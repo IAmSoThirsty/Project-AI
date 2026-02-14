@@ -8,7 +8,7 @@ import logging
 import os
 import time
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Any
 
 from fastapi import APIRouter, Response, status
 from pydantic import BaseModel
@@ -25,14 +25,14 @@ class HealthStatus(BaseModel):
     uptime_seconds: float
     version: str
     environment: str
-    checks: Dict[str, Any]
+    checks: dict[str, Any]
 
 
 class ComponentHealth(BaseModel):
     """Individual component health"""
     healthy: bool
-    latency_ms: Optional[float] = None
-    message: Optional[str] = None
+    latency_ms: float | None = None
+    message: str | None = None
     last_check: str
 
 
@@ -53,10 +53,10 @@ async def check_database() -> ComponentHealth:
         # Replace with actual database check
         # from app.core.database import db
         # await db.execute("SELECT 1")
-        
+
         # Placeholder implementation
         await asyncio.sleep(0.01)  # Simulate DB check
-        
+
         latency = (time.time() - start) * 1000
         return ComponentHealth(
             healthy=True,
@@ -80,10 +80,10 @@ async def check_redis() -> ComponentHealth:
         # Import here to avoid circular dependencies
         # from app.core.cache import redis_client
         # await redis_client.ping()
-        
+
         # Placeholder implementation
         await asyncio.sleep(0.01)  # Simulate Redis check
-        
+
         latency = (time.time() - start) * 1000
         return ComponentHealth(
             healthy=True,
@@ -107,10 +107,10 @@ async def check_temporal() -> ComponentHealth:
         # Import here to avoid circular dependencies
         # from app.temporal.client import temporal_client
         # await temporal_client.describe_namespace("project-ai")
-        
+
         # Placeholder implementation
         await asyncio.sleep(0.01)  # Simulate Temporal check
-        
+
         latency = (time.time() - start) * 1000
         return ComponentHealth(
             healthy=True,
@@ -132,11 +132,11 @@ async def check_disk_space() -> ComponentHealth:
     try:
         import shutil
         stats = shutil.disk_usage("/app/data")
-        
+
         # Consider unhealthy if less than 10% free space
         percent_free = (stats.free / stats.total) * 100
         healthy = percent_free > 10
-        
+
         return ComponentHealth(
             healthy=healthy,
             message=f"{percent_free:.1f}% free disk space",
@@ -156,11 +156,11 @@ async def check_memory() -> ComponentHealth:
     try:
         import psutil
         memory = psutil.virtual_memory()
-        
+
         # Consider unhealthy if less than 10% free memory
         percent_available = memory.available / memory.total * 100
         healthy = percent_available > 10
-        
+
         return ComponentHealth(
             healthy=healthy,
             message=f"{percent_available:.1f}% available memory",
@@ -179,7 +179,7 @@ async def check_memory() -> ComponentHealth:
 async def liveness_probe(response: Response):
     """
     Kubernetes liveness probe endpoint
-    
+
     Returns 200 if the application is running, regardless of dependencies.
     This should only fail if the application itself is dead/deadlocked.
     """
@@ -220,34 +220,34 @@ async def liveness_probe(response: Response):
 async def readiness_probe(response: Response):
     """
     Kubernetes readiness probe endpoint
-    
+
     Returns 200 only if all critical dependencies are healthy.
     Pod will be removed from service load balancer if this fails.
     """
     checks = {}
     all_healthy = True
-    
+
     # Check critical dependencies
     db_health = await check_database()
     checks["database"] = db_health.dict()
     all_healthy = all_healthy and db_health.healthy
-    
+
     redis_health = await check_redis()
     checks["redis"] = redis_health.dict()
     all_healthy = all_healthy and redis_health.healthy
-    
+
     # Check optional dependencies (don't fail on these)
     temporal_health = await check_temporal()
     checks["temporal"] = temporal_health.dict()
-    
+
     disk_health = await check_disk_space()
     checks["disk"] = disk_health.dict()
     all_healthy = all_healthy and disk_health.healthy
-    
+
     memory_health = await check_memory()
     checks["memory"] = memory_health.dict()
     all_healthy = all_healthy and memory_health.healthy
-    
+
     health_status = HealthStatus(
         status="ok" if all_healthy else "degraded",
         timestamp=datetime.utcnow().isoformat(),
@@ -256,10 +256,10 @@ async def readiness_probe(response: Response):
         environment=os.getenv("APP_ENV", "production"),
         checks=checks
     )
-    
+
     if not all_healthy:
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
-    
+
     return health_status
 
 
@@ -267,24 +267,24 @@ async def readiness_probe(response: Response):
 async def startup_probe(response: Response):
     """
     Kubernetes startup probe endpoint
-    
+
     Returns 200 once the application has finished initializing.
     This allows slow-starting applications more time before liveness checks begin.
     """
     checks = {}
-    
+
     # Check if application is fully initialized
     # This is a simplified check - expand based on your initialization needs
     min_uptime = 5.0  # Minimum uptime in seconds before considering started
     uptime = get_uptime()
-    
+
     if uptime < min_uptime:
         checks["initialization"] = {
             "healthy": False,
             "message": f"Application still initializing ({uptime:.1f}s / {min_uptime}s)"
         }
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
-        
+
         return HealthStatus(
             status="starting",
             timestamp=datetime.utcnow().isoformat(),
@@ -293,11 +293,11 @@ async def startup_probe(response: Response):
             environment=os.getenv("APP_ENV", "production"),
             checks=checks
         )
-    
+
     # Check critical dependencies are available
     db_health = await check_database()
     checks["database"] = db_health.dict()
-    
+
     if not db_health.healthy:
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
         return HealthStatus(
@@ -308,12 +308,12 @@ async def startup_probe(response: Response):
             environment=os.getenv("APP_ENV", "production"),
             checks=checks
         )
-    
+
     checks["initialization"] = {
         "healthy": True,
         "message": "Application fully initialized"
     }
-    
+
     return HealthStatus(
         status="ok",
         timestamp=datetime.utcnow().isoformat(),
@@ -328,7 +328,7 @@ async def startup_probe(response: Response):
 async def health_check(response: Response):
     """
     General health check endpoint with detailed status
-    
+
     Returns comprehensive health information including all dependencies.
     """
     return await readiness_probe(response)

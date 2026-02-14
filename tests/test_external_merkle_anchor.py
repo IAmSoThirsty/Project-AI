@@ -78,7 +78,7 @@ class TestExternalMerkleAnchor:
             assert len(anchor_files) == 1
 
             # Verify file contents
-            with open(anchor_files[0], "r") as f:
+            with open(anchor_files[0]) as f:
                 record = json.load(f)
 
             assert record["merkle_root"] == merkle_root
@@ -314,7 +314,7 @@ class TestIPFSBackend:
     @patch('src.app.governance.external_merkle_anchor.ipfshttpclient')
     def test_ipfs_backend_initialization(self, mock_ipfs_module):
         """Test IPFS backend can be initialized."""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             # Mock IPFS client
             mock_client = MagicMock()
             mock_ipfs_module.connect.return_value = mock_client
@@ -332,7 +332,7 @@ class TestIPFSBackend:
     @patch('src.app.governance.external_merkle_anchor.ipfshttpclient')
     def test_ipfs_pin_merkle_root(self, mock_ipfs_module):
         """Test pinning Merkle root to IPFS."""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             # Mock IPFS client
             mock_client = MagicMock()
             mock_cid = "QmTest123456789abcdefghijklmnopqrstuv"
@@ -376,7 +376,7 @@ class TestIPFSBackend:
     @patch('src.app.governance.external_merkle_anchor.ipfshttpclient')
     def test_ipfs_verify_merkle_root(self, mock_ipfs_module):
         """Test verifying Merkle root from IPFS."""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             # Mock IPFS client
             mock_client = MagicMock()
             mock_cid = "QmTest123"
@@ -435,7 +435,7 @@ class TestS3Backend:
     @patch('src.app.governance.external_merkle_anchor.boto3')
     def test_s3_backend_initialization(self, mock_boto3):
         """Test S3 backend can be initialized."""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             # Mock S3 client
             mock_client = MagicMock()
             mock_boto3.client.return_value = mock_client
@@ -457,7 +457,7 @@ class TestS3Backend:
     @patch('src.app.governance.external_merkle_anchor.boto3')
     def test_s3_pin_merkle_root_with_worm(self, mock_boto3):
         """Test pinning Merkle root to S3 with WORM object lock."""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             # Mock S3 client
             mock_client = MagicMock()
             mock_version_id = "abc123version"
@@ -506,7 +506,7 @@ class TestS3Backend:
     @patch('src.app.governance.external_merkle_anchor.boto3')
     def test_s3_verify_merkle_root(self, mock_boto3):
         """Test verifying Merkle root from S3."""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             # Mock S3 client
             mock_client = MagicMock()
 
@@ -636,7 +636,7 @@ class TestMultiBackendIntegration:
     @patch('src.app.governance.external_merkle_anchor.boto3')
     def test_multi_backend_verification(self, mock_boto3, mock_ipfs_module):
         """Test verification can succeed from any backend."""
-        with tempfile.TemporaryDirectory() as tmpdir:
+        with tempfile.TemporaryDirectory():
             # Mock IPFS client (will find the anchor)
             mock_ipfs_client = MagicMock()
             mock_cid = "QmVerifyTest123"

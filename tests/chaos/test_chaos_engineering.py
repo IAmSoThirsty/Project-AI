@@ -1,7 +1,8 @@
 """Chaos Engineering Tests for Project-AI"""
-import pytest
-import asyncio
+
 import httpx
+import pytest
+
 
 @pytest.mark.chaos
 class TestChaosEngineering:

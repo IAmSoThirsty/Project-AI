@@ -4,23 +4,21 @@ Tests critical user flows and system integration
 """
 
 import asyncio
-import json
 import os
 import time
-from typing import Dict, Any
 
-import pytest
 import httpx
+import pytest
 
 
 class TestAPIHealthEndpoints:
     """Test production health check endpoints"""
-    
+
     @pytest.fixture
     def api_base_url(self):
         """Get API base URL from environment"""
         return os.getenv("API_BASE_URL", "http://localhost:5000")
-    
+
     @pytest.mark.asyncio
     async def test_liveness_probe(self, api_base_url):
         """Test liveness probe returns 200"""
@@ -31,7 +29,7 @@ class TestAPIHealthEndpoints:
             assert data["status"] == "ok"
             assert "uptime_seconds" in data
             assert "version" in data
-    
+
     @pytest.mark.asyncio
     async def test_readiness_probe(self, api_base_url):
         """Test readiness probe checks dependencies"""
@@ -43,7 +41,7 @@ class TestAPIHealthEndpoints:
             assert "checks" in data
             assert "database" in data["checks"]
             assert "redis" in data["checks"]
-    
+
     @pytest.mark.asyncio
     async def test_startup_probe(self, api_base_url):
         """Test startup probe"""
@@ -57,11 +55,11 @@ class TestAPIHealthEndpoints:
 
 class TestAPIGovernanceEndpoints:
     """Test governance API endpoints"""
-    
+
     @pytest.fixture
     def api_base_url(self):
         return os.getenv("API_BASE_URL", "http://localhost:5000")
-    
+
     @pytest.mark.asyncio
     async def test_action_submission(self, api_base_url):
         """Test submitting an action for governance review"""
@@ -79,7 +77,7 @@ class TestAPIGovernanceEndpoints:
             )
             # Accept either success or not found (route may not exist)
             assert response.status_code in [200, 201, 404]
-    
+
     @pytest.mark.asyncio
     async def test_action_history(self, api_base_url):
         """Test retrieving action history"""
@@ -94,11 +92,11 @@ class TestAPIGovernanceEndpoints:
 
 class TestUserAuthentication:
     """Test user authentication flows"""
-    
+
     @pytest.fixture
     def api_base_url(self):
         return os.getenv("API_BASE_URL", "http://localhost:5000")
-    
+
     @pytest.mark.asyncio
     async def test_user_login_flow(self, api_base_url):
         """Test complete user login flow"""
@@ -114,11 +112,11 @@ class TestUserAuthentication:
 
 class TestSystemIntegration:
     """Test system-wide integration scenarios"""
-    
+
     @pytest.fixture
     def api_base_url(self):
         return os.getenv("API_BASE_URL", "http://localhost:5000")
-    
+
     @pytest.mark.asyncio
     async def test_concurrent_requests(self, api_base_url):
         """Test handling concurrent requests"""
@@ -129,14 +127,14 @@ class TestSystemIntegration:
                 for _ in range(10)
             ]
             responses = await asyncio.gather(*tasks, return_exceptions=True)
-            
+
             # Check that most requests succeeded
             successful = sum(
-                1 for r in responses 
+                1 for r in responses
                 if not isinstance(r, Exception) and r.status_code == 200
             )
             assert successful >= 8  # At least 80% success rate
-    
+
     @pytest.mark.asyncio
     async def test_response_time(self, api_base_url):
         """Test API response time is acceptable"""
@@ -147,18 +145,18 @@ class TestSystemIntegration:
                 timeout=10.0
             )
             elapsed = time.time() - start
-            
+
             assert response.status_code == 200
             assert elapsed < 1.0  # Should respond within 1 second
 
 
 class TestLoadTolerance:
     """Test system behavior under load"""
-    
+
     @pytest.fixture
     def api_base_url(self):
         return os.getenv("API_BASE_URL", "http://localhost:5000")
-    
+
     @pytest.mark.asyncio
     @pytest.mark.slow
     async def test_sustained_load(self, api_base_url):
@@ -168,7 +166,7 @@ class TestLoadTolerance:
             request_count = 0
             errors = 0
             start = time.time()
-            
+
             while time.time() - start < duration:
                 try:
                     response = await client.get(
@@ -181,9 +179,9 @@ class TestLoadTolerance:
                         errors += 1
                 except Exception:
                     errors += 1
-                
+
                 await asyncio.sleep(0.1)  # 10 RPS
-            
+
             # Should handle most requests successfully
             success_rate = request_count / (request_count + errors)
             assert success_rate > 0.95  # 95% success rate
@@ -191,11 +189,11 @@ class TestLoadTolerance:
 
 class TestDataPersistence:
     """Test data persistence across operations"""
-    
+
     @pytest.fixture
     def api_base_url(self):
         return os.getenv("API_BASE_URL", "http://localhost:5000")
-    
+
     @pytest.mark.asyncio
     async def test_save_points_persistence(self, api_base_url):
         """Test save points are persisted correctly"""
@@ -216,11 +214,11 @@ class TestDataPersistence:
 
 class TestSecurityControls:
     """Test security controls and safeguards"""
-    
+
     @pytest.fixture
     def api_base_url(self):
         return os.getenv("API_BASE_URL", "http://localhost:5000")
-    
+
     @pytest.mark.asyncio
     async def test_rate_limiting(self, api_base_url):
         """Test rate limiting is enforced"""
@@ -237,15 +235,15 @@ class TestSecurityControls:
                 except Exception:
                     responses.append(0)
                 await asyncio.sleep(0.01)
-            
+
             # Should see some rate limit responses (429)
             # Or all successful if rate limiting not yet implemented
             rate_limited = sum(1 for r in responses if r == 429)
             all_success = all(r == 200 for r in responses)
-            
+
             # Either rate limiting works or all requests succeed
             assert rate_limited > 0 or all_success
-    
+
     @pytest.mark.asyncio
     async def test_cors_headers(self, api_base_url):
         """Test CORS headers are present"""
@@ -261,11 +259,11 @@ class TestSecurityControls:
 
 class TestFailureRecovery:
     """Test system recovery from failures"""
-    
+
     @pytest.fixture
     def api_base_url(self):
         return os.getenv("API_BASE_URL", "http://localhost:5000")
-    
+
     @pytest.mark.asyncio
     async def test_graceful_degradation(self, api_base_url):
         """Test system degrades gracefully when dependencies fail"""
@@ -276,21 +274,21 @@ class TestFailureRecovery:
                 timeout=10.0
             )
             assert response.status_code == 200
-    
+
     @pytest.mark.asyncio
     async def test_timeout_handling(self, api_base_url):
         """Test proper timeout handling"""
         async with httpx.AsyncClient() as client:
             # Test with very short timeout
             try:
-                response = await client.get(
+                await client.get(
                     f"{api_base_url}/health/ready",
                     timeout=0.001  # 1ms timeout
                 )
             except httpx.TimeoutException:
                 # Expected - timeout should be handled
                 pass
-            except Exception as e:
+            except Exception:
                 # Other exceptions are acceptable
                 pass
 

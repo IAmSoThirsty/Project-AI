@@ -35,16 +35,14 @@ Example:
 import hashlib
 import logging
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
-from typing import Optional
+from datetime import UTC, datetime
 
 import requests
-from asn1crypto import algos, cms, tsp, x509 as asn1_x509
+from asn1crypto import cms, tsp
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding, rsa
-from cryptography.x509 import ocsp
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +73,7 @@ class TSAToken:
     tsa_time: datetime
     message_imprint: bytes
     serial_number: int
-    tsa_certificate_der: Optional[bytes] = None
+    tsa_certificate_der: bytes | None = None
     hash_algorithm: str = "sha256"
 
 

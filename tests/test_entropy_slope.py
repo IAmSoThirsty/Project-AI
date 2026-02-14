@@ -12,7 +12,7 @@ Validates:
 
 import json
 import tempfile
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 
 import numpy as np
@@ -638,13 +638,13 @@ class TestStatelessness:
 
         assert len(snapshots1) == len(snapshots2) == len(snapshots3)
 
-        for s1, s2, s3 in zip(snapshots1, snapshots2, snapshots3):
+        for s1, s2, s3 in zip(snapshots1, snapshots2, snapshots3, strict=False):
             assert s1.entropy_value == s2.entropy_value == s3.entropy_value
 
     def test_state_recomputed_each_time(self, monitor, tmpdir):
         """Test state is recomputed from ledger each time"""
         # Create some data
-        for i in range(10):
+        for _i in range(10):
             monitor.record_entropy_snapshot(0.5, "system", {})
 
         state1, _ = monitor.get_entropy_state()
@@ -658,7 +658,7 @@ class TestStatelessness:
     def test_no_internal_counters(self, monitor):
         """Test monitor has no internal snapshot counter"""
         # Record some snapshots
-        for i in range(5):
+        for _i in range(5):
             monitor.record_entropy_snapshot(0.5, "system", {})
 
         # Monitor should not store count internally

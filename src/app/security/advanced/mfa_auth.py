@@ -860,7 +860,7 @@ class BiometricProvider(AuthenticationProvider):
         """Calculate similarity between biometric hashes"""
         # Simplified similarity calculation
         # Production systems would use sophisticated matching algorithms
-        matching_bytes = sum(a == b for a, b in zip(hash1, hash2))
+        matching_bytes = sum(a == b for a, b in zip(hash1, hash2, strict=False))
         return matching_bytes / len(hash1)
 
 
@@ -1325,10 +1325,7 @@ class MFAAuthenticator:
 
         # Check if session was created too long ago
         max_session_age = 86400  # 24 hours
-        if time.time() - context.timestamp > max_session_age:
-            return False
-
-        return True
+        return not time.time() - context.timestamp > max_session_age
 
     def _log_audit(
         self,

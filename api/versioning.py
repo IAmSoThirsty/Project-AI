@@ -4,10 +4,10 @@ Implements URL-based and header-based API versioning
 """
 
 import logging
-from typing import Optional
-from fastapi import APIRouter, Request, Header, HTTPException, status
-from fastapi.responses import JSONResponse
 from datetime import datetime
+
+from fastapi import APIRouter, Header, Request, status
+from fastapi.responses import JSONResponse
 
 logger = logging.getLogger(__name__)
 
@@ -19,12 +19,12 @@ DEPRECATED_VERSIONS = []
 
 class APIVersion:
     """API version manager"""
-    
+
     @staticmethod
-    def extract_version(request: Request, api_version: Optional[str] = Header(None)) -> str:
+    def extract_version(request: Request, api_version: str | None = Header(None)) -> str:
         """
         Extract API version from request
-        
+
         Priority:
         1. Header: API-Version
         2. URL path: /v1/endpoint
@@ -34,26 +34,26 @@ class APIVersion:
         # Check header
         if api_version:
             return api_version
-        
+
         # Check URL path
         path_parts = request.url.path.split('/')
         for part in path_parts:
             if part.startswith('v') and part[1:].isdigit():
                 return part
-        
+
         # Check query parameter
         version = request.query_params.get('version')
         if version:
             return version
-        
+
         # Default to current version
         return CURRENT_VERSION
-    
+
     @staticmethod
     def validate_version(version: str) -> bool:
         """Validate if version is supported"""
         return version in SUPPORTED_VERSIONS
-    
+
     @staticmethod
     def is_deprecated(version: str) -> bool:
         """Check if version is deprecated"""
@@ -62,10 +62,10 @@ class APIVersion:
 
 def version_middleware(request: Request, call_next):
     """Middleware to handle API versioning"""
-    
+
     # Extract version
     version = APIVersion.extract_version(request)
-    
+
     # Validate version
     if not APIVersion.validate_version(version):
         return JSONResponse(
@@ -77,27 +77,27 @@ def version_middleware(request: Request, call_next):
                 "current_version": CURRENT_VERSION
             }
         )
-    
+
     # Check if deprecated
     if APIVersion.is_deprecated(version):
         # Add deprecation warning header
         logger.warning(f"Deprecated API version used: {version}")
-    
+
     # Store version in request state
     request.state.api_version = version
-    
+
     # Process request
     response = call_next(request)
-    
+
     # Add version headers to response
     if hasattr(response, 'headers'):
         response.headers['X-API-Version'] = version
         response.headers['X-API-Current-Version'] = CURRENT_VERSION
-        
+
         if APIVersion.is_deprecated(version):
             response.headers['X-API-Deprecation'] = 'true'
             response.headers['X-API-Sunset'] = '2025-12-31'  # Example sunset date
-    
+
     return response
 
 
@@ -165,7 +165,7 @@ async def api_info_v2():
 # Version compatibility layer
 class VersionCompatibility:
     """Handle backward compatibility between versions"""
-    
+
     @staticmethod
     def convert_v1_to_v2(data: dict) -> dict:
         """Convert v1 response format to v2"""
@@ -178,7 +178,7 @@ class VersionCompatibility:
                 "timestamp": datetime.utcnow().isoformat()
             }
         }
-    
+
     @staticmethod
     def convert_v2_to_v1(data: dict) -> dict:
         """Convert v2 response format to v1"""
@@ -206,7 +206,7 @@ app.include_router(router_v2)
 @app.get("/health")
 async def health(request: Request):
     version = request.state.api_version
-    
+
     if version == "v1":
         return {"status": "ok", "version": "v1"}
     elif version == "v2":

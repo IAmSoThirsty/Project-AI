@@ -51,7 +51,6 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import (
     Ed25519PrivateKey,
@@ -61,7 +60,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 try:
     from app.governance.tsa_provider import TSAProvider, TSAToken
 except ImportError:
-    from src.app.governance.tsa_provider import TSAProvider, TSAToken
+    from src.app.governance.tsa_provider import TSAProvider
 
 logger = logging.getLogger(__name__)
 
@@ -163,7 +162,7 @@ class TSAAnchorManager:
         self,
         genesis_private_key: Ed25519PrivateKey,
         anchor_path: str | Path,
-        tsa_provider: Optional[TSAProvider] = None,
+        tsa_provider: TSAProvider | None = None,
     ):
         """Initialize TSA anchor manager.
 
@@ -305,8 +304,8 @@ class TSAAnchorManager:
         if not anchors:
             return True, "No anchors to verify"
 
-        previous_time: Optional[datetime] = None
-        previous_payload_hash: Optional[str] = None
+        previous_time: datetime | None = None
+        previous_payload_hash: str | None = None
 
         for i, anchor_dict in enumerate(anchors):
             try:
@@ -391,14 +390,14 @@ class TSAAnchorManager:
     # QUERY METHODS
     # ==============================
 
-    def get_anchor(self, index: int) -> Optional[AnchorRecord]:
+    def get_anchor(self, index: int) -> AnchorRecord | None:
         """Get anchor by index."""
         anchors = self._load()
         if 0 <= index < len(anchors):
             return AnchorRecord.from_dict(anchors[index])
         return None
 
-    def get_latest_anchor(self) -> Optional[AnchorRecord]:
+    def get_latest_anchor(self) -> AnchorRecord | None:
         """Get most recent anchor."""
         anchors = self._load()
         if anchors:
