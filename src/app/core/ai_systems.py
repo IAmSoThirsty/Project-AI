@@ -1050,73 +1050,19 @@ class OverrideType(Enum):
 
 
 class CommandOverrideSystem:
-    """Command override system."""
+    """Command override system - direct control without authentication."""
 
-    def __init__(self, data_dir: str = "data", password_hash: str | None = None):
+    def __init__(self, data_dir: str = "data"):
         """Initialize override system."""
         self.data_dir = data_dir
         self.override_dir = os.path.join(data_dir, "overrides")
         os.makedirs(self.override_dir, exist_ok=True)
 
-        self.password_hash = password_hash
-        self.password_salt: str | None = None
         self.active_overrides: dict[str, dict[str, Any]] = {}
         self.audit_log: list[dict[str, Any]] = []
         self._audit_path = os.path.join(self.override_dir, "audit.json")
         # load persisted audit if present
         self._load_audit()
-
-    def _hash_password(self, password: str) -> str:
-        """Hash password. Prefer argon2 if available, otherwise PBKDF2 fallback."""
-        if PasswordHasher is not None:
-            try:
-                ph = PasswordHasher()
-                return ph.hash(password)
-            except Exception:
-                logger.exception("argon2 hashing failed, falling back to pbkdf2")
-        # fallback
-        iterations = 100_000
-        if self.password_salt is None:
-            self.password_salt = secrets.token_hex(16)
-            dk = hashlib.pbkdf2_hmac(
-                "sha256", password.encode(), self.password_salt.encode(), iterations
-            )
-            return f"{iterations}${self.password_salt}${base64.b64encode(dk).decode()}"
-
-    def set_password(self, password: str) -> bool:
-        """Set master password."""
-        if self.password_hash is not None:
-            return False
-        self.password_hash = self._hash_password(password)
-        # persist audit (credentials info only)
-        self._save_audit()
-        return True
-
-    def verify_password(self, password: str) -> bool:
-        """Verify password."""
-        if self.password_hash is None:
-            return False
-        if PasswordHasher is not None:
-            try:
-                ph = PasswordHasher()
-                return ph.verify(self.password_hash, password)
-            except Exception:
-                # fall back to pbkdf2 check if stored format matches
-                pass
-        try:
-            parts = self.password_hash.split("$")
-            if len(parts) != 3:
-                return False
-            iterations = int(parts[0])
-            salt = parts[1]
-            stored = parts[2]
-            dk = hashlib.pbkdf2_hmac(
-                "sha256", password.encode(), salt.encode(), iterations
-            )
-            return base64.b64encode(dk).decode() == stored
-        except Exception:
-            logger.exception("Password verify failed")
-            return False
 
     def _load_audit(self) -> None:
         try:
@@ -1138,17 +1084,7 @@ class CommandOverrideSystem:
         override_type: OverrideType,
         reason: str | None = None,
     ) -> tuple[bool, str]:
-        """Request override."""
-        if not self.verify_password(password):
-            entry = {
-                "action": "failed_auth",
-                "timestamp": datetime.now().isoformat(),
-                "corr": new_correlation_id(),
-            }
-            self.audit_log.append(entry)
-            self._save_audit()
-            return False, "Invalid password"
-
+        """Request override - password parameter ignored (kept for compatibility)."""
         override_key = f"{override_type.value}_{datetime.now().timestamp()}"
         self.active_overrides[override_key] = {
             "type": override_type.value,
@@ -1188,7 +1124,6 @@ class CommandOverrideSystem:
         return {
             "active_overrides": len(self.active_overrides),
             "audit_entries": len(self.audit_log),
-            "password_set": self.password_hash is not None,
         }
 
 
