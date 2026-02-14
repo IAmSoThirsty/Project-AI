@@ -91,16 +91,16 @@ check_branch_protection() {
     fi
 
     # Check required reviews
-    local required_reviews=$(echo "$protection" | jq -r '.required_pull_request_reviews.required_approving_review_count // 0')
-    if [ "$required_reviews" -ge 2 ]; then
+    local required_reviews=$(echo "$protection" | jq -r '.required_pull_request_reviews.required_approving_review_count // 0' | tr -d '\n')
+    if [ "$required_reviews" -ge 2 ] 2>/dev/null; then
         log_success "Required approvals: ${required_reviews}"
     else
         log_warning "Required approvals: ${required_reviews} (should be 2+)"
     fi
 
     # Check required status checks
-    local status_checks=$(echo "$protection" | jq -r '.required_status_checks.checks // [] | length')
-    if [ "$status_checks" -gt 0 ]; then
+    local status_checks=$(echo "$protection" | jq -r '.required_status_checks.checks // [] | length' | tr -d '\n')
+    if [ "$status_checks" -gt 0 ] 2>/dev/null; then
         log_success "Required status checks: ${status_checks}"
     else
         log_warning "No required status checks configured"
