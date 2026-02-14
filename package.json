@@ -1,7 +1,7 @@
 {
   "name": "project-ai",
   "version": "1.0.0",
-  "description": "Comprehensive AI assistant with advanced features",
+  "description": "A constitutionally governed, sovereign-grade AI platform with cryptographic audit trails and enforced ethical behavior",
   "main": "src/app/main.py",
   "scripts": {
     "test": "npm run test:js && npm run test:python",
@@ -30,7 +30,12 @@
     "assistant",
     "pyqt6",
     "machine-learning",
-    "desktop"
+    "desktop",
+    "constitutional-ai",
+    "asimov-laws",
+    "cryptographic-audit",
+    "ethical-ai",
+    "open-source"
   ],
   "author": "Project AI Team",
   "license": "MIT",
