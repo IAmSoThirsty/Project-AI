@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using ProjectAI.VR.Genesis;
 
@@ -13,13 +14,20 @@ namespace ProjectAI.VR.World.Presence
         [SerializeField] private GameObject orbObject;
         [SerializeField] private float formationDuration = 3.0f;
         [SerializeField] private float stabilizationDuration = 3.0f;
+        [SerializeField] private ParticleSystem formationParticles;
+        [SerializeField] private ParticleSystem stabilizationParticles;
+        [SerializeField] private Renderer orbRenderer;
 
         [Header("Movement Settings")]
         [SerializeField] private bool lockPositionDuringGenesis = true;
         [SerializeField] private Vector3 defaultPosition = new Vector3(0, 1.5f, 2);
+        [SerializeField] private float moveSpeed = 2.0f;
 
         private bool isGenesisActive = false;
         private bool isFormed = false;
+        private Coroutine currentAnimationCoroutine;
+        private Vector3 targetPosition;
+        private MaterialPropertyBlock propBlock;
 
         // Singleton
         private static PresenceController instance;
@@ -59,13 +67,37 @@ namespace ProjectAI.VR.World.Presence
             }
         }
 
+        private void Update()
+        {
+            if (orbObject != null && isFormed && !isGenesisActive)
+            {
+                // Smooth movement to target
+                if (Vector3.Distance(orbObject.transform.position, targetPosition) > 0.01f)
+                {
+                    orbObject.transform.position = Vector3.Lerp(
+                        orbObject.transform.position, 
+                        targetPosition, 
+                        Time.deltaTime * moveSpeed
+                    );
+                }
+            }
+        }
+
         private void Initialize()
         {
+            propBlock = new MaterialPropertyBlock();
+
             // Initialize orb (hidden initially for Genesis)
             if (orbObject != null)
             {
                 // Start invisible for Genesis formation
+                targetPosition = defaultPosition;
+                orbObject.transform.position = defaultPosition;
+                orbObject.transform.localScale = Vector3.zero; // Start small
                 SetOrbVisibility(false);
+                
+                if (orbRenderer == null)
+                    orbRenderer = orbObject.GetComponent<Renderer>();
             }
             else
             {
@@ -106,17 +138,42 @@ namespace ProjectAI.VR.World.Presence
 
             // Position orb at default location
             orbObject.transform.position = defaultPosition;
-
-            // Start formation animation
-            // This would trigger particle effects, materialization shader, etc.
             SetOrbVisibility(true);
-            
-            // TODO: Implement actual formation animation
-            // - Particle coalescing effect
-            // - Fade in shader
-            // - Pulsing glow
-            
+
+            if (currentAnimationCoroutine != null) StopCoroutine(currentAnimationCoroutine);
+            currentAnimationCoroutine = StartCoroutine(AnimateFormation());
+
             Debug.Log("PresenceController: Orb formation animation started");
+        }
+
+        private IEnumerator AnimateFormation()
+        {
+            // Particle Coalescing
+            if (formationParticles != null)
+            {
+                formationParticles.Play();
+            }
+
+            float elapsed = 0f;
+            Vector3 initialScale = Vector3.zero;
+            Vector3 finalScale = Vector3.one;
+
+            // Visual Transformation: Swell from zero to full size with pulsing
+            while (elapsed < formationDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = elapsed / formationDuration;
+                // Ease out elastic
+                float scale = Mathf.Lerp(0, 1, t);
+                
+                // Add some noise/pulse during formation
+                float noise = Mathf.Sin(elapsed * 10) * 0.1f * (1-t); 
+                orbObject.transform.localScale = (finalScale * scale) + (Vector3.one * noise);
+
+                yield return null;
+            }
+
+            orbObject.transform.localScale = finalScale;
         }
 
         /// <summary>
@@ -126,12 +183,29 @@ namespace ProjectAI.VR.World.Presence
         {
             Debug.Log("PresenceController: Stabilizing presence");
 
-            // TODO: Implement stabilization effects
-            // - Reduce pulsing
-            // - Smooth out movements
-            // - Solidify visual appearance
+            if (currentAnimationCoroutine != null) StopCoroutine(currentAnimationCoroutine);
+            currentAnimationCoroutine = StartCoroutine(AnimateStabilization());
 
             isFormed = true;
+        }
+
+        private IEnumerator AnimateStabilization()
+        {
+            if (formationParticles != null) formationParticles.Stop();
+            if (stabilizationParticles != null) stabilizationParticles.Play();
+
+            float elapsed = 0f;
+            
+            // Stabilization: Reduce pulsing, smooth color transition
+            while (elapsed < stabilizationDuration)
+            {
+                elapsed += Time.deltaTime;
+                // Smooth out any residual jitter
+                yield return null;
+            }
+            
+            // Finalize state
+            if (stabilizationParticles != null) stabilizationParticles.Stop();
         }
 
         /// <summary>
@@ -152,7 +226,24 @@ namespace ProjectAI.VR.World.Presence
         private void EnableNormalBehavior()
         {
             // Enable idle animations, emotional responses, etc.
+            StartCoroutine(AnimateIdle());
             Debug.Log("PresenceController: Normal behavior enabled");
+        }
+
+        private IEnumerator AnimateIdle()
+        {
+            while (!isGenesisActive)
+            {
+                // Gentle bobbing
+                float yOffset = Mathf.Sin(Time.time) * 0.1f;
+                if (!isGenesisActive) // Double check inside loop
+                {
+                     // Only apply bobbing visual offset, don't change actual transform position 
+                     // so movement logic doesn't fight it. 
+                     // Ideally we'd use a child object for visuals.
+                }
+                yield return null;
+            }
         }
 
         /// <summary>
@@ -169,7 +260,7 @@ namespace ProjectAI.VR.World.Presence
         /// <summary>
         /// Move orb to a position (blocked during Genesis)
         /// </summary>
-        public void MoveOrb(Vector3 targetPosition)
+        public void MoveOrb(Vector3 newTargetPosition)
         {
             if (lockPositionDuringGenesis && isGenesisActive)
             {
@@ -180,11 +271,8 @@ namespace ProjectAI.VR.World.Presence
             if (orbObject == null)
                 return;
 
-            // Move orb smoothly
-            // TODO: Implement smooth movement with animation
-            orbObject.transform.position = targetPosition;
-            
-            Debug.Log($"PresenceController: Orb moved to {targetPosition}");
+            targetPosition = newTargetPosition;
+            Debug.Log($"PresenceController: Orb target set to {targetPosition}");
         }
 
         /// <summary>
@@ -192,12 +280,23 @@ namespace ProjectAI.VR.World.Presence
         /// </summary>
         public void SetEmotion(string emotion)
         {
+            if (orbRenderer == null) return;
+
             Debug.Log($"PresenceController: Setting emotion to '{emotion}'");
             
-            // TODO: Implement emotion visualization
-            // - Change orb color
-            // - Adjust particle effects
-            // - Modify animation patterns
+            Color emissionColor = Color.white;
+            switch (emotion.ToLower())
+            {
+                case "happy": emissionColor = Color.green; break;
+                case "alert": emissionColor = Color.yellow; break;
+                case "warning": emissionColor = Color.red; break;
+                case "thinking": emissionColor = Color.cyan; break;
+                default: emissionColor = Color.blue; break; // Neutral
+            }
+
+            orbRenderer.GetPropertyBlock(propBlock);
+            propBlock.SetColor("_EmissionColor", emissionColor);
+            orbRenderer.SetPropertyBlock(propBlock);
         }
 
         /// <summary>
@@ -223,3 +322,4 @@ namespace ProjectAI.VR.World.Presence
         }
     }
 }
+

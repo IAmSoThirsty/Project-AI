@@ -1,1 +1,1 @@
-# Initialize application package
+"""App package."""

@@ -74,7 +74,7 @@ def main():
     print_header("✨ Setup Complete")
     print("Next steps:\n")
     print("  Backend API:")
-    print("    python start_api.py\n")
+    print("    python scripts/start_api.py\n")
     print("  Web Frontend:")
     print("    Open web/index.html in browser\n")
 
@@ -84,11 +84,11 @@ def main():
 
     print("  Run Tests:")
     print("    pytest tests/ -v\n")
-    print("  Verify Constitution:")
-    print("    python verify_constitution.py\n")
+    print("  Verify System:")
+    print("    python scripts/maintenance/verify_system.py\n")
 
-    print("📚 Documentation: README.md")
-    print("🏛️  Constitution: CONSTITUTION.md\n")
+    print("📚 Documentation: docs/README.md")
+    print("🏛️  Constitution: docs/CONSTITUTION.md\n")
 
 
 if __name__ == "__main__":

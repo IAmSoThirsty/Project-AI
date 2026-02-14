@@ -173,23 +173,57 @@ class SecurityEnforcementGateway:
             "context": request.context,
         }
 
-        # TODO: Wire into Hydra-50 incident response system
-        logger.critical("SECURITY INCIDENT: %s", incident)
+        # Wire into Hydra-50 incident response system
+        try:
+            from app.security.hydra_incident_response import get_hydra_response
+            hydra = get_hydra_response()
+            hydra.report_incident(incident)
+        except ImportError:
+            logger.critical("Hydra-50 not available - falling back to log")
+            logger.critical("SECURITY INCIDENT: %s", incident)
+        except Exception as e:
+            logger.error(f"Failed to report to Hydra-50: {e}")
 
     def _create_audit_trail(
         self, request: OperationRequest, result: OperationResult
     ) -> str:
         """Create audit trail for allowed operation."""
-        from hashlib import sha256
-
-        audit_id = sha256(
-            f"{request.operation_id}{request.timestamp}".encode()
-        ).hexdigest()[:16]
-
-        # TODO: Wire into immutable audit log system
-        logger.info("AUDIT TRAIL: %s - %s", audit_id, request.action)
-
-        return audit_id
+        
+        # Wire into immutable audit log system
+        try:
+            from app.security.immutable_audit_log import get_audit_logger
+            audit_logger = get_audit_logger()
+            
+            audit_data = {
+                "operation_id": request.operation_id,
+                "action": request.action,
+                "context": request.context,
+                "result": {
+                    "allowed": result.allowed,
+                    "threat_level": result.threat_level,
+                    "layers_checked": result.layers_checked
+                }
+            }
+            
+            audit_id = audit_logger.log_event(
+                event_type="OPERATION_ALLOWED",
+                user_id=request.user_id,
+                data=audit_data
+            )
+            
+            return audit_id
+            
+        except ImportError:
+            # Fallback to simple hash if audit logger not available
+            from hashlib import sha256
+            audit_id = sha256(
+                f"{request.operation_id}{request.timestamp}".encode()
+            ).hexdigest()[:16]
+            logger.info("AUDIT TRAIL (Fallback): %s - %s", audit_id, request.action)
+            return audit_id
+        except Exception as e:
+            logger.error(f"Failed to write audit log: {e}")
+            return "audit_error"
 
     def get_enforcement_stats(self) -> dict[str, Any]:
         """Get enforcement statistics."""
