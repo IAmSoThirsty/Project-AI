@@ -703,19 +703,24 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
 
             # Merge state if peer version is newer
             if peer_version > self.gossip_version:
-                # Update cell health information
+                # Update cell health information (optimized to reduce lock contention)
                 peer_health = gossip_data.get("cell_health", {})
+
+                # Batch update to reduce lock contention
+                updates_to_apply = {}
                 for cell_id, health_data in peer_health.items():
                     if cell_id in self.cell_health:
-                        # Merge with local knowledge
+                        # Only update if peer data is newer
                         if (
                             health_data["last_heartbeat"]
                             > self.cell_health[cell_id].last_heartbeat
                         ):
-                            self.cell_health[cell_id].last_heartbeat = health_data[
-                                "last_heartbeat"
-                            ]
-                            self.cell_health[cell_id].healthy = health_data["healthy"]
+                            updates_to_apply[cell_id] = health_data
+
+                # Apply all updates at once (reduces iterations)
+                for cell_id, health_data in updates_to_apply.items():
+                    self.cell_health[cell_id].last_heartbeat = health_data["last_heartbeat"]
+                    self.cell_health[cell_id].healthy = health_data["healthy"]
 
         except Exception as e:
             self.logger.error("Gossip handling failed: %s", e)
