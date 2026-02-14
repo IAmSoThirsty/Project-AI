@@ -115,14 +115,13 @@ class IrreversibilityLaws:
         """
         threshold = self.config.kindness_singularity_threshold
 
-        if state.kindness.value < threshold:
-            if not state.in_collapse:
-                logger.critical(
-                    "KINDNESS SINGULARITY: value %s < threshold %s",
-                    state.kindness.value,
-                    threshold,
-                )
-                return True, "kindness_singularity"
+        if state.kindness.value < threshold and not state.in_collapse:
+            logger.critical(
+                "KINDNESS SINGULARITY: value %s < threshold %s",
+                state.kindness.value,
+                threshold,
+            )
+            return True, "kindness_singularity"
 
         return False, ""
 

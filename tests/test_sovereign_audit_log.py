@@ -13,7 +13,6 @@ This test suite validates constitutional-grade audit logging features:
 """
 
 import base64
-import json
 import tempfile
 import time
 from datetime import UTC, datetime, timedelta

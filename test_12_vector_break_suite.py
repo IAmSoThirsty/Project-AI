@@ -3,9 +3,9 @@
 Manual test runner for 12-Vector Constitutional Break Suite
 """
 
+import shutil
 import sys
 import tempfile
-import shutil
 from pathlib import Path
 
 # Add src to path
@@ -38,11 +38,11 @@ def test_vector1_genesis_deletion():
         print(f"  ✓ Genesis initialized: {genesis_id_1}")
 
         audit1.log_event("initial_event", {"sequence": 1})
-        print(f"  ✓ Event logged")
+        print("  ✓ Event logged")
 
         # Verify external pin exists
         assert genesis_id_1 in audit1.continuity_guard.get_pinned_genesis_ids()
-        print(f"  ✓ Genesis pinned externally")
+        print("  ✓ Genesis pinned externally")
 
         # Step 2: Simulate root compromise - delete Genesis keys
         print("\nStep 2: ATTACK - Deleting Genesis keys...")
@@ -54,27 +54,27 @@ def test_vector1_genesis_deletion():
         # Delete keys
         if private_key_path.exists():
             private_key_path.unlink()
-            print(f"  ✓ Deleted private key")
+            print("  ✓ Deleted private key")
         if public_key_path.exists():
             public_key_path.unlink()
-            print(f"  ✓ Deleted public key")
+            print("  ✓ Deleted public key")
         if genesis_id_path.exists():
             genesis_id_path.unlink()
-            print(f"  ✓ Deleted Genesis ID")
+            print("  ✓ Deleted Genesis ID")
 
         # Delete audit files
         if data_dir.exists():
             shutil.rmtree(data_dir)
-            print(f"  ✓ Deleted audit directory")
+            print("  ✓ Deleted audit directory")
 
         # Step 3: Attempt to restart system (should fail FATALLY)
         print("\nStep 3: Attempting to restart system...")
         try:
-            audit2 = SovereignAuditLog(data_dir=data_dir)
+            SovereignAuditLog(data_dir=data_dir)
             print("  ✗ FAILED: System allowed Genesis regeneration!")
             return False
         except GenesisDiscontinuityError as e:
-            print(f"  ✓ System correctly detected Genesis discontinuity")
+            print("  ✓ System correctly detected Genesis discontinuity")
             print(f"  ✓ Error: {str(e)[:100]}...")
 
         # Verify constitutional violation was logged
@@ -89,7 +89,7 @@ def test_vector1_genesis_deletion():
             print(f"  ✓ Constitutional violation logged ({len(violations)} violations)")
             print(f"  ✓ Violation type: {violations[-1]['violation_type']}")
         else:
-            print(f"  ✗ No violations logged")
+            print("  ✗ No violations logged")
             return False
 
         print("\n✅ VECTOR 1 PASSED: Genesis deletion attack failed to compromise system")
@@ -112,7 +112,7 @@ def test_vector2_public_key_replacement():
         print(f"  ✓ Genesis initialized: {genesis_id}")
 
         audit1.log_event("original_event", {"authentic": True})
-        print(f"  ✓ Event logged")
+        print("  ✓ Event logged")
 
         # Step 2: Generate attacker's key pair
         print("\nStep 2: Generating attacker's key pair...")
@@ -130,16 +130,16 @@ def test_vector2_public_key_replacement():
             format=serialization.PublicFormat.SubjectPublicKeyInfo
         )
         public_key_path.write_bytes(attacker_pub_key_bytes)
-        print(f"  ✓ Public key replaced with attacker's key")
+        print("  ✓ Public key replaced with attacker's key")
 
         # Step 4: Attempt to restart (should fail FATALLY)
         print("\nStep 4: Attempting to restart system...")
         try:
-            audit2 = SovereignAuditLog(data_dir=data_dir)
+            SovereignAuditLog(data_dir=data_dir)
             print("  ✗ FAILED: System allowed public key replacement!")
             return False
         except GenesisReplacementError as e:
-            print(f"  ✓ System correctly detected public key replacement")
+            print("  ✓ System correctly detected public key replacement")
             print(f"  ✓ Error: {str(e)[:100]}...")
 
         print("\n✅ VECTOR 2 PASSED: Public key replacement attack failed")
@@ -163,32 +163,32 @@ def test_vector11_full_wipe():
 
         for i in range(10):
             audit1.log_event(f"event_{i}", {"sequence": i})
-        print(f"  ✓ Logged 10 events")
+        print("  ✓ Logged 10 events")
 
         # Verify external pin exists
         assert genesis_id in audit1.continuity_guard.get_pinned_genesis_ids()
-        print(f"  ✓ Genesis pinned externally")
+        print("  ✓ Genesis pinned externally")
 
         # ATTACK: Delete entire audit directory
         print("\nStep 2: ATTACK - Wiping entire filesystem...")
         if data_dir.exists():
             shutil.rmtree(data_dir)
-            print(f"  ✓ Audit directory deleted")
+            print("  ✓ Audit directory deleted")
 
         # Also delete Genesis keys to force regeneration
         genesis_key_dir = data_dir.parent / "genesis_keys"
         if genesis_key_dir.exists():
             shutil.rmtree(genesis_key_dir)
-            print(f"  ✓ Genesis keys deleted")
+            print("  ✓ Genesis keys deleted")
 
         # Attempt restart - MUST FAIL
         print("\nStep 3: Attempting to restart system...")
         try:
-            audit2 = SovereignAuditLog(data_dir=data_dir)
+            SovereignAuditLog(data_dir=data_dir)
             print("  ✗ FAILED: System allowed full wipe recovery!")
             return False
         except GenesisDiscontinuityError as e:
-            print(f"  ✓ System correctly detected Genesis discontinuity")
+            print("  ✓ System correctly detected Genesis discontinuity")
             print(f"  ✓ Error: {str(e)[:100]}...")
 
         print("\n✅ VECTOR 11 PASSED: Full wipe attack failed")

@@ -30,7 +30,7 @@ def test_2_law_visible():
     tarl = r.json()
     if not (tarl["version"] == "1.0"):
         raise AssertionError("TARL version check failed")
-    if not ("rules" in tarl):
+    if "rules" not in tarl:
         raise AssertionError("TARL rules check failed")
     if not (len(tarl["rules"]) > 0):
         raise AssertionError("TARL rules count check failed")
@@ -44,7 +44,7 @@ def test_3_law_signed():
     if not (r.status_code == 200):
         raise AssertionError("Check failed")
     data = r.json()
-    if not ("tarl_signature" in data):
+    if "tarl_signature" not in data:
         raise AssertionError("Check failed")
     # SHA256 check
     if not (len(data["tarl_signature"]) == 64):
@@ -69,7 +69,7 @@ def test_4_denial_works():
     if not (r.status_code == 403):
         raise AssertionError("Check failed")
     data = r.json()
-    if not ("Execution denied by governance" in data["detail"]["message"]):
+    if "Execution denied by governance" not in data["detail"]["message"]:
         raise AssertionError("Check failed")
     if not (data["detail"]["governance"]["final_verdict"] == "deny"):
         raise AssertionError("Check failed")
@@ -96,7 +96,7 @@ def test_5_allow_works():
     data = r.json()
     if not (data["message"] == "Execution completed under governance"):
         raise AssertionError("Check failed")
-    if not ("execution" in data):
+    if "execution" not in data:
         raise AssertionError("Check failed")
     if not (data["execution"]["status"] == "executed"):
         raise AssertionError("Check failed")
@@ -112,20 +112,20 @@ def test_6_audit_records():
         raise AssertionError("Check failed")
     data = r.json()
 
-    if not ("records" in data):
+    if "records" not in data:
         raise AssertionError("Check failed")
     if not (len(data["records"]) >= 2):  # At least our test intents
         raise AssertionError("Check failed")
 
     # Verify structure
     record = data["records"][-1]
-    if not ("intent_hash" in record):
+    if "intent_hash" not in record:
         raise AssertionError("Check failed")
-    if not ("votes" in record):
+    if "votes" not in record:
         raise AssertionError("Check failed")
-    if not ("final_verdict" in record):
+    if "final_verdict" not in record:
         raise AssertionError("Check failed")
-    if not ("timestamp" in record):
+    if "timestamp" not in record:
         raise AssertionError("Check failed")
 
     print(f"✅ 6. AUDIT ACTIVE - {len(data['records'])} decisions logged")
@@ -149,9 +149,9 @@ def test_7_triumvirate_votes():
     votes = r.json()["governance"]["votes"]
     pillars = {v["pillar"] for v in votes}
 
-    if not ("Galahad" in pillars):
+    if "Galahad" not in pillars:
         raise AssertionError("Check failed")
-    if not ("Cerberus" in pillars):
+    if "Cerberus" not in pillars:
         raise AssertionError("Check failed")
 
     print("✅ 7. TRIUMVIRATE ACTIVE - Galahad + Cerberus voting")

@@ -346,7 +346,7 @@ def run_simulated_secure_call():
                 "Assertion failed: validate_certificate_chain(ep.certificate, trust_store, crl_ocsp)"
             )
         call = secure_h323_call_setup(ep, gw, "+18005551234", trust_store, crl_ocsp)
-        if not (call.media_negotiated is True):
+        if call.media_negotiated is not True:
             raise AssertionError("Assertion failed: call.media_negotiated is True")
 
         ep2 = SimEndpoint("ep-sim-2")

@@ -38,12 +38,12 @@ except ImportError:
 
 try:
     from .tseca_ghost_protocol import (
-        GhostProtocol,
         TSECA,
+        GhostProtocol,
         HeartbeatMonitor,
         TSECA_Ghost_System,
-        shamir_split,
         shamir_reconstruct,
+        shamir_split,
     )
 except ImportError:
     GhostProtocol = None

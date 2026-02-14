@@ -73,11 +73,10 @@ class Decision:
             if self.basis in [
                 DecisionBasis.INFORMED_BY_ATLAS,
                 DecisionBasis.INFORMED_AND_VALIDATED,
-            ]:
-                if not self.reasoning_beyond_atlas:
-                    errors.append(
-                        "ATLAS-informed decision MUST include reasoning beyond ATLAS"
-                    )
+            ] and not self.reasoning_beyond_atlas:
+                errors.append(
+                    "ATLAS-informed decision MUST include reasoning beyond ATLAS"
+                )
 
         if self.dissents_from_atlas and not self.dissent_justification:
             errors.append("Dissent from ATLAS requires justification")

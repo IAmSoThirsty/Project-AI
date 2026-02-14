@@ -54,41 +54,37 @@ import logging
 import os
 import secrets
 import threading
-import time
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 from uuid import uuid4
-
-import yaml
 
 # Import existing audit infrastructure
 try:
     from app.governance.audit_log import AuditLog
+    from app.governance.external_merkle_anchor import ExternalMerkleAnchor
     from app.governance.genesis_continuity import (
         GenesisContinuityGuard,
         GenesisDiscontinuityError,
         GenesisReplacementError,
     )
-    from app.governance.external_merkle_anchor import ExternalMerkleAnchor
-    from app.governance.tsa_provider import TSAProvider
     from app.governance.tsa_anchor_manager import TSAAnchorManager
+    from app.governance.tsa_provider import TSAProvider
 except ImportError:
     from src.app.governance.audit_log import AuditLog
+    from src.app.governance.external_merkle_anchor import ExternalMerkleAnchor
     from src.app.governance.genesis_continuity import (
         GenesisContinuityGuard,
         GenesisDiscontinuityError,
         GenesisReplacementError,
     )
-    from src.app.governance.external_merkle_anchor import ExternalMerkleAnchor
-    from src.app.governance.tsa_provider import TSAProvider
     from src.app.governance.tsa_anchor_manager import TSAAnchorManager
 
 # Import Ed25519 from cryptography library (already used by ConfigSigner)
 try:
-    from cryptography.hazmat.primitives.asymmetric import ed25519
-    from cryptography.hazmat.primitives import hashes, serialization
     from cryptography.hazmat.backends import default_backend
+    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives.asymmetric import ed25519
 except ImportError:
     # Graceful degradation if cryptography not installed
     ed25519 = None

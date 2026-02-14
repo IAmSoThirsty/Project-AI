@@ -268,7 +268,7 @@ class ExternalMerkleAnchor:
         # Search for matching anchor
         for anchor_file in self.filesystem_dir.glob("merkle_anchor_*.json"):
             try:
-                with open(anchor_file, "r") as f:
+                with open(anchor_file) as f:
                     anchor_record = json.load(f)
 
                 if (anchor_record.get("merkle_root") == merkle_root and
@@ -367,7 +367,7 @@ class ExternalMerkleAnchor:
                         logger.info("Found matching anchor in IPFS (CID=%s)", cid)
                         return anchor_record
 
-                except Exception as e:
+                except Exception:
                     # Not a valid anchor record, skip
                     continue
 
@@ -565,7 +565,7 @@ class ExternalMerkleAnchor:
             if backend_name == "filesystem":
                 for anchor_file in self.filesystem_dir.glob("merkle_anchor_*.json"):
                     try:
-                        with open(anchor_file, "r") as f:
+                        with open(anchor_file) as f:
                             anchor_record = json.load(f)
 
                         # Filter by genesis_id if provided

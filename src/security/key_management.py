@@ -3,19 +3,19 @@ Enterprise-Grade Key Management System
 Supports HSM, Cloud KMS (AWS KMS, GCP KMS, Azure Key Vault), and automated key rotation.
 """
 
-import os
 import json
 import logging
+import os
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple, Any
-from dataclasses import dataclass, asdict
 from enum import Enum
+from typing import Any
 
 try:
+    from cryptography.fernet import Fernet
+    from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives import hashes, serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
-    from cryptography.hazmat.backends import default_backend
-    from cryptography.fernet import Fernet
 except ImportError:
     pass  # Will be handled at runtime
 
@@ -54,13 +54,13 @@ class KeyMetadata:
     provider: KeyProvider
     status: KeyStatus
     created_at: datetime
-    rotated_at: Optional[datetime] = None
-    expires_at: Optional[datetime] = None
-    rotation_policy: Optional[Dict[str, Any]] = None
-    access_control: Optional[Dict[str, List[str]]] = None
-    audit_trail: Optional[List[Dict[str, Any]]] = None
+    rotated_at: datetime | None = None
+    expires_at: datetime | None = None
+    rotation_policy: dict[str, Any] | None = None
+    access_control: dict[str, list[str]] | None = None
+    audit_trail: list[dict[str, Any]] | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization"""
         data = asdict(self)
         data['key_type'] = self.key_type.value
@@ -74,7 +74,7 @@ class KeyMetadata:
         return data
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'KeyMetadata':
+    def from_dict(cls, data: dict[str, Any]) -> 'KeyMetadata':
         """Create from dictionary"""
         data['key_type'] = KeyType(data['key_type'])
         data['provider'] = KeyProvider(data['provider'])
@@ -98,27 +98,27 @@ class KeyManagementSystem:
     - SIEM integration
     """
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: dict[str, Any] | None = None):
         """
         Initialize key management system
-        
+
         Args:
             config: Configuration dictionary with provider settings
         """
         self.config = config or {}
         self.provider = KeyProvider(self.config.get('provider', 'local'))
-        self.keys: Dict[str, KeyMetadata] = {}
-        self.audit_log: List[Dict[str, Any]] = []
-        
+        self.keys: dict[str, KeyMetadata] = {}
+        self.audit_log: list[dict[str, Any]] = []
+
         # Initialize storage paths
         self.data_dir = self.config.get('data_dir', 'data/keys')
         self.audit_dir = os.path.join(self.data_dir, 'audit')
         os.makedirs(self.data_dir, exist_ok=True)
         os.makedirs(self.audit_dir, exist_ok=True)
-        
+
         # Load existing keys
         self._load_keys()
-        
+
         # Initialize provider-specific clients
         self._initialize_provider()
 
@@ -174,13 +174,13 @@ class KeyManagementSystem:
     def _initialize_azure_kv(self):
         """Initialize Azure Key Vault client"""
         try:
-            from azure.keyvault.keys import KeyClient
             from azure.identity import DefaultAzureCredential
-            
+            from azure.keyvault.keys import KeyClient
+
             vault_url = self.config.get('azure_vault_url')
             if not vault_url:
                 raise ValueError("azure_vault_url is required for Azure Key Vault")
-            
+
             credential = DefaultAzureCredential()
             self.kms_client = KeyClient(vault_url=vault_url, credential=credential)
             logger.info("Azure Key Vault client initialized")
@@ -199,7 +199,7 @@ class KeyManagementSystem:
             lib_path = self.config.get('pkcs11_library_path')
             if not lib_path:
                 raise ValueError("pkcs11_library_path is required for HSM")
-            
+
             self.pkcs11_lib.load(lib_path)
             self.hsm_slot = self.config.get('hsm_slot', 0)
             self.hsm_pin = self.config.get('hsm_pin')
@@ -215,28 +215,28 @@ class KeyManagementSystem:
         self,
         key_id: str,
         key_type: KeyType,
-        rotation_policy: Optional[Dict[str, Any]] = None,
-        access_control: Optional[Dict[str, List[str]]] = None
+        rotation_policy: dict[str, Any] | None = None,
+        access_control: dict[str, list[str]] | None = None
     ) -> KeyMetadata:
         """
         Generate a new cryptographic key
-        
+
         Args:
             key_id: Unique identifier for the key
             key_type: Type of key to generate
             rotation_policy: Automatic rotation policy (days, enabled)
             access_control: RBAC access control rules
-            
+
         Returns:
             KeyMetadata: Metadata for the generated key
         """
         if key_id in self.keys:
             raise ValueError(f"Key {key_id} already exists")
-        
+
         # Default rotation policy: 90 days for production keys
         if rotation_policy is None:
             rotation_policy = {'enabled': True, 'rotation_days': 90}
-        
+
         # Generate key based on provider
         if self.provider == KeyProvider.AWS_KMS:
             self._generate_aws_key(key_id, key_type)
@@ -249,7 +249,7 @@ class KeyManagementSystem:
         else:
             # Local key generation (development only)
             self._generate_local_key(key_id, key_type)
-        
+
         # Create metadata
         metadata = KeyMetadata(
             key_id=key_id,
@@ -262,10 +262,10 @@ class KeyManagementSystem:
             access_control=access_control,
             audit_trail=[]
         )
-        
+
         self.keys[key_id] = metadata
         self._save_keys()
-        
+
         # Audit log
         self._audit_log_event({
             'event': 'key_generated',
@@ -274,14 +274,14 @@ class KeyManagementSystem:
             'provider': self.provider.value,
             'timestamp': datetime.utcnow().isoformat()
         })
-        
+
         logger.info(f"Generated key {key_id} with provider {self.provider.value}")
         return metadata
 
     def _generate_local_key(self, key_id: str, key_type: KeyType):
         """Generate local key (development only)"""
         key_path = os.path.join(self.data_dir, f"{key_id}.key")
-        
+
         if key_type == KeyType.SYMMETRIC:
             key = Fernet.generate_key()
             with open(key_path, 'wb') as f:
@@ -292,66 +292,66 @@ class KeyManagementSystem:
                 key_size=4096,
                 backend=default_backend()
             )
-            
+
             pem = private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.PKCS8,
                 encryption_algorithm=serialization.BestAvailableEncryption(b'changeme')
             )
-            
+
             with open(key_path, 'wb') as f:
                 f.write(pem)
-            
+
             # Save public key
             public_key = private_key.public_key()
             pub_pem = public_key.public_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PublicFormat.SubjectPublicKeyInfo
             )
-            
+
             with open(key_path + '.pub', 'wb') as f:
                 f.write(pub_pem)
-        
+
         logger.info(f"Created local key: {key_path}")
 
     def rotate_key(self, key_id: str, force: bool = False) -> KeyMetadata:
         """
         Rotate a cryptographic key
-        
+
         Args:
             key_id: Key identifier to rotate
             force: Force rotation even if not due
-            
+
         Returns:
             KeyMetadata: Updated metadata
         """
         if key_id not in self.keys:
             raise ValueError(f"Key {key_id} not found")
-        
+
         metadata = self.keys[key_id]
-        
+
         # Check if rotation is due
         if not force and metadata.expires_at and datetime.utcnow() < metadata.expires_at:
             logger.info(f"Key {key_id} rotation not due yet")
             return metadata
-        
+
         # Mark old key as deprecated
         metadata.status = KeyStatus.DEPRECATED
-        
+
         # Generate new key version
         new_key_id = f"{key_id}_v{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
-        
+
         new_metadata = self.generate_key(
             key_id=new_key_id,
             key_type=metadata.key_type,
             rotation_policy=metadata.rotation_policy,
             access_control=metadata.access_control
         )
-        
+
         # Update metadata
         metadata.rotated_at = datetime.utcnow()
         self._save_keys()
-        
+
         # Audit log
         self._audit_log_event({
             'event': 'key_rotated',
@@ -359,34 +359,34 @@ class KeyManagementSystem:
             'new_key_id': new_key_id,
             'timestamp': datetime.utcnow().isoformat()
         })
-        
+
         logger.info(f"Rotated key {key_id} to {new_key_id}")
         return new_metadata
 
     def check_access(self, key_id: str, identity: str, action: str) -> bool:
         """
         Check if an identity has access to perform an action on a key
-        
+
         Args:
             key_id: Key identifier
             identity: User/service identity
             action: Action to perform (use, rotate, revoke)
-            
+
         Returns:
             bool: True if access is granted
         """
         if key_id not in self.keys:
             return False
-        
+
         metadata = self.keys[key_id]
-        
+
         if not metadata.access_control:
             # No access control defined, allow all (development mode)
             return True
-        
+
         allowed_identities = metadata.access_control.get(action, [])
         has_access = identity in allowed_identities or '*' in allowed_identities
-        
+
         # Audit log
         self._audit_log_event({
             'event': 'access_check',
@@ -396,21 +396,21 @@ class KeyManagementSystem:
             'granted': has_access,
             'timestamp': datetime.utcnow().isoformat()
         })
-        
+
         return has_access
 
     def export_audit_log(self, format: str = 'json') -> str:
         """
         Export audit log for SIEM integration
-        
+
         Args:
             format: Export format (json, csv, syslog)
-            
+
         Returns:
             str: Path to exported file
         """
         timestamp = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
-        
+
         if format == 'json':
             output_path = os.path.join(self.audit_dir, f'audit_log_{timestamp}.json')
             with open(output_path, 'w') as f:
@@ -425,14 +425,14 @@ class KeyManagementSystem:
                     writer.writerows(self.audit_log)
         else:
             raise ValueError(f"Unsupported export format: {format}")
-        
+
         logger.info(f"Exported audit log to {output_path}")
         return output_path
 
-    def _audit_log_event(self, event: Dict[str, Any]):
+    def _audit_log_event(self, event: dict[str, Any]):
         """Add event to audit log"""
         self.audit_log.append(event)
-        
+
         # Write to file immediately for durability
         log_file = os.path.join(self.audit_dir, 'current.jsonl')
         with open(log_file, 'a') as f:
@@ -443,7 +443,7 @@ class KeyManagementSystem:
         keys_file = os.path.join(self.data_dir, 'keys.json')
         if os.path.exists(keys_file):
             try:
-                with open(keys_file, 'r') as f:
+                with open(keys_file) as f:
                     data = json.load(f)
                     self.keys = {
                         k: KeyMetadata.from_dict(v)
@@ -464,11 +464,11 @@ class KeyManagementSystem:
         except Exception as e:
             logger.error(f"Failed to save keys: {e}")
 
-    def get_key_metadata(self, key_id: str) -> Optional[KeyMetadata]:
+    def get_key_metadata(self, key_id: str) -> KeyMetadata | None:
         """Get metadata for a key"""
         return self.keys.get(key_id)
 
-    def list_keys(self, status: Optional[KeyStatus] = None) -> List[KeyMetadata]:
+    def list_keys(self, status: KeyStatus | None = None) -> list[KeyMetadata]:
         """List all keys, optionally filtered by status"""
         if status:
             return [m for m in self.keys.values() if m.status == status]
@@ -478,7 +478,7 @@ class KeyManagementSystem:
         """Generate key in AWS KMS"""
         key_spec = 'SYMMETRIC_DEFAULT' if key_type == KeyType.SYMMETRIC else 'RSA_4096'
         key_usage = 'ENCRYPT_DECRYPT' if key_type == KeyType.ENCRYPTION else 'SIGN_VERIFY'
-        
+
         response = self.kms_client.create_key(
             Description=f"Project-AI Key: {key_id}",
             KeyUsage=key_usage,
@@ -489,26 +489,26 @@ class KeyManagementSystem:
                 {'TagKey': 'KeyType', 'TagValue': key_type.value}
             ]
         )
-        
+
         key_arn = response['KeyMetadata']['Arn']
-        
+
         # Create alias
         self.kms_client.create_alias(
             AliasName=f"alias/project-ai/{key_id}",
             TargetKeyId=response['KeyMetadata']['KeyId']
         )
-        
+
         logger.info(f"Created AWS KMS key: {key_arn}")
         return key_arn
 
     def _generate_gcp_key(self, key_id: str, key_type: KeyType) -> str:
         """Generate key in GCP KMS"""
         from google.cloud import kms
-        
+
         # Create key ring if not exists
         key_ring_id = self.config.get('gcp_key_ring', 'project-ai-keys')
         parent = f"projects/{self.gcp_project_id}/locations/{self.gcp_location}"
-        
+
         try:
             self.kms_client.create_key_ring(
                 request={
@@ -519,14 +519,14 @@ class KeyManagementSystem:
         except Exception:
             # Key ring may already exist
             pass
-        
+
         # Create key
         key_ring_name = f"{parent}/keyRings/{key_ring_id}"
-        
+
         purpose = kms.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT
         if key_type == KeyType.SIGNING:
             purpose = kms.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_SIGN
-        
+
         crypto_key = self.kms_client.create_crypto_key(
             request={
                 "parent": key_ring_name,
@@ -546,17 +546,15 @@ class KeyManagementSystem:
                 }
             }
         )
-        
+
         logger.info(f"Created GCP KMS key: {crypto_key.name}")
         return crypto_key.name
 
     def _generate_azure_key(self, key_id: str, key_type: KeyType) -> str:
         """Generate key in Azure Key Vault"""
-        from azure.keyvault.keys import KeyType as AzureKeyType
-        
-        azure_key_type = AzureKeyType.rsa
+
         key_size = 4096
-        
+
         key = self.kms_client.create_rsa_key(
             name=key_id,
             size=key_size,
@@ -566,17 +564,17 @@ class KeyManagementSystem:
                 'key-type': key_type.value
             }
         )
-        
+
         logger.info(f"Created Azure Key Vault key: {key.id}")
         return key.id
 
     def _generate_hsm_key(self, key_id: str, key_type: KeyType) -> int:
         """Generate key in HSM via PKCS#11"""
         import PyKCS11
-        
+
         session = self.pkcs11_lib.openSession(self.hsm_slot)
         session.login(self.hsm_pin)
-        
+
         # Generate RSA key pair
         public_template = [
             (PyKCS11.CKA_CLASS, PyKCS11.CKO_PUBLIC_KEY),
@@ -589,7 +587,7 @@ class KeyManagementSystem:
             (PyKCS11.CKA_WRAP, True),
             (PyKCS11.CKA_LABEL, key_id)
         ]
-        
+
         private_template = [
             (PyKCS11.CKA_CLASS, PyKCS11.CKO_PRIVATE_KEY),
             (PyKCS11.CKA_TOKEN, True),
@@ -599,14 +597,14 @@ class KeyManagementSystem:
             (PyKCS11.CKA_UNWRAP, True),
             (PyKCS11.CKA_LABEL, key_id)
         ]
-        
+
         (public_key, private_key) = session.generateKeyPair(
             public_template,
             private_template
         )
-        
+
         session.logout()
         session.closeSession()
-        
+
         logger.info(f"Created HSM key: {key_id}")
         return private_key

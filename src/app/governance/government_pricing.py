@@ -6,7 +6,6 @@ Implements progressive seat-based pricing for government tier:
 - Base pricing: $2,500/month or $10,000/year (1-25 seats)
 """
 
-import math
 from dataclasses import dataclass
 from enum import StrEnum
 

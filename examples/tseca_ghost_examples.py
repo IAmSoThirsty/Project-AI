@@ -20,12 +20,12 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 from src.app.security.tseca_ghost_protocol import (
-    GhostProtocol,
     TSECA,
+    GhostProtocol,
     HeartbeatMonitor,
     TSECA_Ghost_System,
-    shamir_split,
     shamir_reconstruct,
+    shamir_split,
 )
 
 # Configure logging
@@ -146,8 +146,8 @@ def example_5_unified_system():
     system = TSECA_Ghost_System()
     print("Unified system initialized with:")
     print(f"  - Ghost Protocol (identity: {system.ghost.identity_hash[:32]}...)")
-    print(f"  - T-SECA Hardening")
-    print(f"  - Heartbeat Monitor")
+    print("  - T-SECA Hardening")
+    print("  - Heartbeat Monitor")
     print(f"  - {len(system.shards)} Identity Shards")
 
     # Perform secure operations
