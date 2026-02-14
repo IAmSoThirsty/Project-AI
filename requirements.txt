@@ -19,6 +19,7 @@ python-multipart==0.0.22
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 cryptography==42.0.4
+asn1crypto>=1.5.1  # RFC 3161 TSA support
 
 # HTTP client
 httpx==0.26.0
@@ -49,3 +50,7 @@ mypy==1.8.0
 cbor2>=5.6.0  # Canonical binary encoding for hash integrity (updated for security)
 jsonschema>=4.23.0  # Schema validation (updated for security)
 pyyaml>=6.0.2  # Configuration loading (updated for security)
+
+# Constitutional Sovereignty - Off-Machine Backup (VECTOR 5, 10, 11)
+ipfshttpclient==0.8.0a2  # IPFS distributed immutable storage
+boto3==1.34.24  # AWS S3 with WORM (Write-Once-Read-Many) object lock

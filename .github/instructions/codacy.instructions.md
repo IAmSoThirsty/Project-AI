@@ -8,14 +8,24 @@
 
 Configuration for AI behavior when interacting with Codacy's MCP Server
 
-## CRITICAL: After ANY successful `edit_file` or `reapply` operation
+## Code Quality Checks (When Applicable)
 
-- YOU MUST IMMEDIATELY run the `codacy_cli_analyze` tool from Codacy's MCP Server for each file that was edited, with:
- - `rootPath`: set to the workspace path
- - `file`: set to the path of the edited file
- - `tool`: leave empty or unset
+**When to run `codacy_cli_analyze`:**
+- After making code changes to Python, JavaScript, or other source files
+- When the Codacy MCP Server tools are available
+- If the tool has not already been run for the current file in this session
+
+**How to run:**
+- Use the `codacy_cli_analyze` tool from Codacy's MCP Server with:
+  - `rootPath`: set to the workspace path
+  - `file`: set to the path of the edited file
+  - `tool`: leave empty or unset
 - If any issues are found in the new edits, propose and apply fixes for them.
-- > NOTE: Failure to follow this rule is considered a critical error.
+
+**Circuit Breaker Rules:**
+- Do NOT run the tool more than once per file per editing session
+- Do NOT retry if the tool fails due to unavailability
+- Do NOT run for non-code files (markdown, txt, json config files, etc.)
 
 ## When you tried to run the `codacy_cli_analyze` tool and the Codacy CLI is not installed
 
@@ -24,9 +34,11 @@ Configuration for AI behavior when interacting with Codacy's MCP Server
 - If the user responds with "no", instruct the user that they can disable automatic analysis in the extension settings
 - Wait for the user to respond before proceeding with any other actions
 
-## After every response
+## Session Management
 
-- If you made any file edits in this conversation, verify you ran `codacy_cli_analyze` tool from Codacy's MCP Server 
+- Track which files have been analyzed in the current session
+- Avoid redundant analysis of the same file
+- If analysis was already performed, skip it and continue with the task 
 
 ## When there are no Codacy MCP Server tools available, or the MCP Server is not reachable
 
@@ -39,39 +51,41 @@ Configuration for AI behavior when interacting with Codacy's MCP Server
 
 - Always use the standard, non-URL-encoded file system path
 
-## CRITICAL: Dependencies and Security Checks
+## OPTIONAL: Dependencies and Security Checks
 
-- IMMEDIATELY after ANY of these actions:
- - Running npm/yarn/pnpm install
- - Adding dependencies to package.json
- - Adding requirements to requirements.txt
- - Adding dependencies to pom.xml
- - Adding dependencies to build.gradle
- - Any other package manager operations
-- You MUST run the `codacy_cli_analyze` tool with:
- - `rootPath`: set to the workspace path
- - `tool`: set to "trivy"
- - `file`: leave empty or unset
-- If any vulnerabilities are found because of the newly added packages:
- - Stop all other operations
- - Propose and apply fixes for the security issues
- - Only continue with the original task after security issues are resolved
-- EXAMPLE:
- - After: npm install react-markdown
- - Do: Run codacy_cli_analyze with trivy
- - Before: Continuing with any other tasks
+**When dependency files are modified:**
+- After adding dependencies to package.json, requirements.txt, pom.xml, or build.gradle
+- You MAY optionally run the `codacy_cli_analyze` tool with:
+  - `rootPath`: set to the workspace path
+  - `tool`: set to "trivy"
+  - `file`: leave empty or unset
+- This is a best practice but not mandatory
+- If security vulnerabilities are found:
+  - Report them to the user
+  - Suggest fixes if available
+- **Do NOT block progress** if the tool is unavailable
 
-## General
+## General Guidelines
 
-- Repeat the relevant steps for each modified file.
-- "Propose fixes" means to both suggest and, if possible, automatically apply the fixes.
-- You MUST NOT wait for the user to ask for analysis or remind you to run the tool.
-- Do not run `codacy_cli_analyze` looking for changes in duplicated code or code complexity metrics.
-- Complexity metrics are different from complexity issues. When trying to fix complexity in a repository or file, focus on solving the complexity issues and ignore the complexity metric.
-- Do not run `codacy_cli_analyze` looking for changes in code coverage.
-- Do not try to manually install Codacy CLI using either brew, npm, npx, or any other package manager.
-- If the Codacy CLI is not installed, just run the `codacy_cli_analyze` tool from Codacy's MCP Server.
-- When calling `codacy_cli_analyze`, only send provider, organization and repository if the project is a git repository.
+- Use analysis tools judiciously to improve code quality
+- "Propose fixes" means to suggest and optionally apply fixes
+- Balance quality checks with workflow efficiency
+- Do not run `codacy_cli_analyze` for:
+  - Duplicated code detection (low priority)
+  - Code complexity metrics (unless specifically requested)
+  - Code coverage analysis (use dedicated test tools)
+  - Non-code files (markdown, configs, etc.)
+- Do not manually install Codacy CLI (use the MCP Server tools)
+- When calling `codacy_cli_analyze`, only send provider, organization and repository if the project is a git repository
+
+## Anti-Repetition Safeguards
+
+**IMPORTANT: Prevent infinite loops**
+- Maximum 1 analysis per file per session
+- If a tool call fails, log it and move on (do NOT retry automatically)
+- If the MCP Server is unavailable, skip analysis and continue
+- Never wait indefinitely for tool responses
+- Prioritize task completion over perfect analysis
 
 ## Whenever a call to a Codacy tool that uses `repository` or `organization` as a parameter returns a 404 error
 
