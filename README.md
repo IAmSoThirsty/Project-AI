@@ -18,7 +18,7 @@
 ---
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE-APACHE)
+[![Dual License](https://img.shields.io/badge/License-Dual%20MIT%2FApache-blue.svg)](docs/legal/LICENSE_README.md)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![Production Status](https://img.shields.io/badge/status-production%20ready-brightgreen.svg)](PROJECT_STATUS.md)
 [![GitHub Workflow Status](https://img.shields.io/badge/CI-passing-success)](https://github.com/IAmSoThirsty/Project-AI/actions)
@@ -77,7 +77,7 @@
 - ✅ Your data stays your data
 - ✅ **Asimov's Four Laws enforced in code**
 - ✅ Zero vendor lock-in
-- ✅ 100% open source (MIT/Apache 2.0)
+- ✅ 100% open source (MIT + comprehensive governance)
 - ✅ Cryptographic audit ledger (SHA-256 + Ed25519)
 - ✅ Immutable governance framework
 
@@ -706,8 +706,8 @@ Project-AI operates under a comprehensive **10-layer licensing framework**:
 
 ### Copyright Licenses
 
-1. **[MIT License](LICENSE)** - General codebase
-2. **[Apache 2.0 License](LICENSE-APACHE)** - Novel/patent components
+1. **[MIT License](LICENSE)** - Primary license for the codebase
+2. **Dual Licensing Framework** - See [docs/legal/LICENSE_README.md](docs/legal/LICENSE_README.md) for component-specific licenses
 
 ### Governance License
 
