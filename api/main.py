@@ -35,7 +35,7 @@ enable_rate_limiting = os.getenv("ENABLE_RATE_LIMITING", "true").lower() == "tru
 if enable_rate_limiting:
     try:
         from api.rate_limiter import RateLimitMiddleware
-        
+
         rate_limit = int(os.getenv("RATE_LIMIT_PER_MINUTE", "60"))
         app.add_middleware(
             RateLimitMiddleware,
@@ -52,7 +52,7 @@ enable_validation = os.getenv("ENABLE_REQUEST_VALIDATION", "true").lower() == "t
 if enable_validation:
     try:
         from api.request_validator import RequestValidationMiddleware
-        
+
         app.add_middleware(
             RequestValidationMiddleware,
             exempt_paths=["/docs", "/openapi.json", "/metrics"]
@@ -66,7 +66,7 @@ enable_observability = os.getenv("ENABLE_OBSERVABILITY", "true").lower() == "tru
 if enable_observability:
     try:
         from api.observability import setup_observability
-        
+
         setup_observability(app)
         print("[OK] Observability (tracing, metrics) enabled")
     except ImportError as e:

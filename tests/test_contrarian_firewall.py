@@ -14,12 +14,12 @@ import asyncio
 from datetime import datetime
 
 import pytest
-
 from integrations.thirsty_lang_security import (
     OperationMode,
     SecurityConfig,
     ThirstyLangSecurityBridge,
 )
+
 from src.app.security.contrarian_firewall_orchestrator import (
     ContrariaNFirewallOrchestrator,
     FirewallMode,

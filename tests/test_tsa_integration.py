@@ -20,7 +20,6 @@ Attack Simulations:
 - Genesis continuity violation
 """
 
-import hashlib
 import tempfile
 import threading
 import time
@@ -32,19 +31,22 @@ import pytest
 try:
     from app.governance.sovereign_audit_log import SovereignAuditLog
     from app.governance.tsa_anchor_manager import (
-        TSAAnchorManager,
         AnchorChainError,
         MonotonicViolationError,
+        TSAAnchorManager,
     )
     from app.governance.tsa_provider import TSAProvider, TSAToken, TSAVerificationError
 except ImportError:
     from src.app.governance.sovereign_audit_log import SovereignAuditLog
     from src.app.governance.tsa_anchor_manager import (
-        TSAAnchorManager,
         AnchorChainError,
         MonotonicViolationError,
+        TSAAnchorManager,
     )
-    from src.app.governance.tsa_provider import TSAProvider, TSAToken, TSAVerificationError
+    from src.app.governance.tsa_provider import (
+        TSAProvider,
+        TSAVerificationError,
+    )
 
 
 class TestTSAProvider:
@@ -156,7 +158,9 @@ class TestTSAAnchorManager:
     def test_anchor_creation(self):
         """Test creating TSA anchor with Genesis binding."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+            from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+                Ed25519PrivateKey,
+            )
 
             # Generate test Genesis key
             genesis_key = Ed25519PrivateKey.generate()
@@ -187,7 +191,9 @@ class TestTSAAnchorManager:
     def test_monotonic_timestamp_enforcement(self):
         """Test that non-monotonic timestamps are rejected (VM rollback simulation)."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+            from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+                Ed25519PrivateKey,
+            )
 
             genesis_key = Ed25519PrivateKey.generate()
             anchor_path = Path(tmpdir) / "anchors.json"
@@ -196,11 +202,11 @@ class TestTSAAnchorManager:
 
             try:
                 # Create first anchor
-                anchor1 = manager.create_anchor("a" * 64, "GENESIS-MONO1")
+                manager.create_anchor("a" * 64, "GENESIS-MONO1")
                 time.sleep(1)  # Ensure time progresses
 
                 # Create second anchor
-                anchor2 = manager.create_anchor("b" * 64, "GENESIS-MONO1")
+                manager.create_anchor("b" * 64, "GENESIS-MONO1")
 
                 # Verify chain
                 is_valid, msg = manager.verify_chain(genesis_key.public_key())
@@ -224,7 +230,9 @@ class TestTSAAnchorManager:
     def test_chain_integrity_verification(self):
         """Test anchor chain integrity with previous hash linking."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+            from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+                Ed25519PrivateKey,
+            )
 
             genesis_key = Ed25519PrivateKey.generate()
             anchor_path = Path(tmpdir) / "anchors.json"
@@ -256,7 +264,9 @@ class TestTSAAnchorManager:
     def test_genesis_signature_binding(self):
         """Test that anchors are bound to Genesis identity."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+            from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+                Ed25519PrivateKey,
+            )
 
             genesis_key1 = Ed25519PrivateKey.generate()
             genesis_key2 = Ed25519PrivateKey.generate()  # Different key
@@ -283,7 +293,9 @@ class TestTSAAnchorManager:
     def test_anchor_query_methods(self):
         """Test anchor query methods."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+            from cryptography.hazmat.primitives.asymmetric.ed25519 import (
+                Ed25519PrivateKey,
+            )
 
             genesis_key = Ed25519PrivateKey.generate()
             anchor_path = Path(tmpdir) / "anchors.json"

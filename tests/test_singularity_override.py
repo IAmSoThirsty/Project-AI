@@ -20,7 +20,6 @@ from pathlib import Path
 import pytest
 
 from governance.singularity_override import (
-    OverrideRecord,
     OverrideType,
     SingularityOverride,
     SystemState,
@@ -467,7 +466,7 @@ class TestOverrideChainIntegrity:
         )
 
         # Tamper with ledger
-        with open(override_system.override_ledger_path, "r") as f:
+        with open(override_system.override_ledger_path) as f:
             lines = f.readlines()
 
         # Modify the hash

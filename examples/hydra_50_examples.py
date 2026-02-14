@@ -66,7 +66,7 @@ def example_realtime_monitoring():
     engine = HYDRA50Engine()
 
     # Monitor for 10 seconds
-    for i in range(5):
+    for _i in range(5):
         status = engine.get_system_status()
         logger.info(
             "Active: %s, Critical: %s",
@@ -224,7 +224,7 @@ def example_alert_management():
         source="system_monitor",
     )
 
-    alert2 = telemetry.alert_manager.create_alert(
+    telemetry.alert_manager.create_alert(
         severity=AlertSeverity.CRITICAL,
         title="Scenario Escalation",
         message="Scenario reached critical level",
@@ -323,13 +323,13 @@ def example_performance_optimization():
 
     # First call (slow)
     start = time.time()
-    result1 = expensive_computation(10)
+    expensive_computation(10)
     time1 = time.time() - start
     logger.info("First call: %ss", time1)
 
     # Second call (cached, fast)
     start = time.time()
-    result2 = expensive_computation(10)
+    expensive_computation(10)
     time2 = time.time() - start
     logger.info("Second call (cached): %ss", time2)
 

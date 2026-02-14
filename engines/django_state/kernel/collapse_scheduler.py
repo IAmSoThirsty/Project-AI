@@ -134,12 +134,11 @@ class CollapseScheduler:
         if (
             state.moral_injury.value
             > self.auto_schedule_thresholds["moral_injury_critical"]
+        ) and not any(
+            c.collapse_type == "moral_injury_critical" and c.triggered
+            for c in self.triggered_collapses
         ):
-            if not any(
-                c.collapse_type == "moral_injury_critical" and c.triggered
-                for c in self.triggered_collapses
-            ):
-                triggered.append("moral_injury_critical")
+            triggered.append("moral_injury_critical")
 
         # Check legitimacy failure
         if state.legitimacy.value < self.auto_schedule_thresholds["legitimacy_failure"]:
@@ -153,12 +152,11 @@ class CollapseScheduler:
         if (
             state.epistemic_confidence.value
             < self.auto_schedule_thresholds["epistemic_collapse"]
+        ) and not any(
+            c.collapse_type == "epistemic_collapse" and c.triggered
+            for c in self.triggered_collapses
         ):
-            if not any(
-                c.collapse_type == "epistemic_collapse" and c.triggered
-                for c in self.triggered_collapses
-            ):
-                triggered.append("epistemic_collapse")
+            triggered.append("epistemic_collapse")
 
         return triggered
 
