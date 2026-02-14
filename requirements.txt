@@ -24,6 +24,8 @@ asn1crypto>=1.5.1  # RFC 3161 TSA support
 # HTTP client
 httpx==0.26.0
 requests==2.31.0
+rfc3161ng>=2.1.2
+pyasn1>=0.4.8
 
 # Save points system dependencies
 # Note: uses Python standard library only

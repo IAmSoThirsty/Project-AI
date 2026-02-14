@@ -493,6 +493,67 @@ def read_audit(limit: int = 50):
 
 
 # ==========================================================
+# Explainability Endpoint
+# ==========================================================
+
+
+@app.get("/explain/{action_id}")
+def explain_decision(action_id: str):
+    """Explain why a governance decision was made."""
+    try:
+        from app.core.explainability_agent import get_explainability_agent
+        
+        agent = get_explainability_agent()
+        explanation = agent.explain_decision(action_id)
+        
+        return {
+            "action_id": explanation.action_id,
+            "timestamp": explanation.timestamp,
+            "summary": explanation.summary,
+            "reasoning": explanation.detailed_reasoning,
+            "laws_evaluated": explanation.laws_evaluated,
+            "moral_claims": explanation.moral_claims_detected,
+            "outcome": explanation.outcome,
+            "recommendation": explanation.recommendation
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except ImportError:
+        raise HTTPException(
+            status_code=500, 
+            detail="Explainability Agent not available"
+        )
+
+
+@app.get("/explain")
+def explain_recent_decisions(limit: int = 10):
+    """Explain recent governance decisions."""
+    try:
+        from app.core.explainability_agent import get_explainability_agent
+        
+        agent = get_explainability_agent()
+        explanations = agent.explain_latest_decisions(limit=limit)
+        
+        return {
+            "count": len(explanations),
+            "explanations": [
+                {
+                    "action_id": ex.action_id,
+                    "timestamp": ex.timestamp,
+                    "summary": ex.summary,
+                    "outcome": ex.outcome
+                }
+                for ex in explanations
+            ]
+        }
+    except ImportError:
+        raise HTTPException(
+            status_code=500,
+            detail="Explainability Agent not available"
+        )
+
+
+# ==========================================================
 # Governed Execution Endpoint
 # ==========================================================
 

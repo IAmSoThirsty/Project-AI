@@ -268,7 +268,7 @@ Project-AI operates under a **complete, layered, non-redundant, enforceable lice
             └─ [10] License Manifest ────────► Supremacy order
 ```
 
-###  License Supremacy Order
+### License Supremacy Order
 
 When conflicts arise:
 
@@ -365,26 +365,26 @@ docker pull projectai/projectai:latest && docker run -it projectai/projectai
 
 ```bash
 # 1. Accept User Agreement (cryptographic)
-project-ai accept-agreement
+python scripts/tools/project_ai_cli.py accept-agreement
 
 # 2. Launch desktop app
 python -m src.app.main
 
 # OR: Launch API server
-uvicorn api.main:app --host 0.0.0.0 --port 8000
+python scripts/start_api.py
 ```
 
 ### Verify Installation
 
 ```bash
 # Check acceptance ledger integrity
-project-ai verify-ledger
+python scripts/tools/project_ai_cli.py verify-ledger
 
 # Test governance enforcement
-project-ai test-governance
+python scripts/tools/project_ai_cli.py test-governance
 
 # View your acceptance record
-project-ai show-acceptance --user-id your-email@example.com
+python scripts/tools/project_ai_cli.py show-acceptance --user-id your-email@example.com
 ```
 
 ---
@@ -477,6 +477,7 @@ python validate_tk8s.py
 | **Lifetime** | $25,000 one-time | Permanent rights, eliminate recurring costs |
 
 **What You Get:**
+
 - ✅ Unlimited seats per entity (no per-user fees)
 - ✅ Full commercial use rights
 - ✅ Team collaboration and cloud sync
@@ -485,6 +486,7 @@ python validate_tk8s.py
 - ✅ 99.5% uptime SLA
 
 **Example Value:**
+
 - 10-person team: $1,000/month = $100/person/month
 - 100-person team: $1,000/month = $10/person/month
 - **No per-seat penalties as you grow**
@@ -496,6 +498,7 @@ python validate_tk8s.py
 **For government, military, and defense.** Subscription only (requires ongoing compliance operations).
 
 **Base Pricing (1-25 seats):**
+
 - Monthly: $2,500/month
 - Yearly: $10,000/year (67% savings vs monthly)
 
@@ -513,10 +516,12 @@ Government pricing increases by 15% for every 25 seats:
 | 151+ seats | Custom pricing | Custom pricing | Contact sales |
 
 **Additional Surcharges:**
+
 - Classified Deployment: +$1,000/month
 - Air-gapped/Tactical: +$1,500/month
 
 **What You Get:**
+
 - ✅ Specified seat count with progressive pricing
 - ✅ FIPS 140-2/3 Level 3+ HSM (mandatory)
 - ✅ FedRAMP High authorization support
@@ -544,6 +549,7 @@ All six systems implemented in `src/app/core/ai_systems.py` for cohesion:
 **Purpose:** Immutable ethics enforcement via hierarchical rule validation
 
 **Example Usage:**
+
 ```python
 from app.core.ai_systems import FourLaws
 
@@ -564,6 +570,7 @@ else:
 ```
 
 **Key Functions:**
+
 - `validate_action(action, context)` - Check action against Four Laws hierarchy
 - `get_law_hierarchy()` - Return ordered list of laws (0→1→2→3)
 - `explain_decision(action, decision)` - Provide reasoning trace
@@ -577,6 +584,7 @@ else:
 **Purpose:** 8 personality traits, mood tracking, persistent behavioral state
 
 **Example Usage:**
+
 ```python
 from app.core.ai_systems import AIPersona
 
@@ -599,6 +607,7 @@ print(f"Interaction count: {profile['interactions']}")
 ```
 
 **Key Functions:**
+
 - `update_trait(trait_name, value)` - Modify personality dimension (0.0-1.0)
 - `set_mood(mood, intensity)` - Set current emotional state
 - `get_personality_profile()` - Get complete personality snapshot
@@ -613,6 +622,7 @@ print(f"Interaction count: {profile['interactions']}")
 **Purpose:** Conversation logging, categorized knowledge base, persistent learning
 
 **Example Usage:**
+
 ```python
 from app.core.ai_systems import MemoryExpansionSystem
 
@@ -644,6 +654,7 @@ results = memory.search_conversations(query="robotics", limit=5)
 ```
 
 **Knowledge Categories:**
+
 - `general` - Common facts and information
 - `technical` - Programming, systems, algorithms
 - `ethical` - Moral principles and guidelines
@@ -660,6 +671,7 @@ results = memory.search_conversations(query="robotics", limit=5)
 **Purpose:** Human-in-the-loop approval for learning, Black Vault for denied content
 
 **Example Usage:**
+
 ```python
 from app.core.ai_systems import LearningRequestManager
 
@@ -695,6 +707,7 @@ if is_blocked:
 ```
 
 **Request States:**
+
 - `pending` - Awaiting review
 - `approved` - Cleared for learning
 - `denied` - Rejected (fingerprint added to Black Vault)
@@ -709,6 +722,7 @@ if is_blocked:
 **Purpose:** Master password protection, audit logging, emergency overrides
 
 **Example Usage:**
+
 ```python
 from app.core.ai_systems import CommandOverrideSystem
 
@@ -735,6 +749,7 @@ override.emergency_lockdown(reason="Security breach detected")
 ```
 
 **Key Functions:**
+
 - `set_master_password(password)` - Configure SHA-256 hashed master password
 - `verify_override(password)` - Check password and log attempt
 - `execute_privileged_action(action)` - Run protected operation
@@ -752,6 +767,7 @@ override.emergency_lockdown(reason="Security breach detected")
 **Purpose:** Simple plugin system with enable/disable control
 
 **Example Usage:**
+
 ```python
 from app.core.ai_systems import PluginManager
 
@@ -785,6 +801,7 @@ plugin_mgr.disable_plugin("data_analyzer")
 ```
 
 **Built-in Plugins:**
+
 - `image_generator` - Stable Diffusion + DALL-E 3 image generation
 - `data_analyzer` - CSV/XLSX/JSON analysis with K-means clustering
 - `learning_paths` - OpenAI-powered learning path generation
@@ -797,6 +814,63 @@ plugin_mgr.disable_plugin("data_analyzer")
 ---
 
 ### 🛡️ Security & Governance Features
+
+---
+
+## 📱 Mobile & VR Extensions
+
+### Project-AI Mobile (Android)
+
+**Native Governance Interface**
+
+- **Dashboard**: Real-time monitoring of Triumvirate health.
+- **Intent Submission**: Submit actions for governance review directly from your phone.
+- **Audit Viewer**: Immutable logs in your pocket.
+- **Tech Stack**: Native Android (Java), programmatic UI, Retrofit.
+
+### Project-AI Presence (Unity VR)
+
+**Embodied AI Intelligence**
+
+- **Reactive Presence**: The AI manifests as a dynamic orb that responds to system state.
+- **Genesis Animation**: Witness the birth of the AI entity through particle coalescing.
+- **Emotional Visualization**: Visual cues reflect the AI's internal state (e.g., Green=Safe, Red=Threat).
+- **Tech Stack**: Unity 2022+, C#, Shader Graph.
+
+---
+
+## ⚖️ Enhanced Compliance & Security
+
+### Jurisdictional Awareness
+
+Project-AI now enforces compliance with major global regulations:
+
+- **US CCPA**: California Consumer Privacy Act
+- **GDPR / UK DPA 2018**: General Data Protection Regulation
+- **Canada PIPEDA**: Personal Information Protection and Electronic Documents Act
+- **Australia Privacy Act**: Australian Privacy Principles
+
+### Hydra-50 Incident Response
+
+**Active Defense System**
+
+- **Automated Countermeasures**: Immediate reaction to security threats.
+- **Threat Levels**: Low (Log) → High (Throttle) → Critical (Lockdown).
+- **Integration**: Wired directly into the Enforcement Gateway.
+
+### Immutable Accountability
+
+- **RFC 3161 Timestamping**: Cryptographic proof of *when* actions occurred.
+- **Hash-Chained Logs**: Blockchain-style audit trails that cannot be altered without detection.
+
+### Explainability & Transparency
+
+**Ask "Why?"**
+
+- **Explainability Agent**: Query any governance decision to understand the reasoning.
+- **API Endpoints**: `GET /explain/{action_id}` for specific decisions, `GET /explain` for recent history.
+- **Law Breakdown**: See which of the Four Laws were evaluated and why actions were allowed or blocked.
+- **Human Narratives**: Technical decisions translated into plain language.
 
 [![Security](https://img.shields.io/badge/Security-ASL--3_Defense-critical.svg)](#)
 [![Encryption](https://img.shields.io/badge/Encryption-AES--256%2BChaCha20-blue.svg)](#)
@@ -837,11 +911,13 @@ if decision['final_decision'] == 'ALLOW':
 ```
 
 **Agents:**
+
 - **GALAHAD** - Ethics guardian, validates against Four Laws
 - **CERBERUS** - Threat detection, adversarial pattern recognition
 - **CODEX DEUS** - Final arbitrator, applies TARL rules
 
 **Decision Outcomes:**
+
 - `ALLOW` - Full approval, action executes
 - `DENY` - Rejection, logged as violation
 - `DEGRADE` - Limited execution with enhanced monitoring
@@ -885,6 +961,7 @@ if not is_valid:
 ```
 
 **Encryption Options:**
+
 - **AES-256-GCM** - Government-grade symmetric encryption
 - **ChaCha20-Poly1305** - High-performance stream cipher
 - **Fernet** - Symmetric encryption with timestamp verification
@@ -892,6 +969,7 @@ if not is_valid:
 - **RSA-4096** - Asymmetric encryption for key exchange
 
 **Hardware Security:**
+
 - TPM 2.0 integration for key storage
 - HSM support (FIPS 140-2 Level 3+)
 - Hardware key derivation (PBKDF2, Argon2)
@@ -952,6 +1030,7 @@ with open("acceptance_proof.json", "w") as f:
 ```
 
 **Ledger Properties:**
+
 - **Immutable** - Append-only, tamper-evident
 - **Cryptographic** - Ed25519 signatures, SHA-256 hash chains
 - **Timestamped** - RFC 3161 trusted timestamps
@@ -959,6 +1038,7 @@ with open("acceptance_proof.json", "w") as f:
 - **Court-Grade** - Legally admissible evidence format
 
 **Use Cases:**
+
 - User agreement acceptance
 - License acceptance tracking
 - Data processing consent (GDPR)
@@ -1057,6 +1137,7 @@ for result in results:
 ```
 
 **Memory Features:**
+
 - **Decay & Reinforcement** - Memories fade over time unless accessed
 - **Importance Weighting** - Critical memories preserved longer
 - **Associative Recall** - Memories linked by semantic relationships
@@ -1138,12 +1219,14 @@ for entry in history:
 ```
 
 **Learning Modes:**
+
 - **Automatic** - Ingest facts from conversations (low-risk topics)
 - **Supervised** - Request approval for sensitive topics
 - **Interactive** - Ask clarifying questions before learning
 - **Batch** - Process large datasets with summarization
 
 **Safety Features:**
+
 - Black Vault fingerprinting (denied content permanently blocked)
 - Content filtering (weapons, illegal activities, harmful advice)
 - Source verification (trust score for information sources)
@@ -1223,12 +1306,14 @@ print(f"Index size: {stats['index_size_mb']} MB")
 ```
 
 **Vector Store Options:**
+
 - **ChromaDB** - Local, lightweight, embedded
 - **Pinecone** - Cloud-hosted, scalable, production-ready
 - **FAISS** - Meta's similarity search library
 - **Weaviate** - GraphQL-based vector database
 
 **Embedding Models:**
+
 - OpenAI: `text-embedding-ada-002`, `text-embedding-3-small`, `text-embedding-3-large`
 - Open Source: `sentence-transformers`, `all-MiniLM-L6-v2`
 
@@ -1311,6 +1396,7 @@ print(f"\nFinal answer: {reasoning['final_answer']}")
 ```
 
 **Analysis Capabilities:**
+
 - Statistical analysis (mean, median, std, quartiles)
 - K-means clustering
 - Correlation matrices
@@ -1383,6 +1469,7 @@ print(f"Pipeline completed: {result['status']}")
 ```
 
 **Supported Formats:**
+
 - CSV (comma-separated values)
 - XLSX (Microsoft Excel)
 - JSON (nested structures)
@@ -1470,11 +1557,13 @@ print(f"  Cost: ${comparison['openai']['cost']}")
 ```
 
 **Backends:**
+
 - **Hugging Face** - Stable Diffusion 2.1 (free, local, slower)
 - **OpenAI** - DALL-E 3 (paid, cloud, faster, higher quality)
 
 **Content Filtering:**
 15 blocked keyword categories:
+
 - Violence, weapons, explicit content
 - Illegal activities, drugs, self-harm
 - Hate speech, harassment, impersonation
@@ -1482,6 +1571,7 @@ print(f"  Cost: ${comparison['openai']['cost']}")
 
 **GUI Integration:**
 Desktop app includes dual-page image generation interface:
+
 - Left: Tron-themed prompt input
 - Right: Image display with zoom, metadata, save/copy
 
@@ -1508,6 +1598,7 @@ python -m src.app.main
 ```
 
 **Features:**
+
 - 🔐 Login page with bcrypt authentication
 - 📊 6-zone dashboard (stats, actions, AI head, chat, response)
 - 🎨 Image generation interface (dual-page layout)
@@ -1517,6 +1608,7 @@ python -m src.app.main
 - ⚙️ Settings and preferences
 
 **UI Components:**
+
 ```python
 from src.app.gui.leather_book_interface import LeatherBookInterface
 from PyQt6.QtWidgets import QApplication
@@ -1549,6 +1641,7 @@ npm run dev
 ```
 
 **API Endpoints:**
+
 ```http
 POST /api/v1/chat
 Content-Type: application/json
@@ -1564,6 +1657,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "response": "Hello! How can I help you today?",
@@ -1581,6 +1675,7 @@ Content-Type: application/json
 ```
 
 **Frontend Technologies:**
+
 - React 18 with hooks
 - Zustand state management
 - Vite build tool
@@ -1632,6 +1727,7 @@ project-ai export --format json --output backup.json
 ```
 
 **Interactive Mode:**
+
 ```bash
 # Launch interactive shell
 project-ai shell
@@ -1674,6 +1770,7 @@ uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
 **REST Endpoints:**
+
 ```
 GET    /api/v1/health              - Health check
 POST   /api/v1/chat                - Send message
@@ -1689,6 +1786,7 @@ POST   /api/v1/accept-agreement    - Accept user agreement
 ```
 
 **GraphQL Schema:**
+
 ```graphql
 type Query {
   chat(message: String!, userId: String!): ChatResponse
@@ -1713,6 +1811,7 @@ type Subscription {
 ```
 
 **Example GraphQL Query:**
+
 ```graphql
 query GetChatHistory {
   conversations(userId: "user123", limit: 10) {
@@ -1732,6 +1831,7 @@ query GetChatHistory {
 ```
 
 **API Authentication:**
+
 ```python
 # API key authentication
 headers = {
@@ -1768,6 +1868,7 @@ Project-AI includes 30+ specialized agents for security, code quality, infrastru
 | **TARLProtector** | Code Protection | Strategic defensive programming, runtime monitoring, stack analysis |
 
 **Example: Run Red Team Attack**
+
 ```python
 from src.app.agents.red_team_agent import RedTeamAgent
 
@@ -1800,6 +1901,7 @@ for vulnerability in red_team.analyze_vulnerabilities(attack_session):
 | **TestQAGenerator** | Test Generation | pytest stub creation, test validation, coverage improvement |
 
 **Example: Auto-fix Vulnerabilities**
+
 ```python
 from src.app.agents.code_adversary_agent import CodeAdversary
 
@@ -1836,6 +1938,7 @@ print(f"Patched: {patch_results['patched_count']}/{patch_results['total_issues']
 | **RollbackAgent** | Incident Response | Integration monitoring, automatic rollbacks, failure detection |
 
 **Example: Enforce Repository Structure**
+
 ```python
 from src.app.agents.codex_deus_maximus import CodexDeusMaximus
 
@@ -1862,6 +1965,7 @@ for violation in validation['violations']:
 | **SandboxWorker** | Resource-Constrained Worker | CPU/memory/FD limits, timeout enforcement, safe builtins |
 
 **Example: Execute Untrusted Code Safely**
+
 ```python
 from src.app.agents.sandbox_runner import SandboxRunner
 
@@ -1899,6 +2003,7 @@ if result['success']:
 | **ExpertAgent** | Elevated Review | Audit review, integration approval, elevated permissions |
 
 **Example: Plan and Execute Complex Task**
+
 ```python
 from src.app.agents.planner_agent import PlannerAgent
 
@@ -1954,12 +2059,14 @@ print(f"Progress: {status['completed_tasks']}/{status['total_tasks']}")
 [![Unlimited](https://img.shields.io/badge/Unlimited-Memory-purple.svg)](#)
 
 **Infrastructure:**
+
 - CPU: 2-4 cores
 - RAM: 4-8GB
 - Storage: 30GB
 - OS: Windows/macOS/Linux
 
 **Deployment:**
+
 ```bash
 pip install project-ai
 project-ai accept-agreement
@@ -1976,12 +2083,14 @@ python -m src.app.main  # Launch desktop app
 [![Shared](https://img.shields.io/badge/Shared-Knowledge-green.svg)](#)
 
 **Infrastructure:**
+
 - CPU: 4-8 cores
 - RAM: 16-32GB
 - Storage: 100GB SSD
 - Server: 1 VM (t3.medium)
 
 **Deployment:**
+
 ```bash
 # Option 1: Shared desktop
 python -m src.app.main --multi-user --port 8000
@@ -2003,11 +2112,13 @@ docker-compose up -d
 [![HA](https://img.shields.io/badge/HA-High_Availability-red.svg)](#)
 
 **Architecture:**
+
 ```
 Load Balancer → API Pods (3-5) → PostgreSQL + Redis
 ```
 
 **Deployment:**
+
 ```bash
 # Kubernetes
 kubectl apply -f k8s/namespace.yaml
@@ -2025,11 +2136,13 @@ kubectl autoscale deployment project-ai-api --cpu-percent=70 --min=3 --max=10
 [![HA](https://img.shields.io/badge/HA-99.95%25_Uptime-success.svg)](#)
 
 **Architecture:**
+
 ```
 Global LB → Multi-region K8s (10-20 pods) → PostgreSQL (multi-region) + Redis (sharded)
 ```
 
 **Deployment:**
+
 ```bash
 cd k8s/tk8s
 kubectl apply -k infrastructure/
@@ -2048,11 +2161,13 @@ python validate_tk8s.py --environment production
 [![HA](https://img.shields.io/badge/HA-99.99%25_Uptime-success.svg)](#)
 
 **Architecture:**
+
 ```
 GeoDNS + Multi-CDN → 4+ Regions (US/EU/APAC/LATAM) → K8s Federation → Global Data Layer
 ```
 
 **Features:**
+
 - Multi-region, multi-cloud
 - Geo-replication
 - 99.99%+ uptime SLA
@@ -2070,6 +2185,7 @@ GeoDNS + Multi-CDN → 4+ Regions (US/EU/APAC/LATAM) → K8s Federation → Glob
 [![FedRAMP](https://img.shields.io/badge/FedRAMP-High-success.svg)](#)
 
 **Special Features:**
+
 - FIPS 140-2/3 Level 3+ HSM
 - FedRAMP High authorization
 - Air-gapped deployment
@@ -2077,6 +2193,7 @@ GeoDNS + Multi-CDN → 4+ Regions (US/EU/APAC/LATAM) → K8s Federation → Glob
 - 24/7/365 cleared support
 
 **Deployment:**
+
 ```bash
 ./install-airgap.sh --mode airgap --classification TOP_SECRET --hsm-required
 # OR
@@ -2096,22 +2213,26 @@ GeoDNS + Multi-CDN → 4+ Regions (US/EU/APAC/LATAM) → K8s Federation → Glob
 ### Encryption Algorithms
 
 **Symmetric:**
+
 - AES-256-GCM (FIPS 140-2)
 - ChaCha20-Poly1305
 - Fernet (timestamp-verified)
 
 **Asymmetric:**
+
 - RSA-4096
 - Ed25519 (fast elliptic curve)
 - ECDH (key exchange)
 
 **Hashing:**
+
 - SHA-256 (ledger chains)
 - SHA-3 (Keccak)
 - BLAKE2 (fast)
 - Argon2 (password hashing)
 
 **Key Derivation:**
+
 - PBKDF2
 - HKDF
 - Scrypt
@@ -2119,6 +2240,7 @@ GeoDNS + Multi-CDN → 4+ Regions (US/EU/APAC/LATAM) → K8s Federation → Glob
 ### Hardware Security
 
 **TPM 2.0 Integration:**
+
 ```python
 from governance.security.tpm_integration import TPMKeyStore
 
@@ -2128,6 +2250,7 @@ signature = tpm.sign(key_handle=key_handle, data=b"Document")
 ```
 
 **HSM Integration (FIPS 140-2 Level 3+):**
+
 ```python
 from governance.security.hsm_integration import HSMKeyStore
 
@@ -2141,12 +2264,14 @@ ciphertext = hsm.encrypt(key_id=key_id, plaintext=b"Sensitive data")
 ## 📖 Documentation
 
 **Project Status:**
+
 - [Current Project Status](PROJECT_STATUS.md) - Complete system status and capabilities
 - [360° Deployable System Standard](docs/DEPLOYABLE_SYSTEM_STANDARD.md) - Comprehensive deployment standard ⭐ NEW
 - [Changelog](CHANGELOG.md) - Version history and recent updates
 - [Historical Documentation](docs/internal/archive/ARCHIVE_INDEX.md) - Archived implementation summaries (168 files)
 
 **Core Documentation:**
+
 - [Installation Guide](INSTALL.md) - Setup instructions for all platforms
 - [Architecture Overview](docs/PRODUCTION_ARCHITECTURE.md) - System design and components
 - [Trust Boundaries](docs/TRUST_BOUNDARIES.md) - Security boundary analysis ⭐ NEW
@@ -2154,11 +2279,13 @@ ciphertext = hsm.encrypt(key_id=key_id, plaintext=b"Sensitive data")
 - [Security Documentation](SECURITY.md) - Security architecture and compliance
 
 **Governance & Legal:**
+
 - [Governance Framework](docs/governance/GOVERNANCE_FRAMEWORK.md) - Triumvirate system
 - [Legal Documentation](docs/legal/) - Complete license codex
 - [Acceptance Ledger](docs/legal/ACCEPTANCE_LEDGER_LICENSE.md) - Cryptographic binding
 
 **Operations:**
+
 - [TK8S Doctrine](docs/TK8S_DOCTRINE.md) - Kubernetes deployment philosophy
 - [Production Deployment](PRODUCTION_DEPLOYMENT.md) - Scaling guide
 - [Failure Models & Operations](docs/FAILURE_MODELS_OPERATIONS.md) - Incident response ⭐ NEW
@@ -2184,6 +2311,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 5. ✅ Attempting log deletion from a running workload with evidence of denial
 
 **If ANY validations are missing, use safe framing ONLY:**
+
 - "Implementation aligns with enterprise hardening patterns."
 - "Validation tests confirm configuration correctness."
 - "Full adversarial validation is ongoing."
@@ -2195,6 +2323,7 @@ See the complete policy: [.github/SECURITY_VALIDATION_POLICY.md](.github/SECURIT
 ### Development Setup
 
 **Development Setup:**
+
 ```bash
 git clone https://github.com/IAmSoThirsty/Project-AI.git
 cd Project-AI
@@ -2225,15 +2354,17 @@ See [LICENSE](LICENSE) and [docs/legal/](docs/legal/) for details.
 ## 🆘 Support
 
 **Community:**
+
 - [GitHub Issues](https://github.com/IAmSoThirsty/Project-AI/issues)
 - [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)
 - Documentation: [docs/](docs/)
 
 **Commercial:**
-- Email: support@project-ai.com
+
+- Email: <support@project-ai.com>
 - Priority Support: 4-hour response (Company tier+)
 - 24/7 Support: Government tier
-- Custom SLA: sales@project-ai.com
+- Custom SLA: <sales@project-ai.com>
 
 ---
 
