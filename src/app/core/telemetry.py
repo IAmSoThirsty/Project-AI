@@ -24,9 +24,9 @@ TELEMETRY_MAX_EVENTS = int(os.getenv("TELEMETRY_MAX_EVENTS", "1000"))
 
 
 def _ensure_logs_dir() -> None:
-    d = os.path.dirname(TELEMETRY_FILE)
-    if d:
-        os.makedirs(d, exist_ok=True)
+    telemetry_dir = os.path.dirname(TELEMETRY_FILE)
+    if telemetry_dir:
+        os.makedirs(telemetry_dir, exist_ok=True)
 
 
 class TelemetryManager:

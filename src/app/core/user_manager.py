@@ -164,10 +164,10 @@ class UserManager:
 
     def get_user_data(self, username):
         """Get sanitized user data (omit password hash)."""
-        u = self.users.get(username)
-        if not u:
+        user = self.users.get(username)
+        if not user:
             return {}
-        sanitized = {k: v for k, v in u.items() if k != "password_hash"}
+        sanitized = {k: v for k, v in user.items() if k != "password_hash"}
         return sanitized
 
     # --- Additional management helpers ---
