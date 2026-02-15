@@ -196,3 +196,7 @@ cosign.pub
 k8s/tk8s/.cosign-keys/
 k8s/tk8s/.kms-keys/
 k8s/tk8s/security/*.backup
+
+# Unity installers
+unity/UnityHubSetup.exe
+*.exe
