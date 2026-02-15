@@ -142,6 +142,14 @@ try:
 except ImportError as e:
     print(f"[WARN] Contrarian Firewall endpoints not available: {e}")
 
+# Include VR Router
+try:
+    from api.vr_routes import router as vr_router
+    app.include_router(vr_router)
+    print("[OK] VR Bridge endpoints registered")
+except ImportError as e:
+    print(f"[WARN] VR endpoints not available: {e}")
+
 # ==========================================================
 # Core Data Models
 # ==========================================================
