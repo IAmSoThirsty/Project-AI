@@ -2,11 +2,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
-using ProjectAI.VR.Bridge;
 
 namespace ProjectAI.VR.RainbowCSV
 {
-    /// <summary>
+    ///  <summary>
     /// Example script demonstrating how to consume commands from the Rainbow CSV backend
     /// Attach this to a GameObject in your VR scene
     /// </summary>
@@ -38,35 +37,39 @@ namespace ProjectAI.VR.RainbowCSV
             while (true)
             {
                 yield return new WaitForSeconds(pollInterval);
-                yield return PollCommands();
+                yield return StartCoroutine(PollCommands());
             }
         }
 
         private IEnumerator PollCommands()
         {
-            string url = $"{backendUrl}/vr/commands?since={lastPollTimestamp}";
+            string url = backendUrl + "/vr/commands?since=" + lastPollTimestamp.ToString();
 
-            using (UnityWebRequest request = UnityWebRequest.Get(url))
+            UnityWebRequest request = UnityWebRequest.Get(url);
+            yield return request.SendWebRequest();
+
+#if UNITY_2020_1_OR_NEWER
+            if (request.result == UnityWebRequest.Result.Success)
+#else
+            if (!request.isNetworkError && !request.isHttpError)
+#endif
             {
-                yield return request.SendWebRequest();
-
-                if (request.result == UnityWebRequest.Result.Success)
+                string json = request.downloadHandler.text;
+                
+                // Simple JSON parsing (you may need JsonUtility or Newtonsoft.Json for complex objects)
+                if (!string.IsNullOrEmpty(json) && json != "[]")
                 {
-                    string json = request.downloadHandler.text;
-                    
-                    // Simple JSON parsing (you may need JsonUtility or Newtonsoft.Json for complex objects)
-                    if (!string.IsNullOrEmpty(json) && json != "[]")
-                    {
-                        Debug.Log($"[Rainbow CSV] Received commands: {json}");
-                        // For Demo: just log. In production, parse and execute
-                        // ProcessCommands(json);
-                    }
-                }
-                else
-                {
-                    Debug.LogWarning($"[Rainbow CSV] Poll failed: {request.error}");
+                    Debug.Log("[Rainbow CSV] Received commands: " + json);
+                    // For Demo: just log. In production, parse and execute
+                    // ProcessCommands(json);
                 }
             }
+            else
+            {
+                Debug.LogWarning("[Rainbow CSV] Poll failed: " + request.error);
+            }
+
+            request.Dispose();
         }
 
         /// <summary>
@@ -79,7 +82,7 @@ namespace ProjectAI.VR.RainbowCSV
             if (ColorUtility.TryParseHtmlString(hexColor, out Color color))
             {
                 roomLight.color = color;
-                Debug.Log($"[Rainbow CSV] Light color changed to {hexColor}");
+                Debug.Log("[Rainbow CSV] Light color changed to " + hexColor);
             }
         }
 
@@ -91,7 +94,7 @@ namespace ProjectAI.VR.RainbowCSV
             if (orbPrefab == null || orbContainer == null) return;
 
             GameObject orb = Instantiate(orbPrefab, orbContainer);
-            orb.name = $"DataOrb_{label}";
+            orb.name = "DataOrb_" + label;
 
             if (ColorUtility.TryParseHtmlString(hexColor, out Color color))
             {
@@ -102,7 +105,7 @@ namespace ProjectAI.VR.RainbowCSV
                 }
             }
 
-            Debug.Log($"[Rainbow CSV] Spawned orb: {label}");
+            Debug.Log("[Rainbow CSV] Spawned orb: " + label);
         }
     }
 }
