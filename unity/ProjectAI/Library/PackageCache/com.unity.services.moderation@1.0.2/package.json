@@ -1,0 +1,27 @@
+{
+  "name": "com.unity.services.moderation",
+  "displayName": "Moderation",
+  "version": "1.0.2",
+  "unity": "2020.3",
+  "description": "Unity Moderation makes toxicity-management accessible, impactful, and insightful. The service providing developers with the tools they need to grow and maintain healthy communities within their games.",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.services.core": "1.11.0"
+  },
+  "relatedPackages": {
+    "com.unity.services.moderation.tests": "1.0.1"
+  },
+  "_upm": {
+    "changelog": "### Bugfix\n- Fixed a bug where package compilation would fail if Vivox is used alongside Moderation"
+  },
+  "upmCi": {
+    "footprint": "d187c5aee90416dd3b011958e99a99141c4de74f"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.services.moderation@1.0/manual/index.html",
+  "repository": {
+    "url": "https://github.cds.internal.unity3d.com/unity/operate-services-sdk.git",
+    "type": "git",
+    "revision": "155be1c83875a56bae2d72d925cc49bdf07c2740"
+  },
+  "_fingerprint": "618fc44c0c2ff30b5745d10d5ef2b7631b776ad5"
+}

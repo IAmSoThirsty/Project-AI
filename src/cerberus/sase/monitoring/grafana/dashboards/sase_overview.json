@@ -1,0 +1,197 @@
+{
+    "dashboard": {
+        "id": null,
+        "uid": "sase-overview",
+        "title": "SASE - Overview Dashboard",
+        "tags": [
+            "sase",
+            "security",
+            "telemetry"
+        ],
+        "timezone": "browser",
+        "schemaVersion": 16,
+        "version": 1,
+        "refresh": "10s",
+        "panels": [
+            {
+                "id": 1,
+                "title": "Events Ingested (Total)",
+                "type": "stat",
+                "targets": [
+                    {
+                        "expr": "sase_events_ingested_total",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": {
+                    "h": 4,
+                    "w": 6,
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            {
+                "id": 2,
+                "title": "False Positive Rate",
+                "type": "gauge",
+                "targets": [
+                    {
+                        "expr": "sase_false_positive_rate",
+                        "refId": "A"
+                    }
+                ],
+                "fieldConfig": {
+                    "defaults": {
+                        "thresholds": {
+                            "steps": [
+                                {
+                                    "value": 0,
+                                    "color": "green"
+                                },
+                                {
+                                    "value": 0.05,
+                                    "color": "yellow"
+                                },
+                                {
+                                    "value": 0.1,
+                                    "color": "red"
+                                }
+                            ]
+                        },
+                        "max": 1
+                    }
+                },
+                "gridPos": {
+                    "h": 4,
+                    "w": 6,
+                    "x": 6,
+                    "y": 0
+                }
+            },
+            {
+                "id": 3,
+                "title": "Mean Time to Detect (seconds)",
+                "type": "stat",
+                "targets": [
+                    {
+                        "expr": "sase_mean_time_to_detect_seconds",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": {
+                    "h": 4,
+                    "w": 6,
+                    "x": 12,
+                    "y": 0
+                }
+            },
+            {
+                "id": 4,
+                "title": "Model Drift Delta",
+                "type": "gauge",
+                "targets": [
+                    {
+                        "expr": "sase_model_drift_delta",
+                        "refId": "A"
+                    }
+                ],
+                "fieldConfig": {
+                    "defaults": {
+                        "thresholds": {
+                            "steps": [
+                                {
+                                    "value": 0,
+                                    "color": "green"
+                                },
+                                {
+                                    "value": 0.3,
+                                    "color": "yellow"
+                                },
+                                {
+                                    "value": 0.5,
+                                    "color": "red"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "gridPos": {
+                    "h": 4,
+                    "w": 6,
+                    "x": 18,
+                    "y": 0
+                }
+            },
+            {
+                "id": 5,
+                "title": "Events by Artifact Type",
+                "type": "timeseries",
+                "targets": [
+                    {
+                        "expr": "rate(sase_events_ingested_total[5m])",
+                        "legendFormat": "{{artifact_type}}",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": {
+                    "h": 8,
+                    "w": 12,
+                    "x": 0,
+                    "y": 4
+                }
+            },
+            {
+                "id": 6,
+                "title": "Containment Actions",
+                "type": "timeseries",
+                "targets": [
+                    {
+                        "expr": "rate(sase_containment_actions_total[5m])",
+                        "legendFormat": "{{action}}",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": {
+                    "h": 8,
+                    "w": 12,
+                    "x": 12,
+                    "y": 4
+                }
+            },
+            {
+                "id": 7,
+                "title": "ASN Entropy Index",
+                "type": "timeseries",
+                "targets": [
+                    {
+                        "expr": "sase_asn_entropy_index",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": {
+                    "h": 6,
+                    "w": 12,
+                    "x": 0,
+                    "y": 12
+                }
+            },
+            {
+                "id": 8,
+                "title": "Beacon Activation Density",
+                "type": "timeseries",
+                "targets": [
+                    {
+                        "expr": "sase_beacon_activation_density",
+                        "refId": "A"
+                    }
+                ],
+                "gridPos": {
+                    "h": 6,
+                    "w": 12,
+                    "x": 12,
+                    "y": 12
+                }
+            }
+        ]
+    }
+}

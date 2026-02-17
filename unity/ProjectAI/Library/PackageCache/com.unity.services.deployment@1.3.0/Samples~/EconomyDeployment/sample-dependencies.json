@@ -1,0 +1,6 @@
+{
+  "dependencies": [
+    "com.unity.services.economy@3.3.0",
+    "com.unity.services.authentication@3.2.0"
+  ]
+}

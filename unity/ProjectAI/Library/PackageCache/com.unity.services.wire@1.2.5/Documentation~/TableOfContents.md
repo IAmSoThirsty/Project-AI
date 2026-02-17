@@ -1,0 +1,3 @@
+# Tableofcontents
+
+* [Wire package](index)

@@ -1,0 +1,69 @@
+version: "3.8"
+
+services:
+  # Prometheus - Metrics Collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: sase-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+    restart: unless-stopped
+    networks:
+      - sase-network
+
+  # Grafana - Metrics Visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: sase-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=sase_admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - sase-network
+
+  # SASE Application
+  sase:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sase-app
+    environment:
+      - SASE_DEPLOYMENT=single_node
+      - SASE_NODE_ID=sase-node-1
+      - SASE_PROMETHEUS_ENABLED=true
+      - SASE_GRAFANA_ENABLED=true
+    ports:
+      - "8000:8000" # SASE API
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - sase-network
+
+networks:
+  sase-network:
+    driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:

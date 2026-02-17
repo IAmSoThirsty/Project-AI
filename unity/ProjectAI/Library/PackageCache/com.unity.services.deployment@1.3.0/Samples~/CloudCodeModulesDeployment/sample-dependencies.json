@@ -1,0 +1,6 @@
+{
+  "dependencies": [
+    "com.unity.services.authentication@3.2.0",
+    "com.unity.services.cloudcode@2.5.1"
+  ]
+}

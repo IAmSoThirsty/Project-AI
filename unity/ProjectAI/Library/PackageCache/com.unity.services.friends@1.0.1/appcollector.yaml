@@ -1,0 +1,20 @@
+application_name: Friends SDK
+application_type: SDK
+description: The Friends SDK allows developers to integrate with the Friends system to help their players create persistent relationships.  See https://docs.unity.com/friends/ for full docs.
+language: C#
+development_stage: Beta
+findings_access:
+  - ben.randall@unity3d.com
+  - the-team@unity3d.com
+organization: 5da71cabe0bb56f09c34870d
+product: 6411d84e911060e17ed8cbfc
+poc: ben.randall@unity3d.com
+slack_channel: ask-friends
+risk_assessment:
+  internet_facing: false
+  personal_info: false
+  payment_info: false
+  authentication: Unity ID
+  hosting: N/A
+  revenue_impact: false
+  pci: false

@@ -1,0 +1,73 @@
+{
+  "name": "com.unity.remote-config",
+  "displayName": "Remote Config",
+  "version": "4.0.0",
+  "unity": "2021.3",
+  "_upm": {
+    "gameService": {
+      "genericDashboardUrl": "https://dashboard.unity3d.com/remote-config",
+      "projectDashboardUrl": "https://dashboard.unity3d.com/organizations/{0}/projects/{1}/settings/general",
+      "projectDashboardUrlType": "OrganizationKeyAndProjectGuid"
+    },
+    "changelog": "Changed\n- Dropping support for Unity 2019 & 2020, minimum Editor version is now 2021.3\n- Updated `com.unity.remote-config-runtime` dependency to `4.0.1`\n\nFixed\n- Issue deploying a remote-config containing JSON array with the Deployment Window"
+  },
+  "description": "Remote Config is a cloud service that lets you tune and customize your app over the air without requiring an update to your game.  You can use rules to enable or disable features, change the difficulty of your game or run special events to target specific audiences.  Campaigns control when updates are applied and to whom, while Unity manages delivery of your game content with minimal performance impact. \n\nRemote Config can be configured via the editor or through our public API’s.  Functionality includes: \n- Release new features without deploying code:\n   - Feature flagging\n   - Staged Rollouts\n   - Kill switch functionality\n   - Start & End Date\n   - Enable & disable rules\n- Personalized real-time segmentation with custom attributes\n   - Custom conditions for applying setting variants\n   - Device, user, game and other arbitrary attributes supporting\n- Reporting\n   - Tracing ID for decorating analytics events",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2",
+    "com.unity.modules.unitywebrequest": "1.0.0",
+    "com.unity.remote-config-runtime": "4.0.1"
+  },
+  "keywords": [
+    "remote",
+    "config",
+    "configuration",
+    "settings",
+    "remote settings",
+    "remote config",
+    "firebase",
+    "staged rollouts",
+    "feature flagging",
+    "roll-out",
+    "adapt",
+    "tune",
+    "tailor",
+    "test",
+    "experiment",
+    "experimentation",
+    "app update",
+    "target",
+    "targeting",
+    "segment",
+    "segmentation",
+    "segmenting",
+    "override",
+    "rules",
+    "variants",
+    "variation",
+    "parameter",
+    "conditions",
+    "conditional",
+    "continuous delivery",
+    "deploy"
+  ],
+  "relatedPackages": {
+    "com.unity.remote-config.tests": "4.0.0"
+  },
+  "upmCi": {
+    "footprint": "8c5d4ed2099098d20d4181386b14d1bb403fa7c6"
+  },
+  "documentationUrl": "https://docs.unity3d.com/Packages/com.unity.remote-config@4.0/manual/index.html",
+  "repository": {
+    "url": "https://github.cds.internal.unity3d.com/unity/com.unity.remote-config.git",
+    "type": "git",
+    "revision": "98a58e8d2f21e03168c7a34058a319fdad8bc4ad"
+  },
+  "samples": [
+    {
+      "displayName": "Example Sample",
+      "description": "This sample example C# file can be used to quickly utilise usage of Remote Config APIs. For more comprehensive code integration, visit https://docs.unity3d.com/Packages/com.unity.remote-config@latest",
+      "path": "Samples~/Example"
+    }
+  ],
+  "_fingerprint": "fcdc569b343f2f7d0fc26e8ac740badcb4cc0c2d"
+}

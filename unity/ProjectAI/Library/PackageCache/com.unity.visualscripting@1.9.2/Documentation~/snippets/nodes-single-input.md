@@ -1,0 +1,7 @@
+# Nodes Single Input
+
+---
+title: nodes-single-input
+---
+
+node has one input port:
