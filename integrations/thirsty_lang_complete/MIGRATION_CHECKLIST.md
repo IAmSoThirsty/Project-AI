@@ -41,22 +41,28 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
   - [ ] 500MB disk space available
 
 - [ ] **Install base dependencies**
+
   ```bash
+
   # Python dependencies
+
   pip install --upgrade pip
   pip install pyyaml jsonschema cryptography psutil
-  
+
   # Node.js dependencies
+
   npm install --save @thirsty-lang/core
   ```
 
 - [ ] **Clone Project-AI repository**
+
   ```bash
   git clone https://github.com/your-org/Project-AI.git
   cd Project-AI
   ```
 
 - [ ] **Verify TARL installation**
+
   ```bash
   python3 -c "import tarl; print('TARL OK')"
   ```
@@ -66,11 +72,13 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### Copy Integration Files
 
 - [ ] **Create bridge directory structure**
+
   ```bash
   mkdir -p src/security/bridge
   ```
 
 - [ ] **Copy bridge files**
+
   ```bash
   cp integrations/thirsty_lang_complete/bridge/tarl-bridge.js src/security/bridge/
   cp integrations/thirsty_lang_complete/bridge/unified-security.py src/security/bridge/
@@ -78,6 +86,7 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
   ```
 
 - [ ] **Set file permissions**
+
   ```bash
   chmod 644 src/security/bridge/*.js
   chmod 644 src/security/bridge/*.py
@@ -86,40 +95,47 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### Configuration Setup
 
 - [ ] **Create configuration directories**
+
   ```bash
   mkdir -p config policies logs
   ```
 
 - [ ] **Create environment file**
+
   ```bash
   cat > .env << 'EOF'
+
   # TARL Configuration
+
   TARL_POLICY_DIR=./policies
   TARL_AUDIT_LOG=./logs/audit.log
   TARL_LOG_LEVEL=INFO
-  
+
   # Bridge Configuration
+
   TARL_BRIDGE_PYTHON_PATH=python3
   TARL_BRIDGE_TIMEOUT=5000
-  
+
   # Security Configuration
+
   SECURITY_STRICT_MODE=true
   SECURITY_AUDIT_ENABLED=true
   EOF
   ```
 
 - [ ] **Create security configuration file**
+
   ```bash
   cat > config/security.yaml << 'EOF'
   security:
     strict_mode: true
     default_action: "deny"
-    
+
     audit:
       enabled: true
       log_file: "./logs/audit.log"
       flush_interval_sec: 30
-    
+
     cache:
       enabled: true
       max_size: 1000
@@ -137,20 +153,26 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
   - [ ] Identify policy conflicts
 
 - [ ] **Create TARL policy files**
+
   ```bash
+
   # Example: Create default policy
+
   cat > policies/default.yaml << 'EOF'
   version: "1.0"
   name: "Default Security Policy"
-  
+
   rules:
+
     - id: "file_read_allowed"
+
       operation: "file_read"
       resource: "/home/*"
       action: "allow"
       audit: true
-    
+
     - id: "system_files_deny"
+
       operation: "file_*"
       resource: "/etc/*"
       action: "deny"
@@ -159,6 +181,7 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
   ```
 
 - [ ] **Test policy loading**
+
   ```bash
   python3 -m tarl.runtime --policy-dir ./policies --validate
   ```
@@ -173,30 +196,33 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### JavaScript Integration
 
 - [ ] **Update imports**
+
   ```javascript
   // Old:
   // const security = require('./old-security');
-  
+
   // New:
   const { TARLBridge } = require('./security/bridge/tarl-bridge');
   ```
 
 - [ ] **Initialize bridge in application startup**
+
   ```javascript
   const tarlBridge = new TARLBridge({
     pythonPath: process.env.TARL_BRIDGE_PYTHON_PATH || 'python3',
     policyDir: process.env.TARL_POLICY_DIR || './policies',
     logLevel: process.env.TARL_LOG_LEVEL || 'info'
   });
-  
+
   await tarlBridge.initialize();
   ```
 
 - [ ] **Replace security checkpoints**
+
   ```javascript
   // Old:
   // if (!security.checkAccess(file)) { ... }
-  
+
   // New:
   const decision = await tarlBridge.evaluatePolicy({
     operation: 'file_read',
@@ -204,13 +230,14 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
     user: currentUser,
     timestamp: Date.now()
   });
-  
+
   if (!decision.allowed) {
     throw new Error(`Access denied: ${decision.reason}`);
   }
   ```
 
 - [ ] **Add shutdown handler**
+
   ```javascript
   process.on('SIGINT', async () => {
     await tarlBridge.shutdown();
@@ -221,38 +248,47 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### Python Integration
 
 - [ ] **Update imports**
+
   ```python
+
   # Old:
+
   # from old_security import SecurityManager
-  
+
   # New:
+
   from security.bridge.unified_security import UnifiedSecurityManager
   ```
 
 - [ ] **Initialize security manager**
+
   ```python
   security = UnifiedSecurityManager(
       policy_dir=os.getenv('TARL_POLICY_DIR', './policies'),
       audit_log=os.getenv('TARL_AUDIT_LOG', './logs/audit.log'),
       config_file='./config/security.yaml'
   )
-  
+
   await security.initialize()
   ```
 
 - [ ] **Replace security checks**
+
   ```python
+
   # Old:
+
   # if not security.check_access(resource):
-  
+
   # New:
+
   decision = await security.check_permission({
       'operation': 'file_read',
       'resource': resource,
       'user': current_user,
       'timestamp': time.time()
   })
-  
+
   if not decision['allowed']:
       raise PermissionError(f"Access denied: {decision['reason']}")
   ```
@@ -262,28 +298,30 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### Unit Tests
 
 - [ ] **Create test directory structure**
+
   ```bash
   mkdir -p tests/integration
   ```
 
 - [ ] **Write bridge tests**
+
   ```javascript
   // tests/integration/bridge.test.js
   const { TARLBridge } = require('../src/security/bridge/tarl-bridge');
   const assert = require('assert');
-  
+
   describe('TARL Bridge', () => {
     let bridge;
-    
+
     before(async () => {
       bridge = new TARLBridge({ logLevel: 'error' });
       await bridge.initialize();
     });
-    
+
     after(async () => {
       await bridge.shutdown();
     });
-    
+
     it('should evaluate policy', async () => {
       const decision = await bridge.evaluatePolicy({
         operation: 'test',
@@ -295,6 +333,7 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
   ```
 
 - [ ] **Run unit tests**
+
   ```bash
   npm test
   pytest tests/
@@ -303,13 +342,14 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### Integration Tests
 
 - [ ] **Test file system access control**
+
   ```javascript
   const contexts = [
     { operation: 'file_read', resource: '/home/user/doc.txt' },
     { operation: 'file_read', resource: '/etc/passwd' },
     { operation: 'file_write', resource: '/tmp/output.txt' }
   ];
-  
+
   for (const ctx of contexts) {
     const decision = await bridge.evaluatePolicy(ctx);
     console.log(`${ctx.operation} ${ctx.resource}: ${decision.allowed ? 'ALLOWED' : 'DENIED'}`);
@@ -324,6 +364,7 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### Performance Tests
 
 - [ ] **Benchmark policy evaluation**
+
   ```bash
   npm run benchmark -- --requests 1000
   ```
@@ -343,12 +384,14 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
   - [ ] Validate policy files
 
 - [ ] **Security audit**
+
   ```bash
   npm audit
   pip-audit
   ```
 
 - [ ] **Run full test suite**
+
   ```bash
   npm run test:all
   pytest tests/ -v
@@ -377,8 +420,11 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### Rollback Plan
 
 - [ ] **Document rollback procedure**
+
   ```bash
+
   # If issues occur:
+
   git checkout <previous-commit>
   npm install
   pm2 restart app
@@ -391,6 +437,7 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### Monitoring Setup
 
 - [ ] **Configure metrics collection**
+
   ```javascript
   setInterval(async () => {
     const metrics = await bridge.getMetrics();
@@ -413,6 +460,7 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### Performance Optimization
 
 - [ ] **Enable caching**
+
   ```javascript
   const bridge = new TARLBridge({
     cache: {
@@ -500,18 +548,21 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ## Post-Migration
 
 ### Week 1
+
 - [ ] Daily metric reviews
 - [ ] Monitor error rates
 - [ ] Review audit logs
 - [ ] Address any issues
 
 ### Week 2-4
+
 - [ ] Weekly performance reviews
 - [ ] Optimize based on metrics
 - [ ] Gather team feedback
 - [ ] Update documentation
 
 ### Month 2+
+
 - [ ] Monthly security reviews
 - [ ] Policy optimization
 - [ ] Performance tuning
@@ -522,18 +573,22 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 ### Common Issues
 
 **Issue:** Bridge fails to start
+
 - **Solution:** Check Python installation and TARL module
 - **Command:** `python3 -c "import tarl"`
 
 **Issue:** Policy evaluation timeout
+
 - **Solution:** Increase timeout setting
 - **Command:** `new TARLBridge({ timeout: 10000 })`
 
 **Issue:** High memory usage
+
 - **Solution:** Reduce cache size and enable log rotation
 - **Config:** `cache.max_size: 1000` in security.yaml
 
 **Issue:** Audit log growing too large
+
 - **Solution:** Configure log rotation
 - **Config:** Add log rotation in security.yaml
 
@@ -547,6 +602,6 @@ This checklist guides you through migrating an existing Thirsty-Lang or TARL pro
 
 ---
 
-**Migration Version:** 1.0.0  
-**Last Updated:** January 2025  
+**Migration Version:** 1.0.0
+**Last Updated:** January 2025
 **Status:** Production Ready

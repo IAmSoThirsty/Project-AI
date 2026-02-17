@@ -48,17 +48,21 @@ This will:
 from app.core.cybersecurity_knowledge import CybersecurityKnowledge
 
 # Initialize the module
+
 cyber = CybersecurityKnowledge(data_dir="data")
 
 # Get a complete section
+
 malware = cyber.get_section("malware")
 print(malware['strategic_importance'])
 
 # Get a specific subsection
+
 love_letter = cyber.get_subsection("malware", "case_study_love_letter")
 print(f"Case Study: {love_letter['name']} ({love_letter['year']})")
 
 # Search for content
+
 results = cyber.search_content("buffer overflow")
 for result in results:
     print(f"Found in: {result['path']}")
@@ -71,13 +75,16 @@ for result in results:
 from app.core.ai_systems import MemoryExpansionSystem
 
 # Initialize memory system
+
 memory = MemoryExpansionSystem(data_dir="data")
 
 # Query cybersecurity education content
+
 web_attacks = memory.get_knowledge("cybersecurity_education", "web_attacks")
 print(web_attacks['strategic_importance'])
 
 # Access specific defensive measures
+
 defense = memory.get_knowledge("cybersecurity_education", "proactive_defense")
 print(defense['four_pillars']['discovery'])
 ```
@@ -88,14 +95,17 @@ print(defense['four_pillars']['discovery'])
 from app.core.ai_systems import AIPersona, MemoryExpansionSystem
 
 # Initialize systems
+
 persona = AIPersona(data_dir="data")
 memory = MemoryExpansionSystem(data_dir="data")
 
 # Query and use in conversation
+
 exploitation = memory.get_knowledge("cybersecurity_education", "system_exploitation")
 shellcode_info = exploitation['shellcode']['definition']
 
 # The AI can now reference this knowledge in responses
+
 ```
 
 ## Content Structure

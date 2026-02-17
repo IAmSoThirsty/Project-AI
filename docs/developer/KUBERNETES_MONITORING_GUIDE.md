@@ -13,7 +13,7 @@ Deploy the complete Project-AI observability stack on Kubernetes in minutes usin
 
 **Battle-tested at exabyte scale. All Apache/MIT licenses. Container-ready.**
 
----
+______________________________________________________________________
 
 ## Table of Contents
 
@@ -29,7 +29,7 @@ Deploy the complete Project-AI observability stack on Kubernetes in minutes usin
 1. [Troubleshooting](#troubleshooting)
 1. [Production Best Practices](#production-best-practices)
 
----
+______________________________________________________________________
 
 ## Prerequisites
 
@@ -50,53 +50,68 @@ Deploy the complete Project-AI observability stack on Kubernetes in minutes usin
 ### Check Prerequisites
 
 ```bash
+
 # Verify Kubernetes
+
 kubectl version --short
 kubectl get nodes
 
 # Verify Helm
+
 helm version
 
 # Check storage classes
+
 kubectl get storageclass
 
 # Verify resources
+
 kubectl top nodes
 ```
 
----
+______________________________________________________________________
 
 ## Quick Start
 
 ### 1. Add Helm Repositories
 
 ```bash
+
 # Prometheus community charts
+
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
 # Elastic charts
+
 helm repo add elastic https://helm.elastic.co
 
 # Netdata charts
+
 helm repo add netdata https://netdata.github.io/helmchart/
 
 # OpenTelemetry charts
+
 helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
 
 # Cilium charts
+
 helm repo add cilium https://helm.cilium.io/
 
 # Zabbix charts (optional)
+
 helm repo add zabbix https://zabbix.github.io/helm-charts
 
 # Update repositories
+
 helm repo update
 ```
 
 ### 2. Install Complete Stack (One Command!)
 
 ```bash
+
 # Install full observability stack
+
 helm install project-ai-monitoring ./helm/project-ai-monitoring \
   --namespace monitoring \
   --create-namespace \
@@ -104,6 +119,7 @@ helm install project-ai-monitoring ./helm/project-ai-monitoring \
   --wait
 
 # Watch deployment
+
 kubectl get pods -n monitoring -w
 ```
 
@@ -114,10 +130,13 @@ kubectl get pods -n monitoring -w
 Get access URLs:
 
 ```bash
+
 # Get all services
+
 kubectl get svc -n monitoring
 
 # Port forward for local access
+
 kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090:9090 &
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80 &
 kubectl port-forward -n monitoring svc/kibana-kibana 5601:5601 &
@@ -133,7 +152,7 @@ Access:
 - **Hubble UI**: http://localhost:8080
 - **Netdata**: http://localhost:19999
 
----
+______________________________________________________________________
 
 ## Deployment Options
 
@@ -157,7 +176,9 @@ helm install project-ai-monitoring ./helm/project-ai-monitoring \
 With custom values for production:
 
 ```bash
+
 # Create custom values file
+
 cat > prod-values.yaml <<EOF
 global:
   environment: production
@@ -184,17 +205,22 @@ kube-prometheus-stack:
         limits:
           cpu: 4000m
           memory: 16Gi
-  
+
   grafana:
     adminPassword: "super_secret_password_here"
     ingress:
       enabled: true
       ingressClassName: nginx
       hosts:
+
         - grafana.your-domain.com
+
       tls:
+
         - secretName: grafana-tls
+
           hosts:
+
             - grafana.your-domain.com
 
 elasticsearch:
@@ -227,10 +253,13 @@ cilium:
       ingress:
         enabled: true
         hosts:
+
           - hubble.your-domain.com
+
 EOF
 
 # Deploy with production values
+
 helm install project-ai-monitoring ./helm/project-ai-monitoring \
   -f prod-values.yaml \
   --namespace monitoring \
@@ -249,7 +278,7 @@ helm install project-ai-monitoring ./helm/project-ai-monitoring \
   --set zabbix.enabled=true
 ```
 
----
+______________________________________________________________________
 
 ## Component Details
 
@@ -266,29 +295,40 @@ helm install project-ai-monitoring ./helm/project-ai-monitoring \
 **Configuration:**
 
 ```yaml
+
 # values.yaml
+
 prometheus:
   enabled: true
 
 kube-prometheus-stack:
   prometheus:
     prometheusSpec:
+
       # Scrape interval
+
       scrapeInterval: 15s
+
       # Retention period
+
       retention: 15d
+
       # Storage size
+
       retentionSize: "50GB"
 ```
 
 **Access Grafana:**
 
 ```bash
+
 # Get admin password
+
 kubectl get secret -n monitoring prometheus-grafana \
   -o jsonpath="{.data.admin-password}" | base64 --decode
 
 # Port forward
+
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
 ```
 
@@ -299,14 +339,17 @@ Navigate to http://localhost:3000 and explore pre-configured dashboards.
 **Configure alerts:**
 
 ```bash
+
 # Edit AlertManager config
+
 kubectl edit secret -n monitoring alertmanager-prometheus-kube-prometheus-alertmanager
 
 # Test alert delivery
+
 kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-alertmanager 9093:9093
 ```
 
----
+______________________________________________________________________
 
 ## eBPF Observability with Cilium
 
@@ -330,7 +373,9 @@ kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-alertmanager 9
 Cilium is installed automatically with the Helm chart. If you want standalone:
 
 ```bash
+
 # Install Cilium CLI
+
 CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
 curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-amd64.tar.gz{,.sha256sum}
 sha256sum --check cilium-linux-amd64.tar.gz.sha256sum
@@ -338,16 +383,20 @@ sudo tar xzvfC cilium-linux-amd64.tar.gz /usr/local/bin
 rm cilium-linux-amd64.tar.gz{,.sha256sum}
 
 # Check Cilium status
+
 cilium status
 
 # Enable Hubble observability
+
 cilium hubble enable --ui
 ```
 
 ### Using Hubble CLI
 
 ```bash
+
 # Install Hubble CLI
+
 HUBBLE_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/hubble/master/stable.txt)
 curl -L --fail --remote-name-all https://github.com/cilium/hubble/releases/download/$HUBBLE_VERSION/hubble-linux-amd64.tar.gz{,.sha256sum}
 sha256sum --check hubble-linux-amd64.tar.gz.sha256sum
@@ -355,27 +404,35 @@ sudo tar xzvfC hubble-linux-amd64.tar.gz /usr/local/bin
 rm hubble-linux-amd64.tar.gz{,.sha256sum}
 
 # Port forward to Hubble Relay
+
 cilium hubble port-forward &
 
 # Watch network flows in real-time
+
 hubble observe
 
 # Filter by namespace
+
 hubble observe --namespace monitoring
 
 # Watch DNS queries
+
 hubble observe --type dns
 
 # See HTTP requests
+
 hubble observe --protocol http
 
 # Monitor specific pod
+
 hubble observe --pod project-ai-app
 
 # See dropped packets
+
 hubble observe --verdict DROPPED
 
 # Get network statistics
+
 hubble status
 hubble observe --last 1000 | grep -E "TCP|UDP" | wc -l
 ```
@@ -408,20 +465,25 @@ Cilium runs the following eBPF programs in the kernel:
 **View loaded eBPF programs:**
 
 ```bash
+
 # SSH into node
+
 ssh node1
 
 # List eBPF programs
+
 sudo bpftool prog list | grep cilium
 
 # View eBPF maps
+
 sudo bpftool map list | grep cilium
 
 # Inspect specific map
+
 sudo bpftool map dump id <map-id>
 ```
 
----
+______________________________________________________________________
 
 ## ELK Stack Configuration
 
@@ -440,11 +502,14 @@ Application Logs → Filebeat/Fluentd → Logstash → Elasticsearch → Kibana
 #### Option 1: Direct Logging (Python Application)
 
 ```python
+
 # In your Project-AI code
+
 import logging
 from pythonjsonlogger import jsonlogger
 
 # Configure JSON logging
+
 logger = logging.getLogger()
 handler = logging.StreamHandler()
 formatter = jsonlogger.JsonFormatter('%(timestamp)s %(level)s %(name)s %(message)s')
@@ -452,6 +517,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 # Logs will be collected by Logstash
+
 logger.info("AI Persona mood updated", extra={
     "component": "ai-persona",
     "mood": "contentment",
@@ -462,24 +528,33 @@ logger.info("AI Persona mood updated", extra={
 #### Option 2: Filebeat Sidecar
 
 ```yaml
+
 # Add to deployment.yaml
+
 - name: filebeat
+
   image: docker.elastic.co/beats/filebeat:8.5.1
   args: [
     "-c", "/etc/filebeat/filebeat.yml",
     "-e"
   ]
   volumeMounts:
+
   - name: config
+
     mountPath: /etc/filebeat
+
   - name: logs
+
     mountPath: /var/log/project-ai
 ```
 
 #### Option 3: Fluentd
 
 ```yaml
+
 # Deploy Fluentd DaemonSet
+
 kubectl apply -f https://raw.githubusercontent.com/fluent/fluentd-kubernetes-daemonset/master/fluentd-daemonset-elasticsearch.yaml
 ```
 
@@ -510,19 +585,25 @@ The Logstash pipeline automatically creates indices:
 1. **Search Examples:**
 
 ```
+
 # Find critical security events
+
 component:security AND severity:critical
 
 # AI persona mood changes
+
 component:ai-persona AND mood:*
 
 # Four Laws violations
+
 component:four-laws AND result:denied
 
 # High-latency API requests
+
 api.duration:>1000 AND endpoint:*
 
 # Error logs in last hour
+
 level:ERROR AND @timestamp:[now-1h TO now]
 ```
 
@@ -531,7 +612,9 @@ level:ERROR AND @timestamp:[now-1h TO now]
 For 1M+ events/sec:
 
 ```yaml
+
 # values.yaml
+
 elasticsearch:
   replicas: 5  # Scale horizontally
   resources:
@@ -541,16 +624,19 @@ elasticsearch:
     limits:
       cpu: 8000m
       memory: 32Gi
-  
+
   esJavaOpts: "-Xms16g -Xmx16g"
-  
+
   esConfig:
     elasticsearch.yml: |
+
       # Bulk indexing optimization
+
       indices.memory.index_buffer_size: 30%
       thread_pool.write.queue_size: 10000
-      
+
       # Refresh interval (higher = better throughput)
+
       index.refresh_interval: 30s
 
 logstash:
@@ -559,14 +645,14 @@ logstash:
     requests:
       cpu: 2000m
       memory: 8Gi
-  
+
   logstashConfig:
     pipeline.workers: 8
     pipeline.batch.size: 2000
     pipeline.batch.delay: 50
 ```
 
----
+______________________________________________________________________
 
 ## Netdata Setup
 
@@ -579,12 +665,14 @@ logstash:
 - **Cloud sync** - access anywhere
 - **1-second granularity** - see instant changes
 - **ML-powered anomaly detection**
-- **Low overhead** - <1% CPU, <100MB RAM
+- **Low overhead** - \<1% CPU, \<100MB RAM
 
 ### Accessing Netdata
 
 ```bash
+
 # Port forward to parent node
+
 kubectl port-forward -n monitoring svc/netdata 19999:19999
 ```
 
@@ -599,7 +687,9 @@ Visit https://app.netdata.cloud and create workspace
 1. **Update values:**
 
 ```yaml
+
 # values.yaml
+
 netdata:
   parent:
     claiming:
@@ -642,13 +732,15 @@ helm upgrade project-ai-monitoring ./helm/project-ai-monitoring \
 **Custom Metrics:**
 
 ```bash
+
 # Custom Python plugin
+
 cat > /etc/netdata/python.d/project_ai.conf <<EOF
 project_ai:
   name: 'project_ai'
   update_every: 1
   priority: 90000
-  
+
 jobs:
   local:
     url: 'http://localhost:8000/metrics'
@@ -656,10 +748,11 @@ jobs:
 EOF
 
 # Restart Netdata
+
 systemctl restart netdata
 ```
 
----
+______________________________________________________________________
 
 ## OpenTelemetry Integration
 
@@ -676,10 +769,13 @@ systemctl restart netdata
 ### Python SDK Integration
 
 ```python
+
 # Install OpenTelemetry
+
 pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-otlp
 
 # In your Project-AI code
+
 from opentelemetry import trace, metrics
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.metrics import MeterProvider
@@ -689,6 +785,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 
 # Configure tracer
+
 trace.set_tracer_provider(TracerProvider())
 tracer = trace.get_tracer(__name__)
 span_exporter = OTLPSpanExporter(
@@ -700,6 +797,7 @@ trace.get_tracer_provider().add_span_processor(
 )
 
 # Configure metrics
+
 metric_reader = PeriodicExportingMetricReader(
     OTLPMetricExporter(
         endpoint="http://opentelemetry-collector:4317",
@@ -710,6 +808,7 @@ metrics.set_meter_provider(MeterProvider(metric_readers=[metric_reader]))
 meter = metrics.get_meter(__name__)
 
 # Create custom metrics
+
 persona_mood_counter = meter.create_counter(
     name="ai.persona.mood.changes",
     description="AI persona mood changes",
@@ -717,8 +816,11 @@ persona_mood_counter = meter.create_counter(
 )
 
 # Use in code
+
 with tracer.start_as_current_span("update_persona_mood"):
+
     # Your code here
+
     update_mood()
     persona_mood_counter.add(1, {"mood_type": "contentment"})
 ```
@@ -726,10 +828,13 @@ with tracer.start_as_current_span("update_persona_mood"):
 ### Auto-Instrumentation (No Code Changes)
 
 ```bash
+
 # Install auto-instrumentation
+
 pip install opentelemetry-instrumentation
 
 # Run with auto-instrumentation
+
 opentelemetry-instrument \
   --traces_exporter otlp \
   --metrics_exporter otlp \
@@ -741,13 +846,15 @@ opentelemetry-instrument \
 ### Viewing Traces in Jaeger
 
 ```bash
+
 # Port forward to Jaeger UI
+
 kubectl port-forward -n monitoring svc/jaeger-query 16686:16686
 ```
 
 Navigate to http://localhost:16686 and search for traces.
 
----
+______________________________________________________________________
 
 ## Scaling
 
@@ -756,23 +863,30 @@ Navigate to http://localhost:16686 and search for traces.
 Scale components based on load:
 
 ```bash
+
 # Scale Prometheus
+
 kubectl scale statefulset -n monitoring prometheus-kube-prometheus-prometheus --replicas=3
 
 # Scale Elasticsearch
+
 kubectl scale statefulset -n monitoring elasticsearch-master --replicas=5
 
 # Scale Logstash
+
 kubectl scale deployment -n monitoring logstash-logstash --replicas=5
 
 # Scale OpenTelemetry Collector
+
 kubectl scale deployment -n monitoring opentelemetry-collector --replicas=4
 ```
 
 ### Autoscaling
 
 ```yaml
+
 # HPA for OpenTelemetry Collector
+
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -786,13 +900,17 @@ spec:
   minReplicas: 2
   maxReplicas: 10
   metrics:
+
   - type: Resource
+
     resource:
       name: cpu
       target:
         type: Utilization
         averageUtilization: 70
+
   - type: Resource
+
     resource:
       name: memory
       target:
@@ -805,7 +923,9 @@ spec:
 For monitoring 12,000+ nodes across multiple clusters:
 
 ```yaml
+
 # values.yaml - Enable Thanos for federation
+
 kube-prometheus-stack:
   prometheus:
     prometheusSpec:
@@ -815,7 +935,7 @@ kube-prometheus-stack:
         objectStorageConfig:
           key: thanos.yaml
           name: thanos-objstore-config
-      
+
       externalLabels:
         cluster: us-east-1
         datacenter: dc1
@@ -830,46 +950,58 @@ helm install thanos bitnami/thanos \
   --set query.stores={prometheus-operated:10901}
 ```
 
----
+______________________________________________________________________
 
 ## Troubleshooting
 
 ### Pods Not Starting
 
 ```bash
+
 # Check pod status
+
 kubectl get pods -n monitoring
 
 # Describe problematic pod
+
 kubectl describe pod -n monitoring <pod-name>
 
 # Check logs
+
 kubectl logs -n monitoring <pod-name>
 
 # Check events
+
 kubectl get events -n monitoring --sort-by='.lastTimestamp'
 ```
 
 ### Storage Issues
 
 ```bash
+
 # Check PVCs
+
 kubectl get pvc -n monitoring
 
 # Check storage class
+
 kubectl get storageclass
 
 # Increase storage (if using dynamic provisioning)
+
 kubectl edit pvc -n monitoring <pvc-name>
 ```
 
 ### Network Issues
 
 ```bash
+
 # Test connectivity between pods
+
 kubectl run -it --rm debug --image=nicolaka/netshoot --restart=Never -n monitoring -- /bin/bash
 
 # Inside debug pod
+
 curl http://prometheus-kube-prometheus-prometheus:9090/-/healthy
 curl http://elasticsearch-master:9200/_cluster/health
 ```
@@ -877,20 +1009,25 @@ curl http://elasticsearch-master:9200/_cluster/health
 ### Cilium Issues
 
 ```bash
+
 # Check Cilium status
+
 cilium status
 
 # Test connectivity
+
 cilium connectivity test
 
 # View Cilium logs
+
 kubectl logs -n kube-system -l k8s-app=cilium
 
 # Restart Cilium
+
 kubectl rollout restart daemonset/cilium -n kube-system
 ```
 
----
+______________________________________________________________________
 
 ## Production Best Practices
 
@@ -899,15 +1036,21 @@ kubectl rollout restart daemonset/cilium -n kube-system
 1. **Enable TLS**:
 
 ```yaml
+
 # values.yaml
+
 kube-prometheus-stack:
   grafana:
     ingress:
       enabled: true
       tls:
+
         - secretName: grafana-tls
+
           hosts:
+
             - grafana.example.com
+
 ```
 
 1. **Network Policies**:
@@ -921,10 +1064,14 @@ metadata:
 spec:
   podSelector: {}
   policyTypes:
+
   - Ingress
+
   ingress:
+
   - from:
     - namespaceSelector:
+
         matchLabels:
           name: monitoring
 ```
@@ -932,7 +1079,9 @@ spec:
 1. **RBAC**:
 
 ```bash
+
 # Create read-only user
+
 kubectl create serviceaccount monitoring-readonly -n monitoring
 kubectl create clusterrole monitoring-readonly --verb=get,list,watch --resource=*
 kubectl create clusterrolebinding monitoring-readonly --clusterrole=monitoring-readonly --serviceaccount=monitoring:monitoring-readonly
@@ -941,12 +1090,14 @@ kubectl create clusterrolebinding monitoring-readonly --clusterrole=monitoring-r
 ### High Availability
 
 ```yaml
+
 # values.yaml - Enable HA for all components
+
 kube-prometheus-stack:
   prometheus:
     prometheusSpec:
       replicas: 3
-  
+
   alertmanager:
     alertmanagerSpec:
       replicas: 3
@@ -966,7 +1117,9 @@ cilium:
 ### Backup and Restore
 
 ```bash
+
 # Backup Prometheus data
+
 kubectl exec -n monitoring prometheus-kube-prometheus-prometheus-0 -- \
   tar czf /tmp/prometheus-backup.tar.gz /prometheus
 
@@ -974,6 +1127,7 @@ kubectl cp monitoring/prometheus-kube-prometheus-prometheus-0:/tmp/prometheus-ba
   ./prometheus-backup.tar.gz
 
 # Backup Elasticsearch snapshots
+
 kubectl exec -n monitoring elasticsearch-master-0 -- \
   curl -X PUT "localhost:9200/_snapshot/backup_repo/snapshot_1?wait_for_completion=true"
 ```
@@ -981,8 +1135,11 @@ kubectl exec -n monitoring elasticsearch-master-0 -- \
 ### Monitoring the Monitors
 
 ```yaml
+
 # AlertManager alert for Prometheus down
+
 - alert: PrometheusDown
+
   expr: up{job="prometheus"} == 0
   for: 5m
   labels:
@@ -991,14 +1148,16 @@ kubectl exec -n monitoring elasticsearch-master-0 -- \
     summary: "Prometheus is down"
 
 # Alert for Elasticsearch cluster health
+
 - alert: ElasticsearchClusterRed
+
   expr: elasticsearch_cluster_health_status{color="red"} == 1
   for: 5m
   labels:
     severity: critical
 ```
 
----
+______________________________________________________________________
 
 ## Support and Resources
 
@@ -1009,8 +1168,6 @@ kubectl exec -n monitoring elasticsearch-master-0 -- \
 - **OpenTelemetry**: https://opentelemetry.io/docs/
 - **Cilium**: https://docs.cilium.io/
 
----
+______________________________________________________________________
 
-**Last Updated**: 2026-01-07  
-**Version**: 1.0  
-**License**: MIT (monitoring stack uses Apache 2.0 / MIT licenses)
+**Last Updated**: 2026-01-07 **Version**: 1.0 **License**: MIT (monitoring stack uses Apache 2.0 / MIT licenses)

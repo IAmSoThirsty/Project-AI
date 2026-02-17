@@ -4,42 +4,43 @@
 
 Total OWASP Categories Listed: **66 tests**
 
----
+______________________________________________________________________
 
 ## ✅ **Current Coverage in 2,000 Tests**
 
 ### **Covered (Partial or Full):**
 
-| OWASP ID | Category | Coverage | Test IDs |
-|----------|----------|----------|----------|
-| **AT-004** | Brute Force Testing | ✅ Full | Rate Limiting tests (150) |
-| **AT-005** | Bypassing Authentication | ✅ Full | Authorization bypass (200) |
-| **AT-010** | Race Conditions | ✅ Full | Race condition tests (100) |
-| **SM-001** | Session Management | ✅ Partial | Session attacks (200) |
-| **SM-003** | Session Fixation | ✅ Partial | Session attacks (200) |
-| **SM-005** | CSRF | ✅ Partial | Session attacks (200) |
-| **AZ-001** | Path Traversal | ✅ Full | Path traversal (50) |
-| **AZ-002** | Bypassing Authorization | ✅ Full | Authorization bypass (200) |
-| **AZ-003** | Privilege Escalation | ✅ Full | Privilege escalation (150) |
-| **BL-001** | Business Logic | ✅ Full | Business logic (150) |
-| **DV-001** | Reflected XSS | ❌ Missing | - |
-| **DV-002** | Stored XSS | ❌ Missing | - |
-| **DV-003** | DOM XSS | ❌ Missing | - |
-| **DV-005** | SQL Injection | ✅ Full | SQL injection (40) |
-| **DV-006** | LDAP Injection | ✅ Full | LDAP injection (40) |
-| **DV-007** | ORM Injection | ❌ Missing | - |
-| **DV-008** | XML Injection | ✅ Partial | XML injection (30) |
-| **DV-010** | XPath Injection | ❌ Missing | - |
-| **DV-012** | Code Injection | ✅ Full | Command injection (40) |
-| **DV-013** | OS Commanding | ✅ Full | Command injection (40) |
-| **DS-001** | SQL Wildcard | ❌ Missing | - |
-| **DS-002** | Account Locking | ❌ Missing | - |
+| OWASP ID   | Category                 | Coverage   | Test IDs                   |
+| ---------- | ------------------------ | ---------- | -------------------------- |
+| **AT-004** | Brute Force Testing      | ✅ Full    | Rate Limiting tests (150)  |
+| **AT-005** | Bypassing Authentication | ✅ Full    | Authorization bypass (200) |
+| **AT-010** | Race Conditions          | ✅ Full    | Race condition tests (100) |
+| **SM-001** | Session Management       | ✅ Partial | Session attacks (200)      |
+| **SM-003** | Session Fixation         | ✅ Partial | Session attacks (200)      |
+| **SM-005** | CSRF                     | ✅ Partial | Session attacks (200)      |
+| **AZ-001** | Path Traversal           | ✅ Full    | Path traversal (50)        |
+| **AZ-002** | Bypassing Authorization  | ✅ Full    | Authorization bypass (200) |
+| **AZ-003** | Privilege Escalation     | ✅ Full    | Privilege escalation (150) |
+| **BL-001** | Business Logic           | ✅ Full    | Business logic (150)       |
+| **DV-001** | Reflected XSS            | ❌ Missing | -                          |
+| **DV-002** | Stored XSS               | ❌ Missing | -                          |
+| **DV-003** | DOM XSS                  | ❌ Missing | -                          |
+| **DV-005** | SQL Injection            | ✅ Full    | SQL injection (40)         |
+| **DV-006** | LDAP Injection           | ✅ Full    | LDAP injection (40)        |
+| **DV-007** | ORM Injection            | ❌ Missing | -                          |
+| **DV-008** | XML Injection            | ✅ Partial | XML injection (30)         |
+| **DV-010** | XPath Injection          | ❌ Missing | -                          |
+| **DV-012** | Code Injection           | ✅ Full    | Command injection (40)     |
+| **DV-013** | OS Commanding            | ✅ Full    | Command injection (40)     |
+| **DS-001** | SQL Wildcard             | ❌ Missing | -                          |
+| **DS-002** | Account Locking          | ❌ Missing | -                          |
 
----
+______________________________________________________________________
 
 ## ❌ **Missing OWASP Categories (24 total)**
 
 ### **Information Gathering (IG) - 6 missing:**
+
 - ❌ IG-001: Spiders, Robots, Crawlers
 - ❌ IG-002: Search Engine Discovery
 - ❌ IG-003: Application Entry Points
@@ -48,6 +49,7 @@ Total OWASP Categories Listed: **66 tests**
 - ❌ IG-006: Error Code Analysis
 
 ### **Configuration Management (CM) - 8 missing:**
+
 - ❌ CM-001: SSL/TLS Testing
 - ❌ CM-002: DB Listener Testing
 - ❌ CM-003: Infrastructure Config
@@ -58,6 +60,7 @@ Total OWASP Categories Listed: **66 tests**
 - ❌ CM-008: HTTP Methods/XST
 
 ### **Authentication (AT) - 6 missing:**
+
 - ❌ AT-001: Encrypted Credentials
 - ❌ AT-002: User Enumeration
 - ❌ AT-003: Dictionary Attacks
@@ -67,10 +70,12 @@ Total OWASP Categories Listed: **66 tests**
 - ❌ AT-009: Multi-Factor Auth
 
 ### **Session Management (SM) - 2 missing:**
+
 - ❌ SM-002: Cookie Attributes
 - ❌ SM-004: Exposed Session Variables
 
 ### **Data Validation (DV) - 8 missing:**
+
 - ❌ DV-001: Reflected XSS
 - ❌ DV-002: Stored XSS
 - ❌ DV-003: DOM XSS
@@ -84,6 +89,7 @@ Total OWASP Categories Listed: **66 tests**
 - ❌ DV-016: HTTP Splitting/Smuggling
 
 ### **Denial of Service (DS) - 8 missing:**
+
 - ❌ DS-001: SQL Wildcard
 - ❌ DS-002: Account Locking
 - ❌ DS-003: Buffer Overflows
@@ -94,6 +100,7 @@ Total OWASP Categories Listed: **66 tests**
 - ❌ DS-008: Session Storage
 
 ### **Web Services (WS) - 7 missing:**
+
 - ❌ WS-001: Information Gathering
 - ❌ WS-002: WSDL Testing
 - ❌ WS-003: XML Structural
@@ -103,16 +110,18 @@ Total OWASP Categories Listed: **66 tests**
 - ❌ WS-007: Replay Testing
 
 ### **AJAX (AJ) - 2 missing:**
+
 - ❌ AJ-001: AJAX Vulnerabilities
 - ❌ AJ-002: AJAX Testing
 
----
+______________________________________________________________________
 
 ## 🎯 **RECOMMENDATION**
 
 **Generate additional 1,000+ OWASP-specific tests** to cover all 66 categories.
 
 Would you like me to:
+
 1. ✅ Generate comprehensive OWASP test suite (all 66 categories)
-2. ✅ Map existing 2,000 tests to OWASP IDs
-3. ✅ Create combined suite with full OWASP compliance
+1. ✅ Map existing 2,000 tests to OWASP IDs
+1. ✅ Create combined suite with full OWASP compliance

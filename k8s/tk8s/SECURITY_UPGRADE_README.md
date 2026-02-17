@@ -12,12 +12,13 @@ This directory contains enterprise-grade security configurations for TK8S (Thirs
 
 ## ⚠️ Implementation Status
 
-**Configuration:** ✅ COMPLETE  
+**Configuration:** ✅ COMPLETE
 **Live Validation:** ⏳ REQUIRED BEFORE PRODUCTION
 
 This implementation provides enterprise-grade security infrastructure that is **configured** following best practices, but requires **validation testing** on a live GKE cluster before production deployment.
 
 **Required Validations (See VALIDATION_TEST_PROCEDURES.md):**
+
 1. Verify signed images deploy successfully
 2. Confirm unsigned images are rejected
 3. Test network policy enforcement
@@ -54,15 +55,19 @@ k8s/tk8s/
 ### Phase 1: GCP KMS Setup
 
 ```bash
+
 # Set environment variables
+
 export GCP_PROJECT_ID="your-project-id"
 export KMS_LOCATION="us-central1"
 
 # Run setup script
+
 cd k8s/tk8s/scripts
 ./setup-gcp-kms.sh
 
 # Deploy public key to Kubernetes
+
 kubectl create namespace kyverno --dry-run=client -o yaml | kubectl apply -f -
 kubectl create secret generic cosign-public-key \
   --from-file=cosign.pub=.kms-keys/cosign-kms.pub \
@@ -77,6 +82,7 @@ kubectl apply -f kyverno-kms-verification.yaml
 ```
 
 This deploys 5 critical policies:
+
 1. ✅ **KMS Signature Verification** - Verifies images with KMS public key
 2. ✅ **Kyverno Self-Protection** - Prevents policy deletion/tampering
 3. ✅ **Pod Security Admission** - Enforces restricted standards
@@ -87,8 +93,11 @@ This deploys 5 critical policies:
 
 ```bash
 cd k8s/tk8s/network-policies
+
 # ⚠️ WARNING: This blocks all traffic by default
+
 # Ensure explicit allow policies exist first
+
 kubectl apply -f default-deny-network-policies.yaml
 ```
 
@@ -106,7 +115,9 @@ cd k8s/tk8s/scripts
 
 ```bash
 cd k8s/tk8s/security
+
 # Edit binary-authorization-policy.yaml with your PROJECT_ID
+
 gcloud container binauthz policy import binary-authorization-policy.yaml
 ```
 
@@ -153,17 +164,20 @@ gcpkms://projects/PROJECT_ID/locations/us-central1/keyRings/tk8s-keyring/cryptoK
 See `workflows/enhanced-image-signing.yml` for complete implementation.
 
 **Key features:**
+
 - Dual mode: Keyless (OIDC) for staging, KMS for production
 - Automatic signature verification
 - Binary Authorization attestations
 - Configurable via GitHub variables
 
 **Required Secrets:**
+
 - `GCP_PROJECT_ID`
 - `GCP_WORKLOAD_IDENTITY_PROVIDER`
 - `GCP_SERVICE_ACCOUNT`
 
 **Required Variables:**
+
 - `USE_KMS_SIGNING`: Enable KMS signing (true/false)
 - `USE_BINARY_AUTH`: Enable Binary Authorization (true/false)
 
@@ -172,7 +186,9 @@ See `workflows/enhanced-image-signing.yml` for complete implementation.
 ### Test Image Signing
 
 ```bash
+
 # Build and sign test image
+
 docker build -t gcr.io/${PROJECT_ID}/test:v1 .
 docker push gcr.io/${PROJECT_ID}/test:v1
 
@@ -181,6 +197,7 @@ COSIGN_EXPERIMENTAL=1 cosign sign \
   gcr.io/${PROJECT_ID}/test:v1
 
 # Verify signature
+
 cosign verify \
   --key .kms-keys/cosign-kms.pub \
   gcr.io/${PROJECT_ID}/test:v1
@@ -189,41 +206,52 @@ cosign verify \
 ### Test Kyverno Policy
 
 ```bash
+
 # This should FAIL (unsigned)
+
 kubectl run test-fail --image=nginx:latest -n project-ai-core
 
 # This should SUCCEED (if signed)
+
 kubectl run test-pass --image=gcr.io/${PROJECT_ID}/test:v1 -n project-ai-core
 ```
 
 ### Test Network Policy
 
 ```bash
+
 # Should fail (egress blocked)
+
 kubectl run test-net --image=busybox -n project-ai-core -- wget -O- google.com
 ```
 
 ### View Audit Logs
 
 ```bash
+
 # Recent k8s events
+
 gcloud logging read 'resource.type="k8s_cluster"' --limit 10
 
 # Denied pod creations
+
 gcloud logging read 'resource.type="k8s_cluster" AND protoPayload.response.status="Failure"' --limit 10
 
 # Kyverno decisions
+
 gcloud logging read 'jsonPayload.message=~".*kyverno.*"' --limit 10
 ```
 
 ## Security Levels
 
 ### Level 1: Basic (Current State)
+
 - ✅ Keyless signing with GitHub OIDC
 - ✅ Kyverno image verification
 - ✅ Basic network policies
 
 ### Level 2: Enhanced (This Upgrade)
+
 - ✅ KMS-backed signing
 - ✅ Kyverno self-protection
 - ✅ Default-deny network policies
@@ -231,6 +259,7 @@ gcloud logging read 'jsonPayload.message=~".*kyverno.*"' --limit 10
 - ✅ GKE audit logging
 
 ### Level 3: Enterprise (Optional)
+
 - ⬜ HSM-backed keys
 - ⬜ Binary Authorization hard gate
 - ⬜ Multi-region KMS replication
@@ -238,6 +267,7 @@ gcloud logging read 'jsonPayload.message=~".*kyverno.*"' --limit 10
 - ⬜ SIEM integration
 
 ### Level 4: Defense-in-Depth (Future)
+
 - ⬜ Runtime security (Falco)
 - ⬜ Service mesh (Istio)
 - ⬜ Workload identity federation
@@ -249,15 +279,19 @@ gcloud logging read 'jsonPayload.message=~".*kyverno.*"' --limit 10
 If issues arise:
 
 ```bash
+
 # Disable Kyverno enforcement (audit mode)
+
 kubectl patch clusterpolicy require-kms-cosign-signatures \
   --type=merge \
   -p '{"spec":{"validationFailureAction":"audit"}}'
 
 # Remove network policies
+
 kubectl delete networkpolicy default-deny-all -A
 
 # Disable Binary Authorization
+
 gcloud container clusters update tk8s-prod \
   --no-enable-binauthz \
   --zone=us-central1-a

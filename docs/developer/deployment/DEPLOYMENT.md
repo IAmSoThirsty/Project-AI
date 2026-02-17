@@ -9,17 +9,21 @@ The recommended way to create releases is using the automated build system:
 ### Quick Release
 
 ```bash
+
 # 1. Ensure all changes are committed
+
 git add .
 git commit -m "Release v1.0.0"
 git push
 
 # 2. Create and push version tag
+
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
 The GitHub Actions workflow automatically:
+
 - Validates all dependencies
 - Builds backend, web, Android, and desktop artifacts
 - Packages monitoring agents and documentation
@@ -34,10 +38,13 @@ The GitHub Actions workflow automatically:
 For local builds or testing:
 
 ```bash
+
 # Linux/macOS
+
 ./scripts/build_release.sh
 
 # Windows
+
 scripts\build_release.bat
 ```
 
@@ -62,12 +69,17 @@ See [RELEASE_BUILD_GUIDE.md](RELEASE_BUILD_GUIDE.md) for complete instructions.
    ```
 
 1. **Build the PyQt6 executable**
+
    - Use `pyinstaller` (install via `pip install pyinstaller`) with a spec that includes `src/app/main.py`.
    - Example: `pyinstaller --onefile --name project-ai src/app/main.py`.
+
 1. **Bundle assets**
+
    - Copy `data/`, `docs/`, and `web/` artifacts into the distributable folder.
    - Ensure `FERNET_KEY`, API keys, and overrides are provided via environment or secure secrets vault (do not hardcode them).
+
 1. **Sign and publish**
+
    - Sign the executable using the organization’s code signing certificate.
    - Upload the installer/archive to the private release server or shared file storage.
    - Update release notes with new AI capabilities, vulnerability fixes, and CLI updates.
@@ -84,14 +96,18 @@ The repo ships minimal frontend/backed smoke scaffolds that are not production-g
    ```
 
 1. **Frontend**
+
    - Serve `web/frontend/index.html` via any static file server (e.g., `python -m http.server 3000`).
    - Validate the page loads and shows the smoke content.
+
 1. **Integrate with desktop release**
+
    - Embed the Flask backend and front-end artifacts inside the `data/web` folder so the desktop app can point WebView/HTTP clients to `http://localhost:5000`.
 
 ## Release Checklist
 
 ### Automated Release
+
 - [ ] Update `README.md`, `PROGRAM_SUMMARY.md`, and developer docs with new features
 - [ ] Update `CHANGELOG.md` with release notes
 - [ ] Bump version in `pyproject.toml` and `package.json`
@@ -106,6 +122,7 @@ The repo ships minimal frontend/backed smoke scaffolds that are not production-g
 - [ ] Notify team members via Slack/email with release summary
 
 ### Manual Release
+
 - [ ] Follow all automated release steps above
 - [ ] Run `./scripts/build_release.sh` (or `.bat` on Windows)
 - [ ] Review `releases/validation-report-v*.json` for any issues
@@ -123,6 +140,7 @@ python3 scripts/validate_release.py releases/project-ai-v1.0.0 --version 1.0.0
 ```
 
 This checks:
+
 - Directory structure completeness
 - Backend API artifacts (api, tarl, governance, config, utils, kernel)
 - Web frontend files
@@ -154,6 +172,7 @@ project-ai-v1.0.0/
 ## Support
 
 For detailed build instructions, troubleshooting, and CI/CD integration:
+
 - See [RELEASE_BUILD_GUIDE.md](RELEASE_BUILD_GUIDE.md)
 - See [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md) for deployment
 - GitHub Issues: https://github.com/IAmSoThirsty/Project-AI/issues

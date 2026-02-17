@@ -35,34 +35,28 @@ class StorageEngine(ABC):
     @abstractmethod
     def initialize(self) -> None:
         """Initialize the storage engine and create necessary structures."""
-        pass
 
     @abstractmethod
     def store(self, table: str, key: str, data: dict[str, Any]) -> bool:
         """Store data in the specified table with the given key."""
-        pass
 
     @abstractmethod
     def retrieve(self, table: str, key: str) -> dict[str, Any] | None:
         """Retrieve data from the specified table by key."""
-        pass
 
     @abstractmethod
     def query(
         self, table: str, filters: dict[str, Any] | None = None
     ) -> list[dict[str, Any]]:
         """Query data from the specified table with optional filters."""
-        pass
 
     @abstractmethod
     def delete(self, table: str, key: str) -> bool:
         """Delete data from the specified table by key."""
-        pass
 
     @abstractmethod
     def close(self) -> None:
         """Close the storage engine and cleanup resources."""
-        pass
 
 
 class SQLiteStorage(StorageEngine):
@@ -135,7 +129,8 @@ class SQLiteStorage(StorageEngine):
             cursor = conn.cursor()
 
             # Governance table
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS governance_state (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     key TEXT UNIQUE NOT NULL,
@@ -144,10 +139,12 @@ class SQLiteStorage(StorageEngine):
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-                """)
+                """
+            )
 
             # Governance decisions table
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS governance_decisions (
                     decision_id TEXT PRIMARY KEY,
                     action_id TEXT NOT NULL,
@@ -159,10 +156,12 @@ class SQLiteStorage(StorageEngine):
                     consensus_achieved INTEGER DEFAULT 0,
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-                """)
+                """
+            )
 
             # Execution history table
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS execution_history (
                     trace_id TEXT PRIMARY KEY,
                     action_name TEXT NOT NULL,
@@ -175,10 +174,12 @@ class SQLiteStorage(StorageEngine):
                     error TEXT,
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
-                """)
+                """
+            )
 
             # Reflection history table
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS reflection_history (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     trace_id TEXT NOT NULL,
@@ -188,10 +189,12 @@ class SQLiteStorage(StorageEngine):
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (trace_id) REFERENCES execution_history(trace_id)
                 )
-                """)
+                """
+            )
 
             # Memory records table
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS memory_records (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     trace_id TEXT NOT NULL,
@@ -201,18 +204,23 @@ class SQLiteStorage(StorageEngine):
                     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY (trace_id) REFERENCES execution_history(trace_id)
                 )
-                """)
+                """
+            )
 
             # Create indices for performance
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE INDEX IF NOT EXISTS idx_execution_timestamp
                 ON execution_history(timestamp)
-                """)
+                """
+            )
 
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE INDEX IF NOT EXISTS idx_governance_timestamp
                 ON governance_decisions(timestamp)
-                """)
+                """
+            )
 
             conn.commit()
 

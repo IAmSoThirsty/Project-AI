@@ -13,12 +13,14 @@ The implementation consists of six core subsystems:
 **Purpose**: Executes workflows with deterministic, reproducible behavior.
 
 **Key Features**:
+
 - **Logical Clock**: Uses monotonic counter (`self._counter`) instead of `time.time()`
 - **Event Logging**: All workflow events tracked with sequence numbers
 - **Deterministic Snapshots**: Identified by `hash(state + sequence)`, not wall-clock time
 - **State Persistence**: Full VM state can be saved and restored
 
 **Determinism Guarantees**:
+
 - Event IDs: `(workflow_id, sequence_number)`
 - Snapshot IDs: SHA-256 hash of `workflow_id:counter:state_json`
 - Error IDs: SHA-256 hash of `workflow_id:error_message`
@@ -29,14 +31,18 @@ The implementation consists of six core subsystems:
 **Purpose**: Declarative capability system with compile-time/runtime checks.
 
 **Key Features**:
+
 - **Structured Capabilities**: `Capability(name, resource, constraints)`
 - **Declarative Policies**: `Policy(name, capability_name, constraints, enforcement_level)`
 - **Workflow Manifests**: Workflows declare `required_caps` upfront
 - **Verification**: `verify_workflow()` checks manifest against registry and policies
 
 **Example**:
+
 ```python
+
 # Define capability
+
 cap = Capability(
     name="Net.Connect",
     resource="network",
@@ -44,6 +50,7 @@ cap = Capability(
 )
 
 # Define policy
+
 policy = Policy(
     name="RequireHTTPS",
     capability_name="Net.Connect",
@@ -52,6 +59,7 @@ policy = Policy(
 )
 
 # Workflow declares required capabilities
+
 workflow = Workflow(
     workflow_id="api_workflow",
     entrypoint=my_function,
@@ -66,21 +74,25 @@ workflow = Workflow(
 **Patterns**:
 
 1. **Sequential**: Pipeline pattern where output of agent[i] feeds agent[i+1]
+
    ```python
    result = orchestrator.sequential("wf_id", ["planner", "executor", "validator"], initial_input)
    ```
 
-2. **Concurrent**: Fan-out pattern where all agents run in parallel
+1. **Concurrent**: Fan-out pattern where all agents run in parallel
+
    ```python
    results = orchestrator.concurrent("wf_id", ["agent1", "agent2"], [input1, input2])
    ```
 
-3. **Chat**: Multi-agent conversation with turn-taking
+1. **Chat**: Multi-agent conversation with turn-taking
+
    ```python
    conversation = orchestrator.chat("wf_id", ["agent1", "agent2"], "Hello", max_turns=10)
    ```
 
-4. **Graph**: DAG-based execution with arbitrary dependencies
+1. **Graph**: DAG-based execution with arbitrary dependencies
+
    ```python
    graph = {"planner": ["executor"], "executor": ["validator"], "validator": []}
    result = orchestrator.graph("wf_id", graph, "planner", input_data)
@@ -91,14 +103,18 @@ workflow = Workflow(
 **Purpose**: Complete deterministic replay of workflow executions.
 
 **Key Features**:
+
 - **Event Recording**: Captures tool/LLM outputs, timer fires, API responses, agent decisions
 - **Replay Mode**: On replay, pulls outputs from recorded event list instead of calling real tools
 - **Partial Replay**: `replay_workflow(workflow_id, until_event=N)` replays up to event N
 - **Persistence**: Recordings saved to JSON for audit and debugging
 
 **Example**:
+
 ```python
+
 # During execution
+
 recorder.record_external_call(
     workflow_id="analysis",
     call_type="llm",
@@ -108,6 +124,7 @@ recorder.record_external_call(
 recorder.save_recording("analysis", "recording_v1")
 
 # Later, replay
+
 result = recorder.replay_workflow("recording_v1", until_event=42)
 ```
 
@@ -116,6 +133,7 @@ result = recorder.replay_workflow("recording_v1", until_event=42)
 **Purpose**: Track artifact relationships and generate Software Bill of Materials.
 
 **Key Features**:
+
 - **Artifact Registry**: Tracks workflows, modules, binaries, configs, snapshots
 - **Relationships**: Dependency graph with typed edges (uses, depends_on, produces, requires)
 - **Attestations**: Records policy checks, test results, signatures
@@ -130,8 +148,11 @@ result = recorder.replay_workflow("recording_v1", until_event=42)
 - `snapshot`: VM snapshot
 
 **Example**:
+
 ```python
+
 # Register artifacts
+
 workflow_artifact = Artifact(
     artifact_id="data_analysis",
     kind="workflow",
@@ -149,6 +170,7 @@ config_artifact = Artifact(
 provenance.register_artifact(config_artifact)
 
 # Add relationship
+
 provenance.add_relationship(
     ArtifactRelationship(
         from_artifact="data_analysis",
@@ -158,9 +180,11 @@ provenance.add_relationship(
 )
 
 # Attest
+
 provenance.attest("tests_passed", "data_analysis", {"test_count": 50})
 
 # Generate SBOM
+
 sbom = provenance.generate_sbom("data_analysis")
 provenance.save_sbom("data_analysis")
 ```
@@ -170,6 +194,7 @@ provenance.save_sbom("data_analysis")
 **Purpose**: Unified interface to all subsystems.
 
 **Key Features**:
+
 - **Config-Driven**: All paths and options configurable
 - **Production-Ready**: Full error handling, logging, persistence
 - **Provenance-First**: `execute_with_provenance()` tracks everything
@@ -181,6 +206,7 @@ provenance.save_sbom("data_analysis")
 from project_ai.tarl.integrations import TarlStackBox, Workflow, Capability, Policy
 
 # Initialize system
+
 stack = TarlStackBox(config={
     "vm_data_dir": "data/tarl_vm",
     "recording_dir": "data/recordings",
@@ -188,6 +214,7 @@ stack = TarlStackBox(config={
 })
 
 # Register capabilities and policies
+
 cap = Capability(
     name="Net.Connect",
     resource="network",
@@ -203,28 +230,34 @@ policy = Policy(
 stack.capabilities.register_policy(policy)
 
 # Define workflow
+
 def my_workflow(vm, context):
+
     # Check capability
+
     allowed, reason = stack.capabilities.check_capability(
         "Net.Connect", {"protocol": "https"}
     )
     if not allowed:
         raise PermissionError(reason)
-    
+
     # Record external call
+
     stack.recorder.record_external_call(
         workflow_id="my_workflow",
         call_type="api",
         call_args={"endpoint": "api.example.com"},
         call_result={"data": [1, 2, 3]}
     )
-    
+
     # Take snapshot
+
     snapshot_hash = vm.snapshot("my_workflow")
-    
+
     return {"result": "success", "snapshot": snapshot_hash}
 
 # Create and execute
+
 stack.create_workflow(
     workflow_id="my_workflow",
     entrypoint=my_workflow,
@@ -235,9 +268,11 @@ stack.create_workflow(
 result = stack.execute_with_provenance("my_workflow")
 
 # Save recording for replay
+
 stack.recorder.save_recording("my_workflow", "recording_v1")
 
 # Generate SBOM
+
 sbom = stack.provenance.generate_sbom("my_workflow")
 stack.provenance.save_sbom("my_workflow")
 ```
@@ -256,6 +291,7 @@ Comprehensive test suite with 35 tests covering:
 - End-to-end integration
 
 Run tests:
+
 ```bash
 python -m pytest tests/test_tarl_orchestration.py -v
 ```
@@ -263,11 +299,13 @@ python -m pytest tests/test_tarl_orchestration.py -v
 ## Demo Harness
 
 Interactive demo showing all features:
+
 ```bash
 python -m project_ai.tarl.integrations.orchestration
 ```
 
 Output includes:
+
 - Deterministic workflow execution
 - Agent orchestration patterns
 - Recording persistence
@@ -277,11 +315,11 @@ Output includes:
 ## Key Design Principles
 
 1. **Determinism First**: All non-determinism externalized to event log
-2. **Structured Over Ad-Hoc**: Capabilities and policies are structured data, not lambdas
-3. **Compile-Time Checks**: Workflow manifests enable early verification
-4. **Complete Replay**: Full execution can be reproduced from event log
-5. **Provenance by Default**: All artifacts and relationships tracked
-6. **Production-Grade**: Full error handling, logging, persistence
+1. **Structured Over Ad-Hoc**: Capabilities and policies are structured data, not lambdas
+1. **Compile-Time Checks**: Workflow manifests enable early verification
+1. **Complete Replay**: Full execution can be reproduced from event log
+1. **Provenance by Default**: All artifacts and relationships tracked
+1. **Production-Grade**: Full error handling, logging, persistence
 
 ## Integration with Project-AI
 
@@ -316,12 +354,13 @@ tests/
 ## Future Enhancements
 
 Potential extensions:
+
 1. **Parallel VM Execution**: Multiple workflow instances
-2. **Time-Travel Debugging**: Step through event log with state viewer
-3. **Policy DSL**: Custom language for capability constraints
-4. **Distributed Replay**: Replay across multiple machines
-5. **SBOM Signing**: Cryptographic attestations
-6. **IR Integration**: Compile-time capability checks in T.A.R.L. IR
+1. **Time-Travel Debugging**: Step through event log with state viewer
+1. **Policy DSL**: Custom language for capability constraints
+1. **Distributed Replay**: Replay across multiple machines
+1. **SBOM Signing**: Cryptographic attestations
+1. **IR Integration**: Compile-time capability checks in T.A.R.L. IR
 
 ## References
 

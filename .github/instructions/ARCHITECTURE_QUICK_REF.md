@@ -102,9 +102,11 @@ class AISystem:
         self.data_dir = data_dir
         os.makedirs(data_dir, exist_ok=True)  # CRITICAL
         self._load_state()  # Load from JSON
-    
+
     def mutating_operation(self):
+
         # ... modify state ...
+
         self._save_state()  # ALWAYS call after changes
 ```
 
@@ -117,7 +119,9 @@ class AISystem:
 def system_under_test(self):
     with tempfile.TemporaryDirectory() as tmpdir:
         yield AISystem(data_dir=tmpdir)  # Isolated state
+
         # Cleanup automatic via context manager
+
 ```
 
 ### Test Coverage Matrix
@@ -136,26 +140,34 @@ def system_under_test(self):
 ### OpenAI API
 
 ```python
+
 # Environment setup
+
 from dotenv import load_dotenv
 load_dotenv()  # Loads OPENAI_API_KEY
 
 # Used in:
+
 # - learning_paths.py (path generation)
+
 # - intelligence_engine.py (chat completion)
+
 ```
 
 ### PyQt6 Signal Pattern
 
 ```python
+
 # Define signals in class
+
 class Dashboard(QWidget):
     send_message = pyqtSignal(str)  # Custom signal
-    
+
     def on_button_click(self):
         self.send_message.emit("Hello")  # Emit
 
 # Connect in parent
+
 dashboard = Dashboard()
 dashboard.send_message.connect(self.handle_message)  # Connect
 ```
@@ -169,17 +181,21 @@ dashboard.send_message.connect(self.handle_message)  # Connect
 ## 📝 Common Commands
 
 ```powershell
+
 # Development
+
 python -m src.app.main           # Launch desktop app
 pytest -v                        # Run tests
 ruff check .                     # Lint
 ruff check . --fix              # Auto-fix
 
 # Docker
+
 docker-compose up                # Dev environment
 docker build -t project-ai .     # Production build
 
 # Web (separate context)
+
 cd web/backend && flask run      # Backend API
 cd web/frontend && npm run dev   # Frontend dev server
 ```
@@ -189,34 +205,45 @@ cd web/frontend && npm run dev   # Frontend dev server
 ### Module Imports
 
 ```python
+
 # ✅ CORRECT (from project root)
+
 python -m src.app.main
 
 # ❌ WRONG (breaks imports)
+
 python src/app/main.py
 ```
 
 ### State Persistence
 
 ```python
+
 # ✅ CORRECT
+
 def adjust_trait(self, trait, delta):
     self.personality[trait] += delta
     self._save_state()  # Don't forget!
 
 # ❌ WRONG (data lost on restart)
+
 def adjust_trait(self, trait, delta):
     self.personality[trait] += delta
+
     # Missing save - state not persisted
+
 ```
 
 ### Threading in PyQt6
 
 ```python
+
 # ✅ CORRECT
+
 QTimer.singleShot(1000, self.delayed_action)
 
 # ❌ WRONG (thread safety issues)
+
 threading.Thread(target=self.delayed_action).start()
 ```
 
@@ -249,5 +276,5 @@ threading.Thread(target=self.delayed_action).start()
 
 ---
 
-**Last Updated**: November 29, 2025  
+**Last Updated**: November 29, 2025
 **Target Audience**: AI coding agents and new developers

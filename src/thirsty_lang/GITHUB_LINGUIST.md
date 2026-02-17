@@ -1,29 +1,33 @@
 # Thirsty-lang - GitHub Linguist Language Definition
+
 # For submission to: https://github.com/github/linguist
 
 ## Language Overview
 
-**Name:** Thirsty-lang  
-**Type:** Programming Language  
-**Category:** Defensive Programming / Systems Programming  
-**First Appeared:** 2025  
+**Name:** Thirsty-lang
+**Type:** Programming Language
+**Category:** Defensive Programming / Systems Programming
+**First Appeared:** 2025
 **Designer:** Jeremy Karrick (IAmSoThirsty)
 
 ## Language Characteristics
 
 ### Extensions
+
 - `.thirsty` (primary)
 - `.thirstyplus` (enhanced edition)
 - `.thirstyplusplus` (advanced edition)
 - `.thirstofgods` (master edition)
 
 ### Syntax Highlighting
+
 - **TextMate Scope:** source.thirsty
 - **Color Scheme:** #00BFFF (Deep Sky Blue - water themed)
 - **Line Comment:** `//`
 - **Block Comment:** None (uses line comments)
 
 ### Language Type
+
 - **Type:** Programming
 - **Paradigm:** Multi-paradigm (imperative, defensive)
 - **Typing:** Dynamic
@@ -56,11 +60,13 @@
 ## Implementation
 
 ### Runtimes
+
 - **Primary:** Node.js (JavaScript interpreter)
 - **Alternative:** Python 3.8+
 - **Container:** Docker support
 
 ### Tools & Ecosystem
+
 - REPL (interactive shell)
 - Debugger (source-level debugging)
 - Profiler (performance analysis)
@@ -85,11 +91,11 @@ shield mySecureApp {
     morph on: ["injection", "overflow"]
     defend with: "aggressive"
   }
-  
+
   drink userData = sip "Enter name"
   sanitize userData
   armor userData
-  
+
   pour "Hello, " + userData
 }
 ```
@@ -126,15 +132,18 @@ Add to `.gitattributes`:
 For GitHub to officially recognize Thirsty-lang:
 
 1. **Add to `languages.yml`:**
+
 ```yaml
 Thirsty-lang:
   type: programming
   color: "#00BFFF"
   extensions:
+
   - ".thirsty"
   - ".thirstyplus"
   - ".thirstyplusplus"
   - ".thirstofgods"
+
   tm_scope: source.thirsty
   ace_mode: text
   language_id: 472923847
@@ -151,11 +160,15 @@ Thirsty-lang:
 To verify language detection:
 
 ```bash
+
 # Check gitattributes
+
 git check-attr linguist-language src/thirsty_lang/examples/hello.thirsty
 
 # Expected output:
+
 # src/thirsty_lang/examples/hello.thirsty: linguist-language: Thirsty-lang
+
 ```
 
 ## Submission Checklist
@@ -185,6 +198,6 @@ For official GitHub Linguist recognition:
 
 ---
 
-**Status:** Ready for GitHub recognition  
-**Last Updated:** 2026-01-28  
+**Status:** Ready for GitHub recognition
+**Last Updated:** 2026-01-28
 **Version:** 1.0.0

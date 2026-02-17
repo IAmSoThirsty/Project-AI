@@ -93,17 +93,14 @@ class VoiceModel(ABC):
         context: dict[str, Any] | None = None,
     ) -> VoiceResponse:
         """Synthesize speech from text with emotion"""
-        pass
 
     @abstractmethod
     def initialize(self) -> bool:
         """Initialize the voice model"""
-        pass
 
     @abstractmethod
     def shutdown(self) -> None:
         """Clean shutdown of voice model"""
-        pass
 
     def is_ready(self) -> bool:
         """Check if model is ready to use"""

@@ -49,7 +49,9 @@ Client Request
 ## Command Base Classes
 
 ```python
+
 # application/commands/base.py
+
 from abc import ABC
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -62,16 +64,16 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Command(ABC):
     """Base command for CQRS write operations."""
-    
+
     command_id: UUID = field(default_factory=uuid4)
     timestamp: datetime = field(default_factory=datetime.utcnow)
     user_id: Optional[UUID] = None
     correlation_id: Optional[UUID] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
-    
+
     def __post_init__(self):
         logger.debug(f"Created command {self.__class__.__name__} with ID {self.command_id}")
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate command (override in subclasses)."""
         return True, None
@@ -86,14 +88,16 @@ class CommandResult:
     events_emitted: int = 0
 ```
 
----
+______________________________________________________________________
 
 ## Command Catalog
 
 ### User Management Commands
 
 ```python
+
 # application/commands/user_commands.py
+
 from dataclasses import dataclass
 from typing import Optional
 from uuid import UUID
@@ -106,31 +110,35 @@ class RegisterUserCommand(Command):
     username: str = ""
     email: str = ""
     password: str = ""
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate registration data."""
+
         # Username validation
+
         if not 3 <= len(self.username) <= 50:
             return False, "Username must be 3-50 characters"
-        
+
         if not re.match(r'^[a-zA-Z0-9_-]+$', self.username):
             return False, "Username can only contain alphanumeric, underscore, hyphen"
-        
+
         # Email validation
+
         email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if not re.match(email_pattern, self.email):
             return False, "Invalid email format"
-        
+
         # Password validation
+
         if len(self.password) < 8:
             return False, "Password must be at least 8 characters"
-        
+
         if not any(c.isupper() for c in self.password):
             return False, "Password must contain uppercase letter"
-        
+
         if not any(c.isdigit() for c in self.password):
             return False, "Password must contain digit"
-        
+
         return True, None
 
 @dataclass
@@ -140,7 +148,7 @@ class LoginUserCommand(Command):
     password: str = ""
     ip_address: str = ""
     session_duration_hours: int = 24
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate login data."""
         if not self.username:
@@ -157,7 +165,7 @@ class ChangePasswordCommand(Command):
     user_id: UUID = None
     old_password: str = ""
     new_password: str = ""
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate password change."""
         if not self.user_id:
@@ -173,7 +181,7 @@ class GrantPermissionCommand(Command):
     resource: str = ""
     action: str = ""
     granted_by: str = ""
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate permission grant."""
         if not self.user_id:
@@ -188,7 +196,9 @@ class GrantPermissionCommand(Command):
 ### AI Governance Commands
 
 ```python
+
 # application/commands/governance_commands.py
+
 from dataclasses import dataclass
 from typing import Dict, Optional
 from uuid import UUID
@@ -199,7 +209,7 @@ class EvaluateActionCommand(Command):
     """Command: Evaluate action against governance laws."""
     action: str = ""
     context: Dict = field(default_factory=dict)
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate evaluation request."""
         if not self.action or not self.action.strip():
@@ -216,7 +226,7 @@ class ActivateOverrideCommand(Command):
     activated_by: str = ""
     duration_minutes: int = 60
     master_password: str = ""
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate override activation."""
         if not self.override_type:
@@ -235,7 +245,7 @@ class AddToBlackVaultCommand(Command):
     content: str = ""
     reason: str = ""
     added_by: str = ""
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate Black Vault addition."""
         if not self.content:
@@ -248,7 +258,9 @@ class AddToBlackVaultCommand(Command):
 ### Memory Management Commands
 
 ```python
+
 # application/commands/memory_commands.py
+
 from dataclasses import dataclass
 from typing import Dict, Optional
 from uuid import UUID
@@ -259,7 +271,7 @@ class StartConversationCommand(Command):
     """Command: Start new conversation."""
     user_id: UUID = None
     initial_message: str = ""
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate conversation start."""
         if not self.user_id:
@@ -275,7 +287,7 @@ class AddMemoryEntryCommand(Command):
     user_message: str = ""
     ai_response: str = ""
     metadata: Dict = field(default_factory=dict)
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate memory entry."""
         if not self.user_id:
@@ -291,7 +303,7 @@ class ConsolidateKnowledgeCommand(Command):
     """Command: Extract knowledge from conversation entry."""
     user_id: UUID = None
     entry_id: UUID = None
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate knowledge consolidation."""
         if not self.user_id:
@@ -304,7 +316,7 @@ class ConsolidateKnowledgeCommand(Command):
 class PurgeOldMemoriesCommand(Command):
     """Command: Remove old memories per retention policy."""
     user_id: UUID = None
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate purge command."""
         if not self.user_id:
@@ -315,7 +327,9 @@ class PurgeOldMemoriesCommand(Command):
 ### Agent Execution Commands
 
 ```python
+
 # application/commands/agent_commands.py
+
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 from uuid import UUID
@@ -327,7 +341,7 @@ class CreateAgentCommand(Command):
     agent_name: str = ""
     agent_type: str = ""
     capabilities: List[str] = field(default_factory=list)
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate agent creation."""
         if not self.agent_name:
@@ -343,7 +357,7 @@ class AssignTaskCommand(Command):
     task_description: str = ""
     task_params: Dict = field(default_factory=dict)
     priority: str = "normal"
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate task assignment."""
         if not self.agent_id:
@@ -360,7 +374,7 @@ class StartWorkflowCommand(Command):
     workflow_type: str = ""
     input_params: Dict = field(default_factory=dict)
     workflow_id: Optional[str] = None
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate workflow start."""
         if not self.workflow_type:
@@ -374,7 +388,7 @@ class ConveneCouncilCommand(Command):
     agent_ids: List[UUID] = field(default_factory=list)
     decision_topic: str = ""
     voting_threshold: float = 0.67
-    
+
     def validate(self) -> tuple[bool, Optional[str]]:
         """Validate council convening."""
         if not self.council_name:
@@ -388,12 +402,14 @@ class ConveneCouncilCommand(Command):
         return True, None
 ```
 
----
+______________________________________________________________________
 
 ## Command Bus
 
 ```python
+
 # application/command_bus.py
+
 from typing import Callable, Dict, Type
 import logging
 from application.commands.base import Command, CommandResult
@@ -402,36 +418,40 @@ logger = logging.getLogger(__name__)
 
 class CommandBus:
     """Command bus for routing commands to handlers."""
-    
+
     def __init__(self):
         self._handlers: Dict[Type[Command], Callable] = {}
         logger.info("Initialized command bus")
-    
+
     def register(self, command_type: Type[Command], handler: Callable[[Command], CommandResult]) -> None:
         """Register command handler."""
         self._handlers[command_type] = handler
         logger.info(f"Registered handler for {command_type.__name__}")
-    
+
     def dispatch(self, command: Command) -> CommandResult:
         """Dispatch command to registered handler."""
         try:
+
             # Validate command
+
             is_valid, error = command.validate()
             if not is_valid:
                 logger.warning(f"Command validation failed: {error}")
                 return CommandResult(success=False, error=error)
-            
+
             # Find handler
+
             handler = self._handlers.get(type(command))
             if not handler:
                 error = f"No handler registered for {type(command).__name__}"
                 logger.error(error)
                 return CommandResult(success=False, error=error)
-            
+
             # Execute handler
+
             logger.info(f"Dispatching {type(command).__name__} (ID: {command.command_id})")
             result = handler(command)
-            
+
             if result.success:
                 logger.info(
                     f"Command {type(command).__name__} succeeded "
@@ -439,26 +459,28 @@ class CommandBus:
                 )
             else:
                 logger.error(f"Command {type(command).__name__} failed: {result.error}")
-            
+
             return result
-            
+
         except Exception as e:
             logger.error(f"Command dispatch failed: {e}", exc_info=True)
             return CommandResult(success=False, error=str(e))
 ```
 
----
+______________________________________________________________________
 
 ## Command Handlers (Examples)
 
 See **[Command Handlers](command_handlers.md)** for detailed implementations.
 
----
+______________________________________________________________________
 
 ## Command Validation
 
 ```python
+
 # application/commands/validation.py
+
 import logging
 from typing import Dict, List, Optional
 
@@ -466,61 +488,70 @@ logger = logging.getLogger(__name__)
 
 class CommandValidator:
     """Centralized command validation with business rules."""
-    
+
     @staticmethod
     def validate_user_registration(username: str, email: str, password: str) -> tuple[bool, Optional[str]]:
         """Validate user registration data."""
+
         # Username rules
+
         if not 3 <= len(username) <= 50:
             return False, "Username must be 3-50 characters"
-        
+
         # Check for profanity (simple example)
+
         profanity_list = ["badword1", "badword2"]  # Production: use library
         if any(word in username.lower() for word in profanity_list):
             return False, "Username contains inappropriate content"
-        
+
         # Email rules
+
         if "@" not in email or "." not in email.split("@")[-1]:
             return False, "Invalid email format"
-        
+
         # Password strength
+
         if len(password) < 12:
             return False, "Password must be at least 12 characters (recommended)"
-        
+
         has_upper = any(c.isupper() for c in password)
         has_lower = any(c.islower() for c in password)
         has_digit = any(c.isdigit() for c in password)
         has_special = any(c in "!@#$%^&*()_+-=[]{}|;:,.<>?" for c in password)
-        
+
         if not (has_upper and has_lower and has_digit and has_special):
             return False, "Password must contain uppercase, lowercase, digit, and special character"
-        
+
         return True, None
-    
+
     @staticmethod
     def validate_governance_action(action: str, context: Dict) -> tuple[bool, Optional[str]]:
         """Validate governance action evaluation."""
         required_context = ["is_user_order", "endangers_humans", "endangers_self"]
-        
+
         for key in required_context:
             if key not in context:
                 return False, f"Missing required context: {key}"
-        
+
         # Check for obviously dangerous actions
+
         dangerous_keywords = ["rm -rf", "drop table", "delete *", "format c:"]
         if any(keyword in action.lower() for keyword in dangerous_keywords):
             logger.warning(f"Dangerous action detected: {action}")
+
             # Still allow if properly flagged in context
-        
+
         return True, None
 ```
 
----
+______________________________________________________________________
 
 ## Integration with Event Sourcing
 
 ```python
+
 # application/commands/event_sourced_handler.py
+
 import logging
 from typing import Generic, TypeVar
 from uuid import UUID
@@ -534,57 +565,64 @@ T = TypeVar('T', bound=AggregateRoot)
 
 class EventSourcedCommandHandler(Generic[T]):
     """Base handler for event-sourced commands."""
-    
+
     def __init__(self, event_store: EventStore):
         self.event_store = event_store
-    
+
     def handle(self, command: Command, aggregate_id: UUID) -> CommandResult:
         """Handle command with event sourcing."""
         try:
+
             # Load aggregate from event history
+
             events = self.event_store.load_events(aggregate_id)
             aggregate = self._create_aggregate(aggregate_id)
             aggregate.load_from_history(events)
-            
+
             # Execute command on aggregate
+
             self._execute_command(command, aggregate)
-            
+
             # Get uncommitted events
+
             new_events = aggregate.get_uncommitted_events()
-            
+
             # Persist events
+
             for event in new_events:
                 self.event_store.append_event(event)
-            
+
             logger.info(
                 f"Persisted {len(new_events)} events for aggregate {aggregate_id}"
             )
-            
+
             return CommandResult(
                 success=True,
                 aggregate_id=aggregate_id,
                 events_emitted=len(new_events)
             )
-            
+
         except Exception as e:
             logger.error(f"Event-sourced command failed: {e}")
             return CommandResult(success=False, error=str(e))
-    
+
     def _create_aggregate(self, aggregate_id: UUID) -> T:
         """Create new aggregate instance (override in subclasses)."""
         raise NotImplementedError
-    
+
     def _execute_command(self, command: Command, aggregate: T) -> None:
         """Execute command on aggregate (override in subclasses)."""
         raise NotImplementedError
 ```
 
----
+______________________________________________________________________
 
 ## Testing
 
 ```python
+
 # tests/application/test_commands.py
+
 import pytest
 from uuid import uuid4
 from application.commands.user_commands import RegisterUserCommand, LoginUserCommand
@@ -593,7 +631,7 @@ from application.command_bus import CommandBus
 
 class TestCommands:
     """Test command validation and execution."""
-    
+
     def test_command_validation_success(self):
         """Verify valid command passes validation."""
         cmd = RegisterUserCommand(
@@ -601,11 +639,11 @@ class TestCommands:
             email="valid@example.com",
             password="SecurePass123!"
         )
-        
+
         is_valid, error = cmd.validate()
         assert is_valid
         assert error is None
-    
+
     def test_command_validation_failure(self):
         """Verify invalid command fails validation."""
         cmd = RegisterUserCommand(
@@ -613,29 +651,29 @@ class TestCommands:
             email="invalid-email",
             password="weak"
         )
-        
+
         is_valid, error = cmd.validate()
         assert not is_valid
         assert error is not None
-    
+
     def test_command_bus_dispatch(self):
         """Verify command bus routing."""
         bus = CommandBus()
         handled = []
-        
+
         def handler(cmd):
             handled.append(cmd)
             return CommandResult(success=True)
-        
+
         bus.register(EvaluateActionCommand, handler)
-        
+
         cmd = EvaluateActionCommand(
             action="test_action",
             context={"is_user_order": True}
         )
-        
+
         result = bus.dispatch(cmd)
-        
+
         assert result.success
         assert len(handled) == 1
 ```

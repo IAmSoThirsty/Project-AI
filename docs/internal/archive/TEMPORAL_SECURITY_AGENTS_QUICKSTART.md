@@ -3,10 +3,13 @@
 ## Prerequisites
 
 ```bash
+
 # Install Temporal SDK
+
 pip install temporalio
 
 # Or add to requirements.txt
+
 echo "temporalio>=1.5.0" >> requirements.txt
 pip install -r requirements.txt
 ```
@@ -16,36 +19,46 @@ pip install -r requirements.txt
 ### Option 1: Docker Compose (Recommended)
 
 ```bash
+
 # Start Temporal with PostgreSQL
+
 docker-compose up -d temporal temporal-postgresql
 
 # Verify it's running
+
 curl http://localhost:7233/health
 
 # Access UI
+
 open http://localhost:8233
 ```
 
 ### Option 2: Temporal CLI
 
 ```bash
+
 # Install Temporal CLI
+
 brew install temporal
 
 # Or download from https://github.com/temporalio/cli
 
 # Start dev server
+
 temporal server start-dev
 ```
 
 ## Start Security Worker
 
 ```bash
+
 # Start the worker (listens for workflow tasks)
+
 python scripts/run_security_worker.py
 ```
 
 You should see:
+
 ```
 🔌 Connecting to Temporal server at localhost:7233
 ✅ Connected to Temporal server
@@ -66,10 +79,13 @@ Press Ctrl+C to stop
 ### Red Team Campaign
 
 ```bash
+
 # High-priority daily campaign
+
 python examples/temporal/red_team_campaign_example.py --type high-priority
 
 # Comprehensive weekly campaign
+
 python examples/temporal/red_team_campaign_example.py --type comprehensive
 ```
 
@@ -94,13 +110,17 @@ python examples/temporal/code_security_sweep_example.py
 ### Command Line
 
 ```bash
+
 # List workflows
+
 temporal workflow list --task-queue security-agents
 
 # Describe specific workflow
+
 temporal workflow describe --workflow-id red-team-campaign-high-priority-...
 
 # View workflow history
+
 temporal workflow show --workflow-id red-team-campaign-high-priority-...
 ```
 
@@ -113,8 +133,9 @@ from temporalio.client import Client, Schedule, ScheduleActionStartWorkflow, Sch
 
 async def setup_schedules():
     client = await Client.connect("localhost:7233")
-    
+
     # Daily at 2 AM
+
     await client.create_schedule(
         "red-team-daily",
         Schedule(

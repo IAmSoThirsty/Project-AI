@@ -2,7 +2,7 @@
 
 **Stop trying the automated scripts - they're causing issues. Here's the simple way:**
 
----
+______________________________________________________________________
 
 ## Quick Start (2 Steps)
 
@@ -23,7 +23,7 @@ Uvicorn running on http://0.0.0.0:8001
 
 **Leave this window open!**
 
----
+______________________________________________________________________
 
 ### Step 2: Start Legion (Optional - if you want the chat interface)
 
@@ -42,7 +42,7 @@ Uvicorn running on http://localhost:8002
 
 **Leave this window open too!**
 
----
+______________________________________________________________________
 
 ### Step 3: Open in Browser
 
@@ -55,27 +55,22 @@ Uvicorn running on http://localhost:8002
 - Open browser to: <http://localhost:8002>
 - Or open file: `integrations/openclaw/legion_interface.html`
 
----
+______________________________________________________________________
 
 ## What You've Built
 
-✅ **Save Points System** - Auto-saves every 15 minutes (API endpoints at /api/savepoints/*)
-✅ **Triumvirate Governance** - Active in backend
-✅ **Legion Integration** - Chat interface with AI
-✅ **Universal USB Installer** - Script at `scripts\create_universal_usb.ps1`
-✅ **Android App** - Source code ready (needs SDK to build APK)
-✅ **Clean Project Structure** - 209 files → 54 in root
+✅ **Save Points System** - Auto-saves every 15 minutes (API endpoints at /api/savepoints/\*) ✅ **Triumvirate Governance** - Active in backend ✅ **Legion Integration** - Chat interface with AI ✅ **Universal USB Installer** - Script at `scripts\create_universal_usb.ps1` ✅ **Android App** - Source code ready (needs SDK to build APK) ✅ **Clean Project Structure** - 209 files → 54 in root
 
----
+______________________________________________________________________
 
 ## If You Want to Test Save Points
 
 **Via API (<http://localhost:8001/docs>):**
 
 1. Go to `/api/savepoints/create` endpoint
-2. Click "Try it out"
-3. Enter a description like "Test save"
-4. Click "Execute"
+1. Click "Try it out"
+1. Enter a description like "Test save"
+1. Click "Execute"
 
 **Check auto-saves:**
 
@@ -83,7 +78,7 @@ Uvicorn running on http://localhost:8002
 dir data\savepoints\auto
 ```
 
----
+______________________________________________________________________
 
 ## The Automated Stuff That's Ready
 
@@ -107,7 +102,7 @@ You don't need to run the backend to use these:
 .\scripts\cleanup_root.ps1
 ```
 
----
+______________________________________________________________________
 
 ## GitHub Release v1.3.0
 
@@ -120,7 +115,7 @@ git push origin v1.3.0
 
 This will trigger GitHub Actions to build packages (if Android SDK is configured in CI).
 
----
+______________________________________________________________________
 
 ## Bottom Line
 
@@ -129,12 +124,12 @@ This will trigger GitHub Actions to build packages (if Android SDK is configured
 The heavy automation scripts were causing issues. Just run the backend manually when you want to test it:
 
 1. `python start_api.py` - That's it!
-2. Open <http://localhost:8001/docs>
-3. Explore the save points endpoints
-4. Let it run for hours if you want
+1. Open <http://localhost:8001/docs>
+1. Explore the save points endpoints
+1. Let it run for hours if you want
 
 Everything else (USB installer, Android app source, documentation) is ready to go.
 
----
+______________________________________________________________________
 
 **No need for complex launch scripts. Keep it simple!** 🚀

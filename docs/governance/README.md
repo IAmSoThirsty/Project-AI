@@ -23,11 +23,13 @@ This folder contains documentation about ethical frameworks, policy enforcement,
 ## Naming Conventions
 
 For **external-facing documents**:
+
 - Use "Governing Council" instead of "Triumvirate" (internal codename)
 - Use "Ethics Framework" instead of "Four Laws" when appropriate
 - Use "Governance System" instead of "Codex Deus Maximus" for external audiences
 
 For **internal documentation** (keep in `docs/internal/`):
+
 - Internal codenames are acceptable: Triumvirate, Cerberus, Galahad, Codex
 
 ## Guidelines

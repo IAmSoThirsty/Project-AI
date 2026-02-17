@@ -22,7 +22,9 @@ Recommended stack:
 Sample CI step snippet:
 
 ```yaml
+
 - name: Run GUI E2E (Xvfb)
+
   run: |
     sudo apt-get update && sudo apt-get install -y xvfb
     export DISPLAY=:99

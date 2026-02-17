@@ -33,12 +33,14 @@ This guide explains how to build and release the complete Project-AI distributio
 The easiest way to create a release is using GitHub Actions:
 
 1. **Create and push a version tag:**
+
    ```bash
    git tag v1.0.0
    git push origin v1.0.0
    ```
 
-2. The `build-release.yml` workflow automatically:
+1. The `build-release.yml` workflow automatically:
+
    - Validates dependencies
    - Builds all platform artifacts
    - Runs validation checks
@@ -47,7 +49,8 @@ The easiest way to create a release is using GitHub Actions:
    - Creates GitHub release
    - Triggers artifact signing
 
-3. **Manual trigger (optional):**
+1. **Manual trigger (optional):**
+
    - Go to Actions → Build Release Package
    - Click "Run workflow"
    - Enter version number (e.g., `1.0.0`)
@@ -58,11 +61,14 @@ The easiest way to create a release is using GitHub Actions:
 #### Linux/macOS
 
 ```bash
+
 # Make scripts executable (first time only)
+
 chmod +x scripts/build_release.sh
 chmod +x scripts/validate_release.py
 
 # Run the build
+
 ./scripts/build_release.sh
 ```
 
@@ -90,31 +96,37 @@ The build script automatically checks for:
 ### Phase 2: Platform Builds
 
 #### Backend API
+
 - Copies: `api/`, `tarl/`, `governance/`, `config/`, `utils/`, `kernel/`
 - Creates startup scripts: `start.sh`, `start.bat`
 - Includes: `requirements.txt`, `.env` template
 
 #### Web Frontend
+
 - Copies all web assets
 - Creates deployment guide: `DEPLOY.md`
 
 #### Android App
+
 - Runs: `./gradlew assembleDebug` (if available)
 - Output: `project-ai-v1.0.0-debug.apk`
 - Creates: `INSTALL.md` guide
 
 #### Desktop Apps
+
 - Runs: `npm install && npm run build` (if available)
 - Outputs platform-specific installers
 - Creates: `INSTALL.md` guide
 
 #### Monitoring Agents
+
 - Copies monitoring configurations
 - Creates: `README.md` for monitoring setup
 
 ### Phase 3: Security Cleanup
 
 The script automatically removes:
+
 - `*.key` files
 - `*.pem` files (not from signing)
 - `secrets.*` files
@@ -123,12 +135,14 @@ The script automatically removes:
 ### Phase 4: Archive Creation
 
 Creates two archive formats:
+
 - `project-ai-v1.0.0.tar.gz` (Linux/macOS preferred)
 - `project-ai-v1.0.0.zip` (cross-platform)
 
 ### Phase 5: Validation
 
 Runs `validate_release.py` to check:
+
 - Directory structure completeness
 - Backend artifacts presence
 - Web frontend files
@@ -142,6 +156,7 @@ Runs `validate_release.py` to check:
 Creates two JSON reports:
 
 #### `release-summary-v1.0.0.json`
+
 ```json
 {
   "version": "1.0.0",
@@ -160,6 +175,7 @@ Creates two JSON reports:
 ```
 
 #### `validation-report-v1.0.0.json`
+
 ```json
 {
   "validation_passed": true,
@@ -226,14 +242,19 @@ python3 scripts/validate_release.py releases/project-ai-v1.0.0 --version 1.0.0
 ```
 
 Output options:
+
 ```bash
+
 # Human-readable output (default)
+
 python3 scripts/validate_release.py releases/project-ai-v1.0.0
 
 # JSON output to stdout
+
 python3 scripts/validate_release.py releases/project-ai-v1.0.0 --json
 
 # JSON output to file
+
 python3 scripts/validate_release.py releases/project-ai-v1.0.0 --output report.json
 ```
 
@@ -242,15 +263,16 @@ python3 scripts/validate_release.py releases/project-ai-v1.0.0 --output report.j
 The validator performs 8 categories of checks:
 
 1. **Directory Structure** - Verifies all expected directories exist
-2. **Backend** - Checks API, TARL, governance modules, startup scripts
-3. **Web Frontend** - Verifies index.html and deployment guide
-4. **Android** - Checks for APK files and installation guide
-5. **Desktop** - Verifies installers for various platforms
-6. **Documentation** - Ensures all required docs are present
-7. **MANIFEST.in** - Validates against package manifest
-8. **Dependencies** - Checks requirements.txt and dependency files
+1. **Backend** - Checks API, TARL, governance modules, startup scripts
+1. **Web Frontend** - Verifies index.html and deployment guide
+1. **Android** - Checks for APK files and installation guide
+1. **Desktop** - Verifies installers for various platforms
+1. **Documentation** - Ensures all required docs are present
+1. **MANIFEST.in** - Validates against package manifest
+1. **Dependencies** - Checks requirements.txt and dependency files
 
 Exit codes:
+
 - `0` - Validation passed (warnings allowed)
 - `1` - Validation failed (errors found)
 
@@ -275,6 +297,7 @@ sha512sum -c SHA512SUMS
 ```
 
 Expected output:
+
 ```
 project-ai-v1.0.0.tar.gz: OK
 project-ai-v1.0.0.zip: OK
@@ -285,12 +308,14 @@ project-ai-v1.0.0.zip: OK
 ### Automated (Recommended)
 
 1. **Create and push tag:**
+
    ```bash
    git tag v1.0.0
    git push origin v1.0.0
    ```
 
-2. **Workflow automatically:**
+1. **Workflow automatically:**
+
    - Builds complete distribution
    - Validates artifacts
    - Creates GitHub release
@@ -302,11 +327,13 @@ project-ai-v1.0.0.zip: OK
 If you built locally and want to create a release manually:
 
 1. **Create release on GitHub:**
+
    - Go to Releases → Draft a new release
    - Create tag: `v1.0.0`
    - Fill in release notes
 
-2. **Upload artifacts:**
+1. **Upload artifacts:**
+
    - `project-ai-v1.0.0.tar.gz`
    - `project-ai-v1.0.0.zip`
    - `release-summary-v1.0.0.json`
@@ -314,15 +341,15 @@ If you built locally and want to create a release manually:
    - `SHA256SUMS`
    - `SHA512SUMS`
 
-3. **Publish release**
+1. **Publish release**
 
 ## Artifact Signing
 
 Release artifacts are signed using Sigstore Cosign:
 
 1. The `build-release.yml` workflow triggers `sign-release-artifacts.yml`
-2. Artifacts are signed with keyless signing (OIDC)
-3. Signatures and certificates are uploaded to the release
+1. Artifacts are signed with keyless signing (OIDC)
+1. Signatures and certificates are uploaded to the release
 
 **Note:** Signing is automatic for tagged releases. Manual builds require manual signing.
 
@@ -331,48 +358,60 @@ Release artifacts are signed using Sigstore Cosign:
 ### Build Fails: Missing Dependencies
 
 **Error:**
+
 ```
 ERROR: Missing required dependencies. Please install them first.
 ```
 
-**Solution:**
-Install Python 3.11+:
+**Solution:** Install Python 3.11+:
+
 ```bash
+
 # Ubuntu/Debian
+
 sudo apt install python3.11
 
 # macOS
+
 brew install python@3.11
 
 # Windows
+
 # Download from python.org
+
 ```
 
 ### Build Fails: Android Build Error
 
 **Error:**
+
 ```
 ⚠ Android APK build skipped (Gradle not available)
 ```
 
-**Solution:**
-This is a warning, not an error. To build Android:
+**Solution:** This is a warning, not an error. To build Android:
+
 ```bash
+
 # Install Java 17
+
 sudo apt install openjdk-17-jdk
 
 # Run Gradle build
+
 ./gradlew assembleDebug
 ```
 
 ### Build Fails: Desktop Build Error
 
 **Error:**
+
 ```
 ⚠ Desktop builds not found - run npm run build first
 ```
 
 **Solution:**
+
 ```bash
 cd desktop
 npm install
@@ -383,22 +422,23 @@ cd ..
 ### Validation Fails: Missing Files
 
 **Error:**
+
 ```
 ✗ Backend: Missing start.sh
 ```
 
-**Solution:**
-Check that all source files exist in the project root before building. Re-run the build script.
+**Solution:** Check that all source files exist in the project root before building. Re-run the build script.
 
 ### Windows: Archive Creation Failed
 
 **Error:**
+
 ```
 WARNING 7-Zip not found - skipping archive creation
 ```
 
-**Solution:**
-Install 7-Zip from https://www.7-zip.org/ or manually create ZIP:
+**Solution:** Install 7-Zip from https://www.7-zip.org/ or manually create ZIP:
+
 ```batch
 REM Using PowerShell
 powershell Compress-Archive -Path releases\project-ai-v1.0.0 -DestinationPath releases\project-ai-v1.0.0.zip
@@ -407,18 +447,19 @@ powershell Compress-Archive -Path releases\project-ai-v1.0.0 -DestinationPath re
 ### Checksums Don't Match
 
 **Error:**
+
 ```
 project-ai-v1.0.0.tar.gz: FAILED
 ```
 
-**Solution:**
-Re-download the file or rebuild the release. The archive may have been corrupted during transfer.
+**Solution:** Re-download the file or rebuild the release. The archive may have been corrupted during transfer.
 
 ## Best Practices
 
 ### Version Numbering
 
 Follow Semantic Versioning (SemVer):
+
 - **Major** (1.0.0): Breaking changes
 - **Minor** (1.1.0): New features, backward compatible
 - **Patch** (1.0.1): Bug fixes
@@ -426,11 +467,12 @@ Follow Semantic Versioning (SemVer):
 ### Pre-Release Testing
 
 Before creating a release:
+
 1. Run full test suite: `pytest`
-2. Run linting: `ruff check .`
-3. Test the build script locally
-4. Validate the generated package
-5. Test installation from the package
+1. Run linting: `ruff check .`
+1. Test the build script locally
+1. Validate the generated package
+1. Test installation from the package
 
 ### Release Checklist
 
@@ -450,17 +492,18 @@ Before creating a release:
 ### Security Considerations
 
 1. **Never commit secrets** to the repository
-2. **Review .env files** before release
-3. **Check for hardcoded credentials** in code
-4. **Verify sensitive file cleanup** in release package
-5. **Use signed releases** for distribution
-6. **Verify checksums** before installation
+1. **Review .env files** before release
+1. **Check for hardcoded credentials** in code
+1. **Verify sensitive file cleanup** in release package
+1. **Use signed releases** for distribution
+1. **Verify checksums** before installation
 
 ## CI/CD Integration
 
 ### GitHub Actions
 
 The build-release.yml workflow integrates with:
+
 - `sign-release-artifacts.yml` - Artifact signing
 - `ci-consolidated.yml` - CI tests
 - `security-consolidated.yml` - Security scans
@@ -470,24 +513,31 @@ The build-release.yml workflow integrates with:
 To integrate with other CI/CD systems:
 
 ```yaml
+
 # Example: GitLab CI
+
 build-release:
   stage: build
   image: ubuntu:22.04
   script:
+
     - apt-get update && apt-get install -y python3 git zip
     - pip3 install -r requirements.txt
     - chmod +x scripts/build_release.sh
     - ./scripts/build_release.sh
+
   artifacts:
     paths:
+
       - releases/
+
     expire_in: 90 days
 ```
 
 ## Support
 
 For issues or questions:
+
 - **GitHub Issues**: https://github.com/IAmSoThirsty/Project-AI/issues
 - **Email**: projectaidevs@gmail.com
 - **Documentation**: See DEPLOYMENT.md, PRODUCTION_DEPLOYMENT.md

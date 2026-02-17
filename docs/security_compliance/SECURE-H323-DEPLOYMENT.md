@@ -43,25 +43,25 @@ Endpoints SHOULD log:
 ### 13.1 Gatekeeper Performance
 
 - GK MUST support:
-    - ≥ 5,000 concurrent registrations
-    - ≥ 100 call setups per second
-    - < 150 ms ARQ/ACF response time
+  - ≥ 5,000 concurrent registrations
+  - ≥ 100 call setups per second
+  - < 150 ms ARQ/ACF response time
 - GK SHOULD support horizontal failover clustering.
 
 ### 13.2 Gateway Performance
 
 - GW MUST support:
-    - ≥ 500 concurrent calls (scalable by model)
-    - SRTP encryption at line rate
-    - < 200 ms call setup delay added by gateway
+  - ≥ 500 concurrent calls (scalable by model)
+  - SRTP encryption at line rate
+  - < 200 ms call setup delay added by gateway
 - GW SHOULD support DSP resource pooling for codec translation.
 
 ### 13.3 Endpoint Performance
 
 - Endpoints MUST support:
-    - SRTP AES‑128 at full media bandwidth
-    - H.245 negotiation within < 300 ms
-    - Jitter buffer adaptation for variable network conditions
+  - SRTP AES‑128 at full media bandwidth
+  - H.245 negotiation within < 300 ms
+  - Jitter buffer adaptation for variable network conditions
 
 ### 13.4 Network Performance
 
@@ -69,8 +69,8 @@ Endpoints SHOULD log:
 - Jitter target: < 30 ms
 - Packet loss target: < 1%
 - QoS markings:
-    - SRTP: DSCP 46 (EF)
-    - Signaling: DSCP 24 (CS3)
+  - SRTP: DSCP 46 (EF)
+  - Signaling: DSCP 24 (CS3)
 
 ## 14. Reference Topology Diagram
 
@@ -106,6 +106,6 @@ graph TD
 - [RFC 3711: SRTP](https://datatracker.ietf.org/doc/html/rfc3711)
 - [PKI Best Practices](https://www.rfc-editor.org/rfc/rfc3647)
 
----
+______________________________________________________________________
 
 *This specification provides a repeatable, auditable, production-ready blueprint for secure, interoperable H.323 enterprise deployments—including hardened gateway interworking, PKI security, and full H.235 protocol enforcement.*

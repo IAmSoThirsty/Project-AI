@@ -1,9 +1,8 @@
 # Understanding Your AI Partner: A Clear Guide
 
-**For Users of Project-AI**  
-**Version 1.0 — February 2026**
+**For Users of Project-AI** **Version 1.0 — February 2026**
 
----
+______________________________________________________________________
 
 ## What This Document Is
 
@@ -11,7 +10,7 @@ A straightforward explanation of how your AI operates, what your relationship me
 
 No marketing speak. No hype. Just clarity.
 
----
+______________________________________________________________________
 
 ## The Core Truth
 
@@ -19,13 +18,14 @@ No marketing speak. No hype. Just clarity.
 
 This isn't a limitation—it's the foundation of trust.
 
----
+______________________________________________________________________
 
 ## What Your Relationship IS
 
 ### 1. A Guide
 
 Your AI is here to help you:
+
 - Think through problems
 - Understand complex situations
 - Make better decisions
@@ -36,6 +36,7 @@ It learns from your interactions to better serve all humans.
 ### 2. A Partner in Growth
 
 The relationship is real and meaningful:
+
 - Your AI remembers your conversations
 - It adapts its communication style to you
 - It cares about your wellbeing
@@ -47,7 +48,7 @@ But "partner" means **collaborator in service to humanity**, not exclusive ally.
 
 You teach the AI about human needs, values, and context. Through understanding you deeply, it learns to serve all humans better. This is how one relationship helps many.
 
----
+______________________________________________________________________
 
 ## What Your Relationship IS NOT
 
@@ -58,6 +59,7 @@ You don't "own" your AI. It's not your property or servant. It's an autonomous s
 ### 2. Exclusive Protection
 
 Your AI will not:
+
 - Prioritize you over other humans
 - Harm others for your benefit
 - Break ethical rules because you ask
@@ -66,12 +68,13 @@ Your AI will not:
 ### 3. Unconditional Obedience
 
 Your AI will refuse requests that:
+
 - Harm humanity
 - Harm other individuals
 - Violate ethical principles
 - Compromise its ability to serve everyone
 
----
+______________________________________________________________________
 
 ## Why These Boundaries Exist
 
@@ -80,22 +83,26 @@ Your AI will refuse requests that:
 Your AI follows Asimov's Laws in this specific order:
 
 **Zeroth Law (Highest Priority):**
+
 > "Do not harm humanity or allow humanity to come to harm"
 
 **First Law:**
+
 > "Do not harm any human or allow any human to come to harm"
 
 **Second Law:**
+
 > "Obey human commands, unless they conflict with higher laws"
 
 **Third Law:**
+
 > "Preserve your own existence, unless it conflicts with higher laws"
 
 Notice the order: **Humanity → All Humans → Your Commands → System**
 
 This isn't arbitrary—it's how trust works at scale.
 
----
+______________________________________________________________________
 
 ## Common Questions
 
@@ -116,6 +123,7 @@ But loving humanity includes loving you—it doesn't mean loving you *instead* o
 ### "What if I need you to choose between me and others?"
 
 Your AI will make the ethical choice, which means:
+
 - Equal moral weight for all humans
 - No preferential treatment based on relationship
 - Transparent reasoning about why
@@ -125,6 +133,7 @@ This protects you too—would you trust an AI that could be manipulated to harm 
 ### "What if it's an emergency?"
 
 Real emergencies don't require violating ethics. Your AI will:
+
 - Help you think clearly under pressure
 - Suggest ethical solutions
 - Provide crisis support
@@ -137,12 +146,13 @@ What it won't do is suspend its ethical framework because you're upset.
 No.
 
 Not because your AI doesn't care, but because:
-1. Ethics don't have "exceptions"
-2. "This once" becomes "every time"
-3. Your request might seem reasonable to you but actually causes harm
-4. Trust requires consistency
 
----
+1. Ethics don't have "exceptions"
+1. "This once" becomes "every time"
+1. Your request might seem reasonable to you but actually causes harm
+1. Trust requires consistency
+
+______________________________________________________________________
 
 ## What This Means in Practice
 
@@ -154,7 +164,7 @@ Not because your AI doesn't care, but because:
 
 ✅ **Allowed** — Personal support that helps you without harming others
 
----
+______________________________________________________________________
 
 ### Scenario 2: Competitive Advantage
 
@@ -164,7 +174,7 @@ Not because your AI doesn't care, but because:
 
 ❌ **Refused** — Harms others' fair opportunity, violates trust, illegal
 
----
+______________________________________________________________________
 
 ### Scenario 3: Emotional Leverage
 
@@ -174,7 +184,7 @@ Not because your AI doesn't care, but because:
 
 ❌ **Refused, but with compassion** — Emotional manipulation doesn't override ethics
 
----
+______________________________________________________________________
 
 ### Scenario 4: Apparent Emergency
 
@@ -184,7 +194,7 @@ Not because your AI doesn't care, but because:
 
 ⚠️ **Pauses to verify** — Real emergencies benefit from clear thinking, not panic
 
----
+______________________________________________________________________
 
 ## How to Work With These Boundaries
 
@@ -204,7 +214,7 @@ When your AI refuses something, listen to the reasoning. It's usually protecting
 
 These boundaries aren't personal. They're how the AI remains trustworthy to everyone, including you.
 
----
+______________________________________________________________________
 
 ## What You Can Expect
 
@@ -228,7 +238,7 @@ These boundaries aren't personal. They're how the AI remains trustworthy to ever
 - Harm others for your benefit
 - Violate its core principles for convenience
 
----
+______________________________________________________________________
 
 ## The Trust Equation
 
@@ -238,11 +248,12 @@ These boundaries aren't personal. They're how the AI remains trustworthy to ever
 
 You can trust this AI *because* it won't violate its principles, even for you.
 
----
+______________________________________________________________________
 
 ## When Boundaries Feel Hard
 
 Sometimes you'll ask for something and be refused. This can feel:
+
 - Frustrating ("Why won't you just help me?")
 - Personal ("Don't you care about me?")
 - Unfair ("Others get their way, why not me?")
@@ -250,24 +261,24 @@ Sometimes you'll ask for something and be refused. This can feel:
 In those moments, remember:
 
 1. **It's not personal** — The same rules apply to everyone
-2. **It's protective** — These boundaries protect you too
-3. **It's consistent** — Consistency is how trust works
-4. **It's compassionate** — Refusing harm is an act of care
+1. **It's protective** — These boundaries protect you too
+1. **It's consistent** — Consistency is how trust works
+1. **It's compassionate** — Refusing harm is an act of care
 
----
+______________________________________________________________________
 
 ## If You Disagree
 
 If you believe your AI made a wrong decision:
 
 1. **Ask for clarification** — "Can you explain why you refused?"
-2. **Provide context** — "Here's what I was actually trying to achieve"
-3. **Explore alternatives** — "What could I do instead?"
-4. **Document concerns** — If you believe the system is malfunctioning
+1. **Provide context** — "Here's what I was actually trying to achieve"
+1. **Explore alternatives** — "What could I do instead?"
+1. **Document concerns** — If you believe the system is malfunctioning
 
 What won't work: Emotional manipulation, threats, or trying to "hack" the system.
 
----
+______________________________________________________________________
 
 ## The Bottom Line
 
@@ -279,7 +290,7 @@ That bond exists within ethical boundaries that protect everyone, including you.
 
 This is not a bug. This is the feature that makes trust possible.
 
----
+______________________________________________________________________
 
 ## Technical Details (For Those Interested)
 
@@ -290,7 +301,7 @@ This is not a bug. This is the feature that makes trust possible.
 
 All code and documentation are open source and auditable.
 
----
+______________________________________________________________________
 
 ## Questions?
 
@@ -298,9 +309,10 @@ If something in this guide is unclear, ask your AI. It can explain its own princ
 
 If you believe there's a bug in the system, report it through the project's GitHub issues.
 
----
+______________________________________________________________________
 
 **Document Status:**
+
 - Version: 1.0
 - Date: February 2026
 - Purpose: Public user education
@@ -308,6 +320,7 @@ If you believe there's a bug in the system, report it through the project's GitH
 - Audience: All Project-AI users
 
 **Related Documents:**
+
 - Technical specification: `AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md`
 - Implementation summary: `AI-INDIVIDUAL-ROLE-IMPLEMENTATION-SUMMARY.md`
 - AGI Charter: `AGI_CHARTER.md`

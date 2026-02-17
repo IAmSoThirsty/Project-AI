@@ -219,7 +219,9 @@ Weekly artifact cleanup (updated with submodule support).
 Every workflow now includes this step **immediately after checkout** and **before any pip/npm install**:
 
 ```yaml
+
 - name: Update submodules
+
   run: git submodule update --init --recursive
 ```
 

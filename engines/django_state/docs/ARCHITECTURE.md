@@ -317,12 +317,15 @@ OutcomesModule
 ### Tick Execution Flow
 
 ```
+
 1. Clock.tick()
+
    └── Advance current_time, increment tick_count
 
 2. Save state_before = state.copy()
 
 3. IrreversibilityLaws.tick_all_laws(state)
+
    ├── apply_trust_decay_law()
    ├── apply_kindness_decay()
    ├── apply_legitimacy_erosion()
@@ -330,20 +333,24 @@ OutcomesModule
    └── apply_epistemic_decay()
 
 4. State.update_derived_state()
+
    ├── social_cohesion = f(trust, kindness)
    ├── governance_capacity = f(legitimacy, epistemic)
    └── reality_consensus = f(epistemic, social_cohesion)
 
 5. Apply Module Dynamics (parallel)
+
    ├── HumanForcesModule.apply_cooperation_dynamics()
    ├── InstitutionalPressureModule.apply_institutional_dynamics()
    └── PerceptionWarfareModule.apply_perception_warfare_dynamics()
 
 6. Check Collapse Conditions
+
    ├── State.check_collapse_conditions()
    └── CollapseScheduler.process_tick()
 
 7. If in_collapse and acceleration_enabled:
+
    └── IrreversibilityLaws.apply_collapse_acceleration()
 
 8. Timeline.record_tick(state_before, state_after, changes)
@@ -351,11 +358,13 @@ OutcomesModule
 9. Metrics.calculate_current_metrics(state)
 
 10. Return tick results
+
 ```
 
 ### Event Injection Flow
 
 ```
+
 1. Receive Event from external source
 
 2. Save state_before = state.copy()
@@ -363,6 +372,7 @@ OutcomesModule
 3. Set event.timestamp = current_time
 
 4. Apply Event Based on Type
+
    ├── BETRAYAL -> laws.apply_betrayal_impact()
    ├── COOPERATION -> laws.apply_cooperation_boost()
    ├── INSTITUTIONAL_FAILURE -> laws.apply_legitimacy_erosion()
@@ -376,14 +386,17 @@ OutcomesModule
 7. Clock.record_event(event_id, state_hash, irreversible=True)
 
 8. Return success
+
 ```
 
 ### Observation Flow
 
 ```
+
 1. Receive Query with type parameter
 
 2. Route by Query Type
+
    ├── "state" -> return State.to_dict()
    ├── "metrics" -> return MetricsModule.get_summary()
    ├── "timeline" -> return TimelineModule.get_summary()
@@ -396,12 +409,15 @@ OutcomesModule
    └── "all" -> return combined summary
 
 3. Return query results
+
 ```
 
 ### Export Artifacts Flow
 
 ```
+
 1. Collect All Data
+
    ├── config.to_dict()
    ├── state.to_dict()
    ├── timeline.export_timeline()
@@ -411,6 +427,7 @@ OutcomesModule
    └── outcomes.generate_outcome_report()
 
 2. Collect Module Summaries
+
    ├── human_forces.get_summary()
    ├── institutional_pressure.get_summary()
    ├── perception_warfare.get_summary()
@@ -422,6 +439,7 @@ OutcomesModule
 3. Package as artifacts dictionary
 
 4. Return complete export
+
 ```
 
 ---
@@ -432,6 +450,7 @@ OutcomesModule
 
 ```
 Laws provide methods that modules call:
+
 - HumanForces calls laws.apply_betrayal_impact()
 - HumanForces calls laws.apply_cooperation_boost()
 - InstitutionalPressure calls laws.apply_legitimacy_erosion()
@@ -478,6 +497,7 @@ State provides thresholds to Scheduler
 Snapshot Frequency: Every N ticks (default: 100)
 
 Snapshot Contains:
+
 - Complete StateVector.to_dict()
 - All dimension values, ceilings, floors
 - All counters and derived metrics
@@ -490,6 +510,7 @@ Storage: timeline.state_snapshots[tick] = state_dict
 
 ```
 Every Event Recorded:
+
 - Event data (type, source, metadata)
 - State hash before
 - State hash after
@@ -504,6 +525,7 @@ Immutable: Once written, never modified
 
 ```
 Every Event Gets:
+
 - Causal order (monotonic)
 - Parent events (dependencies)
 - Timestamp
@@ -572,53 +594,70 @@ Verification: verify_causal_consistency() checks chain integrity
 ### Adding New Laws
 
 ```python
+
 # 1. Add to IrreversibilityLaws
+
 def apply_new_law(self, state: StateVector) -> float:
+
     # Implement law logic
+
     return change_applied
 
 # 2. Call in tick_all_laws()
+
 changes["new_law"] = self.apply_new_law(state)
 ```
 
 ### Adding New Modules
 
 ```python
+
 # 1. Create new module class
+
 class NewModule:
     def __init__(self, laws: IrreversibilityLaws):
         self.laws = laws
-    
+
     def apply_dynamics(self, state: StateVector) -> Dict[str, Any]:
+
         # Module logic
+
         return results
 
 # 2. Add to engine.__init__()
+
 self.new_module = NewModule(laws=self.laws)
 
 # 3. Call in engine.tick()
+
 new_results = self.new_module.apply_dynamics(self.state)
 ```
 
 ### Adding New Event Types
 
 ```python
+
 # 1. Add to EventType enum
+
 class EventType(Enum):
     NEW_EVENT = "new_event"
 
 # 2. Create event class
+
 @dataclass
 class NewEvent(Event):
     custom_field: float
-    
+
     def __post_init__(self):
         self.event_type = EventType.NEW_EVENT
         super().__post_init__()
 
 # 3. Handle in engine._apply_event()
+
 elif event.event_type == EventType.NEW_EVENT:
+
     # Apply event logic
+
 ```
 
 ---

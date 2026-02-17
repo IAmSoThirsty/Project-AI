@@ -7,76 +7,52 @@ Project-AI includes 12 production-ready Grafana dashboards providing comprehensi
 ## Dashboard Catalog
 
 ### 1. System Overview Dashboard
-**ID**: `project-ai-overview`  
-**Purpose**: High-level system health and performance  
-**Refresh**: 10s  
-**Time Range**: Last 6 hours
+
+**ID**: `project-ai-overview` **Purpose**: High-level system health and performance **Refresh**: 10s **Time Range**: Last 6 hours
 
 ### 2. Application Performance Dashboard
-**ID**: `project-ai-app-performance`  
-**Purpose**: Request rates, latencies, error rates  
-**Refresh**: 10s  
-**Time Range**: Last 1 hour
+
+**ID**: `project-ai-app-performance` **Purpose**: Request rates, latencies, error rates **Refresh**: 10s **Time Range**: Last 1 hour
 
 ### 3. AI Models Dashboard
-**ID**: `project-ai-ai-models`  
-**Purpose**: AI inference metrics, model performance  
-**Refresh**: 30s  
-**Time Range**: Last 6 hours
+
+**ID**: `project-ai-ai-models` **Purpose**: AI inference metrics, model performance **Refresh**: 30s **Time Range**: Last 6 hours
 
 ### 4. Infrastructure Dashboard
-**ID**: `project-ai-infrastructure`  
-**Purpose**: CPU, memory, disk, network metrics  
-**Refresh**: 15s  
-**Time Range**: Last 3 hours
+
+**ID**: `project-ai-infrastructure` **Purpose**: CPU, memory, disk, network metrics **Refresh**: 15s **Time Range**: Last 3 hours
 
 ### 5. Database Dashboard
-**ID**: `project-ai-database`  
-**Purpose**: PostgreSQL performance and health  
-**Refresh**: 15s  
-**Time Range**: Last 1 hour
+
+**ID**: `project-ai-database` **Purpose**: PostgreSQL performance and health **Refresh**: 15s **Time Range**: Last 1 hour
 
 ### 6. Cache Dashboard
-**ID**: `project-ai-cache`  
-**Purpose**: Redis cache performance  
-**Refresh**: 15s  
-**Time Range**: Last 1 hour
+
+**ID**: `project-ai-cache` **Purpose**: Redis cache performance **Refresh**: 15s **Time Range**: Last 1 hour
 
 ### 7. Temporal Workflows Dashboard
-**ID**: `project-ai-temporal`  
-**Purpose**: Workflow orchestration metrics  
-**Refresh**: 30s  
-**Time Range**: Last 6 hours
+
+**ID**: `project-ai-temporal` **Purpose**: Workflow orchestration metrics **Refresh**: 30s **Time Range**: Last 6 hours
 
 ### 8. User Activity Dashboard
-**ID**: `project-ai-users`  
-**Purpose**: User engagement and feature usage  
-**Refresh**: 1m  
-**Time Range**: Last 24 hours
+
+**ID**: `project-ai-users` **Purpose**: User engagement and feature usage **Refresh**: 1m **Time Range**: Last 24 hours
 
 ### 9. Security Dashboard
-**ID**: `project-ai-security`  
-**Purpose**: Authentication, authorization, security events  
-**Refresh**: 30s  
-**Time Range**: Last 24 hours
+
+**ID**: `project-ai-security` **Purpose**: Authentication, authorization, security events **Refresh**: 30s **Time Range**: Last 24 hours
 
 ### 10. SLA Dashboard
-**ID**: `project-ai-sla`  
-**Purpose**: SLA compliance and error budgets  
-**Refresh**: 5m  
-**Time Range**: Last 30 days
+
+**ID**: `project-ai-sla` **Purpose**: SLA compliance and error budgets **Refresh**: 5m **Time Range**: Last 30 days
 
 ### 11. Business Metrics Dashboard
-**ID**: `project-ai-business`  
-**Purpose**: Feature usage, conversion metrics  
-**Refresh**: 5m  
-**Time Range**: Last 7 days
+
+**ID**: `project-ai-business` **Purpose**: Feature usage, conversion metrics **Refresh**: 5m **Time Range**: Last 7 days
 
 ### 12. Alerts Dashboard
-**ID**: `project-ai-alerts`  
-**Purpose**: Active alerts and alert history  
-**Refresh**: 30s  
-**Time Range**: Last 24 hours
+
+**ID**: `project-ai-alerts` **Purpose**: Active alerts and alert history **Refresh**: 30s **Time Range**: Last 24 hours
 
 ## Complete Dashboard JSON Examples
 
@@ -621,11 +597,15 @@ Project-AI includes 12 production-ready Grafana dashboards providing comprehensi
 ### Provisioning Configuration
 
 ```yaml
+
 # /etc/grafana/provisioning/dashboards/project-ai.yaml
+
 apiVersion: 1
 
 providers:
+
   - name: 'Project-AI Dashboards'
+
     orgId: 1
     folder: 'Project-AI'
     type: file
@@ -640,11 +620,15 @@ providers:
 ### Data Source Provisioning
 
 ```yaml
+
 # /etc/grafana/provisioning/datasources/prometheus.yaml
+
 apiVersion: 1
 
 datasources:
+
   - name: Prometheus
+
     type: prometheus
     access: proxy
     url: http://prometheus:9090
@@ -657,6 +641,7 @@ datasources:
     version: 1
 
   - name: Loki
+
     type: loki
     access: proxy
     url: http://loki:3100
@@ -665,7 +650,9 @@ datasources:
     jsonData:
       maxLines: 1000
       derivedFields:
+
         - datasourceUid: Prometheus
+
           matcherRegex: "traceID=(\\w+)"
           name: TraceID
           url: "$${__value.raw}"
@@ -675,6 +662,7 @@ datasources:
 ## Panel Templates
 
 ### Stat Panel Template
+
 ```json
 {
   "type": "stat",
@@ -705,6 +693,7 @@ datasources:
 ```
 
 ### Graph Panel Template
+
 ```json
 {
   "type": "graph",
@@ -740,6 +729,7 @@ datasources:
 ```
 
 ### Heatmap Panel Template
+
 ```json
 {
   "type": "heatmap",
@@ -851,13 +841,15 @@ datasources:
 ## Python Dashboard Generation
 
 ```python
+
 # src/app/monitoring/grafana_dashboard_generator.py
+
 import json
 from typing import Dict, List, Any
 
 class GrafanaDashboardGenerator:
     """Generate Grafana dashboards programmatically"""
-    
+
     def __init__(self):
         self.dashboard = {
             "dashboard": {
@@ -873,14 +865,14 @@ class GrafanaDashboardGenerator:
                 "panels": []
             }
         }
-    
+
     def create_dashboard(self, uid: str, title: str, tags: List[str]) -> 'GrafanaDashboardGenerator':
         """Initialize dashboard metadata"""
         self.dashboard["dashboard"]["uid"] = uid
         self.dashboard["dashboard"]["title"] = title
         self.dashboard["dashboard"]["tags"] = tags
         return self
-    
+
     def add_stat_panel(
         self,
         panel_id: int,
@@ -900,7 +892,7 @@ class GrafanaDashboardGenerator:
                 {"value": 80, "color": "yellow"},
                 {"value": 90, "color": "red"}
             ]
-        
+
         panel = {
             "id": panel_id,
             "gridPos": {"h": h, "w": w, "x": x, "y": y},
@@ -924,7 +916,7 @@ class GrafanaDashboardGenerator:
         }
         self.dashboard["dashboard"]["panels"].append(panel)
         return self
-    
+
     def add_graph_panel(
         self,
         panel_id: int,
@@ -942,7 +934,7 @@ class GrafanaDashboardGenerator:
             {"expr": q["expr"], "refId": chr(65 + i), "legendFormat": q.get("legend", "")}
             for i, q in enumerate(queries)
         ]
-        
+
         panel = {
             "id": panel_id,
             "gridPos": {"h": h, "w": w, "x": x, "y": y},
@@ -962,21 +954,22 @@ class GrafanaDashboardGenerator:
         }
         self.dashboard["dashboard"]["panels"].append(panel)
         return self
-    
+
     def export_json(self, filename: str):
         """Export dashboard to JSON file"""
         with open(filename, 'w') as f:
             json.dump(self.dashboard, f, indent=2)
-    
+
     def to_json(self) -> str:
         """Return dashboard as JSON string"""
         return json.dumps(self.dashboard, indent=2)
 
 # Usage example
+
 def generate_overview_dashboard():
     """Generate the system overview dashboard"""
     generator = GrafanaDashboardGenerator()
-    
+
     dashboard = (
         generator
         .create_dashboard("project-ai-overview", "Project-AI System Overview", ["project-ai", "overview"])
@@ -1011,7 +1004,7 @@ def generate_overview_dashboard():
             x=0, y=4, w=12, h=8
         )
     )
-    
+
     dashboard.export_json("/etc/grafana/dashboards/project-ai/overview.json")
     return dashboard.to_json()
 
@@ -1022,6 +1015,7 @@ if __name__ == "__main__":
 ## Dashboard Performance Optimization
 
 ### Query Optimization
+
 ```json
 {
   "targets": [
@@ -1036,8 +1030,11 @@ if __name__ == "__main__":
 ```
 
 ### Caching Configuration
+
 ```ini
+
 # /etc/grafana/grafana.ini
+
 [caching]
 enabled = true
 ttl = 60
@@ -1050,13 +1047,17 @@ keep_alive_seconds = 30
 ## Troubleshooting
 
 ```bash
+
 # Test dashboard JSON syntax
+
 jq . < dashboard.json
 
 # Validate datasource connectivity
+
 curl http://grafana:3000/api/datasources/proxy/1/api/v1/query?query=up
 
 # Check dashboard provisioning
+
 ls -la /etc/grafana/provisioning/dashboards/
 cat /var/log/grafana/grafana.log | grep provisioning
 ```

@@ -1,7 +1,7 @@
 # Project-AI Copilot Instructions
 
-> **⚠️ GOVERNANCE POLICY SUPERSEDED**  
-> This file contains legacy technical instructions. All AI assistants MUST follow the comprehensive governance policy in [copilot_workspace_profile.md](./copilot_workspace_profile.md).  
+> **⚠️ GOVERNANCE POLICY SUPERSEDED**
+> This file contains legacy technical instructions. All AI assistants MUST follow the comprehensive governance policy in [copilot_workspace_profile.md](./copilot_workspace_profile.md).
 > **The Workspace Profile takes precedence over all instructions in this file.**
 
 ---
@@ -91,18 +91,23 @@ All systems use JSON for persistence in `data/` directory:
 ### Running the Application
 
 ```powershell
+
 # Desktop (PyQt6)
+
 python -m src.app.main
 
 # Tests (14 tests in tests/)
+
 pytest -v
 npm run test:python
 
 # Linting (ruff configured in pyproject.toml)
+
 ruff check .
 ruff check . --fix
 
 # Docker (see docker-compose.yml)
+
 docker-compose up
 ```
 
@@ -149,7 +154,9 @@ All core systems use Python logging:
 import logging
 logger = logging.getLogger(__name__)
 try:
+
     # operation
+
 except Exception as e:
     logger.error(f"Error description: {e}")
 ```
@@ -218,7 +225,9 @@ Dual backend support with content filtering and style presets:
 
 **Environment Setup**:
 ```bash
+
 # Required in .env
+
 HUGGINGFACE_API_KEY=hf_...  # From https://huggingface.co/settings/tokens
 OPENAI_API_KEY=sk-...        # For DALL-E 3 backend
 ```
@@ -299,22 +308,30 @@ Agents are NOT the same as plugins. Plugin system is simpler (enable/disable onl
 ### Development (Desktop)
 
 ```powershell
+
 # Quick launch (Windows)
+
 .\launch-desktop.bat
+
 # or
+
 .\launch-desktop.ps1
 
 # Manual launch
+
 python -m src.app.main
 ```
 
 ### Production (Docker)
 
 ```bash
+
 # Desktop in container
+
 docker-compose up
 
 # Multi-stage build (optimized)
+
 docker build -t project-ai:latest .
 ```
 
@@ -328,11 +345,14 @@ Dockerfile uses:
 ### Web Deployment
 
 ```bash
+
 # Local development
+
 cd web/backend && flask run
 cd web/frontend && npm run dev
 
 # Production (Docker Compose)
+
 docker-compose -f web/docker-compose.yml up -d
 ```
 
@@ -453,10 +473,13 @@ Multiple workflows monitor and respond to security issues:
 
 All automated workflows support manual dispatch:
 ```bash
+
 # Trigger security scan manually
+
 gh workflow run auto-security-fixes.yml
 
 # Trigger Bandit scan manually
+
 gh workflow run auto-bandit-fixes.yml
 ```
 
@@ -487,6 +510,7 @@ All outputs generated using these technical instructions MUST comply with the st
 **[.github/copilot_workspace_profile.md](./copilot_workspace_profile.md)**
 
 Key requirements:
+
 - ✅ Production-ready code (no prototypes, examples, or skeletons)
 - ✅ Full error handling, logging, and testing
 - ✅ Complete system integration (no isolated components)

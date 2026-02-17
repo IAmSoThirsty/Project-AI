@@ -111,8 +111,11 @@ python -m app.cli user --help
 ```
 
 **Examples:**
+
 ```bash
+
 # Example user command
+
 python -m app.cli user example JohnDoe
 ```
 
@@ -125,8 +128,11 @@ python -m app.cli memory --help
 ```
 
 **Examples:**
+
 ```bash
+
 # Example memory command
+
 python -m app.cli memory example "important-fact"
 ```
 
@@ -139,8 +145,11 @@ python -m app.cli learning --help
 ```
 
 **Examples:**
+
 ```bash
+
 # Example learning command
+
 python -m app.cli learning example "machine-learning"
 ```
 
@@ -153,8 +162,11 @@ python -m app.cli plugin --help
 ```
 
 **Examples:**
+
 ```bash
+
 # Example plugin command
+
 python -m app.cli plugin example "my-plugin"
 ```
 
@@ -167,8 +179,11 @@ python -m app.cli system --help
 ```
 
 **Examples:**
+
 ```bash
+
 # Example system command
+
 python -m app.cli system example "config-param"
 ```
 
@@ -181,8 +196,11 @@ python -m app.cli ai --help
 ```
 
 **Examples:**
+
 ```bash
+
 # Example AI command
+
 python -m app.cli ai example "gpt-4"
 ```
 
@@ -196,7 +214,9 @@ The CLI supports tab completion for bash, zsh, and fish shells.
 
 ```bash
 python -m app.cli --install-completion bash
+
 # Or add to ~/.bashrc:
+
 eval "$(_APP_CLI_COMPLETE=bash_source python -m app.cli)"
 ```
 
@@ -204,7 +224,9 @@ eval "$(_APP_CLI_COMPLETE=bash_source python -m app.cli)"
 
 ```bash
 python -m app.cli --install-completion zsh
+
 # Or add to ~/.zshrc:
+
 eval "$(_APP_CLI_COMPLETE=zsh_source python -m app.cli)"
 ```
 
@@ -212,7 +234,9 @@ eval "$(_APP_CLI_COMPLETE=zsh_source python -m app.cli)"
 
 ```bash
 python -m app.cli --install-completion fish
+
 # Or add to ~/.config/fish/completions/app-cli.fish:
+
 eval (env _APP_CLI_COMPLETE=fish_source python -m app.cli)
 ```
 
@@ -238,20 +262,26 @@ python -m app.cli --version
 #### 2. Get Command Help
 
 ```bash
+
 # Get general help
+
 python -m app.cli --help
 
 # Get help for specific command group
+
 python -m app.cli user --help
 
 # Get help for specific subcommand
+
 python -m app.cli user example --help
 ```
 
 #### 3. Using Configuration
 
 ```bash
+
 # Create user config
+
 cat > ~/.projectai.toml << EOF
 [general]
 log_level = "DEBUG"
@@ -263,13 +293,16 @@ temperature = 0.8
 EOF
 
 # Config is automatically loaded
+
 python -m app.cli ai example "gpt-4"
 ```
 
 #### 4. Environment Overrides
 
 ```bash
+
 # Override specific config values
+
 PROJECTAI_AI_TEMPERATURE=0.9 python -m app.cli ai example "model"
 ```
 
@@ -297,11 +330,14 @@ pip install -r requirements.txt
 Check file locations and permissions:
 
 ```bash
+
 # Check if config exists
+
 ls -la ~/.projectai.toml
 ls -la .projectai.toml
 
 # Verify TOML syntax
+
 python -c "import tomllib; print(tomllib.load(open('.projectai.toml', 'rb')))"
 ```
 
@@ -321,17 +357,22 @@ python -c "import tomllib; print(tomllib.load(open('.projectai.toml', 'rb')))"
 The CLI is designed to be script-friendly:
 
 ```bash
+
 #!/bin/bash
+
 # Example automation script
 
 # Set error handling
+
 set -e
 
 # Configure via environment
+
 export PROJECTAI_GENERAL_LOG_LEVEL=ERROR
 export PROJECTAI_GENERAL_VERBOSE=false
 
 # Run commands
+
 python -m app.cli user example "script-user"
 python -m app.cli memory example "script-memory"
 ```
@@ -369,6 +410,6 @@ If you need help:
 1. Open an issue: [GitHub Issues](https://github.com/IAmSoThirsty/Project-AI/issues)
 1. Join discussions: [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)
 
----
+______________________________________________________________________
 
 **Note**: This documentation is for version 1.0.0. For the latest updates, see [CHANGELOG.md](../../CHANGELOG.md).

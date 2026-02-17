@@ -53,10 +53,13 @@ Each category includes test objectives, procedures, expected results, and pass/f
 
 **Automation:**
 ```bash
+
 # Using OpenSSL
+
 openssl x509 -in endpoint.crt -text -noout | grep -E "(Subject|Not|DNS)"
 
 # Using Project-AI tools
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance --config deployment_config.json
 ```
 
@@ -79,10 +82,13 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance --config deploym
 
 **Automation:**
 ```bash
+
 # Test OCSP
+
 openssl ocsp -issuer ca.crt -cert endpoint.crt -url http://ocsp.example.com
 
 # Verify via simulation
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 ```
 
@@ -104,7 +110,9 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 
 **Automation:**
 ```bash
+
 # Capture and verify TLS
+
 tcpdump -i eth0 -n 'tcp port 1720' -w signaling.pcap
 tshark -r signaling.pcap -Y 'ssl.handshake'
 ```
@@ -130,10 +138,13 @@ tshark -r signaling.pcap -Y 'ssl.handshake'
 
 **Automation:**
 ```bash
+
 # Check registration logs
+
 tail -f /var/log/gatekeeper.log | grep 'RRQ.*H.235'
 
 # API check
+
 curl -X GET "http://localhost:8080/registration/status?device_ip=<ep-ip>&..."
 ```
 
@@ -155,9 +166,13 @@ curl -X GET "http://localhost:8080/registration/status?device_ip=<ep-ip>&..."
 
 **Automation:**
 ```bash
+
 # Capture and replay
+
 tcpdump -i eth0 -n 'udp port 1719' -w ras.pcap
+
 # Replay tool would attempt to resend captured RRQ
+
 ```
 
 ### 4.3 Unauthorized Endpoint Test
@@ -197,10 +212,13 @@ tcpdump -i eth0 -n 'udp port 1719' -w ras.pcap
 
 **Automation:**
 ```bash
+
 # Capture signaling
+
 tcpdump -i eth0 -n 'tcp port 1720' -w setup.pcap
 
 # Verify encryption (should not see clear H.323 ASN.1)
+
 strings setup.pcap | grep -i "SETUP" && echo "FAIL: Clear text detected"
 ```
 
@@ -222,7 +240,9 @@ strings setup.pcap | grep -i "SETUP" && echo "FAIL: Clear text detected"
 
 **Automation:**
 ```bash
+
 # Log failed attempts
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type downgrade_attempt \
     --device-id test-ep \
@@ -250,7 +270,9 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 
 **Automation:**
 ```bash
+
 # Capture H.245 negotiation
+
 tcpdump -i eth0 -n 'tcp' -w h245.pcap
 tshark -r h245.pcap -Y 'h245.SecurityMode'
 ```
@@ -292,13 +314,17 @@ tshark -r h245.pcap -Y 'h245.SecurityMode'
 
 **Automation:**
 ```bash
+
 # Capture media
+
 tcpdump -i eth0 -n 'udp and portrange 16384-32767' -w media.pcap
 
 # Verify SRTP (encrypted payload)
+
 tshark -r media.pcap -Y 'rtp' -T fields -e rtp.payload | head -10
 
 # If you can decode audio patterns, it's not encrypted = FAIL
+
 ```
 
 ### 7.2 SRTCP Integrity Test
@@ -335,9 +361,13 @@ tshark -r media.pcap -Y 'rtp' -T fields -e rtp.payload | head -10
 
 **Automation:**
 ```bash
+
 # Test unauthorized port
+
 nc -u -v <remote-ip> 9999
+
 # Should timeout/be blocked
+
 ```
 
 ## 8. Gateway Interworking Security Tests
@@ -360,10 +390,13 @@ nc -u -v <remote-ip> 9999
 
 **Automation:**
 ```bash
+
 # Run full simulation through gateway
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 
 # API compliance check
+
 curl -X POST http://localhost:8080/compliance/check -d '{...}'
 ```
 
@@ -420,9 +453,13 @@ curl -X POST http://localhost:8080/compliance/check -d '{...}'
 
 **Automation:**
 ```bash
+
 # Try direct connection (should fail)
+
 telnet <other-ep-ip> 1720
+
 # Connection should be refused/timeout
+
 ```
 
 ### 9.2 Firewall ACL Test
@@ -443,11 +480,15 @@ telnet <other-ep-ip> 1720
 
 **Automation:**
 ```bash
+
 # Port scan
+
 nmap -p 1-65535 <ep-ip>
 
 # Expected open: 1718, 1719, 1720, 16384-32767
+
 # All others should be filtered/closed
+
 ```
 
 ## 10. QoS & Performance Tests
@@ -472,10 +513,13 @@ nmap -p 1-65535 <ep-ip>
 
 **Automation:**
 ```bash
+
 # Capture with verbose output to see ToS/DSCP
+
 tcpdump -i eth0 -vv -n 'host <ep-ip>' -c 100
 
 # Check for EF (0xb8) for voice
+
 tcpdump -i eth0 -vv -n 'ip[1] & 0xfc == 0xb8'
 ```
 
@@ -498,10 +542,13 @@ tcpdump -i eth0 -vv -n 'ip[1] & 0xfc == 0xb8'
 
 **Automation:**
 ```bash
+
 # Continuous ping for latency
+
 ping -c 100 <remote-ep> | tail -1
 
 # Use iperf for jitter
+
 iperf3 -c <remote-ep> -u -b 100k -t 30
 ```
 
@@ -525,10 +572,13 @@ iperf3 -c <remote-ep> -u -b 100k -t 30
 
 **Automation:**
 ```bash
+
 # Disable primary GK
+
 systemctl stop gatekeeper
 
 # Monitor re-registration
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --device-ip <ep-ip> --snmp-user admin --auth-key <key> --priv-key <key>
 ```
@@ -569,14 +619,18 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
 
 **Automation:**
 ```bash
+
 # Generate test event
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type test_event \
     --device-id test-component \
     --outcome success
 
 # Verify in SIEM
+
 # (Use SIEM API or query interface)
+
 ```
 
 ### 12.2 Security Event Detection Test
@@ -598,7 +652,9 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 
 **Automation:**
 ```bash
+
 # API to set threat level (triggers alerts)
+
 curl -X POST http://localhost:8080/threat-level \
     -H "Content-Type: application/json" \
     -d '{"level": "critical"}'
@@ -619,19 +675,19 @@ A deployment is certified when:
 1. **Pre-Certification Review**
    - Review all documentation
    - Verify test environment readiness
-   
+
 1. **Execute Test Plan**
    - Run all test categories
    - Document results in real-time
-   
+
 1. **Analysis**
    - Calculate compliance score
    - Identify critical failures
-   
+
 1. **Remediation** (if needed)
    - Fix identified issues
    - Re-test affected areas
-   
+
 1. **Final Certification**
    - Issue certification document
    - Schedule next audit
@@ -660,14 +716,18 @@ A deployment is certified when:
 All tests should be supplemented with Project-AI automation tools:
 
 ```bash
+
 # Pre-test validation
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 
 # Compliance check
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
     --config test_deployment_config.json
 
 # Registration validation
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --device-ip <device-ip> \
     --snmp-user <user> \
@@ -675,6 +735,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --priv-key <key>
 
 # Event logging
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type test_execution \
     --device-id test-harness \
@@ -684,11 +745,14 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 ### Using REST API
 
 ```bash
+
 # Start API service for test automation
+
 cd h323_sec_profile
 uvicorn project_ai_fastapi:app --host 0.0.0.0 --port 8080
 
 # Automated compliance check
+
 curl -X POST http://localhost:8080/compliance/check \
     -H "Content-Type: application/json" \
     -d '{
@@ -700,9 +764,11 @@ curl -X POST http://localhost:8080/compliance/check \
     }'
 
 # Registration status check
+
 curl -X GET "http://localhost:8080/registration/status?device_ip=<ip>&..."
 
 # Log test results
+
 curl -X POST http://localhost:8080/log \
     -H "Content-Type: application/json" \
     -d '{

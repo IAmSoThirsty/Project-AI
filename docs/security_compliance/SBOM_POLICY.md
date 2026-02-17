@@ -1,16 +1,14 @@
 # Software Bill of Materials (SBOM) Policy
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-01-19  
-**Owner:** Project-AI Security Team
+**Document Version:** 1.0 **Last Updated:** 2026-01-19 **Owner:** Project-AI Security Team
 
----
+______________________________________________________________________
 
 ## 1. Overview
 
 This document defines the policy for generating, publishing, and verifying Software Bill of Materials (SBOM) for Project-AI. SBOMs provide transparency into software components and dependencies, enabling security analysis, license compliance, and supply chain risk management.
 
----
+______________________________________________________________________
 
 ## 2. Purpose and Scope
 
@@ -32,7 +30,7 @@ SBOM generation covers:
 - System-level dependencies (where applicable)
 - Model files and data artifacts (metadata only)
 
----
+______________________________________________________________________
 
 ## 3. SBOM Format and Standards
 
@@ -54,13 +52,13 @@ SBOM generation covers:
 
 ### 3.2 Standards Compliance
 
-| Standard | Status | Details |
-|----------|--------|---------|
-| **NTIA Minimum Elements** | ✅ Compliant | All 7 baseline fields included |
-| **CycloneDX 1.5 Spec** | ✅ Compliant | Full schema compliance |
-| **NIST SP 800-218** | ✅ Compliant | SSDF secure software development |
-| **OWASP SCVS** | ✅ Compliant | Software Component Verification Standard |
-| **EO 14028** | ✅ Compliant | US Executive Order on cybersecurity |
+| Standard                  | Status       | Details                                  |
+| ------------------------- | ------------ | ---------------------------------------- |
+| **NTIA Minimum Elements** | ✅ Compliant | All 7 baseline fields included           |
+| **CycloneDX 1.5 Spec**    | ✅ Compliant | Full schema compliance                   |
+| **NIST SP 800-218**       | ✅ Compliant | SSDF secure software development         |
+| **OWASP SCVS**            | ✅ Compliant | Software Component Verification Standard |
+| **EO 14028**              | ✅ Compliant | US Executive Order on cybersecurity      |
 
 ### 3.3 NTIA Minimum Elements
 
@@ -74,7 +72,7 @@ All SBOMs include:
 1. **Author of SBOM Data** - GitHub Actions + Syft
 1. **Timestamp** - Generation date/time in UTC
 
----
+______________________________________________________________________
 
 ## 4. SBOM Generation
 
@@ -85,6 +83,7 @@ All SBOMs include:
 **Version Requirements:** Latest stable release
 
 **Configuration:**
+
 ```bash
 syft scan dir:. \
   --scope all-layers \
@@ -98,28 +97,28 @@ syft scan dir:. \
 
 SBOMs are automatically generated on:
 
-| Event | Frequency | Retention |
-|-------|-----------|-----------|
-| **Push to main branch** | Every commit | 90 days (artifacts) |
-| **Release published** | Every release | Permanent (release assets) |
-| **Manual workflow dispatch** | On-demand | 90 days (artifacts) |
+| Event                        | Frequency     | Retention                  |
+| ---------------------------- | ------------- | -------------------------- |
+| **Push to main branch**      | Every commit  | 90 days (artifacts)        |
+| **Release published**        | Every release | Permanent (release assets) |
+| **Manual workflow dispatch** | On-demand     | 90 days (artifacts)        |
 
 ### 4.3 Generated Artifacts
 
 Each SBOM generation produces:
 
-| File | Description |
-|------|-------------|
-| `sbom-comprehensive.cyclonedx.json` | Complete SBOM (all dependencies) |
-| `sbom-python.cyclonedx.json` | Python dependencies only |
-| `sbom-nodejs.cyclonedx.json` | Node.js dependencies only |
-| `sbom-report.txt` | Human-readable dependency list |
-| `sbom-metadata.json` | Generation metadata (timestamp, commit, etc.) |
-| `sbom-checksums.txt` | SHA-256 checksums for all files |
-| `*.sig` | Sigstore Cosign signatures |
-| `*.pem` | Sigstore certificates for verification |
+| File                                | Description                                   |
+| ----------------------------------- | --------------------------------------------- |
+| `sbom-comprehensive.cyclonedx.json` | Complete SBOM (all dependencies)              |
+| `sbom-python.cyclonedx.json`        | Python dependencies only                      |
+| `sbom-nodejs.cyclonedx.json`        | Node.js dependencies only                     |
+| `sbom-report.txt`                   | Human-readable dependency list                |
+| `sbom-metadata.json`                | Generation metadata (timestamp, commit, etc.) |
+| `sbom-checksums.txt`                | SHA-256 checksums for all files               |
+| `*.sig`                             | Sigstore Cosign signatures                    |
+| `*.pem`                             | Sigstore certificates for verification        |
 
----
+______________________________________________________________________
 
 ## 5. SBOM Content
 
@@ -156,7 +155,7 @@ The following are **not** included in SBOM:
 - Internal tools not shipped in releases
 - Sensitive configuration files
 
----
+______________________________________________________________________
 
 ## 6. SBOM Publication
 
@@ -186,7 +185,7 @@ On every main branch push:
 - **CI Artifacts:** Available to authenticated users with repository access
 - **API Access:** Available via GitHub REST API
 
----
+______________________________________________________________________
 
 ## 7. SBOM Verification
 
@@ -195,13 +194,17 @@ On every main branch push:
 All SBOMs are signed using Sigstore Cosign with keyless signing.
 
 **Verify SBOM Signature:**
+
 ```bash
+
 # Install Cosign
+
 curl -O -L "https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64"
 sudo mv cosign-linux-amd64 /usr/local/bin/cosign
 sudo chmod +x /usr/local/bin/cosign
 
 # Verify signature
+
 cosign verify-blob sbom-comprehensive.cyclonedx.json \
   --signature=sbom-comprehensive.cyclonedx.json.sig \
   --certificate=sbom-comprehensive.cyclonedx.json.pem \
@@ -212,8 +215,11 @@ cosign verify-blob sbom-comprehensive.cyclonedx.json \
 ### 7.2 Checksum Verification
 
 **Verify File Integrity:**
+
 ```bash
+
 # Verify checksum signature first
+
 cosign verify-blob sbom-checksums.txt \
   --signature=sbom-checksums.txt.sig \
   --certificate=sbom-checksums.txt.pem \
@@ -221,6 +227,7 @@ cosign verify-blob sbom-checksums.txt \
   --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
 
 # Then verify file checksums
+
 sha256sum -c sbom-checksums.txt
 ```
 
@@ -240,7 +247,7 @@ sha256sum -c sbom-checksums.txt
 - Generation is recorded in immutable transparency log
 - Can be audited independently via Rekor
 
----
+______________________________________________________________________
 
 ## 8. SBOM Usage
 
@@ -249,13 +256,17 @@ sha256sum -c sbom-checksums.txt
 **Use SBOM to scan for known vulnerabilities:**
 
 ```bash
+
 # Using Grype (Anchore)
+
 grype sbom:sbom-comprehensive.cyclonedx.json
 
 # Using OSV Scanner
+
 osv-scanner --sbom=sbom-comprehensive.cyclonedx.json
 
 # Using Trivy
+
 trivy sbom sbom-comprehensive.cyclonedx.json
 ```
 
@@ -264,10 +275,13 @@ trivy sbom sbom-comprehensive.cyclonedx.json
 **Extract license information:**
 
 ```bash
+
 # List all licenses
+
 jq '.components[] | {name: .name, version: .version, licenses: .licenses}' sbom-comprehensive.cyclonedx.json
 
 # Count by license type
+
 jq '.components[].licenses[].license.id' sbom-comprehensive.cyclonedx.json | sort | uniq -c
 ```
 
@@ -276,13 +290,17 @@ jq '.components[].licenses[].license.id' sbom-comprehensive.cyclonedx.json | sor
 **Analyze dependency tree:**
 
 ```bash
+
 # View all components
+
 cat sbom-report.txt
 
 # Extract specific package versions
+
 jq '.components[] | select(.name == "openai") | {name, version}' sbom-comprehensive.cyclonedx.json
 
 # Count total dependencies
+
 jq '.components | length' sbom-comprehensive.cyclonedx.json
 ```
 
@@ -295,7 +313,7 @@ jq '.components | length' sbom-comprehensive.cyclonedx.json
 - Unmaintained dependencies
 - Packages with restrictive licenses
 
----
+______________________________________________________________________
 
 ## 9. Responsibilities
 
@@ -320,7 +338,7 @@ jq '.components | length' sbom-comprehensive.cyclonedx.json
 - Communicate SBOM availability to users
 - Archive SBOMs for compliance records
 
----
+______________________________________________________________________
 
 ## 10. Compliance and Auditing
 
@@ -334,23 +352,23 @@ All SBOM generations are logged:
 
 ### 10.2 Regulatory Compliance
 
-| Regulation | Requirement | Compliance |
-|------------|-------------|------------|
-| **EO 14028** | SBOM for federal software | ✅ NTIA-compliant |
+| Regulation    | Requirement                    | Compliance           |
+| ------------- | ------------------------------ | -------------------- |
+| **EO 14028**  | SBOM for federal software      | ✅ NTIA-compliant    |
 | **NIST SSDF** | Software supply chain security | ✅ SBOM + signatures |
-| **GDPR** | Data processing transparency | ✅ No PII in SBOM |
-| **SOC 2** | Change management | ✅ Audit trail |
+| **GDPR**      | Data processing transparency   | ✅ No PII in SBOM    |
+| **SOC 2**     | Change management              | ✅ Audit trail       |
 
 ### 10.3 Retention Policy
 
-| Artifact Type | Retention Period |
-|---------------|------------------|
-| **Release SBOMs** | Permanent (indefinite) |
-| **CI Artifact SBOMs** | 90 days |
-| **Rekor Log Entries** | Permanent (immutable) |
-| **GitHub Actions Logs** | 90 days |
+| Artifact Type           | Retention Period       |
+| ----------------------- | ---------------------- |
+| **Release SBOMs**       | Permanent (indefinite) |
+| **CI Artifact SBOMs**   | 90 days                |
+| **Rekor Log Entries**   | Permanent (immutable)  |
+| **GitHub Actions Logs** | 90 days                |
 
----
+______________________________________________________________________
 
 ## 11. Incident Response
 
@@ -375,7 +393,7 @@ When vulnerability is found via SBOM:
 1. **Release:** Publish security update with new SBOM
 1. **Communicate:** Issue security advisory
 
----
+______________________________________________________________________
 
 ## 12. Continuous Improvement
 
@@ -405,7 +423,7 @@ Planned improvements:
 - SBOM diff between releases
 - Machine learning model component tracking
 
----
+______________________________________________________________________
 
 ## 13. References
 
@@ -432,7 +450,7 @@ Planned improvements:
 - `.github/workflows/sbom.yml` - SBOM generation workflow
 - `.github/workflows/sign-release-artifacts.yml` - Artifact signing workflow
 
----
+______________________________________________________________________
 
 ## 14. Contact
 
@@ -442,19 +460,18 @@ For questions or concerns about SBOM:
 - **General Questions:** Open GitHub Issue with `sbom` label
 - **Email:** <projectaidevs@gmail.com>
 
----
+______________________________________________________________________
 
 ## 15. Changelog
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | 2026-01-19 | Initial SBOM policy document |
+| Version | Date       | Changes                      |
+| ------- | ---------- | ---------------------------- |
+| 1.0     | 2026-01-19 | Initial SBOM policy document |
 
----
+______________________________________________________________________
 
-**Classification:** PUBLIC  
-**Distribution:** Unlimited
+**Classification:** PUBLIC **Distribution:** Unlimited
 
----
+______________________________________________________________________
 
 *"Transparency builds trust in software supply chains."*

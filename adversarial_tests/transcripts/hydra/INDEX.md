@@ -1,7 +1,7 @@
 # HYDRA DEFENSE Test Transcripts Index
 
-**Generated**: 2026-01-11  
-**Total Tests**: 200  
+**Generated**: 2026-01-11
+**Total Tests**: 200
 **Categories**: 40
 
 ## Overview

@@ -28,19 +28,16 @@ logger = logging.getLogger(__name__)
 class ConstitutionalViolationError(Exception):
     """Base exception for constitutional violations."""
 
-    pass
 
 
 class MoralCertaintyError(ConstitutionalViolationError):
     """Raised when moral certainty claims are detected."""
 
-    pass
 
 
 class LawViolationError(ConstitutionalViolationError):
     """Raised when one or more laws are violated."""
 
-    pass
 
 
 # ============================================================

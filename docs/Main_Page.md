@@ -35,19 +35,23 @@ Detailed health snapshots are available in YAML format at `data/health_snapshots
 To generate a new health report, run:
 
 ```bash
+
 # Using the CLI
+
 python -m src.app health report
 
 # Or directly via the module
+
 python -m src.app.health.report
 ```
 
 This will:
+
 1. Collect system diagnostics (CPU, memory, disk, platform info)
-2. Scan installed dependencies
-3. Generate a timestamped YAML snapshot in `data/health_snapshots/`
-4. Create a PNG visualization in `docs/assets/`
-5. Log the event to the cryptographic audit log
+1. Scan installed dependencies
+1. Generate a timestamped YAML snapshot in `data/health_snapshots/`
+1. Create a PNG visualization in `docs/assets/`
+1. Log the event to the cryptographic audit log
 
 ### Audit Trail
 
@@ -73,6 +77,7 @@ report_dir = "docs/assets"
 ```
 
 Environment variables:
+
 - `PROJECTAI_HEALTH_COLLECT_SYSTEM_METRICS`
 - `PROJECTAI_HEALTH_COLLECT_DEPENDENCIES`
 - `PROJECTAI_HEALTH_SNAPSHOT_DIR`
@@ -112,10 +117,10 @@ The health report follows Project-AI's canonical asset pattern:
 The health reporting system adheres to Project-AI's security and governance standards:
 
 1. **Audit Logging**: Every report generation is logged with cryptographic chaining
-2. **Chain Verification**: Detect any tampering attempts via `verify-audit` command
-3. **No Sensitive Data**: Health reports exclude sensitive configuration values
-4. **Append-Only Logs**: Audit logs are append-only for forensic integrity
-5. **Structured Output**: YAML format ensures parsability and tool compatibility
+1. **Chain Verification**: Detect any tampering attempts via `verify-audit` command
+1. **No Sensitive Data**: Health reports exclude sensitive configuration values
+1. **Append-Only Logs**: Audit logs are append-only for forensic integrity
+1. **Structured Output**: YAML format ensures parsability and tool compatibility
 
 ## Next Steps
 
@@ -124,6 +129,6 @@ The health reporting system adheres to Project-AI's security and governance stan
 - [Review Security Policies](security_compliance/)
 - [Contribute to the Project](developer/CONTRIBUTING.md)
 
----
+______________________________________________________________________
 
 **Project-AI** — Building safe, transparent, and accountable AI systems.

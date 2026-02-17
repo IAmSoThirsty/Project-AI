@@ -146,16 +146,21 @@ This shows execution time and helps optimize your code.
 Convert your Thirsty-lang code to other languages:
 
 ```bash
+
 # To Python
+
 node src/transpiler.js hello.thirsty --target python
 
 # To JavaScript
+
 node src/transpiler.js hello.thirsty --target javascript
 
 # To Go
+
 node src/transpiler.js hello.thirsty --target go --wrap
 
 # Save to file
+
 node src/transpiler.js hello.thirsty --target python --output hello.py
 ```
 

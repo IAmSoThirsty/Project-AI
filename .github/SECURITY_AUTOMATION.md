@@ -35,25 +35,25 @@ The main coordinating workflow that:
    - Code security issues (Bandit)
    - Secret exposure (detect-secrets)
    - Severity assessment
-   
+
 1. **auto-remediate-dependencies**: Automatic dependency fixes
    - Upgrades vulnerable packages
    - Verifies fixes
    - Creates auto-merge PRs
-   
+
 1. **auto-remediate-code-issues**: Code security handling
    - Analyzes fixable issues
    - Creates tracking issues for review
-   
+
 1. **auto-remediate-secrets**: Secret exposure handling
    - Creates critical alerts
    - Requires manual intervention for safety
-   
+
 1. **security-verification**: Final verification
    - Confirms all fixes applied
    - Generates status reports
    - Posts PR comments
-   
+
 1. **generate-security-report**: Compliance reporting
    - Creates detailed compliance report
    - Tracks remediation history
@@ -93,15 +93,19 @@ Python script that handles automated remediation:
 
 **Usage**:
 ```bash
+
 # Remediate all security issues
+
 python3 .github/scripts/security_remediation.py --all
 
 # Remediate specific types
+
 python3 .github/scripts/security_remediation.py --dependencies
 python3 .github/scripts/security_remediation.py --code
 python3 .github/scripts/security_remediation.py --secrets
 
 # Specify custom report directory
+
 python3 .github/scripts/security_remediation.py --all --report-dir custom-reports/
 ```
 
@@ -126,7 +130,9 @@ Python script for comprehensive security verification:
 
 **Usage**:
 ```bash
+
 # Run full verification
+
 python3 .github/scripts/security_verification.py
 ```
 
@@ -349,10 +355,15 @@ Edit `.github/workflows/security-orchestrator.yml`:
 ```yaml
 on:
   schedule:
+
     # Change from 6 hours to desired frequency
+
     - cron: '0 */6 * * *'  # Every 6 hours
+
     # - cron: '0 0 * * *'   # Daily at midnight
+
     # - cron: '0 */12 * * *' # Every 12 hours
+
 ```
 
 ### Customizing Severity Thresholds
@@ -360,10 +371,13 @@ on:
 Edit the scanning steps in `security-orchestrator.yml`:
 
 ```yaml
+
 # For Bandit, adjust severity filter
+
 bandit -r src/ --severity-level medium
 
 # For pip-audit, add ignore options
+
 pip-audit --ignore-vuln VULN-ID
 ```
 
@@ -372,10 +386,13 @@ pip-audit --ignore-vuln VULN-ID
 Edit exclusion patterns in workflow:
 
 ```yaml
+
 # Bandit exclusions
+
 bandit -r src/ --exclude 'tests/,examples/'
 
 # Secret scanning exclusions
+
 detect-secrets scan --exclude-files 'test_data/'
 ```
 
@@ -391,7 +408,9 @@ detect-secrets scan --exclude-files 'test_data/'
 
 **Fix**:
 ```bash
+
 # Manually trigger workflow
+
 gh workflow run security-orchestrator.yml
 ```
 
@@ -405,10 +424,13 @@ gh workflow run security-orchestrator.yml
 
 **Check Status**:
 ```bash
+
 # View PR details
+
 gh pr view <PR-NUMBER>
 
 # Check merge status
+
 gh pr checks <PR-NUMBER>
 ```
 
@@ -418,13 +440,17 @@ gh pr checks <PR-NUMBER>
 
 For Bandit:
 ```python
+
 # Add inline comment to suppress
+
 function_call()  # nosec B101
 ```
 
 For detect-secrets:
 ```python
+
 # Add to allowlist in workflow
+
 --exclude-lines "false_positive_pattern"
 ```
 
@@ -432,10 +458,13 @@ For detect-secrets:
 
 **Debug**:
 ```bash
+
 # Run locally with verbose output
+
 python3 -u .github/scripts/security_remediation.py --all
 
 # Check individual components
+
 python3 .github/scripts/security_remediation.py --dependencies
 ```
 
@@ -453,7 +482,9 @@ python3 .github/scripts/security_remediation.py --dependencies
 
 Before committing:
 ```bash
+
 # Run security checks locally
+
 pip-audit
 bandit -r src/
 detect-secrets scan
@@ -480,10 +511,13 @@ detect-secrets scan
 ### Accessing Metrics
 
 ```bash
+
 # View recent security workflow runs
+
 gh run list --workflow=security-orchestrator.yml --limit 20
 
 # Download compliance reports
+
 gh run download --name security-compliance-report
 ```
 
@@ -494,18 +528,27 @@ gh run download --name security-compliance-report
 Add security checks to pre-commit (optional):
 
 ```yaml
+
 # .pre-commit-config.yaml
+
 repos:
+
   - repo: https://github.com/PyCQA/bandit
+
     rev: '1.7.5'
     hooks:
+
       - id: bandit
+
         args: ['-r', 'src/']
-  
+
   - repo: https://github.com/Yelp/detect-secrets
+
     rev: v1.4.0
     hooks:
+
       - id: detect-secrets
+
 ```
 
 ### CI/CD Pipeline Integration
@@ -540,8 +583,11 @@ The system provides continuous monitoring:
 To update security tools:
 
 ```yaml
+
 # In workflow file
+
 - name: Install security tools
+
   run: |
     pip install --upgrade pip-audit safety bandit detect-secrets
 ```
@@ -563,6 +609,6 @@ For critical security issues:
 
 ---
 
-**Last Updated**: 2026-01-07  
-**System Version**: 1.0.0  
+**Last Updated**: 2026-01-07
+**System Version**: 1.0.0
 **Maintained By**: Project-AI Security Team

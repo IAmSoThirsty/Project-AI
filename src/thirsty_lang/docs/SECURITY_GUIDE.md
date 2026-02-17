@@ -122,7 +122,7 @@ armor secretKey
 shield sqlProtection {
   drink query = sip "Enter search term"
   sanitize query
-  
+
   // Query is now safe from SQL injection
   pour "Safe query: " + query
 }
@@ -140,7 +140,7 @@ shield sqlProtection {
 shield xssProtection {
   drink htmlContent = sip "Enter content"
   sanitize htmlContent
-  
+
   // Content is sanitized from XSS
   pour "Safe HTML: " + htmlContent
 }
@@ -161,7 +161,7 @@ shield commandProtection {
     morph on: ["injection"]
     defend with: "aggressive"
   }
-  
+
   drink command = sip "Enter command"
   sanitize command
   armor command
@@ -182,7 +182,7 @@ shield bufferProtection {
     morph on: ["overflow"]
     defend with: "aggressive"
   }
-  
+
   drink largeInput = sip "Enter data"
   sanitize largeInput  // Automatically limits length
   armor largeInput
@@ -203,7 +203,7 @@ shield timingProtection {
     morph on: ["timing"]
     defend with: "moderate"
   }
-  
+
   // Constant-time operations
   drink secret = "password"
   armor secret
@@ -222,7 +222,7 @@ shield timingProtection {
 shield typeProtection {
   drink value = "string"
   armor value  // Type is locked
-  
+
   // Attempting to change type will fail
 }
 ```
@@ -457,14 +457,14 @@ shield webForm {
     morph on: ["injection", "xss"]
     defend with: "aggressive"
   }
-  
+
   drink email = sip "Enter email"
   sanitize email
-  
+
   drink password = sip "Enter password"
   sanitize password
   armor password
-  
+
   pour "Credentials secured"
 }
 ```
@@ -475,11 +475,11 @@ shield webForm {
 shield apiKeyHandler {
   drink apiKey = "sk-1234567890"
   armor apiKey
-  
+
   detect attacks {
     defend with: "paranoid"
   }
-  
+
   pour "API key protected with maximum security"
 }
 ```
@@ -493,14 +493,14 @@ shield multilayer {
     morph on: ["injection", "overflow", "timing", "xss"]
     defend with: "paranoid"
   }
-  
+
   // Layer 2: Input sanitization
   drink userInput = sip "Enter data"
   sanitize userInput
-  
+
   // Layer 3: Memory protection
   armor userInput
-  
+
   // Layer 4: Safe output
   pour "Data: " + userInput
 }

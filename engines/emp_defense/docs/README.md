@@ -19,7 +19,9 @@ The **EMP Defense Engine** is a simulation system designed to model electromagne
 ### Installation
 
 ```bash
+
 # No additional dependencies required beyond Project-AI base
+
 cd /path/to/Project-AI
 ```
 
@@ -29,33 +31,41 @@ cd /path/to/Project-AI
 from engines.emp_defense import EMPDefenseEngine, EMPScenario, load_scenario_preset
 
 # Create engine with standard scenario
+
 config = load_scenario_preset(EMPScenario.STANDARD)
 engine = EMPDefenseEngine(config)
 
 # Initialize simulation
+
 engine.init()
 
 # Run for 1 year (52 weeks)
+
 for week in range(52):
     engine.tick()
 
 # Observe final state
+
 state = engine.observe()
 print(f"Simulation Day: {state['simulation_day']}")
 print(f"Population: {state['global_population']:,}")
 print(f"Grid Operational: {state['grid_operational_pct']:.1%}")
 
 # Export artifacts
+
 engine.export_artifacts()
 ```
 
 ### Command Line Usage
 
 ```bash
+
 # Run manual tests
+
 python3 engines/emp_defense/tests/manual_test.py
 
 # Run with pytest (if available)
+
 pytest engines/emp_defense/tests/ -v
 ```
 
@@ -102,12 +112,14 @@ All defense engines implement these 5 methods:
 ### Scenario Presets
 
 **Standard Scenario** (Default):
+
 - 90% grid failure
 - 35% population initially affected
 - 10-year simulation
 - Moderate recovery rate
 
 **Severe Scenario**:
+
 - 98% grid failure
 - 85% population initially affected
 - 30-year simulation
@@ -159,19 +171,23 @@ The engine tracks 5 key metrics:
 ### Injecting Events
 
 ```python
+
 # Inject recovery effort
+
 event_id = engine.inject_event("recovery_effort", {
     "region": "North America",
     "resources": "transformer_shipment"
 })
 
 # Inject resource discovery
+
 event_id = engine.inject_event("resource_discovered", {
     "type": "fuel",
     "quantity": "1000000_gallons"
 })
 
 # Inject infrastructure repair
+
 event_id = engine.inject_event("infrastructure_repair", {
     "system": "grid",
     "completion_pct": 0.15
@@ -225,19 +241,31 @@ When `export_artifacts()` is called, three JSON files are created:
 ### Running Tests
 
 ```bash
+
 # Manual test (no dependencies)
+
 python3 engines/emp_defense/tests/manual_test.py
 
 # Expected output:
+
 # ============================================================
+
 # EMP Defense Engine - Manual Test Suite
+
 # ============================================================
-# 
+
+#
+
 # [TEST 1] Engine creation... ✅ PASS
+
 # [TEST 2] Engine initialization... ✅ PASS
+
 # [TEST 3] Simulation tick... ✅ PASS
+
 # ...
+
 # Test Results: 8 passed, 0 failed
+
 ```
 
 ### Test Coverage
@@ -261,9 +289,10 @@ engine = EMPDefenseEngine()
 engine.init()
 
 # Simulate 1 year
+
 for week in range(52):
     engine.tick()
-    
+
     if week % 13 == 0:  # Every quarter
         state = engine.observe()
         print(f"Week {week}: Population = {state['global_population']:,}")
@@ -277,15 +306,18 @@ engine.export_artifacts()
 from engines.emp_defense import EMPDefenseEngine, EMPScenario, load_scenario_preset
 
 # Load severe scenario
+
 config = load_scenario_preset(EMPScenario.SEVERE)
 engine = EMPDefenseEngine(config)
 engine.init()
 
 # Simulate 2 years
+
 for week in range(104):
     engine.tick()
-    
+
     # Inject recovery efforts quarterly
+
     if week % 13 == 0 and week > 0:
         engine.inject_event("recovery_milestone", {
             "type": "grid_repair",
@@ -293,6 +325,7 @@ for week in range(104):
         })
 
 # Check final state
+
 final_state = engine.observe()
 print(f"Final Grid Status: {final_state['grid_operational_pct']:.1%}")
 print(f"Survival Rate: {final_state['global_population'] / 8e9:.1%}")
@@ -306,6 +339,7 @@ engine.export_artifacts()
 from engines.emp_defense import EMPDefenseEngine, SimulationConfig
 
 # Create custom configuration
+
 config = SimulationConfig()
 config.scenario = "regional_emp"
 config.grid_failure_pct = 0.60  # 60% failure
@@ -316,6 +350,7 @@ engine = EMPDefenseEngine(config)
 engine.init()
 
 # Run simulation
+
 for week in range(52 * 5):  # 5 years
     engine.tick()
 
@@ -337,6 +372,7 @@ engines/
 ### Future Integration
 
 Future versions will integrate with:
+
 - **SimulationRegistry**: For unified scenario management
 - **Planetary Defense Monolith**: For constitutional law validation
 - **Defense Engine Core**: For shared infrastructure
@@ -376,6 +412,6 @@ For issues or questions, see the Project-AI repository.
 
 ---
 
-**Status**: ✅ Core engine functional and tested  
-**Version**: 1.0.0  
+**Status**: ✅ Core engine functional and tested
+**Version**: 1.0.0
 **Last Updated**: 2026-02-03

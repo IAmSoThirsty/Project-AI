@@ -2,9 +2,9 @@
 
 **Thirsty's Active Resistance Language - A Production-Grade Language Implementation**
 
-**Version:** 1.0.0  
-**Date:** January 24, 2026  
-**Authors:** Project-AI Team  
+**Version:** 1.0.0
+**Date:** January 24, 2026
+**Authors:** Project-AI Team
 **Status:** Production Implementation
 
 ---
@@ -73,13 +73,13 @@ Every subsystem adheres to a strict interface contract:
 class Subsystem:
     def __init__(self, *dependencies):
         """Initialize with explicit dependencies"""
-        
+
     def initialize(self) -> None:
         """Initialize subsystem state"""
-        
+
     def shutdown(self) -> None:
         """Clean shutdown and resource release"""
-        
+
     def get_status(self) -> Dict[str, Any]:
         """Report current status"""
 ```
@@ -102,21 +102,25 @@ Later sources override earlier ones, enabling environment-specific customization
 ### 3.1 Compilation Pipeline
 
 **Stage 1: Lexical Analysis**
+
 - Tokenizes source text
 - Tracks source locations (file, line, column)
 - Reports lexical errors
 
 **Stage 2: Syntax Parsing**
+
 - Constructs Abstract Syntax Tree (AST)
 - Error recovery for partial programs
 - Validates syntax rules
 
 **Stage 3: Semantic Analysis**
+
 - Type checking and inference
 - Scope resolution and symbol tables
 - Semantic validation
 
 **Stage 4: Code Generation**
+
 - Bytecode emission
 - Optimization passes
 - Source map generation
@@ -126,9 +130,11 @@ Later sources override earlier ones, enabling environment-specific customization
 ```
 Header: TARL_BYTECODE_V1\x00 (16 bytes)
 Sections:
+
   - Constants pool
   - Code section
   - Debug info (optional)
+
 ```
 
 Bytecode is architecture-independent and deterministic.
@@ -190,11 +196,13 @@ Mark-and-sweep collector with generational optimization:
 ### 5.1 Sandboxing
 
 **Resource Limits:**
+
 - CPU time: 30 seconds (configurable)
 - Memory: 64MB heap + 1MB stack (configurable)
 - File descriptors: 100 (configurable)
 
 **Capability-based security:**
+
 - File I/O: Optional whitelist of allowed paths
 - Network I/O: Optional whitelist of allowed hosts
 - System calls: Restricted set of safe operations
@@ -208,6 +216,7 @@ Foreign Function Interface with three security modes:
 3. **Strict**: Library allowlist + type validation
 
 All FFI calls validated before execution:
+
 - Type checking and conversion
 - Memory bounds checking
 - No arbitrary code execution
@@ -248,21 +257,24 @@ Diagnostics include 3 lines of context (configurable):
 ```
 ERROR [test.tarl:10:5] [E001]
   Undefined variable 'x'
-  
+
   Context:
     8:     let y = 10
     9:     let z = 20
    10:     pour x + y
              ^^^^^
-  
+
   Suggestions:
+
     - Did you mean 'y'?
     - Did you mean 'z'?
+
 ```
 
 ### 6.3 Batch Reporting
 
 Multiple diagnostics aggregated for single-pass reporting:
+
 - Errors sorted by severity then location
 - Related diagnostics grouped together
 - Summary statistics (error count, warning count)
@@ -335,6 +347,7 @@ Hello, World!
 ```
 
 Features:
+
 - Persistent session state
 - Command history (1000 entries)
 - Multi-line input
@@ -358,37 +371,44 @@ Port: 9899 (configurable)
 ### 9.1 Benchmarks
 
 **Compilation Performance:**
+
 - Simple programs: <1ms
 - Medium programs (1000 lines): ~20ms
 - Large programs (10000 lines): ~200ms
 
 **Execution Performance:**
+
 - Interpreted: ~1M instructions/second
 - JIT compiled: ~10M instructions/second
 
 **Memory Usage:**
+
 - Base footprint: <10MB
 - Per-program overhead: ~1MB
 
 **Startup Time:**
+
 - Cold start: <100ms (lazy initialization)
 - Warm start: <10ms (cached modules)
 
 ### 9.2 Optimization Techniques
 
 **Compiler:**
+
 - Single-pass compilation by default
 - Optional multi-pass optimization (-O2, -O3)
 - Constant folding and propagation
 - Dead code elimination
 
 **Runtime:**
+
 - Computed goto for interpreter loop
 - Stack caching for hot variables
 - Inline caching for method calls
 - JIT compilation for hot paths
 
 **Memory:**
+
 - Generational garbage collection
 - Object pooling for common types
 - String interning
@@ -469,18 +489,21 @@ Specification compliance tests:
 ### 12.1 Advanced Features
 
 **Concurrency:**
+
 - Green threads
 - Async/await syntax
 - Actor model
 - Parallel execution
 
 **Type System:**
+
 - Static type inference
 - Generic types
 - Type classes
 - Dependent types
 
 **Optimization:**
+
 - Profile-guided optimization
 - Whole-program optimization
 - Speculative optimization
@@ -489,6 +512,7 @@ Specification compliance tests:
 ### 12.2 Native Compilation
 
 **LLVM Backend:**
+
 - Ahead-of-time compilation
 - Native code generation
 - Binary distribution
@@ -497,6 +521,7 @@ Specification compliance tests:
 ### 12.3 Package Ecosystem
 
 **Package Manager:**
+
 - Central package registry
 - Dependency resolution
 - Version management
@@ -508,12 +533,12 @@ Specification compliance tests:
 
 T.A.R.L. provides a production-grade language implementation with:
 
-✅ **Complete architecture** - All subsystems implemented  
-✅ **Zero circular dependencies** - Strict initialization order  
-✅ **Security by default** - Resource limits and sandboxing  
-✅ **Comprehensive testing** - 100% test pass rate  
-✅ **Full documentation** - Architecture, API, integration guides  
-✅ **CI/CD integration** - Automated testing and validation  
+✅ **Complete architecture** - All subsystems implemented
+✅ **Zero circular dependencies** - Strict initialization order
+✅ **Security by default** - Resource limits and sandboxing
+✅ **Comprehensive testing** - 100% test pass rate
+✅ **Full documentation** - Architecture, API, integration guides
+✅ **CI/CD integration** - Automated testing and validation
 
 T.A.R.L. is ready for integration into Project-AI's secure execution environment.
 
@@ -529,7 +554,7 @@ T.A.R.L. is ready for integration into Project-AI's secure execution environment
 
 ---
 
-**Document Version:** 1.0.0  
-**Last Updated:** 2026-01-24  
-**License:** MIT  
+**Document Version:** 1.0.0
+**Last Updated:** 2026-01-24
+**License:** MIT
 **Copyright:** (c) 2026 Project-AI Team

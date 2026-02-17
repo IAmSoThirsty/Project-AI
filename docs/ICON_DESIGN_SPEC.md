@@ -21,13 +21,13 @@ A spherical icon split into two hemispheres with jagged, clashing boundaries, ce
 
 ## Color Palette
 
-| Color | Hex Code | RGB | Usage |
-|-------|----------|-----|-------|
-| **Security Red** | `#DC143C` | (220, 20, 60) | Left/top hemisphere |
-| **Cognitive Blue** | `#1E90FF` | (30, 144, 255) | Right/bottom hemisphere |
-| **Knowledge Gold** | `#FFD700` | (255, 215, 0) | Accent highlights, trim |
-| **Pure White** | `#FFFFFF` | (255, 255, 255) | Center orb, highlights |
-| **Deep Black** | `#000000` | (0, 0, 0) | Background, shadows |
+| Color              | Hex Code  | RGB             | Usage                   |
+| ------------------ | --------- | --------------- | ----------------------- |
+| **Security Red**   | `#DC143C` | (220, 20, 60)   | Left/top hemisphere     |
+| **Cognitive Blue** | `#1E90FF` | (30, 144, 255)  | Right/bottom hemisphere |
+| **Knowledge Gold** | `#FFD700` | (255, 215, 0)   | Accent highlights, trim |
+| **Pure White**     | `#FFFFFF` | (255, 255, 255) | Center orb, highlights  |
+| **Deep Black**     | `#000000` | (0, 0, 0)       | Background, shadows     |
 
 ### Gradient Specifications
 
@@ -135,8 +135,8 @@ A spherical icon split into two hemispheres with jagged, clashing boundaries, ce
 **Three-Point Lighting:**
 
 1. **Key Light:** 45° above, warm white (5000K), intensity 100%
-2. **Fill Light:** Opposite side, cool white (6500K), intensity 60%
-3. **Rim Light:** Behind, slightly blue-tinted, intensity 80%
+1. **Fill Light:** Opposite side, cool white (6500K), intensity 60%
+1. **Rim Light:** Behind, slightly blue-tinted, intensity 80%
 
 **Environment:**
 
@@ -202,13 +202,17 @@ assets/icons/
 The icon generation process is automated via `scripts/setup_icons.py`:
 
 ```bash
+
 # Generate all platform icons from master source
+
 python scripts/setup_icons.py --source assets/icons/source/icon_master_2048x2048.png
 
 # Generate specific platform
+
 python scripts/setup_icons.py --platform windows
 
 # Regenerate all
+
 python scripts/setup_icons.py --regenerate-all
 ```
 
@@ -262,6 +266,6 @@ python scripts/setup_icons.py --regenerate-all
 - Release versions tagged with icon version
 - Export script generates consistent outputs
 
----
+______________________________________________________________________
 
 **This icon represents the core philosophy of Project-AI: the harmonious yet deliberate clash between security and cognition, unified by intelligent decision-making.**

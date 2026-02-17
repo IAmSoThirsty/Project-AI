@@ -20,7 +20,6 @@ class ModelProvider(ABC):
     @abstractmethod
     def __init__(self, api_key: str | None = None):
         """Initialize the provider with API key."""
-        pass
 
     @abstractmethod
     def chat_completion(
@@ -45,12 +44,10 @@ class ModelProvider(ABC):
         Raises:
             Exception: If API call fails
         """
-        pass
 
     @abstractmethod
     def is_available(self) -> bool:
         """Check if provider is available (API key set, etc.)."""
-        pass
 
 
 class OpenAIProvider(ModelProvider):

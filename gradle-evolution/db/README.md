@@ -67,9 +67,11 @@ gradle-evolution/db/
 from gradle_evolution.db import BuildMemoryDB, BuildGraphDB, BuildQueryEngine, MemoryManager
 
 # Initialize database
+
 db = BuildMemoryDB()  # Defaults to data/build_memory.db
 
 # Create a build
+
 build_id = db.create_build(
     version="1.0.0",
     status="running",
@@ -79,9 +81,11 @@ build_id = db.create_build(
 )
 
 # Update build status
+
 db.update_build(build_id, status="success", duration=120.5)
 
 # Record constitutional violation
+
 violation_id = db.create_violation(
     build_id=build_id,
     phase="compilation",
@@ -91,6 +95,7 @@ violation_id = db.create_violation(
 )
 
 # Track security event
+
 event_id = db.create_security_event(
     build_id=build_id,
     event_type="vulnerability_detected",
@@ -101,6 +106,7 @@ event_id = db.create_security_event(
 )
 
 # Record artifact
+
 artifact_id = db.create_artifact(
     build_id=build_id,
     path="build/libs/app.jar",
@@ -111,6 +117,7 @@ artifact_id = db.create_artifact(
 )
 
 # Track dependency
+
 dep_id = db.create_dependency(
     build_id=build_id,
     name="com.example:library",
@@ -124,59 +131,75 @@ dep_id = db.create_dependency(
 ### Graph Analysis
 
 ```python
+
 # Build graph from database
+
 graph = BuildGraphDB(db)
 graph.build_graph(limit=1000)
 
 # Find build ancestry
+
 ancestors = graph.find_build_ancestry(build_id, depth=10)
 
 # Trace artifact provenance
+
 provenance = graph.trace_artifact_provenance("sha256:abcd1234...")
 
 # Detect dependency cycles
+
 cycles = graph.detect_dependency_cycles()
 
 # Identify failure correlations
+
 correlations = graph.identify_failure_correlations(min_correlation=0.5)
 
 # Export to DOT format for visualization
+
 graph.export_to_dot(Path("build_graph.dot"))
 
 # Export to JSON
+
 graph_data = graph.export_to_json(Path("build_graph.json"))
 ```
 
 ### Complex Queries
 
 ```python
+
 # Initialize query engine
+
 query_engine = BuildQueryEngine(db)
 
 # Analyze failure correlations
+
 failures = query_engine.analyze_failure_correlation(
     time_window_hours=24,
     min_failures=2,
 )
 
 # Track dependency vulnerabilities
+
 vulnerabilities = query_engine.track_dependency_vulnerabilities(
     group_by="name",
 )
 
 # Analyze build trends
+
 trends = query_engine.analyze_build_trends(
     days=30,
     granularity="daily",
 )
 
 # Resource usage patterns
+
 resources = query_engine.analyze_resource_patterns(days=30)
 
 # Constitutional compliance rates
+
 compliance = query_engine.analyze_constitutional_compliance(days=30)
 
 # Export results
+
 query_engine.export_to_json(trends, "build_trends.json")
 query_engine.export_to_csv(vulnerabilities, "vulnerabilities.csv")
 ```
@@ -187,6 +210,7 @@ query_engine.export_to_csv(vulnerabilities, "vulnerabilities.csv")
 from gradle_evolution.db.memory_manager import RetentionPolicy
 
 # Create custom retention policy
+
 policy = RetentionPolicy(
     keep_last_n_builds=100,
     keep_days=90,
@@ -197,22 +221,28 @@ policy = RetentionPolicy(
 )
 
 # Initialize manager
+
 manager = MemoryManager(db, retention_policy=policy)
 
 # Dry run cleanup
+
 report = manager.cleanup(dry_run=True)
 print(f"Would delete {report['deleted_builds']} builds")
 
 # Actual cleanup with archival
+
 report = manager.cleanup(dry_run=False)
 
 # Optimize database
+
 optimization = manager.optimize_database()
 
 # Get health status
+
 health = manager.get_health_status()
 
 # Create backup
+
 backup_path = manager.create_backup()
 ```
 
@@ -222,28 +252,36 @@ backup_path = manager.create_backup()
 from gradle_evolution.db.migrations import MigrationManager
 
 # Initialize migration manager
+
 migrator = MigrationManager(db.db_path)
 
 # Check current version
+
 current = migrator.get_current_version()
 latest = migrator.get_latest_version()
 
 # Get pending migrations
+
 pending = migrator.get_pending_migrations()
 
 # Apply all pending migrations
+
 migrator.migrate()
 
 # Migrate to specific version
+
 migrator.migrate(target_version=3)
 
 # Rollback to previous version
+
 migrator.rollback(target_version=2)
 
 # Get migration history
+
 history = migrator.get_migration_history()
 
 # Validate schema integrity
+
 is_valid, issues = migrator.validate_schema()
 ```
 
@@ -256,7 +294,9 @@ All operations use SQLite transactions with ACID guarantees:
 ```python
 with db.get_connection() as conn:
     try:
+
         # Multiple operations in transaction
+
         cursor = conn.execute("INSERT INTO builds ...")
         build_id = cursor.lastrowid
         conn.execute("INSERT INTO artifacts ...")
@@ -271,7 +311,9 @@ with db.get_connection() as conn:
 Database uses Write-Ahead Logging for concurrent access:
 
 ```python
+
 # Automatically enabled in BuildMemoryDB.__init__
+
 conn.execute("PRAGMA journal_mode=WAL")
 conn.execute("PRAGMA synchronous=NORMAL")
 ```
@@ -281,23 +323,29 @@ conn.execute("PRAGMA synchronous=NORMAL")
 Query engine includes automatic result caching:
 
 ```python
+
 # Results cached for 5 minutes
+
 trends = query_engine.analyze_build_trends(days=30)
 
 # Clear cache manually
+
 query_engine.clear_cache()
 ```
 
 ### Data Migration Helpers
 
 ```python
+
 # Transform existing data
+
 def uppercase_versions(row):
     return {"version": row["version"].upper()}
 
 migrator.migrate_data("builds", uppercase_versions, batch_size=1000)
 
 # Copy table with column mapping
+
 migrator.copy_table(
     "old_builds",
     "builds",
@@ -305,9 +353,11 @@ migrator.copy_table(
 )
 
 # Backup before migration
+
 backup_table = migrator.backup_table("builds")
 
 # Restore if needed
+
 migrator.restore_table(backup_table, "builds")
 ```
 
@@ -325,7 +375,7 @@ tasks.register("recordBuild") {
             status = "running",
             gradle_version = gradle.gradleVersion,
         )
-        
+
         // Store build ID for later phases
         project.extra["buildId"] = buildId
     }
@@ -345,6 +395,7 @@ validator = ConstitutionalValidator()
 db = BuildMemoryDB()
 
 # Validate and record
+
 result = validator.validate_build(build_config)
 if not result.is_compliant:
     for violation in result.violations:
@@ -366,16 +417,17 @@ scanner = DependencyScanner()
 db = BuildMemoryDB()
 
 # Scan and record vulnerabilities
+
 for dependency in build_dependencies:
     vulnerabilities = scanner.scan(dependency)
-    
+
     dep_id = db.create_dependency(
         build_id=build_id,
         name=dependency.name,
         version=dependency.version,
         vulnerabilities=vulnerabilities,
     )
-    
+
     if vulnerabilities:
         db.create_security_event(
             build_id=build_id,
@@ -397,23 +449,35 @@ for dependency in build_dependencies:
 ## Monitoring and Observability
 
 ```python
+
 # Get database statistics
+
 stats = db.get_statistics()
+
 # Returns: {
+
 #   "builds": 1234,
+
 #   "build_phases": 5678,
+
 #   "constitutional_violations": 42,
+
 #   "security_events": 15,
+
 #   ...
+
 # }
 
 # Get database size
+
 size_mb = db.get_database_size() / 1024 / 1024
 
 # Get memory usage breakdown
+
 usage = manager.get_memory_usage()
 
 # Get health status
+
 health = manager.get_health_status()
 if health["status"] != "healthy":
     print(f"Issues: {health['issues']}")
@@ -438,13 +502,15 @@ import tempfile
 from pathlib import Path
 
 # Use temporary database for tests
+
 with tempfile.TemporaryDirectory() as tmpdir:
     db = BuildMemoryDB(Path(tmpdir) / "test.db")
-    
+
     # Run tests
+
     build_id = db.create_build(version="1.0.0", status="success")
     assert build_id > 0
-    
+
     build = db.get_build(build_id)
     assert build["version"] == "1.0.0"
 ```
@@ -454,7 +520,9 @@ with tempfile.TemporaryDirectory() as tmpdir:
 ### Database Locked Errors
 
 ```python
+
 # Increase timeout
+
 db = BuildMemoryDB()
 with db.get_connection() as conn:
     conn.execute("PRAGMA busy_timeout = 30000")  # 30 seconds
@@ -463,7 +531,9 @@ with db.get_connection() as conn:
 ### Slow Queries
 
 ```python
+
 # Analyze query plan
+
 with db.get_connection() as conn:
     cursor = conn.execute("EXPLAIN QUERY PLAN SELECT ...")
     for row in cursor:
@@ -473,7 +543,9 @@ with db.get_connection() as conn:
 ### Large Database Size
 
 ```python
+
 # Vacuum and optimize
+
 manager = MemoryManager(db)
 result = manager.optimize_database()
 print(f"Reclaimed {result['vacuum']['reclaimed_mb']} MB")

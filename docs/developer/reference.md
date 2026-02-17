@@ -1,5 +1,6 @@
-References
-==========
+# Reference
+
+# References
 
 This document describes links to resources.
 
@@ -19,6 +20,6 @@ This document describes links to resources.
   - GitHub Actions のワークフローをチェックする actionlint をつくった: https://rhysd.hatenablog.com/entry/2021/07/11/214313
   - actionlint v1.4 → v1.6 で実装した新機能の紹介: https://rhysd.hatenablog.com/entry/2021/08/11/221044
 
----
+______________________________________________________________________
 
 [Checks](checks.md) | [Installation](install.md) | [Usage](usage.md) | [Configuration](config.md) | [Go API](api.md)

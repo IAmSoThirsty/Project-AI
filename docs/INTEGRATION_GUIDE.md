@@ -2,20 +2,20 @@
 
 **Complete guide for integrating Thirsty's Asymmetric Security into your project**
 
----
+______________________________________________________________________
 
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Installation](#installation)
-3. [Quick Start (5 Minutes)](#quick-start-5-minutes)
-4. [Detailed Integration](#detailed-integration)
-5. [Configuration Reference](#configuration-reference)
-6. [Best Practices](#best-practices)
-7. [API Reference](#api-reference)
-8. [Troubleshooting](#troubleshooting)
+1. [Installation](#installation)
+1. [Quick Start (5 Minutes)](#quick-start-5-minutes)
+1. [Detailed Integration](#detailed-integration)
+1. [Configuration Reference](#configuration-reference)
+1. [Best Practices](#best-practices)
+1. [API Reference](#api-reference)
+1. [Troubleshooting](#troubleshooting)
 
----
+______________________________________________________________________
 
 ## Overview
 
@@ -27,7 +27,7 @@ Thirsty's Asymmetric Security Framework provides truth-defining enforcement for 
 - 4 GB RAM minimum
 - Basic understanding of security concepts
 
----
+______________________________________________________________________
 
 ## Installation
 
@@ -51,7 +51,7 @@ pip install -e .
 docker pull thirstysprojects/asymmetric-security:latest
 ```
 
----
+______________________________________________________________________
 
 ## Quick Start (5 Minutes)
 
@@ -61,6 +61,7 @@ docker pull thirstysprojects/asymmetric-security:latest
 from thirstys_security import SecurityEnforcementGateway
 
 # Initialize with defaults
+
 gateway = SecurityEnforcementGateway()
 ```
 
@@ -71,7 +72,9 @@ from thirstys_security import secure_operation, OperationType
 
 @secure_operation(OperationType.STATE_MUTATION)
 def delete_user_data(user_id: str):
+
     # Only executes if security allows
+
     database.delete(user_id)
     return {"status": "deleted"}
 ```
@@ -91,42 +94,51 @@ try:
         user_id="user_123",
         timestamp=datetime.now().isoformat()
     )
-    
+
     result = gateway.enforce(request)
+
     # Proceed with operation
-    
+
 except SecurityViolationException as e:
+
     # Operation blocked
+
     log.error(f"Blocked: {e.reason}")
 ```
 
----
+______________________________________________________________________
 
 ## Detailed Integration
 
 ### New Projects
 
 1. **Design with security first**
+
    - Define constitutional rules for your domain
    - Identify crown jewel actions
    - Set RFI thresholds
 
-2. **Wrap all entry points**
+1. **Wrap all entry points**
+
    ```python
+
    # API endpoints
+
    @app.route('/api/sensitive', methods=['POST'])
    @secure_operation(OperationType.STATE_MUTATION)
    def sensitive_endpoint():
        pass
-   
+
    # Background jobs
+
    @celery.task
    @secure_operation(OperationType.BACKGROUND)
    def process_data():
        pass
    ```
 
-3. **Configure monitoring**
+1. **Configure monitoring**
+
    ```python
    gateway = SecurityEnforcementGateway(
        metrics_enabled=True,
@@ -140,6 +152,7 @@ except SecurityViolationException as e:
 **Migration Strategy:**
 
 **Week 1: Observation Mode**
+
 - Deploy gateway in audit-only mode
 - Collect baseline metrics
 - Identify false positives
@@ -151,6 +164,7 @@ gateway = SecurityEnforcementGateway(
 ```
 
 **Week 2: Critical Paths**
+
 - Enable enforcement on high-risk operations
 - Monitor impact
 
@@ -161,10 +175,11 @@ def escalate_privileges():
 ```
 
 **Week 3-4: Full Rollout**
+
 - Enable enforcement globally
 - Tune RFI thresholds
 
----
+______________________________________________________________________
 
 ## Configuration Reference
 
@@ -172,11 +187,14 @@ def escalate_privileges():
 
 ```python
 gateway = SecurityEnforcementGateway(
+
     # Enforcement
+
     enforcement_mode="enforce",  # "audit_only" | "enforce" | "paranoid"
     fail_open=False,  # Fail closed by default
-    
+
     # Constitutional Rules
+
     constitutional_rules=[
         "no_state_mutation_with_trust_decrease",
         "human_action_replayability",
@@ -184,26 +202,31 @@ gateway = SecurityEnforcementGateway(
         "cross_tenant_authorization",
         "privilege_escalation_approval"
     ],
-    
+
     # RFI Configuration
+
     rfi_threshold=0.85,  # Minimum required RFI
     rfi_dimensions=["observer", "temporal", "invariant", "state"],
-    
+
     # Temporal Security
+
     temporal_enabled=True,
     clock_skew_tolerance_sec=60,
     race_window_ms=100,
-    
+
     # Monitoring
+
     metrics_enabled=True,
     audit_retention_days=90,
     forensics_enabled=True,
-    
+
     # Integration
+
     alert_webhook=None,
     siem_endpoint=None,
-    
+
     # Storage
+
     data_dir="data/security/asymmetric"
 )
 ```
@@ -228,14 +251,16 @@ custom_rule = ConstitutionalRule(
 gateway.add_constitutional_rule(custom_rule)
 ```
 
----
+______________________________________________________________________
 
 ## Best Practices
 
 ### 1. Define Domain-Specific Rules
 
 ```python
+
 # E-commerce example
+
 ecommerce_rules = [
     ConstitutionalRule(
         name="no_price_change_without_approval",
@@ -271,7 +296,9 @@ def with_audit_span(func):
 ### 4. Test with Phase T
 
 ```python
+
 # In your test suite
+
 def test_temporal_attack_surface():
     """Test critical workflow under temporal fuzzing"""
     scenarios = [
@@ -280,7 +307,7 @@ def test_temporal_attack_surface():
         {"delay_ms": 10000},
         {"clock_skew_min": 10}
     ]
-    
+
     for scenario in scenarios:
         result = gateway.validate_with_temporal_fuzzing(
             action="critical_workflow",
@@ -289,7 +316,7 @@ def test_temporal_attack_surface():
         assert result["blocked"], f"Failed on {scenario}"
 ```
 
----
+______________________________________________________________________
 
 ## API Reference
 
@@ -298,20 +325,25 @@ def test_temporal_attack_surface():
 **Methods:**
 
 - `enforce(request: OperationRequest) -> OperationResult`
+
   - Truth-defining enforcement
   - Raises SecurityViolationException if blocked
 
 - `validate(request: OperationRequest) -> Dict`
+
   - Validation only (doesn't raise exception)
   - Returns {"allowed": bool, "reason": str, ...}
 
 - `add_constitutional_rule(rule: ConstitutionalRule)`
+
   - Add custom constitutional rule
 
 - `get_metrics() -> Dict`
+
   - Retrieve enforcement statistics
 
 - `export_audit_trail(start_date, end_date) -> List[Dict]`
+
   - Export audit logs
 
 ### SecureCommandDispatcher
@@ -337,7 +369,7 @@ result = dispatcher.execute_command(
 )
 ```
 
----
+______________________________________________________________________
 
 ## Troubleshooting
 
@@ -346,10 +378,13 @@ result = dispatcher.execute_command(
 **Solution:** Tune RFI thresholds or add context
 
 ```python
+
 # Lower threshold for specific actions
+
 gateway.set_rfi_threshold("read_public_data", 0.70)
 
 # Add more context dimensions
+
 context["device_fingerprint"] = get_device_fingerprint()
 context["session_age_sec"] = get_session_age()
 ```
@@ -359,7 +394,9 @@ context["session_age_sec"] = get_session_age()
 **Check:** Are you running temporal fuzzing in production?
 
 ```python
+
 # Temporal fuzzing should be test-only
+
 gateway = SecurityEnforcementGateway(
     temporal_enabled=False  # Disable in production
 )
@@ -375,12 +412,13 @@ gateway = SecurityEnforcementGateway(
 )
 
 # Review logs
+
 violations = gateway.get_recent_violations()
 for v in violations:
     print(f"Violation: {v['rule']}, Context: {v['context']}")
 ```
 
----
+______________________________________________________________________
 
 ## Examples
 
@@ -407,7 +445,7 @@ def enforce_security():
             user_id=get_current_user_id(),
             timestamp=datetime.now().isoformat()
         )
-        
+
         try:
             gateway.enforce(req)
         except SecurityViolationException as e:
@@ -424,7 +462,9 @@ app = FastAPI()
 gateway = SecurityEnforcementGateway()
 
 async def enforce_security(operation: str):
+
     # Implement security check
+
     pass
 
 @app.post("/users/{user_id}/delete")
@@ -432,25 +472,27 @@ async def delete_user(
     user_id: str,
     _=Depends(lambda: enforce_security("delete_user"))
 ):
+
     # Only executes if security allows
+
     pass
 ```
 
----
+______________________________________________________________________
 
 ## Performance Impact
 
 **Measured Overhead:**
+
 - Constitutional Check: 0.0001 ms
 - RFI Calculation: 0.0002 ms
 - Full Gateway: 0.0012 ms
 
-**At 1,000 ops/sec:** 0.12% overhead (negligible)
-**At 10,000 ops/sec:** 1.2% overhead (minimal)
+**At 1,000 ops/sec:** 0.12% overhead (negligible) **At 10,000 ops/sec:** 1.2% overhead (minimal)
 
 All primitives are O(1) complexity.
 
----
+______________________________________________________________________
 
 ## Support & Resources
 
@@ -459,6 +501,6 @@ All primitives are O(1) complexity.
 - **Demo:** `/demos/thirstys_security_demo/`
 - **Issues:** https://github.com/IAmSoThirsty/Project-AI/issues
 
----
+______________________________________________________________________
 
 **The framework is ready. The game has been rewritten. ✅**

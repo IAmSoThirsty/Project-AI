@@ -46,6 +46,7 @@ docs/
 - ✅ "Governance System" (not "Codex Deus Maximus")
 
 **File naming:**
+
 - Use descriptive names: `API_AUTHENTICATION_GUIDE.md`
 - Avoid generic names: `auth.md`, `notes.md`
 - Use uppercase for multi-word files
@@ -54,6 +55,7 @@ docs/
 ### Internal Folder
 
 **Internal terminology is acceptable:**
+
 - ✅ Triumvirate, Cerberus, Galahad, Codex Deus Maximus
 - ✅ Internal jargon, abbreviations, codenames
 - ✅ Casual or informal tone
@@ -68,7 +70,9 @@ Use the decision tree in [docs/DOCUMENTATION_STRUCTURE_GUIDE.md](../docs/DOCUMEN
 ### Step 2: Create Your File
 
 ```bash
+
 # Example: Adding an API guide
+
 cd docs/developer
 vim NEW_API_GUIDE.md
 ```
@@ -82,11 +86,15 @@ Use appropriate template from [docs/DOCUMENTATION_STRUCTURE_GUIDE.md](../docs/DO
 If your document is important enough to reference from README.md:
 
 ```bash
+
 # Edit README.md to add a link
+
 vim README.md
 
 # Add link in appropriate section:
+
 # - [Your New Doc](docs/folder/YOUR_DOC.md) - Brief description
+
 ```
 
 ### Step 5: Update Folder README
@@ -94,18 +102,22 @@ vim README.md
 If adding a major document, update the folder's README.md:
 
 ```bash
+
 # Example: Adding to developer folder
+
 vim docs/developer/README.md
 
 # Add to "Key Documents" section
+
 ```
 
 ### Step 6: Submit PR
 
 Create a PR with:
+
 - **Title**: `docs: Add [document name]`
 - **Description**: Explain what the doc covers and why it's needed
-- **Checklist**: 
+- **Checklist**:
   - [ ] Placed in correct folder
   - [ ] Used appropriate terminology
   - [ ] Updated cross-references
@@ -122,25 +134,34 @@ Use the decision tree to find where it should go.
 ### Step 2: Move the File
 
 ```bash
+
 # Use git mv to preserve history
+
 git mv docs/old/FILE.md docs/correct/FILE.md
 ```
 
 ### Step 3: Update References
 
 ```bash
+
 # Find all references
+
 grep -r "old/FILE.md" docs/ README.md .github/
 
 # Update each reference to new path
+
 # old/FILE.md → correct/FILE.md
+
 ```
 
 ### Step 4: Test Links
 
 ```bash
+
 # Verify no broken links
+
 # Check README.md and other docs that link to moved file
+
 ```
 
 ### Step 5: Commit
@@ -155,18 +176,21 @@ git commit -m "docs: Move FILE.md to correct folder (docs/correct/)"
 ### Writing Style
 
 **Executive documents:**
+
 - Clear, professional language
 - Avoid technical jargon
 - Focus on business value
 - Include executive summaries
 
 **Technical documents:**
+
 - Precise technical language
 - Include code examples
 - Add diagrams where helpful
 - Link to related docs
 
 **Developer guides:**
+
 - Step-by-step instructions
 - Command examples
 - Troubleshooting sections
@@ -175,6 +199,7 @@ git commit -m "docs: Move FILE.md to correct folder (docs/correct/)"
 ### Markdown Formatting
 
 ```markdown
+
 # Main Title (H1 - one per document)
 
 ## Section (H2)
@@ -187,7 +212,9 @@ git commit -m "docs: Move FILE.md to correct folder (docs/correct/)"
 - Use *italic* sparingly
 
 ```bash
+
 # Code blocks with language
+
 command --flag value
 ```
 
@@ -204,6 +231,7 @@ command --flag value
 ## Common Mistakes to Avoid
 
 ❌ **Don't:**
+
 - Put user guides in internal/
 - Use internal codenames in executive docs
 - Create generic file names like `notes.md` or `temp.md`
@@ -211,6 +239,7 @@ command --flag value
 - Mix internal and external terminology in the same document
 
 ✅ **Do:**
+
 - Choose the correct folder based on audience
 - Use clear, descriptive names
 - Update all references when moving files
@@ -222,21 +251,25 @@ command --flag value
 ### Good Documentation Placement
 
 ✅ **Executive Summary of Q4 Features**
+
 - Location: `docs/executive/Q4_2024_FEATURES_SUMMARY.md`
 - Terminology: "Governing Council", professional language
 - Audience: Executives, investors
 
 ✅ **Kernel Architecture Deep Dive**
+
 - Location: `docs/architecture/KERNEL_ARCHITECTURE_DETAILED.md`
 - Terminology: Technical, precise
 - Audience: Senior engineers, architects
 
 ✅ **CLI Command Reference**
+
 - Location: `docs/developer/cli/COMMAND_REFERENCE.md`
 - Terminology: Technical, practical
 - Audience: Developers
 
 ✅ **Implementation Notes for Sprint 42**
+
 - Location: `docs/internal/SPRINT_42_NOTES.md`
 - Terminology: Internal codenames OK
 - Audience: Engineering team
@@ -244,13 +277,16 @@ command --flag value
 ### Bad Documentation Placement
 
 ❌ **User Guide in internal/**
+
 - Should be: `docs/executive/USER_GUIDE.md`
 
 ❌ **Security Policy with "Cerberus" in title**
+
 - Should use: "Security Sentinel" for external docs
 - Or place in: `docs/internal/` if using internal names
 
 ❌ **API Reference in root docs/**
+
 - Should be: `docs/developer/api/API_REFERENCE.md`
 
 ## Questions?

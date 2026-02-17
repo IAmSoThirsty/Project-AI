@@ -460,7 +460,6 @@ class SuperKernel:
         """
         # RBAC check implementation would go here
         # For now, this is a placeholder
-        pass
 
     def get_execution_history(
         self,

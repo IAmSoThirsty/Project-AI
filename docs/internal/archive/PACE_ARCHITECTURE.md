@@ -1,10 +1,8 @@
 # PACE Architecture
 
-**Version:** 1.0  
-**Last Updated:** 2026-01-23  
-**Status:** Architectural Specification
+**Version:** 1.0 **Last Updated:** 2026-01-23 **Status:** Architectural Specification
 
----
+______________________________________________________________________
 
 ## Overview
 
@@ -213,42 +211,72 @@ Multiple layers of validation, sandboxing, and policy enforcement ensure safe op
 ### Request Processing Flow
 
 ```
+
 1. Request → I/O Router
+
    ↓
+
 2. Identity Manager (Authentication)
+
    ↓
+
 3. Policy Engine (Validation)
+
    ↓
+
 4. Cognition Engine (Reasoning, if needed)
+
    ↓
+
 5. Agent Coordinator (Agent selection)
+
    ↓
+
 6. Workflow Engine / Capability Invoker (Execution)
+
    ↓
+
 7. State Manager (Persistence)
+
    ↓
+
 8. I/O Router → Response
+
 ```
 
 ### Multi-Agent Workflow
 
 ```
+
 1. Request → Workflow Engine
+
    ↓
+
 2. Workflow Engine → Agent Coordinator
+
    ↓
+
 3. Agent Coordinator:
    - Selects Agent A for subtask 1
    - Selects Agent B for subtask 2
    - Coordinates parallel execution
+
    ↓
+
 4. Agents execute subtasks
+
    ↓
+
 5. Results aggregated by Agent Coordinator
+
    ↓
+
 6. Workflow Engine completes workflow
+
    ↓
+
 7. Response
+
 ```
 
 ## Configuration Model
@@ -260,36 +288,36 @@ pace:
   engine:
     version: "1.0"
     mode: "production"  # development, production
-    
+
   identity:
     provider: "local"
     config: {...}
-    
+
   policy:
     framework: "four_laws"
     strict_mode: true
     config: {...}
-    
+
   cognition:
     reasoning_engine: "deliberative"
     config: {...}
-    
+
   agents:
     coordination: "hierarchical"
     config: {...}
-    
+
   workflows:
     persistence: true
     config: {...}
-    
+
   capabilities:
     sandboxing: true
     config: {...}
-    
+
   state:
     backend: "json"
     config: {...}
-    
+
   io:
     input_mode: "async"
     config: {...}
@@ -304,7 +332,9 @@ Implement the `Policy` interface and register with the Policy Engine:
 ```python
 class CustomPolicy(Policy):
     def validate(self, action: Action, context: Context) -> Tuple[bool, str]:
+
         # Custom validation logic
+
         pass
 ```
 
@@ -315,7 +345,9 @@ Implement the `Agent` interface and register with the Agent Coordinator:
 ```python
 class CustomAgent(Agent):
     def execute(self, task: Task) -> Result:
+
         # Custom agent logic
+
         pass
 ```
 
@@ -326,7 +358,9 @@ Implement the `Capability` interface and register with the Capability Invoker:
 ```python
 class CustomCapability(Capability):
     def invoke(self, params: Dict[str, Any]) -> Any:
+
         # Custom capability logic
+
         pass
 ```
 
@@ -412,6 +446,7 @@ The Policy Engine integrates ethical frameworks like the Four Laws:
 ### Synchronous Integration
 
 Direct API calls for real-time responses:
+
 ```python
 result = pace_engine.execute_workflow("workflow_id", context)
 ```
@@ -419,15 +454,19 @@ result = pace_engine.execute_workflow("workflow_id", context)
 ### Asynchronous Integration
 
 Queue-based integration for background processing:
+
 ```python
 pace_engine.submit_workflow("workflow_id", context)
+
 # Later...
+
 status = pace_engine.get_workflow_status(instance_id)
 ```
 
 ### Event-Driven Integration
 
 Subscribe to engine events:
+
 ```python
 pace_engine.on("workflow_completed", lambda event: handle_completion(event))
 ```

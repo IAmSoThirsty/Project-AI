@@ -190,9 +190,7 @@ class TSAProvider:
                 continue
 
         # All TSAs failed
-        raise TSARequestError(
-            f"All TSA endpoints failed. Last error: {last_error}"
-        )
+        raise TSARequestError(f"All TSA endpoints failed. Last error: {last_error}")
 
     def _request_from_url(self, tsa_url: str, digest: bytes) -> TSAToken:
         """Request timestamp from specific TSA URL."""
@@ -236,9 +234,7 @@ class TSAProvider:
     # VERIFY TIMESTAMP
     # ==============================
 
-    def verify_timestamp(
-        self, token_der: bytes, original_data: bytes
-    ) -> TSAToken:
+    def verify_timestamp(self, token_der: bytes, original_data: bytes) -> TSAToken:
         """Verify existing timestamp token.
 
         Args:

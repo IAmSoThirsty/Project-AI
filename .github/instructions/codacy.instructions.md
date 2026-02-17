@@ -1,3 +1,5 @@
+# Codacy.Instructions
+
 ---
     description: Configuration for AI behavior when interacting with Codacy's MCP Server
     applyTo: '**'
@@ -11,11 +13,13 @@ Configuration for AI behavior when interacting with Codacy's MCP Server
 ## Code Quality Checks (When Applicable)
 
 **When to run `codacy_cli_analyze`:**
+
 - After making code changes to Python, JavaScript, or other source files
 - When the Codacy MCP Server tools are available
 - If the tool has not already been run for the current file in this session
 
 **How to run:**
+
 - Use the `codacy_cli_analyze` tool from Codacy's MCP Server with:
   - `rootPath`: set to the workspace path
   - `file`: set to the path of the edited file
@@ -23,6 +27,7 @@ Configuration for AI behavior when interacting with Codacy's MCP Server
 - If any issues are found in the new edits, propose and apply fixes for them.
 
 **Circuit Breaker Rules:**
+
 - Do NOT run the tool more than once per file per editing session
 - Do NOT retry if the tool fails due to unavailability
 - Do NOT run for non-code files (markdown, txt, json config files, etc.)
@@ -38,7 +43,7 @@ Configuration for AI behavior when interacting with Codacy's MCP Server
 
 - Track which files have been analyzed in the current session
 - Avoid redundant analysis of the same file
-- If analysis was already performed, skip it and continue with the task 
+- If analysis was already performed, skip it and continue with the task
 
 ## When there are no Codacy MCP Server tools available, or the MCP Server is not reachable
 
@@ -54,6 +59,7 @@ Configuration for AI behavior when interacting with Codacy's MCP Server
 ## OPTIONAL: Dependencies and Security Checks
 
 **When dependency files are modified:**
+
 - After adding dependencies to package.json, requirements.txt, pom.xml, or build.gradle
 - You MAY optionally run the `codacy_cli_analyze` tool with:
   - `rootPath`: set to the workspace path
@@ -81,6 +87,7 @@ Configuration for AI behavior when interacting with Codacy's MCP Server
 ## Anti-Repetition Safeguards
 
 **IMPORTANT: Prevent infinite loops**
+
 - Maximum 1 analysis per file per session
 - If a tool call fails, log it and move on (do NOT retry automatically)
 - If the MCP Server is unavailable, skip analysis and continue

@@ -12,9 +12,9 @@ from pathlib import Path
 from typing import Any
 
 try:
-    import jsonschema
     from jsonschema import Draft7Validator
     from jsonschema import ValidationError as JSONSchemaValidationError
+
     HAS_JSONSCHEMA = True
 except ImportError:
     HAS_JSONSCHEMA = False
@@ -28,6 +28,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ValidationResult:
     """Result of configuration validation."""
+
     is_valid: bool
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
@@ -38,7 +39,7 @@ class ValidationResult:
         if not self.is_valid:
             raise ConfigValidationError(
                 f"Configuration validation failed: {', '.join(self.errors)}",
-                context={"errors": self.errors, "warnings": self.warnings}
+                context={"errors": self.errors, "warnings": self.warnings},
             )
 
 
@@ -57,7 +58,10 @@ class ConfigValidator:
         Args:
             schema_dir: Directory containing JSON schema files
         """
-        self.schema_dir = schema_dir or Path(__file__).parent.parent.parent.parent / "config" / "schemas"
+        self.schema_dir = (
+            schema_dir
+            or Path(__file__).parent.parent.parent.parent / "config" / "schemas"
+        )
         self._schema_cache: dict[str, dict[str, Any]] = {}
 
         if not HAS_JSONSCHEMA:
@@ -91,7 +95,9 @@ class ConfigValidator:
 
         if schema is None:
             # No schema found, use basic validation
-            result.warnings.append(f"No schema found for {schema_name}, using basic validation")
+            result.warnings.append(
+                f"No schema found for {schema_name}, using basic validation"
+            )
             self._basic_validation(config, result)
         else:
             # Use JSON schema validation
@@ -131,7 +137,9 @@ class ConfigValidator:
             else:
                 # Validate each subsystem definition
                 for subsystem_id, subsystem_def in config["subsystems"].items():
-                    self._validate_subsystem_definition(subsystem_id, subsystem_def, result)
+                    self._validate_subsystem_definition(
+                        subsystem_id, subsystem_def, result
+                    )
 
         # Validate optional fields
         if "discovery_paths" in config:
@@ -153,10 +161,7 @@ class ConfigValidator:
         return result
 
     def _validate_subsystem_definition(
-        self,
-        subsystem_id: str,
-        definition: dict[str, Any],
-        result: ValidationResult
+        self, subsystem_id: str, definition: dict[str, Any], result: ValidationResult
     ) -> None:
         """Validate a single subsystem definition."""
         # Required fields for subsystem definition
@@ -164,7 +169,9 @@ class ConfigValidator:
         for field in required_fields:
             if field not in definition:
                 result.is_valid = False
-                result.errors.append(f"Subsystem '{subsystem_id}': Missing required field '{field}'")
+                result.errors.append(
+                    f"Subsystem '{subsystem_id}': Missing required field '{field}'"
+                )
 
         # Validate priority if present
         if "priority" in definition:
@@ -180,19 +187,20 @@ class ConfigValidator:
         if "dependencies" in definition:
             if not isinstance(definition["dependencies"], list):
                 result.is_valid = False
-                result.errors.append(f"Subsystem '{subsystem_id}': 'dependencies' must be a list")
+                result.errors.append(
+                    f"Subsystem '{subsystem_id}': 'dependencies' must be a list"
+                )
 
         # Validate config if present
         if "config" in definition:
             if not isinstance(definition["config"], dict):
                 result.is_valid = False
-                result.errors.append(f"Subsystem '{subsystem_id}': 'config' must be a dictionary")
+                result.errors.append(
+                    f"Subsystem '{subsystem_id}': 'config' must be a dictionary"
+                )
 
     def _validate_subsystem_fields(
-        self,
-        subsystem_id: str,
-        config: dict[str, Any],
-        result: ValidationResult
+        self, subsystem_id: str, config: dict[str, Any], result: ValidationResult
     ) -> None:
         """Subsystem-specific field validation."""
         # Add subsystem-specific validation rules here
@@ -202,13 +210,17 @@ class ConfigValidator:
             # Engine subsystems might require specific fields
             if "timeout" in config and not isinstance(config["timeout"], (int, float)):
                 result.is_valid = False
-                result.errors.append(f"Subsystem '{subsystem_id}': 'timeout' must be a number")
+                result.errors.append(
+                    f"Subsystem '{subsystem_id}': 'timeout' must be a number"
+                )
 
         if "model" in config:
             # Validate model configurations
             if not isinstance(config["model"], (str, dict)):
                 result.is_valid = False
-                result.errors.append(f"Subsystem '{subsystem_id}': 'model' must be a string or dict")
+                result.errors.append(
+                    f"Subsystem '{subsystem_id}': 'model' must be a string or dict"
+                )
 
     def _load_schema(self, schema_name: str) -> dict[str, Any] | None:
         """Load JSON schema from file."""
@@ -236,10 +248,7 @@ class ConfigValidator:
             return None
 
     def _schema_validation(
-        self,
-        config: dict[str, Any],
-        schema: dict[str, Any],
-        result: ValidationResult
+        self, config: dict[str, Any], schema: dict[str, Any], result: ValidationResult
     ) -> None:
         """Validate config against JSON schema."""
         if not HAS_JSONSCHEMA:
@@ -264,9 +273,7 @@ class ConfigValidator:
             result.errors.append(f"Schema validation failed: {e}")
 
     def _basic_validation(
-        self,
-        config: dict[str, Any],
-        result: ValidationResult
+        self, config: dict[str, Any], result: ValidationResult
     ) -> None:
         """Basic validation without JSON schema."""
         if not isinstance(config, dict):
@@ -287,7 +294,11 @@ class ConfigValidator:
             if field in config:
                 if not isinstance(config[field], expected_type):
                     result.is_valid = False
-                    type_name = expected_type.__name__ if isinstance(expected_type, type) else str(expected_type)
+                    type_name = (
+                        expected_type.__name__
+                        if isinstance(expected_type, type)
+                        else str(expected_type)
+                    )
                     result.errors.append(f"Field '{field}' must be of type {type_name}")
 
     def validate_god_tier_config(self, config: dict[str, Any]) -> ValidationResult:
@@ -311,7 +322,7 @@ class ConfigValidator:
             "fusion",
             "policy",
             "logging",
-            "storage"
+            "storage",
         ]
 
         # Check for required sections (at least some should be present)
@@ -354,7 +365,9 @@ class ConfigValidator:
 
         return result
 
-    def validate_defense_engine_config(self, config: dict[str, Any]) -> ValidationResult:
+    def validate_defense_engine_config(
+        self, config: dict[str, Any]
+    ) -> ValidationResult:
         """
         Validate Defense Engine configuration (TOML).
 
@@ -402,7 +415,9 @@ class ConfigValidator:
 
         return result
 
-    def create_example_schema(self, schema_name: str, output_path: Path | None = None) -> dict[str, Any]:
+    def create_example_schema(
+        self, schema_name: str, output_path: Path | None = None
+    ) -> dict[str, Any]:
         """
         Create an example JSON schema for a configuration.
 
@@ -419,35 +434,32 @@ class ConfigValidator:
             "title": f"{schema_name} Configuration",
             "type": "object",
             "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Name of the configuration"
-                },
+                "name": {"type": "string", "description": "Name of the configuration"},
                 "version": {
                     "type": "string",
-                    "description": "Version of the configuration"
+                    "description": "Version of the configuration",
                 },
                 "enabled": {
                     "type": "boolean",
                     "description": "Whether this configuration is enabled",
-                    "default": True
+                    "default": True,
                 },
                 "priority": {
                     "type": "string",
                     "enum": ["CRITICAL", "HIGH", "NORMAL", "LOW", "BACKGROUND"],
-                    "description": "Priority level"
+                    "description": "Priority level",
                 },
                 "timeout": {
                     "type": "number",
                     "minimum": 0,
-                    "description": "Timeout in seconds"
+                    "description": "Timeout in seconds",
                 },
                 "config": {
                     "type": "object",
-                    "description": "Additional configuration parameters"
-                }
+                    "description": "Additional configuration parameters",
+                },
             },
-            "required": ["name"]
+            "required": ["name"],
         }
 
         if output_path:
@@ -455,7 +467,7 @@ class ConfigValidator:
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
             # Write schema to file
-            with open(output_path, 'w') as f:
+            with open(output_path, "w") as f:
                 json.dump(schema, f, indent=2)
 
             logger.info(f"Example schema written to: {output_path}")
@@ -464,9 +476,7 @@ class ConfigValidator:
 
 
 def validate_config(
-    config: dict[str, Any],
-    config_type: str = "subsystem",
-    **kwargs
+    config: dict[str, Any], config_type: str = "subsystem", **kwargs
 ) -> ValidationResult:
     """
     Convenience function to validate configuration.
@@ -483,8 +493,7 @@ def validate_config(
 
     if config_type == "subsystem":
         return validator.validate_subsystem_config(
-            subsystem_id=kwargs.get("subsystem_id", "unknown"),
-            config=config
+            subsystem_id=kwargs.get("subsystem_id", "unknown"), config=config
         )
     elif config_type == "bootstrap":
         return validator.validate_bootstrap_config(config)

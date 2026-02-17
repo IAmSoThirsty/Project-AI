@@ -315,19 +315,28 @@ Defines how to maintain secure H.323 operations during outages, disasters, or in
 
 **Daily Backup**:
 ```bash
+
 #!/bin/bash
+
 # Backup GK configuration and database
+
 gk-backup --config /etc/gk/config.xml --output /backup/gk-$(date +%Y%m%d).tar.gz
 pg_dump h323_db > /backup/gk-db-$(date +%Y%m%d).sql
 ```
 
 **Restore Procedure**:
 ```bash
+
 # Restore GK configuration
+
 tar -xzf /backup/gk-20260123.tar.gz -C /etc/gk/
+
 # Restore database
+
 psql h323_db < /backup/gk-db-20260123.sql
+
 # Restart GK
+
 systemctl restart gatekeeper
 ```
 
@@ -335,15 +344,21 @@ systemctl restart gatekeeper
 
 **Daily Backup**:
 ```bash
+
 # Export gateway configuration
+
 gateway-cli export-config > /backup/gw-$(date +%Y%m%d).xml
 ```
 
 **Restore Procedure**:
 ```bash
+
 # Import gateway configuration
+
 gateway-cli import-config /backup/gw-20260123.xml
+
 # Restart gateway
+
 systemctl restart gateway
 ```
 

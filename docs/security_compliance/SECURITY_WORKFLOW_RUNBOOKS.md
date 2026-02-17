@@ -1,20 +1,18 @@
 # Security Workflow Failure Runbooks
 
-**Purpose:** Quick reference guide for responding to security workflow failures  
-**Audience:** On-call engineers, contributors, security team  
-**Last Updated:** 2026-01-19
+**Purpose:** Quick reference guide for responding to security workflow failures **Audience:** On-call engineers, contributors, security team **Last Updated:** 2026-01-19
 
----
+______________________________________________________________________
 
 ## 🚨 Quick Triage
 
-| Workflow | Failure Impact | Response Time | Escalation |
-|----------|----------------|---------------|------------|
-| **Release Signing** | ⚠️ **HIGH** - Releases cannot be verified | 1 hour | Security team |
-| **SBOM Generation** | 🟡 **MEDIUM** - Supply chain visibility lost | 4 hours | Release manager |
-| **AI/ML Security** | 🔴 **CRITICAL** - Potential malicious model | 30 minutes | Security + Dev lead |
+| Workflow            | Failure Impact                               | Response Time | Escalation          |
+| ------------------- | -------------------------------------------- | ------------- | ------------------- |
+| **Release Signing** | ⚠️ **HIGH** - Releases cannot be verified    | 1 hour        | Security team       |
+| **SBOM Generation** | 🟡 **MEDIUM** - Supply chain visibility lost | 4 hours       | Release manager     |
+| **AI/ML Security**  | 🔴 **CRITICAL** - Potential malicious model  | 30 minutes    | Security + Dev lead |
 
----
+______________________________________________________________________
 
 ## 1️⃣ Release Artifact Signing Failures
 
@@ -25,6 +23,7 @@
 #### ❌ Failure: Cosign Installation Failed
 
 **Symptoms:**
+
 ```
 Error: Failed to install Cosign
 Unable to locate Cosign binary
@@ -33,12 +32,17 @@ Unable to locate Cosign binary
 **Root Cause:** Network issues or upstream release changes
 
 **Resolution:**
+
 ```bash
+
 # Check Cosign release availability
+
 curl -I https://github.com/sigstore/cosign/releases/latest
 
 # Workflow uses pinned version - check if it exists
+
 # If not, update action version in workflow file
+
 ```
 
 **Fix:**
@@ -49,11 +53,12 @@ curl -I https://github.com/sigstore/cosign/releases/latest
 
 **Prevention:** Pin to stable Cosign action version, not `@latest`
 
----
+______________________________________________________________________
 
 #### ❌ Failure: No Artifacts to Sign
 
 **Symptoms:**
+
 ```
 Error: No files found matching dist/*.whl
 Signing failed: No artifacts in dist/
@@ -62,12 +67,17 @@ Signing failed: No artifacts in dist/
 **Root Cause:** Python build failed before signing step
 
 **Resolution:**
+
 ```bash
+
 # Check build step logs
+
 gh run view <run-id> --log
 
 # Verify build dependencies installed
+
 # Check pyproject.toml and setup.py are valid
+
 ```
 
 **Fix:**
@@ -79,11 +89,12 @@ gh run view <run-id> --log
 
 **Prevention:** Add build verification in CI before signing step
 
----
+______________________________________________________________________
 
 #### ❌ Failure: Signature Verification Failed
 
 **Symptoms:**
+
 ```
 Error: Signature verification failed
 Certificate identity does not match expected pattern
@@ -92,12 +103,17 @@ Certificate identity does not match expected pattern
 **Root Cause:** OIDC token identity mismatch or expired certificate
 
 **Resolution:**
+
 ```bash
+
 # Check workflow run details
+
 gh run view <run-id>
 
 # Verify repository name matches certificate pattern
+
 # Pattern: https://github.com/IAmSoThirsty/Project-AI/*
+
 ```
 
 **Fix:**
@@ -110,11 +126,12 @@ gh run view <run-id>
 
 **Prevention:** Test signing in non-prod branch first
 
----
+______________________________________________________________________
 
 #### ❌ Failure: Upload to Release Failed
 
 **Symptoms:**
+
 ```
 Error: Failed to upload assets to release
 403 Forbidden or 404 Not Found
@@ -123,12 +140,17 @@ Error: Failed to upload assets to release
 **Root Cause:** Missing permissions or release doesn't exist
 
 **Resolution:**
+
 ```bash
+
 # Check if release exists
+
 gh release view <tag>
 
 # Verify workflow permissions
+
 # Must have: contents: write
+
 ```
 
 **Fix:**
@@ -140,7 +162,7 @@ gh release view <tag>
 
 **Prevention:** Use `release: published` trigger, not `release: created`
 
----
+______________________________________________________________________
 
 ### Emergency Procedures
 
@@ -151,6 +173,7 @@ gh release view <tag>
 **Immediate Actions:**
 
 1. **DO NOT DELETE RELEASE** - This breaks existing installations
+
 1. Run manual signing workflow:
 
    ```bash
@@ -160,7 +183,9 @@ gh release view <tag>
    ```
 
 1. Monitor workflow completion
+
 1. Verify signatures uploaded to release
+
 1. Post comment on release with verification instructions
 
 **Post-Incident:**
@@ -170,19 +195,22 @@ gh release view <tag>
 1. Consider adding signing as branch protection rule
 1. Update release checklist to verify signatures
 
----
+______________________________________________________________________
 
 #### 🔧 Manual Signing Procedure (Last Resort)
 
 **Use only if CI/CD signing completely unavailable:**
 
 ```bash
+
 # REQUIRES: Cosign installed locally, GitHub CLI authenticated
 
 # 1. Download release artifacts
+
 gh release download v1.0.0
 
 # 2. Sign locally (will use GitHub login for identity)
+
 for artifact in *.whl *.tar.gz; do
   cosign sign-blob --yes "$artifact" \
     --output-signature="${artifact}.sig" \
@@ -190,15 +218,18 @@ for artifact in *.whl *.tar.gz; do
 done
 
 # 3. Generate checksums
+
 sha256sum *.whl *.tar.gz > SHA256SUMS
 cosign sign-blob --yes SHA256SUMS \
   --output-signature="SHA256SUMS.sig" \
   --output-certificate="SHA256SUMS.pem"
 
 # 4. Upload to release
+
 gh release upload v1.0.0 *.sig *.pem SHA256SUMS*
 
 # 5. Add note to release
+
 gh release edit v1.0.0 --notes-file - << 'EOF'
 ⚠️ **Manual Signing Note**
 Artifacts were manually signed due to CI/CD issue.
@@ -208,7 +239,7 @@ EOF
 
 **⚠️ IMPORTANT:** Manual signing should be documented in incident report
 
----
+______________________________________________________________________
 
 ## 2️⃣ SBOM Generation Failures
 
@@ -219,6 +250,7 @@ EOF
 #### ❌ Failure: Syft Installation Failed
 
 **Symptoms:**
+
 ```
 Error: Failed to download Syft
 curl: Failed to connect
@@ -227,11 +259,15 @@ curl: Failed to connect
 **Root Cause:** Network issues or Anchore CDN problems
 
 **Resolution:**
+
 ```bash
+
 # Check Syft availability
+
 curl -I https://raw.githubusercontent.com/anchore/syft/main/install.sh
 
 # Test installation locally
+
 curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /tmp/syft
 ```
 
@@ -244,11 +280,12 @@ curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -
 
 **Prevention:** Consider caching Syft binary in Actions cache
 
----
+______________________________________________________________________
 
 #### ❌ Failure: SBOM Generation Incomplete
 
 **Symptoms:**
+
 ```
 Error: No packages found in scan
 SBOM file is empty or has 0 components
@@ -257,11 +294,15 @@ SBOM file is empty or has 0 components
 **Root Cause:** Syft didn't detect package files or wrong scan path
 
 **Resolution:**
+
 ```bash
+
 # Check if package files exist
+
 ls -la requirements.txt pyproject.toml package.json
 
 # Test Syft scan locally
+
 syft scan dir:. --scope all-layers
 ```
 
@@ -274,11 +315,12 @@ syft scan dir:. --scope all-layers
 
 **Prevention:** Add SBOM validation step to check component count > 0
 
----
+______________________________________________________________________
 
 #### ❌ Failure: SBOM Signing Failed
 
 **Symptoms:**
+
 ```
 Error: Failed to sign SBOM with Cosign
 Signature generation failed
@@ -297,11 +339,12 @@ Signature generation failed
 
 **Prevention:** Add pre-signing validation
 
----
+______________________________________________________________________
 
 #### ❌ Failure: Vulnerability Scan Timeout
 
 **Symptoms:**
+
 ```
 Error: Grype scan timed out
 Resource exhausted
@@ -310,11 +353,15 @@ Resource exhausted
 **Root Cause:** Large dependency tree or slow vulnerability database
 
 **Resolution:**
+
 ```bash
+
 # Check number of dependencies
+
 jq '.components | length' sbom-comprehensive.cyclonedx.json
 
 # Test Grype locally (with timeout)
+
 timeout 300 grype sbom:sbom-comprehensive.cyclonedx.json
 ```
 
@@ -327,7 +374,7 @@ timeout 300 grype sbom:sbom-comprehensive.cyclonedx.json
 
 **Prevention:** This is marked as `continue-on-error`, should not fail workflow
 
----
+______________________________________________________________________
 
 ### Emergency Procedures
 
@@ -340,29 +387,37 @@ timeout 300 grype sbom:sbom-comprehensive.cyclonedx.json
 1. Run manual SBOM generation:
 
    ```bash
+
    # Install Syft
+
    curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
-   
+
    # Clone repository at release tag
+
    git clone --depth 1 --branch v1.0.0 https://github.com/IAmSoThirsty/Project-AI
    cd Project-AI
-   
+
    # Generate SBOM
+
    syft scan dir:. --scope all-layers \
      --output cyclonedx-json \
      --file sbom-comprehensive.cyclonedx.json
-   
+
    # Sign SBOM
+
    cosign sign-blob --yes sbom-comprehensive.cyclonedx.json \
      --output-signature=sbom-comprehensive.cyclonedx.json.sig \
      --output-certificate=sbom-comprehensive.cyclonedx.json.pem
-   
+
    # Upload to release
+
    gh release upload v1.0.0 sbom-comprehensive.cyclonedx.json*
    ```
 
 1. Document in release notes that SBOM was generated manually
+
 1. Verify SBOM signature works
+
 1. Notify security team
 
 **Post-Incident:**
@@ -371,7 +426,7 @@ timeout 300 grype sbom:sbom-comprehensive.cyclonedx.json
 1. Add monitoring for SBOM generation
 1. Update release checklist to verify SBOM presence
 
----
+______________________________________________________________________
 
 ## 3️⃣ AI/ML Model Security Failures
 
@@ -382,6 +437,7 @@ timeout 300 grype sbom:sbom-comprehensive.cyclonedx.json
 #### ❌ Failure: ModelScan Installation Failed
 
 **Symptoms:**
+
 ```
 Error: Could not install modelscan
 pip install modelscan failed
@@ -390,11 +446,15 @@ pip install modelscan failed
 **Root Cause:** PyPI connectivity or dependency conflicts
 
 **Resolution:**
+
 ```bash
+
 # Check PyPI availability
+
 curl -I https://pypi.org/simple/modelscan/
 
 # Test installation locally
+
 pip install modelscan
 ```
 
@@ -407,11 +467,12 @@ pip install modelscan
 
 **Prevention:** Pin ModelScan version in workflow
 
----
+______________________________________________________________________
 
 #### ❌ Failure: Critical Security Issues Detected
 
 **Symptoms:**
+
 ```
 ❌ Security scan FAILED: Critical or high severity issues found
 🔴 Critical: Dangerous pattern '__reduce__' found in model.pkl
@@ -420,24 +481,32 @@ pip install modelscan
 **Root Cause:** Malicious or unsafe model file detected
 
 **Resolution:**
+
 ```bash
+
 # THIS IS NOT A FALSE POSITIVE - INVESTIGATE IMMEDIATELY
 
 # 1. Download scan report
+
 gh run download <run-id> --name ai-ml-security-report-<sha>
 
 # 2. Review findings
+
 cat ai_ml_security_report.json | jq '.findings[] | select(.severity == "critical")'
 
 # 3. Identify who added the model
+
 git log --all --full-history -- <model-file>
 ```
 
 **Fix - DO NOT SKIP THIS:**
 
 1. **BLOCK PR IMMEDIATELY** - Do not merge
+
 1. Review model file provenance (where did it come from?)
+
 1. Check if model uses `__reduce__` legitimately (rare but possible)
+
 1. Scan model file locally:
 
    ```bash
@@ -445,26 +514,30 @@ git log --all --full-history -- <model-file>
    ```
 
 1. If legitimate:
+
    - Document why `__reduce__` is needed
    - Add exception with security review approval
    - Implement additional controls (integrity checks, runtime monitoring)
+
 1. If malicious:
+
    - Remove model file immediately
    - Check for other suspicious files in PR
    - Report to security team
    - Review author's other contributions
 
-**Prevention:** 
+**Prevention:**
 
 - Require model files to have checksums
 - Document model sources and training provenance
 - Use safer serialization formats (ONNX, TensorFlow SavedModel)
 
----
+______________________________________________________________________
 
 #### ❌ Failure: Unsafe Deserialization Detected
 
 **Symptoms:**
+
 ```
 🟠 High: Unsafe deserialization in src/app/core/model_loader.py: pickle.loads()
 ```
@@ -472,11 +545,15 @@ git log --all --full-history -- <model-file>
 **Root Cause:** Code uses unsafe deserialization without validation
 
 **Resolution:**
+
 ```bash
+
 # Review the specific code location
+
 grep -n "pickle.loads" src/app/core/model_loader.py
 
 # Check if there's input validation
+
 git show <commit>:src/app/core/model_loader.py
 ```
 
@@ -485,11 +562,14 @@ git show <commit>:src/app/core/model_loader.py
 1. **If possible, replace pickle with safer alternative:**
 
    ```python
+
    # Instead of pickle, use:
+
    import joblib
    model = joblib.load(path)  # Still uses pickle but with safety checks
-   
+
    # Or for PyTorch:
+
    import torch
    model = torch.load(path, weights_only=True)  # Safer
    ```
@@ -499,18 +579,20 @@ git show <commit>:src/app/core/model_loader.py
    ```python
    import pickle
    import hashlib
-   
+
    # Verify model checksum before loading
+
    expected_hash = "abc123..."
    actual_hash = hashlib.sha256(open(model_path, 'rb').read()).hexdigest()
    if actual_hash != expected_hash:
        raise ValueError("Model integrity check failed")
-   
+
    with open(model_path, 'rb') as f:
        model = pickle.load(f)
    ```
 
 1. **If it's a false positive (loading from trusted source):**
+
    - Document why pickle is safe in this context
    - Add comment explaining trust model
    - Consider adding to allowlist (with security approval)
@@ -521,11 +603,12 @@ git show <commit>:src/app/core/model_loader.py
 - Always verify model checksums
 - Load models from trusted sources only
 
----
+______________________________________________________________________
 
 #### ❌ Failure: Scan Script Errors
 
 **Symptoms:**
+
 ```
 Error: Python script ai_ml_security_scan.py failed
 ModuleNotFoundError or syntax error
@@ -534,11 +617,15 @@ ModuleNotFoundError or syntax error
 **Root Cause:** Script dependencies missing or Python version mismatch
 
 **Resolution:**
+
 ```bash
+
 # Check Python version
+
 python --version  # Should be 3.11
 
 # Test script locally
+
 cd .github/workflows
 python ai_ml_security_scan.py
 ```
@@ -552,7 +639,7 @@ python ai_ml_security_scan.py
 
 **Prevention:** Add script validation tests
 
----
+______________________________________________________________________
 
 ### Emergency Procedures
 
@@ -567,14 +654,18 @@ python ai_ml_security_scan.py
 1. **Quarantine the model:**
 
    ```bash
+
    # Create incident branch
+
    git checkout -b incident/malicious-model-$(date +%Y%m%d)
-   
+
    # Remove malicious model
+
    git rm data/ai_persona/suspicious_model.pkl
    git commit -m "SECURITY: Remove malicious model file"
-   
+
    # Force push to main (requires admin)
+
    git push origin incident/malicious-model-$(date +%Y%m%d)
    ```
 
@@ -588,6 +679,7 @@ python ai_ml_security_scan.py
    ```
 
 1. **Notify stakeholders:**
+
    - Security team (immediate)
    - Engineering leadership (within 1 hour)
    - Affected users (after mitigation)
@@ -595,17 +687,22 @@ python ai_ml_security_scan.py
 1. **Forensic analysis:**
 
    ```bash
+
    # Who added the model?
+
    git log --all --full-history -- data/ai_persona/suspicious_model.pkl
-   
+
    # What other files did they touch?
+
    git log --author="<author>" --name-only
-   
+
    # Check for other suspicious patterns
+
    grep -r "__reduce__\|__setstate__\|exec\|eval" data/
    ```
 
 1. **Containment:**
+
    - Revoke commit author's access if necessary
    - Review all PRs from same author
    - Scan all model files in repository
@@ -620,10 +717,12 @@ python ai_ml_security_scan.py
 1. Incident report and lessons learned
 
 **Communication Template:**
+
 ```
 Subject: SECURITY INCIDENT - Malicious AI Model Detected
 
 Timeline:
+
 - [TIME] Model security scan detected critical issue
 - [TIME] Malicious model quarantined
 - [TIME] Code removed from repository
@@ -634,6 +733,7 @@ Impact: [Describe if production was affected]
 Mitigation: Malicious model removed, systems verified clean
 
 Next Steps:
+
 - Enhanced model security controls
 - Full audit of model pipeline
 - Review of access controls
@@ -641,51 +741,61 @@ Next Steps:
 Contact: <projectaidevs@gmail.com> for questions
 ```
 
----
+______________________________________________________________________
 
 ## 📞 Escalation Matrix
 
-| Issue Type | Severity | Initial Response | Escalation Contact | Escalation Time |
-|------------|----------|------------------|-------------------|-----------------|
-| **Signing failure** | High | On-call engineer | Security team | 1 hour |
-| **SBOM missing** | Medium | Release manager | Security team | 4 hours |
-| **Malicious model** | Critical | On-call engineer + Security | CTO/Security lead | 30 minutes |
-| **False positive** | Low | Contributor | Dev team lead | Next business day |
+| Issue Type          | Severity | Initial Response            | Escalation Contact | Escalation Time   |
+| ------------------- | -------- | --------------------------- | ------------------ | ----------------- |
+| **Signing failure** | High     | On-call engineer            | Security team      | 1 hour            |
+| **SBOM missing**    | Medium   | Release manager             | Security team      | 4 hours           |
+| **Malicious model** | Critical | On-call engineer + Security | CTO/Security lead  | 30 minutes        |
+| **False positive**  | Low      | Contributor                 | Dev team lead      | Next business day |
 
----
+______________________________________________________________________
 
 ## 🔧 Useful Commands
 
 ### Check Workflow Status
 
 ```bash
+
 # List recent workflow runs
+
 gh run list --workflow=sign-release-artifacts.yml --limit 5
 
 # View specific run details
+
 gh run view <run-id>
 
 # Download artifacts
+
 gh run download <run-id>
 ```
 
 ### Manual Workflow Triggers
 
 ```bash
+
 # Trigger signing workflow
+
 gh workflow run sign-release-artifacts.yml -f tag=v1.0.0
 
 # Trigger SBOM generation
+
 gh workflow run sbom.yml
 
 # Trigger AI/ML security scan
+
 gh workflow run ai-model-security.yml
 ```
 
 ### Verification Commands
 
 ```bash
+
 # Verify artifact signature
+
 cosign verify-blob artifact.whl \
   --signature=artifact.whl.sig \
   --certificate=artifact.whl.pem \
@@ -693,6 +803,7 @@ cosign verify-blob artifact.whl \
   --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
 
 # Verify SBOM signature
+
 cosign verify-blob sbom-comprehensive.cyclonedx.json \
   --signature=sbom-comprehensive.cyclonedx.json.sig \
   --certificate=sbom-comprehensive.cyclonedx.json.pem \
@@ -700,10 +811,11 @@ cosign verify-blob sbom-comprehensive.cyclonedx.json \
   --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
 
 # Scan SBOM for vulnerabilities
+
 grype sbom:sbom-comprehensive.cyclonedx.json
 ```
 
----
+______________________________________________________________________
 
 ## 📚 Additional Resources
 
@@ -712,7 +824,7 @@ grype sbom:sbom-comprehensive.cyclonedx.json
 - **Threat Model:** [docs/security/THREAT_MODEL_SECURITY_WORKFLOWS.md](../docs/security/THREAT_MODEL_SECURITY_WORKFLOWS.md)
 - **Incident Response:** Contact <projectaidevs@gmail.com>
 
----
+______________________________________________________________________
 
 ## 🔄 Continuous Improvement
 
@@ -725,8 +837,6 @@ grype sbom:sbom-comprehensive.cyclonedx.json
 
 **Feedback:** Open issue with label `runbook-improvement`
 
----
+______________________________________________________________________
 
-**Last Updated:** 2026-01-19  
-**Maintainer:** Security Team  
-**Review Frequency:** Quarterly or after each incident
+**Last Updated:** 2026-01-19 **Maintainer:** Security Team **Review Frequency:** Quarterly or after each incident

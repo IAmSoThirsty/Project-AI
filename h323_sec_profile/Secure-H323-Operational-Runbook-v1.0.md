@@ -56,7 +56,9 @@ This is the operations manual for administrators, NOC/SOC teams, and voice/video
 **Using Project-AI Tools:**
 
 ```bash
+
 # Check registration status for all endpoints
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --device-ip <gk-ip> \
     --snmp-user admin \
@@ -78,7 +80,9 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
 **Using Project-AI Tools:**
 
 ```bash
+
 # Query gateway status via API
+
 curl -X GET "http://localhost:8080/registration/status?device_ip=<gw-ip>&snmp_user=admin&auth_key=<key>&priv_key=<key>"
 ```
 
@@ -114,7 +118,9 @@ curl -X GET "http://localhost:8080/registration/status?device_ip=<gw-ip>&snmp_us
 **Using Project-AI Tools:**
 
 ```bash
+
 # Log security event for tracking
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type weekly_audit \
     --device-id gk-primary \
@@ -145,7 +151,9 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 **Using Project-AI Tools:**
 
 ```bash
+
 # Run compliance check
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
     --config /etc/h323/deployment_config.json
 ```
@@ -191,13 +199,17 @@ curl -X POST "http://localhost:8080/compliance/check" \
 **Diagnostic Commands:**
 
 ```bash
+
 # Check endpoint certificate
+
 openssl x509 -in endpoint.crt -text -noout
 
 # Verify NTP sync
+
 ntpq -p
 
 # Test OCSP
+
 openssl ocsp -issuer ca.crt -cert endpoint.crt -url http://ocsp.example.com
 ```
 
@@ -220,7 +232,9 @@ openssl ocsp -issuer ca.crt -cert endpoint.crt -url http://ocsp.example.com
 **Using Project-AI Tools:**
 
 ```bash
+
 # Run simulation to test H.235 profiles
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 ```
 
@@ -243,10 +257,13 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 **Diagnostic Commands:**
 
 ```bash
+
 # Capture media packets
+
 tcpdump -i eth0 -n 'udp port 16384-32767' -w media.pcap
 
 # Verify SRTP (encrypted packets should not show clear audio patterns)
+
 tshark -r media.pcap -Y 'rtp'
 ```
 
@@ -285,13 +302,17 @@ tshark -r media.pcap -Y 'rtp'
 **Diagnostic Commands:**
 
 ```bash
+
 # Check interface statistics
+
 show interface stats
 
 # Monitor QoS queues
+
 show policy-map interface
 
 # Capture with QoS markings
+
 tcpdump -i eth0 -vv -n 'ip[1] & 0xfc == 0xb8'  # EF marking
 ```
 
@@ -346,7 +367,9 @@ tcpdump -i eth0 -vv -n 'ip[1] & 0xfc == 0xb8'  # EF marking
 **Using Project-AI Tools:**
 
 ```bash
+
 # Log the failure event
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type call_setup_failure \
     --device-id <endpoint-id> \
@@ -359,11 +382,13 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 
 1. **Validate SRTP negotiation**
    - Check H.245 logs for SRTP key exchange
-   
+
 1. **Check firewall for blocked media ports**
 
    ```bash
+
    # Test media port connectivity
+
    nc -u -v <remote-ip> 16384
    ```
 
@@ -388,7 +413,9 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 1. **Check QoS**
 
    ```bash
+
    # Verify DSCP markings
+
    tcpdump -i eth0 -vv -n 'udp and host <endpoint-ip>'
    ```
 
@@ -399,14 +426,18 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 1. **Review jitter/latency**
 
    ```bash
+
    # Continuous ping test
+
    ping -i 0.02 <remote-endpoint> | awk '{print $7}' | cut -d= -f2
    ```
 
 1. **Check for duplex mismatches**
 
    ```bash
+
    # Check interface status
+
    ethtool eth0
    ```
 
@@ -433,10 +464,13 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 1. **Backup GK/GW configs**
 
    ```bash
+
    # Backup gatekeeper config
+
    tar czf gk-backup-$(date +%Y%m%d).tar.gz /etc/gatekeeper/
-   
+
    # Backup gateway config
+
    tar czf gw-backup-$(date +%Y%m%d).tar.gz /etc/gateway/
    ```
 
@@ -484,13 +518,16 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 All operational events should be logged using the CLI or API:
 
 ```bash
+
 # CLI logging
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type <type> \
     --device-id <device> \
     --outcome <outcome>
 
 # API logging
+
 curl -X POST "http://localhost:8080/log" \
   -H "Content-Type: application/json" \
   -d '{
@@ -515,11 +552,14 @@ Operations are considered compliant when:
 **Automated Compliance Check:**
 
 ```bash
+
 # Run full compliance validation
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
     --config /etc/h323/deployment_config.json
 
 # Expected output: "PASS" if all criteria met
+
 ```
 
 ---
@@ -546,17 +586,22 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
 ### Critical Commands
 
 ```bash
+
 # Health check simulation
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 
 # Compliance validation
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance --config config.json
 
 # Registration status
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --device-ip <ip> --snmp-user admin --auth-key <key> --priv-key <key>
 
 # Log event
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type <type> --device-id <id> --outcome <result>
 ```
@@ -564,22 +609,29 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 ### API Endpoints
 
 ```bash
+
 # Start API service
+
 cd h323_sec_profile
 uvicorn project_ai_fastapi:app --host 0.0.0.0 --port 8080
 
 # Compliance check
+
 curl -X POST http://localhost:8080/compliance/check -H "Content-Type: application/json" -d '{...}'
 
 # Registration status
+
 curl -X GET "http://localhost:8080/registration/status?device_ip=<ip>&..."
 
 # Log event
+
 curl -X POST http://localhost:8080/log -H "Content-Type: application/json" -d '{...}'
 
 # Set threat level (v2)
+
 curl -X POST http://localhost:8080/threat-level -H "Content-Type: application/json" -d '{"level": "elevated"}'
 
 # Self-evolving cycle (v3)
+
 curl -X POST http://localhost:8080/evolve -H "Content-Type: application/json" -d '{"events": [...]}'
 ```

@@ -19,6 +19,7 @@ tests/gradle_evolution/
 ## Test Coverage
 
 ### Constitutional Tests (274 lines)
+
 - Constitutional engine initialization and configuration
 - Principle validation and enforcement
 - Violation logging and history tracking
@@ -26,12 +27,14 @@ tests/gradle_evolution/
 - Law registry persistence
 
 **Test Classes:**
+
 - `TestConstitutionalEngine` - 6 tests
 - `TestConstitutionalEnforcer` - 5 tests
 - `TestTemporalLaw` - 5 tests
 - `TestTemporalLawRegistry` - 6 tests
 
 ### Cognition Tests (261 lines)
+
 - Build plan deliberation and optimization
 - Cognitive boundary validation
 - Pattern analysis and learning
@@ -39,10 +42,12 @@ tests/gradle_evolution/
 - Metrics and statistics
 
 **Test Classes:**
+
 - `TestBuildCognitionEngine` - 8 tests
 - `TestBuildStateIntegration` - 10 tests
 
 ### Capsule Tests (303 lines)
+
 - Build capsule creation and immutability
 - Merkle tree computation and verification
 - Capsule persistence and retrieval
@@ -50,11 +55,13 @@ tests/gradle_evolution/
 - Forensic analysis and comparison
 
 **Test Classes:**
+
 - `TestBuildCapsule` - 7 tests
 - `TestCapsuleEngine` - 9 tests
 - `TestReplayEngine` - 7 tests
 
 ### Security Tests (299 lines)
+
 - Security context management
 - Path and operation validation
 - Access logging and denied operations
@@ -62,12 +69,14 @@ tests/gradle_evolution/
 - Policy scheduling and evaluation
 
 **Test Classes:**
+
 - `TestSecurityContext` - 1 test
 - `TestSecurityEngine` - 12 tests
 - `TestSecurityPolicy` - 2 tests
 - `TestPolicyScheduler` - 8 tests
 
 ### Audit Tests (344 lines)
+
 - Build event auditing
 - Audit buffer management
 - Accountability tracking
@@ -75,11 +84,13 @@ tests/gradle_evolution/
 - Compliance reporting
 
 **Test Classes:**
+
 - `TestBuildAuditIntegration` - 9 tests
 - `TestActionRecord` - 2 tests
 - `TestAccountabilityTracker` - 8 tests
 
 ### API Tests (362 lines)
+
 - REST API endpoints (health, capsules, audit)
 - Verifiability and proof generation
 - CORS and error handling
@@ -87,11 +98,13 @@ tests/gradle_evolution/
 - Documentation export (Markdown, Postman)
 
 **Test Classes:**
+
 - `TestVerifiabilityAPI` - 11 tests
 - `TestAPIDocumentation` - 2 tests
 - `TestDocumentationGenerator` - 8 tests
 
 ### Integration Tests (337 lines)
+
 - Complete build lifecycle workflow
 - Security violation handling
 - Capsule replay workflow
@@ -100,6 +113,7 @@ tests/gradle_evolution/
 - Performance and scalability
 
 **Test Classes:**
+
 - `TestFullBuildWorkflow` - 4 tests
 - `TestAPIIntegration` - 1 test
 - `TestErrorRecovery` - 4 tests
@@ -108,32 +122,38 @@ tests/gradle_evolution/
 ## Running Tests
 
 ### Run All Gradle Evolution Tests
+
 ```bash
 pytest tests/gradle_evolution/ -v
 ```
 
 ### Run Specific Test File
+
 ```bash
 pytest tests/gradle_evolution/test_constitutional.py -v
 pytest tests/gradle_evolution/test_integration.py -v
 ```
 
 ### Run Specific Test Class
+
 ```bash
 pytest tests/gradle_evolution/test_capsules.py::TestBuildCapsule -v
 ```
 
 ### Run Specific Test
+
 ```bash
 pytest tests/gradle_evolution/test_security.py::TestSecurityEngine::test_validate_path_access_allowed -v
 ```
 
 ### Run With Coverage
+
 ```bash
 pytest tests/gradle_evolution/ --cov=gradle_evolution --cov-report=html
 ```
 
 ### Run With Verbose Output
+
 ```bash
 pytest tests/gradle_evolution/ -vv -s
 ```
@@ -143,6 +163,7 @@ pytest tests/gradle_evolution/ -vv -s
 The `conftest.py` provides shared fixtures for all tests:
 
 ### File System Fixtures
+
 - `temp_dir` - Temporary directory for test isolation
 - `constitution_file` - Test constitution.yaml
 - `security_config_file` - Test security_hardening.yaml
@@ -150,11 +171,13 @@ The `conftest.py` provides shared fixtures for all tests:
 - `audit_log_path` - Audit log file path
 
 ### Mock Fixtures
+
 - `mock_deliberation_engine` - Mock DeliberationEngine
 - `mock_four_laws` - Mock FourLaws validator
 - `mock_audit_function` - Mock audit function
 
 ### Data Fixtures
+
 - `sample_build_context` - Build context dictionary
 - `sample_build_capsule_data` - Capsule data dictionary
 - `sample_security_violation` - Security violation data
@@ -163,6 +186,7 @@ The `conftest.py` provides shared fixtures for all tests:
 ## Test Patterns
 
 ### Pattern 1: Initialization Tests
+
 ```python
 def test_initialization(self, fixture):
     """Test component initializes correctly."""
@@ -171,6 +195,7 @@ def test_initialization(self, fixture):
 ```
 
 ### Pattern 2: Validation Tests
+
 ```python
 def test_validate_allowed_action(self, fixture):
     """Test validation allows compliant actions."""
@@ -179,19 +204,21 @@ def test_validate_allowed_action(self, fixture):
 ```
 
 ### Pattern 3: Persistence Tests
+
 ```python
 def test_persistence(self, temp_dir):
     """Test data persistence to disk."""
     storage = temp_dir / "data.json"
     component = Component(storage_path=storage)
     component.save()
-    
+
     new_component = Component(storage_path=storage)
     new_component.load()
     assert new_component.data == component.data
 ```
 
 ### Pattern 4: Mock Integration Tests
+
 ```python
 @patch("module.function")
 def test_integration(self, mock_function, fixture):
@@ -204,6 +231,7 @@ def test_integration(self, mock_function, fixture):
 ## Dependencies
 
 Tests require the following packages:
+
 - `pytest>=7.4.4` - Test framework
 - `pytest-mock>=3.12.0` - Mocking utilities
 - `pyyaml>=6.0` - YAML parsing (for config fixtures)
@@ -214,6 +242,7 @@ All test dependencies should be in `requirements-dev.txt`.
 ## Test Data Isolation
 
 All tests use:
+
 - `tempfile.TemporaryDirectory()` for file operations
 - Separate fixtures per test via `@pytest.fixture`
 - No shared state between test classes
@@ -224,21 +253,25 @@ All tests use:
 Tests validate integration with existing Project-AI components:
 
 ### Constitutional Integration
+
 - Uses `policies/constitution.yaml` structure
 - Validates against existing governance principles
 - Integrates with FourLaws validation
 
 ### Cognition Integration
+
 - Uses `project_ai.engine.cognition.deliberation_engine`
 - Validates boundary checks via `cognition.boundary`
 - Uses invariant checker from `cognition.invariants`
 
 ### Audit Integration
+
 - Uses `cognition.audit.audit` function
 - Follows existing audit event patterns
 - Compatible with audit log format
 
 ### Security Integration
+
 - Uses `config/security_hardening.yaml`
 - Follows least privilege patterns
 - Integrates with existing security agents
@@ -246,6 +279,7 @@ Tests validate integration with existing Project-AI components:
 ## Continuous Integration
 
 Tests are designed to run in CI/CD pipelines:
+
 - No external dependencies required
 - All data mocked or fixture-based
 - Fast execution (< 5 seconds for full suite)
@@ -266,17 +300,17 @@ Example:
 ```python
 class TestNewComponent:
     """Test NewComponent functionality."""
-    
+
     def test_initialization(self, fixture):
         """Test component initializes."""
         component = NewComponent(fixture)
         assert component is not None
-    
+
     def test_success_case(self, fixture):
         """Test successful operation."""
         result = component.operate()
         assert result.success
-    
+
     def test_failure_case(self, fixture):
         """Test handles errors gracefully."""
         with pytest.raises(ValueError):
@@ -286,17 +320,23 @@ class TestNewComponent:
 ## Troubleshooting
 
 ### Import Errors
+
 If you see `ModuleNotFoundError: No module named 'gradle_evolution'`:
+
 - Ensure gradle-evolution module is in PYTHONPATH
 - Run tests from project root: `cd /path/to/Project-AI && pytest tests/gradle_evolution/`
 
 ### Fixture Errors
+
 If fixtures are not found:
+
 - Check `conftest.py` is in the same directory
 - Verify fixture names match usage
 
 ### Mock Errors
+
 If mocks aren't working:
+
 - Install pytest-mock: `pip install pytest-mock`
 - Use correct patch path (where it's imported, not defined)
 
@@ -311,6 +351,7 @@ If mocks aren't working:
 ## Future Enhancements
 
 Planned test improvements:
+
 - [ ] Property-based testing with Hypothesis
 - [ ] Performance benchmarks with pytest-benchmark
 - [ ] Mutation testing with mutmut

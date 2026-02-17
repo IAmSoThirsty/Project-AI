@@ -376,27 +376,22 @@ class BaseScenario(ABC):
     @abstractmethod
     def initialize_triggers(self) -> None:
         """Define scenario-specific triggers"""
-        pass
 
     @abstractmethod
     def initialize_escalation_ladder(self) -> None:
         """Define escalation steps"""
-        pass
 
     @abstractmethod
     def initialize_couplings(self) -> None:
         """Define cross-scenario couplings"""
-        pass
 
     @abstractmethod
     def initialize_collapse_modes(self) -> None:
         """Define terminal failure states"""
-        pass
 
     @abstractmethod
     def initialize_recovery_poisons(self) -> None:
         """Define false recovery traps"""
-        pass
 
     def update_metrics(self, metrics: dict[str, float]) -> None:
         """

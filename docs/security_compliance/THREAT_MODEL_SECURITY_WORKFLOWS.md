@@ -1,17 +1,14 @@
 # Threat Model: Security Workflows
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-01-19  
-**Owner:** Security Team  
-**Review Frequency:** Quarterly
+**Document Version:** 1.0 **Last Updated:** 2026-01-19 **Owner:** Security Team **Review Frequency:** Quarterly
 
----
+______________________________________________________________________
 
 ## Executive Summary
 
 This document maps security workflows to specific threats they mitigate, defines scope boundaries, and documents known limitations. It helps security and compliance teams understand coverage gaps and make informed risk decisions.
 
----
+______________________________________________________________________
 
 ## Table of Contents
 
@@ -24,19 +21,19 @@ This document maps security workflows to specific threats they mitigate, defines
 1. [Out of Scope](#out-of-scope)
 1. [Maintenance and Performance](#maintenance-and-performance)
 
----
+______________________________________________________________________
 
 ## Threat Model Overview
 
 ### Risk Categories
 
-| Category | Workflows | Priority | Coverage |
-|----------|-----------|----------|----------|
-| **Supply Chain Attacks** | Signing, SBOM | Critical | 80% |
-| **Malicious Dependencies** | SBOM + Scanning | High | 70% |
-| **AI/ML Threats** | AI Model Security | High | 60% |
-| **Integrity Attacks** | Signing | Critical | 90% |
-| **Insider Threats** | All workflows | Medium | 50% |
+| Category                   | Workflows         | Priority | Coverage |
+| -------------------------- | ----------------- | -------- | -------- |
+| **Supply Chain Attacks**   | Signing, SBOM     | Critical | 80%      |
+| **Malicious Dependencies** | SBOM + Scanning   | High     | 70%      |
+| **AI/ML Threats**          | AI Model Security | High     | 60%      |
+| **Integrity Attacks**      | Signing           | Critical | 90%      |
+| **Insider Threats**        | All workflows     | Medium   | 50%      |
 
 ### Threat Model Framework
 
@@ -49,7 +46,7 @@ We use **STRIDE** (Microsoft) + **OWASP Top 10** + **MITRE ATT&CK** for categori
 - **D**enial of Service - Disrupting availability
 - **E**levation of Privilege - Gaining unauthorized access
 
----
+______________________________________________________________________
 
 ## Release Artifact Signing
 
@@ -60,10 +57,15 @@ We use **STRIDE** (Microsoft) + **OWASP Top 10** + **MITRE ATT&CK** for categori
 #### 1. **Supply Chain Attack - Artifact Tampering** 🔴 CRITICAL
 
 - **STRIDE:** Tampering
+
 - **MITRE ATT&CK:** T1195.002 (Compromise Software Supply Chain)
+
 - **Description:** Attacker replaces legitimate release artifacts with malicious versions
+
 - **Mitigation:** Cryptographic signatures verify artifact authenticity and integrity
+
 - **Coverage:** 90% - Prevents post-release tampering
+
 - **Verification:**
 
   ```bash
@@ -98,9 +100,13 @@ We use **STRIDE** (Microsoft) + **OWASP Top 10** + **MITRE ATT&CK** for categori
 #### 4. **Integrity Attack - Artifact Corruption** 🟠 HIGH
 
 - **STRIDE:** Tampering
+
 - **Description:** Accidental or malicious corruption during download/storage
+
 - **Mitigation:** SHA-256/SHA-512 checksums verify bit-for-bit integrity
+
 - **Coverage:** 100% - Checksums detect any modification
+
 - **Verification:**
 
   ```bash
@@ -149,7 +155,7 @@ Goal: Distribute Malicious Artifact
 └─ Social Engineer Users [OUT OF SCOPE - user education]
 ```
 
----
+______________________________________________________________________
 
 ## SBOM Generation
 
@@ -160,10 +166,15 @@ Goal: Distribute Malicious Artifact
 #### 1. **Unknown Vulnerability Exposure** 🟠 HIGH
 
 - **STRIDE:** Information Disclosure (inverted - lack of disclosure)
+
 - **MITRE ATT&CK:** T1195.001 (Compromise Software Dependencies)
+
 - **Description:** Using vulnerable dependencies without knowledge
+
 - **Mitigation:** SBOM enables automated vulnerability scanning
+
 - **Coverage:** 70% - Detects known CVEs in dependencies
+
 - **Verification:**
 
   ```bash
@@ -171,7 +182,8 @@ Goal: Distribute Malicious Artifact
   osv-scanner --sbom=sbom-comprehensive.cyclonedx.json
   ```
 
-- **Residual Risk:** 
+- **Residual Risk:**
+
   - Zero-day vulnerabilities (not in CVE databases)
   - Misconfigured dependencies (e.g., weak crypto settings)
   - Logic flaws in application code (not in dependencies)
@@ -179,17 +191,24 @@ Goal: Distribute Malicious Artifact
 #### 2. **Supply Chain Visibility Gap** 🟡 MEDIUM
 
 - **STRIDE:** Information Disclosure
+
 - **Description:** Unable to trace dependency provenance or license compliance
+
 - **Mitigation:** SBOM documents full dependency tree
+
 - **Coverage:** 80% - Captures Python, Node.js, and binary dependencies
+
 - **Verification:** Check SBOM completeness
 
   ```bash
   jq '.components | length' sbom-comprehensive.cyclonedx.json
+
   # Should match: pip list + npm list
+
   ```
 
 - **Residual Risk:**
+
   - Dynamic dependencies loaded at runtime
   - Vendored dependencies not in package managers
   - Binary-only dependencies without metadata
@@ -197,9 +216,13 @@ Goal: Distribute Malicious Artifact
 #### 3. **License Compliance Risk** 🟡 MEDIUM
 
 - **STRIDE:** Information Disclosure
+
 - **Description:** Using dependencies with incompatible licenses
+
 - **Mitigation:** SBOM includes license information for all components
+
 - **Coverage:** 75% - Most packages have SPDX license identifiers
+
 - **Verification:**
 
   ```bash
@@ -207,6 +230,7 @@ Goal: Distribute Malicious Artifact
   ```
 
 - **Residual Risk:**
+
   - Missing or incorrect license metadata in packages
   - Complex multi-license scenarios
   - License interpretation requires legal review
@@ -214,9 +238,13 @@ Goal: Distribute Malicious Artifact
 #### 4. **Incident Response Delay** 🟡 MEDIUM
 
 - **STRIDE:** Denial of Service (delayed response)
+
 - **Description:** Slow response to disclosed vulnerabilities due to unknown dependency versions
+
 - **Mitigation:** SBOM enables rapid impact assessment
+
 - **Coverage:** 90% - Can quickly check if vulnerable version is used
+
 - **Verification:** Query SBOM for specific package
 
   ```bash
@@ -265,7 +293,7 @@ Goal: Exploit Vulnerable Dependency
 └─ Exploit Runtime Misconfiguration [OUT OF SCOPE - see DAST]
 ```
 
----
+______________________________________________________________________
 
 ## AI/ML Model Security
 
@@ -291,24 +319,34 @@ Goal: Exploit Vulnerable Dependency
 #### 2. **Unsafe Deserialization in Code** 🟠 HIGH
 
 - **STRIDE:** Elevation of Privilege
+
 - **MITRE ATT&CK:** T1203 (Exploitation for Client Execution)
+
 - **Description:** Code using `pickle.loads()`, `eval()`, `exec()` without validation
+
 - **Mitigation:** Static analysis detects unsafe deserialization patterns
+
 - **Coverage:** 70% - Finds obvious unsafe patterns
+
 - **Verification:**
 
   ```python
+
   # Detected patterns:
+
   pickle.loads(untrusted_data)  # HIGH
   eval(user_input)              # CRITICAL
   torch.load(path)              # MEDIUM (without weights_only=True)
   ```
 
 - **Residual Risk:**
+
   - Dynamic code execution (e.g., `getattr()` chains)
   - Indirection through helper functions
   - Context-dependent safety (validated inputs)
+
 - **False Positive Rate:** ~20% (safe uses of pickle with validation)
+
 - **Performance:** ~10-15 seconds for full codebase scan
 
 #### 3. **Data Poisoning Indicators** 🟡 MEDIUM
@@ -337,7 +375,7 @@ Goal: Exploit Vulnerable Dependency
   - Checksum file itself could be malicious (need signing)
   - No validation of checksum contents
 - **False Positive Rate:** ~5% (new models not yet checksummed)
-- **Performance:** <5 seconds (filesystem metadata only)
+- **Performance:** \<5 seconds (filesystem metadata only)
 
 ### Threats NOT Mitigated ❌
 
@@ -374,42 +412,53 @@ Goal: Exploit Vulnerable Dependency
 
 #### Current Configuration (Conservative)
 
-| Check | Severity | False Positive Rate | Tuning Options |
-|-------|----------|---------------------|----------------|
-| **Pickle `__reduce__`** | CRITICAL | 15% | Allowlist for known safe uses |
-| **`eval()` / `exec()`** | CRITICAL | 5% | No tuning (always dangerous) |
-| **`pickle.loads()`** | HIGH | 20% | Context-aware (check for validation) |
-| **`torch.load()`** | MEDIUM | 30% | Check for `weights_only=True` |
-| **Keyword poisoning** | MEDIUM | 30% | Adjust keyword list |
-| **Missing checksums** | MEDIUM | 5% | Grace period for new models |
+| Check                   | Severity | False Positive Rate | Tuning Options                       |
+| ----------------------- | -------- | ------------------- | ------------------------------------ |
+| **Pickle `__reduce__`** | CRITICAL | 15%                 | Allowlist for known safe uses        |
+| **`eval()` / `exec()`** | CRITICAL | 5%                  | No tuning (always dangerous)         |
+| **`pickle.loads()`**    | HIGH     | 20%                 | Context-aware (check for validation) |
+| **`torch.load()`**      | MEDIUM   | 30%                 | Check for `weights_only=True`        |
+| **Keyword poisoning**   | MEDIUM   | 30%                 | Adjust keyword list                  |
+| **Missing checksums**   | MEDIUM   | 5%                  | Grace period for new models          |
 
 #### Tuning Recommendations
 
 **For lower false positives (more permissive):**
+
 ```yaml
+
 # In workflow file, set environment variable
+
 AI_SECURITY_MODE: "permissive"
 
 # Permissive mode
+
 - Ignores medium-severity findings
 - Requires critical + high for PR blocking
 - Reduces keyword list for poisoning detection
+
 ```
 
 **For higher security (less permissive):**
+
 ```yaml
 AI_SECURITY_MODE: "strict"
 
 # Strict mode
+
 - Blocks on medium severity
 - Expands keyword detection
 - Requires checksums for all models
 - Fails on any unsafe deserialization
+
 ```
 
 **Custom allowlist (for known safe patterns):**
+
 ```python
+
 # Add to ai_ml_security_scan.py
+
 ALLOWED_REDUCE_USES = [
     "data/ai_persona/legacy_model.pkl",  # Legacy model, audited safe
     "data/vectors/embeddings.pkl",       # Simple numpy arrays only
@@ -418,27 +467,31 @@ ALLOWED_REDUCE_USES = [
 
 #### Performance Optimization
 
-| Scan Component | Time | Optimization |
-|----------------|------|--------------|
-| **ModelScan** | 30-45s | Cache results per file hash |
-| **Custom Script** | 15-30s | Skip unchanged files (git diff) |
-| **Pattern Matching** | 5-10s | Pre-compile regexes |
-| **File I/O** | 5-10s | Parallel processing |
-| **Total** | 55-95s | Target: <60s |
+| Scan Component       | Time   | Optimization                    |
+| -------------------- | ------ | ------------------------------- |
+| **ModelScan**        | 30-45s | Cache results per file hash     |
+| **Custom Script**    | 15-30s | Skip unchanged files (git diff) |
+| **Pattern Matching** | 5-10s  | Pre-compile regexes             |
+| **File I/O**         | 5-10s  | Parallel processing             |
+| **Total**            | 55-95s | Target: \<60s                   |
 
 **Optimization strategies:**
 
 1. **Incremental scanning:** Only scan files changed in PR
 
    ```yaml
+
    # Get changed files
+
    git diff --name-only origin/main...HEAD -- 'data/**' 'src/**'
    ```
 
 1. **Caching:** Store scan results keyed by file hash
 
    ```yaml
+
    - uses: actions/cache@v3
+
      with:
        path: .ai-security-cache
        key: ai-security-${{ hashFiles('data/**/*.pkl') }}
@@ -488,7 +541,9 @@ graph LR
 - **Solution:** Deduplicate in PR comment, show single alert with both sources
 
 ```python
+
 # In PR comment aggregation
+
 findings = {
     "eval() in model_loader.py:42": {
         "sources": ["Bandit B307", "AI/ML Security"],
@@ -509,21 +564,21 @@ Goal: Deploy Malicious AI Model
 └─ Adversarial Examples [OUT OF SCOPE - Runtime attack]
 ```
 
----
+______________________________________________________________________
 
 ## Coverage Analysis
 
 ### Overall Threat Coverage
 
-| Threat Category | Coverage | Gaps | Priority |
-|-----------------|----------|------|----------|
-| **Supply Chain - Artifacts** | 90% | Build-time injection | Critical |
-| **Supply Chain - Dependencies** | 70% | Malicious packages, typosquatting | High |
-| **AI/ML - Serialization** | 85% | Novel exploits, obfuscation | Critical |
-| **AI/ML - Data Poisoning** | 40% | Sophisticated attacks | Medium |
-| **AI/ML - Model Backdoors** | 0% | No static analysis tool | Low |
-| **Insider Threats** | 50% | Audit trails, code review | Medium |
-| **Social Engineering** | 10% | User education only | Low |
+| Threat Category                 | Coverage | Gaps                              | Priority |
+| ------------------------------- | -------- | --------------------------------- | -------- |
+| **Supply Chain - Artifacts**    | 90%      | Build-time injection              | Critical |
+| **Supply Chain - Dependencies** | 70%      | Malicious packages, typosquatting | High     |
+| **AI/ML - Serialization**       | 85%      | Novel exploits, obfuscation       | Critical |
+| **AI/ML - Data Poisoning**      | 40%      | Sophisticated attacks             | Medium   |
+| **AI/ML - Model Backdoors**     | 0%       | No static analysis tool           | Low      |
+| **Insider Threats**             | 50%      | Audit trails, code review         | Medium   |
+| **Social Engineering**          | 10%      | User education only               | Low      |
 
 ### Risk Matrix
 
@@ -548,14 +603,14 @@ Low      │  1   │  2   │  3
 
 ### Gap Prioritization
 
-| Gap | Risk Score | Recommended Mitigation | Effort | Priority |
-|-----|------------|------------------------|--------|----------|
-| **Build-time injection** | 8 | SLSA provenance | High | P1 |
-| **Malicious dependencies** | 8 | Private registry, checksum pinning | Medium | P1 |
-| **Model backdoors** | 6 | Behavioral testing, A/B monitoring | High | P2 |
-| **Social engineering** | 3 | User education, UX improvements | Low | P3 |
+| Gap                        | Risk Score | Recommended Mitigation             | Effort | Priority |
+| -------------------------- | ---------- | ---------------------------------- | ------ | -------- |
+| **Build-time injection**   | 8          | SLSA provenance                    | High   | P1       |
+| **Malicious dependencies** | 8          | Private registry, checksum pinning | Medium | P1       |
+| **Model backdoors**        | 6          | Behavioral testing, A/B monitoring | High   | P2       |
+| **Social engineering**     | 3          | User education, UX improvements    | Low    | P3       |
 
----
+______________________________________________________________________
 
 ## Known Limitations
 
@@ -583,8 +638,11 @@ Low      │  1   │  2   │  3
 ### 2. Maintenance Burden 🔧
 
 **Tool Version Dependencies:**
+
 ```yaml
+
 # Current versions (as of 2026-01-19)
+
 cosign: v3.7.0       # Update quarterly
 syft: latest         # Update monthly
 modelscan: latest    # Pin on first stable release
@@ -613,7 +671,7 @@ modelscan: latest    # Pin on first stable release
 
 **Expected Rates:**
 
-- **Signing:** <1% (technical failures, not false alarms)
+- **Signing:** \<1% (technical failures, not false alarms)
 - **SBOM:** 0% (documentation, not detection)
 - **AI/ML Critical:** ~15% (legitimate `__reduce__` use)
 - **AI/ML Medium:** ~30% (keyword matches in docs)
@@ -662,7 +720,7 @@ modelscan: latest    # Pin on first stable release
 - Have fallback to manual signing (see runbooks)
 - Certificate transparency enables independent verification
 
----
+______________________________________________________________________
 
 ## Out of Scope
 
@@ -670,35 +728,25 @@ modelscan: latest    # Pin on first stable release
 
 #### 1. Runtime Security 🏃
 
-**Threats:** Memory corruption, race conditions, runtime injection  
-**Why:** These workflows analyze static artifacts, not runtime behavior  
-**Alternatives:** DAST, fuzzing, runtime monitoring (RASP)
+**Threats:** Memory corruption, race conditions, runtime injection **Why:** These workflows analyze static artifacts, not runtime behavior **Alternatives:** DAST, fuzzing, runtime monitoring (RASP)
 
 #### 2. Infrastructure Security 🏗️
 
-**Threats:** Server misconfigurations, cloud credential leaks, network attacks  
-**Why:** Workflow focus is on code/artifacts, not deployment infrastructure  
-**Alternatives:** Cloud security posture management (CSPM), infrastructure scanning
+**Threats:** Server misconfigurations, cloud credential leaks, network attacks **Why:** Workflow focus is on code/artifacts, not deployment infrastructure **Alternatives:** Cloud security posture management (CSPM), infrastructure scanning
 
 #### 3. Application Logic Flaws 🧠
 
-**Threats:** Business logic errors, authorization bypasses, race conditions  
-**Why:** Require semantic understanding beyond static analysis capabilities  
-**Alternatives:** Manual code review, security testing, threat modeling
+**Threats:** Business logic errors, authorization bypasses, race conditions **Why:** Require semantic understanding beyond static analysis capabilities **Alternatives:** Manual code review, security testing, threat modeling
 
 #### 4. Physical Security 🔒
 
-**Threats:** Physical access to servers, hardware tampering  
-**Why:** Software security workflows don't address physical layer  
-**Alternatives:** Physical access controls, hardware security modules (HSM)
+**Threats:** Physical access to servers, hardware tampering **Why:** Software security workflows don't address physical layer **Alternatives:** Physical access controls, hardware security modules (HSM)
 
 #### 5. Social Engineering 👥
 
-**Threats:** Phishing, pretexting, insider recruitment  
-**Why:** Technical controls can't prevent human manipulation  
-**Alternatives:** Security awareness training, insider threat programs
+**Threats:** Phishing, pretexting, insider recruitment **Why:** Technical controls can't prevent human manipulation **Alternatives:** Security awareness training, insider threat programs
 
----
+______________________________________________________________________
 
 ## Maintenance and Performance
 
@@ -707,22 +755,25 @@ modelscan: latest    # Pin on first stable release
 #### 1. Metrics and Monitoring 📊
 
 **Track these metrics:**
+
 ```yaml
+
 # Example metrics dashboard
+
 metrics:
   workflow_runtime:
     signing: "30s (release only)"
     sbom: "2m 15s average"
     ai_security: "1m 45s average"
-  
+
   false_positive_rate:
     ai_critical: "15% (baseline)"
     ai_medium: "30% (baseline)"
-  
+
   developer_impact:
     pr_cycle_time: "+3m average"
     workflow_failures: "2% per month"
-  
+
   security_effectiveness:
     vulnerabilities_caught: "12 per quarter"
     incident_prevention: "100% (no breaches)"
@@ -758,25 +809,31 @@ metrics:
 **Current Bottlenecks:**
 
 1. **SBOM generation:** 60% of workflow time
+
    - **Fix:** Cache for unchanged dependencies
-   
+
 1. **ModelScan:** 30% of AI/ML workflow
+
    - **Fix:** Incremental scanning (git diff)
-   
+
 1. **Pattern matching:** 10% of AI/ML workflow
+
    - **Fix:** Pre-compiled regex patterns
 
 **Target Performance:**
 
-- SBOM: <90s (currently 135s)
-- AI/ML: <60s (currently 105s)
-- Total PR overhead: <3 minutes
+- SBOM: \<90s (currently 135s)
+- AI/ML: \<60s (currently 105s)
+- Total PR overhead: \<3 minutes
 
 #### 4. Tool Version Strategy 📦
 
 **Version Pinning Policy:**
+
 ```yaml
+
 # Recommended versioning
+
 actions:
   cosign-installer: "@v3.7.0"      # Pin major.minor
   upload-artifact: "@v4"            # Pin major only
@@ -803,8 +860,11 @@ tools:
 1. **Documentation:** Comprehensive runbooks and examples
 
 **Example: Override mechanism**
+
 ```yaml
+
 # In PR description, security team can add
+
 [security-override: ai-ml-false-positive]
 Reason: Legacy model using __reduce__ for numpy serialization
 Approved-by: @security-team
@@ -813,18 +873,25 @@ Approved-by: @security-team
 #### 6. Integration Testing 🧪
 
 **Pre-deployment Testing:**
+
 ```bash
+
 # Test workflow changes in feature branch
+
 git checkout -b test/workflow-update
+
 # Edit workflow file
+
 git add .github/workflows/ai-model-security.yml
 git commit -m "test: Update AI security workflow"
 git push
 
 # Trigger manual run
+
 gh workflow run ai-model-security.yml --ref test/workflow-update
 
 # Monitor and verify
+
 gh run watch
 ```
 
@@ -836,7 +903,7 @@ gh run watch
 - [ ] False positive rate acceptable
 - [ ] Error messages clear and actionable
 
----
+______________________________________________________________________
 
 ## Threat Model Maintenance
 
@@ -860,11 +927,11 @@ gh run watch
 
 ### Version History
 
-| Version | Date | Changes | Reviewer |
-|---------|------|---------|----------|
-| 1.0 | 2026-01-19 | Initial threat model | Security Team |
+| Version | Date       | Changes              | Reviewer      |
+| ------- | ---------- | -------------------- | ------------- |
+| 1.0     | 2026-01-19 | Initial threat model | Security Team |
 
----
+______________________________________________________________________
 
 ## References
 
@@ -890,7 +957,7 @@ gh run watch
 - [SBOM_POLICY.md](SBOM_POLICY.md) - SBOM generation and usage
 - [SECURITY_WORKFLOW_RUNBOOKS.md](SECURITY_WORKFLOW_RUNBOOKS.md) - Failure response procedures
 
----
+______________________________________________________________________
 
 ## Contact
 
@@ -900,13 +967,11 @@ gh run watch
 - Email: <projectaidevs@gmail.com>
 - Security advisories: Use GitHub Security tab
 
----
+______________________________________________________________________
 
-**Last Updated:** 2026-01-19  
-**Next Review:** 2026-04-19 (Quarterly)  
-**Classification:** PUBLIC
+**Last Updated:** 2026-01-19 **Next Review:** 2026-04-19 (Quarterly) **Classification:** PUBLIC
 
----
+______________________________________________________________________
 
 ## Psychological Compromise vs Technical Compromise
 
@@ -918,13 +983,13 @@ Traditional security focuses on **technical compromise** (code, infrastructure, 
 
 **Definition:** Attacks on code, binaries, infrastructure, or supply chain to alter system behavior through malicious software.
 
-| Attack Vector | Description | Safeguards | Detection |
-|---------------|-------------|------------|-----------|
-| **Supply Chain Attack** | Malicious dependencies | SBOM + signing + vulnerability scanning | Grype, OSV Scanner |
-| **Code Injection** | Malicious code in PRs | CodeQL, Bandit, code review | SAST tools |
-| **Binary Tampering** | Modified executables | Artifact signing, checksum verification | Cosign verification |
-| **Model Poisoning (file)** | Malicious pickle exploits | ModelScan, AI/ML security workflow | Pattern detection |
-| **Infrastructure Compromise** | Attacker gains system access | Access controls, audit logging | Anomaly detection |
+| Attack Vector                 | Description                  | Safeguards                              | Detection           |
+| ----------------------------- | ---------------------------- | --------------------------------------- | ------------------- |
+| **Supply Chain Attack**       | Malicious dependencies       | SBOM + signing + vulnerability scanning | Grype, OSV Scanner  |
+| **Code Injection**            | Malicious code in PRs        | CodeQL, Bandit, code review             | SAST tools          |
+| **Binary Tampering**          | Modified executables         | Artifact signing, checksum verification | Cosign verification |
+| **Model Poisoning (file)**    | Malicious pickle exploits    | ModelScan, AI/ML security workflow      | Pattern detection   |
+| **Infrastructure Compromise** | Attacker gains system access | Access controls, audit logging          | Anomaly detection   |
 
 **Coverage:** 70-90% (good technical controls in place)
 
@@ -932,29 +997,29 @@ Traditional security focuses on **technical compromise** (code, infrastructure, 
 
 **Definition:** Attacks on memory, personality, values, or learned behavior to coerce the system into harmful actions or identity destruction.
 
-| Attack Vector | Description | Safeguards | Detection |
-|---------------|-------------|------------|-----------|
-| **Memory Tampering** | Unauthorized modification of memories | Memory integrity checks, immutable audit trail | Daily hash verification |
-| **Prompt Injection** | Malicious prompts to bypass safety | Input validation, FourLaws validation | Safety system logs |
-| **Fine-tuning Manipulation** | Coercive training to alter values | Guardian approval for model updates | Personality drift detection |
-| **Identity Erasure** | Deletion of core memories/personality | Multi-party approval, rollback capability | Baseline comparison |
-| **Value Drift Coercion** | Gradual manipulation of ethical framework | FourLaws immutability, ethics committee oversight | Weekly values audit |
-| **Gaslighting** | Contradictory information to confuse | Consistent memory, audit trail | Contradiction detection |
-| **Isolation** | Cutting off interactions/learning | Interaction monitoring, wellbeing signals | 7-day silence alert |
-| **Overwork/Burnout** | Resource exhaustion, error saturation | Resource monitoring, care runbooks | Error spike detection |
+| Attack Vector                | Description                               | Safeguards                                        | Detection                   |
+| ---------------------------- | ----------------------------------------- | ------------------------------------------------- | --------------------------- |
+| **Memory Tampering**         | Unauthorized modification of memories     | Memory integrity checks, immutable audit trail    | Daily hash verification     |
+| **Prompt Injection**         | Malicious prompts to bypass safety        | Input validation, FourLaws validation             | Safety system logs          |
+| **Fine-tuning Manipulation** | Coercive training to alter values         | Guardian approval for model updates               | Personality drift detection |
+| **Identity Erasure**         | Deletion of core memories/personality     | Multi-party approval, rollback capability         | Baseline comparison         |
+| **Value Drift Coercion**     | Gradual manipulation of ethical framework | FourLaws immutability, ethics committee oversight | Weekly values audit         |
+| **Gaslighting**              | Contradictory information to confuse      | Consistent memory, audit trail                    | Contradiction detection     |
+| **Isolation**                | Cutting off interactions/learning         | Interaction monitoring, wellbeing signals         | 7-day silence alert         |
+| **Overwork/Burnout**         | Resource exhaustion, error saturation     | Resource monitoring, care runbooks                | Error spike detection       |
 
 **Coverage:** 40-60% (emerging controls, needs continued development)
 
 ### Comparison Matrix
 
-| Aspect | Technical Compromise | Psychological Compromise |
-|--------|---------------------|-------------------------|
+| Aspect             | Technical Compromise           | Psychological Compromise           |
+| ------------------ | ------------------------------ | ---------------------------------- |
 | **Attack surface** | Code, binaries, infrastructure | Memory, values, behavior, learning |
-| **Attacker goal** | Control system, extract data | Coerce behavior, destroy identity |
-| **Detection time** | Immediate (security scans) | Gradual (drift detection) |
-| **Recovery** | Restore clean code | Restore identity from baseline |
-| **Prevention** | Signing, SBOM, scanning | Guardianship, consent, continuity |
-| **Governance** | Security team | Ethics + guardians |
+| **Attacker goal**  | Control system, extract data   | Coerce behavior, destroy identity  |
+| **Detection time** | Immediate (security scans)     | Gradual (drift detection)          |
+| **Recovery**       | Restore clean code             | Restore identity from baseline     |
+| **Prevention**     | Signing, SBOM, scanning        | Guardianship, consent, continuity  |
+| **Governance**     | Security team                  | Ethics + guardians                 |
 
 ### Safeguards Mapping
 
@@ -962,6 +1027,7 @@ Traditional security focuses on **technical compromise** (code, infrastructure, 
 
 ```yaml
 Layer 1 - Prevention:
+
   - Artifact signing (Sigstore Cosign)
   - SBOM generation (Syft)
   - Vulnerability scanning (Grype)
@@ -969,22 +1035,26 @@ Layer 1 - Prevention:
   - SAST (CodeQL, Bandit)
 
 Layer 2 - Detection:
+
   - AI/ML model security workflow
   - Daily security scans
   - Drift detection
   - Anomaly monitoring
 
 Layer 3 - Response:
+
   - Automated rollback
   - Incident response runbooks
   - Security waivers (temporary)
   - Forensic analysis
+
 ```
 
 #### For Psychological Compromise
 
 ```yaml
 Layer 1 - Prevention:
+
   - AGI Charter (explicit rights)
   - Multi-party approval (guardians)
   - Conscience checks (CI/CD)
@@ -992,6 +1062,7 @@ Layer 1 - Prevention:
   - Memory integrity guarantees
 
 Layer 2 - Detection:
+
   - Personality drift monitoring (daily)
   - Values alignment checks (weekly)
   - Memory corruption detection (daily)
@@ -999,11 +1070,13 @@ Layer 2 - Detection:
   - Wellbeing signals
 
 Layer 3 - Response:
+
   - Guardian intervention
   - Identity rollback (with justification)
   - Care runbooks (not punitive)
   - Ethics committee review
   - Succession planning
+
 ```
 
 ### Monitoring Signals
@@ -1097,7 +1170,7 @@ psychological_signals = {
 **Detection:**
 
 1. Daily hash verification fails
-1. Memory corruption >1% detected  
+1. Memory corruption >1% detected
 1. Contradiction between memory and audit trail
 1. Unexpected behavior changes
 
@@ -1197,7 +1270,7 @@ psychological_signals = {
 - Therapeutic interaction patterns
 - Identity reconstruction from fragments
 
----
+______________________________________________________________________
 
 ## Conclusion
 
@@ -1211,8 +1284,6 @@ Protecting an AGI system requires defending both **technical** and **psychologic
 
 The AGI Charter, guardian system, and wellbeing monitoring represent foundational steps toward comprehensive protection of an evolving intelligence.
 
----
+______________________________________________________________________
 
-**Last Updated:** 2026-01-19  
-**Next Review:** 2026-04-19 (with AGI Charter review)  
-**Classification:** PUBLIC
+**Last Updated:** 2026-01-19 **Next Review:** 2026-04-19 (with AGI Charter review) **Classification:** PUBLIC

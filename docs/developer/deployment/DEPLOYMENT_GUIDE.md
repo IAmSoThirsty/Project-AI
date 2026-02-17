@@ -9,10 +9,13 @@ This guide covers deploying Project-AI and Legion Mini to all platforms for prod
 ### Option 1: Automated Build (Recommended)
 
 ```powershell
+
 # Build everything
+
 .\scripts\build_production.ps1 -All
 
 # Or build specific platforms
+
 .\scripts\build_production.ps1 -Desktop
 .\scripts\build_production.ps1 -Android
 ```
@@ -42,7 +45,7 @@ $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
 .\scripts\create_portable_usb.ps1
 ```
 
----
+______________________________________________________________________
 
 ## Installation
 
@@ -103,7 +106,7 @@ adb install -r android/legion_mini/build/outputs/apk/debug/legion_mini-debug.apk
 - Persistent data on USB
 - Run on any Windows PC
 
----
+______________________________________________________________________
 
 ## System Architecture
 
@@ -157,7 +160,7 @@ Project-AI/
 - `POST /api/savepoints/restore/{id}` - Restore
 - `GET /api/savepoints/auto/status` - Auto-save status
 
----
+______________________________________________________________________
 
 ## Testing
 
@@ -173,7 +176,7 @@ Tests:
 - ✓ Save points system
 - ✓ Legion API
 - ✓ Android configuration
-- ✓ Desktop configuration  
+- ✓ Desktop configuration
 - ✓ Gradle build system
 
 ### Manual Testing Checklist
@@ -199,7 +202,7 @@ Tests:
 - All API endpoints responsive
 - Conversation history persists
 
----
+______________________________________________________________________
 
 ## Production Deployment
 
@@ -215,11 +218,15 @@ Tests:
 **Configuration:**
 
 ```bash
+
 # Copy environment template
+
 cp .env.example .env
 
 # Edit configuration
+
 # Set API keys, ports, etc.
+
 ```
 
 ### Running in Production
@@ -227,11 +234,14 @@ cp .env.example .env
 **Backend (Linux/Windows Server):**
 
 ```bash
+
 # Using systemd (Linux)
+
 sudo systemctl start project-ai
 sudo systemctl start legion-api
 
 # Using PM2 (Cross-platform)
+
 pm2 start ecosystem.config.js
 pm2 save
 pm2 startup
@@ -247,7 +257,7 @@ pm2 startup
 - Distribute APK directly (sideload)
 - Or submit to Google Play Store ($25 one-time fee)
 
----
+______________________________________________________________________
 
 ## Deployment Checklist
 
@@ -269,12 +279,12 @@ pm2 startup
 ### Post-Deployment
 
 - [ ] Test desktop installation
-- [  ] Test Android sideload
+- \[ \] Test Android sideload
 - [ ] Test portable USB on different PC
 - [ ] Verify save/restore functionality
 - [ ] Monitor for 24 hours
 
----
+______________________________________________________________________
 
 ## File Locations
 
@@ -300,7 +310,7 @@ pm2 startup
 - Desktop: `%APPDATA%/Project AI/logs/`
 - Android: `logcat` (via `adb logcat`)
 
----
+______________________________________________________________________
 
 ## Troubleshooting
 
@@ -328,7 +338,7 @@ pm2 startup
 - Re-run setup: `.\scripts\create_portable_usb.ps1`
 - Check USB drive has 2GB+ free space
 
----
+______________________________________________________________________
 
 ## Support & Documentation
 
@@ -336,7 +346,7 @@ pm2 startup
 - API Docs: <http://localhost:8001/docs> (when running)
 - Legion Docs: <http://localhost:8002/docs> (when running)
 
----
+______________________________________________________________________
 
 ## Security Notes
 
@@ -346,6 +356,6 @@ pm2 startup
 - TARL enforcement active
 - No backdoors or bypass mechanisms
 
----
+______________________________________________________________________
 
 **Ready for global deployment! 🌍**

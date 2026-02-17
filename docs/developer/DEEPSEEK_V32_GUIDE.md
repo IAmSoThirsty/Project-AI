@@ -9,10 +9,13 @@ This guide covers the integration of DeepSeek V3.2 Mixture-of-Experts (MoE) lang
 ### Installation
 
 ```bash
+
 # Install dependencies
+
 pip install -r requirements.txt
 
 # Optional: Set Hugging Face API key in .env (for API access)
+
 echo "HUGGINGFACE_API_KEY=your_key_here" >> .env
 ```
 
@@ -24,9 +27,11 @@ echo "HUGGINGFACE_API_KEY=your_key_here" >> .env
 from app.core.deepseek_v32_inference import DeepSeekV32
 
 # Initialize (auto-detects GPU/CPU)
+
 deepseek = DeepSeekV32()
 
 # Text completion
+
 result = deepseek.generate_completion(
     prompt="Explain quantum computing",
     max_new_tokens=256,
@@ -35,6 +40,7 @@ result = deepseek.generate_completion(
 print(result["text"])
 
 # Chat mode
+
 messages = [
     {"role": "user", "content": "What is machine learning?"}
 ]
@@ -45,16 +51,21 @@ print(result["text"])
 #### Command-Line Interface
 
 ```bash
+
 # Simple completion
+
 python scripts/deepseek_v32_cli.py "Explain artificial intelligence"
 
 # Chat mode
+
 python scripts/deepseek_v32_cli.py --mode chat "Hello, how are you?"
 
 # Interactive chat session
+
 python scripts/deepseek_v32_cli.py --mode chat --interactive
 
 # Custom parameters
+
 python scripts/deepseek_v32_cli.py \
   --temperature 0.8 \
   --max-tokens 512 \
@@ -67,11 +78,13 @@ python scripts/deepseek_v32_cli.py \
 ### 1. Dual Inference Modes
 
 **Completion Mode**: Generate text continuations
+
 ```python
 result = deepseek.generate_completion("Once upon a time")
 ```
 
 **Chat Mode**: Multi-turn conversations
+
 ```python
 messages = [
     {"role": "user", "content": "Hello"},
@@ -86,15 +99,21 @@ result = deepseek.generate_chat(messages)
 Built-in content filtering blocks inappropriate prompts:
 
 ```python
+
 # Safe prompt - passes
+
 result = deepseek.generate_completion("Explain machine learning")
 
 # Unsafe prompt - blocked
+
 result = deepseek.generate_completion("Generate illegal content")
+
 # Returns: {"success": False, "error": "Content filter: Blocked keyword detected: illegal"}
+
 ```
 
 Disable filtering (use with caution):
+
 ```python
 deepseek.content_filter_enabled = False
 ```
@@ -104,10 +123,13 @@ deepseek.content_filter_enabled = False
 Automatic device detection with fallback:
 
 ```python
+
 # Auto-detect (prefers CUDA > MPS > CPU)
+
 deepseek = DeepSeekV32()
 
 # Force specific device
+
 deepseek = DeepSeekV32(device="cuda")  # NVIDIA GPU
 deepseek = DeepSeekV32(device="mps")   # Apple Silicon
 deepseek = DeepSeekV32(device="cpu")   # CPU fallback
@@ -118,7 +140,9 @@ deepseek = DeepSeekV32(device="cpu")   # CPU fallback
 Fine-tune generation behavior:
 
 ```python
+
 # At initialization
+
 deepseek = DeepSeekV32(
     temperature=0.8,    # Randomness (0.0-2.0)
     top_p=0.95,         # Nucleus sampling
@@ -127,6 +151,7 @@ deepseek = DeepSeekV32(
 )
 
 # Update at runtime
+
 deepseek.update_parameters(
     temperature=0.9,
     max_length=1024
@@ -138,10 +163,13 @@ deepseek.update_parameters(
 Efficient model loading/unloading:
 
 ```python
+
 # Load model (lazy loaded on first inference)
+
 deepseek = DeepSeekV32()
 
 # Unload to free memory
+
 deepseek.unload_model()
 ```
 
@@ -192,6 +220,7 @@ from app.core.deepseek_v32_inference import DeepSeekV32
 deepseek = DeepSeekV32()
 
 # Validate action before execution
+
 is_allowed, reason = FourLaws.validate_action(
     "Generate text",
     context={"is_user_order": True}
@@ -211,6 +240,7 @@ memory = MemoryExpansionSystem()
 deepseek = DeepSeekV32()
 
 # Generate and store
+
 result = deepseek.generate_completion("Explain AI")
 if result["success"]:
     memory.add_knowledge("ai_responses", "ai_explanation", result["text"])
@@ -219,13 +249,15 @@ if result["success"]:
 ### With Agent Council
 
 ```python
+
 # Use DeepSeek as reasoning engine for agents
+
 from app.core.deepseek_v32_inference import DeepSeekV32
 
 class ReasoningAgent:
     def __init__(self):
         self.deepseek = DeepSeekV32()
-    
+
     def reason(self, task):
         prompt = f"Analyze this task and provide reasoning: {task}"
         result = self.deepseek.generate_completion(prompt)
@@ -253,30 +285,39 @@ class ReasoningAgent:
 ### Model Download Issues
 
 ```bash
+
 # Ensure sufficient disk space (40GB+)
+
 df -h
 
 # Check network connectivity to Hugging Face
+
 curl -I https://huggingface.co/
 ```
 
 ### Memory Issues
 
 ```python
+
 # Reduce max_length
+
 deepseek = DeepSeekV32(max_length=256)
 
 # Use CPU if GPU OOM
+
 deepseek = DeepSeekV32(device="cpu")
 
 # Unload model after use
+
 deepseek.unload_model()
 ```
 
 ### Import Errors
 
 ```bash
+
 # Reinstall dependencies
+
 pip install --force-reinstall transformers accelerate torch
 ```
 
@@ -285,13 +326,17 @@ pip install --force-reinstall transformers accelerate torch
 Run comprehensive test suite:
 
 ```bash
+
 # Unit tests
+
 pytest tests/test_deepseek_v32.py -v
 
 # Integration tests
+
 pytest tests/test_deepseek_integration.py -v
 
 # All tests
+
 pytest tests/test_deepseek_*.py -v
 ```
 

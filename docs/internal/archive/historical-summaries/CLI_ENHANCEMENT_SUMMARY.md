@@ -215,23 +215,30 @@ The CLI is organized into 6 command groups:
 ### Basic Commands
 
 ```bash
+
 # Check version
+
 python -m app.cli --version
 
 # Get help
+
 python -m app.cli --help
 
 # User commands
+
 python -m app.cli user example "John"
 
 # AI commands
+
 python -m app.cli ai example "gpt-4"
 ```
 
 ### With Configuration
 
 ```bash
+
 # Create config
+
 cat > ~/.projectai.toml << EOF
 [ai]
 model = "gpt-4"
@@ -239,19 +246,24 @@ temperature = 0.9
 EOF
 
 # Commands will use config automatically
+
 python -m app.cli ai example "model-name"
 ```
 
 ### In Docker
 
 ```bash
+
 # Build image
+
 docker build -t project-ai:latest .
 
 # Run CLI
+
 docker run --rm project-ai:latest python -m app.cli --version
 
 # With config
+
 docker run --rm -v ~/.projectai.toml:/app/.projectai.toml project-ai:latest \
   python -m app.cli user example "John"
 ```

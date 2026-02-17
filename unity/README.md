@@ -123,7 +123,7 @@ var context = new RequestContext
 
 // Process request
 var result = AutonomyManager.Instance.ProcessRequest(
-    "Turn off the lights", 
+    "Turn off the lights",
     context
 );
 
@@ -232,7 +232,7 @@ if (needsGenesis)
     GenesisManager.Instance.OnStateChanged += HandleStateChanged;
     GenesisManager.Instance.OnNarration += HandleNarration;
     GenesisManager.Instance.OnGenesisComplete += HandleComplete;
-    
+
     // Start Genesis
     GenesisManager.Instance.StartGenesis("owner");
 }

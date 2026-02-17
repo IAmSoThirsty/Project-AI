@@ -7,22 +7,26 @@ Production-ready Android application for interacting with the **Project AI Gover
 ## Features
 
 ✅ **Triumvirate Dashboard**
+
 - Real-time kernel status monitoring
 - Pillar health visualization (Galahad, Cerberus, Codex Deus)
 - Recent governance decisions
 
 ✅ **Intent Submission**
+
 - Submit requests for Triumvirate evaluation
 - Actor type selection (Human, Agent, System)
 - Action type selection (Read, Write, Execute, Mutate)
 - Real-time governance verdict display
 
 ✅ **Audit Log Viewer**
+
 - Immutable decision history
 - Cryptographic intent hashing
 - Timestamp tracking
 
 ✅ **TARL Rule Explorer**
+
 - View governance policies
 - Risk level indicators
 - Allowed actor permissions
@@ -49,6 +53,7 @@ Production-ready Android application for interacting with the **Project AI Gover
 ### 1. Configure Backend URL
 
 The app connects to the Governance Kernel API. By default:
+
 - **Emulator**: `http://10.0.2.2:8001`
 - **Physical Device**: Update `API_BASE_URL` in `app/build.gradle`
 
@@ -69,6 +74,7 @@ python start_api.py
 ## API Integration
 
 ### Endpoints
+
 ```
 GET  /health    - Kernel status
 GET  /tarl      - Governance rules

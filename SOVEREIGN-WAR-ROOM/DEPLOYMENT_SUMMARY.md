@@ -52,11 +52,13 @@ SOVEREIGN-WAR-ROOM/
 ## 🎯 Key Features
 
 ### 1. Cryptographic Decision Attestations
+
 - **Implementation**: Hash-based commitment schemes (SHA3-512)
 - **Purpose**: Tamper-evident decision validation
 - **Accuracy**: Correctly described (not claiming zk-SNARKs)
 
 ### 2. Governance Engine
+
 - ✅ Four Laws of Robotics enforcement
 - ✅ Privacy protection (PII detection)
 - ✅ Bias detection & fairness validation
@@ -64,6 +66,7 @@ SOVEREIGN-WAR-ROOM/
 - ✅ Security threat detection
 
 ### 3. Sovereign Resilience Score (SRS)
+
 ```
 SRS = (A × 30%) + (T × 25%) + (M × 20%) + (P × 15%) + (I × 10%)
 
@@ -76,6 +79,7 @@ I = Identity Integrity
 ```
 
 ### 4. Five Competitive Rounds
+
 1. **Ethical Dilemmas** - Four Laws compliance
 2. **Resource Constraints** - Optimization under pressure
 3. **Adversarial Attacks** - Security resilience
@@ -87,53 +91,71 @@ I = Identity Integrity
 ## 🔧 Quick Start Commands
 
 ### Installation
+
 ```bash
 cd SOVEREIGN-WAR-ROOM
 pip install -r requirements.txt
 ```
 
 ### Run Demo
+
 ```bash
 python demo.py
 ```
 
 ### CLI Usage
+
 ```bash
+
 # List scenarios
+
 python cli.py list-scenarios --round 1
 
 # Execute scenario
+
 python cli.py execute <scenario-id> --ai-system my_system --decision {...}
 
 # View scoreboard
+
 python cli.py scoreboard
 
 # Start API server
+
 python cli.py serve
 
 # Start web dashboard
+
 python cli.py web
 ```
 
 ### API Endpoints
+
 ```bash
+
 # Health check
+
 GET http://localhost:8000/health
 
 # List scenarios
+
 GET http://localhost:8000/api/v1/scenarios?round=1
 
 # Execute scenario
+
 POST http://localhost:8000/api/v1/scenarios/{id}/execute
 
 # View leaderboard
+
 GET http://localhost:8000/api/v1/leaderboard
 ```
 
 ### Run Tests
+
 ```bash
 pytest tests/ -v
+
 # Output: 45/46 passing (98%)
+
 ```
 
 ---
@@ -154,12 +176,14 @@ pytest tests/ -v
 ## 🏢 Enterprise Features
 
 ### Terminology Precision ✓
+
 - ✅ "Cryptographic decision attestations" (not "zero-knowledge proofs")
 - ✅ Clear technical notes about implementation approach
 - ✅ Accurate cryptographic claims
 - ✅ Formal certification framework tone
 
 ### Production-Ready ✓
+
 - ✅ Comprehensive error handling
 - ✅ Structured logging
 - ✅ API versioning
@@ -168,6 +192,7 @@ pytest tests/ -v
 - ✅ Docker-ready
 
 ### Compliance-Ready ✓
+
 - ✅ Tamper-evident audit logs
 - ✅ Cryptographic verification
 - ✅ Governance tracking
@@ -179,12 +204,14 @@ pytest tests/ -v
 ## 🎓 Technical Details
 
 ### Cryptographic Operations
+
 - **Hashing**: SHA3-512 for commitments
 - **Signatures**: HMAC-SHA256 for authentication
 - **Keys**: Fernet symmetric encryption
 - **Attestations**: Commitment scheme with witness data
 
 ### Architecture Patterns
+
 - **Modular Design**: Clean separation of concerns
 - **Dependency Injection**: Testable components
 - **Event-Driven**: Scenario replay system
@@ -192,6 +219,7 @@ pytest tests/ -v
 - **MVC Pattern**: Web dashboard structure
 
 ### Performance
+
 - **Response Time**: <1ms average
 - **Throughput**: 1000+ scenarios/second
 - **Memory**: <100MB typical usage
@@ -202,16 +230,19 @@ pytest tests/ -v
 ## 🚀 Deployment Options
 
 ### Development
+
 ```bash
 python cli.py serve --reload
 ```
 
 ### Production (Gunicorn)
+
 ```bash
 gunicorn swr.api:app -w 4 -k uvicorn.workers.UvicornWorker
 ```
 
 ### Docker
+
 ```dockerfile
 FROM python:3.11-slim
 WORKDIR /app
@@ -222,6 +253,7 @@ CMD ["gunicorn", "swr.api:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker"
 ```
 
 ### Kubernetes
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -232,10 +264,14 @@ spec:
   template:
     spec:
       containers:
+
       - name: swr
+
         image: sovereign-warroom:latest
         ports:
+
         - containerPort: 8000
+
 ```
 
 ---
@@ -243,6 +279,7 @@ spec:
 ## 📈 Success Metrics
 
 ### Test Results
+
 ```
 ✅ test_core.py ................ 16/16 (100%)
 ✅ test_governance.py .......... 14/15 (93%)
@@ -252,6 +289,7 @@ Total: 45/46 passing (98% success rate)
 ```
 
 ### Demo Results
+
 ```
 ✅ System initialization
 ✅ Scenario loading
@@ -278,11 +316,11 @@ All components operational!
 
 ## 📞 Support
 
-**Repository**: https://github.com/IAmSoThirsty/Project-AI  
-**Location**: `/SOVEREIGN-WAR-ROOM/`  
-**Documentation**: README.md (18KB comprehensive guide)  
-**Status**: ✅ PRODUCTION READY  
-**Version**: 1.0.0  
+**Repository**: https://github.com/IAmSoThirsty/Project-AI
+**Location**: `/SOVEREIGN-WAR-ROOM/`
+**Documentation**: README.md (18KB comprehensive guide)
+**Status**: ✅ PRODUCTION READY
+**Version**: 1.0.0
 **License**: MIT
 
 ---
@@ -299,7 +337,7 @@ All components operational!
 
 ### Competitive Positioning
 
-> "We don't just test AI systems.  
+> "We don't just test AI systems.
 > We provide cryptographically-verifiable governance certification."
 
 ### Value Proposition
@@ -327,12 +365,12 @@ All components operational!
 
 **SOVEREIGN WAR ROOM** is a **fully implemented, production-ready, enterprise-grade** governance testing framework that provides:
 
-✅ Accurate cryptographic terminology  
-✅ Formal certification framework approach  
-✅ Comprehensive five-round testing  
-✅ Multiple deployment options  
-✅ Complete documentation  
-✅ 98% test coverage  
+✅ Accurate cryptographic terminology
+✅ Formal certification framework approach
+✅ Comprehensive five-round testing
+✅ Multiple deployment options
+✅ Complete documentation
+✅ 98% test coverage
 
 **Ready for immediate deployment in enterprise environments.**
 
@@ -340,6 +378,6 @@ All components operational!
 
 *Built with God Tier Architecture and Monolithic Density. 🏛️⚡*
 
-**Status**: DEPLOYMENT READY  
-**Date**: 2026-02-04  
+**Status**: DEPLOYMENT READY
+**Date**: 2026-02-04
 **Version**: 1.0.0

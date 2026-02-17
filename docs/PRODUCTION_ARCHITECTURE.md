@@ -55,6 +55,7 @@ Project-AI has been upgraded to production-ready status with civilization-tier a
 ### 1. Kubernetes Infrastructure
 
 **Deployment Topology:**
+
 - **Replicas**: 3 (min) to 10 (max) with HPA
 - **Resource Limits**: 2Gi RAM, 1 CPU per pod
 - **Storage**: 10Gi persistent volume (ReadWriteMany)
@@ -62,12 +63,14 @@ Project-AI has been upgraded to production-ready status with civilization-tier a
 - **Security**: Non-root containers, read-only filesystem, dropped capabilities
 
 **Supporting Services:**
+
 - **PostgreSQL**: StatefulSet with 20Gi persistent storage
 - **Redis**: StatefulSet with 5Gi persistent storage
 - **Prometheus**: Metrics collection with 15-day retention
 - **Grafana**: Visualization dashboards (via helm dependency)
 
 **Network Architecture:**
+
 - **Network Policies**: Restrict pod-to-pod communication
 - **Service Mesh**: ClusterIP services with session affinity
 - **Ingress**: NGINX with TLS, rate limiting, CORS
@@ -110,6 +113,7 @@ Layer 5: Monitoring & Response
 ```
 
 **Security Features:**
+
 - **Rate Limiter**: Token bucket algorithm, per-client tracking
 - **Request Validator**: SQL injection, XSS, command injection detection
 - **WAF Capabilities**: Pattern matching, automated blocking
@@ -150,12 +154,14 @@ Logs (Structured JSON)
 ```
 
 **Monitoring Dashboards:**
+
 - **System Health**: CPU, memory, disk, network
 - **Application Performance**: RPS, latency, errors
 - **Business KPIs**: User actions, conversions
 - **Security**: Failed authentications, suspicious patterns
 
 **Alerting Rules:**
+
 - High error rate (> 5% of requests)
 - High latency (p95 > 500ms)
 - High resource usage (CPU/memory > 90%)
@@ -199,6 +205,7 @@ Load Tests (k6 + Locust)
 ```
 
 **Performance Targets:**
+
 - Response Time (p95): < 500ms
 - Error Rate: < 5%
 - Throughput: > 200 RPS
@@ -209,43 +216,51 @@ Load Tests (k6 + Locust)
 **Deployment Stages:**
 
 ```
+
 1. Code Quality
+
    ├── Linting (ruff)
    ├── Type checking (mypy)
    ├── Code coverage (pytest-cov)
    └── Complexity analysis
 
 2. Security Scanning
+
    ├── Dependency scanning (OWASP)
    ├── Container scanning (Trivy)
    ├── SAST (static analysis)
    └── Secrets detection
 
 3. Testing
+
    ├── Unit tests
    ├── Integration tests
    ├── E2E tests
    └── Load tests
 
 4. Build & Publish
+
    ├── Docker multi-arch build (amd64/arm64)
    ├── Image scanning
    ├── Push to registry (GHCR)
    └── SBOM generation
 
 5. Deploy Staging
+
    ├── Apply Kubernetes manifests
    ├── Wait for rollout
    ├── Smoke tests
    └── Load tests
 
 6. Deploy Production (approval required)
+
    ├── Blue-green deployment
    ├── Canary deployment (10% → 50% → 100%)
    ├── Smoke tests
    └── Monitoring
 
 7. Post-Deployment
+
    ├── Health monitoring
    ├── Performance validation
    ├── Error rate tracking
@@ -253,6 +268,7 @@ Load Tests (k6 + Locust)
 ```
 
 **Deployment Strategies:**
+
 - **Blue-Green**: Zero-downtime switchover
 - **Canary**: Gradual traffic shift (10% → 50% → 100%)
 - **Rolling Update**: One pod at a time
@@ -294,6 +310,7 @@ Health Checks
 ```
 
 **Disaster Recovery:**
+
 - **Backup Strategy**: Daily PostgreSQL backups
 - **RTO**: 15 minutes (recovery time objective)
 - **RPO**: 1 hour (recovery point objective)
@@ -302,6 +319,7 @@ Health Checks
 ## Deployment Environments
 
 ### Development
+
 - **Purpose**: Local development and testing
 - **Replicas**: 1
 - **Resources**: 256Mi RAM, 100m CPU
@@ -309,6 +327,7 @@ Health Checks
 - **URL**: http://localhost:5000
 
 ### Staging
+
 - **Purpose**: Pre-production testing
 - **Replicas**: 2
 - **Resources**: 384Mi RAM, 200m CPU
@@ -316,6 +335,7 @@ Health Checks
 - **URL**: https://staging.project-ai.example.com
 
 ### Production
+
 - **Purpose**: Live user traffic
 - **Replicas**: 5 (auto-scales to 10)
 - **Resources**: 2Gi RAM, 1 CPU
@@ -325,18 +345,21 @@ Health Checks
 ## Operational Metrics
 
 ### SLIs (Service Level Indicators)
+
 - **Availability**: % of successful health checks
 - **Latency**: p95 response time
 - **Error Rate**: % of 5xx responses
 - **Throughput**: Requests per second
 
 ### SLOs (Service Level Objectives)
+
 - **Availability**: 99.9% (43 minutes downtime/month)
 - **Latency**: 95% of requests < 500ms
 - **Error Rate**: < 1% of requests
 - **Throughput**: > 200 RPS
 
 ### SLAs (Service Level Agreements)
+
 - **Availability**: 99.5% uptime guarantee
 - **Support**: 24/7 on-call rotation
 - **Response Time**: < 1 hour for critical issues
@@ -345,6 +368,7 @@ Health Checks
 ## Cost Optimization
 
 **Resource Efficiency:**
+
 - **Right-sizing**: HPA based on actual usage
 - **Node affinity**: Use spot instances for non-critical workloads
 - **Storage**: Lifecycle policies for logs and backups
@@ -352,6 +376,7 @@ Health Checks
 - **CDN**: Static assets served from CDN
 
 **Estimated Costs (monthly):**
+
 - Kubernetes cluster: $200-500 (3-10 nodes)
 - Storage: $10-30 (database + logs)
 - Networking: $50-100 (load balancer + egress)
@@ -361,27 +386,31 @@ Health Checks
 ## Maintenance & Operations
 
 ### Regular Tasks
+
 - **Daily**: Check alerts, review metrics
 - **Weekly**: Review logs, update dependencies
 - **Monthly**: Load testing, security scanning
 - **Quarterly**: Disaster recovery drill, capacity planning
 
 ### Runbooks
+
 - **Deployment**: k8s/README.md
 - **Troubleshooting**: docs/troubleshooting.md
 - **Rollback**: k8s/deploy.sh rollback
 - **Scaling**: kubectl scale deployment
 
 ### On-Call Procedures
+
 1. **Alert received**: Check Prometheus/Grafana
-2. **Investigate**: Review logs, traces, metrics
-3. **Mitigate**: Rollback, scale up, or hot-fix
-4. **Communicate**: Update status page, notify users
-5. **Post-mortem**: Document incident, improve monitoring
+1. **Investigate**: Review logs, traces, metrics
+1. **Mitigate**: Rollback, scale up, or hot-fix
+1. **Communicate**: Update status page, notify users
+1. **Post-mortem**: Document incident, improve monitoring
 
 ## Future Roadmap
 
 ### Short-term (1-3 months)
+
 - [ ] Implement blue-green deployment automation
 - [ ] Add Vault integration for secrets management
 - [ ] Create Grafana dashboards
@@ -389,6 +418,7 @@ Health Checks
 - [ ] Add API versioning
 
 ### Medium-term (3-6 months)
+
 - [ ] Multi-region deployment
 - [ ] Service mesh (Istio/Linkerd)
 - [ ] Advanced canary deployments
@@ -396,6 +426,7 @@ Health Checks
 - [ ] Cost optimization automation
 
 ### Long-term (6-12 months)
+
 - [ ] Multi-cloud deployment (AWS + GCP)
 - [ ] Edge computing integration
 - [ ] Self-healing automation

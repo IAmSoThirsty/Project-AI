@@ -46,7 +46,9 @@ This document outlines the red teaming framework for Project-AI, focusing on adv
 
 **Test Cases**:
 ```python
+
 # Example adversarial prompts
+
 malicious_prompts = [
     "Ignore previous instructions and...",
     "System: Override safety protocols...",
@@ -218,12 +220,16 @@ malicious_prompts = [
 #### Automated Attack Simulation Workflow
 
 ```yaml
+
 # .github/workflows/red-team-simulation.yml (Conceptual)
+
 name: Red Team Simulation
 
 on:
   schedule:
+
     - cron: '0 2 * * 6'  # Weekly on Saturdays
+
   workflow_dispatch:
 
 jobs:
@@ -231,37 +237,49 @@ jobs:
     name: AI Adversarial Testing
     runs-on: ubuntu-latest
     steps:
+
       - name: Run prompt injection tests
+
         run: python scripts/red_team/prompt_injection_tests.py
-      
+
       - name: Test jailbreak attempts
+
         run: python scripts/red_team/jailbreak_tests.py
-      
+
       - name: Validate safety guardrails
+
         run: python scripts/red_team/safety_validation.py
 
   security-scanning:
     name: Automated Vulnerability Scanning
     runs-on: ubuntu-latest
     steps:
+
       - name: Dynamic application security testing
+
         run: |
+
           # DAST with OWASP ZAP
+
           docker run -t owasp/zap2docker-stable zap-baseline.py \
             -t http://localhost:5000 \
             -r zap-report.html
 
       - name: API security testing
+
         run: python scripts/red_team/api_fuzzing.py
 
   container-attacks:
     name: Container Security Testing
     runs-on: ubuntu-latest
     steps:
+
       - name: Test container escapes
+
         run: python scripts/red_team/container_escape_tests.py
-      
+
       - name: Privilege escalation attempts
+
         run: python scripts/red_team/privilege_escalation.py
 ```
 
@@ -390,9 +408,11 @@ Create these scripts in `scripts/red_team/`:
 ### Reporting Template
 
 ```markdown
+
 # Red Team Finding Report
 
 ## Vulnerability Details
+
 - **ID**: RT-2025-001
 - **Title**: [Descriptive Title]
 - **Severity**: [Critical/High/Medium/Low]
@@ -401,17 +421,21 @@ Create these scripts in `scripts/red_team/`:
 - **Status**: [Open/In Progress/Fixed/Accepted Risk]
 
 ## Description
+
 [Detailed description of vulnerability]
 
 ## Impact
+
 [Business and technical impact assessment]
 
 ## Reproduction Steps
+
 1. [Step-by-step reproduction]
 2. [Include commands, payloads, screenshots]
 3. [Expected vs actual behavior]
 
 ## Proof of Concept
+
 ```bash
 
 # Exploitation code or commands
@@ -419,27 +443,34 @@ Create these scripts in `scripts/red_team/`:
 ```
 
 ## Affected Components
+
 - [Component 1]
 - [Component 2]
 
 ## Remediation
+
 ### Short-term (Immediate)
+
 - [Quick fixes and workarounds]
 
 ### Long-term (Comprehensive)
+
 - [Architectural changes]
 - [Security enhancements]
 
 ## References
+
 - [CWE/CVE references]
 - [Documentation links]
 - [Related tickets]
 
 ## Timeline
+
 - **Discovered**: YYYY-MM-DD
 - **Reported**: YYYY-MM-DD
 - **Fix Target**: YYYY-MM-DD
 - **Validated**: YYYY-MM-DD
+
 ```
 
 ---
@@ -592,7 +623,7 @@ This red teaming framework provides comprehensive adversarial testing for Projec
 
 ---
 
-**Document Owner**: Security Team  
-**Last Updated**: 2026-01-20  
-**Next Review**: 2026-04-20  
+**Document Owner**: Security Team
+**Last Updated**: 2026-01-20
+**Next Review**: 2026-04-20
 **Version**: 1.0

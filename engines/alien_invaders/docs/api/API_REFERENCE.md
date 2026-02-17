@@ -13,6 +13,7 @@ AlienInvadersEngine(config: SimulationConfig | None = None)
 ```
 
 **Parameters:**
+
 - `config` (SimulationConfig, optional): Simulation configuration. Uses defaults if None.
 
 **Example:**
@@ -30,6 +31,7 @@ engine = AlienInvadersEngine(config)
 Initialize the simulation with starting conditions.
 
 **Returns:**
+
 - `bool`: True if initialization successful, False otherwise
 
 **Example:**
@@ -45,9 +47,11 @@ else:
 Advance simulation by one time step (default: 30 days).
 
 **Returns:**
+
 - `bool`: True if tick successful, False if validation fails
 
 **Side Effects:**
+
 - Updates all subsystem states
 - Processes cross-domain propagation
 - Validates state consistency
@@ -66,13 +70,16 @@ for month in range(12):  # One year
 Inject an external event into the simulation.
 
 **Parameters:**
+
 - `event_type` (str): Event type identifier
 - `parameters` (dict): Event-specific parameters
 
 **Returns:**
+
 - `str`: Unique event ID for tracking
 
 **Available Event Types:**
+
 - `alien_attack` - Alien military action
 - `alien_escalation` - Increased alien presence
 - `diplomatic_success` - Successful negotiations
@@ -97,23 +104,29 @@ event_id = engine.inject_event(
 Query the current simulation state.
 
 **Parameters:**
+
 - `query` (str, optional): Query filter
 
 **Query Types:**
+
 - `None` - Complete state
 - `"countries"` - Country-level data
 - `"aliens"` - Alien metrics
 - `"global"` - Global summary
 
 **Returns:**
+
 - `dict`: Requested state information
 
 **Example:**
 ```python
+
 # Get complete state
+
 state = engine.observe()
 
 # Query specific data
+
 countries = engine.observe("countries")
 aliens = engine.observe("aliens")
 global_metrics = engine.observe("global")
@@ -124,12 +137,15 @@ global_metrics = engine.observe("global")
 Generate and export all artifacts.
 
 **Parameters:**
+
 - `output_dir` (str, optional): Output directory path
 
 **Returns:**
+
 - `bool`: True if export successful
 
 **Generated Artifacts:**
+
 - Monthly reports (JSON)
 - Annual summaries (JSON)
 - Postmortem analysis (JSON)
@@ -149,6 +165,7 @@ engine.export_artifacts("/path/to/artifacts")
 Master configuration container.
 
 **Attributes:**
+
 - `world` (WorldConfig): World parameters
 - `alien` (AlienConfig): Alien adversary parameters
 - `ai_governance` (AIGovernanceConfig): AI governance parameters
@@ -157,6 +174,7 @@ Master configuration container.
 - `scenario` (str): Scenario preset name
 
 **Methods:**
+
 - `to_dict()` → dict: Convert to dictionary
 
 ---
@@ -166,6 +184,7 @@ Master configuration container.
 World initialization parameters.
 
 **Attributes:**
+
 - `start_year` (int): Simulation start year (default: 2026)
 - `simulation_duration_years` (int): Duration in years (default: 5)
 - `time_step_days` (int): Days per tick (default: 30)
@@ -184,6 +203,7 @@ World initialization parameters.
 Alien adversary parameters.
 
 **Attributes:**
+
 - `initial_threat_level` (AlienThreatLevel): Starting threat
 - `technology_level` (TechnologyLevel): Tech advancement
 - `initial_ship_count` (int): Starting ships (default: 1)
@@ -202,6 +222,7 @@ Alien adversary parameters.
 AI governance system parameters.
 
 **Attributes:**
+
 - `enable_ai_governance` (bool): Enable AI layer (default: True)
 - `ai_failure_probability` (float): Failure chance per year (default: 0.05)
 - `ai_alignment_score` (float): Value alignment 0-1 (default: 0.85)
@@ -247,6 +268,7 @@ class TechnologyLevel(Enum):
 Represents a sovereign nation.
 
 **Attributes:**
+
 - `name` (str): Country name
 - `code` (str): ISO 3166-1 alpha-3 code
 - `population` (int): Current population
@@ -266,6 +288,7 @@ Represents a sovereign nation.
 Complete world state snapshot.
 
 **Attributes:**
+
 - `current_date` (datetime): Current simulation date
 - `day_number` (int): Days since start
 - `countries` (dict): Country states by code
@@ -277,6 +300,7 @@ Complete world state snapshot.
 - `remaining_resources` (dict): Planetary resources
 
 **Methods:**
+
 - `get_total_population()` → int
 - `get_total_gdp()` → float
 - `get_average_morale()` → float
@@ -287,6 +311,7 @@ Complete world state snapshot.
 Discrete event record.
 
 **Attributes:**
+
 - `event_id` (str): Unique identifier
 - `timestamp` (datetime): Event time
 - `day_number` (int): Day number
@@ -307,15 +332,18 @@ Discrete event record.
 Load predefined scenario configuration.
 
 **Parameters:**
+
 - `scenario_name` (str): Preset name
 
 **Available Presets:**
+
 - `"standard"` - Balanced threat scenario
 - `"aggressive"` - High threat, immediate invasion
 - `"peaceful"` - Scientific contact, low hostility
 - `"extinction"` - Apocalyptic scenario
 
 **Returns:**
+
 - `SimulationConfig`: Configured scenario
 
 **Example:**
@@ -335,6 +363,7 @@ The engine uses Python's logging framework for error reporting.
 **Logger Name:** `engines.alien_invaders.engine`
 
 **Log Levels:**
+
 - `DEBUG`: Detailed state changes
 - `INFO`: Major events and milestones
 - `WARNING`: Non-critical issues
@@ -354,6 +383,7 @@ engine = AlienInvadersEngine()
 ## Best Practices
 
 1. **Always call init() before tick()**
+
    ```python
    engine = AlienInvadersEngine()
    engine.init()  # Required!
@@ -361,6 +391,7 @@ engine = AlienInvadersEngine()
    ```
 
 2. **Check return values**
+
    ```python
    if not engine.tick():
        print("Validation failed")
@@ -369,12 +400,16 @@ engine = AlienInvadersEngine()
    ```
 
 3. **Use scenario presets**
+
    ```python
+
    # Easier than manual configuration
+
    config = load_scenario_preset("aggressive")
    ```
 
 4. **Export artifacts regularly**
+
    ```python
    for year in range(10):
        for month in range(12):
@@ -383,6 +418,7 @@ engine = AlienInvadersEngine()
    ```
 
 5. **Enable deterministic replay for testing**
+
    ```python
    config = SimulationConfig()
    config.validation.random_seed = 42
@@ -399,11 +435,13 @@ from src.app.core.simulation_contingency_root import SimulationRegistry
 from engines.alien_invaders import AlienInvadersEngine
 
 # Create and register
+
 engine = AlienInvadersEngine()
 engine.init()
 SimulationRegistry.register("alien_invaders", engine)
 
 # Retrieve later
+
 engine = SimulationRegistry.get("alien_invaders")
 state = engine.observe()
 ```
@@ -416,13 +454,13 @@ scenarios = ["standard", "aggressive", "peaceful", "extinction"]
 for scenario_name in scenarios:
     config = load_scenario_preset(scenario_name)
     config.artifacts.artifact_dir = f"artifacts/{scenario_name}"
-    
+
     engine = AlienInvadersEngine(config)
     engine.init()
-    
+
     for _ in range(60):  # 5 years
         engine.tick()
-    
+
     engine.export_artifacts()
 ```
 
@@ -436,11 +474,11 @@ engine.init()
 
 while True:
     engine.tick()
-    
+
     state = engine.observe("global")
     print(f"Day {state['day_number']}: "
           f"Pop={state['population']:,}, "
           f"Morale={state['average_morale']:.2f}")
-    
+
     time.sleep(1)  # 1 second per month
 ```

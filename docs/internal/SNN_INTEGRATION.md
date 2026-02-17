@@ -30,10 +30,13 @@ Spiking Neural Networks offer several advantages over traditional ANNs:
 ## Installation
 
 ```bash
+
 # Install SNN dependencies
+
 pip install torch bindsnet sinabs
 
 # Or install all Project-AI dependencies
+
 pip install -r requirements.txt
 ```
 
@@ -48,6 +51,7 @@ from app.core.snn_integration import BindsNetRLAgent
 import numpy as np
 
 # Create RL agent
+
 agent = BindsNetRLAgent(
     input_size=784,      # 28x28 image flattened
     hidden_size=400,     # Hidden layer neurons
@@ -56,28 +60,35 @@ agent = BindsNetRLAgent(
 )
 
 # Use in RL loop
+
 for episode in range(1000):
     observation = env.reset()  # Your environment
     done = False
     total_reward = 0
-    
+
     while not done:
+
         # Select action based on SNN spikes
+
         action = agent.select_action(observation)
-        
+
         # Environment step
+
         observation, reward, done, _ = env.step(action)
         total_reward += reward
-        
+
         # Update network with reward (reward-modulated STDP)
+
         agent.update(reward)
-    
+
     # Reset between episodes
+
     agent.reset()
-    
+
     print(f"Episode {episode}: Reward = {total_reward}")
 
 # Save learned weights
+
 agent.save("data/snn/my_agent.pt")
 ```
 
@@ -91,24 +102,30 @@ import torch.nn as nn
 import numpy as np
 
 # Option 1: Create SNN directly
+
 vision_snn = SinabsVisionSNN(
     input_shape=(1, 28, 28),  # Grayscale 28x28
     num_classes=10
 )
 
 # Predict on image
+
 image = np.random.rand(28, 28)  # Your image data
 prediction = vision_snn.predict(image)
 print(f"Predicted class: {prediction}")
 
 # Option 2: Convert existing PyTorch model
+
 # Load your pre-trained CNN
+
 pytorch_cnn = torch.hub.load('pytorch/vision', 'resnet18', pretrained=True)
 
 # Convert to SNN with weight transfer
+
 snn_model = SinabsVisionSNN.convert_from_pytorch(pytorch_cnn)
 
 # Now you can deploy on neuromorphic hardware!
+
 vision_snn.export_for_hardware("data/snn/hardware_model.pt")
 ```
 
@@ -120,15 +137,18 @@ Use the high-level manager for both BindsNet and Sinabs:
 from app.core.snn_integration import create_snn_manager
 
 # Create manager
+
 snn_manager = create_snn_manager(data_dir="data/snn")
 
 # Check available capabilities
+
 caps = snn_manager.get_capabilities()
 print(f"BindsNet available: {caps['bindsnet']}")
 print(f"Sinabs available: {caps['sinabs']}")
 print(f"Hardware deployment: {caps['hardware_deployment']}")
 
 # Create RL agent
+
 rl_agent = snn_manager.create_rl_agent(
     input_size=784,
     hidden_size=400,
@@ -136,6 +156,7 @@ rl_agent = snn_manager.create_rl_agent(
 )
 
 # Create vision SNN
+
 vision_snn = snn_manager.create_vision_snn(
     input_shape=(3, 224, 224),  # RGB image
     num_classes=1000
@@ -195,18 +216,27 @@ Output Spikes (Classification)
 BindsNet excels at continual learning without catastrophic forgetting:
 
 ```python
+
 # Train on Task A
+
 for episode in range(500):
+
     # ... training loop for task A
+
     pass
 
 # Save checkpoint
+
 agent.save("task_a_weights.pt")
 
 # Continue learning on Task B (no catastrophic forgetting!)
+
 for episode in range(500):
+
     # ... training loop for task B
+
     # Previous knowledge from Task A is retained
+
     pass
 ```
 
@@ -220,6 +250,7 @@ import torch.nn as nn
 from app.core.snn_integration import SinabsVisionSNN
 
 # Your pre-trained CNN (e.g., from Caffe2, PyTorch)
+
 class MyCNN(nn.Module):
     def __init__(self):
         super().__init__()
@@ -230,7 +261,7 @@ class MyCNN(nn.Module):
         self.relu2 = nn.ReLU()
         self.pool2 = nn.AvgPool2d(2)
         self.fc = nn.Linear(64 * 56 * 56, 10)
-    
+
     def forward(self, x):
         x = self.pool1(self.relu1(self.conv1(x)))
         x = self.pool2(self.relu2(self.conv2(x)))
@@ -239,13 +270,16 @@ class MyCNN(nn.Module):
         return x
 
 # Load pre-trained weights
+
 cnn = MyCNN()
 cnn.load_state_dict(torch.load("pretrained_cnn.pt"))
 
 # Convert to SNN (automatic ReLU → IAF conversion)
+
 snn = SinabsVisionSNN.convert_from_pytorch(cnn)
 
 # SNN preserves accuracy while being hardware-deployable!
+
 ```
 
 ### Hardware Deployment (SynSense)
@@ -256,18 +290,24 @@ Deploy Sinabs models on neuromorphic chips:
 from app.core.snn_integration import SinabsVisionSNN
 
 # Train or convert your SNN
+
 vision_snn = SinabsVisionSNN(
     input_shape=(1, 128, 128),
     num_classes=100
 )
 
 # Export for hardware
+
 vision_snn.export_for_hardware("hardware_model.pt")
 
 # The model is now ready for:
+
 # - SynSense Speck chip (edge AI)
+
 # - SynSense Dynap-CNN chip (vision processing)
+
 # - Intel Loihi (with additional conversion)
+
 ```
 
 ## Integration with Project-AI Systems
@@ -283,28 +323,35 @@ from app.core.snn_integration import BindsNetRLAgent
 class SNNPersona(AIPersona):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         # Add SNN for continual learning
+
         self.snn_learner = BindsNetRLAgent(
             input_size=8,       # 8 personality traits
             hidden_size=50,
             output_size=4,      # 4 mood dimensions
             learning_rate=0.01
         )
-    
+
     def adapt_to_interaction(self, interaction_type: str, success: bool):
         """Learn from interactions without forgetting."""
+
         # Encode current state
+
         state = np.array([
             self.traits["curiosity"],
             self.traits["empathy"],
+
             # ... other traits
+
         ])
-        
+
         # Select action (mood adjustment)
+
         action = self.snn_learner.select_action(state)
-        
+
         # Update based on interaction success
+
         reward = 1.0 if success else -0.5
         self.snn_learner.update(reward)
 ```
@@ -318,6 +365,7 @@ from app.core.snn_integration import SinabsVisionSNN
 from app.monitoring.cerberus_dashboard import record_incident
 
 # Train SNN on security camera frames
+
 vision_snn = SinabsVisionSNN(
     input_shape=(3, 640, 480),  # RGB security camera
     num_classes=5  # [normal, intrusion, fire, theft, vandalism]
@@ -326,7 +374,7 @@ vision_snn = SinabsVisionSNN(
 def monitor_security_feed(frame):
     """Classify security events with low power consumption."""
     prediction = vision_snn.predict(frame)
-    
+
     if prediction > 0:  # Not normal
         event_types = ["normal", "intrusion", "fire", "theft", "vandalism"]
         record_incident({
@@ -340,21 +388,21 @@ def monitor_security_feed(frame):
 
 ### BindsNet RL
 
-| Metric | Value | Notes |
-|--------|-------|-------|
-| Training Speed | 100-500 episodes/min | CPU-only |
-| Inference | 1000 decisions/sec | Event-driven |
-| Memory | <100MB | Sparse spikes |
-| Energy | 10-100x less than ANN | Neuromorphic hardware |
+| Metric         | Value                 | Notes                 |
+| -------------- | --------------------- | --------------------- |
+| Training Speed | 100-500 episodes/min  | CPU-only              |
+| Inference      | 1000 decisions/sec    | Event-driven          |
+| Memory         | \<100MB               | Sparse spikes         |
+| Energy         | 10-100x less than ANN | Neuromorphic hardware |
 
 ### Sinabs Vision
 
-| Metric | Value | Notes |
-|--------|-------|-------|
-| CNN Accuracy Retention | 95-98% | After conversion |
-| Inference Speed | 500-1000 FPS | On neuromorphic chip |
-| Power Consumption | <10mW | SynSense hardware |
-| Latency | 1-5ms | Per frame |
+| Metric                 | Value        | Notes                |
+| ---------------------- | ------------ | -------------------- |
+| CNN Accuracy Retention | 95-98%       | After conversion     |
+| Inference Speed        | 500-1000 FPS | On neuromorphic chip |
+| Power Consumption      | \<10mW       | SynSense hardware    |
+| Latency                | 1-5ms        | Per frame            |
 
 ## Best Practices
 
@@ -370,38 +418,58 @@ def monitor_security_feed(frame):
 ### BindsNet Issues
 
 **Problem**: Network doesn't learn
+
 ```python
+
 # Solution: Increase learning rate or simulation time
+
 agent = BindsNetRLAgent(
     learning_rate=0.05,  # Increased from 0.01
     dt=1.0
 )
+
 # Process with more time steps
+
 output = agent.process_observation(obs, time=200)  # Increased from 100
 ```
 
 **Problem**: Unstable learning
+
 ```python
+
 # Solution: Add weight clipping
+
 agent.update(reward)
+
 # Weight clipping is automatic (wmin=0.0, wmax=1.0)
+
 ```
 
 ### Sinabs Issues
 
 **Problem**: Accuracy drop after conversion
+
 ```python
+
 # Solution: Use AvgPool instead of MaxPool in original CNN
+
 # Use BatchNorm before conversion
+
 # Increase number of time steps during inference
+
 output = vision_snn.forward(x, num_steps=200)  # More time steps
 ```
 
 **Problem**: Hardware deployment fails
+
 ```python
+
 # Solution: Ensure model size fits hardware constraints
+
 # SynSense Speck: <1M parameters
+
 # Simplify architecture if needed
+
 ```
 
 ## Examples
@@ -434,6 +502,6 @@ For SNN-related questions:
 - BindsNet Docs: https://bindsnet-docs.readthedocs.io/
 - Sinabs Docs: https://sinabs.readthedocs.io/
 
----
+______________________________________________________________________
 
 *Neuromorphic AI for the future. Energy-efficient. Hardware-ready. Continual learning.* 🧠⚡

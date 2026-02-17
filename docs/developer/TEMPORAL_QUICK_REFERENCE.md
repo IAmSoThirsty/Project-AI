@@ -5,15 +5,19 @@ Quick reference guide for using the Temporal integration in Project-AI.
 ## 🚀 Quick Start (30 seconds)
 
 ```bash
+
 # 1. Start Temporal server
+
 docker-compose up -d temporal temporal-postgresql
 
 # 2. Start worker (in another terminal)
+
 cd /path/to/Project-AI
 export PYTHONPATH=/path/to/Project-AI/src
 python -m integrations.temporal.worker
 
 # 3. Run a workflow (in Python)
+
 from app.service.ai_controller import process_ai_request
 result = await process_ai_request("Your input here")
 ```
@@ -56,7 +60,9 @@ Open browser: http://localhost:8233
 ### Environment Variables
 
 ```bash
+
 # .env file
+
 TEMPORAL_HOST=localhost:7233
 TEMPORAL_NAMESPACE=default
 TEMPORAL_TASK_QUEUE=project-ai-tasks
@@ -132,7 +138,9 @@ async def main():
 ### Step 1: Define Workflow
 
 ```python
+
 # src/integrations/temporal/workflows/my_workflow.py
+
 from dataclasses import dataclass
 from datetime import timedelta
 from temporalio import workflow
@@ -150,7 +158,9 @@ class MyOutput:
 class MyWorkflow:
     @workflow.run
     async def run(self, input_data: MyInput) -> MyOutput:
+
         # Your workflow logic
+
         result = await workflow.execute_activity(
             my_activity,
             input_data.data,
@@ -162,24 +172,31 @@ class MyWorkflow:
 ### Step 2: Define Activities
 
 ```python
+
 # src/integrations/temporal/activities/my_activities.py
+
 from temporalio import activity
 
 @activity.defn
 async def my_activity(data: str) -> str:
     activity.logger.info(f"Processing: {data}")
+
     # Your activity logic
+
     return f"Processed: {data}"
 ```
 
 ### Step 3: Register in Worker
 
 ```python
+
 # In worker.py, add to imports
+
 from integrations.temporal.workflows.my_workflow import MyWorkflow
 from integrations.temporal.activities.my_activities import my_activity
 
 # In worker = Worker(...), add:
+
 worker = Worker(
     client,
     task_queue=task_queue,
@@ -191,7 +208,9 @@ worker = Worker(
 ### Step 4: Use in AI Controller
 
 ```python
+
 # Add method to ai_controller.py
+
 async def my_custom_operation(self, data: str):
     handle = await self.temporal_client.start_workflow(
         workflow=MyWorkflow.run,
@@ -218,11 +237,17 @@ docker-compose logs -f temporal-worker
 ### Check Activity Execution
 
 ```bash
+
 # In Web UI at http://localhost:8233
+
 # 1. Find your workflow
+
 # 2. Click on it
+
 # 3. View Event History
+
 # 4. Inspect activity start/complete events
+
 ```
 
 ### Test Activity Locally
@@ -243,15 +268,21 @@ asyncio.run(test())
 ### Worker Not Starting
 
 ```bash
+
 # Check if Temporal server is running
+
 docker-compose ps temporal
 
 # Check worker logs
+
 docker-compose logs temporal-worker
 
 # Verify PYTHONPATH
+
 echo $PYTHONPATH
+
 # Should include /path/to/Project-AI/src
+
 ```
 
 ### Workflow Not Executing
@@ -263,21 +294,29 @@ echo $PYTHONPATH
 ### Connection Refused
 
 ```bash
+
 # Ensure Temporal is running
+
 docker-compose up -d temporal
 
 # Wait for it to be healthy
+
 docker-compose ps temporal
+
 # Should show "healthy" status
+
 ```
 
 ### Import Errors
 
 ```bash
+
 # Set PYTHONPATH correctly
+
 export PYTHONPATH=/path/to/Project-AI/src
 
 # Or use absolute imports in Python
+
 import sys
 sys.path.insert(0, '/path/to/Project-AI/src')
 ```
@@ -324,7 +363,9 @@ docs/
 
    ```python
    async with TemporalClient() as client:
+
        # Use client
+
    ```
 
 1. **Use unique workflow IDs** for idempotency:
@@ -363,6 +404,7 @@ docs/
    ```
 
 1. **Monitor the Web UI** during development:
+
    - http://localhost:8233
    - Inspect event history
    - Check activity retries

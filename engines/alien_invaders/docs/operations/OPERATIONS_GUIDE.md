@@ -27,13 +27,17 @@ This runs a 5-year standard scenario simulation.
 ### 2. View Results
 
 ```bash
+
 # View postmortem
+
 cat engines/alien_invaders/artifacts/postmortem/simulation_postmortem.json
 
 # List monthly reports
+
 ls engines/alien_invaders/artifacts/monthly/
 
 # List annual reports
+
 ls engines/alien_invaders/artifacts/annual/
 ```
 
@@ -59,17 +63,21 @@ python engines/alien_invaders/run_simulation.py [OPTIONS]
 ### Examples
 
 ```bash
+
 # Aggressive 10-year scenario
+
 python engines/alien_invaders/run_simulation.py \
     --scenario aggressive \
     --duration 10
 
 # Peaceful scenario with debug logging
+
 python engines/alien_invaders/run_simulation.py \
     --scenario peaceful \
     --log-level DEBUG
 
 # Custom output directory
+
 python engines/alien_invaders/run_simulation.py \
     --output /tmp/alien_sim_results
 ```
@@ -84,15 +92,18 @@ python engines/alien_invaders/run_simulation.py \
 from engines.alien_invaders import AlienInvadersEngine
 
 # Create and initialize
+
 engine = AlienInvadersEngine()
 engine.init()
 
 # Run simulation
+
 for year in range(5):
     for month in range(12):
         engine.tick()
 
 # Export results
+
 engine.export_artifacts()
 ```
 
@@ -107,6 +118,7 @@ from engines.alien_invaders import (
 )
 
 # Create configuration
+
 config = SimulationConfig()
 config.world.simulation_duration_years = 10
 config.alien.initial_threat_level = AlienThreatLevel.INVASION
@@ -114,6 +126,7 @@ config.alien.technology_level = TechnologyLevel.GODLIKE
 config.alien.hostile_intent = 0.9
 
 # Run simulation
+
 engine = AlienInvadersEngine(config)
 engine.init()
 
@@ -132,10 +145,12 @@ engine = AlienInvadersEngine()
 engine.init()
 
 # Run simulation with events
+
 for month in range(60):
     engine.tick()
-    
+
     # Inject crisis every year
+
     if month % 12 == 0:
         engine.inject_event(
             "alien_attack",
@@ -168,6 +183,7 @@ YYYY-MM-DD HH:MM:SS,mmm [LEVEL] logger_name: message
 import logging
 
 # Configure detailed logging
+
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
@@ -181,6 +197,7 @@ engine = AlienInvadersEngine()
 engine.init()
 
 # Run with detailed logs
+
 for month in range(12):
     engine.tick()
     state = engine.observe("global")
@@ -196,14 +213,15 @@ def run_with_progress(engine, total_ticks):
         if not engine.tick():
             print(f"Failed at tick {tick}")
             return False
-        
+
         # Progress update
+
         if (tick + 1) % 12 == 0:
             year = (tick + 1) // 12
             state = engine.observe("global")
             print(f"Year {year}: {state['population']:,} population, "
                   f"{state['casualties']:,} casualties")
-    
+
     return True
 
 engine = AlienInvadersEngine()
@@ -237,11 +255,13 @@ artifacts/
 ### Artifact Contents
 
 **Monthly Reports:**
+
 - Month identifier
 - Event count
 - Event details (ID, type, severity, description)
 
 **Annual Reports:**
+
 - Year summary
 - Total events
 - Population and casualties
@@ -249,6 +269,7 @@ artifacts/
 - Major events (critical/catastrophic only)
 
 **Postmortem:**
+
 - Complete configuration
 - Simulation duration metrics
 - Final state snapshot
@@ -258,6 +279,7 @@ artifacts/
 - Outcome classification
 
 **Raw Data:**
+
 - Complete event log with parameters
 - Validation history with violations
 - Timestamped records
@@ -270,21 +292,25 @@ from pathlib import Path
 
 def analyze_simulation(artifact_dir):
     """Analyze simulation results."""
+
     # Load postmortem
+
     postmortem_path = Path(artifact_dir) / "postmortem" / "simulation_postmortem.json"
     with open(postmortem_path) as f:
         postmortem = json.load(f)
-    
+
     # Extract metrics
+
     outcome = postmortem["outcome_classification"]
     pop_loss = postmortem["final_state"]["population_loss_pct"]
     alien_control = postmortem["final_state"]["alien_control_pct"]
-    
+
     print(f"Outcome: {outcome}")
     print(f"Population Loss: {pop_loss:.1f}%")
     print(f"Alien Control: {alien_control:.1f}%")
-    
+
     # Load annual reports
+
     annual_dir = Path(artifact_dir) / "annual"
     for report_file in sorted(annual_dir.glob("*.json")):
         with open(report_file) as f:
@@ -294,6 +320,7 @@ def analyze_simulation(artifact_dir):
         print(f"Year {year}: {events} events")
 
 # Usage
+
 analyze_simulation("engines/alien_invaders/artifacts")
 ```
 
@@ -322,19 +349,21 @@ validate_config(config)
 def validate_results(engine):
     """Validate simulation results."""
     state = engine.observe("global")
-    
+
     # Check population conservation
+
     initial_pop = engine.config.world.global_population
     final_pop = state["population"]
     assert final_pop <= initial_pop, "Population increased!"
-    
+
     # Check validation history
+
     failed_validations = [
         v for v in engine.validation_history if not v.is_valid
     ]
     if failed_validations:
         print(f"WARNING: {len(failed_validations)} validation failures")
-    
+
     print("Results valid")
 
 engine = AlienInvadersEngine()
@@ -391,18 +420,20 @@ chmod 755 engines/alien_invaders/artifacts
 import logging
 
 # Enable debug logging
+
 logging.basicConfig(level=logging.DEBUG)
 
 engine = AlienInvadersEngine()
 engine.init()
 
 # Tick with detailed output
+
 for i in range(12):
     print(f"\n=== Tick {i} ===")
     if not engine.tick():
         print("FAILED")
         break
-    
+
     state = engine.observe()
     print(f"Day: {state['day_number']}")
     print(f"Events: {state['num_events']}")
@@ -433,24 +464,25 @@ config.artifacts.include_raw_data = False  # Skip raw data
 def run_batch(scenarios, duration=5):
     """Run multiple scenarios efficiently."""
     results = {}
-    
+
     for scenario_name in scenarios:
         config = load_scenario_preset(scenario_name)
         config.world.simulation_duration_years = duration
         config.artifacts.artifact_dir = f"artifacts/{scenario_name}"
-        
+
         engine = AlienInvadersEngine(config)
         engine.init()
-        
+
         for _ in range(duration * 12):
             engine.tick()
-        
+
         engine.export_artifacts()
         results[scenario_name] = engine.observe()
-    
+
     return results
 
 # Run all scenarios
+
 results = run_batch(["standard", "aggressive", "peaceful", "extinction"])
 ```
 
@@ -467,13 +499,16 @@ from src.app.core.simulation_contingency_root import SimulationRegistry
 from engines.alien_invaders import AlienInvadersEngine
 
 # Initialize engine
+
 engine = AlienInvadersEngine()
 engine.init()
 
 # Register
+
 SimulationRegistry.register("alien_invaders", engine)
 
 # Verify registration
+
 systems = SimulationRegistry.list_systems()
 print("Registered systems:", systems)
 ```
@@ -481,7 +516,9 @@ print("Registered systems:", systems)
 ### Query from Registry
 
 ```python
+
 # Retrieve engine
+
 engine = SimulationRegistry.get("alien_invaders")
 
 if engine:
@@ -498,10 +535,13 @@ else:
 ### Artifact Cleanup
 
 ```bash
+
 # Remove old artifacts
+
 rm -rf engines/alien_invaders/artifacts/*
 
 # Remove logs
+
 rm engines/alien_invaders/artifacts/*.log
 ```
 
@@ -514,21 +554,24 @@ from pathlib import Path
 def cleanup_artifacts(artifact_dir, keep_postmortem=True):
     """Clean up old artifacts."""
     artifact_path = Path(artifact_dir)
-    
+
     # Remove monthly reports
+
     monthly_dir = artifact_path / "monthly"
     if monthly_dir.exists():
         shutil.rmtree(monthly_dir)
-    
+
     # Keep postmortem if requested
+
     if not keep_postmortem:
         postmortem_dir = artifact_path / "postmortem"
         if postmortem_dir.exists():
             shutil.rmtree(postmortem_dir)
-    
+
     print("Cleanup complete")
 
 # Usage
+
 cleanup_artifacts("engines/alien_invaders/artifacts", keep_postmortem=True)
 ```
 
@@ -554,30 +597,39 @@ CMD ["python", "engines/alien_invaders/run_simulation.py", \
 ### Scheduled Execution
 
 ```bash
+
 # Cron job: Run monthly
+
 0 0 1 * * cd /path/to/Project-AI && python engines/alien_invaders/run_simulation.py
 ```
 
 ### CI/CD Integration
 
 ```yaml
+
 # .github/workflows/aicpd-simulation.yml
+
 name: AICPD Simulation
 
 on:
   schedule:
+
     - cron: '0 0 * * 0'  # Weekly
 
 jobs:
   simulate:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
+
         with:
           python-version: '3.11'
+
       - run: python engines/alien_invaders/run_simulation.py
       - uses: actions/upload-artifact@v2
+
         with:
           name: simulation-artifacts
           path: engines/alien_invaders/artifacts/

@@ -142,30 +142,40 @@ A comprehensive, fully automated system has been implemented that:
 Daily at 2 AM UTC / Manual Trigger / New Branch Push
                     ↓
         [Branch Discovery & Filtering]
+
         - Fetch all branches with pagination
         - Exclude main, bots, branches with PRs
+
                     ↓
         [Parallel PR Creation] (5 at a time)
+
         - Check for conflicts
         - Attempt auto-resolution
         - Create PR with labels
         - Generate summary
+
                     ↓
         [Comprehensive PR Automation] (auto-triggered)
+
         - Run checks (lint, test, security)
         - Auto-fix issues
         - Verify fixes
         - Approve if passing
         - Enable auto-merge
+
                     ↓
         [Auto-Merge] (GitHub native)
+
         - Waits for all checks
         - Merges to main
+
                     ↓
         [Post-Merge Validation]
+
         - Validates main branch health
         - Generates summary report
         - Creates alerts if issues
+
 ```
 
 ## 📊 Expected Impact

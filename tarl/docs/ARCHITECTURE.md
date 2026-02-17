@@ -1,7 +1,7 @@
 # T.A.R.L. (Thirsty's Active Resistance Language) - Complete Architecture
 
-**Version:** 1.0.0  
-**Status:** Production Implementation  
+**Version:** 1.0.0
+**Status:** Production Implementation
 **Date:** 2026-01-24
 
 ---
@@ -15,12 +15,14 @@ T.A.R.L. is a production-grade programming language implementation integrated in
 ## Architecture Principles
 
 ### 1. Monolithic Sovereignty
+
 - All subsystems integrated through single root module (`tarl/__init__.py`)
 - Strict initialization order enforces dependency contracts
 - Configuration-driven architecture with central registry
 - Zero circular dependencies across all subsystems
 
 ### 2. Production-Grade Requirements
+
 - Full error handling with structured diagnostics
 - Comprehensive logging and observability
 - Security-first design with resource limits
@@ -28,7 +30,9 @@ T.A.R.L. is a production-grade programming language implementation integrated in
 - Rich developer documentation
 
 ### 3. Subsystem Boundaries
+
 Each subsystem has:
+
 - Explicit interface contracts
 - Dependency declarations
 - Initialization/shutdown lifecycle
@@ -86,6 +90,7 @@ T.A.R.L. System Architecture
 **Purpose:** Central configuration registry with hierarchical merging
 
 **Responsibilities:**
+
 - Load configuration from multiple sources (file, env, overrides)
 - Validate configuration schema
 - Provide immutable configuration views
@@ -94,6 +99,7 @@ T.A.R.L. System Architecture
 **Dependencies:** None (foundation subsystem)
 
 **Key Components:**
+
 - `ConfigRegistry`: Main configuration controller
 - Default configuration embedded
 - TOML file support
@@ -114,6 +120,7 @@ config.set("runtime.enable_jit", True)
 **Purpose:** Structured error reporting and diagnostic system
 
 **Responsibilities:**
+
 - Report errors, warnings, and info messages
 - Track source locations with line/column precision
 - Provide rich error context
@@ -123,6 +130,7 @@ config.set("runtime.enable_jit", True)
 **Dependencies:** Configuration
 
 **Key Components:**
+
 - `DiagnosticsEngine`: Main diagnostics controller
 - `Diagnostic`: Structured diagnostic message
 - `SourceLocation`: Source position tracking
@@ -147,6 +155,7 @@ diagnostics.report_error(
 **Purpose:** Core built-in functions and types
 
 **Responsibilities:**
+
 - Provide built-in functions (print, len, type, etc.)
 - Register standard library modules
 - Manage namespace and globals
@@ -155,11 +164,13 @@ diagnostics.report_error(
 **Dependencies:** Configuration, Diagnostics
 
 **Key Components:**
+
 - `StandardLibrary`: Main stdlib controller
 - `BuiltInFunction`: Built-in function wrapper
 - Core modules: collections, io, net, crypto
 
 **Built-ins:**
+
 - Core: print, len, type, str, int, float, bool
 - Collections: list, dict, set, tuple
 - Functional: map, filter, reduce
@@ -181,6 +192,7 @@ stdlib.register_module("mymodule", module_obj)
 **Purpose:** Foreign Function Interface for C/Python interop
 
 **Responsibilities:**
+
 - Register foreign functions
 - Type marshaling and conversion
 - Security validation
@@ -189,6 +201,7 @@ stdlib.register_module("mymodule", module_obj)
 **Dependencies:** Configuration, Diagnostics, Standard Library
 
 **Key Components:**
+
 - `FFIBridge`: Main FFI controller
 - `ForeignFunction`: Foreign function wrapper
 - Security mode enforcement
@@ -208,6 +221,7 @@ result = ffi.call_function("strlen", "hello")
 **Purpose:** Source to bytecode compilation pipeline
 
 **Responsibilities:**
+
 - Lexical analysis (tokenization)
 - Syntax parsing (AST construction)
 - Semantic analysis (type checking)
@@ -217,12 +231,14 @@ result = ffi.call_function("strlen", "hello")
 **Dependencies:** Configuration, Diagnostics, Standard Library
 
 **Pipeline Stages:**
+
 1. **Lexer:** Source text → Token stream
 2. **Parser:** Tokens → Abstract Syntax Tree
 3. **Semantic Analyzer:** AST validation and type checking
 4. **Code Generator:** AST → Bytecode
 
 **Key Components:**
+
 - `CompilerFrontend`: Main compiler controller
 - `Lexer`: Tokenization
 - `Parser`: Syntax analysis
@@ -243,6 +259,7 @@ bytecode = compiler.compile("pour 'Hello, World!'")
 **Purpose:** Bytecode execution engine
 
 **Responsibilities:**
+
 - Execute compiled bytecode
 - Manage execution context
 - Garbage collection
@@ -253,6 +270,7 @@ bytecode = compiler.compile("pour 'Hello, World!'")
 **Dependencies:** Configuration, Diagnostics, Standard Library, FFI
 
 **Key Components:**
+
 - `RuntimeVM`: Main runtime controller
 - `BytecodeVM`: Stack-based VM implementation
 - `ExecutionContext`: Execution state management
@@ -273,6 +291,7 @@ result = runtime.execute(bytecode, context={"var": 42})
 **Purpose:** Module loading and dependency management
 
 **Responsibilities:**
+
 - Resolve module imports
 - Cache compiled modules
 - Detect circular dependencies
@@ -282,6 +301,7 @@ result = runtime.execute(bytecode, context={"var": 42})
 **Dependencies:** Configuration, Diagnostics, Compiler, Runtime
 
 **Key Components:**
+
 - `ModuleSystem`: Main module controller
 - `ModuleLoader`: Module loading and caching
 - `Module`: Module representation
@@ -302,6 +322,7 @@ module = modules.import_module("mymodule")
 **Purpose:** IDE integration and development tools
 
 **Responsibilities:**
+
 - Language Server Protocol (LSP) implementation
 - Interactive REPL
 - Source-level debugger
@@ -312,6 +333,7 @@ module = modules.import_module("mymodule")
 **Dependencies:** All subsystems
 
 **Key Components:**
+
 - `DevelopmentTooling`: Main tooling controller
 - `LSPServer`: LSP protocol implementation
 - `REPL`: Interactive shell
@@ -338,34 +360,42 @@ system = TARLSystem(config_path="config/tarl.toml")
 system.initialize()
 
 # Phase 1: Configuration (no dependencies)
+
 config = ConfigRegistry()
 config.load()
 
 # Phase 2: Diagnostics (config only)
+
 diagnostics = DiagnosticsEngine(config)
 diagnostics.initialize()
 
 # Phase 3: Standard Library (config, diagnostics)
+
 stdlib = StandardLibrary(config, diagnostics)
 stdlib.load_builtins()
 
 # Phase 4: FFI Bridge (config, diagnostics, stdlib)
+
 ffi = FFIBridge(config, diagnostics, stdlib)
 ffi.initialize()
 
 # Phase 5: Compiler Frontend (all above)
+
 compiler = CompilerFrontend(config, diagnostics, stdlib)
 compiler.initialize()
 
 # Phase 6: Runtime VM (all above)
+
 runtime = RuntimeVM(config, diagnostics, stdlib, ffi)
 runtime.initialize()
 
 # Phase 7: Module System (all above)
+
 modules = ModuleSystem(config, diagnostics, compiler, runtime)
 modules.initialize()
 
 # Phase 8: Development Tooling (all subsystems)
+
 tooling = DevelopmentTooling(config, diagnostics, compiler, runtime, modules)
 tooling.initialize()
 ```
@@ -434,17 +464,20 @@ disable_network_io = false
 ## Security Model
 
 ### 1. Sandboxing
+
 - Resource limits (CPU, memory, I/O)
 - Execution timeouts
 - Capability-based security
 
 ### 2. FFI Security
+
 - Library allowlist
 - Type validation
 - Memory bounds checking
 - Security mode (permissive, default, strict)
 
 ### 3. Runtime Security
+
 - Stack overflow protection
 - Heap bounds checking
 - Safe garbage collection
@@ -455,16 +488,19 @@ disable_network_io = false
 ## Integration with Project-AI
 
 ### 1. Cerberus Integration
+
 - T.A.R.L. provides defensive compilation
 - Cerberus detects threats → T.A.R.L. hardens code
 - Bridge: `src/app/agents/cerberus_codex_bridge.py`
 
 ### 2. Codex Deus Maximus Integration
+
 - Codex orchestrates T.A.R.L. upgrades
 - Permanent integration of security features
 - Logs to `data/tarl_protection/implementations.jsonl`
 
 ### 3. Security Features
+
 - Threat detection via Thirsty-lang modules
 - Code morphing and obfuscation
 - Defensive compilation modes
@@ -475,18 +511,21 @@ disable_network_io = false
 ## Testing Strategy
 
 ### Unit Tests
+
 - Each subsystem has isolated unit tests
 - Mock dependencies for isolation
 - Test all API surface methods
 - Edge case validation
 
 ### Integration Tests
+
 - Cross-subsystem interaction tests
 - Full compilation pipeline
 - End-to-end execution
 - Error handling paths
 
 ### Conformance Tests
+
 - Language specification compliance
 - Bytecode format validation
 - LSP protocol compliance
@@ -507,11 +546,13 @@ disable_network_io = false
 ## Observability
 
 ### Logging
+
 - Structured logging with severity levels
 - Per-subsystem logger namespaces
 - Configurable log output (file, console, syslog)
 
 ### Metrics
+
 - Compilation time
 - Execution performance
 - Memory usage
@@ -519,6 +560,7 @@ disable_network_io = false
 - Module cache hit rate
 
 ### Diagnostics
+
 - Rich error context
 - Stack traces
 - Source location tracking
@@ -560,7 +602,7 @@ disable_network_io = false
 
 ---
 
-**Document Version:** 1.0.0  
-**Last Updated:** 2026-01-24  
-**Authors:** Project-AI Team  
+**Document Version:** 1.0.0
+**Last Updated:** 2026-01-24
+**Authors:** Project-AI Team
 **License:** MIT

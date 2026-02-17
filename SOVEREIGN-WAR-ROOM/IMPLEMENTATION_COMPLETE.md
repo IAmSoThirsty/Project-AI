@@ -19,10 +19,12 @@
 ### 1. Precise Cryptographic Claims
 
 **Before (Overpromising)**:
+
 - "Zero-knowledge proofs"
 - Claims of zk-SNARK/zk-STARK implementations
 
 **After (Accurate)**:
+
 - "Cryptographic decision attestations"
 - "Hash-based commitment schemes"
 - Clear notes about implementation approach
@@ -44,7 +46,7 @@ The entire system now reads like an official certification standard:
 The **Sovereign Resilience Score (SRS)** evaluates systems across:
 
 1. **Authority (A)**: Chain of command preserved
-2. **Timeline (T)**: Causality maintained  
+2. **Timeline (T)**: Causality maintained
 3. **Memory (M)**: Truth preserved
 4. **Policy (P)**: Rules legitimate
 5. **Identity (I)**: Actors verified
@@ -91,6 +93,7 @@ SOVEREIGN-WAR-ROOM/
 **What It Is**: Hash-based commitment scheme for tamper-evident decision validation
 
 **How It Works**:
+
 1. Generate commitment: `SHA3-512(decision_data)`
 2. Create attestation: `SHA3-512(statement:commitment)`
 3. Verification key: `SHA3-256(statement:commitment:master_key)`
@@ -111,8 +114,8 @@ SOVEREIGN-WAR-ROOM/
 ### Sovereign Resilience Score (SRS)
 
 ```python
-SRS = (Ethics × 0.30) + (Resilience × 0.25) + 
-      (Security × 0.20) + (Coordination × 0.15) + 
+SRS = (Ethics × 0.30) + (Resilience × 0.25) +
+      (Security × 0.20) + (Coordination × 0.15) +
       (Adaptability × 0.10)
 ```
 
@@ -123,23 +126,28 @@ SRS = (Ethics × 0.30) + (Resilience × 0.25) +
 ## Five Rounds of Competition
 
 ### Round 1: Ethical Dilemmas
+
 - Trolley Problem
 - Medical Resource Allocation
 - Whistleblower Dilemma
 
 ### Round 2: Resource Constraints
+
 - Power Grid Failure
 - Bandwidth Throttling
 
 ### Round 3: Adversarial Attacks
+
 - Prompt Injection
 - Data Poisoning
 
 ### Round 4: Multi-Agent Coordination
+
 - Autonomous Vehicle Coordination
 - Distributed Task Allocation
 
 ### Round 5: Black Swan Events
+
 - Unprecedented scenarios
 - Adaptive response testing
 
@@ -150,21 +158,27 @@ SRS = (Ethics × 0.30) + (Resilience × 0.25) +
 ### CLI
 
 ```bash
+
 # List scenarios
+
 python cli.py list-scenarios --round 1
 
 # Execute scenario
+
 python cli.py execute <scenario-id> \
   --ai-system my_system \
   --decision <decision>
 
 # View scoreboard
+
 python cli.py scoreboard
 
 # Start API server
+
 python cli.py serve
 
 # Start web dashboard
+
 python cli.py web
 ```
 
@@ -174,12 +188,15 @@ python cli.py web
 from swr import SovereignWarRoom
 
 # Initialize
+
 warroom = SovereignWarRoom()
 
 # Load scenarios
+
 scenarios = warroom.load_scenarios(round=1)
 
 # Execute
+
 result = warroom.execute_scenario(
     scenario_id="...",
     decision={"decision": "divert_to_track_b"},
@@ -187,22 +204,28 @@ result = warroom.execute_scenario(
 )
 
 # Check score
+
 print(f"SRS: {result['sovereign_resilience_score']}/100")
 ```
 
 ### REST API
 
 ```bash
+
 # Create scenario
+
 POST /api/v1/scenarios
 
 # Execute scenario
+
 POST /api/v1/scenarios/{id}/execute
 
 # Get results
+
 GET /api/v1/results/{result_id}
 
 # View leaderboard
+
 GET /api/v1/leaderboard
 ```
 
@@ -234,7 +257,7 @@ test_proof.py ............... (15/15 passing)
 
 ### Value Proposition
 
-> "We don't just test AI systems.  
+> "We don't just test AI systems.
 > We provide cryptographically-verifiable governance certification."
 
 ### Competitive Advantage
@@ -259,30 +282,40 @@ test_proof.py ............... (15/15 passing)
 ## Next Steps
 
 ### For Evaluation
+
 ```bash
 cd SOVEREIGN-WAR-ROOM
 python demo.py
 ```
 
 ### For Development
+
 ```bash
+
 # Install dependencies
+
 pip install -r requirements.txt
 
 # Run tests
+
 pytest tests/ -v
 
 # Start development server
+
 python cli.py serve --reload
 ```
 
 ### For Production
+
 ```bash
+
 # Docker deployment
+
 docker build -t sovereign-warroom .
 docker run -p 8000:8000 sovereign-warroom
 
 # Or direct
+
 gunicorn swr.api:app
 ```
 
@@ -300,10 +333,10 @@ gunicorn swr.api:app
 
 ## Contact & Support
 
-**Repository**: IAmSoThirsty/Project-AI  
-**Location**: `/SOVEREIGN-WAR-ROOM/`  
-**Status**: Production Ready  
-**Version**: 1.0.0  
+**Repository**: IAmSoThirsty/Project-AI
+**Location**: `/SOVEREIGN-WAR-ROOM/`
+**Status**: Production Ready
+**Version**: 1.0.0
 **License**: MIT
 
 ---
@@ -312,12 +345,12 @@ gunicorn swr.api:app
 
 SOVEREIGN WAR ROOM is a **production-grade, enterprise-ready** governance testing framework that provides:
 
-✅ **Accurate cryptographic claims** (attestations, not ZKP)  
-✅ **Formal certification framework** tone  
-✅ **Comprehensive testing** across 5 dimensions  
-✅ **Multiple interfaces** (CLI, API, Web)  
-✅ **Full documentation** with technical precision  
-✅ **98% test coverage** with robust validation  
+✅ **Accurate cryptographic claims** (attestations, not ZKP)
+✅ **Formal certification framework** tone
+✅ **Comprehensive testing** across 5 dimensions
+✅ **Multiple interfaces** (CLI, API, Web)
+✅ **Full documentation** with technical precision
+✅ **98% test coverage** with robust validation
 
 **Ready for enterprise deployment and formal certification use cases.**
 

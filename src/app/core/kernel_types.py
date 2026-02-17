@@ -60,7 +60,6 @@ class KernelInterface(ABC):
         Raises:
             RuntimeError: If processing fails
         """
-        pass
 
     def route(self, task: Any, *, source: str = "agent", **kwargs) -> Any:
         """

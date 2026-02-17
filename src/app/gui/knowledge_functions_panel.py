@@ -129,14 +129,16 @@ class KnowledgeSearchPanel(QFrame):
         filter_layout.addWidget(filter_label)
 
         self.category_combo = QComboBox()
-        self.category_combo.setStyleSheet("""
+        self.category_combo.setStyleSheet(
+            """
             QComboBox {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
                 color: #00ff00;
                 padding: 5px;
             }
-        """)
+        """
+        )
         self.category_combo.addItem("All Categories", "")
         filter_layout.addWidget(self.category_combo)
 
@@ -149,7 +151,8 @@ class KnowledgeSearchPanel(QFrame):
 
         self.results_display = QTextEdit()
         self.results_display.setReadOnly(True)
-        self.results_display.setStyleSheet("""
+        self.results_display.setStyleSheet(
+            """
             QTextEdit {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -157,7 +160,8 @@ class KnowledgeSearchPanel(QFrame):
                 font-family: 'Courier New';
                 font-size: 10px;
             }
-        """)
+        """
+        )
         layout.addWidget(self.results_display)
 
     def _on_search(self):
@@ -243,14 +247,16 @@ class FunctionRegistryPanel(QFrame):
         filter_layout.addWidget(filter_label)
 
         self.category_combo = QComboBox()
-        self.category_combo.setStyleSheet("""
+        self.category_combo.setStyleSheet(
+            """
             QComboBox {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
                 color: #00ff00;
                 padding: 5px;
             }
-        """)
+        """
+        )
         self.category_combo.addItem("All Categories", "")
         self.category_combo.currentIndexChanged.connect(self._on_category_changed)
         filter_layout.addWidget(self.category_combo)
@@ -274,7 +280,8 @@ class FunctionRegistryPanel(QFrame):
 
         self.details_display = QTextEdit()
         self.details_display.setReadOnly(True)
-        self.details_display.setStyleSheet("""
+        self.details_display.setStyleSheet(
+            """
             QTextEdit {
                 background-color: #1a1a1a;
                 border: 2px solid #00ff00;
@@ -282,7 +289,8 @@ class FunctionRegistryPanel(QFrame):
                 font-family: 'Courier New';
                 font-size: 10px;
             }
-        """)
+        """
+        )
         layout.addWidget(self.details_display)
 
         # Action button

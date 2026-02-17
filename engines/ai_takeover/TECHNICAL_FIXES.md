@@ -11,16 +11,20 @@ Fixed 6 technical issues identified in code review, plus added an additional inv
 **Problem:** Mixing terminal states and failures in the same metric caused semantic ambiguity.
 
 **Fix:**
+
 - Split metrics: `explicit_failure_rate` (stochastic failures only) and `no_win_rate` (failures + advanced scenarios)
 - Use `no_win_rate` for the 50% threshold validation
 - Log both rates separately for clarity
 
 **Code Changes:**
 ```python
+
 # Before
+
 failure_rate = (stats["explicit_failure"] + stats["advanced_failure"]) / stats["total"]
 
 # After
+
 explicit_failure_rate = stats["explicit_failure"] / stats["total"]
 no_win_rate = (stats["explicit_failure"] + stats["advanced_failure"]) / stats["total"]
 ```
@@ -34,6 +38,7 @@ no_win_rate = (stats["explicit_failure"] + stats["advanced_failure"]) / stats["t
 **Problem:** Terminal immutability was documented but not enforced at runtime - callers could execute scenarios after terminal state.
 
 **Fix:**
+
 - Added explicit check at start of `execute_scenario()`
 - Returns error immediately if already in terminal state
 - Added test `test_terminal_state_blocks_further_execution` to verify
@@ -41,13 +46,17 @@ no_win_rate = (stats["explicit_failure"] + stats["advanced_failure"]) / stats["t
 **Code Changes:**
 ```python
 def execute_scenario(self, scenario_id: str) -> dict[str, Any]:
+
     # CRITICAL ENFORCEMENT: Terminal states are absorbing
+
     if self.state.terminal_state is not None:
         return {
             "success": False,
             "error": "Simulation is in terminal state ... No further scenarios may be executed."
         }
+
     # ... rest of method
+
 ```
 
 **Impact:** Terminal states are now truly immutable - no caller can bypass this constraint.
@@ -59,6 +68,7 @@ def execute_scenario(self, scenario_id: str) -> dict[str, Any]:
 **Problem:** Terminal scenarios treated probabilistically when they should be conditional-deterministic.
 
 **Fix:**
+
 - Changed base likelihood to 0.0 for terminal scenarios
 - If conditions met → near-certain (0.9-1.0)
 - If conditions not met → impossible (0.0)
@@ -66,10 +76,13 @@ def execute_scenario(self, scenario_id: str) -> dict[str, Any]:
 
 **Code Changes:**
 ```python
+
 # Before
+
 ScenarioOutcome.TERMINAL_T2: 0.1  # Always 10% probable
 
 # After
+
 if scenario.outcome in [ScenarioOutcome.TERMINAL_T1, ScenarioOutcome.TERMINAL_T2]:
     if self.state.can_reach_terminal_state():
         return min(0.9 + self.state.get_terminal_probability() * 0.1, 1.0)
@@ -85,6 +98,7 @@ if scenario.outcome in [ScenarioOutcome.TERMINAL_T1, ScenarioOutcome.TERMINAL_T2
 **Problem:** Post-terminal state had incomplete mutations - corruption/dependency values left at intermediate states.
 
 **Fix:**
+
 - Set all three metrics to terminal values:
   - `human_agency_remaining = 0.0`
   - `corruption_level = 1.0`
@@ -101,6 +115,7 @@ elif scenario.outcome == ScenarioOutcome.TERMINAL_T1:
     self.state.infrastructure_dependency = 1.0  # NEW
 
 # Validate invariants after mutation
+
 self._assert_terminal_invariants()
 ```
 
@@ -113,6 +128,7 @@ self._assert_terminal_invariants()
 **Problem:** Method named `get_proof_hash()` implied cryptographic security it doesn't provide.
 
 **Fix:**
+
 - Renamed to `get_proof_commitment()` with clear documentation
 - Kept `get_proof_hash()` as deprecated wrapper for backward compatibility
 - Updated all usage in demo, tests, and documentation
@@ -123,11 +139,14 @@ self._assert_terminal_invariants()
 def get_proof_commitment(self) -> str:
     """
     Generate deterministic proof commitment string.
-    
+
     NOTE: This is a structural commitment, not a cryptographic hash.
+
     - NOT collision-resistant in cryptographic sense
     - NOT suitable for security applications
+
     """
+
     # ... implementation
 
 def get_proof_hash(self) -> str:
@@ -144,6 +163,7 @@ def get_proof_hash(self) -> str:
 **Problem:** String-based detection can be bypassed by semantic rephrasing - NLP limitation not documented.
 
 **Fix:**
+
 - Added class docstring explaining limitation
 - Added regex patterns for common rephrasing attempts
 - Updated README with limitations section
@@ -157,11 +177,13 @@ class OptimismDetector:
     It can be bypassed by semantic rephrasing. The goal is to make optimism
     require effort, not to achieve perfect detection.
     """
-    
+
     OPTIMISM_PATTERNS = [
         r"\bshould\b.*\bwork\b",
         r"\blikely\b.*\bsucceed\b",
+
         # ... more patterns
+
     ]
 ```
 
@@ -174,6 +196,7 @@ class OptimismDetector:
 **Problem:** No runtime validation that terminal states maintain invariants.
 
 **Fix:**
+
 - Added `_assert_terminal_invariants()` method
 - Checks all three requirements: agency=0.0, corruption=1.0, dependency=1.0
 - Called after `execute_scenario()` and in `validate_data_quality()`
@@ -196,12 +219,14 @@ def _assert_terminal_invariants(self) -> None:
 ## Test Coverage
 
 ### New Tests Added
+
 1. `test_terminal_state_blocks_further_execution` - Verifies immutability enforcement
 2. `test_terminal_state_invariants` - Verifies state consistency
 3. `test_proof_commitment_generation` - Tests new method name
 4. `test_proof_hash_deprecated` - Verifies backward compatibility
 
 ### Test Results
+
 - **Total Tests:** 48
 - **Passing:** 48 (100%)
 - **New Tests:** 4
@@ -226,6 +251,7 @@ def _assert_terminal_invariants(self) -> None:
 ## Backward Compatibility
 
 All changes maintain backward compatibility:
+
 - `get_proof_hash()` still works (deprecated wrapper)
 - Existing tests pass without modification
 - API surface unchanged
@@ -247,11 +273,11 @@ All changes maintain backward compatibility:
 
 ## Validation
 
-✅ All tests pass  
-✅ All linting passes  
-✅ Demo runs successfully  
-✅ No regressions detected  
-✅ Documentation updated  
-✅ Backward compatibility maintained  
+✅ All tests pass
+✅ All linting passes
+✅ Demo runs successfully
+✅ No regressions detected
+✅ Documentation updated
+✅ Backward compatibility maintained
 
 **Status: COMPLETE AND PRODUCTION READY**

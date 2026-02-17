@@ -21,39 +21,51 @@ That's it! Everything will be installed and verified.
 ### Run Programs
 
 ```bash
+
 # Node.js (primary)
+
 npm start examples/hello.thirsty
 
 # Python (alternative)
+
 python3 src/thirsty_interpreter.py examples/hello.thirsty
 
 # Docker
+
 docker-compose run --rm thirsty node src/cli.js examples/hello.thirsty
 ```
 
 ### Interactive REPLs
 
 ```bash
+
 # Node.js REPL
+
 npm run repl
 
 # Python REPL
+
 python3 src/thirsty_repl.py
 
 # Docker Node.js REPL
+
 docker-compose run --rm repl
 
 # Docker Python REPL
+
 docker-compose run --rm python-repl
 ```
 
 ### Learning
 
 ```bash
+
 # Interactive training
+
 npm run train
 
 # Or in Docker
+
 docker-compose run --rm training
 ```
 
@@ -95,19 +107,25 @@ pour userName
 ## Help & Documentation
 
 ```bash
+
 # Main documentation
+
 cat README.md
 
 # Python setup
+
 cat PYTHON_SETUP.md
 
 # Docker guide
+
 cat DOCKER.md
 
 # Complete summary
+
 cat IMPLEMENTATION_SUMMARY.md
 
 # Dependencies info
+
 cat DEPENDENCIES.txt
 ```
 
@@ -116,15 +134,21 @@ cat DEPENDENCIES.txt
 ### Node.js not found
 
 ```bash
+
 # Install Node.js from https://nodejs.org
+
 # Required: v14.0.0 or higher
+
 ```
 
 ### Python not found
 
 ```bash
+
 # Install Python from https://python.org
+
 # Required: 3.8 or higher
+
 ```
 
 ### Permission denied
@@ -137,23 +161,30 @@ chmod +x src/*.py
 ### Docker issues
 
 ```bash
+
 # Check Docker is running
+
 docker --version
 
 # Rebuild containers
+
 docker-compose build --no-cache
 ```
 
 ## Quick Test
 
 ```bash
+
 # Test Node.js
+
 node src/cli.js examples/hello.thirsty
 
 # Test Python
+
 python3 src/thirsty_interpreter.py examples/hello.thirsty
 
 # Run test suite
+
 npm test
 ```
 

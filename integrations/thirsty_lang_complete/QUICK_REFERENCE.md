@@ -7,14 +7,18 @@
 ## Installation
 
 ```bash
+
 # Clone/copy integration package
+
 cp -r integrations/thirsty_lang_complete /path/to/thirsty-lang/
 
 # Or use automated script
+
 cd integrations/thirsty_lang_complete
 ./copy_to_thirsty_lang.sh /path/to/thirsty-lang-repo
 
 # Install dependencies
+
 npm install
 pip install -r requirements.txt
 ```
@@ -62,23 +66,27 @@ interpreter.execute(code)
 ## Language Syntax
 
 ### Variables
+
 ```thirsty
 drink name = "value"        // Variable declaration
 name = "new value"          // Reassignment
 ```
 
 ### Output
+
 ```thirsty
 pour "Hello, World!"        // Print to console
 pour variable               // Print variable
 ```
 
 ### Input
+
 ```thirsty
 drink input = sip "Enter name: "
 ```
 
 ### Conditionals
+
 ```thirsty
 thirsty condition {
   // If block
@@ -88,6 +96,7 @@ thirsty condition {
 ```
 
 ### Loops
+
 ```thirsty
 refill count < 10 {
   pour count
@@ -96,6 +105,7 @@ refill count < 10 {
 ```
 
 ### Functions
+
 ```thirsty
 glass greet(name) {
   pour "Hello, " + name
@@ -109,6 +119,7 @@ greet("World")
 ## Security Features
 
 ### Basic Protection
+
 ```thirsty
 shield myApp {
   // Protected code block
@@ -118,6 +129,7 @@ shield myApp {
 ```
 
 ### Threat Detection
+
 ```thirsty
 detect attacks {
   morph on: ["injection", "overflow", "timing"]
@@ -126,6 +138,7 @@ detect attacks {
 ```
 
 ### Input Sanitization
+
 ```thirsty
 drink userData = sip "Enter name: "
 sanitize userData              // Remove dangerous characters
@@ -133,6 +146,7 @@ armor userData                 // Protect from tampering
 ```
 
 ### TARL Policy Enforcement
+
 ```thirsty
 tarl_policy {
   mutation_allowed: false
@@ -225,11 +239,14 @@ print(result['allowed'])  # True/False
 ### Environment Variables
 
 ```bash
+
 # Thirsty-lang
+
 export THIRSTY_SECURITY_MODE=aggressive
 export THIRSTY_ENABLE_TARL=true
 
 # TARL
+
 export TARL_ENABLED=1
 export TARL_RUNTIME_ENABLE_JIT=true
 export CODEX_ESCALATION_ENABLED=1
@@ -268,10 +285,13 @@ max_execution_time = 30.0
 ### REPL
 
 ```bash
+
 # JavaScript REPL
+
 npm run repl
 
 # Python REPL
+
 python src/thirsty_repl.py
 ```
 
@@ -311,19 +331,25 @@ node src/transpiler.js examples/hello.thirsty --target go
 ## Testing
 
 ```bash
+
 # Thirsty-lang tests
+
 npm test
 
 # TARL tests
+
 pytest tarl/tests/ -v
 
 # Integration tests
+
 python test_integration.py
 
 # Security tests
+
 node src/test/security-tests.js
 
 # Fuzz tests
+
 python -m tarl.fuzz.fuzz_tarl
 ```
 
@@ -336,11 +362,11 @@ python -m tarl.fuzz.fuzz_tarl
 ```thirsty
 shield inputHandler {
   detect attacks { defend with: "aggressive" }
-  
+
   drink userInput = sip "Enter data: "
   sanitize userInput
   armor userInput
-  
+
   thirsty userInput != "" {
     pour "You entered: " + userInput
   } hydrated {
@@ -401,11 +427,13 @@ try {
 ## Performance Tips
 
 1. **Enable JIT Compilation**
+
    ```bash
    export TARL_RUNTIME_ENABLE_JIT=true
    ```
 
 2. **Use Code Caching**
+
    ```javascript
    const interpreter = new ThirstyInterpreter({
      cache: true,
@@ -414,18 +442,22 @@ try {
    ```
 
 3. **Optimize Policy Checks**
+
    ```python
+
    # Use cached decisions
+
    runtime = TARLRuntime(DEFAULT_POLICIES, cache_size=1000)
    ```
 
 4. **Reduce Security Overhead**
+
    ```thirsty
    // Only use security where needed
    shield criticalSection {
      // Protected code
    }
-   
+
    // Regular code (no overhead)
    drink x = 5
    pour x
@@ -438,27 +470,35 @@ try {
 ### Issue: TARL not starting
 
 ```bash
+
 # Check Python path
+
 export PYTHONPATH="${PYTHONPATH}:/path/to/thirsty-lang"
 
 # Verify TARL installation
+
 python -c "import tarl; print(tarl.__version__)"
 ```
 
 ### Issue: Bridge connection failed
 
 ```bash
+
 # Test bridge manually
+
 node bridge/tarl-bridge.js test
 
 # Check Python dependencies
+
 pip install -r requirements.txt
 ```
 
 ### Issue: Security tests failing
 
 ```bash
+
 # Run with verbose output
+
 npm test -- --verbose
 pytest tarl/tests/ -v -s
 ```

@@ -206,18 +206,21 @@ t=0 ────▶ tick() ────▶ t=1 ────▶ tick() ───�
 ## Key Invariants
 
 ### Time Invariants
+
 - ✅ Logical time is monotonically increasing
 - ✅ No entity can advance time except monolith
 - ✅ All events are timestamped with logical time
 - ✅ Event execution order is deterministic
 
 ### Law Invariants
+
 - ✅ Physical coherence violations are illegal
 - ✅ All actions pass through law evaluation
 - ✅ Violations generate accountability records
 - ✅ Action log is append-only
 
 ### Access Invariants
+
 - ✅ Read-only access is default
 - ✅ Mutable access requires monolith context
 - ✅ Mutable access requires law evaluation

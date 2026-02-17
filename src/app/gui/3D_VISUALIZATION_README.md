@@ -41,13 +41,16 @@ Specialized visualization showing Project-AI's core systems:
 from app.gui.visualization_3d import AISystemVisualization3D
 
 # Create widget
+
 viz = AISystemVisualization3D(parent)
 
 # Customize
+
 viz.set_zoom(1.5)
 viz.set_elevation(45)
 
 # Add custom nodes
+
 viz.add_node(x, y, z, "Custom Node", QColor(255, 0, 0))
 viz.add_connection(0, 1)
 ```
@@ -74,7 +77,9 @@ layout.addWidget(self.viz_3d)
 1. Control visibility:
 
 ```python
+
 # Toggle between 2D and 3D views
+
 self.viz_3d.setVisible(show_3d)
 ```
 

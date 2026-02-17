@@ -122,8 +122,11 @@
 All 7 workflows have submodule support:
 
 ```yaml
+
 # Added to every workflow after checkout:
+
 - name: Update submodules
+
   run: git submodule update --init --recursive
 ```
 

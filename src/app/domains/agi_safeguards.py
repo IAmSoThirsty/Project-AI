@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 
 class AlignmentStatus(Enum):
     """AI system alignment status enumeration."""
+
     ALIGNED = "aligned"
     MISALIGNED = "misaligned"
 
@@ -32,6 +33,7 @@ class AlignmentStatus(Enum):
 @dataclass
 class AISystemMonitor:
     """Monitoring data for an AI system."""
+
     system_id: str
     alignment_status: AlignmentStatus
     behavior_score: float
@@ -83,7 +85,9 @@ class AGISafeguardsSubsystem(DomainSubsystemBase, ISecureSubsystem):
         with self._lock:
             return {"monitored_systems": len(self._monitored_systems)}
 
-    def _execute_domain_command(self, command: SubsystemCommand) -> SubsystemResponse | None:
+    def _execute_domain_command(
+        self, command: SubsystemCommand
+    ) -> SubsystemResponse | None:
         """Handle AGI Safeguards specific commands."""
         start_time = time.time()
 
@@ -112,7 +116,7 @@ class AGISafeguardsSubsystem(DomainSubsystemBase, ISecureSubsystem):
         """Provide domain-specific state for persistence."""
         return {
             "metrics": self.get_metrics(),
-            "monitored_systems_count": len(self._monitored_systems)
+            "monitored_systems_count": len(self._monitored_systems),
         }
 
     def _process_iteration(self):

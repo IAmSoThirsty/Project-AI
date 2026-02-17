@@ -29,6 +29,7 @@ gradle.properties         # Project-wide Gradle properties
 The build system automatically discovers and integrates:
 
 1. **Python Backend** (`src/app/`, `api/`, `tarl/`, `kernel/`, `engines/`)
+
    - Virtual environment management
    - Dependency installation (pip)
    - Linting (ruff, black, mypy)
@@ -37,37 +38,43 @@ The build system automatically discovers and integrates:
    - Package building (wheel/sdist)
    - Application execution
 
-2. **Android** (`android/`, `app/`)
+1. **Android** (`android/`, `app/`)
+
    - Debug/Release APK builds
    - Unit testing
    - Lint checks
    - Build artifact management
 
-3. **Electron Desktop** (`desktop/`)
+1. **Electron Desktop** (`desktop/`)
+
    - TypeScript/Vite compilation
    - Multi-platform packaging (Windows, macOS, Linux)
    - Development server
    - Release builds
 
-4. **Documentation** (`docs/`)
+1. **Documentation** (`docs/`)
+
    - Sphinx/MkDocs build integration
    - Markdown linting
    - Link verification
    - Publishing automation
 
-5. **USB/Portable Distributions** (`scripts/`)
+1. **USB/Portable Distributions** (`scripts/`)
+
    - Installation USB creation
    - Portable package generation
    - Universal multi-platform packages
 
-6. **Testing Infrastructure** (`tests/`, `e2e/`, `adversarial_tests/`)
+1. **Testing Infrastructure** (`tests/`, `e2e/`, `adversarial_tests/`)
+
    - Unit tests
    - Integration tests
    - End-to-end tests
    - Adversarial/red-team tests
    - Performance benchmarks
 
-7. **CI/CD Integration**
+1. **CI/CD Integration**
+
    - GitHub Actions workflows
    - Docker containerization
    - Release automation
@@ -86,35 +93,46 @@ The build system automatically discovers and integrates:
 ### Installation
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/IAmSoThirsty/Project-AI.git
    cd Project-AI
    ```
 
-2. **Verify Gradle installation**:
+1. **Verify Gradle installation**:
+
    ```bash
    ./gradlew --version
+
    # or on Windows:
+
    gradlew.bat --version
    ```
 
-3. **View available tasks**:
+1. **View available tasks**:
+
    ```bash
    ./gradlew godTierHelp
+
    # or
+
    ./gradlew tasks --all
    ```
 
 ### First Build
 
 ```bash
+
 # Full build (all modules)
+
 ./gradlew buildAll
 
 # With checks (lint + test)
+
 ./gradlew check
 
 # Clean build
+
 ./gradlew clean buildAll
 ```
 
@@ -125,42 +143,53 @@ The build system automatically discovers and integrates:
 These commands coordinate across ALL modules:
 
 ```bash
+
 # Clean all build artifacts
+
 ./gradlew clean
 
 # Run all checks (lint, test, security)
+
 ./gradlew check
 
 # Build all modules
+
 ./gradlew buildAll
 
 # Full release pipeline
+
 ./gradlew release
 ```
 
 ### Python Backend
 
 ```bash
+
 # Setup and dependencies
+
 ./gradlew pythonVenvCreate       # Create virtual environment
 ./gradlew pythonInstall          # Install dependencies
 
 # Development
+
 ./gradlew pythonLint             # Lint with ruff
 ./gradlew pythonLintFix          # Auto-fix lint issues
 ./gradlew pythonFormat           # Format with black
 ./gradlew pythonTypeCheck        # Type check with mypy
 
 # Testing
+
 ./gradlew pythonTest             # Run all tests
 ./gradlew pythonTestUnit         # Unit tests only
 ./gradlew pythonTestIntegration  # Integration tests
 
 # Security
+
 ./gradlew pythonSecurityScan     # Dependency vulnerability scan
 ./gradlew securityScanBandit     # Bandit security scanner
 
 # Build and run
+
 ./gradlew pythonBuild            # Build Python package
 ./gradlew pythonRun              # Run desktop app
 ./gradlew pythonRunApi           # Run API server
@@ -246,25 +275,32 @@ These commands coordinate across ALL modules:
 Project-wide configuration:
 
 ```properties
+
 # Project metadata
+
 projectVersion=1.0.0
 group=ai.project
 
 # Python configuration
+
 pythonExec=python
 pythonVersion=3.11
 
 # Node.js configuration
+
 nodeVersion=20.11.0
 npmVersion=10.2.4
 
 # Test configuration
+
 testParallelism=8
 
 # Docker configuration
+
 dockerRegistry=ghcr.io/iamsothirsty
 
 # CI mode
+
 ci=false
 ```
 
@@ -273,17 +309,22 @@ ci=false
 Optional environment variables:
 
 ```bash
+
 # Android SDK location
+
 export ANDROID_SDK_ROOT=/path/to/android/sdk
 export ANDROID_HOME=/path/to/android/sdk
 
 # CI mode
+
 export CI=true
 
 # Python executable override
+
 export PYTHON_EXEC=python3.11
 
 # Docker registry
+
 export DOCKER_REGISTRY=ghcr.io/myorg
 ```
 
@@ -294,10 +335,13 @@ export DOCKER_REGISTRY=ghcr.io/myorg
 Gradle automatically parallelizes independent tasks:
 
 ```bash
+
 # Use all CPU cores
+
 ./gradlew buildAll --parallel
 
 # Limit parallelism
+
 ./gradlew buildAll --max-workers=4
 ```
 
@@ -306,9 +350,13 @@ Gradle automatically parallelizes independent tasks:
 Build cache is enabled by default for faster builds:
 
 ```bash
+
 # Cache location: .gradle/build-cache
+
 # Retention: 30 days
+
 # No configuration needed - automatic
+
 ```
 
 ### Incremental Builds
@@ -316,10 +364,13 @@ Build cache is enabled by default for faster builds:
 Gradle tracks inputs/outputs for incremental builds:
 
 ```bash
+
 # Only rebuild changed components
+
 ./gradlew pythonBuild
 
 # Force full rebuild
+
 ./gradlew clean pythonBuild
 ```
 
@@ -331,6 +382,7 @@ Analyze build performance:
 ./gradlew buildAll --profile
 
 # Report: build/reports/profile/
+
 ```
 
 ### Continuous Build
@@ -392,9 +444,9 @@ build/artifacts/release/1.0.0/
 The system auto-discovers modules. To add a new module:
 
 1. **Create module directory** with appropriate build files
-2. **Add to discovery logic** in `build.gradle.kts` if needed
-3. **Create module-specific tasks** following existing patterns
-4. **Integrate with unified commands** (`buildAll`, `testAll`, etc.)
+1. **Add to discovery logic** in `build.gradle.kts` if needed
+1. **Create module-specific tasks** following existing patterns
+1. **Integrate with unified commands** (`buildAll`, `testAll`, etc.)
 
 Example for a new Rust module:
 
@@ -403,15 +455,15 @@ Example for a new Rust module:
 
 if (file("rust_module").exists()) {
     discoveredModules.add("rust-module")
-    
+
     tasks.register<Exec>("rustBuild") {
         group = "rust"
         description = "Build Rust module"
-        
+
         workingDir = file("rust_module")
         commandLine("cargo", "build", "--release")
     }
-    
+
     // Add to buildAll
     tasks.named("buildAll").configure {
         dependsOn("rustBuild")
@@ -428,7 +480,7 @@ Create reusable task types:
 abstract class MultiPlatformBuildTask : DefaultTask() {
     @Input
     abstract val platforms: ListProperty<String>
-    
+
     @TaskAction
     fun execute() {
         platforms.get().forEach { platform ->
@@ -472,7 +524,9 @@ apply<MyPlugin>()
 The build system integrates with existing GitHub Actions:
 
 ```yaml
+
 # .github/workflows/build.yml
+
 name: Build
 on: [push, pull_request]
 
@@ -480,13 +534,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
+
         with:
           java-version: '17'
+
       - name: Build
+
         run: ./gradlew check buildAll
+
       - name: Upload artifacts
+
         uses: actions/upload-artifact@v4
         with:
           name: artifacts
@@ -496,7 +556,9 @@ jobs:
 ### Automated Releases
 
 ```yaml
+
 # .github/workflows/release.yml
+
 name: Release
 on:
   push:
@@ -506,15 +568,21 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
+
         with:
           java-version: '17'
+
       - name: Full Release
+
         run: ./gradlew release
         env:
           CI: true
+
       - name: Create GitHub Release
+
         run: ./gradlew releaseGitHubRelease
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -523,7 +591,9 @@ jobs:
 ### Docker Integration
 
 ```yaml
+
 # .github/workflows/docker.yml
+
 name: Docker
 on: [push]
 
@@ -531,13 +601,19 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
+
         with:
           java-version: '17'
+
       - name: Build Docker Image
+
         run: ./gradlew dockerBuild
+
       - name: Push to Registry
+
         run: ./gradlew dockerPush
         env:
           DOCKER_REGISTRY: ghcr.io/iamsothirsty
@@ -550,14 +626,18 @@ jobs:
 #### Python Virtual Environment Not Found
 
 ```bash
+
 # Recreate virtual environment
+
 ./gradlew pythonVenvCreate --rerun-tasks
 ```
 
 #### Node.js Download Failed
 
 ```bash
+
 # Clear Gradle cache
+
 rm -rf .gradle/nodejs .gradle/npm
 ./gradlew npmInstall --refresh-dependencies
 ```
@@ -565,7 +645,9 @@ rm -rf .gradle/nodejs .gradle/npm
 #### Android SDK Not Found
 
 ```bash
+
 # Set environment variable
+
 export ANDROID_SDK_ROOT=/path/to/android/sdk
 ./gradlew androidBuild
 ```
@@ -573,7 +655,9 @@ export ANDROID_SDK_ROOT=/path/to/android/sdk
 #### Permission Denied (Linux/macOS)
 
 ```bash
+
 # Make gradlew executable
+
 chmod +x gradlew
 ./gradlew buildAll
 ```
@@ -581,7 +665,9 @@ chmod +x gradlew
 #### Build Cache Issues
 
 ```bash
+
 # Clear build cache
+
 rm -rf .gradle/build-cache
 ./gradlew buildAll
 ```
@@ -591,13 +677,17 @@ rm -rf .gradle/build-cache
 Enable detailed logging:
 
 ```bash
+
 # Debug output
+
 ./gradlew buildAll --debug > build.log
 
 # Info level
+
 ./gradlew buildAll --info
 
 # Stack traces
+
 ./gradlew buildAll --stacktrace
 ```
 
@@ -606,7 +696,9 @@ Enable detailed logging:
 Complete reset:
 
 ```bash
+
 # Remove all caches and artifacts
+
 ./gradlew clean
 rm -rf .gradle build dist .venv node_modules
 ./gradlew buildAll
@@ -619,6 +711,7 @@ rm -rf .gradle build dist .venv node_modules
 #### From Makefile
 
 Old:
+
 ```bash
 make test
 make lint
@@ -626,6 +719,7 @@ make build
 ```
 
 New:
+
 ```bash
 ./gradlew pythonTest
 ./gradlew pythonLint
@@ -635,6 +729,7 @@ New:
 #### From npm scripts
 
 Old:
+
 ```bash
 npm run test
 npm run build
@@ -642,6 +737,7 @@ npm run dev
 ```
 
 New:
+
 ```bash
 ./gradlew npmTest
 ./gradlew npmBuild
@@ -651,6 +747,7 @@ New:
 #### From Python setup.py
 
 Old:
+
 ```bash
 python setup.py test
 python setup.py build
@@ -658,6 +755,7 @@ python -m pip install -e .
 ```
 
 New:
+
 ```bash
 ./gradlew pythonTest
 ./gradlew pythonBuild
@@ -681,21 +779,25 @@ The Gradle system **wraps and orchestrates** existing tools rather than replacin
 ### Development Workflow
 
 1. **Start with install**:
+
    ```bash
    ./gradlew pythonInstall npmInstall desktopInstall
    ```
 
-2. **Develop with checks**:
+1. **Develop with checks**:
+
    ```bash
    ./gradlew pythonTest --continuous
    ```
 
-3. **Pre-commit validation**:
+1. **Pre-commit validation**:
+
    ```bash
    ./gradlew lintAll testAll
    ```
 
-4. **Before push**:
+1. **Before push**:
+
    ```bash
    ./gradlew check
    ```
@@ -703,21 +805,25 @@ The Gradle system **wraps and orchestrates** existing tools rather than replacin
 ### Release Workflow
 
 1. **Update version** in `gradle.properties`:
+
    ```properties
    projectVersion=1.1.0
    ```
 
-2. **Run release pipeline**:
+1. **Run release pipeline**:
+
    ```bash
    ./gradlew release
    ```
 
-3. **Verify artifacts**:
+1. **Verify artifacts**:
+
    ```bash
    ls -R build/artifacts/release/1.1.0/
    ```
 
-4. **Publish**:
+1. **Publish**:
+
    ```bash
    ./gradlew releaseGitHubRelease
    ```
@@ -737,13 +843,17 @@ The Gradle system **wraps and orchestrates** existing tools rather than replacin
 The build system includes comprehensive security scanning:
 
 ```bash
+
 # Python dependency vulnerabilities
+
 ./gradlew pythonSecurityScan
 
 # Python code security issues
+
 ./gradlew securityScanBandit
 
 # All security scans
+
 ./gradlew securityScanAll
 ```
 
@@ -755,13 +865,17 @@ Generate Software Bill of Materials for compliance:
 ./gradlew sbomGenerate
 
 # Output: build/artifacts/sbom/
+
 #   - python-dependencies.txt
+
 #   - npm-dependencies.json
+
 ```
 
 ### Secure Releases
 
 Release pipeline includes:
+
 - Dependency vulnerability scanning
 - Code security analysis
 - SBOM generation
@@ -793,6 +907,7 @@ Release pipeline includes:
 ### Maximum Density
 
 Single entry point for ALL operations:
+
 - 1 command to clean everything: `./gradlew clean`
 - 1 command to test everything: `./gradlew testAll`
 - 1 command to build everything: `./gradlew buildAll`
@@ -801,6 +916,7 @@ Single entry point for ALL operations:
 ### Auto-Discovery
 
 Automatically discovers and integrates:
+
 - New modules (just create directories)
 - New test suites (pytest auto-discovery)
 - New plugins (TARL, custom engines)
@@ -809,6 +925,7 @@ Automatically discovers and integrates:
 ### Zero Configuration
 
 Works out of the box:
+
 - No setup required beyond JDK
 - Auto-installs Node.js
 - Auto-creates Python venv
@@ -818,6 +935,7 @@ Works out of the box:
 ### Production-Ready
 
 Enterprise-grade implementation:
+
 - Comprehensive error handling
 - Detailed logging and reporting
 - Artifact management
@@ -828,49 +946,56 @@ Enterprise-grade implementation:
 ### Extensible Architecture
 
 Easy to extend:
+
 - Plugin system
 - Custom task types
 - Module discovery
 - Hook points everywhere
 - Well-documented patterns
 
----
+______________________________________________________________________
 
 ## ⚡ Quick Reference Card
 
 ```bash
+
 # GOD TIER COMMANDS
+
 ./gradlew clean               # Clean everything
 ./gradlew check               # Lint + Test + Security
 ./gradlew buildAll            # Build all modules
 ./gradlew release             # Full release pipeline
 
 # DEVELOPMENT
+
 ./gradlew pythonRun           # Run desktop app
 ./gradlew pythonRunApi        # Run API server
 ./gradlew desktopBuild        # Build Electron app
 
 # TESTING
+
 ./gradlew testAll             # All tests
 ./gradlew pythonTest          # Python tests
 ./gradlew testE2E             # E2E tests
 
 # QUALITY
+
 ./gradlew lintAll             # All linters
 ./gradlew formatAll           # Auto-format
 ./gradlew securityScanAll     # Security scans
 
 # PACKAGING
+
 ./gradlew desktopPackageAll   # Desktop (all platforms)
 ./gradlew androidBuildRelease # Android release
 ./gradlew usbCreateUniversal  # USB installer
 
 # HELP
+
 ./gradlew godTierHelp         # This system's help
 ./gradlew tasks --all         # All available tasks
 ```
 
----
+______________________________________________________________________
 
 **Thirsty's Gradle - Where Maximum Density Meets God Tier Engineering** 🚀
-

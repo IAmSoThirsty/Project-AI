@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 
 class ThreatLevel(Enum):
     """Threat severity levels."""
+
     NONE = 0
     LOW = 1
     MEDIUM = 2
@@ -60,6 +61,7 @@ class ThreatLevel(Enum):
 @dataclass
 class ValidationRule:
     """Input validation rule."""
+
     name: str
     pattern: Pattern | None = None
     validator: Callable[[str], bool] | None = None
@@ -71,6 +73,7 @@ class ValidationRule:
 @dataclass
 class ValidationResult:
     """Result of input validation."""
+
     is_valid: bool
     original_value: Any
     sanitized_value: Any | None = None
@@ -87,13 +90,13 @@ class ValidationResult:
                     context={
                         "threats": self.threats_detected,
                         "threat_level": self.threat_level.name,
-                        "original_value": str(self.original_value)[:100]
-                    }
+                        "original_value": str(self.original_value)[:100],
+                    },
                 )
             else:
                 raise InputValidationError(
                     self.error_message or "Input validation failed",
-                    context={"threats": self.threats_detected}
+                    context={"threats": self.threats_detected},
                 )
 
 
@@ -169,12 +172,22 @@ class SecurityValidator:
 
     def __init__(self):
         """Initialize security validator."""
-        self._sql_patterns = [re.compile(p, re.IGNORECASE) for p in self.SQL_INJECTION_PATTERNS]
+        self._sql_patterns = [
+            re.compile(p, re.IGNORECASE) for p in self.SQL_INJECTION_PATTERNS
+        ]
         self._xss_patterns = [re.compile(p, re.IGNORECASE) for p in self.XSS_PATTERNS]
-        self._cmd_patterns = [re.compile(p, re.IGNORECASE) for p in self.COMMAND_INJECTION_PATTERNS]
-        self._path_patterns = [re.compile(p, re.IGNORECASE) for p in self.PATH_TRAVERSAL_PATTERNS]
-        self._nosql_patterns = [re.compile(p, re.IGNORECASE) for p in self.NOSQL_INJECTION_PATTERNS]
-        self._ldap_patterns = [re.compile(p, re.IGNORECASE) for p in self.LDAP_INJECTION_PATTERNS]
+        self._cmd_patterns = [
+            re.compile(p, re.IGNORECASE) for p in self.COMMAND_INJECTION_PATTERNS
+        ]
+        self._path_patterns = [
+            re.compile(p, re.IGNORECASE) for p in self.PATH_TRAVERSAL_PATTERNS
+        ]
+        self._nosql_patterns = [
+            re.compile(p, re.IGNORECASE) for p in self.NOSQL_INJECTION_PATTERNS
+        ]
+        self._ldap_patterns = [
+            re.compile(p, re.IGNORECASE) for p in self.LDAP_INJECTION_PATTERNS
+        ]
 
         logger.info("SecurityValidator initialized with comprehensive threat detection")
 
@@ -183,7 +196,7 @@ class SecurityValidator:
         value: Any,
         input_type: str = "generic",
         allow_html: bool = False,
-        strict: bool = True
+        strict: bool = True,
     ) -> ValidationResult:
         """
         Validate and sanitize input.
@@ -198,14 +211,14 @@ class SecurityValidator:
             ValidationResult
         """
         if value is None:
-            return ValidationResult(is_valid=True, original_value=None, sanitized_value=None)
+            return ValidationResult(
+                is_valid=True, original_value=None, sanitized_value=None
+            )
 
         # Convert to string for validation
         str_value = str(value)
         result = ValidationResult(
-            is_valid=True,
-            original_value=value,
-            sanitized_value=value
+            is_valid=True, original_value=value, sanitized_value=value
         )
 
         # Check for SQL injection
@@ -249,10 +262,14 @@ class SecurityValidator:
         # Determine if valid
         if strict and result.threats_detected:
             result.is_valid = False
-            result.error_message = f"Security threats detected: {', '.join(result.threats_detected)}"
+            result.error_message = (
+                f"Security threats detected: {', '.join(result.threats_detected)}"
+            )
         else:
             # Sanitize the input
-            result.sanitized_value = self._sanitize_input(str_value, input_type, allow_html)
+            result.sanitized_value = self._sanitize_input(
+                str_value, input_type, allow_html
+            )
 
         # Log threats
         if result.threats_detected:
@@ -268,7 +285,9 @@ class SecurityValidator:
         threats = []
         for pattern in self._sql_patterns:
             if pattern.search(value):
-                threats.append(f"SQL injection pattern detected: {pattern.pattern[:50]}")
+                threats.append(
+                    f"SQL injection pattern detected: {pattern.pattern[:50]}"
+                )
         return threats
 
     def _check_xss(self, value: str) -> list[str]:
@@ -284,7 +303,9 @@ class SecurityValidator:
         threats = []
         for pattern in self._cmd_patterns:
             if pattern.search(value):
-                threats.append(f"Command injection pattern detected: {pattern.pattern[:50]}")
+                threats.append(
+                    f"Command injection pattern detected: {pattern.pattern[:50]}"
+                )
         return threats
 
     def _check_path_traversal(self, value: str) -> list[str]:
@@ -292,7 +313,9 @@ class SecurityValidator:
         threats = []
         for pattern in self._path_patterns:
             if pattern.search(value):
-                threats.append(f"Path traversal pattern detected: {pattern.pattern[:50]}")
+                threats.append(
+                    f"Path traversal pattern detected: {pattern.pattern[:50]}"
+                )
         return threats
 
     def _check_nosql_injection(self, value: str) -> list[str]:
@@ -300,7 +323,9 @@ class SecurityValidator:
         threats = []
         for pattern in self._nosql_patterns:
             if pattern.search(value):
-                threats.append(f"NoSQL injection pattern detected: {pattern.pattern[:50]}")
+                threats.append(
+                    f"NoSQL injection pattern detected: {pattern.pattern[:50]}"
+                )
         return threats
 
     def _check_ldap_injection(self, value: str) -> list[str]:
@@ -308,7 +333,9 @@ class SecurityValidator:
         threats = []
         for pattern in self._ldap_patterns:
             if pattern.search(value):
-                threats.append(f"LDAP injection pattern detected: {pattern.pattern[:50]}")
+                threats.append(
+                    f"LDAP injection pattern detected: {pattern.pattern[:50]}"
+                )
         return threats
 
     def _sanitize_input(self, value: str, input_type: str, allow_html: bool) -> str:
@@ -330,11 +357,19 @@ class SecurityValidator:
 
         # Remove dangerous attributes
         dangerous_attrs = [
-            "onclick", "onload", "onerror", "onmouseover",
-            "onfocus", "onblur", "onchange", "onsubmit"
+            "onclick",
+            "onload",
+            "onerror",
+            "onmouseover",
+            "onfocus",
+            "onblur",
+            "onchange",
+            "onsubmit",
         ]
         for attr in dangerous_attrs:
-            sanitized = re.sub(f'{attr}\\s*=\\s*["\'][^"\']*["\']', '', sanitized, flags=re.IGNORECASE)
+            sanitized = re.sub(
+                f"{attr}\\s*=\\s*[\"'][^\"']*[\"']", "", sanitized, flags=re.IGNORECASE
+            )
 
         return sanitized
 
@@ -362,8 +397,8 @@ class SecurityValidator:
         sanitized = value.replace("'", "''")
 
         # Remove SQL comments
-        sanitized = re.sub(r'--.*$', '', sanitized, flags=re.MULTILINE)
-        sanitized = re.sub(r'/\*.*?\*/', '', sanitized, flags=re.DOTALL)
+        sanitized = re.sub(r"--.*$", "", sanitized, flags=re.MULTILINE)
+        sanitized = re.sub(r"/\*.*?\*/", "", sanitized, flags=re.DOTALL)
 
         return sanitized
 
@@ -371,12 +406,11 @@ class SecurityValidator:
     def sanitize_generic(value: str) -> str:
         """Generic sanitization."""
         # Remove null bytes
-        sanitized = value.replace('\x00', '')
+        sanitized = value.replace("\x00", "")
 
         # Remove control characters except newline, tab, carriage return
-        sanitized = ''.join(
-            char for char in sanitized
-            if ord(char) >= 32 or char in '\n\t\r'
+        sanitized = "".join(
+            char for char in sanitized if ord(char) >= 32 or char in "\n\t\r"
         )
 
         return sanitized
@@ -386,7 +420,7 @@ class SecurityValidator:
         result = ValidationResult(is_valid=True, original_value=email)
 
         # Basic email regex
-        email_pattern = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        email_pattern = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
         if not email_pattern.match(email):
             result.is_valid = False
@@ -405,7 +439,9 @@ class SecurityValidator:
 
         return result
 
-    def validate_url(self, url: str, allowed_schemes: list[str] | None = None) -> ValidationResult:
+    def validate_url(
+        self, url: str, allowed_schemes: list[str] | None = None
+    ) -> ValidationResult:
         """Validate URL."""
         result = ValidationResult(is_valid=True, original_value=url)
 
@@ -414,10 +450,10 @@ class SecurityValidator:
 
         # Basic URL validation
         url_pattern = re.compile(
-            r'^(https?://)?'  # Protocol (optional)
-            r'([a-zA-Z0-9.-]+)'  # Domain
-            r'(:\d+)?'  # Port (optional)
-            r'(/[^\s]*)?$'  # Path (optional)
+            r"^(https?://)?"  # Protocol (optional)
+            r"([a-zA-Z0-9.-]+)"  # Domain
+            r"(:\d+)?"  # Port (optional)
+            r"(/[^\s]*)?$"  # Path (optional)
         )
 
         if not url_pattern.match(url):
@@ -426,8 +462,8 @@ class SecurityValidator:
             return result
 
         # Check scheme
-        if url.startswith(('http://', 'https://')):
-            scheme = url.split('://')[0]
+        if url.startswith(("http://", "https://")):
+            scheme = url.split("://")[0]
             if scheme not in allowed_schemes:
                 result.is_valid = False
                 result.error_message = f"URL scheme not allowed: {scheme}"
@@ -542,9 +578,7 @@ def get_security_validator() -> SecurityValidator:
 
 
 def validate_input(
-    value: Any,
-    input_type: str = "generic",
-    strict: bool = True
+    value: Any, input_type: str = "generic", strict: bool = True
 ) -> ValidationResult:
     """
     Convenience function to validate input.

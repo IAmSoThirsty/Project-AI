@@ -14,16 +14,21 @@ Before installing Thirsty-lang, ensure you have:
 ### Method 1: Clone from GitHub (Recommended)
 
 ```bash
+
 # Clone the repository
+
 git clone https://github.com/IAmSoThirsty/Thirsty-lang.git
 
 # Navigate to the directory
+
 cd Thirsty-lang
 
 # Install dependencies (if any in future)
+
 npm install
 
 # Verify installation
+
 npm test
 ```
 
@@ -40,10 +45,13 @@ npm test
 To use the `thirsty` command from anywhere:
 
 ```bash
+
 # In the Thirsty-lang directory
+
 npm link
 
 # Now you can use 'thirsty' from anywhere
+
 thirsty run myprogram.thirsty
 thirsty repl
 thirsty train
@@ -54,31 +62,43 @@ thirsty train
 After installation, verify everything works:
 
 ```bash
+
 # Run tests
+
 npm test
 
 # Run an example
+
 npm start examples/hello.thirsty
 
 # Start the REPL
+
 npm run repl
+
 # (press Ctrl+C twice to exit)
 
 # Start training
+
 npm run train
+
 # (select option 6 to exit)
+
 ```
 
 ## Setting Up Your First Project
 
 ```bash
+
 # Create a new Thirsty-lang project
+
 node src/thirsty-cli.js init my-first-project
 
 # Navigate to your project
+
 cd my-first-project
 
 # Run the program
+
 thirsty run src/main.thirsty
 ```
 
@@ -99,10 +119,13 @@ thirsty run src/main.thirsty
 If the `thirsty` command isn't found after `npm link`:
 
 ```bash
+
 # Try running with full path
+
 node /path/to/Thirsty-lang/src/thirsty-cli.js
 
 # Or use npm scripts
+
 npm start
 npm run repl
 npm run train
@@ -156,10 +179,13 @@ After installation:
 To remove Thirsty-lang:
 
 ```bash
+
 # If you used npm link
+
 npm unlink
 
 # Remove the directory
+
 rm -rf /path/to/Thirsty-lang
 ```
 

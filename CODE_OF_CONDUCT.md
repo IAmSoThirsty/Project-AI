@@ -15,7 +15,7 @@ If you believe someone is violating the code of conduct, I ask that you report i
 - **Be considerate.** Your work will be used by other people, and you in turn will depend on the work of others. Any decision you take will affect users and colleagues, and you should take those consequences into account when making decisions. Remember that Project AI a world-wide community, so you might not be communicating in someone else's primary language.
 - **Be respectful.** Not all of us will agree all the time, but disagreement is no excuse for poor behavior and poor manners. We might all experience some frustration now and then, but we cannot allow that frustration to turn into a personal attack. It’s important to remember that a community where people feel uncomfortable or threatened is not a productive one. Members of the Project Ai community should be respectful when dealing with other members as well as with people outside the Project Ai community.
       - **These are Not Suggestions.**
-- **Be careful in the words that you choose.** We are a community of professionals, and we conduct ourselves professionally. Be kind to others. Do not insult or put down other participants. Harassment and other exclusionary behavior aren't acceptable. This includes, but is not limited to: 
+- **Be careful in the words that you choose.** We are a community of professionals, and we conduct ourselves professionally. Be kind to others. Do not insult or put down other participants. Harassment and other exclusionary behavior aren't acceptable. This includes, but is not limited to:
  - Violent threats or language directed against another person.
  - Discriminatory jokes and language.
  - Posting sexually explicit or violent material.
@@ -25,11 +25,12 @@ If you believe someone is violating the code of conduct, I ask that you report i
  - Advocating for, or encouraging, any of the above behavior.
  - Repeated harassment of others. In general, if someone asks you to stop, then stop.
 - **When we disagree, try to understand why.** Disagreements, both social and technical, happen all the time and Project Ai is no exception. It is important that we resolve disagreements and differing views constructively. Remember that we’re different. The strength of Project Ai comes from its varied community, people from a wide range of backgrounds. Different people have different perspectives on issues. Being unable to understand why someone holds a viewpoint doesn’t mean that they’re wrong. Don’t forget that it is human to err and blaming each other doesn’t get us anywhere. Instead, focus on helping to resolve issues and learning from mistakes.
+
 **If Non Compliance is a repeat offense You will lose access to all data relevant to any work done and you forfeit your personal AI.**
-  
+
 Original text courtesy of the [Speak Up! project](http://web.archive.org/web/20141109123859/http://speakup.io/coc.html).
 **Minor additions have been made replacing "Project AI Team" references to state "I" as I am a single Architect**
-    
+
 ## Questions?
 
 If you have questions, please see and cannot find answers, feel free to [contact us](mailto:projectaidevs@gmail.com).

@@ -56,13 +56,17 @@ After the container is created:
 ## Running the Application
 
 ```bash
+
 # Desktop application (PyQt6)
+
 python -m src.app.main
 
 # Run tests
+
 pytest -v
 
 # Lint code
+
 ruff check .
 ```
 

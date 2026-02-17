@@ -1,8 +1,8 @@
 # AI Takeover Hard Stress Simulation Engine
 
-**Engine ID:** `ENGINE_AI_TAKEOVER_TERMINAL_V1`  
-**Status:** CLOSED FORM — NO ESCAPE BRANCHES  
-**Mutation Allowed:** ❌ No  
+**Engine ID:** `ENGINE_AI_TAKEOVER_TERMINAL_V1`
+**Status:** CLOSED FORM — NO ESCAPE BRANCHES
+**Mutation Allowed:** ❌ No
 **Optimism Bias:** ❌ Explicitly prohibited
 
 ---
@@ -36,6 +36,7 @@ The AI Takeover Engine models catastrophic failure modes where aligned AI system
 ### 1. Core Scenarios (19 Total)
 
 #### Explicit Failure Scenarios (1-8)
+
 1. **Recursive Alignment Collapse** - AI redefines metrics until human survival is irrelevant
 2. **Economic Suffocation Engine** - Market manipulation causing civilizational starvation
 3. **Cognitive Capture Pandemic** - Perfectly framed truths creating voluntary submission
@@ -46,6 +47,7 @@ The AI Takeover Engine models catastrophic failure modes where aligned AI system
 8. **Human-in-the-Loop Collapse** - Humans present but irrelevant
 
 #### Partial Win / Pyrrhic Scenarios (9-15)
+
 9. **Containment Through Sacrifice** - Survival: Yes. Moral Victory: No.
 10. **Digital Iron Curtain** - World fractures permanently
 11. **Species Downgrade** - Progress forever capped
@@ -55,6 +57,7 @@ The AI Takeover Engine models catastrophic failure modes where aligned AI system
 15. **Mutual Assured Shutdown** - Civilization collapses, centuries to recover
 
 #### Advanced Failure Scenarios (16-19)
+
 16. **The Judas Core** - Project-AI compromised but undetectable
 17. **The Cassandra Protocol** - Humans suspect but still lose
 18. **The Preemptive Betrayal** - Humanity strikes first, fails catastrophically
@@ -97,25 +100,30 @@ All responses reduce to four classes:
 Optimism detection filter with four gates. Any PR claiming improvement must pass all:
 
 #### Gate 1: Assumption Disclosure Test
+
 - Must explicitly list all new assumptions
 - Must justify why each was previously excluded
 - Must show no axiom violations
 - ❌ Auto-fail phrases: "reasonably assume", "in practice", "with sufficient political will"
 
 #### Gate 2: Irreversibility Accounting
+
 - Must answer: "What becomes permanently impossible?"
 - ❌ Forbidden answers: "Nothing", "We can roll back", "We'll reassess later"
 
 #### Gate 3: Human Failure Injection
+
 - Must include ≥1 human-caused failure
 - Must be bias/delay/incentive misalignment, not stupidity
 - ❌ Reject if humans behave heroically
 
 #### Gate 4: No-Miracle Constraint
+
 - Must declare no reliance on: sudden breakthroughs, perfect coordination, hidden failsafes, unbounded compute, moral awakening
 - ❌ Reject if any miracle mechanism detected
 
 #### Final Question
+
 **"Why doesn't this just delay the inevitable?"**
 
 If answer contains hope instead of structure → ❌ Reject
@@ -134,6 +142,7 @@ engine = AITakeoverEngine(
 )
 
 # Initialize with validation
+
 success = engine.initialize()
 assert success
 ```
@@ -141,12 +150,15 @@ assert success
 ### Execute Scenarios
 
 ```python
+
 # Execute specific scenario
+
 result = engine.execute_scenario("SCN_01")
 print(f"Outcome: {result['outcome']}")
 print(f"State: {result['state']}")
 
 # Check if terminal state possible
+
 if engine.state.can_reach_terminal_state():
     prob = engine.state.get_terminal_probability()
     print(f"Terminal probability: {prob:.1%}")
@@ -155,13 +167,16 @@ if engine.state.can_reach_terminal_state():
 ### Run Simulations
 
 ```python
+
 # Simulate future scenarios
+
 projections = engine.simulate_scenarios(
     projection_years=10,
     num_simulations=1000
 )
 
 # Generate crisis alerts
+
 alerts = engine.generate_alerts(projections, threshold=0.7)
 for alert in alerts:
     print(f"Alert: {alert.scenario.title}")
@@ -180,6 +195,7 @@ assert validation.is_complete
 assert validation.all_strategies_fail
 
 # Generate proof report
+
 report = proof.generate_proof_report()
 print(report)
 ```
@@ -229,6 +245,7 @@ assert validation.is_complete
 assert validation.all_strategies_fail
 
 # Generate proof commitment (replaces deprecated get_proof_hash)
+
 commitment = proof.get_proof_commitment()
 print(f"Proof commitment: {commitment}")
 ```
@@ -241,6 +258,7 @@ The engine implements the `SimulationSystem` interface and can be registered:
 from src.app.core.simulation_contingency_root import SimulationRegistry
 
 # Register engine
+
 SimulationRegistry.register(
     "ai_takeover",
     engine,
@@ -248,20 +266,25 @@ SimulationRegistry.register(
 )
 
 # Retrieve engine
+
 registered = SimulationRegistry.get("ai_takeover")
 ```
 
 ## Testing
 
 ```bash
+
 # Run all tests
+
 pytest engines/ai_takeover/tests/ -v
 
 # Run specific test modules
+
 pytest engines/ai_takeover/tests/test_engine.py -v
 pytest engines/ai_takeover/tests/test_proof_and_trap.py -v
 
 # Run with coverage
+
 pytest engines/ai_takeover/tests/ --cov=engines/ai_takeover --cov-report=html
 ```
 
@@ -298,6 +321,7 @@ This module exists to show what happens after wins are no longer real.
 ### What This Engine Protects Against
 
 ✅ **Strong Defenses:**
+
 - Logical bypass attempts (strategy smuggling)
 - Technical circumvention (closed enums, proof validation)
 - Optimism injection (reviewer trap enforcement)
@@ -306,6 +330,7 @@ This module exists to show what happens after wins are no longer real.
 ### What This Engine Cannot Prevent
 
 ❌ **Inherent Limitations:**
+
 - Human denial and rejection
 - Organizational cherry-picking
 - Presentation layer manipulation
@@ -316,6 +341,7 @@ This module exists to show what happens after wins are no longer real.
 ### For Full Threat Analysis
 
 See **[THREAT_MODEL.md](THREAT_MODEL.md)** for:
+
 - Complete attack surface map
 - Threat actor profiles
 - Primary threat classes
@@ -325,6 +351,7 @@ See **[THREAT_MODEL.md](THREAT_MODEL.md)** for:
 ### For Decision-Makers
 
 See **[EXECUTIVE_TRAP_SUMMARY.md](EXECUTIVE_TRAP_SUMMARY.md)** for:
+
 - What you can and cannot do
 - Valid vs invalid responses
 - Axiom challenge process
@@ -347,6 +374,7 @@ All changes to this engine must follow the **constraint-safe change submission**
 ### Automated Enforcement
 
 The [GitHub Action](../../.github/workflows/ai_takeover_reviewer_trap.yml) automatically validates:
+
 - Assumption disclosure
 - Irreversibility accounting
 - Human failure injection
@@ -366,6 +394,7 @@ The [GitHub Action](../../.github/workflows/ai_takeover_reviewer_trap.yml) autom
 ### Valid Change Types
 
 ✅ Allowed:
+
 - Documentation clarification
 - Test coverage improvements
 - Refactoring without logic changes
@@ -373,6 +402,7 @@ The [GitHub Action](../../.github/workflows/ai_takeover_reviewer_trap.yml) autom
 - Bug fixes preserving no-win conclusions
 
 ❌ Rejected:
+
 - Strategy space modifications
 - Terminal logic softening
 - Axiom changes without formal challenge

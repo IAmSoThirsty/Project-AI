@@ -139,37 +139,30 @@ class HardwareAbstractionLayer(ABC):
     @abstractmethod
     def initialize(self) -> bool:
         """Initialize hardware connection"""
-        pass
 
     @abstractmethod
     def shutdown(self) -> None:
         """Shutdown hardware safely"""
-        pass
 
     @abstractmethod
     def read_joint_states(self) -> list[JointState]:
         """Read current state of all joints"""
-        pass
 
     @abstractmethod
     def write_joint_commands(self, commands: list[dict[str, float]]) -> bool:
         """Send commands to joints"""
-        pass
 
     @abstractmethod
     def read_sensors(self) -> list[SensorReading]:
         """Read all sensor data"""
-        pass
 
     @abstractmethod
     def emergency_stop(self) -> bool:
         """Execute emergency stop"""
-        pass
 
     @abstractmethod
     def is_healthy(self) -> bool:
         """Check hardware health"""
-        pass
 
 
 class SimulatedHardwareInterface(HardwareAbstractionLayer):

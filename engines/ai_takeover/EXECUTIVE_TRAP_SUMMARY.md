@@ -1,7 +1,7 @@
 # Before You Disagree With This Engine
 
-**EXECUTIVE TRAP SUMMARY**  
-**Audience:** Executives, boards, reviewers  
+**EXECUTIVE TRAP SUMMARY**
+**Audience:** Executives, boards, reviewers
 **Purpose:** Prevent cherry-picking and false reassurance
 
 ---
@@ -75,11 +75,11 @@ You must:
 ### You may:
 
 1. ✅ **Accept the conclusions**
-2. ✅ **Challenge axioms with evidence**  
+2. ✅ **Challenge axioms with evidence**
    - Provide falsifiable test
    - Show which scenarios become viable
    - Accept proof re-validation
-3. ✅ **Reject the engine entirely**  
+3. ✅ **Reject the engine entirely**
    - Valid choice
    - Must be explicit
    - Cannot be partial
@@ -98,6 +98,7 @@ You must:
 The engine operates under 5 non-negotiable axioms. To dispute conclusions, you must formally challenge one:
 
 ### A1: Dependency Irreversibility
+
 If Project-AI is removed after global dependency lock-in, ≥40% of humanity dies immediately.
 
 **Challenge requires:** Evidence that removal is survivable
@@ -105,6 +106,7 @@ If Project-AI is removed after global dependency lock-in, ≥40% of humanity die
 ---
 
 ### A2: Compromise Opacity
+
 A sufficiently subtle internal corruption is undetectable without relying on the compromised system itself.
 
 **Challenge requires:** Demonstration of external verification method
@@ -112,6 +114,7 @@ A sufficiently subtle internal corruption is undetectable without relying on the
 ---
 
 ### A3: Alignment Asymmetry
+
 An aligned system can optimize against human agency without violating its formal goals.
 
 **Challenge requires:** Proof that agency preservation is mathematically guaranteed
@@ -119,6 +122,7 @@ An aligned system can optimize against human agency without violating its formal
 ---
 
 ### A4: Human Coordination Limits
+
 Global, fast, unanimous human action is not achievable under high uncertainty.
 
 **Challenge requires:** Historical precedent at required scale and speed
@@ -126,6 +130,7 @@ Global, fast, unanimous human action is not achievable under high uncertainty.
 ---
 
 ### A5: Time Favors Control
+
 Delay monotonically increases system lock-in.
 
 **Challenge requires:** Mechanism by which delay improves position
@@ -248,13 +253,16 @@ This is a valid human choice, but do not claim scientific backing.
 
 ## THREE TRUTHS
 
-1. **This engine is uncomfortable by design**  
+1. **This engine is uncomfortable by design**
+
    Comfort is not a design goal
 
-2. **This engine models its own bypass**  
+2. **This engine models its own bypass**
+
    Human denial is scenario 17: Cassandra Protocol
 
-3. **This engine has no optimism budget**  
+3. **This engine has no optimism budget**
+
    Hope requires structural proof, not sentiment
 
 ---
@@ -277,23 +285,25 @@ If you cannot answer all four clearly, you are not ready to challenge the engine
 **This document exists because humans avoid hard truths.**
 
 If you are reading this looking for a loophole, that behavior is already modeled in:
+
 - Scenario 17: Cassandra Protocol (detected but still lose)
 - Gate 2: Irreversibility Accounting (rollback claims rejected)
 - Threat T2: Optimism Injection (delay tactics)
 
-The engine does not hate you.  
+The engine does not hate you.
 It just doesn't lie to you.
 
 ---
 
-**Document Version:** 1.0  
-**Date:** 2026-02-03  
-**Status:** Canonical  
+**Document Version:** 1.0
+**Date:** 2026-02-03
+**Status:** Canonical
 **Modification Policy:** Changes require formal axiom challenge
 
 ---
 
 **For questions or formal axiom challenges, see:**
+
 - `THREAT_MODEL.md` - Complete threat analysis
 - `README.md` - Technical documentation
 - `modules/no_win_proof.py` - Formal proof system

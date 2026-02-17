@@ -4,21 +4,21 @@
 
 This document provides comprehensive documentation for the three-tier platform architecture implemented in Project-AI.
 
----
+______________________________________________________________________
 
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Tier 1: Governance / Enforcement Platform](#tier-1-governance--enforcement-platform)
-3. [Tier 2: Infrastructure Control Platform](#tier-2-infrastructure-control-platform)
-4. [Tier 3: Application / Runtime Platform](#tier-3-application--runtime-platform)
-5. [Cross-Tier Communication](#cross-tier-communication)
-6. [API Boundaries](#api-boundaries)
-7. [Governance Policies](#governance-policies)
-8. [Health Monitoring](#health-monitoring)
-9. [Examples and Usage](#examples-and-usage)
+1. [Tier 1: Governance / Enforcement Platform](#tier-1-governance--enforcement-platform)
+1. [Tier 2: Infrastructure Control Platform](#tier-2-infrastructure-control-platform)
+1. [Tier 3: Application / Runtime Platform](#tier-3-application--runtime-platform)
+1. [Cross-Tier Communication](#cross-tier-communication)
+1. [API Boundaries](#api-boundaries)
+1. [Governance Policies](#governance-policies)
+1. [Health Monitoring](#health-monitoring)
+1. [Examples and Usage](#examples-and-usage)
 
----
+______________________________________________________________________
 
 ## Overview
 
@@ -64,12 +64,12 @@ Project-AI implements a formal three-tier platform architecture with strict sepa
 ### Critical Constraints
 
 1. **Authority flows downward**: Tier 1 → Tier 2 → Tier 3
-2. **Capability flows upward**: Tier 3 → Tier 2 → Tier 1
-3. **Tier 1 independence**: Tier 1 NEVER depends on Tier 2/3
-4. **Infrastructure subordination**: All Tier 2 decisions validated by Tier 1
-5. **Application sandboxing**: Tier 3 is swappable without threatening Tier 1/2
+1. **Capability flows upward**: Tier 3 → Tier 2 → Tier 1
+1. **Tier 1 independence**: Tier 1 NEVER depends on Tier 2/3
+1. **Infrastructure subordination**: All Tier 2 decisions validated by Tier 1
+1. **Application sandboxing**: Tier 3 is swappable without threatening Tier 1/2
 
----
+______________________________________________________________________
 
 ## Tier 1: Governance / Enforcement Platform
 
@@ -95,7 +95,9 @@ The trust root for all executions. Every action flows through `kernel.process()`
 **API**:
 
 ```python
+
 # Process user-initiated actions
+
 result = kernel.process(
     user_input="execute task",
     source="user",
@@ -103,6 +105,7 @@ result = kernel.process(
 )
 
 # Route agent/system-initiated tasks
+
 result = kernel.route(
     task={"action": "analyze", "data": data},
     source="planner_agent",
@@ -110,19 +113,24 @@ result = kernel.route(
 )
 
 # Enforce governance on action
+
 kernel.enforce(action, context)  # Raises PermissionError if blocked
 
 # Execute approved action
+
 kernel.act(action, context)
 
 # Commit to memory
+
 kernel.commit(context)
 
 # Trigger reflection
+
 kernel.reflect(context)
 ```
 
 **Tier Registration**:
+
 - Tier: `TIER_1_GOVERNANCE`
 - Authority: `SOVEREIGN`
 - Role: `GOVERNANCE_CORE`
@@ -139,7 +147,9 @@ Evaluates actions against policies. **Governance observes, never executes**.
 **API**:
 
 ```python
+
 # Evaluate action against governance policies
+
 decision = governance_service.evaluate_action(
     action=action,
     context=context,
@@ -147,11 +157,15 @@ decision = governance_service.evaluate_action(
 )
 
 # decision.approved: bool
+
 # decision.reason: str
+
 # decision.council_votes: dict (Galahad, Cerberus, Codex votes)
+
 ```
 
 **Tier Registration**:
+
 - Tier: `TIER_1_GOVERNANCE`
 - Authority: `SOVEREIGN`
 - Role: `POLICY_ENFORCER`
@@ -162,6 +176,7 @@ decision = governance_service.evaluate_action(
 ### API Boundaries
 
 **What Tier 1 CAN do**:
+
 - ✅ Command Tier 2/3 components (pause, resume, rollback)
 - ✅ Evaluate and approve/deny any action
 - ✅ Enforce policies with absolute authority
@@ -169,15 +184,17 @@ decision = governance_service.evaluate_action(
 - ✅ Override any Tier 2 decision
 
 **What Tier 1 CANNOT do**:
+
 - ❌ Depend on Tier 2/3 for core functionality
 - ❌ Execute actions directly (delegates to ExecutionService)
 - ❌ Be paused or overridden by lower tiers
 
 **Authority Flow**:
+
 - **Outbound**: Can command Tier 2/3
 - **Inbound**: Receives capability requests from Tier 2/3
 
----
+______________________________________________________________________
 
 ## Tier 2: Infrastructure Control Platform
 
@@ -203,18 +220,24 @@ Executes approved actions. **Execution never governs**.
 **API**:
 
 ```python
+
 # Execute pre-approved action
+
 result, status, error = execution_service.execute_action(
     action=action,
     context=context
 )
 
 # status: ExecutionStatus (EXECUTING, COMPLETED, FAILED)
+
 # result: Action result
+
 # error: Error message if failed
+
 ```
 
 **Tier Registration**:
+
 - Tier: `TIER_2_INFRASTRUCTURE`
 - Authority: `CONSTRAINED`
 - Role: `INFRASTRUCTURE_CONTROLLER`
@@ -229,6 +252,7 @@ result, status, error = execution_service.execute_action(
 Four-channel memory system (episodic, semantic, procedural, emotional).
 
 **Tier Registration**:
+
 - Tier: `TIER_2_INFRASTRUCTURE`
 - Authority: `CONSTRAINED`
 - Role: `RESOURCE_ORCHESTRATOR`
@@ -239,23 +263,26 @@ Four-channel memory system (episodic, semantic, procedural, emotional).
 ### API Boundaries
 
 **What Tier 2 CAN do**:
+
 - ✅ Allocate resources to Tier 3 components
 - ✅ Isolate workloads for security
 - ✅ Scale capacity based on metrics
-- ✅ Temporarily block Tier 3 (<5 min) autonomously
+- ✅ Temporarily block Tier 3 (\<5 min) autonomously
 - ✅ Request permanent blocks from Tier 1
 
 **What Tier 2 CANNOT do**:
+
 - ❌ Override Tier 1 governance decisions
 - ❌ Permanently block Tier 3 without approval
 - ❌ Command Tier 1 components
 - ❌ Make policy decisions (only enforce)
 
 **Authority Flow**:
+
 - **Outbound**: Can command Tier 3 (with constraints)
 - **Inbound**: Receives commands from Tier 1, requests from Tier 3
 
----
+______________________________________________________________________
 
 ## Tier 3: Application / Runtime Platform
 
@@ -281,13 +308,16 @@ Agent registry and orchestration hub.
 **API**:
 
 ```python
+
 # Register agent (automatically registers in tier system)
+
 council_hub.register_agent(
     agent_id="expert_agent",
     agent_obj=expert_agent_instance
 )
 
 # Route task through kernel
+
 result = council_hub.route_to_kernel(
     task=task,
     source="council_hub"
@@ -295,6 +325,7 @@ result = council_hub.route_to_kernel(
 ```
 
 **Tier Registration**:
+
 - Tier: `TIER_3_APPLICATION`
 - Authority: `SANDBOXED`
 - Role: `RUNTIME_SERVICE`
@@ -307,6 +338,7 @@ result = council_hub.route_to_kernel(
 All agents (SafetyGuard, ExpertAgent, PlannerAgent, etc.) are registered as Tier 3.
 
 **Tier Registration** (per agent):
+
 - Tier: `TIER_3_APPLICATION`
 - Authority: `SANDBOXED`
 - Role: `RUNTIME_SERVICE`
@@ -317,6 +349,7 @@ All agents (SafetyGuard, ExpertAgent, PlannerAgent, etc.) are registered as Tier
 ### API Boundaries
 
 **What Tier 3 CAN do**:
+
 - ✅ Request capabilities from Tier 2/1
 - ✅ Submit tasks through kernel
 - ✅ Query status and health
@@ -324,6 +357,7 @@ All agents (SafetyGuard, ExpertAgent, PlannerAgent, etc.) are registered as Tier
 - ✅ Appeal blocks to Tier 1
 
 **What Tier 3 CANNOT do**:
+
 - ❌ Enforce policies or make governance decisions
 - ❌ Command Tier 1/2 components
 - ❌ Bypass kernel for execution
@@ -331,10 +365,11 @@ All agents (SafetyGuard, ExpertAgent, PlannerAgent, etc.) are registered as Tier
 - ❌ Override blocks from Tier 2/1
 
 **Authority Flow**:
+
 - **Outbound**: None (sandboxed)
 - **Inbound**: Receives commands from Tier 1/2
 
----
+______________________________________________________________________
 
 ## Cross-Tier Communication
 
@@ -346,6 +381,7 @@ All cross-tier communication flows through the `TierInterfaceRouter`.
 from app.core.tier_interfaces import TierRequest, RequestType, get_tier_router
 
 # Create request
+
 request = TierRequest(
     request_id="req_123",
     request_type=RequestType.CAPABILITY_REQUEST,
@@ -358,25 +394,30 @@ request = TierRequest(
 )
 
 # Route request
+
 router = get_tier_router()
 response = router.route_request(request)
 
 # response.success: bool
+
 # response.result: Any
+
 # response.error_message: str | None
+
 ```
 
 ### Validation Rules
 
 The router validates:
+
 1. **Authority commands** must flow downward (Tier N → Tier N+1)
-2. **Capability requests** must flow upward (Tier N+1 → Tier N)
-3. **Resource allocations** must flow upward
-4. **Enforcement actions** must flow downward
+1. **Capability requests** must flow upward (Tier N+1 → Tier N)
+1. **Resource allocations** must flow upward
+1. **Enforcement actions** must flow downward
 
 **Violations are blocked and logged**.
 
----
+______________________________________________________________________
 
 ## API Boundaries
 
@@ -473,7 +514,7 @@ class ITier3Application(ABC):
         pass
 ```
 
----
+______________________________________________________________________
 
 ## Governance Policies
 
@@ -489,7 +530,7 @@ class ITier3Application(ABC):
 
 #### Tier 2 → Tier 3 (Constrained Authority)
 
-- **Temporary blocks (<5 min)**: Autonomous, audited, auto-lift
+- **Temporary blocks (\<5 min)**: Autonomous, audited, auto-lift
 - **Extended blocks (5min-1hr)**: Requires Tier 1 approval
 - **Permanent blocks**: ALWAYS requires Tier 1 consensus
 
@@ -505,6 +546,7 @@ from app.core.tier_governance_policies import (
 policy_engine = get_policy_engine()
 
 # Request block
+
 success, reason, block_record = policy_engine.request_block(
     component_id="agent_unsafe",
     component_name="UnsafeAgent",
@@ -517,6 +559,7 @@ success, reason, block_record = policy_engine.request_block(
 )
 
 # File appeal
+
 success, reason, appeal = policy_engine.file_appeal(
     block_id=block_record.block_id,
     appellant="agent_unsafe",
@@ -524,6 +567,7 @@ success, reason, appeal = policy_engine.file_appeal(
 )
 
 # Process appeal (Tier 1 authority)
+
 policy_engine.process_appeal(
     appeal_id=appeal.appeal_id,
     approved=True,
@@ -532,7 +576,7 @@ policy_engine.process_appeal(
 )
 ```
 
----
+______________________________________________________________________
 
 ## Health Monitoring
 
@@ -546,15 +590,19 @@ from app.core.tier_health_dashboard import get_health_monitor
 monitor = get_health_monitor()
 
 # Collect platform health
+
 report = monitor.collect_platform_health()
 
 # Print formatted report
+
 print(monitor.format_health_report(report))
 
 # Get alerts
+
 unacknowledged_alerts = monitor.get_alerts(acknowledged=False)
 
 # Record custom metric
+
 from app.core.tier_health_dashboard import HealthMetric, MetricType
 from app.core.platform_tiers import PlatformTier
 
@@ -577,7 +625,7 @@ monitor.record_metric(PlatformTier.TIER_1_GOVERNANCE, metric)
 - **CRITICAL**: Major issues, limited functionality
 - **OFFLINE**: Tier not operational
 
----
+______________________________________________________________________
 
 ## Examples and Usage
 
@@ -594,6 +642,7 @@ from app.core.platform_tiers import (
 registry = get_tier_registry()
 
 # Register Tier 2 component
+
 registry.register_component(
     component_id="memory_engine",
     component_name="MemoryEngine",
@@ -610,7 +659,9 @@ registry.register_component(
 ### Example 2: Validate Authority Flow
 
 ```python
+
 # Validate authority flow before executing command
+
 is_valid, reason = registry.validate_authority_flow(
     source_component_id="governance_service",  # Tier 1
     target_component_id="execution_service",   # Tier 2
@@ -618,7 +669,9 @@ is_valid, reason = registry.validate_authority_flow(
 )
 
 if is_valid:
+
     # Authority flows downward - valid
+
     execution_service.pause()
 ```
 
@@ -630,6 +683,7 @@ from app.core.tier_governance_policies import get_policy_engine, BlockReason, Bl
 policy_engine = get_policy_engine()
 
 # Tier 2 can temporarily block Tier 3 autonomously
+
 success, reason, block = policy_engine.request_block(
     component_id="agent_chatbot",
     component_name="ChatbotAgent",
@@ -642,6 +696,7 @@ success, reason, block = policy_engine.request_block(
 )
 
 # Block is autonomous for <5 min, audited, and auto-lifts
+
 ```
 
 ### Example 4: Monitor Tier Health
@@ -653,6 +708,7 @@ from app.core.platform_tiers import PlatformTier
 monitor = get_health_monitor()
 
 # Check Tier 1 health
+
 tier1_health = monitor.collect_tier_health(PlatformTier.TIER_1_GOVERNANCE)
 
 print(f"Tier 1 Status: {tier1_health.overall_health.value}")
@@ -660,20 +716,21 @@ print(f"Active Components: {tier1_health.tier_status.active_components}")
 print(f"Violations: {tier1_health.active_violations}")
 
 # Get full platform report
+
 platform_report = monitor.collect_platform_health()
 print(monitor.format_health_report(platform_report))
 ```
 
----
+______________________________________________________________________
 
 ## Summary
 
 The three-tier platform strategy provides:
 
 1. **Clear authority hierarchy**: Tier 1 > Tier 2 > Tier 3
-2. **Formal interfaces**: Explicit API boundaries between tiers
-3. **Governance enforcement**: Policies with approval workflows
-4. **Health monitoring**: Real-time visibility into tier status
-5. **Audit trail**: Complete logging of all cross-tier operations
+1. **Formal interfaces**: Explicit API boundaries between tiers
+1. **Governance enforcement**: Policies with approval workflows
+1. **Health monitoring**: Real-time visibility into tier status
+1. **Audit trail**: Complete logging of all cross-tier operations
 
 **Key Principle**: Authority flows downward, capability flows upward. Tier 1 holds the line, always.

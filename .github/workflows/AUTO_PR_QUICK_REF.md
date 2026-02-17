@@ -49,13 +49,17 @@ gh workflow run auto-create-branch-prs.yml -f target_branch=feature/my-feature
 ### Check Automation Status
 
 ```bash
+
 # View recent runs
+
 gh run list --workflow=auto-create-branch-prs.yml --limit 5
 
 # View auto-created PRs
+
 gh pr list --label "auto-created"
 
 # View PRs needing attention
+
 gh pr list --label "needs-manual-review"
 ```
 
@@ -111,7 +115,9 @@ gh run view <RUN_ID> --log
 ```bash
 git checkout your-branch
 git merge main
+
 # Resolve conflicts in editor
+
 git add .
 git commit -m "chore: resolve merge conflicts"
 git push
@@ -122,13 +128,17 @@ git push
 ### Check Overall Status
 
 ```bash
+
 # Recent workflow runs
+
 gh run list --limit 10
 
 # Open automated PRs
+
 gh pr list --label "automated"
 
 # Success rate (last 10 runs)
+
 gh run list --workflow=auto-create-branch-prs.yml --limit 10 --json conclusion
 ```
 
@@ -140,7 +150,9 @@ Edit `.github/workflows/auto-create-branch-prs.yml`:
 
 ```yaml
 schedule:
+
   - cron: '0 */6 * * *'  # Every 6 hours
+
 ```
 
 ### Exclude Branches

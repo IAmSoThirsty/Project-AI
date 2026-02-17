@@ -47,8 +47,8 @@ Follow these steps when validating a new marketplace plugin:
 
 ## Marketplace Catalog
 
-| Plugin | Status | Hook targets |
-| --- | --- | --- |
+| Plugin                | Status  | Hook targets                    |
+| --------------------- | ------- | ------------------------------- |
 | Plugin example (core) | Enabled | message_received, before_action |
 
 Add your plugin entry to the catalog table after it ships so downstream users can discover it easily.

@@ -96,9 +96,13 @@ logger = logging.getLogger(__name__)
 
 # Configuration
 GENESIS_KEY_DIR = Path(__file__).parent.parent.parent.parent / "data" / "genesis_keys"
-SOVEREIGN_AUDIT_DIR = Path(__file__).parent.parent.parent.parent / "data" / "sovereign_audit"
+SOVEREIGN_AUDIT_DIR = (
+    Path(__file__).parent.parent.parent.parent / "data" / "sovereign_audit"
+)
 TSA_ANCHOR_DIR = Path(__file__).parent.parent.parent.parent / "data" / "tsa_anchors"
-HMAC_KEY_ROTATION_INTERVAL = 3600  # Rotate HMAC key every N events (event-count based, NOT time-based)
+HMAC_KEY_ROTATION_INTERVAL = (
+    3600  # Rotate HMAC key every N events (event-count based, NOT time-based)
+)
 MERKLE_BATCH_SIZE = 1000  # Anchor every 1000 events
 TSA_ENABLED = True  # RFC 3161 TSA integration (VECTOR 3, 4, 10)
 
@@ -157,11 +161,11 @@ class GenesisKeyPair:
         private_bytes = self.private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.PKCS8,
-            encryption_algorithm=serialization.NoEncryption()
+            encryption_algorithm=serialization.NoEncryption(),
         )
         public_bytes = self.public_key.public_bytes(
             encoding=serialization.Encoding.PEM,
-            format=serialization.PublicFormat.SubjectPublicKeyInfo
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
         )
 
         # Write keys with restricted permissions
@@ -182,16 +186,13 @@ class GenesisKeyPair:
         # Load private key
         private_bytes = self.private_key_path.read_bytes()
         self.private_key = serialization.load_pem_private_key(
-            private_bytes,
-            password=None,
-            backend=default_backend()
+            private_bytes, password=None, backend=default_backend()
         )
 
         # Load public key
         public_bytes = self.public_key_path.read_bytes()
         self.public_key = serialization.load_pem_public_key(
-            public_bytes,
-            backend=default_backend()
+            public_bytes, backend=default_backend()
         )
 
         # Load Genesis ID
@@ -277,11 +278,11 @@ class HMACKeyRotator:
         if deterministic_mode and genesis_seed:
             # Deterministic key derivation from Genesis seed
             # This ensures replay produces identical HMACs
-            self.current_key = hashlib.sha256(
-                genesis_seed + b"hmac_key_v1"
-            ).digest()
+            self.current_key = hashlib.sha256(genesis_seed + b"hmac_key_v1").digest()
             self.key_id = hashlib.sha256(genesis_seed).hexdigest()[:8]
-            logger.info("HMAC key rotator initialized (deterministic, key_id=%s)", self.key_id)
+            logger.info(
+                "HMAC key rotator initialized (deterministic, key_id=%s)", self.key_id
+            )
         else:
             # Random key generation for normal mode
             self.current_key = secrets.token_bytes(32)  # 256-bit key
@@ -324,17 +325,20 @@ class HMACKeyRotator:
         if self.deterministic_mode and self.genesis_seed:
             # Deterministic rotation: derive next key from previous key
             # This maintains deterministic replay while still rotating
-            self.current_key = hashlib.sha256(
-                self.current_key + b"rotate_v1"
-            ).digest()
+            self.current_key = hashlib.sha256(self.current_key + b"rotate_v1").digest()
             self.key_id = hashlib.sha256(self.current_key).hexdigest()[:8]
         else:
             # Random rotation for normal mode
             self.current_key = secrets.token_bytes(32)
             self.key_id = uuid4().hex[:8]
 
-        logger.info("HMAC key rotated: %s -> %s (deterministic=%s, epoch=%d)",
-                   old_key_id, self.key_id, self.deterministic_mode, self.rotation_epoch)
+        logger.info(
+            "HMAC key rotated: %s -> %s (deterministic=%s, epoch=%d)",
+            old_key_id,
+            self.key_id,
+            self.deterministic_mode,
+            self.rotation_epoch,
+        )
 
     def compute_hmac(self, data: bytes) -> tuple[bytes, str]:
         """Compute HMAC for data with current key.
@@ -410,14 +414,17 @@ class MerkleTreeAnchor:
             "merkle_root": merkle_root.hex(),
             "batch_size": len(self.current_batch),
             "created_at": datetime.now(UTC).isoformat(),
-            "entry_hashes": [h.hex() for h in self.current_batch]
+            "entry_hashes": [h.hex() for h in self.current_batch],
         }
 
         self.anchor_points.append(anchor)
         self.current_batch = []
 
-        logger.info("Merkle anchor created: %s (batch_size=%d)",
-                   anchor["anchor_id"], anchor["batch_size"])
+        logger.info(
+            "Merkle anchor created: %s (batch_size=%d)",
+            anchor["anchor_id"],
+            anchor["batch_size"],
+        )
 
         return anchor
 
@@ -515,9 +522,11 @@ class SovereignAuditLog:
         if pinned_genesis_ids:
             # System has history - verify continuity
             expected_genesis_id = pinned_genesis_ids[0]  # Should only have one
-            is_discontinuity, error_msg = self.continuity_guard.detect_genesis_discontinuity(
-                expected_genesis_id=expected_genesis_id,
-                actual_genesis_id=self.genesis_keypair.genesis_id,
+            is_discontinuity, error_msg = (
+                self.continuity_guard.detect_genesis_discontinuity(
+                    expected_genesis_id=expected_genesis_id,
+                    actual_genesis_id=self.genesis_keypair.genesis_id,
+                )
             )
 
             if is_discontinuity:
@@ -527,8 +536,7 @@ class SovereignAuditLog:
 
         # Get Genesis public key bytes for pinning/verification
         genesis_pub_key_bytes = self.genesis_keypair.public_key.public_bytes(
-            encoding=serialization.Encoding.Raw,
-            format=serialization.PublicFormat.Raw
+            encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
         )
 
         # VECTOR 2 CHECK: Verify Genesis public key continuity
@@ -540,7 +548,9 @@ class SovereignAuditLog:
 
             if not is_valid:
                 self.system_frozen = True
-                logger.critical("Genesis public key replacement detected - FREEZING SYSTEM")
+                logger.critical(
+                    "Genesis public key replacement detected - FREEZING SYSTEM"
+                )
                 raise GenesisReplacementError(error_msg)
         else:
             # First initialization - pin Genesis externally
@@ -550,7 +560,7 @@ class SovereignAuditLog:
             )
             logger.info(
                 "First initialization - Genesis %s pinned externally",
-                self.genesis_keypair.genesis_id
+                self.genesis_keypair.genesis_id,
             )
 
         # Initialize operational audit log
@@ -560,8 +570,7 @@ class SovereignAuditLog:
 
         # Get Genesis public key bytes for HMAC seed derivation
         genesis_pub_key_bytes = self.genesis_keypair.public_key.public_bytes(
-            encoding=serialization.Encoding.Raw,
-            format=serialization.PublicFormat.Raw
+            encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
         )
 
         # Initialize HMAC key rotator with deterministic mode support
@@ -618,7 +627,7 @@ class SovereignAuditLog:
         logger.info(
             "SovereignAuditLog initialized (genesis=%s, deterministic=%s)",
             self.genesis_keypair.genesis_id,
-            deterministic_mode
+            deterministic_mode,
         )
 
     def _log_sovereign_init(self) -> None:
@@ -630,7 +639,7 @@ class SovereignAuditLog:
                 "genesis_public_key": base64.b64encode(
                     self.genesis_keypair.public_key.public_bytes(
                         encoding=serialization.Encoding.Raw,
-                        format=serialization.PublicFormat.Raw
+                        format=serialization.PublicFormat.Raw,
                     )
                 ).decode(),
                 "deterministic_mode": self.deterministic_mode,
@@ -638,7 +647,7 @@ class SovereignAuditLog:
             },
             actor="sovereign_audit_system",
             description="Sovereign audit system initialized with Genesis root key",
-            severity="info"
+            severity="info",
         )
 
     def log_event(
@@ -683,7 +692,7 @@ class SovereignAuditLog:
             logger.error(
                 "Attempt to log event while system frozen due to constitutional violation. "
                 "Event rejected: %s",
-                event_type
+                event_type,
             )
             raise GenesisDiscontinuityError(
                 "System is FROZEN due to constitutional violation. "
@@ -723,13 +732,19 @@ class SovereignAuditLog:
                 genesis_signature = self.genesis_keypair.sign(canonical_bytes)
 
                 # Compute HMAC with rotating key
-                hmac_value, hmac_key_id = self.hmac_rotator.compute_hmac(canonical_bytes)
+                hmac_value, hmac_key_id = self.hmac_rotator.compute_hmac(
+                    canonical_bytes
+                )
 
                 # Check for Merkle anchor
                 merkle_anchor = self.merkle_anchor.add_entry(content_hash)
 
                 # Pin Merkle root externally if anchor was created (VECTOR 3 & 10)
-                if merkle_anchor and self.enable_external_anchoring and self.external_anchor:
+                if (
+                    merkle_anchor
+                    and self.enable_external_anchoring
+                    and self.external_anchor
+                ):
                     try:
                         pin_results = self.external_anchor.pin_merkle_root(
                             merkle_root=merkle_anchor["merkle_root"],
@@ -740,7 +755,7 @@ class SovereignAuditLog:
                         logger.info(
                             "Merkle root externally anchored (anchor_id=%s, backends=%s)",
                             merkle_anchor["anchor_id"],
-                            list(pin_results.keys())
+                            list(pin_results.keys()),
                         )
                         self.anchor_count += 1
                     except Exception as e:
@@ -762,7 +777,9 @@ class SovereignAuditLog:
                     except Exception as e:
                         logger.error("Failed to create TSA anchor: %s", e)
                         # TSA failure is critical - consider system freeze
-                        logger.critical("TSA anchoring failed - constitutional protection degraded")
+                        logger.critical(
+                            "TSA anchoring failed - constitutional protection degraded"
+                        )
 
                 # Build sovereign event record
                 sovereign_event = {
@@ -772,7 +789,9 @@ class SovereignAuditLog:
                     "ed25519_signature": base64.b64encode(genesis_signature).decode(),
                     "hmac": base64.b64encode(hmac_value).decode(),
                     "hmac_key_id": hmac_key_id,
-                    "merkle_anchor_id": merkle_anchor["anchor_id"] if merkle_anchor else None,
+                    "merkle_anchor_id": (
+                        merkle_anchor["anchor_id"] if merkle_anchor else None
+                    ),
                 }
 
                 # Add RFC 3161 notarized timestamp if enabled
@@ -788,7 +807,7 @@ class SovereignAuditLog:
                     actor=actor,
                     description=description,
                     severity=severity,
-                    metadata=metadata
+                    metadata=metadata,
                 )
 
                 if success:
@@ -815,7 +834,7 @@ class SovereignAuditLog:
         Returns:
             Canonical bytes representation
         """
-        return json.dumps(data, sort_keys=True, separators=(',', ':')).encode('utf-8')
+        return json.dumps(data, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
     def _request_notarization(self, data: bytes) -> str | None:
         """Request RFC 3161 timestamp notarization.
@@ -997,7 +1016,10 @@ class SovereignAuditLog:
                     signature_failures.append(f"{event_id}: {msg}")
 
         if signature_failures:
-            return False, f"Signature verification failed for {len(signature_failures)} events"
+            return (
+                False,
+                f"Signature verification failed for {len(signature_failures)} events",
+            )
 
         # CRITICAL: Verify TSA anchor chain (VECTOR 3, 4, 10)
         if self.enable_tsa and self.tsa_anchor_manager:

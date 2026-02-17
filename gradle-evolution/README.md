@@ -1,6 +1,6 @@
 # Thirsty's Gradle—Total System Evolution Substrate
 
-**Version:** 1.0.0  
+**Version:** 1.0.0
 **Status:** Production Ready ✅
 
 ## Overview
@@ -10,16 +10,21 @@ The **Gradle Evolution Substrate** is a God Tier integration layer that transfor
 ## Quick Start
 
 ```bash
+
 # Validate build through all governance layers
+
 gradle evolutionValidate
 
 # Create signed build capsule
+
 gradle evolutionCapsule
 
 # Generate comprehensive audit
+
 gradle evolutionAudit
 
 # View all evolution commands
+
 gradle evolutionHelp
 ```
 
@@ -64,41 +69,46 @@ gradle evolutionHelp
 
 **All existing Project-AI components integrated:**
 
-✅ `policies/constitution.yaml` → Constitutional Engine  
-✅ `project_ai/engine/policy/` → Policy Enforcer  
-✅ `project_ai/engine/state/` → State Integration  
-✅ `project_ai/engine/cognition/` → Build Cognition  
-✅ `governance/core.py` → Governance integration  
-✅ `cognition/audit.py` → Audit Integration  
-✅ `temporal/` → Temporal Law Engine  
-✅ `config/security_hardening.yaml` → Security Engine  
+✅ `policies/constitution.yaml` → Constitutional Engine
+✅ `project_ai/engine/policy/` → Policy Enforcer
+✅ `project_ai/engine/state/` → State Integration
+✅ `project_ai/engine/cognition/` → Build Cognition
+✅ `governance/core.py` → Governance integration
+✅ `cognition/audit.py` → Audit Integration
+✅ `temporal/` → Temporal Law Engine
+✅ `config/security_hardening.yaml` → Security Engine
 
 ## Key Features
 
 ### Constitutional Governance
+
 - Enforces `policies/constitution.yaml` during builds
 - 6 constitutional principles with enforcement levels
 - Violation logging and reporting
 
 ### Deterministic Capsules
+
 - Cryptographically signed (Ed25519)
 - Merkle hash trees for integrity
 - Forensic replay capability
 - Tamper-evident
 
 ### Build Cognition
+
 - Self-modeling and optimization
 - Failure correlation analysis
 - Historical learning
 - Performance trends
 
 ### External Verifiability
+
 - REST API with OpenAPI spec
 - Cryptographic verification endpoints
 - Real-time monitoring
 - Proof certificate validation
 
 ### Military-Grade Audit
+
 - Complete audit trail
 - No gaps or tampering
 - Multi-format reports (HTML/JSON/PDF)
@@ -109,9 +119,11 @@ gradle evolutionHelp
 Evolution tasks automatically integrated:
 
 **`gradle check`** includes:
+
 - Constitutional validation
 
 **`gradle release`** includes:
+
 - Capsule creation
 - Audit report generation
 - Living documentation
@@ -141,37 +153,47 @@ Evolution tasks automatically integrated:
 ## Testing
 
 ```bash
+
 # Run all tests (90+ test cases)
+
 pytest tests/gradle_evolution/ -v
 
 # Run with coverage
+
 pytest tests/gradle_evolution/ --cov=gradle_evolution --cov-report=html
 ```
 
 ## Commands Reference
 
 ```bash
+
 # Constitutional & Policy
+
 gradle evolutionValidate
 gradle evolutionPolicySchedule -PpolicyMode=adaptive
 
 # Capsules & Replay
+
 gradle evolutionCapsule
 gradle evolutionReplay -PcapsuleId=<id>
 
 # Audit & Accountability
+
 gradle evolutionAudit
 gradle evolutionOverride -PoverrideReason="..." -Pauthorizer="..."
 
 # Documentation & Transparency
+
 gradle evolutionDocs
 gradle evolutionTransparency
 
 # Status & API
+
 gradle evolutionStatus
 gradle evolutionApiStart -PapiPort=8765
 
 # Help
+
 gradle evolutionHelp
 ```
 

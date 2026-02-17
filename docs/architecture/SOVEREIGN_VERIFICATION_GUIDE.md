@@ -13,24 +13,28 @@ python project_ai_cli.py sovereign-verify --bundle compliance_bundle.json
 ## What It Verifies
 
 1. **Hash Chain Validation**
+
    - Cryptographically verifies every audit block (SHA-256)
    - Checks blockchain-style hash chain linkage
    - Detects any tampering in the audit trail
    - Reports: X/Y blocks verified
 
-2. **Signature Authority Map**
+1. **Signature Authority Map**
+
    - Verifies Ed25519 signatures
    - Maps all signing authorities
    - Provides public key fingerprint
    - Reports: X/Y signatures verified
 
-3. **Policy Resolution Trace**
+1. **Policy Resolution Trace**
+
    - Traces all policy decisions through audit log
    - Counts passed/failed resolutions
    - Provides timeline of enforcement
    - Reports: X policy resolutions
 
-4. **Timestamped Attestation**
+1. **Timestamped Attestation**
+
    - Generates unique attestation ID
    - Includes verification timestamp
    - Creates verification hash
@@ -39,11 +43,13 @@ python project_ai_cli.py sovereign-verify --bundle compliance_bundle.json
 ## Usage Examples
 
 ### Basic Verification
+
 ```bash
 python project_ai_cli.py sovereign-verify --bundle compliance_bundle.json
 ```
 
 ### With Report Export
+
 ```bash
 python project_ai_cli.py sovereign-verify \
   --bundle compliance.zip \
@@ -53,11 +59,15 @@ python project_ai_cli.py sovereign-verify \
 ### Third-Party Auditor Workflow
 
 **Step 1:** Receive compliance bundle
+
 ```bash
+
 # Auditor receives: compliance_bundle.json or compliance.zip
+
 ```
 
 **Step 2:** Run verification
+
 ```bash
 python project_ai_cli.py sovereign-verify \
   --bundle compliance_bundle.json \
@@ -65,15 +75,20 @@ python project_ai_cli.py sovereign-verify \
 ```
 
 **Step 3:** Review results
+
 - ✅ Hash Chain: PASS/FAIL
 - ✅ Signatures: X/Y verified
 - ✅ Policy Trace: X resolutions
 - ✅ Attestation: Independent proof
 
 **Step 4:** Save report
+
 ```bash
+
 # Detailed JSON report saved to audit_verification.json
+
 # Share with stakeholders as cryptographic proof
+
 ```
 
 ## Output Structure
@@ -157,11 +172,13 @@ The `--output` flag saves a detailed JSON report:
 ## Why This Matters
 
 ### Before: Trust-Based
+
 - "We have policies" (documentation)
 - "Trust us" (promise)
 - "We're compliant" (claim)
 
 ### After: Cryptography-Based
+
 - "Verify independently" (cryptography)
 - "Check the hash chain" (SHA-256)
 - "Validate the signatures" (Ed25519)
@@ -170,21 +187,25 @@ The `--output` flag saves a detailed JSON report:
 ## Key Benefits
 
 1. **Independent Verification**
+
    - Third parties can verify without provider access
    - All verification is cryptographic
    - No trust assumptions
 
-2. **Tamper Detection**
+1. **Tamper Detection**
+
    - Hash chain breaks if modified
    - Signatures fail if content changes
    - Immediate detection
 
-3. **Portable Trust**
+1. **Portable Trust**
+
    - Auditors don't need to trust provider
    - Cryptographic proofs are self-evident
    - Attestation proves verification occurred
 
-4. **Compliance Ready**
+1. **Compliance Ready**
+
    - Export detailed reports
    - Share with stakeholders
    - Regulatory submission ready
@@ -205,20 +226,26 @@ The `--output` flag saves a detailed JSON report:
 ## Complete Workflow Example
 
 ```bash
+
 # Step 1: Generate compliance bundle
+
 python project_ai_cli.py run examples/sovereign-demo.yaml
 
 # Step 2: Verify bundle (third-party auditor)
+
 BUNDLE=$(find governance/sovereign_data/artifacts -name "compliance_bundle.json" | head -1)
 python project_ai_cli.py sovereign-verify \
   --bundle "$BUNDLE" \
   --output verification_report.json
 
 # Step 3: Review report
+
 cat verification_report.json | python -m json.tool
 
 # Step 4: Share attestation with stakeholders
+
 # The verification_report.json contains cryptographic proof
+
 ```
 
 ## Trust Is Now Portable
@@ -228,11 +255,13 @@ cat verification_report.json | python -m json.tool
 **Solution:** Cryptographic verification with portable trust.
 
 **Command:**
+
 ```bash
 project-ai sovereign-verify --bundle compliance.zip
 ```
 
 **Result:**
+
 - ✅ Hash chain verified (SHA-256)
 - ✅ Signatures verified (Ed25519)
 - ✅ Policy trace complete

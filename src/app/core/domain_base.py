@@ -48,7 +48,9 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
                 return ["my_command_1", "my_command_2"]
     """
 
-    def __init__(self, data_dir: str = "data", subsystem_name: str = "unknown", **config):
+    def __init__(
+        self, data_dir: str = "data", subsystem_name: str = "unknown", **config
+    ):
         """
         Initialize domain subsystem with common infrastructure.
 
@@ -104,7 +106,9 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
             self.logger.info(f"{self.__class__.__name__} initialized successfully")
             return True
         except Exception as error:
-            self.logger.error(f"Failed to initialize {self.__class__.__name__}: {error}")
+            self.logger.error(
+                f"Failed to initialize {self.__class__.__name__}: {error}"
+            )
             return False
 
     def shutdown(self) -> bool:
@@ -167,7 +171,7 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
             return SubsystemResponse(
                 command.command_id,
                 False,
-                error=f"Unknown command: {command.command_type}"
+                error=f"Unknown command: {command.command_type}",
             )
         except Exception as error:
             self.logger.error(f"Command execution failed: {error}")
@@ -175,7 +179,7 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
                 command.command_id,
                 False,
                 error=str(error),
-                execution_time_ms=(time.time() - start_time) * 1000
+                execution_time_ms=(time.time() - start_time) * 1000,
             )
 
     # IMonitorable implementation
@@ -220,7 +224,9 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
                 self._subscriptions[event_type] = []
 
             self._subscriptions[event_type].append((subscription_id, callback))
-            self.logger.debug(f"Subscription {subscription_id} added for event {event_type}")
+            self.logger.debug(
+                f"Subscription {subscription_id} added for event {event_type}"
+            )
             return subscription_id
 
     def unsubscribe(self, subscription_id: str) -> bool:
@@ -265,7 +271,7 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
         state_file = self.data_path / "state.json"
         try:
             state = self._get_state_for_persistence()
-            with open(state_file, 'w') as file:
+            with open(state_file, "w") as file:
                 json.dump(state, file, indent=2, default=str)
             self.logger.debug(f"State saved to {state_file}")
         except Exception as error:
@@ -297,13 +303,14 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
 
     def _custom_shutdown(self):
         """Override for domain-specific shutdown logic."""
-        pass
 
     def _get_domain_status(self) -> dict[str, Any]:
         """Override to add domain-specific status information."""
         return {}
 
-    def _execute_domain_command(self, command: SubsystemCommand) -> SubsystemResponse | None:
+    def _execute_domain_command(
+        self, command: SubsystemCommand
+    ) -> SubsystemResponse | None:
         """
         Override to handle domain-specific commands.
 
@@ -313,15 +320,10 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
 
     def _restore_state(self, state: dict[str, Any]):
         """Override to restore domain-specific state from loaded data."""
-        pass
 
     def _get_state_for_persistence(self) -> dict[str, Any]:
         """Override to provide domain-specific state for persistence."""
-        return {
-            "metrics": self._metrics,
-            "initialized": self._initialized
-        }
+        return {"metrics": self._metrics, "initialized": self._initialized}
 
     def _process_iteration(self):
         """Override to define one iteration of the processing loop."""
-        pass

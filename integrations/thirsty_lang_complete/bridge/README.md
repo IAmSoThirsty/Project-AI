@@ -48,6 +48,7 @@ The bridge layer provides seamless integration between Thirsty-Lang's JavaScript
 **Purpose:** JavaScript client for TARL Python runtime
 
 **Key Features:**
+
 - Process management with automatic restart
 - JSON-RPC message protocol
 - Request/response correlation
@@ -84,21 +85,27 @@ await bridge.shutdown();
 **Key Classes:**
 
 #### TARLBridge
+
 Core bridge to TARL runtime. Handles:
+
 - Policy loading and evaluation
 - Request processing
 - Caching and metrics
 - Runtime lifecycle
 
 #### ThirstyLangSecurity
+
 Language-specific security checks:
+
 - Sandbox enforcement
 - FFI restrictions
 - File system access control
 - Network filtering
 
 #### UnifiedSecurityManager
+
 Combined security interface implementing defense-in-depth:
+
 - Checks both security layers
 - Audit logging
 - Resource monitoring
@@ -122,7 +129,9 @@ decision = await security.check_permission({
 })
 
 if decision['allowed']:
+
     # Perform operation
+
     pass
 
 await security.shutdown()
@@ -178,48 +187,59 @@ All messages are newline-delimited JSON objects.
 ### Supported Methods
 
 #### evaluatePolicy
+
 Evaluate single security policy.
 
 **Parameters:**
+
 - `context`: Security context object
 
 **Returns:** SecurityDecision
 
 #### evaluatePolicyBatch
+
 Evaluate multiple policies in batch.
 
 **Parameters:**
+
 - `contexts`: Array of security contexts
 
 **Returns:** Array of SecurityDecisions
 
 #### reloadPolicies
+
 Reload all policies from disk.
 
 **Returns:** Status object
 
 #### loadPolicy
+
 Load policy from JSON/YAML object.
 
 **Parameters:**
+
 - `policy`: Policy definition object
 
 **Returns:** Status object
 
 #### setResourceLimits
+
 Configure resource limits.
 
 **Parameters:**
+
 - `limits`: Resource limits object
 
 **Returns:** Status object
 
 #### getMetrics
+
 Get runtime metrics.
 
 **Returns:** Metrics object
 
 #### shutdown
+
 Gracefully shutdown runtime.
 
 **Returns:** Status object
@@ -252,13 +272,19 @@ try {
 try:
     decision = await bridge.evaluate_policy(context)
 except RuntimeError as e:
+
     # Bridge not initialized
+
     logger.error(f"Bridge error: {e}")
     await bridge.initialize()
 except Exception as e:
+
     # Policy evaluation error
+
     logger.error(f"Policy error: {e}")
+
     # Fail-safe: deny access
+
     decision = SecurityDecision(
         allowed=False,
         decision_type=DecisionType.DENY,
@@ -282,6 +308,7 @@ self.cache_ttl = 60  # seconds
 ```
 
 Cache keys are generated from:
+
 - Operation type
 - Resource path
 - User identity
@@ -333,6 +360,7 @@ const bridge = new TARLBridge({
 ```
 
 Logs include:
+
 - Request/response correlation IDs
 - Timestamps
 - Execution times
@@ -343,6 +371,7 @@ Logs include:
 ### Process Isolation
 
 Python runtime runs in separate process with:
+
 - Restricted file system access
 - Network sandboxing (optional)
 - Resource limits (CPU, memory)
@@ -351,6 +380,7 @@ Python runtime runs in separate process with:
 ### Input Validation
 
 All inputs validated before processing:
+
 - JSON schema validation
 - Size limits (10MB default)
 - Type checking
@@ -359,6 +389,7 @@ All inputs validated before processing:
 ### Audit Logging
 
 All security decisions logged:
+
 - Timestamp
 - User identity
 - Operation and resource
@@ -366,6 +397,7 @@ All security decisions logged:
 - Policy ID
 
 Logs are:
+
 - Tamper-resistant
 - Structured (JSON)
 - Rotated automatically
@@ -376,24 +408,31 @@ Logs are:
 ### Unit Tests
 
 ```bash
+
 # JavaScript tests
+
 npm test bridge/tarl-bridge.test.js
 
 # Python tests
+
 pytest tests/test_unified_security.py
 ```
 
 ### Integration Tests
 
 ```bash
+
 # Full integration test
+
 npm run test:integration
 ```
 
 ### Load Tests
 
 ```bash
+
 # Benchmark performance
+
 npm run benchmark -- --requests 1000 --concurrency 10
 ```
 
@@ -404,6 +443,7 @@ npm run benchmark -- --requests 1000 --concurrency 10
 **Symptoms:** `Error: Python process exited with code 1`
 
 **Solutions:**
+
 1. Check Python installation: `python3 --version`
 2. Verify TARL installed: `python3 -c "import tarl"`
 3. Check stderr logs: Review `logs/bridge-stderr.log`
@@ -414,6 +454,7 @@ npm run benchmark -- --requests 1000 --concurrency 10
 **Symptoms:** `Error: Request timeout after 5000ms`
 
 **Solutions:**
+
 1. Increase timeout: `new TARLBridge({ timeout: 10000 })`
 2. Check Python process health
 3. Review policy complexity
@@ -424,6 +465,7 @@ npm run benchmark -- --requests 1000 --concurrency 10
 **Symptoms:** Memory usage steadily increasing
 
 **Solutions:**
+
 1. Check audit log rotation
 2. Reduce cache size
 3. Monitor with metrics
@@ -434,6 +476,7 @@ npm run benchmark -- --requests 1000 --concurrency 10
 **Symptoms:** Python process consuming excessive CPU
 
 **Solutions:**
+
 1. Simplify policy rules
 2. Enable decision caching
 3. Use batch evaluation
@@ -444,6 +487,7 @@ npm run benchmark -- --requests 1000 --concurrency 10
 ### Adding New Methods
 
 1. Add method to `tarl-bridge.js`:
+
 ```javascript
 async myNewMethod(params) {
   return await this._sendMessage({
@@ -454,6 +498,7 @@ async myNewMethod(params) {
 ```
 
 2. Add handler in `unified-security.py`:
+
 ```python
 elif method == 'myNewMethod':
     result = await bridge.my_new_method(params)
@@ -489,6 +534,7 @@ bridge.on('log', (log) => {
 ## Support
 
 For issues and questions:
+
 - GitHub Issues: https://github.com/your-org/Project-AI/issues
 - Documentation: https://docs.thirsty-lang.org/bridge
 - Community: https://discord.gg/thirsty-lang

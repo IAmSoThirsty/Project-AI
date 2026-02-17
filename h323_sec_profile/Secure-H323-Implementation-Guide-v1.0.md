@@ -278,10 +278,13 @@ Deployment is considered complete when:
 Use the `h323secctl` CLI tool to verify compliance with this implementation guide:
 
 ```bash
+
 # Check deployment compliance
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance --config deployment_config.json
 
 # Query registration status
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --device-ip 192.168.1.100 \
     --snmp-user admin \
@@ -381,7 +384,9 @@ Sample deployment configuration file (`deployment_config.json`):
 Use the simulation harness to test security negotiation:
 
 ```bash
+
 # Run full security simulation
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 ```
 

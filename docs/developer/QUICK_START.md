@@ -24,7 +24,7 @@ Open browser: <http://localhost:8002> or open `integrations/openclaw/legion_inte
 
 **Done!** Start chatting with Legion.
 
----
+______________________________________________________________________
 
 ## Installation
 
@@ -37,10 +37,13 @@ Open browser: <http://localhost:8002> or open `integrations/openclaw/legion_inte
 ### Option 2: Android (Legion Mini)
 
 ```powershell
+
 # Build APK
+
 .\gradlew.bat :legion_mini:assembleDebug
 
 # Install
+
 adb install -r android\legion_mini\build\outputs\apk\debug\legion_mini-debug.apk
 ```
 
@@ -50,7 +53,7 @@ adb install -r android\legion_mini\build\outputs\apk\debug\legion_mini-debug.apk
 .\scripts\create_portable_usb.ps1
 ```
 
----
+______________________________________________________________________
 
 ## System Requirements
 
@@ -60,7 +63,7 @@ adb install -r android\legion_mini\build\outputs\apk\debug\legion_mini-debug.apk
 - **Storage**: 5GB free space
 - **Android**: 8.0+ (for mobile app)
 
----
+______________________________________________________________________
 
 ## Key Features
 
@@ -85,7 +88,7 @@ adb install -r android\legion_mini\build\outputs\apk\debug\legion_mini-debug.apk
 - Portable USB (no installation)
 - Web interface
 
----
+______________________________________________________________________
 
 ## API Endpoints
 
@@ -102,7 +105,7 @@ adb install -r android\legion_mini\build\outputs\apk\debug\legion_mini-debug.apk
 - `/status` - Legion system status
 - `/health` - Health check
 
----
+______________________________________________________________________
 
 ## Testing
 
@@ -120,7 +123,7 @@ adb install -r android\legion_mini\build\outputs\apk\debug\legion_mini-debug.apk
 1. Create manual saves
 1. Test restore functionality
 
----
+______________________________________________________________________
 
 ## Troubleshooting
 
@@ -143,7 +146,7 @@ $env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot"
 - Stop other instances
 - Or edit ports in config files
 
----
+______________________________________________________________________
 
 ## Support
 
@@ -151,6 +154,6 @@ $env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot"
 - **GitHub**: <https://github.com/IAmSoThirsty/Project-AI>
 - **API Docs**: <http://localhost:8001/docs> (when running)
 
----
+______________________________________________________________________
 
 **Ready to use!** 🎉

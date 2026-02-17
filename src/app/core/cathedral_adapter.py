@@ -66,7 +66,9 @@ class CathedralInfrastructureAdapter:
 
         # Initialize secrets manager
         secrets_path = self.data_dir / "secrets.enc"
-        self.secrets_manager: SecretsManager = get_secrets_manager(storage_path=secrets_path)
+        self.secrets_manager: SecretsManager = get_secrets_manager(
+            storage_path=secrets_path
+        )
 
         # Track wrapped components
         self._wrapped_components: dict[str, Any] = {}
@@ -114,14 +116,15 @@ class CathedralInfrastructureAdapter:
                 health_check=health_check or self._default_health_check(instance),
                 priority=service_priority,
                 enable_circuit_breaker=enable_circuit_breaker,
-                circuit_breaker_config=CircuitBreakerConfig(
-                    failure_threshold=5,
-                    timeout=60.0
-                ) if enable_circuit_breaker else None,
+                circuit_breaker_config=(
+                    CircuitBreakerConfig(failure_threshold=5, timeout=60.0)
+                    if enable_circuit_breaker
+                    else None
+                ),
                 metadata={
                     "wrapped_at": "cathedral_adapter",
                     "tracing_enabled": enable_tracing,
-                }
+                },
             )
 
             # Store wrapped component
@@ -141,17 +144,18 @@ class CathedralInfrastructureAdapter:
     def _default_health_check(self, instance: Any) -> Callable[[], bool] | None:
         """Create a default health check function for an instance."""
         # Try to find a health_check method
-        if hasattr(instance, 'health_check'):
+        if hasattr(instance, "health_check"):
             return instance.health_check
-        elif hasattr(instance, 'is_healthy'):
+        elif hasattr(instance, "is_healthy"):
             return instance.is_healthy
-        elif hasattr(instance, 'get_status'):
+        elif hasattr(instance, "get_status"):
             # Create a wrapper that checks if status is "healthy"
             def health_wrapper():
                 status = instance.get_status()
                 if isinstance(status, dict):
-                    return status.get('healthy', True)
+                    return status.get("healthy", True)
                 return True
+
             return health_wrapper
         else:
             # No health check available
@@ -170,10 +174,7 @@ class CathedralInfrastructureAdapter:
             yield
 
     def validate_config(
-        self,
-        config: dict[str, Any],
-        config_type: str = "subsystem",
-        **kwargs
+        self, config: dict[str, Any], config_type: str = "subsystem", **kwargs
     ) -> bool:
         """
         Validate configuration.
@@ -196,10 +197,7 @@ class CathedralInfrastructureAdapter:
         return True
 
     def validate_input(
-        self,
-        value: Any,
-        input_type: str = "generic",
-        strict: bool = True
+        self, value: Any, input_type: str = "generic", strict: bool = True
     ) -> Any:
         """
         Validate and sanitize input.
@@ -215,7 +213,9 @@ class CathedralInfrastructureAdapter:
         Raises:
             ValidationError or SecurityError if validation fails
         """
-        result = self.security_validator.validate_input(value, input_type, strict=strict)
+        result = self.security_validator.validate_input(
+            value, input_type, strict=strict
+        )
 
         if strict:
             result.raise_if_invalid()
@@ -268,9 +268,7 @@ class CathedralInfrastructureAdapter:
             Service response
         """
         return self.integration_bus.request_service(
-            service_id,
-            request,
-            timeout=timeout
+            service_id, request, timeout=timeout
         )
 
     def publish_event(self, event_type: str, data: Any, **metadata) -> None:
@@ -292,6 +290,7 @@ class CathedralInfrastructureAdapter:
             event_type: Event type to subscribe to
             handler: Event handler function
         """
+
         # Create subscriber wrapper
         class HandlerSubscriber:
             def __init__(self, handler_func):
@@ -316,7 +315,7 @@ class CathedralInfrastructureAdapter:
         metric_name: str,
         value: float,
         metric_type: str = "gauge",
-        labels: dict[str, str] | None = None
+        labels: dict[str, str] | None = None,
     ) -> None:
         """
         Record a metric.
@@ -352,16 +351,14 @@ _cathedral_adapter: CathedralInfrastructureAdapter | None = None
 
 
 def get_cathedral_adapter(
-    data_dir: str | None = None,
-    service_name: str = "project-ai"
+    data_dir: str | None = None, service_name: str = "project-ai"
 ) -> CathedralInfrastructureAdapter:
     """Get or create the global cathedral adapter instance."""
     global _cathedral_adapter
 
     if _cathedral_adapter is None:
         _cathedral_adapter = CathedralInfrastructureAdapter(
-            data_dir=data_dir,
-            service_name=service_name
+            data_dir=data_dir, service_name=service_name
         )
 
     return _cathedral_adapter
@@ -378,6 +375,7 @@ def reset_cathedral_adapter() -> None:
 
 # Convenience decorators for existing code
 
+
 def with_observability(operation_name: str | None = None):
     """
     Decorator to add observability to a function.
@@ -387,6 +385,7 @@ def with_observability(operation_name: str | None = None):
         def process_data(data):
             # ... processing code ...
     """
+
     def decorator(func):
         import functools
 
@@ -399,6 +398,7 @@ def with_observability(operation_name: str | None = None):
                 return func(*args, **kwargs)
 
         return wrapper
+
     return decorator
 
 
@@ -411,6 +411,7 @@ def with_circuit_breaker(service_id: str):
         def call_external_api():
             # ... API call ...
     """
+
     def decorator(func):
         import functools
 
@@ -422,7 +423,9 @@ def with_circuit_breaker(service_id: str):
             try:
                 descriptor = adapter.integration_bus._services.get(service_id)
                 if descriptor and descriptor.circuit_breaker:
-                    return descriptor.circuit_breaker.call(lambda: func(*args, **kwargs))
+                    return descriptor.circuit_breaker.call(
+                        lambda: func(*args, **kwargs)
+                    )
                 else:
                     return func(*args, **kwargs)
             except Exception as e:
@@ -430,6 +433,7 @@ def with_circuit_breaker(service_id: str):
                 return func(*args, **kwargs)
 
         return wrapper
+
     return decorator
 
 
@@ -442,6 +446,7 @@ def with_input_validation(input_type: str = "generic", strict: bool = True):
         def execute_query(query):
             # ... execute query ...
     """
+
     def decorator(func):
         import functools
 
@@ -455,4 +460,5 @@ def with_input_validation(input_type: str = "generic", strict: bool = True):
             return func(validated_value, *args, **kwargs)
 
         return wrapper
+
     return decorator

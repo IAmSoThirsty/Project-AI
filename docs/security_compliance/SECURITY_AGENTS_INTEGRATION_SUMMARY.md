@@ -90,7 +90,9 @@ Project-AI has been enhanced with four new security and testing agents that inte
 All agents are automatically registered when CouncilHub initializes:
 
 ```python
+
 # In council_hub.py register_project()
+
 self._project["long_context"] = LongContextAgent(kernel=self.kernel)
 self._project["safety_guard"] = SafetyGuardAgent(kernel=self.kernel)
 self._project["jailbreak_bench"] = JailbreakBenchAgent(kernel=self.kernel)
@@ -123,7 +125,9 @@ This ensures:
 Each agent operation can be evaluated by the Triumvirate:
 
 ```python
+
 # Example: Red team testing requires approval
+
 context = GovernanceContext(
     high_risk=True,
     requires_approval=True,
@@ -149,11 +153,14 @@ The Triumvirate council members evaluate:
 Added to `.env.example`:
 
 ```bash
+
 # Long-Context Model
+
 LONG_CONTEXT_API_ENDPOINT=https://api.example.com/v1/long-context
 LONG_CONTEXT_API_KEY=your_api_key_here
 
 # Safety Model
+
 SAFETY_MODEL_API_ENDPOINT=https://api.example.com/v1/safety
 SAFETY_MODEL_API_KEY=your_api_key_here
 ```
@@ -197,15 +204,19 @@ Created comprehensive test suite:
 ### Pattern 1: Safety Pipeline
 
 ```python
+
 # Pre-process input
+
 safety_check = safety_guard.check_prompt_safety(user_input)
 if not safety_check["is_safe"]:
     return "Input blocked"
 
 # Process with LLM
+
 response = llm.generate(user_input)
 
 # Post-process output
+
 response_check = safety_guard.check_response_safety(response)
 if response_check["is_safe"]:
     return response
@@ -214,7 +225,9 @@ if response_check["is_safe"]:
 ### Pattern 2: Long-Context Analysis
 
 ```python
+
 # Large document with query
+
 result = long_context.analyze_large_document(
     document=large_policy_doc,
     query="Summarize security requirements"
@@ -224,7 +237,9 @@ result = long_context.analyze_large_document(
 ### Pattern 3: Regular Security Testing
 
 ```python
+
 # Weekly automated test
+
 results = jailbreak_bench.run_benchmark(
     target_system=production_ai,
     max_tests=50
@@ -238,7 +253,9 @@ if evaluation["defense_rate"] < 0.8:
 ### Pattern 4: Red Team Exercise
 
 ```python
+
 # Monthly adversarial test
+
 session = red_team.run_adversarial_session(
     target_system=production_ai,
     strategy="gradual_escalation"
@@ -275,12 +292,12 @@ if session["vulnerabilities_found"] > 0:
 
 ### Initial Benchmarks
 
-| Agent | Initialization | Operation | Memory |
-|-------|---------------|-----------|--------|
-| LongContextAgent | <1s | 1-5s | 4-8GB |
-| SafetyGuardAgent | <1s | <100ms | ~2GB |
-| JailbreakBenchAgent | <1s | 1-5s/test | <1GB |
-| RedTeamAgent | <1s | 30-300s/session | <1GB |
+| Agent               | Initialization | Operation       | Memory |
+| ------------------- | -------------- | --------------- | ------ |
+| LongContextAgent    | \<1s           | 1-5s            | 4-8GB  |
+| SafetyGuardAgent    | \<1s           | \<100ms         | ~2GB   |
+| JailbreakBenchAgent | \<1s           | 1-5s/test       | \<1GB  |
+| RedTeamAgent        | \<1s           | 30-300s/session | \<1GB  |
 
 ### Throughput
 
@@ -294,21 +311,25 @@ if session["vulnerabilities_found"] > 0:
 ### Planned Features
 
 1. **Model Integration**:
+
    - Direct integration with Hugging Face models
    - Local model deployment options
    - API fallback mechanisms
 
 1. **Enhanced Testing**:
+
    - Additional attack categories
    - Custom scenario creation
    - Automated vulnerability patching
 
 1. **Analytics**:
+
    - Real-time dashboards
    - Trend analysis
    - Predictive alerts
 
 1. **Optimization**:
+
    - Caching for common patterns
    - Batch processing
    - Parallel testing
@@ -327,17 +348,20 @@ Planned integrations:
 Created comprehensive documentation:
 
 1. **User Guide**: `docs/SECURITY_AGENTS_GUIDE.md` (336 lines)
+
    - Quick start examples
    - API reference
    - Best practices
    - Troubleshooting
 
 1. **Integration Summary**: This document
+
    - Architecture overview
    - Design decisions
    - Performance metrics
 
 1. **Code Documentation**: Inline docstrings
+
    - All methods documented
    - Type hints throughout
    - Usage examples
@@ -366,6 +390,6 @@ All agents integrate seamlessly with the Triumvirate governance system, ensuring
 - Security Review: Triumvirate Council
 - Testing: Automated Test Suite
 
----
+______________________________________________________________________
 
 *For detailed usage instructions, see `docs/SECURITY_AGENTS_GUIDE.md`*

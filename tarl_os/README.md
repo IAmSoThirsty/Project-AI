@@ -68,7 +68,9 @@ tarl_os/
 ### Installation
 
 ```bash
+
 # From Project-AI root
+
 cd tarl_os
 python bridge.py
 ```
@@ -79,12 +81,15 @@ python bridge.py
 from tarl_os.bridge import TARLOSBridge
 
 # Create bridge
+
 bridge = TARLOSBridge()
 
 # Initialize kernel
+
 results = bridge.initialize_kernel()
 
 # Check status
+
 status = bridge.get_system_status()
 print(status)
 ```
@@ -94,6 +99,7 @@ print(status)
 ### 1. Process Scheduler (`kernel/scheduler.thirsty`)
 
 Multi-level feedback queue scheduler with:
+
 - 8 priority levels (real-time to idle)
 - Preemptive multitasking
 - CPU affinity support
@@ -112,6 +118,7 @@ glass getSchedulerStats()
 ### 2. Memory Manager (`kernel/memory.thirsty`)
 
 Paging-based memory management with:
+
 - 4KB page size
 - Virtual memory support
 - Page swapping
@@ -129,6 +136,7 @@ glass getMemoryStats()
 ### 3. Configuration Registry (`config/registry.thirsty`)
 
 Hierarchical configuration with:
+
 - 6 namespaces (system, security, AI, network, storage, user)
 - Schema validation
 - Hot-reload support
@@ -146,6 +154,7 @@ glass watch(namespace, key, callback)
 ### 4. Secrets Vault (`security/secrets_vault.thirsty`)
 
 Secure secrets management with:
+
 - AES-256-GCM encryption
 - Key rotation
 - Access logging
@@ -163,6 +172,7 @@ glass rotateEncryptionKey()
 ### 5. RBAC System (`security/rbac.thirsty`)
 
 Enterprise-grade authorization with:
+
 - 5 built-in roles (super_admin, admin, operator, user, guest)
 - Role hierarchy
 - Permission inheritance
@@ -187,7 +197,7 @@ shield componentName {
     morph on: ["injection", "overflow", "privilege_escalation"]
     defend with: "paranoid"
   }
-  
+
   // Component logic with sanitize and armor
   sanitize userInput
   armor sensitiveData
@@ -197,23 +207,35 @@ shield componentName {
 ## 📊 System Status
 
 ```python
+
 # Get comprehensive system status
+
 status = bridge.get_system_status()
+
 # {
+
 #   "tarl_os_version": "2.0",
+
 #   "modules_loaded": 5,
+
 #   "modules_available": 5,
+
 #   "status": "operational"
+
 # }
+
 ```
 
 ## 🧪 Testing
 
 ```bash
+
 # Run all tests
+
 pytest tarl_os/tests/
 
 # Run specific component tests
+
 pytest tarl_os/tests/test_scheduler.py
 pytest tarl_os/tests/test_memory.py
 pytest tarl_os/tests/test_security.py
@@ -245,10 +267,12 @@ from tarl import TarlRuntime
 from tarl_os.bridge import TARLOSBridge
 
 # Initialize both systems
+
 tarl_runtime = TarlRuntime(DEFAULT_POLICIES)
 tarl_os = TARLOSBridge()
 
 # TARL OS operations go through TARL policy enforcement
+
 def execute_with_tarl(operation, context):
     decision = tarl_runtime.evaluate(context)
     if decision.verdict == TarlVerdict.ALLOW:
@@ -272,12 +296,13 @@ Part of Project-AI (IAmSoThirsty/Project-AI) - MIT License
 ## 🙏 Acknowledgments
 
 Built on top of:
+
 - **Thirsty-Lang**: Water-themed programming language with defensive capabilities
 - **T.A.R.L**: Trust and Authorization Runtime Layer
 - **Project-AI**: Governance-first AI framework
 
 ---
 
-**Status**: ✅ Production Ready  
-**Version**: 2.0  
+**Status**: ✅ Production Ready
+**Version**: 2.0
 **Last Updated**: 2026-01-30

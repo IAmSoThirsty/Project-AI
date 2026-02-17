@@ -141,12 +141,16 @@ class AuditManager:
             try:
                 self.audit_log = SovereignAuditLog(
                     data_dir=data_path / "sovereign",
-                    deterministic_mode=deterministic_mode
+                    deterministic_mode=deterministic_mode,
                 )
-                logger.info("Sovereign-grade audit logging enabled (Genesis: %s)",
-                           self.audit_log.genesis_keypair.genesis_id)
+                logger.info(
+                    "Sovereign-grade audit logging enabled (Genesis: %s)",
+                    self.audit_log.genesis_keypair.genesis_id,
+                )
             except ImportError as e:
-                logger.error("Failed to initialize sovereign audit (missing dependencies): %s", e)
+                logger.error(
+                    "Failed to initialize sovereign audit (missing dependencies): %s", e
+                )
                 logger.info("Falling back to operational audit log")
                 self.audit_log = AuditLog(log_file=data_path / "audit_log.yaml")
                 self.sovereign_mode = False
@@ -177,7 +181,7 @@ class AuditManager:
         self.alert_callbacks: list[Callable[[dict[str, Any]], None]] = []
 
         # Register audit log callback for critical events (only for operational mode)
-        if not sovereign_mode and hasattr(self.audit_log, 'register_callback'):
+        if not sovereign_mode and hasattr(self.audit_log, "register_callback"):
             self.audit_log.register_callback(self._handle_audit_event)
 
         mode_str = "Sovereign-grade" if sovereign_mode else "Operational"
@@ -422,9 +426,7 @@ class AuditManager:
             logger.error("Failed to log trace step: %s", e)
             return None
 
-    def end_trace(
-        self, trace_id: str, result: dict[str, Any] | None = None
-    ) -> bool:
+    def end_trace(self, trace_id: str, result: dict[str, Any] | None = None) -> bool:
         """End a causal trace.
 
         Args:
@@ -473,7 +475,7 @@ class AuditManager:
             Tuple of (is_valid, message)
         """
         # Verify main audit log
-        if self.sovereign_mode and hasattr(self.audit_log, 'verify_integrity'):
+        if self.sovereign_mode and hasattr(self.audit_log, "verify_integrity"):
             # Sovereign audit has comprehensive verification
             is_valid, message = self.audit_log.verify_integrity()
         else:
@@ -509,7 +511,7 @@ class AuditManager:
         }
 
         # Add Genesis ID for sovereign mode
-        if self.sovereign_mode and hasattr(self.audit_log, 'genesis_keypair'):
+        if self.sovereign_mode and hasattr(self.audit_log, "genesis_keypair"):
             stats["genesis_id"] = self.audit_log.genesis_keypair.genesis_id
 
         if self.tamperproof_log:
@@ -577,9 +579,7 @@ class AuditManager:
         # Export tamperproof log if enabled
         if self.tamperproof_log:
             try:
-                success &= self.tamperproof_log.export(
-                    output_path / "tamperproof.json"
-                )
+                success &= self.tamperproof_log.export(output_path / "tamperproof.json")
             except Exception as e:
                 logger.error("Failed to export tamperproof log: %s", e)
                 success = False
@@ -616,7 +616,9 @@ class AuditManager:
         Returns:
             Proof bundle dictionary or None if not in sovereign mode or event not found
         """
-        if not self.sovereign_mode or not hasattr(self.audit_log, 'generate_proof_bundle'):
+        if not self.sovereign_mode or not hasattr(
+            self.audit_log, "generate_proof_bundle"
+        ):
             logger.warning("Proof bundle generation only available in sovereign mode")
             return None
 
@@ -631,7 +633,9 @@ class AuditManager:
         Returns:
             Tuple of (is_valid, message)
         """
-        if not self.sovereign_mode or not hasattr(self.audit_log, 'verify_proof_bundle'):
+        if not self.sovereign_mode or not hasattr(
+            self.audit_log, "verify_proof_bundle"
+        ):
             return False, "Proof bundle verification only available in sovereign mode"
 
         return self.audit_log.verify_proof_bundle(proof)
@@ -645,7 +649,9 @@ class AuditManager:
         Returns:
             Tuple of (is_valid, message)
         """
-        if not self.sovereign_mode or not hasattr(self.audit_log, 'verify_event_signature'):
+        if not self.sovereign_mode or not hasattr(
+            self.audit_log, "verify_event_signature"
+        ):
             return False, "Signature verification only available in sovereign mode"
 
         return self.audit_log.verify_event_signature(event_id)
@@ -656,7 +662,7 @@ class AuditManager:
         Returns:
             Genesis ID string or None if not in sovereign mode
         """
-        if not self.sovereign_mode or not hasattr(self.audit_log, 'genesis_keypair'):
+        if not self.sovereign_mode or not hasattr(self.audit_log, "genesis_keypair"):
             return None
 
         return self.audit_log.genesis_keypair.genesis_id

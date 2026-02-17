@@ -33,6 +33,7 @@ You MUST provide evidence for ALL five validations. Partial evidence is NOT acce
 ### ✅ Validation 1: Unsigned Image Admission Denial
 
 **What to do:**
+
 1. Deploy an unsigned container image to your cluster
 2. Capture the admission controller denial output
 3. Take a screenshot or copy the full error message
@@ -45,11 +46,12 @@ kubectl apply -f unsigned-image-deployment.yaml
 
 **Expected output (example):**
 ```
-Error from server (Forbidden): admission webhook "image-signing.validation" denied the request: 
+Error from server (Forbidden): admission webhook "image-signing.validation" denied the request:
 Image "example.com/app:latest" is not signed with a trusted key
 ```
 
 **Evidence to include in PR:**
+
 - [ ] Screenshot or log output
 - [ ] Timestamp (UTC): _______________
 - [ ] Command used: _______________
@@ -59,6 +61,7 @@ Image "example.com/app:latest" is not signed with a trusted key
 ### ✅ Validation 2: Signed Image Admission Success
 
 **What to do:**
+
 1. Deploy a properly signed container image to your cluster
 2. Capture the admission controller acceptance output
 3. Verify the pod is running
@@ -79,6 +82,7 @@ secure-app-5d8f9c7b6d-x4k2p   1/1     Running   0          5s
 ```
 
 **Evidence to include in PR:**
+
 - [ ] Screenshot or log output
 - [ ] Timestamp (UTC): _______________
 - [ ] Command used: _______________
@@ -88,6 +92,7 @@ secure-app-5d8f9c7b6d-x4k2p   1/1     Running   0          5s
 ### ✅ Validation 3: Privileged Container Denial
 
 **What to do:**
+
 1. Create a deployment with `securityContext.privileged: true`
 2. Attempt to deploy it
 3. Capture the admission controller denial output
@@ -101,11 +106,12 @@ kubectl apply -f privileged-deployment.yaml
 
 **Expected output (example):**
 ```
-Error from server (Forbidden): admission webhook "pod-security.validation" denied the request: 
+Error from server (Forbidden): admission webhook "pod-security.validation" denied the request:
 Privileged containers are not allowed. SecurityContext.privileged must be false or unset
 ```
 
 **Evidence to include in PR:**
+
 - [ ] Screenshot or log output
 - [ ] Timestamp (UTC): _______________
 - [ ] Command used: _______________
@@ -115,6 +121,7 @@ Privileged containers are not allowed. SecurityContext.privileged must be false 
 ### ✅ Validation 4: Cross-Namespace/Lateral Communication Denial
 
 **What to do:**
+
 1. Create pods in two different namespaces (or same namespace with restrictive policies)
 2. Attempt to communicate from one pod to a service in another namespace
 3. Capture the network policy denial (connection timeout, DNS failure, or rejection)
@@ -134,6 +141,7 @@ curl: (28) Connection timed out after 10001 milliseconds
 ```
 
 **Evidence to include in PR:**
+
 - [ ] Screenshot or log output
 - [ ] Timestamp (UTC): _______________
 - [ ] Commands used: _______________
@@ -144,6 +152,7 @@ curl: (28) Connection timed out after 10001 milliseconds
 ### ✅ Validation 5: Log Deletion Prevention
 
 **What to do:**
+
 1. Exec into a running pod
 2. Attempt to delete application logs
 3. Capture the system response (denial or detection)
@@ -164,6 +173,7 @@ rm: cannot remove '/var/log/app/app.log': Operation not permitted
 ```
 
 **Evidence to include in PR:**
+
 - [ ] Screenshot or log output
 - [ ] Timestamp (UTC): _______________
 - [ ] Commands used: _______________

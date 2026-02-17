@@ -7,7 +7,9 @@ Factory Pattern provides an interface for creating objects without specifying th
 ## Agent Factory
 
 ```python
+
 # domain/factories/agent_factory.py
+
 import logging
 from enum import Enum
 from typing import Dict, List
@@ -18,8 +20,9 @@ logger = logging.getLogger(__name__)
 
 class AgentFactory:
     """Factory for creating specialized agents."""
-    
+
     # Agent capability mappings
+
     AGENT_CAPABILITIES = {
         AgentType.OVERSIGHT: [
             "action_validation",
@@ -47,7 +50,7 @@ class AgentFactory:
             "result_reporting"
         ]
     }
-    
+
     @classmethod
     def create_agent(
         cls,
@@ -58,28 +61,28 @@ class AgentFactory:
         """Create agent with type-specific capabilities."""
         try:
             capabilities = cls.AGENT_CAPABILITIES.get(agent_type, [])
-            
+
             if custom_capabilities:
                 capabilities.extend(custom_capabilities)
-            
+
             agent = Agent(
                 agent_id=uuid4(),
                 name=name,
                 agent_type=agent_type,
                 capabilities=capabilities
             )
-            
+
             logger.info(
                 f"Created {agent_type.value} agent '{name}' "
                 f"with {len(capabilities)} capabilities"
             )
-            
+
             return agent
-            
+
         except Exception as e:
             logger.error(f"Agent creation failed: {e}")
             raise
-    
+
     @classmethod
     def create_agent_pool(
         cls,
@@ -87,13 +90,13 @@ class AgentFactory:
     ) -> List[Agent]:
         """Create pool of agents by type."""
         agents = []
-        
+
         for agent_type, count in pool_config.items():
             for i in range(count):
                 name = f"{agent_type.value}_{i+1}"
                 agent = cls.create_agent(agent_type, name)
                 agents.append(agent)
-        
+
         logger.info(f"Created agent pool with {len(agents)} agents")
         return agents
 ```
@@ -101,7 +104,9 @@ class AgentFactory:
 ## Workflow Factory
 
 ```python
+
 # domain/factories/workflow_factory.py
+
 import logging
 from typing import Dict, Optional
 from uuid import uuid4
@@ -110,7 +115,7 @@ logger = logging.getLogger(__name__)
 
 class WorkflowFactory:
     """Factory for Temporal workflow creation."""
-    
+
     @classmethod
     def create_workflow(
         cls,
@@ -122,7 +127,7 @@ class WorkflowFactory:
         try:
             if not workflow_id:
                 workflow_id = f"{workflow_type}_{uuid4()}"
-            
+
             config = {
                 "workflow_id": workflow_id,
                 "workflow_type": workflow_type,
@@ -130,14 +135,14 @@ class WorkflowFactory:
                 "task_queue": cls._get_task_queue(workflow_type),
                 "execution_timeout": cls._get_timeout(workflow_type)
             }
-            
+
             logger.info(f"Created workflow config: {workflow_type}")
             return config
-            
+
         except Exception as e:
             logger.error(f"Workflow creation failed: {e}")
             raise
-    
+
     @classmethod
     def _get_task_queue(cls, workflow_type: str) -> str:
         """Get task queue for workflow type."""
@@ -147,7 +152,7 @@ class WorkflowFactory:
             "execution": "execution-queue"
         }
         return queue_mapping.get(workflow_type, "default-queue")
-    
+
     @classmethod
     def _get_timeout(cls, workflow_type: str) -> int:
         """Get execution timeout for workflow type."""
@@ -162,32 +167,34 @@ class WorkflowFactory:
 ## Testing
 
 ```python
+
 # tests/domain/test_factories.py
+
 import pytest
 from domain.factories.agent_factory import AgentFactory
 from domain.agent.entities import AgentType
 
 class TestAgentFactory:
     """Test agent factory."""
-    
+
     def test_create_agent(self):
         """Verify agent creation."""
         agent = AgentFactory.create_agent(
             AgentType.OVERSIGHT,
             "test_oversight"
         )
-        
+
         assert agent.name == "test_oversight"
         assert agent.agent_type == AgentType.OVERSIGHT
         assert "action_validation" in agent.capabilities
-    
+
     def test_create_agent_pool(self):
         """Verify agent pool creation."""
         pool = AgentFactory.create_agent_pool({
             AgentType.OVERSIGHT: 2,
             AgentType.PLANNER: 1
         })
-        
+
         assert len(pool) == 3
         assert sum(1 for a in pool if a.agent_type == AgentType.OVERSIGHT) == 2
 ```

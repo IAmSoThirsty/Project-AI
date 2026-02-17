@@ -124,13 +124,16 @@ It is designed for SOC, NOC, PKI, and Voice/Video Engineering teams.
 
 **Using Project-AI Tools:**
 ```bash
+
 # Log incident detection
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type incident_detected \
     --device-id <affected-component> \
     --outcome investigating
 
 # API logging
+
 curl -X POST http://localhost:8080/log \
     -H "Content-Type: application/json" \
     -d '{
@@ -162,7 +165,9 @@ curl -X POST http://localhost:8080/log \
 
 **Analysis Commands:**
 ```bash
+
 # Check registration status
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --device-ip <device-ip> \
     --snmp-user admin \
@@ -170,6 +175,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --priv-key <key>
 
 # Run compliance check
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
     --config deployment_config.json
 ```
@@ -206,7 +212,9 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
 
 **Containment Logging:**
 ```bash
+
 # Log containment actions
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type incident_contained \
     --device-id <component> \
@@ -227,10 +235,13 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 
 **Validation:**
 ```bash
+
 # Verify security profiles
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 
 # Check compliance post-remediation
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
     --config deployment_config.json
 ```
@@ -249,10 +260,13 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
 
 **Recovery Validation:**
 ```bash
+
 # Test secure call setup
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 
 # API validation
+
 curl -X POST http://localhost:8080/compliance/check \
     -H "Content-Type: application/json" \
     -d @deployment_config.json
@@ -273,11 +287,15 @@ curl -X POST http://localhost:8080/compliance/check \
 1. **Immediate Containment (< 5 minutes)**
 
    ```bash
+
    # Block affected endpoint at firewall
+
    # (Platform-specific firewall command)
-   
+
    # Disable in GK
+
    # (Platform-specific GK command)
+
    ```
 
 1. **Triage (< 15 minutes)**
@@ -328,10 +346,13 @@ curl -X POST http://localhost:8080/compliance/check \
 1. **Triage**
 
    ```bash
+
    # Capture media packets
+
    tcpdump -i eth0 -n 'udp and portrange 16384-32767' -w media.pcap
-   
+
    # Analyze RTP vs SRTP
+
    tshark -r media.pcap -Y 'rtp'
    ```
 
@@ -366,10 +387,13 @@ curl -X POST http://localhost:8080/compliance/check \
 1. **Triage**
 
    ```bash
+
    # Check GK logs
+
    tail -f /var/log/gatekeeper.log | grep "token"
-   
+
    # Verify endpoint status
+
    python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
        --device-ip <endpoint-ip> \
        --snmp-user admin --auth-key <key> --priv-key <key>
@@ -480,13 +504,17 @@ curl -X POST http://localhost:8080/compliance/check \
 1. **Validation**
 
    ```bash
+
    # Test certificate chain
+
    openssl verify -CAfile ca-chain.crt gk.crt
-   
+
    # Test OCSP
+
    openssl ocsp -issuer ca.crt -cert gk.crt -url http://ocsp.example.com
-   
+
    # Re-register endpoints
+
    python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
        --device-ip <device-ip> --snmp-user admin --auth-key <key> --priv-key <key>
    ```
@@ -558,7 +586,9 @@ TIMELINE
 
 AFFECTED COMPONENTS
 -------------------
+
 - Component: [Name]
+
   Impact: [Description]
   Status: [Resolved/Monitoring]
 
@@ -651,26 +681,34 @@ An incident is considered fully resolved when:
 ### Detection & Triage
 
 ```bash
+
 # Check component status
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status --device-ip <ip> --snmp-user admin --auth-key <key> --priv-key <key>
 
 # Run compliance check
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance --config config.json
 
 # Run simulation test
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py run-sim
 ```
 
 ### Packet Analysis
 
 ```bash
+
 # Capture signaling
+
 tcpdump -i eth0 -n 'tcp port 1720' -w signaling.pcap
 
 # Capture media
+
 tcpdump -i eth0 -n 'udp and portrange 16384-32767' -w media.pcap
 
 # Analyze for clear-text
+
 tshark -r signaling.pcap -Y 'h225'
 tshark -r media.pcap -Y 'rtp'
 ```
@@ -678,26 +716,33 @@ tshark -r media.pcap -Y 'rtp'
 ### Certificate Validation
 
 ```bash
+
 # Check certificate
+
 openssl x509 -in cert.crt -text -noout
 
 # Verify chain
+
 openssl verify -CAfile ca-chain.crt component.crt
 
 # Test OCSP
+
 openssl ocsp -issuer ca.crt -cert component.crt -url http://ocsp.example.com
 ```
 
 ### Incident Logging
 
 ```bash
+
 # Log incident event
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type security_incident \
     --device-id <component> \
     --outcome <status>
 
 # API logging
+
 curl -X POST http://localhost:8080/log \
     -H "Content-Type: application/json" \
     -d '{"event_type":"incident","device_id":"<id>","outcome":"<status>","details":{...}}'

@@ -104,17 +104,14 @@ class VisualCueModel(ABC):
         self, frame_data: np.ndarray, context: dict[str, Any] | None = None
     ) -> VisualCueData:
         """Detect visual cues from frame"""
-        pass
 
     @abstractmethod
     def initialize(self) -> bool:
         """Initialize the model"""
-        pass
 
     @abstractmethod
     def shutdown(self) -> None:
         """Shutdown the model"""
-        pass
 
     def is_ready(self) -> bool:
         """Check if model is ready"""

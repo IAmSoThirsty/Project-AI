@@ -9,6 +9,7 @@ Prerequisites
 - PyQt6, cryptography, scikit-learn and other dependencies (see requirements.txt)
 
 Create and activate a virtual environment (PowerShell):
+
 ```powershell
 cd C:\Users\Jeremy\Documents\GitHub\Project-AI
 python -m venv .venv; .\.venv\Scripts\Activate.ps1
@@ -16,6 +17,7 @@ pip install -r requirements.txt
 ```
 
 Run the desktop app:
+
 ```powershell
 $env:PYTHONPATH='src'
 python -m src.app.main
@@ -36,4 +38,3 @@ Notes
 
 - Use `launch-desktop.ps1` for a Windows-friendly launcher that sets env vars and starts the app.
 - If you want to run with a `.env` file, the app will load OpenAI and Hugging Face keys automatically when present.
-

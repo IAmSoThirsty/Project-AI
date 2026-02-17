@@ -176,6 +176,7 @@ class SecurityEnforcementGateway:
         # Wire into Hydra-50 incident response system
         try:
             from app.security.hydra_incident_response import get_hydra_response
+
             hydra = get_hydra_response()
             hydra.report_incident(incident)
         except ImportError:
@@ -188,12 +189,13 @@ class SecurityEnforcementGateway:
         self, request: OperationRequest, result: OperationResult
     ) -> str:
         """Create audit trail for allowed operation."""
-        
+
         # Wire into immutable audit log system
         try:
             from app.security.immutable_audit_log import get_audit_logger
+
             audit_logger = get_audit_logger()
-            
+
             audit_data = {
                 "operation_id": request.operation_id,
                 "action": request.action,
@@ -201,21 +203,20 @@ class SecurityEnforcementGateway:
                 "result": {
                     "allowed": result.allowed,
                     "threat_level": result.threat_level,
-                    "layers_checked": result.layers_checked
-                }
+                    "layers_checked": result.layers_checked,
+                },
             }
-            
+
             audit_id = audit_logger.log_event(
-                event_type="OPERATION_ALLOWED",
-                user_id=request.user_id,
-                data=audit_data
+                event_type="OPERATION_ALLOWED", user_id=request.user_id, data=audit_data
             )
-            
+
             return audit_id
-            
+
         except ImportError:
             # Fallback to simple hash if audit logger not available
             from hashlib import sha256
+
             audit_id = sha256(
                 f"{request.operation_id}{request.timestamp}".encode()
             ).hexdigest()[:16]

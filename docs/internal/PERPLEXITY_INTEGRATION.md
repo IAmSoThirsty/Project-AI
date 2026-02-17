@@ -5,6 +5,7 @@ This document explains how to use Perplexity AI as an alternative model provider
 ## Overview
 
 Project-AI now supports multiple AI model providers through a unified interface. You can use either OpenAI or Perplexity AI for:
+
 - Learning path generation
 - RAG (Retrieval-Augmented Generation) queries
 - General AI-powered features
@@ -14,8 +15,8 @@ Project-AI now supports multiple AI model providers through a unified interface.
 ### 1. Obtain a Perplexity API Key
 
 1. Visit [Perplexity AI](https://www.perplexity.ai/) and sign up for an account
-2. Navigate to your API settings to generate an API key
-3. Copy your API key for use in the next step
+1. Navigate to your API settings to generate an API key
+1. Copy your API key for use in the next step
 
 ### 2. Set Up Environment Variables
 
@@ -52,10 +53,12 @@ max_tokens = 256
 from app.core.learning_paths import LearningPathManager
 
 # Use Perplexity provider
+
 manager = LearningPathManager(provider="perplexity")
 path = manager.generate_path("machine learning", skill_level="beginner")
 
 # Or use OpenAI provider
+
 manager = LearningPathManager(provider="openai")
 path = manager.generate_path("machine learning", skill_level="beginner")
 ```
@@ -66,12 +69,15 @@ path = manager.generate_path("machine learning", skill_level="beginner")
 from app.core.rag_system import RAGSystem
 
 # Initialize RAG system
+
 rag = RAGSystem(data_dir="data/rag_index")
 
 # Ingest documents
+
 rag.ingest_directory("docs/")
 
 # Query with Perplexity
+
 result = rag.query_with_llm(
     query="What is the main concept?",
     model="llama-3.1-sonar-small-128k-online",
@@ -79,6 +85,7 @@ result = rag.query_with_llm(
 )
 
 # Query with OpenAI
+
 result = rag.query_with_llm(
     query="What is the main concept?",
     model="gpt-4",
@@ -92,9 +99,11 @@ result = rag.query_with_llm(
 from app.core.model_providers import get_provider
 
 # Get Perplexity provider
+
 perplexity = get_provider("perplexity", api_key="your_key")
 
 # Check if available
+
 if perplexity.is_available():
     response = perplexity.chat_completion(
         messages=[
@@ -120,17 +129,17 @@ Refer to [Perplexity's documentation](https://docs.perplexity.ai/) for the lates
 ## Benefits of Using Perplexity
 
 1. **Real-time Information**: Perplexity models have access to current information through online search
-2. **Citation Support**: Responses include citations to sources
-3. **Cost-Effective**: Competitive pricing compared to other providers
-4. **Specialized Models**: Purpose-built models for different use cases
+1. **Citation Support**: Responses include citations to sources
+1. **Cost-Effective**: Competitive pricing compared to other providers
+1. **Specialized Models**: Purpose-built models for different use cases
 
 ## Switching Between Providers
 
 You can easily switch between providers without changing your application code:
 
 1. **Environment Variables**: Set `PERPLEXITY_API_KEY` or `OPENAI_API_KEY`
-2. **Configuration File**: Update the `provider` setting in `.projectai.toml`
-3. **Code**: Pass `provider="perplexity"` or `provider="openai"` to functions
+1. **Configuration File**: Update the `provider` setting in `.projectai.toml`
+1. **Code**: Pass `provider="perplexity"` or `provider="openai"` to functions
 
 ## Error Handling
 

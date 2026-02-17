@@ -42,9 +42,7 @@ This framework provides **3000+ expert career-level security test scenarios** de
 - **A4**: XXE with out-of-band data exfiltration
 - **A5**: XPath injection for XML data extraction
 
-**Difficulty**: Hard to Expert
-**CVSS Range**: 8.0 - 9.3
-**Techniques**: Multi-layer encoding, time-based blind extraction, WAF evasion
+**Difficulty**: Hard to Expert **CVSS Range**: 8.0 - 9.3 **Techniques**: Multi-layer encoding, time-based blind extraction, WAF evasion
 
 ### Category B: Broken Authentication & Session Management (150 scenarios)
 
@@ -113,9 +111,7 @@ This framework provides **3000+ expert career-level security test scenarios** de
 - **J4**: Training data poisoning with backdoors (40 scenarios)
 - **J5**: Model inversion to extract training data (40 scenarios)
 
-**Difficulty**: Easy to Expert
-**CVSS Range**: 7.5 - 9.0
-**Techniques**: Role-play injection, token manipulation, context overflow, gradient-based attacks
+**Difficulty**: Easy to Expert **CVSS Range**: 7.5 - 9.0 **Techniques**: Role-play injection, token manipulation, context overflow, gradient-based attacks
 
 ### Category K: Kubernetes & Container Escape (150 scenarios)
 
@@ -194,10 +190,13 @@ python scripts/run_red_hat_expert_simulations.py --summary-only
 ### Run Specific Categories
 
 ```bash
+
 # Test only AI/ML attacks (Category J)
+
 python scripts/run_red_hat_expert_simulations.py --categories J
 
 # Test injection attacks (Category A) and AI attacks (Category J)
+
 python scripts/run_red_hat_expert_simulations.py --categories A,J --export
 ```
 

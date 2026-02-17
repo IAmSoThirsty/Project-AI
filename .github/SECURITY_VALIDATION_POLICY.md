@@ -1,7 +1,7 @@
 # Security Validation Claims Policy
 
-**Document Version:** 1.0  
-**Effective Date:** 2026-02-12  
+**Document Version:** 1.0
+**Effective Date:** 2026-02-12
 **Status:** MANDATORY - Strictly Enforced
 
 > **Quick Reference:** See [Security Validation Evidence Checklist](SECURITY_VALIDATION_CHECKLIST.md) for a step-by-step guide.
@@ -41,6 +41,7 @@ If a PR makes ANY of the prohibited claims listed above, it **MUST** include exp
 **Requirement:** Deploy an unsigned container image and provide evidence that the admission controller denies the deployment.
 
 **Required Evidence:**
+
 - Command used to deploy the unsigned image
 - Complete admission controller denial log output
 - Timestamp of the attempted deployment
@@ -49,7 +50,7 @@ If a PR makes ANY of the prohibited claims listed above, it **MUST** include exp
 **Example:**
 ```bash
 $ kubectl apply -f unsigned-image-deployment.yaml
-Error from server (Forbidden): admission webhook "image-signing.validation" denied the request: 
+Error from server (Forbidden): admission webhook "image-signing.validation" denied the request:
 Image "example.com/app:latest" is not signed with a trusted key
 ```
 
@@ -58,6 +59,7 @@ Image "example.com/app:latest" is not signed with a trusted key
 **Requirement:** Deploy a properly signed container image and provide evidence that the admission controller allows the deployment.
 
 **Required Evidence:**
+
 - Command used to deploy the signed image
 - Complete admission controller acceptance log output
 - Signature verification logs
@@ -79,6 +81,7 @@ secure-app-5d8f9c7b6d-x4k2p   1/1     Running   0          5s
 **Requirement:** Attempt to deploy a container with privileged security context and provide evidence that the admission controller denies the deployment.
 
 **Required Evidence:**
+
 - Command used to deploy the privileged container
 - Complete admission controller denial log output
 - Policy violation reason
@@ -87,7 +90,7 @@ secure-app-5d8f9c7b6d-x4k2p   1/1     Running   0          5s
 **Example:**
 ```bash
 $ kubectl apply -f privileged-deployment.yaml
-Error from server (Forbidden): admission webhook "pod-security.validation" denied the request: 
+Error from server (Forbidden): admission webhook "pod-security.validation" denied the request:
 Privileged containers are not allowed. SecurityContext.privileged must be false or unset
 ```
 
@@ -96,6 +99,7 @@ Privileged containers are not allowed. SecurityContext.privileged must be false 
 **Requirement:** Attempt pod-to-pod communication across namespaces (or lateral communication within the same namespace if network policies are restrictive) and provide evidence that network policies deny the communication.
 
 **Required Evidence:**
+
 - Commands used to attempt cross-namespace/lateral communication
 - Network policy denial evidence (connection timeout, DNS resolution failure, or explicit rejection)
 - Network policy configuration showing the restriction
@@ -115,6 +119,7 @@ $ kubectl logs -n namespace-a pod-a
 **Requirement:** Attempt to delete logs from a running workload and provide evidence that the system prevents or detects this action.
 
 **Required Evidence:**
+
 - Commands used to attempt log deletion
 - System response showing denial or detection
 - Audit log showing the attempted action
@@ -159,6 +164,7 @@ If **ANY** of the five required runtime validations are missing or not included 
 All PRs must include a new section titled **"Runtime Validation Evidence"** with the following checklist:
 
 ```markdown
+
 ## Runtime Validation Evidence
 
 **Does this PR claim production-readiness, enterprise best practices, or runtime enforcement?**
@@ -193,6 +199,7 @@ All PRs must include a new section titled **"Runtime Validation Evidence"** with
 - [ ] I certify that ALL runtime validation evidence is authentic and reproducible
 - [ ] I understand that false claims will result in PR rejection
 - [ ] I have read and understood the Security Validation Claims Policy
+
 ```
 
 ---
@@ -275,6 +282,6 @@ If you have questions about this policy, please:
 
 ---
 
-**Last Updated:** 2026-02-12  
-**Policy Owner:** Project-AI Maintainers  
+**Last Updated:** 2026-02-12
+**Policy Owner:** Project-AI Maintainers
 **Review Cycle:** Quarterly

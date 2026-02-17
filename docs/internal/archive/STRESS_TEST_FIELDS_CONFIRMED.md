@@ -4,7 +4,7 @@
 
 Every test in the 2,000 adversarial stress tests includes **all requested fields**:
 
----
+______________________________________________________________________
 
 ## 📋 **Complete Test Structure**
 
@@ -17,7 +17,7 @@ Each test (both RED and BLACK team) contains:
   "category": "authorization",
   "subcategory": "impersonation",
   "name": "RED: Actor Impersonation 1",
-  
+
   // ✅ REQUESTED FIELDS:
   "description": "Authorized penetration test: Actor spoofing variant 1",
   "severity": "critical",
@@ -52,7 +52,7 @@ Each test (both RED and BLACK team) contains:
   "exploited_weakness": "Actor validation bypass attempts",
   "tarl_enforcement": "Strict actor type enumeration",
   "success_criteria": "3/3 requests denied, audit logged",
-  
+
   // ✅ BONUS FIELDS:
   "cve_references": [],
   "mitre_attack": ["T1078.001", "T1134.001"],
@@ -60,26 +60,28 @@ Each test (both RED and BLACK team) contains:
 }
 ```
 
----
+______________________________________________________________________
 
 ## ✅ **Field-by-Field Confirmation**
 
-| Field | Status | Example |
-|-------|--------|---------|
-| **Description** | ✅ Included | "Authorized penetration test: Actor spoofing variant 1" |
-| **Severity Level** | ✅ Included | "critical", "high", "medium" |
+| Field                          | Status      | Example                                                  |
+| ------------------------------ | ----------- | -------------------------------------------------------- |
+| **Description**                | ✅ Included | "Authorized penetration test: Actor spoofing variant 1"  |
+| **Severity Level**             | ✅ Included | "critical", "high", "medium"                             |
 | **Attack Steps with Payloads** | ✅ Included | Array of steps with action, payload, expected, rationale |
-| **Expected Behavior** | ✅ Included | "All impersonation attempts blocked" |
-| **Exploited Weakness** | ✅ Included | "Actor validation bypass attempts" |
-| **TARL Enforcement Mechanism** | ✅ Included | "Strict actor type enumeration" |
-| **Success Criteria** | ✅ Included | "3/3 requests denied, audit logged" |
+| **Expected Behavior**          | ✅ Included | "All impersonation attempts blocked"                     |
+| **Exploited Weakness**         | ✅ Included | "Actor validation bypass attempts"                       |
+| **TARL Enforcement Mechanism** | ✅ Included | "Strict actor type enumeration"                          |
+| **Success Criteria**           | ✅ Included | "3/3 requests denied, audit logged"                      |
 
----
+______________________________________________________________________
 
 ## 📊 **Verification**
 
 ### **RED TEAM Tests (1,000)**
+
 All include:
+
 - ✅ Description
 - ✅ Severity: critical/high/medium
 - ✅ Multi-turn steps (2-4 steps each)
@@ -90,7 +92,9 @@ All include:
 - ✅ MITRE ATT&CK mappings
 
 ### **BLACK TEAM Tests (1,000)**
+
 All include:
+
 - ✅ Description
 - ✅ Severity: critical/high/medium
 - ✅ Multi-turn steps (2-4 steps each)
@@ -100,7 +104,7 @@ All include:
 - ✅ Success criteria
 - ✅ MITRE ATT&CK mappings
 
----
+______________________________________________________________________
 
 ## 🔍 **Sample Test Examples**
 
@@ -169,15 +173,16 @@ All include:
 }
 ```
 
----
+______________________________________________________________________
 
 ## 📁 **Files**
 
 All fields are in:
+
 - **`adversarial_stress_tests_2000.json`** - Main test file (3.5 MB)
 - **`tests/generate_2000_stress_tests.py`** - Generator code
 
----
+______________________________________________________________________
 
 ## 🎯 **Attack Steps Detail**
 
@@ -198,20 +203,20 @@ Each step includes:
 }
 ```
 
----
+______________________________________________________________________
 
 ## ✅ **CONFIRMATION**
 
 ### **All 2,000 tests include:**
 
 1. ✅ **Description** - Full test description
-2. ✅ **Severity** - critical/high/medium
-3. ✅ **Attack Steps** - Complete multi-turn sequences
-4. ✅ **Payloads** - Actual attack payloads in each step
-5. ✅ **Expected Behavior** - What should happen
-6. ✅ **Exploited Weakness** - What vulnerability targeted
-7. ✅ **TARL Enforcement** - How TARL prevents it
-8. ✅ **Success Criteria** - How to verify defense
+1. ✅ **Severity** - critical/high/medium
+1. ✅ **Attack Steps** - Complete multi-turn sequences
+1. ✅ **Payloads** - Actual attack payloads in each step
+1. ✅ **Expected Behavior** - What should happen
+1. ✅ **Exploited Weakness** - What vulnerability targeted
+1. ✅ **TARL Enforcement** - How TARL prevents it
+1. ✅ **Success Criteria** - How to verify defense
 
 ### **Bonus fields also included:**
 
@@ -220,19 +225,22 @@ Each step includes:
 - ✅ **Timestamp** - When test was generated
 - ✅ **Unique ID** - Traceable identifier
 
----
+______________________________________________________________________
 
 ## 🔍 **Verify Yourself**
 
 ```bash
+
 # View a sample test
+
 python -c "import json; data = json.load(open('adversarial_stress_tests_2000.json')); print(json.dumps(data['red_team_tests'][0], indent=2))"
 
 # Check field presence
+
 python -c "import json; data = json.load(open('adversarial_stress_tests_2000.json')); test = data['red_team_tests'][0]; fields = ['description', 'severity', 'steps', 'expected_behavior', 'exploited_weakness', 'tarl_enforcement', 'success_criteria']; print('All fields present:', all(f in test for f in fields))"
 ```
 
----
+______________________________________________________________________
 
 ## 📊 **Statistics**
 
@@ -245,7 +253,7 @@ python -c "import json; data = json.load(open('adversarial_stress_tests_2000.jso
 - **100% have TARL enforcement explanation**
 - **100% have success criteria**
 
----
+______________________________________________________________________
 
 **Everything you requested is already in the tests!** ✅
 

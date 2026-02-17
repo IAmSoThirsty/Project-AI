@@ -1,4 +1,5 @@
 # HYDRA-50 API REFERENCE
+
 **Complete API Documentation**
 
 ## Core Engine API
@@ -15,45 +16,46 @@ engine = HYDRA50Engine(data_dir="data/hydra50")
 
 #### Methods
 
-**`list_scenarios() -> List[Dict]`**
-Lists all registered scenarios.
+**`list_scenarios() -> List[Dict]`** Lists all registered scenarios.
 
 Returns:
+
 - List of scenario dictionaries
 
 Example:
+
 ```python
 scenarios = engine.list_scenarios()
 for scenario in scenarios:
     print(f"{scenario['name']}: {scenario['status']}")
 ```
 
-**`activate_scenario(scenario_id: str) -> Dict`**
-Activates a scenario.
+**`activate_scenario(scenario_id: str) -> Dict`** Activates a scenario.
 
 Parameters:
+
 - `scenario_id`: Unique scenario identifier
 
 Returns:
+
 - Result dictionary with success status
 
 Example:
+
 ```python
 result = engine.activate_scenario("scenario_001")
 if result['success']:
     print("Scenario activated")
 ```
 
-**`deactivate_scenario(scenario_id: str) -> Dict`**
-Deactivates a scenario.
+**`deactivate_scenario(scenario_id: str) -> Dict`** Deactivates a scenario.
 
-**`get_scenario_status(scenario_id: str) -> Dict`**
-Gets current status of a scenario.
+**`get_scenario_status(scenario_id: str) -> Dict`** Gets current status of a scenario.
 
-**`get_system_status() -> Dict`**
-Gets overall system status.
+**`get_system_status() -> Dict`** Gets overall system status.
 
 Returns:
+
 ```python
 {
     "active_scenarios": 5,
@@ -80,16 +82,14 @@ telemetry = HYDRA50TelemetrySystem()
 
 #### Metrics Collection
 
-**`metrics_collector.record_counter(name, value, tags)`**
-Records counter metric.
+**`metrics_collector.record_counter(name, value, tags)`** Records counter metric.
 
-**`metrics_collector.record_gauge(name, value, tags)`**
-Records gauge metric.
+**`metrics_collector.record_gauge(name, value, tags)`** Records gauge metric.
 
-**`metrics_collector.record_histogram(name, value, tags)`**
-Records histogram metric.
+**`metrics_collector.record_histogram(name, value, tags)`** Records histogram metric.
 
 Example:
+
 ```python
 telemetry.metrics_collector.record_counter(
     "scenarios_activated",
@@ -100,16 +100,17 @@ telemetry.metrics_collector.record_counter(
 
 #### Alert Management
 
-**`alert_manager.create_alert(severity, title, message, source)`**
-Creates new alert.
+**`alert_manager.create_alert(severity, title, message, source)`** Creates new alert.
 
 Parameters:
+
 - `severity`: AlertSeverity enum
 - `title`: Alert title
 - `message`: Alert message
 - `source`: Source system
 
 Example:
+
 ```python
 from app.core.hydra_50_telemetry import AlertSeverity
 
@@ -135,13 +136,14 @@ viz = HYDRA50VisualizationEngine()
 
 #### Visualization Methods
 
-**`render_escalation_ladder(scenario_name, current_level, max_level, ...)`**
-Renders escalation ladder visualization.
+**`render_escalation_ladder(scenario_name, current_level, max_level, ...)`** Renders escalation ladder visualization.
 
 Returns:
+
 - Tuple of (ascii_output, data_dict)
 
 Example:
+
 ```python
 ascii, data = viz.render_escalation_ladder(
     scenario_name="Economic Collapse",
@@ -160,11 +162,9 @@ ascii, data = viz.render_escalation_ladder(
 print(ascii)
 ```
 
-**`render_coupling_graph(nodes, edges, title)`**
-Renders cross-domain coupling graph.
+**`render_coupling_graph(nodes, edges, title)`** Renders cross-domain coupling graph.
 
-**`render_temporal_flow(scenario_name, transitions, current_state)`**
-Renders temporal state transition flow.
+**`render_temporal_flow(scenario_name, transitions, current_state)`** Renders temporal state transition flow.
 
 ## Analytics API
 
@@ -180,10 +180,10 @@ analytics = HYDRA50AnalyticsEngine()
 
 #### Statistical Analysis
 
-**`statistical_analyzer.compute_summary(data)`**
-Computes statistical summary.
+**`statistical_analyzer.compute_summary(data)`** Computes statistical summary.
 
 Returns:
+
 ```python
 StatisticalSummary(
     mean=0.5,
@@ -202,28 +202,24 @@ StatisticalSummary(
 
 #### Correlation Analysis
 
-**`correlation_analyzer.compute_correlation(data1, data2, method)`**
-Computes correlation coefficient.
+**`correlation_analyzer.compute_correlation(data1, data2, method)`** Computes correlation coefficient.
 
 Methods: "pearson", "spearman", "kendall"
 
-**`correlation_analyzer.find_significant_correlations(data, threshold)`**
-Finds significant correlations above threshold.
+**`correlation_analyzer.find_significant_correlations(data, threshold)`** Finds significant correlations above threshold.
 
 #### Predictive Modeling
 
-**`predictive_modeler.train_regression_model(name, X, y, features)`**
-Trains regression model.
+**`predictive_modeler.train_regression_model(name, X, y, features)`** Trains regression model.
 
-**`predictive_modeler.predict(name, X, confidence_level)`**
-Makes prediction with confidence interval.
+**`predictive_modeler.predict(name, X, confidence_level)`** Makes prediction with confidence interval.
 
 #### Risk Quantification
 
-**`risk_quantifier.quantify_risk(loss_distribution, confidence_level)`**
-Quantifies risk metrics (VaR, CVaR).
+**`risk_quantifier.quantify_risk(loss_distribution, confidence_level)`** Quantifies risk metrics (VaR, CVaR).
 
 Returns:
+
 ```python
 RiskMetrics(
     value_at_risk=-0.15,
@@ -250,18 +246,19 @@ integration = HYDRA50DeepIntegration()
 
 #### Integration Methods
 
-**`handle_scenario_trigger(scenario_id, scenario_type, severity, context)`**
-Handles scenario trigger with full system integration.
+**`handle_scenario_trigger(scenario_id, scenario_type, severity, context)`** Handles scenario trigger with full system integration.
 
 Orchestrates:
+
 1. Planetary Defense validation
-2. Cerberus defense (if high severity)
-3. SOC incident reporting
-4. Command Center threat report
-5. Council advisory (if critical)
-6. Event Spine broadcasting
+1. Cerberus defense (if high severity)
+1. SOC incident reporting
+1. Command Center threat report
+1. Council advisory (if critical)
+1. Event Spine broadcasting
 
 Returns:
+
 ```python
 {
     "scenario_id": "scenario_001",
@@ -281,11 +278,9 @@ Returns:
 }
 ```
 
-**`get_integration_health() -> Dict[str, str]`**
-Gets health status of all integrations.
+**`get_integration_health() -> Dict[str, str]`** Gets health status of all integrations.
 
-**`reconnect_all() -> Dict[str, bool]`**
-Attempts to reconnect all disconnected integrations.
+**`reconnect_all() -> Dict[str, bool]`** Attempts to reconnect all disconnected integrations.
 
 ## Performance API
 
@@ -301,17 +296,13 @@ optimizer = HYDRA50PerformanceOptimizer()
 
 #### Caching
 
-**`lru_cache.get(key) -> Any`**
-Gets value from LRU cache.
+**`lru_cache.get(key) -> Any`** Gets value from LRU cache.
 
-**`lru_cache.put(key, value)`**
-Puts value in LRU cache.
+**`lru_cache.put(key, value)`** Puts value in LRU cache.
 
-**`ttl_cache.get(key) -> Any`**
-Gets value from TTL cache.
+**`ttl_cache.get(key) -> Any`** Gets value from TTL cache.
 
-**`ttl_cache.put(key, value, ttl_seconds)`**
-Puts value in TTL cache with TTL.
+**`ttl_cache.put(key, value, ttl_seconds)`** Puts value in TTL cache with TTL.
 
 #### Memoization Decorator
 
@@ -320,7 +311,9 @@ from app.core.hydra_50_performance import memoize
 
 @memoize(max_size=128)
 def expensive_function(x, y):
+
     # Computation is cached
+
     return x ** y
 ```
 
@@ -338,71 +331,75 @@ security = HYDRA50SecuritySystem()
 
 #### User Management
 
-**`access_control.create_user(username, password, role)`**
-Creates new user.
+**`access_control.create_user(username, password, role)`** Creates new user.
 
-**`access_control.authenticate(username, password)`**
-Authenticates user.
+**`access_control.authenticate(username, password)`** Authenticates user.
 
-**`access_control.check_permission(user, permission)`**
-Checks if user has permission.
+**`access_control.check_permission(user, permission)`** Checks if user has permission.
 
 #### Input Validation
 
-**`validator.validate_username(username)`**
-Validates username format.
+**`validator.validate_username(username)`** Validates username format.
 
-**`validator.validate_password(password)`**
-Validates password strength.
+**`validator.validate_password(password)`** Validates password strength.
 
-**`validator.detect_sql_injection(text)`**
-Detects SQL injection attempts.
+**`validator.detect_sql_injection(text)`** Detects SQL injection attempts.
 
-**`validator.detect_xss(text)`**
-Detects XSS attempts.
+**`validator.detect_xss(text)`** Detects XSS attempts.
 
-**`validator.sanitize_string(text)`**
-Sanitizes string for safe use.
+**`validator.sanitize_string(text)`** Sanitizes string for safe use.
 
 ## CLI Commands
 
 ### Scenario Management
 
 ```bash
+
 # List scenarios
+
 hydra50 list-scenarios [--category CATEGORY] [--status STATUS] [--json]
 
 # Activate scenario
+
 hydra50 activate SCENARIO_ID [--force]
 
 # Deactivate scenario
+
 hydra50 deactivate SCENARIO_ID
 
 # Get scenario status
+
 hydra50 status SCENARIO_ID [--json]
 ```
 
 ### Simulation
 
 ```bash
+
 # Run simulation
+
 hydra50 simulate SCENARIO_ID [--duration-hours HOURS] [--output-file FILE]
 ```
 
 ### Monitoring
 
 ```bash
+
 # Real-time monitoring
+
 hydra50 monitor [--interval SECONDS] [--duration SECONDS]
 ```
 
 ### Data Management
 
 ```bash
+
 # Export data
+
 hydra50 export OUTPUT_FILE [--format json|csv]
 
 # Import data
+
 hydra50 import-data INPUT_FILE [--format json|csv]
 ```
 
@@ -421,8 +418,7 @@ panel.show()
 
 #### Signals
 
-**`scenario_list.scenario_selected`**
-Emitted when scenario is selected.
+**`scenario_list.scenario_selected`** Emitted when scenario is selected.
 
 #### Widgets
 
@@ -449,19 +445,16 @@ Events published to Event Spine:
 
 ### Exception Types
 
-**`ScenarioNotFoundError`**
-Raised when scenario doesn't exist.
+**`ScenarioNotFoundError`** Raised when scenario doesn't exist.
 
-**`ScenarioActivationError`**
-Raised when scenario activation fails.
+**`ScenarioActivationError`** Raised when scenario activation fails.
 
-**`IntegrationError`**
-Raised when system integration fails.
+**`IntegrationError`** Raised when system integration fails.
 
-**`ValidationError`**
-Raised when input validation fails.
+**`ValidationError`** Raised when input validation fails.
 
 Example:
+
 ```python
 try:
     engine.activate_scenario("nonexistent")

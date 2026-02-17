@@ -2,10 +2,7 @@
 
 ## Overview
 
-The **Learning Request Log** is a sophisticated AI learning approval system that allows
-the AI to discover and propose learning new information, while giving users complete
-control over what the AI is allowed to learn. This system implements a human-in-the-loop
-approval workflow with a "Black Vault" mechanism for permanently denying content.
+The **Learning Request Log** is a sophisticated AI learning approval system that allows the AI to discover and propose learning new information, while giving users complete control over what the AI is allowed to learn. This system implements a human-in-the-loop approval workflow with a "Black Vault" mechanism for permanently denying content.
 
 ## Key Features
 
@@ -61,14 +58,16 @@ data/
 
 ### Access Control
 
-The system uses **for_ai** boolean parameters throughout the API to control what the AI
-can see:
+The system uses **for_ai** boolean parameters throughout the API to control what the AI can see:
 
 ```python
+
 # AI calls (for_ai=True or not specified)
+
 requests = log.get_pending_requests(for_ai=True)  # Returns []
 
 # User calls (for_ai=False)
+
 requests = log.get_pending_requests(for_ai=False)  # Returns all pending
 ```
 
@@ -132,9 +131,11 @@ Each request contains:
 from app.core.learning_request_log import LearningRequestLog
 
 # Initialize (get from dashboard context)
+
 log = LearningRequestLog(memory_expansion=memory_system)
 
 # Submit a request
+
 request_id = log.submit_learning_request(
     title="New Python Best Practice Discovered",
     content="Use context managers for resource cleanup...",
@@ -148,7 +149,9 @@ request_id = log.submit_learning_request(
 if request_id:
     print(f"Request submitted: {request_id}")
 else:
+
     # Content is blacklisted or submission failed
+
     print("Request rejected")
 ```
 
@@ -157,12 +160,18 @@ else:
 Before submitting, AI can check if content is worth learning:
 
 ```python
+
 # This automatically filters blacklisted content
+
 if log.is_content_relevant("Some content text...", for_ai=True):
+
     # Content is not blacklisted, proceed
+
     pass
 else:
+
     # Content is blacklisted or irrelevant, ignore it
+
     pass
 ```
 
@@ -171,9 +180,13 @@ else:
 #### Getting Pending Requests (AI)
 
 ```python
+
 # AI calls with for_ai=True (default)
+
 requests = log.get_pending_requests(for_ai=True)
+
 # Returns [] - AI cannot see pending requests
+
 ```
 
 ## API Reference
@@ -220,6 +233,7 @@ def submit_learning_request(
 - `None` if content is blacklisted or submission fails
 
 **Example:**
+
 ```python
 request_id = log.submit_learning_request(
     title="Machine Learning Algorithm",
@@ -306,12 +320,17 @@ def is_content_relevant(self, content: str, for_ai: bool = True) -> bool
 - `True` otherwise
 
 **Example:**
+
 ```python
 if log.is_content_relevant("Potentially blacklisted content", for_ai=True):
+
     # Safe to proceed
+
     log.submit_learning_request(...)
 else:
+
     # Content filtered, skip it
+
     pass
 ```
 
@@ -321,8 +340,7 @@ else:
 def get_statistics(self) -> dict
 ```
 
-**Returns:**
-Dictionary with:
+**Returns:** Dictionary with:
 
 - `total_requests`: Total number of requests
 - `pending_requests`: Awaiting approval
@@ -370,9 +388,13 @@ When AI checks if content is relevant:
 Approved requests automatically integrate:
 
 ```python
+
 # When user approves a request
+
 if log.approve_request(request_id):
+
     # System automatically calls:
+
     memory_system.store_knowledge(
         title=request['title'],
         content=request['content'],
@@ -399,6 +421,7 @@ def initialize(self, context):
     self.request_log = context.get('learning_request_log')
 
     # Submit requests from plugin
+
     self.request_log.submit_learning_request(
         title="Plugin Discovery",
         content="...",
@@ -508,13 +531,17 @@ def initialize(self, context):
 ### Complete AI Learning Cycle
 
 ```python
+
 # 1. AI discovers interesting content
+
 content = "Python 3.14 introduces new performance features..."
 
 # 2. AI checks if content is relevant (subliminal filter)
+
 if log.is_content_relevant(content, for_ai=True):
 
     # 3. AI submits learning request
+
     request_id = log.submit_learning_request(
         title="Python 3.14 Performance Features",
         content=content,
@@ -533,12 +560,15 @@ else:
     print("Content filtered as irrelevant")
 
 # 4. User reviews in UI and approves
+
 # (GUI handles this step)
 
 # 5. System auto-integrates approved content
+
 # (Automatic after user approval)
 
 # 6. AI can now access learned content via Memory Expansion System
+
 results = memory_system.search_knowledge("Python 3.14 performance")
 ```
 
@@ -557,9 +587,7 @@ Potential improvements to consider:
 
 ## Conclusion
 
-The Learning Request Log system provides a sophisticated, secure, and user-friendly way
-to control AI learning. It balances AI autonomy with human oversight, ensuring the AI
-can grow and improve while maintaining complete user control over what gets learned.
+The Learning Request Log system provides a sophisticated, secure, and user-friendly way to control AI learning. It balances AI autonomy with human oversight, ensuring the AI can grow and improve while maintaining complete user control over what gets learned.
 
 Key benefits:
 
@@ -573,8 +601,7 @@ Key benefits:
 
 For additional help, see the main documentation or contact the development team.
 
-
----
+______________________________________________________________________
 
 **Repository note:** Last updated: 2025-11-26 (automated)
 

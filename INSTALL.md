@@ -19,11 +19,14 @@ Project-AI can be installed using multiple methods depending on your platform an
 
 **Option 1: PowerShell (Recommended)**
 ```powershell
+
 # Run as Administrator
+
 irm https://raw.githubusercontent.com/IAmSoThirsty/Project-AI/main/scripts/install-windows.ps1 | iex
 ```
 
 **Option 2: Download Installer**
+
 1. Download the latest [Windows Installer (.exe)](https://github.com/IAmSoThirsty/Project-AI/releases/latest)
 2. Run the installer
 3. Follow the setup wizard
@@ -37,6 +40,7 @@ brew install project-ai
 ```
 
 **Option 2: Download DMG**
+
 1. Download the latest [macOS DMG](https://github.com/IAmSoThirsty/Project-AI/releases/latest)
 2. Open the DMG file
 3. Drag Project-AI to Applications folder
@@ -69,7 +73,9 @@ sudo dnf install https://github.com/IAmSoThirsty/Project-AI/releases/latest/down
 **Arch Linux:**
 ```bash
 yay -S project-ai
+
 # or
+
 paru -S project-ai
 ```
 
@@ -106,15 +112,18 @@ Or install from Google Play Store (coming soon).
 Download pre-built binaries from the [GitHub Releases page](https://github.com/IAmSoThirsty/Project-AI/releases/latest):
 
 ### Windows
+
 - `ProjectAI-1.0.0-windows-x86_64.zip` - Portable ZIP archive
 - `ProjectAI-1.0.0-windows-x86_64.exe` - Installer executable
 - `ProjectAI-1.0.0-windows-x86_64.msi` - MSI installer
 
 ### macOS
+
 - `ProjectAI-1.0.0-macos.dmg` - DMG disk image
 - `ProjectAI-1.0.0-macos-universal.tar.gz` - Universal binary (Intel + Apple Silicon)
 
 ### Linux
+
 - `ProjectAI-1.0.0-linux-x86_64.tar.gz` - Tarball
 - `project-ai_1.0.0_amd64.deb` - Debian/Ubuntu package
 - `project-ai-1.0.0.x86_64.rpm` - Fedora/RHEL package
@@ -126,10 +135,13 @@ Download pre-built binaries from the [GitHub Releases page](https://github.com/I
 All releases include checksums and GPG signatures:
 
 ```bash
+
 # Verify checksum
+
 sha256sum -c ProjectAI-1.0.0-linux-x86_64.tar.gz.sha256
 
 # Verify GPG signature
+
 gpg --verify ProjectAI-1.0.0-linux-x86_64.tar.gz.asc
 ```
 
@@ -171,30 +183,40 @@ sudo port install project-ai
 
 **Ubuntu/Debian (APT):**
 ```bash
+
 # Add repository
+
 curl -fsSL https://repo.projectai.dev/gpg | sudo apt-key add -
 echo "deb https://repo.projectai.dev/apt stable main" | sudo tee /etc/apt/sources.list.d/project-ai.list
 
 # Install
+
 sudo apt update
 sudo apt install project-ai
 ```
 
 **Fedora/RHEL (DNF):**
 ```bash
+
 # Add repository
+
 sudo dnf config-manager --add-repo https://repo.projectai.dev/rpm/project-ai.repo
 
 # Install
+
 sudo dnf install project-ai
 ```
 
 **Arch Linux (AUR):**
 ```bash
 yay -S project-ai
+
 # or
+
 paru -S project-ai
+
 # or
+
 makepkg -si  # from AUR directory
 ```
 
@@ -216,13 +238,17 @@ flatpak run com.projectai.ProjectAI
 ### Quick Start
 
 ```bash
+
 # Pull the image
+
 docker pull ghcr.io/iamsothirsty/project-ai:latest
 
 # Run with defaults
+
 docker run -d -p 5000:5000 ghcr.io/iamsothirsty/project-ai:latest
 
 # Run with custom configuration
+
 docker run -d \
   -p 5000:5000 \
   -v $(pwd)/data:/app/data \
@@ -233,14 +259,18 @@ docker run -d \
 ### Docker Compose
 
 ```bash
+
 # Clone repository
+
 git clone https://github.com/IAmSoThirsty/Project-AI.git
 cd Project-AI
 
 # Start all services
+
 docker-compose up -d
 
 # Access at http://localhost:5000
+
 ```
 
 See [Docker Documentation](docker/README.md) for advanced configuration.
@@ -258,22 +288,29 @@ See [Docker Documentation](docker/README.md) for advanced configuration.
 ### Installation Steps
 
 ```bash
+
 # 1. Clone repository
+
 git clone https://github.com/IAmSoThirsty/Project-AI.git
 cd Project-AI
 
 # 2. Create virtual environment
+
 python3 -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # 3. Install dependencies
+
 pip install -e .
 
 # 4. Configure environment
+
 cp .env.example .env
+
 # Edit .env with your settings
 
 # 5. Run application
+
 python -m src.app.main
 ```
 
@@ -282,10 +319,13 @@ python -m src.app.main
 To create a standalone executable:
 
 ```bash
+
 # Linux/macOS
+
 ./build-installer.sh
 
 # Windows
+
 .\build-installer.ps1
 ```
 
@@ -310,7 +350,9 @@ pip install git+https://github.com/IAmSoThirsty/Project-AI.git
 ### Usage
 
 ```python
+
 # In Python
+
 from project_ai import ProjectAI
 
 app = ProjectAI()
@@ -329,6 +371,7 @@ project-ai
 ### First Run Setup
 
 On first run, Project-AI will:
+
 1. Create data directory: `~/.project-ai/data`
 2. Generate default configuration
 3. Prompt for API keys (optional)
@@ -338,7 +381,9 @@ On first run, Project-AI will:
 For full functionality, configure:
 
 ```bash
+
 # .env file
+
 OPENAI_API_KEY=sk-...        # For AI features
 HUGGINGFACE_API_KEY=hf_...   # For image generation
 ```
@@ -364,13 +409,17 @@ Edit `~/.project-ai/config.json`:
 
 **Issue: "Python not found"**
 ```powershell
+
 # Install Python from Microsoft Store
+
 winget install Python.Python.3.11
 ```
 
 **Issue: "Permission denied"**
 ```powershell
+
 # Run PowerShell as Administrator
+
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
@@ -378,13 +427,17 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 **Issue: "Developer cannot be verified"**
 ```bash
+
 # Remove quarantine attribute
+
 xattr -d com.apple.quarantine /Applications/ProjectAI.app
 ```
 
 **Issue: "Command not found"**
 ```bash
+
 # Add to PATH
+
 echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 ```
@@ -393,16 +446,21 @@ source ~/.zshrc
 
 **Issue: "Permission denied"**
 ```bash
+
 # Make executable
+
 chmod +x ProjectAI-x86_64.AppImage
 ```
 
 **Issue: "Missing dependencies"**
 ```bash
+
 # Ubuntu/Debian
+
 sudo apt install python3-pyqt6 python3-pip
 
 # Fedora
+
 sudo dnf install python3-qt6 python3-pip
 ```
 
@@ -410,19 +468,25 @@ sudo dnf install python3-qt6 python3-pip
 
 **Issue: "Module not found"**
 ```bash
+
 # Reinstall dependencies
+
 pip install --force-reinstall -e .
 ```
 
 **Issue: "Database error"**
 ```bash
+
 # Reset database
+
 rm -rf ~/.project-ai/data/*.db
 ```
 
 **Issue: "Port already in use"**
 ```bash
+
 # Change port in config
+
 export API_PORT=5001
 ```
 
@@ -446,25 +510,36 @@ Project-AI is released under the MIT License. See [LICENSE](../LICENSE) for deta
 ## 🔄 Updating
 
 ### Package Manager
+
 ```bash
+
 # Windows
+
 choco upgrade project-ai
 
 # macOS
+
 brew upgrade project-ai
 
 # Linux
+
 sudo apt update && sudo apt upgrade project-ai
 ```
 
 ### Manual Update
+
 ```bash
+
 # Download latest release
+
 # Extract and replace files
+
 # Or run install script again
+
 ```
 
 ### Docker
+
 ```bash
 docker pull ghcr.io/iamsothirsty/project-ai:latest
 docker-compose pull
@@ -476,28 +551,41 @@ docker-compose up -d
 ## 🗑️ Uninstallation
 
 ### Windows
+
 ```powershell
+
 # Via Control Panel > Add/Remove Programs
+
 # Or via package manager
+
 choco uninstall project-ai
 ```
 
 ### macOS
+
 ```bash
+
 # Drag from Applications to Trash
+
 # Or via package manager
+
 brew uninstall project-ai
 ```
 
 ### Linux
+
 ```bash
+
 # Ubuntu/Debian
+
 sudo apt remove project-ai
 
 # Fedora
+
 sudo dnf remove project-ai
 
 # Remove data (optional)
+
 rm -rf ~/.project-ai
 ```
 

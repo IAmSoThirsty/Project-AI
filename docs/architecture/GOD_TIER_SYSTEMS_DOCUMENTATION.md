@@ -7,13 +7,13 @@ This document provides comprehensive documentation for the 4 critical core syste
 ## Table of Contents
 
 1. [Secure Communications Kernel](#secure-communications-kernel)
-2. [Sensor Fusion Engine](#sensor-fusion-engine)
-3. [Polyglot AI Execution Engine](#polyglot-ai-execution-engine)
-4. [Federated Cell Architecture](#federated-cell-architecture)
-5. [Integration Guide](#integration-guide)
-6. [API Reference](#api-reference)
+1. [Sensor Fusion Engine](#sensor-fusion-engine)
+1. [Polyglot AI Execution Engine](#polyglot-ai-execution-engine)
+1. [Federated Cell Architecture](#federated-cell-architecture)
+1. [Integration Guide](#integration-guide)
+1. [API Reference](#api-reference)
 
----
+______________________________________________________________________
 
 ## Secure Communications Kernel
 
@@ -70,10 +70,12 @@ from app.core.secure_comms import (
 )
 
 # Initialize kernel
+
 comms = SecureCommunicationsKernel(data_dir="data/comms")
 comms.initialize()
 
 # Register TCP transport
+
 endpoint = TransportEndpoint(
     endpoint_id="tcp_primary",
     transport_type=TransportType.TCP,
@@ -83,6 +85,7 @@ endpoint = TransportEndpoint(
 comms.register_transport(endpoint)
 
 # Send encrypted message
+
 comms.send_message(
     destination="node_abc123",
     message={"type": "alert", "data": "threat detected"},
@@ -90,11 +93,13 @@ comms.send_message(
 )
 
 # Receive messages
+
 messages = comms.receive_messages()
 for msg in messages:
     print(f"From: {msg['sender']}, Data: {msg['data']}")
 
 # Get status
+
 status = comms.get_status()
 print(f"Active transports: {status['active_transports']}")
 print(f"Routing table size: {status['routing_table_size']}")
@@ -111,7 +116,7 @@ config = {
 comms.set_config(config)
 ```
 
----
+______________________________________________________________________
 
 ## Sensor Fusion Engine
 
@@ -167,10 +172,12 @@ from app.core.sensor_fusion import (
 )
 
 # Initialize engine
+
 fusion = SensorFusionEngine(data_dir="data/fusion")
 fusion.initialize()
 
 # Register radar sensor
+
 fusion.register_sensor(
     sensor_id="radar_001",
     sensor_type="RADAR",
@@ -183,6 +190,7 @@ fusion.register_sensor(
 )
 
 # Ingest sensor data
+
 fusion.ingest_sensor_data(
     sensor_id="radar_001",
     data={
@@ -193,12 +201,14 @@ fusion.ingest_sensor_data(
 )
 
 # Get fused state
+
 state = fusion.get_fused_state()
 print(f"Position: {state['position']}")
 print(f"Velocity: {state['velocity']}")
 print(f"Confidence: {state['confidence']}")
 
 # Detect threats
+
 threats = fusion.detect_threats(None)
 for threat in threats:
     print(f"Threat ID: {threat['threat_id']}")
@@ -206,6 +216,7 @@ for threat in threats:
     print(f"Position: {threat['position']}")
 
 # Get threat level
+
 overall_threat = fusion.get_threat_level()
 print(f"Overall threat level: {overall_threat} (0-5)")
 ```
@@ -213,23 +224,28 @@ print(f"Overall threat level: {overall_threat} (0-5)")
 ### Kalman Filter Implementation
 
 ```python
+
 # Access the underlying Kalman filter
+
 kf = fusion.kalman_filter
 
 # Prediction step
+
 kf.predict()
 
 # Update with measurement
+
 import numpy as np
 measurement = np.array([x, y, z])
 kf.update(measurement)
 
 # Get state estimate
+
 position, velocity = kf.get_state()
 covariance = kf.get_covariance()
 ```
 
----
+______________________________________________________________________
 
 ## Polyglot AI Execution Engine
 
@@ -280,10 +296,12 @@ PolyglotExecutionEngine
 from app.core.polyglot_execution import PolyglotExecutionEngine
 
 # Initialize engine
+
 ai = PolyglotExecutionEngine(data_dir="data/ai")
 ai.initialize()
 
 # Execute AI inference
+
 response = ai.execute(
     prompt="Analyze this threat scenario...",
     system_prompt="You are a tactical defense AI.",
@@ -301,12 +319,14 @@ print(f"Latency: {response.latency_ms:.2f}ms")
 print(f"Cached: {response.cached}")
 
 # With streaming
+
 response = ai.execute(
     prompt="Generate defense strategy...",
     stream=True
 )
 
 # Get metrics
+
 metrics = ai.get_metrics()
 print(f"Total requests: {metrics['total_requests']}")
 print(f"Cache hit rate: {metrics['cache_hit_rate']:.2%}")
@@ -319,6 +339,7 @@ print(f"Total cost: ${metrics['total_cost']:.2f}")
 from app.core.polyglot_execution import ModelConfig, ModelBackend, ModelTier
 
 # Register custom model
+
 ai.register_model(ModelConfig(
     model_id="custom_gpt",
     backend=ModelBackend.OPENAI,
@@ -330,10 +351,11 @@ ai.register_model(ModelConfig(
 ))
 
 # Configure fallback chain
+
 ai.fallback_chain = ["gpt-4-turbo", "gpt-3.5-turbo", "gpt2"]
 ```
 
----
+______________________________________________________________________
 
 ## Federated Cell Architecture
 
@@ -395,10 +417,12 @@ from app.core.federated_cells import (
 )
 
 # Initialize cell manager
+
 cells = FederatedCellManager(data_dir="data/cells")
 cells.initialize()
 
 # Register another cell
+
 cell_identity = CellIdentity(
     cell_id="cell_002",
     name="Processing Cell Alpha",
@@ -418,6 +442,7 @@ endpoint = CellEndpoint(
 cells.register_cell(cell_identity, endpoint)
 
 # Distribute work
+
 work = WorkUnit(
     work_id="task_001",
     workload_type=WorkloadType.INFERENCE,
@@ -432,6 +457,7 @@ work = WorkUnit(
 cells.distribute_work(work)
 
 # Get cluster status
+
 status = cells.get_status()
 print(f"Role: {status['role']}")
 print(f"Active cells: {status['active_cells']}")
@@ -439,6 +465,7 @@ print(f"Work queue size: {status['work_queue_size']}")
 print(f"Raft term: {status['raft_term']}")
 
 # Check leader
+
 leader_id = cells._find_leader()
 if leader_id:
     print(f"Current leader: {leader_id}")
@@ -447,20 +474,25 @@ if leader_id:
 ### Raft Consensus
 
 ```python
+
 # Monitor election state
+
 print(f"Current term: {cells.raft_state.current_term}")
 print(f"Voted for: {cells.raft_state.voted_for}")
 print(f"Log size: {len(cells.raft_state.log)}")
 
 # Check if this cell is leader
+
 if cells.cell_identity.role == CellRole.LEADER:
     print("This cell is the leader")
-    
+
     # Leader sends heartbeats automatically
+
     # Log entries are replicated to followers
+
 ```
 
----
+______________________________________________________________________
 
 ## Integration Guide
 
@@ -496,18 +528,21 @@ from app.core.polyglot_execution import PolyglotExecutionEngine
 from app.deployment.federated_cells import FederatedCellManager
 
 # Initialize all systems
+
 comms = SecureCommunicationsKernel(data_dir="data/comms")
 fusion = SensorFusionEngine(data_dir="data/fusion")
 ai = PolyglotExecutionEngine(data_dir="data/ai")
 cells = FederatedCellManager(data_dir="data/cells")
 
 # Start all systems
+
 comms.initialize()
 fusion.initialize()
 ai.initialize()
 cells.initialize()
 
 # Register sensor
+
 fusion.register_sensor(
     sensor_id="radar_alpha",
     sensor_type="RADAR",
@@ -515,22 +550,27 @@ fusion.register_sensor(
 )
 
 # Ingest sensor data
+
 fusion.ingest_sensor_data(
     sensor_id="radar_alpha",
     data={"position": [500, 100, 0]}
 )
 
 # Detect threats
+
 threats = fusion.detect_threats(None)
 if threats:
     for threat in threats:
+
         # Use AI to analyze threat
+
         response = ai.execute(
             prompt=f"Analyze threat: {threat}",
             model="gpt-4"
         )
-        
+
         # Distribute countermeasure task
+
         work = WorkUnit(
             work_id=f"countermeasure_{threat['threat_id']}",
             workload_type=WorkloadType.COMPUTATION,
@@ -541,8 +581,9 @@ if threats:
             priority=0
         )
         cells.distribute_work(work)
-        
+
         # Broadcast threat via secure comms
+
         comms.broadcast({
             "type": "threat_alert",
             "threat_id": threat['threat_id'],
@@ -551,6 +592,7 @@ if threats:
         })
 
 # Monitor system health
+
 print("System Health:")
 print(f"  Comms: {comms.health_check()}")
 print(f"  Fusion: {fusion.health_check()}")
@@ -558,7 +600,7 @@ print(f"  AI: {ai.health_check()}")
 print(f"  Cells: {cells.health_check()}")
 ```
 
----
+______________________________________________________________________
 
 ## API Reference
 
@@ -604,87 +646,97 @@ def emit_event(event_type: str, data: Any) -> int
 ### Event Subscriptions
 
 ```python
+
 # Subscribe to events from any system
+
 def on_threat_detected(data):
     print(f"Threat detected: {data}")
 
 sub_id = fusion.subscribe("threat_detected", on_threat_detected)
 
 # Unsubscribe later
+
 fusion.unsubscribe(sub_id)
 ```
 
----
+______________________________________________________________________
 
 ## Performance Considerations
 
 ### Secure Communications
+
 - **Encryption overhead**: ~1-2ms per message
 - **Message queue**: Priority-based, O(log n) insertion
 - **Rate limiting**: O(1) check per message
 - **Recommended**: Use UDP for high-frequency, low-importance messages
 
 ### Sensor Fusion
+
 - **Kalman filter**: O(n³) for covariance update (n=state dimension)
 - **Particle filter**: O(m) for m particles
 - **Recommended**: Use Kalman for linear systems, particle for non-linear
 
 ### Polyglot AI
+
 - **OpenAI latency**: 500-2000ms depending on model
 - **HuggingFace latency**: 100-500ms for local models
-- **Cache hit**: <1ms
+- **Cache hit**: \<1ms
 - **Recommended**: Enable caching for repeated queries
 
 ### Federated Cells
+
 - **Heartbeat frequency**: 1 per second (configurable)
 - **Gossip interval**: 5 seconds (configurable)
 - **Election timeout**: 5 seconds (configurable)
 - **Recommended**: Adjust timeouts based on network latency
 
----
+______________________________________________________________________
 
 ## Security Considerations
 
 1. **Encryption Keys**: Ephemeral keys are generated per session. For persistent identity, implement key storage.
 
-2. **Authentication**: Systems trust registered peers. Implement mutual authentication for production.
+1. **Authentication**: Systems trust registered peers. Implement mutual authentication for production.
 
-3. **Rate Limiting**: Default limits prevent DoS. Adjust based on expected traffic.
+1. **Rate Limiting**: Default limits prevent DoS. Adjust based on expected traffic.
 
-4. **Byzantine Tolerance**: 2/3 quorum assumes <1/3 malicious nodes. Increase for higher security.
+1. **Byzantine Tolerance**: 2/3 quorum assumes \<1/3 malicious nodes. Increase for higher security.
 
-5. **Air-Gapped Mode**: Store-and-forward queue is unlimited by default. Implement size limits.
+1. **Air-Gapped Mode**: Store-and-forward queue is unlimited by default. Implement size limits.
 
----
+______________________________________________________________________
 
 ## Troubleshooting
 
 ### Secure Communications
+
 - **No route to destination**: Check routing table, ensure mesh connectivity
 - **Messages not delivered**: Verify transport endpoints, check rate limits
 - **Consensus not reached**: Ensure sufficient peers (need ≥3 for 2/3 quorum)
 
 ### Sensor Fusion
+
 - **Poor fusion quality**: Check sensor health, verify calibration
 - **No threats detected**: Verify threat detection thresholds
 - **High latency**: Reduce sensor count or decrease update rate
 
 ### Polyglot AI
+
 - **Execution failed**: Check API keys, verify network connectivity
 - **High costs**: Enable caching, use cheaper models for non-critical tasks
 - **No backends available**: Install OpenAI or transformers packages
 
 ### Federated Cells
+
 - **No leader elected**: Ensure ≥3 cells, check network connectivity
 - **Work not distributed**: Verify leader election, check cell capabilities
 - **Cells offline**: Check heartbeat timeouts, verify network
 
----
+______________________________________________________________________
 
 ## License
 
-This code is part of the Project-AI God Tier Zombie Apocalypse Defense Engine.
-See LICENSE file in repository root.
+This code is part of the Project-AI God Tier Zombie Apocalypse Defense Engine. See LICENSE file in repository root.
 
 ## Contributing
 

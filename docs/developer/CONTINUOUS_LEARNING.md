@@ -18,6 +18,7 @@ The Continuous Learning Engine lets the AI absorb every meaningful information i
    ```
 
 1. Call `engine.absorb_information(topic, content, metadata=...)` after absorbing a new piece of information.
+
 1. The returned `LearningReport` contains all parts of the report that can be logged, surfaced in the UI, or handed to further reasoning systems.
 
 ## Persona Integration

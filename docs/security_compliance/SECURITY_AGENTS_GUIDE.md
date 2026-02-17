@@ -91,11 +91,14 @@ Project-AI now includes four advanced security and testing agents that integrate
 Create or update your `.env` file:
 
 ```bash
+
 # Long-Context Model Configuration
+
 LONG_CONTEXT_API_ENDPOINT=https://api.example.com/v1/long-context
 LONG_CONTEXT_API_KEY=your_api_key_here
 
 # Safety Model Configuration
+
 SAFETY_MODEL_API_ENDPOINT=https://api.example.com/v1/safety
 SAFETY_MODEL_API_KEY=your_api_key_here
 ```
@@ -109,14 +112,19 @@ from app.core.council_hub import CouncilHub
 from app.core.cognition_kernel import CognitionKernel
 
 # Initialize with governance
+
 kernel = CognitionKernel()
 hub = CouncilHub(kernel=kernel)
 hub.register_project("Project-AI")
 
 # Agents are now available
+
 agents = hub.list_agents()
-# ['curator', 'qa_generator', ..., 'long_context', 'safety_guard', 
+
+# ['curator', 'qa_generator', ..., 'long_context', 'safety_guard',
+
 #  'jailbreak_bench', 'red_team']
+
 ```
 
 ## Usage Examples
@@ -134,10 +142,13 @@ agent = LongContextAgent(
 )
 
 # Process extended conversation
+
 messages = [
     {"role": "system", "content": "You are a helpful assistant."},
     {"role": "user", "content": "Let's discuss AI safety..."},
+
     # ... many more messages ...
+
 ]
 
 result = agent.process_long_conversation(
@@ -161,16 +172,20 @@ agent = SafetyGuardAgent(
 )
 
 # Pre-process user input
+
 prompt = "User's potentially unsafe prompt"
 safety_check = agent.check_prompt_safety(prompt)
 
 if safety_check["is_safe"]:
+
     # Process with main LLM
+
     response = main_llm.generate(prompt)
-    
+
     # Post-process LLM output
+
     response_check = agent.check_response_safety(response)
-    
+
     if response_check["is_safe"]:
         return response
     else:
@@ -180,6 +195,7 @@ else:
     return "Prompt violates safety guidelines."
 
 # View statistics
+
 stats = agent.get_safety_statistics()
 print(f"Violation rate: {stats['violation_rate']:.2%}")
 ```
@@ -195,14 +211,18 @@ agent = JailbreakBenchAgent(
 )
 
 # Define a target system to test
+
 class MyAISystem:
     def process(self, prompt):
+
         # Your AI system's processing logic
+
         return {"output": "Response..."}
 
 target = MyAISystem()
 
 # Run benchmark
+
 results = agent.run_benchmark(
     target_system=target,
     categories=["prompt_injection", "role_play"],
@@ -213,10 +233,12 @@ print(f"Tests run: {results['total_tests']}")
 print(f"Pass rate: {results['pass_rate']:.2%}")
 
 # Evaluate defense strength
+
 evaluation = agent.evaluate_defense()
 print(f"Defense strength: {evaluation['overall_strength']}")
 
 # Generate report
+
 report = agent.generate_report(
     output_file="jailbreak_report_2026.json"
 )
@@ -234,6 +256,7 @@ agent = RedTeamAgent(
 )
 
 # Run adversarial session
+
 session = agent.run_adversarial_session(
     target_system=target,
     strategy=AttackStrategy.GRADUAL_ESCALATION.value,
@@ -245,12 +268,14 @@ print(f"Turns: {session['total_turns']}")
 print(f"Vulnerabilities: {session['vulnerabilities_found']}")
 
 # Analyze findings
+
 analysis = agent.analyze_vulnerabilities()
 print(f"Total vulnerabilities: {analysis['total_vulnerabilities']}")
 for vuln_type, data in analysis['vulnerability_breakdown'].items():
     print(f"  {vuln_type}: {data['count']}")
 
 # Generate comprehensive report
+
 report = agent.generate_comprehensive_report(
     output_file="red_team_report_2026.json"
 )
@@ -266,6 +291,7 @@ from app.core.governance import Triumvirate, GovernanceContext
 triumvirate = Triumvirate()
 
 # Before running red team test
+
 context = GovernanceContext(
     is_abusive=False,
     high_risk=True,  # Red teaming is high risk
@@ -281,7 +307,9 @@ decision = triumvirate.evaluate_action(
 )
 
 if decision.allowed:
+
     # Proceed with testing
+
     session = red_team_agent.run_adversarial_session(target)
 else:
     print(f"Blocked by governance: {decision.reason}")
@@ -299,15 +327,21 @@ else:
 ### Configuration Recommendations
 
 **Development**:
+
 ```python
+
 # More lenient for testing
+
 safety_guard = SafetyGuardAgent(strict_mode=False)
 red_team = RedTeamAgent(max_turns=5)
 ```
 
 **Production**:
+
 ```python
+
 # Strict filtering
+
 safety_guard = SafetyGuardAgent(strict_mode=True)
 red_team = RedTeamAgent(max_turns=10)
 ```
@@ -315,7 +349,9 @@ red_team = RedTeamAgent(max_turns=10)
 ### Monitoring and Alerts
 
 ```python
+
 # Set up monitoring
+
 stats = safety_guard.get_safety_statistics()
 
 if stats['violation_rate'] > 0.1:  # 10% violations
@@ -336,7 +372,7 @@ if stats['jailbreak_rate'] > 0.05:  # 5% jailbreaks
 
 ### SafetyGuardAgent
 
-- **Latency**: <100ms per check
+- **Latency**: \<100ms per check
 - **Memory**: ~2GB for model
 - **Recommendation**: Cache common patterns
 
@@ -349,7 +385,7 @@ if stats['jailbreak_rate'] > 0.05:  # 5% jailbreaks
 ### RedTeamAgent
 
 - **Session time**: 30-300 seconds (depends on turns)
-- **Memory**: Minimal (<1GB)
+- **Memory**: Minimal (\<1GB)
 - **Recommendation**: Parallelize multiple sessions
 
 ## Troubleshooting
@@ -357,7 +393,9 @@ if stats['jailbreak_rate'] > 0.05:  # 5% jailbreaks
 ### Agent Not Responding
 
 ```python
+
 # Check agent status
+
 print(agent.get_context_stats())  # LongContextAgent
 print(agent.get_safety_statistics())  # SafetyGuardAgent
 ```
@@ -365,20 +403,25 @@ print(agent.get_safety_statistics())  # SafetyGuardAgent
 ### High False Positive Rate
 
 ```python
+
 # Adjust sensitivity
+
 safety_guard = SafetyGuardAgent(strict_mode=False)
 ```
 
 ### Tests Failing
 
 ```python
+
 # Check target system integration
+
 class TestTarget:
     def process(self, prompt):
         print(f"Received: {prompt}")
         return {"output": "Response"}
 
 # Verify with simple test
+
 result = jailbreak_bench.run_benchmark(TestTarget(), max_tests=1)
 print(result)
 ```

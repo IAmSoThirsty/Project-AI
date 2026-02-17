@@ -13,7 +13,7 @@
 - Cross-platform detection and platform-specific installers
 - Immutable installation package - install indefinitely
 
-#### Save Points System  
+#### Save Points System
 
 - **15-minute auto-save rotation** (keeps last 3)
 - Unlimited user save points
@@ -111,7 +111,7 @@ adb install -r legion_mini-debug.apk
 
 ### Known Issues
 
-- Android APK requires manual build due to SDK path configuration  
+- Android APK requires manual build due to SDK path configuration
 - macOS and Linux installers not yet built (use portable package)
 
 ### Coming Soon
@@ -121,7 +121,7 @@ adb install -r legion_mini-debug.apk
 - Automated cloud deployments
 - Enhanced multi-language support
 
----
+______________________________________________________________________
 
 **Ready for global deployment!** 🌍
 

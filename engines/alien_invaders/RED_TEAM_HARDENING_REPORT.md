@@ -26,6 +26,7 @@ Conservation laws enforced per tick, but not across semantic domains.
 Result: Physically impossible world states allowed.
 
 Example:
+
 - Resource depletion: 35%
 - GDP change: 0%
 - Population change: 0%
@@ -43,7 +44,7 @@ Created **Composite Invariant System** (`modules/invariants.py`, 13,340 LOC):
 ```python
 class CompositeInvariant:
     """Enforces cross-domain physical coherence."""
-    
+
     def validate(self, state, prev_state) -> list[InvariantViolation]
 ```
 
@@ -76,7 +77,9 @@ class CompositeInvariant:
 **Validation Integration:**
 
 ```python
+
 # In engine.tick():
+
 invariants_valid, violations = self.invariant_validator.validate_all(
     self.state,
     self.prev_state,
@@ -84,13 +87,14 @@ invariants_valid, violations = self.invariant_validator.validate_all(
 )
 
 if not invariants_valid:
-    logger.error("Composite invariant validation failed: %d violations", 
+    logger.error("Composite invariant validation failed: %d violations",
                  len(violations))
     for v in violations:
         logger.warning("  - %s: %s", v.invariant_name, v.description)
 ```
 
 **Impact:**
+
 - System now enforces physical coherence across domains
 - Prevents "GDP stays constant while resources vanish" scenarios
 - Validates that changes cascade realistically
@@ -107,6 +111,7 @@ Deterministic replay relies on random seed and snapshots,
 but event injection timing + ordering is not normalized.
 
 Two identical runs diverge if:
+
 1. Events injected between ticks vs before ticks
 2. Dict/list iteration order varies
 3. External adapters inject asynchronously
@@ -132,7 +137,7 @@ Created **Causal Clock System** (`modules/causal_clock.py`, 7,735 LOC):
 ```python
 class CausalClock:
     """Logical clock for event ordering."""
-    
+
     def next(self) -> int:
         """Advance logical time."""
         self._logical_time += 1
@@ -142,7 +147,7 @@ class CausalClock:
 ```python
 class EventQueue:
     """Queue for events waiting at tick boundaries."""
-    
+
     def enqueue(self, event: CausalEvent):
         """Add event sorted by logical_time."""
         self._pending_events[tick].append(event)
@@ -168,19 +173,22 @@ class CausalEvent:
 
 ```python
 def inject_event(self, event_type, parameters) -> str:
+
     # Assign logical time
+
     logical_time = self.causal_clock.next()
-    
+
     # Queue for NEXT tick boundary (never immediate)
+
     execution_tick = self.current_tick + 1
-    
+
     causal_event = CausalEvent(
         event_id=f"evt_{logical_time}_{event_type}",
         logical_time=logical_time,
         tick_number=execution_tick,
         ...
     )
-    
+
     self.event_queue.enqueue(causal_event)
     return causal_event.event_id
 ```
@@ -189,12 +197,15 @@ def inject_event(self, event_type, parameters) -> str:
 
 ```python
 def tick(self) -> bool:
+
     # Process queued events FIRST
+
     queued_events = self.event_queue.get_events_for_tick(self.current_tick)
     for causal_event in queued_events:
         self._execute_causal_event(causal_event)
-    
+
     # Then run subsystem updates
+
     self._update_alien_activity()
     ...
 ```
@@ -207,6 +218,7 @@ def tick(self) -> bool:
 4. ✅ Replay produces identical causal chains
 
 **Impact:**
+
 - Deterministic replay now guaranteed
 - Event ordering independent of physical timing
 - Auditors can trust replay logs
@@ -221,15 +233,18 @@ def tick(self) -> bool:
 **Vulnerability Discovered:**
 ```
 The adapter assumes:
+
 - Registry calls are honest
 - Registry won't mutate engine state
 - No hostile SimulationSystem exists
 
 Red Team Scenario:
 A malicious system in registry:
+
 1. Reads AICPD state
 2. Writes back "corrections"
 3. Slowly poisons global projections
+
 ```
 
 **Red Team Claim:** "Your engine is corruptible by neighbors."
@@ -242,39 +257,47 @@ Added **Read-Only Projection Mode** to `observe()`:
 def observe(self, query: str | None = None, readonly: bool = True) -> dict:
     """
     Query simulation state.
-    
+
     Args:
         readonly: If True, return deep copy (default: True)
-    
+
     Returns:
         State dict (immutable if readonly=True)
     """
     state_data = get_state_data()
-    
+
     # Return deep copy for read-only access
+
     if readonly:
         return copy.deepcopy(state_data)
-    
+
     return state_data
 ```
 
 **Default Behavior:**
 
 ```python
+
 # External calls (e.g., from registry) get copies
+
 state = engine.observe("global")  # readonly=True by default
 state["population"] = 999  # ← Mutation doesn't affect engine
 
 # Internal calls can bypass for performance
+
 state = engine.observe("global", readonly=False)  # Direct reference
 ```
 
 **Integration Adapter Update:**
 
 ```python
+
 # In integration.py
+
 def observe(...):
+
     # Registry interactions are pure (read-only)
+
     return self.engine.observe(query, readonly=True)
 ```
 
@@ -286,6 +309,7 @@ def observe(...):
 4. ✅ Non-corruptible by neighbors
 
 **Impact:**
+
 - Engine is now trust-boundary safe
 - Malicious systems in registry cannot poison state
 - Mutations only occur inside engine tick
@@ -309,6 +333,7 @@ def observe(...):
 | Integration | 2 | Full simulation with hardening |
 
 **Total Test Suite:**
+
 - 53 tests (41 existing + 12 new)
 - 100% passing (0 failures)
 - All security features validated
@@ -319,20 +344,24 @@ def observe(...):
 ============================== 53 passed in 0.22s ===============================
 
 Test Breakdown:
+
 - Composite invariant violation detection: ✅
 - Deterministic replay with different injection timing: ✅
 - Read-only observe prevents mutations: ✅
 - Event execution at tick boundaries: ✅
 - Full simulation with all hardening features: ✅
+
 ```
 
 ### Backward Compatibility
 
 **Changes:**
+
 - `observe()` now defaults to `readonly=True` (safe default)
 - Events execute at next tick, not immediately (determinism fix)
 
 **Migration:**
+
 - Existing code continues to work
 - Tests updated to tick after event injection
 - Internal engine code uses `readonly=False` for performance
@@ -351,6 +380,7 @@ Test Breakdown:
 | Deep Copy on observe() | ~0.5ms | Only external calls |
 
 **5-Year Simulation:**
+
 - Before hardening: ~600ms
 - After hardening: ~620ms
 - Performance impact: +3.3% (acceptable)
@@ -373,6 +403,7 @@ Baseline: 60MB → Hardened: 60.8MB (+1.3%)
 ### Before Hardening
 
 **Vulnerabilities:**
+
 1. ❌ Physically impossible states allowed
 2. ❌ Non-deterministic replay
 3. ❌ Registry neighbors can corrupt state
@@ -382,6 +413,7 @@ Baseline: 60MB → Hardened: 60.8MB (+1.3%)
 ### After Hardening
 
 **Vulnerabilities:**
+
 1. ✅ Cross-domain coherence enforced
 2. ✅ Fully deterministic replay guaranteed
 3. ✅ Trust boundary protected
@@ -439,10 +471,12 @@ Baseline: 60MB → Hardened: 60.8MB (+1.3%)
 **Status:** Critical vulnerabilities addressed
 
 **System Classification:**
+
 - ✅ No longer "impressive architecture"
 - ✅ Now "uncomfortable architecture that forces hard conversations"
 
-**Recommendation:** 
+**Recommendation:**
+
 - Tier 1 hardening elevates system to production-grade security
 - Tier 2 implementation would be "defense in depth"
 - Tier 3 provides cryptographic non-repudiation
@@ -462,14 +496,18 @@ Baseline: 60MB → Hardened: 60.8MB (+1.3%)
 
 **`observe()` method:**
 ```python
+
 # Old signature
+
 def observe(self, query: str | None = None) -> dict
 
 # New signature (backward compatible)
+
 def observe(self, query: str | None = None, readonly: bool = True) -> dict
 ```
 
 **`inject_event()` behavior:**
+
 - Events now queue for next tick (not immediate)
 - Returns same event_id format
 - Documented in docstrings

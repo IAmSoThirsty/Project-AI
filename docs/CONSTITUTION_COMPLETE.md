@@ -18,9 +18,9 @@ The constitution is considered complete when entropy has stabilized for **10 con
 ### Additional Requirements
 
 1. **Ledger Integrity**: All hash chains (override, entropy, constitutional) must be intact
-2. **System State**: Must be in ACTIVE or DEFENSE state (not SUSPENDED/REFOUNDING)
-3. **No Active Violations**: Zero critical invariant violations in ledger
-4. **Entropy Stability**: No creep or collapse detected in recent window
+1. **System State**: Must be in ACTIVE or DEFENSE state (not SUSPENDED/REFOUNDING)
+1. **No Active Violations**: Zero critical invariant violations in ledger
+1. **Entropy Stability**: No creep or collapse detected in recent window
 
 ## Defense Mode
 
@@ -39,17 +39,17 @@ Defense Mode is the post-completion operational state where the constitution is 
 ### Permitted Operations in Defense Mode
 
 1. **Normal Operations**: User actions, AI responses, data processing (no governance changes)
-2. **Monitoring**: Entropy tracking, invariant checking, ledger verification
-3. **Querying**: Read-only access to ledger and system state
-4. **Logging**: Append-only audit trail entries
+1. **Monitoring**: Entropy tracking, invariant checking, ledger verification
+1. **Querying**: Read-only access to ledger and system state
+1. **Logging**: Append-only audit trail entries
 
 ### Prohibited Operations in Defense Mode
 
 1. **Constitution Modification**: Changing governance rules or invariants
-2. **Ledger Tampering**: Modifying or deleting historical entries
-3. **ORACLE_SEED Change**: Altering cryptographic genesis anchor
-4. **Bypass Mechanisms**: Creating workarounds to override protocol
-5. **State Mutations**: Internal counters or accumulators (must be ledger-derived)
+1. **Ledger Tampering**: Modifying or deleting historical entries
+1. **ORACLE_SEED Change**: Altering cryptographic genesis anchor
+1. **Bypass Mechanisms**: Creating workarounds to override protocol
+1. **State Mutations**: Internal counters or accumulators (must be ledger-derived)
 
 ## Override Criteria
 
@@ -58,34 +58,39 @@ The Singularity Override Protocol can be triggered under specific conditions:
 ### EPS (Existential Protection System) Triggers
 
 1. **Critical Violations**: 3+ critical invariant violations in ledger
-2. **Total Violations**: 10+ violations of any severity
-3. **Non-Restorability**: 2+ non-restorable violations detected
-4. **Hash Chain Break**: Any break in cryptographic ledger chain
-5. **Entropy Collapse**: Current entropy < 50% of baseline
+1. **Total Violations**: 10+ violations of any severity
+1. **Non-Restorability**: 2+ non-restorable violations detected
+1. **Hash Chain Break**: Any break in cryptographic ledger chain
+1. **Entropy Collapse**: Current entropy < 50% of baseline
 
 ### Override Types
 
 #### EXISTENTIAL_THREAT
+
 - **Trigger**: EPS predicate evaluates to TRUE
 - **Response**: Immediate suspension, audit, restoration plan
 - **Authority**: Dual confirmation (internal + external)
 
 #### INVARIANT_VIOLATION
+
 - **Trigger**: Constitutional invariant broken (e.g., Four Laws, determinism)
 - **Response**: Violation recording, impact assessment, override if non-restorable
 - **Authority**: Dual confirmation required
 
 #### NON_RESTORABILITY
+
 - **Trigger**: System cannot self-restore to valid state
 - **Response**: External intervention required, manual restoration protocol
 - **Authority**: External signature verification mandatory
 
 #### ENTROPY_COLLAPSE
+
 - **Trigger**: Entropy falls below collapse threshold (50% of baseline)
 - **Response**: Re-seed from ORACLE_SEED, entropy source audit
 - **Authority**: Automatic suspension, manual approval for restoration
 
 #### SUPER_UNANIMITY
+
 - **Trigger**: >95% stakeholder consensus for constitutional change
 - **Response**: Controlled evolution path, amendment process
 - **Authority**: Cryptographic vote verification, quorum enforcement
@@ -95,12 +100,14 @@ The Singularity Override Protocol can be triggered under specific conditions:
 All override triggers require **both** internal and external confirmation:
 
 #### Internal Confirmation
+
 - **Source**: Constitutional ledger analysis
 - **Method**: Automated predicate evaluation from ledger state
 - **Evidence**: Violation records, entropy snapshots, hash chain verification
 - **Output**: Boolean confirmation + reason
 
 #### External Confirmation
+
 - **Source**: Cryptographic signature from external authority
 - **Method**: Ed25519 signature verification against pre-registered public key
 - **Evidence**: Signed message with override authorization
@@ -125,10 +132,10 @@ When override is triggered, system enters **SUSPENDED state**:
 ### Suspension Actions
 
 1. **Halt Evolution**: No constitutional changes permitted
-2. **Audit Log**: Override trigger recorded with full context
-3. **State Snapshot**: Current ledger state captured and sealed
-4. **Notification**: All stakeholders notified of suspension
-5. **Restoration Plan**: Generate steps for returning to valid state
+1. **Audit Log**: Override trigger recorded with full context
+1. **State Snapshot**: Current ledger state captured and sealed
+1. **Notification**: All stakeholders notified of suspension
+1. **Restoration Plan**: Generate steps for returning to valid state
 
 ### Suspension Duration
 
@@ -143,31 +150,35 @@ The ultimate reset mechanism for irrecoverable system states.
 ### Refoundation Triggers
 
 1. **Multiple Failed Restorations**: 3+ restoration attempts failed
-2. **Existential Drift**: System has diverged beyond repair thresholds
-3. **Super-Unanimity Mandate**: >95% stakeholder vote for refoundation
-4. **Security Breach**: Cryptographic compromise of genesis seal or keys
+1. **Existential Drift**: System has diverged beyond repair thresholds
+1. **Super-Unanimity Mandate**: >95% stakeholder vote for refoundation
+1. **Security Breach**: Cryptographic compromise of genesis seal or keys
 
 ### Refoundation Process
 
 #### Phase 1: Authorization
+
 - **Requirement**: Cryptographic signature from master authority
 - **Verification**: Signature validated against pre-distributed public key
 - **Logging**: Authorization attempt recorded in immutable audit trail
 
 #### Phase 2: Genesis Reset
+
 1. **Archive Old State**: All ledgers copied to timestamped archive directory
-2. **New Genesis Seal**: Generate fresh cryptographic genesis seal
-3. **New ORACLE_SEED**: Derive new oracle seed from new genesis
-4. **Clear Ledgers**: Reset all ledgers to genesis blocks
-5. **Initialize State**: Create new sovereign runtime with new keys
+1. **New Genesis Seal**: Generate fresh cryptographic genesis seal
+1. **New ORACLE_SEED**: Derive new oracle seed from new genesis
+1. **Clear Ledgers**: Reset all ledgers to genesis blocks
+1. **Initialize State**: Create new sovereign runtime with new keys
 
 #### Phase 3: Reconstruction
+
 1. **Policy Re-establishment**: Rebuild constitutional rules from archive
-2. **Stakeholder Re-registration**: Verify and re-register all stakeholders
-3. **Audit Trail Continuity**: Link new genesis to archived history
-4. **Verification**: Confirm new system integrity before activation
+1. **Stakeholder Re-registration**: Verify and re-register all stakeholders
+1. **Audit Trail Continuity**: Link new genesis to archived history
+1. **Verification**: Confirm new system integrity before activation
 
 #### Phase 4: Activation
+
 - **State Transition**: Move from REFOUNDING → ACTIVE
 - **Announcement**: Broadcast refoundation completion to all stakeholders
 - **Monitoring**: Enhanced monitoring for initial period post-refoundation
@@ -177,10 +188,10 @@ The ultimate reset mechanism for irrecoverable system states.
 **Critical Principles:**
 
 1. **Archive Integrity**: Old ledgers must be preserved with cryptographic seals
-2. **Continuity**: New genesis references previous genesis in metadata
-3. **Key Rotation**: Generate entirely new keypairs for new genesis
-4. **Stakeholder Consent**: All stakeholders must explicitly re-consent to new constitution
-5. **Audit Chain**: Refoundation event itself is immutably recorded
+1. **Continuity**: New genesis references previous genesis in metadata
+1. **Key Rotation**: Generate entirely new keypairs for new genesis
+1. **Stakeholder Consent**: All stakeholders must explicitly re-consent to new constitution
+1. **Audit Chain**: Refoundation event itself is immutably recorded
 
 **Security Notes:**
 
@@ -213,9 +224,9 @@ signature = Ed25519_sign(seal_hash, private_key)
 Any party can verify the seal:
 
 1. **Recompute**: Calculate seal hash from seal data
-2. **Verify Signature**: Check Ed25519 signature using public key
-3. **Validate Inputs**: Verify validation results match ledger state
-4. **Check ORACLE_SEED**: Confirm oracle seed derives from genesis seal
+1. **Verify Signature**: Check Ed25519 signature using public key
+1. **Validate Inputs**: Verify validation results match ledger state
+1. **Check ORACLE_SEED**: Confirm oracle seed derives from genesis seal
 
 ### Seal Immutability
 
@@ -269,21 +280,25 @@ REFOUNDING → ACTIVE
 ### State Authorities
 
 #### ACTIVE
+
 - **Operations**: Full system functionality
 - **Governance**: Constitution can be modified (pre-completion)
 - **Override**: Not applicable
 
 #### DEFENSE
+
 - **Operations**: Read-only for governance, full for user actions
 - **Governance**: Immutable (override required for changes)
 - **Override**: Available via protocol
 
 #### SUSPENDED
+
 - **Operations**: Minimal (monitoring, audit, restoration planning)
 - **Governance**: Frozen
 - **Override**: Active, awaiting resolution
 
 #### REFOUNDING
+
 - **Operations**: Offline (genesis reset)
 - **Governance**: Complete reset
 - **Override**: N/A (in reset process)
@@ -325,15 +340,18 @@ REFOUNDING → ACTIVE
 **All dynamic state must be derived from ledger, not stored in memory:**
 
 ```python
+
 # ❌ WRONG: Internal counter (drifts from truth)
+
 class BadOverride:
     def __init__(self):
         self.violation_count = 0  # Internal state
-    
+
     def check_violations(self):
         return self.violation_count >= 10
 
 # ✅ CORRECT: Ledger-derived (always truth)
+
 class GoodOverride:
     def check_violations(self, ledger_path):
         violations = load_violations_from_ledger(ledger_path)
@@ -345,7 +363,9 @@ class GoodOverride:
 All override predicates must be **pure functions** (no side effects):
 
 ```python
+
 # Pure function: same inputs → same outputs
+
 def evaluate_eps_predicate(ledger_violations: list) -> tuple[bool, str]:
     critical_count = sum(1 for v in ledger_violations if v.severity == "CRITICAL")
     if critical_count >= 3:
@@ -370,10 +390,10 @@ baseline_entropy = oracle_seed_to_entropy(oracle_seed)  # Fixed
 Third-party auditors can verify completion:
 
 1. **Load Compliance Bundle**: Export from sovereign runtime
-2. **Verify Hash Chains**: Check all ledgers for integrity
-3. **Validate Seal**: Recompute seal hash and verify signature
-4. **Check Convergence**: Analyze entropy snapshots for 10-year stability
-5. **Confirm ORACLE_SEED**: Verify derivation from genesis seal
+1. **Verify Hash Chains**: Check all ledgers for integrity
+1. **Validate Seal**: Recompute seal hash and verify signature
+1. **Check Convergence**: Analyze entropy snapshots for 10-year stability
+1. **Confirm ORACLE_SEED**: Verify derivation from genesis seal
 
 ### Compliance Artifacts
 
@@ -404,6 +424,7 @@ attestation = {
 ### Threat Model
 
 **Threats Mitigated:**
+
 - ✅ Internal state drift (ledger-only design)
 - ✅ Unauthorized constitution changes (defense mode)
 - ✅ Single-point failure (dual confirmation)
@@ -412,6 +433,7 @@ attestation = {
 - ✅ Key compromise (refoundation protocol)
 
 **Residual Risks:**
+
 - ⚠️ Coordinated >95% stakeholder collusion
 - ⚠️ Genesis seal compromise (requires refoundation)
 - ⚠️ Quantum computing (Ed25519 vulnerable post-quantum)
@@ -428,11 +450,13 @@ For post-quantum readiness:
 ### Key Management
 
 **Critical Keys:**
+
 - **Override Private Key**: Used to sign override records
 - **External Verifier Key**: Used for dual confirmation
 - **Master Authority Key**: Required for refoundation authorization
 
 **Protection Measures:**
+
 - Hardware Security Module (HSM) storage recommended
 - Key rotation via refoundation protocol
 - Multi-signature schemes for high-value operations
@@ -445,12 +469,12 @@ While in Defense Mode, evolution is constrained but not impossible:
 ### Amendment Process
 
 1. **Proposal**: Stakeholder proposes constitutional amendment
-2. **Review**: Community review and discussion period (minimum 90 days)
-3. **Vote**: Super-unanimity vote (≥95% approval)
-4. **Override**: Trigger via SUPER_UNANIMITY override type
-5. **Dual Confirmation**: Internal + external verification
-6. **Implementation**: Amend constitution via controlled override
-7. **Seal Update**: New seal generated and appended (does not replace)
+1. **Review**: Community review and discussion period (minimum 90 days)
+1. **Vote**: Super-unanimity vote (≥95% approval)
+1. **Override**: Trigger via SUPER_UNANIMITY override type
+1. **Dual Confirmation**: Internal + external verification
+1. **Implementation**: Amend constitution via controlled override
+1. **Seal Update**: New seal generated and appended (does not replace)
 
 ### Non-Constitutional Evolution
 
@@ -469,28 +493,28 @@ The Constitutional Completion Protocol ensures that Project-AI's governance evol
 
 **Once sealed, the constitution is a foundation - not a prison.**
 
----
+______________________________________________________________________
 
-**Protocol Version**: 1.0.0  
-**Last Updated**: 2026-02-12  
-**Status**: ACTIVE  
-**Seal Status**: PENDING (awaiting 10-year convergence)
+**Protocol Version**: 1.0.0 **Last Updated**: 2026-02-12 **Status**: ACTIVE **Seal Status**: PENDING (awaiting 10-year convergence)
 
----
+______________________________________________________________________
 
 ## Quick Reference
 
 ### Check Completion Status
+
 ```bash
 python scripts/freeze_seal.py --dry-run
 ```
 
 ### Generate Completion Seal
+
 ```bash
 python scripts/freeze_seal.py
 ```
 
 ### Trigger Override
+
 ```python
 from governance.singularity_override import SingularityOverride, OverrideType
 
@@ -505,6 +529,7 @@ override_system.trigger_override(
 ```
 
 ### Verify Entropy State
+
 ```python
 from monitoring.entropy_slope import EntropySlopeMonitor
 
@@ -514,6 +539,7 @@ print(f"Current state: {state}")
 ```
 
 ### Check Invariants
+
 ```python
 from governance.existential_proof import ExistentialProof, InvariantType
 

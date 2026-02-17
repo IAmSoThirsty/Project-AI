@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 class KeyProvider(Enum):
     """Supported key management providers"""
+
     LOCAL = "local"
     AWS_KMS = "aws_kms"
     GCP_KMS = "gcp_kms"
@@ -33,6 +34,7 @@ class KeyProvider(Enum):
 
 class KeyType(Enum):
     """Types of cryptographic keys"""
+
     SIGNING = "signing"
     ENCRYPTION = "encryption"
     SYMMETRIC = "symmetric"
@@ -40,6 +42,7 @@ class KeyType(Enum):
 
 class KeyStatus(Enum):
     """Key lifecycle status"""
+
     ACTIVE = "active"
     ROTATING = "rotating"
     DEPRECATED = "deprecated"
@@ -49,6 +52,7 @@ class KeyStatus(Enum):
 @dataclass
 class KeyMetadata:
     """Metadata for a cryptographic key"""
+
     key_id: str
     key_type: KeyType
     provider: KeyProvider
@@ -63,27 +67,27 @@ class KeyMetadata:
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization"""
         data = asdict(self)
-        data['key_type'] = self.key_type.value
-        data['provider'] = self.provider.value
-        data['status'] = self.status.value
-        data['created_at'] = self.created_at.isoformat()
+        data["key_type"] = self.key_type.value
+        data["provider"] = self.provider.value
+        data["status"] = self.status.value
+        data["created_at"] = self.created_at.isoformat()
         if self.rotated_at:
-            data['rotated_at'] = self.rotated_at.isoformat()
+            data["rotated_at"] = self.rotated_at.isoformat()
         if self.expires_at:
-            data['expires_at'] = self.expires_at.isoformat()
+            data["expires_at"] = self.expires_at.isoformat()
         return data
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> 'KeyMetadata':
+    def from_dict(cls, data: dict[str, Any]) -> "KeyMetadata":
         """Create from dictionary"""
-        data['key_type'] = KeyType(data['key_type'])
-        data['provider'] = KeyProvider(data['provider'])
-        data['status'] = KeyStatus(data['status'])
-        data['created_at'] = datetime.fromisoformat(data['created_at'])
-        if data.get('rotated_at'):
-            data['rotated_at'] = datetime.fromisoformat(data['rotated_at'])
-        if data.get('expires_at'):
-            data['expires_at'] = datetime.fromisoformat(data['expires_at'])
+        data["key_type"] = KeyType(data["key_type"])
+        data["provider"] = KeyProvider(data["provider"])
+        data["status"] = KeyStatus(data["status"])
+        data["created_at"] = datetime.fromisoformat(data["created_at"])
+        if data.get("rotated_at"):
+            data["rotated_at"] = datetime.fromisoformat(data["rotated_at"])
+        if data.get("expires_at"):
+            data["expires_at"] = datetime.fromisoformat(data["expires_at"])
         return cls(**data)
 
 
@@ -106,13 +110,13 @@ class KeyManagementSystem:
             config: Configuration dictionary with provider settings
         """
         self.config = config or {}
-        self.provider = KeyProvider(self.config.get('provider', 'local'))
+        self.provider = KeyProvider(self.config.get("provider", "local"))
         self.keys: dict[str, KeyMetadata] = {}
         self.audit_log: list[dict[str, Any]] = []
 
         # Initialize storage paths
-        self.data_dir = self.config.get('data_dir', 'data/keys')
-        self.audit_dir = os.path.join(self.data_dir, 'audit')
+        self.data_dir = self.config.get("data_dir", "data/keys")
+        self.audit_dir = os.path.join(self.data_dir, "audit")
         os.makedirs(self.data_dir, exist_ok=True)
         os.makedirs(self.audit_dir, exist_ok=True)
 
@@ -142,11 +146,12 @@ class KeyManagementSystem:
         """Initialize AWS KMS client"""
         try:
             import boto3
+
             self.kms_client = boto3.client(
-                'kms',
-                region_name=self.config.get('aws_region', 'us-east-1'),
-                aws_access_key_id=self.config.get('aws_access_key_id'),
-                aws_secret_access_key=self.config.get('aws_secret_access_key')
+                "kms",
+                region_name=self.config.get("aws_region", "us-east-1"),
+                aws_access_key_id=self.config.get("aws_access_key_id"),
+                aws_secret_access_key=self.config.get("aws_secret_access_key"),
             )
             logger.info("AWS KMS client initialized")
         except ImportError:
@@ -160,12 +165,15 @@ class KeyManagementSystem:
         """Initialize GCP KMS client"""
         try:
             from google.cloud import kms
+
             self.kms_client = kms.KeyManagementServiceClient()
-            self.gcp_project_id = self.config.get('gcp_project_id')
-            self.gcp_location = self.config.get('gcp_location', 'us-central1')
+            self.gcp_project_id = self.config.get("gcp_project_id")
+            self.gcp_location = self.config.get("gcp_location", "us-central1")
             logger.info("GCP KMS client initialized")
         except ImportError:
-            logger.error("google-cloud-kms not installed. Install with: pip install google-cloud-kms")
+            logger.error(
+                "google-cloud-kms not installed. Install with: pip install google-cloud-kms"
+            )
             raise
         except Exception as e:
             logger.error(f"Failed to initialize GCP KMS: {e}")
@@ -177,7 +185,7 @@ class KeyManagementSystem:
             from azure.identity import DefaultAzureCredential
             from azure.keyvault.keys import KeyClient
 
-            vault_url = self.config.get('azure_vault_url')
+            vault_url = self.config.get("azure_vault_url")
             if not vault_url:
                 raise ValueError("azure_vault_url is required for Azure Key Vault")
 
@@ -185,7 +193,9 @@ class KeyManagementSystem:
             self.kms_client = KeyClient(vault_url=vault_url, credential=credential)
             logger.info("Azure Key Vault client initialized")
         except ImportError:
-            logger.error("azure-keyvault-keys not installed. Install with: pip install azure-keyvault-keys azure-identity")
+            logger.error(
+                "azure-keyvault-keys not installed. Install with: pip install azure-keyvault-keys azure-identity"
+            )
             raise
         except Exception as e:
             logger.error(f"Failed to initialize Azure Key Vault: {e}")
@@ -195,14 +205,15 @@ class KeyManagementSystem:
         """Initialize HSM via PKCS#11"""
         try:
             import PyKCS11
+
             self.pkcs11_lib = PyKCS11.PyKCS11Lib()
-            lib_path = self.config.get('pkcs11_library_path')
+            lib_path = self.config.get("pkcs11_library_path")
             if not lib_path:
                 raise ValueError("pkcs11_library_path is required for HSM")
 
             self.pkcs11_lib.load(lib_path)
-            self.hsm_slot = self.config.get('hsm_slot', 0)
-            self.hsm_pin = self.config.get('hsm_pin')
+            self.hsm_slot = self.config.get("hsm_slot", 0)
+            self.hsm_pin = self.config.get("hsm_pin")
             logger.info("HSM PKCS#11 interface initialized")
         except ImportError:
             logger.error("PyKCS11 not installed. Install with: pip install PyKCS11")
@@ -216,7 +227,7 @@ class KeyManagementSystem:
         key_id: str,
         key_type: KeyType,
         rotation_policy: dict[str, Any] | None = None,
-        access_control: dict[str, list[str]] | None = None
+        access_control: dict[str, list[str]] | None = None,
     ) -> KeyMetadata:
         """
         Generate a new cryptographic key
@@ -235,7 +246,7 @@ class KeyManagementSystem:
 
         # Default rotation policy: 90 days for production keys
         if rotation_policy is None:
-            rotation_policy = {'enabled': True, 'rotation_days': 90}
+            rotation_policy = {"enabled": True, "rotation_days": 90}
 
         # Generate key based on provider
         if self.provider == KeyProvider.AWS_KMS:
@@ -257,23 +268,26 @@ class KeyManagementSystem:
             provider=self.provider,
             status=KeyStatus.ACTIVE,
             created_at=datetime.utcnow(),
-            expires_at=datetime.utcnow() + timedelta(days=rotation_policy.get('rotation_days', 90)),
+            expires_at=datetime.utcnow()
+            + timedelta(days=rotation_policy.get("rotation_days", 90)),
             rotation_policy=rotation_policy,
             access_control=access_control,
-            audit_trail=[]
+            audit_trail=[],
         )
 
         self.keys[key_id] = metadata
         self._save_keys()
 
         # Audit log
-        self._audit_log_event({
-            'event': 'key_generated',
-            'key_id': key_id,
-            'key_type': key_type.value,
-            'provider': self.provider.value,
-            'timestamp': datetime.utcnow().isoformat()
-        })
+        self._audit_log_event(
+            {
+                "event": "key_generated",
+                "key_id": key_id,
+                "key_type": key_type.value,
+                "provider": self.provider.value,
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+        )
 
         logger.info(f"Generated key {key_id} with provider {self.provider.value}")
         return metadata
@@ -284,32 +298,30 @@ class KeyManagementSystem:
 
         if key_type == KeyType.SYMMETRIC:
             key = Fernet.generate_key()
-            with open(key_path, 'wb') as f:
+            with open(key_path, "wb") as f:
                 f.write(key)
         else:
             private_key = rsa.generate_private_key(
-                public_exponent=65537,
-                key_size=4096,
-                backend=default_backend()
+                public_exponent=65537, key_size=4096, backend=default_backend()
             )
 
             pem = private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.PKCS8,
-                encryption_algorithm=serialization.BestAvailableEncryption(b'changeme')
+                encryption_algorithm=serialization.BestAvailableEncryption(b"changeme"),
             )
 
-            with open(key_path, 'wb') as f:
+            with open(key_path, "wb") as f:
                 f.write(pem)
 
             # Save public key
             public_key = private_key.public_key()
             pub_pem = public_key.public_bytes(
                 encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.SubjectPublicKeyInfo
+                format=serialization.PublicFormat.SubjectPublicKeyInfo,
             )
 
-            with open(key_path + '.pub', 'wb') as f:
+            with open(key_path + ".pub", "wb") as f:
                 f.write(pub_pem)
 
         logger.info(f"Created local key: {key_path}")
@@ -331,7 +343,11 @@ class KeyManagementSystem:
         metadata = self.keys[key_id]
 
         # Check if rotation is due
-        if not force and metadata.expires_at and datetime.utcnow() < metadata.expires_at:
+        if (
+            not force
+            and metadata.expires_at
+            and datetime.utcnow() < metadata.expires_at
+        ):
             logger.info(f"Key {key_id} rotation not due yet")
             return metadata
 
@@ -345,7 +361,7 @@ class KeyManagementSystem:
             key_id=new_key_id,
             key_type=metadata.key_type,
             rotation_policy=metadata.rotation_policy,
-            access_control=metadata.access_control
+            access_control=metadata.access_control,
         )
 
         # Update metadata
@@ -353,12 +369,14 @@ class KeyManagementSystem:
         self._save_keys()
 
         # Audit log
-        self._audit_log_event({
-            'event': 'key_rotated',
-            'old_key_id': key_id,
-            'new_key_id': new_key_id,
-            'timestamp': datetime.utcnow().isoformat()
-        })
+        self._audit_log_event(
+            {
+                "event": "key_rotated",
+                "old_key_id": key_id,
+                "new_key_id": new_key_id,
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+        )
 
         logger.info(f"Rotated key {key_id} to {new_key_id}")
         return new_metadata
@@ -385,21 +403,23 @@ class KeyManagementSystem:
             return True
 
         allowed_identities = metadata.access_control.get(action, [])
-        has_access = identity in allowed_identities or '*' in allowed_identities
+        has_access = identity in allowed_identities or "*" in allowed_identities
 
         # Audit log
-        self._audit_log_event({
-            'event': 'access_check',
-            'key_id': key_id,
-            'identity': identity,
-            'action': action,
-            'granted': has_access,
-            'timestamp': datetime.utcnow().isoformat()
-        })
+        self._audit_log_event(
+            {
+                "event": "access_check",
+                "key_id": key_id,
+                "identity": identity,
+                "action": action,
+                "granted": has_access,
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+        )
 
         return has_access
 
-    def export_audit_log(self, format: str = 'json') -> str:
+    def export_audit_log(self, format: str = "json") -> str:
         """
         Export audit log for SIEM integration
 
@@ -409,16 +429,17 @@ class KeyManagementSystem:
         Returns:
             str: Path to exported file
         """
-        timestamp = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
 
-        if format == 'json':
-            output_path = os.path.join(self.audit_dir, f'audit_log_{timestamp}.json')
-            with open(output_path, 'w') as f:
+        if format == "json":
+            output_path = os.path.join(self.audit_dir, f"audit_log_{timestamp}.json")
+            with open(output_path, "w") as f:
                 json.dump(self.audit_log, f, indent=2)
-        elif format == 'csv':
+        elif format == "csv":
             import csv
-            output_path = os.path.join(self.audit_dir, f'audit_log_{timestamp}.csv')
-            with open(output_path, 'w', newline='') as f:
+
+            output_path = os.path.join(self.audit_dir, f"audit_log_{timestamp}.csv")
+            with open(output_path, "w", newline="") as f:
                 if self.audit_log:
                     writer = csv.DictWriter(f, fieldnames=self.audit_log[0].keys())
                     writer.writeheader()
@@ -434,30 +455,27 @@ class KeyManagementSystem:
         self.audit_log.append(event)
 
         # Write to file immediately for durability
-        log_file = os.path.join(self.audit_dir, 'current.jsonl')
-        with open(log_file, 'a') as f:
-            f.write(json.dumps(event) + '\n')
+        log_file = os.path.join(self.audit_dir, "current.jsonl")
+        with open(log_file, "a") as f:
+            f.write(json.dumps(event) + "\n")
 
     def _load_keys(self):
         """Load keys from storage"""
-        keys_file = os.path.join(self.data_dir, 'keys.json')
+        keys_file = os.path.join(self.data_dir, "keys.json")
         if os.path.exists(keys_file):
             try:
                 with open(keys_file) as f:
                     data = json.load(f)
-                    self.keys = {
-                        k: KeyMetadata.from_dict(v)
-                        for k, v in data.items()
-                    }
+                    self.keys = {k: KeyMetadata.from_dict(v) for k, v in data.items()}
                 logger.info(f"Loaded {len(self.keys)} keys from storage")
             except Exception as e:
                 logger.error(f"Failed to load keys: {e}")
 
     def _save_keys(self):
         """Save keys to storage"""
-        keys_file = os.path.join(self.data_dir, 'keys.json')
+        keys_file = os.path.join(self.data_dir, "keys.json")
         try:
-            with open(keys_file, 'w') as f:
+            with open(keys_file, "w") as f:
                 data = {k: v.to_dict() for k, v in self.keys.items()}
                 json.dump(data, f, indent=2)
             logger.info(f"Saved {len(self.keys)} keys to storage")
@@ -476,26 +494,28 @@ class KeyManagementSystem:
 
     def _generate_aws_key(self, key_id: str, key_type: KeyType) -> str:
         """Generate key in AWS KMS"""
-        key_spec = 'SYMMETRIC_DEFAULT' if key_type == KeyType.SYMMETRIC else 'RSA_4096'
-        key_usage = 'ENCRYPT_DECRYPT' if key_type == KeyType.ENCRYPTION else 'SIGN_VERIFY'
+        key_spec = "SYMMETRIC_DEFAULT" if key_type == KeyType.SYMMETRIC else "RSA_4096"
+        key_usage = (
+            "ENCRYPT_DECRYPT" if key_type == KeyType.ENCRYPTION else "SIGN_VERIFY"
+        )
 
         response = self.kms_client.create_key(
             Description=f"Project-AI Key: {key_id}",
             KeyUsage=key_usage,
             KeySpec=key_spec,
             Tags=[
-                {'TagKey': 'Project', 'TagValue': 'Project-AI'},
-                {'TagKey': 'KeyID', 'TagValue': key_id},
-                {'TagKey': 'KeyType', 'TagValue': key_type.value}
-            ]
+                {"TagKey": "Project", "TagValue": "Project-AI"},
+                {"TagKey": "KeyID", "TagValue": key_id},
+                {"TagKey": "KeyType", "TagValue": key_type.value},
+            ],
         )
 
-        key_arn = response['KeyMetadata']['Arn']
+        key_arn = response["KeyMetadata"]["Arn"]
 
         # Create alias
         self.kms_client.create_alias(
             AliasName=f"alias/project-ai/{key_id}",
-            TargetKeyId=response['KeyMetadata']['KeyId']
+            TargetKeyId=response["KeyMetadata"]["KeyId"],
         )
 
         logger.info(f"Created AWS KMS key: {key_arn}")
@@ -506,15 +526,12 @@ class KeyManagementSystem:
         from google.cloud import kms
 
         # Create key ring if not exists
-        key_ring_id = self.config.get('gcp_key_ring', 'project-ai-keys')
+        key_ring_id = self.config.get("gcp_key_ring", "project-ai-keys")
         parent = f"projects/{self.gcp_project_id}/locations/{self.gcp_location}"
 
         try:
             self.kms_client.create_key_ring(
-                request={
-                    "parent": parent,
-                    "key_ring_id": key_ring_id
-                }
+                request={"parent": parent, "key_ring_id": key_ring_id}
             )
         except Exception:
             # Key ring may already exist
@@ -534,16 +551,18 @@ class KeyManagementSystem:
                 "crypto_key": {
                     "purpose": purpose,
                     "version_template": {
-                        "algorithm": kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_4096_SHA256
-                        if key_type == KeyType.SIGNING
-                        else kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION
+                        "algorithm": (
+                            kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.RSA_SIGN_PKCS1_4096_SHA256
+                            if key_type == KeyType.SIGNING
+                            else kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION
+                        )
                     },
                     "labels": {
                         "project": "project-ai",
                         "key-id": key_id,
-                        "key-type": key_type.value
-                    }
-                }
+                        "key-type": key_type.value,
+                    },
+                },
             }
         )
 
@@ -559,10 +578,10 @@ class KeyManagementSystem:
             name=key_id,
             size=key_size,
             tags={
-                'project': 'project-ai',
-                'key-id': key_id,
-                'key-type': key_type.value
-            }
+                "project": "project-ai",
+                "key-id": key_id,
+                "key-type": key_type.value,
+            },
         )
 
         logger.info(f"Created Azure Key Vault key: {key.id}")
@@ -585,7 +604,7 @@ class KeyManagementSystem:
             (PyKCS11.CKA_ENCRYPT, True),
             (PyKCS11.CKA_VERIFY, True),
             (PyKCS11.CKA_WRAP, True),
-            (PyKCS11.CKA_LABEL, key_id)
+            (PyKCS11.CKA_LABEL, key_id),
         ]
 
         private_template = [
@@ -595,12 +614,11 @@ class KeyManagementSystem:
             (PyKCS11.CKA_DECRYPT, True),
             (PyKCS11.CKA_SIGN, True),
             (PyKCS11.CKA_UNWRAP, True),
-            (PyKCS11.CKA_LABEL, key_id)
+            (PyKCS11.CKA_LABEL, key_id),
         ]
 
         (public_key, private_key) = session.generateKeyPair(
-            public_template,
-            private_template
+            public_template, private_template
         )
 
         session.logout()

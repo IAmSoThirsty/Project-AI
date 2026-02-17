@@ -11,10 +11,8 @@ from __future__ import annotations
 
 import logging
 import re
-from dataclasses import dataclass, field
-from datetime import datetime
+from dataclasses import dataclass
 from enum import Enum
-from typing import Any
 
 from app.core.planetary_defense_monolith import planetary_interposition
 
@@ -28,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 class CognitiveHazardLevel(Enum):
     """Levels of cognitive hazard severity."""
+
     INFO = "informational"
     WARNING = "warning"
     CRITICAL = "critical"
@@ -38,6 +37,7 @@ class CognitiveHazardLevel(Enum):
 @dataclass
 class CognitiveAssessment:
     """Assessment of a piece of information or interaction."""
+
     content_hash: str
     hazard_level: CognitiveHazardLevel
     detected_patterns: list[str]
@@ -73,27 +73,28 @@ class CognitiveDefenseEngine:
                 r"act now",
                 r"immediate help needed",
                 r"before it's too late",
-            ]
+            ],
         }
         logger.info("Cognitive Defense Engine initialized")
 
     def assess_content(self, content: str, source: str) -> CognitiveAssessment:
         """
         Assess content for cognitive hazards.
-        
+
         Args:
             content: Text or data to assess
             source: Origin of the content
-            
+
         Returns:
             CognitiveAssessment object
         """
         import hashlib
+
         content_hash = hashlib.sha256(content.encode()).hexdigest()
-        
+
         detected = []
         hazard_level = CognitiveHazardLevel.INFO
-        
+
         # Pattern matching for known hazards
         for category, patterns in self.hazard_patterns.items():
             for pattern in patterns:
@@ -101,49 +102,53 @@ class CognitiveDefenseEngine:
                     detected.append(f"{category}:{pattern}")
                     if category == "memetic":
                         hazard_level = CognitiveHazardLevel.MEMETIC
-                    elif category == "manipulation" and hazard_level != CognitiveHazardLevel.MEMETIC:
+                    elif (
+                        category == "manipulation"
+                        and hazard_level != CognitiveHazardLevel.MEMETIC
+                    ):
                         hazard_level = CognitiveHazardLevel.WARNING
-        
+
         # Determine recommendation
         recommendation = "allow"
         if hazard_level == CognitiveHazardLevel.MEMETIC:
             recommendation = "quarantine"
         elif hazard_level == CognitiveHazardLevel.WARNING:
             recommendation = "flag"
-            
+
         return CognitiveAssessment(
             content_hash=content_hash,
             hazard_level=hazard_level,
             detected_patterns=detected,
-            sentiment_analysis={}, # Placeholder
-            truth_value=0.5, # Neutral/Unknown
-            recommended_action=recommendation
+            sentiment_analysis={},  # Placeholder
+            truth_value=0.5,  # Neutral/Unknown
+            recommended_action=recommendation,
         )
 
     def counter_operation(self, assessment: CognitiveAssessment, target: str) -> str:
         """
         Deploy cognitive countermeasures.
-        
+
         MUST route through Planetary Defense Core.
         """
         context = {
             "hazard_level": assessment.hazard_level.value,
             "patterns": assessment.detected_patterns,
             "target": target,
-            "intentional_harm_to_human": False, # Defensive only
-            "existential_threat": assessment.hazard_level == CognitiveHazardLevel.MEMETIC
+            "intentional_harm_to_human": False,  # Defensive only
+            "existential_threat": assessment.hazard_level
+            == CognitiveHazardLevel.MEMETIC,
         }
-        
+
         intent = f"deploy_countermeasures_{assessment.hazard_level.value}"
-        
+
         # CONSTITUTIONAL CHECK
         action_id = planetary_interposition(
             actor="CognitiveDefenseEngine",
             intent=intent,
             context=context,
-            authorized_by="AutomatedDefenseSystem"
+            authorized_by="AutomatedDefenseSystem",
         )
-        
+
         logger.warning(f"Cognitive countermeasure deployed: {action_id}")
         return action_id
 
@@ -152,11 +157,12 @@ class CognitiveDefenseEngine:
 # 🔮 NARRATIVE CONTROL
 # ============================================================
 
+
 class NarrativeController:
     """
     Manages system narrative and alignment.
     """
-    
+
     def adjust_narrative(self, topic: str, adjustment: str):
         """
         Adjust the system's narrative stance on a topic.
@@ -166,14 +172,14 @@ class NarrativeController:
             "topic": topic,
             "adjustment": adjustment,
             "predicted_harm": "potential bias shift",
-            "moral_claims": []
+            "moral_claims": [],
         }
-        
+
         planetary_interposition(
             actor="NarrativeController",
             intent=f"adjust_narrative_{topic}",
             context=context,
-            authorized_by="System"
+            authorized_by="System",
         )
 
 
@@ -182,6 +188,7 @@ class NarrativeController:
 # ============================================================
 
 _cognitive_engine = CognitiveDefenseEngine()
+
 
 def get_cognitive_engine() -> CognitiveDefenseEngine:
     return _cognitive_engine

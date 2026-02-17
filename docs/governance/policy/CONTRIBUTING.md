@@ -43,26 +43,34 @@ pre-commit install
 ### Running Tests
 
 ```bash
+
 # Run all tests
+
 npm test
 
 # Run Python tests only
+
 pytest -v
 
 # Run Python tests with coverage
+
 pytest --cov=src --cov-report=html
 ```
 
 ### Code Quality
 
 ```bash
+
 # Run linter (ruff)
+
 ruff check .
 
 # Auto-fix linting issues
+
 ruff check . --fix
 
 # Run type checker (Pylance via Pyright)
+
 python -m pylance
 ```
 

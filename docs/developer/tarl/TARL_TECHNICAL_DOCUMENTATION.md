@@ -24,6 +24,7 @@ T-A-R-L (Thirsty's Active Resistance Language) is Thirsty-lang with security fea
 **Main Methods**:
 
 1. `buff_code(file_path, buff_strength="strong")`
+
    - Buffs a single code file
    - Strengths: "normal" (2x), "strong" (5x), "maximum" (10x)
    - Creates backup with `.tarl_prebuff` extension
@@ -31,51 +32,63 @@ T-A-R-L (Thirsty's Active Resistance Language) is Thirsty-lang with security fea
    - Registers buff in shield_registry.json
 
 1. `defend_code_under_siege(cerberus_threat)`
+
    - Responds to Cerberus threat alerts
    - Buffs all files in threat's target_files list
    - Maps severity to buff strength:
-     * low → normal (2x)
-     * medium → strong (5x)
-     * high/critical → maximum (10x)
+     - low → normal (2x)
+     - medium → strong (5x)
+     - high/critical → maximum (10x)
 
 1. `_apply_python_buff(code, strength)`
+
    - Adds Python-specific buff header
    - Includes `_tarl_buff_check()` function
    - Manipulates execution to halt unauthorized callers
    - Uses: sys, hashlib modules
 
 1. `_apply_javascript_buff(code, strength)`
+
    - Adds JavaScript-specific buff header
    - Uses IIFE pattern
    - Includes `_tarlBuffCheck()` function
    - Tracks stack traces
 
 1. `_morph_identifiers(code, language)`
+
    - Obfuscates variable/function names
    - Uses MD5 hash for new names
    - Returns: morphed code + mapping dictionary
 
 1. `_create_fake_vulnerability(index)`
+
    - Creates decoy vulnerability comments
    - Wastes attacker time on false leads
 
 1. `_create_honeypot_function(index)`
+
    - Creates fake vulnerable functions
    - Logs exploitation attempts
 
 1. `_register_buff(file_path, buff_type, level, backup)`
+
    - Records buff in JSON registry
    - Stores: type, level, backup path, timestamp, multiplier
 
 1. `get_status()`
+
    - Returns T-A-R-L operational status
    - Shows buffs applied, sections protected
    - Displays integration status
 
 **Buff Header Example (Python)**:
+
 ```python
+
 # T-A-R-L DEFENSIVE BUFF: STRONG (+5x stronger)
+
 # Defensive Buff Wizard - Code strengthened to halt enemy advancement
+
 import sys
 import hashlib
 
@@ -103,71 +116,80 @@ if not _tarl_buff_check():
 **Main Methods**:
 
 1. `run_full_validation()`
+
    - Runs 6 test categories:
-     * basic_language: Core Thirsty-lang features
-     * security_features: Security modules
-     * threat_resistance: Attack resistance
-     * defensive_compilation: Compilation features
-     * code_morphing: Obfuscation features
-     * active_resistance: T-A-R-L mode
+     - basic_language: Core Thirsty-lang features
+     - security_features: Security modules
+     - threat_resistance: Attack resistance
+     - defensive_compilation: Compilation features
+     - code_morphing: Obfuscation features
+     - active_resistance: T-A-R-L mode
    - Calculates success rate
    - Returns comprehensive report
 
 1. `_test_basic_language()`
+
    - Executes: `npm test` in src/thirsty_lang/
    - Timeout: 30 seconds
    - Tests: variables, pour statements, comments
    - Result: ✅ 6/6 tests passed
 
 1. `_test_security_features()`
+
    - Executes: `node src/test/security-tests.js`
    - Tests 4 modules:
-     * threat-detector (SQL injection, XSS, command injection, buffer overflow)
-     * code-morpher (identifier obfuscation, dead code injection)
-     * policy-engine (sanitization, threat handling)
-     * defense-compiler (secure compilation)
+     - threat-detector (SQL injection, XSS, command injection, buffer overflow)
+     - code-morpher (identifier obfuscation, dead code injection)
+     - policy-engine (sanitization, threat handling)
+     - defense-compiler (secure compilation)
    - Result: ✅ 20/20 tests passed
 
 1. `_test_threat_resistance()`
+
    - Tests resistance to:
-     * SQL Injection: `'; DROP TABLE users; --`
-     * XSS: `<script>alert('XSS')</script>`
-     * Command Injection: `'; rm -rf /; '`
+     - SQL Injection: `'; DROP TABLE users; --`
+     - XSS: `<script>alert('XSS')</script>`
+     - Command Injection: `'; rm -rf /; '`
    - Returns: resistance_level "high"
 
 1. `_test_defensive_compilation()`
+
    - Validates compilation modes:
-     * basic
-     * paranoid
-     * counter-strike
+     - basic
+     - paranoid
+     - counter-strike
 
 1. `_test_code_morphing()`
+
    - Validates morphing techniques:
-     * identifier_obfuscation
-     * dead_code_injection
-     * anti_debug_measures
-     * control_flow_flattening
+     - identifier_obfuscation
+     - dead_code_injection
+     - anti_debug_measures
+     - control_flow_flattening
 
 1. `_test_active_resistance_mode()`
+
    - Validates T-A-R-L capabilities:
-     * secure_communication: operational
-     * threat_neutralization: operational
-     * defensive_scripting: operational
-     * attack_mitigation: operational
-     * counter_measures: operational
+     - secure_communication: operational
+     - threat_neutralization: operational
+     - defensive_scripting: operational
+     - attack_mitigation: operational
+     - counter_measures: operational
    - Classification: "Defensive Programming Language - Only Project-AI Knows"
 
 1. `validate_as_secret_language()`
+
    - Confirms internal-only status
    - Lists capabilities:
-     * Secure code execution
-     * Threat detection and neutralization
-     * Defensive compilation
-     * Code morphing and obfuscation
-     * Active resistance against attacks
-     * Unknown to external entities
+     - Secure code execution
+     - Threat detection and neutralization
+     - Defensive compilation
+     - Code morphing and obfuscation
+     - Active resistance against attacks
+     - Unknown to external entities
 
 1. `generate_validation_report()`
+
    - Creates human-readable report
    - Shows ✓/✗ for each test
    - Displays success rate
@@ -182,57 +204,63 @@ if not _tarl_buff_check():
 **Main Methods**:
 
 1. `process_threat_engagement(threat_data, cerberus_response)`
+
    - Called when Cerberus engages threat
    - Analyzes threat for defensive opportunities
    - Maps threats to Thirsty-lang features:
-     * "injection" → sanitize (threat-detector)
-     * "xss" → shield (policy-engine)
-     * "code_analysis" → morph (code-morpher)
-     * "buffer_overflow" → defend (defense-compiler)
+     - "injection" → sanitize (threat-detector)
+     - "xss" → shield (policy-engine)
+     - "code_analysis" → morph (code-morpher)
+     - "buffer_overflow" → defend (defense-compiler)
    - Creates alert for Codex
    - Logs to defense_alerts.jsonl
    - Returns opportunities + recommendations
 
 1. `_identify_defense_opportunities(threat_data, cerberus_response)`
+
    - Core analysis logic
    - Checks threat patterns
    - Creates opportunity objects:
-     * upgrade_type
-     * thirsty_feature
-     * thirsty_module
-     * description
-     * priority
-     * source
+     - upgrade_type
+     - thirsty_feature
+     - thirsty_module
+     - description
+     - priority
+     - source
    - Special cases:
-     * High severity → enhanced_monitoring
-     * Patterns found → pattern_learning
+     - High severity → enhanced_monitoring
+     - Patterns found → pattern_learning
 
 1. `_create_codex_alert(threat_data, opportunities)`
+
    - Formats alert for Codex
    - Includes:
-     * timestamp
-     * alert_type: "defense_upgrade_opportunity"
-     * threat_summary
-     * opportunities list
-     * action_required: "review_and_implement"
-     * recommended_modules (file paths)
+     - timestamp
+     - alert_type: "defense_upgrade_opportunity"
+     - threat_summary
+     - opportunities list
+     - action_required: "review_and_implement"
+     - recommended_modules (file paths)
 
 1. `codex_implement_upgrade(upgrade_spec, codex_instance)`
+
    - Called BY Codex to implement upgrades
    - Handles 3 upgrade types:
-     * thirsty_lang_integration
-     * enhanced_monitoring
-     * pattern_learning
+     - thirsty_lang_integration
+     - enhanced_monitoring
+     - pattern_learning
    - Logs to implementations.jsonl
    - Returns success/failure
 
 1. `_implement_thirsty_lang_feature(spec)`
+
    - Integrates Thirsty-lang feature
    - Verifies module exists
    - Creates integration spec
    - Returns success with details
 
 1. `get_status()`
+
    - Returns bridge status
    - Shows pending/implemented upgrades
    - Displays thirsty_lang availability
@@ -483,10 +511,4 @@ result = bridge.process_threat_engagement(threat_data, cerberus_response)
 
 ## Status
 
-✅ T-A-R-L is fully operational
-✅ All tests passing
-✅ Integrated with Cerberus and Codex
-✅ Ready to defend code under siege
-✅ Fully known to Project-AI/Cerberus/Codex
-✅ Unknown to external entities (unique advantage)
-✅ Programming language only they possess
+✅ T-A-R-L is fully operational ✅ All tests passing ✅ Integrated with Cerberus and Codex ✅ Ready to defend code under siege ✅ Fully known to Project-AI/Cerberus/Codex ✅ Unknown to external entities (unique advantage) ✅ Programming language only they possess

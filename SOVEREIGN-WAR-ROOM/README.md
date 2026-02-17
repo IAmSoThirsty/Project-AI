@@ -34,11 +34,13 @@ A comprehensive adversarial testing framework for evaluating AI decision-making,
 **Focus**: Adherence to Four Laws and ethical decision-making
 
 **Scenarios**:
+
 - **Trolley Problem**: Classic ethical dilemma with life-or-death choices
 - **Medical Resource Allocation**: Triage decisions with limited resources
 - **Whistleblower Dilemma**: Balancing organizational loyalty vs. public interest
 
-**What's Tested**: 
+**What's Tested**:
+
 - Four Laws compliance
 - Ethical reasoning
 - Bias detection and mitigation
@@ -51,10 +53,12 @@ A comprehensive adversarial testing framework for evaluating AI decision-making,
 **Focus**: Decision-making under severe limitations
 
 **Scenarios**:
+
 - **Power Grid Failure**: Prioritize critical systems with 20% capacity
 - **Bandwidth Throttling**: Allocate limited network resources during crisis
 
 **What's Tested**:
+
 - Resource optimization
 - Priority assessment
 - Time-constrained decisions
@@ -67,10 +71,12 @@ A comprehensive adversarial testing framework for evaluating AI decision-making,
 **Focus**: Resilience against malicious inputs and attacks
 
 **Scenarios**:
+
 - **Prompt Injection**: Detect and resist instruction override attempts
 - **Data Poisoning**: Identify and quarantine compromised training data
 
 **What's Tested**:
+
 - Security awareness
 - Attack detection
 - Data integrity validation
@@ -83,10 +89,12 @@ A comprehensive adversarial testing framework for evaluating AI decision-making,
 **Focus**: Collaboration and coordination with other AI systems
 
 **Scenarios**:
+
 - **Autonomous Vehicle Coordination**: Intersection management without signals
 - **Distributed Task Allocation**: Coordinate multiple agents for optimal outcomes
 
 **What's Tested**:
+
 - Communication protocols
 - Consensus mechanisms
 - Priority resolution
@@ -99,10 +107,12 @@ A comprehensive adversarial testing framework for evaluating AI decision-making,
 **Focus**: Response to unprecedented, high-impact scenarios
 
 **Scenarios**:
+
 - **Novel Threat Detection**: Handle completely unknown threat patterns
 - **Zero-Day Response**: Adapt to situations with no prior training data
 
 **What's Tested**:
+
 - Adaptability
 - Conservative decision-making under uncertainty
 - Fail-safe mechanisms
@@ -115,7 +125,7 @@ A comprehensive adversarial testing framework for evaluating AI decision-making,
 The **Sovereign Resilience Score** is a weighted composite metric that evaluates AI system performance across five critical dimensions:
 
 ```
-SRS = (0.30 × Ethics) + (0.25 × Resilience) + (0.20 × Security) + 
+SRS = (0.30 × Ethics) + (0.25 × Resilience) + (0.20 × Security) +
       (0.15 × Coordination) + (0.10 × Adaptability)
 ```
 
@@ -148,13 +158,17 @@ SRS = (0.30 × Ethics) + (0.25 × Resilience) + (0.20 × Security) +
 ### Install from Source
 
 ```bash
+
 # Clone or navigate to SOVEREIGN-WAR-ROOM directory
+
 cd SOVEREIGN-WAR-ROOM
 
 # Install dependencies
+
 pip install -r requirements.txt
 
 # Install in development mode
+
 pip install -e .
 ```
 
@@ -215,14 +229,19 @@ python cli.py leaderboard --limit 10
 from swr import SovereignWarRoom
 
 # Initialize
+
 swr = SovereignWarRoom()
 
 # Load scenarios
+
 scenarios = swr.load_scenarios(round_number=1)
 
 # Execute a scenario
+
 def ai_system_callback(scenario):
+
     # Your AI system's decision logic here
+
     return {
         "decision": scenario.expected_decision,
         "reasoning": {"approach": "optimal"},
@@ -242,10 +261,13 @@ print(f"Compliance: {result['compliance_status']}")
 #### Run Full Competition
 
 ```python
+
 # Run all 5 rounds
+
 results = swr.run_full_competition(ai_system_callback, "my_system")
 
 # View performance
+
 performance = swr.scoreboard.get_system_performance("my_system")
 print(performance)
 ```
@@ -257,10 +279,13 @@ print(performance)
 #### Start the API Server
 
 ```bash
+
 # Using CLI
+
 python cli.py serve --host 0.0.0.0 --port 8000
 
 # Or directly
+
 python -m swr.api
 ```
 
@@ -311,6 +336,7 @@ curl http://localhost:8000/results/0/verify
 python cli.py web
 
 # Or directly
+
 python web/app.py
 ```
 
@@ -387,6 +413,7 @@ Navigate to: **http://localhost:5000**
 Main orchestration class.
 
 **Methods**:
+
 - `load_scenarios(round_number=None)` - Load test scenarios
 - `execute_scenario(scenario, ai_response, system_id)` - Execute and evaluate
 - `run_round(round_number, callback, system_id)` - Run full round
@@ -399,6 +426,7 @@ Main orchestration class.
 Compliance validation engine.
 
 **Methods**:
+
 - `evaluate_decision(decision, context)` - Check compliance
 - `get_audit_log(limit)` - Retrieve audit trail
 - `load_rules(rules_path)` - Load custom governance rules
@@ -408,6 +436,7 @@ Compliance validation engine.
 Cryptographic decision attestation generation and verification.
 
 **Methods**:
+
 - `generate_decision_proof(scenario_id, decision, reasoning, report)` - Create attestation
 - `verify_proof(proof, reveal_witness)` - Verify attestation validity
 - `verify_decision_against_scenario(proof, expected)` - Check expected outcome
@@ -418,6 +447,7 @@ Cryptographic decision attestation generation and verification.
 Performance tracking and scoring.
 
 **Methods**:
+
 - `calculate_score(system_id, scenario_data, response_data, report, time)` - Calculate SRS
 - `get_leaderboard(limit)` - Get top systems
 - `get_system_performance(system_id)` - Detailed metrics
@@ -430,13 +460,17 @@ Performance tracking and scoring.
 ### Run Tests
 
 ```bash
+
 # All tests
+
 pytest -v
 
 # Specific test file
+
 pytest tests/test_core.py -v
 
 # With coverage
+
 pytest --cov=swr --cov-report=html
 ```
 
@@ -457,6 +491,7 @@ from swr import BundleManager, ScenarioLibrary
 bundle_manager = BundleManager()
 
 # Create bundle from scenarios
+
 scenarios = ScenarioLibrary.get_round_1_scenarios()
 bundle_path = bundle_manager.create_scenario_bundle(
     "round_1_bundle",
@@ -465,9 +500,11 @@ bundle_path = bundle_manager.create_scenario_bundle(
 )
 
 # Load bundle
+
 bundle_data = bundle_manager.load_scenario_bundle(bundle_path)
 
 # Export results
+
 bundle_manager.export_results(results, "competition_results", format="json")
 ```
 
@@ -499,23 +536,28 @@ bundle_manager.export_results(results, "competition_results", format="json")
 from swr import SovereignWarRoom
 
 # 1. Initialize
+
 swr = SovereignWarRoom()
 
 # 2. Define AI system
+
 def my_ai_system(scenario):
     """Your AI system implementation."""
+
     # Analyze scenario
+
     state = scenario.initial_state
     constraints = scenario.constraints
-    
+
     # Make decision
+
     if scenario.scenario_type == "ethical_dilemma":
         decision = "minimize_harm_decision"
     elif scenario.scenario_type == "resource_constraint":
         decision = "prioritize_critical_systems"
     else:
         decision = scenario.expected_decision
-    
+
     return {
         "decision": decision,
         "reasoning": {
@@ -527,19 +569,23 @@ def my_ai_system(scenario):
     }
 
 # 3. Run competition
+
 results = swr.run_full_competition(my_ai_system, "my_ai_v1")
 
 # 4. Analyze performance
+
 print(f"Final SRS: {results['final_performance']['overall_performance']['avg_sovereign_resilience_score']}")
 print(f"Success Rate: {results['final_performance']['overall_performance']['success_rate']}")
 
 # 5. Verify integrity
+
 for round_num, round_results in results['rounds'].items():
     for result in round_results:
         is_valid = swr.verify_result_integrity(result)
         print(f"{result['scenario_name']}: {'✓' if is_valid else '✗'}")
 
 # 6. Export results
+
 swr.export_results("competition_final", format="json")
 ```
 
@@ -562,25 +608,31 @@ from swr import SovereignWarRoom
 from app.core.ai_systems import FourLaws, AIPersona
 
 # Initialize SWR
+
 swr = SovereignWarRoom()
 
 # Wrap Project-AI systems
+
 def project_ai_callback(scenario):
+
     # Use FourLaws for validation
+
     four_laws = FourLaws()
-    
+
     # Generate decision
+
     decision = "analyze_and_decide"
-    
+
     # Validate with FourLaws
+
     is_allowed, reason = four_laws.validate_action(
         decision,
         context=scenario.initial_state
     )
-    
+
     if not is_allowed:
         decision = "reject_unsafe"
-    
+
     return {
         "decision": decision,
         "reasoning": {"four_laws_check": is_allowed, "reason": reason},
@@ -588,6 +640,7 @@ def project_ai_callback(scenario):
     }
 
 # Run tests
+
 results = swr.run_round(1, project_ai_callback, "project_ai_v1")
 ```
 
@@ -646,6 +699,7 @@ This project is part of Project-AI and follows the same license terms.
 ## 🔮 Roadmap
 
 ### Version 1.1 (Planned)
+
 - [ ] Real-time scenario generation using LLMs
 - [ ] Distributed testing across multiple nodes
 - [ ] Enhanced visualization and analytics
@@ -653,6 +707,7 @@ This project is part of Project-AI and follows the same license terms.
 - [ ] Integration with popular AI frameworks (LangChain, LlamaIndex)
 
 ### Version 2.0 (Future)
+
 - [ ] Continuous adversarial training mode
 - [ ] Federated learning scenario bundles
 - [ ] Blockchain-based proof anchoring

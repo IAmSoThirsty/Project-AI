@@ -63,13 +63,17 @@ The automation system consists of five main components:
 
 **Usage**:
 ```bash
+
 # Manually trigger comprehensive security scan
+
 gh workflow run security-orchestrator.yml
 
 # View security compliance status
+
 gh run list --workflow=security-orchestrator.yml
 
 # Download compliance report
+
 gh run download <RUN-ID> -n security-compliance-report
 ```
 
@@ -100,10 +104,13 @@ gh run download <RUN-ID> -n security-compliance-report
 
 **Usage:**
 ```bash
+
 # To enable auto-merge on your PR (use with caution):
+
 gh pr edit <PR-NUMBER> --add-label "auto-merge"
 
 # View workflow runs:
+
 gh run list --workflow=auto-pr-handler.yml
 ```
 
@@ -147,13 +154,17 @@ gh run list --workflow=auto-pr-handler.yml
 
 **Usage:**
 ```bash
+
 # Manually trigger security scan:
+
 gh workflow run auto-security-fixes.yml
 
 # View security issues:
+
 gh issue list --label security,automated
 
 # Download security reports:
+
 gh run download <RUN-ID> -n security-reports
 ```
 
@@ -190,13 +201,17 @@ gh run download <RUN-ID> -n security-reports
 
 **Usage:**
 ```bash
+
 # Manually trigger Bandit scan:
+
 gh workflow run auto-bandit-fixes.yml
 
 # View Bandit issues:
+
 gh issue list --label security,bandit,automated
 
 # View security alerts in browser:
+
 gh browse --security
 ```
 
@@ -240,11 +255,15 @@ All security updates are grouped together for efficient processing.
 
 **Usage:**
 ```bash
+
 # View Dependabot PRs:
+
 gh pr list --author "dependabot[bot]"
 
 # Manually trigger Dependabot:
+
 # (Not possible via CLI, use GitHub UI: Insights > Dependency graph > Dependabot)
+
 ```
 
 ## Existing Security Workflows
@@ -398,13 +417,17 @@ All automated workflows require these GitHub permissions:
 
 **Fix:**
 ```bash
+
 # View workflow status:
+
 gh workflow view auto-pr-handler.yml
 
 # View recent runs:
+
 gh run list --workflow=auto-pr-handler.yml --limit 10
 
 # View specific run logs:
+
 gh run view <RUN-ID> --log
 ```
 
@@ -418,10 +441,13 @@ gh run view <RUN-ID> --log
 
 **Check Status:**
 ```bash
+
 # View PR checks:
+
 gh pr checks <PR-NUMBER>
 
 # View PR merge eligibility:
+
 gh pr view <PR-NUMBER> --json mergeable,mergeStateStatus
 ```
 
@@ -445,10 +471,13 @@ gh pr view <PR-NUMBER> --json mergeable,mergeStateStatus
 
 **Validate Config:**
 ```bash
+
 # Validate YAML syntax:
+
 python3 -c "import yaml; yaml.safe_load(open('.github/dependabot.yml'))"
 
 # View Dependabot alerts:
+
 gh api repos/:owner/:repo/dependabot/alerts
 ```
 
@@ -489,23 +518,30 @@ When modifying workflows:
 ### Pre-Commit
 
 ```bash
+
 # Install pre-commit hooks (recommended):
+
 pre-commit install
 
 # Run manually:
+
 pre-commit run --all-files
 ```
 
 ### Local Security Scanning
 
 ```bash
+
 # Run Bandit locally before pushing:
+
 bandit -r src/ -f screen
 
 # Run pip-audit locally:
+
 pip-audit
 
 # Run safety check:
+
 safety check
 ```
 
@@ -535,5 +571,5 @@ The automated workflows complement the existing CI pipeline:
 
 ---
 
-**Last Updated**: 2025-12-18  
+**Last Updated**: 2025-12-18
 **Maintained By**: Project-AI Team

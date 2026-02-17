@@ -86,7 +86,9 @@ Each profile specifies signaling behavior, media handling, security expectations
 
 **SDP Handling**:
 ```
+
 # H.323 H.245 OLC → SIP SDP
+
 v=0
 o=- 1234567890 1234567890 IN IP4 10.1.1.100
 s=H323 to SIP Call
@@ -277,12 +279,15 @@ a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:BASE64_KEY
 **Example**:
 ```
 Zone A (GK-A):
+
   - Local endpoints: +1-408-xxx-xxxx
   - Remote query: +1-650-xxx-xxxx → LRQ to GK-B
 
 Zone B (GK-B):
+
   - Local endpoints: +1-650-xxx-xxxx
   - LCF response: Route to ep-branch-office-101
+
 ```
 
 **Gatekeeper-to-Gatekeeper Security**:
@@ -379,7 +384,7 @@ interface sip-trunk CARRIER-SIP
   authentication digest
   username gateway01
   password ********
-  
+
 media-profile sip-srtp
   crypto AES_CM_128_HMAC_SHA1_80
   key-exchange sdes
@@ -438,7 +443,7 @@ zone-peering zone-b
   transport tls
   mutual-auth required
   certificate /etc/certs/gw-a.pem
-  
+
 routing
   +1-650-xxx-xxxx → zone-b
   +1-408-xxx-xxxx → local

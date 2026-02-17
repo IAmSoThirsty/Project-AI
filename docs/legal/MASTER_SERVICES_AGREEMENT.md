@@ -1,11 +1,8 @@
 # Project-AI Master Services Agreement (MSA)
 
-**Version:** 1.0.0  
-**Effective Date:** February 8, 2026  
-**Document Hash:** (Computed at runtime)  
-**Legal Supremacy:** This document supersedes all prior agreements
+**Version:** 1.0.0 **Effective Date:** February 8, 2026 **Document Hash:** (Computed at runtime) **Legal Supremacy:** This document supersedes all prior agreements
 
----
+______________________________________________________________________
 
 ## 1. DEFINITIONS
 
@@ -21,7 +18,7 @@
 
 **1.6 Jurisdictional Annex:** Territory-specific legal requirements incorporated by reference.
 
----
+______________________________________________________________________
 
 ## 2. SCOPE OF SERVICES
 
@@ -35,6 +32,7 @@
 - **Government Tier:** Maximum security with mandatory hardware-backed signing and timestamp authority notarization
 
 **2.3 Services Included:**
+
 - AI-powered intelligent assistance
 - Ethical decision-making system (Asimov's Laws framework)
 - Autonomous learning capabilities
@@ -43,13 +41,14 @@
 - Command override system with audit logging
 - Security and privacy protections
 
----
+______________________________________________________________________
 
 ## 3. USER OBLIGATIONS
 
 **3.1 Acceptance Requirement:** User must cryptographically accept this MSA and all applicable Jurisdictional Annexes before Platform access.
 
 **3.2 Prohibited Uses:**
+
 - Any use violating applicable law or regulation
 - Attempts to bypass or disable governance, security, or audit systems
 - Malicious use, including creation or distribution of malware
@@ -61,7 +60,7 @@
 
 **3.4 Data Accuracy:** User is responsible for accuracy of information provided during registration and acceptance.
 
----
+______________________________________________________________________
 
 ## 4. SERVICE PROVIDER OBLIGATIONS
 
@@ -73,7 +72,7 @@
 
 **4.4 Transparency:** Acceptance Ledger provides public cryptographic verification of all agreements.
 
----
+______________________________________________________________________
 
 ## 5. INTELLECTUAL PROPERTY
 
@@ -83,7 +82,7 @@
 
 **5.3 User Content:** User retains ownership of data and content created using the Platform. Service Provider may process such content to provide services.
 
----
+______________________________________________________________________
 
 ## 6. LIMITATION OF LIABILITY
 
@@ -93,7 +92,7 @@
 
 **6.3 Exclusions:** SERVICE PROVIDER NOT LIABLE FOR INDIRECT, INCIDENTAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES.
 
----
+______________________________________________________________________
 
 ## 7. TERM AND TERMINATION
 
@@ -107,11 +106,12 @@
 
 **7.5 Survival:** Sections 5, 6, 8, and 9 survive termination.
 
----
+______________________________________________________________________
 
 ## 8. GOVERNANCE AND ENFORCEMENT
 
 **8.1 Acceptance Ledger:** All acceptances recorded in cryptographically-secured, tamper-proof ledger with:
+
 - SHA-256 hash chaining
 - Ed25519 digital signatures
 - Optional hardware-backed signing (TPM/HSM)
@@ -125,7 +125,7 @@
 
 **8.5 Audit Lock:** Upon termination or breach, audit systems enter locked state preventing further modifications.
 
----
+______________________________________________________________________
 
 ## 9. JURISDICTIONAL COMPLIANCE
 
@@ -137,7 +137,7 @@
 
 **9.4 Regulatory Updates:** Service Provider may update annexes to maintain compliance. Users notified and must re-accept.
 
----
+______________________________________________________________________
 
 ## 10. DISPUTE RESOLUTION
 
@@ -149,7 +149,7 @@
 
 **10.4 Acceptance Ledger as Evidence:** Cryptographically-verified acceptance records admissible in any proceeding.
 
----
+______________________________________________________________________
 
 ## 11. GENERAL PROVISIONS
 
@@ -163,7 +163,7 @@
 
 **11.5 Assignment:** User may not assign rights without written consent. Service Provider may assign without restriction.
 
----
+______________________________________________________________________
 
 ## 12. CRYPTOGRAPHIC INTEGRITY
 
@@ -175,20 +175,21 @@
 
 **12.4 Chain of Trust:** Each acceptance links to previous acceptance via cryptographic hash chain.
 
----
+______________________________________________________________________
 
 ## ACCEPTANCE
 
 By cryptographically signing this Agreement, User acknowledges:
+
 1. Reading and understanding all terms
-2. Agreeing to be legally bound
-3. Accepting all applicable Jurisdictional Annexes
-4. Consenting to immutable recording in Acceptance Ledger
-5. Understanding that acceptance is irrevocable and permanent
+1. Agreeing to be legally bound
+1. Accepting all applicable Jurisdictional Annexes
+1. Consenting to immutable recording in Acceptance Ledger
+1. Understanding that acceptance is irrevocable and permanent
 
 **For questions or concerns, contact:** legal@project-ai.dev
 
----
+______________________________________________________________________
 
 **END OF MASTER SERVICES AGREEMENT**
 

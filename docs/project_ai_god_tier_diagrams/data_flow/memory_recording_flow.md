@@ -55,6 +55,7 @@ The Memory Recording Flow implements a five-channel recording system that captur
 **Purpose**: Record the initial user request before any processing.
 
 **Data Captured**:
+
 ```python
 {
     "operation_id": "uuid-v4",
@@ -94,6 +95,7 @@ The Memory Recording Flow implements a five-channel recording system that captur
 ```
 
 **Database Schema**:
+
 ```sql
 CREATE TABLE memory_attempt (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -101,23 +103,23 @@ CREATE TABLE memory_attempt (
     user_id UUID NOT NULL REFERENCES users(id),
     session_id UUID NOT NULL,
     timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    
+
     -- Request data (JSONB for flexibility)
     content TEXT NOT NULL,
     request_type VARCHAR(50) NOT NULL,
     intent VARCHAR(100),
     confidence NUMERIC(3,2),
     entities JSONB,
-    
+
     -- Context data
     context JSONB NOT NULL,
     previous_operations UUID[],
-    
+
     -- Metadata
     source VARCHAR(20) NOT NULL,
     client_ip INET,
     user_agent TEXT,
-    
+
     -- Indexes
     CONSTRAINT valid_request_type CHECK (request_type IN ('command', 'query', 'analysis'))
 );
@@ -139,10 +141,11 @@ CREATE TABLE memory_attempt_2024_01 PARTITION OF memory_attempt
 ```
 
 **Recording Logic**:
+
 ```python
 async def record_attempt(operation_id: str, request: EnrichedRequest) -> AttemptRecord:
     """Record initial user request to attempt channel."""
-    
+
     attempt_data = {
         'operation_id': operation_id,
         'channel': 'attempt',
@@ -163,12 +166,13 @@ async def record_attempt(operation_id: str, request: EnrichedRequest) -> Attempt
             'user_agent': request.user_agent
         }
     }
-    
+
     # Write to database
+
     async with db.transaction():
         record_id = await db.execute(
             """
-            INSERT INTO memory_attempt 
+            INSERT INTO memory_attempt
             (operation_id, user_id, session_id, timestamp, content, request_type,
              intent, confidence, entities, context, source, client_ip, user_agent)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
@@ -179,9 +183,9 @@ async def record_attempt(operation_id: str, request: EnrichedRequest) -> Attempt
             json.dumps([e.to_dict() for e in request.intent.entities]),
             json.dumps(request.context), request.source, request.client_ip, request.user_agent
         )
-    
+
     logger.info(f"Recorded attempt for operation {operation_id}")
-    
+
     return AttemptRecord(id=record_id, **attempt_data)
 ```
 
@@ -190,6 +194,7 @@ async def record_attempt(operation_id: str, request: EnrichedRequest) -> Attempt
 **Purpose**: Record governance decisions from the Triumvirate.
 
 **Data Captured**:
+
 ```python
 {
     "operation_id": "uuid-v4",
@@ -241,19 +246,20 @@ async def record_attempt(operation_id: str, request: EnrichedRequest) -> Attempt
 ```
 
 **Database Schema**:
+
 ```sql
 CREATE TABLE memory_decision (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     operation_id UUID NOT NULL REFERENCES memory_attempt(operation_id),
     timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    
+
     -- Galahad (Ethics) decision
     galahad_approved BOOLEAN NOT NULL,
     galahad_confidence NUMERIC(3,2),
     galahad_reason TEXT,
     galahad_law_violated VARCHAR(10),
     galahad_time_ms INTEGER,
-    
+
     -- Cerberus (Security) decision
     cerberus_approved BOOLEAN NOT NULL,
     cerberus_security_score NUMERIC(3,2),
@@ -261,23 +267,23 @@ CREATE TABLE memory_decision (
     cerberus_security_incident BOOLEAN DEFAULT FALSE,
     cerberus_reason TEXT,
     cerberus_time_ms INTEGER,
-    
+
     -- Codex (Policy) decision
     codex_approved BOOLEAN NOT NULL,
     codex_approval_hash VARCHAR(64),
     codex_valid_until TIMESTAMPTZ,
     codex_reason TEXT,
     codex_time_ms INTEGER,
-    
+
     -- Final decision
     final_approved BOOLEAN NOT NULL,
     total_time_ms INTEGER,
     rejection_layer VARCHAR(20),
     rejection_reason TEXT,
-    
+
     -- Full governance chain (JSONB)
     governance_chain JSONB NOT NULL,
-    
+
     CONSTRAINT valid_rejection_layer CHECK (
         rejection_layer IS NULL OR rejection_layer IN ('galahad', 'cerberus', 'codex')
     )
@@ -291,13 +297,14 @@ CREATE INDEX idx_decision_governance ON memory_decision USING GIN (governance_ch
 ```
 
 **Recording Logic**:
+
 ```python
-async def record_decision(operation_id: str, 
+async def record_decision(operation_id: str,
                          galahad: GalahadDecision,
                          cerberus: CerberusDecision,
                          codex: FinalDecision) -> DecisionRecord:
     """Record governance decision to decision channel."""
-    
+
     governance_chain = {
         'galahad': {
             'approved': galahad.approved,
@@ -327,7 +334,7 @@ async def record_decision(operation_id: str,
             'compliance_status': codex.compliance_status
         }
     }
-    
+
     final_decision = {
         'approved': codex.approved,
         'total_time_ms': sum([
@@ -347,12 +354,12 @@ async def record_decision(operation_id: str,
             codex.reason if not codex.approved else None
         )
     }
-    
+
     async with db.transaction():
         record_id = await db.execute(
             """
             INSERT INTO memory_decision
-            (operation_id, timestamp, galahad_approved, galahad_confidence, 
+            (operation_id, timestamp, galahad_approved, galahad_confidence,
              galahad_reason, galahad_law_violated, galahad_time_ms,
              cerberus_approved, cerberus_security_score, cerberus_checks_performed,
              cerberus_security_incident, cerberus_reason, cerberus_time_ms,
@@ -364,19 +371,19 @@ async def record_decision(operation_id: str,
             RETURNING id
             """,
             operation_id, datetime.utcnow(),
-            galahad.approved, galahad.confidence, galahad.reason, 
+            galahad.approved, galahad.confidence, galahad.reason,
             galahad.law_violated, galahad.decision_time_ms,
             cerberus.approved, cerberus.security_score, cerberus.checks_performed,
             cerberus.security_incident, cerberus.reason, cerberus.decision_time_ms,
             codex.approved, codex.approval_hash, codex.valid_until, codex.reason,
-            codex.decision_time_ms, final_decision['approved'], 
+            codex.decision_time_ms, final_decision['approved'],
             final_decision['total_time_ms'], final_decision['rejection_layer'],
             final_decision['rejection_reason'], json.dumps(governance_chain)
         )
-    
+
     logger.info(f"Recorded decision for operation {operation_id}: {final_decision['approved']}")
-    
-    return DecisionRecord(id=record_id, governance_chain=governance_chain, 
+
+    return DecisionRecord(id=record_id, governance_chain=governance_chain,
                          final_decision=final_decision)
 ```
 
@@ -385,6 +392,7 @@ async def record_decision(operation_id: str,
 **Purpose**: Record execution results and outcomes.
 
 **Data Captured**:
+
 ```python
 {
     "operation_id": "uuid-v4",
@@ -431,42 +439,43 @@ async def record_decision(operation_id: str,
 ```
 
 **Database Schema**:
+
 ```sql
 CREATE TABLE memory_result (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     operation_id UUID NOT NULL REFERENCES memory_attempt(operation_id),
     timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    
+
     -- Execution data
     agent_type VARCHAR(100) NOT NULL,
     agent_version VARCHAR(20),
     execution_time_ms INTEGER NOT NULL,
     status VARCHAR(20) NOT NULL,
     status_code INTEGER,
-    
+
     -- Output data
     output_type VARCHAR(20) NOT NULL,
     output_content TEXT,
     output_size_bytes INTEGER,
     output_format VARCHAR(20),
-    
+
     -- Side effects (JSONB array)
     side_effects JSONB,
-    
+
     -- Resource usage
     cpu_time_ms INTEGER,
     memory_peak_mb INTEGER,
     disk_io_mb INTEGER,
     network_requests INTEGER,
-    
+
     -- Metadata
     retry_count INTEGER DEFAULT 0,
     cached BOOLEAN DEFAULT FALSE,
     cache_key VARCHAR(64),
-    
+
     -- Full result data (JSONB)
     result_data JSONB NOT NULL,
-    
+
     CONSTRAINT valid_status CHECK (status IN ('success', 'failure', 'timeout')),
     CONSTRAINT valid_output_type CHECK (output_type IN ('text', 'json', 'image', 'file'))
 );
@@ -484,6 +493,7 @@ CREATE INDEX idx_result_data ON memory_result USING GIN (result_data);
 **Purpose**: Post-execution analysis and learning insights.
 
 **Data Captured**:
+
 ```python
 {
     "operation_id": "uuid-v4",
@@ -523,32 +533,33 @@ CREATE INDEX idx_result_data ON memory_result USING GIN (result_data);
 ```
 
 **Database Schema**:
+
 ```sql
 CREATE TABLE memory_reflection (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     operation_id UUID NOT NULL REFERENCES memory_attempt(operation_id),
     timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    
+
     -- Analysis
     success BOOLEAN NOT NULL,
     met_expectations BOOLEAN,
     quality_score NUMERIC(3,2),
     efficiency_score NUMERIC(3,2),
-    
+
     -- Learning insights (JSONB arrays)
     new_knowledge JSONB,
     patterns_detected TEXT[],
     improvement_suggestions JSONB,
-    
+
     -- Impact assessment
     user_satisfaction_estimate NUMERIC(3,2),
     knowledge_base_updated BOOLEAN DEFAULT FALSE,
     persona_adjustments JSONB,
-    
+
     -- Future optimization
     cache_candidate BOOLEAN DEFAULT FALSE,
     similar_operations UUID[],
-    
+
     -- Full reflection data (JSONB)
     reflection_data JSONB NOT NULL
 );
@@ -565,6 +576,7 @@ CREATE INDEX idx_reflection_data ON memory_reflection USING GIN (reflection_data
 **Purpose**: Record failures, exceptions, and recovery actions.
 
 **Data Captured**:
+
 ```python
 {
     "operation_id": "uuid-v4",
@@ -608,44 +620,45 @@ CREATE INDEX idx_reflection_data ON memory_reflection USING GIN (reflection_data
 ```
 
 **Database Schema**:
+
 ```sql
 CREATE TABLE memory_error (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     operation_id UUID NOT NULL REFERENCES memory_attempt(operation_id),
     timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    
+
     -- Error data
     error_type VARCHAR(100) NOT NULL,
     error_message TEXT NOT NULL,
     error_code VARCHAR(50),
     severity VARCHAR(20) NOT NULL,
-    
+
     -- Stack trace
     stack_trace TEXT,
-    
+
     -- Context (JSONB)
     error_context JSONB,
-    
+
     -- Recovery actions
     recovery_action VARCHAR(50),
     retry_attempted BOOLEAN DEFAULT FALSE,
     fallback_used VARCHAR(100),
     user_notified BOOLEAN DEFAULT FALSE,
-    
+
     -- Root cause analysis
     root_cause_analysis TEXT,
     contributing_factors TEXT[],
     suggested_fix TEXT,
-    
+
     -- Incident tracking
     incident_id UUID,
     oncall_notified BOOLEAN DEFAULT FALSE,
     resolved BOOLEAN DEFAULT FALSE,
     resolution_time_minutes INTEGER,
-    
+
     -- Full error data (JSONB)
     error_data JSONB NOT NULL,
-    
+
     CONSTRAINT valid_severity CHECK (severity IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL'))
 );
 
@@ -664,10 +677,11 @@ All five channels are recorded in parallel for maximum performance:
 ```python
 async def record_complete_operation(operation: CompletedOperation):
     """Record operation across all five channels in parallel."""
-    
+
     operation_id = operation.id
-    
+
     # Start all recordings in parallel
+
     await asyncio.gather(
         record_attempt(operation_id, operation.request),
         record_decision(operation_id, operation.galahad, operation.cerberus, operation.codex),
@@ -675,21 +689,23 @@ async def record_complete_operation(operation: CompletedOperation):
         record_reflection(operation_id, await generate_reflection(operation)),
         record_error(operation_id, operation.errors) if operation.errors else asyncio.sleep(0)
     )
-    
+
     logger.info(f"Recorded operation {operation_id} across all channels")
-    
+
     # Update operation status
+
     await db.execute(
         """
-        UPDATE operations 
-        SET recording_complete = TRUE, 
+        UPDATE operations
+        SET recording_complete = TRUE,
             recording_timestamp = NOW()
         WHERE operation_id = $1
         """,
         operation_id
     )
-    
+
     # Emit metric
+
     memory_recordings_total.labels(channel='all').inc()
 ```
 
@@ -700,7 +716,7 @@ async def record_complete_operation(operation: CompletedOperation):
 ```python
 async def get_complete_operation(operation_id: str) -> CompleteOperation:
     """Retrieve all five channels for an operation."""
-    
+
     attempt, decision, result, reflection, error = await asyncio.gather(
         db.fetchrow("SELECT * FROM memory_attempt WHERE operation_id = $1", operation_id),
         db.fetchrow("SELECT * FROM memory_decision WHERE operation_id = $1", operation_id),
@@ -708,7 +724,7 @@ async def get_complete_operation(operation_id: str) -> CompleteOperation:
         db.fetchrow("SELECT * FROM memory_reflection WHERE operation_id = $1", operation_id),
         db.fetchrow("SELECT * FROM memory_error WHERE operation_id = $1", operation_id)
     )
-    
+
     return CompleteOperation(
         operation_id=operation_id,
         attempt=AttemptRecord(**attempt) if attempt else None,
@@ -724,7 +740,7 @@ async def get_complete_operation(operation_id: str) -> CompleteOperation:
 ```python
 async def search_similar_operations(intent: str, limit: int = 10) -> List[str]:
     """Find operations with similar intent."""
-    
+
     similar = await db.fetch(
         """
         SELECT operation_id, content, confidence
@@ -735,7 +751,7 @@ async def search_similar_operations(intent: str, limit: int = 10) -> List[str]:
         """,
         intent, limit
     )
-    
+
     return [row['operation_id'] for row in similar]
 ```
 
@@ -744,7 +760,7 @@ async def search_similar_operations(intent: str, limit: int = 10) -> List[str]:
 ```python
 async def analyze_error_patterns(hours: int = 24) -> ErrorAnalysis:
     """Analyze error patterns over time window."""
-    
+
     errors = await db.fetch(
         """
         SELECT error_type, error_code, severity, COUNT(*) as count
@@ -755,7 +771,7 @@ async def analyze_error_patterns(hours: int = 24) -> ErrorAnalysis:
         """,
         hours
     )
-    
+
     return ErrorAnalysis(
         time_window_hours=hours,
         total_errors=sum(row['count'] for row in errors),
@@ -767,6 +783,7 @@ async def analyze_error_patterns(hours: int = 24) -> ErrorAnalysis:
 ## Data Retention and Archival
 
 **Hot Storage (PostgreSQL)**: 90 days
+
 ```sql
 -- Automatic partition management
 SELECT partman.create_parent('public.memory_attempt', 'timestamp', 'native', 'monthly');
@@ -776,8 +793,8 @@ SELECT partman.create_parent('public.memory_reflection', 'timestamp', 'native', 
 SELECT partman.create_parent('public.memory_error', 'timestamp', 'native', 'monthly');
 
 -- Retention policy: drop partitions older than 90 days
-UPDATE partman.part_config 
-SET retention = '90 days', 
+UPDATE partman.part_config
+SET retention = '90 days',
     retention_keep_table = FALSE
 WHERE parent_table IN (
     'public.memory_attempt',
@@ -789,13 +806,15 @@ WHERE parent_table IN (
 ```
 
 **Warm Storage (Object Store)**: 90 days - 7 years
+
 ```python
 async def archive_old_memories():
     """Archive memories older than 90 days to object storage."""
-    
+
     cutoff = datetime.utcnow() - timedelta(days=90)
-    
+
     # Export to JSON
+
     operations = await db.fetch(
         """
         SELECT a.operation_id, a.*, d.*, r.*, ref.*, e.*
@@ -808,8 +827,9 @@ async def archive_old_memories():
         """,
         cutoff
     )
-    
+
     # Upload to S3/MinIO
+
     for op in operations:
         archive_key = f"memories/{op['operation_id'][:2]}/{op['operation_id']}.json"
         await object_store.upload(
@@ -818,7 +838,7 @@ async def archive_old_memories():
             data=json.dumps(op, default=str),
             encryption='AES256'
         )
-    
+
     logger.info(f"Archived {len(operations)} operations to warm storage")
 ```
 
@@ -827,12 +847,14 @@ async def archive_old_memories():
 ## Performance Characteristics
 
 ### Latency Targets (P95)
+
 - Single channel write: < 10ms
 - All five channels (parallel): < 50ms
 - Query single operation: < 20ms
 - Search by intent: < 100ms
 
 ### Throughput Targets
+
 - Memory writes/sec: 1,000+
 - Concurrent operations: 500
 - Query throughput: 5,000/sec
@@ -840,7 +862,9 @@ async def archive_old_memories():
 ## Monitoring
 
 ```python
+
 # Prometheus metrics
+
 memory_recordings_total = Counter(
     'memory_recordings_total',
     'Total memory recordings',

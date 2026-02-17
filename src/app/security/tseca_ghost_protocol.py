@@ -172,10 +172,7 @@ def shamir_reconstruct(shares: list[tuple[int, bytes]]) -> bytes:
     for idx in range(secret_len):
         x_s = [s[0] for s in shares]
         # Decode 16-bit little-endian values
-        y_s = [
-            s[1][idx * 2] | (s[1][idx * 2 + 1] << 8)
-            for s in shares
-        ]
+        y_s = [s[1][idx * 2] | (s[1][idx * 2 + 1] << 8) for s in shares]
         secret[idx] = _lagrange(0, x_s, y_s)
     return bytes(secret)
 
@@ -236,7 +233,9 @@ class GhostProtocol:
         Returns:
             Hexadecimal identity hash
         """
-        pub = self.identity_key.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)
+        pub = self.identity_key.public_key().public_bytes(
+            Encoding.Raw, PublicFormat.Raw
+        )
         return sha256(pub)
 
     def fragment_identity(self) -> list[bytes]:
@@ -561,6 +560,7 @@ def demo_boot():
 
 if __name__ == "__main__":
     logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
     demo_boot()

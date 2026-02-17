@@ -20,7 +20,9 @@ The Cloud Synchronization module (`cloud_sync.py`) provides encrypted cross-devi
 Add the cloud sync URL to your `.env` file:
 
 ```bash
+
 # .env
+
 CLOUD_SYNC_URL=https://your-api-endpoint.com/sync
 FERNET_KEY=<your-generated-fernet-key>
 ```
@@ -38,9 +40,11 @@ print(Fernet.generate_key().decode())
 from app.core.cloud_sync import CloudSyncManager
 
 # Initialize sync manager
+
 sync_manager = CloudSyncManager()
 
 # Prepare user data
+
 user_data = {
     "preferences": {"theme": "dark", "language": "en"},
     "ai_persona": {"curiosity": 0.8, "empathy": 0.9},
@@ -48,22 +52,28 @@ user_data = {
 }
 
 # Upload data to cloud
+
 success = sync_manager.sync_upload("username", user_data)
 
 # Download data from cloud
+
 cloud_data = sync_manager.sync_download("username")
 
 # Bidirectional sync with conflict resolution
+
 synced_data = sync_manager.bidirectional_sync("username", user_data)
 ```
 
 ### 3. Enable Auto-Sync
 
 ```python
+
 # Enable automatic sync every 10 minutes
+
 sync_manager.enable_auto_sync(interval=600)
 
 # Check sync status
+
 status = sync_manager.get_sync_status("username")
 print(f"Auto-sync enabled: {status['auto_sync_enabled']}")
 print(f"Last upload: {status['last_upload']}")
@@ -82,7 +92,9 @@ print(f"Last upload: {status['last_upload']}")
        │                       │                        │
        ▼                       ▼                        ▼
   Local Data            Encrypted Blob            Local Data
+
   + Metadata            + Device Info             + Metadata
+
 ```
 
 ### Security Model
@@ -101,6 +113,7 @@ The cloud sync module expects a REST API with the following endpoints:
 Upload encrypted user data.
 
 **Request:**
+
 ```json
 {
   "username": "string",
@@ -110,6 +123,7 @@ Upload encrypted user data.
 ```
 
 **Response:**
+
 ```json
 {
   "status": "success",
@@ -127,6 +141,7 @@ Download encrypted user data.
 - `device_id` (string): Device identifier
 
 **Response:**
+
 ```json
 {
   "username": "string",
@@ -145,6 +160,7 @@ List all devices that have synced for a user.
 - `username` (string): User identifier
 
 **Response:**
+
 ```json
 {
   "devices": [
@@ -166,21 +182,27 @@ The module uses timestamp-based conflict resolution:
 1. Update local data if cloud was newer
 
 ```python
+
 # Example: Local data (older)
+
 local_data = {
     "content": "local version",
     "timestamp": "2025-01-01T10:00:00"
 }
 
 # Cloud data (newer)
+
 cloud_data = {
     "content": "cloud version",
     "timestamp": "2025-01-01T11:00:00"
 }
 
 # Resolution: Cloud wins
+
 resolved = sync_manager.resolve_conflict(local_data, cloud_data)
+
 # Result: resolved == cloud_data
+
 ```
 
 ## Testing
@@ -188,10 +210,13 @@ resolved = sync_manager.resolve_conflict(local_data, cloud_data)
 The module includes comprehensive tests:
 
 ```bash
+
 # Run cloud sync tests
+
 python -m pytest tests/test_cloud_sync.py -v
 
 # Run all tests
+
 python -m pytest tests/ -v
 ```
 
@@ -231,7 +256,7 @@ python examples/cloud_sync_demo.py
 
 **Symptom:** `RequestException` during upload/download
 
-**Solution:** 
+**Solution:**
 
 - Check network connectivity
 - Verify cloud API endpoint is accessible

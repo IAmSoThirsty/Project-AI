@@ -43,16 +43,19 @@ Task Queue: `liara-crisis-tasks`
 ### 1. Start Temporal Server
 
 Using Docker Compose:
+
 ```bash
 docker-compose up -d temporal temporal-postgresql
 ```
 
 Using setup script:
+
 ```bash
 python scripts/setup_temporal.py start
 ```
 
 Verify server is running:
+
 ```bash
 curl http://localhost:8233/api/v1/namespaces/default
 ```
@@ -62,16 +65,19 @@ curl http://localhost:8233/api/v1/namespaces/default
 Choose one:
 
 **Dedicated Liara Worker** (recommended for production):
+
 ```bash
 python cognition/liara/worker.py
 ```
 
 **Main Worker** (includes all workflows):
+
 ```bash
 python src/app/temporal/worker.py
 ```
 
 Expected output:
+
 ```
 INFO - Starting Liara Temporal Agency Worker
 INFO - Connected to Temporal server
@@ -85,13 +91,17 @@ INFO - Liara worker is running. Press Ctrl+C to stop.
 #### Method 1: CLI Tool (Quickest)
 
 ```bash
+
 # Trigger crisis response
+
 python cognition/liara/cli.py trigger target-alpha recon secure extract cleanup
 
 # Check status
+
 python cognition/liara/cli.py status <workflow-id>
 
 # Wait for completion
+
 python cognition/liara/cli.py wait <workflow-id>
 ```
 
@@ -118,13 +128,13 @@ async def main():
                 "priority": 1,
             }
         ]
-        
+
         workflow_id = await agency.trigger_crisis_response(
             target_member="target-alpha",
             missions=missions,
             initiated_by="user-123",
         )
-        
+
         result = await agency.wait_for_crisis_completion(workflow_id)
         print(f"Success: {result['success']}")
 
@@ -156,11 +166,13 @@ View details:
 ### Persistent State
 
 Crisis records saved to:
+
 ```
 data/crises/crisis-<id>.json
 ```
 
 Example record:
+
 ```json
 {
   "crisis_id": "crisis-target-alpha-1234567890",
@@ -194,6 +206,7 @@ Worker logs show:
 - Errors and retries
 
 Example log output:
+
 ```
 INFO - AGENT DEPLOYMENT - Phase: recon-phase-1 | Agent: recon-agent-001 | Action: reconnaissance | Target: target-alpha
 INFO - Agent recon-agent-001 deployed successfully for mission phase recon-phase-1
@@ -204,14 +217,18 @@ INFO - Agent recon-agent-001 deployed successfully for mission phase recon-phase
 ### Unit Tests
 
 ```bash
+
 # Test data models and activities (no Temporal server required)
+
 pytest tests/temporal/test_liara_workflows.py -k "not integration"
 ```
 
 ### Integration Tests
 
 ```bash
+
 # Requires running Temporal server
+
 pytest tests/temporal/test_liara_workflows.py -m integration
 ```
 
@@ -228,6 +245,7 @@ pytest tests/temporal/test_liara_workflows.py -m integration
 ### Temporal Cloud
 
 Configure for managed Temporal Cloud:
+
 ```python
 agency = LiaraTemporalAgency(
     temporal_host="<namespace>.<account>.tmprl.cloud:7233",
@@ -239,8 +257,11 @@ agency = LiaraTemporalAgency(
 ### Horizontal Scaling
 
 Deploy multiple workers:
+
 ```bash
+
 # Deploy 5 workers for increased throughput
+
 docker-compose up -d --scale temporal-worker=5
 ```
 
@@ -265,6 +286,7 @@ Access via:
 ### Retry Configuration
 
 Default retry policy (configurable in workflows.py):
+
 ```python
 retry_policy=RetryPolicy(
     maximum_attempts=3,
@@ -309,20 +331,15 @@ Adjust based on:
 
 ## FAQ
 
-**Q: Can I run without Temporal server for testing?**
-A: No, workflows require a running Temporal server. Use Docker Compose for local development.
+**Q: Can I run without Temporal server for testing?** A: No, workflows require a running Temporal server. Use Docker Compose for local development.
 
-**Q: How do I scale horizontally?**
-A: Deploy multiple workers pointing to the same task queue. Temporal automatically distributes work.
+**Q: How do I scale horizontally?** A: Deploy multiple workers pointing to the same task queue. Temporal automatically distributes work.
 
-**Q: What happens if a worker crashes mid-workflow?**
-A: Temporal persists workflow state. When a new worker starts, it resumes from the last checkpoint.
+**Q: What happens if a worker crashes mid-workflow?** A: Temporal persists workflow state. When a new worker starts, it resumes from the last checkpoint.
 
-**Q: Can I modify workflow code?**
-A: Yes, but use versioning to handle in-flight workflows. See Temporal documentation on workflow versioning.
+**Q: Can I modify workflow code?** A: Yes, but use versioning to handle in-flight workflows. See Temporal documentation on workflow versioning.
 
-**Q: How do I integrate with existing systems?**
-A: Activities can call any external API or service. Keep activities idempotent for safe retries.
+**Q: How do I integrate with existing systems?** A: Activities can call any external API or service. Keep activities idempotent for safe retries.
 
 ## Resources
 

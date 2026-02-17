@@ -13,27 +13,38 @@ services:
   backend:
     build: ./backend
     ports:
+
       - "5000:5000"
+
     environment:
+
       - FLASK_ENV=production
       - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/projectai
+
     depends_on:
+
       - db
 
   frontend:
     build: ./frontend
     ports:
+
       - "80:80"
+
     depends_on:
+
       - backend
 
   db:
     image: postgres:15
     environment:
+
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=projectai
+
     volumes:
+
       - postgres_data:/var/lib/postgresql/data
 
 volumes:
@@ -41,6 +52,7 @@ volumes:
 ```
 
 Run with:
+
 ```bash
 docker-compose up -d
 ```
@@ -76,7 +88,9 @@ git push heroku feature/web-conversion:main
 ## Environment Variables for Production
 
 ```env
+
 # Backend
+
 FLASK_ENV=production
 SECRET_KEY=<generate-strong-secret>
 JWT_SECRET_KEY=<generate-strong-jwt-secret>
@@ -84,6 +98,7 @@ DATABASE_URL=<production-database-url>
 CORS_ORIGINS=https://yourdomain.com
 
 # API Keys
+
 OPENAI_API_KEY=<your-key>
 GEMINI_API_KEY=<your-key>
 ```
@@ -99,8 +114,7 @@ GEMINI_API_KEY=<your-key>
 - [ ] Set up database backups
 - [ ] Configure logging and monitoring
 
-
----
+______________________________________________________________________
 
 **Repository note:** Last updated: 2025-11-26 (automated)
 

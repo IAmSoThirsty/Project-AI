@@ -175,7 +175,8 @@ class ScenarioListWidget(QFrame):
 
         # List widget
         self.list_widget = QListWidget()
-        self.list_widget.setStyleSheet(f"""
+        self.list_widget.setStyleSheet(
+            f"""
             QListWidget {{
                 background-color: {TRON_DARK};
                 border: 1px solid {TRON_BORDER};
@@ -187,7 +188,8 @@ class ScenarioListWidget(QFrame):
                 background-color: #004400;
                 border: 1px solid {TRON_CYAN};
             }}
-        """)
+        """
+        )
         self.list_widget.itemClicked.connect(self.on_item_clicked)
         layout.addWidget(self.list_widget)
 
@@ -329,7 +331,8 @@ class StatusDashboardWidget(QFrame):
     def _create_metric_label(self, name: str, value: str) -> QLabel:
         """Create metric label"""
         label = QLabel(f"{name}:\n{value}")
-        label.setStyleSheet(f"""
+        label.setStyleSheet(
+            f"""
             QLabel {{
                 color: {TRON_GREEN};
                 font-family: 'Courier New';
@@ -339,7 +342,8 @@ class StatusDashboardWidget(QFrame):
                 background-color: {TRON_DARK};
                 border-radius: 3px;
             }}
-        """)
+        """
+        )
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         return label
 
@@ -438,7 +442,8 @@ class VisualizationWidget(QFrame):
         # Visualization display (ASCII art)
         self.viz_display = QTextEdit()
         self.viz_display.setReadOnly(True)
-        self.viz_display.setStyleSheet(f"""
+        self.viz_display.setStyleSheet(
+            f"""
             QTextEdit {{
                 background-color: {TRON_DARK};
                 border: 1px solid {TRON_BORDER};
@@ -446,7 +451,8 @@ class VisualizationWidget(QFrame):
                 font-family: 'Courier New';
                 font-size: 9px;
             }}
-        """)
+        """
+        )
         layout.addWidget(self.viz_display)
 
         self.current_scenario_id = None
@@ -521,7 +527,8 @@ class AlertManagementWidget(QFrame):
         self.alert_table.setHorizontalHeaderLabels(
             ["Severity", "Title", "Time", "Status"]
         )
-        self.alert_table.setStyleSheet(f"""
+        self.alert_table.setStyleSheet(
+            f"""
             QTableWidget {{
                 background-color: {TRON_DARK};
                 border: 1px solid {TRON_BORDER};
@@ -535,7 +542,8 @@ class AlertManagementWidget(QFrame):
                 border: 1px solid {TRON_BORDER};
                 padding: 4px;
             }}
-        """)
+        """
+        )
         layout.addWidget(self.alert_table)
 
         # Button row
@@ -719,7 +727,8 @@ class HistoricalReplayWidget(QFrame):
         self.timeline_slider.setMinimum(0)
         self.timeline_slider.setMaximum(100)
         self.timeline_slider.setValue(100)
-        self.timeline_slider.setStyleSheet(f"""
+        self.timeline_slider.setStyleSheet(
+            f"""
             QSlider::groove:horizontal {{
                 border: 1px solid {TRON_BORDER};
                 height: 8px;
@@ -732,7 +741,8 @@ class HistoricalReplayWidget(QFrame):
                 margin: -5px 0;
                 border-radius: 3px;
             }}
-        """)
+        """
+        )
         self.timeline_slider.valueChanged.connect(self.on_timeline_changed)
         layout.addWidget(self.timeline_slider)
 
@@ -828,7 +838,8 @@ class HYDRA50Panel(QWidget):
 
         # Create tab widget
         tabs = QTabWidget()
-        tabs.setStyleSheet(f"""
+        tabs.setStyleSheet(
+            f"""
             QTabWidget::pane {{
                 border: 2px solid {TRON_BORDER};
                 background-color: {TRON_DARK};
@@ -846,7 +857,8 @@ class HYDRA50Panel(QWidget):
                 color: {TRON_CYAN};
                 border: 2px solid {TRON_CYAN};
             }}
-        """)
+        """
+        )
 
         # Create main content area with splitters
         overview_widget = QWidget()

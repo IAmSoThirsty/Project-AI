@@ -119,7 +119,7 @@ class JurisdictionLoader:
     def _parse_document_content(self, file_path: Path) -> dict:
         """
         Parse markdown document to extract structured data.
-        
+
         Extracts:
         - data_subject_rights: From sections like "Consumer Rights", "Individual Rights"
         - compliance_obligations: From "Principles", "Obligations"
@@ -127,46 +127,50 @@ class JurisdictionLoader:
         parsed = {
             "requirements": {},
             "data_subject_rights": [],
-            "compliance_obligations": []
+            "compliance_obligations": [],
         }
-        
+
         try:
             with open(file_path, encoding="utf-8") as f:
                 lines = f.readlines()
-                
+
             current_section = None
-            
+
             for line in lines:
                 line = line.strip()
                 if not line:
                     continue
-                    
+
                 # Detect section headers
                 if line.startswith("## "):
                     header = line.replace("## ", "").strip().lower()
                     if "rights" in header:
                         current_section = "rights"
-                    elif "principles" in header or "obligations" in header or "requirements" in header:
+                    elif (
+                        "principles" in header
+                        or "obligations" in header
+                        or "requirements" in header
+                    ):
                         current_section = "obligations"
                     else:
                         current_section = None
                     continue
-                    
+
                 # Parse list items
                 if current_section and (line.startswith("- ") or line.startswith("* ")):
                     item = line[2:].strip()
                     # Remove broad bolding if present
                     if item.startswith("**") and "**" in item[2:]:
                         item = item.replace("**", "", 2)
-                        
+
                     if current_section == "rights":
                         parsed["data_subject_rights"].append(item)
                     elif current_section == "obligations":
-                         parsed["compliance_obligations"].append(item)
-                         
+                        parsed["compliance_obligations"].append(item)
+
         except Exception as e:
             print(f"Error parsing document content for {file_path}: {e}")
-            
+
         return parsed
 
         """Load all jurisdictional annexes from the jurisdictions directory"""
@@ -198,7 +202,9 @@ class JurisdictionLoader:
                     document_hash=document_hash,
                     requirements=parsed_content.get("requirements", {}),
                     data_subject_rights=parsed_content.get("data_subject_rights", []),
-                    compliance_obligations=parsed_content.get("compliance_obligations", []),
+                    compliance_obligations=parsed_content.get(
+                        "compliance_obligations", []
+                    ),
                 )
 
                 self.loaded_jurisdictions[jurisdiction_code] = annex

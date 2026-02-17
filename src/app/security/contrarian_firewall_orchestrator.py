@@ -179,7 +179,6 @@ class ContrariaNFirewallOrchestrator:
         """Initialize all integrated subsystems"""
         # Import and initialize core components
         from integrations.thirsty_lang_security import ThirstyLangSecurityBridge
-
         from src.app.agents.firewalls.thirsty_honeypot_swarm_defense import (
             ThirstysHoneypotSwarmDefense,
         )

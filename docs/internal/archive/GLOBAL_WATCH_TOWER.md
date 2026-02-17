@@ -43,9 +43,11 @@ Initialize the global watch tower system once at application startup:
 from app.core.global_watch_tower import GlobalWatchTower
 
 # Initialize with default settings
+
 tower = GlobalWatchTower.initialize()
 
 # Or with custom configuration
+
 tower = GlobalWatchTower.initialize(
     num_port_admins=2,      # Number of port administrators
     towers_per_port=5,      # Watch towers per port
@@ -66,10 +68,12 @@ from app.core.global_watch_tower import get_global_watch_tower
 tower = get_global_watch_tower()
 
 # Get Cerberus (Chief of Security)
+
 cerberus = tower.get_chief_of_security()
 print(f"Chief of Security: {cerberus.title}")
 
 # Get comprehensive security status
+
 status = tower.get_security_status()
 print(f"Chief: {status['chief_of_security']}")
 print(f"Total incidents: {status['total_incidents']}")
@@ -86,21 +90,25 @@ from app.core.global_watch_tower import get_global_watch_tower
 tower = get_global_watch_tower()
 
 # Register active defense agents
+
 tower.register_security_agent("active_defense", "safety_guard_1")
 tower.register_security_agent("active_defense", "constitutional_guardrail_1")
 tower.register_security_agent("active_defense", "tarl_protector_1")
 
 # Register red team agents
+
 tower.register_security_agent("red_team", "red_team_agent_1")
 tower.register_security_agent("red_team", "code_adversary_1")
 tower.register_security_agent("red_team", "jailbreak_tester_1")
 
 # Register oversight agents
+
 tower.register_security_agent("oversight", "oversight_agent_1")
 tower.register_security_agent("oversight", "validator_agent_1")
 tower.register_security_agent("oversight", "explainability_agent_1")
 
 # Verify registration
+
 status = tower.get_security_status()
 print(f"Active Defense agents: {len(status['agent_details']['active_defense'])}")
 print(f"Red Team agents: {len(status['agent_details']['red_team'])}")
@@ -138,10 +146,12 @@ For deferred processing:
 tower = get_global_watch_tower()
 
 # Place file in quarantine
+
 box = tower.quarantine_file("/path/to/suspicious.py")
 print(f"Quarantined: {box.path}")
 
 # Later: process the file
+
 result = tower.process_quarantined(str(box.path))
 print(f"Verdict: {result['verdict']}")
 ```
@@ -173,12 +183,15 @@ print(f"Cerberus incidents: {stats['cerberus_incidents']}")
 ### Access Specific Components
 
 ```python
+
 # Get a specific watch tower
+
 watch_tower = tower.get_tower_by_id("wt-0-1")
 if watch_tower:
     print(f"Reports: {len(watch_tower.reports)}")
 
 # Get a specific gate guardian
+
 gate = tower.get_gate_by_id("gate-0-0-0")
 if gate:
     print(f"Force field: {gate.force_field_active}")
@@ -205,24 +218,24 @@ for incident in incidents:
 ### Security Features
 
 1. **Quarantine System**: Files are isolated before verification
-2. **Sandboxed Execution**: Files are executed in isolated processes with timeout
-3. **Dependency Analysis**: Scans for malicious imports and dependencies
-4. **Threat Escalation**: Repeated attacks trigger automatic escalation
-5. **Emergency Lockdown**: System-wide force field activation
-6. **Incident Tracking**: All security events are logged to Cerberus
+1. **Sandboxed Execution**: Files are executed in isolated processes with timeout
+1. **Dependency Analysis**: Scans for malicious imports and dependencies
+1. **Threat Escalation**: Repeated attacks trigger automatic escalation
+1. **Emergency Lockdown**: System-wide force field activation
+1. **Incident Tracking**: All security events are logged to Cerberus
 
 ### Verification Process
 
 When you verify a file:
 
 1. File is placed in quarantine
-2. Dependency analysis is performed (imports, pip packages)
-3. File is executed in sandboxed environment
-4. Results are evaluated and verdict is determined
-5. If suspicious, incident is reported to watch tower
-6. Watch tower may escalate to PortAdmin if repeated threats detected
-7. PortAdmin notifies Cerberus for permanent record
-8. File is released from quarantine after processing
+1. Dependency analysis is performed (imports, pip packages)
+1. File is executed in sandboxed environment
+1. Results are evaluated and verdict is determined
+1. If suspicious, incident is reported to watch tower
+1. Watch tower may escalate to PortAdmin if repeated threats detected
+1. PortAdmin notifies Cerberus for permanent record
+1. File is released from quarantine after processing
 
 ## Integration Examples
 
@@ -250,6 +263,7 @@ pytest tests/test_global_watch_tower.py -v
 ```
 
 Test coverage includes:
+
 - Singleton initialization
 - File verification
 - Quarantine workflow
@@ -260,6 +274,7 @@ Test coverage includes:
 ## Thread Safety
 
 The GlobalWatchTower singleton is thread-safe:
+
 - Initialization uses a lock to prevent race conditions
 - Internal components (GateGuardian) use locks for quarantine operations
 - Safe to use from multiple threads
@@ -267,10 +282,10 @@ The GlobalWatchTower singleton is thread-safe:
 ## Best Practices
 
 1. **Initialize Once**: Call `GlobalWatchTower.initialize()` once at startup
-2. **Use Convenience Functions**: For simple verification, use `verify_file_globally()`
-3. **Monitor Statistics**: Regularly check `get_stats()` for security metrics
-4. **Handle Verdicts**: Always check the verdict and act accordingly
-5. **Emergency Procedures**: Have a plan for handling lockdown events
+1. **Use Convenience Functions**: For simple verification, use `verify_file_globally()`
+1. **Monitor Statistics**: Regularly check `get_stats()` for security metrics
+1. **Handle Verdicts**: Always check the verdict and act accordingly
+1. **Emergency Procedures**: Have a plan for handling lockdown events
 
 ## API Reference
 

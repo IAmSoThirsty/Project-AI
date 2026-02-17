@@ -123,7 +123,6 @@ class EventStreamBackend(ABC):
     @abstractmethod
     def publish(self, topic: str, event: StreamEvent) -> bool:
         """Publish event to topic."""
-        pass
 
     @abstractmethod
     def subscribe(
@@ -133,29 +132,24 @@ class EventStreamBackend(ABC):
         callback: Callable[[StreamEvent], None],
     ) -> str:
         """Subscribe to topics with consumer group."""
-        pass
 
     @abstractmethod
     def unsubscribe(self, subscription_id: str) -> bool:
         """Unsubscribe from topics."""
-        pass
 
     @abstractmethod
     def get_events(
         self, topic: str, offset: int = 0, limit: int = 100
     ) -> list[StreamEvent]:
         """Get events from topic starting at offset."""
-        pass
 
     @abstractmethod
     def commit_offset(self, topic: str, consumer_group: str, offset: int) -> bool:
         """Commit consumer group offset."""
-        pass
 
     @abstractmethod
     def close(self) -> None:
         """Close backend connections."""
-        pass
 
 
 class InMemoryStreamBackend(EventStreamBackend):

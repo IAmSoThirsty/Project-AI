@@ -14,8 +14,9 @@
 **This implementation provides enterprise-grade security INFRASTRUCTURE that is configured but requires validation testing on a live GKE cluster before production deployment.**
 
 **Required Validation Tests:**
+
 - [ ] Signed image deployment succeeds
-- [ ] Unsigned image deployment is denied  
+- [ ] Unsigned image deployment is denied
 - [ ] Lateral pod communication is blocked
 - [ ] Audit log deletion attempts are denied
 - [ ] Privileged container deployment is denied
@@ -46,7 +47,9 @@ roles/cloudkms.signerVerifier
 
 **If you see Owner, Editor, or Admin — FIX IT:**
 ```bash
+
 # Remove over-privileged role
+
 gcloud projects remove-iam-policy-binding PROJECT_ID \
   --member="serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com" \
   --role="roles/DANGEROUS_ROLE"
@@ -67,24 +70,29 @@ gcloud kms keys get-iam-policy cosign-key \
 **✅ EXPECTED OUTPUT:**
 ```yaml
 bindings:
+
 - members:
   - serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com
+
   role: roles/cloudkms.signerVerifier
 etag: BwYRh8xxxxxx
 version: 1
 ```
 
 **Confirm:**
+
 - ✅ Role is ONLY `roles/cloudkms.signerVerifier`
 - ✅ Member is `serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com`
 - ✅ Nothing broader (no admin, owner, editor)
 
 **Permissions Granted:**
+
 - ✅ Sign data with key
 - ✅ View public key
 - ✅ Get key metadata
 
 **Permissions NOT Granted (correct):**
+
 - ❌ Create/delete keys
 - ❌ Modify key policies
 - ❌ Project-level access
@@ -101,21 +109,28 @@ gcloud projects get-iam-policy PROJECT_ID \
 
 **✅ EXPECTED OUTPUT (CLEAN):**
 ```
+
 # Empty output is GOOD - means no project-level bindings
+
 ```
 
 **OR (if using Workload Identity):**
 ```yaml
+
 - members:
   - serviceAccount:PROJECT_ID.svc.id.goog[tk8s-prod/cosign-signer]
+
   role: roles/iam.workloadIdentityUser
 ```
 
 **❌ DANGEROUS (must fix if found):**
 ```yaml
+
 # BAD - Over-privileged
+
 - members:
   - serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com
+
   role: roles/owner  # ❌ REMOVE
 ```
 
@@ -180,8 +195,10 @@ gcloud iam service-accounts add-iam-policy-binding \
 ```
 Updated IAM policy for serviceAccount [cosign-signer@PROJECT_ID.iam.gserviceaccount.com].
 bindings:
+
 - members:
   - serviceAccount:PROJECT_ID.svc.id.goog[tk8s-prod/cosign-signer]
+
   role: roles/iam.workloadIdentityUser
 ```
 
@@ -253,6 +270,7 @@ iam.gke.io/gcp-service-account: cosign-signer@PROJECT_ID.iam.gserviceaccount.com
 ### ✅ PROCEED TO BINARY AUTHORIZATION
 
 **Conditions Met:**
+
 - ✅ Service account has ONLY `roles/cloudkms.signerVerifier` at KMS key level
 - ✅ No project-level over-privileged bindings
 - ✅ Workload Identity is enabled and configured
@@ -265,6 +283,7 @@ echo "✅ PROCEED: Binary Authorization"
 ```
 
 **Next Steps:**
+
 1. Follow Binary Authorization setup in `k8s/tk8s/KMS_SETUP_GUIDE.md` Part 6
 2. Create attestor with KMS key
 3. Import Binary Authorization policy
@@ -276,6 +295,7 @@ echo "✅ PROCEED: Binary Authorization"
 ### ✅ PROCEED TO WORM
 
 **Conditions Met (after Binary Authorization):**
+
 - ✅ All Binary Authorization checks pass
 - ✅ Audit logging is enabled with immutable storage (GCS)
 - ✅ Log retention is configured (365 days minimum)
@@ -289,6 +309,7 @@ echo "✅ PROCEED: WORM - Immutable Audit Trail Active"
 ```
 
 **WORM Status:**
+
 - ✅ Audit logs are **write-once-read-many** (configured)
 - ✅ Compliance: **SOC 2, ISO 27001, PCI DSS** (framework support, requires validation)
 - ✅ Logs stored in Cloud Storage (immutable by configuration)
@@ -329,34 +350,42 @@ echo "✅ PROCEED: WORM - Immutable Audit Trail Active"
 ## 🎯 WHAT CLOSES
 
 ✅ **Local key risk**
+
 - Keys in KMS, non-exportable
 - Hardware-backed security
 
 ✅ **Signature bypass risk**
+
 - Kyverno + Binary Auth dual-layer
 - Self-protecting policies
 
 ✅ **Namespace lateral movement**
+
 - Default-deny network policies
 - Zero-trust model
 
 ✅ **Admission drift**
+
 - Self-protecting Kyverno
 - Immutable webhooks
 
 ✅ **Network exposure**
+
 - Explicit allow only
 - DNS egress controlled
 
 ✅ **Pod privilege escalation**
+
 - PSA restricted mode enforced
 - No privileged containers
 
 ✅ **Cluster logging visibility**
+
 - 365-day immutable audit (configured)
 - Forensic capability (designed, requires validation)
 
 ✅ **Credential leakage**
+
 - Workload Identity
 - No static secrets
 - Automatic rotation
@@ -366,16 +395,19 @@ echo "✅ PROCEED: WORM - Immutable Audit Trail Active"
 ## 📁 IMPLEMENTATION ARTIFACTS
 
 ### Scripts Created
+
 1. `k8s/tk8s/scripts/setup-gcp-kms.sh` - KMS setup automation
 2. `k8s/tk8s/scripts/enable-gke-audit-logging.sh` - Audit logging
 3. `k8s/tk8s/scripts/validate-security-setup.py` - Validation
 
 ### Security Policies Created
+
 4. `k8s/tk8s/security/kyverno-kms-verification.yaml` - 5 policies
 5. `k8s/tk8s/security/binary-authorization-policy.yaml` - Binary Auth
 6. `k8s/tk8s/network-policies/default-deny-network-policies.yaml` - Zero-trust
 
 ### Documentation Created
+
 7. `k8s/tk8s/KMS_SETUP_GUIDE.md` - Comprehensive guide (500+ lines)
 8. `k8s/tk8s/SECURITY_VERIFICATION_REPORT.md` - Verification (450+ lines)
 9. `k8s/tk8s/SECURITY_UPGRADE_README.md` - Quick start (280 lines)
@@ -411,15 +443,18 @@ echo "✅ PROCEED: WORM - Immutable Audit Trail Active"
 **WORKLOAD IDENTITY DOCUMENTED: ✅**
 
 **STATUS:**
+
 - ✅ **PROCEED TO BINARY AUTHORIZATION** (when verification checks pass)
 - ✅ **PROCEED TO WORM** (after Binary Authorization validated)
 
 **Implementation Status:**
+
 - ✅ Infrastructure configured following enterprise patterns
 - ⏳ Production validation pending (requires live GKE cluster testing)
 - ⏳ Security controls designed but not yet tested in live environment
 
 **Required Validation Before Production Deployment:**
+
 1. Deploy and verify signed image acceptance
 2. Test unsigned image rejection
 3. Validate network policy denials (lateral movement)

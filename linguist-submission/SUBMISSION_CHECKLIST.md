@@ -5,6 +5,7 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 ## Pre-Submission Checklist
 
 ### Repository Setup
+
 - [ ] Fork github/linguist repository
 - [ ] Clone your fork locally
 - [ ] Create new branch: `git checkout -b add-thirsty-lang`
@@ -12,6 +13,7 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 - [ ] Verify Ruby environment works
 
 ### Files Review
+
 - [ ] Review `languages.yml` - ensure all fields are correct
 - [ ] Review `grammars/thirsty.tmLanguage.json` - validate JSON syntax
 - [ ] Review sample files - ensure they demonstrate language features
@@ -19,6 +21,7 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 - [ ] Verify file extensions match in all places
 
 ### Language Definition Validation
+
 - [ ] Language name: "Thirsty-lang"
 - [ ] Type: "programming"
 - [ ] Color: "#00BFFF"
@@ -28,6 +31,7 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 - [ ] Interpreters: node, python3
 
 ### Grammar Validation
+
 - [ ] JSON syntax is valid
 - [ ] scopeName matches tm_scope in languages.yml
 - [ ] Keywords defined correctly
@@ -37,6 +41,7 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 - [ ] Operator patterns work
 
 ### Sample Files Validation
+
 - [ ] hello.thirsty - basic example
 - [ ] variables.thirsty - variable types
 - [ ] hydration.thirsty - simple program
@@ -49,11 +54,13 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 ## Installation Steps
 
 ### Using Automated Script
+
 - [ ] Run: `./submit.sh /path/to/linguist`
 - [ ] Review output for any errors
 - [ ] Verify all files copied correctly
 
 ### Manual Installation
+
 - [ ] Copy languages.yml content to lib/linguist/languages.yml
 - [ ] Place in correct alphabetical position (under "T")
 - [ ] Copy grammar to vendor/grammars/thirsty.tmLanguage.json
@@ -64,17 +71,20 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 ## Testing Checklist
 
 ### Local Testing
+
 - [ ] Run full test suite: `bundle exec rake test`
 - [ ] All tests pass (or only expected failures)
 - [ ] No new warnings or errors
 
 ### Language Detection Testing
+
 - [ ] Test hello.thirsty: `bundle exec bin/linguist samples/Thirsty-lang/hello.thirsty`
 - [ ] Output shows: "100.00% (X lines) Thirsty-lang"
 - [ ] Test all sample files individually
 - [ ] All samples detected as Thirsty-lang
 
 ### Grammar Testing
+
 - [ ] Open sample file in editor with grammar
 - [ ] Keywords highlighted correctly
 - [ ] Strings highlighted correctly
@@ -83,6 +93,7 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 - [ ] Operators highlighted correctly
 
 ### Sample Generation
+
 - [ ] Run: `bundle exec rake samples`
 - [ ] Check generated samples.json
 - [ ] Verify Thirsty-lang appears in samples
@@ -91,18 +102,21 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 ## Git Workflow
 
 ### Commit Changes
+
 - [ ] Stage all changes: `git add -A`
 - [ ] Review changes: `git status` and `git diff --cached`
 - [ ] Commit: `git commit -m "Add support for Thirsty-lang"`
 - [ ] Verify commit contains all necessary files
 
 ### Files to Commit
+
 - [ ] lib/linguist/languages.yml (modified)
 - [ ] vendor/grammars/thirsty.tmLanguage.json (new)
 - [ ] grammars.yml (modified)
 - [ ] samples/Thirsty-lang/*.thirsty* (new files)
 
 ### Push and PR
+
 - [ ] Push branch: `git push origin add-thirsty-lang`
 - [ ] Go to GitHub and create pull request
 - [ ] Use PR_TEMPLATE.md for description
@@ -112,6 +126,7 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 ## Pull Request Checklist
 
 ### PR Description
+
 - [ ] Clear title: "Add support for Thirsty-lang"
 - [ ] Comprehensive description
 - [ ] Language overview included
@@ -122,6 +137,7 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 - [ ] All checklist items checked
 
 ### PR Quality
+
 - [ ] No unrelated changes included
 - [ ] Commit message is clear
 - [ ] No merge conflicts
@@ -131,12 +147,14 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 ## Post-Submission
 
 ### Monitoring
+
 - [ ] Watch PR for comments/reviews
 - [ ] Respond to feedback within 48 hours
 - [ ] Make requested changes if needed
 - [ ] Re-test after any changes
 
 ### After Merge
+
 - [ ] Star the linguist repository
 - [ ] Thank reviewers in comments
 - [ ] Update Thirsty-lang documentation
@@ -146,27 +164,32 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 ## Common Issues and Solutions
 
 ### Issue: "Language already exists"
+
 - [ ] Check if Thirsty-lang already in languages.yml
 - [ ] Verify language_id is unique
 - [ ] Search for conflicting extensions
 
 ### Issue: "Grammar scope mismatch"
+
 - [ ] Verify scopeName in grammar matches tm_scope in languages.yml
 - [ ] Both should be "source.thirsty"
 
 ### Issue: "Tests failing"
+
 - [ ] Check Ruby version compatibility
 - [ ] Ensure all dependencies installed
 - [ ] Review test output for specific errors
 - [ ] Check that samples have correct extensions
 
 ### Issue: "Language not detected"
+
 - [ ] Verify file has correct extension
 - [ ] Check languages.yml is valid YAML
 - [ ] Ensure no syntax errors in definition
 - [ ] Test with different sample files
 
 ### Issue: "Samples not representative"
+
 - [ ] Review sample files content
 - [ ] Ensure variety of language features
 - [ ] Add more complex examples if needed
@@ -182,6 +205,7 @@ Use this checklist to ensure your submission to github/linguist is complete and 
 ## Final Verification
 
 Before submitting PR:
+
 - [ ] All checklist items above are complete
 - [ ] All tests pass locally
 - [ ] Language detection works
@@ -192,9 +216,9 @@ Before submitting PR:
 
 ---
 
-**Status**: Ready for submission when all items checked  
-**Last Review**: 2026-01-28  
-**Reviewer**: _______________  
+**Status**: Ready for submission when all items checked
+**Last Review**: 2026-01-28
+**Reviewer**: _______________
 **Date**: _______________
 
 **Notes:**

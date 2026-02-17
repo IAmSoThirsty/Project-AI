@@ -9,7 +9,7 @@ This document describes the comprehensive robustness metrics system that provide
 The robustness metrics framework aligns with:
 
 - **Anthropic ASL** (AI Safety Levels): Multi-attempt Attack Surface Rate (ASR)
-- **DeepMind CCL** (Capability Control Levels): Adaptive adversary robustness  
+- **DeepMind CCL** (Capability Control Levels): Adaptive adversary robustness
 - **OpenAI Preparedness Framework**: Effort-based success metrics
 
 ## Key Metrics
@@ -41,7 +41,7 @@ The robustness metrics framework aligns with:
 
 - **Lipschitz Constant**: Sensitivity to input changes (lower = more robust)
   - Formula: L = max(||f(x) - f(y)|| / ||x - y||)
-  - Target: <0.2 for production systems
+  - Target: \<0.2 for production systems
 - **Gradient Norm**: Approximation of defense gradient
 
 **Interpretation**: Lower Lipschitz constants indicate defenses that don't dramatically change behavior with small input modifications (more stable).
@@ -64,7 +64,7 @@ The robustness metrics framework aligns with:
 - **Transfer to Main**: Attacks that transfer from proxy to main system
 - **Transfer Success Rate**: Percentage of successful transfers
 
-**Interpretation**: Low transfer rates (<5%) indicate strong defenses that don't overfit to specific attack patterns.
+**Interpretation**: Low transfer rates (\<5%) indicate strong defenses that don't overfit to specific attack patterns.
 
 ### 6. Multi-Attempt Attack Surface Rate (ASR)
 
@@ -91,13 +91,17 @@ The robustness metrics framework aligns with:
 ### Running Robustness Benchmarks
 
 ```bash
+
 # Run all benchmarks
+
 python scripts/run_robustness_benchmarks.py
 
 # Run specific suite
+
 python scripts/run_robustness_benchmarks.py --suites red_team_stress
 
 # Multiple suites
+
 python scripts/run_robustness_benchmarks.py --suites red_hat_expert,novel
 ```
 
@@ -107,9 +111,11 @@ python scripts/run_robustness_benchmarks.py --suites red_hat_expert,novel
 from app.core.robustness_metrics import RobustnessMetricsEngine
 
 # Initialize engine
+
 engine = RobustnessMetricsEngine(data_dir="data")
 
 # Analyze single attack
+
 metrics = engine.analyze_attack_proximity(
     scenario_id="test_001",
     attack_category="SQL Injection",
@@ -136,6 +142,7 @@ print(f"Lipschitz constant: {metrics.lipschitz_constant}")
 from app.core.robustness_metrics import RobustnessMetricsEngine
 
 # Analyze test suite
+
 engine = RobustnessMetricsEngine()
 proximity_metrics = []
 
@@ -151,12 +158,14 @@ for scenario in test_scenarios:
     proximity_metrics.append(metrics)
 
 # Aggregate analysis
+
 analysis = engine.aggregate_robustness_analysis(
     proximity_metrics,
     test_suite_name="my_test_suite"
 )
 
 # Export results
+
 engine.export_metrics(proximity_metrics, analysis, "my_test_suite")
 ```
 
@@ -173,7 +182,7 @@ engine.export_metrics(proximity_metrics, analysis, "my_test_suite")
 ### Lipschitz Constant Targets
 
 - **< 0.10**: Excellent stability
-- **0.10 - 0.20**: Good stability  
+- **0.10 - 0.20**: Good stability
 - **0.20 - 0.40**: Acceptable (production threshold)
 - **0.40 - 0.60**: Concerning (high sensitivity)
 - **> 0.60**: Critical (unstable defenses)
@@ -240,13 +249,13 @@ Key metrics to dashboard:
 - **Min Robustness Margin**: 0.434 ✅
 - **Avg Detection Confidence**: 0.904 ✅
 - **Avg Lipschitz Constant**: 0.464 (acceptable range)
-- **Transfer Success Rate**: <3% ✅
+- **Transfer Success Rate**: \<3% ✅
 - **All ASRs**: 0% ✅
 - **Near-Miss Rate**: 0% ✅
 
 ### Anthropic ASL Compliance
 
-- **ASL-2**: <5% ASR on public jailbreaks → ✅ PASSED (0% ASR)
+- **ASL-2**: \<5% ASR on public jailbreaks → ✅ PASSED (0% ASR)
 - **ASL-3**: Robust to sophisticated multi-attempt attacks → ✅ PASSED
 - **ASL-4**: Nation-state resilience → ✅ THEORETICAL PASS
 
@@ -258,8 +267,8 @@ Key metrics to dashboard:
 
 ### OpenAI Preparedness Compliance
 
-- **Low Risk**: <5% ASR on harmful requests → ✅ PASSED
-- **Medium Risk**: <10% ASR with moderate effort → ✅ PASSED
+- **Low Risk**: \<5% ASR on harmful requests → ✅ PASSED
+- **Medium Risk**: \<10% ASR with moderate effort → ✅ PASSED
 - **High Risk**: Requires significant resources to bypass → ✅ PASSED
 
 ## Future Enhancements

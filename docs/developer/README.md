@@ -5,6 +5,7 @@
 This folder contains **installation guides**, **CLI usage documentation**, **API references**, and **service-level guides** for developers.
 
 ### What Belongs Here
+
 - Installation and setup guides
 - Quickstart guides
 - CLI documentation
@@ -15,6 +16,7 @@ This folder contains **installation guides**, **CLI usage documentation**, **API
 - Service-specific documentation
 
 ### Subdirectories
+
 - `api/` - API reference documentation
 - `cli/` - Command-line interface documentation
 - `deployment/` - Deployment and release guides
@@ -23,14 +25,17 @@ This folder contains **installation guides**, **CLI usage documentation**, **API
 - `web/` - Web application documentation
 
 ### Guidelines
+
 - **Audience**: Software developers, DevOps engineers, SRE teams
 - **Tone**: Technical, instructional, practical
 - **Include**: Code examples, commands, configurations, troubleshooting tips
 
----
+______________________________________________________________________
 
 # Quick Start & Installation
+
 ```markdown
+
 # Project AI
 
 This repository contains a Python desktop application that provides a personal AI
@@ -150,4 +155,4 @@ member-only use and can be extended for mobile later.
   - Dashboard panel for personality management, Four Laws testing, and statistics
   - Full test suite: 13 comprehensive tests covering all systems
 
-``` 
+```

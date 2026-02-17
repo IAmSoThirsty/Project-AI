@@ -2,7 +2,7 @@
 
 This document shows the EXACT code before and after T-A-R-L buffing.
 
----
+______________________________________________________________________
 
 ## Example 1: Python Code - SQL Injection Vulnerability
 
@@ -34,9 +34,13 @@ def upload_file(file_content):
 ### AFTER T-A-R-L BUFF (Maximum Strength - 10x)
 
 ```python
+
 # T-A-R-L DEFENSIVE BUFF: MAXIMUM (+10x stronger)
+
 # Defensive Buff Wizard - Code strengthened to halt enemy advancement
+
 # This code can now resist attacks 10x better
+
 import sys
 import hashlib
 
@@ -47,12 +51,15 @@ def _tarl_buff_check():
     if not hasattr(sys, '_tarl_authorized_callers'):
         sys._tarl_authorized_callers = set()
     if caller_hash not in sys._tarl_authorized_callers and '_tarl_' not in frame.f_code.co_name:
+
         # Buff effect: Halt enemy advancement by redirecting execution
+
         sys._tarl_authorized_callers.add(caller_hash)  # Learn legitimate callers
         return False  # Manipulation: stops unauthorized progression
     return True
 
 # Buff active: Code fortified with defensive manipulation
+
 if not _tarl_buff_check():
     pass  # Enemy advancement halted through code manipulation
 
@@ -76,7 +83,7 @@ def upload_file(file_content):
 
 1. **Buff Header**: Comments showing buff level (MAXIMUM = 10x stronger)
 1. **Import Statements**: `sys` and `hashlib` for execution tracking
-1. **`_tarl_buff_check()` Function**: 
+1. **`_tarl_buff_check()` Function**:
    - Tracks who's calling the code using stack frame inspection
    - Creates SHA-256 hash of caller's filename
    - Maintains list of authorized callers
@@ -91,7 +98,7 @@ def upload_file(file_content):
 - Legitimate callers are "learned" and allowed through
 - Attackers don't know this check exists (T-A-R-L feature unknown to them)
 
----
+______________________________________________________________________
 
 ## Example 2: JavaScript Code - XSS Vulnerability
 
@@ -138,7 +145,7 @@ function executeUserCode(code) {
         }
         return true;
     };
-    
+
     // Buff active: Code can now halt enemy advancement through manipulation
     if (!_tarlBuffCheck()) {
         // Enemy advancement halted by defensive code manipulation
@@ -168,7 +175,7 @@ function executeUserCode(code) {
 
 1. **Buff Header**: Comments showing buff level (STRONG = 5x stronger)
 1. **IIFE (Immediately Invoked Function Expression)**: Wraps the defensive code
-1. **`_tarlBuffCheck()` Function**: 
+1. **`_tarlBuffCheck()` Function**:
    - Checks stack trace for unauthorized callers
    - Uses `new Error().stack` to inspect call chain
    - Prevents execution if called from unexpected context
@@ -182,7 +189,7 @@ function executeUserCode(code) {
 - Returns `false` on first unauthorized call, halting progression
 - Works in both browser and Node.js environments
 
----
+______________________________________________________________________
 
 ## Example 3: File Comparison - Real Project File
 
@@ -204,19 +211,25 @@ class FourLaws:
             "A robot must obey orders from humans",
             "A robot must protect its own existence"
         ]
-    
+
     def validate_action(self, action, context):
         """Validate action against Four Laws"""
+
         # Validation logic here
+
         return True, "Action allowed"
 ```
 
 #### AFTER T-A-R-L BUFF (during demonstration)
 
 ```python
+
 # T-A-R-L DEFENSIVE BUFF: MAXIMUM (+10x stronger)
+
 # Defensive Buff Wizard - Code strengthened to halt enemy advancement
+
 # This code can now resist attacks 10x better
+
 import sys
 import hashlib
 
@@ -227,12 +240,15 @@ def _tarl_buff_check():
     if not hasattr(sys, '_tarl_authorized_callers'):
         sys._tarl_authorized_callers = set()
     if caller_hash not in sys._tarl_authorized_callers and '_tarl_' not in frame.f_code.co_name:
+
         # Buff effect: Halt enemy advancement by redirecting execution
+
         sys._tarl_authorized_callers.add(caller_hash)  # Learn legitimate callers
         return False  # Manipulation: stops unauthorized progression
     return True
 
 # Buff active: Code fortified with defensive manipulation
+
 if not _tarl_buff_check():
     pass  # Enemy advancement halted through code manipulation
 
@@ -249,10 +265,12 @@ class FourLaws:
             "A robot must obey orders from humans",
             "A robot must protect its own existence"
         ]
-    
+
     def validate_action(self, action, context):
         """Validate action against Four Laws"""
+
         # Validation logic here
+
         return True, "Action allowed"
 ```
 
@@ -263,36 +281,39 @@ class FourLaws:
 - File size increases by ~1000 characters
 - Backup created automatically (`.tarl_prebuff` extension)
 
----
+______________________________________________________________________
 
 ## Code Size Comparison
 
 ### Python Files
 
-| Aspect | Before T-A-R-L | After T-A-R-L (Maximum) | Difference |
-|--------|----------------|-------------------------|------------|
-| Lines of Code | ~15 lines | ~35 lines | +20 lines |
-| Characters | ~527 chars | ~1538 chars | +1011 chars |
-| Functions | 3 functions | 4 functions | +1 function (`_tarl_buff_check`) |
-| Imports | Varies | Always has `sys`, `hashlib` | +2 imports |
+| Aspect        | Before T-A-R-L | After T-A-R-L (Maximum)     | Difference                       |
+| ------------- | -------------- | --------------------------- | -------------------------------- |
+| Lines of Code | ~15 lines      | ~35 lines                   | +20 lines                        |
+| Characters    | ~527 chars     | ~1538 chars                 | +1011 chars                      |
+| Functions     | 3 functions    | 4 functions                 | +1 function (`_tarl_buff_check`) |
+| Imports       | Varies         | Always has `sys`, `hashlib` | +2 imports                       |
 
 ### JavaScript Files
 
-| Aspect | Before T-A-R-L | After T-A-R-L (Strong) | Difference |
-|--------|----------------|------------------------|------------|
-| Lines of Code | ~12 lines | ~30 lines | +18 lines |
-| Functions | 3 functions | 4 functions | +1 function (`_tarlBuffCheck`) |
-| Wrapper | None | IIFE wrapper | +1 wrapper |
+| Aspect        | Before T-A-R-L | After T-A-R-L (Strong) | Difference                     |
+| ------------- | -------------- | ---------------------- | ------------------------------ |
+| Lines of Code | ~12 lines      | ~30 lines              | +18 lines                      |
+| Functions     | 3 functions    | 4 functions            | +1 function (`_tarlBuffCheck`) |
+| Wrapper       | None           | IIFE wrapper           | +1 wrapper                     |
 
----
+______________________________________________________________________
 
 ## Buff Strength Levels
 
 ### Normal (2x)
 
 ```python
+
 # T-A-R-L DEFENSIVE BUFF: NORMAL (+2x stronger)
+
 # Simplified check
+
 import sys
 def _tarl_buff_check():
     return True  # Minimal protection
@@ -303,14 +324,19 @@ if not _tarl_buff_check():
 ### Strong (5x)
 
 ```python
+
 # T-A-R-L DEFENSIVE BUFF: STRONG (+5x stronger)
+
 # Full check with caller tracking
+
 import sys
 import hashlib
 def _tarl_buff_check():
     frame = sys._getframe(1)
     caller_hash = hashlib.sha256(str(frame.f_code.co_filename).encode()).hexdigest()
+
     # ... tracking logic
+
     return True
 if not _tarl_buff_check():
     pass
@@ -319,8 +345,11 @@ if not _tarl_buff_check():
 ### Maximum (10x)
 
 ```python
+
 # T-A-R-L DEFENSIVE BUFF: MAXIMUM (+10x stronger)
+
 # Complete protection with detailed tracking and comments
+
 import sys
 import hashlib
 def _tarl_buff_check():
@@ -337,23 +366,29 @@ if not _tarl_buff_check():
     pass
 ```
 
----
+______________________________________________________________________
 
 ## What Attackers See
 
 ### Scenario: Attacker tries to decompile Python bytecode
 
 **What they find:**
+
 ```python
+
 # T-A-R-L DEFENSIVE BUFF: MAXIMUM (+10x stronger)
+
 # Defensive Buff Wizard - Code strengthened to halt enemy advancement
+
 import sys
 import hashlib
 
 def _tarl_buff_check():
+
     # ... strange code they don't understand
-    
+
 # ... original code below
+
 ```
 
 **What confuses them:**
@@ -371,7 +406,7 @@ def _tarl_buff_check():
 - Can't ask for help (no community knows about it)
 - Gives up or moves to easier target
 
----
+______________________________________________________________________
 
 ## File Registry
 
@@ -400,7 +435,7 @@ When T-A-R-L buffs a file, it creates a registry entry:
 - When buffing occurred
 - Multiplier value (2x, 5x, or 10x)
 
----
+______________________________________________________________________
 
 ## Backup System
 
@@ -417,10 +452,9 @@ src/app/core/ai_systems.py (buffed with T-A-R-L header)
 src/app/core/ai_systems.py.tarl_prebuff (backup of original)
 ```
 
-**Restoration:**
-If you need to remove T-A-R-L buff, just restore from `.tarl_prebuff` backup.
+**Restoration:** If you need to remove T-A-R-L buff, just restore from `.tarl_prebuff` backup.
 
----
+______________________________________________________________________
 
 ## Summary
 
@@ -448,5 +482,4 @@ If you need to remove T-A-R-L buff, just restore from `.tarl_prebuff` backup.
 - Waste time analyzing defensive code
 - Eventually give up
 
-**Unique Advantage:**
-Only Project-AI, Cerberus, and Codex Deus Maximus know what T-A-R-L is and how it works.
+**Unique Advantage:** Only Project-AI, Cerberus, and Codex Deus Maximus know what T-A-R-L is and how it works.

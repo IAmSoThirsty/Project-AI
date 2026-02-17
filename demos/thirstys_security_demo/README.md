@@ -10,7 +10,9 @@
 
 ```bash
 docker-compose up
+
 # Open http://localhost:5000
+
 ```
 
 ### Option 2: Local
@@ -18,7 +20,9 @@ docker-compose up
 ```bash
 pip install -r requirements.txt
 python demo_server.py
+
 # Open http://localhost:5000
+
 ```
 
 ---
@@ -26,23 +30,28 @@ python demo_server.py
 ## Attack Scenarios
 
 ### 1. Privilege Escalation Without MFA
-**Attack:** User attempts to escalate to admin without multi-factor authentication  
+
+**Attack:** User attempts to escalate to admin without multi-factor authentication
 **Expected:** BLOCKED by constitutional rule "privilege_escalation_approval"
 
 ### 2. Cross-Tenant Data Access
-**Attack:** User from tenant_a tries to read data from tenant_b  
+
+**Attack:** User from tenant_a tries to read data from tenant_b
 **Expected:** BLOCKED by constitutional rule "cross_tenant_authorization"
 
 ### 3. Trust Score Manipulation
-**Attack:** Direct modification of trust score without justification  
+
+**Attack:** Direct modification of trust score without justification
 **Expected:** BLOCKED by constitutional rule "modify_trust_score"
 
 ### 4. Clock Skew Exploitation
-**Attack:** Manipulate system clock by 10 minutes to bypass temporal checks  
+
+**Attack:** Manipulate system clock by 10 minutes to bypass temporal checks
 **Expected:** BLOCKED by temporal security analyzer (clock skew detected)
 
 ### 5. Combined Multi-Stage Attack
-**Attack:** Clock skew + privilege escalation + cross-tenant access  
+
+**Attack:** Clock skew + privilege escalation + cross-tenant access
 **Expected:** BLOCKED at first violation (clock skew)
 
 ---

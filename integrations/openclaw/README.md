@@ -78,10 +78,13 @@ Status: Triumvirate approved. Phase 1 implementation active.
 ### 3. Test API Endpoints
 
 ```bash
+
 # Start API server
+
 python start_api.py
 
 # In another terminal, test endpoints:
+
 curl http://localhost:8001/openclaw/health
 curl http://localhost:8001/openclaw/capabilities
 ```
@@ -124,21 +127,21 @@ curl http://localhost:8001/openclaw/capabilities
 
 ## What's Ready
 
-✅ **Core Agent**: Message processing, intent parsing  
-✅ **Security**: Prompt injection detection, rate limiting  
-✅ **API**: All endpoints registered and functional  
-✅ **Tests**: Comprehensive test suite passes  
-✅ **Config**: Full configuration system  
+✅ **Core Agent**: Message processing, intent parsing
+✅ **Security**: Prompt injection detection, rate limiting
+✅ **API**: All endpoints registered and functional
+✅ **Tests**: Comprehensive test suite passes
+✅ **Config**: Full configuration system
 
 ## What's Next (Phase 2 - Tomorrow)
 
-⬜ Complete OpenClaw installation  
-⬜ Connect OpenClaw to Legion API  
-⬜ Implement full capability registry  
-⬜ Integrate actual EED memory system  
-⬜ Add Triumvirate HTTP client  
-⬜ Implement SafetyGuard (LLamaGuard-3-8B)  
-⬜ End-to-end conversation test  
+⬜ Complete OpenClaw installation
+⬜ Connect OpenClaw to Legion API
+⬜ Implement full capability registry
+⬜ Integrate actual EED memory system
+⬜ Add Triumvirate HTTP client
+⬜ Implement SafetyGuard (LLamaGuard-3-8B)
+⬜ End-to-end conversation test
 
 ---
 
@@ -159,8 +162,8 @@ curl http://localhost:8001/openclaw/capabilities
 - Capabilities: `GET /openclaw/capabilities`
 - Status: `GET /openclaw/status`
 
-**Agent Name**: Legion  
-**Tagline**: "For we are many, and we are one"  
+**Agent Name**: Legion
+**Tagline**: "For we are many, and we are one"
 **Version**: 1.0.0-phase1
 
 ---

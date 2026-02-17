@@ -22,26 +22,31 @@ Stack-based bytecode virtual machine with JIT compilation, garbage collection, a
 ## Components
 
 ### Bytecode VM (`vm/`)
+
 - Stack-based architecture
 - Instruction dispatch
 - Call stack management
 
 ### Interpreter (`interpreter/`)
+
 - Bytecode interpretation
 - Instruction execution
 - Native call interface
 
 ### JIT Compiler (`jit/`)
+
 - Profile-guided optimization
 - Hot path compilation
 - Native code generation
 
 ### Memory Manager (`memory/`)
+
 - Heap allocation
 - Stack management
 - Resource tracking
 
 ### Garbage Collector (`gc/`)
+
 - Mark-and-sweep collection
 - Generational GC
 - Incremental collection
@@ -49,17 +54,20 @@ Stack-based bytecode virtual machine with JIT compilation, garbage collection, a
 ## Integration Contract
 
 **Dependencies:**
+
 - Configuration (for VM settings)
 - Diagnostics (for runtime errors)
 - Standard Library (for built-ins)
 - FFI Bridge (for foreign calls)
 
 **Provides:**
+
 - `RuntimeVM.execute(bytecode: bytes, context: dict) -> Any`
 - Execution context management
 - Resource limit enforcement
 
 **Guarantees:**
+
 - Memory safety
 - Execution timeouts
 - Resource limit enforcement
@@ -74,9 +82,11 @@ runtime = RuntimeVM(config, diagnostics, stdlib, ffi)
 runtime.initialize()
 
 # Execute bytecode
+
 result = runtime.execute(bytecode, context={"var": 42})
 
 # Check status
+
 status = runtime.get_status()
 ```
 

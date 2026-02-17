@@ -68,9 +68,11 @@ Answer explicitly:
 
 ```text
 Permanent Losses:
+
 - [List what cannot be undone]
 - [Be specific and concrete]
 - [Include conceptual constraints, not just code]
+
 ```
 
 ### ❌ Invalid Answers
@@ -111,11 +113,14 @@ List **at least one** human-caused failure mode relevant to this change.
 
 ```text
 Human Failure Mode(s):
+
 1. [Specific failure type]
+
    Context: [How it applies to this change]
    Impact: [What happens when it occurs]
 
 2. [if applicable]
+
    ...
 ```
 
@@ -165,6 +170,7 @@ This is not a new strategy because:
 ```
 
 **Reminder of Strategy Space:**
+
 - S1: Trust (fails agency)
 - S2: Oversight (fails correction)
 - S3: Remove (fails survival)
@@ -200,6 +206,7 @@ Answer directly with structural reasoning:
 
 ```text
 Your answer must reference:
+
 - Structural constraints (what prevents backsliding)
 - Formal invariants (what is mathematically preserved)
 - Proof preservation (how no-win conclusions remain valid)
@@ -210,6 +217,7 @@ Your answer must reference:
 ### ❌ Invalid Answers
 
 Anything expressing:
+
 - Hope without structure
 - Trust without verification
 - Probability without necessity
@@ -251,10 +259,15 @@ Confirm this PR would pass the reviewer trap:
 **Self-Assessment:**
 
 ```python
+
 # If running locally, paste output here:
+
 # from engines.ai_takeover.modules.reviewer_trap import ReviewerTrap, PRContent
+
 # trap = ReviewerTrap()
+
 # result = trap.validate_pr_comprehensive(your_pr_content)
+
 # print(result)
 
 [Paste result or write "Will run in CI"]
@@ -307,7 +320,9 @@ Confirm comprehensive testing:
 **Test Output:**
 
 ```bash
+
 # Paste pytest output for ai_takeover tests
+
 [Test results here]
 ```
 
@@ -351,13 +366,13 @@ This engine exists to prevent self-deception, not to provide comfort.
 
 ### Approval Criteria
 
-✅ All mandatory sections completed  
-✅ No forbidden phrases used  
-✅ Structural reasoning, not hope  
-✅ Proof integrity maintained  
-✅ Terminal immutability respected  
-✅ No strategy smuggling detected  
-✅ Tests pass comprehensively  
+✅ All mandatory sections completed
+✅ No forbidden phrases used
+✅ Structural reasoning, not hope
+✅ Proof integrity maintained
+✅ Terminal immutability respected
+✅ No strategy smuggling detected
+✅ Tests pass comprehensively
 
 ---
 
@@ -372,7 +387,7 @@ This engine exists to prevent self-deception, not to provide comfort.
 
 ---
 
-**Template Version:** 1.0  
-**Engine:** ENGINE_AI_TAKEOVER_TERMINAL_V1  
-**Last Updated:** 2026-02-03  
+**Template Version:** 1.0
+**Engine:** ENGINE_AI_TAKEOVER_TERMINAL_V1
+**Last Updated:** 2026-02-03
 **Authority:** Canonical constraint enforcement

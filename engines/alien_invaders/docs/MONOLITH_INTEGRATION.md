@@ -35,11 +35,13 @@ The Planetary Defense Monolith is a constitutional kernel that consolidates thre
 **Objective**: Treat invariants as a sub-kernel, not a utility.
 
 **Implementation**:
+
 - Invariant validators are registered inside the Monolith's law evaluation phase
 - Invariants become preconditions, not post-hoc checks
 - If an action would violate physical coherence → it is **illegal**, not "bad output"
 
 **Key Classes**:
+
 - `PlanetaryDefenseMonolith.evaluate_action()` - Main law evaluation method
 - `CompositeInvariantValidator` - Validates cross-domain coherence
 - `ActionVerdict` - Results of law evaluation
@@ -52,6 +54,7 @@ from engines.alien_invaders.modules.planetary_defense_monolith import (
 )
 
 # Create action request
+
 action = ActionRequest(
     action_id="resource_extraction_001",
     action_type="resource_extraction",
@@ -60,6 +63,7 @@ action = ActionRequest(
 )
 
 # Evaluate through monolith
+
 verdict = monolith.evaluate_action(action, current_state, prev_state)
 
 if not verdict.allowed:
@@ -75,16 +79,19 @@ if not verdict.allowed:
 **Objective**: Make the causal clock the only clock the Monolith respects.
 
 **Implementation**:
+
 - `PlanetaryDefenseMonolith` defers all execution timing to `causal_clock`
 - No engine advances time independently
 - No registry-triggered side execution
 
 **This eliminates**:
+
 - Race conditions
 - Temporal exploits
 - "but it already happened" excuses
 
 **Key Methods**:
+
 - `PlanetaryDefenseMonolith.advance_time()` - Only method that advances time
 - `PlanetaryDefenseMonolith.get_current_time()` - Read current logical time
 - `AlienInvadersEngine.tick()` - Defers to monolith for time advancement
@@ -92,19 +99,26 @@ if not verdict.allowed:
 
 **Example**:
 ```python
+
 # Engine creation automatically integrates monolith with causal clock
+
 engine = AlienInvadersEngine(config)
 
 # Monolith controls time
+
 initial_time = engine.monolith.get_current_time()  # 0
 
 # Tick advances time through monolith
+
 engine.tick()
 new_time = engine.monolith.get_current_time()  # 1
 
 # Event injection uses monolith's time
+
 event_id = engine.inject_event('alien_attack', {...})
+
 # Event gets logical time from monolith, executes at next tick boundary
+
 ```
 
 **Time Flow**:
@@ -119,6 +133,7 @@ Engine.tick() → Monolith.advance_time() → CausalClock.next()
 **Objective**: Make projection mode mandatory registry behavior.
 
 **Implementation**:
+
 - `SimulationRegistry` enforces projection-only access by default
 - Any engine requesting mutable access must:
   1. Be inside the Monolith
@@ -126,11 +141,13 @@ Engine.tick() → Monolith.advance_time() → CausalClock.next()
   3. Generate an accountability record
 
 **Key Classes**:
+
 - `SimulationRegistry` - Now with projection enforcement
 - `RegistryAccessRequest` - Access request structure
 - `PlanetaryDefenseMonolith.authorize_registry_access()` - Authorization method
 
 **Registry Methods Updated**:
+
 - `register()` - Requires monolith authorization for registration
 - `get()` - Supports `mutable=True` with authorization
 - `unregister()` - Requires monolith authorization
@@ -140,29 +157,35 @@ Engine.tick() → Monolith.advance_time() → CausalClock.next()
 from src.app.core.simulation_contingency_root import SimulationRegistry
 
 # Enable projection mode with monolith authority
+
 SimulationRegistry.set_monolith_authority(monolith)
 SimulationRegistry.enable_projection_mode(True)
 
 # Read-only access always works
+
 system = SimulationRegistry.get("alien_invaders")
 
 # Mutable access requires authorization
+
 system = SimulationRegistry.get("alien_invaders", mutable=True, from_monolith=True)
+
 # Without from_monolith=True, this would return None
 
 # Registration requires monolith bypass during initialization
+
 SimulationRegistry.register("new_system", adapter, from_monolith=True)
 ```
 
 **Trust Model**:
 ```
 External Access → Read-Only Projection (Always Granted)
-                  
+
 Internal Access → Requires:
+
                   1. from_monolith=True
                   2. law_evaluation_passed=True
                   3. Accountability record generated
-                  
+
                   → Mutable Access (Conditionally Granted)
 ```
 
@@ -171,6 +194,7 @@ Internal Access → Requires:
 The monolith maintains comprehensive audit logs:
 
 ### Action Log
+
 Tracks all actions evaluated through the monolith:
 ```python
 action_log = monolith.get_action_log()
@@ -180,6 +204,7 @@ for action_request, verdict in action_log:
 ```
 
 ### Access Log
+
 Tracks all registry access requests:
 ```python
 access_log = monolith.get_access_log()
@@ -213,11 +238,13 @@ from engines.alien_invaders.schemas.config_schema import SimulationConfig
 from engines.alien_invaders.integration import register_aicpd_system
 
 # Create engine (monolith integrated automatically)
+
 config = SimulationConfig()
 engine = AlienInvadersEngine(config)
 engine.init()
 
 # Register with global registry (sets up projection mode)
+
 register_aicpd_system(config)
 ```
 
@@ -227,6 +254,7 @@ register_aicpd_system(config)
 from engines.alien_invaders.modules.planetary_defense_monolith import ActionRequest
 
 # Create action
+
 action = ActionRequest(
     action_id="tick_001",
     action_type="simulation_tick",
@@ -235,26 +263,35 @@ action = ActionRequest(
 )
 
 # Evaluate legality
+
 verdict = engine.monolith.evaluate_action(action, current_state, prev_state)
 
 if verdict.allowed:
+
     # Proceed with action
+
     engine.tick()
 else:
+
     # Action is illegal
+
     print(f"Rejected: {verdict.reason}")
 ```
 
 ### Time Management
 
 ```python
+
 # Get current time
+
 current_time = engine.monolith.get_current_time()
 
 # Advance time (only through monolith)
+
 new_time = engine.monolith.advance_time()
 
 # Engine tick uses monolith internally
+
 engine.tick()  # Automatically calls monolith.advance_time()
 ```
 
@@ -264,12 +301,16 @@ engine.tick()  # Automatically calls monolith.advance_time()
 from src.app.core.simulation_contingency_root import SimulationRegistry
 
 # Read-only access (always works)
+
 system = SimulationRegistry.get("alien_invaders")
 scenarios = system.simulate_scenarios()
 
 # Mutable access (requires authorization)
+
 system = SimulationRegistry.get("alien_invaders", mutable=True, from_monolith=True)
+
 # Only works if called from within monolith context
+
 ```
 
 ## Design Principles
@@ -287,13 +328,17 @@ system = SimulationRegistry.get("alien_invaders", mutable=True, from_monolith=Tr
 The integration is **backward compatible**. Existing code continues to work without changes:
 
 ```python
+
 # Old code (still works)
+
 engine = AlienInvadersEngine(config)
 engine.init()
 engine.tick()
 
 # Monolith is automatically integrated
+
 # Time management happens transparently through monolith
+
 ```
 
 ### For New Features
@@ -301,15 +346,20 @@ engine.tick()
 New features should explicitly use the monolith:
 
 ```python
+
 # Evaluate actions before execution
+
 action = ActionRequest(...)
 verdict = engine.monolith.evaluate_action(action, state, prev_state)
 
 if verdict.allowed:
+
     # Execute action
+
     pass
 
 # Check action history
+
 action_log = engine.monolith.get_action_log()
 ```
 
@@ -346,8 +396,9 @@ Potential areas for enhancement:
 ## Summary
 
 The Planetary Defense Monolith transforms:
+
 - **Invariants** from post-hoc checks → constitutional laws (Integration Point A)
-- **Time** from distributed clocks → single causal authority (Integration Point B)  
+- **Time** from distributed clocks → single causal authority (Integration Point B)
 - **Access** from assumed trust → earned trust with accountability (Integration Point C)
 
 This is not just an architectural improvement - it's a **power move** that makes the system fundamentally more correct, auditable, and secure.

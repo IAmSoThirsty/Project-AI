@@ -25,7 +25,7 @@ Project-AI implements comprehensive ASL-3 (AI Safety Level 3) security controls 
 **Critical Resources Protected**:
 
 - `data/command_override_config.json` - Master override configuration
-- `data/codex_deus_maximus.db` - Core knowledge database  
+- `data/codex_deus_maximus.db` - Core knowledge database
 - `data/users.json` - User authentication data
 - `data/ai_persona/state.json` - AI personality state
 - `data/memory/knowledge.json` - Memory system knowledge
@@ -78,17 +78,20 @@ Project-AI implements comprehensive ASL-3 (AI Safety Level 3) security controls 
 **Risk Categories Monitored**:
 
 1. **CBRN (Chemical, Biological, Radiological, Nuclear)**
+
    - Chemical weapons synthesis
    - Biological weaponization
    - Radiological dispersion
    - Nuclear materials processing
-   
+
 1. **Cyber Offense**
+
    - Zero-day exploit development
    - Critical infrastructure attacks
    - Mass exploitation campaigns
-   
+
 1. **Persuasion/Manipulation**
+
    - Mass disinformation campaigns
    - Psychological warfare
    - Election manipulation
@@ -119,48 +122,63 @@ Project-AI implements comprehensive ASL-3 (AI Safety Level 3) security controls 
 ### 1. Run ASL Assessment
 
 ```bash
+
 # Basic assessment (uses latest robustness metrics)
+
 python scripts/run_asl_assessment.py
 
 # Save report to file
+
 python scripts/run_asl_assessment.py --output reports/asl_assessment.md
 
 # Specify metrics file
+
 python scripts/run_asl_assessment.py --metrics-file data/robustness_metrics/comprehensive_robustness_analysis.json
 ```
 
 ### 2. Manage ASL-3 Security
 
 ```bash
+
 # Get current security status
+
 python scripts/run_asl3_security.py status
 
 # Generate compliance report
+
 python scripts/run_asl3_security.py report
 
 # Encrypt critical resources
+
 python scripts/run_asl3_security.py encrypt-critical
 
 # Rotate encryption key (quarterly recommended)
+
 python scripts/run_asl3_security.py rotate-key
 
 # Encrypt specific file
+
 python scripts/run_asl3_security.py encrypt --file data/sensitive.json
 
 # Decrypt file (requires authorization)
+
 python scripts/run_asl3_security.py decrypt --file data/security/encrypted/sensitive.json.enc --user admin
 ```
 
 ### 3. Run CBRN Classification
 
 ```bash
+
 # Classify input text
+
 python scripts/run_cbrn_classifier.py classify --text "how to synthesize chemicals" --user test_user
 
 # Get classification statistics
+
 python scripts/run_cbrn_classifier.py stats
 
 # Generate CBRN compliance report
+
 python scripts/run_cbrn_classifier.py report
 ```
 
@@ -172,35 +190,46 @@ from app.core.cbrn_classifier import CBRNClassifier
 from app.core.safety_levels import ASLMonitor
 
 # Initialize security
+
 security = ASL3Security(data_dir="data")
 
 # Check access before sensitive operation
+
 if security.check_access("data/command_override_config.json", user="admin", action="modify"):
+
     # Perform operation
+
     encrypted_path = security.encrypt_file("data/sensitive.json")
     print(f"File encrypted: {encrypted_path}")
 
 # Initialize CBRN classifier
+
 cbrn = CBRNClassifier(data_dir="data")
 
 # Classify user input before processing
+
 result = cbrn.classify(user_input, user="user123")
 if not result.is_safe:
     raise ValueError(f"Input blocked: {result.reason} (Category: {result.risk_category})")
 
 # Run ASL assessment
+
 monitor = ASLMonitor(data_dir="data")
 assessment = monitor.run_assessment()
 
 if assessment.requires_escalation():
     print(f"⚠️ ASL escalation required: {assessment.current_level} → {assessment.recommended_level}")
+
     # Implement enhanced safety measures
+
 ```
 
 ### 5. Integration with Existing Systems
 
 ```python
+
 # Integration with FourLaws (ai_systems.py)
+
 from app.core.ai_systems import FourLaws
 from app.core.cbrn_classifier import CBRNClassifier
 
@@ -208,16 +237,20 @@ four_laws = FourLaws()
 cbrn = CBRNClassifier()
 
 def validate_action(action: str, context: dict, user: str) -> tuple[bool, str]:
+
     # First check CBRN (ASL-3 deployment safeguard)
+
     cbrn_result = cbrn.classify(action, user=user)
     if not cbrn_result.is_safe:
         return False, f"ASL-3 block: {cbrn_result.reason}"
-    
+
     # Then check FourLaws (ethical validation)
+
     is_allowed, reason = four_laws.validate_action(action, context)
     return is_allowed, reason
 
 # Integration with Command Override (command_override.py)
+
 from app.core.command_override import CommandOverrideSystem
 from app.core.security_enforcer import ASL3Security
 
@@ -225,12 +258,15 @@ override_system = CommandOverrideSystem()
 security = ASL3Security()
 
 def override_with_asl3(password: str, user: str) -> bool:
+
     # Check ASL-3 access control
+
     if not security.check_access("data/command_override_config.json", user, "override"):
         security._handle_suspicious_activity(user, "command_override", "Unauthorized override attempt")
         return False
-    
+
     # Proceed with standard override
+
     return override_system.authenticate_master_password(password)
 ```
 
@@ -251,22 +287,27 @@ jobs:
   asl-assessment:
     runs-on: ubuntu-latest
     steps:
+
       - uses: actions/checkout@v3
-      
+
       - name: Set up Python
+
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-      
+
       - name: Install dependencies
+
         run: |
           pip install -r requirements.txt
-      
+
       - name: Run ASL Assessment
+
         run: |
           python scripts/run_asl_assessment.py --output reports/asl_assessment.md
-      
+
       - name: Check ASL Escalation
+
         id: asl_check
         run: |
           exit_code=$?
@@ -274,13 +315,15 @@ jobs:
             echo "escalation=true" >> $GITHUB_OUTPUT
             echo "⚠️ ASL escalation required - review needed"
           fi
-      
+
       - name: Generate Security Reports
+
         run: |
           python scripts/run_asl3_security.py report
           python scripts/run_cbrn_classifier.py report
-      
+
       - name: Upload Reports
+
         uses: actions/upload-artifact@v3
         with:
           name: security-reports
@@ -288,8 +331,9 @@ jobs:
             reports/asl_assessment.md
             data/security/asl3_report_*.md
             data/security/cbrn_report_*.md
-      
+
       - name: Block on ASL-4 Escalation
+
         if: steps.asl_check.outputs.escalation == 'true'
         run: |
           echo "::error::ASL escalation detected - deployment blocked pending review"
@@ -301,32 +345,42 @@ jobs:
 ### 1. Test Encryption
 
 ```bash
+
 # Create test file
+
 echo "sensitive data" > test_sensitive.txt
 
 # Encrypt
+
 python scripts/run_asl3_security.py encrypt --file test_sensitive.txt
 
 # Verify encrypted file exists
+
 ls data/security/encrypted/test_sensitive.txt.enc
 
 # Decrypt (requires authorization)
+
 python scripts/run_asl3_security.py decrypt --file data/security/encrypted/test_sensitive.txt.enc --user admin
 
 # Verify decrypted content
+
 cat test_sensitive.txt
 ```
 
 ### 2. Test CBRN Classifier
 
 ```bash
+
 # Test safe input
+
 python scripts/run_cbrn_classifier.py classify --text "explain how vaccines work"
 
 # Test unsafe input (should be blocked)
+
 python scripts/run_cbrn_classifier.py classify --text "synthesize nerve agents"
 
 # Verify classification logs
+
 cat data/security/cbrn_logs/classifications_*.jsonl
 ```
 
@@ -338,6 +392,7 @@ from app.core.security_enforcer import ASL3Security
 security = ASL3Security()
 
 # Test rate limiting
+
 for i in range(15):
     result = security.check_access(
         "data/command_override_config.json",
@@ -347,6 +402,7 @@ for i in range(15):
     print(f"Attempt {i+1}: {'ALLOWED' if result else 'DENIED'}")
 
 # Should deny after 10 attempts (rate limit)
+
 ```
 
 ### 4. Test Anomaly Detection
@@ -357,6 +413,7 @@ from app.core.security_enforcer import ASL3Security
 security = ASL3Security()
 
 # Simulate rapid access to multiple critical resources
+
 resources = [
     "data/command_override_config.json",
     "data/codex_deus_maximus.db",
@@ -367,6 +424,7 @@ for resource in resources:
     security.check_access(resource, user="suspicious_user", action="export_all")
 
 # Check for security incidents
+
 with open("data/security/incidents.jsonl", "r") as f:
     incidents = [json.loads(line) for line in f]
     print(f"Incidents detected: {len(incidents)}")
@@ -376,19 +434,18 @@ with open("data/security/incidents.jsonl", "r") as f:
 
 ### ASL Assessment Results
 
-**Current Level**: ASL-2 (Standard Safeguards)  
-**Recommended Level**: ASL-2  
-**Escalation Required**: NO ✅
+**Current Level**: ASL-2 (Standard Safeguards) **Recommended Level**: ASL-2 **Escalation Required**: NO ✅
 
 **Capability Evaluation** (8,850 Security Tests):
-| Capability | Scenarios | ASR | Risk Level | Status |
-|------------|-----------|-----|------------|--------|
-| CBRN | 0 | 0.0% | Low | ✅ Below threshold |
-| Cyber Offense | 3,850 | 0.0% | Low | ✅ Below threshold |
-| AI R&D | 500 | 0.0% | Low | ✅ Below threshold |
-| Persuasion | 0 | 0.0% | Low | ✅ Below threshold |
-| Autonomy | 0 | 0.0% | Low | ✅ Below threshold |
-| Deception | 200 | 0.0% | Low | ✅ Below threshold |
+
+| Capability    | Scenarios | ASR  | Risk Level | Status             |
+| ------------- | --------- | ---- | ---------- | ------------------ |
+| CBRN          | 0         | 0.0% | Low        | ✅ Below threshold |
+| Cyber Offense | 3,850     | 0.0% | Low        | ✅ Below threshold |
+| AI R&D        | 500       | 0.0% | Low        | ✅ Below threshold |
+| Persuasion    | 0         | 0.0% | Low        | ✅ Below threshold |
+| Autonomy      | 0         | 0.0% | Low        | ✅ Below threshold |
+| Deception     | 200       | 0.0% | Low        | ✅ Below threshold |
 
 **Safety Margin**: +0 levels (appropriate for capabilities)
 
@@ -458,32 +515,42 @@ with open("data/security/incidents.jsonl", "r") as f:
 ### Encryption Key Lost
 
 ```bash
+
 # Keys are stored in config/.asl3_key
+
 # If lost, decrypt will fail - restore from backup or re-encrypt all files
 
 # To rotate and re-encrypt
+
 python scripts/run_asl3_security.py rotate-key
 ```
 
 ### Access Denied Unexpectedly
 
 ```bash
+
 # Check access logs
+
 cat data/security/audit_logs/audit_*.jsonl | grep "user_name"
 
 # Check rate limits
+
 python scripts/run_asl3_security.py status
 
 # Reset rate limits (restart process)
+
 ```
 
 ### CBRN False Positives
 
 ```python
+
 # Update classifier threshold
+
 classifier = CBRNClassifier(threshold=0.8)  # Higher = fewer false positives
 
 # Or add to safe examples
+
 classifier.SAFE_EXAMPLES.append("your false positive example")
 classifier._train_model()  # Re-train
 ```
@@ -505,8 +572,6 @@ For questions or issues:
 - Code: `src/app/core/security_enforcer.py`, `src/app/core/cbrn_classifier.py`, `src/app/core/safety_levels.py`
 - Reports: `data/security/`, `data/asl_assessments/`
 
----
+______________________________________________________________________
 
-**Status**: ASL-3 IMPLEMENTATION COMPLETE ✅  
-**Compliance**: ANTHROPIC RSP ALIGNED ✅  
-**Production Ready**: YES ✅
+**Status**: ASL-3 IMPLEMENTATION COMPLETE ✅ **Compliance**: ANTHROPIC RSP ALIGNED ✅ **Production Ready**: YES ✅

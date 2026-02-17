@@ -7,10 +7,13 @@ If you need to restore any of the archived files, here's how to do it:
 All archived files are still in the repository in `docs/archive/`:
 
 ```bash
+
 # Copy a file back from archive
+
 cp docs/archive/historical-summaries/BATCH_MERGE_SUMMARY.md .
 
 # Or restore multiple files
+
 cp docs/archive/session-notes/*.md docs/notes/
 ```
 
@@ -27,10 +30,13 @@ git log --all --full-history -- path/to/deleted/file
 ### 2. Restore the file
 
 ```bash
+
 # Restore to last version before deletion
+
 git checkout <commit-hash>^ -- path/to/deleted/file
 
 # Example: Restore debug_line57.py
+
 git checkout 0e06f79^ -- debug_line57.py
 ```
 
@@ -82,10 +88,13 @@ git checkout 0e06f79^ -- debug_line57.py
 ## View Archive Contents
 
 ```bash
+
 # List all archived files
+
 find docs/archive -type f ! -name README.md
 
 # Read archive README for context
+
 cat docs/archive/security-incident-jan2026/README.md
 cat docs/archive/session-notes/README.md
 cat docs/archive/historical-summaries/README.md
@@ -117,6 +126,6 @@ If you're unsure about restoring a file:
 - **Deleted files are in git history** - Use git checkout to restore
 - **All changes are reversible** - Git history preserves everything
 
----
+______________________________________________________________________
 
 **Remember**: The cleanup was done to reduce duplication and organize historical documents. Most files don't need to be restored. If you're unsure, check the context in the archive READMEs first.

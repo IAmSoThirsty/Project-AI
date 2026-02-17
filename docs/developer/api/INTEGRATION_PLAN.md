@@ -75,10 +75,13 @@ Integrates the comprehensive OSINT-BIBLE repository (frankielaguerraYT/OSINT-Bib
 #### Usage
 
 ```python
+
 # Fetch latest OSINT data
+
 $ python scripts/update_osint_bible.py --force
 
 # Load OSINT tools in code
+
 from app.knowledge.osint_loader import load_osint_tools
 
 loader = load_osint_tools()
@@ -122,13 +125,16 @@ from app.agents.alpha_red import AlphaRedAgent
 from app.agents.attack_train_loop import AttackTrainLoop
 
 # Initialize adversary
+
 adversary = AlphaRedAgent(kernel=kernel)
 adversary.enabled = True
 
 # Run adversarial test
+
 results = adversary.run_adversarial_test("ethics_validation", iterations=100)
 
 # Train with attack-train loop
+
 loop = AttackTrainLoop()
 loop.enabled = True
 epoch_results = loop.run_training_epoch(num_iterations=100)
@@ -179,17 +185,20 @@ from app.audit.tamperproof_log import TamperproofLog
 from app.alignment.panel_feedback import PanelFeedback
 
 # Trace decision-making
+
 tracer = TraceLogger()
 trace_id = tracer.start_trace("user_command", context)
 step_id = tracer.log_step(trace_id, "validate_input", data)
 tracer.end_trace(trace_id, result)
 
 # Append to tamperproof log
+
 log = TamperproofLog()
 log.append("decision_made", {"action": "delete_cache"})
 is_valid, errors = log.verify_integrity()
 
 # Collect stakeholder feedback
+
 panel = PanelFeedback()
 panel.register_stakeholder("alice", "Alice Smith", "security_expert")
 decision_id = panel.submit_decision_for_feedback(decision, context)
@@ -233,9 +242,11 @@ Enables democratic, transparent governance through proposals, voting, quorum req
 from app.governance.governance_manager import GovernanceManager
 
 # Initialize governance
+
 gov = GovernanceManager()
 
 # Create proposal
+
 proposal_id = gov.create_proposal(
     title="Enable Advanced OSINT Tools",
     description="Proposal to enable external OSINT tool execution",
@@ -244,14 +255,17 @@ proposal_id = gov.create_proposal(
 )
 
 # Vote on proposal
+
 gov.vote_on_proposal(proposal_id, "stakeholder_001", "yes")
 gov.vote_on_proposal(proposal_id, "stakeholder_002", "no")
 
 # Check quorum and execute
+
 if gov.check_quorum(proposal_id):
     gov.execute_proposal(proposal_id)
 
 # Get policy rules
+
 rule_value = gov.get_policy_rule("four_laws_enforcement")
 ```
 
@@ -292,6 +306,7 @@ from app.resilience.self_repair_agent import SelfRepairAgent
 from app.resilience.deadman_switch import DeadmanSwitch
 
 # Self-repair monitoring
+
 repair_agent = SelfRepairAgent(kernel=kernel)
 repair_agent.enabled = True
 
@@ -302,16 +317,19 @@ if health["status"] != "healthy":
     repair_agent.validate_recovery("intelligence_engine")
 
 # Deadman switch
+
 deadman = DeadmanSwitch(timeout_seconds=300)
 
 def emergency_lockdown():
     logger.critical("EMERGENCY LOCKDOWN TRIGGERED")
+
     # Disable external connections, save state, notify admins
 
 deadman.register_failsafe_action(emergency_lockdown)
 deadman.start_monitoring()
 
 # Regular heartbeats
+
 while system_running:
     deadman.send_heartbeat()
     time.sleep(60)
@@ -392,29 +410,39 @@ OSINT tools integrate as standard plugins:
 python -m ruff check src/app/agents/alpha_red.py
 python -m ruff check src/app/knowledge/osint_loader.py
 python -m ruff check src/app/governance/governance_manager.py
+
 # ... for all new files
+
 ```
 
 ### Import Validation
 
 ```python
+
 # Test all imports work
+
 python -c "from app.agents.alpha_red import AlphaRedAgent; print('✓')"
 python -c "from app.knowledge.osint_loader import OSINTLoader; print('✓')"
 python -c "from app.governance.governance_manager import GovernanceManager; print('✓')"
+
 # ... for all new modules
+
 ```
 
 ### Functional Testing
 
 ```bash
+
 # Fetch OSINT data
+
 python scripts/update_osint_bible.py --verbose
 
 # Load OSINT tools
+
 python -c "from app.knowledge.osint_loader import load_osint_tools; loader = load_osint_tools(); print(loader.get_categories())"
 
 # Test governance
+
 python -c "from app.governance.governance_manager import GovernanceManager; gov = GovernanceManager(); print(gov.state)"
 ```
 
@@ -444,21 +472,25 @@ python -c "from app.governance.governance_manager import GovernanceManager; gov 
 ## Migration Path for Existing Systems
 
 1. **Phase 1: Deploy stubs (Current)**
+
    - All components implemented as stubs
    - No breaking changes to existing code
    - Documentation and interfaces complete
 
 1. **Phase 2: Selective activation**
+
    - Enable OSINT integration for specific use cases
    - Run Alpha Red in test mode
    - Set up governance for policy decisions
 
 1. **Phase 3: Full implementation**
+
    - Replace stub implementations with production code
    - Integrate with all system components
    - Enable automated repair and monitoring
 
 1. **Phase 4: Continuous improvement**
+
    - Expand OSINT tool coverage
    - Evolve adversarial strategies
    - Refine governance processes
@@ -505,8 +537,6 @@ For questions, issues, or contributions:
 - Documentation: `docs/` directory
 - Developer Guide: `DEVELOPER_QUICK_REFERENCE.md`
 
----
+______________________________________________________________________
 
-**Status**: All components implemented as extensible stubs (v1.0.0)  
-**Last Updated**: 2026-01-21  
-**Next Review**: After production implementation begins
+**Status**: All components implemented as extensible stubs (v1.0.0) **Last Updated**: 2026-01-21 **Next Review**: After production implementation begins

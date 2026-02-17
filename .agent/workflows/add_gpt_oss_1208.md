@@ -1,3 +1,5 @@
+# Add Gpt Oss 1208
+
 ---
 description: Integrate GPT‑OSS 1208 model into CodexDeusMaximus agent
 ---

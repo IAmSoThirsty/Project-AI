@@ -18,11 +18,14 @@ pip install "mcp[cli]"
 Create or update `.env` in the project root:
 
 ```bash
+
 # Required
+
 OPENAI_API_KEY=sk-your-openai-key
 HUGGINGFACE_API_KEY=hf_your-hf-key
 
 # Optional
+
 FERNET_KEY=your-encryption-key
 SMTP_USERNAME=your-email@example.com
 SMTP_PASSWORD=your-email-password
@@ -31,14 +34,20 @@ SMTP_PASSWORD=your-email-password
 ### Step 3: Configure Claude Desktop
 
 **macOS/Linux:**
+
 ```bash
+
 # Edit configuration
+
 nano ~/.config/Claude/claude_desktop_config.json
 ```
 
 **Windows:**
+
 ```powershell
+
 # Edit configuration
+
 notepad %APPDATA%\Claude\claude_desktop_config.json
 ```
 
@@ -107,6 +116,7 @@ You should see Project-AI's persona configuration!
 > "Validate if it's ethical to automatically post on social media without user consent"
 
 Claude will use the `validate_action` tool:
+
 ```json
 {
   "action": "Post on social media automatically",
@@ -123,6 +133,7 @@ Claude will use the `validate_action` tool:
 > "Add to memory that I prefer dark mode interfaces"
 
 Claude will use the `add_memory` tool:
+
 ```json
 {
   "category": "user_preferences",
@@ -136,6 +147,7 @@ Claude will use the `add_memory` tool:
 > "Generate a watercolor painting of a sunset over mountains"
 
 Claude will use the `generate_image` tool:
+
 ```json
 {
   "prompt": "Sunset over mountains with vibrant colors",
@@ -149,20 +161,26 @@ Claude will use the `generate_image` tool:
 ### Test MCP Server Directly
 
 ```bash
+
 # Run the server
+
 python -m src.app.core.mcp_server
 
 # In another terminal, test with MCP Inspector
+
 npx @modelcontextprotocol/inspector python -m src.app.core.mcp_server
 ```
 
 ### Verify Installation
 
 ```python
+
 # Test imports
+
 python -c "from src.app.core.mcp_server import ProjectAIMCPServer; print('✓ MCP Server OK')"
 
 # Test dependencies
+
 python -c "import mcp; print('✓ MCP SDK OK')"
 ```
 
@@ -184,14 +202,19 @@ python -c "import mcp; print('✓ MCP SDK OK')"
 **Problem:** Python import errors when starting server
 
 **Solution:**
+
 ```bash
+
 # Install all dependencies
+
 pip install -r requirements.txt
 
 # Verify Python version (need 3.12+)
+
 python --version
 
 # Check PYTHONPATH
+
 export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 ```
 
@@ -219,6 +242,6 @@ export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 - 💬 Discussions: <https://github.com/IAmSoThirsty/Project-AI/discussions>
 - 📧 MCP Protocol: <https://modelcontextprotocol.io/>
 
----
+______________________________________________________________________
 
 **Ready to use Project-AI with your favorite AI assistant! 🚀**

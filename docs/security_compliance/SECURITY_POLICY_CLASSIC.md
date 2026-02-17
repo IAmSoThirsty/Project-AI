@@ -48,12 +48,12 @@ When reporting a vulnerability, please provide:
 
 ### Severity and Response Times
 
-| Severity | Description | Response Time |
-|----------|-------------|---------------|
-| **Critical** | Unauthenticated RCE, data breach, credential exposure | 48 hours |
-| **High** | Authenticated RCE, privilege escalation, SQL injection | 1 week |
-| **Medium** | XSS, CSRF, information disclosure | 2 weeks |
-| **Low** | Minor issues with minimal impact | 1 month |
+| Severity     | Description                                            | Response Time |
+| ------------ | ------------------------------------------------------ | ------------- |
+| **Critical** | Unauthenticated RCE, data breach, credential exposure  | 48 hours      |
+| **High**     | Authenticated RCE, privilege escalation, SQL injection | 1 week        |
+| **Medium**   | XSS, CSRF, information disclosure                      | 2 weeks       |
+| **Low**      | Minor issues with minimal impact                       | 1 month       |
 
 ## Security Features
 
@@ -160,7 +160,6 @@ The following are **not** considered security vulnerabilities:
   - Do not disrupt service availability
 - This policy is not a vulnerability bounty program (no financial rewards at this time)
 
----
+______________________________________________________________________
 
-**Last Updated:** 2026-01-19  
-**Contact:** <projectaidevs@gmail.com>
+**Last Updated:** 2026-01-19 **Contact:** <projectaidevs@gmail.com>

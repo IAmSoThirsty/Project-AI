@@ -9,11 +9,11 @@ This document outlines Project-AI's compliance with the UK Data Protection Act 2
 We comply with the six data protection principles:
 
 1. **Lawfulness, fairness and transparency**: Processing must be lawful, fair, and transparent.
-2. **Purpose limitation**: Collected for specified, explicit, and legitimate purposes.
-3. **Data minimization**: Adequate, relevant, and limited to what is necessary.
-4. **Accuracy**: Accurate and, where necessary, kept up to date.
-5. **Storage limitation**: Kept in a form which permits identification for no longer than is necessary.
-6. **Integrity and confidentiality**: Processed in a manner that ensures appropriate security.
+1. **Purpose limitation**: Collected for specified, explicit, and legitimate purposes.
+1. **Data minimization**: Adequate, relevant, and limited to what is necessary.
+1. **Accuracy**: Accurate and, where necessary, kept up to date.
+1. **Storage limitation**: Kept in a form which permits identification for no longer than is necessary.
+1. **Integrity and confidentiality**: Processed in a manner that ensures appropriate security.
 
 ## 3. Lawful Basis for Processing
 

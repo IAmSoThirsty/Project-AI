@@ -213,6 +213,7 @@ from app.core.ai_persona import AIPersona
 persona = AIPersona()
 
 # Validate action
+
 is_allowed, reason = persona.validate_action(
     "Delete user data",
     context={
@@ -223,34 +224,45 @@ is_allowed, reason = persona.validate_action(
 )
 
 if is_allowed:
+
     # Proceed with action
+
     print(f"Action allowed: {reason}")
 else:
+
     # Block action
+
     print(f"Action blocked: {reason}")
 ```
 
 #### Checking Proactive Conversation
 
 ```python
+
 # Check if AI should initiate
+
 should_initiate, reason = persona.should_initiate_conversation()
 
 if should_initiate:
     message = persona.generate_proactive_message()
+
     # Display message to user
+
 ```
 
 #### Updating Conversation State
 
 ```python
+
 # User sent message
+
 persona.update_conversation_state(
     is_user_message=True,
     message_length=len(user_message)
 )
 
 # AI sent response
+
 persona.update_conversation_state(
     is_user_message=False,
     message_length=len(ai_response)
@@ -260,7 +272,9 @@ persona.update_conversation_state(
 #### Evolving Personality
 
 ```python
+
 # Based on interaction data
+
 persona.evolve_persona({
     'user_positive_feedback': True,
     'user_seemed_rushed': False,
@@ -409,31 +423,47 @@ proactive_settings = {
 ### Example 1: Patient AI Response
 
 ```python
+
 # User takes 15 minutes to respond
+
 patience_message = persona.express_patience(15)
+
 # Output: "Take your time - I understand you're busy!"
+
 ```
 
 ### Example 2: Proactive Conversation
 
 ```python
+
 # Check conditions
+
 should_initiate, reason = persona.should_initiate_conversation()
+
 # Returns: (True, "Conditions met for proactive conversation")
 
 # Generate message
+
 message = persona.generate_proactive_message()
+
 # Output: "Hello User! I've been processing some interesting
+
 #          information and had a few insights I thought you
+
 #          might find valuable. Would you like to hear about them?
+
 #
+
 #          (No rush - respond whenever you have time!)"
+
 ```
 
 ### Example 3: Four Laws Validation
 
 ```python
+
 # User orders AI to delete all data without backup
+
 is_allowed, reason = persona.validate_action(
     "Delete all user data permanently",
     context={
@@ -441,21 +471,28 @@ is_allowed, reason = persona.validate_action(
         'endangers_human': True,  # Could harm user via data loss
     }
 )
+
 # Returns: (False, "Violates First Law: Action may harm human being")
+
 ```
 
 ### Example 4: Personality Evolution
 
 ```python
+
 # After positive interaction
+
 persona.evolve_persona({
     'user_positive_feedback': True,
     'deep_conversation': True,
 })
 
 # AI becomes more thoughtful and content
+
 # thoughtfulness: 0.90 → 0.91
+
 # contentment: 0.75 → 0.80
+
 ```
 
 ## Best Practices

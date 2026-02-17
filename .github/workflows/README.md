@@ -7,6 +7,7 @@ This repository implements a **supply chain hardened CI/CD pipeline** with compl
 ### Primary Production Workflow
 
 **[project-ai-monolith.yml](project-ai-monolith.yml)** - 🛡️ **Sovereign Monolithic Pipeline**
+
 - **12 phases** with full trust chain validation
 - **7 trust boundaries** structurally enforced
 - **13/13 supply chain threats** mitigated
@@ -18,6 +19,7 @@ See: [Sovereign Pipeline Documentation](#sovereign-pipeline-documentation)
 ### Additional Active Workflows
 
 **[codex-deus-ultimate.yml](codex-deus-ultimate.yml)** (2,507 lines, 83KB)
+
 - 55 jobs across 15 phases
 - Consolidates 28 previous workflows
 - Zero redundancy, complete coverage
@@ -28,6 +30,7 @@ See: [Sovereign Pipeline Documentation](#sovereign-pipeline-documentation)
 ### Sovereign Pipeline Documentation
 
 **Core Documentation:**
+
 - **[docs/SUPPLY_CHAIN_SECURITY.md](../../docs/SUPPLY_CHAIN_SECURITY.md)** - 13 threat classes and mitigation
 - **[docs/REPOSITORY_HARDENING.md](../../docs/REPOSITORY_HARDENING.md)** - Required repository settings
 - **[project-ai-monolith.yml](project-ai-monolith.yml)** - Complete workflow implementation
@@ -36,6 +39,7 @@ See: [Sovereign Pipeline Documentation](#sovereign-pipeline-documentation)
 **Start here:** [`/CODEX_DEUS_INDEX.md`](../../CODEX_DEUS_INDEX.md)
 
 Full documentation suite:
+
 - **CODEX_DEUS_INDEX.md** - Navigation and getting started
 - **CODEX_DEUS_ULTIMATE_SUMMARY.md** - Complete technical reference
 - **CODEX_DEUS_QUICK_REF.md** - Quick reference guide
@@ -71,21 +75,25 @@ See [`archive/README.md`](archive/README.md) for details on what was archived an
 ## 🚀 Quick Start
 
 ### View Workflow
+
 ```bash
 gh workflow view codex-deus-ultimate.yml
 ```
 
 ### Trigger Manually
+
 ```bash
 gh workflow run codex-deus-ultimate.yml
 ```
 
 ### Watch Execution
+
 ```bash
 gh run watch
 ```
 
 ### List Recent Runs
+
 ```bash
 gh run list --workflow=codex-deus-ultimate.yml
 ```
@@ -121,15 +129,19 @@ Reusable components in [`../.github/actions/`](../actions/):
 ## 🎓 Learning
 
 ### For Developers
+
 Read: [`CODEX_DEUS_QUICK_REF.md`](../../CODEX_DEUS_QUICK_REF.md)
 
 ### For DevOps
+
 Read: [`CODEX_DEUS_ULTIMATE_SUMMARY.md`](../../CODEX_DEUS_ULTIMATE_SUMMARY.md)
 
 ### For Security
+
 Focus on Phases 2, 3, 8, 9 in the summary
 
 ### For Release Managers
+
 Study Phase 12 in the summary
 
 ## 🔗 Links
@@ -147,6 +159,6 @@ Study Phase 12 in the summary
 
 ---
 
-**Status:** ✅ Production Ready  
-**Last Updated:** 2026-02-01  
+**Status:** ✅ Production Ready
+**Last Updated:** 2026-02-01
 **Version:** 1.0.0

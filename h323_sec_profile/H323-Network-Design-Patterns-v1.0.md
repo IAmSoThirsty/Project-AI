@@ -230,7 +230,9 @@ class-map signaling
 
 **Routing Rules**:
 ```
+
 # GK-A routing table
+
 +1408xxxxxxx → GK-B (Site B)
 +1650xxxxxxx → GK-A local
 +1800xxxxxxx → GW-A (PSTN)

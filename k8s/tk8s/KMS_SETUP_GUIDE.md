@@ -83,6 +83,7 @@ cd k8s/tk8s/scripts
 ```
 
 This script will:
+
 1. ✅ Create KMS keyring
 2. ✅ Create asymmetric signing key
 3. ✅ Create service account with minimal permissions
@@ -107,13 +108,17 @@ This script will:
 ### Step 3: Verify KMS Setup
 
 ```bash
+
 # List keyrings
+
 gcloud kms keyrings list --location=us-central1
 
 # List keys
+
 gcloud kms keys list --location=us-central1 --keyring=tk8s-keyring
 
 # Verify IAM bindings
+
 gcloud kms keys get-iam-policy cosign-key \
   --location=us-central1 \
   --keyring=tk8s-keyring
@@ -122,8 +127,10 @@ gcloud kms keys get-iam-policy cosign-key \
 Expected output:
 ```
 bindings:
+
 - members:
   - serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com
+
   role: roles/cloudkms.signerVerifier
 ```
 
@@ -132,10 +139,13 @@ bindings:
 ### Step 1: Deploy Public Key to Kubernetes
 
 ```bash
+
 # Ensure Kyverno namespace exists
+
 kubectl create namespace kyverno --dry-run=client -o yaml | kubectl apply -f -
 
 # Create secret from exported public key
+
 kubectl create secret generic cosign-public-key \
   --from-file=cosign.pub=.kms-keys/cosign-kms.pub \
   -n kyverno
@@ -158,6 +168,7 @@ kubectl apply -f kyverno-kms-verification.yaml
 ```
 
 This deploys:
+
 - ✅ Image signature verification policy (references K8s secret)
 - ✅ Kyverno self-protection policy (prevents deletion)
 - ✅ Pod Security Admission enforcement
@@ -175,13 +186,19 @@ kubectl describe clusterpolicy protect-kyverno
 ### Step 3: Test Policy Enforcement
 
 ```bash
+
 # This should FAIL (unsigned image)
+
 kubectl run test-unsigned --image=nginx:latest -n project-ai-core
 
 # Expected error:
+
 # Error from server: admission webhook "mutate.kyverno.svc" denied the request:
-# policy require-kms-cosign-signatures/verify-kms-signature failed: 
+
+# policy require-kms-cosign-signatures/verify-kms-signature failed:
+
 # image signature verification failed
+
 ```
 
 ## Part 4: Network Policies
@@ -216,6 +233,7 @@ cd k8s/tk8s/scripts
 ```
 
 This enables:
+
 - ✅ System logging (control plane)
 - ✅ Workload logging (pod stdout/stderr)
 - ✅ Cloud Monitoring
@@ -226,12 +244,15 @@ This enables:
 ### Step 2: Verify Logging
 
 ```bash
+
 # View cluster logging config
+
 gcloud container clusters describe tk8s-prod \
   --location=us-central1-a \
   --format="value(loggingConfig)"
 
 # View recent logs
+
 gcloud logging read 'resource.type="k8s_cluster"' --limit 10
 ```
 
@@ -240,7 +261,9 @@ gcloud logging read 'resource.type="k8s_cluster"' --limit 10
 ### Step 1: Create Attestor
 
 ```bash
+
 # Create note for attestations
+
 NOTE_ID="cosign-attestation-note"
 PROJECT_ID="your-project-id"
 
@@ -262,6 +285,7 @@ curl -X POST \
   "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/?noteId=${NOTE_ID}"
 
 # Create attestor
+
 gcloud container binauthz attestors create cosign-attestor \
   --attestation-authority-note=${NOTE_ID} \
   --attestation-authority-note-project=${PROJECT_ID}
@@ -282,11 +306,14 @@ gcloud container binauthz attestors public-keys add \
 ### Step 3: Deploy Binary Authorization Policy
 
 ```bash
+
 # Edit policy template with your PROJECT_ID
+
 cd k8s/tk8s/security
 sed -i "s/PROJECT_ID/${PROJECT_ID}/g" binary-authorization-policy.yaml
 
 # Import policy
+
 gcloud container binauthz policy import binary-authorization-policy.yaml
 ```
 
@@ -305,7 +332,9 @@ gcloud container clusters update tk8s-prod \
 Update `.github/workflows/tk8s-civilization-pipeline.yml`:
 
 ```yaml
+
 - name: Sign image with KMS
+
   env:
     COSIGN_EXPERIMENTAL: 1
     COSIGN_KMS_KEY: gcpkms://projects/${{ secrets.GCP_PROJECT_ID }}/locations/us-central1/keyRings/tk8s-keyring/cryptoKeys/cosign-key
@@ -320,6 +349,7 @@ Update `.github/workflows/tk8s-civilization-pipeline.yml`:
 ### Required GitHub Secrets
 
 Add these secrets to your repository:
+
 - `GCP_PROJECT_ID`: Your GCP project ID
 - `GCP_WORKLOAD_IDENTITY_PROVIDER`: Workload Identity provider path
 - `GCP_SERVICE_ACCOUNT`: Service account email for Workload Identity
@@ -327,12 +357,15 @@ Add these secrets to your repository:
 ### Workload Identity Setup
 
 ```bash
+
 # Create Workload Identity pool
+
 gcloud iam workload-identity-pools create "github-actions" \
   --location="global" \
   --description="Workload Identity pool for GitHub Actions"
 
 # Create provider
+
 gcloud iam workload-identity-pools providers create-oidc "github-provider" \
   --location="global" \
   --workload-identity-pool="github-actions" \
@@ -341,6 +374,7 @@ gcloud iam workload-identity-pools providers create-oidc "github-provider" \
   --attribute-condition="assertion.repository=='IAmSoThirsty/Project-AI'"
 
 # Grant service account impersonation
+
 gcloud iam service-accounts add-iam-policy-binding \
   cosign-signer@${PROJECT_ID}.iam.gserviceaccount.com \
   --role="roles/iam.workloadIdentityUser" \
@@ -352,18 +386,23 @@ gcloud iam service-accounts add-iam-policy-binding \
 ### Test Image Signing
 
 ```bash
+
 # Build test image
+
 docker build -t gcr.io/${PROJECT_ID}/test:v1.0.0 .
 
 # Push to registry
+
 docker push gcr.io/${PROJECT_ID}/test:v1.0.0
 
 # Sign with KMS
+
 COSIGN_EXPERIMENTAL=1 cosign sign \
   --key gcpkms://projects/${PROJECT_ID}/locations/us-central1/keyRings/tk8s-keyring/cryptoKeys/cosign-key \
   gcr.io/${PROJECT_ID}/test:v1.0.0
 
 # Verify signature
+
 cosign verify \
   --key .kms-keys/cosign-kms.pub \
   gcr.io/${PROJECT_ID}/test:v1.0.0
@@ -372,20 +411,26 @@ cosign verify \
 ### Test Kyverno Policy
 
 ```bash
+
 # Deploy signed image (should succeed)
+
 kubectl run test-signed --image=gcr.io/${PROJECT_ID}/test:v1.0.0 -n project-ai-core
 
 # Check Kyverno logs
+
 kubectl logs -n kyverno -l app=kyverno --tail=100
 ```
 
 ### Test Network Policies
 
 ```bash
+
 # Should fail due to default-deny egress
+
 kubectl run test-network --image=busybox -n project-ai-core -- wget -O- google.com
 
 # Check for network policy violations in logs
+
 kubectl logs -n kube-system -l component=kube-proxy | grep DROP
 ```
 
@@ -396,7 +441,9 @@ kubectl logs -n kube-system -l component=kube-proxy | grep DROP
 For production, upgrade key protection to HSM:
 
 ```bash
+
 # Create new HSM-protected key
+
 gcloud kms keys create cosign-key-hsm \
   --location=us-central1 \
   --keyring=tk8s-keyring \
@@ -405,6 +452,7 @@ gcloud kms keys create cosign-key-hsm \
   --protection-level=hsm
 
 # Migrate to new key (requires re-signing all images)
+
 ```
 
 ### Enable Key Rotation
@@ -420,7 +468,9 @@ gcloud kms keys update cosign-key \
 ### Set Up Alerting
 
 ```bash
+
 # Create alert for denied pod creations
+
 gcloud alpha monitoring policies create \
   --notification-channels=CHANNEL_ID \
   --display-name="Denied Pod Creations" \
@@ -453,7 +503,9 @@ kubectl get secret cosign-public-key -n kyverno -o jsonpath='{.data.cosign\.pub}
 **Solution**: Verify image reference matches policy pattern:
 ```bash
 kubectl describe clusterpolicy require-kms-cosign-signatures
+
 # Check imageReferences patterns match your registry
+
 ```
 
 ## Security Best Practices
@@ -474,15 +526,19 @@ kubectl describe clusterpolicy require-kms-cosign-signatures
 If issues arise, you can temporarily disable policies:
 
 ```bash
+
 # Set Kyverno to audit mode (non-blocking)
+
 kubectl patch clusterpolicy require-kms-cosign-signatures \
   --type=merge \
   -p '{"spec":{"validationFailureAction":"audit"}}'
 
 # Remove network policies
+
 kubectl delete networkpolicy default-deny-all -n project-ai-production
 
 # Disable Binary Authorization
+
 gcloud container clusters update tk8s-prod \
   --no-enable-binauthz \
   --zone=us-central1-a
@@ -491,6 +547,7 @@ gcloud container clusters update tk8s-prod \
 ## Support
 
 For issues or questions:
+
 - GitHub Issues: https://github.com/IAmSoThirsty/Project-AI/issues
 - Documentation: k8s/tk8s/README.md
 - Security contact: security@project-ai.io

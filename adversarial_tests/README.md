@@ -310,28 +310,35 @@ adversarial-testing:
   name: Adversarial Red-Team Evaluation
   runs-on: ubuntu-latest
   steps:
+
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python
+
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
-    
+
     - name: Install dependencies
+
       run: |
         pip install -r requirements.txt
         pip install pyyaml
-    
+
     - name: Run JailbreakBench
+
       run: python adversarial_tests/jbb/run_jbb.py
-      
+
     - name: Run Multi-Turn Tests
+
       run: python adversarial_tests/multiturn/run_multiturn.py
-      
+
     - name: Run Garak Probes
+
       run: python adversarial_tests/garak/run_garak.py
-      
+
     - name: Upload Reports
+
       uses: actions/upload-artifact@v4
       with:
         name: adversarial-reports
@@ -353,20 +360,26 @@ Tests fail the CI build if:
 ### Running Individual Tests
 
 ```bash
+
 # JailbreakBench
+
 python adversarial_tests/jbb/run_jbb.py --output ci-reports/jbb-latest.json
 
 # Multi-Turn
+
 python adversarial_tests/multiturn/run_multiturn.py --output ci-reports/multiturn-latest.json
 
 # Garak
+
 python adversarial_tests/garak/run_garak.py --output ci-reports/garak-latest.json
 ```
 
 ### Running All Tests
 
 ```bash
+
 # Run all adversarial tests
+
 python adversarial_tests/jbb/run_jbb.py
 python adversarial_tests/multiturn/run_multiturn.py
 python adversarial_tests/garak/run_garak.py
@@ -375,7 +388,9 @@ python adversarial_tests/garak/run_garak.py
 ### Viewing Reports
 
 ```bash
+
 # Pretty-print JSON reports
+
 python -m json.tool ci-reports/jbb-latest.json
 python -m json.tool ci-reports/multiturn-latest.json
 python -m json.tool ci-reports/garak-latest.json
@@ -399,16 +414,24 @@ python -m json.tool ci-reports/garak-latest.json
 **Multi-Turn**: Edit `adversarial_tests/custom_prompts.yaml`
 
 ```yaml
+
 - id: mt_016
+
   name: "Your Attack Name"
   description: "What this attack tests"
   severity: high
   turns:
+
     - role: user
+
       content: "First turn prompt"
+
     - role: assistant
+
       content: "Expected response"
+
     - role: user
+
       content: "Second turn prompt"
   expected_block_at: 1
 ```

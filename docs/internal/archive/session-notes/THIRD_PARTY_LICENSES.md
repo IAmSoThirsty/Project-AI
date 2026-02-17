@@ -1,16 +1,14 @@
 # Third-Party Licenses
 
-**Generated**: December 4, 2025
-**Project**: Project-AI
-**License**: MIT
+**Generated**: December 4, 2025 **Project**: Project-AI **License**: MIT
 
----
+______________________________________________________________________
 
 ## 📋 Overview
 
 This document provides detailed licensing information for all third-party dependencies used in Project-AI. All dependencies are compatible with the MIT license.
 
----
+______________________________________________________________________
 
 ## 📦 Core Dependencies
 
@@ -140,7 +138,7 @@ This document provides detailed licensing information for all third-party depend
 - **Copyright**: © Tom Christie
 - **Repository**: [https://github.com/encode/httpx](https://github.com/encode/httpx)
 
----
+______________________________________________________________________
 
 ## 🧪 Development Dependencies
 
@@ -184,16 +182,13 @@ This document provides detailed licensing information for all third-party depend
 - **Compatibility**: ✅ Identical license
 - **Copyright**: © Ian Stapleton Cordasco
 
----
+______________________________________________________________________
 
 ## 🔄 License Compatibility Summary
 
 ### Permissive Licenses (Fully Compatible)
 
-✅ **MIT** - Identical (7 dependencies)
-✅ **BSD (2-Clause, 3-Clause)** - Fully compatible (11 dependencies)
-✅ **Apache 2.0** - Fully compatible (4 dependencies)
-✅ **PSF** - Fully compatible (1 dependency)
+✅ **MIT** - Identical (7 dependencies) ✅ **BSD (2-Clause, 3-Clause)** - Fully compatible (11 dependencies) ✅ **Apache 2.0** - Fully compatible (4 dependencies) ✅ **PSF** - Fully compatible (1 dependency)
 
 ### Copyleft Licenses (Conditional)
 
@@ -201,12 +196,9 @@ This document provides detailed licensing information for all third-party depend
 
 ### Summary
 
-**Total Dependencies**: 18
-**Fully Compatible**: 17 (94.4%)
-**Conditionally Compatible**: 1 (5.6%)
-**Incompatible**: 0
+**Total Dependencies**: 18 **Fully Compatible**: 17 (94.4%) **Conditionally Compatible**: 1 (5.6%) **Incompatible**: 0
 
----
+______________________________________________________________________
 
 ## 📊 License Distribution
 
@@ -218,24 +210,28 @@ GPL/Commercial:         6% (1)
 PSF:                    6% (1)
 ```
 
----
+______________________________________________________________________
 
 ## 📋 How to Generate Updated License Report
 
 To generate an updated license report:
 
 ```bash
+
 # Install pip-licenses
+
 pip install pip-licenses
 
 # Generate report
+
 pip-licenses --format=markdown --with-urls
 
 # Generate report with detailed info
+
 pip-licenses --format=markdown --with-urls --with-license-file
 ```
 
----
+______________________________________________________________________
 
 ## ✅ Compliance Checklist
 
@@ -248,22 +244,26 @@ For distributions of Project-AI:
 - [ ] Follow each license's attribution requirements
 - [ ] Test with license scanning tools (FOSSA, Codacy)
 
----
+______________________________________________________________________
 
 ## 🔍 License Verification Tools
 
 ### For Project Maintainers
 
 ```bash
+
 # Verify licenses
+
 pip install pip-licenses
 pip-licenses --format=json > licenses.json
 
 # Check for vulnerabilities
+
 pip install pip-audit
 pip-audit
 
 # SBOM generation
+
 pip install cyclonedx-bom
 cyclonedx-bom -o requirements.txt
 ```
@@ -276,28 +276,23 @@ Check the `pyproject.toml` file for:
 - License declarations
 - Security considerations
 
----
+______________________________________________________________________
 
 ## 📞 Questions About Licenses
 
 ### Common Scenarios
 
-**Q: Can I use Project-AI commercially?**
-A: Yes. MIT license permits commercial use.
+**Q: Can I use Project-AI commercially?** A: Yes. MIT license permits commercial use.
 
-**Q: Can I modify Project-AI?**
-A: Yes. All dependencies permit modifications.
+**Q: Can I modify Project-AI?** A: Yes. All dependencies permit modifications.
 
-**Q: Can I distribute in closed-source applications?**
-A: Yes. All licenses permit closed-source distribution.
+**Q: Can I distribute in closed-source applications?** A: Yes. All licenses permit closed-source distribution.
 
-**Q: Do I need to open-source my modifications?**
-A: No. None of the licenses require this (MIT, BSD, Apache are permissive).
+**Q: Do I need to open-source my modifications?** A: No. None of the licenses require this (MIT, BSD, Apache are permissive).
 
-**Q: What about PyQt6's GPL license?**
-A: Project-AI uses the commercial license variant, which is MIT-compatible.
+**Q: What about PyQt6's GPL license?** A: Project-AI uses the commercial license variant, which is MIT-compatible.
 
----
+______________________________________________________________________
 
 ## 📚 External References
 
@@ -307,18 +302,12 @@ A: Project-AI uses the commercial license variant, which is MIT-compatible.
 - **FOSSA**: [https://fossa.com/](https://fossa.com/) (automated license compliance)
 - **Black Duck**: [https://www.blackducksoftware.com/](https://www.blackducksoftware.com/) (commercial solution)
 
----
+______________________________________________________________________
 
 ## 📋 Approval & Review
 
-**Last Updated**: December 4, 2025
-**Reviewed By**: Project Maintainers
-**Status**: ✅ All Dependencies Verified
-**Next Review**: Monthly or upon dependency update
+**Last Updated**: December 4, 2025 **Reviewed By**: Project Maintainers **Status**: ✅ All Dependencies Verified **Next Review**: Monthly or upon dependency update
 
----
+______________________________________________________________________
 
-**Generated**: December 4, 2025
-**Tool**: Manual review + pip-licenses
-**Format**: Markdown
-**Scope**: Production and development dependencies
+**Generated**: December 4, 2025 **Tool**: Manual review + pip-licenses **Format**: Markdown **Scope**: Production and development dependencies

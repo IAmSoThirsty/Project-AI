@@ -96,15 +96,18 @@ COMPONENT INTERACTIONS:
 ═══════════════════════
 
 1. APPLICATION → Bootstrap
+
    └─→ Initializes entire system
 
 2. Bootstrap → Components
+
    ├─→ Creates TarlRuntime with DEFAULT_POLICIES
    ├─→ Creates CodexDeus escalation handler
    ├─→ Creates GovernanceCore
    └─→ Wires into ExecutionKernel
 
 3. ExecutionKernel.execute(action, context)
+
    │
    ├─→ TarlGate.enforce(context)
    │   │
@@ -127,6 +130,7 @@ DEFAULT POLICIES:
 ═════════════════
 
 1. deny_unauthorized_mutation
+
    ┌────────────────────────────────┐
    │ Input: context                 │
    │ Check: mutation==True AND      │
@@ -135,6 +139,7 @@ DEFAULT POLICIES:
    └────────────────────────────────┘
 
 2. escalate_on_unknown_agent
+
    ┌────────────────────────────────┐
    │ Input: context                 │
    │ Check: agent is None           │

@@ -13,14 +13,17 @@ Successfully restored and improved the image generation feature for Project-AI w
 **Key Components**:
 
 - `ImageStyle` enum: 10 professional style presets
+
   - photorealistic, digital_art, oil_painting, watercolor, anime
   - sketch, abstract, cyberpunk, fantasy, minimalist
-  
+
 - `ImageGenerationBackend` enum: Dual backend support
+
   - HUGGINGFACE (Stable Diffusion 2.1)
   - OPENAI (DALL-E 3)
-  
+
 - `ImageGenerator` class:
+
   - Content filtering with 15 blocked keywords
   - Automatic safety negative prompts
   - Generation history tracking (JSON persistence)
@@ -48,25 +51,29 @@ Successfully restored and improved the image generation feature for Project-AI w
 **Key Components**:
 
 - `ImageGenerationWorker` (QThread):
+
   - Async image generation (prevents UI blocking)
   - Progress signals for real-time feedback
   - Handles 20-60 second generation time without freezing UI
-  
+
 - `ImageGenerationLeftPanel`:
+
   - Tron-themed prompt input interface
   - Style preset selector (dropdown with 10 options)
   - Image size selector (256x256, 512x512, 768x768, 1024x1024)
   - Backend selector (Hugging Face / OpenAI)
   - Generate button with loading state
-  
+
 - `ImageGenerationRightPanel`:
+
   - Image display with QLabel
   - Zoom controls (25%, 50%, 100%, 200%)
   - Metadata display (prompt, style, backend, timestamp)
   - Save button (file dialog)
   - Copy to clipboard button
-  
+
 - `ImageGenerationInterface`:
+
   - Main container with dual-page layout
   - Signal coordination between left/right panels
   - Worker thread management
@@ -115,13 +122,15 @@ Successfully restored and improved the image generation feature for Project-AI w
 **Changes**:
 
 - Added `switch_to_image_generation()` method
+
   - Creates `ImageGenerationInterface`
   - Adds to page container at index 2
   - Handles page navigation
-  
+
 - Added `switch_to_dashboard()` method
+
   - Returns to dashboard at index 1
-  
+
 - Connected dashboard signal to `switch_to_image_generation()`
 
 **Lines Added**: ~25 lines (2 navigation methods + signal connection)
@@ -192,17 +201,17 @@ ImageGenerationRightPanel
 
 ### Dual-Page Pattern
 
-**Left Page (Index 0)**: Login interface (Tron theme)
-**Right Page (Index 1)**: Dashboard (6-zone layout)
-**Page 2 (Index 2)**: Image Generation
+**Left Page (Index 0)**: Login interface (Tron theme) **Right Page (Index 1)**: Dashboard (6-zone layout) **Page 2 (Index 2)**: Image Generation
 
-  - Left half: Prompt input (Tron theme - #00ff00, #00ffff)
-  - Right half: Image display (black background)
+- Left half: Prompt input (Tron theme - #00ff00, #00ffff)
+- Right half: Image display (black background)
 
 ### Async Generation Pattern
 
 ```python
+
 # Create worker thread
+
 worker = ImageGenerationWorker(prompt, style, size, backend)
 worker.image_generated.connect(self.on_image_generated)
 worker.generation_error.connect(self.on_error)
@@ -212,13 +221,16 @@ worker.start()  # Non-blocking
 ### Content Safety Pattern
 
 ```python
+
 # Check before generation
+
 is_safe, reason = generator.check_content_filter(prompt)
 if not is_safe:
     show_error(f"Content filter: {reason}")
     return
 
 # Auto-append safety negative prompt
+
 full_negative = preset["negative_prompt"] + generator.SAFETY_NEGATIVE
 ```
 
@@ -230,7 +242,9 @@ STYLE_PRESETS = {
         "prompt_prefix": "highly detailed photorealistic",
         "negative_prompt": "cartoon, painting, illustration",
     },
+
     # ... 9 more styles
+
 }
 ```
 
@@ -239,7 +253,9 @@ STYLE_PRESETS = {
 ### Environment Variables
 
 ```bash
+
 # Required in .env
+
 HUGGINGFACE_API_KEY=hf_...  # From https://huggingface.co/settings/tokens
 OPENAI_API_KEY=sk-...        # From https://platform.openai.com/api-keys
 ```
@@ -247,11 +263,13 @@ OPENAI_API_KEY=sk-...        # From https://platform.openai.com/api-keys
 ### API Signup
 
 1. **Hugging Face**:
+
    - Visit: https://huggingface.co/settings/tokens
    - Create account → Generate new token
    - Permissions: Read access sufficient
-   
+
 1. **OpenAI**:
+
    - Visit: https://platform.openai.com/api-keys
    - Create account → Create new API key
    - Note: DALL-E 3 requires paid plan
@@ -261,13 +279,17 @@ OPENAI_API_KEY=sk-...        # From https://platform.openai.com/api-keys
 ### Run Tests
 
 ```powershell
+
 # All tests
+
 pytest tests/test_image_generator.py -v
 
 # Specific test
+
 pytest tests/test_image_generator.py::TestImageGenerator::test_content_filter_blocks_forbidden_keywords -v
 
 # With coverage
+
 pytest tests/test_image_generator.py --cov=app.core.image_generator
 ```
 
@@ -284,11 +306,14 @@ pytest tests/test_image_generator.py --cov=app.core.image_generator
 ## Lint Status
 
 All lint errors resolved:
+
 ```powershell
 ruff check --fix src/app/gui/leather_book_dashboard.py
 ruff check --fix src/app/gui/leather_book_interface.py
 ruff check --fix src/app/gui/image_generation.py
+
 # Found 3 errors (3 fixed, 0 remaining)
+
 ```
 
 ## Documentation Status
@@ -304,7 +329,9 @@ ruff check --fix src/app/gui/image_generation.py
 ### 1. Setup API Keys
 
 ```bash
+
 # Add to .env file in project root
+
 HUGGINGFACE_API_KEY=hf_your_key_here
 OPENAI_API_KEY=sk-your_key_here
 ```
@@ -312,15 +339,23 @@ OPENAI_API_KEY=sk-your_key_here
 ### 2. Test Image Generation
 
 ```powershell
+
 # Launch desktop app
+
 python -m src.app.main
 
 # After login:
+
 # 1. Click "🎨 GENERATE IMAGES" button
+
 # 2. Enter prompt: "a cyberpunk city at night"
+
 # 3. Select style: "cyberpunk"
+
 # 4. Click "Generate"
+
 # 5. Wait 20-60 seconds for image
+
 ```
 
 ### 3. Verify Features
@@ -383,11 +418,6 @@ python -m src.app.main
 
 ## Session Summary
 
-**Duration**: Extended session (multiple token budgets)
-**Lines of Code**: ~1,000 lines (400 core + 450 GUI + 150 tests)
-**Files Created**: 3 new files
-**Files Modified**: 4 existing files
-**Tests Written**: 10 test cases
-**Documentation**: 2 major docs updated
+**Duration**: Extended session (multiple token budgets) **Lines of Code**: ~1,000 lines (400 core + 450 GUI + 150 tests) **Files Created**: 3 new files **Files Modified**: 4 existing files **Tests Written**: 10 test cases **Documentation**: 2 major docs updated
 
 **Result**: Fully functional image generation feature with professional UI, content safety, dual backend support, and comprehensive documentation.

@@ -1,7 +1,7 @@
 # Thirsty-Lang + TARL Complete Integration Guide
 
-**Version:** 1.0.0  
-**Last Updated:** January 2025  
+**Version:** 1.0.0
+**Last Updated:** January 2025
 **Status:** Production Ready
 
 ## Table of Contents
@@ -166,7 +166,9 @@ psutil>=5.9.0
 **JavaScript:**
 ```bash
 @thirsty-lang/core>=1.0.0
+
 # No additional dependencies for bridge layer
+
 ```
 
 ---
@@ -176,16 +178,20 @@ psutil>=5.9.0
 ### Option 1: Automated Installation (Recommended)
 
 ```bash
+
 # Clone Project-AI repository
+
 git clone https://github.com/your-org/Project-AI.git
 cd Project-AI
 
 # Run integration setup
+
 cd integrations/thirsty_lang_complete
 chmod +x copy_to_thirsty_lang.sh
 ./copy_to_thirsty_lang.sh
 
 # Verify installation
+
 node -e "require('./bridge/tarl-bridge.js').TARLBridge.checkInstallation()"
 python3 -c "from bridge.unified_security import UnifiedSecurityManager; print('OK')"
 ```
@@ -193,38 +199,49 @@ python3 -c "from bridge.unified_security import UnifiedSecurityManager; print('O
 ### Option 2: Manual Installation
 
 ```bash
+
 # 1. Copy bridge files to Thirsty-Lang repository
+
 cp -r integrations/thirsty_lang_complete/bridge /path/to/thirsty-lang/src/security/
 
 # 2. Install Python dependencies
+
 cd /path/to/thirsty-lang
 pip install -r requirements.txt
 
 # 3. Install Node.js dependencies
+
 npm install
 
 # 4. Configure environment
+
 cp .env.example .env
+
 # Edit .env with your configuration
 
 # 5. Initialize TARL runtime
+
 python3 -m tarl.runtime --init
 ```
 
 ### Option 3: Docker Installation
 
 ```bash
+
 # Build integration image
+
 docker build -t thirsty-lang-complete:latest \
   -f integrations/thirsty_lang_complete/Dockerfile .
 
 # Run container
+
 docker run -it --rm \
   -v $(pwd)/policies:/app/policies \
   -v $(pwd)/logs:/app/logs \
   thirsty-lang-complete:latest
 
 # Test installation
+
 docker exec <container-id> npm test
 ```
 
@@ -265,7 +282,7 @@ async function main() {
     };
 
     const decision = await tarlBridge.evaluatePolicy(context);
-    
+
     if (decision.allowed) {
       const result = thirsty.execute(code);
       console.log('Execution result:', result);
@@ -287,33 +304,39 @@ from bridge.unified_security import UnifiedSecurityManager
 import thirsty_lang
 
 async def main():
+
     # Initialize unified security manager
+
     security = UnifiedSecurityManager(
         policy_dir='./policies',
         audit_log='./logs/audit.log',
         config_file='./config/security.yaml'
     )
-    
+
     await security.initialize()
-    
+
     try:
+
         # Execute Thirsty-Lang code with security
+
         code = """
         let data = readFile("sensitive.txt")
         print(data)
         """
-        
+
         # Security context
+
         context = {
             'operation': 'file_read',
             'resource': 'sensitive.txt',
             'user': 'app_user',
             'timestamp': time.time()
         }
-        
+
         # Check permission
+
         decision = await security.check_permission(context)
-        
+
         if decision['allowed']:
             result = thirsty_lang.execute(code)
             print(f'Result: {result}')
@@ -336,24 +359,32 @@ version: "1.0"
 name: "Default Security Policy"
 
 rules:
+
   - id: "file_read_sensitive"
+
     operation: "file_read"
     resource: "*.txt"
     conditions:
+
       - user_authenticated: true
       - time_window: "09:00-17:00"
+
     action: "allow"
     audit: true
-    
+
   - id: "network_external"
+
     operation: "network_request"
     resource: "https://*"
     conditions:
+
       - domain_whitelisted: true
+
     action: "conditional"
     require_approval: true
-    
+
   - id: "process_spawn"
+
     operation: "process_spawn"
     resource: "*"
     action: "deny"
@@ -469,6 +500,7 @@ new TARLBridge(options)
 ```
 
 **Parameters:**
+
 - `options.pythonPath` (string): Path to Python interpreter (default: `'python3'`)
 - `options.tarlModule` (string): TARL module name (default: `'tarl.runtime'`)
 - `options.policyDir` (string): Directory containing policy files
@@ -479,12 +511,14 @@ new TARLBridge(options)
 #### Methods
 
 ##### `initialize()`
+
 ```javascript
 await tarlBridge.initialize()
 ```
 Spawns Python runtime and loads policies. Returns `Promise<void>`.
 
 ##### `evaluatePolicy(context)`
+
 ```javascript
 const decision = await tarlBridge.evaluatePolicy({
   operation: 'file_read',
@@ -505,12 +539,14 @@ interface Decision {
 ```
 
 ##### `reloadPolicies()`
+
 ```javascript
 await tarlBridge.reloadPolicies()
 ```
 Hot-reload policies without restarting runtime. Returns `Promise<void>`.
 
 ##### `getMetrics()`
+
 ```javascript
 const metrics = await tarlBridge.getMetrics()
 ```
@@ -526,6 +562,7 @@ interface Metrics {
 ```
 
 ##### `shutdown()`
+
 ```javascript
 await tarlBridge.shutdown()
 ```
@@ -547,12 +584,14 @@ UnifiedSecurityManager(
 #### Methods
 
 ##### `initialize()`
+
 ```python
 await security.initialize()
 ```
 Initializes both TARL and Thirsty-Lang security layers.
 
 ##### `check_permission(context: dict)`
+
 ```python
 decision = await security.check_permission({
     'operation': 'network_request',
@@ -572,6 +611,7 @@ Returns:
 ```
 
 ##### `audit_event(event: dict)`
+
 ```python
 await security.audit_event({
     'event_type': 'access_attempt',
@@ -583,9 +623,12 @@ await security.audit_event({
 ```
 
 ##### `get_resource_usage()`
+
 ```python
 usage = await security.get_resource_usage()
+
 # Returns: {'memory_mb': 128, 'cpu_percent': 45, 'file_handles': 12}
+
 ```
 
 ---
@@ -644,17 +687,18 @@ async def fetch_url(url: str, security: UnifiedSecurityManager):
         'user': 'web_scraper',
         'timestamp': time.time()
     }
-    
+
     decision = await security.check_permission(context)
-    
+
     if not decision['allowed']:
         raise PermissionError(f"Access denied: {decision['reason']}")
-    
+
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             return await response.text()
 
 # Usage
+
 security = UnifiedSecurityManager(policy_dir='./policies')
 await security.initialize()
 
@@ -685,7 +729,7 @@ const monitor = setInterval(async () => {
     cpu: `${metrics.cpuPercent}/${limits.max_cpu_percent}%`,
     uptime: `${metrics.uptime}s`
   });
-  
+
   if (metrics.memoryUsageMb > limits.max_memory_mb * 0.9) {
     console.warn('Memory usage critical!');
   }
@@ -705,7 +749,9 @@ process.on('SIGINT', () => {
 ### Environment Variables
 
 ```bash
+
 # TARL Configuration
+
 TARL_POLICY_DIR=/path/to/policies
 TARL_AUDIT_LOG=/path/to/audit.log
 TARL_LOG_LEVEL=INFO
@@ -713,11 +759,13 @@ TARL_CACHE_SIZE=1000
 TARL_CACHE_TTL=60
 
 # Bridge Configuration
+
 TARL_BRIDGE_PYTHON_PATH=/usr/bin/python3
 TARL_BRIDGE_TIMEOUT=5000
 TARL_BRIDGE_RETRY_ATTEMPTS=3
 
 # Security Configuration
+
 SECURITY_STRICT_MODE=true
 SECURITY_AUDIT_ENABLED=true
 SECURITY_CRYPTO_KEY=<base64-encoded-key>
@@ -729,7 +777,7 @@ SECURITY_CRYPTO_KEY=<base64-encoded-key>
 security:
   strict_mode: true
   default_action: "deny"  # deny|allow|prompt
-  
+
   audit:
     enabled: true
     log_file: "./logs/audit.log"
@@ -737,18 +785,18 @@ security:
       max_size_mb: 100
       max_files: 10
     flush_interval_sec: 30
-  
+
   cache:
     enabled: true
     max_size: 1000
     ttl_sec: 60
     eviction_policy: "lru"
-  
+
   rate_limiting:
     enabled: true
     requests_per_minute: 100
     burst_size: 10
-  
+
   encryption:
     algorithm: "AES-256-GCM"
     key_derivation: "PBKDF2"
@@ -759,12 +807,12 @@ bridge:
     path: "python3"
     module: "tarl.runtime"
     startup_timeout_sec: 10
-  
+
   communication:
     protocol: "json-rpc"
     buffer_size: 8192
     max_message_size_mb: 10
-  
+
   resilience:
     retry_attempts: 3
     retry_backoff_ms: [100, 500, 1000]
@@ -813,13 +861,17 @@ bridge:
 ### Unit Tests
 
 ```bash
+
 # JavaScript tests
+
 npm test
 
 # Python tests
+
 pytest tests/
 
 # Bridge integration tests
+
 npm run test:integration
 ```
 
@@ -832,26 +884,26 @@ const assert = require('assert');
 
 describe('TARL Bridge Integration', () => {
   let bridge;
-  
+
   beforeEach(async () => {
     bridge = new TARLBridge({ logLevel: 'error' });
     await bridge.initialize();
   });
-  
+
   afterEach(async () => {
     await bridge.shutdown();
   });
-  
+
   it('should evaluate simple policy', async () => {
     const decision = await bridge.evaluatePolicy({
       operation: 'test_operation',
       resource: 'test_resource',
       user: 'test_user'
     });
-    
+
     assert(typeof decision.allowed === 'boolean');
   });
-  
+
   it('should handle policy reload', async () => {
     await bridge.reloadPolicies();
     const metrics = await bridge.getMetrics();
@@ -863,10 +915,13 @@ describe('TARL Bridge Integration', () => {
 ### Performance Tests
 
 ```bash
+
 # Load test with 1000 concurrent requests
+
 npm run test:load -- --requests 1000 --concurrency 50
 
 # Stress test with gradual ramp-up
+
 npm run test:stress -- --duration 300 --ramp-up 60
 ```
 
@@ -894,7 +949,9 @@ const bridge = new TARLBridge({
 ### Connection Pooling
 
 ```python
+
 # Reuse Python process across requests
+
 security = UnifiedSecurityManager(
     pool_size=5,
     pool_timeout=300,
@@ -919,6 +976,7 @@ const decisions = await bridge.evaluatePolicyBatch(contexts);
 **Symptoms:** `Error: Python process exited with code 1`
 
 **Solutions:**
+
 1. Verify Python installation: `python3 --version`
 2. Check TARL module: `python3 -c "import tarl"`
 3. Review Python stderr logs in `logs/bridge-stderr.log`
@@ -929,6 +987,7 @@ const decisions = await bridge.evaluatePolicyBatch(contexts);
 **Symptoms:** `Error: Request timeout after 5000ms`
 
 **Solutions:**
+
 1. Increase timeout: `new TARLBridge({ timeout: 10000 })`
 2. Check Python process CPU usage
 3. Simplify complex policy rules
@@ -939,6 +998,7 @@ const decisions = await bridge.evaluatePolicyBatch(contexts);
 **Symptoms:** Memory steadily increasing over time
 
 **Solutions:**
+
 1. Check audit log rotation: `audit.log_rotation.enabled`
 2. Reduce cache size: `cache.max_size`
 3. Enable garbage collection: `--max-old-space-size=512`
@@ -991,6 +1051,7 @@ Contributions welcome! Please follow these guidelines:
 5. **Performance**: Benchmark changes: `npm run benchmark`
 
 **Pull Request Process:**
+
 1. Fork repository
 2. Create feature branch: `git checkout -b feature/my-feature`
 3. Commit with conventional commits: `feat: add policy caching`
@@ -1022,7 +1083,7 @@ This integration is licensed under MIT License. See LICENSE file.
 
 ---
 
-**Document Version:** 1.0.0  
-**Last Updated:** January 2025  
-**Maintainers:** Project-AI Team  
+**Document Version:** 1.0.0
+**Last Updated:** January 2025
+**Maintainers:** Project-AI Team
 **Support:** https://github.com/your-org/Project-AI/issues

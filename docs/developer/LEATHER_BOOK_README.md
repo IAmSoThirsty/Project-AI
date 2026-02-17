@@ -16,8 +16,6 @@ cd c:\Users\Jeremy\Documents\GitHub\Project-AI
 python -m src.app.main
 ```
 
-
-
 ### What You'll See
 
 1. **Login Screen**: Right page shows login form with username/password fields
@@ -69,16 +67,15 @@ src/app/gui/
 - Easy to extend and customize
 - Production-ready code quality
 
-
 ## Documentation
 
 Read the documentation for detailed information:
 
-| File | Purpose |
-|------|---------|
-| LEATHER_BOOK_UI_COMPLETE.md | Implementation overview and features |
-| LEATHER_BOOK_ARCHITECTURE.md | Technical architecture and design |
-| DEVELOPER_QUICK_REFERENCE.md | Quick reference for developers |
+| File                         | Purpose                              |
+| ---------------------------- | ------------------------------------ |
+| LEATHER_BOOK_UI_COMPLETE.md  | Implementation overview and features |
+| LEATHER_BOOK_ARCHITECTURE.md | Technical architecture and design    |
+| DEVELOPER_QUICK_REFERENCE.md | Quick reference for developers       |
 
 ## Common Tasks
 
@@ -93,9 +90,11 @@ window = LeatherBookInterface()
 
 def process_user_message(message: str):
     response = your_ai_model.generate_response(message)
+
     # The dashboard will show the response
-    
+
 # Hook into the system when dashboard is ready
+
 ```
 
 ### Customize Colors
@@ -103,7 +102,9 @@ def process_user_message(message: str):
 All colors are defined in stylesheets. Find and modify:
 
 ```python
+
 # In each panel's _get_stylesheet() or __init__
+
 self.setStyleSheet("""
     QLabel { color: YOUR_COLOR; }
     QPushButton { border: 2px solid YOUR_COLOR; }
@@ -115,7 +116,9 @@ self.setStyleSheet("""
 Change the timer interval (milliseconds):
 
 ```python
+
 # In LeatherBookDashboard.__init__
+
 self.animation_timer.start(50)  # Lower = faster, Higher = slower
 ```
 
@@ -137,7 +140,6 @@ LeatherBookInterface (Main Window)
         │   └── AIFaceCanvas (Animated Face)
         └── AIResponsePanel (Bottom Right)
 ```
-
 
 ## Performance
 
@@ -173,9 +175,11 @@ Create a new panel class and add it to the layout:
 class MyPanel(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
+
         # Setup...
 
 # In LeatherBookDashboard:
+
 self.my_panel = MyPanel()
 middle_layout.addWidget(self.my_panel, 1)
 ```
@@ -193,7 +197,6 @@ middle_layout.addWidget(self.my_panel, 1)
 **Cause**: Stats timer not started
 
 **Fix**: Check `self.stats_timer.start(1000)` in StatsPanel.`__init__`
-
 
 ### Messages don't appear
 
@@ -226,7 +229,9 @@ app.exec()
 ### Step 3: Connect Your AI Backend
 
 ```python
+
 # When dashboard is ready (after login):
+
 def handle_message(message: str):
     response = your_ai_backend.process(message)
     dashboard.add_ai_response(response)
@@ -240,7 +245,9 @@ The animations run automatically. Optionally trigger thinking states:
 
 ```python
 dashboard.ai_head.start_thinking()  # Shows thinking animation
+
 # ... process message ...
+
 dashboard.ai_head.stop_thinking()   # Shows RESPONDING
 ```
 
@@ -275,7 +282,6 @@ For detailed technical information, see:
 - **Developer Reference**: DEVELOPER_QUICK_REFERENCE.md
 - **Implementation Guide**: LEATHER_BOOK_UI_COMPLETE.md
 
-
 ## Future Enhancements
 
 - [ ] 3D visualization with OpenGL
@@ -306,6 +312,6 @@ Same as Project-AI (see LICENSE file)
 - **Status**: Production Ready ✅
 - **Last Updated**: 2025
 
----
+______________________________________________________________________
 
 **Happy chatting with your new leather book AI interface!** 📚✨

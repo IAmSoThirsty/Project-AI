@@ -252,7 +252,9 @@
 ### Automated Compliance Check
 
 ```bash
+
 # Validate hardening configuration
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
     --config hardening_config.json
 ```
@@ -290,11 +292,14 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
 ### Checklist Validation API
 
 ```bash
+
 # Start API service
+
 cd h323_sec_profile
 uvicorn project_ai_fastapi:app --host 0.0.0.0 --port 8080
 
 # Validate checklist items
+
 curl -X POST http://localhost:8080/compliance/check \
     -H "Content-Type: application/json" \
     -d @hardening_config.json
@@ -303,13 +308,16 @@ curl -X POST http://localhost:8080/compliance/check \
 ### Logging Hardening Actions
 
 ```bash
+
 # Log hardening task completion
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
     --event-type hardening_task \
     --device-id gk1 \
     --outcome completed
 
 # Log via API
+
 curl -X POST http://localhost:8080/log \
     -H "Content-Type: application/json" \
     -d '{

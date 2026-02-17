@@ -1,3 +1,5 @@
+# Pull Request Template
+
 ---
 name: Pull Request
 about: Propose changes to the codebase
@@ -154,7 +156,7 @@ Expected workflow results:
 
 #### 1. Unsigned Image Admission Denial
 
-- [ ] Evidence attached (logs/screenshots showing deployment denial): 
+- [ ] Evidence attached (logs/screenshots showing deployment denial):
   - Link/attachment: <!-- paste link or attach file -->
   - Timestamp (UTC): <!-- YYYY-MM-DD HH:MM:SS -->
   - Command used: <!-- paste command -->
@@ -255,6 +257,7 @@ If you selected **NO** above, you may use ONLY these approved phrases:
 
 ---
 
-**Reminder:** 
+**Reminder:**
+
 - Changes to the personhood surface require heightened scrutiny. See [AGI Charter](../docs/AGI_CHARTER.md) and [Security Governance](../docs/security/SECURITY_GOVERNANCE.md) for guidelines.
 - **All claims of production-readiness, enterprise best practices, or runtime enforcement require complete runtime validation evidence.** See [Security Validation Claims Policy](.github/SECURITY_VALIDATION_POLICY.md) for details. PRs that violate this policy will be rejected.

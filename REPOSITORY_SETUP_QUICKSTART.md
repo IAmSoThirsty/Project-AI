@@ -3,6 +3,7 @@
 ## 🎯 What This PR Does
 
 This PR prepares the repository for the sovereign CI/CD pipeline by:
+
 1. ✅ Fixing bugs in the configuration script
 2. ✅ Creating comprehensive configuration documentation
 3. ✅ Verifying CODEOWNERS file exists
@@ -20,14 +21,19 @@ GitHub Actions workflows cannot modify repository settings due to security restr
 **Prerequisites**: GitHub CLI with admin access
 
 ```bash
+
 # 1. Authenticate as admin
+
 gh auth login
 
 # 2. Run configuration script
+
 ./scripts/configure-repository.sh
 
 # 3. Review and confirm changes
+
 # The script will show what it will configure and ask for confirmation
+
 ```
 
 ### Option 2: Manual Configuration
@@ -59,10 +65,13 @@ Follow the detailed guide: `docs/REPOSITORY_CONFIGURATION_GUIDE.md`
 After configuration, verify everything is working:
 
 ```bash
+
 # Check configuration status
+
 ./scripts/configure-repository.sh --check-only
 
 # All checks should show green ✅
+
 ```
 
 ## 📚 Documentation
@@ -81,6 +90,7 @@ After configuration, verify everything is working:
 ## 💡 Why This Matters
 
 The sovereign CI/CD pipeline implements:
+
 - 7 trust boundaries
 - 13 supply chain threat mitigations
 - SLSA Level 3 compliance

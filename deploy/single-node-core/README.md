@@ -50,11 +50,14 @@ This directory contains a complete, production-ready deployment recipe for Proje
 ### Software Dependencies
 
 ```bash
+
 # Install Docker and Docker Compose
+
 curl -fsSL https://get.docker.com | sh
 sudo usermod -aG docker $USER
 
 # Verify installation
+
 docker --version
 docker compose version
 ```
@@ -71,11 +74,14 @@ cd Project-AI/deploy/single-node-core
 ### 2. Configure Environment
 
 ```bash
+
 # Copy and edit environment file
+
 cp env/project-ai-core.env env/.env
 nano env/.env
 
 # Generate required secrets
+
 python3 << 'EOF'
 import secrets
 from cryptography.fernet import Fernet
@@ -88,19 +94,26 @@ print("MCP_API_KEY=" + secrets.token_hex(32))
 EOF
 
 # Add API keys to .env
+
 # - OPENAI_API_KEY
+
 # - HUGGINGFACE_API_KEY (optional)
+
 # - Other service keys as needed
+
 ```
 
 ### 3. Configure MCP Secrets
 
 ```bash
+
 # Copy and edit MCP secrets
+
 cp mcp/secrets.env mcp/.secrets.env
 nano mcp/.secrets.env
 
 # Generate additional secrets for MCP
+
 openssl rand -hex 32  # MCP_API_KEY
 openssl rand -hex 32  # MCP_ADMIN_API_KEY
 openssl rand -hex 64  # MCP_JWT_SECRET
@@ -109,29 +122,38 @@ openssl rand -hex 64  # MCP_JWT_SECRET
 ### 4. Launch Stack
 
 ```bash
+
 # Start all services
+
 docker compose up -d
 
 # View logs
+
 docker compose logs -f
 
 # Check service health
+
 docker compose ps
 ```
 
 ### 5. Verify Deployment
 
 ```bash
+
 # Check PostgreSQL
+
 docker compose exec postgres psql -U project_ai -c "SELECT extname, extversion FROM pg_extension WHERE extname IN ('vector', 'pg_trgm');"
 
 # Check Redis
+
 docker compose exec redis redis-cli -a "${REDIS_PASSWORD}" ping
 
 # Check orchestrator health
+
 curl http://localhost:8000/health
 
 # Check MCP gateway
+
 curl http://localhost:9000/health
 ```
 
@@ -170,11 +192,13 @@ deploy/single-node-core/
 ### Secrets Management
 
 **Development**:
+
 - Store secrets in `.env` files (not committed)
 - Use strong passwords (20+ characters)
 - Rotate credentials quarterly
 
 **Production**:
+
 - Use external secrets managers:
   - HashiCorp Vault
   - AWS Secrets Manager
@@ -186,7 +210,9 @@ deploy/single-node-core/
 ### Network Security
 
 ```yaml
+
 # All services on isolated bridge network
+
 networks:
   project-ai-core:
     driver: bridge
@@ -196,7 +222,9 @@ networks:
 ### File Permissions
 
 ```bash
+
 # Secure sensitive files
+
 chmod 600 env/.env
 chmod 600 mcp/.secrets.env
 chown $USER:$USER env/.env mcp/.secrets.env
@@ -205,13 +233,19 @@ chown $USER:$USER env/.env mcp/.secrets.env
 ### Firewall Configuration
 
 ```bash
+
 # Only expose necessary ports
+
 # Orchestrator: 5000, 8000, 8001
+
 # PostgreSQL: 5432 (only if external access needed)
+
 # Redis: 6379 (only if external access needed)
+
 # MCP Gateway: 9000, 9001
 
 # Example UFW rules
+
 sudo ufw allow 5000/tcp
 sudo ufw allow 8000:8001/tcp
 sudo ufw deny 5432/tcp  # Block external DB access
@@ -225,41 +259,52 @@ sudo ufw deny 6379/tcp  # Block external Redis access
 All services include comprehensive health checks:
 
 ```bash
+
 # View service health status
+
 docker compose ps
 
 # Check individual service health
+
 docker inspect project-ai-orchestrator | jq '.[0].State.Health'
 ```
 
 ### Logs
 
 ```bash
+
 # All services
+
 docker compose logs -f
 
 # Specific service
+
 docker compose logs -f project-ai-orchestrator
 
 # With timestamps
+
 docker compose logs -f --timestamps
 
 # Last 100 lines
+
 docker compose logs --tail=100
 ```
 
 ### Metrics
 
 Access Prometheus metrics:
+
 - Orchestrator: `http://localhost:8001/metrics`
 - MCP Gateway: `http://localhost:9001/metrics`
 
 ### Database Monitoring
 
 ```bash
+
 # PostgreSQL stats
+
 docker compose exec postgres psql -U project_ai -c "
-SELECT 
+SELECT
     datname,
     numbackends as connections,
     xact_commit as commits,
@@ -271,6 +316,7 @@ WHERE datname = 'project_ai';
 "
 
 # Redis info
+
 docker compose exec redis redis-cli -a "${REDIS_PASSWORD}" info stats
 ```
 
@@ -279,26 +325,34 @@ docker compose exec redis redis-cli -a "${REDIS_PASSWORD}" info stats
 ### Starting and Stopping
 
 ```bash
+
 # Start all services
+
 docker compose up -d
 
 # Stop all services
+
 docker compose down
 
 # Stop and remove volumes (⚠️ destroys data)
+
 docker compose down -v
 
 # Restart specific service
+
 docker compose restart project-ai-orchestrator
 ```
 
 ### Scaling Workers
 
 ```bash
+
 # Add worker processes
+
 docker compose up -d --scale worker=3
 
 # Or edit docker-compose.yml to add explicit worker services
+
 ```
 
 ### Backups
@@ -306,15 +360,21 @@ docker compose up -d --scale worker=3
 #### PostgreSQL Backup
 
 ```bash
+
 # Manual backup
+
 docker compose exec postgres pg_dump -U project_ai project_ai > backup_$(date +%Y%m%d_%H%M%S).sql
 
 # Restore from backup
+
 docker compose exec -T postgres psql -U project_ai project_ai < backup_20240101_120000.sql
 
 # Automated backup script
+
 cat > backup.sh << 'EOF'
+
 #!/bin/bash
+
 BACKUP_DIR="./backups/postgres"
 mkdir -p "$BACKUP_DIR"
 docker compose exec -T postgres pg_dump -U project_ai project_ai | gzip > "$BACKUP_DIR/backup_$(date +%Y%m%d_%H%M%S).sql.gz"
@@ -323,19 +383,25 @@ EOF
 chmod +x backup.sh
 
 # Add to cron
+
 crontab -e
+
 # Add: 0 2 * * * /path/to/backup.sh
+
 ```
 
 #### Redis Backup
 
 ```bash
+
 # Manual backup (AOF + RDB)
+
 docker compose exec redis redis-cli -a "${REDIS_PASSWORD}" BGSAVE
 docker compose cp redis:/data/dump.rdb ./backups/redis/dump.rdb
 docker compose cp redis:/data/appendonly.aof ./backups/redis/appendonly.aof
 
 # Restore
+
 docker compose down
 cp ./backups/redis/* ./volumes/redis-data/
 docker compose up -d redis
@@ -344,20 +410,26 @@ docker compose up -d redis
 ### Database Migrations
 
 ```bash
+
 # Run migrations
+
 docker compose exec project-ai-orchestrator alembic upgrade head
 
 # Create new migration
+
 docker compose exec project-ai-orchestrator alembic revision --autogenerate -m "description"
 
 # Rollback migration
+
 docker compose exec project-ai-orchestrator alembic downgrade -1
 ```
 
 ### Log Rotation
 
 ```bash
+
 # Configure Docker log rotation
+
 cat > /etc/docker/daemon.json << 'EOF'
 {
   "log-driver": "json-file",
@@ -376,26 +448,34 @@ sudo systemctl restart docker
 ### Smoke Tests
 
 ```bash
+
 # Test PostgreSQL connection
+
 docker compose exec postgres psql -U project_ai -c "SELECT 1;"
 
 # Test Redis connection
+
 docker compose exec redis redis-cli -a "${REDIS_PASSWORD}" ping
 
 # Test orchestrator API
+
 curl -f http://localhost:8000/health || echo "Health check failed"
 
 # Test MCP gateway
+
 curl -f http://localhost:9000/health || echo "MCP health check failed"
 ```
 
 ### Integration Tests
 
 ```bash
+
 # Run integration tests
+
 docker compose exec project-ai-orchestrator pytest tests/integration/
 
 # Test MCP tool execution
+
 docker compose exec project-ai-orchestrator python -c "
 from app.core.mcp_server import ProjectAIMCPServer
 server = ProjectAIMCPServer()
@@ -409,16 +489,20 @@ print('MCP Server initialized successfully')
 
 Edit `postgres/postgresql.conf`:
 ```ini
+
 # Increase based on available RAM
+
 shared_buffers = 512MB
 effective_cache_size = 2GB
 work_mem = 16MB
 maintenance_work_mem = 128MB
 
 # Connection pooling
+
 max_connections = 200
 
 # Query planning
+
 random_page_cost = 1.1  # For SSD
 effective_io_concurrency = 200
 ```
@@ -427,14 +511,18 @@ effective_io_concurrency = 200
 
 Edit `redis/redis.conf`:
 ```ini
+
 # Enable threaded I/O for high throughput
+
 io-threads 4
 io-threads-do-reads yes
 
 # Increase maxmemory
+
 maxmemory 1gb
 
 # Tune eviction
+
 maxmemory-policy allkeys-lfu
 ```
 
@@ -459,58 +547,76 @@ deploy:
 #### Services Won't Start
 
 ```bash
+
 # Check logs
+
 docker compose logs
 
 # Check disk space
+
 df -h
 
 # Check Docker daemon
+
 sudo systemctl status docker
 
 # Rebuild images
+
 docker compose build --no-cache
 ```
 
 #### PostgreSQL Connection Errors
 
 ```bash
+
 # Check PostgreSQL logs
+
 docker compose logs postgres
 
 # Verify credentials
+
 echo $POSTGRES_PASSWORD
 
 # Test connection
+
 docker compose exec postgres psql -U project_ai -c "\l"
 
 # Check extensions
+
 docker compose exec postgres psql -U project_ai -c "SELECT * FROM pg_extension;"
 ```
 
 #### Redis Connection Errors
 
 ```bash
+
 # Check Redis logs
+
 docker compose logs redis
 
 # Test authentication
+
 docker compose exec redis redis-cli -a "${REDIS_PASSWORD}" ping
 
 # Check memory usage
+
 docker compose exec redis redis-cli -a "${REDIS_PASSWORD}" info memory
 ```
 
 #### Out of Memory
 
 ```bash
+
 # Check container memory
+
 docker stats
 
 # Increase Docker memory limit (Docker Desktop)
+
 # Settings > Resources > Memory
 
 # Add swap for Linux
+
 sudo fallocate -l 4G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile

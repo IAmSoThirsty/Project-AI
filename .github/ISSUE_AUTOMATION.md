@@ -90,14 +90,18 @@ The automated system is configured via `.github/issue-automation-config.yml`:
 ### Key Configuration Options
 
 ```yaml
+
 # Enable/disable the entire system
+
 enabled: true
 
 # Auto-labeling
+
 auto_labeling:
   enabled: true
-  
+
 # Auto-closing
+
 auto_closing:
   enabled: true
   stale_issues:
@@ -105,6 +109,7 @@ auto_closing:
     warning_days: 7
 
 # Auto-resolution
+
 auto_resolution:
   enabled: true
   dependency_updates:
@@ -138,25 +143,32 @@ You can customize:
 #### Viewing Status
 
 ```bash
+
 # View all open issues by label
+
 gh issue list --label security
 gh issue list --label bug
 gh issue list --label enhancement
 
 # View recently auto-closed issues
+
 gh issue list --state closed --label automated
 
 # View workflow runs
+
 gh run list --workflow=auto-issue-triage.yml
 ```
 
 #### Manual Triggering
 
 ```bash
+
 # Trigger manual triage run
+
 gh workflow run auto-issue-triage.yml
 
 # Trigger security scan
+
 gh workflow run auto-security-fixes.yml
 ```
 
@@ -174,7 +186,9 @@ The system generates summary reports in GitHub Actions:
 To temporarily disable:
 
 ```yaml
+
 # In .github/issue-automation-config.yml
+
 enabled: false
 ```
 
@@ -270,6 +284,7 @@ Total Open Issues: 5
 Issues Closed Today: 1
 
 Open Issues by Category
+
 - security: 2
 - bug: 1
 - enhancement: 2
@@ -290,7 +305,9 @@ Report generated at 2026-01-07T03:00:00Z
 
 **Solution:**
 ```bash
+
 # Manually trigger triage
+
 gh workflow run auto-issue-triage.yml
 ```
 
@@ -367,6 +384,6 @@ Check workflow logs for errors in dependency update step
 
 ---
 
-**Last Updated**: 2026-01-07  
-**System Status**: ✅ Active  
+**Last Updated**: 2026-01-07
+**System Status**: ✅ Active
 **Current Version**: 1.0.0

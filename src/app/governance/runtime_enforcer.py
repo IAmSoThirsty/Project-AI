@@ -495,16 +495,16 @@ def get_government_pricing_for_user(user_id: str) -> dict | None:
     seat_count = get_seat_count_from_entry(latest_acceptance)
 
     if seat_count is None:
-        logger.warning(
-            "Government tier user %s has no seat count in metadata", user_id
-        )
+        logger.warning("Government tier user %s has no seat count in metadata", user_id)
         return None
 
     # Calculate pricing
     monthly_pricing = calculate_government_price(
         seat_count, GovernmentBillingCycle.MONTHLY
     )
-    yearly_pricing = calculate_government_price(seat_count, GovernmentBillingCycle.YEARLY)
+    yearly_pricing = calculate_government_price(
+        seat_count, GovernmentBillingCycle.YEARLY
+    )
 
     return {
         "seat_count": seat_count,

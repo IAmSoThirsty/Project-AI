@@ -46,16 +46,16 @@ private void Update()
 private IEnumerator PollCommands()
 {
     string url = $"{backendUrl}/vr/commands?since={lastPollTime}";
-    
+
     using (UnityWebRequest request = UnityWebRequest.Get(url))
     {
         yield return request.SendWebRequest();
-        
+
         if (request.result == UnityWebRequest.Result.Success)
         {
             // Parse JSON array of commands
             var commands = JsonUtility.FromJson<VRCommandList>(request.downloadHandler.text);
-            
+
             foreach (var cmd in commands.commands)
             {
                 ProcessCommand(cmd);
@@ -72,7 +72,7 @@ private void ProcessCommand(VRCommand cmd)
         ActionType = cmd.type,
         Parameters = cmd.params  // You'll need to deserialize this properly
     };
-    
+
     OnActionReceived?.Invoke(packet);
     ExecuteAction(packet);
 }

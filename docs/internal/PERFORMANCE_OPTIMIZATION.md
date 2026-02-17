@@ -35,6 +35,7 @@ This document outlines performance optimizations implemented in the Thirsty-lang
 ### 1. Regex Pattern Caching
 
 **Before**:
+
 ```javascript
 evaluateExpression(expr) {
   if (/^".*"$/.test(expr)) return expr.slice(1, -1);
@@ -43,6 +44,7 @@ evaluateExpression(expr) {
 ```
 
 **After**:
+
 ```javascript
 constructor() {
   this.patterns = {
@@ -61,6 +63,7 @@ constructor() {
 ### 2. Optimized isInString Method
 
 **Before**:
+
 ```javascript
 isInString(str, pos) {
   let inString = false;
@@ -72,6 +75,7 @@ isInString(str, pos) {
 ```
 
 **After**:
+
 ```javascript
 isInString(str, pos) {
   if (pos === 0) return false;
@@ -92,6 +96,7 @@ isInString(str, pos) {
 ### 3. Condition Evaluation with indexOf
 
 **Before**:
+
 ```javascript
 if (condition.includes('==')) {
   const parts = condition.split('==');
@@ -100,6 +105,7 @@ if (condition.includes('==')) {
 ```
 
 **After**:
+
 ```javascript
 const idx = condition.indexOf('==');
 if (idx !== -1) {
@@ -118,6 +124,7 @@ if (idx !== -1) {
 ### 4. First-Character Dispatch
 
 **Before**:
+
 ```javascript
 if (line.startsWith('drink ')) { /* ... */ }
 else if (line.startsWith('pour ')) { /* ... */ }
@@ -125,6 +132,7 @@ else if (line.startsWith('sip ')) { /* ... */ }
 ```
 
 **After**:
+
 ```javascript
 const firstChar = line[0];
 if (firstChar === 'd' && line.startsWith('drink ')) { /* ... */ }
@@ -188,13 +196,13 @@ Defer variable lookups until actually needed in expressions.
 ### For Users
 
 1. Use the new optimized benchmark tool: `node tools/benchmark-optimized.js`
-2. Run existing code without changes - optimizations are transparent
-3. Expect 20-30% performance improvement on average
+1. Run existing code without changes - optimizations are transparent
+1. Expect 20-30% performance improvement on average
 
 ### For Developers
 
 1. Always cache regex patterns in constructors
-2. Prefer `indexOf()` over `includes() + split()`
-3. Use early exits in hot paths
-4. Add first-character checks before string comparisons
-5. Profile before and after optimizations
+1. Prefer `indexOf()` over `includes() + split()`
+1. Use early exits in hot paths
+1. Add first-character checks before string comparisons
+1. Profile before and after optimizations

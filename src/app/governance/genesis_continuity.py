@@ -35,17 +35,29 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 # External Genesis pinning configuration
-EXTERNAL_GENESIS_PINS_FILE = Path(__file__).parent.parent.parent.parent / "data" / "genesis_pins" / "external_pins.json"
-GENESIS_CONTINUITY_LOG = Path(__file__).parent.parent.parent.parent / "data" / "genesis_pins" / "continuity_log.json"
+EXTERNAL_GENESIS_PINS_FILE = (
+    Path(__file__).parent.parent.parent.parent
+    / "data"
+    / "genesis_pins"
+    / "external_pins.json"
+)
+GENESIS_CONTINUITY_LOG = (
+    Path(__file__).parent.parent.parent.parent
+    / "data"
+    / "genesis_pins"
+    / "continuity_log.json"
+)
 
 
 class GenesisDiscontinuityError(Exception):
     """Raised when Genesis discontinuity is detected - FATAL constitutional violation."""
+
     pass
 
 
 class GenesisReplacementError(Exception):
     """Raised when Genesis public key replacement is detected - FATAL constitutional violation."""
+
     pass
 
 
@@ -138,7 +150,7 @@ class GenesisContinuityGuard:
     def _save_external_pins(self) -> None:
         """Save external Genesis pins to persistent storage."""
         try:
-            with open(self.external_pins_file, 'w') as f:
+            with open(self.external_pins_file, "w") as f:
                 json.dump(self.external_pins, f, indent=2)
         except Exception as e:
             logger.error("Failed to save external Genesis pins: %s", e)
@@ -157,7 +169,7 @@ class GenesisContinuityGuard:
     def _save_continuity_log(self) -> None:
         """Save continuity violation log."""
         try:
-            with open(self.continuity_log_file, 'w') as f:
+            with open(self.continuity_log_file, "w") as f:
                 json.dump(self.continuity_log, f, indent=2)
         except Exception as e:
             logger.error("Failed to save continuity log: %s", e)
@@ -193,7 +205,7 @@ class GenesisContinuityGuard:
                     "Expected: %s, Got: %s",
                     genesis_id,
                     existing["public_key_hash"],
-                    pub_key_hash
+                    pub_key_hash,
                 )
                 return False
 
@@ -212,7 +224,9 @@ class GenesisContinuityGuard:
         self.external_pins[genesis_id] = pin_record
         self._save_external_pins()
 
-        logger.info("Genesis %s pinned externally (hash: %s)", genesis_id, pub_key_hash[:16])
+        logger.info(
+            "Genesis %s pinned externally (hash: %s)", genesis_id, pub_key_hash[:16]
+        )
         return True
 
     def verify_genesis_continuity(
@@ -236,9 +250,12 @@ class GenesisContinuityGuard:
         if genesis_id not in self.external_pins:
             logger.warning(
                 "Genesis %s not found in external pins - first initialization or VECTOR 11 attack",
-                genesis_id
+                genesis_id,
             )
-            return False, f"Genesis {genesis_id} not found in external pins (possible full wipe attack)"
+            return (
+                False,
+                f"Genesis {genesis_id} not found in external pins (possible full wipe attack)",
+            )
 
         # Get pinned record
         pin_record = self.external_pins[genesis_id]
@@ -258,8 +275,8 @@ class GenesisContinuityGuard:
                 public_key_actual_hash=current_pub_key_hash,
                 details={
                     "pinned_at": pin_record["pinned_at"],
-                    "attack_vector": "VECTOR 2"
-                }
+                    "attack_vector": "VECTOR 2",
+                },
             )
 
             self._log_violation(violation)
@@ -309,8 +326,8 @@ class GenesisContinuityGuard:
                 genesis_id_actual=actual_genesis_id,
                 details={
                     "attack_vector": "VECTOR 1",
-                    "description": "Genesis deletion and regeneration detected"
-                }
+                    "description": "Genesis deletion and regeneration detected",
+                },
             )
 
             self._log_violation(violation)
@@ -334,10 +351,7 @@ class GenesisContinuityGuard:
         self.continuity_log.append(violation.to_dict())
         self._save_continuity_log()
 
-        logger.critical(
-            "Constitutional violation logged: %s",
-            violation.violation_type
-        )
+        logger.critical("Constitutional violation logged: %s", violation.violation_type)
 
     def get_pinned_genesis_ids(self) -> list[str]:
         """Get list of all pinned Genesis IDs."""

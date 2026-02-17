@@ -17,7 +17,7 @@ Unity will automatically compile all C# scripts.
 In your VR scene, create an empty GameObject called "ProjectAI Systems" and add these components:
 
 1. **RoleManager** component
-1. **AutonomyManager** component  
+1. **AutonomyManager** component
 1. **GenesisManager** component
 1. **ConversationContextManager** component
 1. **VRBridgeClient** component
@@ -91,19 +91,19 @@ RoleManager.Instance.SetRole("user456", "guest");
 
 ```csharp
 // AI responses
-ConversationContextManager.Instance.OnAIResponse += (response) => 
+ConversationContextManager.Instance.OnAIResponse += (response) =>
 {
     Debug.Log($"AI said: {response}");
 };
 
 // Genesis completion
-GenesisManager.Instance.OnGenesisComplete += (sender, args) => 
+GenesisManager.Instance.OnGenesisComplete += (sender, args) =>
 {
     Debug.Log("Genesis complete!");
 };
 
 // Autonomy decisions
-AutonomyManager.Instance.OnActionExecuted += (intent, outcome) => 
+AutonomyManager.Instance.OnActionExecuted += (intent, outcome) =>
 {
     Debug.Log($"Action: {intent}, Outcome: {outcome}");
 };
@@ -222,7 +222,7 @@ Expected outcomes:
 void OnUserLogin(string userId, string userRole)
 {
     RoleManager.Instance.SetRole(userId, userRole);
-    
+
     // Check if Genesis needed
     if (GenesisManager.Instance.ShouldTriggerGenesis(userId))
     {
@@ -304,15 +304,15 @@ public class QuickSetup : MonoBehaviour
     {
         // 1. Set user role
         RoleManager.Instance.SetRole("demo_user", "owner");
-        
+
         // 2. Subscribe to events
         ConversationContextManager.Instance.OnAIResponse += OnResponse;
         GenesisManager.Instance.OnGenesisComplete += OnGenesisComplete;
-        
+
         // 3. Test message
         Invoke("SendTestMessage", 2f);
     }
-    
+
     void SendTestMessage()
     {
         if (!GenesisManager.Instance.IsGenesisActive)
@@ -321,12 +321,12 @@ public class QuickSetup : MonoBehaviour
                 .ProcessUserMessage("Hello, can you turn on the lights?");
         }
     }
-    
+
     void OnResponse(string response)
     {
         Debug.Log($"AI Response: {response}");
     }
-    
+
     void OnGenesisComplete(object sender, System.EventArgs e)
     {
         Debug.Log("Genesis complete - ready for interaction!");
@@ -362,5 +362,5 @@ enableDebugLogging = true;
 
 ---
 
-**Quick Start Version:** 1.0  
+**Quick Start Version:** 1.0
 **Ready to code!** 🚀

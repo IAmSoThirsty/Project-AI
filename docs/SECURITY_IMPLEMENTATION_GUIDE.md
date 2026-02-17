@@ -7,14 +7,14 @@ This document describes the enterprise-grade security enhancements implemented f
 ## Table of Contents
 
 1. [Key Management System](#key-management-system)
-2. [Audit Hardening](#audit-hardening)
-3. [Control Plane Hardening](#control-plane-hardening)
-4. [Multi-Environment Separation](#multi-environment-separation)
-5. [Kubernetes Security Policies](#kubernetes-security-policies)
-6. [Deployment Guide](#deployment-guide)
-7. [Compliance and Certifications](#compliance-and-certifications)
+1. [Audit Hardening](#audit-hardening)
+1. [Control Plane Hardening](#control-plane-hardening)
+1. [Multi-Environment Separation](#multi-environment-separation)
+1. [Kubernetes Security Policies](#kubernetes-security-policies)
+1. [Deployment Guide](#deployment-guide)
+1. [Compliance and Certifications](#compliance-and-certifications)
 
----
+______________________________________________________________________
 
 ## Key Management System
 
@@ -124,10 +124,13 @@ kms = KeyManagementSystem(config)
 Automated key rotation is configured per-key with a default policy of 90 days:
 
 ```python
+
 # Automatic rotation (when expires_at is reached)
+
 kms.rotate_key('my-key')
 
 # Force immediate rotation
+
 kms.rotate_key('my-key', force=True)
 ```
 
@@ -136,7 +139,9 @@ kms.rotate_key('my-key', force=True)
 RBAC-style access control with per-action permissions:
 
 ```python
+
 # Check if user can perform action
+
 can_use = kms.check_access('my-key', 'alice@example.com', 'use')
 can_rotate = kms.check_access('my-key', 'bob@example.com', 'rotate')
 ```
@@ -146,14 +151,17 @@ can_rotate = kms.check_access('my-key', 'bob@example.com', 'rotate')
 Full lifecycle audit trail with SIEM export:
 
 ```python
+
 # Export audit log to JSON
+
 audit_file = kms.export_audit_log(format='json')
 
 # Export to CSV for SIEM ingestion
+
 audit_file = kms.export_audit_log(format='csv')
 ```
 
----
+______________________________________________________________________
 
 ## Audit Hardening
 
@@ -240,7 +248,9 @@ audit_system = AuditHardeningSystem(config)
 ### Usage
 
 ```python
+
 # Log an audit event
+
 audit_system.log_event(
     level=LogLevel.SECURITY,
     event_type='unauthorized_access',
@@ -252,14 +262,16 @@ audit_system.log_event(
 )
 
 # Flush batch to immutable storage
+
 audit_system.flush_batch()
 
 # Verify log integrity
+
 results = audit_system.verify_log_integrity()
 print(f"Verified: {results['verified']}, Batches: {results['verified_batches']}")
 ```
 
----
+______________________________________________________________________
 
 ## Control Plane Hardening
 
@@ -328,7 +340,9 @@ control_plane = ControlPlaneHardeningSystem(config)
 ### Two-Man Rule Usage
 
 ```python
+
 # Request critical action
+
 request_id = control_plane.request_critical_action(
     requester='alice@example.com',
     action='delete_kyverno_policy',
@@ -338,16 +352,20 @@ request_id = control_plane.request_critical_action(
 )
 
 # Approve request
+
 control_plane.approve_request(request_id, 'bob@example.com')
 control_plane.approve_request(request_id, 'charlie@example.com')
 
 # Check if approved
+
 if control_plane.is_action_approved(request_id):
+
     # Perform critical action
+
     pass
 ```
 
----
+______________________________________________________________________
 
 ## Multi-Environment Separation
 
@@ -366,7 +384,9 @@ Separate cluster configurations for development, staging, and production environ
 #### Development Environment
 
 ```yaml
+
 # k8s/environments/dev/cluster-config.yaml
+
 environment: dev
 isolation_level: logical
 pod_security_standard: baseline
@@ -379,7 +399,9 @@ network_policy: default-deny + explicit-allow
 #### Staging Environment
 
 ```yaml
+
 # k8s/environments/staging/cluster-config.yaml
+
 environment: staging
 isolation_level: cluster
 pod_security_standard: restricted
@@ -392,7 +414,9 @@ network_policy: default-deny + explicit-allow
 #### Production Environment
 
 ```yaml
+
 # k8s/environments/production/cluster-config.yaml
+
 environment: production
 isolation_level: cluster
 pod_security_standard: restricted
@@ -406,24 +430,30 @@ network_policy: default-deny + explicit-allow
 ### Deployment
 
 ```bash
+
 # Deploy to dev
+
 kubectl apply -f k8s/environments/dev/cluster-config.yaml
 
 # Deploy to staging
+
 kubectl apply -f k8s/environments/staging/cluster-config.yaml
 
 # Deploy to production
+
 kubectl apply -f k8s/environments/production/cluster-config.yaml
 ```
 
----
+______________________________________________________________________
 
 ## Kubernetes Security Policies
 
 ### Enhanced Kyverno Policies with KMS
 
 ```yaml
+
 # KMS-backed image signature verification
+
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
@@ -431,14 +461,22 @@ metadata:
 spec:
   validationFailureAction: enforce
   rules:
+
   - name: verify-with-aws-kms
+
     verifyImages:
+
     - imageReferences:
       - "ghcr.io/iamsothirsty/project-ai-*:*"
+
       attestors:
+
       - count: 1
+
         entries:
+
         - keys:
+
             kms: "awskms:///arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"
 ```
 
@@ -447,7 +485,9 @@ spec:
 Critical security policies are protected from tampering:
 
 ```yaml
+
 # Prevent policy deletion
+
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
@@ -455,95 +495,113 @@ metadata:
 spec:
   validationFailureAction: enforce
   rules:
+
   - name: prevent-policy-tampering
+
     validate:
       message: "TK8S security policies are immutable. Requires two-man approval."
       deny:
         conditions:
           any:
+
           - key: "{{ request.operation }}"
+
             operator: In
             value: ["DELETE", "UPDATE"]
 ```
 
----
+______________________________________________________________________
 
 ## Deployment Guide
 
 ### Prerequisites
 
 1. **Cloud Provider Setup**
+
    - AWS: KMS key, S3 bucket with Object Lock
    - GCP: KMS keyring, GCS bucket with retention
    - Azure: Key Vault, Storage Account with immutable blobs
 
-2. **Kubernetes Cluster**
+1. **Kubernetes Cluster**
+
    - Version 1.25+
    - Kyverno installed
    - ArgoCD installed (optional)
 
-3. **Environment Variables**
+1. **Environment Variables**
+
    ```bash
+
    # AWS
+
    export AWS_ACCESS_KEY_ID=...
    export AWS_SECRET_ACCESS_KEY=...
-   
+
    # GCP
+
    export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
-   
+
    # Azure
+
    export AZURE_VAULT_URL=https://project-ai-vault.vault.azure.net
    ```
 
 ### Installation Steps
 
 1. **Deploy Security Infrastructure**
+
    ```bash
+
    # Install Kyverno policies
+
    kubectl apply -f k8s/tk8s/security/kyverno-policies-kms.yaml
-   
+
    # Deploy environment configurations
+
    kubectl apply -f k8s/environments/production/cluster-config.yaml
    ```
 
-2. **Initialize Key Management**
+1. **Initialize Key Management**
+
    ```python
    from src.security.key_management import KeyManagementSystem, KeyType, KeyProvider
-   
+
    config = {
        'provider': 'aws_kms',
        'aws_region': 'us-east-1'
    }
-   
+
    kms = KeyManagementSystem(config)
    kms.generate_key('cosign-signing-key', KeyType.SIGNING)
    ```
 
-3. **Configure Audit Hardening**
+1. **Configure Audit Hardening**
+
    ```python
    from src.security.audit_hardening import AuditHardeningSystem, StorageBackend
-   
+
    config = {
        'backend': 's3_object_lock',
        's3_bucket': 'project-ai-audit-logs'
    }
-   
+
    audit = AuditHardeningSystem(config)
    ```
 
-4. **Enable Control Plane Hardening**
+1. **Enable Control Plane Hardening**
+
    ```python
    from src.security.control_plane_hardening import ControlPlaneHardeningSystem
-   
+
    config = {
        'enable_monitoring': True,
        'siem_endpoint': 'https://siem.example.com/api/events'
    }
-   
+
    control_plane = ControlPlaneHardeningSystem(config)
    ```
 
----
+______________________________________________________________________
 
 ## Compliance and Certifications
 
@@ -556,41 +614,44 @@ spec:
 
 ### Compliance Features
 
-| Requirement | Implementation |
-|-------------|----------------|
-| Audit Logging | WORM storage, 7-year retention, cryptographic signing |
-| Access Control | RBAC key management, two-man rule |
-| Encryption | KMS-backed keys, TLS everywhere |
-| Data Retention | Immutable storage with retention policies |
-| Incident Response | Automated lockdown, SIEM integration |
-| Key Management | HSM/KMS, automated rotation |
-| Network Isolation | Default-deny NetworkPolicies |
-| Pod Security | Restricted PSS, no privileged containers |
+| Requirement       | Implementation                                        |
+| ----------------- | ----------------------------------------------------- |
+| Audit Logging     | WORM storage, 7-year retention, cryptographic signing |
+| Access Control    | RBAC key management, two-man rule                     |
+| Encryption        | KMS-backed keys, TLS everywhere                       |
+| Data Retention    | Immutable storage with retention policies             |
+| Incident Response | Automated lockdown, SIEM integration                  |
+| Key Management    | HSM/KMS, automated rotation                           |
+| Network Isolation | Default-deny NetworkPolicies                          |
+| Pod Security      | Restricted PSS, no privileged containers              |
 
 ### Audit Reports
 
 Generate compliance reports:
 
 ```python
+
 # Generate SOC 2 compliance report
+
 report = audit_system.verify_log_integrity()
 print(f"Audit integrity: {report['verified']}")
 
 # Export key management audit trail
+
 kms.export_audit_log(format='csv')
 ```
 
----
+______________________________________________________________________
 
 ## Support and Maintenance
 
 ### Key Rotation Schedule
 
-| Key Type | Rotation Period | Automated |
-|----------|----------------|-----------|
-| Signing Keys | 90 days | Yes |
-| Encryption Keys | 90 days | Yes |
-| HSM Keys | 365 days | Manual |
+| Key Type        | Rotation Period | Automated |
+| --------------- | --------------- | --------- |
+| Signing Keys    | 90 days         | Yes       |
+| Encryption Keys | 90 days         | Yes       |
+| HSM Keys        | 365 days        | Manual    |
 
 ### Monitoring
 
@@ -604,21 +665,27 @@ kms.export_audit_log(format='csv')
 #### Key Rotation Failures
 
 ```python
+
 # Check key metadata
+
 metadata = kms.get_key_metadata('my-key')
 print(f"Status: {metadata.status}, Expires: {metadata.expires_at}")
 
 # Force rotation
+
 kms.rotate_key('my-key', force=True)
 ```
 
 #### Audit Log Verification
 
 ```python
+
 # Verify specific batch
+
 results = audit_system.verify_log_integrity(batch_id='batch_20240212_143000')
 
 # Check for failures
+
 if not results['verified']:
     print(f"Failed batches: {results['failed_batches']}")
     print(f"Errors: {results['errors']}")
@@ -627,7 +694,9 @@ if not results['verified']:
 #### Tamper Detection Alerts
 
 ```python
+
 # Get recent tamper events
+
 from datetime import datetime, timedelta
 events = control_plane.get_tamper_events(
     severity=TamperEventSeverity.CRITICAL,
@@ -638,7 +707,7 @@ for event in events:
     print(f"{event.timestamp}: {event.resource_name} - {event.event_type}")
 ```
 
----
+______________________________________________________________________
 
 ## Appendix
 
@@ -647,16 +716,20 @@ for event in events:
 #### AWS Setup
 
 ```bash
+
 # Create KMS key
+
 aws kms create-key --description "Project-AI signing key"
 
 # Create S3 bucket with Object Lock
+
 aws s3api create-bucket \
   --bucket project-ai-audit-logs \
   --region us-east-1 \
   --object-lock-enabled-for-bucket
 
 # Enable versioning
+
 aws s3api put-bucket-versioning \
   --bucket project-ai-audit-logs \
   --versioning-configuration Status=Enabled
@@ -665,17 +738,21 @@ aws s3api put-bucket-versioning \
 #### GCP Setup
 
 ```bash
+
 # Create KMS keyring
+
 gcloud kms keyrings create project-ai-keys \
   --location us-central1
 
 # Create key
+
 gcloud kms keys create cosign-key \
   --location us-central1 \
   --keyring project-ai-keys \
   --purpose asymmetric-signing
 
 # Create GCS bucket with retention
+
 gsutil mb -l us-central1 gs://project-ai-audit-logs
 gsutil retention set 7y gs://project-ai-audit-logs
 ```
@@ -683,19 +760,23 @@ gsutil retention set 7y gs://project-ai-audit-logs
 #### Azure Setup
 
 ```bash
+
 # Create Key Vault
+
 az keyvault create \
   --name project-ai-vault \
   --resource-group project-ai \
   --location eastus
 
 # Create Storage Account with immutable blobs
+
 az storage account create \
   --name projectaiauditlogs \
   --resource-group project-ai \
   --sku Standard_LRS
 
 # Enable immutability
+
 az storage container immutability-policy create \
   --account-name projectaiauditlogs \
   --container-name audit-logs \
@@ -705,17 +786,18 @@ az storage container immutability-policy create \
 ### Testing
 
 ```bash
+
 # Run security tests
+
 pytest tests/security/ -v
 
 # Run integration tests
+
 pytest tests/security/test_key_management.py -v
 pytest tests/security/test_audit_hardening.py -v
 pytest tests/security/test_control_plane.py -v
 ```
 
----
+______________________________________________________________________
 
-**Document Version**: 1.0.0  
-**Last Updated**: February 12, 2026  
-**Maintained By**: Project-AI Security Team
+**Document Version**: 1.0.0 **Last Updated**: February 12, 2026 **Maintained By**: Project-AI Security Team

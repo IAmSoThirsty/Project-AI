@@ -2,7 +2,7 @@
 
 **Effective Date**: November 28, 2025
 
----
+______________________________________________________________________
 
 ## 🤝 Our Pledge
 
@@ -10,7 +10,7 @@ We are committed to providing a welcoming and inspiring community for all. We pl
 
 We are committed to being an inclusive, welcoming, and harassment-free experience for everyone.
 
----
+______________________________________________________________________
 
 ## 👥 Expected Behavior
 
@@ -44,7 +44,7 @@ We expect all community members to:
 - Maintain confidentiality of private information
 - Follow project guidelines and processes
 
----
+______________________________________________________________________
 
 ## 🚫 Unacceptable Behavior
 
@@ -63,7 +63,7 @@ The following behaviors are considered unacceptable:
 - Publishing private information without consent
 - Other conduct which could reasonably be considered inappropriate
 
----
+______________________________________________________________________
 
 ## 🎯 Our Standards
 
@@ -78,7 +78,7 @@ Examples of behavior that contribute to creating a positive environment include:
 - Creating space for underrepresented voices
 - Following through on commitments
 
----
+______________________________________________________________________
 
 ## 📢 Reporting & Enforcement
 
@@ -118,7 +118,7 @@ Violations of this code of conduct may result in:
 - **Permanent Ban**: Severe or repeated serious violations
 - **Legal Action**: If applicable and necessary
 
----
+______________________________________________________________________
 
 ## 🛡️ Specific Guidelines
 
@@ -152,7 +152,7 @@ Violations of this code of conduct may result in:
 - Support fellow community members
 - Help create a welcoming environment
 
----
+______________________________________________________________________
 
 ## 💡 Accountability
 
@@ -176,7 +176,7 @@ Project maintainers commit to:
 - Following due process in investigations
 - Updating the community on progress
 
----
+______________________________________________________________________
 
 ## 📚 Resources
 
@@ -194,7 +194,7 @@ Project maintainers commit to:
 - [Django Code of Conduct](https://www.djangoproject.com/conduct/)
 - [Geek Feminism Wiki: Codes of Conduct](https://geekfeminism.fandom.com/wiki/Code_of_conduct)
 
----
+______________________________________________________________________
 
 ## 🔄 Policy Updates
 
@@ -205,7 +205,7 @@ This code of conduct may be updated periodically. Changes will be:
 - Documented with effective dates
 - Applied fairly to all members
 
----
+______________________________________________________________________
 
 ## 📋 Acknowledgments
 
@@ -217,7 +217,7 @@ This code of conduct is adapted from:
 
 We appreciate these communities for their leadership in establishing inclusive standards.
 
----
+______________________________________________________________________
 
 ## ✅ Compliance
 
@@ -228,9 +228,6 @@ By participating in Project-AI, you agree to:
 - Treat all community members with respect
 - Support a welcoming and inclusive environment
 
----
+______________________________________________________________________
 
-**Effective Date**: November 28, 2025
-**Status**: ✅ Active
-**Last Updated**: November 28, 2025
-**Report Issues**: [GitHub Issues](https://github.com/IAmSoThirsty/Project-AI/issues) or [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)
+**Effective Date**: November 28, 2025 **Status**: ✅ Active **Last Updated**: November 28, 2025 **Report Issues**: [GitHub Issues](https://github.com/IAmSoThirsty/Project-AI/issues) or [GitHub Discussions](https://github.com/IAmSoThirsty/Project-AI/discussions)

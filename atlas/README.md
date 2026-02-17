@@ -20,10 +20,10 @@ See [SUBORDINATION.md](./SUBORDINATION.md) for full relationship documentation.
 
 ---
 
-**Status**: Production-Grade Implementation  
-**Version**: 1.0.0  
-**Architecture**: God-Tier Monolithic  
-**Axioms**: Non-Override Constitutional Enforcement  
+**Status**: Production-Grade Implementation
+**Version**: 1.0.0
+**Architecture**: God-Tier Monolithic
+**Axioms**: Non-Override Constitutional Enforcement
 **Relationship**: SECONDARY TOOL (subordinate to Project-AI)
 
 ---
@@ -60,6 +60,7 @@ ATLAS Ω serves as a **Triumvirate-accessible tool** for:
 ### 13-Layer Stack
 
 #### ✅ Layer 0: Constitutional Kernel (PRODUCTION-READY)
+
 Immutable runtime constraints enforced before every simulation tick.
 
 **Features:**
@@ -86,6 +87,7 @@ Immutable runtime constraints enforced before every simulation tick.
 - Temporal skew: ABORT
 
 #### ✅ Layer 4: Bayesian Claim Engine (PRODUCTION-READY)
+
 Probabilistic legitimacy scoring using evidence-based Bayesian inference.
 
 **Formula:**
@@ -108,6 +110,7 @@ Where:
 - Responds to constitutional kernel signals (immutable)
 
 #### ✅ Layer 9: Sludge Narrative Sandbox (PRODUCTION-READY)
+
 Air-gapped fictional narrative generator with complete isolation from authoritative stacks.
 
 **Features:**
@@ -128,24 +131,32 @@ Air-gapped fictional narrative generator with complete isolation from authoritat
 ```
 
 #### ✅ Layer 12: CLI & Export Interface (OPERATIONAL)
+
 Command-line interface with constitutional verification and system status.
 
 **Commands:**
 ```bash
+
 # Verify bundle constitutional compliance (7-step verification)
+
 atlas sovereign-verify --bundle output.json
 
 # Display system status and statistics
+
 atlas status
 
 # Build Reality Stack history chain (Planned)
+
 # atlas build-hc --input data/raw
 
 # Generate timeline projections (Planned)
+
 # atlas project --seed ATLAS-TS0-BASE-2026-02-07-001 --horizon 30
 
 # Export artifacts with compliance stamps (Planned)
+
 # atlas export --output reports/
+
 ```
 
 ### Stack Classification
@@ -213,20 +224,26 @@ atlas status
 - PyYAML for configuration
 
 ### Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### Setup
+
 ```bash
+
 # Clone repository
+
 git clone https://github.com/IAmSoThirsty/Project-AI.git
 cd Project-AI
 
 # Install dependencies
+
 pip install -r requirements.txt
 
 # Verify installation
+
 PYTHONPATH=$PWD python atlas/cli/atlas_cli.py status
 ```
 
@@ -237,6 +254,7 @@ PYTHONPATH=$PWD python atlas/cli/atlas_cli.py status
 ### CLI Usage
 
 #### 1. System Status
+
 ```bash
 PYTHONPATH=$PWD python atlas/cli/atlas_cli.py status
 ```
@@ -269,11 +287,13 @@ Schema Integrity:
 ```
 
 #### 2. Constitutional Verification
+
 ```bash
 PYTHONPATH=$PWD python atlas/cli/atlas_cli.py sovereign-verify --bundle bundle.json
 ```
 
 **Verification Steps:**
+
 1. Data hash validation (canonical SHA-256)
 2. Seed reproducibility (deterministic random seeds)
 3. Bayesian posterior correctness (formula verification)
@@ -322,12 +342,14 @@ Bundle is constitutionally compliant
 ### Python API Usage
 
 #### Constitutional Kernel
+
 ```python
 from atlas.governance.constitutional_kernel import get_constitutional_kernel
 
 kernel = get_constitutional_kernel()
 
 # Validate state before simulation tick
+
 state = {
     "id": "WS-001",
     "stack": "RS",
@@ -354,12 +376,14 @@ except ConstitutionalViolation as e:
 ```
 
 #### Bayesian Claim Engine
+
 ```python
 from atlas.core.bayesian_engine import get_bayesian_engine
 
 engine = get_bayesian_engine()
 
 # Process claim
+
 claim = {
     "id": "CLM-001",
     "claim_type": "factual",
@@ -382,12 +406,14 @@ print(f"Posterior: {processed['bayesian_analysis']['posterior']:.3f}")
 ```
 
 #### Sludge Sandbox
+
 ```python
 from atlas.sandbox.sludge_sandbox import get_sludge_sandbox
 
 sandbox = get_sludge_sandbox()
 
 # Generate fictional narrative (WARNING: NOT FOR DECISION-MAKING)
+
 rs_snapshot = {
     "id": "WS-RS-001",
     "stack": "RS",
@@ -398,6 +424,7 @@ rs_snapshot = {
 narrative = sandbox.generate_narrative(rs_snapshot)
 
 # ALWAYS display fiction banner
+
 print(narrative["fiction_banner"])
 print(f"\nNarrative ID: {narrative['id']}")
 print(f"Watermark: {narrative['watermark']}")
@@ -443,6 +470,7 @@ from atlas.audit.trail import get_audit_trail, AuditCategory, AuditLevel
 audit = get_audit_trail()
 
 # Log event
+
 audit.log_event(
     category=AuditCategory.GOVERNANCE,
     level=AuditLevel.CRITICAL,
@@ -452,10 +480,12 @@ audit.log_event(
 )
 
 # Verify chain integrity
+
 is_valid = audit.verify_chain()
 print(f"Audit chain valid: {is_valid}")
 
 # Export report
+
 report = audit.export_report(format="json")
 ```
 
@@ -486,6 +516,7 @@ report = audit.export_report(format="json")
 - **Step size change detection**
 
 ### Parameter Bounds
+
 Complete bounds enforcement for 50+ parameters:
 
 - Temporal bounds

@@ -7,6 +7,7 @@ This directory contains **comprehensive, production-grade end-to-end (E2E) test 
 ## Test Coverage
 
 ### 1. Full-Stack Scenario Tests
+
 - **UI Layer**: Leather Book Dashboard, PyQt6 GUI interactions
 - **Service Layer**: Flask/FastAPI REST APIs, service orchestration
 - **Data Persistence**: JSON storage, state management, data integrity
@@ -14,6 +15,7 @@ This directory contains **comprehensive, production-grade end-to-end (E2E) test 
 - **Third-Party Integrations**: External APIs, service dependencies
 
 ### 2. Subsystem Integration Tests
+
 - **Council Hub**: Agent coordination and message routing
 - **Triumvirate**: Galahad (ethics), Cerberus (security), CodexDeus (orchestration)
 - **Global Watch Tower**: Event monitoring and audit trail propagation
@@ -21,6 +23,7 @@ This directory contains **comprehensive, production-grade end-to-end (E2E) test 
 - **Cognition Kernel**: Secure agent operation routing
 
 ### 3. Comprehensive Scenario Coverage
+
 - **Happy Path**: Normal user workflows and AI agent operations
 - **Failure Scenarios**: Error handling, degradation, recovery
 - **Security Boundaries**: Permission checks, authentication, authorization
@@ -28,6 +31,7 @@ This directory contains **comprehensive, production-grade end-to-end (E2E) test 
 - **Event Propagation**: Audit logging, Global Watch Tower triggers
 
 ### 4. Validation Targets
+
 - **State Transitions**: Correct state changes across components
 - **Event Log Integrity**: Complete audit trail with no gaps
 - **Business Invariants**: System constraints and rules enforcement
@@ -78,13 +82,17 @@ e2e/
 ### Quick Start
 
 ```bash
+
 # Run all E2E tests
+
 pytest e2e/ -v --tb=short
 
 # Run specific subsystem tests
+
 pytest e2e/scenarios/test_council_hub_e2e.py -v
 
 # Run with coverage
+
 pytest e2e/ -v --cov=. --cov-report=html --cov-report=term
 ```
 
@@ -93,19 +101,25 @@ pytest e2e/ -v --cov=. --cov-report=html --cov-report=term
 E2E tests are organized with pytest markers:
 
 ```bash
+
 # Run only E2E tests
+
 pytest -m e2e
 
 # Run GUI E2E tests
+
 pytest -m "e2e and gui"
 
-# Run API E2E tests  
+# Run API E2E tests
+
 pytest -m "e2e and api"
 
 # Run security E2E tests
+
 pytest -m "e2e and security"
 
 # Skip slow E2E tests
+
 pytest -m "e2e and not slow"
 ```
 
@@ -114,7 +128,9 @@ pytest -m "e2e and not slow"
 E2E tests are integrated into the CI pipeline via `.github/workflows/ci.yml`:
 
 ```yaml
+
 - name: Run E2E Tests
+
   run: |
     pytest e2e/ -v --cov=. --cov-report=xml --cov-report=html
 ```
@@ -136,18 +152,23 @@ pytest-qt>=4.2.0  # For GUI testing
 ### Environment Setup
 
 1. **Copy environment template**:
+
    ```bash
    cp .env.example .env
    ```
 
 2. **Configure test environment**:
+
    ```bash
+
    # Set required API keys
+
    export OPENAI_API_KEY=sk-...
    export HUGGINGFACE_API_KEY=hf_...
    ```
 
 3. **Initialize test database**:
+
    ```bash
    python e2e/orchestration/setup_teardown.py --init
    ```
@@ -167,19 +188,24 @@ from e2e.utils.assertions import assert_state_transition
 @pytest.mark.council_hub
 def test_council_hub_agent_coordination(service_manager):
     """E2E test for Council Hub agent coordination and message routing."""
+
     # Arrange: Set up test environment
+
     service_manager.start_all()
     agent_a = service_manager.register_agent("agent_a")
     agent_b = service_manager.register_agent("agent_b")
-    
+
     # Act: Execute scenario
+
     result = agent_a.send_message(agent_b, "test_message")
-    
+
     # Assert: Validate outcomes
+
     assert result.status == "success"
     assert_state_transition(agent_b, "idle", "processing")
-    
+
     # Cleanup
+
     service_manager.stop_all()
 ```
 
@@ -204,19 +230,24 @@ def test_council_hub_agent_coordination(service_manager):
 ### Debug Mode
 
 ```bash
+
 # Run with verbose output
+
 pytest e2e/ -vv --tb=long
 
 # Run with debug logging
+
 pytest e2e/ -v --log-cli-level=DEBUG
 
 # Run single test with debugging
+
 pytest e2e/scenarios/test_council_hub_e2e.py::test_specific_scenario -vv --pdb
 ```
 
 ## Coverage Requirements
 
 E2E tests must maintain:
+
 - **Overall Coverage**: ≥80% of critical paths
 - **Integration Points**: 100% of subsystem boundaries
 - **Security Checks**: 100% of permission boundaries
@@ -238,6 +269,7 @@ When adding new E2E tests:
 ## Contact
 
 For questions or issues with E2E tests, please:
+
 - Open an issue on GitHub
 - Tag with `e2e-tests` label
 - Provide test output and logs

@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 class TamperEventSeverity(Enum):
     """Severity levels for tamper events"""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -27,6 +28,7 @@ class TamperEventSeverity(Enum):
 
 class ApprovalStatus(Enum):
     """Status of approval requests"""
+
     PENDING = "pending"
     APPROVED = "approved"
     REJECTED = "rejected"
@@ -36,6 +38,7 @@ class ApprovalStatus(Enum):
 @dataclass
 class TamperEvent:
     """Tamper detection event"""
+
     timestamp: datetime
     severity: TamperEventSeverity
     resource_type: str
@@ -48,14 +51,15 @@ class TamperEvent:
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         data = asdict(self)
-        data['timestamp'] = self.timestamp.isoformat()
-        data['severity'] = self.severity.value
+        data["timestamp"] = self.timestamp.isoformat()
+        data["severity"] = self.severity.value
         return data
 
 
 @dataclass
 class ApprovalRequest:
     """Two-man rule approval request"""
+
     request_id: str
     timestamp: datetime
     requester: str
@@ -70,9 +74,9 @@ class ApprovalRequest:
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary"""
         data = asdict(self)
-        data['timestamp'] = self.timestamp.isoformat()
-        data['status'] = self.status.value
-        data['expires_at'] = self.expires_at.isoformat()
+        data["timestamp"] = self.timestamp.isoformat()
+        data["status"] = self.status.value
+        data["expires_at"] = self.expires_at.isoformat()
         return data
 
 
@@ -94,9 +98,9 @@ class ControlPlaneHardeningSystem:
             config: Configuration dictionary
         """
         self.config = config or {}
-        self.data_dir = self.config.get('data_dir', 'data/control_plane')
-        self.tamper_log_dir = os.path.join(self.data_dir, 'tamper_events')
-        self.approval_dir = os.path.join(self.data_dir, 'approvals')
+        self.data_dir = self.config.get("data_dir", "data/control_plane")
+        self.tamper_log_dir = os.path.join(self.data_dir, "tamper_events")
+        self.approval_dir = os.path.join(self.data_dir, "approvals")
 
         os.makedirs(self.tamper_log_dir, exist_ok=True)
         os.makedirs(self.approval_dir, exist_ok=True)
@@ -110,26 +114,31 @@ class ControlPlaneHardeningSystem:
         self.approval_requests: dict[str, ApprovalRequest] = {}
 
         # Critical resources to monitor
-        self.critical_resources = self.config.get('critical_resources', [
-            'kyverno-deployment',
-            'kyverno-clusterpolicies',
-            'argocd-deployment',
-            'argocd-applications',
-            'admission-webhooks',
-            'audit-policy'
-        ])
+        self.critical_resources = self.config.get(
+            "critical_resources",
+            [
+                "kyverno-deployment",
+                "kyverno-clusterpolicies",
+                "argocd-deployment",
+                "argocd-applications",
+                "admission-webhooks",
+                "audit-policy",
+            ],
+        )
 
         # SIEM configuration
-        self.siem_endpoint = self.config.get('siem_endpoint')
-        self.siem_api_key = self.config.get('siem_api_key')
+        self.siem_endpoint = self.config.get("siem_endpoint")
+        self.siem_api_key = self.config.get("siem_api_key")
 
         # Start monitoring thread
-        if self.config.get('enable_monitoring', True):
+        if self.config.get("enable_monitoring", True):
             self._start_monitoring()
 
     def _start_monitoring(self):
         """Start background monitoring thread"""
-        self.monitoring_thread = threading.Thread(target=self._monitor_loop, daemon=True)
+        self.monitoring_thread = threading.Thread(
+            target=self._monitor_loop, daemon=True
+        )
         self.monitoring_thread.start()
         logger.info("Started control plane monitoring")
 
@@ -138,7 +147,7 @@ class ControlPlaneHardeningSystem:
         while True:
             try:
                 self._check_critical_resources()
-                time.sleep(self.config.get('monitoring_interval', 60))
+                time.sleep(self.config.get("monitoring_interval", 60))
             except Exception as e:
                 logger.error(f"Error in monitoring loop: {e}")
 
@@ -181,13 +190,13 @@ class ControlPlaneHardeningSystem:
             severity=TamperEventSeverity.CRITICAL,
             resource_type=self._get_resource_type(resource),
             resource_name=resource,
-            event_type='unauthorized_modification',
+            event_type="unauthorized_modification",
             details={
-                'previous_hash': self.monitored_resources.get(resource),
-                'current_hash': current_hash
+                "previous_hash": self.monitored_resources.get(resource),
+                "current_hash": current_hash,
             },
-            detected_by='control-plane-hardening-system',
-            action_taken='alert_and_log'
+            detected_by="control-plane-hardening-system",
+            action_taken="alert_and_log",
         )
 
         self.tamper_events.append(event)
@@ -204,21 +213,23 @@ class ControlPlaneHardeningSystem:
 
     def _get_resource_type(self, resource: str) -> str:
         """Determine resource type from name"""
-        if 'deployment' in resource.lower():
-            return 'Deployment'
-        elif 'policy' in resource.lower():
-            return 'ClusterPolicy'
-        elif 'webhook' in resource.lower():
-            return 'ValidatingWebhookConfiguration'
-        elif 'application' in resource.lower():
-            return 'Application'
-        return 'Unknown'
+        if "deployment" in resource.lower():
+            return "Deployment"
+        elif "policy" in resource.lower():
+            return "ClusterPolicy"
+        elif "webhook" in resource.lower():
+            return "ValidatingWebhookConfiguration"
+        elif "application" in resource.lower():
+            return "Application"
+        return "Unknown"
 
     def _should_trigger_lockdown(self, event: TamperEvent) -> bool:
         """Determine if event should trigger lockdown"""
         # Lockdown for critical resources
-        critical_keywords = ['kyverno', 'argocd', 'admission', 'webhook']
-        return any(keyword in event.resource_name.lower() for keyword in critical_keywords)
+        critical_keywords = ["kyverno", "argocd", "admission", "webhook"]
+        return any(
+            keyword in event.resource_name.lower() for keyword in critical_keywords
+        )
 
     def _trigger_lockdown(self, event: TamperEvent):
         """Trigger cluster lockdown"""
@@ -230,19 +241,19 @@ class ControlPlaneHardeningSystem:
 
         # Log lockdown event
         lockdown_data = {
-            'timestamp': datetime.utcnow().isoformat(),
-            'reason': f"Tamper detected: {event.resource_name}",
-            'event': event.to_dict(),
-            'actions': [
-                'scale_to_zero_non_critical',
-                'disable_admission_webhooks',
-                'alert_security_team',
-                'create_incident'
-            ]
+            "timestamp": datetime.utcnow().isoformat(),
+            "reason": f"Tamper detected: {event.resource_name}",
+            "event": event.to_dict(),
+            "actions": [
+                "scale_to_zero_non_critical",
+                "disable_admission_webhooks",
+                "alert_security_team",
+                "create_incident",
+            ],
         }
 
-        lockdown_file = os.path.join(self.data_dir, 'lockdown.json')
-        with open(lockdown_file, 'w') as f:
+        lockdown_file = os.path.join(self.data_dir, "lockdown.json")
+        with open(lockdown_file, "w") as f:
             json.dump(lockdown_data, f, indent=2)
 
         # Alert SIEM with critical severity
@@ -258,24 +269,21 @@ class ControlPlaneHardeningSystem:
             import requests
 
             payload = {
-                'timestamp': event.timestamp.isoformat(),
-                'severity': event.severity.value,
-                'event_type': 'tamper_detection',
-                'resource': event.resource_name,
-                'details': event.details,
-                'source': 'project-ai-control-plane-hardening'
+                "timestamp": event.timestamp.isoformat(),
+                "severity": event.severity.value,
+                "event_type": "tamper_detection",
+                "resource": event.resource_name,
+                "details": event.details,
+                "source": "project-ai-control-plane-hardening",
             }
 
             headers = {
-                'Content-Type': 'application/json',
-                'Authorization': f'Bearer {self.siem_api_key}'
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.siem_api_key}",
             }
 
             response = requests.post(
-                self.siem_endpoint,
-                json=payload,
-                headers=headers,
-                timeout=5
+                self.siem_endpoint, json=payload, headers=headers, timeout=5
             )
 
             if response.status_code == 200:
@@ -296,23 +304,20 @@ class ControlPlaneHardeningSystem:
             import requests
 
             payload = {
-                'timestamp': datetime.utcnow().isoformat(),
-                'severity': 'critical',
-                'event_type': 'cluster_lockdown',
-                'details': data,
-                'source': 'project-ai-control-plane-hardening'
+                "timestamp": datetime.utcnow().isoformat(),
+                "severity": "critical",
+                "event_type": "cluster_lockdown",
+                "details": data,
+                "source": "project-ai-control-plane-hardening",
             }
 
             headers = {
-                'Content-Type': 'application/json',
-                'Authorization': f'Bearer {self.siem_api_key}'
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.siem_api_key}",
             }
 
             response = requests.post(
-                self.siem_endpoint,
-                json=payload,
-                headers=headers,
-                timeout=5
+                self.siem_endpoint, json=payload, headers=headers, timeout=5
             )
 
             if response.status_code == 200:
@@ -328,7 +333,7 @@ class ControlPlaneHardeningSystem:
         filename = f"tamper_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.json"
         filepath = os.path.join(self.tamper_log_dir, filename)
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(event.to_dict(), f, indent=2)
 
     def request_critical_action(
@@ -337,7 +342,7 @@ class ControlPlaneHardeningSystem:
         action: str,
         resource: str,
         justification: str,
-        approvers_required: int = 2
+        approvers_required: int = 2,
     ) -> str:
         """
         Request approval for a critical action (two-man rule)
@@ -367,7 +372,7 @@ class ControlPlaneHardeningSystem:
             approvers_required=approvers_required,
             approvers=[],
             status=ApprovalStatus.PENDING,
-            expires_at=datetime.utcnow() + timedelta(hours=24)
+            expires_at=datetime.utcnow() + timedelta(hours=24),
         )
 
         self.approval_requests[request_id] = request
@@ -411,7 +416,9 @@ class ControlPlaneHardeningSystem:
         # Check if enough approvals
         if len(request.approvers) >= request.approvers_required:
             request.status = ApprovalStatus.APPROVED
-            logger.info(f"Request {request_id} APPROVED with {len(request.approvers)} approvals")
+            logger.info(
+                f"Request {request_id} APPROVED with {len(request.approvers)} approvals"
+            )
 
         self._save_approval_request(request)
         return True
@@ -451,13 +458,11 @@ class ControlPlaneHardeningSystem:
         """Save approval request to storage"""
         filepath = os.path.join(self.approval_dir, f"{request.request_id}.json")
 
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(request.to_dict(), f, indent=2)
 
     def get_tamper_events(
-        self,
-        severity: TamperEventSeverity | None = None,
-        since: datetime | None = None
+        self, severity: TamperEventSeverity | None = None, since: datetime | None = None
     ) -> list[TamperEvent]:
         """Get tamper events, optionally filtered"""
         events = self.tamper_events
@@ -471,8 +476,7 @@ class ControlPlaneHardeningSystem:
         return events
 
     def get_approval_requests(
-        self,
-        status: ApprovalStatus | None = None
+        self, status: ApprovalStatus | None = None
     ) -> list[ApprovalRequest]:
         """Get approval requests, optionally filtered by status"""
         requests = list(self.approval_requests.values())
@@ -498,7 +502,7 @@ class ControlPlaneHardeningSystem:
 
         self.lockdown_active = False
 
-        lockdown_file = os.path.join(self.data_dir, 'lockdown.json')
+        lockdown_file = os.path.join(self.data_dir, "lockdown.json")
         if os.path.exists(lockdown_file):
             os.remove(lockdown_file)
 

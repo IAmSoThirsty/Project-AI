@@ -23,7 +23,7 @@ These settings must be configured in the GitHub repository settings under **Sett
 **Required status checks:**
 
 - `test` (from ci.yml)
-- `lint` (from ci.yml)  
+- `lint` (from ci.yml)
 - `tests` (from ci.yml)
 - `Auto Review PR` (from auto-pr-handler.yml)
 - `Validate Main Branch Health` (from post-merge-validation.yml)
@@ -106,14 +106,17 @@ The following workflows enforce these requirements automatically:
 ⚠️ **IMPORTANT**: While this automation provides significant efficiency, consider these security best practices:
 
 1. **Workflow File Changes**: PRs that modify `.github/workflows/` files should be reviewed manually before merge
+
    - Add a required review for workflow changes via CODEOWNERS file
    - Example CODEOWNERS entry: `.github/workflows/* @IAmSoThirsty`
 
 1. **External Contributors**: Consider requiring manual approval for PRs from external contributors
+
    - Can be configured in branch protection: "Require approval from specific users"
    - Protects against malicious PRs from unknown sources
 
 1. **Sensitive Code Areas**: High-security code (authentication, encryption, payment processing) should have:
+
    - Required code owner reviews
    - Additional manual validation
    - Separate security scanning workflows
@@ -123,10 +126,13 @@ The following workflows enforce these requirements automatically:
 Create `.github/CODEOWNERS` file:
 
 ```
+
 # Workflow files require owner review
+
 /.github/workflows/ @IAmSoThirsty
 
 # Security-sensitive code requires review
+
 /src/app/core/user_manager.py @IAmSoThirsty
 /src/app/core/command_override.py @IAmSoThirsty
 ```
@@ -165,28 +171,32 @@ All workflows are already deployed in `.github/workflows/`:
 ### For All Pull Requests:
 
 1. **PR Created/Updated**
+
    - `auto-pr-handler.yml` triggers
    - Runs lint and test checks
    - Comments with results
    - Approves if all checks pass
 
 1. **CI Failures Detected**
+
    - `auto-fix-failures.yml` triggers
    - Attempts automatic fixes
    - Commits fixes to PR branch
    - CI re-runs automatically
 
 1. **All Checks Pass**
+
    - Auto-approval granted
    - Auto-merge enabled
    - PR merges to main automatically (NO MANUAL APPROVAL NEEDED)
 
 1. **Merge Complete**
+
    - `post-merge-validation.yml` triggers on main
    - Validates main branch health
    - Reports:
      - ✅ Zero conflicts
-     - ✅ Zero linting errors  
+     - ✅ Zero linting errors
      - ✅ Zero test failures
    - Comments success on merged PR
 

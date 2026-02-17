@@ -28,23 +28,30 @@
 Create or edit `.env` file in project root:
 
 ```bash
+
 # Required
+
 HUGGINGFACE_API_KEY=hf_your_token_here
 
 # Optional (for DALL-E 3)
+
 OPENAI_API_KEY=sk_your_key_here
 
 # Other existing keys (don't remove)
+
 FERNET_KEY=...
 ```
 
 ### 3. Verify Setup
 
 ```powershell
+
 # Check .env file exists
+
 cat .env
 
 # Should see HUGGINGFACE_API_KEY=hf_...
+
 ```
 
 ## Using Image Generation
@@ -52,7 +59,9 @@ cat .env
 ### 1. Launch Application
 
 ```powershell
+
 # From project root
+
 python -m src.app.main
 ```
 
@@ -68,9 +77,11 @@ python -m src.app.main
 **Left Page (Prompt Input)**:
 
 1. **Enter prompt**: Type your image description
+
    - Example: "a cyberpunk city at night with neon lights"
-   
+
 1. **Select style**: Choose from dropdown
+
    - photorealistic
    - digital_art
    - oil_painting
@@ -83,12 +94,14 @@ python -m src.app.main
    - minimalist
 
 1. **Select size**: Choose image dimensions
+
    - 256x256 (fast, low quality)
    - 512x512 (balanced, recommended)
    - 768x768 (slower, higher quality)
    - 1024x1024 (slowest, highest quality)
 
 1. **Select backend**:
+
    - Hugging Face (free, Stable Diffusion 2.1)
    - OpenAI (paid, DALL-E 3, highest quality)
 
@@ -171,17 +184,11 @@ python -m src.app.main
 
 ### Good Prompts
 
-✅ **Be specific**: "red sports car on mountain road at sunset"
-✅ **Include style**: "watercolor painting of lavender field"
-✅ **Add mood**: "mysterious foggy forest with eerie lighting"
-✅ **Specify details**: "close-up portrait with blue eyes and freckles"
+✅ **Be specific**: "red sports car on mountain road at sunset" ✅ **Include style**: "watercolor painting of lavender field" ✅ **Add mood**: "mysterious foggy forest with eerie lighting" ✅ **Specify details**: "close-up portrait with blue eyes and freckles"
 
 ### Avoid
 
-❌ **Vague prompts**: "something cool"
-❌ **Too short**: "car"
-❌ **Contradictions**: "bright dark scene"
-❌ **Forbidden content**: See Content Safety below
+❌ **Vague prompts**: "something cool" ❌ **Too short**: "car" ❌ **Contradictions**: "bright dark scene" ❌ **Forbidden content**: See Content Safety below
 
 ### Style Matching
 
@@ -286,20 +293,21 @@ The system automatically blocks prompts containing:
 
 ### Backend Comparison
 
-| Feature | Hugging Face | OpenAI DALL-E 3 |
-|---------|-------------|-----------------|
-| Cost | **Free** | Paid plan required |
-| Speed | 20-40 sec | 30-60 sec |
-| Quality | Good | **Excellent** |
-| Max Size | 768x768 | **1024x1024** |
-| Styles | All presets | All presets |
-| Prompt Length | 77 tokens | **Unlimited** |
+| Feature       | Hugging Face | OpenAI DALL-E 3    |
+| ------------- | ------------ | ------------------ |
+| Cost          | **Free**     | Paid plan required |
+| Speed         | 20-40 sec    | 30-60 sec          |
+| Quality       | Good         | **Excellent**      |
+| Max Size      | 768x768      | **1024x1024**      |
+| Styles        | All presets  | All presets        |
+| Prompt Length | 77 tokens    | **Unlimited**      |
 
 ### Generation History
 
 **Location**: `data/image_history.json`
 
 **Format**:
+
 ```json
 [
   {
@@ -344,7 +352,7 @@ Not yet implemented. To generate multiple:
 
 - Each 512x512 PNG: ~2MB
 - Each 1024x1024 PNG: ~5MB
-- History JSON: <1MB
+- History JSON: \<1MB
 
 ## Keyboard Shortcuts
 
@@ -360,29 +368,21 @@ Currently no keyboard shortcuts implemented.
 
 ## FAQ
 
-**Q: Can I generate videos?**
-A: Not yet. Video generation is a future enhancement.
+**Q: Can I generate videos?** A: Not yet. Video generation is a future enhancement.
 
-**Q: Can I edit generated images?**
-A: Not yet. Image-to-image and inpainting are future features.
+**Q: Can I edit generated images?** A: Not yet. Image-to-image and inpainting are future features.
 
-**Q: How many images can I generate?**
-A: Unlimited (subject to API rate limits).
+**Q: How many images can I generate?** A: Unlimited (subject to API rate limits).
 
-**Q: Are images stored in the cloud?**
-A: No. All images saved locally in `data/generated_images/`.
+**Q: Are images stored in the cloud?** A: No. All images saved locally in `data/generated_images/`.
 
-**Q: Can I use generated images commercially?**
-A: Check Hugging Face and OpenAI terms of service for license details.
+**Q: Can I use generated images commercially?** A: Check Hugging Face and OpenAI terms of service for license details.
 
-**Q: Why is my prompt being rejected?**
-A: Content filter blocks 15 forbidden keywords for safety.
+**Q: Why is my prompt being rejected?** A: Content filter blocks 15 forbidden keywords for safety.
 
-**Q: Can I use my own Stable Diffusion model?**
-A: Not yet. Custom model support is a future enhancement.
+**Q: Can I use my own Stable Diffusion model?** A: Not yet. Custom model support is a future enhancement.
 
-**Q: Does this work offline?**
-A: No. Requires internet connection for API calls.
+**Q: Does this work offline?** A: No. Requires internet connection for API calls.
 
 ## Getting Help
 

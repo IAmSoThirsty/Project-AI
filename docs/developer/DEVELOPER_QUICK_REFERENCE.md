@@ -2,18 +2,20 @@
 
 ## File Locations
 
-| File | Purpose | Status |
-|------|---------|--------|
-| `src/app/gui/leather_book_interface.py` | Main container with login/dashboard switching | ✅ Ready |
-| `src/app/gui/leather_book_dashboard.py` | 6-zone dashboard with chat and AI head | ✅ Ready |
-| `src/app/main.py` | Application entry point | ✅ Updated |
+| File                                    | Purpose                                       | Status     |
+| --------------------------------------- | --------------------------------------------- | ---------- |
+| `src/app/gui/leather_book_interface.py` | Main container with login/dashboard switching | ✅ Ready   |
+| `src/app/gui/leather_book_dashboard.py` | 6-zone dashboard with chat and AI head        | ✅ Ready   |
+| `src/app/main.py`                       | Application entry point                       | ✅ Updated |
 
 ## Quick Start Commands
 
 Run the application:
 
-    cd c:\Users\Jeremy\Documents\GitHub\Project-AI
-    python -m src.app.main
+```
+cd c:\Users\Jeremy\Documents\GitHub\Project-AI
+python -m src.app.main
+```
 
 ## Component Reference
 
@@ -109,41 +111,47 @@ Border styling:
 
 ## Animation Timings
 
-| Element | Interval | Formula |
-|---------|----------|---------|
-| Face eyes | 50ms | `sin(frame * 0.05)` |
-| Face mouth | 50ms | `cos(frame * 0.05)` |
-| Stats update | 1000ms | Counter increment |
-| UI refresh | 50ms | `update()` call |
+| Element      | Interval | Formula             |
+| ------------ | -------- | ------------------- |
+| Face eyes    | 50ms     | `sin(frame * 0.05)` |
+| Face mouth   | 50ms     | `cos(frame * 0.05)` |
+| Stats update | 1000ms   | Counter increment   |
+| UI refresh   | 50ms     | `update()` call     |
 
 ## Common Integration Tasks
 
 ### Connect AI Backend
 
-    dashboard = LeatherBookDashboard(username)
-    
-    def process_ai_message(user_message: str):
-        response = ai_model.generate_response(user_message)
-        dashboard.add_ai_response(response)
-    
-    dashboard.send_message.connect(process_ai_message)
+```
+dashboard = LeatherBookDashboard(username)
+
+def process_ai_message(user_message: str):
+    response = ai_model.generate_response(user_message)
+    dashboard.add_ai_response(response)
+
+dashboard.send_message.connect(process_ai_message)
+```
 
 ### Connect Database
 
 Save messages by overriding AIResponsePanel.add_ai_response():
 
-    def add_ai_response(self, response: str):
-        db.save_message(user=username, content=response, is_ai=True)
-        super().add_ai_response(response)
+```
+def add_ai_response(self, response: str):
+    db.save_message(user=username, content=response, is_ai=True)
+    super().add_ai_response(response)
+```
 
 ### Connect Real System Stats
 
-Replace simulated values in StatsPanel._update_stats():
+Replace simulated values in StatsPanel.\_update_stats():
 
-    import psutil
-    
-    memory_percent = psutil.virtual_memory().percent
-    cpu_percent = psutil.cpu_percent(interval=0.1)
+```
+import psutil
+
+memory_percent = psutil.virtual_memory().percent
+cpu_percent = psutil.cpu_percent(interval=0.1)
+```
 
 ## Common Customization Tasks
 
@@ -151,28 +159,34 @@ Replace simulated values in StatsPanel._update_stats():
 
 Modify timer interval in `LeatherBookDashboard.__init__`:
 
-    self.animation_timer.start(50)  # milliseconds
+```
+self.animation_timer.start(50)  # milliseconds
+```
 
 ### Add New Panel
 
-    class NewPanel(QFrame):
-        def __init__(self, parent=None):
-            super().__init__(parent)
-            layout = QVBoxLayout(self)
+```
+class NewPanel(QFrame):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        layout = QVBoxLayout(self)
 
-            # Add widgets...
+        # Add widgets...
+```
 
 ### Add New Button
 
-    new_btn = QPushButton("MY BUTTON")
-    new_btn.setStyleSheet("""
-        QPushButton {
-            background-color: #1a1a1a;
-            border: 2px solid #00ff00;
-            color: #00ff00;
-        }
-    """)
-    new_btn.clicked.connect(callback_function)
+```
+new_btn = QPushButton("MY BUTTON")
+new_btn.setStyleSheet("""
+    QPushButton {
+        background-color: #1a1a1a;
+        border: 2px solid #00ff00;
+        color: #00ff00;
+    }
+""")
+new_btn.clicked.connect(callback_function)
+```
 
 ## Testing Checklist
 
@@ -210,7 +224,6 @@ Cause: Stylesheet not applied or overridden
 
 Fix: Check setStyleSheet() calls and inheritance chain
 
----
+______________________________________________________________________
 
-**Version**: 1.0  
-**Status**: Production Ready ✅
+**Version**: 1.0 **Status**: Production Ready ✅

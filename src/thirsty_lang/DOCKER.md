@@ -7,26 +7,34 @@ This guide explains how to use Docker with Thirsty-lang for containerized develo
 ### Using Docker Compose (Recommended)
 
 ```bash
+
 # Build and start all services
+
 docker-compose up
 
 # Start specific service
+
 docker-compose up thirsty-dev
 
 # Run in detached mode
+
 docker-compose up -d
 ```
 
 ### Using Docker Directly
 
 ```bash
+
 # Build the image
+
 docker build -t thirsty-lang .
 
 # Run a Thirsty-lang program
+
 docker run --rm -v $(pwd)/examples:/app/examples thirsty-lang node src/cli.js examples/hello.thirsty
 
 # Run the REPL
+
 docker run -it --rm thirsty-lang npm run repl
 ```
 
@@ -124,20 +132,26 @@ Access at: http://localhost:8888
 ### Run a Thirsty-lang Program
 
 ```bash
+
 # Using Docker Compose
+
 docker-compose run --rm thirsty node src/cli.js examples/hello.thirsty
 
 # Using Docker directly
+
 docker run --rm -v $(pwd)/examples:/app/examples thirsty-lang node src/cli.js examples/hello.thirsty
 ```
 
 ### Start Interactive REPL
 
 ```bash
+
 # Node.js REPL
+
 docker-compose run --rm repl
 
 # Python REPL
+
 docker-compose run --rm python-repl
 ```
 
@@ -219,8 +233,10 @@ docker-compose down
 
 ```yaml
 volumes:
+
   - ./examples:/app/examples  # Example programs
   - ./src:/app/src            # Source code
+
 ```
 
 ## Port Mapping
@@ -298,17 +314,22 @@ docker-compose down -v --rmi all --remove-orphans
 ### Container Won't Start
 
 ```bash
+
 # Check logs
+
 docker-compose logs thirsty
 
 # Check specific service logs
+
 docker-compose logs thirsty-dev
 ```
 
 ### Permission Issues
 
 ```bash
+
 # Rebuild with proper permissions
+
 docker-compose build --no-cache
 ```
 
@@ -317,13 +338,17 @@ docker-compose build --no-cache
 Change ports in `docker-compose.yml`:
 ```yaml
 ports:
+
   - "8081:8080"  # Change host port
+
 ```
 
 ### Volume Issues
 
 ```bash
+
 # Remove volumes and rebuild
+
 docker-compose down -v
 docker-compose up --build
 ```
@@ -333,10 +358,13 @@ docker-compose up --build
 ### Custom Dockerfile Build
 
 ```bash
+
 # Build only base stage
+
 docker build --target node-base -t thirsty-lang:base .
 
 # Build development stage
+
 docker build --target development -t thirsty-lang:dev .
 ```
 
@@ -359,10 +387,13 @@ docker run --network thirsty-net thirsty-lang
 ### Using Docker
 
 ```bash
+
 # Build production image
+
 docker build -t thirsty-lang:1.0.0 .
 
 # Run in production
+
 docker run -d \
   --name thirsty-prod \
   --restart unless-stopped \
@@ -373,7 +404,9 @@ docker run -d \
 ### Using Docker Compose
 
 ```bash
+
 # Production compose file
+
 docker-compose -f docker-compose.yml up -d thirsty
 ```
 
@@ -399,14 +432,19 @@ docker-compose -f docker-compose.yml up -d thirsty
 ## Integration with CI/CD
 
 ```yaml
+
 # Example GitHub Actions workflow
+
 - name: Build Docker image
+
   run: docker build -t thirsty-lang .
 
 - name: Run tests in Docker
+
   run: docker run thirsty-lang npm test
 
 - name: Push to registry
+
   run: docker push thirsty-lang:latest
 ```
 

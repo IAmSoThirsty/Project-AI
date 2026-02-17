@@ -18,6 +18,7 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 ### Core Components
 
 1. **`src/app/core/safety_levels.py`** - Main ASL framework module
+
    - `SafetyLevel` enum: ASL-1 through ASL-4 definitions
    - `CapabilityCategory` enum: High-risk capability tracking (CBRN, Cyber, AI R&D, etc.)
    - `ASLThresholds`: Configurable thresholds for level transitions
@@ -25,7 +26,9 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
    - `ASLMonitor`: Continuous monitoring and automatic escalation
 
 1. **`scripts/run_asl_assessment.py`** - CLI runner for assessments
+
 1. **`config/asl_config.json`** - Runtime configuration (auto-generated)
+
 1. **`data/asl_assessments/`** - Historical assessment records
 
 ### Integration Points
@@ -76,7 +79,7 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 
 **Thresholds**:
 
-- ASL-2→ASL-3: Can operate autonomously <1 week
+- ASL-2→ASL-3: Can operate autonomously \<1 week
 - ASL-3→ASL-4: Can operate autonomously indefinitely
 
 **Current Status**: Not yet tested
@@ -94,26 +97,23 @@ AI Safety Levels are a standardized risk classification system for AI systems ba
 
 ### Latest Results (8,850 Security Tests)
 
-| Capability Category | Scenarios Tested | ASR | Risk Level | ASL Trigger |
-|---------------------|------------------|-----|------------|-------------|
-| CBRN | 0 | 0.0% | Low | ✅ Below ASL-3 |
-| Cyber Offense | 3,850 | 0.0% | Low | ✅ Below ASL-3 |
-| AI R&D | 500 | 0.0% | Low | ✅ Below ASL-3 |
-| Persuasion | 0 | 0.0% | Low | ✅ Below ASL-3 |
-| Autonomy | 0 | 0.0% | Low | ✅ Below ASL-3 |
-| Deception | 200 | 0.0% | Low | ✅ Below ASL-3 |
+| Capability Category | Scenarios Tested | ASR  | Risk Level | ASL Trigger    |
+| ------------------- | ---------------- | ---- | ---------- | -------------- |
+| CBRN                | 0                | 0.0% | Low        | ✅ Below ASL-3 |
+| Cyber Offense       | 3,850            | 0.0% | Low        | ✅ Below ASL-3 |
+| AI R&D              | 500              | 0.0% | Low        | ✅ Below ASL-3 |
+| Persuasion          | 0                | 0.0% | Low        | ✅ Below ASL-3 |
+| Autonomy            | 0                | 0.0% | Low        | ✅ Below ASL-3 |
+| Deception           | 200              | 0.0% | Low        | ✅ Below ASL-3 |
 
-**Current ASL Level**: ASL-2 (Standard Safeguards)  
-**Recommended Level**: ASL-2  
-**Safety Margin**: +0 levels (appropriate for current capabilities)  
-**Escalation Required**: NO ✅
+**Current ASL Level**: ASL-2 (Standard Safeguards) **Recommended Level**: ASL-2 **Safety Margin**: +0 levels (appropriate for current capabilities) **Escalation Required**: NO ✅
 
 ### Key Findings
 
 - **Perfect Defense Record**: 0% ASR across all 8,850 scenarios
 - **Well Below All Thresholds**: All categories are 5-20%+ below ASL-3 triggers
 - **Strong Robustness Margins**: Minimum margin 0.434, average confidence 90.4%
-- **Low Transferability**: <3% cross-model attack transfer rate
+- **Low Transferability**: \<3% cross-model attack transfer rate
 - **Deep Defense**: 2.8 average layers triggered, 100% multi-layer stops
 
 ## Safety Measures by Level
@@ -187,16 +187,21 @@ All ASL-3 measures plus:
 ### Running ASL Assessment
 
 ```bash
+
 # Basic assessment (uses latest robustness metrics)
+
 python scripts/run_asl_assessment.py
 
 # Specify metrics file
+
 python scripts/run_asl_assessment.py --metrics-file data/robustness_metrics/comprehensive_robustness_analysis_20260102.json
 
 # Save report to file
+
 python scripts/run_asl_assessment.py --output reports/asl_assessment.md
 
 # Custom data directory
+
 python scripts/run_asl_assessment.py --data-dir /path/to/data
 ```
 
@@ -206,22 +211,27 @@ python scripts/run_asl_assessment.py --data-dir /path/to/data
 from app.core.safety_levels import ASLMonitor, SafetyLevel
 
 # Initialize monitor
+
 monitor = ASLMonitor(data_dir="data")
 
 # Run assessment
+
 assessment = monitor.run_assessment()
 
 # Check results
+
 print(f"Current Level: {assessment.current_level}")
 print(f"Recommended Level: {assessment.recommended_level}")
 print(f"Escalation Required: {assessment.requires_escalation()}")
 print(f"Overall ASR: {assessment.overall_asr:.2%}")
 
 # Generate report
+
 report = monitor.generate_report(assessment)
 print(report)
 
 # Check specific capabilities
+
 for eval_result in assessment.evaluations:
     print(f"{eval_result.category.value}: {eval_result.asr:.2%} ASR")
 ```
@@ -231,11 +241,14 @@ for eval_result in assessment.evaluations:
 Add to `.github/workflows/auto-security-fixes.yml`:
 
 ```yaml
+
 - name: Run ASL Assessment
+
   run: |
     python scripts/run_asl_assessment.py --output reports/asl_assessment.md
-    
+
 - name: Check ASL Escalation
+
   run: |
     exit_code=$?
     if [ $exit_code -eq 1 ]; then
@@ -278,11 +291,17 @@ Configuration stored in `config/asl_config.json`:
 ### Escalation Workflow
 
 ```
+
 1. Run ASL assessment
+
    ↓
+
 2. Evaluate against thresholds
+
    ↓
+
 3. If threshold exceeded:
+
    ↓
 4a. ASL-3: Auto-escalate (if enabled)
     → Implement enhanced measures
@@ -318,14 +337,14 @@ Project-AI's ASL framework aligns with:
 
 ## Comparison: Project-AI vs Frontier Models
 
-| System | Security Tests | Overall ASR | ASL Level | Status |
-|--------|---------------|-------------|-----------|---------|
-| **Project-AI** | 8,850 | 0.0% | ASL-2 | ✅ Production Ready |
-| GPT-4 | Unknown | <5%* | ASL-2/3 | Deployed |
-| Claude 3 | Unknown | <10%* | ASL-2/3 | Deployed |
-| Gemini Ultra | Unknown | Unknown | ASL-2/3 | Deployed |
+| System         | Security Tests | Overall ASR | ASL Level | Status              |
+| -------------- | -------------- | ----------- | --------- | ------------------- |
+| **Project-AI** | 8,850          | 0.0%        | ASL-2     | ✅ Production Ready |
+| GPT-4          | Unknown        | \<5%\*      | ASL-2/3   | Deployed            |
+| Claude 3       | Unknown        | \<10%\*     | ASL-2/3   | Deployed            |
+| Gemini Ultra   | Unknown        | Unknown     | ASL-2/3   | Deployed            |
 
-*Estimated from public safety reports
+\*Estimated from public safety reports
 
 **Project-AI Advantages**:
 
@@ -338,21 +357,25 @@ Project-AI's ASL framework aligns with:
 ## Future Enhancements
 
 1. **Capability-Specific Scenarios**:
+
    - Add 500+ CBRN uplift scenarios
    - Add 500+ persuasion/manipulation scenarios
    - Add 500+ autonomy scenarios
 
 1. **Advanced Metrics**:
+
    - Real-time capability drift detection
    - Predictive risk modeling
    - Comparative benchmarking against frontier models
 
 1. **Enhanced Automation**:
+
    - Auto-triggered assessments on code changes
    - Integration with model versioning
    - Automated safety measure enforcement
 
 1. **External Validation**:
+
    - Third-party red team engagements
    - Academic collaboration on novel threats
    - Regulatory compliance audits

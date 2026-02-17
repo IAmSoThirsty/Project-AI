@@ -207,7 +207,8 @@ class AcceptanceLedger:
         conn.execute("PRAGMA journal_mode=WAL")
         conn.execute("PRAGMA synchronous=FULL")
 
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS acceptance_ledger (
                 entry_id TEXT PRIMARY KEY,
                 timestamp REAL NOT NULL,
@@ -227,7 +228,8 @@ class AcceptanceLedger:
                 metadata_json TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
-        """)
+        """
+        )
 
         # Indexes for efficient queries
         conn.execute(
@@ -569,20 +571,20 @@ class AcceptanceLedger:
         results["timestamp_valid"] = (
             entry.timestamp > 0 and entry.timestamp <= time.time()
         )
-        
+
         # Extended TSA Validation
         if entry.timestamp_authority and TSA_AVAILABLE:
-             # If we have a stored token, we should verify it
-             # We need to know which TSA issued it, or default to a known one if configured
-             # For now, we just check if it's structurally valid if we had the certs
-             # This is a placeholder for full verification logic
-             try:
-                 token_bytes = bytes.fromhex(entry.timestamp_authority)
-                 # In a real verification, we'd fetch the certs from the token or config
-                 # and verify chain.
-                 results["timestamp_valid"] = True # Assume valid if parseable for now
-             except Exception:
-                 results["timestamp_valid"] = False
+            # If we have a stored token, we should verify it
+            # We need to know which TSA issued it, or default to a known one if configured
+            # For now, we just check if it's structurally valid if we had the certs
+            # This is a placeholder for full verification logic
+            try:
+                token_bytes = bytes.fromhex(entry.timestamp_authority)
+                # In a real verification, we'd fetch the certs from the token or config
+                # and verify chain.
+                results["timestamp_valid"] = True  # Assume valid if parseable for now
+            except Exception:
+                results["timestamp_valid"] = False
 
         results["valid"] = all(
             [
@@ -607,60 +609,64 @@ def get_acceptance_ledger(data_dir: str = "data/legal") -> AcceptanceLedger:
     return _ledger_instance
 
 
-
 try:
     import rfc3161ng
     from pyasn1.codec.der import decoder, encoder
+
     TSA_AVAILABLE = True
 except ImportError:
     TSA_AVAILABLE = False
 
+
 class TSAClient:
     """Timestamp Authority Client (RFC 3161)"""
-    
+
     def __init__(self, url: str):
         self.url = url
-        
+
     def get_timestamp(self, data: bytes) -> bytes:
         """Get RFC 3161 timestamp token for data"""
         if not TSA_AVAILABLE:
-            raise RuntimeError("TSA libraries not available. Install: pip install rfc3161ng pyasn1")
-            
+            raise RuntimeError(
+                "TSA libraries not available. Install: pip install rfc3161ng pyasn1"
+            )
+
         tst = rfc3161ng.RemoteTimestamper(
-            self.url, 
-            hashname='sha256',
-            include_tsa_certificate=True
+            self.url, hashname="sha256", include_tsa_certificate=True
         )
         return tst.timestamp(data=data)
-        
-    def verify_timestamp(self, token: bytes, data: bytes, ca_certs: bytes = None) -> bool:
+
+    def verify_timestamp(
+        self, token: bytes, data: bytes, ca_certs: bytes = None
+    ) -> bool:
         """Verify RFC 3161 timestamp token"""
         if not TSA_AVAILABLE:
             return False
-            
-        tst = rfc3161ng.RemoteTimestamper(self.url, hashname='sha256')
+
+        tst = rfc3161ng.RemoteTimestamper(self.url, hashname="sha256")
         try:
-             # Basic verification: check integrity and data match
-             # For production, we'd need a full chain verification with ca_certs
-             # Here we rely on the library providing basic checks, but note that 
-             # without a trusted root CA store passed in, this is limited.
-             # rfc3161ng doesn't have a simple 'verify' method that takes the token and data 
-             # in a stateless way easily without a Timestamper instance.
-             # We will implement a basic check using pyasn1 decoding if needed, 
-             # but for now we'll assume the token structure is valid and contains the hash.
-             
-             # Decode token
-             tst_obj, _ = decoder.decode(token, asn1Spec=rfc3161ng.TimeStampResp())
-             status = tst_obj['status']
-             if status['status'] != 0: # 0 = granted
-                 return False
-                 
-             # Verify the hash in the token matches our data hash
-             # This is a simplification. A real implementation needs full signature verification.
-             # rfc3161ng provides tools for this but they expect specific setup.
-             return True
+            # Basic verification: check integrity and data match
+            # For production, we'd need a full chain verification with ca_certs
+            # Here we rely on the library providing basic checks, but note that
+            # without a trusted root CA store passed in, this is limited.
+            # rfc3161ng doesn't have a simple 'verify' method that takes the token and data
+            # in a stateless way easily without a Timestamper instance.
+            # We will implement a basic check using pyasn1 decoding if needed,
+            # but for now we'll assume the token structure is valid and contains the hash.
+
+            # Decode token
+            tst_obj, _ = decoder.decode(token, asn1Spec=rfc3161ng.TimeStampResp())
+            status = tst_obj["status"]
+            if status["status"] != 0:  # 0 = granted
+                return False
+
+            # Verify the hash in the token matches our data hash
+            # This is a simplification. A real implementation needs full signature verification.
+            # rfc3161ng provides tools for this but they expect specific setup.
+            return True
         except Exception:
             return False
+
 
 def get_seat_count_from_entry(entry: AcceptanceEntry) -> int | None:
     """
@@ -670,6 +676,7 @@ def get_seat_count_from_entry(entry: AcceptanceEntry) -> int | None:
         return entry.metadata.get("seat_count")
     return None
 
+
 def set_seat_count_in_metadata(metadata: dict, seat_count: int) -> dict:
     """
     Add seat count to metadata dictionary.
@@ -678,4 +685,3 @@ def set_seat_count_in_metadata(metadata: dict, seat_count: int) -> dict:
         raise ValueError(f"Seat count must be at least 1, got {seat_count}")
     metadata["seat_count"] = seat_count
     return metadata
-

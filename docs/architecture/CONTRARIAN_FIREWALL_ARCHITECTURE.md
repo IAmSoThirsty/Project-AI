@@ -15,16 +15,16 @@ The Contrarian Firewall is a **God-tier monolithic security architecture** that 
 
 ### Core Philosophy: Contrarian Security
 
-**Traditional Security**: Harden weak points
-**Contrarian Security**: Turn weak points into bait
+**Traditional Security**: Harden weak points **Contrarian Security**: Turn weak points into bait
 
 Instead of trying to eliminate vulnerabilities, we:
-1. **Deploy Decoys**: Intentional "weak links" that look real
-2. **Swarm Response**: The more you attack, the more defenses appear
-3. **Cognitive Overload**: Attackers can't tell real from fake
-4. **Adaptive Escalation**: System learns and adapts from every attack
 
----
+1. **Deploy Decoys**: Intentional "weak links" that look real
+1. **Swarm Response**: The more you attack, the more defenses appear
+1. **Cognitive Overload**: Attackers can't tell real from fake
+1. **Adaptive Escalation**: System learns and adapts from every attack
+
+______________________________________________________________________
 
 ## System Architecture
 
@@ -54,30 +54,34 @@ Instead of trying to eliminate vulnerabilities, we:
 ### Integration Layers
 
 #### Layer 1: Threat Detection & Response
+
 - **Thirsty-lang Threat Detection**: White/Grey/Black/Red box analysis
 - **Swarm Defense**: Honeypot deployment and cognitive overload
 - **Pattern Recognition**: ML-based threat classification
 - **Real-Time Adaptation**: Continuous policy adjustment
 
 #### Layer 2: Governance & Ethics
+
 - **TARL Evaluation**: Every action evaluated through governance rules
 - **Triumvirate Voting**: Galahad (ethics), Cerberus (security), CodexDeus (logic)
 - **Audit Trail**: Immutable log of all governance decisions
 - **Policy Enforcement**: Dynamic policy updates based on threat level
 
 #### Layer 3: Agent Coordination
+
 - **59+ Agent Registry**: All agents registered with orchestrator
 - **Bi-Directional Communication**: Agents notify orchestrator, orchestrator directs agents
 - **Role Assignment**: Dynamic role allocation based on threat context
 - **Collective Intelligence**: Swarm learning from all agent experiences
 
 #### Layer 4: Crisis Escalation
+
 - **LiaraLayer Integration**: Automatic crisis workflow trigger
 - **Cerberus Hydra**: Multi-head detection for distributed threats
 - **Planetary Defense Advisory**: Constitutional guidance during crises
 - **Emergency Lockdown**: Full system quarantine capabilities
 
----
+______________________________________________________________________
 
 ## API Surface
 
@@ -85,8 +89,8 @@ Instead of trying to eliminate vulnerabilities, we:
 
 ### Chaos Engine Control
 
-**POST /chaos/start**
-Start the chaos engine with optional configuration
+**POST /chaos/start** Start the chaos engine with optional configuration
+
 ```json
 {
   "base_decoy_count": 10,
@@ -96,14 +100,12 @@ Start the chaos engine with optional configuration
 }
 ```
 
-**POST /chaos/stop**
-Stop the chaos engine
+**POST /chaos/stop** Stop the chaos engine
 
-**POST /chaos/tune**
-Dynamically adjust chaos parameters during runtime
+**POST /chaos/tune** Dynamically adjust chaos parameters during runtime
 
-**GET /chaos/status**
-Get comprehensive orchestrator status including:
+**GET /chaos/status** Get comprehensive orchestrator status including:
+
 - Running state
 - Current stability level (0.0 = stable, 1.0 = max chaos)
 - Threat score
@@ -112,8 +114,8 @@ Get comprehensive orchestrator status including:
 
 ### Threat Detection
 
-**POST /violation/detect**
-Process security violation through full orchestration pipeline
+**POST /violation/detect** Process security violation through full orchestration pipeline
+
 ```json
 {
   "source_ip": "192.168.1.100",
@@ -126,72 +128,57 @@ Process security violation through full orchestration pipeline
 ```
 
 **Response includes**:
+
 - Swarm defense response (decoys deployed, threat level)
 - Governance verdict (TARL evaluation)
 - Intent tracking ID
 - Orchestration metadata
 
-**GET /violation/recommendations/{source_ip}**
-Get decoy recommendations for specific attacker
+**GET /violation/recommendations/{source_ip}** Get decoy recommendations for specific attacker
 
 ### Intent Tracking
 
-**POST /intent/track**
-Track security intent with full context
+**POST /intent/track** Track security intent with full context
 
-**GET /intent/list**
-List all tracked intents (paginated)
+**GET /intent/list** List all tracked intents (paginated)
 
-**GET /intent/{intent_id}**
-Get specific intent with governance verdict and agent actions
+**GET /intent/{intent_id}** Get specific intent with governance verdict and agent actions
 
 ### Decoy Management
 
-**POST /decoy/deploy**
-Deploy additional honeypot decoys
+**POST /decoy/deploy** Deploy additional honeypot decoys
 
-**GET /decoy/list**
-List all active decoys with effectiveness metrics
+**GET /decoy/list** List all active decoys with effectiveness metrics
 
-**POST /decoy/access/{decoy_id}**
-Record decoy access (attacker took the bait!)
+**POST /decoy/access/{decoy_id}** Record decoy access (attacker took the bait!)
 
 ### Cognitive Warfare
 
-**GET /cognitive/overload**
-Get aggregate cognitive overload status for all attackers
+**GET /cognitive/overload** Get aggregate cognitive overload status for all attackers
 
-**GET /cognitive/overload/{source_ip}**
-Get detailed overload metrics for specific attacker
+**GET /cognitive/overload/{source_ip}** Get detailed overload metrics for specific attacker
 
 ### Adversary Profiling
 
-**POST /adversary/profile**
-Create or update adversary profile
+**POST /adversary/profile** Create or update adversary profile
 
-**GET /adversary/profiles**
-List all adversary profiles
+**GET /adversary/profiles** List all adversary profiles
 
-**POST /adversary/rotate**
-Trigger adversary profile rotation
+**POST /adversary/rotate** Trigger adversary profile rotation
 
 ### Threat Intelligence
 
-**GET /threat/score**
-Get federated threat score from all sources
+**GET /threat/score** Get federated threat score from all sources
 
-**POST /threat/score/update**
-Update threat score from external intelligence feed
+**POST /threat/score/update** Update threat score from external intelligence feed
 
 ### Administration
 
-**GET /status**
-Comprehensive firewall status (all subsystems)
+**GET /status** Comprehensive firewall status (all subsystems)
 
-**POST /reset**
-Reset firewall state (admin only, for testing)
+**POST /reset** Reset firewall state (admin only, for testing)
 
----
+______________________________________________________________________
 
 ## Configuration
 
@@ -238,71 +225,82 @@ security_config = SecurityConfig(
 )
 ```
 
----
+______________________________________________________________________
 
 ## Operational Modes
 
 ### Passive Mode
+
 - Observing only, no active intervention
 - Collect telemetry and build threat profiles
 - Used for: Initial deployment, learning phase
 
 ### Active Mode
+
 - Active defense with decoy deployment
 - Moderate chaos injection (30-50%)
 - Used for: Normal operations
 
 ### Aggressive Mode
+
 - Maximum chaos deployment
 - High decoy count (500+ decoys)
 - Cognitive overload maximized
 - Used for: Active attack scenarios
 
 ### Adaptive Mode (Recommended)
+
 - Auto-tuning based on threat level
 - Dynamic chaos/stability balance
 - Learns from every interaction
 - Used for: Production deployments
 
----
+______________________________________________________________________
 
 ## Threat Escalation Levels
 
 ### SCOUT (1-2 violations)
+
 - **Decoys**: 10 base decoys
 - **Response**: Minimal, observing
-- **Cognitive Overload**: <2.0
+- **Cognitive Overload**: \<2.0
 
 ### PROBE (3-5 violations)
+
 - **Decoys**: 30 decoys (3× multiplier)
 - **Response**: Moderate decoy deployment
 - **Cognitive Overload**: 2.0-4.0
 
 ### ATTACK (6-10 violations)
+
 - **Decoys**: 90 decoys (9× multiplier)
 - **Response**: Active confusion tactics
 - **Cognitive Overload**: 4.0-6.0
 
 ### SIEGE (11-20 violations)
+
 - **Decoys**: 270 decoys (27× multiplier)
 - **Response**: Maximum chaos deployment
 - **Cognitive Overload**: 6.0-8.0
 - **Escalation**: Notify agents
 
 ### SWARM (21+ violations)
+
 - **Decoys**: 810+ decoys (81× multiplier)
 - **Response**: FULL COGNITIVE WARFARE
 - **Cognitive Overload**: >8.0
 - **Escalation**: Crisis mode, LiaraLayer engaged
 
----
+______________________________________________________________________
 
 ## Auto-Tuning Algorithm
 
 The orchestrator continuously tunes chaos/stability balance:
 
 ```python
+
 # Every 30 seconds:
+
 if avg_threat_score > 0.7:
     stability -= 0.1  # Increase chaos
 elif avg_threat_score < 0.3:
@@ -316,11 +314,12 @@ elif avg_cognitive_overload > target * 1.5:
 
 **Result**: System automatically finds optimal chaos/stability balance for current threat landscape.
 
----
+______________________________________________________________________
 
 ## Telemetry & Monitoring
 
 ### Real-Time Metrics (5s interval)
+
 - Threat score (0-100)
 - Cognitive overload average
 - Active violations count
@@ -330,21 +329,24 @@ elif avg_cognitive_overload > target * 1.5:
 - Auto-tuning state
 
 ### Historical Aggregation
+
 - 15-minute rolling window summaries
 - 1-hour trend analysis
 - Daily threat intelligence reports
 
 ### Alerts & Notifications
+
 - Automatic alert on SWARM level
 - Crisis escalation to LiaraLayer
 - Agent coordination events
 - Governance policy violations
 
----
+______________________________________________________________________
 
 ## Integration Patterns
 
 ### Pattern 1: Standalone Deployment
+
 Use Contrarian Firewall as independent security layer
 
 ```python
@@ -354,6 +356,7 @@ orchestrator = get_orchestrator()
 await orchestrator.start()
 
 # Process violations
+
 result = orchestrator.process_violation(
     source_ip="192.168.1.100",
     violation_type="injection",
@@ -362,23 +365,32 @@ result = orchestrator.process_violation(
 ```
 
 ### Pattern 2: Governance Integration
+
 Deep integration with TARL + Triumvirate
 
 ```python
+
 # Violations automatically evaluated through:
+
 # 1. Galahad (ethical assessment)
+
 # 2. Cerberus (threat analysis)
+
 # 3. CodexDeus (final arbitration)
 
 # Result includes governance verdict
+
 assert result["governance_verdict"] in ["allow", "deny", "degrade"]
 ```
 
 ### Pattern 3: Agent Coordination
+
 Bi-directional communication with agents
 
 ```python
+
 # Orchestrator notifies agents
+
 orchestrator._notify_agents(
     event_type="violation",
     source="attacker_ip",
@@ -386,33 +398,41 @@ orchestrator._notify_agents(
 )
 
 # Agents report back through telemetry
+
 orchestrator._update_threat_intelligence(...)
 ```
 
 ### Pattern 4: Crisis Escalation
+
 Automatic escalation to LiaraLayer
 
 ```python
+
 # When SWARM level reached:
+
 if swarm_result["swarm_active"]:
     orchestrator._escalate_to_liara(source_ip, swarm_result)
+
     # Triggers LiaraLayer crisis workflow
+
 ```
 
----
+______________________________________________________________________
 
 ## Security Guarantees
 
 ### Defense in Depth
+
 1. **Constitutional Guardrails**: Base ethical rules
-2. **Border Patrol**: Perimeter security
-3. **Jailbreak Detection**: Prompt injection defense
-4. **Code Adversary**: Supply chain security
-5. **Contrarian Firewall**: Cognitive warfare layer
-6. **Red Team Validation**: Continuous testing
-7. **Dependency Audit**: Vulnerability scanning
+1. **Border Patrol**: Perimeter security
+1. **Jailbreak Detection**: Prompt injection defense
+1. **Code Adversary**: Supply chain security
+1. **Contrarian Firewall**: Cognitive warfare layer
+1. **Red Team Validation**: Continuous testing
+1. **Dependency Audit**: Vulnerability scanning
 
 ### Audit Trail
+
 - Every violation logged immutably
 - All governance decisions recorded
 - Complete intent tracking
@@ -420,55 +440,62 @@ if swarm_result["swarm_active"]:
 - Telemetry history preserved
 
 ### Zero Trust Architecture
+
 - No action bypasses governance
 - Every intent evaluated through TARL
 - Agent coordination authenticated
 - Crisis escalation verified
 
----
+______________________________________________________________________
 
 ## Performance Characteristics
 
 ### Latency
-- Violation processing: <100ms (without governance)
-- With governance: <500ms (includes Triumvirate voting)
+
+- Violation processing: \<100ms (without governance)
+- With governance: \<500ms (includes Triumvirate voting)
 - Telemetry collection: 5s intervals
 - Auto-tuning: 30s intervals
 
 ### Scalability
+
 - Handles 1000+ concurrent attackers
 - Supports 10,000+ decoy deployment
 - Scales horizontally with load balancing
 - Redis/PostgreSQL for distributed state
 
 ### Resource Usage
+
 - Memory: ~500MB base + 1KB per attacker
-- CPU: <10% idle, <50% under attack
+- CPU: \<10% idle, \<50% under attack
 - Storage: ~1MB per 1000 violations logged
 
----
+______________________________________________________________________
 
 ## Future Enhancements
 
 ### Phase 7: Machine Learning Integration
+
 - Predictive threat modeling
 - Anomaly detection with neural networks
 - Behavioral biometrics for attackers
 - Automated vulnerability patching
 
 ### Phase 8: Distributed Deployment
+
 - Multi-region orchestration
 - Federated threat intelligence sharing
 - Cross-organization defense cooperation
 - Global honeypot network
 
 ### Phase 9: Advanced Cognitive Warfare
+
 - AI-powered decoy generation
 - Dynamic vulnerability simulation
 - Attacker psychology profiling
 - Deception theory optimization
 
----
+______________________________________________________________________
 
 ## References
 
@@ -479,7 +506,6 @@ if swarm_result["swarm_active"]:
 - `cognition/triumvirate.py` - Governance integration
 - `src/thirsty_lang/PROJECT_AI_INTEGRATION.md` - Integration plan
 
----
+______________________________________________________________________
 
-**Built with God-tier architectural density.**
-**As if from the Codex Deus Maximus itself.**
+**Built with God-tier architectural density.** **As if from the Codex Deus Maximus itself.**

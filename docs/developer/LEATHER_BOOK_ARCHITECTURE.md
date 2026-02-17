@@ -129,14 +129,18 @@ User Action Flow:
 
 1. User types message in UserChatPanel.input_text
 2. User clicks UserChatPanel.send_btn
+
    ↓
+
 3. UserChatPanel._send_message() called
+
    ├── Extract text from input_text
    ├── Emit message_sent(message) signal
    ├── Clear input field
    └── Return
 
 4. LeatherBookDashboard._on_user_message() received signal
+
    ├── Emit send_message(message) to parent
    ├── Call ai_head.start_thinking()
    ├── Call ai_response.add_user_message(message)
@@ -145,6 +149,7 @@ User Action Flow:
 5. [Parent/AI Backend processes message]
 
 6. Parent calls LeatherBookDashboard.add_ai_response(response)
+
    ├── Call ai_response.add_ai_response(response)
    ├── Call ai_head.stop_thinking()
    └── Return
@@ -156,7 +161,7 @@ Animation Update Flow:
 QTimer (50ms interval)
         ↓
 LeatherBookDashboard._update_animations()
-    ├── Call ai_head.update() 
+    ├── Call ai_head.update()
     │   └── Increments animation_frame
     │       └── Triggers paintEvent() on canvas
     │           ├── Draw grid background (updated)
@@ -210,30 +215,34 @@ Main Thread
     └── Window events → resizeEvent, closeEvent, etc.
 ```
 
-
 ## Color Coding Reference
 
 ```text
 Typography:
+
   - Titles: #00ffff (Cyan, font-weight: bold, 12pt Courier New)
   - Labels: #00ff00 (Neon Green, Courier New)
   - Input focus: #00ffff (Cyan border)
 
 Panel Backgrounds:
+
   - Main: #0a0a0a (Deep black)
   - Frames: #0f0f0f (Slightly lighter black)
   - Input areas: #1a1a1a (Dark gray)
 
 Borders & Effects:
+
   - Standard: 2px solid #00ff00
   - Focus: 2px solid #00ffff
   - Text shadow: 0px 0px 5px-15px #00ff00 (glow)
   - Hover state: color changes to cyan
 
 Buttons:
+
   - Normal: #1a1a1a background, #00ff00 text, green border
   - Hover: #2a2a2a background, #00ffff text, cyan border
   - Send button (special): #00ff00 background, #000000 text
+
 ```
 
 ## Performance Considerations
@@ -242,7 +251,7 @@ Buttons:
 
 - 50ms timer = 20 FPS (sufficient for smooth smooth movement)
 - Each frame: 1 paintEvent per visible widget
-- Typical paint time: <5ms on modern systems
+- Typical paint time: \<5ms on modern systems
 
 ### Memory Usage
 
@@ -267,7 +276,7 @@ class LeatherBookDashboard(QWidget):
     def __init__(self, username: str, ai_backend, parent=None):
         self.ai = ai_backend  # E.g., OpenAI API, local LLM, etc.
         self.send_message.connect(self._process_message)
-    
+
     def _process_message(self, message: str):
         response = self.ai.generate_response(message)
         self.add_ai_response(response)
@@ -278,9 +287,11 @@ class LeatherBookDashboard(QWidget):
 ```python
 def add_ai_response(self, response: str):
     self.ai_response.add_ai_response(response)
+
     # Save to database
-    self.db.save_message(user=self.username, 
-                        content=response, 
+
+    self.db.save_message(user=self.username,
+                        content=response,
                         is_ai=True)
 ```
 
@@ -290,13 +301,13 @@ def add_ai_response(self, response: str):
 import psutil
 
 def _update_stats(self):
+
     # Real stats instead of simulation
+
     self.memory_label.setText(f"Memory: {psutil.virtual_memory().percent}%")
     self.processor_label.setText(f"CPU: {psutil.cpu_percent()}%")
 ```
 
----
+______________________________________________________________________
 
-**Diagram Generated**: 2025
-**Architecture Version**: 1.0
-**Status**: Complete & Production-Ready ✅
+**Diagram Generated**: 2025 **Architecture Version**: 1.0 **Status**: Complete & Production-Ready ✅

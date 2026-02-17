@@ -1,11 +1,8 @@
 # Security Roadmap
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-01-19  
-**Owner:** Security Team (@org/security-guardians)  
-**Review Cycle:** Quarterly
+**Document Version:** 1.0 **Last Updated:** 2026-01-19 **Owner:** Security Team (@org/security-guardians) **Review Cycle:** Quarterly
 
----
+______________________________________________________________________
 
 ## Overview
 
@@ -17,7 +14,7 @@ This document outlines Project-AI's security enhancement roadmap, converting pre
 - [Security Framework](../SECURITY_FRAMEWORK.md) - Overall security posture
 - [Security Governance](SECURITY_GOVERNANCE.md) - Ownership and processes
 
----
+______________________________________________________________________
 
 ## Roadmap Status Legend
 
@@ -27,7 +24,7 @@ This document outlines Project-AI's security enhancement roadmap, converting pre
 - 🔴 **Research:** Under evaluation, no commitment yet
 - ⚫ **Deferred:** Lower priority, no active planning
 
----
+______________________________________________________________________
 
 ## 1. Build-Time Code Injection Protection
 
@@ -52,7 +49,7 @@ Malicious code could be injected during the build process (e.g., compromised CI 
 - ✅ SBOM generation (records build dependencies)
 - ✅ Pinned GitHub Actions (prevents action tampering)
 - ✅ GitHub-hosted runners (reduces runner compromise risk)
-- ⚠️  No build attestation or provenance
+- ⚠️ No build attestation or provenance
 
 **Gaps:**
 
@@ -64,18 +61,19 @@ Malicious code could be injected during the build process (e.g., compromised CI 
 
 #### Short-term (Q2 2026) - SLSA Level 2
 
-**Status:** 🟠 Planned  
-**Owner:** DevOps Lead + Security Guardian
+**Status:** 🟠 Planned **Owner:** DevOps Lead + Security Guardian
 
 **Initiatives:**
 
 1. **SLSA Provenance Generation**
+
    - Implement: [slsa-github-generator](https://github.com/slsa-framework/slsa-github-generator)
    - Generate: SLSA provenance attestations for all releases
    - Attach: Provenance to GitHub releases alongside signatures
    - Workflow: `.github/workflows/slsa-provenance.yml`
 
 1. **Hardened Build Environment**
+
    - Use: Dedicated, ephemeral build runners
    - Implement: Network restrictions during build
    - Enable: GitHub Actions runner audit logging
@@ -88,17 +86,18 @@ Malicious code could be injected during the build process (e.g., compromised CI 
 
 #### Medium-term (Q3-Q4 2026) - SLSA Level 3
 
-**Status:** 🟠 Planned  
-**Owner:** Security Team
+**Status:** 🟠 Planned **Owner:** Security Team
 
 **Initiatives:**
 
 1. **Reproducible Builds**
+
    - Research: Python wheel reproducibility
    - Implement: Deterministic build process
    - Enable: Build verification by third parties
 
 1. **Build Isolation**
+
    - Evaluate: Hermetic build environments
    - Implement: Stronger isolation guarantees
 
@@ -109,8 +108,7 @@ Malicious code could be injected during the build process (e.g., compromised CI 
 
 #### Long-term (2027+) - SLSA Level 4
 
-**Status:** 🔴 Research  
-**Owner:** TBD
+**Status:** 🔴 Research **Owner:** TBD
 
 **Initiatives:**
 
@@ -118,7 +116,7 @@ Malicious code could be injected during the build process (e.g., compromised CI 
 - Tamper-proof build log
 - Fully hermetic builds
 
----
+______________________________________________________________________
 
 ## 2. Malicious Dependency Injection
 
@@ -148,8 +146,8 @@ Attacker introduces malicious dependencies through:
 - ✅ `pip-audit` in CI (known vulnerabilities)
 - ✅ SBOM generation (visibility)
 - ✅ Pinned versions in `requirements.txt`
-- ⚠️  No dependency review workflow
-- ⚠️  No package verification
+- ⚠️ No dependency review workflow
+- ⚠️ No package verification
 
 **Gaps:**
 
@@ -161,23 +159,25 @@ Attacker introduces malicious dependencies through:
 
 #### Short-term (Q2 2026) - Enhanced Monitoring
 
-**Status:** 🟠 Planned  
-**Owner:** Security Guardian
+**Status:** 🟠 Planned **Owner:** Security Guardian
 
 **Initiatives:**
 
 1. **GitHub Dependency Review**
+
    - Enable: GitHub Dependency Review in PRs
    - Workflow: `.github/workflows/dependency-review.yml`
    - Action: [dependency-review-action](https://github.com/actions/dependency-review-action)
    - Block: PRs introducing vulnerable dependencies
 
 1. **Supply Chain Levels for Software Artifacts (SLSA)**
+
    - Verify: Package provenance when available
    - Implement: Package signature verification
    - Document: Trusted package sources
 
 1. **Enhanced Dependency Scanning**
+
    - Tool: [socket.dev](https://socket.dev) or [Snyk](https://snyk.io)
    - Detect: Suspicious package behavior (telemetry, install scripts)
    - Alert: On new dependencies with concerning patterns
@@ -190,22 +190,24 @@ Attacker introduces malicious dependencies through:
 
 #### Medium-term (Q3-Q4 2026) - Dependency Hardening
 
-**Status:** 🟠 Planned  
-**Owner:** DevOps + Security
+**Status:** 🟠 Planned **Owner:** DevOps + Security
 
 **Initiatives:**
 
 1. **Private Package Registry**
+
    - Implement: Internal PyPI mirror
    - Curate: Reviewed and approved packages only
    - Scan: Packages before addition to mirror
 
 1. **Dependency Pinning Policy**
+
    - Require: Hash-pinning for all direct dependencies
    - Automate: Integrity verification
    - Document: Dependency update approval process
 
 1. **Transitive Dependency Review**
+
    - Analyze: Full dependency tree
    - Audit: High-risk transitive dependencies
    - Minimize: Transitive dependency count
@@ -218,8 +220,7 @@ Attacker introduces malicious dependencies through:
 
 #### Long-term (2027+) - Full Provenance
 
-**Status:** 🔴 Research  
-**Owner:** TBD
+**Status:** 🔴 Research **Owner:** TBD
 
 **Initiatives:**
 
@@ -227,7 +228,7 @@ Attacker introduces malicious dependencies through:
 - Require SLSA provenance for critical dependencies
 - Implement dependency firewall
 
----
+______________________________________________________________________
 
 ## 3. Model Backdoors in Weights
 
@@ -253,8 +254,8 @@ Pre-trained model weights contain hidden backdoors that activate on specific inp
 - ✅ Model file integrity checks (SHA-256 hashes)
 - ✅ ModelScan for pickle exploits (structural, not behavioral)
 - ✅ Source tracking (where models came from)
-- ⚠️  No behavioral anomaly detection
-- ⚠️  No static weight analysis
+- ⚠️ No behavioral anomaly detection
+- ⚠️ No static weight analysis
 
 **Gaps:**
 
@@ -266,24 +267,26 @@ Pre-trained model weights contain hidden backdoors that activate on specific inp
 
 #### Short-term (Q2 2026) - Enhanced Monitoring
 
-**Status:** 🟡 In Progress  
-**Owner:** ML Lead + Security Guardian
+**Status:** 🟡 In Progress **Owner:** ML Lead + Security Guardian
 
 **Initiatives:**
 
 1. **Model Provenance Tracking**
+
    - Document: Source, training data, fine-tuning history
    - Implement: Model registry with provenance metadata
    - File: `data/ai_persona/models/MODEL_PROVENANCE.json`
    - Schema: Training dataset, hyperparameters, source, date
 
 1. **Model Integrity Verification**
+
    - Generate: Cryptographic hashes for all model files
    - Sign: Model files with Cosign (like artifacts)
    - Verify: Signatures before loading models
    - Workflow: Extend `sign-release-artifacts.yml`
 
 1. **Behavioral Testing Suite**
+
    - Create: Test cases for expected model behavior
    - Detect: Unexpected outputs on known inputs
    - Alert: On significant behavior changes
@@ -297,23 +300,25 @@ Pre-trained model weights contain hidden backdoors that activate on specific inp
 
 #### Medium-term (Q3-Q4 2026) - Behavioral Analysis
 
-**Status:** 🟠 Planned  
-**Owner:** ML Lead
+**Status:** 🟠 Planned **Owner:** ML Lead
 
 **Initiatives:**
 
 1. **Runtime Anomaly Detection**
+
    - Implement: Output monitoring for anomalies
    - Baseline: Normal model behavior patterns
    - Alert: On statistical deviations
    - Tool: Custom + open-source monitoring
 
 1. **Model Scanning Tools**
+
    - Evaluate: Emerging tools (e.g., [Vigil](https://github.com/meta-llama/vigil))
    - Integrate: When mature enough for production
    - Research: Academic backdoor detection methods
 
 1. **Red Team Testing**
+
    - Conduct: Adversarial testing against models
    - Simulate: Backdoor trigger scenarios
    - Document: Attack surface and defenses
@@ -326,8 +331,7 @@ Pre-trained model weights contain hidden backdoors that activate on specific inp
 
 #### Long-term (2027+) - Advanced Verification
 
-**Status:** 🔴 Research  
-**Owner:** TBD
+**Status:** 🔴 Research **Owner:** TBD
 
 **Initiatives:**
 
@@ -342,7 +346,7 @@ Pre-trained model weights contain hidden backdoors that activate on specific inp
 - Tools may not exist yet
 - Requires active monitoring of ML security literature
 
----
+______________________________________________________________________
 
 ## 4. Adversarial Examples (Runtime Attacks)
 
@@ -367,8 +371,8 @@ Attacker crafts inputs that fool the model at runtime, causing misclassification
 - ✅ Input validation (basic sanity checks)
 - ✅ Content filtering (image generation)
 - ✅ Safety guardrails in prompts
-- ⚠️  No adversarial robustness testing
-- ⚠️  No runtime attack detection
+- ⚠️ No adversarial robustness testing
+- ⚠️ No runtime attack detection
 
 **Gaps:**
 
@@ -380,24 +384,26 @@ Attacker crafts inputs that fool the model at runtime, causing misclassification
 
 #### Short-term (Q2 2026) - Input Hardening
 
-**Status:** 🟠 Planned  
-**Owner:** ML Lead + Security Guardian
+**Status:** 🟠 Planned **Owner:** ML Lead + Security Guardian
 
 **Initiatives:**
 
 1. **Enhanced Input Validation**
+
    - Implement: Stricter input sanitization
    - Add: Adversarial input detection heuristics
    - Tool: [LLM Guard](https://github.com/protectai/llm-guard) or similar
    - Location: `src/app/core/input_validation.py`
 
 1. **Prompt Injection Defenses**
+
    - Implement: Prompt injection detection
    - Use: Separator tokens and delimiters
    - Test: Against known prompt injection techniques
    - Document: Safe prompt engineering patterns
 
 1. **Monitoring and Alerting**
+
    - Log: All model inputs and outputs
    - Detect: Unusual input patterns
    - Alert: On suspected attacks
@@ -411,23 +417,25 @@ Attacker crafts inputs that fool the model at runtime, causing misclassification
 
 #### Medium-term (Q3-Q4 2026) - Adversarial Training
 
-**Status:** 🟠 Planned  
-**Owner:** ML Lead
+**Status:** 🟠 Planned **Owner:** ML Lead
 
 **Initiatives:**
 
 1. **Adversarial Robustness Testing**
+
    - Create: Adversarial test suite
    - Automate: Testing in CI
    - Measure: Model robustness metrics
    - Tool: [TextAttack](https://github.com/QData/TextAttack) or [Foolbox](https://github.com/bethgelab/foolbox)
 
 1. **Model Hardening**
+
    - Implement: Adversarial training techniques
    - Fine-tune: Models with adversarial examples
    - Evaluate: Robustness improvements
 
 1. **Runtime Attack Detection**
+
    - Implement: Real-time attack detection
    - Use: Ensemble methods or uncertainty estimation
    - Block: Detected attacks before processing
@@ -440,8 +448,7 @@ Attacker crafts inputs that fool the model at runtime, causing misclassification
 
 #### Long-term (2027+) - Advanced Defenses
 
-**Status:** 🔴 Research  
-**Owner:** TBD
+**Status:** 🔴 Research **Owner:** TBD
 
 **Initiatives:**
 
@@ -450,7 +457,7 @@ Attacker crafts inputs that fool the model at runtime, causing misclassification
 - Multi-model consensus systems
 - Adaptive defense mechanisms
 
----
+______________________________________________________________________
 
 ## 5. Runtime Vulnerabilities (DAST/RASP)
 
@@ -477,9 +484,9 @@ Vulnerabilities in the running application that are not detectable through stati
 - ✅ Input validation (basic)
 - ✅ Authentication (bcrypt passwords)
 - ✅ HTTPS for web version
-- ⚠️  No dynamic analysis (DAST)
-- ⚠️  No runtime protection (RASP)
-- ⚠️  Limited penetration testing
+- ⚠️ No dynamic analysis (DAST)
+- ⚠️ No runtime protection (RASP)
+- ⚠️ Limited penetration testing
 
 **Gaps:**
 
@@ -491,24 +498,26 @@ Vulnerabilities in the running application that are not detectable through stati
 
 #### Short-term (Q2 2026) - DAST Implementation
 
-**Status:** 🟠 Planned  
-**Owner:** Security Guardian + DevOps
+**Status:** 🟠 Planned **Owner:** Security Guardian + DevOps
 
 **Initiatives:**
 
 1. **Dynamic Application Security Testing (DAST)**
+
    - Tool: [OWASP ZAP](https://www.zaproxy.org/) or [Burp Suite Pro](https://portswigger.net/burp/pro)
    - Workflow: `.github/workflows/dast.yml`
    - Schedule: Weekly scans against staging environment
    - Target: Web interface (Flask backend)
 
 1. **API Security Testing**
+
    - Test: REST API endpoints
    - Check: Authentication, authorization, input validation
    - Tool: OWASP ZAP API scan
    - Document: API security requirements
 
 1. **Dependency Runtime Monitoring**
+
    - Monitor: Runtime library behavior
    - Detect: Unexpected network calls, file access
    - Tool: [Contrast Security](https://www.contrastsecurity.com/) or [Snyk Runtime](https://snyk.io/product/runtime-security/)
@@ -521,24 +530,26 @@ Vulnerabilities in the running application that are not detectable through stati
 
 #### Medium-term (Q3-Q4 2026) - RASP Integration
 
-**Status:** 🟠 Planned  
-**Owner:** Security Team
+**Status:** 🟠 Planned **Owner:** Security Team
 
 **Initiatives:**
 
 1. **Runtime Application Self-Protection (RASP)**
+
    - Evaluate: RASP solutions (e.g., [Sqreen](https://www.sqreen.com/), [Contrast Protect](https://www.contrastsecurity.com/contrast-protect))
    - Implement: Runtime monitoring and blocking
    - Deploy: In production environment
    - Mode: Initially in monitoring mode, then blocking
 
 1. **Security Monitoring and SIEM**
+
    - Implement: Centralized logging
    - Tool: ELK stack or cloud SIEM
    - Alert: On security events
    - Integrate: With incident response process
 
 1. **Penetration Testing**
+
    - Conduct: Annual penetration test
    - Scope: Full application stack
    - Partner: External security firm
@@ -552,8 +563,7 @@ Vulnerabilities in the running application that are not detectable through stati
 
 #### Long-term (2027+) - Continuous Security
 
-**Status:** 🔴 Research  
-**Owner:** TBD
+**Status:** 🔴 Research **Owner:** TBD
 
 **Initiatives:**
 
@@ -562,7 +572,7 @@ Vulnerabilities in the running application that are not detectable through stati
 - Red team exercises
 - Advanced threat hunting
 
----
+______________________________________________________________________
 
 ## Implementation Timeline
 
@@ -598,7 +608,7 @@ Vulnerabilities in the running application that are not detectable through stati
 - 🔴 Certified robustness
 - 🔴 Continuous security testing
 
----
+______________________________________________________________________
 
 ## Tracking and Governance
 
@@ -631,7 +641,7 @@ Track progress using these KPIs:
 - **Timeline slip:** Document reason, update roadmap
 - **New vulnerability class:** Emergency roadmap update
 
----
+______________________________________________________________________
 
 ## Integration with Security Framework
 
@@ -647,7 +657,7 @@ All roadmap items transition from:
 1. Each transition requires guardian approval
 1. Implemented items update the threat model coverage analysis
 
----
+______________________________________________________________________
 
 ## Contact and Feedback
 
@@ -663,6 +673,6 @@ All roadmap items transition from:
 - Review: Quarterly
 - Updates: As initiatives complete or priorities change
 
----
+______________________________________________________________________
 
 *This roadmap is a living document. As the threat landscape evolves and new tools emerge, we will adapt our plans accordingly.*

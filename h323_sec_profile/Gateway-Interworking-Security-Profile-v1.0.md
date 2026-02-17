@@ -423,7 +423,9 @@ SRTP → Gateway → SRTP/RTP → SIP Trunk
 
 **Automation:**
 ```bash
+
 # Daily gateway health check
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --device-ip <gateway-ip> \
     --snmp-user admin \
@@ -431,6 +433,7 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py reg-status \
     --priv-key <key>
 
 # API health check
+
 curl -X GET "http://localhost:8080/registration/status?device_ip=<gateway-ip>&..."
 ```
 
@@ -469,7 +472,9 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py log-event \
 
 **Validation:**
 ```bash
+
 # Check trunk status
+
 snmpwalk -v3 -u admin <gateway-ip> trunkStatus
 ```
 
@@ -508,11 +513,14 @@ A gateway is compliant when:
 
 **Validation:**
 ```bash
+
 # Run compliance check
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
     --config gateway_deployment_config.json
 
 # Expected result: PASS with no critical failures
+
 ```
 
 **Sample Configuration:**

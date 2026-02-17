@@ -42,15 +42,18 @@ Implements threshold cryptography over Galois Field GF(257):
 from src.app.security.tseca_ghost_protocol import shamir_split, shamir_reconstruct
 
 # Split secret into 5 shares, requiring 3 to reconstruct
+
 secret = b"My secret data"
 shares = shamir_split(secret, k=3, n=5)
 
 # Reconstruct from any 3 shares
+
 reconstructed = shamir_reconstruct(shares[:3])
 assert reconstructed == secret
 ```
 
 **Key Features:**
+
 - Threshold: k-of-n reconstruction (k ≤ n)
 - Field: GF(257) for byte-compatible operations
 - Encoding: 2 bytes per GF(257) value (little-endian)
@@ -64,16 +67,20 @@ Identity continuity system with encrypted shard fragmentation:
 from src.app.security.tseca_ghost_protocol import GhostProtocol
 
 # Initialize with quorum parameters
+
 ghost = GhostProtocol(quorum_k=3, total_n=5)
 
 # Fragment identity into encrypted shards
+
 shards = ghost.fragment_identity()
 
 # Resurrect identity from any k shards
+
 restored_hash = ghost.resurrect(shards[:3])
 ```
 
 **Key Features:**
+
 - Ed25519 cryptographic identity
 - AES-GCM encrypted shards
 - SHA-256 identity hashing
@@ -91,16 +98,23 @@ ghost = GhostProtocol()
 tseca = TSECA(ghost)
 
 # Perform secure inference
+
 result = tseca.secure_inference({"operation": "analyze"})
 
 # Result includes:
+
 # - result: Inference output
+
 # - identity_hash: Current identity
+
 # - response_hash: SHA-256 of canonical result
+
 # - signature: Ed25519 signature
+
 ```
 
 **Key Features:**
+
 - Identity anchor validation
 - Deterministic processing
 - Canonical JSON serialization
@@ -121,10 +135,12 @@ monitor = HeartbeatMonitor(timeout=5, threshold=3)
 monitor.monitor(on_failure)  # Runs in background
 
 # Send regular heartbeats
+
 monitor.beat()
 ```
 
 **Key Features:**
+
 - Configurable timeout and threshold
 - Thread-safe operation
 - Automatic failure detection
@@ -138,17 +154,22 @@ Complete integrated system:
 from src.app.security.tseca_ghost_protocol import TSECA_Ghost_System
 
 # Initialize unified system
+
 system = TSECA_Ghost_System()
 
 # Perform secure operations
+
 result = system.inference({"operation": "test"})
 system.send_heartbeat()
 
 # Automatic catastrophic recovery
+
 # (triggered after threshold heartbeat failures)
+
 ```
 
 **Key Features:**
+
 - Automatic initialization
 - Background heartbeat monitoring
 - Automatic identity resurrection
@@ -159,22 +180,26 @@ system.send_heartbeat()
 ### Cryptographic Guarantees
 
 1. **Identity Security**
+
    - Ed25519 public key cryptography (256-bit security)
    - Private key never exposed in plaintext
    - Tamper-evident identity hash chains
 
-2. **Shard Protection**
+1. **Shard Protection**
+
    - AES-GCM authenticated encryption
    - 256-bit master key
    - 96-bit random nonces
    - Authenticated ciphertext
 
-3. **Secret Sharing**
+1. **Secret Sharing**
+
    - Information-theoretically secure (k-1 shares reveal nothing)
    - Polynomial interpolation over GF(257)
    - Random coefficients from cryptographic PRNG
 
-4. **Attestation**
+1. **Attestation**
+
    - Ed25519 digital signatures
    - SHA-256 response hashing
    - Canonical JSON serialization
@@ -182,6 +207,7 @@ system.send_heartbeat()
 ### Threat Model
 
 **Protected Against:**
+
 - ✅ Shard theft (k-1 shards insufficient)
 - ✅ Identity impersonation (signature verification)
 - ✅ Response tampering (hash + signature)
@@ -189,6 +215,7 @@ system.send_heartbeat()
 - ✅ Memory corruption (identity resurrection)
 
 **Requires Protection:**
+
 - ⚠️ Master key must remain confidential
 - ⚠️ At least k shards must be available for recovery
 - ⚠️ Side-channel attacks on cryptographic operations
@@ -198,37 +225,41 @@ system.send_heartbeat()
 
 ### Computational Complexity
 
-| Operation | Time Complexity | Notes |
-|-----------|----------------|-------|
-| Shamir Split | O(n × m × k) | n=shares, m=secret_length, k=threshold |
-| Shamir Reconstruct | O(k² × m) | k=shares_used, m=secret_length |
-| Identity Fragment | O(n × k) | Includes AES-GCM encryption |
-| Identity Resurrect | O(k²) | Includes AES-GCM decryption |
-| Secure Inference | O(1) | Constant overhead |
-| Heartbeat | O(1) | Constant time check |
+| Operation          | Time Complexity | Notes                                  |
+| ------------------ | --------------- | -------------------------------------- |
+| Shamir Split       | O(n × m × k)    | n=shares, m=secret_length, k=threshold |
+| Shamir Reconstruct | O(k² × m)       | k=shares_used, m=secret_length         |
+| Identity Fragment  | O(n × k)        | Includes AES-GCM encryption            |
+| Identity Resurrect | O(k²)           | Includes AES-GCM decryption            |
+| Secure Inference   | O(1)            | Constant overhead                      |
+| Heartbeat          | O(1)            | Constant time check                    |
 
 ### Memory Usage
 
-| Component | Memory | Notes |
-|-----------|--------|-------|
-| Ed25519 Private Key | 32 bytes | |
-| Ed25519 Public Key | 32 bytes | |
-| AES-GCM Master Key | 32 bytes | |
-| Identity Shard | ~100 bytes | 1 + 12 + (32 × 2) + overhead |
-| Signature | 64 bytes | Ed25519 signature |
+| Component           | Memory     | Notes                        |
+| ------------------- | ---------- | ---------------------------- |
+| Ed25519 Private Key | 32 bytes   |                              |
+| Ed25519 Public Key  | 32 bytes   |                              |
+| AES-GCM Master Key  | 32 bytes   |                              |
+| Identity Shard      | ~100 bytes | 1 + 12 + (32 × 2) + overhead |
+| Signature           | 64 bytes   | Ed25519 signature            |
 
 ## Best Practices
 
 ### 1. Quorum Configuration
 
 ```python
+
 # For high-availability systems
+
 ghost = GhostProtocol(quorum_k=3, total_n=7)  # Can lose 4 shards
 
 # For ultra-secure systems
+
 ghost = GhostProtocol(quorum_k=5, total_n=7)  # Need most shards
 
 # For balanced approach (recommended)
+
 ghost = GhostProtocol(quorum_k=3, total_n=5)  # Default
 ```
 
@@ -242,13 +273,17 @@ ghost = GhostProtocol(quorum_k=3, total_n=5)  # Default
 ### 3. Heartbeat Configuration
 
 ```python
+
 # For critical systems (aggressive)
+
 monitor = HeartbeatMonitor(timeout=1, threshold=2)
 
 # For standard systems (recommended)
+
 monitor = HeartbeatMonitor(timeout=5, threshold=3)
 
 # For resilient systems (conservative)
+
 monitor = HeartbeatMonitor(timeout=10, threshold=5)
 ```
 
@@ -261,10 +296,14 @@ try:
     system = TSECA_Ghost_System()
     result = system.inference(payload)
 except RuntimeError as e:
+
     # Identity validation failed
+
     logger.error(f"Identity error: {e}")
 except ValueError as e:
+
     # Shard reconstruction failed
+
     logger.error(f"Recovery error: {e}")
 ```
 
@@ -277,20 +316,27 @@ from src.app.security.tseca_ghost_protocol import TSECA_Ghost_System
 
 class MySecureSystem:
     def __init__(self):
+
         # Initialize T-SECA/GHOST
+
         self.security = TSECA_Ghost_System()
-        
+
         # Store shards securely
+
         self._distribute_shards(self.security.shards)
-    
+
     def process_request(self, data):
+
         # Send heartbeat
+
         self.security.send_heartbeat()
-        
+
         # Perform secure inference
+
         result = self.security.inference(data)
-        
+
         # Verify signature before returning
+
         return self._verify_and_extract(result)
 ```
 
@@ -303,10 +349,10 @@ from src.app.security.tseca_ghost_protocol import GhostProtocol
 def test_my_integration():
     ghost = GhostProtocol(quorum_k=2, total_n=3)
     original = ghost.identity_hash
-    
+
     shards = ghost.fragment_identity()
     restored = ghost.resurrect(shards[:2])
-    
+
     assert restored == original
 ```
 
@@ -339,6 +385,7 @@ pytest tests/test_tseca_ghost_protocol.py -v
 ```
 
 38 tests covering:
+
 - Shamir Secret Sharing (9 tests)
 - Ghost Protocol (9 tests)
 - T-SECA (7 tests)
@@ -353,6 +400,6 @@ See [LICENSE](../LICENSE) for details.
 ## References
 
 1. Shamir, A. (1979). "How to share a secret". Communications of the ACM.
-2. Ed25519: High-speed high-security signatures. https://ed25519.cr.yp.to/
-3. NIST SP 800-38D: Galois/Counter Mode (GCM) for AES
-4. RFC 8032: Edwards-Curve Digital Signature Algorithm (EdDSA)
+1. Ed25519: High-speed high-security signatures. https://ed25519.cr.yp.to/
+1. NIST SP 800-38D: Galois/Counter Mode (GCM) for AES
+1. RFC 8032: Edwards-Curve Digital Signature Algorithm (EdDSA)

@@ -70,11 +70,13 @@ The **Gradle Evolution Substrate** is a God Tier integration layer that weaves t
 **Purpose:** Enforce policies/constitution.yaml during build lifecycle
 
 **Components:**
+
 - `constitutional/engine.py` - Constitutional validation engine
 - `constitutional/enforcer.py` - Policy enforcement with identity verification
 - `constitutional/temporal_law.py` - Time-aware policy enforcement
 
 **Integration Points:**
+
 - Loads `policies/constitution.yaml`
 - Validates build actions against 6 constitutional principles
 - Enforces critical/high/medium/low enforcement levels
@@ -91,6 +93,7 @@ gradle check              # Auto-includes constitutional validation
 **Purpose:** Compile high-level build intents into deterministic IR with provable properties
 
 **Components:**
+
 - `ir/ir_schema.py` - IR data structures, type system, dataflow analysis
 - `ir/compiler.py` - YAML→IR compilation with semantic analysis
 - `ir/ir_executor.py` - Deterministic execution with tracing
@@ -98,6 +101,7 @@ gradle check              # Auto-includes constitutional validation
 - `ir/verifier.py` - Formal verification and proof certificates
 
 **Capabilities:**
+
 - Parse YAML intent specifications
 - Compile to typed IR (13 operation types)
 - Optimize with 5 passes (3 levels: O0/O1/O2)
@@ -110,14 +114,22 @@ gradle check              # Auto-includes constitutional validation
 intent: build-python-module
 version: 1.0
 steps:
+
   - action: validate
+
     policies: [non_maleficence, transparency]
+
   - action: compile
+
     source: src/
     output: build/
+
   - action: test
+
     suite: pytest
+
   - action: package
+
     format: wheel
 ```
 
@@ -126,16 +138,19 @@ steps:
 **Purpose:** Self-modeling, learning, and cognitive optimization of builds
 
 **Components:**
+
 - `cognition/build_cognition.py` - Deliberation engine integration
 - `cognition/state_integration.py` - Build memory and state
 
 **Integration Points:**
+
 - Uses `project_ai/engine/cognition/deliberation_engine.py`
 - Stores state in `project_ai/engine/state/state_manager.py`
 - Records build patterns, failures, optimizations
 - Learns from historical data to optimize future builds
 
 **Capabilities:**
+
 - Deliberate on build plans
 - Analyze failure patterns
 - Optimize build strategies
@@ -147,6 +162,7 @@ steps:
 **Purpose:** Create immutable, verifiable build artifacts with complete provenance
 
 **Components:**
+
 - `capsules/capsule_engine.py` - Capsule creation with Merkle trees
 - `capsules/replay_engine.py` - Forensic replay and verification
 
@@ -174,16 +190,19 @@ gradle evolutionReplay   # Forensic replay with verification
 **Purpose:** Enforce security constraints and dynamically schedule policies
 
 **Components:**
+
 - `security/security_engine.py` - Security validation
 - `security/policy_scheduler.py` - Dynamic policy scheduling
 
 **Integration Points:**
+
 - Loads `config/security_hardening.yaml`
 - Uses `project_ai/engine/policy/policy_engine.py`
 - Enforces path restrictions, operation whitelisting
 - Schedules policies based on risk levels
 
 **Modes:**
+
 - **adaptive** - Automatically adjusts based on context
 - **strict** - Maximum security, minimal flexibility
 - **permissive** - Development mode with warnings
@@ -193,16 +212,19 @@ gradle evolutionReplay   # Forensic replay with verification
 **Purpose:** Complete audit trail with human accountability interfaces
 
 **Components:**
+
 - `audit/audit_integration.py` - Audit system integration
 - `audit/accountability.py` - Human override workflow
 
 **Integration Points:**
+
 - Extends `cognition/audit.py`
 - Logs all build events to `cognition/governance_audit.log`
 - Tracks constitutional violations, policy decisions, security events
 - Provides override, waiver, and signature workflows
 
 **Reports Generated:**
+
 - HTML audit report (human-readable)
 - JSON audit log (machine-parseable)
 - PDF compliance report (formal documentation)
@@ -220,6 +242,7 @@ gradle evolutionOverride   # Request human override
 **Purpose:** Persistent storage for build history and analytics
 
 **Schema (7 Tables):**
+
 1. **builds** - Build metadata (id, timestamp, version, status, duration)
 2. **build_phases** - Phase execution details
 3. **constitutional_violations** - Principle violations
@@ -229,6 +252,7 @@ gradle evolutionOverride   # Request human override
 7. **dependencies** - Dependency tracking with vulnerabilities
 
 **Features:**
+
 - SQLite with WAL mode (concurrency)
 - 25+ indexes for performance
 - ACID transactions
@@ -236,6 +260,7 @@ gradle evolutionOverride   # Request human override
 - Automatic cleanup with retention policies
 
 **Performance:**
+
 - ~10,000 inserts/sec
 - <100ms complex queries
 - <50ms graph queries
@@ -245,10 +270,12 @@ gradle evolutionOverride   # Request human override
 **Purpose:** Track build ancestry, provenance, and failure correlations
 
 **Graph Schema:**
+
 - **Nodes:** BuildNode, ArtifactNode, DependencyNode
 - **Edges:** PRODUCES, DEPENDS_ON, EVOLVED_FROM, SHARES_ARTIFACT
 
 **Queries:**
+
 - Find build ancestry (parent builds)
 - Trace artifact provenance
 - Detect dependency cycles
@@ -256,6 +283,7 @@ gradle evolutionOverride   # Request human override
 - Identify shared dependencies
 
 **Export Formats:**
+
 - DOT (Graphviz visualization)
 - JSON (programmatic access)
 - SQL (database import)
@@ -265,6 +293,7 @@ gradle evolutionOverride   # Request human override
 **Purpose:** REST API for external verification of builds and capsules
 
 **Endpoints:**
+
 - `GET /health` - System health
 - `GET /capsules` - List all capsules
 - `GET /capsules/:id` - Get specific capsule
@@ -274,6 +303,7 @@ gradle evolutionOverride   # Request human override
 - `POST /proofs/:id/verify` - Verify proof certificate
 
 **Features:**
+
 - OpenAPI 3.0 specification
 - Cryptographic verification
 - Audit log access
@@ -282,7 +312,9 @@ gradle evolutionOverride   # Request human override
 **Gradle Integration:**
 ```bash
 gradle evolutionApiStart -PapiPort=8765
+
 # API available at http://localhost:8765/
+
 ```
 
 ### 10. Documentation Generator
@@ -290,6 +322,7 @@ gradle evolutionApiStart -PapiPort=8765
 **Purpose:** Generate living documentation from execution state
 
 **Outputs:**
+
 - System architecture documentation
 - Build history reports
 - Constitutional compliance reports
@@ -312,9 +345,11 @@ gradle evolutionTransparency  # Zero-magic mode
 Evolution tasks are automatically wired into existing Gradle lifecycle:
 
 **`gradle check`** now includes:
+
 - Constitutional validation (`evolutionValidate`)
 
 **`gradle release`** now includes:
+
 - Constitutional validation
 - Deterministic capsule creation (`evolutionCapsule`)
 - Comprehensive audit report (`evolutionAudit`)
@@ -324,32 +359,39 @@ Evolution tasks are automatically wired into existing Gradle lifecycle:
 ### Manual Evolution Tasks
 
 ```bash
+
 # Constitutional & Policy
+
 gradle evolutionValidate         # Validate through all layers
 gradle evolutionPolicySchedule   # Configure policies
   -PpolicyMode=adaptive
 
 # Capsules & Replay
+
 gradle evolutionCapsule          # Create signed capsule
 gradle evolutionReplay           # Forensic replay
   -PcapsuleId=cap_xxx
 
 # Audit & Accountability
+
 gradle evolutionAudit            # Generate audit reports
 gradle evolutionOverride         # Request override
   -PoverrideReason="..."
   -Pauthorizer="..."
 
 # Documentation & Transparency
+
 gradle evolutionDocs             # Generate living docs
 gradle evolutionTransparency     # Zero-magic mode
 
 # Status & API
+
 gradle evolutionStatus           # System health
 gradle evolutionApiStart         # Start API server
   -PapiPort=8765
 
 # Help
+
 gradle evolutionHelp             # Comprehensive help
 ```
 
@@ -360,49 +402,85 @@ gradle evolutionHelp             # Comprehensive help
 ### Build Execution Flow
 
 ```
+
 1. User runs: gradle buildAll
+
    │
+
 2. Gradle triggers: check (includes evolutionValidate)
+
    │
+
 3. Evolution Substrate:
+
    ├─► Constitutional Engine validates action
    ├─► Policy Enforcer checks policies
    ├─► Security Engine validates context
    └─► Audit logs event
    │
+
 4. If approved, build proceeds
+
    │
+
 5. Build Cognition records execution
+
    │
+
 6. Build Memory DB stores results
+
    │
+
 7. On release: evolutionCapsule creates artifact
+
    │
+
 8. Capsule signed and stored
+
    │
+
 9. Audit report generated
+
    │
+
 10. Documentation updated
+
 ```
 
 ### Replay Flow
 
 ```
+
 1. User runs: gradle evolutionReplay -PcapsuleId=xxx
+
    │
+
 2. Replay Engine loads capsule
+
    │
+
 3. Verifies cryptographic signature
+
    │
+
 4. Reconstructs build environment
+
    │
+
 5. Replays each phase deterministically
+
    │
+
 6. Compares outputs with original
+
    │
+
 7. Generates verification report
+
    │
+
 8. Updates audit log
+
 ```
 
 ---
@@ -428,18 +506,23 @@ tests/gradle_evolution/
 ### Running Tests
 
 ```bash
+
 # All evolution tests
+
 pytest tests/gradle_evolution/ -v
 
 # Specific subsystem
+
 pytest tests/gradle_evolution/test_constitutional.py -v
 
 # With coverage
+
 pytest tests/gradle_evolution/ \
   --cov=gradle_evolution \
   --cov-report=html
 
 # Integration tests only
+
 pytest tests/gradle_evolution/test_integration.py -v
 ```
 
@@ -500,6 +583,7 @@ pytest tests/gradle_evolution/test_integration.py -v
 ### Threat Model
 
 **Protects Against:**
+
 - Unauthorized build modifications
 - Artifact tampering
 - Dependency injection
@@ -507,6 +591,7 @@ pytest tests/gradle_evolution/test_integration.py -v
 - Audit log manipulation
 
 **Does NOT Protect Against:**
+
 - Compromised host system
 - Stolen signing keys
 - Zero-day exploits in dependencies
@@ -518,26 +603,33 @@ pytest tests/gradle_evolution/test_integration.py -v
 ### Environment Variables
 
 ```bash
+
 # Python executable (optional)
+
 export PYTHON_EXEC=python3.11
 
 # Database location (optional)
+
 export EVOLUTION_DB_PATH=data/build_memory.db
 
 # API configuration (optional)
+
 export EVOLUTION_API_HOST=0.0.0.0
 export EVOLUTION_API_PORT=8765
 
 # Logging level (optional)
+
 export EVOLUTION_LOG_LEVEL=INFO
 ```
 
 ### Gradle Properties
 
 ```properties
+
 # In gradle.properties
 
 # Evolution configuration
+
 evolution.enabled=true
 evolution.constitutional.strict=true
 evolution.capsule.sign=true
@@ -556,7 +648,9 @@ Edit `policies/constitution.yaml`:
 
 ```yaml
 principles:
+
   - id: custom_principle
+
     priority: high
     text: >
       Description of your principle...
@@ -569,7 +663,9 @@ def _violates_principle(self, action, context, principle):
     principle_id = principle.get("id")
     if principle_id == "custom_principle":
         return context.get("violates_custom", False)
+
     # ... existing checks
+
 ```
 
 ### Adding New Security Rules
@@ -580,10 +676,14 @@ Edit `config/security_hardening.yaml`:
 security_levels:
   custom_level:
     allowed_operations:
+
       - read
       - write
+
     restricted_paths:
+
       - /etc/
+
     max_risk_level: 3
 ```
 
@@ -593,7 +693,9 @@ Edit `ir/ir_schema.py`:
 
 ```python
 class IRNode:
+
     # Add new operation type
+
     operation: Literal["custom_op", ...]
 ```
 
@@ -636,7 +738,9 @@ gradle evolutionValidate
 
 ```bash
 gradle evolutionStatus
+
 # Shows health of all components
+
 ```
 
 ---
@@ -655,10 +759,13 @@ gradle evolutionStatus
 If issues arise:
 
 ```bash
+
 # Disable evolution in gradle.properties
+
 echo "evolution.enabled=false" >> gradle.properties
 
 # Or skip evolution tasks
+
 gradle buildAll -x evolutionValidate -x evolutionCapsule
 ```
 
@@ -667,12 +774,14 @@ gradle buildAll -x evolutionValidate -x evolutionCapsule
 ## Roadmap
 
 ### Current (v1.0)
+
 - ✅ All 23 components implemented
 - ✅ 90+ tests with comprehensive coverage
 - ✅ Complete documentation
 - ✅ Gradle integration with 13 tasks
 
 ### Future Enhancements (v1.1+)
+
 - Distributed build coordination
 - Machine learning for build optimization
 - Advanced failure prediction
@@ -685,12 +794,14 @@ gradle buildAll -x evolutionValidate -x evolutionCapsule
 ## References
 
 ### Internal Documentation
+
 - `GRADLE_BUILD_SYSTEM.md` - Main Gradle documentation
 - `GRADLE_IMPLEMENTATION_SUMMARY.md` - Implementation details
 - `gradle-evolution/ir/README.md` - Intent Compiler docs
 - `gradle-evolution/db/README.md` - Database docs
 
 ### External Standards
+
 - SLSA Framework (Supply Chain Levels for Software Artifacts)
 - NIST SP 800-218 (Secure Software Development Framework)
 - ISO/IEC 27001 (Information Security Management)

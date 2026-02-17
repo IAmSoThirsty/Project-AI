@@ -495,7 +495,6 @@ class GodTierIntegratedSystem:
     def _final_setup(self) -> None:
         """Final system setup"""
         # Any final wiring or setup
-        pass
 
     def process_user_interaction(
         self, user_id: str, text_input: str, visual_frame: np.ndarray | None = None

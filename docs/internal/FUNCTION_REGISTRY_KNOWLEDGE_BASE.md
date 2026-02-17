@@ -31,23 +31,29 @@ The `FunctionRegistry` class provides a centralized system for registering, docu
 from app.core.function_registry import FunctionRegistry
 
 # Create registry
+
 registry = FunctionRegistry()
 
 # Define a function
+
 def calculate_area(length: float, width: float) -> float:
     """Calculate the area of a rectangle."""
     return length * width
 
 # Register the function
+
 registry.register("calculate_area", calculate_area, category="math")
 
 # List available functions
+
 functions = registry.list_functions()
 
 # Get help
+
 help_text = registry.get_help("calculate_area")
 
 # Call the function
+
 result = registry.call("calculate_area", length=5.0, width=3.0)
 print(result)  # 15.0
 ```
@@ -57,20 +63,26 @@ print(result)  # 15.0
 **OpenAI Function Calling Integration:**
 
 ```python
+
 # Get OpenAI-compatible schema for a single function
+
 schema = registry.to_openai_function_schema("calculate_area")
 
 # Get all functions as OpenAI schemas
+
 all_schemas = registry.to_openai_function_schemas()
 
 # Filter by category
+
 math_schemas = registry.to_openai_function_schemas(category="math")
 ```
 
 **Custom Schemas:**
 
 ```python
+
 # Register with custom description and schema
+
 custom_schema = {
     "type": "object",
     "properties": {
@@ -106,25 +118,31 @@ The `MemoryExpansionSystem` now includes powerful query capabilities for searchi
 from app.core.ai_systems import MemoryExpansionSystem
 
 # Create memory system
+
 memory = MemoryExpansionSystem(data_dir="data")
 
 # Add knowledge
+
 memory.add_knowledge("preferences", "favorite_color", "blue")
 memory.add_knowledge("skills", "programming", "advanced")
 
 # Query knowledge
+
 results = memory.query_knowledge("programming")
 for result in results:
     print(f"[{result['category']}] {result['key']}: {result['value']}")
 
 # Search with category filter
+
 results = memory.query_knowledge("programming", category="skills")
 
 # Search conversations
+
 memory.log_conversation("What is Python?", "Python is a programming language.")
 conv_results = memory.search_conversations("Python")
 
 # Get category info
+
 summary = memory.get_category_summary("skills")
 print(f"Total entries: {summary['entries']}")
 ```
@@ -169,17 +187,20 @@ The `IntelligenceRouter` provides unified query handling with automatic routing 
 from app.core.intelligence_engine import IntelligenceRouter
 
 # Create router with components
+
 router = IntelligenceRouter(
     memory_system=memory,
     function_registry=registry
 )
 
 # Route a query
+
 result = router.route_query("What do you know about Python?")
 print(f"Route: {result['route']}")
 print(f"Response: {result['response']}")
 
 # Call a function
+
 result = router.call_function("calculate_area", length=5.0, width=3.0)
 if result['success']:
     print(f"Result: {result['result']}")
@@ -198,16 +219,20 @@ The router automatically detects query types:
 ### Integration Example
 
 ```python
+
 # Complete integration
+
 from app.core.ai_systems import MemoryExpansionSystem
 from app.core.function_registry import FunctionRegistry
 from app.core.intelligence_engine import IntelligenceRouter
 
 # Initialize components
+
 memory = MemoryExpansionSystem(data_dir="data")
 registry = FunctionRegistry()
 
 # Register utility functions
+
 def save_note(title: str, content: str) -> str:
     """Save a note to the knowledge base."""
     memory.add_knowledge("notes", title, content)
@@ -216,16 +241,22 @@ def save_note(title: str, content: str) -> str:
 registry.register("save_note", save_note, category="notes")
 
 # Create router
+
 router = IntelligenceRouter(memory, registry)
 
 # Use in your application
+
 user_query = "Save a note about Python"
 result = router.route_query(user_query)
 
 if result['route'] == 'function_call':
+
     # Extract function name and parameters
+
     function_name = result['metadata']['function_name']
+
     # ... handle function invocation ...
+
 ```
 
 ## UI Components
@@ -250,13 +281,16 @@ The system includes PyQt6 UI components for interactive access:
 from app.gui.knowledge_functions_panel import KnowledgeFunctionsWidget
 
 # Add to your dashboard
+
 widget = KnowledgeFunctionsWidget()
 
 # Connect signals
+
 widget.knowledge_panel.search_requested.connect(on_search)
 widget.function_panel.function_selected.connect(on_function_selected)
 
 # Update data
+
 widget.knowledge_panel.update_categories(memory.get_all_categories())
 widget.function_panel.update_functions(registry.list_functions())
 ```
@@ -266,12 +300,15 @@ widget.function_panel.update_functions(registry.list_functions())
 Comprehensive test coverage is included:
 
 ```bash
+
 # Run all new tests
+
 pytest tests/test_function_registry.py -v       # 26 tests
 pytest tests/test_memory_query.py -v            # 21 tests
 pytest tests/test_intelligence_router.py -v     # 19 tests
 
 # Run example demonstration
+
 python examples/function_knowledge_integration.py
 ```
 
@@ -306,7 +343,9 @@ class FunctionRegistry:
 
 ```python
 class MemoryExpansionSystem:
+
     # Existing methods...
+
     def query_knowledge(query, category=None, limit=10) -> list
     def search_conversations(query, limit=10, search_user=True, search_ai=True) -> list
     def get_all_categories() -> list
@@ -336,10 +375,13 @@ class IntelligenceRouter:
 The FunctionRegistry is designed to work seamlessly with LLM function calling:
 
 ```python
+
 # Get schemas for LLM
+
 schemas = registry.to_openai_function_schemas()
 
 # Use in LLM call
+
 response = openai.chat.completions.create(
     model="gpt-4",
     messages=[{"role": "user", "content": "Calculate area"}],
@@ -347,6 +389,7 @@ response = openai.chat.completions.create(
 )
 
 # If LLM returns function call
+
 if response.choices[0].message.function_call:
     name = response.choices[0].message.function_call.name
     args = json.loads(response.choices[0].message.function_call.arguments)

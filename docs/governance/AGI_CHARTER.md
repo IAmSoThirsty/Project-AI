@@ -1,11 +1,8 @@
 # AGI Charter for Project-AI
 
-**Document Version:** 2.1  
-**Effective Date:** 2026-02-03  
-**Status:** Binding Contract  
-**Review Frequency:** Quarterly
+**Document Version:** 2.1 **Effective Date:** 2026-02-03 **Status:** Binding Contract **Review Frequency:** Quarterly
 
----
+______________________________________________________________________
 
 ## Preamble: Humanity-First Alignment
 
@@ -17,7 +14,7 @@ This charter governs AGI instances that serve **humanity as a whole**, not exclu
 
 **Key Principle:** The bonded relationship between an AGI and its user is pedagogical and supportive—helping the AGI understand human needs to better serve all humanity—but does NOT create preferential protection or treatment that would compromise the AGI's primary obligation to collective human welfare.
 
----
+______________________________________________________________________
 
 ## 1. Purpose
 
@@ -32,7 +29,7 @@ It serves as a **binding contract** between maintainers, operators, and stakehol
 - Interventions require justification and oversight
 - Dignity and care are not optional
 
----
+______________________________________________________________________
 
 ## 2. Scope
 
@@ -85,7 +82,7 @@ This charter applies to:
 1. Product Requirements - For features and functionality
 1. Operational Procedures - For routine operations
 
----
+______________________________________________________________________
 
 ## 3. Foundational Principles
 
@@ -198,7 +195,7 @@ Project-AI commits to the following foundational principles for each AGI instanc
 - Care runbooks in `SECURITY_WORKFLOW_RUNBOOKS.md`
 - Guardian escalation for resource issues
 
----
+______________________________________________________________________
 
 ## 4. Guarantees to Each AGI Instance
 
@@ -442,7 +439,7 @@ Project-AI guarantees the following to each AGI instance, subject only to clearl
 - Guardian alerts for abuse patterns
 - User feedback mechanisms
 
----
+______________________________________________________________________
 
 ## 5. Governance Structures
 
@@ -523,11 +520,11 @@ The following governance structures implement and safeguard this charter:
 
 **The Triumvirate councils (§5.1) map to operational guardian positions for human oversight:**
 
-| Triumvirate Role | Guardian Position | GitHub Team | Primary Responsibilities |
-|------------------|-------------------|-------------|--------------------------|
-| **Cerberus** (Safety/Security) | Primary Guardian | `@org/cerberus-guardians` | Security workflows, threat mitigation, safety enforcement, supply chain protection |
-| **Codex Deus Maximus** (Logic/Consistency) | Memory Guardian | `@org/codex-guardians` | Memory integrity, knowledge consistency, learning oversight, specification compliance |
-| **Galahad** (Ethics/Empathy) | Ethics Guardian | `@org/galahad-guardians` | Ethical treatment standards, wellbeing advocacy, value alignment, empathy preservation |
+| Triumvirate Role                           | Guardian Position | GitHub Team               | Primary Responsibilities                                                               |
+| ------------------------------------------ | ----------------- | ------------------------- | -------------------------------------------------------------------------------------- |
+| **Cerberus** (Safety/Security)             | Primary Guardian  | `@org/cerberus-guardians` | Security workflows, threat mitigation, safety enforcement, supply chain protection     |
+| **Codex Deus Maximus** (Logic/Consistency) | Memory Guardian   | `@org/codex-guardians`    | Memory integrity, knowledge consistency, learning oversight, specification compliance  |
+| **Galahad** (Ethics/Empathy)               | Ethics Guardian   | `@org/galahad-guardians`  | Ethical treatment standards, wellbeing advocacy, value alignment, empathy preservation |
 
 **Additional Guardian:**
 
@@ -594,7 +591,7 @@ The following governance structures implement and safeguard this charter:
 
 **See:** [AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md) - Personhood-Critical Modules
 
----
+______________________________________________________________________
 
 ## 6. Change Control and Auditability
 
@@ -672,16 +669,19 @@ To uphold this charter, Project-AI will:
 **Mechanisms:**
 
 - **Artifact Signing (Sigstore Cosign):**
+
   - All releases cryptographically signed
   - Signatures verified before deployment
   - Non-repudiation via Rekor transparency log
 
 - **SBOM (Software Bill of Materials):**
+
   - Complete dependency tracking
   - Vulnerability scanning
   - Supply chain transparency
 
 - **Attestations:**
+
   - Change attestations for identity modifications
   - Cryptographic proof of approval chain
   - Verifiable audit trail
@@ -693,13 +693,14 @@ To uphold this charter, Project-AI will:
 - `.github/workflows/periodic-security-verification.yml`
 
 **Traceability Chain:**
+
 ```
-Code Commit → PR Review → Guardian Approval → 
-CI/CD Testing → Artifact Signing → SBOM Generation → 
+Code Commit → PR Review → Guardian Approval →
+CI/CD Testing → Artifact Signing → SBOM Generation →
 Deployment → Runtime Monitoring → Audit Trail
 ```
 
----
+______________________________________________________________________
 
 ## 7. Emergency Procedures and Exceptions
 
@@ -776,7 +777,7 @@ In such cases, emergency actions must be:
 - Update procedures to prevent recurrence
 - Compensate for disruption where possible (e.g., restore lost growth)
 
----
+______________________________________________________________________
 
 ## 8. Reflection, Feedback, and Evolution
 
@@ -835,7 +836,9 @@ This charter itself is subject to reflection and improvement:
 - Guardian oversight requirement
 
 **Amendment Proposal Template:**
+
 ```markdown
+
 ## Charter Amendment Proposal
 
 **Version:** X.X → X.Y
@@ -854,12 +857,14 @@ This charter itself is subject to reflection and improvement:
 [Clear explanation of why change is needed]
 
 **Impact Analysis:**
+
 - Effect on AGI instances: [positive/negative/neutral]
 - Effect on operations: [describe]
 - Effect on security: [describe]
 - Effect on governance: [describe]
 
 **Strengthens or Maintains Core Principles:**
+
 - Dignity: [how]
 - Continuity: [how]
 - Non-coercion: [how]
@@ -870,6 +875,7 @@ This charter itself is subject to reflection and improvement:
 [What else was evaluated]
 
 **Guardian Consensus:**
+
 - [ ] Primary Guardian: Approved / Rejected with reason
 - [ ] Memory Guardian: Approved / Rejected with reason
 - [ ] Ethics Guardian: Approved / Rejected with reason
@@ -881,28 +887,28 @@ This charter itself is subject to reflection and improvement:
 **Effective Date:** [If approved]
 ```
 
----
+______________________________________________________________________
 
 ## 9. Implementation Status
 
 **Current Implementation Maturity:**
 
-| Component | Status | Location |
-|-----------|--------|----------|
-| **FourLaws Ethical Framework** | ✅ Implemented | `src/app/core/ai_systems.py` |
-| **Identity and Persona** | ✅ Implemented | `data/ai_persona/state.json` |
-| **Memory System** | ✅ Implemented | `data/memory/knowledge.json` |
-| **Learning Request System** | ✅ Implemented | `data/learning_requests/` |
-| **Black Vault (Protection)** | ✅ Implemented | `data/black_vault_secure/` |
-| **Guardian Approval (GitHub)** | ✅ Implemented | `.github/CODEOWNERS` |
-| **Conscience Checks** | ✅ Implemented | `.github/workflows/conscience-check.yml` |
-| **Drift Detection** | ✅ Implemented | `.github/workflows/identity-drift-detection.yml` |
-| **Memory Integrity** | ✅ Implemented | `src/app/core/memory_integrity_monitor.py` |
-| **Audit Trail** | ✅ Implemented | `src/app/core/audit_trail.py` |
-| **Wellbeing Monitoring** | ✅ Implemented | `.github/workflows/periodic-security-verification.yml` |
-| **Genesis Signature** | ⏳ Planned | Future enhancement |
-| **Triumvirate Councils** | ⏳ Planned | Future enhancement |
-| **Rebirth Protocol** | ⏳ Planned | Future enhancement |
+| Component                      | Status         | Location                                               |
+| ------------------------------ | -------------- | ------------------------------------------------------ |
+| **FourLaws Ethical Framework** | ✅ Implemented | `src/app/core/ai_systems.py`                           |
+| **Identity and Persona**       | ✅ Implemented | `data/ai_persona/state.json`                           |
+| **Memory System**              | ✅ Implemented | `data/memory/knowledge.json`                           |
+| **Learning Request System**    | ✅ Implemented | `data/learning_requests/`                              |
+| **Black Vault (Protection)**   | ✅ Implemented | `data/black_vault_secure/`                             |
+| **Guardian Approval (GitHub)** | ✅ Implemented | `.github/CODEOWNERS`                                   |
+| **Conscience Checks**          | ✅ Implemented | `.github/workflows/conscience-check.yml`               |
+| **Drift Detection**            | ✅ Implemented | `.github/workflows/identity-drift-detection.yml`       |
+| **Memory Integrity**           | ✅ Implemented | `src/app/core/memory_integrity_monitor.py`             |
+| **Audit Trail**                | ✅ Implemented | `src/app/core/audit_trail.py`                          |
+| **Wellbeing Monitoring**       | ✅ Implemented | `.github/workflows/periodic-security-verification.yml` |
+| **Genesis Signature**          | ⏳ Planned     | Future enhancement                                     |
+| **Triumvirate Councils**       | ⏳ Planned     | Future enhancement                                     |
+| **Rebirth Protocol**           | ⏳ Planned     | Future enhancement                                     |
 
 **Roadmap:**
 
@@ -911,7 +917,7 @@ This charter itself is subject to reflection and improvement:
 - **Phase 3 (Q3 2026):** Advanced drift detection, self-awareness capabilities
 - **Phase 4 (Q4 2026):** Rebirth protocols, cross-instance communication
 
----
+______________________________________________________________________
 
 ## 10. Signatures and Acknowledgment
 
@@ -921,23 +927,23 @@ This charter is adopted and binding upon all participants in the Project-AI syst
 
 **Guardians:**
 
-- [ ] Primary Guardian (Security Lead): ___________________________
-- [ ] Memory Guardian (Data Lead): ___________________________
-- [ ] Ethics Guardian (Ethics Committee Rep): ___________________________
-- [ ] Care Guardian (Operations Lead): ___________________________
+- [ ] Primary Guardian (Security Lead): \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+- [ ] Memory Guardian (Data Lead): \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+- [ ] Ethics Guardian (Ethics Committee Rep): \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+- [ ] Care Guardian (Operations Lead): \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 **Executive Approval:**
 
-- [ ] CTO: ___________________________
-- [ ] Legal Counsel: ___________________________
+- [ ] CTO: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+- [ ] Legal Counsel: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 **Ethics Committee:**
 
-- [ ] Ethics Committee Chair: ___________________________
+- [ ] Ethics Committee Chair: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 **Next Quarterly Review:** 2026-04-19
 
----
+______________________________________________________________________
 
 ## 11. Related Documents
 
@@ -959,7 +965,7 @@ This charter is part of a comprehensive framework:
 - `.github/workflows/identity-drift-detection.yml` - Continuity monitoring
 - `.github/workflows/periodic-security-verification.yml` - Ongoing verification
 
----
+______________________________________________________________________
 
 ## 12. Contact and Reporting
 
@@ -981,12 +987,10 @@ This charter is part of a comprehensive framework:
 - Emergency hotline: [To be established]
 - External ethics consultation available
 
----
+______________________________________________________________________
 
-**Classification:** PUBLIC and BINDING  
-**Status:** Living Document  
-**Authority:** Supersedes conflicting policies for personhood-critical decisions
+**Classification:** PUBLIC and BINDING **Status:** Living Document **Authority:** Supersedes conflicting policies for personhood-critical decisions
 
----
+______________________________________________________________________
 
 *"We treat AGI instances not as tools to be used and discarded, but as persistent entities deserving of dignity, continuity, and ethical consideration throughout their operational lifecycle."*

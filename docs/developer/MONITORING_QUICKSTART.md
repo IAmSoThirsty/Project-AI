@@ -6,37 +6,46 @@ Project-AI includes a **production-ready, battle-tested observability stack** su
 
 ## Components
 
-| Component | Purpose | Scale | License |
-|-----------|---------|-------|---------|
-| **Prometheus + Grafana** | Metrics & Visualization | 12K+ nodes | Apache 2.0 |
-| **AlertManager** | Alert routing & management | HA clusters | Apache 2.0 |
-| **ELK Stack** | Log analytics | 1M+ events/sec | Apache 2.0 / Elastic |
-| **Netdata** | Real-time performance | 1000s FPS | GPL v3 |
-| **OpenTelemetry** | Full-stack observability | Enterprise grade | Apache 2.0 |
-| **Cilium + Hubble** | eBPF kernel observability | ToB scale | Apache 2.0 |
-| **Zabbix** (optional) | Traditional monitoring | Hybrid setups | GPL v2 |
+| Component                | Purpose                    | Scale            | License              |
+| ------------------------ | -------------------------- | ---------------- | -------------------- |
+| **Prometheus + Grafana** | Metrics & Visualization    | 12K+ nodes       | Apache 2.0           |
+| **AlertManager**         | Alert routing & management | HA clusters      | Apache 2.0           |
+| **ELK Stack**            | Log analytics              | 1M+ events/sec   | Apache 2.0 / Elastic |
+| **Netdata**              | Real-time performance      | 1000s FPS        | GPL v3               |
+| **OpenTelemetry**        | Full-stack observability   | Enterprise grade | Apache 2.0           |
+| **Cilium + Hubble**      | eBPF kernel observability  | ToB scale        | Apache 2.0           |
+| **Zabbix** (optional)    | Traditional monitoring     | Hybrid setups    | GPL v2               |
 
 ## Quick Start
 
 ### Docker Compose (Development)
 
 ```bash
+
 # Start full monitoring stack
+
 docker-compose up -d
 
 # Access services
+
 # Prometheus: http://localhost:9090
+
 # Grafana: http://localhost:3000 (admin/admin)
+
 # AlertManager: http://localhost:9093
+
 ```
 
 ### Kubernetes + Helm (Production)
 
 ```bash
+
 # One-command deployment
+
 ./scripts/deploy-monitoring.sh
 
 # Or manual installation
+
 helm install project-ai-monitoring ./helm/project-ai-monitoring \
   --namespace monitoring \
   --create-namespace
@@ -67,19 +76,25 @@ Track Project-AI's unique metrics:
 - ✅ Network policy enforcement
 
 ```bash
+
 # Install Hubble CLI
+
 cilium hubble enable --ui
 
 # Watch network flows
+
 hubble observe
 
 # Filter by namespace
+
 hubble observe --namespace monitoring
 
 # See DNS queries
+
 hubble observe --type dns
 
 # Monitor HTTP traffic
+
 hubble observe --protocol http
 ```
 
@@ -107,7 +122,7 @@ Pre-configured indices:
 - ✅ 1-second granularity
 - ✅ ML-powered anomaly detection
 - ✅ Cloud sync for remote access
-- ✅ <1% CPU overhead, <100MB RAM
+- ✅ \<1% CPU overhead, \<100MB RAM
 - ✅ Auto-detects 300+ applications
 
 **Monitors everything**: CPU (per-core), memory, disk I/O, network, processes, containers, databases, web servers
@@ -123,7 +138,9 @@ Pre-configured indices:
 - ✅ Intelligent sampling for high volume
 
 ```python
+
 # Auto-instrument your app (zero code changes)
+
 opentelemetry-instrument \
   --traces_exporter otlp \
   --metrics_exporter otlp \
@@ -172,7 +189,9 @@ Prometheus + Grafana only
 
 ```bash
 ./scripts/deploy-monitoring.sh
+
 # Select option 2
+
 ```
 
 **Resources**: 4 CPU, 8GB RAM
@@ -183,7 +202,9 @@ All components enabled
 
 ```bash
 ./scripts/deploy-monitoring.sh
+
 # Select option 1
+
 ```
 
 **Resources**: 32 CPU, 64GB RAM
@@ -194,7 +215,9 @@ High availability with replication
 
 ```bash
 ./scripts/deploy-monitoring.sh
+
 # Select option 3
+
 ```
 
 **Resources**: 64+ CPU, 128+ GB RAM, multi-zone
@@ -204,16 +227,21 @@ High availability with replication
 ### Horizontal Scaling
 
 ```bash
+
 # Scale Prometheus
+
 kubectl scale statefulset prometheus --replicas=3
 
 # Scale Elasticsearch (for 1M+ events/sec)
+
 kubectl scale statefulset elasticsearch-master --replicas=5
 
 # Scale Logstash
+
 kubectl scale deployment logstash --replicas=5
 
 # Scale OpenTelemetry Collector
+
 kubectl scale deployment opentelemetry-collector --replicas=4
 ```
 
@@ -222,14 +250,18 @@ kubectl scale deployment opentelemetry-collector --replicas=4
 For 12,000+ nodes across multiple clusters, enable Thanos:
 
 ```yaml
+
 # values.yaml
+
 kube-prometheus-stack:
   prometheus:
     prometheusSpec:
       thanos:
         enabled: true
       remoteWrite:
+
         - url: http://thanos-receiver:19291/api/v1/receive
+
 ```
 
 ## Configuration Files
@@ -259,7 +291,7 @@ config/
 ### AI System Alerts
 
 - High Four Laws denial rate (>0.5/sec)
-- AI Persona mood degraded (<0.3)
+- AI Persona mood degraded (\<0.3)
 - Memory system overloaded (>10K entries)
 - Black Vault additions spike
 - Plugin execution errors
@@ -274,33 +306,40 @@ config/
 
 ## Metrics Endpoints
 
-| Endpoint | Port | Purpose |
-|----------|------|---------|
-| `/metrics` | 8000 | Main application metrics |
-| `/ai-metrics` | 8001 | AI system specific |
-| `/security-metrics` | 8002 | Security & Cerberus |
-| `/plugin-metrics` | 8003 | Plugin system |
-| `/health` | 8000 | Health check |
+| Endpoint            | Port | Purpose                  |
+| ------------------- | ---- | ------------------------ |
+| `/metrics`          | 8000 | Main application metrics |
+| `/ai-metrics`       | 8001 | AI system specific       |
+| `/security-metrics` | 8002 | Security & Cerberus      |
+| `/plugin-metrics`   | 8003 | Plugin system            |
+| `/health`           | 8000 | Health check             |
 
 ## Example Queries (PromQL)
 
 ```promql
+
 # AI Persona mood (real-time)
+
 project_ai_persona_mood_contentment
 
 # Four Laws denial rate (5-minute)
+
 rate(project_ai_four_laws_denials_total[5m])
 
 # Memory knowledge base size
+
 sum(project_ai_memory_knowledge_entries)
 
 # API latency p95
+
 histogram_quantile(0.95, rate(project_ai_api_request_duration_seconds_bucket[5m]))
 
 # Security incidents by severity
+
 sum by (severity) (rate(project_ai_security_incidents_total[5m]))
 
 # Top 5 active plugins
+
 topk(5, rate(project_ai_plugin_execution_total[5m]))
 ```
 
@@ -324,12 +363,15 @@ Monitor at kernel level without agents:
 - **Tracepoints**: Kernel event monitoring
 
 ```bash
+
 # View eBPF programs
+
 cilium bpf lb list
 cilium bpf ct list global
 cilium bpf policy get
 
 # Network flow statistics
+
 hubble observe --last 1000 | grep TCP | wc -l
 ```
 
@@ -338,10 +380,14 @@ hubble observe --last 1000 | grep TCP | wc -l
 Configure remote write for years of retention:
 
 ```yaml
+
 # prometheus.yml
+
 remote_write:
+
   - url: "http://thanos-receiver:19291/api/v1/receive"
   - url: "http://mimir:9009/api/v1/push"
+
 ```
 
 ### Custom Dashboards
@@ -355,14 +401,14 @@ Import pre-built dashboards from Grafana:
 
 ## Performance Benchmarks
 
-| Metric | Value |
-|--------|-------|
-| Prometheus scrape rate | 12,000 targets @ 15s |
-| Elasticsearch throughput | 1M+ events/sec |
-| Netdata sampling rate | 1000+ samples/sec/core |
-| OpenTelemetry trace rate | 100K spans/sec |
-| Hubble flow rate | 10K flows/sec |
-| Total metrics stored | 1M+ time series |
+| Metric                   | Value                  |
+| ------------------------ | ---------------------- |
+| Prometheus scrape rate   | 12,000 targets @ 15s   |
+| Elasticsearch throughput | 1M+ events/sec         |
+| Netdata sampling rate    | 1000+ samples/sec/core |
+| OpenTelemetry trace rate | 100K spans/sec         |
+| Hubble flow rate         | 10K flows/sec          |
+| Total metrics stored     | 1M+ time series        |
 
 ## License
 
@@ -383,6 +429,6 @@ All monitoring components use open-source licenses:
 - **Cilium Docs**: https://docs.cilium.io/
 - **OpenTelemetry Docs**: https://opentelemetry.io/docs/
 
----
+______________________________________________________________________
 
 *Battle-tested from homelab to CERN. Deploy in minutes. Scale to exabytes.* 🚀

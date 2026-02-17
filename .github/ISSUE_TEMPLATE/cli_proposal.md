@@ -1,3 +1,5 @@
+# Cli Proposal
+
 ---
 name: CLI Enhancement Proposal
 about: Propose a new CLI command, feature, or improvement
@@ -22,7 +24,9 @@ assignees: ''
 #### Command Structure
 
 ```bash
+
 # Example of proposed command usage
+
 python -m app.cli [command] [subcommand] [options]
 ```
 
@@ -36,7 +40,9 @@ python -m app.cli [command] [subcommand] [options]
 #### Example Usage
 
 ```bash
+
 # Provide concrete examples of how the command would be used
+
 python -m app.cli example command --option value
 ```
 

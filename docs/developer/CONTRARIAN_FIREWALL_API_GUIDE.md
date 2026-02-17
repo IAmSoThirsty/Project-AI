@@ -5,26 +5,32 @@
 ### Prerequisites
 
 ```bash
+
 # Install dependencies
+
 pip install fastapi uvicorn pydantic
 
 # Ensure Project-AI is in PYTHONPATH
+
 export PYTHONPATH=/path/to/Project-AI:$PYTHONPATH
 ```
 
 ### Start the Server
 
 ```bash
+
 # From Project-AI root
+
 cd /home/runner/work/Project-AI/Project-AI
 
 # Start FastAPI server
+
 uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 The Contrarian Firewall Orchestrator will automatically start on server startup.
 
----
+______________________________________________________________________
 
 ## Basic Usage
 
@@ -43,6 +49,7 @@ curl -X POST "http://localhost:8000/api/firewall/chaos/start" \
 ```
 
 **Response:**
+
 ```json
 {
   "status": "started",
@@ -83,6 +90,7 @@ curl -X POST "http://localhost:8000/api/firewall/violation/detect" \
 ```
 
 **Response:**
+
 ```json
 {
   "attacker_ip": "192.168.1.100",
@@ -123,6 +131,7 @@ curl -X GET "http://localhost:8000/api/firewall/status"
 ```
 
 **Response:**
+
 ```json
 {
   "orchestrator": {
@@ -176,7 +185,7 @@ curl -X GET "http://localhost:8000/api/firewall/status"
 }
 ```
 
----
+______________________________________________________________________
 
 ## Advanced Usage
 
@@ -188,6 +197,7 @@ Track security intents for analysis:
 import requests
 
 # Track an intent
+
 response = requests.post("http://localhost:8000/api/firewall/intent/track", json={
     "intent_type": "file_access",
     "parameters": {
@@ -200,9 +210,11 @@ response = requests.post("http://localhost:8000/api/firewall/intent/track", json
 intent_id = response.json()["intent_id"]
 
 # List all intents
+
 intents = requests.get("http://localhost:8000/api/firewall/intent/list?limit=50")
 
 # Get specific intent
+
 intent_details = requests.get(f"http://localhost:8000/api/firewall/intent/{intent_id}")
 ```
 
@@ -211,7 +223,9 @@ intent_details = requests.get(f"http://localhost:8000/api/firewall/intent/{inten
 Deploy and manage honeypot decoys:
 
 ```python
+
 # Deploy additional decoys
+
 requests.post("http://localhost:8000/api/firewall/decoy/deploy", json={
     "decoy_types": ["fake_admin_panel", "fake_database", "fake_ssh_server"],
     "count": 5,
@@ -219,9 +233,11 @@ requests.post("http://localhost:8000/api/firewall/decoy/deploy", json={
 })
 
 # List active decoys
+
 decoys = requests.get("http://localhost:8000/api/firewall/decoy/list?limit=100")
 
 # Record decoy access (attacker took the bait)
+
 requests.post(
     "http://localhost:8000/api/firewall/decoy/access/fake_admin_panel_abc123",
     params={"source_ip": "192.168.1.100"}
@@ -233,10 +249,13 @@ requests.post(
 Monitor cognitive warfare effectiveness:
 
 ```python
+
 # Get aggregate overload status
+
 overload_status = requests.get("http://localhost:8000/api/firewall/cognitive/overload")
 
 # Get specific attacker overload
+
 attacker_overload = requests.get(
     "http://localhost:8000/api/firewall/cognitive/overload/192.168.1.100"
 )
@@ -251,7 +270,9 @@ print(f"Decoys Accessed: {attacker_overload.json()['decoys_accessed']}")
 Adjust chaos parameters during runtime:
 
 ```python
+
 # Increase chaos for aggressive defense
+
 requests.post("http://localhost:8000/api/firewall/chaos/tune", json={
     "base_decoy_count": 20,
     "swarm_multiplier": 5.0,
@@ -261,6 +282,7 @@ requests.post("http://localhost:8000/api/firewall/chaos/tune", json={
 })
 
 # Check new status
+
 status = requests.get("http://localhost:8000/api/firewall/chaos/status")
 print(f"New stability: {status.json()['orchestrator']['orchestrator']['stability']}")
 ```
@@ -270,7 +292,9 @@ print(f"New stability: {status.json()['orchestrator']['orchestrator']['stability
 Create and manage adversary profiles:
 
 ```python
+
 # Create adversary profile
+
 requests.post("http://localhost:8000/api/firewall/adversary/profile", json={
     "profile_id": "apt_group_1",
     "characteristics": {
@@ -283,9 +307,11 @@ requests.post("http://localhost:8000/api/firewall/adversary/profile", json={
 })
 
 # List all profiles
+
 profiles = requests.get("http://localhost:8000/api/firewall/adversary/profiles")
 
 # Trigger rotation
+
 requests.post("http://localhost:8000/api/firewall/adversary/rotate")
 ```
 
@@ -294,27 +320,32 @@ requests.post("http://localhost:8000/api/firewall/adversary/rotate")
 Get aggregated threat intelligence:
 
 ```python
+
 # Get federated threat score
+
 threat_score = requests.get("http://localhost:8000/api/firewall/threat/score")
 
 print(f"Threat Score: {threat_score.json()['federated_threat_score']:.1f}/100")
 print(f"Threat Level: {threat_score.json()['threat_level']}")
 
 # Update score from external source
-requests.post("http://localhost:8000/api/firewall/threat/score/update", 
+
+requests.post("http://localhost:8000/api/firewall/threat/score/update",
     params={"source": "external_feed"},
     json=45.8
 )
 ```
 
----
+______________________________________________________________________
 
 ## Python SDK
 
 ### Installation
 
 ```python
+
 # Add to your project
+
 from src.app.security.contrarian_firewall_orchestrator import (
     get_orchestrator,
     OrchestratorConfig,
@@ -329,14 +360,19 @@ import asyncio
 from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
 
 async def main():
+
     # Get orchestrator instance
+
     orchestrator = get_orchestrator()
-    
+
     # Start orchestrator
+
     await orchestrator.start()
-    
+
     try:
+
         # Process violation
+
         result = orchestrator.process_violation(
             source_ip="192.168.1.100",
             violation_type="xss_attempt",
@@ -345,31 +381,37 @@ async def main():
                 "user_agent": "Mozilla/5.0..."
             }
         )
-        
+
         print(f"Threat Level: {result['threat_level']}")
         print(f"Cognitive Overload: {result['cognitive_overload']}")
         print(f"Intent ID: {result['intent_id']}")
-        
+
         # Get status
+
         status = orchestrator.get_comprehensive_status()
         print(f"Running: {status['orchestrator']['running']}")
         print(f"Stability: {status['orchestrator']['stability']:.2f}")
-        
+
         # Get intent history
+
         intents = orchestrator.get_intent_history(limit=10)
         for intent in intents:
             print(f"- {intent['type']}: {intent['threat_score']:.2f}")
-        
+
         # Get telemetry summary
+
         telemetry = orchestrator.get_telemetry_summary(minutes=60)
         print(f"Avg Threat: {telemetry['avg_threat_score']:.2f}")
         print(f"Avg Overload: {telemetry['avg_cognitive_overload']:.2f}")
-        
+
     finally:
+
         # Stop orchestrator
+
         await orchestrator.stop()
 
 # Run
+
 asyncio.run(main())
 ```
 
@@ -382,6 +424,7 @@ from src.app.security.contrarian_firewall_orchestrator import (
 )
 
 # Create custom config
+
 config = OrchestratorConfig(
     mode=FirewallMode.AGGRESSIVE,
     stability_target=0.8,  # High chaos
@@ -394,10 +437,11 @@ config = OrchestratorConfig(
 )
 
 # Create orchestrator with config
+
 orchestrator = get_orchestrator(config)
 ```
 
----
+______________________________________________________________________
 
 ## Integration Examples
 
@@ -412,19 +456,23 @@ orchestrator = get_orchestrator()
 
 @app.middleware("http")
 async def firewall_middleware(request: Request, call_next):
+
     # Check for suspicious patterns
+
     suspicious = False
     violation_type = None
-    
+
     if "' OR '" in str(request.url):
         suspicious = True
         violation_type = "sql_injection"
     elif "<script>" in str(request.url):
         suspicious = True
         violation_type = "xss_attempt"
-    
+
     if suspicious:
+
         # Process through orchestrator
+
         result = orchestrator.process_violation(
             source_ip=request.client.host,
             violation_type=violation_type,
@@ -434,11 +482,12 @@ async def firewall_middleware(request: Request, call_next):
                 "user_agent": request.headers.get("user-agent")
             }
         )
-        
+
         # Block if governance denies
+
         if result.get("governance_verdict", {}).get("verdict") == "deny":
             raise HTTPException(status_code=403, detail="Blocked by security policy")
-    
+
     response = await call_next(request)
     return response
 ```
@@ -457,22 +506,28 @@ request_counts = defaultdict(int)
 async def rate_limit_middleware(request: Request, call_next):
     client_ip = request.client.host
     request_counts[client_ip] += 1
-    
+
     # Check if exceeding rate limit
+
     if request_counts[client_ip] > 100:  # 100 requests
+
         # Report as violation
+
         result = orchestrator.process_violation(
             source_ip=client_ip,
             violation_type="rate_limit_exceeded",
             details={"request_count": request_counts[client_ip]}
         )
-        
+
         # If cognitive overload high, they're confused - mission accomplished
+
         if result["cognitive_overload"] > 8.0:
+
             # Serve them random decoys
+
             decoys = orchestrator.swarm_defense.get_decoy_recommendations(client_ip)
             return JSONResponse({"error": "Rate limited", "try_these": decoys[:5]})
-    
+
     response = await call_next(request)
     return response
 ```
@@ -482,20 +537,27 @@ async def rate_limit_middleware(request: Request, call_next):
 ```python
 class ExistingSecuritySystem:
     """Your existing security system"""
-    
+
     def detect_threat(self, data):
+
         # Your existing threat detection
+
         return {"threat": True, "confidence": 0.85}
 
 # Enhance with Contrarian Firewall
+
 orchestrator = get_orchestrator()
 
 def enhanced_threat_detection(source_ip, data):
+
     # Get existing system's opinion
+
     existing_result = existing_security.detect_threat(data)
-    
+
     if existing_result["threat"]:
+
         # Feed to orchestrator for cognitive warfare
+
         contrarian_result = orchestrator.process_violation(
             source_ip=source_ip,
             violation_type="existing_system_detection",
@@ -504,19 +566,20 @@ def enhanced_threat_detection(source_ip, data):
                 "data": data
             }
         )
-        
+
         # Combine results
+
         return {
             "block": contrarian_result["governance_verdict"]["verdict"] == "deny",
             "serve_decoys": contrarian_result["swarm_active"],
             "cognitive_overload": contrarian_result["cognitive_overload"],
             "recommended_decoys": orchestrator.swarm_defense.get_decoy_recommendations(source_ip)
         }
-    
+
     return {"block": False}
 ```
 
----
+______________________________________________________________________
 
 ## Testing
 
@@ -547,20 +610,22 @@ def test_violation_processing(orchestrator):
         violation_type="test_violation",
         details={"test": True}
     )
-    
+
     assert result["attacker_ip"] == "test.ip.1.1"
     assert result["threat_level"] == "scout"
     assert "intent_id" in result
 
 def test_threat_escalation(orchestrator):
+
     # Simulate 25 violations (SWARM level)
+
     for i in range(25):
         result = orchestrator.process_violation(
             source_ip="aggressive.attacker",
             violation_type=f"violation_{i}",
             details={}
         )
-    
+
     assert result["threat_level"] == "swarm"
     assert result["swarm_active"] == True
     assert result["cognitive_overload"] > 8.0
@@ -576,44 +641,52 @@ from api.main import app
 client = TestClient(app)
 
 def test_chaos_engine_lifecycle():
+
     # Start chaos engine
+
     response = client.post("/api/firewall/chaos/start")
     assert response.status_code == 200
     assert response.json()["status"] == "started"
-    
+
     # Check status
+
     response = client.get("/api/firewall/chaos/status")
     assert response.status_code == 200
     assert response.json()["orchestrator"]["orchestrator"]["running"] == True
-    
+
     # Stop chaos engine
+
     response = client.post("/api/firewall/chaos/stop")
     assert response.status_code == 200
     assert response.json()["status"] == "stopped"
 
 def test_violation_detection():
+
     # Start engine
+
     client.post("/api/firewall/chaos/start")
-    
+
     # Report violation
+
     response = client.post("/api/firewall/violation/detect", json={
         "source_ip": "test.ip",
         "violation_type": "test",
         "details": {}
     })
-    
+
     assert response.status_code == 200
     assert "intent_id" in response.json()
     assert "governance_verdict" in response.json()
 ```
 
----
+______________________________________________________________________
 
 ## Troubleshooting
 
 ### Issue: "Orchestrator not active"
 
 **Solution**: Start the chaos engine first:
+
 ```bash
 curl -X POST "http://localhost:8000/api/firewall/chaos/start"
 ```
@@ -621,6 +694,7 @@ curl -X POST "http://localhost:8000/api/firewall/chaos/start"
 ### Issue: High latency on violation detection
 
 **Solution**: Disable governance integration for faster processing:
+
 ```python
 config = OrchestratorConfig(governance_integration=False)
 ```
@@ -632,22 +706,23 @@ config = OrchestratorConfig(governance_integration=False)
 ### Issue: Auto-tuning not working
 
 **Solution**: Check telemetry collection:
+
 ```python
 telemetry = orchestrator.get_telemetry_summary(minutes=5)
 print(f"Records: {telemetry['records']}")  # Should be > 0
 ```
 
----
+______________________________________________________________________
 
 ## Performance Tips
 
 1. **Disable governance for high-throughput**: Set `governance_integration=False` if processing >1000 req/s
-2. **Adjust telemetry interval**: Increase to 10-15s for lower overhead
-3. **Use async processing**: Always `await orchestrator.start()` to enable background tasks
-4. **Cache decoy recommendations**: They don't change often for same attacker
-5. **Batch violation reporting**: Group violations and process in batches
+1. **Adjust telemetry interval**: Increase to 10-15s for lower overhead
+1. **Use async processing**: Always `await orchestrator.start()` to enable background tasks
+1. **Cache decoy recommendations**: They don't change often for same attacker
+1. **Batch violation reporting**: Group violations and process in batches
 
----
+______________________________________________________________________
 
 ## API Reference
 
@@ -655,6 +730,6 @@ Full OpenAPI docs available at: `http://localhost:8000/docs`
 
 Interactive API testing: `http://localhost:8000/redoc`
 
----
+______________________________________________________________________
 
 **Built with God-tier engineering standards.**

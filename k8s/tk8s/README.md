@@ -1,7 +1,8 @@
 # TK8S - Thirsty's Kubernetes
+
 ## Civilization-Grade Sovereign Orchestration Layer for Project-AI
 
-> **No wrappers. No managed magic. No YAML sprawl chaos.**  
+> **No wrappers. No managed magic. No YAML sprawl chaos.**
 > **Everything constitutional. Everything deterministic.**
 
 ---
@@ -18,16 +19,21 @@ cd Project-AI/k8s/tk8s
 
 **Step-by-step:**
 ```bash
+
 # 1. Install ArgoCD, Kyverno, and tools
+
 ./install-prerequisites.sh
 
 # 2. Generate Cosign signing keys
+
 ./generate-cosign-keys.sh
 
 # 3. Deploy TK8S infrastructure
+
 ./deploy-tk8s.sh
 
 # 4. Verify deployment
+
 ./verify-deployment.sh
 ```
 
@@ -51,33 +57,41 @@ For manual deployment or custom workflows:
 #### Installation
 
 1. **Clone the repository:**
+
 ```bash
 git clone https://github.com/IAmSoThirsty/Project-AI.git
 cd Project-AI/k8s/tk8s
 ```
 
 2. **Generate Cosign keys:**
+
 ```bash
 cosign generate-key-pair
+
 # Store keys securely and update security/kyverno-policies.yaml
+
 ```
 
 3. **Apply namespaces:**
+
 ```bash
 kubectl apply -f namespaces/tk8s-namespaces.yaml
 ```
 
 4. **Deploy base infrastructure:**
+
 ```bash
 kubectl apply -k .
 ```
 
 5. **Install ArgoCD applications:**
+
 ```bash
 kubectl apply -f argocd/applications.yaml
 ```
 
 6. **Verify deployment:**
+
 ```bash
 kubectl get pods -n project-ai-core
 kubectl get pods -n project-ai-eca
@@ -131,33 +145,43 @@ python validate_tk8s.py
 ## Core Principles
 
 ### 1. Single Monorepo Authority
+
 All infrastructure as code lives in this repository. Git is the single source of truth.
 
 ### 2. Signed Images Only
+
 Every container image must be signed with Cosign. Kyverno admission controller enforces this.
 
 ```bash
+
 # Sign an image
+
 cosign sign --key cosign.key ghcr.io/iamsothirsty/project-ai-core:v1.0.0
 
 # Verify signature
+
 cosign verify --key cosign.pub ghcr.io/iamsothirsty/project-ai-core:v1.0.0
 ```
 
 ### 3. SBOM Mandatory
+
 Software Bill of Materials required for every image.
 
 ```bash
+
 # Generate SBOM
+
 syft ghcr.io/iamsothirsty/project-ai-core:v1.0.0 -o spdx-json > sbom.json
 ```
 
 ### 4. No Mutable Containers
+
 - `latest` tag forbidden
 - Read-only root filesystem enforced
 - No in-place modifications
 
 ### 5. No Shell Access in Production
+
 - No `kubectl exec` into production pods
 - Debug containers blocked via Kyverno
 - All debugging via logs and traces only
@@ -191,10 +215,13 @@ The TK8S Civilization Pipeline (`tk8s-civilization-pipeline.yml`) implements:
 ### Triggering the Pipeline
 
 ```bash
+
 # Push to main branch (auto-deploys to staging)
+
 git push origin main
 
 # Create a release tag (triggers production pipeline)
+
 git tag -s v1.0.0 -m "Release v1.0.0"
 git push origin v1.0.0
 ```
@@ -220,17 +247,22 @@ TK8S uses Kyverno for admission control:
 Default-deny with explicit allow rules:
 
 ```yaml
+
 # ECA namespace: Default deny all
+
 - Ingress: Blocked
 - Egress: DNS + HTTPS only (no internal cluster communication)
 
 # Core namespace: Standard isolation
+
 - Ingress: From ingress controller + monitoring
 - Egress: To memory namespace + external APIs
 
 # Security namespace: High isolation
+
 - Ingress: From monitoring only
 - Egress: Read-only access to all namespaces
+
 ```
 
 ### RBAC
@@ -285,39 +317,56 @@ Grafana dashboards available at `/k8s/tk8s/monitoring/`:
 ### Staging Deployment (Automatic)
 
 ```bash
+
 # Push to main branch
+
 git push origin main
 
 # ArgoCD auto-syncs to staging
+
 # Regression tests run automatically
+
 # Results available in CI/CD logs
+
 ```
 
 ### Production Deployment (Manual Approval)
 
 ```bash
+
 # After successful staging deployment
+
 # Obtain constitutional approval from:
+
 # - Technical Lead
+
 # - Security Officer
+
 # - Product Owner
 
 # Create signed release tag
+
 git tag -s v1.0.0 -m "Production release v1.0.0"
 git push origin v1.0.0
 
 # Pipeline promotes to production
+
 # CIVILIZATION LOCK applied
+
 # Timeline updated automatically
+
 ```
 
 ### Rollback
 
 ```bash
+
 # Via ArgoCD (instant)
+
 argocd app rollback project-ai-core
 
 # Via Git (if ArgoCD unavailable)
+
 git revert HEAD
 git push origin main
 ```
@@ -352,22 +401,29 @@ Examples:
 
 **1. Image signature verification failed**
 ```bash
+
 # Check if image is signed
+
 cosign verify --key cosign.pub <image>
 
 # Re-sign image if needed
+
 cosign sign --key cosign.key <image>
 ```
 
 **2. SBOM annotation missing**
 ```bash
+
 # Generate SBOM
+
 syft <image> -o spdx-json > sbom.json
 
 # Calculate SHA256
+
 sha256sum sbom.json
 
 # Add annotation to deployment
+
 kubectl annotate deployment/<name> \
   tk8s.io/sbom-sha256=<hash> \
   -n <namespace>
@@ -375,28 +431,37 @@ kubectl annotate deployment/<name> \
 
 **3. Network policy blocking traffic**
 ```bash
+
 # Check current policies
+
 kubectl get networkpolicies -A
 
 # Describe specific policy
+
 kubectl describe networkpolicy <name> -n <namespace>
 
 # Temporarily allow all (testing only)
+
 kubectl delete networkpolicy <name> -n <namespace>
 ```
 
 **4. Pod failing to start**
 ```bash
+
 # Check pod status
+
 kubectl get pods -n <namespace>
 
 # View pod events
+
 kubectl describe pod <pod-name> -n <namespace>
 
 # Check logs
+
 kubectl logs <pod-name> -n <namespace>
 
 # Check security context
+
 kubectl get pod <pod-name> -n <namespace> -o yaml | grep -A 10 securityContext
 ```
 
@@ -407,13 +472,17 @@ kubectl get pod <pod-name> -n <namespace> -o yaml | grep -A 10 securityContext
 ### Local Testing
 
 ```bash
+
 # Validate manifests
+
 kubectl apply --dry-run=client -k .
 
 # Check with kubeval
+
 kubeval **/*.yaml
 
 # Score with kube-score
+
 kube-score score **/*.yaml
 ```
 
@@ -451,7 +520,7 @@ MIT License - See [LICENSE](../../LICENSE) for details
 
 ---
 
-**Status:** Configured (Requires Live Validation - See VALIDATION_TEST_PROCEDURES.md)  
-**Version:** 1.0.0  
-**Last Updated:** 2026-02-12  
+**Status:** Configured (Requires Live Validation - See VALIDATION_TEST_PROCEDURES.md)
+**Version:** 1.0.0
+**Last Updated:** 2026-02-12
 **Maintained By:** TK8S Core Team

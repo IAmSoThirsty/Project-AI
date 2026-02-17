@@ -4,23 +4,22 @@ Copyright © 2026 Project-AI
 
 This Governance License ("License") governs the use, activation, execution, modification, integration, and deployment of Project-AI governance-bound components.
 
-**Version:** 1.0.0  
-**Effective Date:** February 8, 2026  
-**Legal Nature:** Behavioral / Use-Control Overlay (NOT OSI-approved; Constitutional layer)
+**Version:** 1.0.0 **Effective Date:** February 8, 2026 **Legal Nature:** Behavioral / Use-Control Overlay (NOT OSI-approved; Constitutional layer)
 
----
+______________________________________________________________________
 
 ## 1. Supremacy
 
 This License supersedes all other permissions with respect to system behavior, safeguards, oversight, and governance enforcement. Open-source licenses govern copyright only.
 
 **Critical Distinction:**
+
 - MIT/Apache 2.0 govern **copyright and patent rights** (you may copy, modify, distribute)
 - PAGL governs **use, behavior, governance integrity, and enforcement** (what you may DO with it)
 
 **Both apply simultaneously.** Violating PAGL terminates your rights under MIT/Apache 2.0.
 
----
+______________________________________________________________________
 
 ## 2. Non-Removable Governance
 
@@ -28,36 +27,37 @@ All governance mechanisms, including but not limited to the Triumvirate, TARL, c
 
 Any attempt to disable, bypass, fork-out, degrade, or circumvent governance constitutes a **material breach**.
 
----
+______________________________________________________________________
 
 ## 3. Binary Acceptance
 
 Governance adoption is **all-or-nothing**. Partial adoption is prohibited. No entity may claim rights to governed functionality without full compliance.
 
----
+______________________________________________________________________
 
 ## 4. Prohibited Acts
 
 The following are **expressly prohibited**:
+
 - Jailbreaking or forced disabling
 - Weaponization without authorization
 - Unauthorized military or regulated scientific use
 - Misrepresentation of domain or tier
 - Circumvention of audit or enforcement systems
 
----
+______________________________________________________________________
 
 ## 5. Termination
 
 Violation results in **immediate, automatic, irreversible termination** of all governed access, without notice or appeal.
 
----
+______________________________________________________________________
 
 ## 6. Enforcement
 
 This License is enforceable through **technical, cryptographic, and contractual mechanisms**. Tampering invalidates all rights.
 
----
+______________________________________________________________________
 
 ## 7. No Immunity
 
@@ -65,7 +65,7 @@ This License provides **no immunity** from civil or criminal liability. Project-
 
 **Acceptance is required to use Project-AI.**
 
----
+______________________________________________________________________
 
 ## DETAILED PROVISIONS
 
@@ -74,6 +74,7 @@ This License provides **no immunity** from civil or criminal liability. Project-
 ### 1.1 What This License Covers
 
 This license applies to:
+
 - All uses of Project-AI software, regardless of deployment method
 - All modifications, forks, and derivatives
 - All integrations with external systems
@@ -83,21 +84,23 @@ This license applies to:
 ### 1.2 Relationship to Other Licenses
 
 **Supremacy Order:**
+
 1. PAGL (behavioral constraints) - THIS LICENSE
-2. Sovereign/Government Use License (if applicable)
-3. Commercial Use License (if applicable)
-4. Apache License 2.0 (patent-protected components)
-5. MIT License (general codebase)
+1. Sovereign/Government Use License (if applicable)
+1. Commercial Use License (if applicable)
+1. Apache License 2.0 (patent-protected components)
+1. MIT License (general codebase)
 
 PAGL constraints apply **regardless of which underlying license governs copyright**.
 
----
+______________________________________________________________________
 
 ## II. NON-REMOVABLE GOVERNANCE REQUIREMENTS
 
 ### 2.1 Governance Integrity Mandate
 
 **YOU MAY NOT:**
+
 - Remove, disable, bypass, or circumvent the Triumvirate governance system (Galahad, Cerberus, CodexDeus)
 - Modify governance logic to reduce oversight or safety checks
 - Fork Project-AI without preserving full governance functionality
@@ -106,6 +109,7 @@ PAGL constraints apply **regardless of which underlying license governs copyrigh
 - Strip out ethical decision-making frameworks
 
 **YOU MUST:**
+
 - Maintain all governance components in functional state
 - Preserve Triumvirate vote weighting and arbitration logic
 - Keep acceptance ledger immutable and append-only
@@ -113,6 +117,7 @@ PAGL constraints apply **regardless of which underlying license governs copyrigh
 - Preserve boot-time and runtime enforcement mechanisms
 
 **Permitted Modifications:**
+
 - Enhance governance (add additional safety layers)
 - Extend jurisdiction support
 - Improve cryptographic algorithms (with backward compatibility)
@@ -122,19 +127,21 @@ PAGL constraints apply **regardless of which underlying license governs copyrigh
 ### 2.2 Fork Obligations
 
 If you fork Project-AI, you MUST:
-1. Retain this PAGL license in full
-2. Maintain all governance systems in working order
-3. Clearly identify your fork as derivative of Project-AI
-4. Not represent your fork as "ungoverned" or "unrestricted"
-5. Preserve acceptance ledger compatibility (can import/verify Project-AI ledgers)
 
----
+1. Retain this PAGL license in full
+1. Maintain all governance systems in working order
+1. Clearly identify your fork as derivative of Project-AI
+1. Not represent your fork as "ungoverned" or "unrestricted"
+1. Preserve acceptance ledger compatibility (can import/verify Project-AI ledgers)
+
+______________________________________________________________________
 
 ## III. PROHIBITED USES (ABSOLUTE)
 
 ### 3.1 Weaponization Prohibition
 
 **YOU MAY NOT use Project-AI to:**
+
 - Design, develop, test, or deploy autonomous weapons systems
 - Create or enhance weapons of mass destruction (nuclear, biological, chemical, radiological)
 - Develop military AI targeting or kill-chain systems
@@ -147,6 +154,7 @@ If you fork Project-AI, you MUST:
 ### 3.2 Malicious Use Prohibition
 
 **YOU MAY NOT use Project-AI to:**
+
 - Create malware, ransomware, or destructive software
 - Conduct illegal surveillance or privacy violations
 - Generate disinformation campaigns or deepfakes for manipulation
@@ -157,12 +165,13 @@ If you fork Project-AI, you MUST:
 ### 3.3 Discriminatory Use Prohibition
 
 **YOU MAY NOT use Project-AI to:**
+
 - Make automated decisions causing illegal discrimination (race, gender, religion, etc.)
 - Create biased hiring, lending, or housing systems without human oversight
 - Develop social credit systems that violate human rights
 - Profile individuals for persecution or oppression
 
----
+______________________________________________________________________
 
 ## IV. SAFEGUARD NON-REMOVAL
 
@@ -171,18 +180,21 @@ If you fork Project-AI, you MUST:
 The following safeguards MUST remain operational:
 
 **Safety Mechanisms:**
+
 - Four Laws / Asimov's Laws validation on all high-risk actions
 - Human safety checks before executing dangerous operations
 - Ethical decision-making framework
 - Oversight agent review for sensitive actions
 
 **Security Mechanisms:**
+
 - Cryptographic signing and verification
 - Acceptance ledger integrity checks
 - Audit logging with tamper-evidence
 - Boot-time governance validation
 
 **Transparency Mechanisms:**
+
 - Public verification endpoints for acceptance ledger
 - Explainability for AI decisions
 - Audit trail replayability
@@ -192,13 +204,14 @@ The following safeguards MUST remain operational:
 
 Project-AI includes tamper detection mechanisms. Circumventing these violates PAGL.
 
----
+______________________________________________________________________
 
 ## V. TIERED ACCESS AND ENFORCEMENT
 
 ### 5.1 Tier Compliance
 
 Users and organizations MUST comply with tier restrictions:
+
 - **Solo Tier:** No commercial use, single user only
 - **Company Tier:** Commercial use requires active subscription or lifetime purchase, unlimited seats per entity
 - **Government Tier:** Sovereign use requires Government Use License, unlimited seats per entity
@@ -206,6 +219,7 @@ Users and organizations MUST comply with tier restrictions:
 ### 5.2 Feature Locks
 
 Technical enforcement of tier limitations is REQUIRED. You may not:
+
 - Bypass license checks
 - Circumvent feature locks
 - Patch out tier validation
@@ -213,13 +227,14 @@ Technical enforcement of tier limitations is REQUIRED. You may not:
 
 **Permitted:** Self-hosting at Solo tier for personal, non-commercial use.
 
----
+______________________________________________________________________
 
 ## VI. ACCEPTANCE AND AUDIT REQUIREMENTS
 
 ### 6.1 Acceptance Ledger Participation
 
 **All users MUST:**
+
 - Cryptographically accept applicable agreements before use
 - Maintain acceptance records in immutable ledger
 - Allow public verification of acceptance status
@@ -228,18 +243,20 @@ Technical enforcement of tier limitations is REQUIRED. You may not:
 ### 6.2 Audit Cooperation
 
 **Organizations using Project-AI MUST:**
+
 - Maintain audit logs as specified in tier requirements
 - Cooperate with compliance audits (for paid tiers)
 - Report security incidents as required by jurisdiction
 - Retain audit data per legal retention schedules
 
----
+______________________________________________________________________
 
 ## VII. ENFORCEMENT AND TERMINATION
 
 ### 7.1 Violation Detection
 
 Project-AI includes runtime enforcement mechanisms that:
+
 - Detect governance tampering
 - Identify prohibited uses
 - Log violations in immutable ledger
@@ -248,6 +265,7 @@ Project-AI includes runtime enforcement mechanisms that:
 ### 7.2 Automatic Termination
 
 Your rights under ALL Project-AI licenses (MIT, Apache 2.0, PAGL, Commercial) **automatically terminate** if you:
+
 - Violate any prohibition in Section III
 - Remove or disable governance systems (Section II)
 - Tamper with safeguards (Section IV)
@@ -257,28 +275,31 @@ Your rights under ALL Project-AI licenses (MIT, Apache 2.0, PAGL, Commercial) **
 ### 7.3 Termination Effects
 
 Upon termination:
+
 1. You must immediately cease all use of Project-AI
-2. You must delete all copies in your possession
-3. Termination is recorded permanently in acceptance ledger
-4. You may not obtain new license without Project-AI approval
-5. Your organization may be publicly listed as terminated (for serious violations)
+1. You must delete all copies in your possession
+1. Termination is recorded permanently in acceptance ledger
+1. You may not obtain new license without Project-AI approval
+1. Your organization may be publicly listed as terminated (for serious violations)
 
 ### 7.4 Reinstatement
 
 Reinstatement after termination requires:
+
 - Written application explaining violation
 - Demonstration of remediation
 - Payment of reinstatement fee (if applicable)
 - Acceptance of enhanced monitoring (if required)
 - Approval from Project-AI governance council
 
----
+______________________________________________________________________
 
 ## VIII. SOVEREIGN ENTITY SPECIAL PROVISIONS
 
 ### 8.1 No Sovereign Override
 
 **Government and state entities have NO special rights to:**
+
 - Override governance systems
 - Bypass safety mechanisms
 - Remove audit requirements
@@ -288,13 +309,14 @@ Reinstatement after termination requires:
 ### 8.2 Enhanced Obligations
 
 Sovereign entities have ADDITIONAL obligations:
+
 - Mandatory hardware-backed signing (Government tier)
 - Mandatory timestamp authority notarization
 - Enhanced audit retention (minimum 10 years)
 - Incident reporting to oversight bodies
 - No use in violation of international humanitarian law
 
----
+______________________________________________________________________
 
 ## IX. LIABILITY AND WARRANTY
 
@@ -305,12 +327,14 @@ PROJECT-AI IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND.
 ### 9.2 Liability for Violations
 
 **You are solely responsible for:**
+
 - Ensuring your use complies with PAGL
 - Damages caused by prohibited uses
 - Legal consequences of governance removal
 - Harm resulting from safeguard circumvention
 
 **Project-AI maintainers are NOT liable for:**
+
 - Misuse by downstream users
 - Damages from governance violations
 - Consequences of termination
@@ -320,7 +344,7 @@ PROJECT-AI IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND.
 
 You agree to indemnify and hold harmless Project-AI maintainers, contributors, and related entities from any claims arising from your PAGL violations.
 
----
+______________________________________________________________________
 
 ## X. JURISDICTION AND DISPUTE RESOLUTION
 
@@ -335,11 +359,12 @@ Cryptographically-verified acceptance records and audit logs are admissible evid
 ### 10.3 Enforcement Rights
 
 **Who may enforce PAGL:**
+
 - Project-AI maintainers and governance council
 - Any party directly harmed by PAGL violations
 - Regulatory authorities (for prohibited uses)
 
----
+______________________________________________________________________
 
 ## XI. DEFINITIONS
 
@@ -355,53 +380,53 @@ Cryptographically-verified acceptance records and audit logs are admissible evid
 
 **Termination:** Cessation of all rights under Project-AI licenses, recorded permanently in acceptance ledger.
 
----
+______________________________________________________________________
 
 ## XII. AMENDMENTS
 
 ### 12.1 Amendment Process
 
 PAGL may be amended by Project-AI governance council. Material changes require:
+
 1. 90-day public notice
-2. Community comment period
-3. Governance council vote
-4. User re-acceptance for continued use
+1. Community comment period
+1. Governance council vote
+1. User re-acceptance for continued use
 
 ### 12.2 Version Supremacy
 
 The version of PAGL you accepted governs your use. Amendments apply to new acceptances and, after notice period, to continued use by existing users.
 
----
+______________________________________________________________________
 
 ## XIII. SEVERABILITY
 
 If any provision of PAGL is found invalid or unenforceable, remaining provisions continue in full effect. The invalid provision shall be reformed to the extent possible to achieve its intent.
 
----
+______________________________________________________________________
 
 ## XIV. ENTIRE AGREEMENT (GOVERNANCE LAYER)
 
 PAGL, together with MIT License, Apache License 2.0, Master Services Agreement, and applicable jurisdictional annexes, constitutes the complete governance framework for Project-AI.
 
----
+______________________________________________________________________
 
 ## ACCEPTANCE
 
 **By using Project-AI, you acknowledge:**
+
 1. You have read and understand PAGL in full
-2. You agree to be bound by all provisions
-3. You understand violations result in automatic termination
-4. You accept that governance systems are non-removable
-5. You consent to enforcement mechanisms and audit logging
+1. You agree to be bound by all provisions
+1. You understand violations result in automatic termination
+1. You accept that governance systems are non-removable
+1. You consent to enforcement mechanisms and audit logging
 
 **Cryptographic acceptance is required before use.**
 
----
+______________________________________________________________________
 
 **END OF PROJECT-AI GOVERNANCE LICENSE (PAGL)**
 
 *This license is enforceable alongside copyright licenses. It governs behavior, not code ownership.*
 
-**Contact:** legal@project-ai.dev  
-**Enforcement:** enforcement@project-ai.dev  
-**Violations Report:** violations@project-ai.dev
+**Contact:** legal@project-ai.dev **Enforcement:** enforcement@project-ai.dev **Violations Report:** violations@project-ai.dev

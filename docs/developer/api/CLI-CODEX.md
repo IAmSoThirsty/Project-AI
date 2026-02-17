@@ -4,7 +4,7 @@
 
 This document outlines best practices, structure recommendations, and guidelines for CLI (Command-Line Interface) development specifically for Project-AI. It serves as the definitive reference for contributors to create, maintain, and expand CLI features in a robust, scalable, and user-friendly manner.
 
----
+______________________________________________________________________
 
 ## Best Practices
 
@@ -49,7 +49,7 @@ This document outlines best practices, structure recommendations, and guidelines
 - Typer provides built-in completion support via `--install-completion`.
 - Document completion installation in `docs/cli/README.md`.
 
----
+______________________________________________________________________
 
 ## Structure
 
@@ -77,7 +77,7 @@ Project-AI/
 - The CLI entry script (`cli.py`) uses Typer's command group structure.
 - Avoid side-effects on import—entry point should be wrapped in `if __name__ == "__main__"`.
 
----
+______________________________________________________________________
 
 ## Command Groups
 
@@ -101,13 +101,15 @@ def command_name(
     option: bool = typer.Option(False, "--option", help="Option description."),
 ):
     """Command description visible in --help."""
+
     # Implementation
+
     typer.echo("Result message")
 
 app.add_typer(group_app, name="group")
 ```
 
----
+______________________________________________________________________
 
 ## Coding Guidelines
 
@@ -127,7 +129,9 @@ app.add_typer(group_app, name="group")
 def command_name(param: str):
     """Command description."""
     try:
+
         # Implementation
+
         result = do_something(param)
         typer.echo(f"✓ Success: {result}")
     except ValueError as e:
@@ -138,7 +142,7 @@ def command_name(param: str):
         raise typer.Exit(1)
 ```
 
----
+______________________________________________________________________
 
 ## Testing Guidelines
 
@@ -168,17 +172,21 @@ def test_command():
 ### Running Tests
 
 ```bash
+
 # Run all CLI tests
+
 pytest tests/test_cli.py -v
 
 # Run specific test class
+
 pytest tests/test_cli.py::TestUserCommands -v
 
 # Run with coverage
+
 pytest tests/test_cli.py --cov=src/app/cli --cov-report=term
 ```
 
----
+______________________________________________________________________
 
 ## Documentation Workflow
 
@@ -201,7 +209,7 @@ When adding new features, update:
 1. **CHANGELOG.md** - Document changes for version tracking
 1. **CONTRIBUTING.md** - Update if development workflow changes
 
----
+______________________________________________________________________
 
 ## Configuration File Format
 
@@ -236,7 +244,7 @@ export PROJECTAI_AI_TEMPERATURE=0.9
 export PROJECTAI_SECURITY_ENABLE_AUDIT_LOG=true
 ```
 
----
+______________________________________________________________________
 
 ## Future Guidelines
 
@@ -249,7 +257,7 @@ export PROJECTAI_SECURITY_ENABLE_AUDIT_LOG=true
 1. **Continuous Integration**: Integrate CLI testing into CI/CD pipelines for every push & PR (see `.github/workflows/cli.yml`).
 1. **Deprecation Policy**: Announce and document deprecated commands/options; maintain backward compatibility where feasible.
 
----
+______________________________________________________________________
 
 ## CI/CD Integration
 
@@ -274,17 +282,21 @@ It includes:
 Before committing CLI changes:
 
 ```bash
+
 # Install pre-commit hooks
+
 pre-commit install
 
 # Run manually
+
 pre-commit run --all-files
 
 # Or just CLI files
+
 pre-commit run --files src/app/cli.py tests/test_cli.py
 ```
 
----
+______________________________________________________________________
 
 ## Contribution Process
 
@@ -294,14 +306,14 @@ pre-commit run --files src/app/cli.py tests/test_cli.py
 - Update this CODEX with any structural or procedural changes to the CLI.
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for general contribution guidelines.
 
----
+______________________________________________________________________
 
 ## Version History
 
 - **v1.0.0** (2026-01-09) - Initial CLI implementation with command groups
 - **Unreleased** - CLI best-practice enhancements (config, completion, docs, testing)
 
----
+______________________________________________________________________
 
 ## Related Documentation
 
@@ -311,6 +323,6 @@ pre-commit run --files src/app/cli.py tests/test_cli.py
 - [CHANGELOG.md](CHANGELOG.md) - Version history and changes
 - [README.md](README.md) - Main project documentation
 
----
+______________________________________________________________________
 
 _Last updated: 2026-01-09_

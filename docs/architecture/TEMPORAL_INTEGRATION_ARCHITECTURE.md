@@ -130,19 +130,25 @@ This document describes the Temporal integration architecture for Project-AI.
 ### Starting a Workflow
 
 ```
+
 1. Application → AI Controller
+
    controller.process_ai_request(data="...", user_id="...")
 
 2. AI Controller → Temporal Client
+
    client.start_workflow(ExampleWorkflow, args=WorkflowInput(...))
 
 3. Temporal Client → Temporal Server
+
    POST /api/v1/namespaces/default/workflows
 
 4. Temporal Server → Worker
+
    Task dispatched to worker via task queue
 
 5. Worker → Workflow
+
    ExampleWorkflow.run() starts executing
 
 6. Workflow → Activities
@@ -151,12 +157,15 @@ This document describes the Temporal integration architecture for Project-AI.
    - execute_activity(process_ai_task)
 
 7. Workflow → Temporal Server
+
    Workflow result stored
 
 8. Temporal Server → AI Controller
+
    Result returned to caller
 
 9. AI Controller → Application
+
    WorkflowOutput returned with success/result
 ```
 
@@ -210,6 +219,7 @@ The AI Controller provides a clean interface:
 from app.service.ai_controller import AIController
 
 # Use in existing code
+
 controller = AIController()
 result = await controller.process_ai_request(
     data=user_input,
@@ -217,10 +227,14 @@ result = await controller.process_ai_request(
 )
 
 if result.success:
+
     # Handle success
+
     process_result(result.result)
 else:
+
     # Handle error
+
     log_error(result.error)
 ```
 

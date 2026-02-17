@@ -29,8 +29,8 @@ Project-AI implements multiple layers of security:
 
 ### Example/Test Keys in Git History
 
-**Commit:** `9134791530f193bde79d2afddeefd2342e0c5e90`  
-**Date:** 2026-01-28 21:05:59 UTC  
+**Commit:** `9134791530f193bde79d2afddeefd2342e0c5e90`
+**Date:** 2026-01-28 21:05:59 UTC
 **Files Affected:**
 
 - `data/sovereign_messages_ai/identity.json`
@@ -40,9 +40,9 @@ Project-AI implements multiple layers of security:
 - `data/sovereign_messages_multi_charlie/identity.json`
 - `data/sovereign_messages_user/identity.json`
 
-**Status:** Files removed from HEAD (current working tree is clean)  
-**Classification:** Example/test RSA private keys only  
-**Risk Level:** LOW - These are demonstration keys for the sovereign messaging integration example  
+**Status:** Files removed from HEAD (current working tree is clean)
+**Classification:** Example/test RSA private keys only
+**Risk Level:** LOW - These are demonstration keys for the sovereign messaging integration example
 **Recommendation:** Generate new cryptographic keys for any production deployment
 
 **Important:** These keys were never used in production and were only included as examples to demonstrate the sovereign messaging feature. If you are deploying Project-AI in a production environment, you must generate your own unique keys using:
@@ -53,6 +53,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 
 # Generate new key pair
+
 private_key = rsa.generate_private_key(
     public_exponent=65537,
     key_size=2048,
@@ -60,6 +61,7 @@ private_key = rsa.generate_private_key(
 )
 
 # Export private key
+
 pem = private_key.private_bytes(
     encoding=serialization.Encoding.PEM,
     format=serialization.PrivateFormat.PKCS8,
@@ -120,6 +122,7 @@ All PRs that claim "production-ready," "enterprise best practices," "complete fo
 5. **Log Deletion Prevention** - Evidence of log deletion prevention or detection
 
 **If ANY of these validations are missing**, the PR MUST use safe framing language ONLY:
+
 - "Implementation aligns with enterprise hardening patterns."
 - "Validation tests confirm configuration correctness."
 - "Full adversarial validation is ongoing."

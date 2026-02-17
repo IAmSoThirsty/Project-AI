@@ -13,14 +13,17 @@ python src/app/main.py
 ### Alternative Launch Methods
 
 ```powershell
+
 # Method 1: Using python module execution
+
 python -m app.main
 
 # Method 2: With environment file
+
 python src/app/main.py  # Automatically loads .env file
 ```
 
----
+______________________________________________________________________
 
 ## ✅ Pre-Launch Checklist
 
@@ -30,7 +33,7 @@ python src/app/main.py  # Automatically loads .env file
 - [x] Documentation updated
 - [x] READMEs updated (main, web, android)
 
----
+______________________________________________________________________
 
 ## 🆕 New Features Available
 
@@ -52,7 +55,7 @@ python src/app/main.py  # Automatically loads .env file
 - **Location**: `plugins/` directory
 - **Template**: See `src/app/core/plugin_system.py` for ExamplePlugin
 
----
+______________________________________________________________________
 
 ## 🎯 What You Can Do Now
 
@@ -70,7 +73,7 @@ python src/app/main.py  # Automatically loads .env file
    - Emergency Alerts
    - Intent Detection
 
----
+______________________________________________________________________
 
 ## 📋 Test Results Summary
 
@@ -85,32 +88,38 @@ python src/app/main.py  # Automatically loads .env file
 Total: 6/6 tests passing (100%)
 ```
 
----
+______________________________________________________________________
 
 ## 🔧 Environment Variables (Optional)
 
 Add these to your `.env` file for enhanced features:
 
 ```env
+
 # OpenAI Integration (for learning paths & chat)
+
 OPENAI_API_KEY=sk-your-key-here
 
 # Email Alerts (for emergency features)
+
 SMTP_USERNAME=your-email@example.com
 SMTP_PASSWORD=your-secure-app-password-here  # Generate from email provider
 
 # Encryption (auto-generated if not provided)
+
 FERNET_KEY=your-base64-key-here
 
 # Cloud Sync (NEW!)
+
 CLOUD_SYNC_URL=https://your-api.com/sync
 
 # Directories (optional)
+
 DATA_DIR=data
 LOG_DIR=logs
 ```
 
----
+______________________________________________________________________
 
 ## 🎨 Dashboard Features
 
@@ -155,7 +164,7 @@ LOG_DIR=logs
 - Quick alert system
 - Location-aware alerts
 
----
+______________________________________________________________________
 
 ## 📊 System Architecture
 
@@ -188,7 +197,7 @@ Project-AI/
 └── requirements.txt               # All dependencies
 ```
 
----
+______________________________________________________________________
 
 ## 🐛 Known Minor Issues
 
@@ -199,7 +208,7 @@ Project-AI/
 1. Minor type annotation mismatches - no runtime impact
 1. Unused imports - cosmetic only
 
----
+______________________________________________________________________
 
 ## 💬 Support
 
@@ -208,20 +217,20 @@ Project-AI/
 - **Documentation**: See README.md, INTEGRATION_SUMMARY.md
 - **Branch**: feature/android-apk-integration
 
----
+______________________________________________________________________
 
 **System Status: ✅ READY FOR PRODUCTION USE**
 
 **Happy coding! 🎉**
 
-
----
+______________________________________________________________________
 
 ## Formatting & Linters
 
 Before committing changes, run the project formatters and linters:
 
 PowerShell (Python):
+
 ```powershell
 $env:PYTHONPATH='src'
 python -m pip install -r requirements.txt
@@ -232,14 +241,17 @@ black src tests
 ```
 
 PowerShell (Web frontend):
+
 ```powershell
 cd web/frontend
 npm install
 npm run format
+
 # ESLint configuration may not be present; to set up linting run `npm init @eslint/config`
+
 ```
 
----
+______________________________________________________________________
 
 **Repository note:** Last updated: 2025-11-26 (automated)
 

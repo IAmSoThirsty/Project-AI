@@ -78,11 +78,11 @@ Contextual information based on event type:
   - Severity: INFO (success), ERROR (failure)
   - Fields: source_id, h235_token_valid, ip_src
   - Outcome: SUCCESS, FAILURE
-  
+
 - **RCF** (Registration Confirm)
   - Severity: INFO
   - Fields: source_id, ttl_seconds
-  
+
 - **RRJ** (Registration Reject)
   - Severity: ERROR
   - Fields: source_id, reason_code, reason_text
@@ -92,11 +92,11 @@ Contextual information based on event type:
 - **ARQ** (Admission Request)
   - Severity: INFO (success), WARN (denied)
   - Fields: source_id, dest_id, bandwidth_kbps, call_id
-  
+
 - **ACF** (Admission Confirm)
   - Severity: INFO
   - Fields: call_id, bandwidth_allocated_kbps
-  
+
 - **ARJ** (Admission Reject)
   - Severity: WARN
   - Fields: call_id, reason_code (e.g., "BANDWIDTH_EXCEEDED")
@@ -106,7 +106,7 @@ Contextual information based on event type:
 - **DRQ** (Disengage Request)
   - Severity: INFO
   - Fields: call_id, reason_code
-  
+
 - **DCF** (Disengage Confirm)
   - Severity: INFO
 
@@ -115,17 +115,17 @@ Contextual information based on event type:
 - **SETUP**
   - Severity: INFO (secure), ERROR (insecure)
   - Fields: source_id, dest_id, call_id, h235_mode
-  
+
 - **CALL_PROCEEDING**
   - Severity: INFO
-  
+
 - **ALERTING**
   - Severity: INFO
-  
+
 - **CONNECT**
   - Severity: INFO (secure), CRITICAL (insecure)
   - Fields: call_id, encryption_enabled
-  
+
 - **RELEASE_COMPLETE**
   - Severity: INFO
   - Fields: call_id, reason_code, duration_seconds
@@ -139,17 +139,17 @@ Contextual information based on event type:
 - **TERMINAL_CAPABILITY_SET**
   - Severity: INFO
   - Fields: source_id, codec_list
-  
+
 - **MASTER_SLAVE_DETERMINATION**
   - Severity: DEBUG
-  
+
 - **OPEN_LOGICAL_CHANNEL**
   - Severity: INFO (SRTP), CRITICAL (RTP)
   - Fields: call_id, media_type, srtp_enabled, cipher_suite
-  
+
 - **CLOSE_LOGICAL_CHANNEL**
   - Severity: INFO
-  
+
 - **H245_SECURITY_MODE**
   - Severity: INFO (success), ERROR (failure)
   - Fields: call_id, h235_4_enabled, outcome
@@ -159,23 +159,23 @@ Contextual information based on event type:
 - **SRTP_ESTABLISHED**
   - Severity: INFO
   - Fields: call_id, cipher_suite, key_length_bits
-  
+
 - **RTP_FALLBACK_DETECTED**
   - Severity: CRITICAL
   - Fields: call_id, source_id, dest_id, reason_text
-  
+
 - **MEDIA_PATH_BLOCKED**
   - Severity: ERROR
   - Fields: call_id, ip_src, ip_dst, reason_text
-  
+
 - **PACKET_LOSS_THRESHOLD_EXCEEDED**
   - Severity: WARN
   - Fields: call_id, packet_loss_percent, threshold_percent
-  
+
 - **JITTER_THRESHOLD_EXCEEDED**
   - Severity: WARN
   - Fields: call_id, jitter_ms, threshold_ms
-  
+
 - **SRTCP_INTEGRITY_FAILURE**
   - Severity: ERROR
   - Fields: call_id, source_id
@@ -185,23 +185,23 @@ Contextual information based on event type:
 - **H235_TOKEN_VALIDATION_SUCCESS**
   - Severity: INFO
   - Fields: source_id, token_type
-  
+
 - **H235_TOKEN_VALIDATION_FAILURE**
   - Severity: ERROR
   - Fields: source_id, reason_code, reason_text
-  
+
 - **H235_DOWNGRADE_ATTEMPT**
   - Severity: CRITICAL
   - Fields: source_id, attempted_mode, required_mode
-  
+
 - **H235_REPLAY_ATTACK_DETECTED**
   - Severity: CRITICAL
   - Fields: source_id, ip_src, timestamp_drift_seconds
-  
+
 - **CLEARTEXT_SIGNALING_DETECTED**
   - Severity: CRITICAL
   - Fields: source_id, dest_id, call_id
-  
+
 - **CLEARTEXT_MEDIA_DETECTED**
   - Severity: CRITICAL
   - Fields: call_id, ip_src, ip_dst
@@ -211,27 +211,27 @@ Contextual information based on event type:
 - **CERTIFICATE_VALIDATED**
   - Severity: INFO
   - Fields: certificate_serial, subject_dn, issuer_dn
-  
+
 - **CERTIFICATE_VALIDATION_FAILURE**
   - Severity: ERROR
   - Fields: certificate_serial, reason_code, reason_text
-  
+
 - **CERTIFICATE_EXPIRING_SOON**
   - Severity: WARN
   - Fields: certificate_serial, subject_dn, days_until_expiry
-  
+
 - **CERTIFICATE_EXPIRED**
   - Severity: ERROR
   - Fields: certificate_serial, subject_dn, expired_date
-  
+
 - **CERTIFICATE_REVOKED**
   - Severity: ERROR
   - Fields: certificate_serial, revocation_date, reason_code
-  
+
 - **CRL_OCSP_UNREACHABLE**
   - Severity: ERROR
   - Fields: ocsp_url, reason_text
-  
+
 - **TRUST_CHAIN_FAILURE**
   - Severity: ERROR
   - Fields: certificate_serial, reason_text
@@ -241,23 +241,23 @@ Contextual information based on event type:
 - **TRUNK_UP**
   - Severity: INFO
   - Fields: trunk_id, trunk_type (PSTN, ISDN, H320, SIP)
-  
+
 - **TRUNK_DOWN**
   - Severity: ERROR
   - Fields: trunk_id, reason_text
-  
+
 - **CODEC_TRANSCODING**
   - Severity: INFO
   - Fields: call_id, codec_in, codec_out
-  
+
 - **GATEWAY_SRTP_TERMINATION**
   - Severity: INFO
   - Fields: call_id, cipher_suite
-  
+
 - **GATEWAY_REGISTRATION_FAILURE**
   - Severity: ERROR
   - Fields: gateway_id, gatekeeper_id, reason_text
-  
+
 - **CDR_GENERATED**
   - Severity: INFO
   - Fields: call_id, duration_seconds, source_id, dest_id, codec
@@ -267,15 +267,15 @@ Contextual information based on event type:
 - **FIREWALL_BLOCK**
   - Severity: WARN
   - Fields: ip_src, ip_dst, port_src, port_dst, rule_id
-  
+
 - **QOS_QUEUE_CONGESTION**
   - Severity: WARN
   - Fields: queue_name, utilization_percent
-  
+
 - **DSCP_MISMATCH**
   - Severity: WARN
   - Fields: expected_dscp, actual_dscp, ip_src
-  
+
 - **VLAN_ISOLATION_VIOLATION**
   - Severity: CRITICAL
   - Fields: source_vlan, dest_vlan, ip_src, ip_dst
@@ -285,15 +285,15 @@ Contextual information based on event type:
 - **SERVICE_STARTED**
   - Severity: INFO
   - Fields: service_name, version
-  
+
 - **SERVICE_STOPPED**
   - Severity: WARN
   - Fields: service_name, reason_text
-  
+
 - **CONFIGURATION_CHANGED**
   - Severity: INFO
   - Fields: admin_id, change_description
-  
+
 - **HEALTH_CHECK_FAILURE**
   - Severity: ERROR
   - Fields: check_name, reason_text

@@ -33,17 +33,21 @@ roles/cloudkms.admin
 ```
 
 **Interpretation:**
+
 - ✅ **PASS**: Only `roles/cloudkms.signerVerifier` is listed
 - ❌ **FAIL**: If you see `Owner`, `Editor`, `Admin`, or any broader roles
 
 **Remediation (if failed):**
 ```bash
+
 # Remove over-privileged bindings
+
 gcloud projects remove-iam-policy-binding PROJECT_ID \
   --member="serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com" \
   --role="roles/DANGEROUS_ROLE"
 
 # Ensure only signerVerifier at KMS key level (not project level)
+
 gcloud kms keys add-iam-policy-binding cosign-key \
   --location=us-central1 \
   --keyring=tk8s-keyring \
@@ -66,24 +70,29 @@ gcloud kms keys get-iam-policy cosign-key \
 **✅ Expected Output (CORRECT):**
 ```yaml
 bindings:
+
 - members:
   - serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com
+
   role: roles/cloudkms.signerVerifier
 etag: BwYRh8xxxxxx
 version: 1
 ```
 
 **Key Points:**
+
 - ✅ **ONLY** `roles/cloudkms.signerVerifier` is bound
 - ✅ Member is the `cosign-signer@PROJECT_ID.iam.gserviceaccount.com` service account
 - ✅ No additional members or roles
 
 **Permissions Granted by `roles/cloudkms.signerVerifier`:**
+
 - `cloudkms.cryptoKeyVersions.useToSign` - Sign data
 - `cloudkms.cryptoKeyVersions.viewPublicKey` - View public key
 - `cloudkms.cryptoKeys.get` - Get key metadata
 
 **Permissions NOT Granted (as expected):**
+
 - ❌ `cloudkms.cryptoKeys.create` - Cannot create keys
 - ❌ `cloudkms.cryptoKeys.update` - Cannot modify keys
 - ❌ `cloudkms.cryptoKeyVersions.destroy` - Cannot delete key versions
@@ -101,27 +110,38 @@ gcloud projects get-iam-policy PROJECT_ID \
 
 **✅ Expected Output (CORRECT - Empty or minimal):**
 ```yaml
+
 # No output is GOOD - means no project-level bindings
+
 # OR only specific resource-level bindings like:
+
 - members:
   - serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com
+
   role: roles/iam.workloadIdentityUser
 ```
 
 **❌ Incorrect Output (DANGEROUS):**
 ```yaml
+
 - members:
   - serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com
+
   role: roles/owner  # ❌ DANGEROUS
+
 - members:
   - serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com
+
   role: roles/editor  # ❌ DANGEROUS
+
 - members:
   - serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com
+
   role: roles/cloudkms.admin  # ❌ TOO BROAD
 ```
 
 **Dangerous Roles to Avoid:**
+
 - ❌ `roles/owner` - Full project access
 - ❌ `roles/editor` - Can modify all resources
 - ❌ `roles/admin` - Administrative access
@@ -130,13 +150,16 @@ gcloud projects get-iam-policy PROJECT_ID \
 
 **Remediation:**
 ```bash
+
 # List all bindings for the service account
+
 gcloud projects get-iam-policy PROJECT_ID \
   --flatten="bindings[].members" \
   --filter="bindings.members:cosign-signer@PROJECT_ID.iam.gserviceaccount.com" \
   --format="table(bindings.role)"
 
 # Remove each over-privileged binding
+
 gcloud projects remove-iam-policy-binding PROJECT_ID \
   --member="serviceAccount:cosign-signer@PROJECT_ID.iam.gserviceaccount.com" \
   --role="roles/ROLE_TO_REMOVE"
@@ -231,8 +254,10 @@ gcloud iam service-accounts add-iam-policy-binding \
 ```
 Updated IAM policy for serviceAccount [cosign-signer@PROJECT_ID.iam.gserviceaccount.com].
 bindings:
+
 - members:
   - serviceAccount:PROJECT_ID.svc.id.goog[tk8s-prod/cosign-signer]
+
   role: roles/iam.workloadIdentityUser
 etag: BwYRh8xxxxxx
 version: 1
@@ -248,8 +273,10 @@ gcloud iam service-accounts get-iam-policy \
 **✅ Expected Output:**
 ```yaml
 bindings:
+
 - members:
   - serviceAccount:PROJECT_ID.svc.id.goog[tk8s-prod/cosign-signer]
+
   role: roles/iam.workloadIdentityUser
 etag: BwYRh8xxxxxx
 version: 1
@@ -302,7 +329,9 @@ metadata:
 spec:
   serviceAccountName: cosign-signer
   containers:
+
   - name: gcloud
+
     image: google/cloud-sdk:slim
     command: ["sleep", "infinity"]
 EOF
@@ -317,7 +346,9 @@ kubectl exec -it workload-identity-test -n tk8s-prod -- gcloud auth list
 ```
                 Credentialed Accounts
 ACTIVE  ACCOUNT
+
 *       cosign-signer@PROJECT_ID.iam.gserviceaccount.com
+
 ```
 
 **Test KMS Access:**
@@ -375,7 +406,9 @@ kubectl delete pod workload-identity-test -n tk8s-prod
 Run all checks and verify outputs match expected results:
 
 ```bash
+
 #!/bin/bash
+
 set -e
 
 PROJECT_ID="your-project-id"
@@ -447,6 +480,7 @@ After running all verification commands, determine status:
 ### ✅ PROCEED TO BINARY AUTHORIZATION
 
 **Conditions:**
+
 - Service account has ONLY `roles/cloudkms.signerVerifier` at KMS key level
 - No project-level over-privileged bindings
 - Workload Identity is enabled and configured
@@ -456,12 +490,15 @@ After running all verification commands, determine status:
 **Next Step:**
 ```bash
 echo "✅ PROCEED: Binary Authorization"
+
 # Follow Binary Authorization setup in KMS_SETUP_GUIDE.md Part 6
+
 ```
 
 ### ✅ PROCEED TO WORM (Write-Once-Read-Many)
 
 **Conditions:**
+
 - All Binary Authorization checks pass
 - Audit logging is enabled with immutable storage
 - Log retention is configured (365 days minimum)
@@ -470,8 +507,11 @@ echo "✅ PROCEED: Binary Authorization"
 **Next Step:**
 ```bash
 echo "✅ PROCEED: WORM - Immutable Audit Trail Active"
+
 # Audit logs are now write-once-read-many
+
 # Compliance: SOC 2, ISO 27001, PCI DSS
+
 ```
 
 ---
@@ -479,6 +519,7 @@ echo "✅ PROCEED: WORM - Immutable Audit Trail Active"
 ## 🔒 Security Posture After Setup
 
 ### Before
+
 - 🔴 Private keys in GitHub Secrets
 - 🔴 Downloadable credentials
 - 🔴 Manual key rotation
@@ -486,6 +527,7 @@ echo "✅ PROCEED: WORM - Immutable Audit Trail Active"
 - 🔴 Broad service account permissions
 
 ### After
+
 - 🟢 Keys in GCP KMS (hardware-backed)
 - 🟢 No static credentials
 - 🟢 Automatic rotation
@@ -499,12 +541,14 @@ echo "✅ PROCEED: WORM - Immutable Audit Trail Active"
 ## 📞 Support
 
 If any verification step fails:
+
 1. Review the remediation steps in this document
 2. Check Cloud Audit Logs for permission errors
 3. Verify cluster has Workload Identity enabled
 4. Ensure namespace and service account names match exactly
 
 **Resources:**
+
 - [GCP KMS IAM](https://cloud.google.com/kms/docs/reference/permissions-and-roles)
 - [Workload Identity](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity)
 - [Binary Authorization](https://cloud.google.com/binary-authorization/docs)
@@ -516,14 +560,17 @@ If any verification step fails:
 Document your verification:
 
 ```markdown
+
 # Security Verification - [DATE]
 
 ## Environment
+
 - Project ID: [PROJECT_ID]
 - Cluster: [CLUSTER_NAME]
 - Location: [CLUSTER_LOCATION]
 
 ## Verification Results
+
 - [ ] Service account has minimal privileges
 - [ ] KMS key policy is correct
 - [ ] No over-privileged bindings
@@ -532,14 +579,17 @@ Document your verification:
 - [ ] Test pod authenticated successfully
 
 ## Status
+
 - [✅] PROCEED TO BINARY AUTHORIZATION
 - [ ] PROCEED TO WORM
 - [ ] REMEDIATION REQUIRED
 
 ## Notes
+
 [Add any additional notes or findings]
 
 ## Verified By
+
 Name: _______________
 Date: _______________
 ```

@@ -2,7 +2,7 @@
 
 ## Critical Relationship Declaration
 
-**ATLAS Ω is NOT a replacement for Project-AI.**  
+**ATLAS Ω is NOT a replacement for Project-AI.**
 **ATLAS Ω is an INSTRUMENT built on top of Project-AI.**
 
 ---
@@ -28,16 +28,19 @@
 ## Non-Negotiable Principles
 
 ### 1. Project-AI is Primary
-Your work is **primary**.  
+
+Your work is **primary**.
 The system is **secondary**.
 
 All design decisions, judgment, and labor from Project-AI take absolute precedence.
 
 ### 2. ATLAS Ω is Bounded
-ATLAS Ω operates **within** the constraints of Project-AI architecture.  
+
+ATLAS Ω operates **within** the constraints of Project-AI architecture.
 It cannot override, bypass, or supersede Project-AI's governance.
 
 ### 3. ATLAS Ω is Removable
+
 If any part of ATLAS Ω attempts to "take over" or violate Project-AI:
 
 - **It is defective**
@@ -45,6 +48,7 @@ If any part of ATLAS Ω attempts to "take over" or violate Project-AI:
 - **No questions asked**
 
 ### 4. ATLAS Ω is Optional
+
 ATLAS Ω is:
 
 - **Optional** - Not required for Project-AI to function
@@ -131,16 +135,21 @@ ATLAS Ω is:
 If ATLAS Ω needs to be removed:
 
 1. **Delete the `/atlas` directory**
+
    ```bash
    rm -rf /home/runner/work/Project-AI/Project-AI/atlas
    ```
 
 2. **Remove ATLAS dependencies from requirements.txt**
+
    ```bash
+
    # Remove: cbor2, any ATLAS-specific dependencies
+
    ```
 
 3. **Verify Project-AI still functions**
+
    ```bash
    python -m pytest tests/
    ```
@@ -154,9 +163,11 @@ No core functionality depends on ATLAS Ω.
 ## Authority Declaration
 
 ### Source of Truth
+
 **Project-AI architecture, constraints, and vision** remain the **sole source of truth**.
 
 ### Triumvirate Governance (UNCHANGED)
+
 **The Triumvirate remain in full authority** over Project-AI:
 
 - The Triumvirate members (including Liara) continue performing their duties
@@ -189,6 +200,7 @@ ATLAS Ω is a **Triumvirate-accessible tool** that can be used for:
 - Triumvirate makes decisions; ATLAS provides projections to inform those decisions
 
 ### ATLAS Ω Subordination
+
 Everything in ATLAS Ω—including all analytical systems—is:
 
 - **Optional**
@@ -198,6 +210,7 @@ Everything in ATLAS Ω—including all analytical systems—is:
 ATLAS Ω operates UNDER Triumvirate authority, never above or alongside it.
 
 ### No AI Supersession
+
 **No AI component supersedes** Jeremy Karrick's:
 
 - Design decisions
@@ -232,16 +245,16 @@ If ATLAS Ω attempts to:
 
 ## Summary
 
-**ATLAS Ω projects; it does not decide.**  
-**ATLAS Ω assists; it does not replace.**  
+**ATLAS Ω projects; it does not decide.**
+**ATLAS Ω assists; it does not replace.**
 **ATLAS Ω extends; it does not subsume.**
 
-Your architecture is sovereign.  
-ATLAS Ω is a tool.  
+Your architecture is sovereign.
+ATLAS Ω is a tool.
 That's all.
 
 ---
 
-**Issued**: 2026-02-07  
-**Authority**: Project-AI Primary Documentation  
+**Issued**: 2026-02-07
+**Authority**: Project-AI Primary Documentation
 **Status**: IMMUTABLE

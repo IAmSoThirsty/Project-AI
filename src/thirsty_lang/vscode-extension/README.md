@@ -17,7 +17,9 @@ This directory contains the VS Code extension for Thirsty-lang with syntax highl
 ### Alternative: Symlink (Advanced)
 
 ```bash
+
 # From the Thirsty-lang directory
+
 ln -s "$(pwd)/vscode-extension" ~/.vscode/extensions/thirsty-lang
 ```
 

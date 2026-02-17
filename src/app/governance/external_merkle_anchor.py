@@ -45,7 +45,9 @@ from typing import Any, Literal
 logger = logging.getLogger(__name__)
 
 # Default paths
-DEFAULT_ANCHOR_DIR = Path(__file__).parent.parent.parent.parent / "data" / "external_merkle_anchors"
+DEFAULT_ANCHOR_DIR = (
+    Path(__file__).parent.parent.parent.parent / "data" / "external_merkle_anchors"
+)
 
 # Backend types
 AnchorBackend = Literal["filesystem", "ipfs", "s3", "blockchain"]
@@ -53,6 +55,7 @@ AnchorBackend = Literal["filesystem", "ipfs", "s3", "blockchain"]
 # Optional imports for external backends
 try:
     import ipfshttpclient
+
     IPFS_AVAILABLE = True
 except ImportError:
     IPFS_AVAILABLE = False
@@ -61,6 +64,7 @@ except ImportError:
 try:
     import boto3
     from botocore.exceptions import ClientError
+
     S3_AVAILABLE = True
 except ImportError:
     S3_AVAILABLE = False
@@ -98,7 +102,9 @@ class ExternalMerkleAnchor:
             s3_retention_days: S3 object lock retention period (days)
         """
         self.backends = backends or ["filesystem"]
-        self.filesystem_dir = Path(filesystem_dir) if filesystem_dir else DEFAULT_ANCHOR_DIR
+        self.filesystem_dir = (
+            Path(filesystem_dir) if filesystem_dir else DEFAULT_ANCHOR_DIR
+        )
         self.ipfs_api_url = ipfs_api_url or "http://127.0.0.1:5001"
         self.s3_bucket = s3_bucket
         self.s3_region = s3_region
@@ -114,11 +120,15 @@ class ExternalMerkleAnchor:
         valid_backends: set[AnchorBackend] = {"filesystem", "ipfs", "s3", "blockchain"}
         for backend in self.backends:
             if backend not in valid_backends:
-                raise ValueError(f"Invalid backend: {backend}. Must be one of {valid_backends}")
+                raise ValueError(
+                    f"Invalid backend: {backend}. Must be one of {valid_backends}"
+                )
 
             # Check availability
             if backend == "ipfs" and not IPFS_AVAILABLE:
-                raise ValueError("IPFS backend requested but ipfshttpclient not installed")
+                raise ValueError(
+                    "IPFS backend requested but ipfshttpclient not installed"
+                )
             if backend == "s3" and not S3_AVAILABLE:
                 raise ValueError("S3 backend requested but boto3 not installed")
 
@@ -182,7 +192,7 @@ class ExternalMerkleAnchor:
                     "Merkle root pinned to %s (anchor_id=%s, merkle_root=%s)",
                     backend,
                     anchor_id,
-                    merkle_root[:16] + "..."
+                    merkle_root[:16] + "...",
                 )
             except Exception as e:
                 logger.error("Failed to pin to %s: %s", backend, e)
@@ -208,13 +218,17 @@ class ExternalMerkleAnchor:
         for backend in self.backends:
             try:
                 if backend == "filesystem":
-                    anchor_record = self._verify_from_filesystem(merkle_root, genesis_id)
+                    anchor_record = self._verify_from_filesystem(
+                        merkle_root, genesis_id
+                    )
                 elif backend == "ipfs":
                     anchor_record = self._verify_from_ipfs(merkle_root, genesis_id)
                 elif backend == "s3":
                     anchor_record = self._verify_from_s3(merkle_root, genesis_id)
                 elif backend == "blockchain":
-                    anchor_record = self._verify_from_blockchain(merkle_root, genesis_id)
+                    anchor_record = self._verify_from_blockchain(
+                        merkle_root, genesis_id
+                    )
                 else:
                     continue
 
@@ -226,7 +240,7 @@ class ExternalMerkleAnchor:
                         logger.warning(
                             "Genesis ID mismatch: expected %s, got %s",
                             genesis_id,
-                            anchor_record.get("genesis_id")
+                            anchor_record.get("genesis_id"),
                         )
             except Exception as e:
                 logger.error("Verification error on %s: %s", backend, e)
@@ -256,7 +270,7 @@ class ExternalMerkleAnchor:
         return {
             "status": "success",
             "path": str(filepath),
-            "permissions": "0o444 (read-only)"
+            "permissions": "0o444 (read-only)",
         }
 
     def _verify_from_filesystem(
@@ -271,8 +285,10 @@ class ExternalMerkleAnchor:
                 with open(anchor_file) as f:
                     anchor_record = json.load(f)
 
-                if (anchor_record.get("merkle_root") == merkle_root and
-                    anchor_record.get("genesis_id") == genesis_id):
+                if (
+                    anchor_record.get("merkle_root") == merkle_root
+                    and anchor_record.get("genesis_id") == genesis_id
+                ):
                     return anchor_record
             except Exception as e:
                 logger.error("Error reading %s: %s", anchor_file, e)
@@ -307,7 +323,7 @@ class ExternalMerkleAnchor:
 
             # Serialize anchor record to JSON bytes
             anchor_json = json.dumps(anchor_record, indent=2)
-            anchor_bytes = anchor_json.encode('utf-8')
+            anchor_bytes = anchor_json.encode("utf-8")
 
             # Add to IPFS and get CID (Content Identifier)
             result = client.add_bytes(anchor_bytes)
@@ -319,7 +335,7 @@ class ExternalMerkleAnchor:
             logger.info(
                 "Merkle anchor pinned to IPFS (CID=%s, merkle_root=%s...)",
                 cid,
-                anchor_record["merkle_root"][:16]
+                anchor_record["merkle_root"][:16],
             )
 
             return {
@@ -327,7 +343,7 @@ class ExternalMerkleAnchor:
                 "cid": cid,
                 "ipfs_url": f"ipfs://{cid}",
                 "gateway_url": f"https://ipfs.io/ipfs/{cid}",
-                "pinned": True
+                "pinned": True,
             }
 
         except Exception as e:
@@ -351,19 +367,21 @@ class ExternalMerkleAnchor:
             client = self._get_ipfs_client()
 
             # Get list of pinned CIDs
-            pins = client.pin.ls(type='all')
+            pins = client.pin.ls(type="all")
 
             # Search through pinned content for matching anchor
-            for cid_info in pins.get('Keys', {}).items():
+            for cid_info in pins.get("Keys", {}).items():
                 cid = cid_info[0]
                 try:
                     # Retrieve content from IPFS
                     content_bytes = client.cat(cid)
-                    anchor_record = json.loads(content_bytes.decode('utf-8'))
+                    anchor_record = json.loads(content_bytes.decode("utf-8"))
 
                     # Check if this is our anchor
-                    if (anchor_record.get("merkle_root") == merkle_root and
-                        anchor_record.get("genesis_id") == genesis_id):
+                    if (
+                        anchor_record.get("merkle_root") == merkle_root
+                        and anchor_record.get("genesis_id") == genesis_id
+                    ):
                         logger.info("Found matching anchor in IPFS (CID=%s)", cid)
                         return anchor_record
 
@@ -385,7 +403,7 @@ class ExternalMerkleAnchor:
             if not S3_AVAILABLE:
                 raise RuntimeError("boto3 not available")
             try:
-                self._s3_client = boto3.client('s3', region_name=self.s3_region)
+                self._s3_client = boto3.client("s3", region_name=self.s3_region)
                 logger.info("Connected to S3 in region %s", self.s3_region)
             except Exception as e:
                 logger.error("Failed to connect to S3: %s", e)
@@ -416,31 +434,32 @@ class ExternalMerkleAnchor:
 
             # Calculate retention date
             from datetime import timedelta
+
             retention_until = datetime.now(UTC) + timedelta(days=self.s3_retention_days)
 
             # Put object with object lock retention
             response = client.put_object(
                 Bucket=self.s3_bucket,
                 Key=s3_key,
-                Body=anchor_json.encode('utf-8'),
-                ContentType='application/json',
+                Body=anchor_json.encode("utf-8"),
+                ContentType="application/json",
                 Metadata={
-                    'genesis_id': anchor_record["genesis_id"],
-                    'merkle_root': anchor_record["merkle_root"],
-                    'anchor_id': anchor_id,
+                    "genesis_id": anchor_record["genesis_id"],
+                    "merkle_root": anchor_record["merkle_root"],
+                    "anchor_id": anchor_id,
                 },
-                ObjectLockMode='GOVERNANCE',  # GOVERNANCE mode (admin can override)
+                ObjectLockMode="GOVERNANCE",  # GOVERNANCE mode (admin can override)
                 ObjectLockRetainUntilDate=retention_until,
             )
 
-            version_id = response.get('VersionId', 'unknown')
+            version_id = response.get("VersionId", "unknown")
 
             logger.info(
                 "Merkle anchor pinned to S3 (bucket=%s, key=%s, version=%s, retention_days=%d)",
                 self.s3_bucket,
                 s3_key,
                 version_id,
-                self.s3_retention_days
+                self.s3_retention_days,
             )
 
             return {
@@ -454,12 +473,12 @@ class ExternalMerkleAnchor:
             }
 
         except ClientError as e:
-            error_code = e.response['Error']['Code']
-            if error_code == 'ObjectLockConfigurationNotFoundError':
+            error_code = e.response["Error"]["Code"]
+            if error_code == "ObjectLockConfigurationNotFoundError":
                 logger.error(
                     "S3 bucket %s does not have object lock enabled. "
                     "Enable object lock for WORM protection.",
-                    self.s3_bucket
+                    self.s3_bucket,
                 )
             raise RuntimeError(f"S3 pinning error: {e}")
         except Exception as e:
@@ -482,27 +501,23 @@ class ExternalMerkleAnchor:
             client = self._get_s3_client()
 
             # List objects in merkle_anchors/ prefix
-            paginator = client.get_paginator('list_objects_v2')
-            pages = paginator.paginate(
-                Bucket=self.s3_bucket,
-                Prefix='merkle_anchors/'
-            )
+            paginator = client.get_paginator("list_objects_v2")
+            pages = paginator.paginate(Bucket=self.s3_bucket, Prefix="merkle_anchors/")
 
             for page in pages:
-                for obj in page.get('Contents', []):
-                    s3_key = obj['Key']
+                for obj in page.get("Contents", []):
+                    s3_key = obj["Key"]
                     try:
                         # Get object content
-                        response = client.get_object(
-                            Bucket=self.s3_bucket,
-                            Key=s3_key
-                        )
-                        content = response['Body'].read().decode('utf-8')
+                        response = client.get_object(Bucket=self.s3_bucket, Key=s3_key)
+                        content = response["Body"].read().decode("utf-8")
                         anchor_record = json.loads(content)
 
                         # Check if this is our anchor
-                        if (anchor_record.get("merkle_root") == merkle_root and
-                            anchor_record.get("genesis_id") == genesis_id):
+                        if (
+                            anchor_record.get("merkle_root") == merkle_root
+                            and anchor_record.get("genesis_id") == genesis_id
+                        ):
                             logger.info("Found matching anchor in S3 (key=%s)", s3_key)
                             return anchor_record
 
@@ -530,7 +545,7 @@ class ExternalMerkleAnchor:
         return {
             "status": "stub",
             "message": "Blockchain integration pending",
-            "todo": "Implement Web3.py smart contract interaction"
+            "todo": "Implement Web3.py smart contract interaction",
         }
 
     def _verify_from_blockchain(
@@ -589,10 +604,12 @@ class ExternalMerkleAnchor:
             "backends": self.backends,
             "total_anchors": len(self.list_anchors()),
             "backend_configs": {
-                "filesystem": str(self.filesystem_dir) if "filesystem" in self.backends else None,
+                "filesystem": (
+                    str(self.filesystem_dir) if "filesystem" in self.backends else None
+                ),
                 "ipfs": self.ipfs_api_url if "ipfs" in self.backends else None,
                 "s3": self.s3_bucket if "s3" in self.backends else None,
-            }
+            },
         }
 
         return stats

@@ -238,12 +238,16 @@ A deployment is **fully compliant** when:
 ### Automated Compliance Validation
 
 ```bash
+
 # Run comprehensive compliance check
+
 python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
     --config deployment_config.json
 
 # Expected output format:
+
 # PASS or detailed list of failures
+
 ```
 
 ### Sample Deployment Configuration
@@ -272,16 +276,20 @@ python h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance \
 ### API-Based Validation
 
 ```bash
+
 # Start API service
+
 cd h323_sec_profile
 uvicorn project_ai_fastapi:app --host 0.0.0.0 --port 8080
 
 # Check compliance via API
+
 curl -X POST http://localhost:8080/compliance/check \
     -H "Content-Type: application/json" \
     -d @deployment_config.json
 
 # Log compliance results
+
 curl -X POST http://localhost:8080/log \
     -H "Content-Type: application/json" \
     -d '{
@@ -295,10 +303,13 @@ curl -X POST http://localhost:8080/log \
 ### Continuous Monitoring
 
 ```bash
+
 # Daily compliance validation
+
 0 2 * * * /usr/bin/python /opt/h323_sec_profile/H323_SEC_PROFILE_v1.py check-compliance --config /etc/h323/prod_config.json >> /var/log/h323_compliance.log 2>&1
 
 # Weekly detailed audit
+
 0 3 * * 0 /opt/scripts/weekly_h323_audit.sh
 ```
 

@@ -7,22 +7,26 @@ The Evolution Substrate is already integrated. No installation needed.
 ## Basic Usage
 
 ### 1. Validate Your Build
+
 ```bash
 gradle evolutionValidate
 ```
 This checks constitutional compliance, policy enforcement, and security.
 
 ### 2. Run a Normal Build
+
 ```bash
 gradle buildAll
 ```
 Evolution validation runs automatically during `gradle check`.
 
 ### 3. Create a Release with Capsule
+
 ```bash
 gradle release
 ```
 Automatically includes:
+
 - Constitutional validation
 - Signed build capsule
 - Comprehensive audit report
@@ -32,16 +36,21 @@ Automatically includes:
 ## Common Commands
 
 ```bash
+
 # Check system status
+
 gradle evolutionStatus
 
 # Generate audit report
+
 gradle evolutionAudit
 
 # View help
+
 gradle evolutionHelp
 
 # Start verification API
+
 gradle evolutionApiStart -PapiPort=8765
 ```
 
@@ -49,25 +58,29 @@ gradle evolutionApiStart -PapiPort=8765
 
 Edit `gradle.properties`:
 ```properties
+
 # Enable/disable evolution
+
 evolution.enabled=true
 
 # Strict constitutional enforcement
+
 evolution.constitutional.strict=true
 
 # Sign all capsules
+
 evolution.capsule.sign=true
 ```
 
 ## Troubleshooting
 
-**Issue:** Validation fails  
+**Issue:** Validation fails
 **Fix:** Check `policies/constitution.yaml` exists
 
-**Issue:** Python dependencies missing  
+**Issue:** Python dependencies missing
 **Fix:** Run `gradle pythonInstall` first
 
-**Issue:** Database errors  
+**Issue:** Database errors
 **Fix:** Ensure `data/` directory is writable
 
 ## Next Steps

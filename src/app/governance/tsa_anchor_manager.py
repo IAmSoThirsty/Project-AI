@@ -180,17 +180,13 @@ class TSAAnchorManager:
             self.anchor_path.parent.mkdir(parents=True, exist_ok=True)
             self._save([])
 
-        logger.info(
-            "TSAAnchorManager initialized (anchor_path=%s)", self.anchor_path
-        )
+        logger.info("TSAAnchorManager initialized (anchor_path=%s)", self.anchor_path)
 
     # ==============================
     # CREATE ANCHOR
     # ==============================
 
-    def create_anchor(
-        self, merkle_root: str, genesis_id: str
-    ) -> AnchorRecord:
+    def create_anchor(self, merkle_root: str, genesis_id: str) -> AnchorRecord:
         """Create new anchor with TSA timestamp.
 
         This is the critical anchoring function that:
@@ -216,9 +212,7 @@ class TSAAnchorManager:
 
             # Determine index and previous hash
             index = len(anchors)
-            previous_hash = (
-                anchors[-1]["payload_hash"] if anchors else "0" * 64
-            )
+            previous_hash = anchors[-1]["payload_hash"] if anchors else "0" * 64
 
             # Create canonical payload
             # Format: merkle_root|genesis_id|index|previous_hash
@@ -277,9 +271,7 @@ class TSAAnchorManager:
     # VERIFY ANCHOR CHAIN
     # ==============================
 
-    def verify_chain(
-        self, genesis_public_key: Ed25519PublicKey
-    ) -> tuple[bool, str]:
+    def verify_chain(self, genesis_public_key: Ed25519PublicKey) -> tuple[bool, str]:
         """Verify entire anchor chain integrity.
 
         This is the critical verification function that ensures:
@@ -335,9 +327,7 @@ class TSAAnchorManager:
                 # CRITICAL: Verify TSA token
                 tsa_token_der = bytes.fromhex(anchor.tsa_token_hex)
                 try:
-                    token = self.tsa.verify_timestamp(
-                        tsa_token_der, payload_bytes
-                    )
+                    token = self.tsa.verify_timestamp(tsa_token_der, payload_bytes)
                 except Exception as e:
                     raise ChainIntegrityError(
                         f"TSA token verification failed at index {i}: {e}"
@@ -377,13 +367,9 @@ class TSAAnchorManager:
                 raise
             except Exception as e:
                 logger.error("Unexpected error during verification: %s", e)
-                raise ChainIntegrityError(
-                    f"Verification failed at index {i}: {e}"
-                )
+                raise ChainIntegrityError(f"Verification failed at index {i}: {e}")
 
-        logger.info(
-            "Anchor chain verified successfully (%d anchors)", len(anchors)
-        )
+        logger.info("Anchor chain verified successfully (%d anchors)", len(anchors))
         return True, f"All {len(anchors)} anchors verified successfully"
 
     # ==============================
@@ -408,16 +394,10 @@ class TSAAnchorManager:
         """Get total number of anchors."""
         return len(self._load())
 
-    def get_anchors_since(
-        self, since_index: int
-    ) -> list[AnchorRecord]:
+    def get_anchors_since(self, since_index: int) -> list[AnchorRecord]:
         """Get all anchors since given index."""
         anchors = self._load()
-        return [
-            AnchorRecord.from_dict(a)
-            for a in anchors
-            if a["index"] >= since_index
-        ]
+        return [AnchorRecord.from_dict(a) for a in anchors if a["index"] >= since_index]
 
     # ==============================
     # INTERNAL STORAGE

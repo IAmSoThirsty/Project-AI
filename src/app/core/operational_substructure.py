@@ -335,7 +335,6 @@ class DecisionContract(ABC):
         Returns:
             Dictionary containing all contract details
         """
-        pass
 
 
 class SignalsTelemetry(ABC):
@@ -434,7 +433,6 @@ class SignalsTelemetry(ABC):
         Returns:
             Dictionary containing all telemetry details
         """
-        pass
 
 
 class FailureSemantics(ABC):
@@ -529,7 +527,6 @@ class FailureSemantics(ABC):
         Returns:
             FailureResponse object
         """
-        pass
 
     @abstractmethod
     def get_failure_specification(self) -> dict[str, Any]:
@@ -539,7 +536,6 @@ class FailureSemantics(ABC):
         Returns:
             Dictionary containing all failure handling details
         """
-        pass
 
 
 # ============================================================================

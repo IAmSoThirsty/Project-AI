@@ -1,7 +1,7 @@
 # T.A.R.L. (Thirsty's Active Resistance Language)
 
-**Version:** 1.0.0  
-**Status:** Production Implementation  
+**Version:** 1.0.0
+**Status:** Production Implementation
 **License:** MIT
 
 ---
@@ -13,30 +13,35 @@ T.A.R.L. is a production-grade programming language implementation integrated in
 ### Key Features
 
 ✅ **Complete Language Implementation**
+
 - Lexer, parser, AST, semantic analyzer
 - Bytecode compiler with optimizations
 - Stack-based VM with JIT compilation
 - Automatic garbage collection
 
 ✅ **Production-Grade Architecture**
+
 - Zero circular dependencies
 - Strict subsystem boundaries
 - Configuration-driven design
 - Comprehensive error handling
 
 ✅ **Rich Standard Library**
+
 - 30+ built-in functions
 - Collections (list, dict, set, tuple)
 - I/O operations (file, streams)
 - Networking capabilities
 
 ✅ **Developer Experience**
+
 - Language Server Protocol (LSP) support
 - Interactive REPL
 - Source-level debugger
 - Build system with incremental compilation
 
 ✅ **Security & Safety**
+
 - Resource limits and sandboxing
 - Memory safety guarantees
 - FFI security validation
@@ -49,7 +54,9 @@ T.A.R.L. is a production-grade programming language implementation integrated in
 ### Installation
 
 ```bash
+
 # Add tarl to Python path
+
 export PYTHONPATH="${PYTHONPATH}:/path/to/Project-AI"
 ```
 
@@ -59,34 +66,42 @@ export PYTHONPATH="${PYTHONPATH}:/path/to/Project-AI"
 from tarl import TARLSystem
 
 # Initialize system
+
 system = TARLSystem()
 system.initialize()
 
 # Execute source code
+
 source = """
 pour 'Hello, T.A.R.L.!'
 """
 result = system.execute_source(source)
 
 # Check status
+
 status = system.get_status()
 print(status)
 
 # Shutdown
+
 system.shutdown()
 ```
 
 ### Command Line
 
 ```bash
+
 # Run tests
+
 cd tarl/tests
 pytest test_tarl_integration.py -v
 
 # Interactive REPL (planned)
+
 python -m tarl.tooling.repl
 
 # LSP Server (planned)
+
 python -m tarl.tooling.lsp --port 9898
 ```
 
@@ -218,17 +233,22 @@ result = runtime.execute(bytecode)
 ### Running Tests
 
 ```bash
+
 # All tests
+
 cd tarl/tests
 pytest test_tarl_integration.py -v
 
 # Specific test class
+
 pytest test_tarl_integration.py::TestConfigurationSubsystem -v
 
 # Specific test
+
 pytest test_tarl_integration.py::TestTARLSystemIntegration::test_system_initialization -v
 
 # With coverage
+
 pytest test_tarl_integration.py --cov=tarl --cov-report=html
 ```
 
@@ -237,7 +257,7 @@ pytest test_tarl_integration.py --cov=tarl --cov-report=html
 Current test coverage: **100%** of core API surface
 
 - Configuration subsystem: 12 tests
-- Diagnostics subsystem: 8 tests  
+- Diagnostics subsystem: 8 tests
 - Standard library: 10 tests
 - Compiler: 6 tests
 - Runtime: 6 tests
@@ -319,6 +339,7 @@ opportunities = bridge.process_threat_engagement(threat_data, cerberus_response)
 ### Thirsty-lang Security Features
 
 T.A.R.L. leverages Thirsty-lang security modules:
+
 - Threat detection (`src/thirsty_lang/src/security/threat-detector.js`)
 - Code morphing (`src/thirsty_lang/src/security/code-morpher.js`)
 - Defense compilation (`src/thirsty_lang/src/security/defense-compiler.js`)
@@ -373,13 +394,17 @@ export PYTHONPATH="${PYTHONPATH}:/path/to/Project-AI"
 
 **Configuration not found**
 ```bash
+
 # Specify config path explicitly
+
 system = TARLSystem(config_path="/full/path/to/tarl.toml")
 ```
 
 **Tests failing**
 ```bash
+
 # Run from project root
+
 cd /path/to/Project-AI
 pytest tarl/tests/test_tarl_integration.py -v
 ```
@@ -389,6 +414,7 @@ pytest tarl/tests/test_tarl_integration.py -v
 ## Roadmap
 
 ### Phase 1: Foundation (Complete ✅)
+
 - [x] Core architecture
 - [x] All subsystems scaffolded
 - [x] Configuration system
@@ -396,18 +422,21 @@ pytest tarl/tests/test_tarl_integration.py -v
 - [x] Integration tests
 
 ### Phase 2: Compiler (Complete ✅)
+
 - [x] Complete lexer implementation
 - [x] Full parser with error recovery
 - [x] Semantic analyzer with type inference
 - [x] Optimization passes
 
 ### Phase 3: Runtime (Complete ✅)
+
 - [x] Complete bytecode VM
 - [x] Stack-based execution engine
 - [x] Memory management
 - [x] Error handling and recovery
 
 ### Phase 4: Tooling (In Progress)
+
 - [x] Development tooling infrastructure
 - [x] Integration test framework
 - [ ] LSP server (planned - infrastructure ready)

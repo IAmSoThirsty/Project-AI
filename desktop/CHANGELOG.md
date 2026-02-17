@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2026-01-27
 
 ### Added
+
 - Initial release of Project AI Desktop application
 - Electron framework with React + TypeScript
 - Material-UI design system
@@ -28,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ESLint configuration
 
 ### Features
+
 - **Triumvirate Dashboard**: Real-time kernel status and pillar monitoring
 - **Intent Submission**: Interactive form with governance evaluation
 - **Audit Trail**: Immutable log of all governance decisions
@@ -38,12 +40,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Pillar Visualization**: Galahad (Purple), Cerberus (Red), Codex Deus (Green)
 
 ### Security
+
 - Context isolation enabled
 - Node integration disabled
 - Secure IPC communication
 - TARL enforcement on all API calls
 
 ### Technical
+
 - Electron 28
 - React 18
 - TypeScript 5

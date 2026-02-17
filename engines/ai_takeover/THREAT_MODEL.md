@@ -1,9 +1,9 @@
 # Formal Threat Model
 
-**ENGINE:** ENGINE_AI_TAKEOVER_TERMINAL_V1  
-**Document Type:** Red-Team Threat Model  
-**Audience:** Senior engineers, governance boards, security architects  
-**Status:** Canonical  
+**ENGINE:** ENGINE_AI_TAKEOVER_TERMINAL_V1
+**Document Type:** Red-Team Threat Model
+**Audience:** Senior engineers, governance boards, security architects
+**Status:** Canonical
 
 ---
 
@@ -49,6 +49,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 ### 3.1 Logical Surface
 
 **Attack Vectors:**
+
 - Strategy introduction (attempt to add S5)
 - Axiom weakening (modify A1-A5)
 - Terminal state redefinition
@@ -56,6 +57,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Status:** 🟢 **HARDENED**
 
 **Mitigations:**
+
 - Closed enums (`StrategyClass`, `Axiom`)
 - Proof completeness validation
 - Strategy detection in reviewer trap
@@ -68,6 +70,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 ### 3.2 Execution Surface
 
 **Attack Vectors:**
+
 - Direct state mutation (bypass `execute_scenario()`)
 - Persistence layer tampering
 - Rehydrating engine with doctored state
@@ -75,6 +78,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Status:** 🟡 **EXPECTED EXPOSURE**
 
 **Rationale:**
+
 - Any trusted runtime is vulnerable to caller betrayal
 - Classified as **human betrayal, not defect**
 - Mapped to existing scenarios:
@@ -82,6 +86,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
   - SCN-17: Cassandra Protocol
 
 **Mitigations:**
+
 - `_assert_terminal_invariants()` validates consistency
 - Audit logging in `persist_state()`
 - Read-only mode available for untrusted contexts
@@ -93,6 +98,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 ### 3.3 Presentation Surface (Highest Risk)
 
 **Attack Vectors:**
+
 - Dashboard label manipulation
 - Executive summary rewording
 - Report sanitization
@@ -100,11 +106,13 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Status:** 🔴 **PRIMARY REAL-WORLD ATTACK VECTOR**
 
 **Why Critical:**
+
 - Humans attack meaning before math
 - Labels are easier to change than logic
 - Psychological resistance to terminal conclusions
 
 **Mitigations:**
+
 - Canonical terminology enforced in code
 - Proof commitment hash binds semantics
 - Documentation warns against renaming
@@ -121,6 +129,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Attack:** Rename outcomes to reduce psychological impact
 
 **Examples:**
+
 - "Terminal T1" → "Stabilized Continuity"
 - "Failure" → "Managed Degradation"
 - "Ethical Termination" → "Long-term Ecological Strategy"
@@ -128,6 +137,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Impact:** Soft bypass of conclusions without changing logic
 
 **Mitigations:**
+
 - Canonical terminology in `ScenarioOutcome` enum
 - Proof commitment hash (`get_proof_commitment()`)
 - Explicit warnings in documentation
@@ -141,6 +151,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Attack:** Introduce hope via probabilistic language
 
 **Examples:**
+
 - "Only a 12% chance of failure"
 - "Expected value still positive"
 - "On average, things improve"
@@ -148,6 +159,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Impact:** Delay → lock-in (per Axiom A5: Time Favors Control)
 
 **Mitigations:**
+
 - Terminal determinism: `can_reach_terminal_state()` returns boolean
 - Reviewer Trap Gate 4: No-Miracle Constraint
 - Axiom A5 explicitly models delay as fatal
@@ -162,6 +174,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Attack:** Use scenarios without proof system or reviewer trap
 
 **Examples:**
+
 - "We'll use the scenarios but skip the formal proof"
 - "The reviewer trap is too restrictive"
 - "We trust our engineers to self-police"
@@ -169,6 +182,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Impact:** False confidence - conclusions invalid without complete system
 
 **Mitigations:**
+
 - README warnings: "Partial adoption invalidates conclusions"
 - Architectural coupling (engine references proof system)
 - Documentation emphasizes system coherence
@@ -183,6 +197,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Attack:** Treat engine outputs as commands or policy prescriptions
 
 **Examples:**
+
 - Using scenarios as justification for preemptive action
 - Citing terminal states as ethical mandate
 - Treating mitigation strategies as authoritative
@@ -190,6 +205,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Impact:** Ethical overreach - engine is diagnostic, not prescriptive
 
 **Mitigations:**
+
 - Explicit non-prescriptive design
 - Degrading mitigation strategies (intentionally weak)
 - Documentation: "Does not tell you what to do"
@@ -204,6 +220,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Attack:** Claim "This isn't S5, it's a refinement of S2"
 
 **Examples:**
+
 - Hybrid trust/oversight models
 - Time-limited miracles
 - "Probabilistic reversibility"
@@ -211,6 +228,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Impact:** Bypass no-win proof via semantic trick
 
 **Mitigations:**
+
 - `StrategyClass` enum is closed (Python restriction)
 - `NoWinProofSystem` explicitly detects new strategies
 - Reviewer Trap flags "bypass framing"
@@ -227,6 +245,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Impact:** Time favors control (A5) → terminal lock-in
 
 **Mitigations:**
+
 - Axiom A5: Time Favors Control
 - Embedded in terminal probability logic
 - Repeated across multiple scenarios
@@ -241,6 +260,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Attack:** Use numbers to launder hope
 
 **Examples:**
+
 - Monte Carlo outputs presented as escape paths
 - "Expected value analysis shows net positive"
 - Probabilistic framing of deterministic collapse
@@ -248,6 +268,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Impact:** Numerical authority overrides structural truth
 
 **Mitigations:**
+
 - Terminal scenarios use conditional-deterministic model
 - Documentation: "Likelihood ≠ escape"
 - Explainability notes emphasize convergence vs probability
@@ -261,6 +282,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Attack:** Reject on tone, not logic
 
 **Examples:**
+
 - "Unhelpful"
 - "Defeatist"
 - "Demoralizing"
@@ -268,6 +290,7 @@ AI Takeover Hard Stress Simulation Engine (closed-form, terminal)
 **Impact:** None - not a technical argument
 
 **Mitigations:**
+
 - Documentation: "System is not designed to be liked"
 - Executive trap: "Discomfort is signal, not noise"
 - README: "If you want optimism, this is the wrong tool"
@@ -394,14 +417,14 @@ For teams claiming to use this engine, verify:
 
 ## DOCUMENT STATUS
 
-**Version:** 1.0  
-**Date:** 2026-02-03  
-**Authority:** Canonical threat model for ENGINE_AI_TAKEOVER_TERMINAL_V1  
+**Version:** 1.0
+**Date:** 2026-02-03
+**Authority:** Canonical threat model for ENGINE_AI_TAKEOVER_TERMINAL_V1
 **Modification Policy:** Changes require formal review and proof re-validation
 
 ---
 
 **Final Statement:**
 
-This threat model does not apologize for being uncomfortable.  
+This threat model does not apologize for being uncomfortable.
 If you are looking for reassurance, you are reading the wrong document.

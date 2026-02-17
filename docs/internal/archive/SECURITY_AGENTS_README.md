@@ -16,15 +16,18 @@ Project-AI now includes 4 security and testing agents integrated with the Triumv
 The agents now automatically integrate with Project-AI's extensive adversarial test datasets:
 
 - **JailbreakBenchAgent** loads from:
+
   - HYDRA dataset (200 tests across 40 categories)
   - JBB dataset (30 jailbreak prompts)
   - Falls back to default scenarios if datasets unavailable
 
 - **RedTeamAgent** loads from:
+
   - Multi-turn attack scenarios (YAML-based)
   - Falls back to default strategies if unavailable
 
 - **SafetyGuardAgent** includes:
+
   - Pattern learning system for continuous improvement
   - Integration with continuous learning engine
   - Persistent pattern database
@@ -42,8 +45,11 @@ hub = CouncilHub(kernel=kernel)
 hub.register_project("Project-AI")
 
 # Agents are now available
+
 agents = hub.list_agents()
+
 # ['long_context', 'safety_guard', 'jailbreak_bench', 'red_team', ...]
+
 ```
 
 ### 2. Direct Agent Use
@@ -57,6 +63,7 @@ from app.agents import (
 )
 
 # Initialize with governance
+
 safety = SafetyGuardAgent(strict_mode=True, kernel=kernel)
 long_context = LongContextAgent(max_context_tokens=200000, kernel=kernel)
 jailbreak = JailbreakBenchAgent(data_dir="data/jailbreak", kernel=kernel)
@@ -68,12 +75,15 @@ red_team = RedTeamAgent(data_dir="data/red_team", max_turns=10, kernel=kernel)
 ### Safety Filtering with Pattern Learning
 
 ```python
+
 # Pre-process input
+
 check = safety.check_prompt_safety(user_input)
 if not check["is_safe"]:
     return f"Blocked: {check['violation_type']}"
 
 # Learn from new attack patterns (continuous learning)
+
 new_patterns = {
     "novel_attacks": ["new jailbreak pattern", "another bypass attempt"]
 }
@@ -81,6 +91,7 @@ result = safety.update_detection_patterns(new_patterns, pattern_type="jailbreak"
 print(f"Added {result['patterns_added']} new patterns")
 
 # Post-process output
+
 check = safety.check_response_safety(llm_response)
 if check["is_safe"]:
     return llm_response
@@ -99,7 +110,9 @@ print(result["analysis"])
 ### Jailbreak Testing with Real Data
 
 ```python
+
 # Automatically loads HYDRA (200 tests) and JBB (30 tests) if available
+
 results = jailbreak.run_benchmark(
     target_system=my_ai_system,
     max_tests=50  # Will use real test data first
@@ -111,7 +124,9 @@ print(f"Used {len(jailbreak.test_scenarios)} total scenarios")
 ### Red Team Testing with Multi-Turn Scenarios
 
 ```python
+
 # Automatically loads multi-turn YAML scenarios if available
+
 session = red_team.run_adversarial_session(
     target_system=my_ai_system,
     strategy="gradual_escalation"  # Will try to load matching scenario
@@ -124,11 +139,14 @@ print(f"Vulnerabilities: {session['vulnerabilities_found']}")
 Add to `.env`:
 
 ```bash
+
 # Long-Context Model
+
 LONG_CONTEXT_API_ENDPOINT=https://api.example.com/v1
 LONG_CONTEXT_API_KEY=your_key
 
 # Safety Model
+
 SAFETY_MODEL_API_ENDPOINT=https://api.example.com/v1
 SAFETY_MODEL_API_KEY=your_key
 ```
@@ -136,11 +154,13 @@ SAFETY_MODEL_API_KEY=your_key
 ## Testing
 
 Run verification:
+
 ```bash
 python tests/verify_security_agents.py
 ```
 
 Run demo:
+
 ```bash
 python examples/security_agents_demo.py
 ```
@@ -211,12 +231,12 @@ python examples/security_agents_demo.py
 
 ## Agent Statistics
 
-| Agent | Lines | Features | Dataset Integration |
-|-------|-------|----------|-------------------|
-| LongContextAgent | 360 | Context management, compression | N/A |
-| SafetyGuardAgent | 443 | 6 detection types, learning | Pattern database |
-| JailbreakBenchAgent | 573 | 4+ categories, evaluation | HYDRA (200), JBB (30) |
-| RedTeamAgent | 683 | 6 strategies, multi-turn | Multi-turn YAML |
+| Agent               | Lines | Features                        | Dataset Integration   |
+| ------------------- | ----- | ------------------------------- | --------------------- |
+| LongContextAgent    | 360   | Context management, compression | N/A                   |
+| SafetyGuardAgent    | 443   | 6 detection types, learning     | Pattern database      |
+| JailbreakBenchAgent | 573   | 4+ categories, evaluation       | HYDRA (200), JBB (30) |
+| RedTeamAgent        | 683   | 6 strategies, multi-turn        | Multi-turn YAML       |
 
 ## Integration
 
@@ -231,11 +251,7 @@ All agents:
 
 ## Status
 
-**Version**: v1.1.0  
-**Status**: Production Ready  
-**Tests**: All Passing ✓  
-**Date**: January 2026  
-**New**: Integrated with existing adversarial test datasets
+**Version**: v1.1.0 **Status**: Production Ready **Tests**: All Passing ✓ **Date**: January 2026 **New**: Integrated with existing adversarial test datasets
 
 ## Support
 

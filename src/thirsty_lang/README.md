@@ -52,10 +52,13 @@ npm install
 #### Python Setup (Alternative)
 
 ```bash
+
 # Automated setup
+
 ./setup_venv.sh
 
 # Manual setup
+
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -64,10 +67,13 @@ pip install -r requirements.txt
 #### Docker Setup (Optional)
 
 ```bash
+
 # Build and run with Docker Compose
+
 docker-compose up
 
 # Or build Docker image directly
+
 docker build -t thirsty-lang .
 ```
 
@@ -78,36 +84,47 @@ See [DOCKER.md](DOCKER.md) for detailed Docker instructions and [PYTHON_SETUP.md
 #### Using Node.js
 
 ```bash
+
 # Run a program
+
 npm start examples/hello.thirsty
 
 # Or use the unified CLI
+
 node src/thirsty-cli.js run examples/hello.thirsty
 ```
 
 #### Using Python
 
 ```bash
+
 # Activate virtual environment (if using)
+
 source .venv/bin/activate
 
 # Run a program
+
 python3 src/thirsty_interpreter.py examples/hello.thirsty
 
 # Start Python REPL
+
 python3 src/thirsty_repl.py
 ```
 
 #### Using Docker
 
 ```bash
+
 # Run a program
+
 docker-compose run --rm thirsty node src/cli.js examples/hello.thirsty
 
 # Start Node.js REPL
+
 docker-compose run --rm repl
 
 # Start Python REPL
+
 docker-compose run --rm python-repl
 ```
 
@@ -138,6 +155,7 @@ npm start examples/hello.thirsty
 npm test
 
 # Run security tests
+
 node src/test/security-tests.js
 ```
 
@@ -147,7 +165,7 @@ node src/test/security-tests.js
 
 - `drink` - Variable declaration
 - `pour` - Output/print statement
-- `sip` - Input statement  
+- `sip` - Input statement
 - `thirsty` - If statement
 - `hydrated` - Else statement
 - `refill` - Loop statement
@@ -179,11 +197,11 @@ shield mySecureApp {
     morph on: ["injection", "overflow", "timing"]
     defend with: "aggressive"
   }
-  
+
   drink userData = sip "Enter your name"
   sanitize userData
   armor userData
-  
+
   pour "Hello, " + userData
 }
 ```
@@ -296,10 +314,13 @@ Open `playground/index.html` in your browser for an interactive web-based editor
 ### Docker Services
 
 ```bash
+
 # See all available services
+
 docker-compose ps
 
 # Run specific services (see DOCKER.md for details)
+
 docker-compose up playground     # Web playground on port 8888
 docker-compose up training       # Interactive training
 ```

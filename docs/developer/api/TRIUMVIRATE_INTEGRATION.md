@@ -32,10 +32,13 @@ This integration adds production-ready features to Project-AI through the Triumv
 ### 1. Install Dependencies
 
 ```bash
+
 # Core dependencies
+
 pip install temporalio sentence-transformers transformers torch spacy
 
 # Download spaCy language model
+
 python -m spacy download en_core_web_sm
 ```
 
@@ -44,7 +47,9 @@ python -m spacy download en_core_web_sm
 Create or update `.env` file:
 
 ```bash
+
 # Codex Engine Configuration
+
 export CODEX_FULL_ENGINE=1              # Enable full ML engine (0 for lightweight)
 export CODEX_ENABLE_GPU=1               # Enable GPU support (0 for CPU only)
 export CODEX_FALLBACK_CPU=1             # Fallback to CPU if GPU fails
@@ -53,9 +58,11 @@ export CODEX_DEVICE=auto                # Device selection (auto/cuda/cpu)
 export CODEX_ADAPTER=auto               # Adapter type (auto/huggingface/pytorch/dummy)
 
 # Memory Configuration
+
 export MEMORY_SIZE=10000                # Maximum memory records
 
 # Temporal Configuration
+
 export TEMPORAL_HOST=localhost:7233     # Temporal server address
 export TEMPORAL_NAMESPACE=default       # Temporal namespace
 export TEMPORAL_TASK_QUEUE=triumvirate-prod  # Task queue name
@@ -64,11 +71,15 @@ export TEMPORAL_TASK_QUEUE=triumvirate-prod  # Task queue name
 ### 3. Start Temporal Server (Optional for Development)
 
 ```bash
+
 # Using Docker
+
 docker run -p 7233:7233 temporalio/auto-setup:latest
 
 # Or use Temporal Cloud (production)
+
 # https://temporal.io/cloud
+
 ```
 
 ## Usage
@@ -79,9 +90,11 @@ docker run -p 7233:7233 temporalio/auto-setup:latest
 from src.cognition.triumvirate import Triumvirate
 
 # Initialize
+
 triumvirate = Triumvirate()
 
 # Process input
+
 result = triumvirate.process(
     input_data="What is machine learning?",
     context={"user_id": "user123"}
@@ -102,9 +115,11 @@ from temporal.workflows.triumvirate_workflow import (
 )
 
 # Connect to Temporal
+
 client = await Client.connect("localhost:7233")
 
 # Execute workflow
+
 result = await client.execute_workflow(
     TriumvirateWorkflow.run,
     TriumvirateRequest(
@@ -145,7 +160,7 @@ from temporal.workflows import activities
 
 async def main():
     client = await Client.connect("localhost:7233")
-    
+
     worker = Worker(
         client,
         task_queue="triumvirate-prod",
@@ -159,7 +174,7 @@ async def main():
             activities.record_telemetry,
         ]
     )
-    
+
     await worker.run()
 
 if __name__ == "__main__":
@@ -177,18 +192,23 @@ python worker.py
 Run the complete test suite:
 
 ```bash
+
 # All tests
+
 pytest tests/test_complete_system.py -v
 
 # Specific test categories
+
 pytest tests/test_complete_system.py::TestModelAdapter -v
 pytest tests/test_complete_system.py::TestMemoryAdapter -v
 pytest tests/test_complete_system.py::TestTriumvirate -v
 
 # Test contradiction detection
+
 pytest tests/test_complete_system.py::test_contradiction_detection_e2e -v
 
 # Test full integration
+
 pytest tests/test_complete_system.py::test_full_system_integration -v
 ```
 
@@ -204,6 +224,7 @@ pytest tests/test_complete_system.py::test_full_system_integration -v
 - Graceful degradation in lightweight mode
 
 **Configuration:**
+
 ```python
 from src.cognition.codex.engine import CodexConfig, CodexEngine
 
@@ -229,12 +250,14 @@ engine = CodexEngine(config)
 - Explanation generation
 
 **Example:**
+
 ```python
 from src.cognition.galahad.engine import GalahadEngine
 
 engine = GalahadEngine()
 
 # Detect contradictions
+
 result = engine.reason(["yes", "no"])
 print(f"Contradictions: {result['contradictions']}")
 print(f"Explanation: {result['explanation']}")
@@ -250,6 +273,7 @@ print(f"Explanation: {result['explanation']}")
 - Policy statistics tracking
 
 **Example:**
+
 ```python
 from src.cognition.cerberus.engine import CerberusEngine, CerberusConfig
 
@@ -257,6 +281,7 @@ config = CerberusConfig(mode="production")
 engine = CerberusEngine(config)
 
 # Enforce output
+
 result = engine.enforce_output("Some output data")
 print(f"Allowed: {result['allowed']}")
 ```
@@ -271,16 +296,19 @@ print(f"Allowed: {result['allowed']}")
 - Automatic persistence
 
 **Example:**
+
 ```python
 from src.cognition.adapters.memory_adapter import MemoryAdapter
 
 memory = MemoryAdapter(max_records=10000)
 
 # Add memories
+
 memory.add_memory("Python is a programming language")
 memory.add_memory("Machine learning uses neural networks")
 
 # Search
+
 results = memory.search("coding", top_k=5)
 for result in results:
     print(f"[{result['similarity']:.2f}] {result['content']}")
@@ -291,7 +319,9 @@ for result in results:
 ### Recommended Environment Variables
 
 ```bash
+
 # Production
+
 export CODEX_FULL_ENGINE=1
 export CODEX_ENABLE_GPU=1
 export CODEX_FALLBACK_CPU=1
@@ -299,6 +329,7 @@ export MEMORY_SIZE=50000
 export TEMPORAL_TASK_QUEUE=triumvirate-prod
 
 # Development
+
 export CODEX_FULL_ENGINE=0
 export CODEX_ENABLE_GPU=0
 export MEMORY_SIZE=1000
@@ -314,6 +345,7 @@ triumvirate = Triumvirate()
 triumvirate.process("input")
 
 # Get telemetry
+
 events = triumvirate.get_telemetry(limit=100)
 for event in events:
     print(f"{event['timestamp']}: {event['event_type']}")
@@ -331,7 +363,9 @@ for event in events:
 ### GPU Not Available
 
 ```bash
+
 # Force CPU mode
+
 export CODEX_ENABLE_GPU=0
 export CODEX_DEVICE=cpu
 ```
@@ -339,27 +373,35 @@ export CODEX_DEVICE=cpu
 ### Model Loading Fails
 
 ```bash
+
 # Use lightweight mode
+
 export CODEX_FULL_ENGINE=0
 
 # Or specify different model
+
 export CODEX_MODEL_PATH=distilgpt2
 ```
 
 ### Memory Issues
 
 ```bash
+
 # Reduce memory size
+
 export MEMORY_SIZE=1000
 ```
 
 ### Temporal Connection Issues
 
 ```bash
+
 # Check Temporal server
+
 export TEMPORAL_HOST=localhost:7233
 
 # Verify server is running
+
 docker ps | grep temporal
 ```
 
@@ -377,6 +419,7 @@ def process(
 ```
 
 **Returns:**
+
 ```python
 {
     "success": bool,

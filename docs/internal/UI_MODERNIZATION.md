@@ -55,6 +55,7 @@ from pathlib import Path
 app = QApplication([])
 
 # Load modern stylesheet
+
 style_path = Path(__file__).parent / "styles_modern.qss"
 with open(style_path, "r") as f:
     app.setStyleSheet(f.read())
@@ -68,14 +69,17 @@ Apply custom classes to widgets using Qt properties:
 from PyQt6.QtWidgets import QWidget
 
 # Glass panel
+
 widget = QWidget()
 widget.setProperty("class", "glass-panel")
 
 # Card style
+
 card = QWidget()
 card.setProperty("class", "card")
 
 # Elevated card
+
 elevated_card = QWidget()
 elevated_card.setProperty("class", "card-elevated")
 ```
@@ -86,13 +90,16 @@ elevated_card.setProperty("class", "card-elevated")
 from PyQt6.QtWidgets import QPushButton
 
 # Default (gradient purple)
+
 default_btn = QPushButton("Default")
 
 # Danger button
+
 danger_btn = QPushButton("Delete")
 danger_btn.setProperty("class", "danger")
 
 # Success button
+
 success_btn = QPushButton("Save")
 success_btn.setProperty("class", "success")
 ```
@@ -103,14 +110,17 @@ success_btn.setProperty("class", "success")
 from PyQt6.QtWidgets import QLabel
 
 # Title
+
 title = QLabel("Main Title")
 title.setProperty("class", "title")
 
 # Subtitle
+
 subtitle = QLabel("Section Subtitle")
 subtitle.setProperty("class", "subtitle")
 
 # Body text (default)
+
 body = QLabel("Regular text content")
 ```
 

@@ -1,7 +1,6 @@
 # Security Incident - January 9, 2026 (ARCHIVED)
 
-**Status**: RESOLVED  
-**Current Documentation**: See `SECURITY_INCIDENT_REPORT.md` in the repository root for comprehensive information.
+**Status**: RESOLVED **Current Documentation**: See `SECURITY_INCIDENT_REPORT.md` in the repository root for comprehensive information.
 
 ## Contents of This Archive
 

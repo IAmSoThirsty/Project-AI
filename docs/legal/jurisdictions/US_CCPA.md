@@ -36,8 +36,7 @@ California residents have the right to:
 
 ## 5. Opt-Out Mechanism
 
-Project-AI provides a "Do Not Sell My Personal Information" link on the homepage.
-Consumers can submit requests via:
+Project-AI provides a "Do Not Sell My Personal Information" link on the homepage. Consumers can submit requests via:
 
 - Email: <privacy@project-ai.example.com>
 - Toll-free number: 1-800-XXX-XXXX
