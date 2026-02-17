@@ -5,3 +5,15 @@
 [submodule "external/Cerberus"]
 	path = external/Cerberus
 	url = https://github.com/IAmSoThirsty/Cerberus
+[submodule "external/Thirsty-Lang"]
+	path = external/Thirsty-Lang
+	url = https://github.com/IAmSoThirsty/Thirsty-Lang.git
+[submodule "external/Thirstys-Monolith"]
+	path = external/Thirstys-Monolith
+	url = https://github.com/IAmSoThirsty/Thirstys-Monolith.git
+[submodule "external/Thirstys-Waterfall"]
+	path = external/Thirstys-Waterfall
+	url = https://github.com/IAmSoThirsty/Thirstys-Waterfall.git
+[submodule "external/The_Triumvirate"]
+	path = external/The_Triumvirate
+	url = https://github.com/IAmSoThirsty/The_Triumvirate.git
