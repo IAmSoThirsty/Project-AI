@@ -107,6 +107,7 @@ Multi-level feedback queue scheduler with:
 - Context switching with state preservation
 
 **Key Functions:**
+
 ```thirsty
 glass initScheduler()
 glass createProcess(command, priority, memory_required)
@@ -126,6 +127,7 @@ Paging-based memory management with:
 - Memory leak prevention
 
 **Key Functions:**
+
 ```thirsty
 glass initMemoryManager()
 glass allocateMemory(pid, size_bytes)
@@ -144,6 +146,7 @@ Hierarchical configuration with:
 - Encryption for sensitive values
 
 **Key Functions:**
+
 ```thirsty
 glass initConfigRegistry()
 glass set(namespace, key, value, encrypted)
@@ -162,6 +165,7 @@ Secure secrets management with:
 - Seal/unseal capability
 
 **Key Functions:**
+
 ```thirsty
 glass initSecretsVault(masterPassword)
 glass storeSecret(path, value, secretType, metadata)
@@ -180,6 +184,7 @@ Enterprise-grade authorization with:
 - Comprehensive audit logging
 
 **Key Functions:**
+
 ```thirsty
 glass initRBAC()
 glass assignRole(userId, roleName)
@@ -305,4 +310,4 @@ Built on top of:
 
 **Status**: ✅ Production Ready
 **Version**: 2.0
-**Last Updated**: 2026-01-30
+**Last Updated**: 2026-02-17
