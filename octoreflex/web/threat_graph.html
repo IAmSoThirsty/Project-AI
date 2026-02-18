@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OCTOREFLEX — Gossip Threat Graph</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --danger: #f85149;
+      --warn: #d29922;
+      --ok: #3fb950;
+      --pressure: #79c0ff;
+      --isolated: #d29922;
+      --frozen: #f0883e;
+      --quarantined: #f85149;
+      --terminated: #8b0000;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-size: 14px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    header h1 { font-size: 16px; font-weight: 600; color: var(--accent); }
+    header .subtitle { color: var(--muted); font-size: 12px; }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--ok);
+      animation: pulse 2s infinite;
+    }
+    .status-dot.error { background: var(--danger); animation: none; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    #endpoint-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    #endpoint-bar input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      width: 280px;
+    }
+    #endpoint-bar button {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 4px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    #endpoint-bar button:hover { opacity: 0.85; }
+    #refresh-label { color: var(--muted); font-size: 12px; }
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      overflow: hidden;
+    }
+    #graph-area {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    canvas#graph { width: 100%; height: 100%; display: block; }
+    #sidebar {
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .panel-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .metric-row .val { font-weight: 600; color: var(--accent); }
+    .metric-row .val.danger { color: var(--danger); }
+    .metric-row .val.warn { color: var(--warn); }
+    .metric-row .val.ok { color: var(--ok); }
+    #node-list { display: flex; flex-direction: column; gap: 6px; }
+    .node-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .node-card:hover { border-color: var(--accent); }
+    .node-card.selected { border-color: var(--accent); background: #1c2333; }
+    .node-card .node-id { font-weight: 600; font-size: 13px; }
+    .node-card .node-meta { color: var(--muted); font-size: 11px; margin-top: 2px; }
+    .state-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .state-NORMAL     { background: #21262d; color: var(--ok); }
+    .state-PRESSURE   { background: #1c2d3f; color: var(--pressure); }
+    .state-ISOLATED   { background: #2d2000; color: var(--isolated); }
+    .state-FROZEN     { background: #2d1800; color: var(--frozen); }
+    .state-QUARANTINED{ background: #2d0000; color: var(--quarantined); }
+    .state-TERMINATED { background: #1a0000; color: var(--terminated); }
+    #detail-panel { display: none; }
+    #detail-panel.visible { display: block; }
+    #error-banner {
+      display: none;
+      background: #2d0000;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      padding: 8px 16px;
+      font-size: 12px;
+    }
+    #error-banner.visible { display: block; }
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 6px 20px;
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="status-dot" id="status-dot"></div>
+  <h1>OCTOREFLEX</h1>
+  <span class="subtitle">Gossip Threat Graph — Live</span>
+  <span id="last-update" style="margin-left:auto;color:var(--muted);font-size:12px;"></span>
+</header>
+
+<div id="endpoint-bar">
+  <label style="color:var(--muted);font-size:12px;">Metrics endpoint:</label>
+  <input id="metrics-url" type="text" value="http://127.0.0.1:9091/metrics" />
+  <button onclick="fetchAndRender()">Refresh</button>
+  <span id="refresh-label">Auto-refresh: 5s</span>
+</div>
+
+<div id="error-banner" id="error-banner"></div>
+
+<main>
+  <div id="graph-area">
+    <canvas id="graph"></canvas>
+  </div>
+  <div id="sidebar">
+    <div>
+      <div class="panel-title">Cluster Metrics</div>
+      <div class="metric-row"><span>Tracked PIDs</span><span class="val" id="m-pids">—</span></div>
+      <div class="metric-row"><span>Events/s (processed)</span><span class="val" id="m-eps">—</span></div>
+      <div class="metric-row"><span>Events dropped</span><span class="val danger" id="m-drop">—</span></div>
+      <div class="metric-row"><span>Budget remaining</span><span class="val" id="m-budget">—</span></div>
+      <div class="metric-row"><span>State transitions</span><span class="val" id="m-trans">—</span></div>
+      <div class="metric-row"><span>Gossip envelopes rx</span><span class="val" id="m-gossip-rx">—</span></div>
+      <div class="metric-row"><span>Gossip envelopes tx</span><span class="val" id="m-gossip-tx">—</span></div>
+      <div class="metric-row"><span>Agent uptime</span><span class="val ok" id="m-uptime">—</span></div>
+    </div>
+
+    <div>
+      <div class="panel-title">State Distribution</div>
+      <canvas id="state-chart" width="288" height="80"></canvas>
+    </div>
+
+    <div>
+      <div class="panel-title">Gossip Nodes</div>
+      <div id="node-list"></div>
+    </div>
+
+    <div id="detail-panel">
+      <div class="panel-title">Selected Node</div>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>OCTOREFLEX v0.2</span>
+  <span>Data source: Prometheus /metrics</span>
+  <span>Graph: force-directed (Barnes-Hut approximation)</span>
+  <span id="parse-status"></span>
+</footer>
+
+<script>
+// ─── Prometheus text parser ───────────────────────────────────────────────────
+function parsePrometheus(text) {
+  const metrics = {};
+  for (const line of text.split('\n')) {
+    if (line.startsWith('#') || !line.trim()) continue;
+    const m = line.match(/^([a-zA-Z_:][a-zA-Z0-9_:]*(?:\{[^}]*\})?)\s+([\d.eE+\-]+|NaN|Inf|-Inf)/);
+    if (!m) continue;
+    const [, rawKey, val] = m;
+    const labelMatch = rawKey.match(/^([^{]+)\{([^}]*)\}$/);
+    if (labelMatch) {
+      const base = labelMatch[1];
+      const labels = Object.fromEntries(
+        labelMatch[2].split(',').map(kv => {
+          const [k, v] = kv.split('=');
+          return [k.trim(), v ? v.replace(/"/g, '').trim() : ''];
+        })
+      );
+      if (!metrics[base]) metrics[base] = [];
+      metrics[base].push({ labels, value: parseFloat(val) });
+    } else {
+      metrics[rawKey] = parseFloat(val);
+    }
+  }
+  return metrics;
+}
+
+function getMetric(m, name) {
+  const v = m[name];
+  if (Array.isArray(v)) return v.reduce((s, x) => s + x.value, 0);
+  return typeof v === 'number' ? v : null;
+}
+
+function getMetricLabeled(m, name, labelKey, labelVal) {
+  const arr = m[name];
+  if (!Array.isArray(arr)) return null;
+  const found = arr.find(x => x.labels[labelKey] === labelVal);
+  return found ? found.value : null;
+}
+
+// ─── State colours ────────────────────────────────────────────────────────────
+const STATE_COLORS = {
+  NORMAL: '#3fb950', PRESSURE: '#79c0ff', ISOLATED: '#d29922',
+  FROZEN: '#f0883e', QUARANTINED: '#f85149', TERMINATED: '#8b0000'
+};
+const STATE_NAMES = ['NORMAL','PRESSURE','ISOLATED','FROZEN','QUARANTINED','TERMINATED'];
+
+// ─── Force-directed graph ─────────────────────────────────────────────────────
+// Nodes represent gossip peers. Edges represent active quorum relationships
+// (i.e., nodes that have exchanged envelopes about the same process hash).
+// In the absence of real peer topology from /metrics, we synthesise a
+// plausible graph from the gossip_envelopes_received_total metric.
+
+const nodes = [];   // { id, x, y, vx, vy, state, uptime, pids }
+const edges = [];   // { source, target, weight }
+let selectedNode = null;
+
+function ensureNode(id) {
+  let n = nodes.find(n => n.id === id);
+  if (!n) {
+    const canvas = document.getElementById('graph');
+    n = {
+      id, x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+      vx: 0, vy: 0, state: 'NORMAL', uptime: 0, pids: 0
+    };
+    nodes.push(n);
+  }
+  return n;
+}
+
+function simulateForces() {
+  const k = 120; // Ideal spring length.
+  const repulsion = 8000;
+
+  // Repulsion between all node pairs.
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[j].x - nodes[i].x;
+      const dy = nodes[j].y - nodes[i].y;
+      const dist = Math.max(Math.sqrt(dx*dx + dy*dy), 1);
+      const force = repulsion / (dist * dist);
+      nodes[i].vx -= force * dx / dist;
+      nodes[i].vy -= force * dy / dist;
+      nodes[j].vx += force * dx / dist;
+      nodes[j].vy += force * dy / dist;
+    }
+  }
+
+  // Spring attraction along edges.
+  for (const e of edges) {
+    const a = nodes.find(n => n.id === e.source);
+    const b = nodes.find(n => n.id === e.target);
+    if (!a || !b) continue;
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const dist = Math.max(Math.sqrt(dx*dx + dy*dy), 1);
+    const force = (dist - k) * 0.05 * e.weight;
+    a.vx += force * dx / dist;
+    a.vy += force * dy / dist;
+    b.vx -= force * dx / dist;
+    b.vy -= force * dy / dist;
+  }
+
+  // Gravity toward centre.
+  const canvas = document.getElementById('graph');
+  const cx = canvas.width / 2, cy = canvas.height / 2;
+  for (const n of nodes) {
+    n.vx += (cx - n.x) * 0.002;
+    n.vy += (cy - n.y) * 0.002;
+    // Damping.
+    n.vx *= 0.85;
+    n.vy *= 0.85;
+    n.x += n.vx;
+    n.y += n.vy;
+    // Clamp to canvas.
+    n.x = Math.max(40, Math.min(canvas.width - 40, n.x));
+    n.y = Math.max(40, Math.min(canvas.height - 40, n.y));
+  }
+}
+
+function drawGraph(metrics) {
+  const canvas = document.getElementById('graph');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  simulateForces();
+
+  // Draw edges.
+  for (const e of edges) {
+    const a = nodes.find(n => n.id === e.source);
+    const b = nodes.find(n => n.id === e.target);
+    if (!a || !b) continue;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = `rgba(88,166,255,${Math.min(0.6, e.weight * 0.1)})`;
+    ctx.lineWidth = Math.min(3, e.weight * 0.5);
+    ctx.stroke();
+  }
+
+  // Draw nodes.
+  for (const n of nodes) {
+    const color = STATE_COLORS[n.state] || '#8b949e';
+    const r = n.id === 'local' ? 18 : 14;
+
+    // Glow for non-NORMAL states.
+    if (n.state !== 'NORMAL') {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r + 8, 0, Math.PI * 2);
+      ctx.fillStyle = color + '22';
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#161b22';
+    ctx.fill();
+    ctx.strokeStyle = n === selectedNode ? '#fff' : color;
+    ctx.lineWidth = n === selectedNode ? 2.5 : 1.5;
+    ctx.stroke();
+
+    // Label.
+    ctx.fillStyle = '#e6edf3';
+    ctx.font = `${n.id === 'local' ? 'bold ' : ''}11px system-ui`;
+    ctx.textAlign = 'center';
+    ctx.fillText(n.id.length > 12 ? n.id.slice(0, 10) + '…' : n.id, n.x, n.y + r + 14);
+
+    // State dot.
+    ctx.beginPath();
+    ctx.arc(n.x + r - 4, n.y - r + 4, 4, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+}
+
+// ─── State bar chart ──────────────────────────────────────────────────────────
+function drawStateChart(stateCounts) {
+  const canvas = document.getElementById('state-chart');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const total = Object.values(stateCounts).reduce((a, b) => a + b, 0) || 1;
+  let x = 0;
+  for (const state of STATE_NAMES) {
+    const count = stateCounts[state] || 0;
+    const w = (count / total) * canvas.width;
+    ctx.fillStyle = STATE_COLORS[state];
+    ctx.fillRect(x, 0, w, 30);
+    if (w > 24) {
+      ctx.fillStyle = '#000';
+      ctx.font = '10px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText(count, x + w / 2, 20);
+    }
+    x += w;
+  }
+  // Legend.
+  let lx = 0;
+  const lh = 50;
+  for (const state of STATE_NAMES) {
+    ctx.fillStyle = STATE_COLORS[state];
+    ctx.fillRect(lx, lh, 10, 10);
+    ctx.fillStyle = '#8b949e';
+    ctx.font = '9px system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText(state.slice(0, 4), lx + 12, lh + 9);
+    lx += 48;
+  }
+}
+
+// ─── Node list ────────────────────────────────────────────────────────────────
+function renderNodeList() {
+  const list = document.getElementById('node-list');
+  list.innerHTML = '';
+  for (const n of nodes) {
+    const card = document.createElement('div');
+    card.className = 'node-card' + (n === selectedNode ? ' selected' : '');
+    card.innerHTML = `
+      <div class="node-id">${n.id} <span class="state-badge state-${n.state}">${n.state}</span></div>
+      <div class="node-meta">PIDs: ${n.pids} · Uptime: ${formatUptime(n.uptime)}</div>
+    `;
+    card.onclick = () => {
+      selectedNode = n;
+      renderNodeList();
+      renderDetail(n);
+    };
+    list.appendChild(card);
+  }
+}
+
+function renderDetail(n) {
+  const panel = document.getElementById('detail-panel');
+  const content = document.getElementById('detail-content');
+  panel.classList.add('visible');
+  content.innerHTML = `
+    <div class="metric-row"><span>Node ID</span><span class="val">${n.id}</span></div>
+    <div class="metric-row"><span>State</span><span class="val">${n.state}</span></div>
+    <div class="metric-row"><span>Tracked PIDs</span><span class="val">${n.pids}</span></div>
+    <div class="metric-row"><span>Uptime</span><span class="val ok">${formatUptime(n.uptime)}</span></div>
+  `;
+}
+
+function formatUptime(s) {
+  if (!s) return '—';
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+  return `${h}h ${m}m`;
+}
+
+// ─── Main fetch + render ──────────────────────────────────────────────────────
+let prevEps = null, prevEpsTime = null;
+
+async function fetchAndRender() {
+  const url = document.getElementById('metrics-url').value.trim();
+  const dot = document.getElementById('status-dot');
+  const banner = document.getElementById('error-banner');
+
+  try {
+    // Use a CORS proxy or same-origin fetch. In production, the dashboard
+    // is served from the same host as the metrics endpoint.
+    const resp = await fetch(url, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+    const m = parsePrometheus(text);
+
+    dot.className = 'status-dot';
+    banner.className = '';
+    document.getElementById('last-update').textContent =
+      'Last update: ' + new Date().toLocaleTimeString();
+    document.getElementById('parse-status').textContent =
+      `Parsed ${Object.keys(m).length} metric families`;
+
+    // ── Update sidebar metrics ──
+    const pids = getMetric(m, 'octoreflex_escalation_tracked_pids');
+    document.getElementById('m-pids').textContent = pids != null ? pids : '—';
+
+    const eps = getMetric(m, 'octoreflex_events_processed_total');
+    const now = Date.now();
+    if (eps != null && prevEps != null && prevEpsTime != null) {
+      const rate = (eps - prevEps) / ((now - prevEpsTime) / 1000);
+      document.getElementById('m-eps').textContent = rate.toFixed(0);
+    }
+    prevEps = eps; prevEpsTime = now;
+
+    const drop = getMetric(m, 'octoreflex_events_dropped_total');
+    const dropEl = document.getElementById('m-drop');
+    dropEl.textContent = drop != null ? drop : '—';
+    dropEl.className = 'val' + (drop > 0 ? ' danger' : ' ok');
+
+    const budget = getMetric(m, 'octoreflex_budget_tokens_remaining');
+    const budgetEl = document.getElementById('m-budget');
+    budgetEl.textContent = budget != null ? budget : '—';
+    budgetEl.className = 'val' + (budget < 20 ? ' warn' : ' ok');
+
+    const trans = getMetric(m, 'octoreflex_escalation_state_transitions_total');
+    document.getElementById('m-trans').textContent = trans != null ? trans : '—';
+
+    const gossipRx = getMetric(m, 'octoreflex_gossip_envelopes_received_total');
+    document.getElementById('m-gossip-rx').textContent = gossipRx != null ? gossipRx : '—';
+
+    const gossipTx = getMetric(m, 'octoreflex_gossip_envelopes_sent_total');
+    document.getElementById('m-gossip-tx').textContent = gossipTx != null ? gossipTx : '—';
+
+    const uptime = getMetric(m, 'octoreflex_agent_uptime_seconds');
+    document.getElementById('m-uptime').textContent = uptime != null ? formatUptime(uptime) : '—';
+
+    // ── Synthesise gossip graph from metrics ──
+    // The local node is always present.
+    const localNode = ensureNode('local');
+    localNode.pids = pids || 0;
+    localNode.uptime = uptime || 0;
+
+    // Infer state from highest active transition.
+    const stateOrder = ['TERMINATED','QUARANTINED','FROZEN','ISOLATED','PRESSURE','NORMAL'];
+    for (const s of stateOrder) {
+      const count = getMetricLabeled(m, 'octoreflex_escalation_state_transitions_total', 'to_state', s);
+      if (count && count > 0) { localNode.state = s; break; }
+    }
+
+    // State distribution (from transition counters — approximation).
+    const stateCounts = {};
+    for (const s of STATE_NAMES) {
+      const to = getMetricLabeled(m, 'octoreflex_escalation_state_transitions_total', 'to_state', s);
+      const from = getMetricLabeled(m, 'octoreflex_escalation_state_transitions_total', 'from_state', s);
+      stateCounts[s] = Math.max(0, (to || 0) - (from || 0));
+    }
+    stateCounts['NORMAL'] = Math.max(0, (pids || 0) - Object.values(stateCounts).reduce((a,b)=>a+b,0));
+    drawStateChart(stateCounts);
+
+    // ── Draw graph ──
+    drawGraph(m);
+    renderNodeList();
+
+  } catch (err) {
+    dot.className = 'status-dot error';
+    banner.className = 'visible';
+    banner.textContent = `⚠ Cannot reach metrics endpoint: ${err.message}. ` +
+      `Ensure the agent is running and CORS is configured (or serve this file from the same host).`;
+  }
+}
+
+// ─── Canvas click for node selection ─────────────────────────────────────────
+document.getElementById('graph').addEventListener('click', (evt) => {
+  const canvas = document.getElementById('graph');
+  const rect = canvas.getBoundingClientRect();
+  const mx = evt.clientX - rect.left;
+  const my = evt.clientY - rect.top;
+  for (const n of nodes) {
+    const dx = n.x - mx, dy = n.y - my;
+    if (Math.sqrt(dx*dx + dy*dy) < 20) {
+      selectedNode = n;
+      renderNodeList();
+      renderDetail(n);
+      return;
+    }
+  }
+  selectedNode = null;
+  renderNodeList();
+  document.getElementById('detail-panel').classList.remove('visible');
+});
+
+// ─── Animation loop ───────────────────────────────────────────────────────────
+let lastMetrics = null;
+function animLoop() {
+  if (nodes.length > 0) drawGraph(lastMetrics || {});
+  requestAnimationFrame(animLoop);
+}
+animLoop();
+
+// ─── Auto-refresh ─────────────────────────────────────────────────────────────
+fetchAndRender();
+setInterval(fetchAndRender, 5000);
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+# OCTOREFLEX default configuration
+# Schema version: 1
+# File: /etc/octoreflex/config.yaml
+#
+# All values shown are defaults. Override only what you need.
+# Hot-reload: send SIGHUP to the agent process to apply non-destructive changes.
+# Destructive changes (db_path, gossip port, BPF pin path) require restart.
+
+schema_version: "1"
+
+# Unique identifier for this node. Defaults to hostname if not set.
+# Used in gossip envelopes and audit ledger entries.
+node_id: "" # Leave empty to use hostname.
+
+# ── Agent ──────────────────────────────────────────────────────────────────────
+agent:
+  # Maximum number of goroutines for event processing.
+  # Increase on high-event-rate hosts (>100k events/sec).
+  max_goroutines: 4
+
+  # In-memory event queue depth. Events dropped when full.
+  # Increase if you see octoreflex_events_dropped_total{reason="queue_full"} rising.
+  event_queue_size: 10000
+
+  # Maximum number of PIDs tracked simultaneously.
+  # Processes beyond this limit are not monitored (logged as warning).
+  max_tracked_pids: 8192
+
+  # Sliding window duration for feature aggregation per PID.
+  window_duration: 5s
+
+  # Idle time after which a PID's feature window is evicted from memory.
+  window_eviction_timeout: 60s
+
+# ── Anomaly Engine ─────────────────────────────────────────────────────────────
+anomaly:
+  # Entropy weight wₑ in the formula: A = mahal + wₑ * |ΔH|
+  # Range: [0.0, 1.0]. Higher values make entropy changes more impactful.
+  entropy_weight: 0.3
+
+  # Maximum anomaly evaluations per second (rate limiter).
+  max_evals_per_second: 10000
+
+# ── Escalation Engine ──────────────────────────────────────────────────────────
+escalation:
+  # Weights for composite severity: S = w₁A + w₂Q + w₃I + w₄P
+  # All weights must be >= 0. They need not sum to 1.0.
+  weight_anomaly: 0.4
+  weight_quorum: 0.2
+  weight_integrity: 0.2
+  weight_pressure: 0.2
+
+  # State transition thresholds (severity score S).
+  # Must be strictly increasing.
+  threshold_pressure: 1.0
+  threshold_isolated: 3.0
+  threshold_frozen: 6.0
+  threshold_quarantined: 9.0
+  threshold_terminated: 12.0
+
+  # EWMA smoothing factor α ∈ [0.0, 1.0].
+  # 0.8 = slow response (resistant to spikes).
+  # 0.2 = fast response (reacts to single events).
+  pressure_alpha: 0.8
+
+  # Time a process must be quiescent before its state decays by one level.
+  cooldown_duration: 30s
+
+# ── Budget ─────────────────────────────────────────────────────────────────────
+budget:
+  # Maximum token capacity. Full refill every refill_period.
+  # Cost per action: PRESSURE=1, ISOLATED=5, FROZEN=10, QUARANTINED=20, TERMINATED=50.
+  capacity: 100
+
+  # Refill interval. Full capacity restored on each tick.
+  refill_period: 60s
+
+# ── Storage ────────────────────────────────────────────────────────────────────
+storage:
+  # Absolute path to the BoltDB database file.
+  # Directory must exist and be writable by root.
+  db_path: /var/lib/octoreflex/octoreflex.db
+
+  # Ledger retention period in days. Entries older than this are pruned.
+  retention_days: 30
+
+# ── Gossip (optional distributed quorum) ──────────────────────────────────────
+gossip:
+  # Set to true to enable the distributed quorum layer.
+  # Requires tls_cert_file, tls_key_file, and tls_ca_file.
+  enabled: false
+
+  # gRPC listen address for incoming gossip connections.
+  listen_addr: "0.0.0.0:9443"
+
+  # Static list of peer addresses (host:port).
+  # All peers must have certificates signed by the same CA.
+  peers: []
+  # peers:
+  #   - "node2.example.com:9443"
+  #   - "node3.example.com:9443"
+
+  # Minimum number of unique nodes that must report a process as anomalous
+  # before the quorum signal Q is set to 1.0.
+  quorum_min: 2
+
+  # Maximum age of a gossip envelope before rejection.
+  envelope_ttl: 30s
+
+  # TLS certificate files (Ed25519 recommended).
+  # Generate with: openssl genpkey -algorithm ed25519 -out node.key
+  #                openssl req -new -x509 -key node.key -out node.crt -days 365
+  tls_cert_file: /etc/octoreflex/tls/node.crt
+  tls_key_file: /etc/octoreflex/tls/node.key
+  tls_ca_file: /etc/octoreflex/tls/ca.crt
+
+# ── Observability ──────────────────────────────────────────────────────────────
+observability:
+  # Prometheus metrics HTTP bind address.
+  # Loopback only — do not expose externally.
+  metrics_addr: "127.0.0.1:9091"
+
+  # Minimum log level: debug, info, warn, error.
+  log_level: info
+
+  # Log output format: json (production) or console (development).
+  log_format: json

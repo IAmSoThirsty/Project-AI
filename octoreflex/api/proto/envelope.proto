@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package octoreflex.gossip.v1;
+
+option go_package = "github.com/octoreflex/octoreflex/api/generated/gossip/v1;gossipv1";
+
+// GossipService is the gRPC service for inter-node OCTOREFLEX communication.
+// Transport: gRPC over mTLS (TLS 1.3, TLS_AES_256_GCM_SHA384).
+// Port: 9443 (configurable).
+//
+// Security model:
+//   - All connections require mutual TLS with Ed25519 certificates.
+//   - Envelopes are additionally signed with the node's Ed25519 private key.
+//   - Receivers verify: (1) TLS peer certificate, (2) envelope signature,
+//     (3) timestamp freshness (reject if older than envelope_ttl).
+//   - Peers are statically configured; unknown peers are rejected at TLS level.
+service GossipService {
+  // ShareObservation broadcasts a process anomaly observation to a peer.
+  // The peer accumulates observations and evaluates quorum independently.
+  rpc ShareObservation(Envelope) returns (AckResponse);
+
+  // ShareBaseline broadcasts an anonymized baseline (μ/diag(Σ)) to a peer.
+  // Only sent when gossip.federated_baseline.enabled=true.
+  // The receiver merges the federated baseline with its local baseline using
+  // a weighted average controlled by trust_weight.
+  rpc ShareBaseline(BaselineEnvelope) returns (AckResponse);
+
+  // HealthCheck is a lightweight liveness probe between peers.
+  rpc HealthCheck(HealthRequest) returns (HealthResponse);
+
+  // OperatorCommand is reserved for future operator-to-peer override relay.
+  // Not implemented in v0.1; present for forward compatibility.
+  rpc OperatorCommand(OperatorCommandRequest) returns (OperatorCommandResponse);
+}
+
+// Envelope carries a signed anomaly observation from one node to another.
+// All fields are required unless marked optional.
+message Envelope {
+  // node_id is the unique identifier of the sending node (e.g., hostname).
+  string node_id = 1;
+
+  // signature is the Ed25519 signature over the canonical serialisation of
+  // all other fields (node_id + timestamp_unix_ns + process_hash +
+  // anomaly_score + impact_score), encoded as raw 64 bytes.
+  bytes signature = 2;
+
+  // timestamp_unix_ns is the Unix timestamp in nanoseconds when the
+  // observation was made. Used for TTL enforcement (reject if stale).
+  int64 timestamp_unix_ns = 3;
+
+  // process_hash is sha256(binary_path) of the observed process binary.
+  // Used to correlate observations across nodes without leaking full paths.
+  string process_hash = 4;
+
+  // anomaly_score is the Mahalanobis anomaly score A computed by the
+  // sending node's anomaly engine. Range: [0.0, ∞).
+  double anomaly_score = 5;
+
+  // impact_score is the composite severity score S computed by the
+  // sending node's escalation engine. Range: [0.0, ∞).
+  double impact_score = 6;
+
+  // current_state is the isolation state of the process on the sending node.
+  // Encoded as the uint8 value of octo_state_t.
+  uint32 current_state = 7;
+
+  // report_count is the number of unique nodes that have reported this
+  // process_hash as anomalous on the sending node (from its local quorum).
+  // Used by receivers to compute the log-boosted quorum signal:
+  //   Q_boost = min(1.0, log(1 + report_count) / log(1 + quorum_min))
+  // This gives diminishing returns for large report counts, preventing
+  // a single highly-connected node from dominating the quorum signal.
+  uint32 report_count = 8;
+}
+
+// BaselineEnvelope carries an anonymized baseline for federated learning.
+// Privacy guarantees:
+//   - Only mean_vector and covariance_diagonal are shared (not raw events).
+//   - process_hash = sha256(binary_path) — binary path is never transmitted.
+//   - No PID, UID, or hostname is included.
+message BaselineEnvelope {
+  // node_id identifies the sending node.
+  string node_id = 1;
+
+  // signature is the Ed25519 signature over:
+  //   node_id + timestamp_unix_ns + process_hash + mean_vector + covariance_diagonal
+  bytes signature = 2;
+
+  // timestamp_unix_ns is the creation time of this baseline snapshot.
+  int64 timestamp_unix_ns = 3;
+
+  // process_hash is sha256(binary_path). Identifies the binary without
+  // revealing its path.
+  string process_hash = 4;
+
+  // mean_vector μ is the per-feature mean from the sending node's training samples.
+  // Length = number of features (currently 3).
+  repeated double mean_vector = 5;
+
+  // covariance_diagonal is diag(Σ) — only the diagonal of the covariance matrix.
+  // Sharing the full matrix would reveal too much about the feature distribution.
+  // Receivers use diag(Σ) to construct a diagonal approximation for merging.
+  repeated double covariance_diagonal = 6;
+
+  // sample_count is the number of training samples used to compute this baseline.
+  // Receivers use this to weight the merge: higher sample_count = more trust.
+  uint32 sample_count = 7;
+
+  // baseline_entropy is the Shannon entropy of the baseline event distribution.
+  double baseline_entropy = 8;
+}
+
+// AckResponse is the receiver's acknowledgement of a ShareObservation or
+// ShareBaseline call.
+message AckResponse {
+  // accepted is true if the envelope was valid and accepted.
+  bool accepted = 1;
+
+  // rejection_reason is set if accepted=false.
+  // Values: "signature_invalid", "timestamp_stale", "peer_unknown",
+  //         "federated_baseline_disabled", "insufficient_samples".
+  string rejection_reason = 2;
+}
+
+// HealthRequest is the payload for a HealthCheck RPC.
+message HealthRequest {
+  // sender_node_id identifies the requesting node.
+  string sender_node_id = 1;
+}
+
+// HealthResponse is the response to a HealthCheck RPC.
+message HealthResponse {
+  // node_id identifies the responding node.
+  string node_id = 1;
+
+  // status is "ok" if the node is healthy, "degraded" if partially impaired.
+  string status = 2;
+
+  // uptime_seconds is the number of seconds the agent has been running.
+  int64 uptime_seconds = 3;
+
+  // tracked_pids is the current number of PIDs being monitored.
+  int32 tracked_pids = 4;
+
+  // lightweight_mode is true if the node is running in lightweight mode.
+  bool lightweight_mode = 5;
+
+  // federated_baseline_enabled reflects the node's federated baseline config.
+  bool federated_baseline_enabled = 6;
+}
+
+// OperatorCommandRequest is reserved for future operator override relay.
+// Not implemented in v0.1.
+message OperatorCommandRequest {
+  string command = 1;
+  uint32 target_pid = 2;
+  string operator_token = 3;
+}
+
+// OperatorCommandResponse is reserved for future operator override relay.
+message OperatorCommandResponse {
+  bool success = 1;
+  string message = 2;
+}

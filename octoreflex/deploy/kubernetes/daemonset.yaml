@@ -1,0 +1,186 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: octoreflex
+  namespace: octoreflex-system
+  labels:
+    app: octoreflex
+    app.kubernetes.io/name: octoreflex
+    app.kubernetes.io/version: "0.1.0"
+    app.kubernetes.io/component: security-agent
+spec:
+  selector:
+    matchLabels:
+      app: octoreflex
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  template:
+    metadata:
+      labels:
+        app: octoreflex
+      annotations:
+        # Prometheus scrape annotations for auto-discovery.
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9091"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Run on every node including control-plane nodes.
+      tolerations:
+        - operator: Exists
+          effect: NoSchedule
+        - operator: Exists
+          effect: NoExecute
+
+      # Required for PID namespace visibility (hostPID: true per spec §13).
+      hostPID: true
+
+      # Required for network-level containment actions (hostNetwork: true per spec §13).
+      hostNetwork: true
+
+      # DNS policy must be ClusterFirstWithHostNet when hostNetwork=true.
+      dnsPolicy: ClusterFirstWithHostNet
+
+      serviceAccountName: octoreflex
+
+      # Terminate immediately on shutdown — the agent handles graceful drain.
+      terminationGracePeriodSeconds: 10
+
+      initContainers:
+        # Mount BPF filesystem if not already mounted.
+        # This is a no-op on most modern Kubernetes nodes (bpffs is pre-mounted).
+        - name: mount-bpffs
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              if ! mountpoint -q /sys/fs/bpf; then
+                echo "Mounting bpffs at /sys/fs/bpf..."
+                mount -t bpf bpf /sys/fs/bpf
+              else
+                echo "bpffs already mounted."
+              fi
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: bpffs
+              mountPath: /sys/fs/bpf
+
+      containers:
+        - name: octoreflex
+          image: octoreflex:0.1.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - -config
+            - /etc/octoreflex/config.yaml
+
+          securityContext:
+            # Privileged is required for BPF LSM attachment and cgroup operations.
+            privileged: true
+            # Prevent privilege escalation via execve.
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsUser: 0
+            runAsGroup: 0
+
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"      # Peak <5% on 2-core node = ~100m; limit at 500m for burst.
+              memory: "128Mi"  # Spec: <100MB; limit at 128Mi with headroom.
+
+          ports:
+            - name: metrics
+              containerPort: 9091
+              protocol: TCP
+            - name: gossip
+              containerPort: 9443
+              protocol: TCP
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 9091
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 9091
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          env:
+            - name: GOMAXPROCS
+              value: "4"
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+
+          volumeMounts:
+            # BPF filesystem: required for map pinning.
+            - name: bpffs
+              mountPath: /sys/fs/bpf
+
+            # cgroup v2: required for freeze/quarantine actions.
+            - name: cgroupfs
+              mountPath: /sys/fs/cgroup
+              readOnly: false
+
+            # /proc: required for PID namespace operations.
+            - name: proc
+              mountPath: /proc
+              readOnly: false
+
+            # Configuration from ConfigMap.
+            - name: config
+              mountPath: /etc/octoreflex
+              readOnly: true
+
+            # Persistent data volume (BoltDB).
+            - name: data
+              mountPath: /var/lib/octoreflex
+
+            # TLS certificates for gossip mTLS (from Secret).
+            - name: tls-certs
+              mountPath: /etc/octoreflex/tls
+              readOnly: true
+
+      volumes:
+        - name: bpffs
+          hostPath:
+            path: /sys/fs/bpf
+            type: DirectoryOrCreate
+
+        - name: cgroupfs
+          hostPath:
+            path: /sys/fs/cgroup
+            type: Directory
+
+        - name: proc
+          hostPath:
+            path: /proc
+            type: Directory
+
+        - name: config
+          configMap:
+            name: octoreflex-config
+            defaultMode: 0400
+
+        - name: data
+          hostPath:
+            path: /var/lib/octoreflex
+            type: DirectoryOrCreate
+
+        - name: tls-certs
+          secret:
+            secretName: octoreflex-tls
+            defaultMode: 0400
+            optional: true  # Optional: only required when gossip.enabled=true.

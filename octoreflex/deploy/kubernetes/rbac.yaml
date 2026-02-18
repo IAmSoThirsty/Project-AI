@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: octoreflex-system
+  labels:
+    app.kubernetes.io/name: octoreflex
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/warn: privileged
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: octoreflex
+  namespace: octoreflex-system
+  labels:
+    app: octoreflex
+
+---
+# ClusterRole: grants the octoreflex agent access to node-level resources.
+# Principle of least privilege: only the permissions required for operation.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: octoreflex
+  labels:
+    app: octoreflex
+rules:
+  # Read node information (for node_id resolution and health reporting).
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+
+  # Read pod information (for correlating PIDs to workloads).
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+
+  # Read secrets (for TLS certificate rotation detection).
+  # Scoped to the octoreflex-system namespace via RoleBinding, not ClusterRoleBinding.
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+
+  # Read ConfigMaps (for config hot-reload from Kubernetes).
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "watch"]
+
+---
+# ClusterRoleBinding: binds the ClusterRole to the octoreflex ServiceAccount.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: octoreflex
+  labels:
+    app: octoreflex
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: octoreflex
+subjects:
+  - kind: ServiceAccount
+    name: octoreflex
+    namespace: octoreflex-system
+
+---
+# Service: exposes the metrics endpoint for Prometheus scraping.
+# ClusterIP only — no external exposure.
+apiVersion: v1
+kind: Service
+metadata:
+  name: octoreflex-metrics
+  namespace: octoreflex-system
+  labels:
+    app: octoreflex
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9091"
+    prometheus.io/path: "/metrics"
+spec:
+  selector:
+    app: octoreflex
+  ports:
+    - name: metrics
+      port: 9091
+      targetPort: 9091
+      protocol: TCP
+  type: ClusterIP

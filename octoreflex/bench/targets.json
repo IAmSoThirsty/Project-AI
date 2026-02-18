@@ -1,0 +1,72 @@
+{
+    "_comment": "Benchmark pass/fail targets for OCTOREFLEX. Edit to tighten targets as the system matures.",
+    "_version": "0.2",
+    "targets": {
+        "containment_latency_p50_us": {
+            "op": "<=",
+            "value": 500,
+            "unit": "µs",
+            "description": "Median BPF LSM hook enforcement latency. Sub-millisecond is the primary claim."
+        },
+        "containment_latency_p99_us": {
+            "op": "<=",
+            "value": 2000,
+            "unit": "µs",
+            "description": "99th percentile enforcement latency. Must stay under 2ms to avoid disrupting legitimate traffic."
+        },
+        "cpu_idle_avg_pct": {
+            "op": "<=",
+            "value": 0.5,
+            "unit": "%",
+            "description": "Agent CPU% with no monitored process activity. Target: < 0.5% on a 2-core host."
+        },
+        "cpu_idle_max_pct": {
+            "op": "<=",
+            "value": 2.0,
+            "unit": "%",
+            "description": "Peak agent CPU% at idle. Spikes above 2% indicate ring buffer processing bursts."
+        },
+        "cpu_storm_avg_pct": {
+            "op": "<=",
+            "value": 5.0,
+            "unit": "%",
+            "description": "Agent CPU% under 100k syscalls/sec (stress-ng --syscall). Includes BPF hook overhead."
+        },
+        "cpu_storm_max_pct": {
+            "op": "<=",
+            "value": 15.0,
+            "unit": "%",
+            "description": "Peak agent CPU% under syscall storm. Sustained peaks above 15% indicate ring buffer saturation."
+        },
+        "fpr_pct": {
+            "op": "<=",
+            "value": 0.5,
+            "unit": "%",
+            "description": "False positive rate over 10,000 normal-process samples. FPR > 0.5% is operationally unacceptable."
+        },
+        "budget_exhaustion": {
+            "op": "==",
+            "value": "PASS",
+            "unit": "",
+            "description": "Agent must remain alive and responsive after token bucket exhaustion."
+        },
+        "kernel_stability": {
+            "op": "==",
+            "value": "PASS",
+            "unit": "",
+            "description": "Zero BPF verifier errors, kernel oops, or panics in dmesg during 60s stress-ng run."
+        },
+        "ransom_contained": {
+            "op": "==",
+            "value": "PASS",
+            "unit": "",
+            "description": "Synthetic ransomware (entropy spike) must be contained (file_open blocked) within 5s."
+        },
+        "ransom_latency_s": {
+            "op": "<=",
+            "value": 5.0,
+            "unit": "s",
+            "description": "Time from ransomware entropy spike onset to first file_open block."
+        }
+    }
+}

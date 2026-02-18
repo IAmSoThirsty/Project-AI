@@ -1,0 +1,69 @@
+[Unit]
+Description=OCTOREFLEX — Autonomous Host Containment Engine
+Documentation=https://github.com/octoreflex/octoreflex
+After=network.target
+Wants=network.target
+
+# Require BPF filesystem to be mounted before starting.
+# If /sys/fs/bpf is not mounted, the agent will fail at BPF load time.
+# The condition below provides an early, clear error message.
+ConditionPathIsMountPoint=/sys/fs/bpf
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/octoreflex -config /etc/octoreflex/config.yaml
+
+# Restart policy: always restart on failure.
+# RestartSec: wait 2 seconds before restarting to avoid tight crash loops.
+Restart=always
+RestartSec=2s
+
+# On restart, re-load BPF programs and restore state from BoltDB.
+# No special pre/post scripts needed — the agent handles this internally.
+
+# File descriptor limit: required for BPF maps and ring buffer.
+LimitNOFILE=65536
+
+# No new privileges after start.
+NoNewPrivileges=true
+
+# Capabilities:
+# CAP_BPF:       load and manage BPF programs and maps.
+# CAP_SYS_ADMIN: required for BPF LSM attachment (dropped after load).
+# CAP_NET_ADMIN: required for network-level containment actions.
+# CAP_KILL:      required for SIGKILL (TERMINATED state action).
+# CAP_SYS_PTRACE: required for /proc/$PID access during forensics.
+AmbientCapabilities=CAP_BPF CAP_SYS_ADMIN CAP_NET_ADMIN CAP_KILL CAP_SYS_PTRACE
+CapabilityBoundingSet=CAP_BPF CAP_SYS_ADMIN CAP_NET_ADMIN CAP_KILL CAP_SYS_PTRACE
+
+# Run as root (required for BPF LSM and cgroup operations).
+User=root
+Group=root
+
+# Working directory.
+WorkingDirectory=/var/lib/octoreflex
+
+# Standard output and error go to the journal.
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=octoreflex
+
+# Environment.
+Environment=GOMAXPROCS=4
+
+# Protect system directories from accidental modification.
+# Note: ProtectSystem=strict would block /sys/fs/bpf writes — use 'full' instead.
+ProtectSystem=full
+ProtectHome=true
+
+# Allow writes to the data directory and BPF filesystem.
+ReadWritePaths=/var/lib/octoreflex /sys/fs/bpf /etc/octoreflex
+
+# Private /tmp.
+PrivateTmp=true
+
+# Prevent the agent from gaining new capabilities via execve.
+SecureBits=no-setuid-fixup-locked
+
+[Install]
+WantedBy=multi-user.target
