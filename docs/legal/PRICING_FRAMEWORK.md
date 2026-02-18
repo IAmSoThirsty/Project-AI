@@ -139,6 +139,8 @@ ______________________________________________________________________
 
 **Pricing Plans:**
 
+**Companies with <250 Employees (Flat Rate):**
+
 | Plan         | Price            | Best For                                              |
 | ------------ | ---------------- | ----------------------------------------------------- |
 | **Weekly**   | $250/week        | Short-term projects, trials, pilot programs           |
@@ -146,13 +148,30 @@ ______________________________________________________________________
 | **Yearly**   | $8,000/year      | Long-term use, 33% savings vs monthly                 |
 | **Lifetime** | $25,000 one-time | Permanent rights, unlimited seats, no recurring costs |
 
+**Companies with 250+ Employees (Per-Seat Pricing):**
+
+| Plan       | Price Per Seat   | Best For                                      |
+| ---------- | ---------------- | --------------------------------------------- |
+| **Weekly** | $6.25/seat/week  | Large enterprise deployments, flexible terms  |
+| **Monthly**| $25/seat/month   | Scalable enterprise solutions                 |
+| **Yearly** | $200/seat/year   | Long-term enterprise commitment, 33% savings  |
+
+**Pricing Model Transition:**
+
+- Companies with **<250 employees**: Flat rate pricing (unlimited seats included)
+- Companies with **250+ employees**: Per-seat pricing (pay for what you use)
+- Seat count determined by actual usage/assignment, not employee count
+
 **All Plans Include:**
 
-- Unlimited seats per entity (no per-user fees)
 - Full commercial use rights
 - Priority support
 - Automatic updates
 - Cancel anytime (no penalties)
+
+**Note for <250 Employee Companies:** Unlimited seats included in flat rate.
+
+**Note for 250+ Employee Companies:** Per-seat pricing scales with usage.
 
 **Why Subscribe vs Lifetime:** Subscription includes automatic managed cloud hosting, daily backups, 4-hour support response, and continuous hands-off updates. Lifetime requires self-management.
 
@@ -185,7 +204,7 @@ ______________________________________________________________________
 - ✓ Disaster recovery and business continuity (geographically distributed)
 - ✓ Chain of custody documentation
 - ✓ Tamper-evident packaging and delivery
-- ✓ Progressive seat-based pricing (15% increase per 25 seats)
+- ✓ Tiered pricing for seats 1-100, per-seat pricing for seats 101+
 
 **Entity Types Supported:**
 
@@ -210,34 +229,42 @@ ______________________________________________________________________
 - Supply chain risk management (SCRM) compliance
 - Anti-tamper and self-destruct mechanisms (optional)
 
-**Pricing Plans (Progressive Seat-Based):**
+**Pricing Plans (Tiered & Per-Seat Hybrid Model):**
 
-**Base Pricing (1-25 seats):**
+**Seats 1-100: Progressive Tiered Pricing**
+
+Base Pricing (1-25 seats):
 
 - Monthly: $2,500/month
 - Yearly: $10,000/year
 
-**Progressive Pricing Tiers:**
+Progressive Pricing Tiers (15% increase per 25 seats):
 
-Government pricing increases by 15% for every 25 seats to account for increased security operations, compliance overhead, and support requirements.
+| Seat Range  | Monthly Price | Yearly Price  | Price Multiplier |
+| ----------- | ------------- | ------------- | ---------------- |
+| 1-25 seats  | $2,500/month  | $10,000/year  | Base (100%)      |
+| 26-50 seats | $2,875/month  | $11,500/year  | +15% (115%)      |
+| 51-75 seats | $3,250/month  | $13,000/year  | +30% (130%)      |
+| 76-100 seats| $3,625/month  | $14,500/year  | +45% (145%)      |
 
-| Seat Range    | Monthly Price | Yearly Price  | Price Multiplier |
-| ------------- | ------------- | ------------- | ---------------- |
-| 1-25 seats    | $2,500/month  | $10,000/year  | Base (100%)      |
-| 26-50 seats   | $2,875/month  | $11,500/year  | +15% (115%)      |
-| 51-75 seats   | $3,250/month  | $13,000/year  | +30% (130%)      |
-| 76-100 seats  | $3,625/month  | $14,500/year  | +45% (145%)      |
-| 101-125 seats | $4,000/month  | $16,000/year  | +60% (160%)      |
-| 126-150 seats | $4,375/month  | $17,500/year  | +75% (175%)      |
-| 151+ seats    | Contact sales | Contact sales | Custom pricing   |
+**Seats 101+: Per-Seat Pricing**
+
+| Billing Cycle | Price Per Seat   |
+| ------------- | ---------------- |
+| **Monthly**   | $50/seat/month   |
+| **Yearly**    | $400/seat/year   |
 
 **Formula:**
 
-```
-Price = Base_Price × (1 + 0.15 × floor((seats - 1) / 25))
-Monthly: $2,500 × multiplier
-Yearly: $10,000 × multiplier
-```
+- **Seats 1-100:** `Price = Base_Price × (1 + 0.15 × floor((seats - 1) / 25))`
+- **Seats 101+:** `Price = Price_Per_Seat × seat_count`
+
+**Examples:**
+
+- 50 seats (monthly): $2,875/month (tiered pricing, tier 1)
+- 100 seats (monthly): $3,625/month (tiered pricing, tier 3)
+- 150 seats (monthly): $7,500/month (per-seat: 150 × $50)
+- 500 seats (monthly): $25,000/month (per-seat: 500 × $50)
 
 **Additional Surcharges:**
 
@@ -246,7 +273,7 @@ Yearly: $10,000 × multiplier
 
 **All Plans Include:**
 
-- Specified seat count with progressive pricing
+- Specified seat count (tiered pricing for 1-100 seats, per-seat for 101+ seats)
 - 24/7/365 dedicated support with cleared personnel
 - Continuous security monitoring
 - On-site installation and training
@@ -269,14 +296,17 @@ Yearly: $10,000 × multiplier
 
 **Why No Lifetime Option:** Government-grade security and compliance require ongoing operations: continuous security monitoring, compliance audits, cleared support staff, threat intelligence feeds, and regulatory updates. These operational requirements make subscription the only viable model.
 
-**Why Progressive Pricing:** Government deployments scale with complexity. Each additional 25-seat tier requires:
+**Why Hybrid Pricing Model:**
 
-- Additional cleared support personnel
-- Increased security monitoring infrastructure
-- Enhanced compliance reporting and audits
-- Expanded threat intelligence coverage
-- Additional hardware security modules
-- Greater operational overhead
+For seats 1-100:
+- Progressive tiered pricing accounts for increased security operations, compliance overhead, and support requirements
+- 15% increase per 25-seat tier reflects scaling operational complexity
+
+For seats 101+:
+- Per-seat pricing provides predictable, scalable costs for large deployments
+- $50/month per seat (or $400/year) includes all security, compliance, and support overhead
+- Simpler to budget and forecast for large-scale government operations
+- Each additional seat costs the same, avoiding exponential pricing growth
 
 ______________________________________________________________________
 

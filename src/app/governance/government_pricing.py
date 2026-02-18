@@ -1,8 +1,9 @@
 """
 Government Tier Progressive Pricing Calculator
 
-Implements progressive seat-based pricing for government tier:
-- 15% price increase for every 25 seats
+Implements tiered pricing for government tier:
+- Seats 1-100: Progressive pricing (15% increase for every 25 seats)
+- Seats 101+: Per-seat pricing ($50/seat/month or $400/seat/year)
 - Base pricing: $2,500/month or $10,000/year (1-25 seats)
 """
 
@@ -24,10 +25,12 @@ class GovernmentPricing:
     seat_count: int
     billing_cycle: GovernmentBillingCycle
     base_price: float
-    tier_multiplier: float
+    tier_multiplier: float | None  # None for per-seat pricing (101+ seats)
     total_price: float
-    tier_number: int
+    tier_number: int | None  # None for per-seat pricing (101+ seats)
     price_increase_percentage: float
+    pricing_model: str  # "tiered" or "per_seat"
+    price_per_seat: float | None  # Only for per-seat pricing (101+ seats)
 
 
 def calculate_government_tier_multiplier(seat_count: int) -> tuple[float, int, float]:
@@ -75,11 +78,15 @@ def calculate_government_price(
     """
     Calculate government tier pricing for given seat count and billing cycle.
 
-    Base pricing (1-25 seats):
-    - Monthly: $2,500/month
-    - Yearly: $10,000/year
-
-    Progressive pricing: +15% for every 25 seats.
+    Pricing Models:
+    - Seats 1-100: Progressive pricing (15% increase for every 25 seats)
+        - Base pricing (1-25 seats):
+            - Monthly: $2,500/month
+            - Yearly: $10,000/year
+        - Progressive increase: +15% for every 25 seats
+    - Seats 101+: Per-seat pricing
+        - Monthly: $50/seat/month
+        - Yearly: $400/seat/year
 
     Args:
         seat_count: Number of seats (must be >= 1)
@@ -92,17 +99,23 @@ def calculate_government_price(
         ValueError: If seat_count < 1
 
     Examples:
+        >>> # Progressive pricing (1-100 seats)
         >>> pricing = calculate_government_price(25, GovernmentBillingCycle.MONTHLY)
         >>> pricing.total_price
         2500.0
+        >>> pricing.pricing_model
+        'tiered'
 
         >>> pricing = calculate_government_price(50, GovernmentBillingCycle.MONTHLY)
         >>> pricing.total_price
         2875.0
 
-        >>> pricing = calculate_government_price(75, GovernmentBillingCycle.YEARLY)
+        >>> # Per-seat pricing (101+ seats)
+        >>> pricing = calculate_government_price(150, GovernmentBillingCycle.MONTHLY)
         >>> pricing.total_price
-        13000.0
+        7500.0
+        >>> pricing.pricing_model
+        'per_seat'
     """
     if seat_count < 1:
         raise ValueError(f"Seat count must be at least 1, got {seat_count}")
@@ -117,13 +130,27 @@ def calculate_government_price(
     else:  # YEARLY
         base_price = base_price_yearly
 
-    # Calculate tier multiplier
-    multiplier, tier_number, increase_percentage = calculate_government_tier_multiplier(
-        seat_count
-    )
+    # Determine pricing model based on seat count
+    if seat_count <= 100:
+        # Progressive pricing for seats 1-100
+        multiplier, tier_number, increase_percentage = calculate_government_tier_multiplier(
+            seat_count
+        )
+        total_price = base_price * multiplier
+        pricing_model = "tiered"
+        price_per_seat = None
+    else:
+        # Per-seat pricing for seats 101+
+        if billing_cycle == GovernmentBillingCycle.MONTHLY:
+            price_per_seat = 50.0
+        else:  # YEARLY
+            price_per_seat = 400.0
 
-    # Calculate total price
-    total_price = base_price * multiplier
+        total_price = price_per_seat * seat_count
+        multiplier = None
+        tier_number = None
+        increase_percentage = 0.0
+        pricing_model = "per_seat"
 
     return GovernmentPricing(
         seat_count=seat_count,
@@ -133,6 +160,8 @@ def calculate_government_price(
         total_price=total_price,
         tier_number=tier_number,
         price_increase_percentage=increase_percentage,
+        pricing_model=pricing_model,
+        price_per_seat=price_per_seat,
     )
 
 
@@ -180,60 +209,69 @@ def format_price(price: float) -> str:
 
 # Example pricing table (for reference/documentation)
 GOVERNMENT_PRICING_TABLE = {
-    "tiers": [
-        {"range": "1-25", "monthly": 2500, "yearly": 10000, "increase": "Base (100%)"},
-        {
-            "range": "26-50",
-            "monthly": 2875,
-            "yearly": 11500,
-            "increase": "+15% (115%)",
-        },
-        {
-            "range": "51-75",
-            "monthly": 3250,
-            "yearly": 13000,
-            "increase": "+30% (130%)",
-        },
-        {
-            "range": "76-100",
-            "monthly": 3625,
-            "yearly": 14500,
-            "increase": "+45% (145%)",
-        },
-        {
-            "range": "101-125",
-            "monthly": 4000,
-            "yearly": 16000,
-            "increase": "+60% (160%)",
-        },
-        {
-            "range": "126-150",
-            "monthly": 4375,
-            "yearly": 17500,
-            "increase": "+75% (175%)",
-        },
-    ],
-    "formula": "Price = Base_Price × (1 + 0.15 × floor((seats - 1) / 25))",
+    "tiered_pricing": {
+        "range": "1-100 seats",
+        "tiers": [
+            {"range": "1-25", "monthly": 2500, "yearly": 10000, "increase": "Base (100%)"},
+            {
+                "range": "26-50",
+                "monthly": 2875,
+                "yearly": 11500,
+                "increase": "+15% (115%)",
+            },
+            {
+                "range": "51-75",
+                "monthly": 3250,
+                "yearly": 13000,
+                "increase": "+30% (130%)",
+            },
+            {
+                "range": "76-100",
+                "monthly": 3625,
+                "yearly": 14500,
+                "increase": "+45% (145%)",
+            },
+        ],
+        "formula": "Price = Base_Price × (1 + 0.15 × floor((seats - 1) / 25))",
+    },
+    "per_seat_pricing": {
+        "range": "101+ seats",
+        "monthly_per_seat": 50,
+        "yearly_per_seat": 400,
+        "formula": "Price = Price_Per_Seat × seat_count",
+    },
 }
 
 
 if __name__ == "__main__":
     # Demo/validation
-    print("Government Tier Progressive Pricing Calculator")
-    print("=" * 60)
+    print("Government Tier Pricing Calculator")
+    print("=" * 70)
     print()
 
-    test_cases = [10, 25, 26, 50, 51, 75, 76, 100, 101, 125, 150]
+    test_cases = [10, 25, 26, 50, 51, 75, 76, 100, 101, 125, 150, 200, 500]
 
     for seats in test_cases:
         monthly = calculate_government_price(seats, GovernmentBillingCycle.MONTHLY)
         yearly = calculate_government_price(seats, GovernmentBillingCycle.YEARLY)
 
-        print(f"Seats: {seats:3d} | Tier: {monthly.tier_number}")
-        print(
-            f"  Monthly: {format_price(monthly.total_price)} (increase: {monthly.price_increase_percentage:.0f}%)"
-        )
-        print(
-            f"  Yearly:  {format_price(yearly.total_price)} (increase: {yearly.price_increase_percentage:.0f}%)"
-        )
+        print(f"Seats: {seats:3d} | Model: {monthly.pricing_model}")
+        if monthly.pricing_model == "tiered":
+            print(
+                f"  Monthly: {format_price(monthly.total_price)} "
+                f"(Tier {monthly.tier_number}, +{monthly.price_increase_percentage:.0f}%)"
+            )
+            print(
+                f"  Yearly:  {format_price(yearly.total_price)} "
+                f"(Tier {yearly.tier_number}, +{yearly.price_increase_percentage:.0f}%)"
+            )
+        else:  # per_seat
+            print(
+                f"  Monthly: {format_price(monthly.total_price)} "
+                f"({format_price(monthly.price_per_seat)}/seat × {seats} seats)"
+            )
+            print(
+                f"  Yearly:  {format_price(yearly.total_price)} "
+                f"({format_price(yearly.price_per_seat)}/seat × {seats} seats)"
+            )
         print()
