@@ -1,6 +1,6 @@
 {
   "name": "project-ai",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A constitutionally governed, sovereign-grade AI platform with cryptographic audit trails and enforced ethical behavior",
   "main": "src/app/main.py",
   "scripts": {

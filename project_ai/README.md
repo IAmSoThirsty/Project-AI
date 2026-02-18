@@ -405,6 +405,7 @@ For questions or issues:
 ## Version History
 
 - **1.0.0** (2026-01-23) - Initial PACE architecture implementation
+- **1.0.1** (2026-02-17) - Production deployment, documentation updates, full integration
   - Core engine with all modules
   - Identity and bonding system
   - Built-in capabilities
