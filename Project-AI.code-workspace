@@ -2,10 +2,6 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "external/Cerberus",
-			"name": "Cerberus (external)"
 		}
 	],
 	"settings": {
