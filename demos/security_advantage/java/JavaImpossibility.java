@@ -1,8 +1,11 @@
 /**
  * Java Security Demonstration: Why Absolute Secret Protection is IMPOSSIBLE
  * 
+ * Java Version: 21 LTS (Long-Term Support)
+ * Updated: 2026 with modern Java features
+ * 
  * This demonstrates that Java CANNOT provide absolute protection for secrets,
- * even with best practices, due to fundamental architectural constraints.
+ * even with best practices and modern features, due to fundamental architectural constraints.
  * 
  * The Challenge: Protect an API key so that even with full access to the JVM
  * runtime, an attacker cannot extract it.
@@ -12,24 +15,28 @@
 
 import java.lang.reflect.*;
 import java.util.*;
-import sun.misc.Unsafe;
+import java.util.concurrent.Executors;
+import jdk.internal.misc.Unsafe;
 
 public class JavaImpossibility {
     
     public static void main(String[] args) throws Exception {
         System.out.println("=".repeat(80));
         System.out.println("JAVA SECRET PROTECTION: IMPOSSIBLE TO ACHIEVE ABSOLUTE SECURITY");
+        System.out.println("Java Version: " + Runtime.version());
         System.out.println("=".repeat(80));
         System.out.println();
         
         attempt1PrivateField();
         attempt2FinalField();
-        attempt3SecurityManager();
-        attempt4ReflectionBlock();
-        attempt5UnsafeAccess();
-        attempt6InnerClass();
-        attempt7Immutable Collections();
-        attempt8JNIBypass();
+        attempt3SealedClasses();
+        attempt4Records();
+        attempt5VirtualThreads();
+        attempt6ReflectionBlock();
+        attempt7UnsafeAccess();
+        attempt8InnerClass();
+        attempt9ImmutableCollections();
+        attempt10JNIBypass();
         
         printSummary();
     }
@@ -79,61 +86,75 @@ public class JavaImpossibility {
         
         SecretHolder holder = new SecretHolder();
         
-        // Bypass: Reflection can modify even final fields
-        Field field = SecretHolder.class.getDeclaredField("apiKey");
-        field.setAccessible(true);
-        
-        // Remove final modifier
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-        
-        // Now we can modify it
-        field.set(holder, "HACKED");
-        
-        System.out.println("✗ BYPASSED: " + holder.getKey());
-        System.out.println("  Attack: Reflection can modify final fields");
-        System.out.println();
-    }
-    
-    // ========================================================================
-    // ATTEMPT 3: Security Manager
-    // ========================================================================
-    static void attempt3SecurityManager() throws Exception {
-        System.out.println("ATTEMPT 3: SecurityManager Protection");
-        System.out.println("-".repeat(80));
-        
-        // Note: SecurityManager is deprecated in Java 17+
-        // Even when active, can be disabled or bypassed
-        
-        class SecretHolder {
-            private String apiKey = "sk-PRODUCTION-SECRET-12345";
-        }
-        
-        SecretHolder holder = new SecretHolder();
-        
-        // Bypass: SecurityManager can be disabled
-        // System.setSecurityManager(null);  // If we had permission
-        
-        // Or bypass using privileged action
+        // Bypass: Reflection can still read final fields
         Field field = SecretHolder.class.getDeclaredField("apiKey");
         field.setAccessible(true);
         String stolen = (String) field.get(holder);
         
         System.out.println("✗ BYPASSED: " + stolen);
-        System.out.println("  Attack: SecurityManager deprecated, can be disabled");
+        System.out.println("  Attack: Reflection can read final fields");
+        System.out.println("  Note: Modifying final fields is harder in Java 12+ but reading still works");
         System.out.println();
     }
     
     // ========================================================================
-    // ATTEMPT 4: Block Reflection
+    // ATTEMPT 3: Sealed Classes (Java 17+)
     // ========================================================================
-    static void attempt4ReflectionBlock() throws Exception {
-        System.out.println("ATTEMPT 4: Attempt to Block Reflection");
+    static void attempt3SealedClasses() throws Exception {
+        System.out.println("ATTEMPT 3: Sealed Classes (Java 17+ Feature)");
         System.out.println("-".repeat(80));
         
-        // Cannot truly block reflection at language level
-        // Module system (Java 9+) helps but can be opened
+        // Sealed class restricts inheritance
+        sealed class SecretHolder permits AuthorizedAccess {
+            private String apiKey = "sk-PRODUCTION-SECRET-12345";
+        }
+        
+        final class AuthorizedAccess extends SecretHolder {
+            public String getKey() {
+                return super.apiKey;
+            }
+        }
+        
+        SecretHolder holder = new SecretHolder();
+        
+        // Bypass: Sealed classes don't prevent reflection
+        Field field = SecretHolder.class.getDeclaredField("apiKey");
+        field.setAccessible(true);
+        String stolen = (String) field.get(holder);
+        
+        System.out.println("✗ BYPASSED: " + stolen);
+        System.out.println("  Attack: Sealed classes control inheritance, not reflection");
+        System.out.println();
+    }
+    
+    // ========================================================================
+    // ATTEMPT 4: Records (Java 16+)
+    // ========================================================================
+    static void attempt4Records() throws Exception {
+        System.out.println("ATTEMPT 4: Records with Implicit Final Fields (Java 16+ Feature)");
+        System.out.println("-".repeat(80));
+        
+        // Record components are implicitly final
+        record SecretHolder(String apiKey) {}
+        
+        SecretHolder holder = new SecretHolder("sk-PRODUCTION-SECRET-12345");
+        
+        // Bypass: Records are just syntactic sugar over classes
+        Field field = SecretHolder.class.getDeclaredField("apiKey");
+        field.setAccessible(true);
+        String stolen = (String) field.get(holder);
+        
+        System.out.println("✗ BYPASSED: " + stolen);
+        System.out.println("  Attack: Records don't prevent reflection access");
+        System.out.println();
+    }
+    
+    // ========================================================================
+    // ATTEMPT 5: Virtual Threads (Java 21)
+    // ========================================================================
+    static void attempt5VirtualThreads() throws Exception {
+        System.out.println("ATTEMPT 5: Virtual Threads Isolation (Java 21 Feature)");
+        System.out.println("-".repeat(80));
         
         class SecretHolder {
             private String apiKey = "sk-PRODUCTION-SECRET-12345";
@@ -141,21 +162,54 @@ public class JavaImpossibility {
         
         SecretHolder holder = new SecretHolder();
         
-        // Bypass: Can always use --add-opens flag or Unsafe
+        // Try to hide secret in virtual thread
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            executor.submit(() -> {
+                // Secret "isolated" in virtual thread
+                return holder.apiKey;
+            });
+        }
+        
+        // Bypass: Virtual threads share heap memory
+        Field field = SecretHolder.class.getDeclaredField("apiKey");
+        field.setAccessible(true);
+        String stolen = (String) field.get(holder);
+        
+        System.out.println("✗ BYPASSED: " + stolen);
+        System.out.println("  Attack: Virtual threads share heap, reflection still works");
+        System.out.println();
+    }
+    
+    // ========================================================================
+    // ATTEMPT 6: Block Reflection with Module System
+    // ========================================================================
+    static void attempt6ReflectionBlock() throws Exception {
+        System.out.println("ATTEMPT 6: Module System Reflection Blocking (Java 9+)");
+        System.out.println("-".repeat(80));
+        
+        // Module system (Java 9+) helps but can be opened
+        class SecretHolder {
+            private String apiKey = "sk-PRODUCTION-SECRET-12345";
+        }
+        
+        SecretHolder holder = new SecretHolder();
+        
+        // Bypass: Can use --add-opens flag or setAccessible
         Field field = SecretHolder.class.getDeclaredField("apiKey");
         field.setAccessible(true);
         String stolen = (String) field.get(holder);
         
         System.out.println("✗ BYPASSED: " + stolen);
         System.out.println("  Attack: Module system can be opened with JVM flags");
+        System.out.println("  Flag: --add-opens java.base/package=ALL-UNNAMED");
         System.out.println();
     }
     
     // ========================================================================
-    // ATTEMPT 5: sun.misc.Unsafe
+    // ATTEMPT 7: jdk.internal.misc.Unsafe
     // ========================================================================
-    static void attempt5UnsafeAccess() throws Exception {
-        System.out.println("ATTEMPT 5: Direct Memory Access with Unsafe");
+    static void attempt7UnsafeAccess() throws Exception {
+        System.out.println("ATTEMPT 7: Direct Memory Access with jdk.internal.misc.Unsafe");
         System.out.println("-".repeat(80));
         
         class SecretHolder {
@@ -164,7 +218,7 @@ public class JavaImpossibility {
         
         SecretHolder holder = new SecretHolder();
         
-        // Bypass: Get Unsafe instance
+        // Bypass: Get Unsafe instance (moved to jdk.internal.misc in Java 9+)
         Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
         unsafeField.setAccessible(true);
         Unsafe unsafe = (Unsafe) unsafeField.get(null);
@@ -174,18 +228,19 @@ public class JavaImpossibility {
         long offset = unsafe.objectFieldOffset(field);
         
         // Read directly from memory
-        String stolen = (String) unsafe.getObject(holder, offset);
+        String stolen = (String) unsafe.getReference(holder, offset);
         
         System.out.println("✗ BYPASSED: " + stolen);
         System.out.println("  Attack: Unsafe provides direct memory access");
+        System.out.println("  Note: Moved to jdk.internal.misc in Java 9+ but still accessible");
         System.out.println();
     }
     
     // ========================================================================
-    // ATTEMPT 6: Inner Class Encapsulation
+    // ATTEMPT 8: Inner Class Encapsulation
     // ========================================================================
-    static void attempt6InnerClass() throws Exception {
-        System.out.println("ATTEMPT 6: Private Inner Class");
+    static void attempt8InnerClass() throws Exception {
+        System.out.println("ATTEMPT 8: Private Inner Class");
         System.out.println("-".repeat(80));
         
         class Outer {
@@ -213,35 +268,43 @@ public class JavaImpossibility {
     }
     
     // ========================================================================
-    // ATTEMPT 7: Immutable Collections
+    // ATTEMPT 9: Immutable Collections
     // ========================================================================
-    static void attempt7ImmutableCollections() throws Exception {
-        System.out.println("ATTEMPT 7: Collections.unmodifiableMap");
+    static void attempt9ImmutableCollections() throws Exception {
+        System.out.println("ATTEMPT 9: Immutable Collections (Java 9+ of())");
         System.out.println("-".repeat(80));
         
-        Map<String, String> secrets = new HashMap<>();
-        secrets.put("apiKey", "sk-PRODUCTION-SECRET-12345");
-        Map<String, String> unmodifiable = Collections.unmodifiableMap(secrets);
+        // Modern immutable map using Java 9+ factory method
+        Map<String, String> secrets = Map.of("apiKey", "sk-PRODUCTION-SECRET-12345");
         
-        // Bypass 1: Original map is still accessible
-        System.out.println("✗ BYPASSED (original): " + secrets.get("apiKey"));
+        // Try older approach too
+        Map<String, String> mutableSecrets = new HashMap<>();
+        mutableSecrets.put("apiKey2", "sk-PRODUCTION-SECRET-67890");
+        Map<String, String> unmodifiable = Collections.unmodifiableMap(mutableSecrets);
         
-        // Bypass 2: Reflection to get the wrapped map
+        // Bypass 1: Original mutable map is still accessible
+        System.out.println("✗ BYPASSED (mutable ref): " + mutableSecrets.get("apiKey2"));
+        
+        // Bypass 2: Reflection to get wrapped map
         Field mField = unmodifiable.getClass().getDeclaredField("m");
         mField.setAccessible(true);
         @SuppressWarnings("unchecked")
         Map<String, String> wrapped = (Map<String, String>) mField.get(unmodifiable);
         
-        System.out.println("✗ BYPASSED (reflection): " + wrapped.get("apiKey"));
-        System.out.println("  Attack: Unmodifiable is just a wrapper");
+        System.out.println("✗ BYPASSED (reflection): " + wrapped.get("apiKey2"));
+        
+        // Bypass 3: Even Map.of() can be accessed via iteration
+        System.out.println("✗ BYPASSED (iteration): " + secrets.get("apiKey"));
+        
+        System.out.println("  Attack: Immutable collections don't encrypt data");
         System.out.println();
     }
     
     // ========================================================================
-    // ATTEMPT 8: JNI Native Code
+    // ATTEMPT 10: JNI Native Code
     // ========================================================================
-    static void attempt8JNIBypass() {
-        System.out.println("ATTEMPT 8: JNI Native Code Protection");
+    static void attempt10JNIBypass() {
+        System.out.println("ATTEMPT 10: JNI Native Code Protection");
         System.out.println("-".repeat(80));
         
         // Even with secrets in native code, can be extracted
@@ -251,7 +314,8 @@ public class JavaImpossibility {
         System.out.println("  - Reverse engineered");
         System.out.println("  - Memory dumped");
         System.out.println("  - Debugger attached");
-        System.out.println("  - Hooked with LD_PRELOAD");
+        System.out.println("  - Hooked with LD_PRELOAD / Windows hooks");
+        System.out.println("  - Accessed via JNI reflection");
         System.out.println("  Attack: Native code not safer than Java");
         System.out.println();
     }
@@ -261,18 +325,18 @@ public class JavaImpossibility {
     // ========================================================================
     static void printSummary() {
         System.out.println("=".repeat(80));
-        System.out.println("RESULTS: ALL 8 PROTECTION MECHANISMS WERE BYPASSED");
+        System.out.println("RESULTS: ALL 10 PROTECTION MECHANISMS WERE BYPASSED");
         System.out.println("=".repeat(80));
         System.out.println();
         System.out.println("Why Java Cannot Provide Absolute Security:");
         System.out.println("  1. Reflection API: Can access all fields/methods");
         System.out.println("  2. Field.setAccessible(): Bypasses private/final");
-        System.out.println("  3. sun.misc.Unsafe: Direct memory manipulation");
+        System.out.println("  3. jdk.internal.misc.Unsafe: Direct memory manipulation");
         System.out.println("  4. JNI: Native code equally vulnerable");
-        System.out.println("  5. SecurityManager: Deprecated, can be disabled");
-        System.out.println("  6. Module System: Can be opened with JVM flags");
+        System.out.println("  5. Module System: Can be opened with JVM flags");
+        System.out.println("  6. Modern Features: Sealed classes, records, virtual threads don't help");
         System.out.println();
-        System.out.println("Attack Vectors Available in Java:");
+        System.out.println("Attack Vectors Available in Java 21:");
         System.out.println("  ✗ Reflection API (Field.setAccessible)");
         System.out.println("  ✗ Unsafe direct memory access");
         System.out.println("  ✗ JNI native code manipulation");
@@ -281,12 +345,15 @@ public class JavaImpossibility {
         System.out.println("  ✗ Serialization/deserialization");
         System.out.println("  ✗ ClassLoader manipulation");
         System.out.println("  ✗ MethodHandles bypass");
+        System.out.println("  ✗ VarHandles direct field access");
         System.out.println();
-        System.out.println("Protection Success Rate: 0/8 (0%)");
+        System.out.println("Protection Success Rate: 0/10 (0%)");
         System.out.println();
         System.out.println("=".repeat(80));
         System.out.println("CONCLUSION: Absolute secret protection is ARCHITECTURALLY IMPOSSIBLE");
         System.out.println("in Java due to its reflective runtime and JVM architecture.");
+        System.out.println("Even modern Java 21 features (sealed classes, records, virtual threads)");
+        System.out.println("do not change this fundamental limitation.");
         System.out.println("=".repeat(80));
         System.out.println();
         System.out.println("See: TARLJavaProtection.java for how T.A.R.L. solves this");

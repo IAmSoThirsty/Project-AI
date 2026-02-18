@@ -75,4 +75,4 @@ The borrow checker and type system provide **memory safety**, NOT **security fro
 
 ## Learn More
 
-This demonstration is part of the T.A.R.L. (Temporal Authority Resource Ledger) project, which provides architectural solutions to secret protection through cryptographic attestation rather than runtime hiding.
+This demonstration is part of the T.A.R.L. (Thirsty's Active Resistance Language) project, which provides architectural solutions to secret protection through cryptographic attestation rather than runtime hiding.

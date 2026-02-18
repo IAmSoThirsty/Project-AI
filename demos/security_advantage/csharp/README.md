@@ -69,4 +69,4 @@ Protection Success Rate: 0/8 (0%)
 
 ## Learn More
 
-This demonstration is part of the T.A.R.L. (Temporal Authority Resource Ledger) project, which provides architectural solutions to secret protection through cryptographic attestation rather than runtime hiding.
+This demonstration is part of the T.A.R.L. (Thirsty's Active Resistance Language) project, which provides architectural solutions to secret protection through cryptographic attestation rather than runtime hiding.
