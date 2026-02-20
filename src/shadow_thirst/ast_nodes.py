@@ -67,7 +67,7 @@ class ASTNode:
 class TypeAnnotation(ASTNode):
     """Type annotation with optional plane qualifier."""
 
-    name: str
+    name: str = ""
     qualifier: PlaneQualifier | None = None
     type_params: list["TypeAnnotation"] = field(default_factory=list)
 
@@ -100,38 +100,38 @@ class Expression(ASTNode):
 class Literal(Expression):
     """Literal value (integer, float, string, boolean)."""
 
-    value: Any
+    value: Any = None
 
 
 @dataclass
 class Identifier(Expression):
     """Variable or function identifier."""
 
-    name: str
+    name: str = ""
 
 
 @dataclass
 class BinaryOp(Expression):
     """Binary operation (e.g., a + b)."""
 
-    operator: str
-    left: Expression
-    right: Expression
+    operator: str = ""
+    left: Expression = None
+    right: Expression = None
 
 
 @dataclass
 class UnaryOp(Expression):
     """Unary operation (e.g., !x, -x)."""
 
-    operator: str
-    operand: Expression
+    operator: str = ""
+    operand: Expression = None
 
 
 @dataclass
 class FunctionCall(Expression):
     """Function call."""
 
-    function: str
+    function: str = ""
     arguments: list[Expression] = field(default_factory=list)
 
 
@@ -139,8 +139,8 @@ class FunctionCall(Expression):
 class MemberAccess(Expression):
     """Member access (e.g., obj.field)."""
 
-    object: Expression
-    member: str
+    object: Expression = None
+    member: str = ""
 
 
 # ============================================================================
@@ -159,7 +159,7 @@ class Statement(ASTNode):
 class VariableDeclaration(Statement):
     """Variable declaration (drink x = value)."""
 
-    name: str
+    name: str = ""
     type_annotation: TypeAnnotation | None = None
     initializer: Expression | None = None
 
@@ -168,8 +168,8 @@ class VariableDeclaration(Statement):
 class Assignment(Statement):
     """Assignment statement."""
 
-    target: str
-    value: Expression
+    target: str = ""
+    value: Expression = None
 
 
 @dataclass
@@ -183,21 +183,21 @@ class ReturnStatement(Statement):
 class OutputStatement(Statement):
     """Output statement (pour x)."""
 
-    expression: Expression
+    expression: Expression = None
 
 
 @dataclass
 class InputStatement(Statement):
     """Input statement (sip x)."""
 
-    variable: str
+    variable: str = ""
 
 
 @dataclass
 class ExpressionStatement(Statement):
     """Expression as statement."""
 
-    expression: Expression
+    expression: Expression = None
 
 
 @dataclass
@@ -230,7 +230,7 @@ class ShadowBlock(ASTNode):
 class ActivationPredicate(ASTNode):
     """Activation predicate (activate_if condition)."""
 
-    condition: Expression
+    condition: Expression = None
 
 
 @dataclass
@@ -244,7 +244,7 @@ class InvariantClause(ASTNode):
 class DivergencePolicy(ASTNode):
     """Divergence policy specification."""
 
-    policy_type: DivergencePolicyType
+    policy_type: DivergencePolicyType = None
     epsilon: float | None = None  # For allow_epsilon policy
 
 
@@ -252,7 +252,7 @@ class DivergencePolicy(ASTNode):
 class MutationBoundary(ASTNode):
     """Mutation boundary specification."""
 
-    boundary_type: MutationBoundaryType
+    boundary_type: MutationBoundaryType = None
 
 
 # ============================================================================
@@ -264,7 +264,7 @@ class MutationBoundary(ASTNode):
 class Parameter(ASTNode):
     """Function parameter."""
 
-    name: str
+    name: str = ""
     type_annotation: TypeAnnotation | None = None
 
 
@@ -298,7 +298,7 @@ class FunctionDefinition(ASTNode):
         }
     """
 
-    name: str
+    name: str = ""
     parameters: list[Parameter] = field(default_factory=list)
     return_type: TypeAnnotation | None = None
 
