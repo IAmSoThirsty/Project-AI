@@ -319,6 +319,7 @@ class CognitionKernel:
         governance_system: Any | None = None,
         reflection_engine: Any | None = None,
         triumvirate: Any | None = None,
+        shadow_plane: Any | None = None,
         data_dir: str = "data",
     ):
         """
@@ -330,6 +331,7 @@ class CognitionKernel:
             governance_system: Governance system (enforces Four Laws)
             reflection_engine: Reflection cycle engine
             triumvirate: Triumvirate orchestrator (Galahad, Cerberus, Codex)
+            shadow_plane: Shadow Execution Plane (dual-reality execution)
             data_dir: Data directory for kernel state persistence
         """
         self.identity_system = identity_system
@@ -337,6 +339,7 @@ class CognitionKernel:
         self.governance_system = governance_system
         self.reflection_engine = reflection_engine
         self.triumvirate = triumvirate
+        self.shadow_plane = shadow_plane
         self.data_dir = data_dir
 
         # Execution tracking (forensic auditability)
@@ -372,6 +375,7 @@ class CognitionKernel:
         logger.info("Governance: %s", governance_system is not None)
         logger.info("Reflection: %s", reflection_engine is not None)
         logger.info("Triumvirate: %s", triumvirate is not None)
+        logger.info("Shadow Plane: %s", shadow_plane is not None)
 
     def process(
         self,
@@ -567,6 +571,100 @@ class CognitionKernel:
 
             logger.error("[%s] Execution failed: %s", context.trace_id, e)
             raise
+
+    def act_with_shadow(
+        self,
+        action: Action,
+        context: ExecutionContext,
+        shadow_callable: Callable | None = None,
+        activation_predicates: list[Any] | None = None,
+        invariants: list[Any] | None = None,
+    ) -> None:
+        """
+        Execute action with optional shadow validation.
+
+        If shadow plane is configured and activation predicates pass,
+        executes in dual-plane mode with invariant validation.
+
+        CRITICAL: Only called after enforce() approval.
+
+        Mutates context.result, context.channels["result"], and context.channels["shadow"].
+
+        Args:
+            action: The action to execute
+            context: The execution context to mutate
+            shadow_callable: Optional shadow callable (defaults to primary)
+            activation_predicates: Shadow activation predicates
+            invariants: Invariants to validate
+        """
+        # If no shadow plane, fall back to regular act()
+        if not self.shadow_plane:
+            return self.act(action, context)
+
+        logger.info("[%s] Shadow-aware execution: %s", context.trace_id, action.action_name)
+
+        # Build shadow context from execution context
+        shadow_context = {
+            "threat_score": context.metadata.get("threat_score", 0.0),
+            "is_high_stakes": action.risk_level in ("high", "critical"),
+            "risk_level": action.risk_level,
+            "mutation_targets": action.mutation_targets,
+            "source": action.source,
+        }
+
+        # Execute in dual-plane mode
+        try:
+            shadow_result = self.shadow_plane.execute_dual_plane(
+                trace_id=context.trace_id,
+                primary_callable=lambda: action.callable(*action.args, **action.kwargs),
+                shadow_callable=shadow_callable,
+                activation_predicates=activation_predicates or [],
+                invariants=invariants or [],
+                context=shadow_context,
+            )
+
+            # Update execution context with shadow results
+            context.result = shadow_result.primary_result
+            context.channels["result"] = shadow_result.primary_result
+            context.status = ExecutionStatus.COMPLETED
+
+            # Store shadow metadata
+            context.channels["shadow"] = {
+                "shadow_id": shadow_result.shadow_id,
+                "shadow_activated": shadow_result.shadow_result is not None,
+                "invariants_passed": shadow_result.invariants_passed,
+                "invariants_violated": shadow_result.invariants_violated,
+                "divergence_detected": shadow_result.divergence_detected,
+                "divergence_magnitude": shadow_result.divergence_magnitude,
+                "should_commit": shadow_result.should_commit,
+                "should_quarantine": shadow_result.should_quarantine,
+                "audit_hash": shadow_result.audit_hash,
+            }
+
+            # If shadow says quarantine, quarantine
+            if shadow_result.should_quarantine:
+                context.status = ExecutionStatus.BLOCKED
+                context.error = shadow_result.quarantine_reason
+                logger.warning(
+                    "[%s] Shadow quarantine: %s",
+                    context.trace_id,
+                    shadow_result.quarantine_reason
+                )
+                raise PermissionError(f"Shadow quarantine: {shadow_result.quarantine_reason}")
+
+            logger.info(
+                "[%s] Shadow execution complete: commit=%s",
+                context.trace_id,
+                shadow_result.should_commit
+            )
+
+        except PermissionError:
+            # Re-raise quarantine
+            raise
+        except Exception as e:
+            # Shadow failure - fall back to primary only with warning
+            logger.warning("[%s] Shadow execution failed, falling back to primary: %s", context.trace_id, e)
+            return self.act(action, context)
 
     def reflect(self, context: ExecutionContext) -> None:
         """
