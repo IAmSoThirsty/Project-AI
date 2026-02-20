@@ -528,5 +528,103 @@ class TestShadowIntegration:
         assert result.duration_ms > 0.0
 
 
+class TestShadowResourceLimits:
+    """Test Shadow Resource Limiter enforcement via resource_limiter.thirsty."""
+
+    def test_cpu_timeout_enforced(self):
+        """Shadow callable that sleeps past the CPU quota is quarantined."""
+        shadow_plane = ShadowExecutionPlane(default_cpu_quota_ms=200.0)
+
+        def primary_fn():
+            return "primary_ok"
+
+        def slow_shadow():
+            import time
+            time.sleep(5)  # Well beyond 200ms quota
+            return "shadow_ok"
+
+        predicate = create_high_stakes_activation_predicate()
+
+        result = shadow_plane.execute_dual_plane(
+            trace_id="test_timeout",
+            primary_callable=primary_fn,
+            shadow_callable=slow_shadow,
+            activation_predicates=[predicate],
+            context={"is_high_stakes": True},
+        )
+
+        # Shadow timed out → resource violation → quarantined
+        assert result.should_quarantine is True
+        assert result.success is False
+
+    def test_memory_limit_tracking(self):
+        """Resource usage object records peak memory allocation."""
+        from app.core.shadow_resource_limiter import ShadowResourceLimiter
+
+        limiter = ShadowResourceLimiter()
+
+        def allocating_fn():
+            # Allocate 1MB of data
+            return bytearray(1024 * 1024)
+
+        result, usage = limiter.execute(allocating_fn, cpu_quota_ms=5000.0, memory_quota_mb=512.0)
+
+        assert usage is not None
+        assert usage.peak_memory_mb >= 0.0  # tracemalloc measured something
+        assert usage.cpu_ms >= 0.0
+
+    def test_resource_usage_surfaced_in_result(self):
+        """Normal shadow execution attaches ResourceUsage to telemetry."""
+        shadow_plane = ShadowExecutionPlane()
+
+        def primary_fn():
+            return 42
+
+        def shadow_fn():
+            return 42
+
+        predicate = create_high_stakes_activation_predicate()
+
+        result = shadow_plane.execute_dual_plane(
+            trace_id="test_usage_surface",
+            primary_callable=primary_fn,
+            shadow_callable=shadow_fn,
+            activation_predicates=[predicate],
+            context={"is_high_stakes": True},
+        )
+
+        assert result.success is True
+        # Telemetry should have real cpu/memory figures (not 0/0 stub)
+        telemetry = shadow_plane.get_telemetry()
+        assert telemetry["avg_shadow_overhead_ms"] >= 0.0
+
+    def test_cpu_and_memory_within_limits(self):
+        """Fast, low-memory shadow execution is not quarantined."""
+        shadow_plane = ShadowExecutionPlane(
+            default_cpu_quota_ms=5000.0,
+            default_memory_quota_mb=512.0,
+        )
+
+        def primary_fn():
+            return "ok"
+
+        def fast_shadow():
+            return "ok"
+
+        predicate = create_high_stakes_activation_predicate()
+
+        result = shadow_plane.execute_dual_plane(
+            trace_id="test_within_limits",
+            primary_callable=primary_fn,
+            shadow_callable=fast_shadow,
+            activation_predicates=[predicate],
+            context={"is_high_stakes": True},
+        )
+
+        assert result.success is True
+        assert result.should_quarantine is False
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+

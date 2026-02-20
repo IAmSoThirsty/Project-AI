@@ -37,6 +37,11 @@ from app.core.platform_tiers import (
     PlatformTier,
     get_tier_registry,
 )
+from app.core.shadow_resource_limiter import (
+    ResourceUsage,
+    ShadowResourceLimiter,
+    ShadowResourceViolation,
+)
 from app.core.shadow_types import (
     ActivationPredicate,
     ActivationReason,
@@ -112,6 +117,15 @@ class ShadowExecutionPlane:
 
         # Execution history (forensic auditability)
         self.shadow_history: list[ShadowContext] = []
+
+        # Resource limiter — compiled from Shadow Thirst source
+        # (resource_limiter.thirsty) with Python bridge fallback
+        self._resource_limiter = ShadowResourceLimiter()
+        logger.info(
+            "  Resource Limiter: %s",
+            "Shadow Thirst bytecode" if self._resource_limiter.is_bytecode_active()
+            else "Python runtime",
+        )
 
         # Register in Tier Registry as Tier-2 Infrastructure Controller
         try:
@@ -245,7 +259,9 @@ class ShadowExecutionPlane:
                 should_commit=True,
             )
 
-        # Shadow activated - record telemetry
+        # Shadow activated - record telemetry (activation_reason is not None here
+        # because should_activate_shadow only returns True with a non-None reason)
+        assert activation_reason is not None
         self.telemetry.record_activation(activation_reason)
 
         # Phase 2: Create shadow context
@@ -298,17 +314,32 @@ class ShadowExecutionPlane:
             logger.info("[%s] Shadow completed in %.2fms", shadow_id, shadow_duration)
             shadow_ctx.status = ShadowStatus.COMPLETED
 
+        except ShadowResourceViolation as e:
+            # Resource limit exceeded — quarantine immediately.
+            # Do not fall through to invariant checks; this shadow is dead.
+            shadow_duration = (time.time() - shadow_start) * 1000
+            shadow_ctx.duration_ms = shadow_duration
+            shadow_ctx.status = ShadowStatus.FAILED
+            shadow_ctx.error = f"Resource limit exceeded: {e.reason}"
+            logger.warning(
+                "[%s] Shadow quarantined due to resource violation: %s",
+                shadow_id,
+                e.reason,
+            )
+            return self._build_failed_result(shadow_ctx, primary_result, None)
+
         except Exception as e:
             logger.error("[%s] Shadow execution failed: %s", shadow_id, e)
             shadow_ctx.status = ShadowStatus.FAILED
             shadow_ctx.error = f"Shadow failed: {e}"
             shadow_result = None
 
-        # Record execution metrics
+        # Record execution metrics (real measurements from resource limiter)
+        _usage: ResourceUsage | None = getattr(shadow_ctx, "resource_usage", None)
         self.telemetry.record_execution(
             duration_ms=shadow_ctx.duration_ms,
-            cpu_ms=shadow_ctx.duration_ms,  # Simplified - real impl would track actual CPU
-            memory_mb=0.0,  # Simplified - real impl would track actual memory
+            cpu_ms=_usage.cpu_ms if _usage else shadow_ctx.duration_ms,
+            memory_mb=_usage.peak_memory_mb if _usage else 0.0,
         )
 
         # Phase 5: Validate invariants
@@ -487,36 +518,56 @@ class ShadowExecutionPlane:
         """
         Execute shadow callable with resource limits.
 
-        In production, this would:
-        - Set CPU quota via cgroups
-        - Set memory limits
-        - Isolate memory region
-        - Stream audit to sealed log
+        Enforced by ShadowResourceLimiter, which is compiled from
+        resource_limiter.thirsty — a native Shadow Thirst dual-plane function
+        that itself uses shadow execution to measure and bound the callable.
 
-        For now, simplified implementation with timeout.
+        Limits enforced:
+        - CPU / wall-clock timeout via ThreadPoolExecutor.Future.result(timeout=)
+        - Memory growth via tracemalloc peak-delta measurement
 
         Args:
             callable_obj: Shadow callable
-            shadow_ctx: Shadow context
+            shadow_ctx: Shadow context (cpu_quota_ms, memory_quota_mb read here)
 
         Returns:
             Result from shadow execution
 
         Raises:
-            RuntimeError: If resource limits exceeded
+            ShadowResourceViolation: If CPU or memory quota exceeded
         """
-        # TODO: Implement true resource isolation
-        # - cgroup CPU quota
-        # - Memory namespace isolation
-        # - Sandboxed execution environment
-
-        # For now, just execute with basic timeout concept
         shadow_ctx.start_time = time.time()
 
         try:
-            result = callable_obj()
+            result, resource_usage = self._resource_limiter.execute(
+                callable_obj,
+                cpu_quota_ms=shadow_ctx.cpu_quota_ms,
+                memory_quota_mb=shadow_ctx.memory_quota_mb,
+            )
+
             shadow_ctx.end_time = time.time()
+
+            # Attach real resource measurements to context for telemetry
+            shadow_ctx.resource_usage = resource_usage  # type: ignore[attr-defined]
+
+            logger.debug(
+                "[%s] Resource usage: cpu=%.1fms mem=%.2fMB",
+                shadow_ctx.shadow_id,
+                resource_usage.cpu_ms,
+                resource_usage.peak_memory_mb,
+            )
+
             return result
+
+        except ShadowResourceViolation as e:
+            shadow_ctx.end_time = time.time()
+            shadow_ctx.error = f"Resource limit exceeded: {e.reason}"
+            logger.warning(
+                "[%s] Shadow resource violation: %s",
+                shadow_ctx.shadow_id,
+                e.reason,
+            )
+            raise
 
         except Exception as e:
             shadow_ctx.end_time = time.time()
