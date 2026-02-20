@@ -1,0 +1,206 @@
+##
+## Shadow Resource Limiter
+## Written in Shadow Thirst
+##
+## This module enforces CPU and memory quotas on shadow execution.
+## It is itself a shadow construct — the limiter uses its own dual-plane
+## architecture to observe, measure, and bound the callable it wraps.
+##
+## The meta-level loop:
+##   Primary plane  → runs the callable (the real work)
+##   Shadow plane   → measures resource consumption and enforces quotas
+##   Invariant      → asserts limits were not breached
+##   Commit gate    → quarantines if violated
+##
+## VERSION: 1.0.0
+## STATUS:  PRODUCTION
+## EXTENDS: Thirsty-Lang v1.0 (Shadow Thirst superset)
+##
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Type aliases (Shadow Thirst generics)
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ResourceUsage - ephemeral measurement struct (shadow-plane only)
+# Fields:   cpu_ms          wall-clock elapsed during shadow execution
+#           peak_memory_mb  peak heap delta measured via tracemalloc
+#           violated        true if any quota was exceeded
+#           violation_reason human-readable reason string or null
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# execute_with_limits
+#
+# Core entry point. Runs `callable` in the primary plane and simultaneously
+# measures its resource footprint in the shadow plane. If either quota is
+# breached the result is quarantined before it can touch canonical state.
+# ─────────────────────────────────────────────────────────────────────────────
+
+fn execute_with_limits(cpu_quota_ms: Float, memory_quota_mb: Float) -> Dual<Data> {
+
+    primary {
+        # Primary plane: run the actual work.
+        # We do NOT impose a hard deadline here — the shadow plane handles that.
+        # The primary result is canonical-candidate until C validates it.
+        drink primary_result = invoke_callable()
+        pour primary_result
+    }
+
+    shadow {
+        # Shadow plane: measure resource consumption.
+        # This block has read-only access — it cannot alter primary_result.
+
+        # 1. Memory baseline snapshot
+        drink mem_before = tracemalloc_take_snapshot()
+
+        # 2. CPU wall-clock start
+        drink cpu_start = clock_now_ms()
+
+        # 3. Run callable inside a timeout fence
+        #    execute_timeout raises ShadowResourceViolation if deadline exceeded
+        drink shadow_result = execute_timeout(cpu_quota_ms)
+
+        # 4. Measure elapsed and peak heap
+        drink cpu_used    = clock_now_ms() - cpu_start
+        drink peak_mem_mb = tracemalloc_peak_mb(mem_before)
+
+        # 5. Determine violation status
+        drink cpu_violated = cpu_used > cpu_quota_ms
+        drink mem_violated = peak_mem_mb > memory_quota_mb
+        drink any_violated = cpu_violated || mem_violated
+
+        drink why = build_violation_reason(cpu_violated, mem_violated,
+                                           cpu_used, cpu_quota_ms,
+                                           peak_mem_mb, memory_quota_mb)
+
+        pour ResourceUsage {
+            cpu_ms:           cpu_used,
+            peak_memory_mb:   peak_mem_mb,
+            violated:         any_violated,
+            violation_reason: why
+        }
+    }
+
+    # Shadow activates on every invocation — resource limits are always enforced.
+    activate_if policy_flag == "always"
+
+    invariant {
+        # CRITICAL: shadow-measured CPU must not exceed quota
+        shadow.output.cpu_ms <= cpu_quota_ms
+
+        # CRITICAL: shadow-measured memory must not exceed quota
+        shadow.output.peak_memory_mb <= memory_quota_mb
+
+        # CRITICAL: shadow must not have flagged a violation
+        shadow.output.violated == false
+    }
+
+    # Any breach quarantines — never permit a resource-overrunning shadow
+    # result to commit to canonical state.
+    divergence quarantine_on_diverge
+
+    # Shadow observes only — it may not mutate canonical state.
+    mutation read_only
+}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# execute_timeout
+#
+# Runs the wrapped callable in a ThreadPoolExecutor future.
+# If the future does not resolve within cpu_quota_ms milliseconds the
+# future is cancelled and ShadowResourceViolation is raised.
+#
+# This is pure shadow-plane machinery — it never touches canonical state.
+# ─────────────────────────────────────────────────────────────────────────────
+
+fn execute_timeout(cpu_quota_ms: Float) -> Shadow<Data> {
+    primary {
+        # Primary: no timeout — direct invocation
+        drink result = invoke_callable()
+        pour result
+    }
+
+    shadow {
+        # Shadow: submit to thread pool, block for quota duration
+        drink future  = thread_pool_submit(invoke_callable)
+        drink timeout = cpu_quota_ms / 1000.0   # convert ms -> seconds
+        drink result  = future_result_or_raise(future, timeout)
+        pour result
+    }
+
+    activate_if policy_flag == "always"
+
+    invariant {
+        # Result must be non-null (timeout raises before returning null)
+        shadow.output != null
+    }
+
+    divergence require_identical
+    mutation read_only
+}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# check_memory_quota
+#
+# Validates a peak_memory_mb measurement against the configured quota.
+# Returns a boolean — called inside invariant blocks.
+# Pure function: no side effects, deterministic, no I/O.
+# ─────────────────────────────────────────────────────────────────────────────
+
+fn check_memory_quota(peak_memory_mb: Float, memory_quota_mb: Float) -> Bool {
+    primary {
+        drink within = peak_memory_mb <= memory_quota_mb
+        pour within
+    }
+
+    invariant {
+        primary.output == true || primary.output == false
+    }
+
+    divergence require_identical
+    mutation read_only
+}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# build_violation_reason
+#
+# Constructs a human-readable violation string.
+# Returns null when no violation occurred.
+# Pure — used inside shadow blocks and invariants.
+# ─────────────────────────────────────────────────────────────────────────────
+
+fn build_violation_reason(
+    cpu_violated:    Bool,
+    mem_violated:    Bool,
+    cpu_used:        Float,
+    cpu_quota_ms:    Float,
+    peak_mem_mb:     Float,
+    memory_quota_mb: Float
+) -> Shadow<String> {
+
+    shadow {
+        if cpu_violated && mem_violated {
+            pour "CPU exceeded (used=" + str(cpu_used) + "ms quota=" + str(cpu_quota_ms) + "ms) AND " +
+                 "Memory exceeded (used=" + str(peak_mem_mb) + "MB quota=" + str(memory_quota_mb) + "MB)"
+        }
+        if cpu_violated {
+            pour "CPU quota exceeded: used " + str(cpu_used) + "ms, limit " + str(cpu_quota_ms) + "ms"
+        }
+        if mem_violated {
+            pour "Memory quota exceeded: used " + str(peak_mem_mb) + "MB, limit " + str(memory_quota_mb) + "MB"
+        }
+        pour null
+    }
+
+    invariant {
+        # If no violation, reason must be null
+        (cpu_violated == false && mem_violated == false) == (shadow.output == null)
+    }
+
+    divergence require_identical
+    mutation read_only
+}
