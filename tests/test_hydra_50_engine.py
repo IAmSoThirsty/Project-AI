@@ -112,9 +112,7 @@ class TestDigitalCognitiveScenarios:
 
         # Should have high-strength couplings
         assert len(couplings) > 0
-        assert any(
-            c.target_scenario_id == "S09" for c in couplings
-        )  # Deepfake coupling
+        assert any(c.target_scenario_id == "S09" for c in couplings)  # Deepfake coupling
 
     def test_s02_autonomous_trading_war(self):
         """Test S02 algorithmic trading scenario"""
@@ -286,9 +284,7 @@ class TestAdversarialRealityGenerator:
         engine.update_scenario_metrics("S10", {"mental_health_crisis": 0.5})
 
         # Get active scenarios
-        active = [
-            s for s in engine.scenarios.values() if s.status != ScenarioStatus.DORMANT
-        ]
+        active = [s for s in engine.scenarios.values() if s.status != ScenarioStatus.DORMANT]
 
         # Generate compound
         compound = engine.adversarial_generator.generate_compound_scenario(active)
@@ -299,9 +295,7 @@ class TestAdversarialRealityGenerator:
 
     def test_critical_nodes_identification(self, engine):
         """Test identification of high-coupling scenarios"""
-        critical_nodes = engine.adversarial_generator.identify_critical_nodes(
-            list(engine.scenarios.values())
-        )
+        critical_nodes = engine.adversarial_generator.identify_critical_nodes(list(engine.scenarios.values()))
 
         assert len(critical_nodes) == 10  # Top 10
         assert all(sid in engine.scenarios for sid in critical_nodes)
@@ -354,9 +348,7 @@ class TestHumanFailureEmulator:
         # Simulate multiple failures
         results = []
         for _ in range(5):
-            result = engine.human_failure_emulator.simulate_decision_failure(
-                0.5, "strategic"
-            )
+            result = engine.human_failure_emulator.simulate_decision_failure(0.5, "strategic")
             results.append(result)
 
         # Failure probability should increase over time
@@ -372,9 +364,7 @@ class TestIrreversibilityDetector:
         scenario.activation_time = datetime.utcnow() - timedelta(days=800)
 
         # Assess irreversibility
-        assessment = engine.irreversibility_detector.assess_irreversibility(
-            scenario, time_elapsed=timedelta(days=800)
-        )
+        assessment = engine.irreversibility_detector.assess_irreversibility(scenario, time_elapsed=timedelta(days=800))
 
         assert "irreversible" in assessment
         assert "score" in assessment
@@ -384,9 +374,7 @@ class TestIrreversibilityDetector:
         scenario = engine.scenarios["S01"]
         scenario.activation_time = datetime.utcnow() - timedelta(days=1000)
 
-        assessment = engine.irreversibility_detector.assess_irreversibility(
-            scenario, time_elapsed=timedelta(days=1000)
-        )
+        assessment = engine.irreversibility_detector.assess_irreversibility(scenario, time_elapsed=timedelta(days=1000))
 
         # Should detect irreversibility after long elapsed time
         if assessment["score"] > 0.7:
@@ -413,12 +401,8 @@ class TestFalseRecoveryEngine:
         scenario = engine.scenarios["S01"]
 
         # Deploy multiple poisons
-        engine.false_recovery_engine.evaluate_recovery_attempt(
-            scenario, "blockchain_verification_theater"
-        )
-        engine.false_recovery_engine.evaluate_recovery_attempt(
-            scenario, "ai_fact_checker_paradox"
-        )
+        engine.false_recovery_engine.evaluate_recovery_attempt(scenario, "blockchain_verification_theater")
+        engine.false_recovery_engine.evaluate_recovery_attempt(scenario, "ai_fact_checker_paradox")
 
         # Calculate total cost
         total_cost = engine.false_recovery_engine.calculate_cumulative_poison_cost()
@@ -491,13 +475,9 @@ class TestTimeTravel:
         branch_point = datetime.utcnow()
 
         # Create alternate branch
-        alternate_events = [
-            {"scenario_id": "S01", "metrics": {"synthetic_content_ratio": 0.3}}
-        ]
+        alternate_events = [{"scenario_id": "S01", "metrics": {"synthetic_content_ratio": 0.3}}]
 
-        branch_result = engine.create_counterfactual_branch(
-            "low_ai_content", branch_point, alternate_events
-        )
+        branch_result = engine.create_counterfactual_branch("low_ai_content", branch_point, alternate_events)
 
         assert branch_result["branch_name"] == "low_ai_content"
         assert len(branch_result["results"]) == 10  # 10 ticks
@@ -515,9 +495,7 @@ class TestPlanetaryDefenseIntegration:
         """Test mitigation action validation"""
         pd_integration = PlanetaryDefenseIntegration(engine)
 
-        is_allowed, reason = pd_integration.validate_mitigation_action(
-            "S01", "Deploy watermarking standards"
-        )
+        is_allowed, reason = pd_integration.validate_mitigation_action("S01", "Deploy watermarking standards")
 
         # Should either validate or fallback to allow
         assert isinstance(is_allowed, bool)

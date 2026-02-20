@@ -50,9 +50,7 @@ class TestDataAnalyzer:
             csv_path = self._write_csv(tmpdir)
 
             analyzer.load_data(csv_path)
-            fig_clusters = analyzer.perform_clustering(
-                columns=["value", "score"], n_clusters=2
-            )
+            fig_clusters = analyzer.perform_clustering(columns=["value", "score"], n_clusters=2)
 
             fig, clusters = fig_clusters
             assert fig is not None

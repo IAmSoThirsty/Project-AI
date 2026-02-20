@@ -82,8 +82,12 @@ class ShadowThirstCompiler:
         self.enable_static_analysis = enable_static_analysis
         self.strict_mode = strict_mode
 
-        logger.info("Shadow Thirst compiler initialized (optimizations=%s, analysis=%s, strict=%s)",
-                    enable_optimizations, enable_static_analysis, strict_mode)
+        logger.info(
+            "Shadow Thirst compiler initialized (optimizations=%s, analysis=%s, strict=%s)",
+            enable_optimizations,
+            enable_static_analysis,
+            strict_mode,
+        )
 
     def compile(self, source: str, source_file: str | None = None) -> CompilationResult:
         """
@@ -96,10 +100,10 @@ class ShadowThirstCompiler:
         Returns:
             Compilation result
         """
-        logger.info("Compiling Shadow Thirst program%s",
-                    f" from {source_file}" if source_file else "")
+        logger.info("Compiling Shadow Thirst program%s", f" from {source_file}" if source_file else "")
 
         import time
+
         start_time = time.time()
 
         result = CompilationResult(

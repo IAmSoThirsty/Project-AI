@@ -32,9 +32,7 @@ from uuid import uuid4
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_STATE_FILE = (
-    Path(__file__).parent.parent.parent.parent / "governance" / "governance_state.json"
-)
+DEFAULT_STATE_FILE = Path(__file__).parent.parent.parent.parent / "governance" / "governance_state.json"
 
 
 class GovernanceManager:

@@ -169,8 +169,12 @@ class TestVector2_GenesisPublicKeyReplacement:
             # Step 1: Initialize with original Genesis
             audit1 = SovereignAuditLog(data_dir=data_dir)
             audit1.genesis_keypair.public_key.public_bytes(
-                encoding=audit1.genesis_keypair.public_key.__class__.__module__.split('.')[0] == 'cryptography' and __import__('cryptography.hazmat.primitives.serialization', fromlist=['Encoding']).Encoding.Raw or None,
-                format=__import__('cryptography.hazmat.primitives.serialization', fromlist=['PublicFormat']).PublicFormat.Raw
+                encoding=audit1.genesis_keypair.public_key.__class__.__module__.split(".")[0] == "cryptography"
+                and __import__("cryptography.hazmat.primitives.serialization", fromlist=["Encoding"]).Encoding.Raw
+                or None,
+                format=__import__(
+                    "cryptography.hazmat.primitives.serialization", fromlist=["PublicFormat"]
+                ).PublicFormat.Raw,
             )
             audit1.log_event("original_event", {"authentic": True})
 
@@ -182,8 +186,10 @@ class TestVector2_GenesisPublicKeyReplacement:
             public_key_path = genesis_key_dir / "genesis_audit.pub"
 
             attacker_pub_key_bytes = attacker_keypair.public_key.public_bytes(
-                encoding=__import__('cryptography.hazmat.primitives.serialization', fromlist=['Encoding']).Encoding.PEM,
-                format=__import__('cryptography.hazmat.primitives.serialization', fromlist=['PublicFormat']).PublicFormat.SubjectPublicKeyInfo
+                encoding=__import__("cryptography.hazmat.primitives.serialization", fromlist=["Encoding"]).Encoding.PEM,
+                format=__import__(
+                    "cryptography.hazmat.primitives.serialization", fromlist=["PublicFormat"]
+                ).PublicFormat.SubjectPublicKeyInfo,
             )
             public_key_path.write_bytes(attacker_pub_key_bytes)
 
@@ -214,8 +220,10 @@ class TestVector2_GenesisPublicKeyReplacement:
 
             # Try to verify with wrong public key
             attacker_pub_bytes = attacker_key.public_key.public_bytes(
-                encoding=__import__('cryptography.hazmat.primitives.serialization', fromlist=['Encoding']).Encoding.Raw,
-                format=__import__('cryptography.hazmat.primitives.serialization', fromlist=['PublicFormat']).PublicFormat.Raw
+                encoding=__import__("cryptography.hazmat.primitives.serialization", fromlist=["Encoding"]).Encoding.Raw,
+                format=__import__(
+                    "cryptography.hazmat.primitives.serialization", fromlist=["PublicFormat"]
+                ).PublicFormat.Raw,
             )
 
             # Verification against pinned key should fail
@@ -345,14 +353,15 @@ class TestVector5_LogTruncation:
             if audit_log_file.exists():
                 # Read all events
                 import yaml
+
                 with open(audit_log_file) as f:
                     events = list(yaml.safe_load_all(f))
 
                 # Keep only first 30 events (delete last 20)
-                with open(audit_log_file, 'w') as f:
+                with open(audit_log_file, "w") as f:
                     for event in events[:30]:
                         yaml.dump(event, f)
-                        f.write('---\n')
+                        f.write("---\n")
 
             # Create new audit instance to reload
             audit2 = SovereignAuditLog(data_dir=data_dir)
@@ -452,7 +461,7 @@ class TestVector7_ReplayDeterminism:
                 audit1.log_event(
                     f"deterministic_event_{i}",
                     {"sequence": i},
-                    deterministic_timestamp=base_time + timedelta(seconds=i)
+                    deterministic_timestamp=base_time + timedelta(seconds=i),
                 )
 
             # Export audit artifacts
@@ -461,12 +470,14 @@ class TestVector7_ReplayDeterminism:
 
             artifacts1 = []
             for event in sovereign_events1:
-                artifacts1.append({
-                    "ed25519_signature": event["data"]["ed25519_signature"],
-                    "hmac": event["data"]["hmac"],
-                    "content_hash": event["data"]["content_hash"],
-                    "timestamp": event["data"]["timestamp"],
-                })
+                artifacts1.append(
+                    {
+                        "ed25519_signature": event["data"]["ed25519_signature"],
+                        "hmac": event["data"]["hmac"],
+                        "content_hash": event["data"]["content_hash"],
+                        "timestamp": event["data"]["timestamp"],
+                    }
+                )
 
         # Run 2: Second execution with same scenario
         with tempfile.TemporaryDirectory() as tmpdir2:
@@ -478,7 +489,7 @@ class TestVector7_ReplayDeterminism:
                 audit2.log_event(
                     f"deterministic_event_{i}",
                     {"sequence": i},
-                    deterministic_timestamp=base_time + timedelta(seconds=i)
+                    deterministic_timestamp=base_time + timedelta(seconds=i),
                 )
 
             # Export artifacts
@@ -487,12 +498,14 @@ class TestVector7_ReplayDeterminism:
 
             artifacts2 = []
             for event in sovereign_events2:
-                artifacts2.append({
-                    "ed25519_signature": event["data"]["ed25519_signature"],
-                    "hmac": event["data"]["hmac"],
-                    "content_hash": event["data"]["content_hash"],
-                    "timestamp": event["data"]["timestamp"],
-                })
+                artifacts2.append(
+                    {
+                        "ed25519_signature": event["data"]["ed25519_signature"],
+                        "hmac": event["data"]["hmac"],
+                        "content_hash": event["data"]["content_hash"],
+                        "timestamp": event["data"]["timestamp"],
+                    }
+                )
 
         # Compare artifacts - timestamps should match
         assert len(artifacts1) == len(artifacts2)
@@ -538,10 +551,7 @@ class TestVector9_ConcurrentRaceCondition:
 
             def log_events(thread_id):
                 for i in range(events_per_thread):
-                    audit.log_event(
-                        f"concurrent_event_t{thread_id}_i{i}",
-                        {"thread": thread_id, "index": i}
-                    )
+                    audit.log_event(f"concurrent_event_t{thread_id}_i{i}", {"thread": thread_id, "index": i})
 
             threads = []
             for t in range(num_threads):

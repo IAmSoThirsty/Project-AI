@@ -40,9 +40,7 @@ class IncrementalUpdateManager:
         self.update_log = deque(maxlen=1000)  # Keep last 1000 updates
         self.lock = threading.Lock()
 
-    def update_country_data(
-        self, country: str, domain: str, year: int, value: float
-    ) -> bool:
+    def update_country_data(self, country: str, domain: str, year: int, value: float) -> bool:
         """
         Update data for a specific country/domain/year.
 
@@ -160,9 +158,7 @@ class RealTimeAlertSystem:
         Args:
             alert: CrisisAlert instance
         """
-        self.alert_queue.append(
-            {"timestamp": datetime.now(UTC).isoformat(), "alert": alert}
-        )
+        self.alert_queue.append({"timestamp": datetime.now(UTC).isoformat(), "alert": alert})
 
         for subscriber in self.subscribers:
             try:
@@ -174,14 +170,10 @@ class RealTimeAlertSystem:
         """Check for new alerts based on current data."""
         try:
             # Re-run scenario simulation
-            scenarios = self.engine.simulate_scenarios(
-                projection_years=5, num_simulations=500
-            )
+            scenarios = self.engine.simulate_scenarios(projection_years=5, num_simulations=500)
 
             # Generate alerts
-            alerts = self.engine.generate_alerts(
-                scenarios, threshold=self.alert_threshold
-            )
+            alerts = self.engine.generate_alerts(scenarios, threshold=self.alert_threshold)
 
             # Emit new alerts
             for alert in alerts:
@@ -303,9 +295,7 @@ class WebhookNotifier:
                     }
                 )
 
-                logger.info(
-                    "Webhook notification sent to %s: %s", url, response.status_code
-                )
+                logger.info("Webhook notification sent to %s: %s", url, response.status_code)
 
             except Exception as e:
                 self.notification_log.append(
@@ -349,17 +339,9 @@ class MonitoringDashboard:
             metrics = {
                 "timestamp": datetime.now(UTC).isoformat(),
                 "data_points": sum(
-                    sum(len(years) for years in data.values())
-                    for data in self.engine.historical_data.values()
+                    sum(len(years) for years in data.values()) for data in self.engine.historical_data.values()
                 ),
-                "countries": len(
-                    set().union(
-                        *[
-                            set(data.keys())
-                            for data in self.engine.historical_data.values()
-                        ]
-                    )
-                ),
+                "countries": len(set().union(*[set(data.keys()) for data in self.engine.historical_data.values()])),
                 "domains": len(self.engine.historical_data),
                 "threshold_events": len(self.engine.threshold_events),
                 "scenarios": len(self.engine.scenarios),
@@ -383,9 +365,7 @@ class MonitoringDashboard:
         if not self.engine.scenarios:
             return []
 
-        top_scenarios = sorted(
-            self.engine.scenarios, key=lambda s: s.likelihood, reverse=True
-        )[:limit]
+        top_scenarios = sorted(self.engine.scenarios, key=lambda s: s.likelihood, reverse=True)[:limit]
 
         return [
             {
@@ -409,11 +389,7 @@ class MonitoringDashboard:
         """
         cutoff = datetime.now(UTC).timestamp() - (minutes * 60)
 
-        return [
-            m
-            for m in self.metrics_history
-            if datetime.fromisoformat(m["timestamp"]).timestamp() > cutoff
-        ]
+        return [m for m in self.metrics_history if datetime.fromisoformat(m["timestamp"]).timestamp() > cutoff]
 
     def export_dashboard_state(self, filepath: str) -> bool:
         """

@@ -63,9 +63,7 @@ class PerceptionWarfareModule:
         Returns:
             Campaign ID
         """
-        campaign_id = (
-            f"campaign_{len(self.active_campaigns) + len(self.completed_campaigns) + 1}"
-        )
+        campaign_id = f"campaign_{len(self.active_campaigns) + len(self.completed_campaigns) + 1}"
 
         campaign = {
             "campaign_id": campaign_id,
@@ -105,9 +103,7 @@ class PerceptionWarfareModule:
 
             # Gradually increase reach
             reach_increment = campaign["target_reach"] / campaign["duration"]
-            campaign["current_reach"] = min(
-                campaign["target_reach"], campaign["current_reach"] + reach_increment
-            )
+            campaign["current_reach"] = min(campaign["target_reach"], campaign["current_reach"] + reach_increment)
 
             # Generate manipulation event
             from ..schemas.event_schema import EventType
@@ -170,13 +166,9 @@ class PerceptionWarfareModule:
         elif state.epistemic_confidence.value > 0.5:
             self.reality_fragments = 2
         elif state.epistemic_confidence.value > 0.3:
-            self.reality_fragments = 3 + int(
-                (0.5 - state.epistemic_confidence.value) * 10
-            )
+            self.reality_fragments = 3 + int((0.5 - state.epistemic_confidence.value) * 10)
         else:
-            self.reality_fragments = 5 + int(
-                (0.3 - state.epistemic_confidence.value) * 20
-            )
+            self.reality_fragments = 5 + int((0.3 - state.epistemic_confidence.value) * 20)
 
         # Manipulation campaigns increase fragmentation
         active_campaigns_factor = len(self.active_campaigns)
@@ -227,9 +219,9 @@ class PerceptionWarfareModule:
 
         # Active campaigns increase noise
         if self.active_campaigns:
-            campaign_noise = sum(
-                c["sophistication"] * c["current_reach"] for c in self.active_campaigns
-            ) / len(self.active_campaigns)
+            campaign_noise = sum(c["sophistication"] * c["current_reach"] for c in self.active_campaigns) / len(
+                self.active_campaigns
+            )
             self.noise_level = min(1.0, self.noise_level + campaign_noise * 0.3)
             self.information_quality = 1.0 - self.noise_level
 
@@ -294,16 +286,10 @@ class PerceptionWarfareModule:
 
         if not epistemic_collapse:
             # More campaigns likely when trust/legitimacy low
-            campaign_prob = (
-                0.1
-                + (1.0 - state.trust.value) * 0.2
-                + (1.0 - state.legitimacy.value) * 0.15
-            )
+            campaign_prob = 0.1 + (1.0 - state.trust.value) * 0.2 + (1.0 - state.legitimacy.value) * 0.15
 
             if random.random() < campaign_prob:
-                campaign_type = random.choice(
-                    ["misinformation", "disinformation", "gaslighting"]
-                )
+                campaign_type = random.choice(["misinformation", "disinformation", "gaslighting"])
                 target_reach = random.uniform(0.3, 0.8)
                 sophistication = random.uniform(0.4, 0.9)
                 duration = random.randint(5, 15)

@@ -436,9 +436,7 @@ class GovernanceGraph:
         with self._lock:
             return [rel.to_dict() for rel in self._relationships.values()]
 
-    def get_relationship(
-        self, from_domain: str, to_domain: str
-    ) -> AuthorityRelationship | None:
+    def get_relationship(self, from_domain: str, to_domain: str) -> AuthorityRelationship | None:
         """
         Get a specific relationship.
 

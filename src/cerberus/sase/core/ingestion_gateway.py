@@ -288,9 +288,7 @@ class TelemetryGateway:
     def _enrich_geoip(self, ip: str) -> GeoLocation:
         """Enrich with GeoIP data"""
         # TODO: Implement real GeoIP lookup
-        return GeoLocation(
-            country="US", city="San Francisco", lat=37.7749, lon=-122.4194, region="CA"
-        )
+        return GeoLocation(country="US", city="San Francisco", lat=37.7749, lon=-122.4194, region="CA")
 
     def _correlate_token(self, artifact_id: str) -> str:
         """Correlate artifact to campaign"""

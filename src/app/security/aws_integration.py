@@ -56,9 +56,7 @@ class AWSSecurityManager:
             )
 
         except NoCredentialsError:
-            logger.error(
-                "No AWS credentials found - must use IAM role or temp credentials"
-            )
+            logger.error("No AWS credentials found - must use IAM role or temp credentials")
             raise
         except (BotoCoreError, ClientError) as e:
             logger.error("Failed to initialize AWS session: %s", e)
@@ -106,23 +104,17 @@ class AWSSecurityManager:
 
             # Try to create or update
             try:
-                client.create_secret(
-                    Name=secret_name, SecretString=json.dumps(secret_data)
-                )
+                client.create_secret(Name=secret_name, SecretString=json.dumps(secret_data))
                 logger.info("Created secret: %s", secret_name)
             except client.exceptions.ResourceExistsException:
-                client.update_secret(
-                    SecretId=secret_name, SecretString=json.dumps(secret_data)
-                )
+                client.update_secret(SecretId=secret_name, SecretString=json.dumps(secret_data))
                 logger.info("Updated secret: %s", secret_name)
 
         except ClientError as e:
             logger.error("Failed to store secret %s: %s", secret_name, e)
             raise
 
-    def upload_to_s3(
-        self, bucket: str, key: str, data: bytes, encryption: str = "AES256"
-    ) -> None:
+    def upload_to_s3(self, bucket: str, key: str, data: bytes, encryption: str = "AES256") -> None:
         """Upload data to S3 with encryption.
 
         Args:
@@ -220,9 +212,7 @@ class AWSSecurityManager:
                     policy_version = iam.get_policy(PolicyArn=policy_arn)
                     version_id = policy_version["Policy"]["DefaultVersionId"]
 
-                    policy_doc = iam.get_policy_version(
-                        PolicyArn=policy_arn, VersionId=version_id
-                    )
+                    policy_doc = iam.get_policy_version(PolicyArn=policy_arn, VersionId=version_id)
 
                     audit_result["permissions"].append(
                         {
@@ -302,9 +292,7 @@ class AWSSecurityManager:
             logger.error("Failed to enable versioning: %s", e)
             raise
 
-    def get_temporary_credentials(
-        self, role_arn: str, session_name: str, duration: int = 3600
-    ) -> dict[str, str]:
+    def get_temporary_credentials(self, role_arn: str, session_name: str, duration: int = 3600) -> dict[str, str]:
         """Get temporary credentials via STS AssumeRole.
 
         Args:

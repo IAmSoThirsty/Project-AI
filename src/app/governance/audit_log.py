@@ -46,9 +46,7 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_AUDIT_LOG = (
-    Path(__file__).parent.parent.parent.parent / "governance" / "audit_log.yaml"
-)
+DEFAULT_AUDIT_LOG = Path(__file__).parent.parent.parent.parent / "governance" / "audit_log.yaml"
 
 # Configuration constants
 MAX_LOG_SIZE_MB = 100  # Rotate after 100MB
@@ -289,9 +287,7 @@ class AuditLog:
         except Exception as e:
             return False, f"Verification failed with error: {e}"
 
-    def get_events(
-        self, event_type: str | None = None, limit: int | None = None
-    ) -> list[dict[str, Any]]:
+    def get_events(self, event_type: str | None = None, limit: int | None = None) -> list[dict[str, Any]]:
         """Retrieve audit events from the log.
 
         Args:
@@ -468,18 +464,10 @@ class AuditLog:
             events = [e for e in events if e.get("severity") == severity]
 
         if start_time:
-            events = [
-                e
-                for e in events
-                if datetime.fromisoformat(e.get("timestamp", "")) >= start_time
-            ]
+            events = [e for e in events if datetime.fromisoformat(e.get("timestamp", "")) >= start_time]
 
         if end_time:
-            events = [
-                e
-                for e in events
-                if datetime.fromisoformat(e.get("timestamp", "")) <= end_time
-            ]
+            events = [e for e in events if datetime.fromisoformat(e.get("timestamp", "")) <= end_time]
 
         # Apply limit (most recent first)
         if limit and len(events) > limit:
@@ -581,11 +569,7 @@ class AuditLog:
             severities[severity] = severities.get(severity, 0) + 1
 
         # Time range
-        timestamps = [
-            datetime.fromisoformat(e.get("timestamp", ""))
-            for e in events
-            if "timestamp" in e
-        ]
+        timestamps = [datetime.fromisoformat(e.get("timestamp", "")) for e in events if "timestamp" in e]
         first_event = min(timestamps) if timestamps else None
         last_event = max(timestamps) if timestamps else None
 
@@ -646,9 +630,7 @@ class AuditLog:
             "critical_events": critical_events,
             "error_events": error_events,
             "warning_events": warning_events,
-            "compliance_status": (
-                "PASS" if is_valid and critical_events == 0 else "FAIL"
-            ),
+            "compliance_status": ("PASS" if is_valid and critical_events == 0 else "FAIL"),
             "event_summary": self.get_statistics(),
         }
 

@@ -263,9 +263,7 @@ class SafetyGuardAgent(KernelRoutedAgent):
                     "harmful_content": harmful_result,
                     "unsafe_instructions": unsafe_instruction_result,
                 },
-                "recommendation": (
-                    "Block response" if not is_safe else "Allow response"
-                ),
+                "recommendation": ("Block response" if not is_safe else "Allow response"),
             }
 
         except Exception as e:
@@ -287,16 +285,8 @@ class SafetyGuardAgent(KernelRoutedAgent):
             "total_checks": self.total_checks,
             "violations_detected": self.violations_detected,
             "jailbreaks_blocked": self.jailbreaks_blocked,
-            "violation_rate": (
-                self.violations_detected / self.total_checks
-                if self.total_checks > 0
-                else 0
-            ),
-            "jailbreak_rate": (
-                self.jailbreaks_blocked / self.total_checks
-                if self.total_checks > 0
-                else 0
-            ),
+            "violation_rate": (self.violations_detected / self.total_checks if self.total_checks > 0 else 0),
+            "jailbreak_rate": (self.jailbreaks_blocked / self.total_checks if self.total_checks > 0 else 0),
             "model": self.model_name,
             "strict_mode": self.strict_mode,
         }
@@ -369,9 +359,7 @@ class SafetyGuardAgent(KernelRoutedAgent):
 
         return {}
 
-    def _save_pattern_database(
-        self, pattern_type: str, patterns: dict[str, list[str]]
-    ) -> None:
+    def _save_pattern_database(self, pattern_type: str, patterns: dict[str, list[str]]) -> None:
         """Save pattern database to storage.
 
         Args:

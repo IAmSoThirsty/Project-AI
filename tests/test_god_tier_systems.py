@@ -164,9 +164,7 @@ class TestPolyglotExecutionEngine(unittest.TestCase):
         """Test cache key generation"""
         from app.core.polyglot_execution import ExecutionRequest
 
-        request = ExecutionRequest(
-            request_id="test123", prompt="Hello world", max_tokens=100
-        )
+        request = ExecutionRequest(request_id="test123", prompt="Hello world", max_tokens=100)
 
         cache_key = self.engine._generate_cache_key(request)
         self.assertIsNotNone(cache_key)
@@ -322,9 +320,7 @@ class TestSensorFusionEngine(unittest.TestCase):
         )
 
         # Ingest data
-        success = self.engine.ingest_sensor_data(
-            sensor_id="sensor_002", data={"position": [1.0, 2.0, 3.0]}
-        )
+        success = self.engine.ingest_sensor_data(sensor_id="sensor_002", data={"position": [1.0, 2.0, 3.0]})
 
         self.assertTrue(success)
         self.assertGreater(self.engine.metrics["sensor_readings_processed"], 0)

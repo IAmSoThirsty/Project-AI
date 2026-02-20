@@ -152,9 +152,7 @@ class TestResonantSparseGeometryNetwork:
     @pytest.fixture
     def resonance_params(self):
         """Create test resonance parameters."""
-        return ResonanceParameters(
-            frequency=40.0, modulation_depth=0.1, phase_coherence_threshold=0.5
-        )
+        return ResonanceParameters(frequency=40.0, modulation_depth=0.1, phase_coherence_threshold=0.5)
 
     @pytest.fixture
     def rsgn(self, topology, learning_params, inhibition_params, resonance_params):
@@ -213,12 +211,8 @@ class TestResonantSparseGeometryNetwork:
 
         # Apply multiple Hebbian updates to create noticeable difference
         for _ in range(10):
-            pre = np.random.randn(batch_size, rsgn.topology.layer_sizes[0]).astype(
-                np.float32
-            )
-            post = np.random.randn(batch_size, rsgn.topology.layer_sizes[1]).astype(
-                np.float32
-            )
+            pre = np.random.randn(batch_size, rsgn.topology.layer_sizes[0]).astype(np.float32)
+            post = np.random.randn(batch_size, rsgn.topology.layer_sizes[1]).astype(np.float32)
             rsgn.update_weights_hebbian(0, pre, post)
 
         # Now they should be different

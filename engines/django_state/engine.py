@@ -20,9 +20,7 @@ from .modules import (
 from .schemas import EngineConfig, Event, StateVector
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -156,17 +154,11 @@ class DjangoStateEngine:
 
         # Apply module dynamics
         human_results = self.human_forces.apply_cooperation_dynamics(self.state)
-        institutional_results = (
-            self.institutional_pressure.apply_institutional_dynamics(self.state)
-        )
-        perception_results = self.perception_warfare.apply_perception_warfare_dynamics(
-            self.state
-        )
+        institutional_results = self.institutional_pressure.apply_institutional_dynamics(self.state)
+        perception_results = self.perception_warfare.apply_perception_warfare_dynamics(self.state)
 
         # Check collapse conditions
-        collapsed, collapse_reason = self.state.check_collapse_conditions(
-            self.config.thresholds.to_dict()["collapse"]
-        )
+        collapsed, collapse_reason = self.state.check_collapse_conditions(self.config.thresholds.to_dict()["collapse"])
 
         if collapsed and not self.state.in_collapse:
             self.state.in_collapse = True
@@ -297,15 +289,11 @@ class DjangoStateEngine:
 
         if event.event_type == EventType.BETRAYAL:
             betrayal_event = BetrayalEvent(**event.__dict__)
-            changes = self.laws.apply_betrayal_impact(
-                self.state, betrayal_event.severity
-            )
+            changes = self.laws.apply_betrayal_impact(self.state, betrayal_event.severity)
 
         elif event.event_type == EventType.COOPERATION:
             cooperation_event = CooperationEvent(**event.__dict__)
-            change = self.laws.apply_cooperation_boost(
-                self.state, cooperation_event.magnitude
-            )
+            change = self.laws.apply_cooperation_boost(self.state, cooperation_event.magnitude)
             changes = {"kindness_boost": change}
 
         elif event.event_type == EventType.INSTITUTIONAL_FAILURE:
@@ -432,11 +420,7 @@ class DjangoStateEngine:
             "metrics_history": self.metrics.export_metrics(),
             "collapse_events": self.collapse_scheduler.export_collapses(),
             "causal_chain": self.clock.export_causal_chain(),
-            "outcome_report": (
-                self.outcomes.generate_outcome_report(self.state)
-                if self.state
-                else None
-            ),
+            "outcome_report": (self.outcomes.generate_outcome_report(self.state) if self.state else None),
             "module_summaries": {
                 "human_forces": self.human_forces.get_summary(),
                 "institutional_pressure": self.institutional_pressure.get_summary(),
@@ -465,9 +449,7 @@ class DjangoStateEngine:
         # Collapse conditions
         if self.state.in_collapse:
             # Give some time in collapse state before terminating
-            ticks_in_collapse = self.state.tick_count - (
-                self.state.collapse_triggered_at / self.config.time_step
-            )
+            ticks_in_collapse = self.state.tick_count - (self.state.collapse_triggered_at / self.config.time_step)
             if ticks_in_collapse > 50:  # Allow 50 ticks of collapse observation
                 logger.info("Extended collapse state - terminating")
                 return True
@@ -484,10 +466,7 @@ class DjangoStateEngine:
             crossed_count += 1
         if self.state.legitimacy.value < thresholds_dict["legitimacy_failure"]:
             crossed_count += 1
-        if (
-            self.state.epistemic_confidence.value
-            < thresholds_dict["epistemic_collapse"]
-        ):
+        if self.state.epistemic_confidence.value < thresholds_dict["epistemic_collapse"]:
             crossed_count += 1
 
         if crossed_count >= 4:  # 4 out of 5 critical thresholds

@@ -35,9 +35,7 @@ class TestLoadTesting:
         start_time = time.time()
 
         for i in range(1000):
-            task_id = stack.task_queue.enqueue(
-                f"wf_{i}", "processing", {"index": i}, TaskQueuePriority.NORMAL
-            )
+            task_id = stack.task_queue.enqueue(f"wf_{i}", "processing", {"index": i}, TaskQueuePriority.NORMAL)
             task_ids.append(task_id)
 
         elapsed = time.time() - start_time
@@ -63,10 +61,7 @@ class TestLoadTesting:
 
         # Execute concurrently
         with ThreadPoolExecutor(max_workers=20) as executor:
-            futures = [
-                executor.submit(stack.vm.execute_workflow, f"wf_{i}", {"id": i})
-                for i in range(100)
-            ]
+            futures = [executor.submit(stack.vm.execute_workflow, f"wf_{i}", {"id": i}) for i in range(100)]
 
             results = [f.result() for f in as_completed(futures)]
 
@@ -82,9 +77,7 @@ class TestLoadTesting:
             stack.multi_tenant.create_namespace(
                 f"tenant_{i}",
                 f"Tenant {i}",
-                ResourceQuota(
-                    max_workflows=10, max_concurrent_executions=5, max_queue_depth=100
-                ),
+                ResourceQuota(max_workflows=10, max_concurrent_executions=5, max_queue_depth=100),
             )
 
         # Each tenant consumes quota concurrently
@@ -110,9 +103,7 @@ class TestLoadTesting:
         stack = ExtendedTarlStackBox(config={})
 
         # Register capability
-        cap = Capability(
-            name="Test.Action", resource="test", constraints={"level": "high"}
-        )
+        cap = Capability(name="Test.Action", resource="test", constraints={"level": "high"})
         stack.capabilities.register_capability(cap)
 
         # Check capability 10,000 times
@@ -120,9 +111,7 @@ class TestLoadTesting:
         success_count = 0
 
         for _ in range(10000):
-            allowed, _ = stack.capabilities.check_capability(
-                "Test.Action", {"level": "high"}
-            )
+            allowed, _ = stack.capabilities.check_capability("Test.Action", {"level": "high"})
             if allowed:
                 success_count += 1
 
@@ -152,10 +141,7 @@ class TestLoadTesting:
         activity = FastActivity("fast_activity", "test", {})
 
         # Execute 500 activities concurrently
-        tasks = [
-            executor.execute_activity(activity, idempotency_token=f"token_{i}")
-            for i in range(500)
-        ]
+        tasks = [executor.execute_activity(activity, idempotency_token=f"token_{i}") for i in range(500)]
 
         start_time = time.time()
         results = await asyncio.gather(*tasks)
@@ -177,18 +163,14 @@ class TestChaosTesting:
         # Enqueue 100 tasks
         task_ids = []
         for i in range(100):
-            task_id = stack.task_queue.enqueue(
-                f"wf_{i}", "processing", {"index": i}, TaskQueuePriority.NORMAL
-            )
+            task_id = stack.task_queue.enqueue(f"wf_{i}", "processing", {"index": i}, TaskQueuePriority.NORMAL)
             task_ids.append(task_id)
 
         # Randomly fail 30% of tasks
         failed_count = 0
         for task_id in random.sample(task_ids, 30):
             try:
-                stack.task_queue.fail_task(
-                    f"worker_{random.randint(0, 3)}", task_id, "Random chaos failure"
-                )
+                stack.task_queue.fail_task(f"worker_{random.randint(0, 3)}", task_id, "Random chaos failure")
                 failed_count += 1
             except Exception:
                 pass
@@ -212,9 +194,7 @@ class TestChaosTesting:
         def try_consume():
             for _ in range(10):
                 try:
-                    stack.multi_tenant.consume_quota(
-                        "chaos_tenant", "workflows", amount=1
-                    )
+                    stack.multi_tenant.consume_quota("chaos_tenant", "workflows", amount=1)
                 except Exception:
                     pass
 
@@ -233,9 +213,7 @@ class TestChaosTesting:
         # Schedule 50 timers
         timer_ids = []
         for i in range(50):
-            timer_id = stack.long_running.schedule_timer(
-                f"wf_{i}", delay=60, callback=lambda: None  # Long delay
-            )
+            timer_id = stack.long_running.schedule_timer(f"wf_{i}", delay=60, callback=lambda: None)  # Long delay
             timer_ids.append(timer_id)
 
         # Randomly cancel 50% of timers
@@ -255,9 +233,7 @@ class TestChaosTesting:
         # Acquire leases with very short duration
         lease_holders = []
         for i in range(20):
-            acquired = stack.long_running.acquire_lease(
-                f"wf_{i}", f"executor_{i}", duration=0.1  # Very short lease
-            )
+            acquired = stack.long_running.acquire_lease(f"wf_{i}", f"executor_{i}", duration=0.1)  # Very short lease
             if acquired:
                 lease_holders.append((f"wf_{i}", f"executor_{i}"))
 
@@ -267,9 +243,7 @@ class TestChaosTesting:
         # Try to acquire same leases again (should succeed as they expired)
         reacquire_count = 0
         for wf_id, _ in lease_holders:
-            acquired = stack.long_running.acquire_lease(
-                wf_id, "new_executor", duration=10
-            )
+            acquired = stack.long_running.acquire_lease(wf_id, "new_executor", duration=10)
             if acquired:
                 reacquire_count += 1
 
@@ -331,13 +305,9 @@ class TestSoakTesting:
             # Simulate processing
             for task_id in task_ids:
                 try:
-                    task = stack.task_queue.lease_task(
-                        f"worker_{random.randint(0, 3)}", lease_duration=30
-                    )
+                    task = stack.task_queue.lease_task(f"worker_{random.randint(0, 3)}", lease_duration=30)
                     if task:
-                        stack.task_queue.complete_task(
-                            task["leased_by"], task["id"], {"result": "completed"}
-                        )
+                        stack.task_queue.complete_task(task["leased_by"], task["id"], {"result": "completed"})
                 except Exception:
                     pass
 
@@ -352,9 +322,7 @@ class TestSoakTesting:
         stack = ExtendedTarlStackBox(config={})
 
         # Acquire lease
-        acquired = stack.long_running.acquire_lease(
-            "soak_wf", "soak_executor", duration=60
-        )
+        acquired = stack.long_running.acquire_lease("soak_wf", "soak_executor", duration=60)
         assert acquired
 
         # Send heartbeats for 5 seconds
@@ -374,9 +342,7 @@ class TestSoakTesting:
         """Test quota consume/release cycling over time"""
         stack = ExtendedTarlStackBox(config={})
 
-        stack.multi_tenant.create_namespace(
-            "soak_tenant", "Soak Test", ResourceQuota(max_workflows=10)
-        )
+        stack.multi_tenant.create_namespace("soak_tenant", "Soak Test", ResourceQuota(max_workflows=10))
 
         # Cycle quota usage for 5 seconds
         end_time = time.time() + 5
@@ -386,18 +352,14 @@ class TestSoakTesting:
             # Consume
             for _ in range(5):
                 try:
-                    stack.multi_tenant.consume_quota(
-                        "soak_tenant", "workflows", amount=1
-                    )
+                    stack.multi_tenant.consume_quota("soak_tenant", "workflows", amount=1)
                 except Exception:
                     pass
 
             # Release
             for _ in range(5):
                 try:
-                    stack.multi_tenant.release_quota(
-                        "soak_tenant", "workflows", amount=1
-                    )
+                    stack.multi_tenant.release_quota("soak_tenant", "workflows", amount=1)
                 except Exception:
                     pass
 
@@ -455,13 +417,9 @@ class TestPerformanceDegradation:
             # Complete tasks
             for task_id in task_ids:
                 try:
-                    task = stack.task_queue.lease_task(
-                        f"worker_{random.randint(0, 1)}", lease_duration=30
-                    )
+                    task = stack.task_queue.lease_task(f"worker_{random.randint(0, 1)}", lease_duration=30)
                     if task:
-                        stack.task_queue.complete_task(
-                            task["leased_by"], task["id"], {"result": "done"}
-                        )
+                        stack.task_queue.complete_task(task["leased_by"], task["id"], {"result": "done"})
                 except Exception:
                     pass
 
@@ -498,12 +456,8 @@ class TestPerformanceDegradation:
 def pytest_configure(config):
     """Configure pytest markers for load testing"""
     config.addinivalue_line("markers", "load: mark test as load test (may be slow)")
-    config.addinivalue_line(
-        "markers", "chaos: mark test as chaos test (may be unstable)"
-    )
-    config.addinivalue_line(
-        "markers", "soak: mark test as soak test (runs for extended period)"
-    )
+    config.addinivalue_line("markers", "chaos: mark test as chaos test (may be unstable)")
+    config.addinivalue_line("markers", "soak: mark test as soak test (runs for extended period)")
 
 
 # Mark all tests appropriately

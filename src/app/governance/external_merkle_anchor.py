@@ -45,9 +45,7 @@ from typing import Any, Literal
 logger = logging.getLogger(__name__)
 
 # Default paths
-DEFAULT_ANCHOR_DIR = (
-    Path(__file__).parent.parent.parent.parent / "data" / "external_merkle_anchors"
-)
+DEFAULT_ANCHOR_DIR = Path(__file__).parent.parent.parent.parent / "data" / "external_merkle_anchors"
 
 # Backend types
 AnchorBackend = Literal["filesystem", "ipfs", "s3", "blockchain"]
@@ -102,9 +100,7 @@ class ExternalMerkleAnchor:
             s3_retention_days: S3 object lock retention period (days)
         """
         self.backends = backends or ["filesystem"]
-        self.filesystem_dir = (
-            Path(filesystem_dir) if filesystem_dir else DEFAULT_ANCHOR_DIR
-        )
+        self.filesystem_dir = Path(filesystem_dir) if filesystem_dir else DEFAULT_ANCHOR_DIR
         self.ipfs_api_url = ipfs_api_url or "http://127.0.0.1:5001"
         self.s3_bucket = s3_bucket
         self.s3_region = s3_region
@@ -120,15 +116,11 @@ class ExternalMerkleAnchor:
         valid_backends: set[AnchorBackend] = {"filesystem", "ipfs", "s3", "blockchain"}
         for backend in self.backends:
             if backend not in valid_backends:
-                raise ValueError(
-                    f"Invalid backend: {backend}. Must be one of {valid_backends}"
-                )
+                raise ValueError(f"Invalid backend: {backend}. Must be one of {valid_backends}")
 
             # Check availability
             if backend == "ipfs" and not IPFS_AVAILABLE:
-                raise ValueError(
-                    "IPFS backend requested but ipfshttpclient not installed"
-                )
+                raise ValueError("IPFS backend requested but ipfshttpclient not installed")
             if backend == "s3" and not S3_AVAILABLE:
                 raise ValueError("S3 backend requested but boto3 not installed")
 
@@ -218,17 +210,13 @@ class ExternalMerkleAnchor:
         for backend in self.backends:
             try:
                 if backend == "filesystem":
-                    anchor_record = self._verify_from_filesystem(
-                        merkle_root, genesis_id
-                    )
+                    anchor_record = self._verify_from_filesystem(merkle_root, genesis_id)
                 elif backend == "ipfs":
                     anchor_record = self._verify_from_ipfs(merkle_root, genesis_id)
                 elif backend == "s3":
                     anchor_record = self._verify_from_s3(merkle_root, genesis_id)
                 elif backend == "blockchain":
-                    anchor_record = self._verify_from_blockchain(
-                        merkle_root, genesis_id
-                    )
+                    anchor_record = self._verify_from_blockchain(merkle_root, genesis_id)
                 else:
                     continue
 
@@ -285,10 +273,7 @@ class ExternalMerkleAnchor:
                 with open(anchor_file) as f:
                     anchor_record = json.load(f)
 
-                if (
-                    anchor_record.get("merkle_root") == merkle_root
-                    and anchor_record.get("genesis_id") == genesis_id
-                ):
+                if anchor_record.get("merkle_root") == merkle_root and anchor_record.get("genesis_id") == genesis_id:
                     return anchor_record
             except Exception as e:
                 logger.error("Error reading %s: %s", anchor_file, e)
@@ -476,8 +461,7 @@ class ExternalMerkleAnchor:
             error_code = e.response["Error"]["Code"]
             if error_code == "ObjectLockConfigurationNotFoundError":
                 logger.error(
-                    "S3 bucket %s does not have object lock enabled. "
-                    "Enable object lock for WORM protection.",
+                    "S3 bucket %s does not have object lock enabled. " "Enable object lock for WORM protection.",
                     self.s3_bucket,
                 )
             raise RuntimeError(f"S3 pinning error: {e}")
@@ -604,9 +588,7 @@ class ExternalMerkleAnchor:
             "backends": self.backends,
             "total_anchors": len(self.list_anchors()),
             "backend_configs": {
-                "filesystem": (
-                    str(self.filesystem_dir) if "filesystem" in self.backends else None
-                ),
+                "filesystem": (str(self.filesystem_dir) if "filesystem" in self.backends else None),
                 "ipfs": self.ipfs_api_url if "ipfs" in self.backends else None,
                 "s3": self.s3_bucket if "s3" in self.backends else None,
             },

@@ -110,9 +110,7 @@ class BackpressureConfig:
 
     strategy: str = BackpressureStrategy.DROP_OLDEST.value
     max_queue_size: int = 10000  # Maximum events per topic before backpressure
-    disk_spill_path: str | None = (
-        None  # Path for disk spill (if strategy is SPILL_TO_DISK)
-    )
+    disk_spill_path: str | None = None  # Path for disk spill (if strategy is SPILL_TO_DISK)
     block_timeout_ms: int = 5000  # Timeout for BLOCK_PRODUCER strategy
     enable_metrics: bool = True  # Track backpressure metrics
 
@@ -138,9 +136,7 @@ class EventStreamBackend(ABC):
         """Unsubscribe from topics."""
 
     @abstractmethod
-    def get_events(
-        self, topic: str, offset: int = 0, limit: int = 100
-    ) -> list[StreamEvent]:
+    def get_events(self, topic: str, offset: int = 0, limit: int = 100) -> list[StreamEvent]:
         """Get events from topic starting at offset."""
 
     @abstractmethod
@@ -236,9 +232,7 @@ class InMemoryStreamBackend(EventStreamBackend):
         elif strategy == BackpressureStrategy.REJECT_NEW.value:
             # Reject new event
             self.backpressure_metrics["events_rejected"] += 1
-            logger.warning(
-                "Backpressure: Rejecting event %s for topic %s", event.event_id, topic
-            )
+            logger.warning("Backpressure: Rejecting event %s for topic %s", event.event_id, topic)
             return False
 
         return False
@@ -293,9 +287,7 @@ class InMemoryStreamBackend(EventStreamBackend):
         callback: Callable[[StreamEvent], None],
     ):
         """Consumer thread loop."""
-        while self.running and self.subscriptions.get(subscription_id, {}).get(
-            "active"
-        ):
+        while self.running and self.subscriptions.get(subscription_id, {}).get("active"):
             try:
                 with self.lock:
                     for topic in topics:
@@ -307,9 +299,7 @@ class InMemoryStreamBackend(EventStreamBackend):
                                 callback(event)
                                 self.offsets[topic][consumer_group] = event.offset + 1
                             except Exception as e:
-                                logger.error(
-                                    "Error processing event %s: %s", event.event_id, e
-                                )
+                                logger.error("Error processing event %s: %s", event.event_id, e)
             except Exception as e:
                 logger.error("Error in consumer loop for %s: %s", subscription_id, e)
 
@@ -329,9 +319,7 @@ class InMemoryStreamBackend(EventStreamBackend):
             logger.error("Failed to unsubscribe %s: %s", subscription_id, e)
             return False
 
-    def get_events(
-        self, topic: str, offset: int = 0, limit: int = 100
-    ) -> list[StreamEvent]:
+    def get_events(self, topic: str, offset: int = 0, limit: int = 100) -> list[StreamEvent]:
         """Get events from topic starting at offset."""
         try:
             with self.lock:
@@ -348,9 +336,7 @@ class InMemoryStreamBackend(EventStreamBackend):
                 self.offsets[topic][consumer_group] = offset
                 return True
         except Exception as e:
-            logger.error(
-                "Failed to commit offset for %s/%s: %s", topic, consumer_group, e
-            )
+            logger.error("Failed to commit offset for %s/%s: %s", topic, consumer_group, e)
             return False
 
     def close(self) -> None:
@@ -384,9 +370,7 @@ class EventSourceStore:
             logger.error("Failed to append event to aggregate %s: %s", aggregate_id, e)
             return False
 
-    def get_aggregate_events(
-        self, aggregate_id: str, from_version: int = 0
-    ) -> list[StreamEvent]:
+    def get_aggregate_events(self, aggregate_id: str, from_version: int = 0) -> list[StreamEvent]:
         """Get all events for an aggregate from specified version."""
         try:
             with self.lock:
@@ -489,9 +473,7 @@ class SensorMotorAggregator:
                 "sensor_count": len(self.sensor_data),
                 "motor_count": len(self.motor_commands),
                 "total_sensor_readings": sum(len(q) for q in self.sensor_data.values()),
-                "total_motor_commands": sum(
-                    len(q) for q in self.motor_commands.values()
-                ),
+                "total_motor_commands": sum(len(q) for q in self.motor_commands.values()),
                 "timestamp": datetime.now(UTC).isoformat(),
             }
 
@@ -541,9 +523,7 @@ class DistributedEventStreamingSystem:
             "errors": 0,
         }
         self.lock = threading.RLock()
-        logger.info(
-            "Initialized event streaming system with %s backend", backend_type.value
-        )
+        logger.info("Initialized event streaming system with %s backend", backend_type.value)
 
     def _create_backend(self) -> EventStreamBackend:
         """Create appropriate backend based on type."""
@@ -560,9 +540,7 @@ class DistributedEventStreamingSystem:
         else:
             return InMemoryStreamBackend()
 
-    def publish(
-        self, topic: str, event_type: EventType, data: dict[str, Any], source: str = ""
-    ) -> bool:
+    def publish(self, topic: str, event_type: EventType, data: dict[str, Any], source: str = "") -> bool:
         """Publish event to topic."""
         try:
             event = StreamEvent(
@@ -605,9 +583,7 @@ class DistributedEventStreamingSystem:
         """Unsubscribe from topics."""
         return self.backend.unsubscribe(subscription_id)
 
-    def get_events(
-        self, topic: str, offset: int = 0, limit: int = 100
-    ) -> list[StreamEvent]:
+    def get_events(self, topic: str, offset: int = 0, limit: int = 100) -> list[StreamEvent]:
         """Get events from topic."""
         return self.backend.get_events(topic, offset, limit)
 

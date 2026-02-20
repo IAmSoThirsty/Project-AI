@@ -66,9 +66,7 @@ class TestLocalFBOSystem:
     @pytest.fixture
     def fbo_system(self, temp_dir):
         """Create FBO system instance."""
-        return LocalFBOSystem(
-            data_dir=temp_dir, enable_rag=False, enable_reflection=True
-        )
+        return LocalFBOSystem(data_dir=temp_dir, enable_rag=False, enable_reflection=True)
 
     def test_initialization(self, fbo_system):
         """Test FBO system initialization."""
@@ -177,9 +175,7 @@ class TestLocalFBOSystem:
         """Test pattern analysis."""
         # Add various reflections
         for i in range(5):
-            fbo_system.add_reflection(
-                f"Learning {i}", category="learning", tags=["python"]
-            )
+            fbo_system.add_reflection(f"Learning {i}", category="learning", tags=["python"])
 
         patterns = fbo_system.reflect_on_patterns()
         assert isinstance(patterns, list)
@@ -195,9 +191,7 @@ class TestLocalFBOSystem:
     def test_query_offline_basic(self, fbo_system):
         """Test basic offline query without RAG."""
         # Add some knowledge
-        fbo_system.add_offline_knowledge(
-            "python", "A programming language", "languages"
-        )
+        fbo_system.add_offline_knowledge("python", "A programming language", "languages")
 
         result = fbo_system.query_offline("python")
 
@@ -292,18 +286,14 @@ class TestLocalFBOSystem:
     def test_multiple_reflections_same_category(self, fbo_system):
         """Test adding multiple reflections in same category."""
         for i in range(10):
-            fbo_system.add_reflection(
-                f"Learning {i}", category="learning", confidence=0.7 + i * 0.01
-            )
+            fbo_system.add_reflection(f"Learning {i}", category="learning", confidence=0.7 + i * 0.01)
 
         learning_reflections = fbo_system.search_reflections(category="learning")
         assert len(learning_reflections) == 10
 
     def test_reflection_tags(self, fbo_system):
         """Test reflection tagging system."""
-        fbo_system.add_reflection(
-            "Python is great", tags=["python", "programming", "learning"]
-        )
+        fbo_system.add_reflection("Python is great", tags=["python", "programming", "learning"])
         fbo_system.add_reflection("AI is fascinating", tags=["ai", "learning"])
 
         # Analyze patterns should detect common tags
@@ -393,9 +383,7 @@ class TestIntegration:
         fbo.add_offline_knowledge("ai", "Artificial Intelligence", "tech")
 
         # Add reflections
-        fbo.add_reflection(
-            "User prefers Python", category="preference", tags=["python"]
-        )
+        fbo.add_reflection("User prefers Python", category="preference", tags=["python"])
         fbo.add_reflection("Interest in AI topics", category="interest", tags=["ai"])
 
         # Query

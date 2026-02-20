@@ -176,9 +176,7 @@ class RisingWaveClient:
         """
 
         self.execute(query)
-        logger.info(
-            "Created CDC source: %s from %s:%s/%s", source_name, host, port, database
-        )
+        logger.info("Created CDC source: %s from %s:%s/%s", source_name, host, port, database)
 
     def create_materialized_view(self, view_name: str, query: str):
         """Create materialized view for real-time aggregations.
@@ -231,9 +229,7 @@ class RisingWaveClient:
         self.execute(query)
         logger.info("Created Kafka sink: %s", sink_name)
 
-    def query_stream(
-        self, table_or_view: str, where_clause: str = "", limit: int = 100
-    ) -> list[dict]:
+    def query_stream(self, table_or_view: str, where_clause: str = "", limit: int = 100) -> list[dict]:
         """Query streaming data.
 
         Args:
@@ -424,9 +420,7 @@ class ProjectAIEventStream:
             limit=limit,
         )
 
-    def get_security_alerts(
-        self, severity: str = "critical", limit: int = 50
-    ) -> list[dict]:
+    def get_security_alerts(self, severity: str = "critical", limit: int = 50) -> list[dict]:
         """Get recent security alerts.
 
         Args:
@@ -451,18 +445,14 @@ class ProjectAIEventStream:
         Returns:
             Ethics violation data
         """
-        return self.client.query_stream(
-            "four_laws_denial_rate", where_clause="denial_rate > 0", limit=limit
-        )
+        return self.client.query_stream("four_laws_denial_rate", where_clause="denial_rate > 0", limit=limit)
 
     def close(self):
         """Close streaming connection."""
         self.client.close()
 
 
-def create_risingwave_client(
-    host: str = "localhost", port: int = 4566, database: str = "dev"
-) -> RisingWaveClient:
+def create_risingwave_client(host: str = "localhost", port: int = 4566, database: str = "dev") -> RisingWaveClient:
     """Create RisingWave client for Project-AI.
 
     Args:

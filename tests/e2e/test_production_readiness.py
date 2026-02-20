@@ -68,13 +68,9 @@ class TestAPIGovernanceEndpoints:
                 "actor_type": "human",
                 "action_type": "read",
                 "resource": "/api/data",
-                "reasoning": "Retrieve user data"
+                "reasoning": "Retrieve user data",
             }
-            response = await client.post(
-                f"{api_base_url}/actions/submit",
-                json=action,
-                timeout=10.0
-            )
+            response = await client.post(f"{api_base_url}/actions/submit", json=action, timeout=10.0)
             # Accept either success or not found (route may not exist)
             assert response.status_code in [200, 201, 404]
 
@@ -82,10 +78,7 @@ class TestAPIGovernanceEndpoints:
     async def test_action_history(self, api_base_url):
         """Test retrieving action history"""
         async with httpx.AsyncClient() as client:
-            response = await client.get(
-                f"{api_base_url}/actions/history",
-                timeout=10.0
-            )
+            response = await client.get(f"{api_base_url}/actions/history", timeout=10.0)
             # Accept success or not found
             assert response.status_code in [200, 404]
 
@@ -102,10 +95,7 @@ class TestUserAuthentication:
         """Test complete user login flow"""
         async with httpx.AsyncClient() as client:
             # Try to access protected endpoint without auth
-            response = await client.get(
-                f"{api_base_url}/api/user/profile",
-                timeout=10.0
-            )
+            response = await client.get(f"{api_base_url}/api/user/profile", timeout=10.0)
             # Should be unauthorized or not found
             assert response.status_code in [401, 404]
 
@@ -122,17 +112,11 @@ class TestSystemIntegration:
         """Test handling concurrent requests"""
         async with httpx.AsyncClient() as client:
             # Send 10 concurrent health check requests
-            tasks = [
-                client.get(f"{api_base_url}/health/live", timeout=10.0)
-                for _ in range(10)
-            ]
+            tasks = [client.get(f"{api_base_url}/health/live", timeout=10.0) for _ in range(10)]
             responses = await asyncio.gather(*tasks, return_exceptions=True)
 
             # Check that most requests succeeded
-            successful = sum(
-                1 for r in responses
-                if not isinstance(r, Exception) and r.status_code == 200
-            )
+            successful = sum(1 for r in responses if not isinstance(r, Exception) and r.status_code == 200)
             assert successful >= 8  # At least 80% success rate
 
     @pytest.mark.asyncio
@@ -140,10 +124,7 @@ class TestSystemIntegration:
         """Test API response time is acceptable"""
         async with httpx.AsyncClient() as client:
             start = time.time()
-            response = await client.get(
-                f"{api_base_url}/health/live",
-                timeout=10.0
-            )
+            response = await client.get(f"{api_base_url}/health/live", timeout=10.0)
             elapsed = time.time() - start
 
             assert response.status_code == 200
@@ -169,10 +150,7 @@ class TestLoadTolerance:
 
             while time.time() - start < duration:
                 try:
-                    response = await client.get(
-                        f"{api_base_url}/health/live",
-                        timeout=5.0
-                    )
+                    response = await client.get(f"{api_base_url}/health/live", timeout=5.0)
                     if response.status_code == 200:
                         request_count += 1
                     else:
@@ -199,15 +177,8 @@ class TestDataPersistence:
         """Test save points are persisted correctly"""
         async with httpx.AsyncClient() as client:
             # Try to create a save point
-            save_point = {
-                "name": f"test_save_{int(time.time())}",
-                "description": "E2E test save point"
-            }
-            response = await client.post(
-                f"{api_base_url}/save-points",
-                json=save_point,
-                timeout=10.0
-            )
+            save_point = {"name": f"test_save_{int(time.time())}", "description": "E2E test save point"}
+            response = await client.post(f"{api_base_url}/save-points", json=save_point, timeout=10.0)
             # Accept success or not found (route may not exist)
             assert response.status_code in [200, 201, 404]
 
@@ -227,10 +198,7 @@ class TestSecurityControls:
             responses = []
             for _ in range(150):  # Exceed typical rate limit
                 try:
-                    response = await client.get(
-                        f"{api_base_url}/health/live",
-                        timeout=2.0
-                    )
+                    response = await client.get(f"{api_base_url}/health/live", timeout=2.0)
                     responses.append(response.status_code)
                 except Exception:
                     responses.append(0)
@@ -249,9 +217,7 @@ class TestSecurityControls:
         """Test CORS headers are present"""
         async with httpx.AsyncClient() as client:
             response = await client.options(
-                f"{api_base_url}/health/live",
-                headers={"Origin": "https://example.com"},
-                timeout=10.0
+                f"{api_base_url}/health/live", headers={"Origin": "https://example.com"}, timeout=10.0
             )
             # CORS preflight should work
             assert response.status_code in [200, 204]
@@ -269,10 +235,7 @@ class TestFailureRecovery:
         """Test system degrades gracefully when dependencies fail"""
         async with httpx.AsyncClient() as client:
             # Even if some dependencies are down, health endpoint should respond
-            response = await client.get(
-                f"{api_base_url}/health/live",
-                timeout=10.0
-            )
+            response = await client.get(f"{api_base_url}/health/live", timeout=10.0)
             assert response.status_code == 200
 
     @pytest.mark.asyncio
@@ -281,10 +244,7 @@ class TestFailureRecovery:
         async with httpx.AsyncClient() as client:
             # Test with very short timeout
             try:
-                await client.get(
-                    f"{api_base_url}/health/ready",
-                    timeout=0.001  # 1ms timeout
-                )
+                await client.get(f"{api_base_url}/health/ready", timeout=0.001)  # 1ms timeout
             except httpx.TimeoutException:
                 # Expected - timeout should be handled
                 pass

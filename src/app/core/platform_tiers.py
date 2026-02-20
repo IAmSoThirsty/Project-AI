@@ -175,9 +175,7 @@ class TierBoundaryViolation:
     """Records a violation of tier boundary rules."""
 
     violation_id: str
-    violation_type: (
-        str  # "upward_authority", "tier_1_dependency", "unauthorized_enforcement"
-    )
+    violation_type: str  # "upward_authority", "tier_1_dependency", "unauthorized_enforcement"
     source_component: str
     target_component: str
     source_tier: PlatformTier
@@ -316,29 +314,19 @@ class TierRegistry:
 
         return component
 
-    def _validate_tier_authority_alignment(
-        self, tier: PlatformTier, authority: AuthorityLevel
-    ) -> None:
+    def _validate_tier_authority_alignment(self, tier: PlatformTier, authority: AuthorityLevel) -> None:
         """Validate that tier and authority level are aligned."""
         if tier == PlatformTier.TIER_1_GOVERNANCE:
             if authority != AuthorityLevel.SOVEREIGN:
-                raise ValueError(
-                    f"Tier 1 components must have SOVEREIGN authority, got {authority}"
-                )
+                raise ValueError(f"Tier 1 components must have SOVEREIGN authority, got {authority}")
         elif tier == PlatformTier.TIER_2_INFRASTRUCTURE:
             if authority != AuthorityLevel.CONSTRAINED:
-                raise ValueError(
-                    f"Tier 2 components must have CONSTRAINED authority, got {authority}"
-                )
+                raise ValueError(f"Tier 2 components must have CONSTRAINED authority, got {authority}")
         elif tier == PlatformTier.TIER_3_APPLICATION:
             if authority != AuthorityLevel.SANDBOXED:
-                raise ValueError(
-                    f"Tier 3 components must have SANDBOXED authority, got {authority}"
-                )
+                raise ValueError(f"Tier 3 components must have SANDBOXED authority, got {authority}")
 
-    def _validate_dependencies(
-        self, tier: PlatformTier, dependencies: list[str]
-    ) -> None:
+    def _validate_dependencies(self, tier: PlatformTier, dependencies: list[str]) -> None:
         """
         Validate dependencies don't violate tier boundaries.
 
@@ -364,9 +352,7 @@ class TierRegistry:
                         description=f"Tier 1 component cannot depend on {dep_component.tier.name}",
                     )
                     self._violations.append(violation)
-                    raise ValueError(
-                        f"Tier 1 cannot depend on Tier 2/3: {dep_id} is {dep_component.tier.name}"
-                    )
+                    raise ValueError(f"Tier 1 cannot depend on Tier 2/3: {dep_id} is {dep_component.tier.name}")
 
     def validate_authority_flow(
         self,
@@ -508,9 +494,7 @@ class TierRegistry:
             component_ids = self._tier_3_components
 
         active = sum(
-            1
-            for cid in component_ids
-            if cid not in self._paused_components and cid not in self._failed_components
+            1 for cid in component_ids if cid not in self._paused_components and cid not in self._failed_components
         )
         paused = len(self._paused_components.intersection(component_ids))
         failed = len(self._failed_components.intersection(component_ids))

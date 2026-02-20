@@ -96,13 +96,9 @@ logger = logging.getLogger(__name__)
 
 # Configuration
 GENESIS_KEY_DIR = Path(__file__).parent.parent.parent.parent / "data" / "genesis_keys"
-SOVEREIGN_AUDIT_DIR = (
-    Path(__file__).parent.parent.parent.parent / "data" / "sovereign_audit"
-)
+SOVEREIGN_AUDIT_DIR = Path(__file__).parent.parent.parent.parent / "data" / "sovereign_audit"
 TSA_ANCHOR_DIR = Path(__file__).parent.parent.parent.parent / "data" / "tsa_anchors"
-HMAC_KEY_ROTATION_INTERVAL = (
-    3600  # Rotate HMAC key every N events (event-count based, NOT time-based)
-)
+HMAC_KEY_ROTATION_INTERVAL = 3600  # Rotate HMAC key every N events (event-count based, NOT time-based)
 MERKLE_BATCH_SIZE = 1000  # Anchor every 1000 events
 TSA_ENABLED = True  # RFC 3161 TSA integration (VECTOR 3, 4, 10)
 
@@ -129,8 +125,7 @@ class GenesisKeyPair:
         """
         if ed25519 is None:
             raise ImportError(
-                "cryptography library required for sovereign audit. "
-                "Install with: pip install cryptography"
+                "cryptography library required for sovereign audit. " "Install with: pip install cryptography"
             )
 
         self.key_dir = key_dir or GENESIS_KEY_DIR
@@ -185,15 +180,11 @@ class GenesisKeyPair:
 
         # Load private key
         private_bytes = self.private_key_path.read_bytes()
-        self.private_key = serialization.load_pem_private_key(
-            private_bytes, password=None, backend=default_backend()
-        )
+        self.private_key = serialization.load_pem_private_key(private_bytes, password=None, backend=default_backend())
 
         # Load public key
         public_bytes = self.public_key_path.read_bytes()
-        self.public_key = serialization.load_pem_public_key(
-            public_bytes, backend=default_backend()
-        )
+        self.public_key = serialization.load_pem_public_key(public_bytes, backend=default_backend())
 
         # Load Genesis ID
         self.genesis_id = self.genesis_id_path.read_text().strip()
@@ -270,8 +261,7 @@ class HMACKeyRotator:
         # Validate deterministic mode requirements
         if deterministic_mode and genesis_seed is None:
             raise ValueError(
-                "genesis_seed is required when deterministic_mode=True. "
-                "Pass the Genesis public key bytes as seed."
+                "genesis_seed is required when deterministic_mode=True. " "Pass the Genesis public key bytes as seed."
             )
 
         # Initialize first key
@@ -280,9 +270,7 @@ class HMACKeyRotator:
             # This ensures replay produces identical HMACs
             self.current_key = hashlib.sha256(genesis_seed + b"hmac_key_v1").digest()
             self.key_id = hashlib.sha256(genesis_seed).hexdigest()[:8]
-            logger.info(
-                "HMAC key rotator initialized (deterministic, key_id=%s)", self.key_id
-            )
+            logger.info("HMAC key rotator initialized (deterministic, key_id=%s)", self.key_id)
         else:
             # Random key generation for normal mode
             self.current_key = secrets.token_bytes(32)  # 256-bit key
@@ -403,8 +391,7 @@ class MerkleTreeAnchor:
                 tree_leaves.append(tree_leaves[-1])  # Duplicate last for even count
 
             tree_leaves = [
-                hashlib.sha256(tree_leaves[i] + tree_leaves[i + 1]).digest()
-                for i in range(0, len(tree_leaves), 2)
+                hashlib.sha256(tree_leaves[i] + tree_leaves[i + 1]).digest() for i in range(0, len(tree_leaves), 2)
             ]
 
         merkle_root = tree_leaves[0]
@@ -478,8 +465,7 @@ class SovereignAuditLog:
         """
         if ed25519 is None:
             raise ImportError(
-                "cryptography library required for sovereign audit. "
-                "Install with: pip install cryptography"
+                "cryptography library required for sovereign audit. " "Install with: pip install cryptography"
             )
 
         # Setup directories
@@ -522,11 +508,9 @@ class SovereignAuditLog:
         if pinned_genesis_ids:
             # System has history - verify continuity
             expected_genesis_id = pinned_genesis_ids[0]  # Should only have one
-            is_discontinuity, error_msg = (
-                self.continuity_guard.detect_genesis_discontinuity(
-                    expected_genesis_id=expected_genesis_id,
-                    actual_genesis_id=self.genesis_keypair.genesis_id,
-                )
+            is_discontinuity, error_msg = self.continuity_guard.detect_genesis_discontinuity(
+                expected_genesis_id=expected_genesis_id,
+                actual_genesis_id=self.genesis_keypair.genesis_id,
             )
 
             if is_discontinuity:
@@ -548,9 +532,7 @@ class SovereignAuditLog:
 
             if not is_valid:
                 self.system_frozen = True
-                logger.critical(
-                    "Genesis public key replacement detected - FREEZING SYSTEM"
-                )
+                logger.critical("Genesis public key replacement detected - FREEZING SYSTEM")
                 raise GenesisReplacementError(error_msg)
         else:
             # First initialization - pin Genesis externally
@@ -564,9 +546,7 @@ class SovereignAuditLog:
             )
 
         # Initialize operational audit log
-        self.operational_log = AuditLog(
-            log_file=self.data_dir / "operational_audit.yaml"
-        )
+        self.operational_log = AuditLog(log_file=self.data_dir / "operational_audit.yaml")
 
         # Get Genesis public key bytes for HMAC seed derivation
         genesis_pub_key_bytes = self.genesis_keypair.public_key.public_bytes(
@@ -596,9 +576,7 @@ class SovereignAuditLog:
         # Initialize TSA anchor manager (VECTOR 3, 4, 10)
         self.enable_tsa = enable_notarization
         if enable_notarization:
-            tsa_anchor_file = (
-                self.data_dir.parent / "tsa_anchors" / "tsa_anchor_chain.json"
-            )
+            tsa_anchor_file = self.data_dir.parent / "tsa_anchors" / "tsa_anchor_chain.json"
             tsa_anchor_file.parent.mkdir(parents=True, exist_ok=True)
             self.tsa_anchor_manager = TSAAnchorManager(
                 genesis_private_key=self.genesis_keypair.private_key,
@@ -690,8 +668,7 @@ class SovereignAuditLog:
         # CONSTITUTIONAL CHECKPOINT: Refuse logging if system frozen
         if self.system_frozen:
             logger.error(
-                "Attempt to log event while system frozen due to constitutional violation. "
-                "Event rejected: %s",
+                "Attempt to log event while system frozen due to constitutional violation. " "Event rejected: %s",
                 event_type,
             )
             raise GenesisDiscontinuityError(
@@ -732,19 +709,13 @@ class SovereignAuditLog:
                 genesis_signature = self.genesis_keypair.sign(canonical_bytes)
 
                 # Compute HMAC with rotating key
-                hmac_value, hmac_key_id = self.hmac_rotator.compute_hmac(
-                    canonical_bytes
-                )
+                hmac_value, hmac_key_id = self.hmac_rotator.compute_hmac(canonical_bytes)
 
                 # Check for Merkle anchor
                 merkle_anchor = self.merkle_anchor.add_entry(content_hash)
 
                 # Pin Merkle root externally if anchor was created (VECTOR 3 & 10)
-                if (
-                    merkle_anchor
-                    and self.enable_external_anchoring
-                    and self.external_anchor
-                ):
+                if merkle_anchor and self.enable_external_anchoring and self.external_anchor:
                     try:
                         pin_results = self.external_anchor.pin_merkle_root(
                             merkle_root=merkle_anchor["merkle_root"],
@@ -777,9 +748,7 @@ class SovereignAuditLog:
                     except Exception as e:
                         logger.error("Failed to create TSA anchor: %s", e)
                         # TSA failure is critical - consider system freeze
-                        logger.critical(
-                            "TSA anchoring failed - constitutional protection degraded"
-                        )
+                        logger.critical("TSA anchoring failed - constitutional protection degraded")
 
                 # Build sovereign event record
                 sovereign_event = {
@@ -789,16 +758,12 @@ class SovereignAuditLog:
                     "ed25519_signature": base64.b64encode(genesis_signature).decode(),
                     "hmac": base64.b64encode(hmac_value).decode(),
                     "hmac_key_id": hmac_key_id,
-                    "merkle_anchor_id": (
-                        merkle_anchor["anchor_id"] if merkle_anchor else None
-                    ),
+                    "merkle_anchor_id": (merkle_anchor["anchor_id"] if merkle_anchor else None),
                 }
 
                 # Add RFC 3161 notarized timestamp if enabled
                 if self.notarization_enabled:
-                    sovereign_event["notarized_timestamp"] = self._request_notarization(
-                        canonical_bytes
-                    )
+                    sovereign_event["notarized_timestamp"] = self._request_notarization(canonical_bytes)
 
                 # Log to operational audit log
                 success = self.operational_log.log_event(
@@ -1024,9 +989,7 @@ class SovereignAuditLog:
         # CRITICAL: Verify TSA anchor chain (VECTOR 3, 4, 10)
         if self.enable_tsa and self.tsa_anchor_manager:
             try:
-                is_valid, msg = self.tsa_anchor_manager.verify_chain(
-                    self.genesis_keypair.public_key
-                )
+                is_valid, msg = self.tsa_anchor_manager.verify_chain(self.genesis_keypair.public_key)
                 if not is_valid:
                     return False, f"TSA anchor chain verification failed: {msg}"
 

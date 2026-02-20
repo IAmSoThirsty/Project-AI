@@ -76,19 +76,11 @@ class SystemLoad:
 
     def is_high_load(self) -> bool:
         """Check if system is under high load."""
-        return (
-            self.cpu_percent > 80.0
-            or self.memory_percent > 85.0
-            or self.active_agents > 500
-        )
+        return self.cpu_percent > 80.0 or self.memory_percent > 85.0 or self.active_agents > 500
 
     def is_critical_load(self) -> bool:
         """Check if system is under critical load."""
-        return (
-            self.cpu_percent > 95.0
-            or self.memory_percent > 95.0
-            or self.active_agents > 800
-        )
+        return self.cpu_percent > 95.0 or self.memory_percent > 95.0 or self.active_agents > 800
 
 
 @dataclass
@@ -226,9 +218,7 @@ class SpawnConstraints:
 
         # Check incident budget
         if incident_id not in self.incident_budgets:
-            self.incident_budgets[incident_id] = SpawnBudget(
-                max_spawns=min(50, self.max_concurrent_agents // 2)
-            )
+            self.incident_budgets[incident_id] = SpawnBudget(max_spawns=min(50, self.max_concurrent_agents // 2))
 
         if not self.incident_budgets[incident_id].can_spawn():
             self.total_spawns_rejected += 1
@@ -267,9 +257,7 @@ class SpawnConstraints:
         # Check limit
         return len(self.spawn_times) < self.max_spawns_per_minute
 
-    def record_spawn(
-        self, incident_id: str, resource_cost: dict[str, float] | None = None
-    ) -> None:
+    def record_spawn(self, incident_id: str, resource_cost: dict[str, float] | None = None) -> None:
         """Record a successful spawn."""
         now = time.time()
         self.spawn_times.append(now)
@@ -336,16 +324,12 @@ class SpawnConstraints:
         # Cap at reasonable limits
         return max(1, min(5, factor))
 
-    def enter_cooldown(
-        self, duration: float = 60.0, reason: str = "adaptive_response"
-    ) -> None:
+    def enter_cooldown(self, duration: float = 60.0, reason: str = "adaptive_response") -> None:
         """Enter cooldown period for observation."""
         self.cooldown_state.enter_cooldown(duration)
         logger.warning("🧊 Entering cooldown period for %ss: %s", duration, reason)
 
-    def should_enter_cooldown(
-        self, recent_incidents: list[dict[str, Any]], system_load: SystemLoad
-    ) -> bool:
+    def should_enter_cooldown(self, recent_incidents: list[dict[str, Any]], system_load: SystemLoad) -> bool:
         """
         Determine if system should enter cooldown.
 
@@ -366,8 +350,7 @@ class SpawnConstraints:
             recent_count = sum(
                 1
                 for inc in recent_incidents
-                if datetime.fromisoformat(inc.get("timestamp", "2000-01-01"))
-                > recent_time
+                if datetime.fromisoformat(inc.get("timestamp", "2000-01-01")) > recent_time
             )
             if recent_count > 5:
                 return True
@@ -379,9 +362,7 @@ class SpawnConstraints:
         return {
             "total_spawns_attempted": self.total_spawns_attempted,
             "total_spawns_rejected": self.total_spawns_rejected,
-            "rejection_rate": (
-                self.total_spawns_rejected / max(1, self.total_spawns_attempted)
-            ),
+            "rejection_rate": (self.total_spawns_rejected / max(1, self.total_spawns_attempted)),
             "rejection_reasons": dict(self.rejection_reasons),
             "current_rate_per_minute": len(self.spawn_times),
             "global_budget_utilization": self.global_budget.get_utilization(),

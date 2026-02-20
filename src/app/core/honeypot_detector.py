@@ -202,9 +202,7 @@ class HoneypotDetector:
 
         # Check for path traversal
         for pattern in self.path_traversal_patterns:
-            if re.search(pattern, payload, re.IGNORECASE) or re.search(
-                pattern, endpoint, re.IGNORECASE
-            ):
+            if re.search(pattern, payload, re.IGNORECASE) or re.search(pattern, endpoint, re.IGNORECASE):
                 attack_types.append(AttackType.PATH_TRAVERSAL.value)
                 break
 
@@ -251,9 +249,7 @@ class HoneypotDetector:
             self._update_attacker_profile(ip_address, attack_type, tool_detected)
             self._save_state()
 
-            logger.warning(
-                "Attack detected: %s from %s on %s", attack_type, ip_address, endpoint
-            )
+            logger.warning("Attack detected: %s from %s on %s", attack_type, ip_address, endpoint)
             if tool_detected:
                 logger.warning("  Tool detected: %s", tool_detected)
 
@@ -299,13 +295,9 @@ class HoneypotDetector:
                 return True
 
         # Empty or suspicious user agent
-        return bool(
-            not user_agent or user_agent in ["", "-", "python-requests", "curl"]
-        )
+        return bool(not user_agent or user_agent in ["", "-", "python-requests", "curl"])
 
-    def _detect_tool(
-        self, user_agent: str, headers: dict[str, str], payload: str
-    ) -> str | None:
+    def _detect_tool(self, user_agent: str, headers: dict[str, str], payload: str) -> str | None:
         """Detect scanning/attack tool being used."""
         search_text = f"{user_agent} {str(headers)} {payload}".lower()
 
@@ -344,9 +336,7 @@ class HoneypotDetector:
 
         return severity
 
-    def _create_fingerprint(
-        self, attack_type: str, payload: str, tool_detected: str | None
-    ) -> str:
+    def _create_fingerprint(self, attack_type: str, payload: str, tool_detected: str | None) -> str:
         """Create attack fingerprint for tracking."""
         import hashlib
 
@@ -354,9 +344,7 @@ class HoneypotDetector:
         fp_data = f"{attack_type}:{tool_detected or 'manual'}:{payload[:100]}"
         return hashlib.sha256(fp_data.encode()).hexdigest()[:16]
 
-    def _update_attacker_profile(
-        self, ip_address: str, attack_type: str, tool_detected: str | None
-    ) -> None:
+    def _update_attacker_profile(self, ip_address: str, attack_type: str, tool_detected: str | None) -> None:
         """Update attacker profile based on new attack."""
         if ip_address not in self.attacker_profiles:
             self.attacker_profiles[ip_address] = AttackerProfile(ip_address=ip_address)
@@ -429,9 +417,7 @@ class HoneypotDetector:
             "attack_types": dict(attack_type_counts),
             "tools_detected": dict(tool_counts),
             "recent_attempts_24h": self._count_recent_attempts(24),
-            "blocked_attackers": sum(
-                1 for p in self.attacker_profiles.values() if p.blocked
-            ),
+            "blocked_attackers": sum(1 for p in self.attacker_profiles.values() if p.blocked),
         }
 
     def _count_recent_attempts(self, hours: int) -> int:
@@ -459,9 +445,7 @@ class HoneypotDetector:
             for profile in self.attacker_profiles.values()
             if profile.sophistication_score >= 7.0 or profile.attempt_count >= 50
         ]
-        return sorted(
-            high_threat, key=lambda x: x["sophistication_score"], reverse=True
-        )
+        return sorted(high_threat, key=lambda x: x["sophistication_score"], reverse=True)
 
     def _load_state(self) -> None:
         """Load state from disk."""
@@ -470,17 +454,13 @@ class HoneypotDetector:
                 with open(self.attempts_file) as f:
                     attempt_data = json.load(f)
                     # Load last 10000 attempts
-                    self.attack_attempts = [
-                        AttackAttempt(**a) for a in attempt_data[-10000:]
-                    ]
+                    self.attack_attempts = [AttackAttempt(**a) for a in attempt_data[-10000:]]
                 logger.info("Loaded %s attack attempts", len(self.attack_attempts))
 
             if self.profiles_file.exists():
                 with open(self.profiles_file) as f:
                     profile_data = json.load(f)
-                    self.attacker_profiles = {
-                        ip: AttackerProfile(**data) for ip, data in profile_data.items()
-                    }
+                    self.attacker_profiles = {ip: AttackerProfile(**data) for ip, data in profile_data.items()}
                 logger.info("Loaded %s attacker profiles", len(self.attacker_profiles))
 
         except Exception as e:
@@ -496,10 +476,7 @@ class HoneypotDetector:
 
             # Save profiles
             with open(self.profiles_file, "w") as f:
-                profile_data = {
-                    ip: asdict(profile)
-                    for ip, profile in self.attacker_profiles.items()
-                }
+                profile_data = {ip: asdict(profile) for ip, profile in self.attacker_profiles.items()}
                 json.dump(profile_data, f, indent=2)
 
         except Exception as e:

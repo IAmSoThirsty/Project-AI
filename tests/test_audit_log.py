@@ -295,9 +295,7 @@ class TestAuditLog:
                 actor="bob",
                 severity="warning",
             )
-            audit.log_event(
-                "system_crash", {"cause": "OOM"}, actor="system", severity="critical"
-            )
+            audit.log_event("system_crash", {"cause": "OOM"}, actor="system", severity="critical")
 
             # Filter by severity
             critical_events = audit.get_events_filtered(severity="critical")
@@ -368,9 +366,7 @@ class TestAuditLog:
             # Log various events
             audit.log_event("login", {"user": "alice"}, actor="alice")
             audit.log_event("login", {"user": "bob"}, actor="bob")
-            audit.log_event(
-                "error", {"code": 500}, actor="system", severity="error"
-            )
+            audit.log_event("error", {"code": 500}, actor="system", severity="error")
 
             # Get statistics
             stats = audit.get_statistics()
@@ -437,4 +433,3 @@ class TestAuditLog:
 
             # Callback should not be invoked
             assert len(callback_events) == 2
-

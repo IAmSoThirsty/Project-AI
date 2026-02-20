@@ -113,9 +113,7 @@ class TestVoiceSystem:
         with tempfile.TemporaryDirectory() as tmpdir:
             registry = VoiceModelRegistry(os.path.join(tmpdir, "voice"))
             profiler = EngagementProfiler(os.path.join(tmpdir, "engagement"))
-            bonding = VoiceBondingProtocol(
-                registry, profiler, os.path.join(tmpdir, "bonding")
-            )
+            bonding = VoiceBondingProtocol(registry, profiler, os.path.join(tmpdir, "bonding"))
 
             # Register model
             model = BasicTTSVoiceModel(
@@ -188,9 +186,7 @@ class TestVisualSystem:
         with tempfile.TemporaryDirectory() as tmpdir:
             registry = VisualCueModelRegistry(os.path.join(tmpdir, "visual"))
             camera = CameraManager(os.path.join(tmpdir, "camera"))
-            bonding = VisualBondingProtocol(
-                registry, camera, os.path.join(tmpdir, "bonding")
-            )
+            bonding = VisualBondingProtocol(registry, camera, os.path.join(tmpdir, "bonding"))
 
             # Register model
             model = FacialEmotionModel()
@@ -280,12 +276,8 @@ class TestMultiModalFusion:
 
             registry = VisualCueModelRegistry(os.path.join(tmpdir, "visual"))
             camera = CameraManager(os.path.join(tmpdir, "camera"))
-            visual_bonding = VisualBondingProtocol(
-                registry, camera, os.path.join(tmpdir, "v_bonding")
-            )
-            visual_ctrl = VisualController(
-                registry, camera, visual_bonding, os.path.join(tmpdir, "v_ctrl")
-            )
+            visual_bonding = VisualBondingProtocol(registry, camera, os.path.join(tmpdir, "v_bonding"))
+            visual_ctrl = VisualController(registry, camera, visual_bonding, os.path.join(tmpdir, "v_ctrl"))
 
             context_engine = ConversationContextEngine(os.path.join(tmpdir, "context"))
             policy_mgr = PolicyManager(context_engine, os.path.join(tmpdir, "policy"))
@@ -313,12 +305,8 @@ class TestMultiModalFusion:
             model.initialize()
 
             camera = CameraManager(os.path.join(tmpdir, "camera"))
-            visual_bonding = VisualBondingProtocol(
-                visual_registry, camera, os.path.join(tmpdir, "v_bonding")
-            )
-            visual_ctrl = VisualController(
-                visual_registry, camera, visual_bonding, os.path.join(tmpdir, "v_ctrl")
-            )
+            visual_bonding = VisualBondingProtocol(visual_registry, camera, os.path.join(tmpdir, "v_bonding"))
+            visual_ctrl = VisualController(visual_registry, camera, visual_bonding, os.path.join(tmpdir, "v_ctrl"))
 
             context_engine = ConversationContextEngine(os.path.join(tmpdir, "context"))
             policy_mgr = PolicyManager(context_engine, os.path.join(tmpdir, "policy"))

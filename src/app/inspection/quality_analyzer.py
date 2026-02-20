@@ -113,9 +113,7 @@ class QualityAnalyzer:
 
             return {
                 "file_metrics": {k: asdict(v) for k, v in self.metrics.items()},
-                "component_quality": {
-                    k: asdict(v) for k, v in self.component_quality.items()
-                },
+                "component_quality": {k: asdict(v) for k, v in self.component_quality.items()},
                 "aggregate_metrics": aggregate,
             }
 
@@ -145,9 +143,7 @@ class QualityAnalyzer:
             except Exception as e:
                 logger.debug("Error analyzing %s: %s", file_path, e)
 
-    def _compute_file_metrics(
-        self, content: str, file_info: dict[str, Any]
-    ) -> QualityMetrics:
+    def _compute_file_metrics(self, content: str, file_info: dict[str, Any]) -> QualityMetrics:
         """Compute quality metrics for a single file."""
         lines = content.splitlines()
         total_lines = len([line for line in lines if line.strip()])
@@ -163,9 +159,7 @@ class QualityAnalyzer:
         complexity = file_info.get("complexity_score", 0)
 
         # Maintainability index (simplified Halstead)
-        maintainability = self._compute_maintainability_index(
-            total_lines, complexity, comment_ratio
-        )
+        maintainability = self._compute_maintainability_index(total_lines, complexity, comment_ratio)
 
         # Cohesion score
         cohesion = self._compute_cohesion_score(file_info)
@@ -202,9 +196,7 @@ class QualityAnalyzer:
             total_items = 0
 
             for node in ast.walk(tree):
-                if isinstance(
-                    node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)
-                ):
+                if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)):
                     total_items += 1
                     if ast.get_docstring(node):
                         documented_items += 1
@@ -214,9 +206,7 @@ class QualityAnalyzer:
         except Exception:
             return 0.0
 
-    def _compute_maintainability_index(
-        self, lines: int, complexity: int, comment_ratio: float
-    ) -> float:
+    def _compute_maintainability_index(self, lines: int, complexity: int, comment_ratio: float) -> float:
         """
         Compute maintainability index (simplified).
 
@@ -321,9 +311,7 @@ class QualityAnalyzer:
                 continue
 
             # Compute component quality
-            quality = self._compute_component_quality(
-                comp_name, comp_info, file_metrics
-            )
+            quality = self._compute_component_quality(comp_name, comp_info, file_metrics)
             self.component_quality[comp_name] = quality
 
     def _compute_component_quality(
@@ -345,9 +333,7 @@ class QualityAnalyzer:
             )
 
         # Average documentation coverage
-        doc_score = (
-            sum(m.documentation_coverage for m in file_metrics) / len(file_metrics)
-        ) * 100
+        doc_score = (sum(m.documentation_coverage for m in file_metrics) / len(file_metrics)) * 100
 
         # Integration score (has tests + type hints + low complexity)
         integration_factors = [
@@ -358,27 +344,18 @@ class QualityAnalyzer:
         integration_score = (sum(integration_factors) / len(integration_factors)) * 100
 
         # Average cohesion
-        cohesion_score = (
-            sum(m.cohesion_score for m in file_metrics) / len(file_metrics)
-        ) * 100
+        cohesion_score = (sum(m.cohesion_score for m in file_metrics) / len(file_metrics)) * 100
 
         # Rigor score (maintainability + documentation + type hints)
         rigor_factors = [
-            sum(m.maintainability_index for m in file_metrics)
-            / len(file_metrics)
-            / 100,
+            sum(m.maintainability_index for m in file_metrics) / len(file_metrics) / 100,
             sum(1 for m in file_metrics if m.has_docstring) / len(file_metrics),
             sum(1 for m in file_metrics if m.has_type_hints) / len(file_metrics),
         ]
         rigor_score = (sum(rigor_factors) / len(rigor_factors)) * 100
 
         # Overall score (weighted average)
-        overall_score = (
-            doc_score * 0.25
-            + integration_score * 0.25
-            + cohesion_score * 0.25
-            + rigor_score * 0.25
-        )
+        overall_score = doc_score * 0.25 + integration_score * 0.25 + cohesion_score * 0.25 + rigor_score * 0.25
 
         # Generate issues and recommendations
         issues = []
@@ -421,22 +398,14 @@ class QualityAnalyzer:
             "average_documentation_coverage": round(
                 sum(m.documentation_coverage for m in all_metrics) / total_files, 3
             ),
-            "average_code_coverage": round(
-                sum(m.code_coverage for m in all_metrics) / total_files, 3
-            ),
-            "average_maintainability_index": round(
-                sum(m.maintainability_index for m in all_metrics) / total_files, 2
-            ),
-            "average_cohesion_score": round(
-                sum(m.cohesion_score for m in all_metrics) / total_files, 3
-            ),
+            "average_code_coverage": round(sum(m.code_coverage for m in all_metrics) / total_files, 3),
+            "average_maintainability_index": round(sum(m.maintainability_index for m in all_metrics) / total_files, 2),
+            "average_cohesion_score": round(sum(m.cohesion_score for m in all_metrics) / total_files, 3),
             "files_with_docstrings": sum(1 for m in all_metrics if m.has_docstring),
             "files_with_tests": sum(1 for m in all_metrics if m.has_tests),
             "files_with_type_hints": sum(1 for m in all_metrics if m.has_type_hints),
             "total_lines_of_code": sum(m.lines_of_code for m in all_metrics),
-            "average_complexity": round(
-                sum(m.complexity_score for m in all_metrics) / total_files, 2
-            ),
+            "average_complexity": round(sum(m.complexity_score for m in all_metrics) / total_files, 2),
             "component_count": len(self.component_quality),
             "component_quality_distribution": self._get_quality_distribution(),
         }

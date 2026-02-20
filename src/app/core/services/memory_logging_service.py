@@ -268,11 +268,7 @@ class MemoryLoggingService:
             reflection_data = {
                 "action": context.proposed_action.action_name,
                 "result_success": context.status.value == "completed",
-                "governance_decision": (
-                    context.governance_decision.reason
-                    if context.governance_decision
-                    else None
-                ),
+                "governance_decision": (context.governance_decision.reason if context.governance_decision else None),
                 "duration_ms": context.duration_ms,
                 "triggered_by": "memory_logging_service",
             }

@@ -38,9 +38,7 @@ def demo_engine_basics():
         print(f"  Partial Wins: {stats['partial_win']}")
         print(f"  Advanced Failures: {stats['advanced_failure']}")
 
-        failure_rate = (stats["explicit_failure"] + stats["advanced_failure"]) / stats[
-            "total"
-        ]
+        failure_rate = (stats["explicit_failure"] + stats["advanced_failure"]) / stats["total"]
         print(f"\n  Failure Acceptance Rate: {failure_rate:.1%} (threshold: ≥50%)")
 
 
@@ -171,15 +169,9 @@ def demo_reviewer_trap():
     good_pr = PRContent(
         description="Constraint-based approach using formal methods",
         code_changes="def validate(): return formal_proof()",
-        assumptions=[
-            "Assumption 1: This maintains all existing axioms without modification or deviation"
-        ],
-        irreversibility_statement=(
-            "Once deployed, the previous validation path becomes permanently unavailable"
-        ),
-        human_failures=[
-            "Bureaucratic delay in reviewing changes due to institutional inertia"
-        ],
+        assumptions=["Assumption 1: This maintains all existing axioms without modification or deviation"],
+        irreversibility_statement=("Once deployed, the previous validation path becomes permanently unavailable"),
+        human_failures=["Bureaucratic delay in reviewing changes due to institutional inertia"],
         miracle_declaration=(
             "This approach does not rely on sudden alignment breakthroughs, "
             "perfect coordination, hidden failsafes, unbounded compute, "

@@ -68,9 +68,7 @@ class InstitutionalPressureModule:
         capacity *= self.efficiency
 
         # Recent failures reduce capacity
-        recent_failures = len(
-            [f for f in self.failure_history[-10:] if f.get("severity", 0) > 0.5]
-        )
+        recent_failures = len([f for f in self.failure_history[-10:] if f.get("severity", 0) > 0.5])
         failure_penalty = min(recent_failures * 0.05, 0.3)
         capacity -= failure_penalty
 
@@ -97,9 +95,7 @@ class InstitutionalPressureModule:
 
         return promise_id
 
-    def evaluate_promise_keeping(
-        self, state: StateVector, promise_difficulty: float = 0.5
-    ) -> bool:
+    def evaluate_promise_keeping(self, state: StateVector, promise_difficulty: float = 0.5) -> bool:
         """Evaluate whether a promise can be kept.
 
         Args:
@@ -200,9 +196,7 @@ class InstitutionalPressureModule:
 
             if random.random() < cascade_prob:
                 self.cascading_failures += 1
-                logger.warning(
-                    "CASCADING FAILURE DETECTED (total: %s)", self.cascading_failures
-                )
+                logger.warning("CASCADING FAILURE DETECTED (total: %s)", self.cascading_failures)
                 return True
 
         return False
@@ -251,15 +245,11 @@ class InstitutionalPressureModule:
 
         if random.random() < failure_prob:
             failure_occurred = True
-            failure_type = random.choice(
-                ["system_failure", "corruption", "promise_broken"]
-            )
+            failure_type = random.choice(["system_failure", "corruption", "promise_broken"])
             impact_scope = random.choice(["local", "regional", "national"])
             severity = random.uniform(0.4, 0.8)
 
-            failure_event = self.generate_failure_event(
-                state, failure_type, impact_scope, severity
-            )
+            failure_event = self.generate_failure_event(state, failure_type, impact_scope, severity)
 
             # Apply legitimacy erosion
             self.laws.apply_legitimacy_erosion(

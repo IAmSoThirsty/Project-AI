@@ -228,9 +228,7 @@ class SimulationViewerPanel(QFrame):
 
         except Exception as e:
             logger.error("Error running simulation: %s", e)
-            self.simulation_display.setText(
-                f"ERROR: Failed to run simulation\n\n{str(e)}"
-            )
+            self.simulation_display.setText(f"ERROR: Failed to run simulation\n\n{str(e)}")
 
     def load_latest_simulation(self):
         """Load the most recent simulation."""
@@ -459,23 +457,15 @@ class IntelligenceLibraryPanel(QWidget):
             output.append("GLOBAL INTELLIGENCE LIBRARY STATUS")
             output.append("=" * 60)
             output.append("")
-            output.append(
-                f"Initialized: {'✓ YES' if status.get('initialized') else '✗ NO'}"
-            )
+            output.append(f"Initialized: {'✓ YES' if status.get('initialized') else '✗ NO'}")
             output.append("")
 
             if status.get("curator"):
                 curator_status = status["curator"]
                 output.append("CURATOR STATUS:")
-                output.append(
-                    f"  - Domains Managed: {curator_status.get('overseer_count', 0)}"
-                )
-                output.append(
-                    f"  - Simulations Run: {curator_status.get('theory_count', 0)}"
-                )
-                output.append(
-                    "  - Role: Librarian & Statistician (NO command authority)"
-                )
+                output.append(f"  - Domains Managed: {curator_status.get('overseer_count', 0)}")
+                output.append(f"  - Simulations Run: {curator_status.get('theory_count', 0)}")
+                output.append("  - Role: Librarian & Statistician (NO command authority)")
                 output.append("")
 
             output.append("INTELLIGENCE DOMAINS:")

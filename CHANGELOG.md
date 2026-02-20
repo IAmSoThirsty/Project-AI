@@ -4,6 +4,55 @@ All notable changes to Project-AI will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-02-20
+
+### Added
+
+- **Shadow Resource Limits** — closes the `_execute_shadow_with_limits` TODO
+  - `src/shadow_thirst/resource_limiter.thirsty`: dual-plane Shadow Thirst source defining
+    `execute_with_limits`, `execute_timeout`, `check_memory_quota`, `build_violation_reason`
+    with `invariant`, `divergence quarantine_on_diverge`, and `mutation read_only` constraints
+  - `src/app/core/shadow_resource_limiter.py`: Python bridge compiling the `.thirsty` source
+    at import time through the 15-stage Shadow Thirst pipeline; falls back to Python runtime
+    gracefully if compiler is unavailable
+  - CPU enforcement: `ThreadPoolExecutor` future with wall-clock timeout
+  - Memory tracking: `tracemalloc` peak-delta measurement
+  - `ShadowResourceViolation` exception, `ResourceUsage` dataclass
+- **TestShadowResourceLimits** — 4 new tests in `tests/test_shadow_execution.py`
+  - `test_cpu_timeout_enforced`: sleep-callable exceeding quota → quarantine
+  - `test_memory_limit_tracking`: 1MB allocation → `usage.peak_memory_mb ≥ 0`
+  - `test_resource_usage_surfaced_in_result`: real figures flow into telemetry
+  - `test_cpu_and_memory_within_limits`: normal callable → no quarantine
+
+### Changed
+
+- **`shadow_execution_plane.py`**
+  - TODO replaced with `ShadowResourceLimiter.execute()` call
+  - Added `except ShadowResourceViolation` handler *before* generic `except Exception`
+    — violations quarantine immediately rather than silently becoming `shadow_result=None`
+  - `ShadowTelemetry.record_execution` now receives real `cpu_ms` and `memory_mb`
+    from `ResourceUsage` instead of stub approximations
+  - `assert activation_reason is not None` added to narrow type for checker
+- **Full Codebase Code-Quality Sweep** (all files with last commit < 2026-02-17)
+  - `black` auto-formatted all Python in `src/`, `tests/`, `engines/`, `adversarial_tests/`
+    at `--line-length=120`
+  - **Syntax fixes**: `src/cerberus/sase/governance/rbac.py` — 3-space indent on class
+    docstring corrected; `src/cerberus/sase/governance/key_management.py` — `Key Type`
+    type-annotation space typo fixed, `import hmac` indent corrected
+  - **E722**: `tests/test_tarl_productivity.py:138` bare `except:` → `except Exception:`
+  - **E402**: `adversarial_tests/galahad_model.py` and `tests/verify_security_agents.py`
+    post-`sys.path.insert` imports annotated with `# noqa: E402`
+- **Documentation** — root-level markdown files updated to reflect current state
+  - `CHANGELOG.md`, `PROJECT_STATUS.md`, `PROJECT_STRUCTURE.md` updated 2026-02-20
+
+### CI — Test Results
+
+- 34 tests passing (30 pre-existing + 4 new resource-limit tests)
+- 0 syntax errors (`E999`)
+- Black format: ✅ clean
+
+---
+
 ## [Unreleased] - 2026-02-17
 
 ### Added

@@ -43,9 +43,7 @@ from app.governance.audit_log import AuditLog
 logger = logging.getLogger(__name__)
 
 # Default paths
-DEFAULT_SNAPSHOT_DIR = (
-    Path(__file__).parent.parent.parent.parent / "data" / "health_snapshots"
-)
+DEFAULT_SNAPSHOT_DIR = Path(__file__).parent.parent.parent.parent / "data" / "health_snapshots"
 DEFAULT_REPORT_DIR = Path(__file__).parent.parent.parent.parent / "docs" / "assets"
 
 
@@ -81,12 +79,8 @@ class HealthReporter:
 
         # Set directories from config or defaults
         health_config = self.config.get_section("health")
-        self.snapshot_dir = snapshot_dir or Path(
-            health_config.get("snapshot_dir", DEFAULT_SNAPSHOT_DIR)
-        )
-        self.report_dir = report_dir or Path(
-            health_config.get("report_dir", DEFAULT_REPORT_DIR)
-        )
+        self.snapshot_dir = snapshot_dir or Path(health_config.get("snapshot_dir", DEFAULT_SNAPSHOT_DIR))
+        self.report_dir = report_dir or Path(health_config.get("report_dir", DEFAULT_REPORT_DIR))
 
         # Create directories
         self.snapshot_dir.mkdir(parents=True, exist_ok=True)
@@ -218,9 +212,7 @@ class HealthReporter:
             logger.error("Failed to generate YAML snapshot: %s", e)
             return False, None
 
-    def generate_png_report(
-        self, snapshot_data: dict[str, Any]
-    ) -> tuple[bool, Path | None]:
+    def generate_png_report(self, snapshot_data: dict[str, Any]) -> tuple[bool, Path | None]:
         """Generate a PNG health report visualization.
 
         Args:
@@ -232,9 +224,7 @@ class HealthReporter:
         try:
             # Create figure with subplots
             fig, axes = plt.subplots(2, 2, figsize=(12, 10))
-            fig.suptitle(
-                "Project-AI System Health Report", fontsize=16, fontweight="bold"
-            )
+            fig.suptitle("Project-AI System Health Report", fontsize=16, fontweight="bold")
 
             # Extract system metrics
             system_metrics = snapshot_data.get("system_metrics", {})

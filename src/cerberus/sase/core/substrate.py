@@ -76,9 +76,7 @@ class FailureRecoveryOrchestrator:
         self.recovery_log = []
         self.monotonic_clock = time.monotonic()
 
-    def handle_failure(
-        self, mode: FailureMode, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def handle_failure(self, mode: FailureMode, context: Dict[str, Any]) -> Dict[str, Any]:
         """
         Execute recovery procedure for specific failure mode
 

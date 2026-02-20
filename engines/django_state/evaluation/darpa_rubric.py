@@ -146,9 +146,7 @@ class DARPAEvaluator:
         if engine.laws:
             test_state = engine.state.copy()
             initial_legitimacy = test_state.legitimacy.value
-            engine.laws.apply_legitimacy_erosion(
-                test_state, broken_promises=1, failures=1, visibility=0.5
-            )
+            engine.laws.apply_legitimacy_erosion(test_state, broken_promises=1, failures=1, visibility=0.5)
             if test_state.legitimacy.value < initial_legitimacy:
                 score += 10
                 self._record_test("legitimacy_erosion", True)
@@ -173,9 +171,7 @@ class DARPAEvaluator:
         if engine.laws:
             test_state = engine.state.copy()
             initial_epistemic = test_state.epistemic_confidence.value
-            engine.laws.apply_manipulation_impact(
-                test_state, reach=0.5, sophistication=0.5
-            )
+            engine.laws.apply_manipulation_impact(test_state, reach=0.5, sophistication=0.5)
             if test_state.epistemic_confidence.value < initial_epistemic:
                 score += 10
                 self._record_test("epistemic_damage", True)
@@ -198,9 +194,7 @@ class DARPAEvaluator:
         # Check collapse detection
         test_state = engine.state.copy()
         test_state.kindness.value = 0.1
-        collapsed, reason = test_state.check_collapse_conditions(
-            engine.config.thresholds.to_dict()["collapse"]
-        )
+        collapsed, reason = test_state.check_collapse_conditions(engine.config.thresholds.to_dict()["collapse"])
         if collapsed:
             score += 10
             self._record_test("collapse_detection", True)
@@ -372,9 +366,7 @@ class DARPAEvaluator:
         test_state = engine.state.copy()
         test_state.moral_injury.value = 0.5
         test_state.moral_injury.impose_floor(0.4)
-        test_state.moral_injury.update(
-            -0.3, test_state.timestamp
-        )  # Try to go below floor
+        test_state.moral_injury.update(-0.3, test_state.timestamp)  # Try to go below floor
         if test_state.moral_injury.value >= 0.4:
             score += 25
             self._record_test("moral_injury_floor_enforcement", True)

@@ -29,10 +29,10 @@ logger = logging.getLogger(__name__)
 class CommitDecision(Enum):
     """Decision from constitutional validation."""
 
-    COMMIT = "commit"              # Approve and commit primary result
-    QUARANTINE = "quarantine"      # Quarantine due to violations
-    REJECT = "reject"              # Reject execution entirely
-    CONDITIONAL = "conditional"    # Conditional approval with constraints
+    COMMIT = "commit"  # Approve and commit primary result
+    QUARANTINE = "quarantine"  # Quarantine due to violations
+    REJECT = "reject"  # Reject execution entirely
+    CONDITIONAL = "conditional"  # Conditional approval with constraints
 
 
 @dataclass
@@ -165,8 +165,7 @@ class ConstitutionalIntegration:
 
         # 2. Invariant validation
         if not context.invariants_passed:
-            logger.error("[%s] Invariant violations: %s",
-                         frame.function_name, context.invariant_violations)
+            logger.error("[%s] Invariant violations: %s", frame.function_name, context.invariant_violations)
             self.stats["quarantines"] += 1
             return ValidationResult(
                 decision=CommitDecision.QUARANTINE,
@@ -233,8 +232,7 @@ class ConstitutionalIntegration:
         if frame.invariant_results:
             context.invariants_passed = all(frame.invariant_results)
             context.invariant_violations = [
-                f"invariant_{i}" for i, passed in enumerate(frame.invariant_results)
-                if not passed
+                f"invariant_{i}" for i, passed in enumerate(frame.invariant_results) if not passed
             ]
 
         # Resource usage
@@ -261,7 +259,10 @@ class ConstitutionalIntegration:
         policy = context.divergence_policy or "log_divergence"
 
         if policy == "require_identical":
-            return False, f"Divergence detected with require_identical policy (magnitude: {context.divergence_magnitude})"
+            return (
+                False,
+                f"Divergence detected with require_identical policy (magnitude: {context.divergence_magnitude})",
+            )
 
         elif policy == "allow_epsilon":
             # In real implementation, would check epsilon threshold
@@ -275,8 +276,7 @@ class ConstitutionalIntegration:
             return False, "Divergence detected with fail_primary policy"
 
         # log_divergence - allow but log
-        logger.warning("Divergence detected (policy: log_divergence): magnitude=%f",
-                       context.divergence_magnitude)
+        logger.warning("Divergence detected (policy: log_divergence): magnitude=%f", context.divergence_magnitude)
         return True, "Divergence logged"
 
     def _check_tarl_policy(self, context: ConstitutionalContext) -> tuple[bool, str]:

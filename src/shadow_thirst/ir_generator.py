@@ -99,12 +99,7 @@ class IRGenerator:
                 param.type_annotation.qualifier if param.type_annotation else None
             )
             type_name = param.type_annotation.name if param.type_annotation else None
-            self.builder.add_variable(
-                param.name,
-                qualifier,
-                type_name,
-                is_parameter=True
-            )
+            self.builder.add_variable(param.name, qualifier, type_name, is_parameter=True)
 
         # Generate primary plane IR
         if function_ast.primary_block:
@@ -199,9 +194,7 @@ class IRGenerator:
     def _generate_variable_declaration(self, stmt: VariableDeclaration):
         """Generate IR for variable declaration."""
         # Determine plane qualifier
-        qualifier = self._convert_plane_qualifier(
-            stmt.type_annotation.qualifier if stmt.type_annotation else None
-        )
+        qualifier = self._convert_plane_qualifier(stmt.type_annotation.qualifier if stmt.type_annotation else None)
 
         type_name = stmt.type_annotation.name if stmt.type_annotation else None
 

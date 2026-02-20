@@ -283,7 +283,8 @@ class TestDefenseEngineIntegration(unittest.TestCase):
 
         # Create minimal config
         self.config_file = Path(self.test_dir) / "test_config.toml"
-        self.config_file.write_text("""
+        self.config_file.write_text(
+            """
 version = "1.0.0"
 
 [bootstrap]
@@ -293,7 +294,8 @@ health_check_interval = 30
 enable_hot_reload = false
 
 [subsystems]
-        """)
+        """
+        )
 
     def tearDown(self):
         """Clean up test environment."""
@@ -301,18 +303,14 @@ enable_hot_reload = false
 
     def test_defense_engine_creation(self):
         """Test defense engine creation."""
-        engine = DefenseEngine(
-            config_path=str(self.config_file), data_dir=self.test_dir
-        )
+        engine = DefenseEngine(config_path=str(self.config_file), data_dir=self.test_dir)
 
         self.assertIsNotNone(engine)
         self.assertFalse(engine.running)
 
     def test_defense_engine_initialization(self):
         """Test defense engine initialization."""
-        engine = DefenseEngine(
-            config_path=str(self.config_file), data_dir=self.test_dir
-        )
+        engine = DefenseEngine(config_path=str(self.config_file), data_dir=self.test_dir)
 
         # Note: This will fail without domain modules in path
         # but tests the initialization logic

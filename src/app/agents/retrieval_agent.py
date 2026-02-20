@@ -24,9 +24,7 @@ class RetrievalAgent(KernelRoutedAgent):
     All operations route through CognitionKernel for governance.
     """
 
-    def __init__(
-        self, data_dir: str = "data", kernel: CognitionKernel | None = None
-    ) -> None:
+    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
         """Initialize the retrieval agent.
 
         Args:

@@ -188,9 +188,7 @@ class FunctionRegistry:
         func_data.pop("func", None)
         return func_data
 
-    def list_functions(
-        self, category: str | None = None, include_schema: bool = False
-    ) -> list[dict[str, Any]]:
+    def list_functions(self, category: str | None = None, include_schema: bool = False) -> list[dict[str, Any]]:
         """List all registered functions.
 
         Args:
@@ -253,9 +251,7 @@ class FunctionRegistry:
             return result
         except TypeError as e:
             logger.error("Parameter mismatch calling '%s': %s", function_name, e)
-            raise TypeError(
-                f"Invalid parameters for function '{function_name}': {e}"
-            ) from e
+            raise TypeError(f"Invalid parameters for function '{function_name}': {e}") from e
 
     def get_help(self, name: str | None = None) -> str:
         """Get help text for a function or all functions.
@@ -284,12 +280,8 @@ class FunctionRegistry:
                     required = param_name in schema.get("required", [])
                     req_str = " (required)" if required else " (optional)"
                     default = param_info.get("default")
-                    default_str = (
-                        f" [default: {default}]" if default is not None else ""
-                    )
-                    help_text += (
-                        f"  - {param_name}: {param_type}{req_str}{default_str}\n"
-                    )
+                    default_str = f" [default: {default}]" if default is not None else ""
+                    help_text += f"  - {param_name}: {param_type}{req_str}{default_str}\n"
             else:
                 help_text += "Parameters: None\n"
 
@@ -336,9 +328,7 @@ class FunctionRegistry:
             "parameters": func_data["schema"],
         }
 
-    def to_openai_function_schemas(
-        self, category: str | None = None
-    ) -> list[dict[str, Any]]:
+    def to_openai_function_schemas(self, category: str | None = None) -> list[dict[str, Any]]:
         """Get all functions as OpenAI function calling schemas.
 
         Args:

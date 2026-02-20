@@ -95,9 +95,7 @@ class GlobalWatchTower:
     def __init__(self) -> None:
         """Private constructor. Use get_instance() or initialize() instead."""
         if GlobalWatchTower._initialized:
-            raise RuntimeError(
-                "GlobalWatchTower is a singleton. Use get_instance() or initialize()"
-            )
+            raise RuntimeError("GlobalWatchTower is a singleton. Use get_instance() or initialize()")
 
         self.cerberus: Cerberus = Cerberus()
         self.port_admins: list[PortAdmin] = []
@@ -145,9 +143,7 @@ class GlobalWatchTower:
         """
         with cls._lock:
             if cls._instance is not None:
-                logger.warning(
-                    "GlobalWatchTower already initialized, returning existing instance"
-                )
+                logger.warning("GlobalWatchTower already initialized, returning existing instance")
                 return cls._instance
 
             instance = cls.__new__(cls)
@@ -189,21 +185,15 @@ class GlobalWatchTower:
 
             # Register border patrol agents with Cerberus (Chief of Security)
             for admin in instance.port_admins:
-                instance.cerberus.register_security_agent(
-                    "border_patrol", admin.admin_id
-                )
+                instance.cerberus.register_security_agent("border_patrol", admin.admin_id)
             for tower in instance.watch_towers:
-                instance.cerberus.register_security_agent(
-                    "border_patrol", tower.tower_id
-                )
+                instance.cerberus.register_security_agent("border_patrol", tower.tower_id)
             for gate in instance.gate_guardians:
                 instance.cerberus.register_security_agent("border_patrol", gate.gate_id)
             for verifier_id in instance.verifiers:
                 instance.cerberus.register_security_agent("border_patrol", verifier_id)
 
-            logger.info(
-                "GlobalWatchTower (Security Command Center) initialized under Cerberus (Chief of Security)"
-            )
+            logger.info("GlobalWatchTower (Security Command Center) initialized under Cerberus (Chief of Security)")
             logger.info(
                 "Border Patrol: %d admins, %d towers, %d gates, %d verifiers",
                 len(instance.port_admins),
@@ -222,19 +212,13 @@ class GlobalWatchTower:
                     authority_level=AuthorityLevel.CONSTRAINED,
                     role=ComponentRole.INFRASTRUCTURE_CONTROLLER,
                     component_ref=instance,
-                    dependencies=[
-                        "cognition_kernel"
-                    ],  # Depends on kernel for authority
+                    dependencies=["cognition_kernel"],  # Depends on kernel for authority
                     can_be_paused=True,  # Can be paused by Tier-1
                     can_be_replaced=False,  # Core security infrastructure
                 )
-                logger.info(
-                    "GlobalWatchTower registered as Tier-2 Infrastructure Controller"
-                )
+                logger.info("GlobalWatchTower registered as Tier-2 Infrastructure Controller")
             except Exception as e:
-                logger.warning(
-                    "Failed to register GlobalWatchTower in tier registry: %s", e
-                )
+                logger.warning("Failed to register GlobalWatchTower in tier registry: %s", e)
 
             return instance
 
@@ -253,9 +237,7 @@ class GlobalWatchTower:
             result = tower.verify_file("/path/to/file.py")
         """
         if cls._instance is None:
-            raise RuntimeError(
-                "GlobalWatchTower not initialized. Call GlobalWatchTower.initialize() first"
-            )
+            raise RuntimeError("GlobalWatchTower not initialized. Call GlobalWatchTower.initialize() first")
         return cls._instance
 
     @classmethod
@@ -468,9 +450,7 @@ class GlobalWatchTower:
         """
         return self.cerberus
 
-    def register_security_agent(
-        self, agent_type: str, agent_id: str, agent_instance: Any = None
-    ) -> None:
+    def register_security_agent(self, agent_type: str, agent_id: str, agent_instance: Any = None) -> None:
         """Register an external security agent with Cerberus (Chief of Security).
 
         This allows other security agents in the system to register themselves

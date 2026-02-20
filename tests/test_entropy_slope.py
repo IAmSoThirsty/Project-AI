@@ -159,9 +159,7 @@ class TestSnapshotRecording:
     def test_record_multiple_snapshots(self, monitor):
         """Test recording multiple snapshots"""
         for i in range(5):
-            monitor.record_entropy_snapshot(
-                0.5 + i * 0.01, f"source_{i}", {"block": i}
-            )
+            monitor.record_entropy_snapshot(0.5 + i * 0.01, f"source_{i}", {"block": i})
 
         snapshots = monitor.load_entropy_snapshots()
         assert len(snapshots) == 5
@@ -196,9 +194,7 @@ class TestSnapshotRecording:
         start_time = base_time + 3600
         end_time = base_time + 3 * 3600
 
-        filtered = monitor.load_entropy_snapshots(
-            start_time=start_time, end_time=end_time
-        )
+        filtered = monitor.load_entropy_snapshots(start_time=start_time, end_time=end_time)
 
         assert len(filtered) == 3
 
@@ -270,9 +266,7 @@ class TestCompletionConvergence:
 
     def test_completion_with_sufficient_stable_data(self, monitor, stable_snapshots):
         """Test completion detection with 10+ years of stable data"""
-        is_complete, metadata = monitor.detect_completion_convergence(
-            stable_snapshots
-        )
+        is_complete, metadata = monitor.detect_completion_convergence(stable_snapshots)
 
         # The function should return proper structure
         # Check that we got either success metadata or failure reason

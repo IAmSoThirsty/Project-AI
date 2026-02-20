@@ -383,9 +383,7 @@ class LocalFBOSystem:
         logger.info("Added reflection: %s from %s", category, source)
         return reflection
 
-    def search_reflections(
-        self, query: str = None, category: str = None, limit: int = 10
-    ) -> list[ReflectionEntry]:
+    def search_reflections(self, query: str = None, category: str = None, limit: int = 10) -> list[ReflectionEntry]:
         """
         Search reflections.
 
@@ -438,17 +436,13 @@ class LocalFBOSystem:
             for tag in r.tags:
                 tag_counts[tag] = tag_counts.get(tag, 0) + 1
 
-        for tag, count in sorted(tag_counts.items(), key=lambda x: x[1], reverse=True)[
-            :5
-        ]:
+        for tag, count in sorted(tag_counts.items(), key=lambda x: x[1], reverse=True)[:5]:
             patterns.append(f"Common theme: {tag} ({count} occurrences)")
 
         # Analyze confidence trends
         recent_reflections = self.reflections[-10:]
         avg_confidence = np.mean([r.confidence for r in recent_reflections])
-        patterns.append(
-            f"Average confidence in recent reflections: {avg_confidence:.2f}"
-        )
+        patterns.append(f"Average confidence in recent reflections: {avg_confidence:.2f}")
 
         return patterns
 
@@ -580,9 +574,7 @@ class LocalFBOSystem:
 # Convenience functions
 
 
-def create_local_fbo(
-    data_dir: str = "data/local_fbo", enable_all: bool = True
-) -> LocalFBOSystem:
+def create_local_fbo(data_dir: str = "data/local_fbo", enable_all: bool = True) -> LocalFBOSystem:
     """
     Create a Local FBO system with default settings.
 

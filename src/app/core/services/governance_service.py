@@ -40,9 +40,7 @@ class MutationIntent(Enum):
     """Intent classification for mutations to identity/memory."""
 
     CORE = "core"  # genesis, law_hierarchy, core_values - requires full consensus
-    STANDARD = (
-        "standard"  # personality_weights, preferences - requires standard consensus
-    )
+    STANDARD = "standard"  # personality_weights, preferences - requires standard consensus
     ROUTINE = "routine"  # regular operations - allowed
 
 
@@ -127,9 +125,7 @@ class GovernanceService:
             )
             logger.info("GovernanceService registered as Tier-1 Policy Enforcer")
         except Exception as e:
-            logger.warning(
-                "Failed to register GovernanceService in tier registry: %s", e
-            )
+            logger.warning("Failed to register GovernanceService in tier registry: %s", e)
 
         logger.info("GovernanceService initialized")
         logger.info("  Triumvirate: %s", triumvirate is not None)

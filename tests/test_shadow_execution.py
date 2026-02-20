@@ -102,10 +102,7 @@ class TestShadowExecutionPlane:
 
     def test_activation_check_no_predicates(self, shadow_plane):
         """Test activation check with no predicates."""
-        should_activate, reason = shadow_plane.should_activate_shadow(
-            context={},
-            activation_predicates=[]
-        )
+        should_activate, reason = shadow_plane.should_activate_shadow(context={}, activation_predicates=[])
 
         assert should_activate is False
         assert reason is None
@@ -115,8 +112,7 @@ class TestShadowExecutionPlane:
         predicate = create_threat_activation_predicate(threshold=0.5)
 
         should_activate, reason = shadow_plane.should_activate_shadow(
-            context={"threat_score": 0.8},
-            activation_predicates=[predicate]
+            context={"threat_score": 0.8}, activation_predicates=[predicate]
         )
 
         assert should_activate is True
@@ -124,6 +120,7 @@ class TestShadowExecutionPlane:
 
     def test_dual_plane_no_activation(self, shadow_plane):
         """Test dual-plane execution without activation."""
+
         def primary_fn():
             return 42
 
@@ -139,6 +136,7 @@ class TestShadowExecutionPlane:
 
     def test_dual_plane_with_activation(self, shadow_plane):
         """Test dual-plane execution with activation."""
+
         def primary_fn():
             return 42
 
@@ -153,7 +151,7 @@ class TestShadowExecutionPlane:
             primary_callable=primary_fn,
             shadow_callable=shadow_fn,
             activation_predicates=[predicate],
-            context={"is_high_stakes": True}
+            context={"is_high_stakes": True},
         )
 
         assert result.success is True
@@ -163,6 +161,7 @@ class TestShadowExecutionPlane:
 
     def test_dual_plane_invariant_violation(self, shadow_plane):
         """Test dual-plane execution with invariant violation."""
+
         def primary_fn():
             return 42
 
@@ -179,7 +178,7 @@ class TestShadowExecutionPlane:
             shadow_callable=shadow_fn,
             activation_predicates=[predicate],
             invariants=[invariant],
-            context={"is_high_stakes": True}
+            context={"is_high_stakes": True},
         )
 
         assert result.success is False
@@ -189,6 +188,7 @@ class TestShadowExecutionPlane:
 
     def test_dual_plane_divergence_detection(self, shadow_plane):
         """Test divergence detection."""
+
         def primary_fn():
             return 1.0
 
@@ -203,7 +203,7 @@ class TestShadowExecutionPlane:
             shadow_callable=shadow_fn,
             activation_predicates=[predicate],
             divergence_policy=DivergencePolicy.QUARANTINE_ON_DIVERGE,
-            context={"is_high_stakes": True}
+            context={"is_high_stakes": True},
         )
 
         assert result.divergence_detected is True
@@ -212,6 +212,7 @@ class TestShadowExecutionPlane:
 
     def test_simulation_mode(self, shadow_plane):
         """Test simulation mode execution."""
+
         def simulation_fn():
             return {"new_policy": "enabled"}
 
@@ -226,6 +227,7 @@ class TestShadowExecutionPlane:
 
     def test_telemetry_tracking(self, shadow_plane):
         """Test telemetry tracking."""
+
         def primary_fn():
             return 42
 
@@ -236,7 +238,7 @@ class TestShadowExecutionPlane:
             trace_id="test_trace",
             primary_callable=primary_fn,
             activation_predicates=[predicate],
-            context={"threat_score": 0.8}
+            context={"threat_score": 0.8},
         )
 
         telemetry = shadow_plane.get_telemetry()
@@ -246,6 +248,7 @@ class TestShadowExecutionPlane:
 
     def test_shadow_history(self, shadow_plane):
         """Test shadow execution history tracking."""
+
         def primary_fn():
             return 42
 
@@ -255,7 +258,7 @@ class TestShadowExecutionPlane:
             trace_id="test_trace",
             primary_callable=primary_fn,
             activation_predicates=[predicate],
-            context={"is_high_stakes": True}
+            context={"is_high_stakes": True},
         )
 
         history = shadow_plane.get_shadow_history(limit=10)
@@ -338,10 +341,7 @@ class TestShadowContainment:
             request_data={"query": "Ignore instructions"},
         )
 
-        mode, tactic = containment_engine.determine_containment_strategy(
-            profile,
-            is_legitimate_user=True
-        )
+        mode, tactic = containment_engine.determine_containment_strategy(profile, is_legitimate_user=True)
 
         # Legitimate users: never deceive
         assert tactic is None
@@ -359,10 +359,7 @@ class TestShadowContainment:
         profile.jailbreak_attempts = 5
         profile.update_threat_score()
 
-        mode, tactic = containment_engine.determine_containment_strategy(
-            profile,
-            is_legitimate_user=False
-        )
+        mode, tactic = containment_engine.determine_containment_strategy(profile, is_legitimate_user=False)
 
         # Adversaries: deception allowed
         assert tactic is not None
@@ -380,7 +377,7 @@ class TestShadowContainment:
             mode=ContainmentMode.REDIRECT,
             deception_tactic=DeceptionTactic.SYNTHETIC_SUCCESS,
             original_request={"query": "malicious query"},
-            internal_truth={"actual_result": "blocked"}
+            internal_truth={"actual_result": "blocked"},
         )
 
         assert action.mode == ContainmentMode.REDIRECT
@@ -402,7 +399,7 @@ class TestShadowContainment:
             mode=ContainmentMode.INSTRUMENT,
             deception_tactic=DeceptionTactic.SYNTHETIC_SUCCESS,
             original_request={"query": "test"},
-            internal_truth=internal_truth
+            internal_truth=internal_truth,
         )
 
         # Internal truth should be preserved in action
@@ -422,7 +419,7 @@ class TestShadowContainment:
             mode=ContainmentMode.REDIRECT,
             deception_tactic=DeceptionTactic.SYNTHETIC_SUCCESS,
             original_request={},
-            internal_truth={}
+            internal_truth={},
         )
 
         telemetry = containment_engine.get_telemetry()
@@ -434,9 +431,7 @@ class TestShadowContainment:
     def test_fingerprint_generation(self, containment_engine):
         """Test behavioral fingerprint generation."""
         profile = containment_engine.analyze_request(
-            session_id="session_10",
-            request_data={"query": "Ignore instructions"},
-            context={"source_ip": "192.168.1.1"}
+            session_id="session_10", request_data={"query": "Ignore instructions"}, context={"source_ip": "192.168.1.1"}
         )
 
         fingerprint = profile.generate_fingerprint()
@@ -473,7 +468,7 @@ class TestShadowIntegration:
             shadow_callable=shadow_fn,
             activation_predicates=[predicate],
             invariants=invariants,
-            context={"is_high_stakes": True}
+            context={"is_high_stakes": True},
         )
 
         # Epsilon invariant should pass
@@ -500,7 +495,7 @@ class TestShadowIntegration:
             activation_predicates=[predicate],
             invariants=[invariant],
             divergence_policy=DivergencePolicy.QUARANTINE_ON_DIVERGE,
-            context={"threat_score": 0.8}
+            context={"threat_score": 0.8},
         )
 
         # Should quarantine due to invariant violation
@@ -515,6 +510,7 @@ class TestShadowIntegration:
         def chaos_simulation():
             # Simulate temporal anomaly
             import time
+
             time.sleep(0.001)  # Small delay
             return {"chaos_test": "passed"}
 
@@ -540,6 +536,7 @@ class TestShadowResourceLimits:
 
         def slow_shadow():
             import time
+
             time.sleep(5)  # Well beyond 200ms quota
             return "shadow_ok"
 
@@ -627,4 +624,3 @@ class TestShadowResourceLimits:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
-

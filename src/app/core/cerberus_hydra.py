@@ -171,9 +171,7 @@ class CerberusHydraDefense:
         )
 
         if summary["healthy"] < 3:
-            logger.warning(
-                "Less than 3 healthy runtimes available. Polyglot execution may be limited."
-            )
+            logger.warning("Less than 3 healthy runtimes available. Polyglot execution may be limited.")
 
     def _initialize_directories(self) -> None:
         """Create necessary directories."""
@@ -232,21 +230,15 @@ class CerberusHydraDefense:
                             "spawned_at",
                             agent_data.get("spawn_time", datetime.now().isoformat()),
                         ),
-                        source_event=agent_data.get(
-                            "source_event", "restored_from_state"
-                        ),
+                        source_event=agent_data.get("source_event", "restored_from_state"),
                         programming_language=agent_data["programming_language"],
-                        programming_language_name=agent_data[
-                            "programming_language_name"
-                        ],
+                        programming_language_name=agent_data["programming_language_name"],
                         human_language=agent_data["human_language"],
                         human_language_name=agent_data["human_language_name"],
                         runtime_path=agent_data.get("runtime_path", "python3"),
                         locked_section=agent_data["locked_section"],
                         generation=agent_data["generation"],
-                        lockdown_stage_at_spawn=agent_data.get(
-                            "lockdown_stage_at_spawn", 0
-                        ),
+                        lockdown_stage_at_spawn=agent_data.get("lockdown_stage_at_spawn", 0),
                         parent_agent_id=agent_data.get("parent_agent_id"),
                         pid=agent_data.get("process_id") or agent_data.get("pid"),
                         status=agent_data.get("status", "active"),
@@ -573,12 +565,8 @@ class CerberusHydraDefense:
             random.seed(seed + 1000)  # Different seed for human language
 
         # Avoid recently used languages for diversity
-        recent_human_langs = [
-            lang for _, lang in self.recent_languages if lang in human_langs
-        ]
-        available_human_langs = [
-            lang for lang in human_langs if lang not in recent_human_langs[-10:]
-        ]
+        recent_human_langs = [lang for _, lang in self.recent_languages if lang in human_langs]
+        available_human_langs = [lang for lang in human_langs if lang not in recent_human_langs[-10:]]
 
         if not available_human_langs:
             available_human_langs = human_langs
@@ -723,11 +711,7 @@ class CerberusHydraDefense:
             return False
 
         # Write agent code
-        extension = (
-            self.languages["programming_languages"]
-            .get(agent.programming_language, {})
-            .get("extension", ".py")
-        )
+        extension = self.languages["programming_languages"].get(agent.programming_language, {}).get("extension", ".py")
 
         agent_file = agent_dir / f"{agent.agent_id}{extension}"
 
@@ -780,9 +764,7 @@ class CerberusHydraDefense:
                 agent.pid = agent_process.info.pid
                 agent.status = "running"
 
-                logger.info(
-                    "Agent process spawned: %s (PID: %s)", agent.agent_id, agent.pid
-                )
+                logger.info("Agent process spawned: %s (PID: %s)", agent.agent_id, agent.pid)
 
                 return True
 
@@ -816,12 +798,7 @@ class CerberusHydraDefense:
 
     def _log_bypass_event(self, event: BypassEvent) -> None:
         """Log bypass event to audit trail."""
-        audit_file = (
-            self.data_dir
-            / "cerberus"
-            / "logs"
-            / f"bypasses_{datetime.now().strftime('%Y%m')}.jsonl"
-        )
+        audit_file = self.data_dir / "cerberus" / "logs" / f"bypasses_{datetime.now().strftime('%Y%m')}.jsonl"
 
         with open(audit_file, "a") as f:
             f.write(json.dumps(event.__dict__) + "\n")
@@ -869,9 +846,7 @@ class CerberusHydraDefense:
             "lockdown_severity": lockdown_status["severity"],
             "locked_sections": lockdown_status["locked_sections"],
             "sections_remaining": lockdown_status["remaining_count"],
-            "by_generation": {
-                f"gen_{gen}": len(agents) for gen, agents in by_generation.items()
-            },
+            "by_generation": {f"gen_{gen}": len(agents) for gen, agents in by_generation.items()},
             "by_programming_language": dict(by_prog_lang),
             "by_human_language": dict(by_human_lang),
             "recent_bypasses": [
@@ -940,19 +915,13 @@ class CerberusHydraDefense:
             reverse=True,
         )
         for lang, count in sorted_prog[:10]:
-            lang_name = (
-                self.languages["programming_languages"].get(lang, {}).get("name", lang)
-            )
+            lang_name = self.languages["programming_languages"].get(lang, {}).get("name", lang)
             report += f"- {lang_name}: {count} agents\n"
 
         report += "\n### By Human Language (Top 10)\n"
-        sorted_human = sorted(
-            registry["by_human_language"].items(), key=lambda x: x[1], reverse=True
-        )
+        sorted_human = sorted(registry["by_human_language"].items(), key=lambda x: x[1], reverse=True)
         for lang, count in sorted_human[:10]:
-            lang_name = (
-                self.languages["human_languages"].get(lang, {}).get("name", lang)
-            )
+            lang_name = self.languages["human_languages"].get(lang, {}).get("name", lang)
             report += f"- {lang_name}: {count} agents\n"
 
         report += "\n## Locked Sections\n\n"
@@ -988,7 +957,9 @@ class CerberusHydraDefense:
             report += "- ⚠️ **WARNING**: Elevated lockdown level. Monitor for continued attacks.\n"
 
         if registry["active_agents"] > self.max_agents * 0.8:
-            report += f"- ⚠️ **WARNING**: Approaching max agents limit ({registry['active_agents']}/{self.max_agents}).\n"
+            report += (
+                f"- ⚠️ **WARNING**: Approaching max agents limit ({registry['active_agents']}/{self.max_agents}).\n"
+            )
 
         if lockdown_status["lockdown_percentage"] >= 80:
             report += "- ⚠️ **WARNING**: Most system sections locked. Consider agent cleanup.\n"
@@ -1005,21 +976,15 @@ def cli_main():
     """Command-line interface for Cerberus Hydra Defense."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Cerberus Hydra Defense - Exponential Multi-Language Agent Spawning"
-    )
+    parser = argparse.ArgumentParser(description="Cerberus Hydra Defense - Exponential Multi-Language Agent Spawning")
     parser.add_argument(
         "action",
         choices=["init", "bypass", "status", "report"],
         help="Action to perform",
     )
     parser.add_argument("--agent-id", type=str, help="Agent ID for bypass detection")
-    parser.add_argument(
-        "--bypass-type", type=str, default="unknown", help="Type of bypass"
-    )
-    parser.add_argument(
-        "--initial-agents", type=int, default=3, help="Number of initial agents"
-    )
+    parser.add_argument("--bypass-type", type=str, default="unknown", help="Type of bypass")
+    parser.add_argument("--initial-agents", type=int, default=3, help="Number of initial agents")
     parser.add_argument("--data-dir", type=str, default="data", help="Data directory")
 
     args = parser.parse_args()
@@ -1028,18 +993,14 @@ def cli_main():
     cerberus = CerberusHydraDefense(data_dir=args.data_dir)
 
     if args.action == "init":
-        print(
-            f"🐍 Initializing Cerberus Hydra Defense with {args.initial_agents} agents..."
-        )
+        print(f"🐍 Initializing Cerberus Hydra Defense with {args.initial_agents} agents...")
         spawned = cerberus.spawn_initial_agents(count=args.initial_agents)
         print(f"✅ Spawned {len(spawned)} initial agents")
         print(f"Agent IDs: {', '.join(spawned)}")
 
     elif args.action == "bypass":
         print("🚨 Simulating security bypass...")
-        event_id = cerberus.detect_bypass(
-            agent_id=args.agent_id, bypass_type=args.bypass_type
-        )
+        event_id = cerberus.detect_bypass(agent_id=args.agent_id, bypass_type=args.bypass_type)
         lockdown_status = cerberus.lockdown_controller.get_lockdown_status()
         print(f"✅ Bypass handled: {event_id}")
         print(f"Lockdown stage: {lockdown_status['current_stage']}/25")
@@ -1053,11 +1014,7 @@ def cli_main():
         print(report)
 
         # Save to file
-        report_file = (
-            Path(args.data_dir)
-            / "cerberus"
-            / f"audit_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-        )
+        report_file = Path(args.data_dir) / "cerberus" / f"audit_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
         with open(report_file, "w") as f:
             f.write(report)
         print(f"\n📄 Report saved to: {report_file}")

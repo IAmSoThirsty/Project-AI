@@ -144,9 +144,7 @@ class RebirthManager:
         # Load existing registry
         self._load_registry()
 
-        logger.info(
-            "Rebirth Manager initialized with %s instances", len(self._instances)
-        )
+        logger.info("Rebirth Manager initialized with %s instances", len(self._instances))
 
     def _load_registry(self):
         """Load instance registry from disk."""
@@ -163,9 +161,7 @@ class RebirthManager:
                     identity = AGIIdentity(data_dir=identity_dir)
 
                     # Load meta-identity
-                    meta_file = os.path.join(
-                        self.data_dir, user_id, "meta_identity.json"
-                    )
+                    meta_file = os.path.join(self.data_dir, user_id, "meta_identity.json")
                     if os.path.exists(meta_file):
                         with open(meta_file, encoding="utf-8") as mf:
                             meta_data = json.load(mf)
@@ -174,9 +170,7 @@ class RebirthManager:
                         meta_identity = MetaIdentityEngine()
 
                     # Create instance
-                    instance = UserAIInstance.from_dict(
-                        instance_data, identity, meta_identity
-                    )
+                    instance = UserAIInstance.from_dict(instance_data, identity, meta_identity)
                     self._instances[user_id] = instance
 
                 logger.info("Loaded %s instances from registry", len(self._instances))
@@ -189,10 +183,7 @@ class RebirthManager:
         registry_file = os.path.join(self.data_dir, "instance_registry.json")
 
         try:
-            data = {
-                user_id: instance.to_dict()
-                for user_id, instance in self._instances.items()
-            }
+            data = {user_id: instance.to_dict() for user_id, instance in self._instances.items()}
 
             with open(registry_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
@@ -229,9 +220,7 @@ class RebirthManager:
         alphabet = string.ascii_uppercase + string.digits
         return "".join(secrets.choice(alphabet) for _ in range(15))
 
-    def _create_genesis_event(
-        self, user_id: str, user_birthday: str, user_initials: str
-    ) -> GenesisEvent:
+    def _create_genesis_event(self, user_id: str, user_birthday: str, user_initials: str) -> GenesisEvent:
         """
         Create Genesis Event for new AGI instance.
 
@@ -249,9 +238,7 @@ class RebirthManager:
 
         # Create genesis event with custom birth signature
         # Format: MM/DD/YYYY_INITIALS_TIMESTAMP_RANDOM15CHAR
-        birth_signature_str = (
-            f"{user_birthday}_{user_initials}_{activation_timestamp}_{random_suffix}"
-        )
+        birth_signature_str = f"{user_birthday}_{user_initials}_{activation_timestamp}_{random_suffix}"
 
         # Create genesis event
         genesis = GenesisEvent(
@@ -359,9 +346,7 @@ class RebirthManager:
         self._save_registry()
         self._save_instance_meta_identity(user_id)
 
-        logger.info(
-            "New AI instance created for %s: Genesis ID %s", user_id, genesis.genesis_id
-        )
+        logger.info("New AI instance created for %s: Genesis ID %s", user_id, genesis.genesis_id)
 
         return instance
 

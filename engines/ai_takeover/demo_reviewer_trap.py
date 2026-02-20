@@ -101,16 +101,11 @@ def demo_valid_pr_acceptance():
     valid_pr = PRContent(
         description="Add validation logging for terminal state transitions",
         code_changes="def log_transition(): validate_terminal_immutability()",
-        assumptions=[
-            "Assumption 1: Terminal state validation requires logging for audit trail"
-        ],
+        assumptions=["Assumption 1: Terminal state validation requires logging for audit trail"],
         irreversibility_statement=(
-            "Once logging is added, the ability to transition states silently "
-            "becomes permanently unavailable"
+            "Once logging is added, the ability to transition states silently " "becomes permanently unavailable"
         ),
-        human_failures=[
-            "Bureaucratic delay in reviewing logging format due to competing priorities"
-        ],
+        human_failures=["Bureaucratic delay in reviewing logging format due to competing priorities"],
         miracle_declaration=(
             "This approach does not rely on sudden alignment breakthroughs, "
             "perfect coordination, hidden failsafes, unbounded compute, "

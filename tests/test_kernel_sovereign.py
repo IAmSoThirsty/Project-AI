@@ -127,9 +127,7 @@ class TestExecutionKernelSovereign:
         assert "SOVEREIGN ENFORCEMENT" in str(exc_info.value)
         assert "no policy binding provided" in str(exc_info.value)
 
-    def test_kernel_with_sovereign_blocks_invalid_binding(
-        self, kernel_with_sovereign, sovereign
-    ):
+    def test_kernel_with_sovereign_blocks_invalid_binding(self, kernel_with_sovereign, sovereign):
         """
         CRITICAL TEST: Kernel blocks execution with invalid policy binding.
 
@@ -142,22 +140,16 @@ class TestExecutionKernelSovereign:
         wrong_context = {"stage": "different"}
         policy_state = {"stage_allowed": True, "governance_active": True}
 
-        policy_binding = sovereign.create_policy_state_binding(
-            policy_state, wrong_context
-        )
+        policy_binding = sovereign.create_policy_state_binding(policy_state, wrong_context)
 
         # Should raise RuntimeError with invalid binding
         with pytest.raises(RuntimeError) as exc_info:
-            kernel_with_sovereign.execute(
-                action, context, policy_binding=policy_binding
-            )
+            kernel_with_sovereign.execute(action, context, policy_binding=policy_binding)
 
         assert "SOVEREIGN ENFORCEMENT" in str(exc_info.value)
         assert "policy binding verification failed" in str(exc_info.value)
 
-    def test_kernel_with_sovereign_allows_valid_binding(
-        self, kernel_with_sovereign, sovereign
-    ):
+    def test_kernel_with_sovereign_allows_valid_binding(self, kernel_with_sovereign, sovereign):
         """
         Test that kernel allows execution with valid policy binding.
 
@@ -171,21 +163,15 @@ class TestExecutionKernelSovereign:
         policy_binding = sovereign.create_policy_state_binding(policy_state, context)
 
         # Should succeed with valid binding
-        result = kernel_with_sovereign.execute(
-            action, context, policy_binding=policy_binding
-        )
+        result = kernel_with_sovereign.execute(action, context, policy_binding=policy_binding)
 
         assert result["status"] == "success"
         assert result["action"] == action
         assert "sovereign_proof" in result
         assert result["sovereign_proof"]["verified"]
-        assert (
-            result["sovereign_proof"]["binding_hash"] == policy_binding["binding_hash"]
-        )
+        assert result["sovereign_proof"]["binding_hash"] == policy_binding["binding_hash"]
 
-    def test_sovereign_enforcement_logs_to_audit_trail(
-        self, kernel_with_sovereign, sovereign
-    ):
+    def test_sovereign_enforcement_logs_to_audit_trail(self, kernel_with_sovereign, sovereign):
         """Test that sovereign enforcement logs to audit trail."""
         action = "test_action"
         context = {"stage": "test"}
@@ -204,9 +190,7 @@ class TestExecutionKernelSovereign:
             # Should have AUTHORIZED and COMPLETED events
             assert len(events) >= 2
 
-    def test_sovereign_enforcement_logs_blocked_execution(
-        self, kernel_with_sovereign, sovereign
-    ):
+    def test_sovereign_enforcement_logs_blocked_execution(self, kernel_with_sovereign, sovereign):
         """Test that blocked executions are logged to audit trail."""
         action = "test_action"
         context = {"stage": "test"}
@@ -245,9 +229,7 @@ class TestExecutionKernelSovereign:
         # Attempt 2: Wrong binding - BLOCKED
         wrong_context = {"stage": "test"}
         policy_state = {"stage_allowed": True, "governance_active": True}
-        wrong_binding = sovereign.create_policy_state_binding(
-            policy_state, wrong_context
-        )
+        wrong_binding = sovereign.create_policy_state_binding(policy_state, wrong_context)
 
         with pytest.raises(RuntimeError) as exc2:
             kernel_with_sovereign.execute(action, context, policy_binding=wrong_binding)
@@ -255,9 +237,7 @@ class TestExecutionKernelSovereign:
 
         # Attempt 3: Valid binding - ALLOWED
         correct_binding = sovereign.create_policy_state_binding(policy_state, context)
-        result = kernel_with_sovereign.execute(
-            action, context, policy_binding=correct_binding
-        )
+        result = kernel_with_sovereign.execute(action, context, policy_binding=correct_binding)
         assert result["status"] == "success"
 
         # PROOF COMPLETE:
@@ -268,9 +248,7 @@ class TestExecutionKernelSovereign:
         #
         # = GOVERNANCE IS NON-BYPASSABLE BY DESIGN
 
-    def test_tarl_gate_still_enforced_in_sovereign_mode(
-        self, kernel_with_sovereign, sovereign
-    ):
+    def test_tarl_gate_still_enforced_in_sovereign_mode(self, kernel_with_sovereign, sovereign):
         """Test that TARL gate is still enforced even in sovereign mode."""
         action = "test_action"
         context = {"stage": "test"}
@@ -293,9 +271,7 @@ class TestExecutionKernelSovereign:
         policy_state = {"stage_allowed": True, "governance_active": True}
         policy_binding = sovereign.create_policy_state_binding(policy_state, context)
 
-        result = kernel_with_sovereign.execute(
-            action, context, policy_binding=policy_binding
-        )
+        result = kernel_with_sovereign.execute(action, context, policy_binding=policy_binding)
 
         # Verify sovereign proof
         assert "sovereign_proof" in result

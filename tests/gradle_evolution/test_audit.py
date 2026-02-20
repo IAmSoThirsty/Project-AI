@@ -20,9 +20,7 @@ class TestBuildAuditIntegration:
 
     def test_initialization(self, audit_log_path):
         """Test audit integration initializes."""
-        integration = BuildAuditIntegration(
-            audit_log_path=audit_log_path, enable_verbose=True
-        )
+        integration = BuildAuditIntegration(audit_log_path=audit_log_path, enable_verbose=True)
 
         assert integration.audit_log_path == audit_log_path
         assert integration.enable_verbose
@@ -53,9 +51,7 @@ class TestBuildAuditIntegration:
         build_id = "build-001"
         result = {"status": "success"}
 
-        integration.audit_build_complete(
-            build_id, success=True, duration_seconds=45.2, result=result
-        )
+        integration.audit_build_complete(build_id, success=True, duration_seconds=45.2, result=result)
 
         mock_audit.assert_called_once()
         call_args = mock_audit.call_args[0]

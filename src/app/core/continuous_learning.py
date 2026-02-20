@@ -89,11 +89,7 @@ class ContinuousLearningEngine:
 
     def _extract_facts(self, content: str) -> list[str]:
         """Find up to three meaningful facts in the text."""
-        candidates = [
-            s.strip()
-            for s in re.split(r"(?<=[.!?])\s+", content)
-            if len(s.strip()) >= 20
-        ]
+        candidates = [s.strip() for s in re.split(r"(?<=[.!?])\s+", content) if len(s.strip()) >= 20]
         if not candidates:
             return [content.strip()]
         return candidates[:3]
@@ -105,9 +101,7 @@ class ContinuousLearningEngine:
             f"Create a small experiment around {topic} that tests one of the recorded facts.",
         ]
         if "application" in content.lower():
-            ideas.append(
-                f"Leverage the application-focused details to improve how {topic} connects to daily practice."
-            )
+            ideas.append(f"Leverage the application-focused details to improve how {topic} connects to daily practice.")
         return ideas
 
     def _evaluate_pros_cons(self, content: str) -> dict[str, list[str]]:
@@ -123,17 +117,11 @@ class ContinuousLearningEngine:
         ]
         pros_cons = {"pros": [], "cons": []}
         if any(marker in normalized for marker in controversy_markers):
-            pros_cons["pros"].append(
-                "Summarizes the benefits or arguments that advocates are promoting."
-            )
-            pros_cons["cons"].append(
-                "Remembers the counterpoints that keep the debate grounded and neutral."
-            )
+            pros_cons["pros"].append("Summarizes the benefits or arguments that advocates are promoting.")
+            pros_cons["cons"].append("Remembers the counterpoints that keep the debate grounded and neutral.")
         return pros_cons
 
-    def _compose_neutral(
-        self, topic: str, facts: list[str], pros_cons: dict[str, list[str]]
-    ) -> str:
+    def _compose_neutral(self, topic: str, facts: list[str], pros_cons: dict[str, list[str]]) -> str:
         """Compose a neutral perspective that accompanies the recorded facts."""
         base = f"Continuous learning update for {topic}: {len(facts)} fact(s) recorded."
         if pros_cons.get("pros") or pros_cons.get("cons"):

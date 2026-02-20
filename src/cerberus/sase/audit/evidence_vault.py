@@ -61,14 +61,10 @@ class MerkleTree:
 
             for i in range(0, len(nodes), 2):
                 left = nodes[i]
-                right = (
-                    nodes[i + 1] if i + 1 < len(nodes) else nodes[i]
-                )  # Duplicate if odd
+                right = nodes[i + 1] if i + 1 < len(nodes) else nodes[i]  # Duplicate if odd
 
                 # Combine hashes
-                combined = hashlib.sha256(
-                    (left.hash_value + right.hash_value).encode()
-                ).hexdigest()
+                combined = hashlib.sha256((left.hash_value + right.hash_value).encode()).hexdigest()
 
                 parent = MerkleNode(hash_value=combined, left=left, right=right)
 
@@ -100,9 +96,7 @@ class MerkleTree:
 
         return proof
 
-    def _generate_proof_recursive(
-        self, node: MerkleNode, target_hash: str, proof: List[str]
-    ) -> bool:
+    def _generate_proof_recursive(self, node: MerkleNode, target_hash: str, proof: List[str]) -> bool:
         """Recursively generate proof path"""
         if node.is_leaf():
             return node.hash_value == target_hash
@@ -114,9 +108,7 @@ class MerkleTree:
             return True
 
         # Check right subtree
-        if node.right and self._generate_proof_recursive(
-            node.right, target_hash, proof
-        ):
+        if node.right and self._generate_proof_recursive(node.right, target_hash, proof):
             proof.append(node.left.hash_value)
             return True
 
@@ -182,9 +174,7 @@ class ProofGenerator:
     def __init__(self):
         self.generated_proofs: Dict[str, Dict] = {}
 
-    def generate(
-        self, event_hash: str, merkle_tree: MerkleTree, signature: str
-    ) -> Dict:
+    def generate(self, event_hash: str, merkle_tree: MerkleTree, signature: str) -> Dict:
         """
         Generate full cryptographic proof
 
@@ -295,9 +285,7 @@ class EvidenceVault:
         Validates both Merkle proof and HSM signature
         """
         # Verify Merkle proof
-        merkle_valid = MerkleTree.verify_proof(
-            proof["event_hash"], proof["merkle_proof"], proof["merkle_root"]
-        )
+        merkle_valid = MerkleTree.verify_proof(proof["event_hash"], proof["merkle_proof"], proof["merkle_root"])
 
         if not merkle_valid:
             logger.error("Merkle proof validation failed")

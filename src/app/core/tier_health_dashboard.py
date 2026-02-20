@@ -131,12 +131,8 @@ class ComponentHealthReport:
             return HealthLevel.DEGRADED
 
         # Check metrics
-        critical_count = sum(
-            1 for m in self.metrics if m.get_health_level() == HealthLevel.CRITICAL
-        )
-        warning_count = sum(
-            1 for m in self.metrics if m.get_health_level() == HealthLevel.DEGRADED
-        )
+        critical_count = sum(1 for m in self.metrics if m.get_health_level() == HealthLevel.CRITICAL)
+        warning_count = sum(1 for m in self.metrics if m.get_health_level() == HealthLevel.DEGRADED)
 
         if critical_count > 0:
             return HealthLevel.CRITICAL
@@ -220,9 +216,7 @@ class TierHealthMonitor:
 
         logger.info("TierHealthMonitor initialized")
 
-    def collect_component_health(
-        self, component_id: str
-    ) -> ComponentHealthReport | None:
+    def collect_component_health(self, component_id: str) -> ComponentHealthReport | None:
         """
         Collect health report for a single component.
 
@@ -311,11 +305,7 @@ class TierHealthMonitor:
             overall_health = HealthLevel.DEGRADED
         else:
             # Check component health levels
-            critical_components = sum(
-                1
-                for r in component_reports
-                if r.get_overall_health() == HealthLevel.CRITICAL
-            )
+            critical_components = sum(1 for r in component_reports if r.get_overall_health() == HealthLevel.CRITICAL)
             if critical_components > 0:
                 overall_health = HealthLevel.CRITICAL
             else:
@@ -323,9 +313,7 @@ class TierHealthMonitor:
 
         # Get violations
         violations = registry.get_all_violations()
-        tier_violations = [
-            v for v in violations if v.source_tier == tier or v.target_tier == tier
-        ]
+        tier_violations = [v for v in violations if v.source_tier == tier or v.target_tier == tier]
 
         # Select tier-specific metrics
         if tier == PlatformTier.TIER_1_GOVERNANCE:
@@ -374,18 +362,10 @@ class TierHealthMonitor:
             overall_health = HealthLevel.HEALTHY
 
         # Aggregate statistics
-        total_components = sum(
-            r.tier_status.component_count for r in tier_reports.values()
-        )
-        active_components = sum(
-            r.tier_status.active_components for r in tier_reports.values()
-        )
-        paused_components = sum(
-            r.tier_status.paused_components for r in tier_reports.values()
-        )
-        failed_components = sum(
-            r.tier_status.failed_components for r in tier_reports.values()
-        )
+        total_components = sum(r.tier_status.component_count for r in tier_reports.values())
+        active_components = sum(r.tier_status.active_components for r in tier_reports.values())
+        paused_components = sum(r.tier_status.paused_components for r in tier_reports.values())
+        failed_components = sum(r.tier_status.failed_components for r in tier_reports.values())
         total_violations = sum(r.active_violations for r in tier_reports.values())
 
         uptime = time.time() - self._start_time

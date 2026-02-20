@@ -141,9 +141,7 @@ class ThirstysHoneypotSwarmDefense:
 
         self.logger.info("Deployed %s base honeypot decoys", len(self.decoys))
 
-    def detect_policy_violation(
-        self, source_ip: str, violation_type: str, details: dict
-    ) -> dict:
+    def detect_policy_violation(self, source_ip: str, violation_type: str, details: dict) -> dict:
         """
         Detect policy violation and trigger swarm response
 
@@ -191,8 +189,7 @@ class ThirstysHoneypotSwarmDefense:
             "violation_count": attacker.violation_count,
             "cognitive_overload": attacker.cognitive_overload_score,
             "active_decoys": len(self.decoys),
-            "swarm_active": attacker.threat_level
-            in [ThreatLevel.SIEGE, ThreatLevel.SWARM],
+            "swarm_active": attacker.threat_level in [ThreatLevel.SIEGE, ThreatLevel.SWARM],
         }
 
     def _calculate_threat_level(self, violation_count: int) -> ThreatLevel:
@@ -251,9 +248,7 @@ class ThirstysHoneypotSwarmDefense:
             decoy_type = random.choice(list(DecoyType)[:decoy_variety])
 
             # Generate unique decoy ID
-            decoy_hash = hashlib.sha256(
-                f"{decoy_type.value}_{time.time()}_{i}".encode()
-            ).hexdigest()[:12]
+            decoy_hash = hashlib.sha256(f"{decoy_type.value}_{time.time()}_{i}".encode()).hexdigest()[:12]
 
             decoy_id = f"{decoy_type.value}_{decoy_hash}"
 
@@ -280,9 +275,7 @@ class ThirstysHoneypotSwarmDefense:
         decoy_confusion = len(attacker.accessed_decoys) / 10.0
 
         # Pattern chaos - inconsistent attack patterns indicate confusion
-        pattern_diversity = len(set(attacker.attack_patterns)) / max(
-            len(attacker.attack_patterns), 1
-        )
+        pattern_diversity = len(set(attacker.attack_patterns)) / max(len(attacker.attack_patterns), 1)
         pattern_chaos = pattern_diversity * 2.0
 
         # Time-based fatigue
@@ -337,9 +330,7 @@ class ThirstysHoneypotSwarmDefense:
             "total_attackers_tracked": len(self.attackers),
             "active_decoys": len(self.decoys),
             "threat_distribution": {k.value: v for k, v in threat_distribution.items()},
-            "swarm_active": any(
-                a.threat_level == ThreatLevel.SWARM for a in self.attackers.values()
-            ),
+            "swarm_active": any(a.threat_level == ThreatLevel.SWARM for a in self.attackers.values()),
             "max_cognitive_overload": max(
                 (a.cognitive_overload_score for a in self.attackers.values()),
                 default=0.0,

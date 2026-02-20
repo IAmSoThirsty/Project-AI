@@ -49,11 +49,7 @@ class Secret:
     value: str
     secret_type: SecretType
     created_at: datetime = field(
-        default_factory=lambda: (
-            datetime.now(datetime.UTC)
-            if hasattr(datetime, "UTC")
-            else datetime.utcnow()
-        )
+        default_factory=lambda: (datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow())
     )
     expires_at: datetime | None = None
     rotation_required: bool = False
@@ -63,11 +59,7 @@ class Secret:
         """Check if secret has expired."""
         if self.expires_at is None:
             return False
-        now = (
-            datetime.now(datetime.UTC)
-            if hasattr(datetime, "UTC")
-            else datetime.utcnow()
-        )
+        now = datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow()
         return now > self.expires_at
 
     def needs_rotation(self) -> bool:
@@ -82,9 +74,7 @@ class SecretStore(Protocol):
         """Retrieve a secret by key."""
         ...
 
-    def set_secret(
-        self, key: str, value: str, secret_type: SecretType, **kwargs
-    ) -> None:
+    def set_secret(self, key: str, value: str, secret_type: SecretType, **kwargs) -> None:
         """Store a secret."""
         ...
 
@@ -117,9 +107,7 @@ class EnvironmentSecretStore:
             logger.debug(f"Retrieved secret from environment: {env_key}")
         return value
 
-    def set_secret(
-        self, key: str, value: str, secret_type: SecretType, **kwargs
-    ) -> None:
+    def set_secret(self, key: str, value: str, secret_type: SecretType, **kwargs) -> None:
         """Set environment variable (for current process only)."""
         env_key = f"{self.prefix}{key.upper()}"
         os.environ[env_key] = value
@@ -134,11 +122,7 @@ class EnvironmentSecretStore:
 
     def list_secrets(self) -> list[str]:
         """List all secrets with prefix."""
-        return [
-            key[len(self.prefix) :].lower()
-            for key in os.environ
-            if key.startswith(self.prefix)
-        ]
+        return [key[len(self.prefix) :].lower() for key in os.environ if key.startswith(self.prefix)]
 
 
 class EncryptedFileSecretStore:
@@ -165,15 +149,9 @@ class EncryptedFileSecretStore:
 
         # Initialize Fernet cipher
         try:
-            self._cipher = Fernet(
-                encryption_key.encode()
-                if isinstance(encryption_key, str)
-                else encryption_key
-            )
+            self._cipher = Fernet(encryption_key.encode() if isinstance(encryption_key, str) else encryption_key)
         except Exception as e:
-            raise ConfigurationError(
-                f"Invalid encryption key: {e}", original_exception=e
-            )
+            raise ConfigurationError(f"Invalid encryption key: {e}", original_exception=e)
 
         # Load existing secrets
         self._load_secrets()
@@ -201,11 +179,7 @@ class EncryptedFileSecretStore:
         """Store secret in encrypted store."""
         expires_at = None
         if expires_in_days:
-            now = (
-                datetime.now(datetime.UTC)
-                if hasattr(datetime, "UTC")
-                else datetime.utcnow()
-            )
+            now = datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow()
             expires_at = now + timedelta(days=expires_in_days)
 
         secret = Secret(
@@ -238,11 +212,7 @@ class EncryptedFileSecretStore:
 
         secret = self._secrets[key]
         secret.value = new_value
-        secret.created_at = (
-            datetime.now(datetime.UTC)
-            if hasattr(datetime, "UTC")
-            else datetime.utcnow()
-        )
+        secret.created_at = datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow()
         secret.rotation_required = False
 
         self._save_secrets()
@@ -283,9 +253,7 @@ class EncryptedFileSecretStore:
                     secret_type=SecretType(secret_dict["secret_type"]),
                     created_at=datetime.fromisoformat(secret_dict["created_at"]),
                     expires_at=(
-                        datetime.fromisoformat(secret_dict["expires_at"])
-                        if secret_dict.get("expires_at")
-                        else None
+                        datetime.fromisoformat(secret_dict["expires_at"]) if secret_dict.get("expires_at") else None
                     ),
                     rotation_required=secret_dict.get("rotation_required", False),
                     metadata=secret_dict.get("metadata", {}),
@@ -313,9 +281,7 @@ class EncryptedFileSecretStore:
                     "value": secret.value,
                     "secret_type": secret.secret_type.value,
                     "created_at": secret.created_at.isoformat(),
-                    "expires_at": (
-                        secret.expires_at.isoformat() if secret.expires_at else None
-                    ),
+                    "expires_at": (secret.expires_at.isoformat() if secret.expires_at else None),
                     "rotation_required": secret.rotation_required,
                     "metadata": secret.metadata,
                 }
@@ -416,14 +382,10 @@ class SecretsManager:
         """
         value = self.get_secret(key)
         if value is None:
-            raise ConfigurationError(
-                f"Required secret not found: {key}", context={"key": key}
-            )
+            raise ConfigurationError(f"Required secret not found: {key}", context={"key": key})
         return value
 
-    def set_secret(
-        self, key: str, value: str, secret_type: SecretType = SecretType.OTHER, **kwargs
-    ) -> None:
+    def set_secret(self, key: str, value: str, secret_type: SecretType = SecretType.OTHER, **kwargs) -> None:
         """
         Store a secret.
 
@@ -481,9 +443,7 @@ class SecretsManager:
         return Fernet.generate_key().decode()
 
     @staticmethod
-    def derive_key_from_password(
-        password: str, salt: bytes | None = None
-    ) -> tuple[str, bytes]:
+    def derive_key_from_password(password: str, salt: bytes | None = None) -> tuple[str, bytes]:
         """
         Derive an encryption key from a password.
 
@@ -535,9 +495,7 @@ def get_secrets_manager(
         else:
             default_path = storage_path
 
-        _secrets_manager = SecretsManager(
-            storage_path=default_path, encryption_key=encryption_key
-        )
+        _secrets_manager = SecretsManager(storage_path=default_path, encryption_key=encryption_key)
 
     return _secrets_manager
 

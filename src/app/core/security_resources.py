@@ -71,9 +71,7 @@ class SecurityResourceManager:
         """Get security resources filtered by category"""
         resources = []
         for category_resources in self.resources.values():
-            resources.extend(
-                [r for r in category_resources if r["category"] == category]
-            )
+            resources.extend([r for r in category_resources if r["category"] == category])
         return resources
 
     def get_all_categories(self):

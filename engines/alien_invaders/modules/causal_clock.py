@@ -251,9 +251,7 @@ class CausalValidator:
         return True
 
     @staticmethod
-    def compare_causal_chains(
-        chain1: list[tuple[int, str]], chain2: list[tuple[int, str]]
-    ) -> bool:
+    def compare_causal_chains(chain1: list[tuple[int, str]], chain2: list[tuple[int, str]]) -> bool:
         """
         Compare two causal chains for equality.
 
@@ -267,9 +265,7 @@ class CausalValidator:
             True if chains are identical
         """
         if len(chain1) != len(chain2):
-            logger.error(
-                "Causal chain length mismatch: %d vs %d", len(chain1), len(chain2)
-            )
+            logger.error("Causal chain length mismatch: %d vs %d", len(chain1), len(chain2))
             return False
 
         for i, ((t1, e1), (t2, e2)) in enumerate(zip(chain1, chain2, strict=False)):

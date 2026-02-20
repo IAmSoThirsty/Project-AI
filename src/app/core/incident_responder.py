@@ -145,9 +145,7 @@ class IncidentResponder:
         self._load_state()
 
         logger.info("Incident Responder initialized")
-        logger.info(
-            "  Auto-response: %s", "enabled" if enable_auto_response else "disabled"
-        )
+        logger.info("  Auto-response: %s", "enabled" if enable_auto_response else "disabled")
         logger.info("  Available actions: %s", len(self.response_handlers))
 
     def handle_incident(
@@ -492,9 +490,7 @@ Please review and take appropriate action.
 
             # Success rate
             successful = sum(1 for r in self.responses if r.success)
-            success_rate = (
-                (successful / total_responses * 100) if total_responses > 0 else 0
-            )
+            success_rate = (successful / total_responses * 100) if total_responses > 0 else 0
 
             return {
                 "total_incidents": total_incidents,
@@ -528,18 +524,14 @@ Please review and take appropriate action.
                 with open(self.incidents_file) as f:
                     incident_data = json.load(f)
                     # Load last 1000 incidents
-                    self.incidents = [
-                        SecurityIncident(**i) for i in incident_data[-1000:]
-                    ]
+                    self.incidents = [SecurityIncident(**i) for i in incident_data[-1000:]]
                 logger.info("Loaded %s incidents", len(self.incidents))
 
             if self.responses_file.exists():
                 with open(self.responses_file) as f:
                     response_data = json.load(f)
                     # Load last 5000 responses
-                    self.responses = [
-                        IncidentResponse(**r) for r in response_data[-5000:]
-                    ]
+                    self.responses = [IncidentResponse(**r) for r in response_data[-5000:]]
                 logger.info("Loaded %s responses", len(self.responses))
 
         except Exception as e:

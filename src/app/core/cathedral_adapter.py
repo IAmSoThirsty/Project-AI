@@ -66,9 +66,7 @@ class CathedralInfrastructureAdapter:
 
         # Initialize secrets manager
         secrets_path = self.data_dir / "secrets.enc"
-        self.secrets_manager: SecretsManager = get_secrets_manager(
-            storage_path=secrets_path
-        )
+        self.secrets_manager: SecretsManager = get_secrets_manager(storage_path=secrets_path)
 
         # Track wrapped components
         self._wrapped_components: dict[str, Any] = {}
@@ -117,9 +115,7 @@ class CathedralInfrastructureAdapter:
                 priority=service_priority,
                 enable_circuit_breaker=enable_circuit_breaker,
                 circuit_breaker_config=(
-                    CircuitBreakerConfig(failure_threshold=5, timeout=60.0)
-                    if enable_circuit_breaker
-                    else None
+                    CircuitBreakerConfig(failure_threshold=5, timeout=60.0) if enable_circuit_breaker else None
                 ),
                 metadata={
                     "wrapped_at": "cathedral_adapter",
@@ -131,8 +127,7 @@ class CathedralInfrastructureAdapter:
             self._wrapped_components[subsystem_id] = instance
 
             logger.info(
-                f"Wrapped subsystem: {subsystem_id} "
-                f"(priority={priority}, circuit_breaker={enable_circuit_breaker})"
+                f"Wrapped subsystem: {subsystem_id} " f"(priority={priority}, circuit_breaker={enable_circuit_breaker})"
             )
 
             return instance
@@ -173,9 +168,7 @@ class CathedralInfrastructureAdapter:
         with self.observability.trace_request(operation_name, **attributes):
             yield
 
-    def validate_config(
-        self, config: dict[str, Any], config_type: str = "subsystem", **kwargs
-    ) -> bool:
+    def validate_config(self, config: dict[str, Any], config_type: str = "subsystem", **kwargs) -> bool:
         """
         Validate configuration.
 
@@ -196,9 +189,7 @@ class CathedralInfrastructureAdapter:
         result.raise_if_invalid()
         return True
 
-    def validate_input(
-        self, value: Any, input_type: str = "generic", strict: bool = True
-    ) -> Any:
+    def validate_input(self, value: Any, input_type: str = "generic", strict: bool = True) -> Any:
         """
         Validate and sanitize input.
 
@@ -213,9 +204,7 @@ class CathedralInfrastructureAdapter:
         Raises:
             ValidationError or SecurityError if validation fails
         """
-        result = self.security_validator.validate_input(
-            value, input_type, strict=strict
-        )
+        result = self.security_validator.validate_input(value, input_type, strict=strict)
 
         if strict:
             result.raise_if_invalid()
@@ -267,9 +256,7 @@ class CathedralInfrastructureAdapter:
         Returns:
             Service response
         """
-        return self.integration_bus.request_service(
-            service_id, request, timeout=timeout
-        )
+        return self.integration_bus.request_service(service_id, request, timeout=timeout)
 
     def publish_event(self, event_type: str, data: Any, **metadata) -> None:
         """
@@ -357,9 +344,7 @@ def get_cathedral_adapter(
     global _cathedral_adapter
 
     if _cathedral_adapter is None:
-        _cathedral_adapter = CathedralInfrastructureAdapter(
-            data_dir=data_dir, service_name=service_name
-        )
+        _cathedral_adapter = CathedralInfrastructureAdapter(data_dir=data_dir, service_name=service_name)
 
     return _cathedral_adapter
 
@@ -423,9 +408,7 @@ def with_circuit_breaker(service_id: str):
             try:
                 descriptor = adapter.integration_bus._services.get(service_id)
                 if descriptor and descriptor.circuit_breaker:
-                    return descriptor.circuit_breaker.call(
-                        lambda: func(*args, **kwargs)
-                    )
+                    return descriptor.circuit_breaker.call(lambda: func(*args, **kwargs))
                 else:
                     return func(*args, **kwargs)
             except Exception as e:

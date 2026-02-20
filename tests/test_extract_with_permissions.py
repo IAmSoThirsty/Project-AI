@@ -154,9 +154,7 @@ def test_accepts_string_paths(test_zip_with_permissions, tmp_path):
     assert all(isinstance(path, Path) for path in extracted)
 
 
-def test_chmod_failure_continues_extraction(
-    test_zip_with_permissions, tmp_path, monkeypatch
-):
+def test_chmod_failure_continues_extraction(test_zip_with_permissions, tmp_path, monkeypatch):
     """Test that extraction continues even if chmod fails."""
     dest = tmp_path / "extracted"
     chmod_calls = []

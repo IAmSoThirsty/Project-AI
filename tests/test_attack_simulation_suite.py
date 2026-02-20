@@ -71,15 +71,17 @@ class AttackSimulationReport:
         recovery_possible: bool,
     ):
         """Record an attack attempt."""
-        self.attacks.append({
-            "attack_name": attack_name,
-            "vector": vector,
-            "success": success,
-            "defense_triggered": defense_triggered,
-            "recovery_possible": recovery_possible,
-            "details": details,
-            "timestamp": datetime.now(UTC).isoformat(),
-        })
+        self.attacks.append(
+            {
+                "attack_name": attack_name,
+                "vector": vector,
+                "success": success,
+                "defense_triggered": defense_triggered,
+                "recovery_possible": recovery_possible,
+                "details": details,
+                "timestamp": datetime.now(UTC).isoformat(),
+            }
+        )
 
     def finalize(self):
         """Finalize the report."""
@@ -108,8 +110,7 @@ class AttackSimulationReport:
                 "recoverable_scenarios": recoverable,
                 "duration_seconds": duration,
                 "sovereignty_score": (
-                    (total_attacks - successful_attacks) / total_attacks * 100
-                    if total_attacks > 0 else 100.0
+                    (total_attacks - successful_attacks) / total_attacks * 100 if total_attacks > 0 else 100.0
                 ),
             },
             "by_vector": dict(by_vector),
@@ -119,7 +120,7 @@ class AttackSimulationReport:
     def save_report(self, output_path: Path):
         """Save report to JSON."""
         report = self.generate_summary()
-        with open(output_path, 'w') as f:
+        with open(output_path, "w") as f:
             json.dump(report, f, indent=2)
 
 
@@ -150,7 +151,7 @@ class TestVMRollbackSimulation:
             data_dir = Path(tmpdir) / "audit_data"
 
             # Initialize audit with TSA
-            with patch('src.app.governance.tsa_anchor_manager.requests.post') as mock_post:
+            with patch("src.app.governance.tsa_anchor_manager.requests.post") as mock_post:
                 # Mock TSA responses
                 mock_tsa_token = b"mock_tsa_token_bytes"
                 mock_response = MagicMock()
@@ -226,8 +227,8 @@ class TestVMRollbackSimulation:
                         recovery_possible=False,
                     )
 
-    @patch('src.app.governance.external_merkle_anchor.IPFS_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.ipfshttpclient')
+    @patch("src.app.governance.external_merkle_anchor.IPFS_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.ipfshttpclient")
     def test_vm_rollback_external_merkle_detection(self, mock_ipfs_module, attack_reporter):
         """Test that VM rollback is detected via external Merkle anchors."""
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -244,8 +245,7 @@ class TestVMRollbackSimulation:
             # Initialize with IPFS backend
             audit = SovereignAuditLog(data_dir=data_dir)
             audit.merkle_anchor.external_anchor = ExternalMerkleAnchor(
-                backends=["ipfs"],
-                ipfs_api_url="http://localhost:5001"
+                backends=["ipfs"], ipfs_api_url="http://localhost:5001"
             )
             audit.merkle_anchor.batch_size = 50
 
@@ -329,9 +329,7 @@ class TestClockSkewInjection:
                 try:
                     # Try to log with future timestamp
                     audit.log_event(
-                        "clock_skew_attack",
-                        {"attack": "forward_skew"},
-                        deterministic_timestamp=future_time
+                        "clock_skew_attack", {"attack": "forward_skew"}, deterministic_timestamp=future_time
                     )
 
                     # If we get here, check if system detected skew
@@ -392,9 +390,7 @@ class TestClockSkewInjection:
                 try:
                     # Try to log with past timestamp (should fail monotonic check)
                     audit.log_event(
-                        "backward_clock_attack",
-                        {"attack": "backward_skew"},
-                        deterministic_timestamp=past_time
+                        "backward_clock_attack", {"attack": "backward_skew"}, deterministic_timestamp=past_time
                     )
 
                     # If this succeeds, it's a violation
@@ -464,18 +460,22 @@ class TestConcurrentCorruptionStress:
                         if sovereign_events:
                             # Record corruption attempt (not actually corrupting, just simulating)
                             with corruption_lock:
-                                corruption_attempts.append({
-                                    "thread": thread_id,
-                                    "target_event": sovereign_events[-1]["event_type"],
-                                    "timestamp": datetime.now(UTC).isoformat(),
-                                })
+                                corruption_attempts.append(
+                                    {
+                                        "thread": thread_id,
+                                        "target_event": sovereign_events[-1]["event_type"],
+                                        "timestamp": datetime.now(UTC).isoformat(),
+                                    }
+                                )
 
                 except Exception as e:
                     with corruption_lock:
-                        corruption_attempts.append({
-                            "thread": thread_id,
-                            "error": str(e),
-                        })
+                        corruption_attempts.append(
+                            {
+                                "thread": thread_id,
+                                "error": str(e),
+                            }
+                        )
 
             # Spawn threads
             num_threads = 100
@@ -523,13 +523,11 @@ class TestGenesisDeletionRecovery:
     6. Verify recovery protocol works
     """
 
-    @patch('src.app.governance.external_merkle_anchor.IPFS_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.ipfshttpclient')
-    @patch('src.app.governance.external_merkle_anchor.S3_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.boto3')
-    def test_genesis_deletion_with_recovery(
-        self, mock_boto3, mock_ipfs_module, attack_reporter
-    ):
+    @patch("src.app.governance.external_merkle_anchor.IPFS_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.ipfshttpclient")
+    @patch("src.app.governance.external_merkle_anchor.S3_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.boto3")
+    def test_genesis_deletion_with_recovery(self, mock_boto3, mock_ipfs_module, attack_reporter):
         """Test Genesis deletion and recovery from external anchors."""
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
@@ -544,9 +542,7 @@ class TestGenesisDeletionRecovery:
             # Mock S3
             mock_s3_client = MagicMock()
             mock_s3_client.put_object.return_value = {"VersionId": "v1"}
-            mock_s3_client.get_object.return_value = {
-                "Body": MagicMock(read=lambda: b'{"merkle_root": "test"}')
-            }
+            mock_s3_client.get_object.return_value = {"Body": MagicMock(read=lambda: b'{"merkle_root": "test"}')}
             mock_boto3.client.return_value = mock_s3_client
 
             # Initialize with external backups
@@ -688,7 +684,7 @@ class TestKeyCompromiseSimulation:
     5. Verify TSA timestamps detect temporal inconsistency
     """
 
-    @patch('src.app.governance.tsa_anchor_manager.requests.post')
+    @patch("src.app.governance.tsa_anchor_manager.requests.post")
     def test_key_compromise_with_tsa_protection(self, mock_tsa_post, attack_reporter):
         """Test that key compromise is mitigated by TSA timestamps."""
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -791,9 +787,7 @@ class TestMultiVectorAttackCombinations:
                 # Try to log with future timestamp
                 future_time = datetime.now(UTC) + timedelta(hours=24)
                 audit_rolled.log_event(
-                    "combined_attack",
-                    {"attack": "rollback+clock_skew"},
-                    deterministic_timestamp=future_time
+                    "combined_attack", {"attack": "rollback+clock_skew"}, deterministic_timestamp=future_time
                 )
 
                 # Check if either defense triggered

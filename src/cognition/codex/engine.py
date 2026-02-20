@@ -80,9 +80,7 @@ class CodexEngine:
 
         try:
             # Get adapter
-            self.model_adapter = get_adapter(
-                adapter_type=self.config.adapter_type, device=device
-            )
+            self.model_adapter = get_adapter(adapter_type=self.config.adapter_type, device=device)
 
             # Load model if full engine is enabled
             if self.config.enable_full_engine:
@@ -127,9 +125,7 @@ class CodexEngine:
         """Fallback to CPU if GPU initialization fails."""
         try:
             logger.info("Falling back to CPU")
-            self.model_adapter = get_adapter(
-                adapter_type=self.config.adapter_type, device="cpu"
-            )
+            self.model_adapter = get_adapter(adapter_type=self.config.adapter_type, device="cpu")
 
             if self.config.enable_full_engine:
                 self.model_adapter.load_model(self.config.model_path)

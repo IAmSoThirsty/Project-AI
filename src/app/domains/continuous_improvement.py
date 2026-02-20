@@ -36,9 +36,7 @@ class Improvement:
     impact_score: float
 
 
-class ContinuousImprovementSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable
-):
+class ContinuousImprovementSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable):
     SUBSYSTEM_METADATA = {
         "id": "continuous_improvement",
         "name": "Continuous Improvement",
@@ -71,9 +69,7 @@ class ContinuousImprovementSubsystem(
         try:
             self._load_state()
             self._processing_active = True
-            self._processing_thread = threading.Thread(
-                target=self._processing_loop, daemon=True
-            )
+            self._processing_thread = threading.Thread(target=self._processing_loop, daemon=True)
             self._processing_thread.start()
             self._initialized = True
             return True

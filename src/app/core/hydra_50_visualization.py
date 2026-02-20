@@ -126,25 +126,17 @@ class ASCIIArtRenderer:
             )
         else:
             top_line = (
-                cls.BOX_CHARS["top_left"]
-                + cls.BOX_CHARS["horizontal"] * (width - 2)
-                + cls.BOX_CHARS["top_right"]
+                cls.BOX_CHARS["top_left"] + cls.BOX_CHARS["horizontal"] * (width - 2) + cls.BOX_CHARS["top_right"]
             )
         lines.append(top_line)
 
         # Middle lines
         for _ in range(height - 2):
-            lines.append(
-                cls.BOX_CHARS["vertical"]
-                + " " * (width - 2)
-                + cls.BOX_CHARS["vertical"]
-            )
+            lines.append(cls.BOX_CHARS["vertical"] + " " * (width - 2) + cls.BOX_CHARS["vertical"])
 
         # Bottom line
         bottom_line = (
-            cls.BOX_CHARS["bottom_left"]
-            + cls.BOX_CHARS["horizontal"] * (width - 2)
-            + cls.BOX_CHARS["bottom_right"]
+            cls.BOX_CHARS["bottom_left"] + cls.BOX_CHARS["horizontal"] * (width - 2) + cls.BOX_CHARS["bottom_right"]
         )
         lines.append(bottom_line)
 
@@ -200,11 +192,7 @@ class EscalationLadderViz:
         lines = []
 
         # Title
-        lines.append(
-            ASCIIArtRenderer.colorize(
-                f"═══ ESCALATION LADDER: {self.scenario_name} ═══", "cyan"
-            )
-        )
+        lines.append(ASCIIArtRenderer.colorize(f"═══ ESCALATION LADDER: {self.scenario_name} ═══", "cyan"))
         lines.append("")
 
         # Draw each level
@@ -428,9 +416,7 @@ class StateTransition:
 class TemporalFlowViz:
     """Temporal flow diagram showing state transitions"""
 
-    def __init__(
-        self, scenario_name: str, transitions: list[StateTransition], current_state: str
-    ):
+    def __init__(self, scenario_name: str, transitions: list[StateTransition], current_state: str):
         self.scenario_name = scenario_name
         self.transitions = sorted(transitions, key=lambda t: t.timestamp)
         self.current_state = current_state
@@ -440,11 +426,7 @@ class TemporalFlowViz:
         lines = []
 
         # Title
-        lines.append(
-            ASCIIArtRenderer.colorize(
-                f"═══ TEMPORAL FLOW: {self.scenario_name} ═══", "cyan"
-            )
-        )
+        lines.append(ASCIIArtRenderer.colorize(f"═══ TEMPORAL FLOW: {self.scenario_name} ═══", "cyan"))
         lines.append("")
 
         if not self.transitions:
@@ -462,9 +444,7 @@ class TemporalFlowViz:
 
             # State transition
             arrow = ASCIIArtRenderer.ARROWS["right"]
-            state_line = (
-                f"{time_str} │ {transition.from_state} {arrow} {transition.to_state}"
-            )
+            state_line = f"{time_str} │ {transition.from_state} {arrow} {transition.to_state}"
 
             # Color based on target state
             if "COLLAPSE" in transition.to_state:
@@ -480,9 +460,7 @@ class TemporalFlowViz:
             lines.append("")
 
         # Current state
-        lines.append(
-            ASCIIArtRenderer.colorize(f"Current State: {self.current_state}", "bold")
-        )
+        lines.append(ASCIIArtRenderer.colorize(f"Current State: {self.current_state}", "bold"))
 
         return "\n".join(lines)
 
@@ -525,20 +503,14 @@ class CollapsePredictionViz:
 
     def __init__(self, scenario_name: str, predictions: list[CollapsePrediction]):
         self.scenario_name = scenario_name
-        self.predictions = sorted(
-            predictions, key=lambda p: p.probability, reverse=True
-        )
+        self.predictions = sorted(predictions, key=lambda p: p.probability, reverse=True)
 
     def render_ascii(self, width: int = 70) -> str:
         """Render collapse predictions as ASCII chart"""
         lines = []
 
         # Title
-        lines.append(
-            ASCIIArtRenderer.colorize(
-                f"═══ COLLAPSE PREDICTIONS: {self.scenario_name} ═══", "red"
-            )
-        )
+        lines.append(ASCIIArtRenderer.colorize(f"═══ COLLAPSE PREDICTIONS: {self.scenario_name} ═══", "red"))
         lines.append("")
 
         if not self.predictions:
@@ -702,23 +674,17 @@ class HeatMapViz:
         lines = []
 
         # Title
-        lines.append(
-            ASCIIArtRenderer.colorize("═══ SCENARIO INTENSITY HEAT MAP ═══", "cyan")
-        )
+        lines.append(ASCIIArtRenderer.colorize("═══ SCENARIO INTENSITY HEAT MAP ═══", "cyan"))
         lines.append("")
 
         # Header with categories
-        header = "Scenario".ljust(30) + " ".join(
-            [c[:6].center(6) for c in self.categories]
-        )
+        header = "Scenario".ljust(30) + " ".join([c[:6].center(6) for c in self.categories])
         lines.append(header)
         lines.append("─" * len(header))
 
         # Draw each scenario row
         for i, scenario in enumerate(self.scenarios):
-            row_data = (
-                self.intensity_matrix[i] if i < len(self.intensity_matrix) else []
-            )
+            row_data = self.intensity_matrix[i] if i < len(self.intensity_matrix) else []
 
             cells = []
             for _j, intensity in enumerate(row_data):
@@ -866,9 +832,7 @@ class HYDRA50VisualizationEngine:
 
         return ascii_output, data_output
 
-    def export_visualization(
-        self, viz_type: VisualizationType, data: dict[str, Any], filename: str
-    ) -> str:
+    def export_visualization(self, viz_type: VisualizationType, data: dict[str, Any], filename: str) -> str:
         """Export visualization data to file"""
         output_path = self.output_dir / filename
 

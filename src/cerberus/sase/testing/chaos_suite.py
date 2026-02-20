@@ -148,8 +148,7 @@ class EventGenerator:
     def _random_ip(self) -> str:
         """Generate random IP address"""
         return (
-            f"{random.randint(1, 255)}.{random.randint(0, 255)}."
-            f"{random.randint(0, 255)}.{random.randint(0, 255)}"
+            f"{random.randint(1, 255)}.{random.randint(0, 255)}." f"{random.randint(0, 255)}.{random.randint(0, 255)}"
         )
 
 
@@ -199,11 +198,7 @@ class ChaosValidator:
 
         precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-        f1 = (
-            2 * (precision * recall) / (precision + recall)
-            if (precision + recall) > 0
-            else 0.0
-        )
+        f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
         fpr = fp / (fp + tn) if (fp + tn) > 0 else 0.0
         accuracy = (tp + tn) / (tp + tn + fp + fn) if (tp + tn + fp + fn) > 0 else 0.0
 
@@ -225,11 +220,7 @@ class ChaosValidator:
         - Recall > 95%
         """
         metrics = self.get_metrics()
-        return (
-            metrics["accuracy"] >= 0.995
-            and metrics["false_positive_rate"] <= 0.005
-            and metrics["recall"] >= 0.95
-        )
+        return metrics["accuracy"] >= 0.995 and metrics["false_positive_rate"] <= 0.005 and metrics["recall"] >= 0.95
 
 
 __all__ = ["SyntheticEvent", "EventGenerator", "ChaosValidator"]

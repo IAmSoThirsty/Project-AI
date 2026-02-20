@@ -29,15 +29,12 @@ class ConstitutionalViolationError(Exception):
     """Base exception for constitutional violations."""
 
 
-
 class MoralCertaintyError(ConstitutionalViolationError):
     """Raised when moral certainty claims are detected."""
 
 
-
 class LawViolationError(ConstitutionalViolationError):
     """Raised when one or more laws are violated."""
-
 
 
 # ============================================================
@@ -102,9 +99,7 @@ class AccountabilityRecord:
         for claim in self.moral_claims:
             for phrase in forbidden_phrases:
                 if phrase in claim.lower():
-                    raise MoralCertaintyError(
-                        f"Moral certainty claim detected: '{claim}'"
-                    )
+                    raise MoralCertaintyError(f"Moral certainty claim detected: '{claim}'")
 
 
 # ============================================================
@@ -333,11 +328,7 @@ class PlanetaryDefenseCore:
 
         record = AccountabilityRecord(
             action_id=action_id,
-            timestamp=(
-                datetime.now(datetime.UTC)
-                if hasattr(datetime, "UTC")
-                else datetime.utcnow()
-            ),
+            timestamp=(datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow()),
             actor=actor,
             intent=intent,
             authorized_by=authorized_by,
@@ -346,9 +337,7 @@ class PlanetaryDefenseCore:
 
         try:
             # Triumvirate assessment (advisory, not executive)
-            assessments = {
-                name: agent.assess(context) for name, agent in self.agents.items()
-            }
+            assessments = {name: agent.assess(context) for name, agent in self.agents.items()}
             logger.info("Triumvirate assessments for %s: %s", action_id, assessments)
 
             # Law evaluation (binding constraint)
@@ -357,9 +346,7 @@ class PlanetaryDefenseCore:
 
             if violations:
                 record.violated_laws.extend(violations)
-                record.actual_outcome = (
-                    "BLOCKED: Law violation detected before execution"
-                )
+                record.actual_outcome = "BLOCKED: Law violation detected before execution"
                 violation_details = [f"{v.value}" for v in violations]
                 self.ledger.append(record)  # Log violation
                 raise LawViolationError(f"Action violates laws: {violation_details}")
@@ -523,8 +510,7 @@ def get_ledger_stats() -> dict[str, Any]:
         "total_actions": PLANETARY_CORE.get_ledger_count(),
         "violations": PLANETARY_CORE.get_violation_count(),
         "compliance_rate": (
-            1.0
-            - (PLANETARY_CORE.get_violation_count() / PLANETARY_CORE.get_ledger_count())
+            1.0 - (PLANETARY_CORE.get_violation_count() / PLANETARY_CORE.get_ledger_count())
             if PLANETARY_CORE.get_ledger_count() > 0
             else 1.0
         ),

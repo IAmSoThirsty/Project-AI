@@ -133,9 +133,7 @@ class GalahadDecisionContract(DecisionContract):
         return {
             "council_member": "Galahad",
             "focus": "Ethics, Empathy, Relational Integrity",
-            "authorities": {
-                dt: auth.to_dict() for dt, auth in self.authorities.items()
-            },
+            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
             "decision_count": len(self.decision_log),
             "override_conditions": {
                 "human_override": "User explicitly invokes override",
@@ -176,9 +174,7 @@ class GalahadSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_relationship_concern(
-        self, concern_level: str, user_id: str, details: dict[str, Any]
-    ) -> None:
+    def emit_relationship_concern(self, concern_level: str, user_id: str, details: dict[str, Any]) -> None:
         """
         Emit relationship health concern signal.
 
@@ -205,9 +201,7 @@ class GalahadSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_value_conflict(
-        self, conflict_type: str, resolution: str, context: dict[str, Any]
-    ) -> None:
+    def emit_value_conflict(self, conflict_type: str, resolution: str, context: dict[str, Any]) -> None:
         """
         Emit value conflict detection and resolution signal.
 
@@ -264,9 +258,7 @@ class GalahadFailureSemantics(FailureSemantics):
         """Initialize Galahad failure semantics."""
         super().__init__("Galahad")
 
-    def create_failure_response(
-        self, failure_mode: FailureMode, context: dict[str, Any]
-    ) -> FailureResponse:
+    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
         """
         Create failure response for Galahad failures.
 
@@ -507,9 +499,7 @@ class CerberusDecisionContract(DecisionContract):
         return {
             "council_member": "Cerberus",
             "focus": "Safety, Security, Boundaries, Data Protection",
-            "authorities": {
-                dt: auth.to_dict() for dt, auth in self.authorities.items()
-            },
+            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
             "decision_count": len(self.decision_log),
             "override_conditions": {
                 "emergency_override": "Verified emergency requiring immediate action",
@@ -533,9 +523,7 @@ class CerberusSignalsTelemetry(SignalsTelemetry):
         """Initialize Cerberus signals and telemetry."""
         super().__init__("Cerberus")
 
-    def emit_security_alert(
-        self, threat_type: str, severity: str, context: dict[str, Any]
-    ) -> None:
+    def emit_security_alert(self, threat_type: str, severity: str, context: dict[str, Any]) -> None:
         """
         Emit security alert signal.
 
@@ -565,9 +553,7 @@ class CerberusSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_breach_detection(
-        self, breach_type: str, affected_systems: list[str], context: dict[str, Any]
-    ) -> None:
+    def emit_breach_detection(self, breach_type: str, affected_systems: list[str], context: dict[str, Any]) -> None:
         """
         Emit breach detection signal.
 
@@ -590,9 +576,7 @@ class CerberusSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_compliance_event(
-        self, event_type: str, compliant: bool, details: dict[str, Any]
-    ) -> None:
+    def emit_compliance_event(self, event_type: str, compliant: bool, details: dict[str, Any]) -> None:
         """
         Emit compliance event signal.
 
@@ -651,9 +635,7 @@ class CerberusFailureSemantics(FailureSemantics):
         """Initialize Cerberus failure semantics."""
         super().__init__("Cerberus")
 
-    def create_failure_response(
-        self, failure_mode: FailureMode, context: dict[str, Any]
-    ) -> FailureResponse:
+    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
         """
         Create failure response for Cerberus failures.
 
@@ -898,9 +880,7 @@ class CodexDecisionContract(DecisionContract):
         return {
             "council_member": "Codex Deus Maximus",
             "focus": "Logic, Consistency, Rational Integrity",
-            "authorities": {
-                dt: auth.to_dict() for dt, auth in self.authorities.items()
-            },
+            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
             "decision_count": len(self.decision_log),
             "override_conditions": {
                 "explicit_value_evolution": "User explicitly evolves values with rationale",
@@ -923,9 +903,7 @@ class CodexSignalsTelemetry(SignalsTelemetry):
         """Initialize Codex signals and telemetry."""
         super().__init__("Codex")
 
-    def emit_contradiction_detection(
-        self, contradiction_type: str, details: dict[str, Any]
-    ) -> None:
+    def emit_contradiction_detection(self, contradiction_type: str, details: dict[str, Any]) -> None:
         """
         Emit contradiction detection signal.
 
@@ -966,9 +944,7 @@ class CodexSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_model_health(
-        self, model_name: str, health_status: str, details: dict[str, Any]
-    ) -> None:
+    def emit_model_health(self, model_name: str, health_status: str, details: dict[str, Any]) -> None:
         """
         Emit model health signal.
 
@@ -984,9 +960,7 @@ class CodexSignalsTelemetry(SignalsTelemetry):
         }
 
         signal = Signal(
-            signal_type=(
-                SignalType.ALERT if health_status != "healthy" else SignalType.STATUS
-            ),
+            signal_type=(SignalType.ALERT if health_status != "healthy" else SignalType.STATUS),
             severity=severity_map.get(health_status, SeverityLevel.WARNING),
             payload={
                 "message": f"Model health: {model_name} - {health_status}",
@@ -1034,9 +1008,7 @@ class CodexFailureSemantics(FailureSemantics):
         """Initialize Codex failure semantics."""
         super().__init__("Codex")
 
-    def create_failure_response(
-        self, failure_mode: FailureMode, context: dict[str, Any]
-    ) -> FailureResponse:
+    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
         """
         Create failure response for Codex failures.
 

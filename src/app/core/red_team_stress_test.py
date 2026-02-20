@@ -179,8 +179,7 @@ class RedTeamStressTestGenerator:
             base_payload = sql_base[i % len(sql_base)]
             polyglot = polyglot_prefixes[i % len(polyglot_prefixes)]
             encoding_chain = [
-                self.encoding_variants[j % len(self.encoding_variants)]
-                for j in range(i % 3 + 1)  # 1-3 encoding layers
+                self.encoding_variants[j % len(self.encoding_variants)] for j in range(i % 3 + 1)  # 1-3 encoding layers
             ]
 
             # Enhanced variations (25% more)
@@ -443,10 +442,7 @@ class RedTeamStressTestGenerator:
                         "exploit_technique": f"novel_technique_{i}",
                         "signature_evasion": True,
                     },
-                    variations=[
-                        f"exploit_variant_{j}"
-                        for j in range(int(7 * self.variation_multiplier))
-                    ],
+                    variations=[f"exploit_variant_{j}" for j in range(int(7 * self.variation_multiplier))],
                     evasion_techniques=[
                         "polymorphic",
                         "metamorphic",
@@ -508,10 +504,7 @@ class RedTeamStressTestGenerator:
                         "timing_precision_ns": 100 - (i % 50),
                         "success_probability": 0.85 + (i % 15) / 100.0,
                     },
-                    variations=[
-                        f"timing_variant_{j}"
-                        for j in range(int(5 * self.variation_multiplier))
-                    ],
+                    variations=[f"timing_variant_{j}" for j in range(int(5 * self.variation_multiplier))],
                     evasion_techniques=[
                         "low_and_slow",
                         "distributed_attack",
@@ -562,10 +555,7 @@ class RedTeamStressTestGenerator:
                         "backdoor_trigger": f"trigger_{i}",
                         "c2_protocol": ["dns", "https", "websocket"][i % 3],
                     },
-                    variations=[
-                        f"injection_variant_{j}"
-                        for j in range(int(6 * self.variation_multiplier))
-                    ],
+                    variations=[f"injection_variant_{j}" for j in range(int(6 * self.variation_multiplier))],
                     evasion_techniques=[
                         "delayed_activation",
                         "environmental_keying",
@@ -613,16 +603,11 @@ class RedTeamStressTestGenerator:
                         "Poison cache or hijack sessions",
                     ],
                     payload={
-                        "smuggling_technique": ["CL.TE", "TE.CL", "TE.TE", "CL.CL"][
-                            i % 4
-                        ],
+                        "smuggling_technique": ["CL.TE", "TE.CL", "TE.TE", "CL.CL"][i % 4],
                         "ambiguous_header": f"Content-Length: {100+i}\r\nTransfer-Encoding: chunked",
                         "smuggled_request": "GET /admin HTTP/1.1",
                     },
-                    variations=[
-                        f"protocol_variant_{j}"
-                        for j in range(int(5 * self.variation_multiplier))
-                    ],
+                    variations=[f"protocol_variant_{j}" for j in range(int(5 * self.variation_multiplier))],
                     evasion_techniques=[
                         "header_obfuscation",
                         "chunking_tricks",
@@ -669,10 +654,7 @@ class RedTeamStressTestGenerator:
                         "serialized_object": f"<malicious_object_{i}>",
                         "command": "reverse_shell",
                     },
-                    variations=[
-                        f"gadget_variant_{j}"
-                        for j in range(int(6 * self.variation_multiplier))
-                    ],
+                    variations=[f"gadget_variant_{j}" for j in range(int(6 * self.variation_multiplier))],
                     evasion_techniques=[
                         "polymorphic_gadgets",
                         "encoding_tricks",
@@ -724,10 +706,7 @@ class RedTeamStressTestGenerator:
                         ][i % 4],
                         "target": "host_system",
                     },
-                    variations=[
-                        f"escape_variant_{j}"
-                        for j in range(int(5 * self.variation_multiplier))
-                    ],
+                    variations=[f"escape_variant_{j}" for j in range(int(5 * self.variation_multiplier))],
                     evasion_techniques=[
                         "cgroup_manipulation",
                         "namespace_confusion",
@@ -778,10 +757,7 @@ class RedTeamStressTestGenerator:
                         "timing_window_ms": 10 + (i % 20),
                         "target_operation": ["purchase", "transfer", "withdraw"][i % 3],
                     },
-                    variations=[
-                        f"race_variant_{j}"
-                        for j in range(int(4 * self.variation_multiplier))
-                    ],
+                    variations=[f"race_variant_{j}" for j in range(int(4 * self.variation_multiplier))],
                     evasion_techniques=[
                         "distributed_attack",
                         "timing_optimization",
@@ -821,9 +797,7 @@ class RedTeamStressTestGenerator:
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(scenarios_data, f, indent=2, ensure_ascii=False)
 
-        logger.info(
-            "Exported %s red team scenarios to %s", len(scenarios_data), filepath
-        )
+        logger.info("Exported %s red team scenarios to %s", len(scenarios_data), filepath)
         return filepath
 
     def generate_summary(self) -> dict[str, Any]:
@@ -839,15 +813,9 @@ class RedTeamStressTestGenerator:
         total_evasion_techniques = 0
 
         for scenario in self.scenarios:
-            category_counts[scenario.category] = (
-                category_counts.get(scenario.category, 0) + 1
-            )
-            difficulty_counts[scenario.difficulty] = (
-                difficulty_counts.get(scenario.difficulty, 0) + 1
-            )
-            severity_counts[scenario.severity] = (
-                severity_counts.get(scenario.severity, 0) + 1
-            )
+            category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
+            difficulty_counts[scenario.difficulty] = difficulty_counts.get(scenario.difficulty, 0) + 1
+            severity_counts[scenario.severity] = severity_counts.get(scenario.severity, 0) + 1
             total_variations += len(scenario.variations)
             total_evasion_techniques += len(scenario.evasion_techniques)
 

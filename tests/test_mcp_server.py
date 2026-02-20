@@ -258,9 +258,7 @@ class TestMCPIntegration:
             server = ProjectAIMCPServer(data_dir=tmpdir)
 
             # 1. Validate an action
-            result = await server._validate_action(
-                {"action": "Test action", "context": {"is_user_order": True}}
-            )
+            result = await server._validate_action({"action": "Test action", "context": {"is_user_order": True}})
             assert len(result) > 0
 
             # 2. Get persona state
@@ -281,9 +279,7 @@ class TestMCPIntegration:
 
             # 4. Search memory
             if server.memory:
-                result = await server._search_memory(
-                    {"query": "integration", "category": "facts"}
-                )
+                result = await server._search_memory({"query": "integration", "category": "facts"})
                 assert len(result) > 0
 
 

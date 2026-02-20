@@ -380,9 +380,7 @@ class IntroInfoPage(QFrame):
         status_title.setStyleSheet("color: #8b7355; font-weight: bold;")
         layout.addWidget(status_title)
         self.backend_status_label = QLabel("Checking service heartbeat …")
-        self.backend_status_label.setStyleSheet(
-            "color: #a0a0a0; font-size: 11px; padding-bottom: 10px;"
-        )
+        self.backend_status_label.setStyleSheet("color: #a0a0a0; font-size: 11px; padding-bottom: 10px;")
         layout.addWidget(self.backend_status_label)
 
     def _add_login_feedback(self, layout: QVBoxLayout):
@@ -436,21 +434,15 @@ class IntroInfoPage(QFrame):
         layout = QVBoxLayout(page)
         layout.setContentsMargins(20, 20, 20, 20)
         title = QLabel("GLOSSARY OF TERMS")
-        title.setStyleSheet(
-            "color: #8b7355; font-size: 14px; font-weight: bold; margin-bottom: 10px;"
-        )
+        title.setStyleSheet("color: #8b7355; font-size: 14px; font-weight: bold; margin-bottom: 10px;")
         layout.addWidget(title)
         for term, definition in glossary_items:
             term_label = QLabel(f"• {term}")
-            term_label.setStyleSheet(
-                "color: #8b7355; font-weight: bold; padding-top: 8px;"
-            )
+            term_label.setStyleSheet("color: #8b7355; font-weight: bold; padding-top: 8px;")
             layout.addWidget(term_label)
             def_label = QLabel(definition)
             def_label.setWordWrap(True)
-            def_label.setStyleSheet(
-                "color: #a0a0a0; font-size: 10px; padding-left: 20px; padding-bottom: 8px;"
-            )
+            def_label.setStyleSheet("color: #a0a0a0; font-size: 10px; padding-left: 20px; padding-bottom: 8px;")
             layout.addWidget(def_label)
         layout.addStretch()
         return page
@@ -471,21 +463,15 @@ class IntroInfoPage(QFrame):
         layout = QVBoxLayout(page)
         layout.setContentsMargins(20, 20, 20, 20)
         title = QLabel("TABLE OF CONTENTS")
-        title.setStyleSheet(
-            "color: #8b7355; font-size: 14px; font-weight: bold; margin-bottom: 10px;"
-        )
+        title.setStyleSheet("color: #8b7355; font-size: 14px; font-weight: bold; margin-bottom: 10px;")
         layout.addWidget(title)
         for item, description in contents_items:
             item_label = QLabel(item)
-            item_label.setStyleSheet(
-                "color: #8b7355; font-weight: bold; padding-top: 8px;"
-            )
+            item_label.setStyleSheet("color: #8b7355; font-weight: bold; padding-top: 8px;")
             layout.addWidget(item_label)
             desc_label = QLabel(description)
             desc_label.setWordWrap(True)
-            desc_label.setStyleSheet(
-                "color: #a0a0a0; font-size: 10px; padding-left: 20px; padding-bottom: 8px;"
-            )
+            desc_label.setStyleSheet("color: #a0a0a0; font-size: 10px; padding-left: 20px; padding-bottom: 8px;")
             layout.addWidget(desc_label)
         layout.addStretch()
         return page

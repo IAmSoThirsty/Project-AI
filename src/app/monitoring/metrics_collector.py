@@ -54,9 +54,7 @@ class MetricsCollector:
             traits = persona_state.get("traits", {})
             for trait_name, trait_value in traits.items():
                 if isinstance(trait_value, (int, float)):
-                    metrics.persona_trait_value.labels(trait=trait_name).set(
-                        trait_value
-                    )
+                    metrics.persona_trait_value.labels(trait=trait_name).set(trait_value)
 
             # Interaction count
             interaction_counts = persona_state.get("interaction_counts", {})
@@ -65,9 +63,7 @@ class MetricsCollector:
                 key = f"persona_interaction_{interaction_type}"
                 last_count = self._last_update.get(key, 0)
                 if count > last_count:
-                    metrics.persona_interactions_total.labels(
-                        interaction_type=interaction_type
-                    ).inc(count - last_count)
+                    metrics.persona_interactions_total.labels(interaction_type=interaction_type).inc(count - last_count)
                     self._last_update[key] = count
 
         except Exception as e:
@@ -79,9 +75,7 @@ class MetricsCollector:
         Args:
             interaction_type: Type of interaction (chat, config_change, etc.)
         """
-        metrics.persona_interactions_total.labels(
-            interaction_type=interaction_type
-        ).inc()
+        metrics.persona_interactions_total.labels(interaction_type=interaction_type).inc()
 
     # ==================== FOUR LAWS METRICS ====================
 
@@ -102,14 +96,10 @@ class MetricsCollector:
         metrics.four_laws_validations_total.labels(result=result).inc()
 
         if not is_allowed and law_violated:
-            metrics.four_laws_denials_total.labels(
-                law_violated=law_violated, severity=severity
-            ).inc()
+            metrics.four_laws_denials_total.labels(law_violated=law_violated, severity=severity).inc()
 
             if severity == "critical":
-                metrics.four_laws_critical_denials_total.labels(
-                    law_violated=law_violated
-                ).inc()
+                metrics.four_laws_critical_denials_total.labels(law_violated=law_violated).inc()
 
     def record_four_laws_override(self, success: bool, user: str = "unknown") -> None:
         """Record a Four Laws override attempt.
@@ -134,9 +124,7 @@ class MetricsCollector:
             knowledge = memory_state.get("knowledge", {})
             for category, entries in knowledge.items():
                 if isinstance(entries, list):
-                    metrics.memory_knowledge_entries.labels(category=category).set(
-                        len(entries)
-                    )
+                    metrics.memory_knowledge_entries.labels(category=category).set(len(entries))
 
             # Total storage size
             memory_file = self.data_dir / "memory" / "knowledge.json"
@@ -163,9 +151,7 @@ class MetricsCollector:
         metrics.memory_queries_total.labels(query_type=query_type, status=status).inc()
 
         if duration_seconds is not None:
-            metrics.memory_query_duration_seconds.labels(query_type=query_type).observe(
-                duration_seconds
-            )
+            metrics.memory_query_duration_seconds.labels(query_type=query_type).observe(duration_seconds)
 
     def record_memory_error(self, error_type: str) -> None:
         """Record a memory system error.
@@ -196,9 +182,7 @@ class MetricsCollector:
                     key = f"learning_{status}"
                     last_count = self._last_update.get(key, 0)
                     if count > last_count:
-                        metrics.learning_requests_total.labels(status=status).inc(
-                            count - last_count
-                        )
+                        metrics.learning_requests_total.labels(status=status).inc(count - last_count)
                         self._last_update[key] = count
 
                 # Pending requests gauge
@@ -236,9 +220,7 @@ class MetricsCollector:
         metrics.command_override_attempts_total.labels(user=user).inc()
 
         if success:
-            metrics.command_override_successes_total.labels(
-                user=user, command=command
-            ).inc()
+            metrics.command_override_successes_total.labels(user=user, command=command).inc()
         else:
             metrics.command_override_failures_total.labels(reason=failure_reason).inc()
 
@@ -252,9 +234,7 @@ class MetricsCollector:
 
     # ==================== SECURITY METRICS ====================
 
-    def record_security_incident(
-        self, severity: str, event_type: str, source: str = "unknown"
-    ) -> None:
+    def record_security_incident(self, severity: str, event_type: str, source: str = "unknown") -> None:
         """Record a security incident.
 
         Args:
@@ -262,9 +242,7 @@ class MetricsCollector:
             event_type: Type of security event
             source: Source of incident
         """
-        metrics.security_incidents_total.labels(
-            severity=severity, event_type=event_type, source=source
-        ).inc()
+        metrics.security_incidents_total.labels(severity=severity, event_type=event_type, source=source).inc()
 
     def record_cerberus_block(self, attack_type: str, gate: str = "unknown") -> None:
         """Record Cerberus blocking an action.
@@ -309,19 +287,13 @@ class MetricsCollector:
             duration_seconds: Execution duration
             error_type: Type of error (if failed)
         """
-        metrics.plugin_execution_total.labels(
-            plugin_name=plugin_name, status=status
-        ).inc()
+        metrics.plugin_execution_total.labels(plugin_name=plugin_name, status=status).inc()
 
         if duration_seconds is not None:
-            metrics.plugin_execution_duration_seconds.labels(
-                plugin_name=plugin_name
-            ).observe(duration_seconds)
+            metrics.plugin_execution_duration_seconds.labels(plugin_name=plugin_name).observe(duration_seconds)
 
         if error_type:
-            metrics.plugin_execution_errors_total.labels(
-                plugin_name=plugin_name, error_type=error_type
-            ).inc()
+            metrics.plugin_execution_errors_total.labels(plugin_name=plugin_name, error_type=error_type).inc()
 
     def record_plugin_load_failure(self, plugin_name: str, reason: str) -> None:
         """Record plugin load failure.
@@ -330,15 +302,11 @@ class MetricsCollector:
             plugin_name: Name of plugin
             reason: Failure reason
         """
-        metrics.plugin_load_failures_total.labels(
-            plugin_name=plugin_name, reason=reason
-        ).inc()
+        metrics.plugin_load_failures_total.labels(plugin_name=plugin_name, reason=reason).inc()
 
     # ==================== SYSTEM PERFORMANCE METRICS ====================
 
-    def record_api_request(
-        self, method: str, endpoint: str, status: int, duration_seconds: float
-    ) -> None:
+    def record_api_request(self, method: str, endpoint: str, status: int, duration_seconds: float) -> None:
         """Record API request.
 
         Args:
@@ -347,13 +315,9 @@ class MetricsCollector:
             status: HTTP status code
             duration_seconds: Request duration
         """
-        metrics.api_requests_total.labels(
-            method=method, endpoint=endpoint, status=str(status)
-        ).inc()
+        metrics.api_requests_total.labels(method=method, endpoint=endpoint, status=str(status)).inc()
 
-        metrics.api_request_duration_seconds.labels(
-            method=method, endpoint=endpoint
-        ).observe(duration_seconds)
+        metrics.api_request_duration_seconds.labels(method=method, endpoint=endpoint).observe(duration_seconds)
 
     def set_active_users(self, count: int) -> None:
         """Set number of active users.

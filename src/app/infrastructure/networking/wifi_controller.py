@@ -121,9 +121,7 @@ class WiFiController:
         """Discover WiFi adapters on Linux using iw/iwconfig"""
         try:
             # Use 'iw dev' to list wireless interfaces
-            result = subprocess.run(
-                ["iw", "dev"], capture_output=True, text=True, timeout=10
-            )
+            result = subprocess.run(["iw", "dev"], capture_output=True, text=True, timeout=10)
 
             if result.returncode == 0:
                 # Parse output to extract adapter information
@@ -139,9 +137,7 @@ class WiFiController:
                         mac = line.split()[-1]
 
                         # Get detailed adapter capabilities
-                        adapter = self._get_adapter_capabilities_linux(
-                            current_interface, mac
-                        )
+                        adapter = self._get_adapter_capabilities_linux(current_interface, mac)
                         if adapter:
                             self.adapters.append(adapter)
 
@@ -152,15 +148,11 @@ class WiFiController:
         except Exception as e:
             self.logger.error("Linux adapter discovery error: %s", e)
 
-    def _get_adapter_capabilities_linux(
-        self, interface: str, mac: str
-    ) -> WiFiAdapter | None:
+    def _get_adapter_capabilities_linux(self, interface: str, mac: str) -> WiFiAdapter | None:
         """Get detailed capabilities of Linux WiFi adapter"""
         try:
             # Use 'iw phy' to get physical capabilities
-            result = subprocess.run(
-                ["iw", "phy"], capture_output=True, text=True, timeout=10
-            )
+            result = subprocess.run(["iw", "phy"], capture_output=True, text=True, timeout=10)
 
             if result.returncode != 0:
                 return None
@@ -239,9 +231,7 @@ class WiFiController:
                     if "Physical address" in line and interface_name:
                         mac = line.split(":", 1)[1].strip()
 
-                        adapter = self._get_adapter_capabilities_windows(
-                            interface_name, mac
-                        )
+                        adapter = self._get_adapter_capabilities_windows(interface_name, mac)
                         if adapter:
                             self.adapters.append(adapter)
 
@@ -250,9 +240,7 @@ class WiFiController:
         except Exception as e:
             self.logger.error("Windows adapter discovery error: %s", e)
 
-    def _get_adapter_capabilities_windows(
-        self, interface: str, mac: str
-    ) -> WiFiAdapter | None:
+    def _get_adapter_capabilities_windows(self, interface: str, mac: str) -> WiFiAdapter | None:
         """Get WiFi adapter capabilities on Windows"""
         try:
             # Get detailed capabilities using netsh
@@ -320,9 +308,7 @@ class WiFiController:
                             if "Device:" in device_line:
                                 interface = device_line.split(":", 1)[1].strip()
 
-                                adapter = self._get_adapter_capabilities_macos(
-                                    interface
-                                )
+                                adapter = self._get_adapter_capabilities_macos(interface)
                                 if adapter:
                                     self.adapters.append(adapter)
 
@@ -344,9 +330,7 @@ class WiFiController:
                 return None
 
             # Get MAC address
-            mac_result = subprocess.run(
-                ["ifconfig", interface], capture_output=True, text=True, timeout=5
-            )
+            mac_result = subprocess.run(["ifconfig", interface], capture_output=True, text=True, timeout=5)
 
             mac = "Unknown"
             if mac_result.returncode == 0:
@@ -416,9 +400,7 @@ class WiFiController:
     def _get_chipset_linux(self, interface: str) -> str:
         """Get chipset information for Linux WiFi interface"""
         try:
-            result = subprocess.run(
-                ["lspci", "-k"], capture_output=True, text=True, timeout=5
-            )
+            result = subprocess.run(["lspci", "-k"], capture_output=True, text=True, timeout=5)
 
             if result.returncode == 0:
                 # Parse lspci output for wireless controller
@@ -483,9 +465,7 @@ class WiFiController:
         self.available_networks = networks
         return networks
 
-    def _parse_scan_results_linux(
-        self, output: str, band_filter: WiFiBand | None
-    ) -> list[WiFiNetwork]:
+    def _parse_scan_results_linux(self, output: str, band_filter: WiFiBand | None) -> list[WiFiNetwork]:
         """Parse Linux iw scan output"""
         networks = []
         # Simplified parser - production would be more comprehensive
@@ -513,9 +493,7 @@ class WiFiController:
         self.available_networks = networks
         return networks
 
-    def _parse_scan_results_windows(
-        self, output: str, band_filter: WiFiBand | None
-    ) -> list[WiFiNetwork]:
+    def _parse_scan_results_windows(self, output: str, band_filter: WiFiBand | None) -> list[WiFiNetwork]:
         """Parse Windows netsh scan output"""
         networks = []
         # Simplified parser
@@ -546,17 +524,13 @@ class WiFiController:
         self.available_networks = networks
         return networks
 
-    def _parse_scan_results_macos(
-        self, output: str, band_filter: WiFiBand | None
-    ) -> list[WiFiNetwork]:
+    def _parse_scan_results_macos(self, output: str, band_filter: WiFiBand | None) -> list[WiFiNetwork]:
         """Parse macOS airport scan output"""
         networks = []
         # Simplified parser
         return networks
 
-    def connect(
-        self, ssid: str, password: str | None = None, security: str | None = None
-    ) -> bool:
+    def connect(self, ssid: str, password: str | None = None, security: str | None = None) -> bool:
         """
         Connect to WiFi network with God Tier security
 
@@ -584,24 +558,18 @@ class WiFiController:
             self.logger.error("WiFi connection failed: %s", e)
             return False
 
-    def _connect_linux(
-        self, ssid: str, password: str | None, security: str | None
-    ) -> bool:
+    def _connect_linux(self, ssid: str, password: str | None, security: str | None) -> bool:
         """Connect to WiFi on Linux using NetworkManager or wpa_supplicant"""
         # Implementation would use nmcli or wpa_supplicant
         # Prioritize WPA3 if available
         return False
 
-    def _connect_windows(
-        self, ssid: str, password: str | None, security: str | None
-    ) -> bool:
+    def _connect_windows(self, ssid: str, password: str | None, security: str | None) -> bool:
         """Connect to WiFi on Windows"""
         # Implementation would use netsh or Windows API
         return False
 
-    def _connect_macos(
-        self, ssid: str, password: str | None, security: str | None
-    ) -> bool:
+    def _connect_macos(self, ssid: str, password: str | None, security: str | None) -> bool:
         """Connect to WiFi on macOS"""
         # Implementation would use networksetup
         return False
@@ -625,9 +593,7 @@ class WiFiController:
         """Get WiFi connection status"""
         return {
             "connected": self.connected_network is not None,
-            "network": (
-                self.connected_network.__dict__ if self.connected_network else None
-            ),
+            "network": (self.connected_network.__dict__ if self.connected_network else None),
             "adapters": [adapter.__dict__ for adapter in self.adapters],
             "available_networks_count": len(self.available_networks),
             "marketplace_mode": self.marketplace_mode,

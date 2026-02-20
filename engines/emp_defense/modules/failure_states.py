@@ -72,9 +72,7 @@ class FailureStatesEngine:
 
         return newly_triggered
 
-    def _trigger_failure(
-        self, state: SectorizedWorldState, threshold: FailureThreshold
-    ) -> None:
+    def _trigger_failure(self, state: SectorizedWorldState, threshold: FailureThreshold) -> None:
         """
         Trigger an irreversible failure state.
 
@@ -93,9 +91,7 @@ class FailureStatesEngine:
             state.irreversible_collapses.append(threshold.name)
 
         # Major event
-        state.major_events.append(
-            f"⚠️ FAILURE STATE: {threshold.name} - {threshold.description}"
-        )
+        state.major_events.append(f"⚠️ FAILURE STATE: {threshold.name} - {threshold.description}")
 
     def _register_failure_thresholds(self) -> None:
         """Register all failure thresholds."""
@@ -106,8 +102,7 @@ class FailureStatesEngine:
                 name="water_death_spiral",
                 description="Water <20% for 60+ days → death rate ×3",
                 condition=lambda state: (
-                    state.water.potable_water_pct < 0.20
-                    and state.water.days_below_threshold >= 60
+                    state.water.potable_water_pct < 0.20 and state.water.days_below_threshold >= 60
                 ),
                 consequence=lambda state: self._apply_water_death_spiral(state),
                 recoverable=False,  # Once death rate accelerates, can't undo deaths
@@ -167,9 +162,7 @@ class FailureStatesEngine:
             FailureThreshold(
                 name="agricultural_collapse",
                 description="Rural food output <5% for 90 days → permanent famine",
-                condition=lambda state: (
-                    state.food.rural_output_pct < 0.05 and state.simulation_day > 90
-                ),
+                condition=lambda state: (state.food.rural_output_pct < 0.05 and state.simulation_day > 90),
                 consequence=lambda state: self._apply_agricultural_collapse(state),
                 recoverable=False,  # Can't restart agriculture at scale
             )
@@ -181,8 +174,7 @@ class FailureStatesEngine:
                 name="medical_dark_age",
                 description="Hospital capacity <5% AND med supplies exhausted",
                 condition=lambda state: (
-                    state.health.hospital_capacity_pct < 0.05
-                    and state.health.critical_med_supply_days <= 0
+                    state.health.hospital_capacity_pct < 0.05 and state.health.critical_med_supply_days <= 0
                 ),
                 consequence=lambda state: self._apply_medical_dark_age(state),
                 recoverable=False,  # Medical knowledge lost
@@ -195,8 +187,7 @@ class FailureStatesEngine:
                 name="civil_war",
                 description="Violence >70% AND armed groups >50 → civil war",
                 condition=lambda state: (
-                    state.security.violence_index > 0.70
-                    and state.security.armed_group_count > 50
+                    state.security.violence_index > 0.70 and state.security.armed_group_count > 50
                 ),
                 consequence=lambda state: self._apply_civil_war(state),
                 recoverable=True,  # War can end, but at huge cost
@@ -210,9 +201,7 @@ class FailureStatesEngine:
         logger.critical("💀 Water death spiral - mortality rate tripled")
         # This is applied as a multiplier in death calculations
         # Mark as permanent modifier
-        state.major_events.append(
-            "IRREVERSIBLE: Water scarcity death rate permanently ×3"
-        )
+        state.major_events.append("IRREVERSIBLE: Water scarcity death rate permanently ×3")
 
     def _apply_pandemic_outbreak(self, state: SectorizedWorldState) -> None:
         """Pandemic unlocked: Exponential disease spread."""
@@ -220,9 +209,7 @@ class FailureStatesEngine:
         state.health.disease_pressure_index = 0.80  # Jump to 80%
 
         logger.critical("💀 Pandemic outbreak - exponential disease spread")
-        state.major_events.append(
-            "IRREVERSIBLE: Pandemic unlocked - healthcare overwhelmed"
-        )
+        state.major_events.append("IRREVERSIBLE: Pandemic unlocked - healthcare overwhelmed")
 
         # Immediate casualties
         pandemic_deaths = int(state.global_population * 0.01)  # 1% immediate
@@ -242,12 +229,8 @@ class FailureStatesEngine:
         state.governance.competing_authorities = 1 + num_splinters
         state.governance.regional_fragmentation = 0.80
 
-        logger.critical(
-            "💀 Government splinter - %s competing authorities", num_splinters
-        )
-        state.major_events.append(
-            f"IRREVERSIBLE: Government fragmented into {num_splinters} splinter entities"
-        )
+        logger.critical("💀 Government splinter - %s competing authorities", num_splinters)
+        state.major_events.append(f"IRREVERSIBLE: Government fragmented into {num_splinters} splinter entities")
 
     def _apply_nuclear_meltdown(self, state: SectorizedWorldState) -> None:
         """Nuclear meltdowns: Regional exclusion zones."""
@@ -287,14 +270,10 @@ class FailureStatesEngine:
 
         # Armed groups take over completely
         state.security.armed_group_count += 20
-        state.security.militia_governance_regions = (
-            state.governance.competing_authorities
-        )
+        state.security.militia_governance_regions = state.governance.competing_authorities
 
         logger.critical("💀 State failure - government no longer exists")
-        state.major_events.append(
-            "IRREVERSIBLE: State failure - no functioning government"
-        )
+        state.major_events.append("IRREVERSIBLE: State failure - no functioning government")
 
     def _apply_agricultural_collapse(self, state: SectorizedWorldState) -> None:
         """Agricultural collapse: Permanent famine."""
@@ -346,11 +325,5 @@ class FailureStatesEngine:
             "irreversible_collapses": len(state.irreversible_collapses),
             "failure_list": state.failure_states_triggered,
             "irreversible_list": state.irreversible_collapses,
-            "cascading_failures": len(
-                [
-                    f
-                    for f in state.failure_states_triggered
-                    if f not in self.triggered_failures
-                ]
-            ),
+            "cascading_failures": len([f for f in state.failure_states_triggered if f not in self.triggered_failures]),
         }

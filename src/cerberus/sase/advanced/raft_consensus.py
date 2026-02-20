@@ -54,9 +54,7 @@ class LeaderElection:
         self.voted_for = self.node_id
         self.votes_received = {self.node_id}
 
-        logger.warning(
-            f"ELECTION STARTED: Node {self.node_id} term {self.current_term}"
-        )
+        logger.warning(f"ELECTION STARTED: Node {self.node_id} term {self.current_term}")
 
         # Request votes from peers (simplified)
         # In real impl, would send RequestVote RPCs
@@ -152,9 +150,7 @@ class RaftNode:
             logger.error("Only leader can append to log")
             return None
 
-        entry = self.log_replication.append_entry(
-            self.election.current_term, command, data
-        )
+        entry = self.log_replication.append_entry(self.election.current_term, command, data)
 
         # Replicate to followers
         for follower in self.cluster_nodes:

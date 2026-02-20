@@ -81,9 +81,7 @@ class CrossDomainCoupling:
         grid_factor = state.energy.grid_generation_pct
 
         # Pumping stations depend heavily on grid
-        state.water.pumping_stations_operational_pct = min(
-            1.0, grid_factor * 1.1  # Some backup, but not much
-        )
+        state.water.pumping_stations_operational_pct = min(1.0, grid_factor * 1.1)  # Some backup, but not much
 
         # Treatment capacity degrades without power
         if grid_factor < 0.30:  # Below 30% grid
@@ -110,9 +108,7 @@ class CrossDomainCoupling:
         )
 
         # Precision farming depends on both
-        state.food.precision_farming_operational_pct = (
-            grid_factor * 0.7 + fuel_factor * 0.3
-        )
+        state.food.precision_farming_operational_pct = grid_factor * 0.7 + fuel_factor * 0.3
 
     @staticmethod
     def _energy_to_health(state: SectorizedWorldState) -> None:
@@ -128,16 +124,12 @@ class CrossDomainCoupling:
             state.health.generator_fuel_days -= 0.5  # Burns fuel when grid weak
 
         # Electronic records inaccessible without power
-        state.health.electronic_records_accessible_pct = max(
-            0.1, grid_factor  # Some paper backup
-        )
+        state.health.electronic_records_accessible_pct = max(0.1, grid_factor)  # Some paper backup
 
         # Cold chain fails (vaccines, insulin)
         if grid_factor < 0.30:
             state.health.cold_chain_loss_pct += 0.05
-            state.health.cold_chain_loss_pct = min(
-                1.0, state.health.cold_chain_loss_pct
-            )
+            state.health.cold_chain_loss_pct = min(1.0, state.health.cold_chain_loss_pct)
 
     @staticmethod
     def _energy_to_governance(state: SectorizedWorldState) -> None:
@@ -145,16 +137,12 @@ class CrossDomainCoupling:
         grid_factor = state.energy.grid_generation_pct
 
         # Courts can't function without infrastructure
-        state.governance.courts_operational_pct = max(
-            0.3, grid_factor * 1.2  # Some manual operation possible
-        )
+        state.governance.courts_operational_pct = max(0.3, grid_factor * 1.2)  # Some manual operation possible
 
         # Regional fragmentation increases when coordination fails
         if grid_factor < 0.40:
             state.governance.regional_fragmentation += 0.01
-            state.governance.regional_fragmentation = min(
-                1.0, state.governance.regional_fragmentation
-            )
+            state.governance.regional_fragmentation = min(1.0, state.governance.regional_fragmentation)
 
     # Water dependencies
 
@@ -165,9 +153,7 @@ class CrossDomainCoupling:
         contamination = state.water.contamination_index
 
         # Disease pressure rises with contamination
-        state.health.disease_pressure_index = max(
-            state.health.disease_pressure_index, contamination * 0.8
-        )
+        state.health.disease_pressure_index = max(state.health.disease_pressure_index, contamination * 0.8)
 
         # Waterborne disease cases
         if water_factor < 0.60:
@@ -220,9 +206,7 @@ class CrossDomainCoupling:
         if famine_affected > 0:
             famine_factor = famine_affected / state.global_population
             state.health.disease_pressure_index += famine_factor * 0.1
-            state.health.disease_pressure_index = min(
-                1.0, state.health.disease_pressure_index
-            )
+            state.health.disease_pressure_index = min(1.0, state.health.disease_pressure_index)
 
     @staticmethod
     def _food_to_governance(state: SectorizedWorldState) -> None:
@@ -256,9 +240,7 @@ class CrossDomainCoupling:
         # Panic and violence rise with disease
         if disease_pressure > 0.50:
             state.security.civil_unrest_level += 0.01
-            state.security.civil_unrest_level = min(
-                1.0, state.security.civil_unrest_level
-            )
+            state.security.civil_unrest_level = min(1.0, state.security.civil_unrest_level)
 
     # Security dependencies
 
@@ -277,12 +259,8 @@ class CrossDomainCoupling:
             state.governance.legitimacy_score -= 0.01
 
         # Clamp values
-        state.governance.government_control_pct = max(
-            0.0, state.governance.government_control_pct
-        )
-        state.governance.regional_fragmentation = min(
-            1.0, state.governance.regional_fragmentation
-        )
+        state.governance.government_control_pct = max(0.0, state.governance.government_control_pct)
+        state.governance.regional_fragmentation = min(1.0, state.governance.regional_fragmentation)
         state.governance.legitimacy_score = max(0.0, state.governance.legitimacy_score)
 
     @staticmethod

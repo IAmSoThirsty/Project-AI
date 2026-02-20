@@ -24,9 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class TestQAGenerator(KernelRoutedAgent):
-    def __init__(
-        self, data_dir: str = "data", kernel: CognitionKernel | None = None
-    ) -> None:
+    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
@@ -59,9 +57,7 @@ class TestQAGenerator(KernelRoutedAgent):
             with open(module_path, encoding="utf-8") as f:
                 src = f.read()
             funcs = [
-                line.split("def ")[1].split("(")[0]
-                for line in src.splitlines()
-                if line.strip().startswith("def ")
+                line.split("def ")[1].split("(")[0] for line in src.splitlines() if line.strip().startswith("def ")
             ]
             # Build a test that imports the module and calls functions that accept no required args
             lines = [
@@ -84,9 +80,7 @@ class TestQAGenerator(KernelRoutedAgent):
                     "    req = [p for p in sig.parameters.values() if p.default is inspect._empty and p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD)]"
                 )
                 lines.append("    if len(req) == 0:")
-                lines.append(
-                    "        # call the function and assert it does not raise and returns a truthy value"
-                )
+                lines.append("        # call the function and assert it does not raise and returns a truthy value")
                 lines.append("        res = _fn()")
                 lines.append("        assert res or res is None or res == True")
                 lines.append("except Exception:")
@@ -120,11 +114,7 @@ class TestQAGenerator(KernelRoutedAgent):
     def _do_run_tests(self, tests_dir: str | None = None) -> dict[str, Any]:
         """Internal implementation of test execution."""
         # Prefer running only the latest generated test directory to avoid unrelated tests
-        run_dir = (
-            tests_dir
-            or self._last_test_dir
-            or os.path.join(self.data_dir, "generated_tests")
-        )
+        run_dir = tests_dir or self._last_test_dir or os.path.join(self.data_dir, "generated_tests")
         if not os.path.exists(run_dir):
             return {"success": True, "ran": 0}
 

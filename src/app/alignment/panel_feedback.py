@@ -169,9 +169,7 @@ class PanelFeedback:
         }
 
         self.votes[decision_id].append(vote_record)
-        logger.debug(
-            "Recorded vote from %s on %s: %s", stakeholder_id, decision_id, vote
-        )
+        logger.debug("Recorded vote from %s on %s: %s", stakeholder_id, decision_id, vote)
 
         return True
 

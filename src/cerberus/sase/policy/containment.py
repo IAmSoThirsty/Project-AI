@@ -68,9 +68,7 @@ class ActionValidator:
             return False, f"Model validation failed: {model_reason}"
 
         # 2. Verify scoring integrity
-        score_valid, score_reason = self._verify_scoring(
-            request, feature_vector, confidence_assessment
-        )
+        score_valid, score_reason = self._verify_scoring(request, feature_vector, confidence_assessment)
         if not score_valid:
             return False, f"Scoring validation failed: {score_reason}"
 
@@ -188,9 +186,7 @@ class ContainmentOrchestrator:
         logger.warning(f"ORCHESTRATING CONTAINMENT: {request.event_id}")
 
         # 1. Validate
-        valid, reason = self.validator.validate(
-            request, feature_vector, confidence_assessment
-        )
+        valid, reason = self.validator.validate(request, feature_vector, confidence_assessment)
 
         if not valid:
             logger.error(f"Containment REJECTED: {reason}")
@@ -250,9 +246,7 @@ class ContainmentOrchestrator:
 
         return action_hash
 
-    def _notify_governance(
-        self, request: ContainmentRequest, executions: List, proof: Dict
-    ):
+    def _notify_governance(self, request: ContainmentRequest, executions: List, proof: Dict):
         """Notify governance layer of containment"""
         logger.info("Governance notified of containment action")
         # TODO: Integrate with L10 governance RBAC

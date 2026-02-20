@@ -30,9 +30,7 @@ class ContentBlocker:
 
     def start(self):
         """Start content blocker"""
-        self.logger.info(
-            "Starting Content Blocker - blocking trackers, pop-ups, and redirects"
-        )
+        self.logger.info("Starting Content Blocker - blocking trackers, pop-ups, and redirects")
         self._active = True
 
     def stop(self):

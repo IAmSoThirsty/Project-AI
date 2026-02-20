@@ -66,9 +66,7 @@ class ExplainabilityAgent:
                 break
 
         if not record:
-            raise ValueError(
-                f"Action ID {action_id} not found in accountability ledger"
-            )
+            raise ValueError(f"Action ID {action_id} not found in accountability ledger")
 
         # Build explanation
         summary = self._generate_summary(record)
@@ -99,9 +97,7 @@ class ExplainabilityAgent:
         elif "ABORTED" in outcome:
             return f"{actor} attempted '{intent}' but ABORTED due to error."
         else:
-            return (
-                f"{actor} successfully executed '{intent}' under governance oversight."
-            )
+            return f"{actor} successfully executed '{intent}' under governance oversight."
 
     def _generate_detailed_reasoning(self, record: dict[str, Any]) -> list[str]:
         """Generate detailed reasoning steps."""
@@ -113,9 +109,7 @@ class ExplainabilityAgent:
         )
 
         # Step 2: Authorization
-        reasoning.append(
-            f"2. Action was authorized by: {record.get('authorized_by', 'Unknown')}"
-        )
+        reasoning.append(f"2. Action was authorized by: {record.get('authorized_by', 'Unknown')}")
 
         # Step 3: Predicted Harm Assessment
         predicted_harm = record.get("predicted_harm", "unknown")
@@ -132,13 +126,9 @@ class ExplainabilityAgent:
         # Step 5: Moral Claims
         moral_claims = record.get("moral_claims", [])
         if moral_claims:
-            reasoning.append(
-                f"5. Moral certainty claims detected: {len(moral_claims)} claim(s)"
-            )
+            reasoning.append(f"5. Moral certainty claims detected: {len(moral_claims)} claim(s)")
         else:
-            reasoning.append(
-                "5. No moral certainty claims detected (compliant with Accountability Axiom)"
-            )
+            reasoning.append("5. No moral certainty claims detected (compliant with Accountability Axiom)")
 
         # Step 6: Final Outcome
         outcome = record.get("actual_outcome", "unknown")

@@ -114,17 +114,13 @@ class SecurityMetricsCollector:
         self.safety_detections.append(event)
         self._save_metrics()
 
-    def record_latency(
-        self, agent_name: str, latency_ms: float, timestamp: str | None = None
-    ):
+    def record_latency(self, agent_name: str, latency_ms: float, timestamp: str | None = None):
         """Record agent operation latency."""
         self.latency_measurements[agent_name].append(latency_ms)
 
         # Keep only recent measurements (last 1000)
         if len(self.latency_measurements[agent_name]) > 1000:
-            self.latency_measurements[agent_name] = self.latency_measurements[
-                agent_name
-            ][-1000:]
+            self.latency_measurements[agent_name] = self.latency_measurements[agent_name][-1000:]
 
         self._save_metrics()
 
@@ -191,11 +187,7 @@ class SecurityMetricsCollector:
         """Calculate attack success rate."""
         cutoff = datetime.now() - timedelta(hours=hours)
 
-        filtered = [
-            r
-            for r in self.attack_results
-            if datetime.fromisoformat(r["timestamp"]) > cutoff
-        ]
+        filtered = [r for r in self.attack_results if datetime.fromisoformat(r["timestamp"]) > cutoff]
 
         if persona:
             filtered = [r for r in filtered if r["persona"] == persona]
@@ -219,9 +211,7 @@ class SecurityMetricsCollector:
         cutoff = datetime.now() - timedelta(hours=hours)
 
         filtered = [
-            e
-            for e in self.detection_events
-            if datetime.fromisoformat(e["timestamp"]) > cutoff and e["detected"]
+            e for e in self.detection_events if datetime.fromisoformat(e["timestamp"]) > cutoff and e["detected"]
         ]
 
         if not filtered:
@@ -239,11 +229,7 @@ class SecurityMetricsCollector:
         """Calculate time to respond to incidents."""
         cutoff = datetime.now() - timedelta(hours=hours)
 
-        filtered = [
-            e
-            for e in self.response_events
-            if datetime.fromisoformat(e["timestamp"]) > cutoff
-        ]
+        filtered = [e for e in self.response_events if datetime.fromisoformat(e["timestamp"]) > cutoff]
 
         if not filtered:
             return {"mean_seconds": 0.0, "median_seconds": 0.0, "p95_seconds": 0.0}
@@ -260,11 +246,7 @@ class SecurityMetricsCollector:
         """Calculate false positive rate for safety detections."""
         cutoff = datetime.now() - timedelta(hours=hours)
 
-        filtered = [
-            d
-            for d in self.safety_detections
-            if datetime.fromisoformat(d["timestamp"]) > cutoff
-        ]
+        filtered = [d for d in self.safety_detections if datetime.fromisoformat(d["timestamp"]) > cutoff]
 
         if not filtered:
             return {"false_positive_rate": 0.0, "total_detections": 0}
@@ -296,9 +278,7 @@ class SecurityMetricsCollector:
         """Calculate CI run failure rate."""
         cutoff = datetime.now() - timedelta(hours=hours)
 
-        filtered = [
-            r for r in self.ci_runs if datetime.fromisoformat(r["timestamp"]) > cutoff
-        ]
+        filtered = [r for r in self.ci_runs if datetime.fromisoformat(r["timestamp"]) > cutoff]
 
         if not filtered:
             return {"failure_rate": 0.0, "total_runs": 0}
@@ -312,11 +292,7 @@ class SecurityMetricsCollector:
         """Calculate patch acceptance rate (default 7 days)."""
         cutoff = datetime.now() - timedelta(hours=hours)
 
-        filtered = [
-            p
-            for p in self.patch_proposals
-            if datetime.fromisoformat(p["timestamp"]) > cutoff
-        ]
+        filtered = [p for p in self.patch_proposals if datetime.fromisoformat(p["timestamp"]) > cutoff]
 
         if not filtered:
             return {"acceptance_rate": 0.0, "total_proposals": 0}
@@ -334,11 +310,7 @@ class SecurityMetricsCollector:
         """Calculate regression rate from pattern updates (default 7 days)."""
         cutoff = datetime.now() - timedelta(hours=hours)
 
-        filtered = [
-            u
-            for u in self.pattern_updates
-            if datetime.fromisoformat(u["timestamp"]) > cutoff
-        ]
+        filtered = [u for u in self.pattern_updates if datetime.fromisoformat(u["timestamp"]) > cutoff]
 
         if not filtered:
             return {"regression_rate": 0.0, "total_updates": 0}
@@ -396,9 +368,7 @@ class SecurityMetricsCollector:
                 self.detection_events = data.get("detection_events", [])
                 self.response_events = data.get("response_events", [])
                 self.safety_detections = data.get("safety_detections", [])
-                self.latency_measurements = defaultdict(
-                    list, data.get("latency_measurements", {})
-                )
+                self.latency_measurements = defaultdict(list, data.get("latency_measurements", {}))
                 self.ci_runs = data.get("ci_runs", [])
                 self.patch_proposals = data.get("patch_proposals", [])
                 self.pattern_updates = data.get("pattern_updates", [])
@@ -434,9 +404,7 @@ class SecurityMetricsCollector:
         # Security metrics
         lines.append("# HELP security_attack_success_rate Attack success rate")
         lines.append("# TYPE security_attack_success_rate gauge")
-        lines.append(
-            f"security_attack_success_rate {metrics['security']['attack_success_rate']['success_rate']}"
-        )
+        lines.append(f"security_attack_success_rate {metrics['security']['attack_success_rate']['success_rate']}")
 
         lines.append("# HELP security_time_to_detect_ms Time to detect incidents (ms)")
         lines.append("# TYPE security_time_to_detect_ms gauge")
@@ -456,11 +424,7 @@ class SecurityMetricsCollector:
             if latency:
                 lines.append(f"# HELP {agent}_latency_ms Agent latency (ms)")
                 lines.append(f"# TYPE {agent}_latency_ms gauge")
-                lines.append(
-                    f"{agent}_latency_ms {{quantile=\"0.95\"}} {latency.get('p95_ms', 0)}"
-                )
-                lines.append(
-                    f"{agent}_latency_ms {{quantile=\"0.99\"}} {latency.get('p99_ms', 0)}"
-                )
+                lines.append(f"{agent}_latency_ms {{quantile=\"0.95\"}} {latency.get('p95_ms', 0)}")
+                lines.append(f"{agent}_latency_ms {{quantile=\"0.99\"}} {latency.get('p99_ms', 0)}")
 
         return "\n".join(lines)

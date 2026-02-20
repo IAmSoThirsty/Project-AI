@@ -134,20 +134,14 @@ def audit(
         repo_root=repo,
         output_dir=output,
         enable_lint=not no_lint and config.get("lint", {}).get("enabled", True),
-        enable_quality=not no_quality
-        and config.get("quality", {}).get("enabled", True),
-        enable_integrity=not no_integrity
-        and config.get("integrity", {}).get("enabled", True),
-        generate_reports=not no_reports
-        and config.get("report", {}).get("enabled", True),
-        generate_catalog=not no_catalog
-        and config.get("catalog", {}).get("enabled", True),
+        enable_quality=not no_quality and config.get("quality", {}).get("enabled", True),
+        enable_integrity=not no_integrity and config.get("integrity", {}).get("enabled", True),
+        generate_reports=not no_reports and config.get("report", {}).get("enabled", True),
+        generate_catalog=not no_catalog and config.get("catalog", {}).get("enabled", True),
     )
 
     # Display header
-    console.print(
-        "\n[bold cyan]Project-AI Repository Inspection & Audit System[/bold cyan]"
-    )
+    console.print("\n[bold cyan]Project-AI Repository Inspection & Audit System[/bold cyan]")
     console.print("[dim]Version 1.0.0[/dim]\n")
 
     console.print(f"[bold]Repository:[/bold] {repo}")
@@ -169,9 +163,7 @@ def audit(
 
             if results.success:
                 _display_results(results)
-                console.print(
-                    "\n[bold green]✓ Audit completed successfully![/bold green]"
-                )
+                console.print("\n[bold green]✓ Audit completed successfully![/bold green]")
                 sys.exit(0)
             else:
                 console.print(f"\n[bold red]✗ Audit failed:[/bold red] {results.error}")
@@ -215,11 +207,7 @@ def config(
     """
     if create:
         # Create default config
-        default_config_path = (
-            Path(__file__).parent.parent.parent.parent
-            / "config"
-            / "inspection_config.yaml"
-        )
+        default_config_path = Path(__file__).parent.parent.parent.parent / "config" / "inspection_config.yaml"
 
         if default_config_path.exists():
             import shutil
@@ -227,18 +215,12 @@ def config(
             shutil.copy(default_config_path, output)
             console.print(f"[green]✓ Created configuration file:[/green] {output}")
         else:
-            console.print(
-                f"[red]✗ Default configuration file not found:[/red] {default_config_path}"
-            )
+            console.print(f"[red]✗ Default configuration file not found:[/red] {default_config_path}")
             sys.exit(1)
 
     elif show:
         # Show current config
-        config_path = (
-            Path(__file__).parent.parent.parent.parent
-            / "config"
-            / "inspection_config.yaml"
-        )
+        config_path = Path(__file__).parent.parent.parent.parent / "config" / "inspection_config.yaml"
 
         if config_path.exists():
             with open(config_path) as f:
@@ -287,9 +269,7 @@ def _display_results(results):
         else:
             color = "red"
 
-        console.print(
-            f"[bold]Overall Health:[/bold] [{color}]{health_score:.1f}/100 (Grade: {grade})[/{color}]\n"
-        )
+        console.print(f"[bold]Overall Health:[/bold] [{color}]{health_score:.1f}/100 (Grade: {grade})[/{color}]\n")
 
     # Statistics table
     table = Table(title="Statistics")
@@ -303,9 +283,7 @@ def _display_results(results):
         table.add_row("Components", str(len(results.inspection.get("components", {}))))
 
     if results.integrity:
-        table.add_row(
-            "Dependencies", str(len(results.integrity.get("dependencies", [])))
-        )
+        table.add_row("Dependencies", str(len(results.integrity.get("dependencies", []))))
         table.add_row("Integrity Issues", str(len(results.integrity.get("issues", []))))
         table.add_row(
             "Circular Dependencies",

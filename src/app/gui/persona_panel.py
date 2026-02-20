@@ -230,9 +230,7 @@ These laws are **immutable and hierarchical**. They cannot be overridden or modi
         layout.addWidget(self.proactive_enabled)
 
         # Respect quiet hours
-        self.respect_quiet_hours = QCheckBox(
-            "Respect quiet hours (no messages 12 AM - 8 AM)"
-        )
+        self.respect_quiet_hours = QCheckBox("Respect quiet hours (no messages 12 AM - 8 AM)")
         self.respect_quiet_hours.setChecked(True)
         self.respect_quiet_hours.stateChanged.connect(self.on_proactive_changed)
         layout.addWidget(self.respect_quiet_hours)
@@ -328,11 +326,7 @@ These laws are **immutable and hierarchical**. They cannot be overridden or modi
 
         try:
             is_allowed, reason = FourLaws.validate_action(action, context)
-            result = (
-                f"✅ **ALLOWED**\n\n{reason}"
-                if is_allowed
-                else f"❌ **BLOCKED**\n\n{reason}"
-            )
+            result = f"✅ **ALLOWED**\n\n{reason}" if is_allowed else f"❌ **BLOCKED**\n\n{reason}"
             self.action_result.setMarkdown(result)
         except Exception as e:
             logger.error("Error validating action: %s", e)
@@ -405,10 +399,7 @@ These laws are **immutable and hierarchical**. They cannot be overridden or modi
     def get_settings(self) -> dict:
         """Get current settings."""
         return {
-            "personality": {
-                trait: slider.value() / 100.0
-                for trait, slider in self.trait_sliders.items()
-            },
+            "personality": {trait: slider.value() / 100.0 for trait, slider in self.trait_sliders.items()},
             "proactive": {
                 "enabled": self.proactive_enabled.isChecked(),
                 "respect_quiet_hours": self.respect_quiet_hours.isChecked(),

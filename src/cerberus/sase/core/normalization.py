@@ -156,9 +156,7 @@ class CloudProviderClassifier:
         """Classify cloud provider"""
         return self.cloud_asns.get(asn)
 
-    def classify_infrastructure(
-        self, asn: str, ip: str, is_tor: bool, is_vpn: bool
-    ) -> InfrastructureType:
+    def classify_infrastructure(self, asn: str, ip: str, is_tor: bool, is_vpn: bool) -> InfrastructureType:
         """Classify infrastructure type"""
         if is_tor:
             return InfrastructureType.TOR
@@ -192,9 +190,7 @@ class HistoricalCorrelator:
     def record_interaction(self, ip: str, artifact_id: str):
         """Record artifact interaction"""
         # Increment artifact reuse count
-        self.interaction_counts[artifact_id] = (
-            self.interaction_counts.get(artifact_id, 0) + 1
-        )
+        self.interaction_counts[artifact_id] = self.interaction_counts.get(artifact_id, 0) + 1
 
         # Track IP-artifact associations
         if ip not in self.ip_artifact_map:
@@ -210,9 +206,7 @@ class HistoricalCorrelator:
 
     def get_ip_diversity(self, artifact_id: str) -> int:
         """Get how many unique IPs have accessed artifact"""
-        unique_ips = sum(
-            1 for ips in self.ip_artifact_map.values() if artifact_id in ips
-        )
+        unique_ips = sum(1 for ips in self.ip_artifact_map.values() if artifact_id in ips)
         return unique_ips
 
 
@@ -224,9 +218,7 @@ class TokenSensitivityMapper:
     """
 
     def __init__(self):
-        self.sensitivity_map: Dict[str, float] = (
-            {}
-        )  # artifact_id -> sensitivity (0.0-1.0)
+        self.sensitivity_map: Dict[str, float] = {}  # artifact_id -> sensitivity (0.0-1.0)
 
     def set_sensitivity(self, artifact_id: str, sensitivity: float):
         """Set token sensitivity"""
@@ -286,9 +278,7 @@ class EventEnrichmentPipeline:
 
         # Cloud provider classification
         cloud_provider = self.cloud_classifier.classify(asn, ip)
-        infrastructure_type = self.cloud_classifier.classify_infrastructure(
-            asn, ip, is_tor, is_vpn
-        ).value
+        infrastructure_type = self.cloud_classifier.classify_infrastructure(asn, ip, is_tor, is_vpn).value
 
         # Historical correlation
         self.historical_correlator.record_interaction(ip, artifact_id)

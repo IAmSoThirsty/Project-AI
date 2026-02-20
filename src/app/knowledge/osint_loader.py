@@ -68,9 +68,7 @@ class OSINTLoader:
             self.tools = data.get("categories", {})
 
             tool_count = sum(len(tools) for tools in self.tools.values())
-            logger.info(
-                "Loaded %s tools from %s categories", tool_count, len(self.tools)
-            )
+            logger.info("Loaded %s tools from %s categories", tool_count, len(self.tools))
             return True
 
         except json.JSONDecodeError as e:
@@ -138,9 +136,7 @@ class OSINTLoader:
         """
         tool_name = tool.get("name", "unknown")
         logger.info("Plugin registration stub called for: %s", tool_name)
-        logger.debug(
-            "Future implementation will create plugin wrapper and register with system"
-        )
+        logger.debug("Future implementation will create plugin wrapper and register with system")
         return False  # Not yet implemented
 
     def get_metadata(self) -> dict[str, Any]:

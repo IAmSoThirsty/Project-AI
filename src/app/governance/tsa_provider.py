@@ -254,9 +254,7 @@ class TSAProvider:
     # INTERNAL VERIFICATION
     # ==============================
 
-    def _parse_and_verify(
-        self, response_der: bytes, expected_digest: bytes
-    ) -> TSAToken:
+    def _parse_and_verify(self, response_der: bytes, expected_digest: bytes) -> TSAToken:
         """Parse and cryptographically verify TSA response.
 
         This is the critical security function that ensures:
@@ -284,9 +282,7 @@ class TSAProvider:
             status = ts_resp["status"]["status"].native
             if status not in ("granted", "granted_with_mods"):
                 fail_info = ts_resp["status"].get("fail_info")
-                raise TSAVerificationError(
-                    f"TSA did not grant timestamp: status={status}, fail_info={fail_info}"
-                )
+                raise TSAVerificationError(f"TSA did not grant timestamp: status={status}, fail_info={fail_info}")
 
             # Extract ContentInfo (the actual timestamp token)
             content_info = ts_resp["time_stamp_token"]
@@ -334,9 +330,7 @@ class TSAProvider:
 
             # Get first certificate (TSA signing cert)
             tsa_cert_der = certs[0].chosen.dump()
-            tsa_cert = x509.load_der_x509_certificate(
-                tsa_cert_der, backend=default_backend()
-            )
+            tsa_cert = x509.load_der_x509_certificate(tsa_cert_der, backend=default_backend())
 
             # CRITICAL: Verify signature
             self._verify_signature(signed_data, tsa_cert)
@@ -345,9 +339,7 @@ class TSAProvider:
             serial_number = tst_info["serial_number"].native
 
             # Extract hash algorithm
-            hash_algo = tst_info["message_imprint"]["hash_algorithm"][
-                "algorithm"
-            ].native
+            hash_algo = tst_info["message_imprint"]["hash_algorithm"]["algorithm"].native
 
             logger.debug(
                 "TSA token verified successfully (serial=%s, time=%s, skew=%ds)",
@@ -368,9 +360,7 @@ class TSAProvider:
         except (ValueError, KeyError, AttributeError) as e:
             raise TSAVerificationError(f"Failed to parse TSA response: {e}")
 
-    def _verify_signature(
-        self, signed_data: cms.SignedData, tsa_cert: x509.Certificate
-    ) -> None:
+    def _verify_signature(self, signed_data: cms.SignedData, tsa_cert: x509.Certificate) -> None:
         """Verify SignedData signature using TSA certificate.
 
         Args:
@@ -427,9 +417,7 @@ class TSAProvider:
                 )
             else:
                 # For other key types, we'd need different verification
-                raise TSAVerificationError(
-                    f"Unsupported public key type: {type(public_key)}"
-                )
+                raise TSAVerificationError(f"Unsupported public key type: {type(public_key)}")
 
             logger.debug("TSA signature verified successfully")
 

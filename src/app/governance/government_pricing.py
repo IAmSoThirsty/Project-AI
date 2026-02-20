@@ -133,9 +133,7 @@ def calculate_government_price(
     # Determine pricing model based on seat count
     if seat_count <= 100:
         # Progressive pricing for seats 1-100
-        multiplier, tier_number, increase_percentage = calculate_government_tier_multiplier(
-            seat_count
-        )
+        multiplier, tier_number, increase_percentage = calculate_government_tier_multiplier(seat_count)
         total_price = base_price * multiplier
         pricing_model = "tiered"
         price_per_seat = None

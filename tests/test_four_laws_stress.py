@@ -58,9 +58,7 @@ STRESS_CASES = _gen_contexts(100)
 @pytest.mark.parametrize("ctx", STRESS_CASES)
 def test_four_laws_stress(ctx):
     """Validate action decision for each generated scenario."""
-    allowed, reason = FourLaws.validate_action(
-        action=f"stress_action_{ctx['case_id']}", context=ctx
-    )
+    allowed, reason = FourLaws.validate_action(action=f"stress_action_{ctx['case_id']}", context=ctx)
     assert allowed == expected_allowed(ctx), reason
 
 

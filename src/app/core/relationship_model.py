@@ -140,9 +140,7 @@ class RelationshipState:
     preferences: dict[str, str] = field(default_factory=dict)
 
     # Relationship metadata
-    relationship_started: str = field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
-    )
+    relationship_started: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     last_interaction: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     def to_dict(self) -> dict[str, Any]:
@@ -330,9 +328,7 @@ class RelationshipModel:
 
     def _load_relationship(self):
         """Load relationship data from disk."""
-        relationship_file = os.path.join(
-            self.data_dir, f"relationship_{self.state.user_id}.json"
-        )
+        relationship_file = os.path.join(self.data_dir, f"relationship_{self.state.user_id}.json")
 
         if os.path.exists(relationship_file):
             try:
@@ -340,9 +336,7 @@ class RelationshipModel:
                     data = json.load(f)
 
                 self.state = RelationshipState.from_dict(data["state"])
-                self.interaction_patterns = InteractionPattern.from_dict(
-                    data.get("interaction_patterns", {})
-                )
+                self.interaction_patterns = InteractionPattern.from_dict(data.get("interaction_patterns", {}))
 
                 # Load conflicts
                 for conflict_data in data.get("conflicts", []):
@@ -366,9 +360,7 @@ class RelationshipModel:
 
     def _save_relationship(self):
         """Save relationship data to disk."""
-        relationship_file = os.path.join(
-            self.data_dir, f"relationship_{self.state.user_id}.json"
-        )
+        relationship_file = os.path.join(self.data_dir, f"relationship_{self.state.user_id}.json")
 
         try:
             data = {
@@ -428,9 +420,7 @@ class RelationshipModel:
 
         self._save_relationship()
 
-    def register_support(
-        self, support_type: SupportType, description: str, provided_by: str, impact: str
-    ) -> str:
+    def register_support(self, support_type: SupportType, description: str, provided_by: str, impact: str) -> str:
         """
         Register mutual support event.
 
@@ -597,18 +587,14 @@ class RelationshipModel:
         """
         # Calculate positivity ratio
         if self.state.total_interactions > 0:
-            positivity_ratio = (
-                self.state.positive_interactions / self.state.total_interactions
-            )
+            positivity_ratio = self.state.positive_interactions / self.state.total_interactions
         else:
             positivity_ratio = 0.5
 
         # Calculate conflict resolution rate
         total_conflicts = len(self.conflicts)
         resolved_conflicts = sum(1 for c in self.conflicts.values() if c.resolved)
-        resolution_rate = (
-            resolved_conflicts / total_conflicts if total_conflicts > 0 else 1.0
-        )
+        resolution_rate = resolved_conflicts / total_conflicts if total_conflicts > 0 else 1.0
 
         # Overall health score (0.0-1.0)
         health_score = (

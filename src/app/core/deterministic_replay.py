@@ -78,9 +78,7 @@ class DeterministicReplayTool:
             Path to saved execution log
         """
         # Create filename from trace_id and timestamp
-        filename = (
-            f"{context.trace_id}_{context.timestamp.isoformat().replace(':', '-')}.json"
-        )
+        filename = f"{context.trace_id}_{context.timestamp.isoformat().replace(':', '-')}.json"
         filepath = self.replay_dir / filename
 
         # Serialize context (excluding non-serializable callables)
@@ -199,9 +197,7 @@ class DeterministicReplayTool:
             timeline.append(
                 ReplayEvent(
                     trace_id=trace_id,
-                    timestamp=datetime.fromisoformat(
-                        execution["governance_decision"]["timestamp"]
-                    ),
+                    timestamp=datetime.fromisoformat(execution["governance_decision"]["timestamp"]),
                     event_type="GOVERNANCE_DECISION",
                     data=execution["channels"]["decision"],
                 )
@@ -257,16 +253,12 @@ class DeterministicReplayTool:
             "raw_execution": execution,
         }
 
-    def _analyze_execution(
-        self, execution: dict[str, Any], timeline: list[ReplayEvent]
-    ) -> dict[str, Any]:
+    def _analyze_execution(self, execution: dict[str, Any], timeline: list[ReplayEvent]) -> dict[str, Any]:
         """Analyze an execution for insights."""
         analysis: dict[str, Any] = {
             "status": execution["status"],
             "was_approved": (
-                execution["governance_decision"]["approved"]
-                if execution["governance_decision"]
-                else None
+                execution["governance_decision"]["approved"] if execution["governance_decision"] else None
             ),
             "was_blocked": execution["status"] == "blocked",
             "had_error": execution["error"] is not None,
@@ -352,11 +344,7 @@ class DeterministicReplayTool:
             "blocked_count": sum(1 for c in chain if c["analysis"]["was_blocked"]),
             "error_count": sum(1 for c in chain if c["analysis"]["had_error"]),
             "total_duration_ms": sum(c["analysis"]["duration_ms"] for c in chain),
-            "approval_rate": (
-                sum(1 for c in chain if c["analysis"]["was_approved"]) / len(chain)
-                if chain
-                else 0
-            ),
+            "approval_rate": (sum(1 for c in chain if c["analysis"]["was_approved"]) / len(chain) if chain else 0),
         }
 
     def search_executions(
@@ -388,10 +376,7 @@ class DeterministicReplayTool:
                     execution = json.load(f)
 
                 # Apply filters
-                if (
-                    action_name
-                    and execution["proposed_action"]["action_name"] != action_name
-                ):
+                if action_name and execution["proposed_action"]["action_name"] != action_name:
                     continue
 
                 if status and execution["status"] != status:

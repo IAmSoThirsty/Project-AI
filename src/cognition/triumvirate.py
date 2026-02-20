@@ -117,14 +117,10 @@ class Triumvirate:
             # Phase 2: ML Inference (Codex)
             codex_result = self._run_inference(input_data, full_context)
             if not codex_result["success"]:
-                return self._build_error_response(
-                    correlation_id, "Codex inference failed", codex_result, start_time
-                )
+                return self._build_error_response(correlation_id, "Codex inference failed", codex_result, start_time)
 
             # Phase 3: Reasoning (Galahad)
-            reasoning_result = self._run_reasoning(
-                [input_data, codex_result["output"]], full_context
-            )
+            reasoning_result = self._run_reasoning([input_data, codex_result["output"]], full_context)
             if not reasoning_result["success"]:
                 return self._build_error_response(
                     correlation_id,
@@ -134,9 +130,7 @@ class Triumvirate:
                 )
 
             # Phase 4: Output Enforcement (Cerberus)
-            enforcement_result = self._enforce_output(
-                reasoning_result["conclusion"], full_context
-            )
+            enforcement_result = self._enforce_output(reasoning_result["conclusion"], full_context)
             if not enforcement_result["allowed"]:
                 return self._build_error_response(
                     correlation_id,
@@ -263,9 +257,7 @@ class Triumvirate:
         }
         self.telemetry_events.append(event)
 
-    def _build_error_response(
-        self, correlation_id: str, error: str, details: dict, start_time: datetime
-    ) -> dict:
+    def _build_error_response(self, correlation_id: str, error: str, details: dict, start_time: datetime) -> dict:
         """Build standardized error response."""
         end_time = datetime.now()
         duration_ms = (end_time - start_time).total_seconds() * 1000

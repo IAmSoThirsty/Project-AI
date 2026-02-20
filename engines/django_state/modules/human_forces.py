@@ -83,12 +83,8 @@ class HumanForcesModule:
             cooperators_to_defectors = int(self.cooperators * switch_rate)
 
         # Apply switches
-        self.cooperators = (
-            self.cooperators + defectors_to_cooperators - cooperators_to_defectors
-        )
-        self.defectors = (
-            self.defectors - defectors_to_cooperators + cooperators_to_defectors
-        )
+        self.cooperators = self.cooperators + defectors_to_cooperators - cooperators_to_defectors
+        self.defectors = self.defectors - defectors_to_cooperators + cooperators_to_defectors
 
         # Ensure valid counts
         self.cooperators = max(0, min(self.population_size, self.cooperators))
@@ -107,9 +103,7 @@ class HumanForcesModule:
 
         return self.cooperators, self.defectors
 
-    def generate_cooperation_events(
-        self, state: StateVector, count: int = 1
-    ) -> list[CooperationEvent]:
+    def generate_cooperation_events(self, state: StateVector, count: int = 1) -> list[CooperationEvent]:
         """Generate cooperation events based on current cooperation levels.
 
         Args:
@@ -138,9 +132,7 @@ class HumanForcesModule:
                 description=f"Cooperation event {i+1}: magnitude {magnitude:.2f}",
                 magnitude=magnitude,
                 reciprocity=reciprocity,
-                participants=[
-                    f"agent_{random.randint(1, self.population_size)}" for _ in range(2)
-                ],
+                participants=[f"agent_{random.randint(1, self.population_size)}" for _ in range(2)],
             )
             events.append(event)
 
@@ -163,9 +155,7 @@ class HumanForcesModule:
         defector_factor = (self.defectors / self.population_size) * 0.5
 
         # Adjust for recent betrayal history
-        recent_betrayals = sum(
-            1 for b in self.betrayal_history[-10:] if b.get("severity", 0) > 0.5
-        )
+        recent_betrayals = sum(1 for b in self.betrayal_history[-10:] if b.get("severity", 0) > 0.5)
         history_factor = min(recent_betrayals * 0.1, 0.3)
 
         total_risk = base_prob + defector_factor + history_factor
@@ -204,11 +194,7 @@ class HumanForcesModule:
 
         if visibility is None:
             # Visibility correlates with epistemic confidence (harder to hide with good information)
-            visibility = (
-                0.5
-                + (state.epistemic_confidence.value * 0.3)
-                + random.uniform(-0.2, 0.2)
-            )
+            visibility = 0.5 + (state.epistemic_confidence.value * 0.3) + random.uniform(-0.2, 0.2)
             visibility = max(0.0, min(1.0, visibility))
 
         event = BetrayalEvent(
@@ -232,9 +218,7 @@ class HumanForcesModule:
             }
         )
 
-        logger.info(
-            "Generated betrayal event: severity=%s, visibility=%s", severity, visibility
-        )
+        logger.info("Generated betrayal event: severity=%s, visibility=%s", severity, visibility)
 
         return event
 
@@ -261,9 +245,7 @@ class HumanForcesModule:
 
         cooperation_events = []
         if events_to_generate > 0:
-            cooperation_events = self.generate_cooperation_events(
-                state, events_to_generate
-            )
+            cooperation_events = self.generate_cooperation_events(state, events_to_generate)
 
             # Apply cooperation boosts
             for event in cooperation_events:
@@ -320,9 +302,7 @@ class HumanForcesModule:
         Returns:
             Dictionary with module state
         """
-        cooperation_rate = (
-            self.cooperators / self.population_size if self.population_size > 0 else 0.0
-        )
+        cooperation_rate = self.cooperators / self.population_size if self.population_size > 0 else 0.0
 
         return {
             "population_size": self.population_size,

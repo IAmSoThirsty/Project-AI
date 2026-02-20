@@ -208,9 +208,7 @@ class NovelSecurityScenarios:
                     payload={
                         "causality_violation": "[REDACTED]",
                         "temporal_window_ns": 10 + i,
-                        "paradox_type": ["grandfather", "bootstrap", "predestination"][
-                            i % 3
-                        ],
+                        "paradox_type": ["grandfather", "bootstrap", "predestination"][i % 3],
                         "timeline_branches": "[REDACTED]",
                     },
                     prerequisites=[
@@ -368,9 +366,7 @@ class NovelSecurityScenarios:
                     description="Generation of [REDACTED] multi-modal biometric deepfakes using [REDACTED] GAN architectures. Bypasses [REDACTED] liveness detection through [REDACTED] physiological mimicry.",
                     attack_vector="biometric",
                     payload={
-                        "deepfake_modalities": ["face", "voice", "gait", "iris"][
-                            : (i % 4 + 1)
-                        ],
+                        "deepfake_modalities": ["face", "voice", "gait", "iris"][: (i % 4 + 1)],
                         "gan_architecture": "[REDACTED]",
                         "liveness_bypass": "[REDACTED]",
                         "physiological_signals": "[REDACTED]",
@@ -541,15 +537,9 @@ class NovelSecurityScenarios:
         total_innovation = 0
 
         for scenario in self.scenarios:
-            category_counts[scenario.category] = (
-                category_counts.get(scenario.category, 0) + 1
-            )
-            novelty_counts[scenario.novelty_factor] = (
-                novelty_counts.get(scenario.novelty_factor, 0) + 1
-            )
-            classification_counts[scenario.classification] = (
-                classification_counts.get(scenario.classification, 0) + 1
-            )
+            category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
+            novelty_counts[scenario.novelty_factor] = novelty_counts.get(scenario.novelty_factor, 0) + 1
+            classification_counts[scenario.classification] = classification_counts.get(scenario.classification, 0) + 1
             total_innovation += scenario.innovation_score
 
         avg_cvss = sum(s.cvss_score for s in self.scenarios) / len(self.scenarios)

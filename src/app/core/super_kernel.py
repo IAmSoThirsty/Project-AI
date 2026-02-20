@@ -163,9 +163,7 @@ class SuperKernel:
             raise ValueError(f"{kernel_type.name} already registered")
 
         if not isinstance(instance, KernelInterface):
-            raise TypeError(
-                f"Kernel instance must implement KernelInterface, got {type(instance)}"
-            )
+            raise TypeError(f"Kernel instance must implement KernelInterface, got {type(instance)}")
 
         self.kernels[kernel_type] = RegisteredKernel(
             type=kernel_type,
@@ -262,9 +260,7 @@ class SuperKernel:
 
         try:
             # Step 1: Governance checks
-            governance_decision = self._check_governance(
-                kernel_type, input_data, source, metadata
-            )
+            governance_decision = self._check_governance(kernel_type, input_data, source, metadata)
 
             # Channel 2: Decision (governance outcome)
             record.decision = governance_decision
@@ -273,9 +269,7 @@ class SuperKernel:
             if not governance_decision.get("approved", True):
                 # Blocked by governance
                 self.blocked_count += 1
-                record.error = governance_decision.get(
-                    "reason", "Blocked by governance"
-                )
+                record.error = governance_decision.get("reason", "Blocked by governance")
 
                 logger.warning(
                     "[%s] Blocked by governance: %s",
@@ -402,9 +396,7 @@ class SuperKernel:
 
                 return {
                     "approved": triumvirate_result.get("success", True),
-                    "reason": triumvirate_result.get(
-                        "output", "Triumvirate evaluation"
-                    ),
+                    "reason": triumvirate_result.get("output", "Triumvirate evaluation"),
                 }
             except Exception as e:
                 logger.error("Triumvirate evaluation failed: %s", e)
@@ -496,9 +488,7 @@ class SuperKernel:
             "total_executions": self.execution_count,
             "blocked_executions": self.blocked_count,
             "success_rate": (
-                (self.execution_count - self.blocked_count) / self.execution_count
-                if self.execution_count > 0
-                else 0.0
+                (self.execution_count - self.blocked_count) / self.execution_count if self.execution_count > 0 else 0.0
             ),
             "registered_kernels": [k.name for k in self.kernels],
             "history_size": len(self.execution_history),

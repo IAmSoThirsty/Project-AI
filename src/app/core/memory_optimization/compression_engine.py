@@ -282,9 +282,7 @@ class CompressionEngine:
     # General Purpose Compression
     # ========================================================================
 
-    def _compress_general(
-        self, data: Any, strategy: CompressionStrategy, metadata: dict
-    ) -> CompressionResult:
+    def _compress_general(self, data: Any, strategy: CompressionStrategy, metadata: dict) -> CompressionResult:
         """Compress general data (dicts, lists, etc.)."""
         # Serialize to JSON then compress
         serialized = json.dumps(data, ensure_ascii=False).encode("utf-8")
@@ -297,12 +295,8 @@ class CompressionEngine:
                 codec=blosc2.Codec.LZ4,
             )
         elif strategy == CompressionStrategy.LZ4 and HAS_LZ4:
-            compressed = lz4.frame.compress(
-                serialized, compression_level=self.compression_level
-            )
-        elif (
-            strategy == CompressionStrategy.ZLIB or strategy == CompressionStrategy.NONE
-        ):
+            compressed = lz4.frame.compress(serialized, compression_level=self.compression_level)
+        elif strategy == CompressionStrategy.ZLIB or strategy == CompressionStrategy.NONE:
             compressed = zlib.compress(serialized, level=self.compression_level)
         else:
             # Fallback
@@ -310,9 +304,7 @@ class CompressionEngine:
             strategy = CompressionStrategy.ZLIB
 
         compressed_size = len(compressed)
-        compression_ratio = (
-            1.0 - (compressed_size / original_size) if original_size > 0 else 0.0
-        )
+        compression_ratio = 1.0 - (compressed_size / original_size) if original_size > 0 else 0.0
 
         # Update stats
         self.compression_stats["total_original_bytes"] += original_size
@@ -344,9 +336,7 @@ class CompressionEngine:
     # Vector Compression
     # ========================================================================
 
-    def _compress_vector(
-        self, data: np.ndarray, strategy: CompressionStrategy, metadata: dict
-    ) -> CompressionResult:
+    def _compress_vector(self, data: np.ndarray, strategy: CompressionStrategy, metadata: dict) -> CompressionResult:
         """Compress vector data with quantization or sparsification."""
         original_size = data.nbytes
 
@@ -367,9 +357,7 @@ class CompressionEngine:
             )
 
             # Compress quantized data
-            compressed = zlib.compress(
-                quantized.tobytes(), level=self.compression_level
-            )
+            compressed = zlib.compress(quantized.tobytes(), level=self.compression_level)
 
         elif strategy == CompressionStrategy.QUANTIZE_INT4:
             # 4-bit quantization (pack 2 values per byte)
@@ -421,9 +409,7 @@ class CompressionEngine:
             compressed = zlib.compress(serialized, level=self.compression_level)
 
         compressed_size = len(compressed)
-        compression_ratio = (
-            1.0 - (compressed_size / original_size) if original_size > 0 else 0.0
-        )
+        compression_ratio = 1.0 - (compressed_size / original_size) if original_size > 0 else 0.0
 
         self.compression_stats["total_original_bytes"] += original_size
         self.compression_stats["total_compressed_bytes"] += compressed_size
@@ -444,12 +430,8 @@ class CompressionEngine:
         metadata = result.metadata
 
         if strategy == CompressionStrategy.QUANTIZE_INT8:
-            quantized = np.frombuffer(decompressed, dtype=np.int8).reshape(
-                metadata["shape"]
-            )
-            data = (quantized.astype(np.float32) / metadata["scale"]) + metadata[
-                "min_val"
-            ]
+            quantized = np.frombuffer(decompressed, dtype=np.int8).reshape(metadata["shape"])
+            data = (quantized.astype(np.float32) / metadata["scale"]) + metadata["min_val"]
 
         elif strategy == CompressionStrategy.QUANTIZE_INT4:
             packed = np.frombuffer(decompressed, dtype=np.uint8)
@@ -460,18 +442,13 @@ class CompressionEngine:
             quantized[::2] = high
             quantized[1::2] = low
             quantized = quantized[: np.prod(metadata["shape"])]  # Trim padding
-            data = (quantized.astype(np.float32) / metadata["scale"]) + metadata[
-                "min_val"
-            ]
+            data = (quantized.astype(np.float32) / metadata["scale"]) + metadata["min_val"]
             data = data.reshape(metadata["shape"])
 
         elif strategy == CompressionStrategy.BINARIZE:
             packed = np.frombuffer(decompressed, dtype=np.uint8)
             binary = np.unpackbits(packed)[: np.prod(metadata["shape"])]
-            data = (
-                binary.astype(np.float32).reshape(metadata["shape"])
-                * metadata["threshold"]
-            )
+            data = binary.astype(np.float32).reshape(metadata["shape"]) * metadata["threshold"]
 
         elif strategy == CompressionStrategy.SPARSE_CSR:
             from scipy.sparse import csr_matrix
@@ -492,9 +469,7 @@ class CompressionEngine:
     # Graph Compression
     # ========================================================================
 
-    def _compress_graph(
-        self, data: dict, strategy: CompressionStrategy, metadata: dict
-    ) -> CompressionResult:
+    def _compress_graph(self, data: dict, strategy: CompressionStrategy, metadata: dict) -> CompressionResult:
         """Compress graph data with pruning and quantization."""
         original_size = len(json.dumps(data).encode("utf-8"))
 
@@ -504,9 +479,7 @@ class CompressionEngine:
             serialized = json.dumps(pruned).encode("utf-8")
             compressed = zlib.compress(serialized, level=self.compression_level)
 
-            metadata["pruned_edges"] = len(data.get("edges", [])) - len(
-                pruned.get("edges", [])
-            )
+            metadata["pruned_edges"] = len(data.get("edges", [])) - len(pruned.get("edges", []))
 
         elif strategy == CompressionStrategy.GRAPH_QUANTIZE:
             # Quantize edge weights to int8
@@ -519,9 +492,7 @@ class CompressionEngine:
             compressed = zlib.compress(serialized, level=self.compression_level)
 
         compressed_size = len(compressed)
-        compression_ratio = (
-            1.0 - (compressed_size / original_size) if original_size > 0 else 0.0
-        )
+        compression_ratio = 1.0 - (compressed_size / original_size) if original_size > 0 else 0.0
 
         self.compression_stats["total_original_bytes"] += original_size
         self.compression_stats["total_compressed_bytes"] += compressed_size
@@ -545,11 +516,7 @@ class CompressionEngine:
         pruned = graph.copy()
 
         if "edges" in pruned:
-            pruned["edges"] = [
-                edge
-                for edge in pruned["edges"]
-                if edge.get("confidence", 1.0) >= threshold
-            ]
+            pruned["edges"] = [edge for edge in pruned["edges"] if edge.get("confidence", 1.0) >= threshold]
 
         return pruned
 
@@ -585,9 +552,7 @@ class CompressionEngine:
 
         # Compression ratio: 0 = no compression, 1.0 = 100% reduction
         # Ensure it's always non-negative (compressed can be larger than original in some cases)
-        overall_ratio = (
-            max(0.0, 1.0 - (total_comp / total_orig)) if total_orig > 0 else 0.0
-        )
+        overall_ratio = max(0.0, 1.0 - (total_comp / total_orig)) if total_orig > 0 else 0.0
 
         return {
             "total_compressions": self.compression_stats["total_compressions"],

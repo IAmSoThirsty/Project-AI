@@ -179,9 +179,9 @@ class BytecodeInstruction:
         """Decode a single operand (simplified)."""
         # In a real implementation, would use type tags
         # For now, assume strings
-        str_len = struct.unpack(">H", data[offset:offset + 2])[0]
+        str_len = struct.unpack(">H", data[offset : offset + 2])[0]
         offset += 2
-        value = data[offset:offset + str_len].decode("utf-8")
+        value = data[offset : offset + str_len].decode("utf-8")
         offset += str_len
         return value, offset
 
@@ -393,21 +393,15 @@ class BytecodeGenerator:
 
         # Generate bytecode for primary blocks
         for block in ir_function.primary_blocks:
-            bytecode_function.primary_bytecode.extend(
-                self._generate_block(block)
-            )
+            bytecode_function.primary_bytecode.extend(self._generate_block(block))
 
         # Generate bytecode for shadow blocks
         for block in ir_function.shadow_blocks:
-            bytecode_function.shadow_bytecode.extend(
-                self._generate_block(block)
-            )
+            bytecode_function.shadow_bytecode.extend(self._generate_block(block))
 
         # Generate bytecode for invariant blocks
         for block in ir_function.invariant_blocks:
-            bytecode_function.invariant_bytecode.extend(
-                self._generate_block(block)
-            )
+            bytecode_function.invariant_bytecode.extend(self._generate_block(block))
 
         return bytecode_function
 

@@ -92,13 +92,9 @@ class ExecutionService:
                 can_be_paused=True,  # Can be paused by Tier-1
                 can_be_replaced=False,  # Core infrastructure
             )
-            logger.info(
-                "ExecutionService registered as Tier-2 Infrastructure Controller"
-            )
+            logger.info("ExecutionService registered as Tier-2 Infrastructure Controller")
         except Exception as e:
-            logger.warning(
-                "Failed to register ExecutionService in tier registry: %s", e
-            )
+            logger.warning("Failed to register ExecutionService in tier registry: %s", e)
 
         logger.info("ExecutionService initialized")
         logger.info("  TARL Gate: %s", tarl_gate is not None)
@@ -207,9 +203,7 @@ class ExecutionService:
         if hasattr(action, "callable") and callable(action.callable):
             return action.callable(*action.args, **action.kwargs)
         else:
-            raise ValueError(
-                f"Action {action.action_name} has no callable implementation"
-            )
+            raise ValueError(f"Action {action.action_name} has no callable implementation")
 
     def _enforce_tarl(self, action: Any, context: Any) -> None:
         """
@@ -227,16 +221,10 @@ class ExecutionService:
         try:
             tarl_context = {
                 "action_name": action.action_name,
-                "action_type": (
-                    action.action_type.value
-                    if hasattr(action, "action_type")
-                    else "unknown"
-                ),
+                "action_type": (action.action_type.value if hasattr(action, "action_type") else "unknown"),
                 "trace_id": context.trace_id,
                 "timestamp": (
-                    context.timestamp.isoformat()
-                    if hasattr(context.timestamp, "isoformat")
-                    else str(context.timestamp)
+                    context.timestamp.isoformat() if hasattr(context.timestamp, "isoformat") else str(context.timestamp)
                 ),
             }
 
@@ -262,17 +250,9 @@ class ExecutionService:
         Returns:
             Dictionary with execution metrics
         """
-        success_rate = (
-            self.success_count / self.execution_count
-            if self.execution_count > 0
-            else 0.0
-        )
+        success_rate = self.success_count / self.execution_count if self.execution_count > 0 else 0.0
 
-        avg_execution_time = (
-            self.total_execution_time_ms / self.execution_count
-            if self.execution_count > 0
-            else 0.0
-        )
+        avg_execution_time = self.total_execution_time_ms / self.execution_count if self.execution_count > 0 else 0.0
 
         return {
             "total_executions": self.execution_count,

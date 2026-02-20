@@ -39,9 +39,7 @@ class TestConstitutionalEngine:
         """Test validation allows compliant actions."""
         engine = ConstitutionalEngine(constitution_path=str(constitution_file))
 
-        is_allowed, reason = engine.validate_build_action(
-            "compile", context={"violations": []}
-        )
+        is_allowed, reason = engine.validate_build_action("compile", context={"violations": []})
 
         assert is_allowed
 
@@ -49,9 +47,7 @@ class TestConstitutionalEngine:
         """Test validation blocks actions with immediate violations."""
         engine = ConstitutionalEngine(constitution_path=str(constitution_file))
 
-        is_allowed, reason = engine.validate_build_action(
-            "deploy", context={"violations": ["security_violation"]}
-        )
+        is_allowed, reason = engine.validate_build_action("deploy", context={"violations": ["security_violation"]})
 
         assert not is_allowed
         assert "security_violation" in reason
@@ -62,9 +58,7 @@ class TestConstitutionalEngine:
         engine = ConstitutionalEngine(constitution_path=str(constitution_file))
 
         # Trigger violation
-        engine.validate_build_action(
-            "test_action", context={"violations": ["credential_leak"]}
-        )
+        engine.validate_build_action("test_action", context={"violations": ["credential_leak"]})
 
         assert len(engine.violation_log) > 0
         violation = engine.violation_log[0]
@@ -77,9 +71,7 @@ class TestConstitutionalEngine:
 
         # Create multiple violations
         for i in range(3):
-            engine.validate_build_action(
-                f"action_{i}", context={"violations": ["security_violation"]}
-            )
+            engine.validate_build_action(f"action_{i}", context={"violations": ["security_violation"]})
 
         history = engine.get_violation_history()
         assert len(history) == 3
@@ -106,9 +98,7 @@ class TestConstitutionalEnforcer:
         """Test enforcer allows compliant actions."""
         enforcer = ConstitutionalEnforcer(mock_identity_manager)
 
-        result = enforcer.enforce_action(
-            action="compile", identity="build_agent", context={"violations": []}
-        )
+        result = enforcer.enforce_action(action="compile", identity="build_agent", context={"violations": []})
 
         assert result["allowed"]
         assert result["action"] == "compile"
@@ -126,9 +116,7 @@ class TestConstitutionalEnforcer:
         # Should check policy enforcement
         assert "allowed" in result or "reason" in result
 
-    def test_enforcement_history_tracking(
-        self, constitution_file, mock_identity_manager
-    ):
+    def test_enforcement_history_tracking(self, constitution_file, mock_identity_manager):
         """Test enforcement history is tracked."""
         enforcer = ConstitutionalEnforcer(mock_identity_manager)
 

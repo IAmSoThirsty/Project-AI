@@ -123,9 +123,7 @@ class HardwareDevice:
             serial_number=data.get("serial_number"),
             firmware_version=data.get("firmware_version"),
             status=HardwareStatus(data.get("status", "discovered")),
-            capabilities=[
-                HardwareCapability.from_dict(c) for c in data.get("capabilities", [])
-            ],
+            capabilities=[HardwareCapability.from_dict(c) for c in data.get("capabilities", [])],
             connection_info=data.get("connection_info", {}),
             discovered_at=data.get("discovered_at", time.time()),
             last_seen=data.get("last_seen", time.time()),
@@ -263,9 +261,7 @@ class HardwareRegistry:
         """
         self.data_dir = data_dir
         self._devices: dict[str, HardwareDevice] = {}
-        self._device_by_type: dict[HardwareType, list[str]] = {
-            t: [] for t in HardwareType
-        }
+        self._device_by_type: dict[HardwareType, list[str]] = {t: [] for t in HardwareType}
         self._events: list[DiscoveryEvent] = []
         self._lock = threading.RLock()
 
@@ -301,9 +297,7 @@ class HardwareRegistry:
             )
             self._events.append(event)
 
-            logger.info(
-                "Registered device '%s' (%s)", device.device_name, device.device_id
-            )
+            logger.info("Registered device '%s' (%s)", device.device_name, device.device_id)
             return True
 
     def unregister_device(self, device_id: str) -> bool:
@@ -516,9 +510,7 @@ class HardwareAutoDiscoverySystem:
                 self._running = True
 
                 # Start scan thread
-                self._scan_thread = threading.Thread(
-                    target=self._scan_loop, daemon=True
-                )
+                self._scan_thread = threading.Thread(target=self._scan_loop, daemon=True)
                 self._scan_thread.start()
 
                 logger.info("✅ Hardware Auto-Discovery System started")
@@ -566,16 +558,12 @@ class HardwareAutoDiscoverySystem:
 
         # Register new devices
         for device in discovered_devices:
-            if device.device_id not in [
-                d.device_id for d in self.registry.get_all_devices()
-            ]:
+            if device.device_id not in [d.device_id for d in self.registry.get_all_devices()]:
                 # New device found
                 if self.registry.register_device(device):
                     # Probe device
                     if self.discovery_protocol.probe_device(device):
-                        self.registry.update_device_status(
-                            device.device_id, HardwareStatus.READY
-                        )
+                        self.registry.update_device_status(device.device_id, HardwareStatus.READY)
                         self._trigger_event("device_discovered", {"device": device})
 
         # Update last_seen for existing devices
@@ -586,14 +574,10 @@ class HardwareAutoDiscoverySystem:
         for device_id in existing_ids - discovered_ids:
             device = self.registry.get_device(device_id)
             if device and device.status != HardwareStatus.DISCONNECTED:
-                self.registry.update_device_status(
-                    device_id, HardwareStatus.DISCONNECTED
-                )
+                self.registry.update_device_status(device_id, HardwareStatus.DISCONNECTED)
                 self._trigger_event("device_disconnected", {"device_id": device_id})
 
-    def negotiate_capabilities(
-        self, device_id: str, required_capabilities: list[str]
-    ) -> bool:
+    def negotiate_capabilities(self, device_id: str, required_capabilities: list[str]) -> bool:
         """
         Negotiate capabilities with a device.
 
@@ -613,16 +597,10 @@ class HardwareAutoDiscoverySystem:
         has_all = all(req in device_capabilities for req in required_capabilities)
 
         if has_all:
-            logger.info(
-                "Device '%s' meets all capability requirements", device.device_name
-            )
+            logger.info("Device '%s' meets all capability requirements", device.device_name)
         else:
-            missing = [
-                req for req in required_capabilities if req not in device_capabilities
-            ]
-            logger.warning(
-                "Device '%s' missing capabilities: %s", device.device_name, missing
-            )
+            missing = [req for req in required_capabilities if req not in device_capabilities]
+            logger.warning("Device '%s' missing capabilities: %s", device.device_name, missing)
 
         return has_all
 
@@ -637,9 +615,7 @@ class HardwareAutoDiscoverySystem:
             try:
                 handler(data)
             except Exception as e:
-                logger.error(
-                    "Error in event handler for %s: %s", event_type, e, exc_info=True
-                )
+                logger.error("Error in event handler for %s: %s", event_type, e, exc_info=True)
 
     def get_system_status(self) -> dict[str, Any]:
         """Get system status"""
@@ -676,6 +652,4 @@ def create_auto_discovery_system(
     Returns:
         Configured HardwareAutoDiscoverySystem
     """
-    return HardwareAutoDiscoverySystem(
-        system_id=system_id, scan_interval=scan_interval, data_dir=data_dir
-    )
+    return HardwareAutoDiscoverySystem(system_id=system_id, scan_interval=scan_interval, data_dir=data_dir)

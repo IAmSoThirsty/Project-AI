@@ -75,11 +75,7 @@ class UserManager:
         """Migrate plaintext passwords to hashed versions."""
         migrated = False
         for uname, udata in self.users.items():
-            if (
-                isinstance(udata, dict)
-                and "password" in udata
-                and "password_hash" not in udata
-            ):
+            if isinstance(udata, dict) and "password" in udata and "password_hash" not in udata:
                 pw = udata.get("password")
                 if not pw:
                     # Skip if password is empty/None

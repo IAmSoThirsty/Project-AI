@@ -171,9 +171,7 @@ class KeyManagementSystem:
             self.gcp_location = self.config.get("gcp_location", "us-central1")
             logger.info("GCP KMS client initialized")
         except ImportError:
-            logger.error(
-                "google-cloud-kms not installed. Install with: pip install google-cloud-kms"
-            )
+            logger.error("google-cloud-kms not installed. Install with: pip install google-cloud-kms")
             raise
         except Exception as e:
             logger.error(f"Failed to initialize GCP KMS: {e}")
@@ -268,8 +266,7 @@ class KeyManagementSystem:
             provider=self.provider,
             status=KeyStatus.ACTIVE,
             created_at=datetime.utcnow(),
-            expires_at=datetime.utcnow()
-            + timedelta(days=rotation_policy.get("rotation_days", 90)),
+            expires_at=datetime.utcnow() + timedelta(days=rotation_policy.get("rotation_days", 90)),
             rotation_policy=rotation_policy,
             access_control=access_control,
             audit_trail=[],
@@ -301,9 +298,7 @@ class KeyManagementSystem:
             with open(key_path, "wb") as f:
                 f.write(key)
         else:
-            private_key = rsa.generate_private_key(
-                public_exponent=65537, key_size=4096, backend=default_backend()
-            )
+            private_key = rsa.generate_private_key(public_exponent=65537, key_size=4096, backend=default_backend())
 
             pem = private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
@@ -343,11 +338,7 @@ class KeyManagementSystem:
         metadata = self.keys[key_id]
 
         # Check if rotation is due
-        if (
-            not force
-            and metadata.expires_at
-            and datetime.utcnow() < metadata.expires_at
-        ):
+        if not force and metadata.expires_at and datetime.utcnow() < metadata.expires_at:
             logger.info(f"Key {key_id} rotation not due yet")
             return metadata
 
@@ -495,9 +486,7 @@ class KeyManagementSystem:
     def _generate_aws_key(self, key_id: str, key_type: KeyType) -> str:
         """Generate key in AWS KMS"""
         key_spec = "SYMMETRIC_DEFAULT" if key_type == KeyType.SYMMETRIC else "RSA_4096"
-        key_usage = (
-            "ENCRYPT_DECRYPT" if key_type == KeyType.ENCRYPTION else "SIGN_VERIFY"
-        )
+        key_usage = "ENCRYPT_DECRYPT" if key_type == KeyType.ENCRYPTION else "SIGN_VERIFY"
 
         response = self.kms_client.create_key(
             Description=f"Project-AI Key: {key_id}",
@@ -530,9 +519,7 @@ class KeyManagementSystem:
         parent = f"projects/{self.gcp_project_id}/locations/{self.gcp_location}"
 
         try:
-            self.kms_client.create_key_ring(
-                request={"parent": parent, "key_ring_id": key_ring_id}
-            )
+            self.kms_client.create_key_ring(request={"parent": parent, "key_ring_id": key_ring_id})
         except Exception:
             # Key ring may already exist
             pass
@@ -617,9 +604,7 @@ class KeyManagementSystem:
             (PyKCS11.CKA_LABEL, key_id),
         ]
 
-        (public_key, private_key) = session.generateKeyPair(
-            public_template, private_template
-        )
+        (public_key, private_key) = session.generateKeyPair(public_template, private_template)
 
         session.logout()
         session.closeSession()

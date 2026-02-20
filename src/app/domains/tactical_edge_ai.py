@@ -146,9 +146,7 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
             return False
 
         return not (
-            not self._processing_active
-            or not self._processing_thread
-            or not self._processing_thread.is_alive()
+            not self._processing_active or not self._processing_thread or not self._processing_thread.is_alive()
         )
 
     def get_status(self) -> dict[str, Any]:
@@ -232,9 +230,7 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
         with self._subscription_lock:
             for event_type in self._subscriptions:
                 self._subscriptions[event_type] = [
-                    (sid, cb)
-                    for sid, cb in self._subscriptions[event_type]
-                    if sid != subscription_id
+                    (sid, cb) for sid, cb in self._subscriptions[event_type] if sid != subscription_id
                 ]
             return True
 
@@ -246,9 +242,7 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error(
-                        "Error in event callback %s: %s", subscription_id, e
-                    )
+                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
 
             return len(subscribers)
 
@@ -343,9 +337,7 @@ class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObserv
             "recommendation": self._get_effectiveness_recommendation(effectiveness),
         }
 
-    def _get_effectiveness_recommendation(
-        self, effectiveness: CombatEffectiveness
-    ) -> str:
+    def _get_effectiveness_recommendation(self, effectiveness: CombatEffectiveness) -> str:
         recommendations = {
             CombatEffectiveness.OVERWHELMING: "Press advantage with aggressive tactics",
             CombatEffectiveness.SUPERIOR: "Maintain offensive posture",

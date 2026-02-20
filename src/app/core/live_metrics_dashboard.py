@@ -212,9 +212,7 @@ class MetricsCollector:
         label_str = ",".join(f"{k}={v}" for k, v in sorted(labels.items()))
         return f"{name}{{{label_str}}}"
 
-    def _add_to_series(
-        self, name: str, point: MetricPoint, labels: dict[str, str] | None
-    ) -> None:
+    def _add_to_series(self, name: str, point: MetricPoint, labels: dict[str, str] | None) -> None:
         """Add point to time series."""
         key = self._make_key(name, labels)
         if key not in self.series:
@@ -226,9 +224,7 @@ class MetricsCollector:
             )
         self.series[key].add_point(point)
 
-    def get_series(
-        self, name: str, labels: dict[str, str] | None = None
-    ) -> MetricSeries | None:
+    def get_series(self, name: str, labels: dict[str, str] | None = None) -> MetricSeries | None:
         """Get metric series."""
         with self.lock:
             key = self._make_key(name, labels)
@@ -299,15 +295,8 @@ class AGIBehaviorMonitor:
 
                 compliance_rate = (
                     self.four_laws_checks["passed"]
-                    / (
-                        self.four_laws_checks["passed"]
-                        + self.four_laws_checks["failed"]
-                    )
-                    if (
-                        self.four_laws_checks["passed"]
-                        + self.four_laws_checks["failed"]
-                    )
-                    > 0
+                    / (self.four_laws_checks["passed"] + self.four_laws_checks["failed"])
+                    if (self.four_laws_checks["passed"] + self.four_laws_checks["failed"]) > 0
                     else 1.0
                 )
 
@@ -326,9 +315,7 @@ class AGIBehaviorMonitor:
         except Exception as e:
             logger.error("Error recording AGI decision: %s", e)
 
-    def record_learning_event(
-        self, learning_type: str, success: bool, duration: float
-    ) -> None:
+    def record_learning_event(self, learning_type: str, success: bool, duration: float) -> None:
         """Record learning event."""
         self.collector.record_counter(
             "agi_learning_events_total",
@@ -346,11 +333,7 @@ class AGIBehaviorMonitor:
     def get_behavior_summary(self) -> dict[str, Any]:
         """Get behavior summary."""
         with self.lock:
-            avg_reasoning_steps = (
-                sum(self.reasoning_steps) / len(self.reasoning_steps)
-                if self.reasoning_steps
-                else 0
-            )
+            avg_reasoning_steps = sum(self.reasoning_steps) / len(self.reasoning_steps) if self.reasoning_steps else 0
             return {
                 "total_decisions": self.decision_count,
                 "average_reasoning_steps": avg_reasoning_steps,
@@ -366,9 +349,7 @@ class FusionOperationsMonitor:
         self.fusion_count = 0
         self.lock = threading.RLock()
 
-    def record_fusion(
-        self, fusion_type: str, modalities: list[str], latency: float, confidence: float
-    ) -> None:
+    def record_fusion(self, fusion_type: str, modalities: list[str], latency: float, confidence: float) -> None:
         """Record fusion operation."""
         try:
             with self.lock:
@@ -406,9 +387,7 @@ class FusionOperationsMonitor:
         except Exception as e:
             logger.error("Error recording fusion operation: %s", e)
 
-    def record_sensor_reading(
-        self, sensor_id: str, sensor_type: str, value: float
-    ) -> None:
+    def record_sensor_reading(self, sensor_id: str, sensor_type: str, value: float) -> None:
         """Record sensor reading."""
         self.collector.record_gauge(
             f"sensor_{sensor_type}_value",
@@ -466,9 +445,7 @@ class RoboticActionMonitor:
         except Exception as e:
             logger.error("Error recording robotic action: %s", e)
 
-    def record_motor_health(
-        self, motor_id: str, temperature: float, current: float
-    ) -> None:
+    def record_motor_health(self, motor_id: str, temperature: float, current: float) -> None:
         """Record motor health metrics."""
         self.collector.record_gauge(
             "robotic_motor_temperature_celsius",
@@ -519,9 +496,7 @@ class SystemHealthMonitor:
             category=MetricCategory.SYSTEM_HEALTH.value,
         )
 
-    def record_disk_usage(
-        self, used_gb: float, total_gb: float, path: str = "/"
-    ) -> None:
+    def record_disk_usage(self, used_gb: float, total_gb: float, path: str = "/") -> None:
         """Record disk usage."""
         self.collector.record_gauge(
             "system_disk_used_gb",
@@ -543,9 +518,7 @@ class SystemHealthMonitor:
             category=MetricCategory.SYSTEM_HEALTH.value,
         )
 
-    def record_component_health(
-        self, component: str, healthy: bool, uptime_seconds: float
-    ) -> None:
+    def record_component_health(self, component: str, healthy: bool, uptime_seconds: float) -> None:
         """Record component health."""
         self.collector.record_gauge(
             "system_component_healthy",
@@ -675,23 +648,13 @@ class LiveMetricsDashboard:
     def _setup_default_alerts(self) -> None:
         """Setup default alerting thresholds."""
         # System health alerts
-        self.alert_manager.add_threshold(
-            "system_cpu_usage_percent", 90.0, "gt", "warning"
-        )
-        self.alert_manager.add_threshold(
-            "system_cpu_usage_percent", 95.0, "gt", "critical"
-        )
-        self.alert_manager.add_threshold(
-            "system_memory_usage_percent", 85.0, "gt", "warning"
-        )
-        self.alert_manager.add_threshold(
-            "system_memory_usage_percent", 95.0, "gt", "critical"
-        )
+        self.alert_manager.add_threshold("system_cpu_usage_percent", 90.0, "gt", "warning")
+        self.alert_manager.add_threshold("system_cpu_usage_percent", 95.0, "gt", "critical")
+        self.alert_manager.add_threshold("system_memory_usage_percent", 85.0, "gt", "warning")
+        self.alert_manager.add_threshold("system_memory_usage_percent", 95.0, "gt", "critical")
 
         # AGI behavior alerts
-        self.alert_manager.add_threshold(
-            "agi_four_laws_compliance_rate", 0.95, "lt", "critical"
-        )
+        self.alert_manager.add_threshold("agi_four_laws_compliance_rate", 0.95, "lt", "critical")
 
     def start_monitoring(self) -> bool:
         """Start background monitoring."""
@@ -700,9 +663,7 @@ class LiveMetricsDashboard:
                 return False
 
             self.monitoring_active = True
-            self.monitor_thread = threading.Thread(
-                target=self._monitoring_loop, daemon=True
-            )
+            self.monitor_thread = threading.Thread(target=self._monitoring_loop, daemon=True)
             self.monitor_thread.start()
             logger.info("Started live metrics monitoring")
             return True
@@ -732,9 +693,7 @@ class LiveMetricsDashboard:
             except Exception as e:
                 logger.error("Error in monitoring loop: %s", e)
 
-    def get_dashboard_data(
-        self, category: MetricCategory | None = None
-    ) -> dict[str, Any]:
+    def get_dashboard_data(self, category: MetricCategory | None = None) -> dict[str, Any]:
         """Get dashboard data for API."""
         try:
             if category:

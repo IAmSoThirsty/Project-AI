@@ -22,9 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 class SandboxRunner(KernelRoutedAgent):
-    def __init__(
-        self, data_dir: str = "data", kernel: CognitionKernel | None = None
-    ) -> None:
+    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
@@ -71,15 +69,11 @@ class SandboxRunner(KernelRoutedAgent):
         try:
             common = os.path.commonpath([abs_path, cwd])
             if common != cwd:
-                logger.error(
-                    "Path traversal attempt detected: %s not within %s", abs_path, cwd
-                )
+                logger.error("Path traversal attempt detected: %s not within %s", abs_path, cwd)
                 return {"success": False, "error": "path_traversal"}
         except ValueError:
             # Different drives on Windows or no common path
-            logger.error(
-                "Path traversal attempt: %s on different drive from %s", abs_path, cwd
-            )
+            logger.error("Path traversal attempt: %s on different drive from %s", abs_path, cwd)
             return {"success": False, "error": "path_traversal"}
 
         # Resolve Python executable - use shutil.which for security
@@ -90,9 +84,7 @@ class SandboxRunner(KernelRoutedAgent):
 
         try:
             # nosec B603 B607 - Python executable resolved with shutil.which, module path validated
-            res = subprocess.run(
-                [python_cmd, abs_path], capture_output=True, text=True, timeout=timeout
-            )
+            res = subprocess.run([python_cmd, abs_path], capture_output=True, text=True, timeout=timeout)
             return {
                 "success": res.returncode == 0,
                 "stdout": res.stdout,

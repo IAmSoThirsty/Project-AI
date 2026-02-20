@@ -10,9 +10,7 @@ class DashboardHandlers:
         if interest:
             path = self.learning_manager.generate_path(interest, skill_level)
             self.learning_path_display.setText(path)
-            self.learning_manager.save_path(
-                self.user_manager.current_user, interest, path
-            )
+            self.learning_manager.save_path(self.user_manager.current_user, interest, path)
 
     def load_data_file(self):
         """Load a data file for analysis"""
@@ -86,22 +84,17 @@ class DashboardHandlers:
         if self.location_tracker.active:
             location = self.location_tracker.get_location_from_ip()
             if location:
-                self.location_tracker.save_location_history(
-                    self.user_manager.current_user, location
-                )
+                self.location_tracker.save_location_history(self.user_manager.current_user, location)
                 self.update_location_display()
 
     def update_location_display(self):
         """Update the location display"""
-        history = self.location_tracker.get_location_history(
-            self.user_manager.current_user
-        )
+        history = self.location_tracker.get_location_history(self.user_manager.current_user)
 
         self.location_history.clear()
         for location in history:
             self.location_history.addItem(
-                f"{location['timestamp']}: {location.get('city', 'Unknown')}, "
-                f"{location.get('region', 'Unknown')}"
+                f"{location['timestamp']}: {location.get('city', 'Unknown')}, " f"{location.get('region', 'Unknown')}"
             )
 
     def clear_location_history(self):
@@ -121,9 +114,7 @@ class DashboardHandlers:
     def save_emergency_contacts(self):
         """Save emergency contact information"""
         contacts = [email.strip() for email in self.contacts_input.text().split(",")]
-        self.emergency_alert.add_emergency_contact(
-            self.user_manager.current_user, {"emails": contacts}
-        )
+        self.emergency_alert.add_emergency_contact(self.user_manager.current_user, {"emails": contacts})
         QMessageBox.information(self, "Success", "Emergency contacts saved")
 
     def send_emergency_alert(self):
@@ -138,26 +129,18 @@ class DashboardHandlers:
             == QMessageBox.StandardButton.Yes
         ):
             # Get latest location
-            history = self.location_tracker.get_location_history(
-                self.user_manager.current_user
-            )
+            history = self.location_tracker.get_location_history(self.user_manager.current_user)
             location = history[-1] if history else None
 
             message = self.emergency_message.toPlainText()
 
-            success, msg = self.emergency_alert.send_alert(
-                self.user_manager.current_user, location, message
-            )
+            success, msg = self.emergency_alert.send_alert(self.user_manager.current_user, location, message)
 
             if success:
-                QMessageBox.information(
-                    self, "Alert Sent", "Emergency alert was sent successfully"
-                )
+                QMessageBox.information(self, "Alert Sent", "Emergency alert was sent successfully")
                 self.update_alert_history()
             else:
-                QMessageBox.warning(
-                    self, "Alert Failed", f"Failed to send alert: {msg}"
-                )
+                QMessageBox.warning(self, "Alert Failed", f"Failed to send alert: {msg}")
 
     def update_alert_history(self):
         """Update the alert history display"""
@@ -165,16 +148,12 @@ class DashboardHandlers:
 
         self.alert_history.clear()
         for alert in history:
-            self.alert_history.addItem(
-                f"{alert['timestamp']}: {alert.get('message', 'No message')}"
-            )
+            self.alert_history.addItem(f"{alert['timestamp']}: {alert.get('message', 'No message')}")
 
     def create_visualization(self, plot_type):
         """Create data visualization"""
         if plot_type in ["scatter", "histogram", "boxplot"]:
-            canvas = self.data_analyzer.create_visualization(
-                plot_type, self.column_selector.currentText()
-            )
+            canvas = self.data_analyzer.create_visualization(plot_type, self.column_selector.currentText())
             if canvas:
                 # Create a new window to display the plot
                 plot_window = QWidget()
@@ -186,13 +165,9 @@ class DashboardHandlers:
     def perform_clustering(self):
         """Perform clustering analysis"""
         # Get numerical columns
-        numeric_cols = self.data_analyzer.data.select_dtypes(
-            include=["float64", "int64"]
-        ).columns
+        numeric_cols = self.data_analyzer.data.select_dtypes(include=["float64", "int64"]).columns
         if len(numeric_cols) < 2:
-            QMessageBox.warning(
-                self, "Error", "Need at least 2 numeric columns for clustering"
-            )
+            QMessageBox.warning(self, "Error", "Need at least 2 numeric columns for clustering")
             return
 
         canvas, _ = self.data_analyzer.perform_clustering(numeric_cols)

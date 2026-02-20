@@ -106,9 +106,7 @@ class SovereignMessaging:
             Tuple of (private_key_pem, public_key_pem)
         """
         # Generate RSA-2048 private key
-        private_key = rsa.generate_private_key(
-            public_exponent=65537, key_size=2048, backend=default_backend()
-        )
+        private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
 
         # Serialize private key to PEM format
         private_pem = private_key.private_bytes(
@@ -286,9 +284,7 @@ class SovereignMessaging:
             Encrypted data bytes
         """
         # Load public key
-        public_key = serialization.load_pem_public_key(
-            public_key_pem.encode("utf-8"), backend=default_backend()
-        )
+        public_key = serialization.load_pem_public_key(public_key_pem.encode("utf-8"), backend=default_backend())
 
         # Encrypt with RSA OAEP
         encrypted = public_key.encrypt(
@@ -353,9 +349,7 @@ class SovereignMessaging:
         padded_plaintext = plaintext_bytes + bytes([padding_length] * padding_length)
 
         # Encrypt with AES-256-CBC
-        cipher = Cipher(
-            algorithms.AES(aes_key), modes.CBC(iv), backend=default_backend()
-        )
+        cipher = Cipher(algorithms.AES(aes_key), modes.CBC(iv), backend=default_backend())
         encryptor = cipher.encryptor()
         ciphertext = encryptor.update(padded_plaintext) + encryptor.finalize()
 
@@ -374,9 +368,7 @@ class SovereignMessaging:
             Decrypted plaintext string
         """
         # Decrypt with AES-256-CBC
-        cipher = Cipher(
-            algorithms.AES(aes_key), modes.CBC(iv), backend=default_backend()
-        )
+        cipher = Cipher(algorithms.AES(aes_key), modes.CBC(iv), backend=default_backend())
         decryptor = cipher.decryptor()
         padded_plaintext = decryptor.update(ciphertext) + decryptor.finalize()
 
@@ -520,9 +512,7 @@ class SovereignMessaging:
             # Log error without exposing sensitive data
             import logging
 
-            logging.error(
-                "Failed to decrypt message from %s: %s", sender_code, type(e).__name__
-            )
+            logging.error("Failed to decrypt message from %s: %s", sender_code, type(e).__name__)
             return None
 
     def mark_message_seen(self, message_id: str) -> bool:
@@ -536,10 +526,7 @@ class SovereignMessaging:
             True if successful, False otherwise
         """
         for message in self.messages:
-            if (
-                message["message_id"] == message_id
-                and message["status"] != MessageStatus.DELETED.value
-            ):
+            if message["message_id"] == message_id and message["status"] != MessageStatus.DELETED.value:
                 message["status"] = MessageStatus.SEEN.value
                 message["seen_at"] = datetime.now().isoformat()
                 # Set delete time to 1 hour from now
@@ -562,10 +549,7 @@ class SovereignMessaging:
         for message in self.messages:
             if message.get("delete_at"):
                 delete_time = datetime.fromisoformat(message["delete_at"])
-                if (
-                    now >= delete_time
-                    and message["status"] != MessageStatus.DELETED.value
-                ):
+                if now >= delete_time and message["status"] != MessageStatus.DELETED.value:
                     message["status"] = MessageStatus.DELETED.value
                     # Clear sensitive data
                     if "content" in message:
@@ -596,9 +580,7 @@ class SovereignMessaging:
         if include_deleted:
             return self.messages
 
-        return [
-            msg for msg in self.messages if msg["status"] != MessageStatus.DELETED.value
-        ]
+        return [msg for msg in self.messages if msg["status"] != MessageStatus.DELETED.value]
 
     def get_contacts(self) -> dict:
         """
@@ -676,9 +658,7 @@ def main():
             public_key = "\n".join(key_lines)
 
             ptype = input("Participant type (user/ai) [user]: ").strip().lower()
-            participant_type = (
-                ParticipantType.AI if ptype == "ai" else ParticipantType.USER
-            )
+            participant_type = ParticipantType.AI if ptype == "ai" else ParticipantType.USER
 
             if messaging.pair_with_contact(name, code, public_key, participant_type):
                 print("✅ Contact paired successfully!")
@@ -726,9 +706,7 @@ def main():
         elif choice == "5":
             message_id = input("Message ID to mark as seen: ").strip()
             if messaging.mark_message_seen(message_id):
-                print(
-                    "✅ Message marked as seen. Self-destruct timer started (1 hour)."
-                )
+                print("✅ Message marked as seen. Self-destruct timer started (1 hour).")
             else:
                 print("❌ Message not found.")
 
@@ -751,9 +729,7 @@ def main():
             print("\nCurrent type:", messaging.identity.get("participant_type", "user"))
             ptype = input("New participant type (user/ai): ").strip().lower()
             if ptype in ["user", "ai"]:
-                participant_type = (
-                    ParticipantType.AI if ptype == "ai" else ParticipantType.USER
-                )
+                participant_type = ParticipantType.AI if ptype == "ai" else ParticipantType.USER
                 messaging.set_participant_type(participant_type)
                 print(f"✅ Participant type set to: {participant_type.value}")
             else:

@@ -62,8 +62,10 @@ def test_sovereign_mode():
         stats = manager.get_statistics()
         assert stats["mode"] == "sovereign"
         assert stats["genesis_id"] == genesis_id
-        print(f"  ✓ Statistics: {stats['main_log']['event_count']} events, "
-              f"{stats['main_log']['signature_count']} signatures")
+        print(
+            f"  ✓ Statistics: {stats['main_log']['event_count']} events, "
+            f"{stats['main_log']['signature_count']} signatures"
+        )
 
         # Verify integrity (includes Ed25519 signature verification)
         is_valid, message = manager.verify_integrity()
@@ -96,20 +98,12 @@ def test_deterministic_mode():
     from datetime import UTC, datetime
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        manager = AuditManager(
-            data_dir=tmpdir,
-            sovereign_mode=True,
-            deterministic_mode=True
-        )
+        manager = AuditManager(data_dir=tmpdir, sovereign_mode=True, deterministic_mode=True)
 
         # Log events with fixed timestamps
         base_time = datetime(2025, 1, 15, 10, 0, 0, tzinfo=UTC)
 
-        manager.audit_log.log_event(
-            "deterministic_test",
-            {"sequence": 1},
-            deterministic_timestamp=base_time
-        )
+        manager.audit_log.log_event("deterministic_test", {"sequence": 1}, deterministic_timestamp=base_time)
 
         print("  ✓ Deterministic mode enabled")
         print("  ✓ Events logged with fixed timestamps for canonical replay")
@@ -134,6 +128,7 @@ def main():
     except Exception as e:
         print(f"\n✗ TEST FAILED: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

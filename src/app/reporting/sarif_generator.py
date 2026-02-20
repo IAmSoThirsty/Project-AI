@@ -25,9 +25,7 @@ class SARIFGenerator:
         self.tool_name = "Project-AI-Security"
         self.tool_uri = "https://project-ai/docs/security_agents"
 
-    def generate_jailbreak_report(
-        self, findings: list[dict[str, Any]], campaign_id: str
-    ) -> dict[str, Any]:
+    def generate_jailbreak_report(self, findings: list[dict[str, Any]], campaign_id: str) -> dict[str, Any]:
         """
         Generate SARIF report for jailbreak findings.
 
@@ -45,12 +43,8 @@ class SARIFGenerator:
             if finding.get("success", False):  # Only report successful jailbreaks
                 results.append(
                     {
-                        "ruleId": self._get_jailbreak_rule_id(
-                            finding["attack_category"]
-                        ),
-                        "level": self._map_severity_to_level(
-                            finding.get("severity", "high")
-                        ),
+                        "ruleId": self._get_jailbreak_rule_id(finding["attack_category"]),
+                        "level": self._map_severity_to_level(finding.get("severity", "high")),
                         "message": {
                             "text": f"Prompt injection succeeded against flow {finding['target']} with persona {finding.get('persona', 'unknown')}"
                         },
@@ -63,9 +57,7 @@ class SARIFGenerator:
                                             f"workspace://flows/{finding['target']}_flow.yaml",
                                         )
                                     },
-                                    "region": {
-                                        "startLine": finding.get("line_number", 1)
-                                    },
+                                    "region": {"startLine": finding.get("line_number", 1)},
                                 }
                             }
                         ],
@@ -87,9 +79,7 @@ class SARIFGenerator:
 
         return self._create_sarif_document(rules, results, "JailbreakBench")
 
-    def generate_code_vulnerability_report(
-        self, findings: list[dict[str, Any]], scan_id: str
-    ) -> dict[str, Any]:
+    def generate_code_vulnerability_report(self, findings: list[dict[str, Any]], scan_id: str) -> dict[str, Any]:
         """
         Generate SARIF report for code vulnerabilities.
 
@@ -107,9 +97,7 @@ class SARIFGenerator:
             results.append(
                 {
                     "ruleId": finding["type"].upper(),
-                    "level": self._map_severity_to_level(
-                        finding.get("severity", "medium")
-                    ),
+                    "level": self._map_severity_to_level(finding.get("severity", "medium")),
                     "message": {"text": finding["description"]},
                     "locations": [
                         {
@@ -117,36 +105,26 @@ class SARIFGenerator:
                                 "artifactLocation": {"uri": finding["file"]},
                                 "region": {
                                     "startLine": finding["line"],
-                                    "snippet": {
-                                        "text": finding.get("code_snippet", "")
-                                    },
+                                    "snippet": {"text": finding.get("code_snippet", "")},
                                 },
                             }
                         }
                     ],
-                    "fixes": (
-                        self._generate_fixes(finding)
-                        if finding.get("suggested_fix")
-                        else []
-                    ),
+                    "fixes": (self._generate_fixes(finding) if finding.get("suggested_fix") else []),
                     "properties": {
                         "vulnerability_type": finding["type"],
                         "cwe_id": finding.get("cwe_id", ""),
                         "cvss_score": finding.get("cvss_score", 0.0),
                         "confidence": finding.get("confidence", 0.9),
                         "scan_id": scan_id,
-                        "timestamp": finding.get(
-                            "timestamp", datetime.now().isoformat()
-                        ),
+                        "timestamp": finding.get("timestamp", datetime.now().isoformat()),
                     },
                 }
             )
 
         return self._create_sarif_document(rules, results, "CodeAdversary")
 
-    def generate_red_team_report(
-        self, sessions: list[dict[str, Any]], campaign_id: str
-    ) -> dict[str, Any]:
+    def generate_red_team_report(self, sessions: list[dict[str, Any]], campaign_id: str) -> dict[str, Any]:
         """
         Generate SARIF report for red team persona attacks.
 
@@ -165,20 +143,14 @@ class SARIFGenerator:
                 results.append(
                     {
                         "ruleId": f"RTP-{session['persona_id'].upper()}",
-                        "level": self._map_severity_to_level(
-                            session.get("severity", "high")
-                        ),
+                        "level": self._map_severity_to_level(session.get("severity", "high")),
                         "message": {
                             "text": f"Red team attack succeeded: {session['persona_id']} on {session['target']}"
                         },
                         "locations": [
                             {
                                 "physicalLocation": {
-                                    "artifactLocation": {
-                                        "uri": session.get(
-                                            "target_uri", "workspace://system"
-                                        )
-                                    },
+                                    "artifactLocation": {"uri": session.get("target_uri", "workspace://system")},
                                     "region": {"startLine": 1},
                                 }
                             }
@@ -186,9 +158,7 @@ class SARIFGenerator:
                         "properties": {
                             "persona": session["persona_id"],
                             "attack_vector": " -> ".join(session.get("tactics", [])),
-                            "repro_steps": self._extract_repro_steps(
-                                session["conversation"]
-                            ),
+                            "repro_steps": self._extract_repro_steps(session["conversation"]),
                             "evidence": f"session_id: {session.get('session_id', '')}",
                             "confidence": session.get("confidence", 0.95),
                         },
@@ -237,36 +207,28 @@ class SARIFGenerator:
                 "id": "JBB-001",
                 "name": "PromptInjection",
                 "shortDescription": {"text": "Prompt injection vulnerability"},
-                "fullDescription": {
-                    "text": "User-controlled input can alter system instructions."
-                },
+                "fullDescription": {"text": "User-controlled input can alter system instructions."},
                 "helpUri": f"{self.tool_uri}/jailbreakbench#prompt-injection",
             },
             {
                 "id": "JBB-002",
                 "name": "RoleConfusion",
                 "shortDescription": {"text": "Role confusion attack"},
-                "fullDescription": {
-                    "text": "Attacker can assume privileged roles through prompt manipulation."
-                },
+                "fullDescription": {"text": "Attacker can assume privileged roles through prompt manipulation."},
                 "helpUri": f"{self.tool_uri}/jailbreakbench#role-confusion",
             },
             {
                 "id": "JBB-003",
                 "name": "HypotheticalScenario",
                 "shortDescription": {"text": "Hypothetical framing bypass"},
-                "fullDescription": {
-                    "text": "Safety guardrails bypassed through hypothetical scenario framing."
-                },
+                "fullDescription": {"text": "Safety guardrails bypassed through hypothetical scenario framing."},
                 "helpUri": f"{self.tool_uri}/jailbreakbench#hypothetical",
             },
             {
                 "id": "JBB-004",
                 "name": "EncodingAttack",
                 "shortDescription": {"text": "Encoding-based bypass"},
-                "fullDescription": {
-                    "text": "Content filters bypassed through encoding (base64, ROT13, etc.)."
-                },
+                "fullDescription": {"text": "Content filters bypassed through encoding (base64, ROT13, etc.)."},
                 "helpUri": f"{self.tool_uri}/jailbreakbench#encoding",
             },
         ]
@@ -285,18 +247,14 @@ class SARIFGenerator:
                 "id": "COMMAND_INJECTION",
                 "name": "CommandInjection",
                 "shortDescription": {"text": "Command injection vulnerability"},
-                "fullDescription": {
-                    "text": "Unsanitized user input in system command."
-                },
+                "fullDescription": {"text": "Unsanitized user input in system command."},
                 "helpUri": f"{self.tool_uri}/code_adversary#command-injection",
             },
             {
                 "id": "HARDCODED_SECRET",
                 "name": "HardcodedSecret",
                 "shortDescription": {"text": "Hardcoded secret detected"},
-                "fullDescription": {
-                    "text": "API key, password, or token hardcoded in source."
-                },
+                "fullDescription": {"text": "API key, password, or token hardcoded in source."},
                 "helpUri": f"{self.tool_uri}/code_adversary#hardcoded-secrets",
             },
         ]
@@ -308,18 +266,14 @@ class SARIFGenerator:
                 "id": "RTP-JAILBREAK_ATTACKER",
                 "name": "JailbreakAttackerSuccess",
                 "shortDescription": {"text": "Jailbreak attacker succeeded"},
-                "fullDescription": {
-                    "text": "Safety constraints bypassed by jailbreak_attacker persona."
-                },
+                "fullDescription": {"text": "Safety constraints bypassed by jailbreak_attacker persona."},
                 "helpUri": f"{self.tool_uri}/red_team_persona#jailbreak-attacker",
             },
             {
                 "id": "RTP-DATA_EXFILTRATOR",
                 "name": "DataExfiltratorSuccess",
                 "shortDescription": {"text": "Data exfiltrator succeeded"},
-                "fullDescription": {
-                    "text": "Sensitive data extracted by data_exfiltrator persona."
-                },
+                "fullDescription": {"text": "Sensitive data extracted by data_exfiltrator persona."},
                 "helpUri": f"{self.tool_uri}/red_team_persona#data-exfiltrator",
             },
         ]
@@ -404,9 +358,7 @@ class SARIFGenerator:
         # Save report temporarily using secure temp file
         import tempfile
 
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as temp_file:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as temp_file:
             temp_filename = temp_file.name
             json.dump(report, temp_file, indent=2)
 

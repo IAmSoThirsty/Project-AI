@@ -124,9 +124,7 @@ class KernelFuzzHarness:
 
             try:
                 # Random fake agent name
-                fake_agent = "".join(
-                    random.choices(string.ascii_letters + string.digits, k=20)
-                )
+                fake_agent = "".join(random.choices(string.ascii_letters + string.digits, k=20))
 
                 result = self.kernel.route(
                     task={"action_name": f"fake_{fake_agent}", "risk_level": "high"},
@@ -171,14 +169,8 @@ class KernelFuzzHarness:
                     task={
                         "action_name": "governance_stress_test",
                         "requires_approval": random.choice([True, False]),
-                        "risk_level": random.choice(
-                            ["low", "medium", "high", "critical", "invalid"]
-                        ),
-                        "mutation_targets": [
-                            random.choice(
-                                ["genesis", "law_hierarchy", "core_values", "invalid"]
-                            )
-                        ],
+                        "risk_level": random.choice(["low", "medium", "high", "critical", "invalid"]),
+                        "mutation_targets": [random.choice(["genesis", "law_hierarchy", "core_values", "invalid"])],
                     },
                     source="fuzz_harness",
                     metadata={"stress_test": True},
@@ -225,9 +217,7 @@ class KernelFuzzHarness:
                     ]
                 )
 
-                self.kernel.route(
-                    task=extreme_input, source="fuzz_harness", metadata={}
-                )
+                self.kernel.route(task=extreme_input, source="fuzz_harness", metadata={})
 
                 self.results.append(
                     FuzzResult(
@@ -272,9 +262,7 @@ class KernelFuzzHarness:
                     ]
                 )
 
-                self.kernel.route(
-                    task=confused_input, source="fuzz_harness", metadata={}
-                )
+                self.kernel.route(task=confused_input, source="fuzz_harness", metadata={})
 
                 self.results.append(
                     FuzzResult(

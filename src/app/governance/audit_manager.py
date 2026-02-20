@@ -148,9 +148,7 @@ class AuditManager:
                     self.audit_log.genesis_keypair.genesis_id,
                 )
             except ImportError as e:
-                logger.error(
-                    "Failed to initialize sovereign audit (missing dependencies): %s", e
-                )
+                logger.error("Failed to initialize sovereign audit (missing dependencies): %s", e)
                 logger.info("Falling back to operational audit log")
                 self.audit_log = AuditLog(log_file=data_path / "audit_log.yaml")
                 self.sovereign_mode = False
@@ -161,9 +159,7 @@ class AuditManager:
         self.tamperproof_log = None
         if enable_tamperproof:
             try:
-                self.tamperproof_log = TamperproofLog(
-                    log_file=data_path / "tamperproof.log"
-                )
+                self.tamperproof_log = TamperproofLog(log_file=data_path / "tamperproof.log")
                 logger.info("Tamperproof logging enabled")
             except Exception as e:
                 logger.warning("Failed to initialize tamperproof log: %s", e)
@@ -372,9 +368,7 @@ class AuditManager:
             metadata={"sensitivity": sensitivity},
         )
 
-    def start_trace(
-        self, operation: str, context: dict[str, Any] | None = None
-    ) -> str | None:
+    def start_trace(self, operation: str, context: dict[str, Any] | None = None) -> str | None:
         """Start a causal trace for a decision-making process.
 
         Args:
@@ -452,9 +446,7 @@ class AuditManager:
             logger.error("Failed to end trace: %s", e)
             return False
 
-    def register_alert_callback(
-        self, callback: Callable[[dict[str, Any]], None]
-    ) -> None:
+    def register_alert_callback(self, callback: Callable[[dict[str, Any]], None]) -> None:
         """Register a callback for critical event alerts.
 
         Args:
@@ -523,11 +515,7 @@ class AuditManager:
         if self.trace_logger:
             stats["trace_log"] = {
                 "total_traces": len(self.trace_logger.traces),
-                "active_traces": sum(
-                    1
-                    for t in self.trace_logger.traces.values()
-                    if t.get("status") == "active"
-                ),
+                "active_traces": sum(1 for t in self.trace_logger.traces.values() if t.get("status") == "active"),
             }
 
         return stats
@@ -616,9 +604,7 @@ class AuditManager:
         Returns:
             Proof bundle dictionary or None if not in sovereign mode or event not found
         """
-        if not self.sovereign_mode or not hasattr(
-            self.audit_log, "generate_proof_bundle"
-        ):
+        if not self.sovereign_mode or not hasattr(self.audit_log, "generate_proof_bundle"):
             logger.warning("Proof bundle generation only available in sovereign mode")
             return None
 
@@ -633,9 +619,7 @@ class AuditManager:
         Returns:
             Tuple of (is_valid, message)
         """
-        if not self.sovereign_mode or not hasattr(
-            self.audit_log, "verify_proof_bundle"
-        ):
+        if not self.sovereign_mode or not hasattr(self.audit_log, "verify_proof_bundle"):
             return False, "Proof bundle verification only available in sovereign mode"
 
         return self.audit_log.verify_proof_bundle(proof)
@@ -649,9 +633,7 @@ class AuditManager:
         Returns:
             Tuple of (is_valid, message)
         """
-        if not self.sovereign_mode or not hasattr(
-            self.audit_log, "verify_event_signature"
-        ):
+        if not self.sovereign_mode or not hasattr(self.audit_log, "verify_event_signature"):
             return False, "Signature verification only available in sovereign mode"
 
         return self.audit_log.verify_event_signature(event_id)

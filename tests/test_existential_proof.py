@@ -230,9 +230,7 @@ class TestNonRestorability:
             )
         ]
 
-        is_non_restorable, reason = proof_system.evaluate_non_restorability(
-            violations
-        )
+        is_non_restorable, reason = proof_system.evaluate_non_restorability(violations)
 
         assert is_non_restorable
         assert "Critical non-restorable" in reason
@@ -254,9 +252,7 @@ class TestNonRestorability:
             for i in range(2)
         ]
 
-        is_non_restorable, reason = proof_system.evaluate_non_restorability(
-            violations
-        )
+        is_non_restorable, reason = proof_system.evaluate_non_restorability(violations)
 
         assert is_non_restorable
         assert "error-level non-restorable" in reason.lower()
@@ -277,9 +273,7 @@ class TestNonRestorability:
             )
         ]
 
-        is_non_restorable, reason = proof_system.evaluate_non_restorability(
-            violations
-        )
+        is_non_restorable, reason = proof_system.evaluate_non_restorability(violations)
 
         assert is_non_restorable
         assert "Hash chain" in reason
@@ -300,9 +294,7 @@ class TestNonRestorability:
             )
         ]
 
-        is_non_restorable, reason = proof_system.evaluate_non_restorability(
-            violations
-        )
+        is_non_restorable, reason = proof_system.evaluate_non_restorability(violations)
 
         assert not is_non_restorable
         assert "restorable" in reason.lower()
@@ -316,9 +308,7 @@ class TestExternalSignatureVerification:
         message = b"test message for signature"
         signature = sample_keypair["private_key"].sign(message)
 
-        is_valid = proof_system.verify_external_signature(
-            message, signature, sample_keypair["public_bytes"]
-        )
+        is_valid = proof_system.verify_external_signature(message, signature, sample_keypair["public_bytes"])
 
         assert is_valid
 
@@ -328,9 +318,7 @@ class TestExternalSignatureVerification:
         wrong_message = b"different message"
         signature = sample_keypair["private_key"].sign(message)
 
-        is_valid = proof_system.verify_external_signature(
-            wrong_message, signature, sample_keypair["public_bytes"]
-        )
+        is_valid = proof_system.verify_external_signature(wrong_message, signature, sample_keypair["public_bytes"])
 
         assert not is_valid
 
@@ -348,9 +336,7 @@ class TestExternalSignatureVerification:
             format=serialization.PublicFormat.Raw,
         )
 
-        is_valid = proof_system.verify_external_signature(
-            message, signature, wrong_public_bytes
-        )
+        is_valid = proof_system.verify_external_signature(message, signature, wrong_public_bytes)
 
         assert not is_valid
 
@@ -381,9 +367,7 @@ class TestDualChannelRestoration:
         # Test that signature verification works
         test_message = b"test restoration authorization"
         signature = sample_keypair["private_key"].sign(test_message)
-        is_valid = proof_system.verify_external_signature(
-            test_message, signature, sample_keypair["public_bytes"]
-        )
+        is_valid = proof_system.verify_external_signature(test_message, signature, sample_keypair["public_bytes"])
         assert is_valid
 
         # Note: Full dual-channel test requires signing the exact message
@@ -619,9 +603,7 @@ class TestRestorationPlan:
                 severity=ViolationSeverity.ERROR,
                 description="Test",
                 restorable=True,
-                restoration_steps=[
-                    "Synchronize system clock"
-                ],  # Same step for both
+                restoration_steps=["Synchronize system clock"],  # Same step for both
                 evidence_hash=f"hash{i}",
                 ledger_state_hash="state_hash",
             )

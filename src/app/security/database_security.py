@@ -130,9 +130,7 @@ class SecureDatabaseManager:
         finally:
             conn.close()
 
-    def execute_query(
-        self, query: str, params: tuple = (), fetch: bool = False
-    ) -> list[sqlite3.Row] | None:
+    def execute_query(self, query: str, params: tuple = (), fetch: bool = False) -> list[sqlite3.Row] | None:
         """Execute parameterized query safely.
 
         Args:
@@ -188,9 +186,7 @@ class SecureDatabaseManager:
 
         return True
 
-    def insert_user(
-        self, username: str, password_hash: str, email: str | None = None
-    ) -> int:
+    def insert_user(self, username: str, password_hash: str, email: str | None = None) -> int:
         """Insert new user with parameterized query.
 
         Args:
@@ -292,9 +288,7 @@ class SecureDatabaseManager:
 
         self.execute_query(query, (user_id, action, resource, details_json, ip_address))
 
-    def get_audit_log(
-        self, user_id: int | None = None, limit: int = 100
-    ) -> list[dict[str, Any]]:
+    def get_audit_log(self, user_id: int | None = None, limit: int = 100) -> list[dict[str, Any]]:
         """Get audit log entries.
 
         Args:
@@ -361,9 +355,7 @@ class SecureDatabaseManager:
 
         return None
 
-    def store_knowledge(
-        self, category: str, key: str, value: Any, metadata: dict | None = None
-    ) -> None:
+    def store_knowledge(self, category: str, key: str, value: Any, metadata: dict | None = None) -> None:
         """Store knowledge in database.
 
         Args:
@@ -387,9 +379,7 @@ class SecureDatabaseManager:
         self.execute_query(query, (category, key, value_json, metadata_json))
         logger.debug("Knowledge stored: %s/%s", category, key)
 
-    def get_knowledge(
-        self, category: str, key: str | None = None
-    ) -> list[dict[str, Any]]:
+    def get_knowledge(self, category: str, key: str | None = None) -> list[dict[str, Any]]:
         """Get knowledge from database.
 
         Args:

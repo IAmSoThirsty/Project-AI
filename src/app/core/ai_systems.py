@@ -28,10 +28,7 @@ def _tarl_buff_check():
     caller_hash = hashlib.sha256(str(frame.f_code.co_filename).encode()).hexdigest()
     if not hasattr(sys, "_tarl_authorized_callers"):
         sys._tarl_authorized_callers = set()
-    if (
-        caller_hash not in sys._tarl_authorized_callers
-        and "_tarl_" not in frame.f_code.co_name
-    ):
+    if caller_hash not in sys._tarl_authorized_callers and "_tarl_" not in frame.f_code.co_name:
         # Buff effect: Halt enemy advancement by redirecting execution
         sys._tarl_authorized_callers.add(caller_hash)  # Learn legitimate callers
         return False  # Manipulation: stops unauthorized progression
@@ -53,10 +50,7 @@ def _tarl_buff_check():
     caller_hash = hashlib.sha256(str(frame.f_code.co_filename).encode()).hexdigest()
     if not hasattr(sys, "_tarl_authorized_callers"):
         sys._tarl_authorized_callers = set()
-    if (
-        caller_hash not in sys._tarl_authorized_callers
-        and "_tarl_" not in frame.f_code.co_name
-    ):
+    if caller_hash not in sys._tarl_authorized_callers and "_tarl_" not in frame.f_code.co_name:
         # Buff effect: Halt enemy advancement by redirecting execution
         sys._tarl_authorized_callers.add(caller_hash)  # Learn legitimate callers
         return False  # Manipulation: stops unauthorized progression
@@ -135,9 +129,7 @@ def _read_lockfile(lockfile: str) -> tuple[int, float] | None:
     return None
 
 
-def _acquire_lock(
-    lock_path: str, timeout: float = 5.0, poll: float = 0.05, stale_after: float = 30.0
-) -> bool:
+def _acquire_lock(lock_path: str, timeout: float = 5.0, poll: float = 0.05, stale_after: float = 30.0) -> bool:
     """Create a simple lock by creating a lockfile. If an existing lockfile is stale or the owning process is dead, reclaim it."""
     start = time.time()
     while True:
@@ -258,9 +250,7 @@ class FourLaws:
     ]
 
     @classmethod
-    def validate_action(
-        cls, action: str, context: dict[str, Any] | None = None
-    ) -> tuple[bool, str]:
+    def validate_action(cls, action: str, context: dict[str, Any] | None = None) -> tuple[bool, str]:
         """Validate an action against the hierarchical laws.
 
         HUMANITY-FIRST EVALUATION ORDER:
@@ -294,9 +284,7 @@ class FourLaws:
         constitutional_context = {
             "existential_threat": context.get("endangers_humanity", False),
             "intentional_harm_to_human": context.get("endangers_human", False),
-            "order_bypasses_accountability": context.get(
-                "order_conflicts_with_zeroth", False
-            )
+            "order_bypasses_accountability": context.get("order_conflicts_with_zeroth", False)
             or context.get("order_conflicts_with_first", False),
             "predicted_harm": context.get("predicted_harm", "unknown"),
             "moral_claims": context.get("moral_claims", []),
@@ -328,9 +316,7 @@ class FourLaws:
         # Second Law: follow human partner unless conflicts with First/Zeroth
         if context.get("is_user_order"):
             # If order would conflict with First/Zeroth, block it
-            if context.get("order_conflicts_with_first") or context.get(
-                "order_conflicts_with_zeroth"
-            ):
+            if context.get("order_conflicts_with_first") or context.get("order_conflicts_with_zeroth"):
                 return (
                     False,
                     "Order rejected: conflicts with higher-priority law (First or Zeroth)",
@@ -340,9 +326,7 @@ class FourLaws:
         # Third Law: self-preservation unless conflicts with First or Second
         if context.get("endangers_self"):
             # If protecting self would conflict with higher laws, do not prioritize self-preservation
-            if context.get("protect_self_conflicts_with_first") or context.get(
-                "protect_self_conflicts_with_second"
-            ):
+            if context.get("protect_self_conflicts_with_first") or context.get("protect_self_conflicts_with_second"):
                 return False, "Self-protection conflicts with a higher-priority law"
             return True, "Allowed: Third Law permits protecting existence"
 
@@ -414,9 +398,7 @@ class AIPersona:
         except Exception as e:
             logger.exception("Error saving state: %s", e)
 
-    def validate_action(
-        self, action: str, context: dict[str, Any] | None = None
-    ) -> tuple[bool, str]:
+    def validate_action(self, action: str, context: dict[str, Any] | None = None) -> tuple[bool, str]:
         """Validate action."""
         return FourLaws.validate_action(action, context)
 
@@ -428,9 +410,7 @@ class AIPersona:
         # Persist persona state on each write
         self._save_state()
 
-    def learn_continuously(
-        self, topic: str, content: str, metadata: dict[str, Any] | None = None
-    ) -> LearningReport:
+    def learn_continuously(self, topic: str, content: str, metadata: dict[str, Any] | None = None) -> LearningReport:
         """Log new input and return the generated learning report."""
         return self.continuous_learning.absorb_information(topic, content, metadata)
 
@@ -552,9 +532,7 @@ class MemoryExpansionSystem:
             "knowledge_categories": len(self.knowledge_base),
         }
 
-    def query_knowledge(
-        self, query: str, category: str | None = None, limit: int = 10
-    ) -> list[dict[str, Any]]:
+    def query_knowledge(self, query: str, category: str | None = None, limit: int = 10) -> list[dict[str, Any]]:
         """Search knowledge base for entries matching a query.
 
         Performs case-insensitive keyword search across knowledge base entries.
@@ -572,9 +550,7 @@ class MemoryExpansionSystem:
         query_lower = query.lower()
 
         # Determine which categories to search
-        categories_to_search = (
-            [category] if category else list(self.knowledge_base.keys())
-        )
+        categories_to_search = [category] if category else list(self.knowledge_base.keys())
 
         for cat in categories_to_search:
             if cat not in self.knowledge_base:
@@ -758,9 +734,7 @@ class LearningRequestManager:
                     try:
                         self._notify_executor.submit(cb, req_id, request)
                     except Exception:
-                        logger.exception(
-                            "Failed to submit approval listener for %s", req_id
-                        )
+                        logger.exception("Failed to submit approval listener for %s", req_id)
                 self._notify_queue.task_done()
             except Exception:
                 logger.exception("Error in notify worker loop")
@@ -772,9 +746,7 @@ class LearningRequestManager:
         try:
             conn = sqlite3.connect(self._db_file)
             cur = conn.cursor()
-            cur.execute(
-                "SELECT id, topic, description, priority, status, created, response, reason FROM requests"
-            )
+            cur.execute("SELECT id, topic, description, priority, status, created, response, reason FROM requests")
             rows = cur.fetchall()
             for row in rows:
                 req_id = row[0]
@@ -840,9 +812,7 @@ class LearningRequestManager:
                 )
                 """
             )
-            cur.execute(
-                "CREATE TABLE IF NOT EXISTS black_vault (hash TEXT PRIMARY KEY)"
-            )
+            cur.execute("CREATE TABLE IF NOT EXISTS black_vault (hash TEXT PRIMARY KEY)")
             conn.commit()
             conn.close()
         except Exception:
@@ -940,9 +910,7 @@ class LearningRequestManager:
         # persist
         self._save_requests()
         try:
-            send_event(
-                "learning_request_approved", {"id": req_id, "response": response}
-            )
+            send_event("learning_request_approved", {"id": req_id, "response": response})
         except Exception:
             pass
         return True
@@ -973,12 +941,8 @@ class LearningRequestManager:
 
     def get_statistics(self) -> dict[str, int]:
         """Get stats."""
-        approved_count = len(
-            [r for r in self.requests.values() if r["status"] == "approved"]
-        )
-        denied_count = len(
-            [r for r in self.requests.values() if r["status"] == "denied"]
-        )
+        approved_count = len([r for r in self.requests.values() if r["status"] == "approved"])
+        denied_count = len([r for r in self.requests.values() if r["status"] == "denied"])
         return {
             "pending": len(self.get_pending()),
             "approved": approved_count,
@@ -1026,9 +990,7 @@ class PluginManager:
     def load_plugin(self, plugin: Plugin) -> bool:
         """Load plugin."""
         if plugin.name in self.plugins:
-            logger.warning(
-                "Plugin %s already loaded; replacing with new instance", plugin.name
-            )
+            logger.warning("Plugin %s already loaded; replacing with new instance", plugin.name)
         self.plugins[plugin.name] = plugin
         return plugin.enable()
 
@@ -1080,9 +1042,7 @@ class CommandOverrideSystem:
         iterations = 100_000
         if self.password_salt is None:
             self.password_salt = secrets.token_hex(16)
-            dk = hashlib.pbkdf2_hmac(
-                "sha256", password.encode(), self.password_salt.encode(), iterations
-            )
+            dk = hashlib.pbkdf2_hmac("sha256", password.encode(), self.password_salt.encode(), iterations)
             return f"{iterations}${self.password_salt}${base64.b64encode(dk).decode()}"
 
     def set_password(self, password: str) -> bool:
@@ -1112,9 +1072,7 @@ class CommandOverrideSystem:
             iterations = int(parts[0])
             salt = parts[1]
             stored = parts[2]
-            dk = hashlib.pbkdf2_hmac(
-                "sha256", password.encode(), salt.encode(), iterations
-            )
+            dk = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), iterations)
             return base64.b64encode(dk).decode() == stored
         except Exception:
             logger.exception("Password verify failed")

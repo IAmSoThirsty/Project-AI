@@ -44,9 +44,7 @@ class Visualization3DWidget(QWidget):
         self.rotation_angle = (self.rotation_angle + 1) % 360
         self.update()
 
-    def add_node(
-        self, x: float, y: float, z: float, label: str = "", color: QColor = None
-    ):
+    def add_node(self, x: float, y: float, z: float, label: str = "", color: QColor = None):
         """Add a 3D node to the visualization."""
         if color is None:
             color = QColor(0, 255, 255)  # Tron cyan
@@ -102,12 +100,8 @@ class Visualization3DWidget(QWidget):
                 from_node = self.nodes[from_idx]
                 to_node = self.nodes[to_idx]
 
-                from_x, from_y = self._project_3d_to_2d(
-                    from_node["x"], from_node["y"], from_node["z"]
-                )
-                to_x, to_y = self._project_3d_to_2d(
-                    to_node["x"], to_node["y"], to_node["z"]
-                )
+                from_x, from_y = self._project_3d_to_2d(from_node["x"], from_node["y"], from_node["z"])
+                to_x, to_y = self._project_3d_to_2d(to_node["x"], to_node["y"], to_node["z"])
 
                 painter.drawLine(int(from_x), int(from_y), int(to_x), int(to_y))
 
@@ -129,9 +123,7 @@ class Visualization3DWidget(QWidget):
             )
             glow.setColorAt(
                 1,
-                QColor(
-                    node["color"].red(), node["color"].green(), node["color"].blue(), 0
-                ),
+                QColor(node["color"].red(), node["color"].green(), node["color"].blue(), 0),
             )
 
             painter.setBrush(QBrush(glow))

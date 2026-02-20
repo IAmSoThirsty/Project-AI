@@ -111,9 +111,7 @@ class IMFDataSource(DataSource):
             # For demo purposes, return empty dict
             # In production, this would be handled with proper error recovery
 
-        logger.info(
-            "Loaded IMF data for %s countries, indicator %s", len(result), indicator
-        )
+        logger.info("Loaded IMF data for %s countries, indicator %s", len(result), indicator)
         return result
 
     def fetch_fiscal_data(
@@ -226,9 +224,7 @@ class WHODataSource(DataSource):
         except Exception as e:
             logger.warning("Error parsing WHO data: %s", e)
 
-        logger.info(
-            "Loaded WHO data for %s countries, indicator %s", len(result), indicator
-        )
+        logger.info("Loaded WHO data for %s countries, indicator %s", len(result), indicator)
         return result
 
     def fetch_covid19_data(
@@ -289,9 +285,7 @@ class WHODataSource(DataSource):
 # Integration helper functions
 
 
-def integrate_imf_data(
-    engine, start_year: int, end_year: int, countries: list[str] | None = None
-) -> bool:
+def integrate_imf_data(engine, start_year: int, end_year: int, countries: list[str] | None = None) -> bool:
     """
     Integrate IMF data into the Global Scenario Engine.
 
@@ -331,9 +325,7 @@ def integrate_imf_data(
         return False
 
 
-def integrate_who_data(
-    engine, start_year: int, end_year: int, countries: list[str] | None = None
-) -> bool:
+def integrate_who_data(engine, start_year: int, end_year: int, countries: list[str] | None = None) -> bool:
     """
     Integrate WHO data into the Global Scenario Engine.
 
@@ -364,9 +356,7 @@ def integrate_who_data(
                     engine.historical_data[RiskDomain.PANDEMIC][country] = {}
                 # Invert life expectancy to risk metric (lower = higher risk)
                 for year, value in years.items():
-                    engine.historical_data[RiskDomain.PANDEMIC][country][year] = (
-                        100 - value
-                    )
+                    engine.historical_data[RiskDomain.PANDEMIC][country][year] = 100 - value
 
         logger.info("WHO data integration completed")
         return True

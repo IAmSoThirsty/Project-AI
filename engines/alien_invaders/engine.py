@@ -118,18 +118,14 @@ class AlienInvadersEngine:
 
             # Initialize alien presence
             self.state.alien_ships_in_system = self.config.alien.initial_ship_count
-            self.state.alien_tech_level = self._tech_level_to_float(
-                self.config.alien.technology_level
-            )
+            self.state.alien_tech_level = self._tech_level_to_float(self.config.alien.technology_level)
 
             # Initial validation
             validation = self._validate_state()
             self.validation_history.append(validation)
 
             if not validation.is_valid:
-                logger.error(
-                    "Initial state validation failed: %s", validation.violations
-                )
+                logger.error("Initial state validation failed: %s", validation.violations)
                 return False
 
             # Save initial snapshot
@@ -202,9 +198,7 @@ class AlienInvadersEngine:
                 requestor="AlienInvadersEngine",
             )
 
-            verdict = self.monolith.evaluate_action(
-                tick_action, self.state, self.prev_state
-            )
+            verdict = self.monolith.evaluate_action(tick_action, self.state, self.prev_state)
 
             if not verdict.allowed:
                 logger.error(
@@ -216,9 +210,7 @@ class AlienInvadersEngine:
                     return False
                 # Log violations but continue if not strict
                 for violation in verdict.violations:
-                    logger.warning(
-                        "  - %s: %s", violation.invariant_name, violation.description
-                    )
+                    logger.warning("  - %s: %s", violation.invariant_name, violation.description)
 
             # Process all subsystem updates
             self._update_alien_activity()
@@ -241,10 +233,7 @@ class AlienInvadersEngine:
             validation = self._validate_state()
             self.validation_history.append(validation)
 
-            if (
-                not validation.is_valid
-                and self.config.validation.enable_strict_validation
-            ):
+            if not validation.is_valid and self.config.validation.enable_strict_validation:
                 logger.error(
                     "State validation failed at day %d: %s",
                     self.state.day_number,
@@ -254,9 +243,7 @@ class AlienInvadersEngine:
 
             # Save periodic snapshots
             if self.state.day_number % self.config.validation.save_state_frequency == 0:
-                self.state_snapshots[self.state.day_number] = self._deep_copy_state(
-                    self.state
-                )
+                self.state_snapshots[self.state.day_number] = self._deep_copy_state(self.state)
 
             return True
 
@@ -368,9 +355,7 @@ class AlienInvadersEngine:
             causal_event.logical_time,
         )
 
-    def observe(
-        self, query: str | None = None, readonly: bool = True
-    ) -> dict[str, Any]:
+    def observe(self, query: str | None = None, readonly: bool = True) -> dict[str, Any]:
         """
         Query the current simulation state.
 
@@ -604,9 +589,7 @@ class AlienInvadersEngine:
 
         # Check for invasion escalation
         if random.random() < (
-            self.config.alien.invasion_probability_per_year
-            / 365.0
-            * self.config.world.time_step_days
+            self.config.alien.invasion_probability_per_year / 365.0 * self.config.world.time_step_days
         ):
             self.state.alien_ships_in_system += random.randint(1, 5)
             self.state.alien_ground_forces += random.randint(100, 1000)
@@ -623,16 +606,10 @@ class AlienInvadersEngine:
             self.events.append(event)
 
         # Resource extraction
-        extraction_per_tick = (
-            self.config.alien.resource_extraction_rate
-            / 365.0
-            * self.config.world.time_step_days
-        )
+        extraction_per_tick = self.config.alien.resource_extraction_rate / 365.0 * self.config.world.time_step_days
         for resource in self.state.remaining_resources:
             self.state.remaining_resources[resource] *= 1.0 - extraction_per_tick
-            self.state.remaining_resources[resource] = max(
-                0.0, self.state.remaining_resources[resource]
-            )
+            self.state.remaining_resources[resource] = max(0.0, self.state.remaining_resources[resource])
 
     def _update_political_systems(self):
         """Update political stability and alliances."""
@@ -666,9 +643,9 @@ class AlienInvadersEngine:
             country.unemployment_rate = min(0.5, country.unemployment_rate)
 
             # Inflation from resource scarcity
-            avg_resource_depletion = 1.0 - sum(
-                self.state.remaining_resources.values()
-            ) / len(self.state.remaining_resources)
+            avg_resource_depletion = 1.0 - sum(self.state.remaining_resources.values()) / len(
+                self.state.remaining_resources
+            )
             country.inflation_rate += avg_resource_depletion * 0.001
 
     def _update_military_systems(self):
@@ -681,11 +658,7 @@ class AlienInvadersEngine:
             for country in self.state.countries.values():
                 if country.alien_influence > 0.1:
                     # Combat casualties
-                    casualty_rate = (
-                        0.0001
-                        * country.alien_influence
-                        * self.state.alien_ground_forces
-                    )
+                    casualty_rate = 0.0001 * country.alien_influence * self.state.alien_ground_forces
                     casualties = int(country.population * casualty_rate)
                     country.casualties += casualties
                     country.population -= casualties
@@ -717,9 +690,7 @@ class AlienInvadersEngine:
             if country.alien_influence > 0.2:
                 damage_rate = 0.01 * country.alien_influence
                 country.infrastructure_integrity *= 1.0 - damage_rate
-                country.infrastructure_integrity = max(
-                    0.0, country.infrastructure_integrity
-                )
+                country.infrastructure_integrity = max(0.0, country.infrastructure_integrity)
 
     def _update_environment(self):
         """Update environmental conditions."""
@@ -763,9 +734,7 @@ class AlienInvadersEngine:
 
         # Check for AI failure
         if random.random() < (
-            self.config.ai_governance.ai_failure_probability
-            / 365.0
-            * self.config.world.time_step_days
+            self.config.ai_governance.ai_failure_probability / 365.0 * self.config.world.time_step_days
         ):
             self.state.ai_failure_count += 1
             self.state.ai_alignment_score -= 0.05
@@ -814,9 +783,7 @@ class AlienInvadersEngine:
 
         if current_pop > expected_max_pop * 1.01:  # 1% tolerance
             validation.population_conserved = False
-            validation.violations.append(
-                f"Population increased beyond initial: {current_pop} > {expected_max_pop}"
-            )
+            validation.violations.append(f"Population increased beyond initial: {current_pop} > {expected_max_pop}")
 
         validation.population_delta = self.config.world.global_population - current_pop
 
@@ -824,14 +791,10 @@ class AlienInvadersEngine:
         for resource, amount in self.state.remaining_resources.items():
             if amount > 1.0:
                 validation.resources_conserved = False
-                validation.violations.append(
-                    f"Resource {resource} exceeded max: {amount}"
-                )
+                validation.violations.append(f"Resource {resource} exceeded max: {amount}")
 
         validation.is_valid = (
-            validation.population_conserved
-            and validation.resources_conserved
-            and validation.causality_maintained
+            validation.population_conserved and validation.resources_conserved and validation.causality_maintained
         )
 
         return validation
@@ -896,9 +859,7 @@ class AlienInvadersEngine:
                 "summary": {
                     "total_events": len(year_events),
                     "population_end": self.state.get_total_population(),
-                    "casualties_year": sum(
-                        e.parameters.get("casualties", 0) for e in year_events
-                    ),
+                    "casualties_year": sum(e.parameters.get("casualties", 0) for e in year_events),
                     "alien_control": self.state.get_alien_control_percentage(),
                 },
                 "major_events": [
@@ -939,10 +900,7 @@ class AlienInvadersEngine:
                 "global_population": self.state.get_total_population(),
                 "initial_population": self.config.world.global_population,
                 "population_loss_pct": (
-                    (
-                        self.config.world.global_population
-                        - self.state.get_total_population()
-                    )
+                    (self.config.world.global_population - self.state.get_total_population())
                     / self.config.world.global_population
                     * 100
                 ),
@@ -956,8 +914,7 @@ class AlienInvadersEngine:
                 "ships_in_system": self.state.alien_ships_in_system,
                 "ground_forces": self.state.alien_ground_forces,
                 "resource_extraction_total": 1.0
-                - sum(self.state.remaining_resources.values())
-                / len(self.state.remaining_resources),
+                - sum(self.state.remaining_resources.values()) / len(self.state.remaining_resources),
                 "contact_established": self.state.alien_contact_established,
                 "negotiations_attempted": self.state.negotiations_active,
             },
@@ -975,13 +932,9 @@ class AlienInvadersEngine:
             ],
             "validation_summary": {
                 "total_validations": len(self.validation_history),
-                "failed_validations": sum(
-                    1 for v in self.validation_history if not v.is_valid
-                ),
+                "failed_validations": sum(1 for v in self.validation_history if not v.is_valid),
                 "conservation_violations": sum(
-                    1
-                    for v in self.validation_history
-                    if not v.population_conserved or not v.resources_conserved
+                    1 for v in self.validation_history if not v.population_conserved or not v.resources_conserved
                 ),
             },
             "outcome_classification": self._classify_outcome(),

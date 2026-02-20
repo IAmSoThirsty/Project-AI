@@ -260,9 +260,7 @@ class GodTierIntegratedSystem:
         """Initialize voice system components"""
         try:
             # Create voice registry
-            voice_dir = os.path.join(
-                self.config.storage.base_dir, self.config.storage.voice_models_dir
-            )
+            voice_dir = os.path.join(self.config.storage.base_dir, self.config.storage.voice_models_dir)
             self.voice_registry = VoiceModelRegistry(voice_dir)
 
             # Register voice models
@@ -314,9 +312,7 @@ class GodTierIntegratedSystem:
                     self.config.storage.bonding_dir,
                     "voice",
                 )
-                self.voice_bonding = VoiceBondingProtocol(
-                    self.voice_registry, self.engagement_profiler, bonding_dir
-                )
+                self.voice_bonding = VoiceBondingProtocol(self.voice_registry, self.engagement_profiler, bonding_dir)
 
             logger.info("Voice system initialized successfully")
             return True
@@ -329,9 +325,7 @@ class GodTierIntegratedSystem:
         """Initialize visual system components"""
         try:
             # Create visual registry
-            visual_dir = os.path.join(
-                self.config.storage.base_dir, self.config.storage.visual_models_dir
-            )
+            visual_dir = os.path.join(self.config.storage.base_dir, self.config.storage.visual_models_dir)
             self.visual_registry = VisualCueModelRegistry(visual_dir)
 
             # Register visual models
@@ -351,9 +345,7 @@ class GodTierIntegratedSystem:
 
             # Create camera manager
             if self.config.camera.enabled:
-                camera_dir = os.path.join(
-                    self.config.storage.base_dir, self.config.storage.camera_dir
-                )
+                camera_dir = os.path.join(self.config.storage.base_dir, self.config.storage.camera_dir)
                 self.camera_manager = CameraManager(camera_dir)
 
                 if self.config.camera.auto_discover:
@@ -362,9 +354,7 @@ class GodTierIntegratedSystem:
 
                     # Activate preferred or first device
                     if self.config.camera.preferred_device:
-                        self.camera_manager.activate_device(
-                            self.config.camera.preferred_device
-                        )
+                        self.camera_manager.activate_device(self.config.camera.preferred_device)
                     elif devices:
                         self.camera_manager.activate_device(devices[0].device_id)
 
@@ -375,15 +365,11 @@ class GodTierIntegratedSystem:
                     self.config.storage.bonding_dir,
                     "visual",
                 )
-                self.visual_bonding = VisualBondingProtocol(
-                    self.visual_registry, self.camera_manager, bonding_dir
-                )
+                self.visual_bonding = VisualBondingProtocol(self.visual_registry, self.camera_manager, bonding_dir)
 
             # Create visual controller
             if self.camera_manager and self.visual_bonding:
-                controller_dir = os.path.join(
-                    self.config.storage.base_dir, "visual_controller"
-                )
+                controller_dir = os.path.join(self.config.storage.base_dir, "visual_controller")
                 self.visual_controller = VisualController(
                     self.visual_registry,
                     self.camera_manager,
@@ -406,9 +392,7 @@ class GodTierIntegratedSystem:
                 self.config.storage.conversation_context_dir,
             )
             self.context_engine = ConversationContextEngine(context_dir)
-            self.context_engine._context_window = (
-                self.config.conversation.context_window
-            )
+            self.context_engine._context_window = self.config.conversation.context_window
 
             logger.info("Conversation system initialized successfully")
             return True
@@ -424,9 +408,7 @@ class GodTierIntegratedSystem:
                 logger.error("Context engine required for policy system")
                 return False
 
-            policy_dir = os.path.join(
-                self.config.storage.base_dir, self.config.storage.policy_manager_dir
-            )
+            policy_dir = os.path.join(self.config.storage.base_dir, self.config.storage.policy_manager_dir)
             self.policy_manager = PolicyManager(self.context_engine, policy_dir)
 
             logger.info("Policy system initialized successfully")
@@ -450,9 +432,7 @@ class GodTierIntegratedSystem:
                 logger.error("All component systems required for fusion")
                 return False
 
-            fusion_dir = os.path.join(
-                self.config.storage.base_dir, self.config.storage.fusion_dir
-            )
+            fusion_dir = os.path.join(self.config.storage.base_dir, self.config.storage.fusion_dir)
 
             fusion_strategy = FusionStrategy(self.config.fusion.strategy)
 
@@ -516,21 +496,15 @@ class GodTierIntegratedSystem:
                 session_id = self.context_engine.start_session(user_id)
 
             # Create multi-modal input
-            multimodal_input = MultiModalInput(
-                text_input=text_input, visual_frame=visual_frame
-            )
+            multimodal_input = MultiModalInput(text_input=text_input, visual_frame=visual_frame)
 
             # Process through fusion engine
             fused_context = None
             if self.fusion_engine and session_id:
-                fused_context = self.fusion_engine.process_multimodal_input(
-                    user_id, session_id, multimodal_input
-                )
+                fused_context = self.fusion_engine.process_multimodal_input(user_id, session_id, multimodal_input)
 
             # Generate response (simplified - production would use actual response generation)
-            response = self._generate_response(
-                user_id, session_id, text_input, fused_context
-            )
+            response = self._generate_response(user_id, session_id, text_input, fused_context)
 
             # Add conversation turn
             if self.context_engine and session_id:

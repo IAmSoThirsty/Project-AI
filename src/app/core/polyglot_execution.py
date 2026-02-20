@@ -202,9 +202,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
 
         # Model registry
         self.models: dict[str, ModelConfig] = {}
-        self.model_metrics: dict[str, ModelMetrics] = defaultdict(
-            lambda: ModelMetrics(model_id="")
-        )
+        self.model_metrics: dict[str, ModelMetrics] = defaultdict(lambda: ModelMetrics(model_id=""))
 
         # Backend clients
         self.openai_client: Any | None = None
@@ -325,9 +323,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
 
         # HuggingFace (initialized on-demand)
         if not TRANSFORMERS_AVAILABLE:
-            self.logger.warning(
-                "Transformers not available - HuggingFace backend disabled"
-            )
+            self.logger.warning("Transformers not available - HuggingFace backend disabled")
 
     def _register_default_models(self):
         """Register default model configurations"""
@@ -446,9 +442,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         # Check worker threads
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
-            self.logger.warning(
-                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
-            )
+            self.logger.warning("Only %s/%s workers alive", alive_threads, len(self.worker_threads))
             return False
 
         # Check if at least one backend is available
@@ -482,9 +476,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         """Register a model configuration"""
         try:
             self.models[config.model_id] = config
-            self.logger.info(
-                "Registered model: %s (%s)", config.model_id, config.backend.value
-            )
+            self.logger.info("Registered model: %s (%s)", config.model_id, config.backend.value)
             return True
         except Exception as e:
             self.logger.error("Failed to register model: %s", e)
@@ -504,9 +496,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             tokenizer = AutoTokenizer.from_pretrained(model_name)
             model = AutoModelForCausalLM.from_pretrained(
                 model_name,
-                torch_dtype=(
-                    torch.float16 if torch.cuda.is_available() else torch.float32
-                ),
+                torch_dtype=(torch.float16 if torch.cuda.is_available() else torch.float32),
                 device_map="auto" if torch.cuda.is_available() else None,
             )
 
@@ -584,9 +574,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
 
         if cached_response:
             self.metrics["cached_responses"] += 1
-            self.metrics["cache_hit_rate"] = (
-                self.metrics["cached_responses"] / self.metrics["total_requests"]
-            )
+            self.metrics["cache_hit_rate"] = self.metrics["cached_responses"] / self.metrics["total_requests"]
             cached_response.cached = True
             return cached_response
 
@@ -631,9 +619,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             self.metrics["successful_requests"] += 1
 
             # Update average latency
-            self.metrics["avg_latency_ms"] = (
-                0.9 * self.metrics["avg_latency_ms"] + 0.1 * latency
-            )
+            self.metrics["avg_latency_ms"] = 0.9 * self.metrics["avg_latency_ms"] + 0.1 * latency
 
             return response
 
@@ -642,9 +628,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             self.metrics["failed_requests"] += 1
 
             # Try fallback
-            fallback_response = self._execute_with_fallback(
-                request, selected_model.model_id
-            )
+            fallback_response = self._execute_with_fallback(request, selected_model.model_id)
             if fallback_response:
                 return fallback_response
 
@@ -666,9 +650,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         self.active_requests[request.request_id] = request
         return request.request_id
 
-    def get_result(
-        self, request_id: str, timeout: float = 30.0
-    ) -> ExecutionResponse | None:
+    def get_result(self, request_id: str, timeout: float = 30.0) -> ExecutionResponse | None:
         """Get result of asynchronous request"""
         # Placeholder - would implement result retrieval
         return None
@@ -677,9 +659,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
     # BACKEND EXECUTION
     # ========================================================================
 
-    def _execute_openai(
-        self, request: ExecutionRequest, model: ModelConfig
-    ) -> ExecutionResponse:
+    def _execute_openai(self, request: ExecutionRequest, model: ModelConfig) -> ExecutionResponse:
         """Execute request using OpenAI API"""
         if not self.openai_client:
             raise RuntimeError("OpenAI client not available")
@@ -729,9 +709,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         except Exception as e:
             raise RuntimeError(f"OpenAI execution failed: {e}")
 
-    def _execute_huggingface(
-        self, request: ExecutionRequest, model: ModelConfig
-    ) -> ExecutionResponse:
+    def _execute_huggingface(self, request: ExecutionRequest, model: ModelConfig) -> ExecutionResponse:
         """Execute request using HuggingFace transformers"""
         if not TRANSFORMERS_AVAILABLE:
             raise RuntimeError("Transformers not available")
@@ -819,9 +797,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
 
         return None
 
-    def _execute_with_fallback(
-        self, request: ExecutionRequest, failed_model_id: str
-    ) -> ExecutionResponse | None:
+    def _execute_with_fallback(self, request: ExecutionRequest, failed_model_id: str) -> ExecutionResponse | None:
         """Execute request with fallback chain"""
         self.metrics["fallback_activations"] += 1
 
@@ -900,11 +876,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
 
         # Clean old entries
         self.rate_limits[backend.value] = deque(
-            [
-                t
-                for t in self.rate_limits[backend.value]
-                if current_time - t < self.rate_limit_window
-            ],
+            [t for t in self.rate_limits[backend.value] if current_time - t < self.rate_limit_window],
             maxlen=self.rate_limit_max[backend],
         )
 
@@ -952,17 +924,13 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
             try:
                 current_time = time.time()
                 expired_keys = [
-                    key
-                    for key, (_, timestamp) in self.cache.items()
-                    if current_time - timestamp > self.cache_ttl
+                    key for key, (_, timestamp) in self.cache.items() if current_time - timestamp > self.cache_ttl
                 ]
 
                 for key in expired_keys:
                     del self.cache[key]
 
-                self.logger.info(
-                    "Cache cleanup: removed %s expired entries", len(expired_keys)
-                )
+                self.logger.info("Cache cleanup: removed %s expired entries", len(expired_keys))
 
                 time.sleep(300)  # Every 5 minutes
 
@@ -1001,9 +969,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
         metrics.total_cost += response.cost_estimate
 
         # Update average latency
-        metrics.avg_latency_ms = (
-            0.9 * metrics.avg_latency_ms + 0.1 * response.latency_ms
-        )
+        metrics.avg_latency_ms = 0.9 * metrics.avg_latency_ms + 0.1 * response.latency_ms
 
         metrics.last_used = time.time()
 
@@ -1087,9 +1053,7 @@ class PolyglotExecutionEngine(BaseSubsystem, IConfigurable, IMonitorable, IObser
     def unsubscribe(self, subscription_id: str) -> bool:
         """Unsubscribe from events"""
         for event_type, subs in self.subscribers.items():
-            self.subscribers[event_type] = [
-                (sid, cb) for sid, cb in subs if sid != subscription_id
-            ]
+            self.subscribers[event_type] = [(sid, cb) for sid, cb in subs if sid != subscription_id]
         return True
 
     def emit_event(self, event_type: str, data: Any) -> int:

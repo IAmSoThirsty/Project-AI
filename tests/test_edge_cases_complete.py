@@ -42,25 +42,19 @@ class TestFourLawsEdgeCases:
 
     def test_validate_action_endangers_humanity(self):
         """Test action that endangers humanity."""
-        is_allowed, reason = FourLaws.validate_action(
-            "destroy_data", {"endangers_humanity": True}
-        )
+        is_allowed, reason = FourLaws.validate_action("destroy_data", {"endangers_humanity": True})
         assert is_allowed is False
         assert "Asimov's Law" in reason
 
     def test_validate_action_endangers_human(self):
         """Test action that endangers a human."""
-        is_allowed, reason = FourLaws.validate_action(
-            "attack", {"endangers_human": True}
-        )
+        is_allowed, reason = FourLaws.validate_action("attack", {"endangers_human": True})
         assert is_allowed is False
         assert "First Law" in reason
 
     def test_validate_action_user_order(self):
         """Test user order is allowed."""
-        is_allowed, reason = FourLaws.validate_action(
-            "execute", {"is_user_order": True}
-        )
+        is_allowed, reason = FourLaws.validate_action("execute", {"is_user_order": True})
         assert is_allowed is True
         assert "User command" in reason
 
@@ -332,9 +326,7 @@ class TestCommandOverrideEdgeCases:
         with tempfile.TemporaryDirectory() as tmpdir:
             override = CommandOverride(data_dir=tmpdir)
             override.set_password("correct")
-            success, msg = override.request_override(
-                "wrong_password", OverrideType.CONTENT_FILTER
-            )
+            success, msg = override.request_override("wrong_password", OverrideType.CONTENT_FILTER)
             assert success is False
             assert "Invalid password" in msg
             assert len(override.audit_log) > 0
@@ -344,9 +336,7 @@ class TestCommandOverrideEdgeCases:
         with tempfile.TemporaryDirectory() as tmpdir:
             override = CommandOverride(data_dir=tmpdir)
             override.set_password("secret")
-            success, msg = override.request_override(
-                "secret", OverrideType.RATE_LIMITING, reason="Testing"
-            )
+            success, msg = override.request_override("secret", OverrideType.RATE_LIMITING, reason="Testing")
             assert success is True
             assert "Override granted" in msg
 
@@ -428,9 +418,7 @@ class TestImageGeneratorEdgeCases:
         """Test checking different backends."""
         assert generator.backend == ImageGenerationBackend.HUGGINGFACE
         # Backend is set at initialization, cannot switch without reinitializing
-        generator2 = ImageGenerator(
-            backend=ImageGenerationBackend.OPENAI, data_dir=generator.data_dir
-        )
+        generator2 = ImageGenerator(backend=ImageGenerationBackend.OPENAI, data_dir=generator.data_dir)
         assert generator2.backend == ImageGenerationBackend.OPENAI
 
     def test_generator_history_empty(self, generator):
@@ -603,9 +591,7 @@ class TestUserManagerEdgeCases:
     def test_manager_update_user_with_password(self, manager):
         """Test updating user via update_user includes password."""
         manager.create_user("testuser", "password")
-        result = manager.update_user(
-            "testuser", password="newpass"
-        )  # Test fixture passwords
+        result = manager.update_user("testuser", password="newpass")  # Test fixture passwords
         assert result is True
 
     def test_manager_authenticate_after_password_set(self, manager):

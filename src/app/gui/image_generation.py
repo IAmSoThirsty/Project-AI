@@ -135,9 +135,7 @@ class ImageGenerationLeftPanel(QFrame):
         title_font.setPointSize(18)
         title_font.setBold(True)
         title.setFont(title_font)
-        title.setStyleSheet(
-            f"color: {TRON_GREEN}; text-shadow: 0px 0px 20px {TRON_GREEN};"
-        )
+        title.setStyleSheet(f"color: {TRON_GREEN}; text-shadow: 0px 0px 20px {TRON_GREEN};")
         layout.addWidget(title)
 
         # Prompt input label
@@ -192,9 +190,7 @@ class ImageGenerationLeftPanel(QFrame):
         layout.addStretch()
 
         # Info label
-        info_label = QLabel(
-            "⚠️ Content filtering enabled\n" "All images comply with safety guidelines"
-        )
+        info_label = QLabel("⚠️ Content filtering enabled\n" "All images comply with safety guidelines")
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         info_label.setStyleSheet(f"color: {TRON_CYAN}; font-size: 9pt;")
         layout.addWidget(info_label)
@@ -220,9 +216,7 @@ class ImageGenerationLeftPanel(QFrame):
 
         if generating:
             self.status_label.setText("🔄 Generating...")
-            self.status_label.setStyleSheet(
-                f"color: {TRON_GREEN}; font-size: 10pt; font-weight: bold;"
-            )
+            self.status_label.setStyleSheet(f"color: {TRON_GREEN}; font-size: 10pt; font-weight: bold;")
         else:
             self.status_label.setText("Ready")
             self.status_label.setStyleSheet(f"color: {TRON_CYAN}; font-size: 10pt;")
@@ -282,9 +276,7 @@ class ImageGenerationRightPanel(QFrame):
         # Image label
         self.image_label = QLabel("No image generated yet")
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.image_label.setStyleSheet(
-            "color: #555555; font-size: 12pt; padding: 50px;"
-        )
+        self.image_label.setStyleSheet("color: #555555; font-size: 12pt; padding: 50px;")
         self.image_label.setMinimumSize(512, 512)
         image_layout.addWidget(self.image_label)
 
@@ -353,9 +345,7 @@ class ImageGenerationRightPanel(QFrame):
             # Update metadata
             prompt = metadata.get("prompt", "Unknown")
             timestamp = metadata.get("timestamp", "")
-            self.metadata_label.setText(
-                f"Prompt: {prompt[:100]}...\n" f"Generated: {timestamp}"
-            )
+            self.metadata_label.setText(f"Prompt: {prompt[:100]}...\n" f"Generated: {timestamp}")
 
             # Enable buttons
             self.save_btn.setEnabled(True)
@@ -368,9 +358,7 @@ class ImageGenerationRightPanel(QFrame):
     def show_error(self, message: str):
         """Show error message."""
         self.image_label.setText(f"❌ {message}")
-        self.image_label.setStyleSheet(
-            "color: #ff4444; font-size: 12pt; padding: 50px;"
-        )
+        self.image_label.setStyleSheet("color: #ff4444; font-size: 12pt; padding: 50px;")
         self.metadata_label.setText("")
         self.save_btn.setEnabled(False)
         self.copy_btn.setEnabled(False)
@@ -378,9 +366,7 @@ class ImageGenerationRightPanel(QFrame):
     def show_generating(self):
         """Show generating state."""
         self.image_label.setText("⚡ Generating...\n\nThis may take 20-60 seconds")
-        self.image_label.setStyleSheet(
-            f"color: {TRON_GREEN}; font-size: 14pt; padding: 50px;"
-        )
+        self.image_label.setStyleSheet(f"color: {TRON_GREEN}; font-size: 14pt; padding: 50px;")
         self.metadata_label.setText("")
 
 

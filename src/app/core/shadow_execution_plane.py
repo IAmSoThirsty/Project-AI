@@ -123,8 +123,7 @@ class ShadowExecutionPlane:
         self._resource_limiter = ShadowResourceLimiter()
         logger.info(
             "  Resource Limiter: %s",
-            "Shadow Thirst bytecode" if self._resource_limiter.is_bytecode_active()
-            else "Python runtime",
+            "Shadow Thirst bytecode" if self._resource_limiter.is_bytecode_active() else "Python runtime",
         )
 
         # Register in Tier Registry as Tier-2 Infrastructure Controller
@@ -143,10 +142,7 @@ class ShadowExecutionPlane:
             )
             logger.info("ShadowExecutionPlane registered as Tier-2 Infrastructure")
         except Exception as e:
-            logger.warning(
-                "Failed to register ShadowExecutionPlane in tier registry: %s",
-                e
-            )
+            logger.warning("Failed to register ShadowExecutionPlane in tier registry: %s", e)
 
         logger.info("ShadowExecutionPlane initialized")
         logger.info("  CPU Quota: %.0fms", default_cpu_quota_ms)
@@ -174,18 +170,10 @@ class ShadowExecutionPlane:
         for predicate in activation_predicates:
             try:
                 if predicate.evaluate(context):
-                    logger.info(
-                        "Shadow activation triggered: %s (%s)",
-                        predicate.name,
-                        predicate.reason.value
-                    )
+                    logger.info("Shadow activation triggered: %s (%s)", predicate.name, predicate.reason.value)
                     return True, predicate.reason
             except Exception as e:
-                logger.error(
-                    "Activation predicate %s failed: %s",
-                    predicate.predicate_id,
-                    e
-                )
+                logger.error("Activation predicate %s failed: %s", predicate.predicate_id, e)
 
         return False, None
 
@@ -238,10 +226,7 @@ class ShadowExecutionPlane:
         logger.info("[%s] Starting dual-plane execution", shadow_id)
 
         # Phase 1: Check activation
-        should_activate, activation_reason = self.should_activate_shadow(
-            context,
-            activation_predicates
-        )
+        should_activate, activation_reason = self.should_activate_shadow(context, activation_predicates)
 
         # If no activation, run primary only
         if not should_activate:
@@ -303,10 +288,7 @@ class ShadowExecutionPlane:
 
         try:
             # Execute shadow with resource limits
-            shadow_result = self._execute_shadow_with_limits(
-                shadow_callable,
-                shadow_ctx
-            )
+            shadow_result = self._execute_shadow_with_limits(shadow_callable, shadow_ctx)
 
             shadow_duration = (time.time() - shadow_start) * 1000
             shadow_ctx.duration_ms = shadow_duration
@@ -353,12 +335,7 @@ class ShadowExecutionPlane:
                 self.telemetry.record_invariant_check(is_valid)
 
                 if not is_valid:
-                    logger.warning(
-                        "[%s] Invariant violated: %s - %s",
-                        shadow_id,
-                        invariant.name,
-                        reason
-                    )
+                    logger.warning("[%s] Invariant violated: %s - %s", shadow_id, invariant.name, reason)
                     invariants_violated.append(invariant.name)
 
                     if invariant.is_critical:
@@ -366,9 +343,7 @@ class ShadowExecutionPlane:
 
         # Phase 6: Check divergence
         divergence_detected, divergence_magnitude = self._check_divergence(
-            primary_result,
-            shadow_result,
-            divergence_policy
+            primary_result, shadow_result, divergence_policy
         )
 
         if divergence_detected:
@@ -379,10 +354,7 @@ class ShadowExecutionPlane:
 
         # Phase 7: Determine commit/quarantine decision
         should_commit, should_quarantine, quarantine_reason = self._determine_commit_decision(
-            invariants_passed,
-            divergence_detected,
-            divergence_policy,
-            invariants_violated
+            invariants_passed, divergence_detected, divergence_policy, invariants_violated
         )
 
         # Phase 8: Seal audit trail
@@ -411,10 +383,7 @@ class ShadowExecutionPlane:
         )
 
         logger.info(
-            "[%s] Dual-plane execution complete: commit=%s, quarantine=%s",
-            shadow_id,
-            should_commit,
-            should_quarantine
+            "[%s] Dual-plane execution complete: commit=%s, quarantine=%s", shadow_id, should_commit, should_quarantine
         )
 
         return result
@@ -463,20 +432,13 @@ class ShadowExecutionPlane:
         start_time = time.time()
 
         try:
-            result = self._execute_shadow_with_limits(
-                simulation_callable,
-                shadow_ctx
-            )
+            result = self._execute_shadow_with_limits(simulation_callable, shadow_ctx)
 
             shadow_ctx.duration_ms = (time.time() - start_time) * 1000
             shadow_ctx.status = ShadowStatus.COMPLETED
             shadow_ctx.result = result
 
-            logger.info(
-                "[%s] Simulation completed in %.2fms",
-                shadow_id,
-                shadow_ctx.duration_ms
-            )
+            logger.info("[%s] Simulation completed in %.2fms", shadow_id, shadow_ctx.duration_ms)
 
         except Exception as e:
             logger.error("[%s] Simulation failed: %s", shadow_id, e)
@@ -510,11 +472,7 @@ class ShadowExecutionPlane:
             duration_ms=shadow_ctx.duration_ms,
         )
 
-    def _execute_shadow_with_limits(
-        self,
-        callable_obj: Callable,
-        shadow_ctx: ShadowContext
-    ) -> Any:
+    def _execute_shadow_with_limits(self, callable_obj: Callable, shadow_ctx: ShadowContext) -> Any:
         """
         Execute shadow callable with resource limits.
 
@@ -575,10 +533,7 @@ class ShadowExecutionPlane:
             raise
 
     def _check_divergence(
-        self,
-        primary_result: Any,
-        shadow_result: Any,
-        policy: DivergencePolicy
+        self, primary_result: Any, shadow_result: Any, policy: DivergencePolicy
     ) -> tuple[bool, float]:
         """
         Check for divergence between primary and shadow results.
@@ -622,7 +577,7 @@ class ShadowExecutionPlane:
         invariants_passed: bool,
         divergence_detected: bool,
         divergence_policy: DivergencePolicy,
-        invariants_violated: list[str]
+        invariants_violated: list[str],
     ) -> tuple[bool, bool, str | None]:
         """
         Determine commit/quarantine decision.
@@ -654,12 +609,7 @@ class ShadowExecutionPlane:
         # Default: commit
         return True, False, None
 
-    def _build_failed_result(
-        self,
-        shadow_ctx: ShadowContext,
-        primary_result: Any,
-        shadow_result: Any
-    ) -> ShadowResult:
+    def _build_failed_result(self, shadow_ctx: ShadowContext, primary_result: Any, shadow_result: Any) -> ShadowResult:
         """Build a failed ShadowResult."""
         audit_hash = shadow_ctx.seal_audit_trail()
         self.shadow_history.append(shadow_ctx)
@@ -699,18 +649,20 @@ class ShadowExecutionPlane:
         """
         history = []
         for ctx in self.shadow_history[-limit:]:
-            history.append({
-                "shadow_id": ctx.shadow_id,
-                "trace_id": ctx.trace_id,
-                "timestamp": ctx.timestamp.isoformat(),
-                "mode": ctx.mode.value,
-                "activation_reason": ctx.activation_reason.value,
-                "status": ctx.status.value,
-                "divergence_detected": ctx.divergence_detected,
-                "divergence_magnitude": ctx.divergence_magnitude,
-                "duration_ms": ctx.duration_ms,
-                "audit_hash": ctx.audit_hash,
-            })
+            history.append(
+                {
+                    "shadow_id": ctx.shadow_id,
+                    "trace_id": ctx.trace_id,
+                    "timestamp": ctx.timestamp.isoformat(),
+                    "mode": ctx.mode.value,
+                    "activation_reason": ctx.activation_reason.value,
+                    "status": ctx.status.value,
+                    "divergence_detected": ctx.divergence_detected,
+                    "divergence_magnitude": ctx.divergence_magnitude,
+                    "duration_ms": ctx.duration_ms,
+                    "audit_hash": ctx.audit_hash,
+                }
+            )
         return history
 
 

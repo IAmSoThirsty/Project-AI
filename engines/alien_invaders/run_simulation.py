@@ -68,9 +68,7 @@ def run_simulation(
         total_days = duration_years * 365
         total_ticks = total_days // config.world.time_step_days
 
-        logger.info(
-            "Starting simulation: %d ticks over %d years", total_ticks, duration_years
-        )
+        logger.info("Starting simulation: %d ticks over %d years", total_ticks, duration_years)
 
         # Run simulation
         for tick_num in range(total_ticks):
@@ -121,9 +119,7 @@ def run_simulation(
         logger.info("Final Population: %d", final_state["global"]["population"])
         logger.info("Total Casualties: %d", final_state["global"]["casualties"])
         logger.info("Average Morale: %.2f", final_state["global"]["average_morale"])
-        logger.info(
-            "Alien Control: %.1f%%", final_state["aliens"]["control_percentage"]
-        )
+        logger.info("Alien Control: %.1f%%", final_state["aliens"]["control_percentage"])
         logger.info("AI Operational: %s", final_state["ai"]["operational"])
         logger.info("Total Events: %d", final_state["num_events"])
         logger.info("=" * 80)
@@ -139,9 +135,7 @@ def run_simulation(
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Alien Invaders Contingency Plan Defense Engine - Simulation Runner"
-    )
+    parser = argparse.ArgumentParser(description="Alien Invaders Contingency Plan Defense Engine - Simulation Runner")
 
     parser.add_argument(
         "--scenario",

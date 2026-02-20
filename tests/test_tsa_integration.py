@@ -119,7 +119,7 @@ class TestTSAProvider:
             fallback_urls=[
                 "http://timestamp.digicert.com",  # Fallback
                 "https://freetsa.org/tsr",  # Second fallback
-            ]
+            ],
         )
 
         test_data = b"FALLBACK_TEST"
@@ -355,9 +355,7 @@ class TestSovereignAuditLogTSAIntegration:
                     assert anchor_count >= 1, "TSA anchor should have been created"
 
                     # Verify anchor chain
-                    is_valid, msg = audit.tsa_anchor_manager.verify_chain(
-                        audit.genesis_keypair.public_key
-                    )
+                    is_valid, msg = audit.tsa_anchor_manager.verify_chain(audit.genesis_keypair.public_key)
                     assert is_valid, f"TSA anchor chain verification failed: {msg}"
 
             except Exception as e:
@@ -421,10 +419,7 @@ class TestConcurrentLoggingWithTSA:
                 """Worker thread that logs events."""
                 try:
                     for i in range(count):
-                        audit.log_event(
-                            f"concurrent_test_worker{worker_id}_event{i}",
-                            {"worker": worker_id, "seq": i}
-                        )
+                        audit.log_event(f"concurrent_test_worker{worker_id}_event{i}", {"worker": worker_id, "seq": i})
                 except Exception as e:
                     errors.append(f"Worker {worker_id} error: {e}")
 

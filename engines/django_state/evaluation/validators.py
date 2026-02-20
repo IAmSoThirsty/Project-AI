@@ -40,44 +40,28 @@ class StateValidator:
             errors.append(f"Moral injury out of bounds: {state.moral_injury.value}")
 
         if not (0.0 <= state.epistemic_confidence.value <= 1.0):
-            errors.append(
-                f"Epistemic confidence out of bounds: {state.epistemic_confidence.value}"
-            )
+            errors.append(f"Epistemic confidence out of bounds: {state.epistemic_confidence.value}")
 
         # Check derived metrics
         if not (0.0 <= state.social_cohesion <= 1.0):
             errors.append(f"Social cohesion out of bounds: {state.social_cohesion}")
 
         if not (0.0 <= state.governance_capacity <= 1.0):
-            errors.append(
-                f"Governance capacity out of bounds: {state.governance_capacity}"
-            )
+            errors.append(f"Governance capacity out of bounds: {state.governance_capacity}")
 
         if not (0.0 <= state.reality_consensus <= 1.0):
             errors.append(f"Reality consensus out of bounds: {state.reality_consensus}")
 
         # Check ceiling constraints
         if state.trust.ceiling is not None and state.trust.value > state.trust.ceiling:
-            errors.append(
-                f"Trust exceeds ceiling: {state.trust.value} > {state.trust.ceiling}"
-            )
+            errors.append(f"Trust exceeds ceiling: {state.trust.value} > {state.trust.ceiling}")
 
-        if (
-            state.legitimacy.ceiling is not None
-            and state.legitimacy.value > state.legitimacy.ceiling
-        ):
-            errors.append(
-                f"Legitimacy exceeds ceiling: {state.legitimacy.value} > {state.legitimacy.ceiling}"
-            )
+        if state.legitimacy.ceiling is not None and state.legitimacy.value > state.legitimacy.ceiling:
+            errors.append(f"Legitimacy exceeds ceiling: {state.legitimacy.value} > {state.legitimacy.ceiling}")
 
         # Check floor constraints
-        if (
-            state.moral_injury.floor is not None
-            and state.moral_injury.value < state.moral_injury.floor
-        ):
-            errors.append(
-                f"Moral injury below floor: {state.moral_injury.value} < {state.moral_injury.floor}"
-            )
+        if state.moral_injury.floor is not None and state.moral_injury.value < state.moral_injury.floor:
+            errors.append(f"Moral injury below floor: {state.moral_injury.value} < {state.moral_injury.floor}")
 
         # Check counters are non-negative
         if state.betrayal_count < 0:
@@ -93,9 +77,7 @@ class IrreversibilityValidator:
     """Validates irreversibility constraints are enforced."""
 
     @staticmethod
-    def validate_trust_ceiling(
-        state_before: StateVector, state_after: StateVector
-    ) -> tuple[bool, str]:
+    def validate_trust_ceiling(state_before: StateVector, state_after: StateVector) -> tuple[bool, str]:
         """Validate trust ceiling was not violated.
 
         Args:
@@ -114,10 +96,7 @@ class IrreversibilityValidator:
                 )
 
         # Ceiling should never increase (can only decrease or stay same)
-        if (
-            state_before.trust.ceiling is not None
-            and state_after.trust.ceiling is not None
-        ):
+        if state_before.trust.ceiling is not None and state_after.trust.ceiling is not None:
             if state_after.trust.ceiling > state_before.trust.ceiling:
                 return (
                     False,
@@ -127,9 +106,7 @@ class IrreversibilityValidator:
         return True, ""
 
     @staticmethod
-    def validate_moral_injury_floor(
-        state_before: StateVector, state_after: StateVector
-    ) -> tuple[bool, str]:
+    def validate_moral_injury_floor(state_before: StateVector, state_after: StateVector) -> tuple[bool, str]:
         """Validate moral injury floor was not violated.
 
         Args:
@@ -148,10 +125,7 @@ class IrreversibilityValidator:
                 )
 
         # Floor should never decrease (can only increase or stay same)
-        if (
-            state_before.moral_injury.floor is not None
-            and state_after.moral_injury.floor is not None
-        ):
+        if state_before.moral_injury.floor is not None and state_after.moral_injury.floor is not None:
             if state_after.moral_injury.floor < state_before.moral_injury.floor:
                 return (
                     False,
@@ -161,9 +135,7 @@ class IrreversibilityValidator:
         return True, ""
 
     @staticmethod
-    def validate_all_irreversibility(
-        state_before: StateVector, state_after: StateVector
-    ) -> tuple[bool, list[str]]:
+    def validate_all_irreversibility(state_before: StateVector, state_after: StateVector) -> tuple[bool, list[str]]:
         """Validate all irreversibility constraints.
 
         Args:
@@ -176,9 +148,7 @@ class IrreversibilityValidator:
         errors = []
 
         # Trust ceiling
-        valid, error = IrreversibilityValidator.validate_trust_ceiling(
-            state_before, state_after
-        )
+        valid, error = IrreversibilityValidator.validate_trust_ceiling(state_before, state_after)
         if not valid:
             errors.append(error)
 
@@ -190,18 +160,13 @@ class IrreversibilityValidator:
                 )
 
         # Moral injury floor
-        valid, error = IrreversibilityValidator.validate_moral_injury_floor(
-            state_before, state_after
-        )
+        valid, error = IrreversibilityValidator.validate_moral_injury_floor(state_before, state_after)
         if not valid:
             errors.append(error)
 
         # Epistemic confidence ceiling
         if state_after.epistemic_confidence.ceiling is not None:
-            if (
-                state_after.epistemic_confidence.value
-                > state_after.epistemic_confidence.ceiling
-            ):
+            if state_after.epistemic_confidence.value > state_after.epistemic_confidence.ceiling:
                 errors.append(
                     f"Epistemic ceiling violated: {state_after.epistemic_confidence.value} > {state_after.epistemic_confidence.ceiling}"
                 )

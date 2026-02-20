@@ -26,9 +26,7 @@ def test_device_id_generation(sync_manager, tmp_path):
     assert isinstance(device_id1, str)
 
     # Device ID should be consistent for the same machine
-    manager2 = CloudSyncManager(
-        encryption_key=sync_manager.encryption_key, data_dir=str(tmp_path)
-    )
+    manager2 = CloudSyncManager(encryption_key=sync_manager.encryption_key, data_dir=str(tmp_path))
     assert manager2.device_id == device_id1
 
 

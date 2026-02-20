@@ -177,9 +177,7 @@ class InstitutionalFailureEvent(Event):
 class ManipulationEvent(Event):
     """Event representing information manipulation or epistemic attack."""
 
-    manipulation_type: str = (
-        "misinformation"  # misinformation, disinformation, gaslighting
-    )
+    manipulation_type: str = "misinformation"  # misinformation, disinformation, gaslighting
     reach: float = 0.5  # Fraction of population affected
     sophistication: float = 0.5  # How hard to detect
 

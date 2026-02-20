@@ -272,9 +272,7 @@ class ClickHouseClient:
 
         return self.execute(query)
 
-    def get_top_components_by_events(
-        self, limit: int = 10, hours: int = 24
-    ) -> list[tuple]:
+    def get_top_components_by_events(self, limit: int = 10, hours: int = 24) -> list[tuple]:
         """Get components with most events in last N hours.
 
         Args:
@@ -319,9 +317,7 @@ class ProjectAIAnalytics:
             clickhouse_host: ClickHouse host
             clickhouse_port: ClickHouse port
         """
-        self.client = ClickHouseClient(
-            host=clickhouse_host, port=clickhouse_port, database="project_ai"
-        )
+        self.client = ClickHouseClient(host=clickhouse_host, port=clickhouse_port, database="project_ai")
 
         # Create database if not exists
         self.client.execute("CREATE DATABASE IF NOT EXISTS project_ai")
@@ -426,9 +422,7 @@ class ProjectAIAnalytics:
         self.client.close()
 
 
-def create_clickhouse_client(
-    host: str = "localhost", port: int = 9000, database: str = "default"
-) -> ClickHouseClient:
+def create_clickhouse_client(host: str = "localhost", port: int = 9000, database: str = "default") -> ClickHouseClient:
     """Create ClickHouse client for Project-AI.
 
     Args:

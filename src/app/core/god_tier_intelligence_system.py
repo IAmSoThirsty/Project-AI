@@ -137,9 +137,7 @@ class CircuitBreaker:
 
             if self.failure_count >= self.failure_threshold:
                 self.state = "OPEN"
-                logger.error(
-                    "Circuit breaker OPENED after %s failures", self.failure_count
-                )
+                logger.error("Circuit breaker OPENED after %s failures", self.failure_count)
 
 
 class SelfHealingSystem:
@@ -320,11 +318,7 @@ class LoadBalancer:
                 else 0.0
             ),
             "total_processing_time": self.total_processing_time,
-            "avg_task_time": (
-                self.total_processing_time / self.completed_tasks
-                if self.completed_tasks > 0
-                else 0.0
-            ),
+            "avg_task_time": (self.total_processing_time / self.completed_tasks if self.completed_tasks > 0 else 0.0),
         }
 
 
@@ -471,9 +465,7 @@ class IntelligentCache:
         self.hits = 0
         self.misses = 0
 
-        logger.info(
-            "IntelligentCache initialized (max_size=%s, ttl=%ss)", max_size, default_ttl
-        )
+        logger.info("IntelligentCache initialized (max_size=%s, ttl=%ss)", max_size, default_ttl)
 
     def get(self, key: str) -> Any | None:
         """Get value from cache.
@@ -685,9 +677,7 @@ class ResourceMonitor:
             "cpu_percent": cpu,
             "cpu_status": "high" if cpu > self.cpu_threshold else "normal",
             "memory_percent": memory.percent,
-            "memory_status": (
-                "high" if memory.percent > self.memory_threshold else "normal"
-            ),
+            "memory_status": ("high" if memory.percent > self.memory_threshold else "normal"),
             "memory_available_gb": memory.available / (1024**3),
             "disk_percent": disk.percent,
             "disk_free_gb": disk.free / (1024**3),
@@ -753,9 +743,7 @@ class GodTierIntelligenceSystem:
         # Start resource monitoring
         self.resource_monitor.start_monitoring()
 
-        logger.info(
-            "GodTierIntelligenceSystem initialized with all enterprise features"
-        )
+        logger.info("GodTierIntelligenceSystem initialized with all enterprise features")
 
     def get_comprehensive_status(self) -> dict[str, Any]:
         """Get comprehensive system status.

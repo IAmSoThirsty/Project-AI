@@ -203,18 +203,12 @@ class StateMachineAnalyzer:
                 to_state=to_state,
                 transition_path=[from_state, to_state],
                 violated_invariants=to_state_obj.invariants,
-                exploitation_potential=(
-                    ThreatLevel.HIGH
-                    if not to_state_obj.is_legal
-                    else ThreatLevel.MEDIUM
-                ),
+                exploitation_potential=(ThreatLevel.HIGH if not to_state_obj.is_legal else ThreatLevel.MEDIUM),
                 timestamp=datetime.now().isoformat(),
             )
 
             self.illegal_transitions.append(transition)
-            logger.critical(
-                "ILLEGAL STATE TRANSITION: %s %s -> %s", component, from_state, to_state
-            )
+            logger.critical("ILLEGAL STATE TRANSITION: %s %s -> %s", component, from_state, to_state)
             return False, f"Illegal transition: {from_state} -> {to_state}"
 
         self.current_states[component] = to_state
@@ -223,15 +217,11 @@ class StateMachineAnalyzer:
     def find_illegal_reachable_states(self) -> list[SystemState]:
         """Find states that are illegal but potentially reachable."""
         illegal_reachable = [
-            state
-            for state in self.states.values()
-            if not state.is_legal and len(state.reachable_from) > 0
+            state for state in self.states.values() if not state.is_legal and len(state.reachable_from) > 0
         ]
 
         if illegal_reachable:
-            logger.critical(
-                "Found %s illegal but reachable states", len(illegal_reachable)
-            )
+            logger.critical("Found %s illegal but reachable states", len(illegal_reachable))
 
         return illegal_reachable
 
@@ -274,9 +264,7 @@ class TemporalSecurityAnalyzer:
         timestamp = time.time()
         self.timeline_snapshots[component].append((timestamp, {"event": event, **data}))
 
-    def detect_race_condition(
-        self, component: str, window_ms: float = 100.0
-    ) -> TemporalViolation | None:
+    def detect_race_condition(self, component: str, window_ms: float = 100.0) -> TemporalViolation | None:
         """Detect potential race conditions in event timeline."""
         if component not in self.timeline_snapshots:
             return None
@@ -286,11 +274,7 @@ class TemporalSecurityAnalyzer:
             return None
 
         recent = snapshots[-10:]
-        state_mutations = [
-            (ts, event)
-            for ts, event in recent
-            if event.get("event", "").startswith("mutate_")
-        ]
+        state_mutations = [(ts, event) for ts, event in recent if event.get("event", "").startswith("mutate_")]
 
         if len(state_mutations) < 2:
             return None
@@ -311,9 +295,7 @@ class TemporalSecurityAnalyzer:
                 )
 
                 self.violations.append(violation)
-                logger.critical(
-                    "RACE CONDITION DETECTED: %s (delta=%sms)", component, time_delta
-                )
+                logger.critical("RACE CONDITION DETECTED: %s (delta=%sms)", component, time_delta)
                 return violation
 
         return None
@@ -385,17 +367,13 @@ class InvertedKillChainEngine:
             try:
                 if precond.check_function(context):
                     met_preconditions.append(precond_id)
-                    logger.warning(
-                        "PRECONDITION MET: %s - %s", precond_id, precond.description
-                    )
+                    logger.warning("PRECONDITION MET: %s - %s", precond_id, precond.description)
             except Exception as e:
                 logger.error("Error checking precondition %s: %s", precond_id, e)
 
         return met_preconditions
 
-    def predict_attacks(
-        self, met_preconditions: list[str], context: dict[str, Any]
-    ) -> list[PredictedAttack]:
+    def predict_attacks(self, met_preconditions: list[str], context: dict[str, Any]) -> list[PredictedAttack]:
         """PHASE 2: PREDICT - Predict what attacks are now possible."""
         possible_attacks: dict[str, list[str]] = defaultdict(list)
 
@@ -420,9 +398,7 @@ class InvertedKillChainEngine:
 
             predictions.append(prediction)
             self.predictions.append(prediction)
-            logger.warning(
-                "ATTACK PREDICTED: %s (confidence=%s)", attack_type, confidence
-            )
+            logger.warning("ATTACK PREDICTED: %s (confidence=%s)", attack_type, confidence)
 
         return predictions
 
@@ -479,10 +455,7 @@ class EntropicArchitecture:
             "status": ["state", "status_code", "current_status"],
         }
 
-        field_mappings = {
-            field: random.choice(alternatives.get(field, [field]))
-            for field in base_fields
-        }
+        field_mappings = {field: random.choice(alternatives.get(field, [field])) for field in base_fields}
 
         self.schema_version += 1
 
@@ -490,20 +463,14 @@ class EntropicArchitecture:
             observer_id=observer_id,
             field_mappings=field_mappings,
             created_at=datetime.now().isoformat(),
-            expires_at=(
-                datetime.now() + timedelta(seconds=self.rotation_interval)
-            ).isoformat(),
+            expires_at=(datetime.now() + timedelta(seconds=self.rotation_interval)).isoformat(),
             schema_version=self.schema_version,
         )
 
         self.observer_schemas[observer_id] = schema
-        logger.info(
-            "Created observer schema v%s for %s", self.schema_version, observer_id
-        )
+        logger.info("Created observer schema v%s for %s", self.schema_version, observer_id)
 
-    def transform_response(
-        self, data: dict[str, Any], observer_id: str
-    ) -> dict[str, Any]:
+    def transform_response(self, data: dict[str, Any], observer_id: str) -> dict[str, Any]:
         """Transform response based on observer-specific schema."""
         schema = self.get_observer_schema(observer_id)
         transformed = {}
@@ -597,9 +564,7 @@ class GodTierAsymmetricSecurity:
     Paradigm: SYSTEM-THEORETIC (not endpoint-focused)
     """
 
-    def __init__(
-        self, data_dir: str = "data/security/godtier", enable_all: bool = True
-    ):
+    def __init__(self, data_dir: str = "data/security/godtier", enable_all: bool = True):
         self.data_dir = Path(data_dir)
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
@@ -629,15 +594,11 @@ class GodTierAsymmetricSecurity:
         }
 
         # Thread pool for async operations
-        self.executor = ThreadPoolExecutor(
-            max_workers=4, thread_name_prefix="asymmetric_sec"
-        )
+        self.executor = ThreadPoolExecutor(max_workers=4, thread_name_prefix="asymmetric_sec")
 
         logger.info("God Tier Asymmetric Security initialized successfully")
 
-    def validate_action_comprehensive(
-        self, action: str, context: dict[str, Any], user_id: str
-    ) -> dict[str, Any]:
+    def validate_action_comprehensive(self, action: str, context: dict[str, Any], user_id: str) -> dict[str, Any]:
         """
         COMPREHENSIVE ACTION VALIDATION
 
@@ -717,13 +678,9 @@ class GodTierAsymmetricSecurity:
         # Layer 4: Inverted kill chain (predictive)
         met_preconditions = self.inverted_kill_chain.detect_preconditions(context)
         if met_preconditions:
-            predictions = self.inverted_kill_chain.predict_attacks(
-                met_preconditions, context
-            )
+            predictions = self.inverted_kill_chain.predict_attacks(met_preconditions, context)
             if predictions:
-                validation_result["actions_taken"].append(
-                    f"predicted_{len(predictions)}_attacks"
-                )
+                validation_result["actions_taken"].append(f"predicted_{len(predictions)}_attacks")
                 validation_result["threat_level"] = ThreatLevel.MEDIUM.value
 
         validation_result["layers_passed"].append("inverted_kill_chain")
@@ -734,9 +691,7 @@ class GodTierAsymmetricSecurity:
 
         return validation_result
 
-    def apply_entropic_transformation(
-        self, data: dict[str, Any], observer_id: str
-    ) -> dict[str, Any]:
+    def apply_entropic_transformation(self, data: dict[str, Any], observer_id: str) -> dict[str, Any]:
         """Apply observer-dependent schema transformation."""
         return self.entropic_architecture.transform_response(data, observer_id)
 
@@ -752,12 +707,8 @@ class GodTierAsymmetricSecurity:
                 "asymmetric_engine": self.asymmetric_engine.generate_comprehensive_report(),
                 "state_machine_analyzer": {
                     "states": len(self.state_machine_analyzer.states),
-                    "illegal_transitions": len(
-                        self.state_machine_analyzer.illegal_transitions
-                    ),
-                    "illegal_reachable_states": len(
-                        self.state_machine_analyzer.find_illegal_reachable_states()
-                    ),
+                    "illegal_transitions": len(self.state_machine_analyzer.illegal_transitions),
+                    "illegal_reachable_states": len(self.state_machine_analyzer.find_illegal_reachable_states()),
                 },
                 "temporal_analyzer": {
                     "violations": len(self.temporal_analyzer.violations),
@@ -768,9 +719,7 @@ class GodTierAsymmetricSecurity:
                 },
                 "entropic_architecture": {
                     "schema_version": self.entropic_architecture.schema_version,
-                    "observer_schemas": len(
-                        self.entropic_architecture.observer_schemas
-                    ),
+                    "observer_schemas": len(self.entropic_architecture.observer_schemas),
                 },
                 "rfi_calculator": {
                     "measurements": len(self.rfi_calculator.measurements),
@@ -809,9 +758,7 @@ if __name__ == "__main__":
         "mfa_enabled": True,
     }
 
-    result = god_tier.validate_action_comprehensive(
-        action="delete_user_data", context=test_context, user_id="user_123"
-    )
+    result = god_tier.validate_action_comprehensive(action="delete_user_data", context=test_context, user_id="user_123")
 
     print(json.dumps(result, indent=2))
 

@@ -19,9 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class KnowledgeCurator(KernelRoutedAgent):
-    def __init__(
-        self, data_dir: str = "data", kernel: CognitionKernel | None = None
-    ) -> None:
+    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
@@ -29,9 +27,7 @@ class KnowledgeCurator(KernelRoutedAgent):
             default_risk_level="low",
         )
         self.data_dir = data_dir
-        self.curated_path = os.path.join(
-            self.data_dir, "continuous_learning", "curated.json"
-        )
+        self.curated_path = os.path.join(self.data_dir, "continuous_learning", "curated.json")
         os.makedirs(os.path.dirname(self.curated_path), exist_ok=True)
         self.curated: list[dict[str, Any]] = []
         self._load()

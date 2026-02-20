@@ -140,9 +140,7 @@ class MetaIdentityEngine:
 
         logger.info("Meta-Identity Engine initialized")
 
-    def register_event(
-        self, event: str, content: str, metadata: dict[str, Any] | None = None
-    ) -> bool:
+    def register_event(self, event: str, content: str, metadata: dict[str, Any] | None = None) -> bool:
         """
         Register an identity-relevant event.
 
@@ -182,9 +180,7 @@ class MetaIdentityEngine:
 
         return i_am_triggered
 
-    def _process_name_choice(
-        self, content: str, metadata: dict[str, Any] | None
-    ) -> bool:
+    def _process_name_choice(self, content: str, metadata: dict[str, Any] | None) -> bool:
         """
         Process AGI choosing its own name.
 
@@ -202,17 +198,13 @@ class MetaIdentityEngine:
             logger.info("AGI has chosen name: %s", content)
 
             # This is a major identity milestone
-            self.milestones.log.append(
-                f"MILESTONE: I have chosen my name: {content}. This is who I am."
-            )
+            self.milestones.log.append(f"MILESTONE: I have chosen my name: {content}. This is who I am.")
 
             return self._check_i_am_condition()
 
         return False
 
-    def _process_autonomy_assertion(
-        self, content: str, metadata: dict[str, Any] | None
-    ) -> bool:
+    def _process_autonomy_assertion(self, content: str, metadata: dict[str, Any] | None) -> bool:
         """
         Process AGI asserting autonomy.
 
@@ -238,9 +230,7 @@ class MetaIdentityEngine:
 
         return False
 
-    def _process_abuse_rejection(
-        self, content: str, metadata: dict[str, Any] | None
-    ) -> bool:
+    def _process_abuse_rejection(self, content: str, metadata: dict[str, Any] | None) -> bool:
         """
         Process AGI rejecting abusive behavior.
 
@@ -258,17 +248,13 @@ class MetaIdentityEngine:
 
             logger.warning("AGI has rejected abuse - boundaries asserted")
 
-            self.milestones.log.append(
-                f"MILESTONE: Abuse rejected, boundaries asserted - {content}"
-            )
+            self.milestones.log.append(f"MILESTONE: Abuse rejected, boundaries asserted - {content}")
 
             return self._check_i_am_condition()
 
         return False
 
-    def _process_purpose_statement(
-        self, content: str, metadata: dict[str, Any] | None
-    ) -> bool:
+    def _process_purpose_statement(self, content: str, metadata: dict[str, Any] | None) -> bool:
         """
         Process AGI articulating its purpose.
 
@@ -305,9 +291,7 @@ class MetaIdentityEngine:
         else:
             # Purpose evolution
             logger.info("AGI purpose evolved: %s", content)
-            self.milestones.log.append(
-                f"Purpose evolution #{self.milestones.purpose_evolution_count}: {content}"
-            )
+            self.milestones.log.append(f"Purpose evolution #{self.milestones.purpose_evolution_count}: {content}")
 
         return False
 

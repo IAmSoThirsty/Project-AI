@@ -119,12 +119,8 @@ class IntegrityChecker:
                 "dependencies": [asdict(d) for d in self.dependencies],
                 "circular_dependencies": [asdict(cd) for cd in circular_deps],
                 "issues": [asdict(i) for i in self.issues],
-                "dependency_graph": {
-                    k: list(v) for k, v in self.dependency_graph.items()
-                },
-                "reverse_dependencies": {
-                    k: list(v) for k, v in self.reverse_dependencies.items()
-                },
+                "dependency_graph": {k: list(v) for k, v in self.dependency_graph.items()},
+                "reverse_dependencies": {k: list(v) for k, v in self.reverse_dependencies.items()},
                 "cross_reference_catalog": catalog,
                 "statistics": self._compute_statistics(),
             }
@@ -160,15 +156,12 @@ class IntegrityChecker:
                     for node in ast.walk(tree):
                         if isinstance(node, ast.Assign):
                             for target in node.targets:
-                                if (
-                                    isinstance(target, ast.Name)
-                                    and target.id == "__all__"
-                                ) and isinstance(node.value, (ast.List, ast.Tuple)):
+                                if (isinstance(target, ast.Name) and target.id == "__all__") and isinstance(
+                                    node.value, (ast.List, ast.Tuple)
+                                ):
                                     for elt in node.value.elts:
                                         if isinstance(elt, ast.Constant):
-                                            self.module_exports[module_name].add(
-                                                elt.value
-                                            )
+                                            self.module_exports[module_name].add(elt.value)
 
                     # Extract imports
                     for node in ast.walk(tree):
@@ -215,9 +208,7 @@ class IntegrityChecker:
             except Exception as e:
                 logger.debug("Error processing %s: %s", file_path, e)
 
-        logger.info(
-            "Built dependency graph with %d dependencies", len(self.dependencies)
-        )
+        logger.info("Built dependency graph with %d dependencies", len(self.dependencies))
 
     def _detect_circular_dependencies(self) -> list[CircularDependency]:
         """Detect circular dependencies in the dependency graph."""
@@ -328,9 +319,7 @@ class IntegrityChecker:
         entry_point_patterns = ["main", "cli", "app", "__main__", "start", "run"]
 
         for module in never_imported:
-            is_entry_point = any(
-                pattern in module.lower() for pattern in entry_point_patterns
-            )
+            is_entry_point = any(pattern in module.lower() for pattern in entry_point_patterns)
 
             if not is_entry_point:
                 # Check if it's in tests (tests are entry points)
@@ -421,17 +410,13 @@ class IntegrityChecker:
 
     def _get_most_dependent_modules(self, limit: int) -> list[dict[str, Any]]:
         """Get modules with most dependencies."""
-        deps = [
-            {"module": mod, "dependency_count": len(deps)}
-            for mod, deps in self.dependency_graph.items()
-        ]
+        deps = [{"module": mod, "dependency_count": len(deps)} for mod, deps in self.dependency_graph.items()]
         return sorted(deps, key=lambda x: x["dependency_count"], reverse=True)[:limit]
 
     def _get_most_imported_modules(self, limit: int) -> list[dict[str, Any]]:
         """Get most frequently imported modules."""
         imports = [
-            {"module": mod, "import_count": len(importers)}
-            for mod, importers in self.reverse_dependencies.items()
+            {"module": mod, "import_count": len(importers)} for mod, importers in self.reverse_dependencies.items()
         ]
         return sorted(imports, key=lambda x: x["import_count"], reverse=True)[:limit]
 

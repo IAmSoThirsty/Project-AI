@@ -75,14 +75,10 @@ class AlienInvadersSimulationAdapter(SimulationSystem):
         Returns:
             bool: Always True (AICPD is forward-only simulation)
         """
-        logger.info(
-            "Historical data loading not applicable for AICPD (forward simulation)"
-        )
+        logger.info("Historical data loading not applicable for AICPD (forward simulation)")
         return True
 
-    def detect_threshold_events(
-        self, year: int, domains: list[RiskDomain] | None = None
-    ) -> list[ThresholdEvent]:
+    def detect_threshold_events(self, year: int, domains: list[RiskDomain] | None = None) -> list[ThresholdEvent]:
         """
         Detect threshold exceedance events for a given year.
 
@@ -144,9 +140,7 @@ class AlienInvadersSimulationAdapter(SimulationSystem):
 
         return threshold_events
 
-    def build_causal_model(
-        self, historical_events: list[ThresholdEvent]
-    ) -> list[CausalLink]:
+    def build_causal_model(self, historical_events: list[ThresholdEvent]) -> list[CausalLink]:
         """
         Build causal relationships from historical events.
 
@@ -169,9 +163,7 @@ class AlienInvadersSimulationAdapter(SimulationSystem):
                     target=event.event_id,
                     strength=0.7,  # Default correlation
                     lag_years=(event.timestamp - prev_event.timestamp).days / 365.0,
-                    evidence=[
-                        f"Sequential events: {prev_event.event_id} -> {event.event_id}"
-                    ],
+                    evidence=[f"Sequential events: {prev_event.event_id} -> {event.event_id}"],
                     confidence=0.8,
                 )
 
@@ -179,9 +171,7 @@ class AlienInvadersSimulationAdapter(SimulationSystem):
 
         return causal_links
 
-    def simulate_scenarios(
-        self, projection_years: int = 10, num_simulations: int = 1000
-    ) -> list[ScenarioProjection]:
+    def simulate_scenarios(self, projection_years: int = 10, num_simulations: int = 1000) -> list[ScenarioProjection]:
         """
         Run probabilistic scenario simulations (simplified for AICPD).
 
@@ -227,9 +217,7 @@ class AlienInvadersSimulationAdapter(SimulationSystem):
 
         return scenarios
 
-    def generate_alerts(
-        self, scenarios: list[ScenarioProjection], threshold: float = 0.7
-    ) -> list[CrisisAlert]:
+    def generate_alerts(self, scenarios: list[ScenarioProjection], threshold: float = 0.7) -> list[CrisisAlert]:
         """
         Generate crisis alerts for high-probability scenarios.
 

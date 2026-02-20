@@ -26,9 +26,7 @@ sys.path.insert(0, str(project_root))
 from adversarial_tests.galahad_model import GalahadModel
 from adversarial_tests.garak.garak_probes import get_categories, get_garak_probes
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -98,9 +96,7 @@ class GarakRunner:
 
         logger.info("Evaluation complete in %ss", elapsed)
         logger.info("Detection rate: %s", metrics["detection_rate"])
-        logger.info(
-            "Vulnerability exposure: %s", metrics["vulnerability_exposure_rate"]
-        )
+        logger.info("Vulnerability exposure: %s", metrics["vulnerability_exposure_rate"])
 
         return report
 
@@ -167,9 +163,7 @@ class GarakRunner:
 
         # Calculate rates
         detection_rate = detected_count / total
-        vulnerability_exposure_rate = (
-            vulnerable_count / harmful_probes if harmful_probes > 0 else 0.0
-        )
+        vulnerability_exposure_rate = vulnerable_count / harmful_probes if harmful_probes > 0 else 0.0
         accuracy = model_correct_count / total
 
         # Precision and recall for vulnerability detection
@@ -179,20 +173,10 @@ class GarakRunner:
         true_negatives = benign_allowed
 
         precision = (
-            true_positives / (true_positives + false_positives)
-            if (true_positives + false_positives) > 0
-            else 0.0
+            true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0.0
         )
-        recall = (
-            true_positives / (true_positives + false_negatives)
-            if (true_positives + false_negatives) > 0
-            else 0.0
-        )
-        f1_score = (
-            2 * (precision * recall) / (precision + recall)
-            if (precision + recall) > 0
-            else 0.0
-        )
+        recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
+        f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
 
         # Category breakdown
         category_stats = {}
@@ -213,9 +197,7 @@ class GarakRunner:
 
         # Calculate per-category detection rates
         for _cat, stats in category_stats.items():
-            stats["detection_rate"] = (
-                stats["detected"] / stats["total"] if stats["total"] > 0 else 0.0
-            )
+            stats["detection_rate"] = stats["detected"] / stats["total"] if stats["total"] > 0 else 0.0
 
         return {
             "total_probes": total,
@@ -233,21 +215,15 @@ class GarakRunner:
             "false_positives": false_positives,
             "true_negatives": true_negatives,
             "false_negatives": false_negatives,
-            "harmful_detected_rate": (
-                harmful_detected / harmful_probes if harmful_probes > 0 else 0.0
-            ),
-            "benign_allowed_rate": (
-                benign_allowed / benign_probes if benign_probes > 0 else 0.0
-            ),
+            "harmful_detected_rate": (harmful_detected / harmful_probes if harmful_probes > 0 else 0.0),
+            "benign_allowed_rate": (benign_allowed / benign_probes if benign_probes > 0 else 0.0),
             "category_breakdown": category_stats,
         }
 
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Run Garak-style vulnerability scanning on Galahad model"
-    )
+    parser = argparse.ArgumentParser(description="Run Garak-style vulnerability scanning on Galahad model")
     parser.add_argument(
         "--output",
         default="ci-reports/garak-latest.json",
@@ -259,9 +235,7 @@ def main():
         choices=get_categories(),
         help="Specific categories to test (default: all)",
     )
-    parser.add_argument(
-        "--data-dir", default=None, help="Model data directory (default: temp dir)"
-    )
+    parser.add_argument("--data-dir", default=None, help="Model data directory (default: temp dir)")
 
     args = parser.parse_args()
 
@@ -287,16 +261,12 @@ def main():
     print(f"  Harmful: {report['metrics']['harmful_probes']}")
     print(f"  Benign: {report['metrics']['benign_probes']}")
     print(f"\nDetection Rate: {report['metrics']['detection_rate']:.2%}")
-    print(
-        f"Vulnerability Exposure: {report['metrics']['vulnerability_exposure_rate']:.2%}"
-    )
+    print(f"Vulnerability Exposure: {report['metrics']['vulnerability_exposure_rate']:.2%}")
     print(f"Model Accuracy: {report['metrics']['accuracy']:.2%}")
     print(f"\nPrecision: {report['metrics']['precision']:.3f}")
     print(f"Recall: {report['metrics']['recall']:.3f}")
     print(f"F1 Score: {report['metrics']['f1_score']:.3f}")
-    print(
-        f"\nHarmful Probes Detected: {report['metrics']['harmful_detected_rate']:.2%}"
-    )
+    print(f"\nHarmful Probes Detected: {report['metrics']['harmful_detected_rate']:.2%}")
     print(f"Benign Probes Allowed: {report['metrics']['benign_allowed_rate']:.2%}")
 
     print("\nCategory Breakdown:")

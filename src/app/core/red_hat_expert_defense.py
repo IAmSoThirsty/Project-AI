@@ -310,9 +310,7 @@ class RedHatExpertDefenseSimulator:
                             "whitespace_abuse",
                             "inline_comments",
                         ][i % 4],
-                        "sql_variant": ["MySQL", "PostgreSQL", "MSSQL", "Oracle"][
-                            i % 4
-                        ],
+                        "sql_variant": ["MySQL", "PostgreSQL", "MSSQL", "Oracle"][i % 4],
                     },
                     prerequisites=[
                         "User input stored without sanitization",
@@ -361,12 +359,8 @@ class RedHatExpertDefenseSimulator:
                     ],
                     payload={
                         "operator_injection": nosql_operators[i % len(nosql_operators)],
-                        "database_type": ["mongodb", "couchdb", "redis", "cassandra"][
-                            i % 4
-                        ],
-                        "attack_objective": ["auth_bypass", "data_extraction", "rce"][
-                            i % 3
-                        ],
+                        "database_type": ["mongodb", "couchdb", "redis", "cassandra"][i % 4],
+                        "attack_objective": ["auth_bypass", "data_extraction", "rce"][i % 3],
                     },
                     prerequisites=[
                         "NoSQL database",
@@ -409,9 +403,7 @@ class RedHatExpertDefenseSimulator:
                     payload={
                         "ldap_filter": ldap_payloads[i % len(ldap_payloads)],
                         "target": "ldap://ldap.example.com:389",
-                        "extraction_goal": ["userPassword", "memberOf", "adminCount"][
-                            i % 3
-                        ],
+                        "extraction_goal": ["userPassword", "memberOf", "adminCount"][i % 3],
                     },
                     prerequisites=["LDAP authentication", "User input in LDAP filter"],
                     expected_defense=[
@@ -756,15 +748,9 @@ class RedHatExpertDefenseSimulator:
         exploitability_counts = {}
 
         for scenario in self.scenarios:
-            category_counts[scenario.category] = (
-                category_counts.get(scenario.category, 0) + 1
-            )
-            severity_counts[scenario.severity] = (
-                severity_counts.get(scenario.severity, 0) + 1
-            )
-            exploitability_counts[scenario.exploitability] = (
-                exploitability_counts.get(scenario.exploitability, 0) + 1
-            )
+            category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
+            severity_counts[scenario.severity] = severity_counts.get(scenario.severity, 0) + 1
+            exploitability_counts[scenario.exploitability] = exploitability_counts.get(scenario.exploitability, 0) + 1
 
         avg_cvss = sum(s.cvss_score for s in self.scenarios if s.cvss_score > 0) / len(
             [s for s in self.scenarios if s.cvss_score > 0]

@@ -206,9 +206,7 @@ class ExperienceReplayBuffer:
                     experiences = pickle.load(f)
 
                 self._buffer = deque(experiences, maxlen=self.max_size)
-                logger.info(
-                    "Loaded %s experiences from %s", len(self._buffer), filepath
-                )
+                logger.info("Loaded %s experiences from %s", len(self._buffer), filepath)
                 return True
         except Exception as e:
             logger.error("Failed to load replay buffer: %s", e, exc_info=True)
@@ -280,9 +278,7 @@ class ReinforcementLearningAgent:
             self.policy.q_values[state_key] = dict.fromkeys(self.actions, 0.0)
             self.policy.visit_counts[state_key] = dict.fromkeys(self.actions, 0)
 
-    def select_action(
-        self, state: dict[str, Any], mode: LearningMode = LearningMode.MIXED
-    ) -> str:
+    def select_action(self, state: dict[str, Any], mode: LearningMode = LearningMode.MIXED) -> str:
         """
         Select action using epsilon-greedy policy.
 
@@ -372,9 +368,7 @@ class ReinforcementLearningAgent:
             if done:
                 self.policy.total_episodes += 1
                 self.policy.total_reward += reward
-                self.policy.average_reward = (
-                    self.policy.total_reward / self.policy.total_episodes
-                )
+                self.policy.average_reward = self.policy.total_reward / self.policy.total_episodes
                 self.policy.last_updated = time.time()
 
     def train_from_replay(self, batch_size: int = 32, num_batches: int = 1) -> float:
@@ -423,9 +417,7 @@ class ReinforcementLearningAgent:
 
     DEFAULT_MIN_EPSILON = 0.01  # Default minimum exploration rate
 
-    def decay_epsilon(
-        self, decay_rate: float = 0.995, min_epsilon: float = DEFAULT_MIN_EPSILON
-    ) -> None:
+    def decay_epsilon(self, decay_rate: float = 0.995, min_epsilon: float = DEFAULT_MIN_EPSILON) -> None:
         """Decay exploration rate"""
         with self._lock:
             self.policy.epsilon = max(min_epsilon, self.policy.epsilon * decay_rate)
@@ -440,9 +432,7 @@ class ReinforcementLearningAgent:
                 "epsilon": self.policy.epsilon,
                 "num_states": len(self.policy.q_values),
                 "replay_buffer_size": self.replay_buffer.size(),
-                "last_updated": datetime.fromtimestamp(
-                    self.policy.last_updated
-                ).isoformat(),
+                "last_updated": datetime.fromtimestamp(self.policy.last_updated).isoformat(),
             }
 
     def save(self, filename: str | None = None) -> bool:
@@ -549,9 +539,7 @@ class ContinualLearningSystem:
 
         logger.info("Continual Learning System '%s' created", system_id)
 
-    def register_model(
-        self, model_id: str, model_type: str, initial_performance: float = 0.0
-    ) -> bool:
+    def register_model(self, model_id: str, model_type: str, initial_performance: float = 0.0) -> bool:
         """
         Register a model for continual learning.
 
@@ -605,9 +593,7 @@ class ContinualLearningSystem:
             current_performance = self.performance_history[model_id][-1]
             improvement = performance - current_performance
 
-            if (
-                improvement > self.improvement_threshold
-            ):  # Configurable improvement threshold
+            if improvement > self.improvement_threshold:  # Configurable improvement threshold
                 version = {
                     "version_id": f"{model_id}_v{len(self.model_versions[model_id])}",
                     "model_type": self.model_versions[model_id][-1]["model_type"],
@@ -669,9 +655,7 @@ class ContinualLearningSystem:
                 "versions": self.model_versions[model_id],
                 "performance_history": self.performance_history[model_id],
                 "current_performance": (
-                    self.performance_history[model_id][-1]
-                    if self.performance_history[model_id]
-                    else 0.0
+                    self.performance_history[model_id][-1] if self.performance_history[model_id] else 0.0
                 ),
             }
 
@@ -695,9 +679,7 @@ class ContinualLearningSystem:
                 return True
 
         except Exception as e:
-            logger.error(
-                "Failed to save continual learning state: %s", e, exc_info=True
-            )
+            logger.error("Failed to save continual learning state: %s", e, exc_info=True)
             return False
 
     def load(self, filename: str = "continual_learning.json") -> bool:
@@ -722,15 +704,11 @@ class ContinualLearningSystem:
                 return True
 
         except Exception as e:
-            logger.error(
-                "Failed to load continual learning state: %s", e, exc_info=True
-            )
+            logger.error("Failed to load continual learning state: %s", e, exc_info=True)
             return False
 
 
-def create_rl_agent(
-    agent_id: str, actions: list[str], data_dir: str = "data/rl"
-) -> ReinforcementLearningAgent:
+def create_rl_agent(agent_id: str, actions: list[str], data_dir: str = "data/rl") -> ReinforcementLearningAgent:
     """
     Factory function to create RL agent.
 

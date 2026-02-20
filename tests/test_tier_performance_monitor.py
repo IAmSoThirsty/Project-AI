@@ -72,9 +72,7 @@ class TestTierPerformanceMonitor:
 
         # Failed request
         self.monitor.start_request_tracking("req_failure", component_id, tier)
-        latency_failure = self.monitor.end_request_tracking(
-            "req_failure", success=False
-        )
+        latency_failure = self.monitor.end_request_tracking("req_failure", success=False)
         assert latency_failure is not None
 
     def test_request_tracking_not_started(self):

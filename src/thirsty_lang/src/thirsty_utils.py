@@ -109,9 +109,7 @@ def check_version() -> str:
     Returns:
         Version string
     """
-    python_version = (
-        f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
-    )
+    python_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
     return f"Python {python_version} | Thirsty-lang 1.0.0"
 
 

@@ -210,9 +210,7 @@ class KernelInterface:
                             if "sys_call_table" in line:
                                 syscall_data.append(line.encode())
                 except PermissionError:
-                    self.logger.warning(
-                        "Insufficient permissions to read /proc/kallsyms"
-                    )
+                    self.logger.warning("Insufficient permissions to read /proc/kallsyms")
                     return None
 
                 if syscall_data:
@@ -273,9 +271,7 @@ class KernelInterface:
                         proc_pids.add(int(entry))
 
                 # Get PIDs from ps
-                result = subprocess.run(
-                    ["ps", "-eo", "pid"], capture_output=True, text=True, timeout=10
-                )
+                result = subprocess.run(["ps", "-eo", "pid"], capture_output=True, text=True, timeout=10)
                 ps_pids = set()
                 for line in result.stdout.strip().split("\n")[1:]:
                     if line.strip():
@@ -362,9 +358,7 @@ class CompromiseDetector:
             syscall_table_hash=self.kernel_interface.get_syscall_table_hash(),
             memory_regions=self.kernel_interface.scan_memory_regions(),
             process_list=(
-                {int(pid) for pid in os.listdir("/proc") if pid.isdigit()}
-                if os.path.exists("/proc")
-                else set()
+                {int(pid) for pid in os.listdir("/proc") if pid.isdigit()} if os.path.exists("/proc") else set()
             ),
             network_connections=[],
             loaded_libraries=set(),
@@ -380,9 +374,7 @@ class CompromiseDetector:
 
         try:
             current_modules = self.kernel_interface.get_loaded_kernel_modules()
-            suspicious_modules = self.kernel_interface.detect_suspicious_modules(
-                current_modules
-            )
+            suspicious_modules = self.kernel_interface.detect_suspicious_modules(current_modules)
 
             if suspicious_modules:
                 event = CompromiseEvent(
@@ -532,9 +524,7 @@ class CompromiseDetector:
                     evidence={"hidden_pids": hidden_pids},
                 )
 
-                self.logger.critical(
-                    "PROCESS INJECTION DETECTED: %s hidden processes", len(hidden_pids)
-                )
+                self.logger.critical("PROCESS INJECTION DETECTED: %s hidden processes", len(hidden_pids))
                 return event
 
         except Exception as e:
@@ -815,9 +805,7 @@ class InterfaceDisabler:
 
             if self._is_linux:
                 # Get all network interfaces
-                result = subprocess.run(
-                    ["ip", "link", "show"], capture_output=True, text=True, timeout=10
-                )
+                result = subprocess.run(["ip", "link", "show"], capture_output=True, text=True, timeout=10)
 
                 interfaces = []
                 for line in result.stdout.split("\n"):
@@ -831,9 +819,7 @@ class InterfaceDisabler:
                 # Disable each interface
                 for iface in interfaces:
                     try:
-                        subprocess.run(
-                            ["ip", "link", "set", iface, "down"], timeout=5, check=True
-                        )
+                        subprocess.run(["ip", "link", "set", iface, "down"], timeout=5, check=True)
                         self._disabled_interfaces.append(iface)
                         self.logger.info("Disabled network interface: %s", iface)
                     except Exception as e:
@@ -855,9 +841,7 @@ class InterfaceDisabler:
                 except Exception as e:
                     self.logger.error("Failed to disable Windows adapters: %s", e)
 
-            self.logger.info(
-                "Disabled %s network interfaces", len(self._disabled_interfaces)
-            )
+            self.logger.info("Disabled %s network interfaces", len(self._disabled_interfaces))
             return True
 
         except Exception as e:
@@ -884,9 +868,7 @@ class InterfaceDisabler:
                                     if ":" in device:
                                         with open(unbind_path, "w") as f:
                                             f.write(device)
-                                        self.logger.info(
-                                            "Unbound USB device: %s", device
-                                        )
+                                        self.logger.info("Unbound USB device: %s", device)
                             except Exception as e:
                                 self.logger.error("Failed to unbind %s: %s", driver, e)
 
@@ -933,9 +915,7 @@ class MemorySanitizer:
         self.logger = logging.getLogger(__name__)
         self._sanitized_regions: list[tuple[int, int]] = []
 
-    def sanitize_ram(
-        self, mode: SanitizationMode = SanitizationMode.THREE_PASS
-    ) -> bool:
+    def sanitize_ram(self, mode: SanitizationMode = SanitizationMode.THREE_PASS) -> bool:
         """
         Sanitize system RAM.
 
@@ -960,9 +940,7 @@ class MemorySanitizer:
             chunk_size = 1024 * 1024 * 100  # 100MB chunks
 
             for pass_num in range(num_passes):
-                self.logger.info(
-                    "RAM sanitization pass %s/%s", pass_num + 1, num_passes
-                )
+                self.logger.info("RAM sanitization pass %s/%s", pass_num + 1, num_passes)
 
                 try:
                     # Allocate memory
@@ -1009,9 +987,7 @@ class DiskSanitizer:
     def __init__(self):
         self.logger = logging.getLogger(__name__)
 
-    def sanitize_file(
-        self, file_path: str, mode: SanitizationMode = SanitizationMode.THREE_PASS
-    ) -> bool:
+    def sanitize_file(self, file_path: str, mode: SanitizationMode = SanitizationMode.THREE_PASS) -> bool:
         """
         Securely delete a file using multiple overwrite passes.
 
@@ -1049,9 +1025,7 @@ class DiskSanitizer:
                         bytes_written = 0
                         while bytes_written < file_size:
                             chunk = (
-                                data
-                                if bytes_written + len(data) <= file_size
-                                else data[: file_size - bytes_written]
+                                data if bytes_written + len(data) <= file_size else data[: file_size - bytes_written]
                             )
                             f.write(chunk)
                             bytes_written += len(chunk)
@@ -1078,9 +1052,7 @@ class DiskSanitizer:
             self.logger.error("Failed to sanitize file %s: %s", file_path, e)
             return False
 
-    def sanitize_directory(
-        self, directory: str, mode: SanitizationMode = SanitizationMode.THREE_PASS
-    ) -> bool:
+    def sanitize_directory(self, directory: str, mode: SanitizationMode = SanitizationMode.THREE_PASS) -> bool:
         """Securely delete all files in directory"""
         try:
             self.logger.warning("Sanitizing directory: %s", directory)
@@ -1210,9 +1182,7 @@ class DOSTrapMode:
 
             # Start monitoring thread
             self._stop_monitoring.clear()
-            self._monitor_thread = threading.Thread(
-                target=self._monitoring_loop, daemon=True, name="DOSTrapMonitor"
-            )
+            self._monitor_thread = threading.Thread(target=self._monitoring_loop, daemon=True, name="DOSTrapMonitor")
             self._monitor_thread.start()
 
     def disable(self):
@@ -1314,10 +1284,7 @@ class DOSTrapMode:
                 self.logger.critical("  Indicators: %s", event.indicators)
 
             # Auto-respond if configured
-            if (
-                self.config["auto_respond"]
-                and max_threat.value >= self.config["response_threshold"].value
-            ):
+            if self.config["auto_respond"] and max_threat.value >= self.config["response_threshold"].value:
                 self._execute_emergency_response(events)
 
             # Notify callbacks
@@ -1369,9 +1336,7 @@ class DOSTrapMode:
         try:
             if action == ResponseAction.TRIGGER_KILL_SWITCH:
                 if self.kill_switch:
-                    self.kill_switch.trigger(
-                        "DOS Trap Mode - Compromise Detected", "dos_trap"
-                    )
+                    self.kill_switch.trigger("DOS Trap Mode - Compromise Detected", "dos_trap")
                 else:
                     self.logger.error("Kill switch not available")
 
@@ -1387,9 +1352,7 @@ class DOSTrapMode:
 
             elif action == ResponseAction.SANITIZE_DISK:
                 if self.config["auto_sanitize"]:
-                    self.logger.critical(
-                        "Disk sanitization requested but requires manual approval"
-                    )
+                    self.logger.critical("Disk sanitization requested but requires manual approval")
 
             elif action == ResponseAction.SHUTDOWN:
                 if self.config["emergency_shutdown"]:
@@ -1412,9 +1375,7 @@ class DOSTrapMode:
                 if hasattr(self.hardware_root_of_trust, "hsm"):
                     hardware_interfaces.append(self.hardware_root_of_trust.hsm)
 
-                self.hardware_key_destroyer.destroy_all_hardware_keys(
-                    hardware_interfaces
-                )
+                self.hardware_key_destroyer.destroy_all_hardware_keys(hardware_interfaces)
 
             # Emergency memory wipe
             self.secret_wiper.emergency_wipe_all()

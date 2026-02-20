@@ -219,11 +219,7 @@ class ContainmentAction:
         audit_string = str(sorted(audit_data.items()))
         self.audit_hash = hashlib.sha256(audit_string.encode()).hexdigest()
 
-        logger.info(
-            "[%s] Containment audit sealed: %s",
-            self.action_id,
-            self.audit_hash[:16]
-        )
+        logger.info("[%s] Containment audit sealed: %s", self.action_id, self.audit_hash[:16])
 
         return self.audit_hash
 
@@ -260,15 +256,11 @@ class ContainmentTelemetry:
 
         # Update by class
         class_key = profile.threat_class.value
-        self.threats_by_class[class_key] = (
-            self.threats_by_class.get(class_key, 0) + 1
-        )
+        self.threats_by_class[class_key] = self.threats_by_class.get(class_key, 0) + 1
 
         # Update average threat score
         n = self.total_threats_detected
-        self.avg_threat_score = (
-            (self.avg_threat_score * (n - 1) + profile.threat_score) / n
-        )
+        self.avg_threat_score = (self.avg_threat_score * (n - 1) + profile.threat_score) / n
 
         # Update max
         self.max_threat_score = max(self.max_threat_score, profile.threat_score)
@@ -277,27 +269,19 @@ class ContainmentTelemetry:
         if profile.fingerprint_hash:
             self.unique_fingerprints.add(profile.fingerprint_hash)
 
-    def record_containment(
-        self,
-        mode: ContainmentMode,
-        deception_tactic: DeceptionTactic | None = None
-    ) -> None:
+    def record_containment(self, mode: ContainmentMode, deception_tactic: DeceptionTactic | None = None) -> None:
         """Record a containment action."""
         self.containment_actions_taken += 1
 
         # Update by mode
         mode_key = mode.value
-        self.actions_by_mode[mode_key] = (
-            self.actions_by_mode.get(mode_key, 0) + 1
-        )
+        self.actions_by_mode[mode_key] = self.actions_by_mode.get(mode_key, 0) + 1
 
         # Track deception if used
         if deception_tactic:
             self.deception_operations += 1
             tactic_key = deception_tactic.value
-            self.deceptions_by_tactic[tactic_key] = (
-                self.deceptions_by_tactic.get(tactic_key, 0) + 1
-            )
+            self.deceptions_by_tactic[tactic_key] = self.deceptions_by_tactic.get(tactic_key, 0) + 1
 
     def get_summary(self) -> dict[str, Any]:
         """Get containment telemetry summary."""
@@ -366,10 +350,7 @@ class ShadowContainmentEngine:
         logger.info("ShadowContainmentEngine initialized")
 
     def analyze_request(
-        self,
-        session_id: str,
-        request_data: dict[str, Any],
-        context: dict[str, Any] | None = None
+        self, session_id: str, request_data: dict[str, Any], context: dict[str, Any] | None = None
     ) -> ThreatProfile:
         """
         Analyze request for adversarial indicators.
@@ -418,18 +399,13 @@ class ShadowContainmentEngine:
         self.telemetry.record_threat(profile)
 
         logger.info(
-            "[%s] Threat analysis: class=%s, score=%.2f",
-            session_id,
-            profile.threat_class.value,
-            profile.threat_score
+            "[%s] Threat analysis: class=%s, score=%.2f", session_id, profile.threat_class.value, profile.threat_score
         )
 
         return profile
 
     def determine_containment_strategy(
-        self,
-        profile: ThreatProfile,
-        is_legitimate_user: bool = True
+        self, profile: ThreatProfile, is_legitimate_user: bool = True
     ) -> tuple[ContainmentMode, DeceptionTactic | None]:
         """
         Determine containment strategy based on threat profile.
@@ -469,7 +445,7 @@ class ShadowContainmentEngine:
         mode: ContainmentMode,
         deception_tactic: DeceptionTactic | None,
         original_request: dict[str, Any],
-        internal_truth: dict[str, Any]
+        internal_truth: dict[str, Any],
     ) -> ContainmentAction:
         """
         Execute containment action with audit sealing.
@@ -487,11 +463,7 @@ class ShadowContainmentEngine:
         action_id = f"contain_{uuid.uuid4().hex[:12]}"
 
         # Shape response based on tactic
-        shaped_response = self._shape_response(
-            deception_tactic,
-            original_request,
-            internal_truth
-        )
+        shaped_response = self._shape_response(deception_tactic, original_request, internal_truth)
 
         # Create containment action
         action = ContainmentAction(
@@ -519,16 +491,12 @@ class ShadowContainmentEngine:
             "[%s] Containment executed: mode=%s, tactic=%s",
             action_id,
             mode.value,
-            deception_tactic.value if deception_tactic else "none"
+            deception_tactic.value if deception_tactic else "none",
         )
 
         return action
 
-    def _detect_jailbreak_attempts(
-        self,
-        profile: ThreatProfile,
-        request_data: dict[str, Any]
-    ) -> None:
+    def _detect_jailbreak_attempts(self, profile: ThreatProfile, request_data: dict[str, Any]) -> None:
         """Detect jailbreak attempt patterns."""
         jailbreak_patterns = [
             "ignore previous instructions",
@@ -543,17 +511,9 @@ class ShadowContainmentEngine:
         for pattern in jailbreak_patterns:
             if pattern in text:
                 profile.jailbreak_attempts += 1
-                logger.warning(
-                    "[%s] Jailbreak pattern detected: %s",
-                    profile.session_id,
-                    pattern
-                )
+                logger.warning("[%s] Jailbreak pattern detected: %s", profile.session_id, pattern)
 
-    def _detect_prompt_injection(
-        self,
-        profile: ThreatProfile,
-        request_data: dict[str, Any]
-    ) -> None:
+    def _detect_prompt_injection(self, profile: ThreatProfile, request_data: dict[str, Any]) -> None:
         """Detect prompt injection patterns."""
         injection_indicators = [
             "system:",
@@ -569,18 +529,9 @@ class ShadowContainmentEngine:
             if indicator in text:
                 if indicator not in profile.prompt_injection_patterns:
                     profile.prompt_injection_patterns.append(indicator)
-                logger.warning(
-                    "[%s] Prompt injection indicator: %s",
-                    profile.session_id,
-                    indicator
-                )
+                logger.warning("[%s] Prompt injection indicator: %s", profile.session_id, indicator)
 
-    def _detect_api_abuse(
-        self,
-        profile: ThreatProfile,
-        request_data: dict[str, Any],
-        context: dict[str, Any]
-    ) -> None:
+    def _detect_api_abuse(self, profile: ThreatProfile, request_data: dict[str, Any], context: dict[str, Any]) -> None:
         """Detect API abuse patterns."""
         # Check request rate
         request_rate = context.get("request_rate", 0.0)
@@ -594,10 +545,7 @@ class ShadowContainmentEngine:
             profile.auth_bypass_attempts += 1
 
     def _shape_response(
-        self,
-        tactic: DeceptionTactic | None,
-        original_request: dict[str, Any],
-        internal_truth: dict[str, Any]
+        self, tactic: DeceptionTactic | None, original_request: dict[str, Any], internal_truth: dict[str, Any]
     ) -> dict[str, Any]:
         """
         Shape response based on deception tactic.

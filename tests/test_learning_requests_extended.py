@@ -138,11 +138,7 @@ def test_multiple_denies_and_approvals(lr_tmpdir):
 
 
 def test_priority_values_are_increasing(lr_tmpdir):
-    assert (
-        RequestPriority.LOW.value
-        < RequestPriority.MEDIUM.value
-        < RequestPriority.HIGH.value
-    )
+    assert RequestPriority.LOW.value < RequestPriority.MEDIUM.value < RequestPriority.HIGH.value
 
 
 def test_requests_have_timestamps(lr_tmpdir):

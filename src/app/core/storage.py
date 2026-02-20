@@ -45,9 +45,7 @@ class StorageEngine(ABC):
         """Retrieve data from the specified table by key."""
 
     @abstractmethod
-    def query(
-        self, table: str, filters: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    def query(self, table: str, filters: dict[str, Any] | None = None) -> list[dict[str, Any]]:
         """Query data from the specified table with optional filters."""
 
     @abstractmethod
@@ -115,10 +113,7 @@ class SQLiteStorage(StorageEngine):
             ValueError: If table name is not in whitelist
         """
         if table not in self.ALLOWED_TABLES:
-            raise ValueError(
-                f"Invalid table name: {table}. "
-                f"Allowed tables: {', '.join(self.ALLOWED_TABLES)}"
-            )
+            raise ValueError(f"Invalid table name: {table}. " f"Allowed tables: {', '.join(self.ALLOWED_TABLES)}")
 
     def initialize(self) -> None:
         """Initialize database schema."""
@@ -329,18 +324,14 @@ class SQLiteStorage(StorageEngine):
                 cursor = conn.cursor()
 
                 if table == "governance_state":
-                    cursor.execute(
-                        "SELECT data FROM governance_state WHERE key = ?", (key,)
-                    )
+                    cursor.execute("SELECT data FROM governance_state WHERE key = ?", (key,))
                 elif table in [
                     "governance_decisions",
                     "execution_history",
                     "reflection_history",
                 ]:
                     # Get column name for primary key (validated tables only)
-                    pk_col = (
-                        "decision_id" if table == "governance_decisions" else "trace_id"
-                    )
+                    pk_col = "decision_id" if table == "governance_decisions" else "trace_id"
                     if table == "reflection_history":
                         pk_col = "id"
 
@@ -365,9 +356,7 @@ class SQLiteStorage(StorageEngine):
             logger.error("Failed to retrieve data from %s: %s", table, e)
             return None
 
-    def query(
-        self, table: str, filters: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    def query(self, table: str, filters: dict[str, Any] | None = None) -> list[dict[str, Any]]:
         """
         Query data from the specified table.
 
@@ -421,13 +410,9 @@ class SQLiteStorage(StorageEngine):
                 if table == "governance_state":
                     cursor.execute("DELETE FROM governance_state WHERE key = ?", (key,))
                 elif table == "governance_decisions":
-                    cursor.execute(
-                        "DELETE FROM governance_decisions WHERE decision_id = ?", (key,)
-                    )
+                    cursor.execute("DELETE FROM governance_decisions WHERE decision_id = ?", (key,))
                 elif table == "execution_history":
-                    cursor.execute(
-                        "DELETE FROM execution_history WHERE trace_id = ?", (key,)
-                    )
+                    cursor.execute("DELETE FROM execution_history WHERE trace_id = ?", (key,))
                 else:
                     # Validate table name before generic handling
                     self._validate_table_name(table)
@@ -521,9 +506,7 @@ class JSONStorage(StorageEngine):
             logger.error("Failed to retrieve JSON data: %s", e)
             return None
 
-    def query(
-        self, table: str, filters: dict[str, Any] | None = None
-    ) -> list[dict[str, Any]]:
+    def query(self, table: str, filters: dict[str, Any] | None = None) -> list[dict[str, Any]]:
         """
         Query data from JSON files (limited support).
 

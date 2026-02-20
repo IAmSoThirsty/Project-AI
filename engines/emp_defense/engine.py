@@ -148,9 +148,7 @@ class EMPDefenseEngine:
             self.events.append(event)
 
             logger.info("Event injected: %s (ID: %s)", event_type, event_id)
-            self.state.major_events.append(
-                f"Day {self.state.simulation_day}: {event_type}"
-            )
+            self.state.major_events.append(f"Day {self.state.simulation_day}: {event_type}")
             return event_id
 
         except Exception as e:
@@ -258,9 +256,7 @@ class EMPDefenseEngine:
         self.state.grid_operational_pct = 1.0 - self.config.grid_failure_pct
 
         # Record event
-        self.state.major_events.append(
-            f"Day 0: EMP event - {self.config.grid_failure_pct*100}% grid failure"
-        )
+        self.state.major_events.append(f"Day 0: EMP event - {self.config.grid_failure_pct*100}% grid failure")
 
         # Inject event
         self.inject_event(
@@ -278,9 +274,7 @@ class EMPDefenseEngine:
 
         # Grid recovers slowly (0.1% per week)
         if self.state.grid_operational_pct < 1.0:
-            self.state.grid_operational_pct = min(
-                1.0, self.state.grid_operational_pct + 0.001
-            )
+            self.state.grid_operational_pct = min(1.0, self.state.grid_operational_pct + 0.001)
 
         # Economic impact (GDP decreases with grid failure)
         grid_factor = self.state.grid_operational_pct
@@ -291,6 +285,4 @@ class EMPDefenseEngine:
             grid_loss = 1.0 - self.state.grid_operational_pct
             daily_deaths = int(grid_loss * 10000)  # Simple model
             self.state.total_deaths += daily_deaths * 7  # Weekly accumulation
-            self.state.global_population = max(
-                0, 8_000_000_000 - self.state.total_deaths
-            )
+            self.state.global_population = max(0, 8_000_000_000 - self.state.total_deaths)

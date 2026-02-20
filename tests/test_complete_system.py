@@ -109,10 +109,7 @@ class TestMemoryAdapter:
             assert len(results) <= 2
             # Most relevant should be about Python
             if results:
-                assert (
-                    "Python" in results[0]["content"]
-                    or "PyTorch" in results[0]["content"]
-                )
+                assert "Python" in results[0]["content"] or "PyTorch" in results[0]["content"]
 
     def test_memory_persistence(self):
         """Test memory persistence across instances."""
@@ -185,9 +182,7 @@ class TestPolicyEngine:
             PolicyEngine,
         )
 
-        engine = PolicyEngine(
-            policies=[ContentFilterPolicy(blocked_patterns=[r"bad\w+"])]
-        )
+        engine = PolicyEngine(policies=[ContentFilterPolicy(blocked_patterns=[r"bad\w+"])])
 
         # Should allow clean content
         result1 = engine.enforce("This is good content")
@@ -248,9 +243,7 @@ class TestCodexEngine:
         """Test GPU/CPU fallback logic."""
         from src.cognition.codex.engine import CodexConfig, CodexEngine
 
-        config = CodexConfig(
-            enable_gpu=True, fallback_to_cpu=True, enable_full_engine=False
-        )
+        config = CodexConfig(enable_gpu=True, fallback_to_cpu=True, enable_full_engine=False)
         engine = CodexEngine(config)
 
         # Should initialize without error
@@ -298,9 +291,7 @@ class TestGalahadEngine:
         engine = GalahadEngine(GalahadConfig(arbitration_strategy="weighted"))
 
         # Arbitrate between conflicting inputs
-        result = engine.arbitrate(
-            [{"data": "A", "confidence": 0.8}, {"data": "B", "confidence": 0.5}]
-        )
+        result = engine.arbitrate([{"data": "A", "confidence": 0.8}, {"data": "B", "confidence": 0.5}])
 
         assert "decision" in result
         assert "reason" in result

@@ -125,9 +125,7 @@ class OpticalFlowDetector:
             self.cv2 = cv2
             logger.info("OpenCV version: %s", cv2.__version__)
         except ImportError as e:
-            logger.error(
-                "OpenCV not installed. Install with: pip install opencv-python"
-            )
+            logger.error("OpenCV not installed. Install with: pip install opencv-python")
             raise ImportError("opencv-python required for optical flow") from e
 
     def analyze_video(
@@ -189,9 +187,7 @@ class OpticalFlowDetector:
             flow = self._compute_flow(prev_gray, gray)
 
             # Analyze flow for epicenters
-            frame_epicenters = self._detect_epicenters(
-                flow, frame_count, cap.get(self.cv2.CAP_PROP_POS_MSEC) / 1000.0
-            )
+            frame_epicenters = self._detect_epicenters(flow, frame_count, cap.get(self.cv2.CAP_PROP_POS_MSEC) / 1000.0)
             epicenters.extend(frame_epicenters)
 
             # Calculate motion magnitude
@@ -218,10 +214,7 @@ class OpticalFlowDetector:
         # Save results
         self._save_analysis(result, video_path)
 
-        logger.info(
-            f"Analysis complete: {len(epicenters)} epicenters detected "
-            f"in {processed_frames} frames"
-        )
+        logger.info(f"Analysis complete: {len(epicenters)} epicenters detected " f"in {processed_frames} frames")
 
         return result
 
@@ -271,9 +264,7 @@ class OpticalFlowDetector:
                     ),
                 }
 
-                p1, st, err = self.cv2.calcOpticalFlowPyrLK(
-                    prev_gray, gray, p0, None, **lk_params
-                )
+                p1, st, err = self.cv2.calcOpticalFlowPyrLK(prev_gray, gray, p0, None, **lk_params)
 
                 # Create dense flow field from sparse points
                 flow = self._sparse_to_dense_flow(p0, p1, st, prev_gray.shape)
@@ -285,9 +276,7 @@ class OpticalFlowDetector:
 
         return flow
 
-    def _sparse_to_dense_flow(
-        self, p0: np.ndarray, p1: np.ndarray, status: np.ndarray, shape: tuple
-    ) -> np.ndarray:
+    def _sparse_to_dense_flow(self, p0: np.ndarray, p1: np.ndarray, status: np.ndarray, shape: tuple) -> np.ndarray:
         """Convert sparse optical flow to dense flow field."""
         flow = np.zeros((shape[0], shape[1], 2), dtype=np.float32)
 
@@ -302,9 +291,7 @@ class OpticalFlowDetector:
 
         return flow
 
-    def _detect_epicenters(
-        self, flow: np.ndarray, frame_number: int, timestamp: float
-    ) -> list[FlowEpicenter]:
+    def _detect_epicenters(self, flow: np.ndarray, frame_number: int, timestamp: float) -> list[FlowEpicenter]:
         """
         Detect epicenters in optical flow field.
 
@@ -535,9 +522,7 @@ class OpticalFlowDetector:
         except Exception as e:
             logger.error("Error saving results: %s", e)
 
-    def visualize_flow(
-        self, video_path: str, output_path: str = None, show_epicenters: bool = True
-    ):
+    def visualize_flow(self, video_path: str, output_path: str = None, show_epicenters: bool = True):
         """
         Create visualization of optical flow with epicenters.
 
@@ -591,11 +576,7 @@ class OpticalFlowDetector:
                     color = (
                         (0, 255, 0)
                         if epi.flow_type == "convergent"
-                        else (
-                            (0, 0, 255)
-                            if epi.flow_type == "divergent"
-                            else (255, 0, 255)
-                        )
+                        else ((0, 0, 255) if epi.flow_type == "divergent" else (255, 0, 255))
                     )
                     self.cv2.circle(frame, (int(epi.x), int(epi.y)), 5, color, -1)
                     self.cv2.putText(

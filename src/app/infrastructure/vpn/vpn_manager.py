@@ -30,9 +30,7 @@ class VPNManager:
         self.stealth_mode = config.get("stealth_mode", True)
         self.split_tunneling = config.get("split_tunneling", False)
         self.logging_policy = config.get("logging", "never")
-        self.protocol_fallback = config.get(
-            "protocol_fallback", ["wireguard", "openvpn"]
-        )
+        self.protocol_fallback = config.get("protocol_fallback", ["wireguard", "openvpn"])
 
         # ENCRYPTION: Generate encryption key for all VPN traffic
         self._vpn_cipher = Fernet(Fernet.generate_key())
@@ -94,9 +92,7 @@ class VPNManager:
         """Establish VPN connection"""
         if self.multi_hop:
             self._current_route = self.router.establish_route()
-            self.logger.info(
-                "Multi-hop route established: %s hops", len(self._current_route)
-            )
+            self.logger.info("Multi-hop route established: %s hops", len(self._current_route))
         else:
             self._current_route = [self._connect_single_node()]
 

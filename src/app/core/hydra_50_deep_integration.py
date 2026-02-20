@@ -135,9 +135,7 @@ class CerberusAgentIntegration:
             self.lockdown_controller = None
             self.integration_status = IntegrationStatus.DISCONNECTED
 
-    def trigger_defense(
-        self, incident_id: str, threat_type: str, severity: int
-    ) -> dict[str, Any]:
+    def trigger_defense(self, incident_id: str, threat_type: str, severity: int) -> dict[str, Any]:
         """Trigger Cerberus defense spawning"""
         if self.integration_status != IntegrationStatus.CONNECTED:
             logger.warning("Cerberus not connected, cannot trigger defense")
@@ -166,9 +164,7 @@ class CerberusAgentIntegration:
                 "agents_spawned": spawn_result.get("agents_spawned", 0),
                 "total_spawned": self.spawned_count,
                 "lockdown_stage": (
-                    self.lockdown_controller.current_stage
-                    if hasattr(self.lockdown_controller, "current_stage")
-                    else 0
+                    self.lockdown_controller.current_stage if hasattr(self.lockdown_controller, "current_stage") else 0
                 ),
             }
 
@@ -284,9 +280,7 @@ class TemporalWorkflowIntegration:
             logger.warning("Temporal integration not available: %s", e)
             self.integration_status = IntegrationStatus.DISCONNECTED
 
-    def start_workflow(
-        self, workflow_type: str, workflow_id: str, parameters: dict[str, Any]
-    ) -> dict[str, Any]:
+    def start_workflow(self, workflow_type: str, workflow_id: str, parameters: dict[str, Any]) -> dict[str, Any]:
         """Start Temporal workflow"""
         workflow = {
             "workflow_id": workflow_id,
@@ -370,9 +364,7 @@ class GodTierCommandCenterIntegration:
             logger.error("Intelligence query failed: %s", e)
             return {"success": False, "error": str(e)}
 
-    def submit_threat_report(
-        self, scenario_id: str, threat_data: dict[str, Any]
-    ) -> bool:
+    def submit_threat_report(self, scenario_id: str, threat_data: dict[str, Any]) -> bool:
         """Submit threat report to Watch Tower"""
         if not self.command_center:
             return False
@@ -443,9 +435,7 @@ class SecurityOperationsCenterIntegration:
 
         self.incidents[incident_id] = incident
 
-        logger.warning(
-            "Security incident reported: %s - %s", incident_id, incident_type
-        )
+        logger.warning("Security incident reported: %s - %s", incident_id, incident_type)
 
         return incident_id
 
@@ -490,9 +480,7 @@ class CouncilHubIntegration:
             self.council = None
             self.integration_status = IntegrationStatus.DISCONNECTED
 
-    def request_advisory(
-        self, scenario_id: str, decision_type: str, context: dict[str, Any]
-    ) -> str:
+    def request_advisory(self, scenario_id: str, decision_type: str, context: dict[str, Any]) -> str:
         """Request advisory from Council Hub"""
         request_id = str(uuid.uuid4())
 
@@ -604,9 +592,7 @@ class EventSpineIntegration:
             self.event_spine = None
             self.integration_status = IntegrationStatus.DISCONNECTED
 
-    def publish_event(
-        self, event_type: str, priority: EventPriority, data: dict[str, Any]
-    ) -> str:
+    def publish_event(self, event_type: str, priority: EventPriority, data: dict[str, Any]) -> str:
         """Publish event to Event Spine"""
         event = SystemEvent(
             event_id=str(uuid.uuid4()),
@@ -711,9 +697,7 @@ class HYDRA50DeepIntegration:
 
         # 1. Validate with Planetary Defense
         action_description = f"Activate {scenario_type} scenario"
-        is_valid, validation_msg = self.planetary_defense.validate_action(
-            action_description, context
-        )
+        is_valid, validation_msg = self.planetary_defense.validate_action(action_description, context)
 
         if not is_valid:
             logger.error("Action blocked by Planetary Defense: %s", validation_msg)
@@ -759,9 +743,7 @@ class HYDRA50DeepIntegration:
 
         # 4. Submit to Command Center intelligence
         self.command_center.submit_threat_report(scenario_id, context)
-        results["actions"].append(
-            {"action": "command_center_threat_report", "status": "submitted"}
-        )
+        results["actions"].append({"action": "command_center_threat_report", "status": "submitted"})
 
         # 5. Request Council advisory if critical
         if severity >= 5:
@@ -812,15 +794,11 @@ class HYDRA50DeepIntegration:
 
         if self.cerberus.integration_status != IntegrationStatus.CONNECTED:
             self.cerberus._try_import_cerberus()
-            results["cerberus"] = (
-                self.cerberus.integration_status == IntegrationStatus.CONNECTED
-            )
+            results["cerberus"] = self.cerberus.integration_status == IntegrationStatus.CONNECTED
 
         if self.command_center.integration_status != IntegrationStatus.CONNECTED:
             self.command_center._try_connect_command_center()
-            results["command_center"] = (
-                self.command_center.integration_status == IntegrationStatus.CONNECTED
-            )
+            results["command_center"] = self.command_center.integration_status == IntegrationStatus.CONNECTED
 
         # Add other reconnection attempts as needed
 

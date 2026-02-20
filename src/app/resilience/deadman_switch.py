@@ -76,9 +76,7 @@ class DeadmanSwitch:
         self.last_heartbeat = datetime.now()
         self.triggered = False
 
-        logger.info(
-            "Deadman switch monitoring started (timeout: %ss)", self.timeout_seconds
-        )
+        logger.info("Deadman switch monitoring started (timeout: %ss)", self.timeout_seconds)
 
         # Stub: Would launch monitoring thread here
         # self.monitoring_thread = threading.Thread(target=self._monitor_loop)
@@ -194,9 +192,7 @@ class DeadmanSwitch:
             True if registered successfully, False otherwise
         """
         self.failsafe_actions.append(action)
-        logger.info(
-            "Registered failsafe action (total: %s)", len(self.failsafe_actions)
-        )
+        logger.info("Registered failsafe action (total: %s)", len(self.failsafe_actions))
 
         return True
 
@@ -224,9 +220,7 @@ class DeadmanSwitch:
             "enabled": self.enabled,
             "triggered": self.triggered,
             "timeout_seconds": self.timeout_seconds,
-            "last_heartbeat": (
-                self.last_heartbeat.isoformat() if self.last_heartbeat else None
-            ),
+            "last_heartbeat": (self.last_heartbeat.isoformat() if self.last_heartbeat else None),
             "failsafe_actions_registered": len(self.failsafe_actions),
         }
 

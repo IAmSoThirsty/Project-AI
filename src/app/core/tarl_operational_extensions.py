@@ -146,9 +146,7 @@ class TARLDecisionContract(DecisionContract):
         return {
             "system": "TARL (Thirsty's Active Resistance Language)",
             "focus": "Adaptive Security, Threat Detection, Active Defense",
-            "authorities": {
-                dt: auth.to_dict() for dt, auth in self.authorities.items()
-            },
+            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
             "decision_count": len(self.decision_log),
             "immutable_protections": [
                 "trust_score_evaluation",  # Always active
@@ -176,9 +174,7 @@ class TARLSignalsTelemetry(SignalsTelemetry):
         """Initialize TARL signals and telemetry."""
         super().__init__("TARL")
 
-    def emit_threat_detected(
-        self, threat_type: str, confidence: float, context: dict[str, Any]
-    ) -> None:
+    def emit_threat_detected(self, threat_type: str, confidence: float, context: dict[str, Any]) -> None:
         """
         Emit threat detection signal.
 
@@ -207,9 +203,7 @@ class TARLSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_trust_score_updated(
-        self, entity: str, old_score: float, new_score: float, reason: str
-    ) -> None:
+    def emit_trust_score_updated(self, entity: str, old_score: float, new_score: float, reason: str) -> None:
         """
         Emit trust score update signal.
 
@@ -219,9 +213,7 @@ class TARLSignalsTelemetry(SignalsTelemetry):
             new_score: New trust score
             reason: Reason for change
         """
-        severity = (
-            SeverityLevel.WARNING if new_score < old_score - 0.2 else SeverityLevel.INFO
-        )
+        severity = SeverityLevel.WARNING if new_score < old_score - 0.2 else SeverityLevel.INFO
 
         signal = Signal(
             signal_type=SignalType.AUDIT,
@@ -237,9 +229,7 @@ class TARLSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_policy_mutation(
-        self, mutation_type: str, details: dict[str, Any], justification: str
-    ) -> None:
+    def emit_policy_mutation(self, mutation_type: str, details: dict[str, Any], justification: str) -> None:
         """
         Emit runtime policy mutation signal.
 
@@ -262,9 +252,7 @@ class TARLSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_active_resistance(
-        self, resistance_type: str, target: str, effectiveness: float
-    ) -> None:
+    def emit_active_resistance(self, resistance_type: str, target: str, effectiveness: float) -> None:
         """
         Emit active resistance activation signal.
 
@@ -286,9 +274,7 @@ class TARLSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_pattern_detection(
-        self, pattern_name: str, detection_confidence: float, context: dict[str, Any]
-    ) -> None:
+    def emit_pattern_detection(self, pattern_name: str, detection_confidence: float, context: dict[str, Any]) -> None:
         """
         Emit adversarial pattern detection signal.
 
@@ -353,9 +339,7 @@ class TARLFailureSemantics(FailureSemantics):
         """Initialize TARL failure semantics."""
         super().__init__("TARL")
 
-    def create_failure_response(
-        self, failure_mode: FailureMode, context: dict[str, Any]
-    ) -> FailureResponse:
+    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
         """
         Create failure response for TARL failures.
 
@@ -525,9 +509,7 @@ class TrustScoringEngine:
             "pattern_analysis": 0.2,
         }
 
-    def calculate_trust_score(
-        self, entity: str, factors: dict[str, float]
-    ) -> tuple[float, str]:
+    def calculate_trust_score(self, entity: str, factors: dict[str, float]) -> tuple[float, str]:
         """
         Calculate trust score for an entity.
 
@@ -546,9 +528,7 @@ class TrustScoringEngine:
                 factor_value = factors[factor]
                 contribution = factor_value * weight
                 score += contribution
-                reasoning_parts.append(
-                    f"{factor}: {factor_value:.2f} (weight {weight:.2f})"
-                )
+                reasoning_parts.append(f"{factor}: {factor_value:.2f} (weight {weight:.2f})")
 
         # Record score history
         if entity not in self.trust_history:
@@ -566,9 +546,7 @@ class TrustScoringEngine:
         old_score = self.trust_scores.get(entity, 0.5)
         self.trust_scores[entity] = score
 
-        reasoning = f"Trust score: {score:.2f} (was {old_score:.2f}). " + ", ".join(
-            reasoning_parts
-        )
+        reasoning = f"Trust score: {score:.2f} (was {old_score:.2f}). " + ", ".join(reasoning_parts)
 
         return score, reasoning
 
@@ -753,18 +731,10 @@ class AdversarialPatternRegistry:
             "total_patterns": len(self.patterns),
             "total_detections": len(self.detection_history),
             "patterns_by_threat_level": {
-                "low": sum(
-                    1 for p in self.patterns.values() if p["threat_level"] == "low"
-                ),
-                "medium": sum(
-                    1 for p in self.patterns.values() if p["threat_level"] == "medium"
-                ),
-                "high": sum(
-                    1 for p in self.patterns.values() if p["threat_level"] == "high"
-                ),
-                "critical": sum(
-                    1 for p in self.patterns.values() if p["threat_level"] == "critical"
-                ),
+                "low": sum(1 for p in self.patterns.values() if p["threat_level"] == "low"),
+                "medium": sum(1 for p in self.patterns.values() if p["threat_level"] == "medium"),
+                "high": sum(1 for p in self.patterns.values() if p["threat_level"] == "high"),
+                "critical": sum(1 for p in self.patterns.values() if p["threat_level"] == "critical"),
             },
         }
 

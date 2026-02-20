@@ -234,7 +234,7 @@ class ShadowAwareVM:
         if args:
             func = self.functions.get(function_name)
             if func:
-                for i, arg in enumerate(args[:func.parameter_count]):
+                for i, arg in enumerate(args[: func.parameter_count]):
                     frame.primary.parameters[f"arg{i}"] = arg
 
         self.call_stack.append(frame)
@@ -281,8 +281,7 @@ class ShadowAwareVM:
             return
 
         plane_name = "PRIMARY" if plane == PlaneTag.PRIMARY else "SHADOW"
-        logger.debug("[%s] Executing %s plane (%d instructions)",
-                     frame.function_name, plane_name, len(bytecode))
+        logger.debug("[%s] Executing %s plane (%d instructions)", frame.function_name, plane_name, len(bytecode))
 
         # Execute instructions
         for instruction in bytecode:
@@ -455,8 +454,9 @@ class ShadowAwareVM:
 
         # Check if all invariants passed
         all_passed = all(frame.invariant_results)
-        logger.debug("[%s] Invariants: %d checked, all passed: %s",
-                     frame.function_name, len(frame.invariant_results), all_passed)
+        logger.debug(
+            "[%s] Invariants: %d checked, all passed: %s", frame.function_name, len(frame.invariant_results), all_passed
+        )
 
     def _constitutional_commit(self, frame: DualExecutionFrame):
         """Execute constitutional commit protocol."""
@@ -477,8 +477,12 @@ class ShadowAwareVM:
                 except (TypeError, ValueError):
                     frame.divergence_magnitude = float("inf")
 
-                logger.warning("[%s] Divergence detected: primary=%s, shadow=%s",
-                               frame.function_name, primary_result, shadow_result)
+                logger.warning(
+                    "[%s] Divergence detected: primary=%s, shadow=%s",
+                    frame.function_name,
+                    primary_result,
+                    shadow_result,
+                )
 
         # Check invariants
         if frame.invariant_results and not all(frame.invariant_results):
@@ -486,11 +490,14 @@ class ShadowAwareVM:
 
         # Audit seal
         if self.enable_audit:
-            frame.record_audit("commit", {
-                "divergence_detected": frame.divergence_detected,
-                "divergence_magnitude": frame.divergence_magnitude,
-                "invariants_passed": all(frame.invariant_results) if frame.invariant_results else True,
-            })
+            frame.record_audit(
+                "commit",
+                {
+                    "divergence_detected": frame.divergence_detected,
+                    "divergence_magnitude": frame.divergence_magnitude,
+                    "invariants_passed": all(frame.invariant_results) if frame.invariant_results else True,
+                },
+            )
 
     def get_stats(self) -> dict[str, Any]:
         """Get VM execution statistics."""

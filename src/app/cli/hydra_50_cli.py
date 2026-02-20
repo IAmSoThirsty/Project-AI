@@ -27,9 +27,7 @@ from rich.console import Console
 from rich.progress import track
 from rich.table import Table
 
-app = typer.Typer(
-    name="hydra50", help="HYDRA-50 Contingency Plan Engine CLI", add_completion=True
-)
+app = typer.Typer(name="hydra50", help="HYDRA-50 Contingency Plan Engine CLI", add_completion=True)
 
 console = Console()
 
@@ -97,9 +95,7 @@ def activate(
         engine = HYDRA50Engine()
 
         if not force:
-            confirm = typer.confirm(
-                f"Are you sure you want to activate scenario {scenario_id}?"
-            )
+            confirm = typer.confirm(f"Are you sure you want to activate scenario {scenario_id}?")
             if not confirm:
                 console.print("[yellow]Activation cancelled[/yellow]")
                 raise typer.Exit()
@@ -158,12 +154,8 @@ def status(
             console.print(f"[bold]Name:[/bold] {scenario_status.get('name')}")
             console.print(f"[bold]Category:[/bold] {scenario_status.get('category')}")
             console.print(f"[bold]Status:[/bold] {scenario_status.get('status')}")
-            console.print(
-                f"[bold]Escalation Level:[/bold] {scenario_status.get('escalation_level')}"
-            )
-            console.print(
-                f"[bold]Last Updated:[/bold] {scenario_status.get('last_updated')}"
-            )
+            console.print(f"[bold]Escalation Level:[/bold] {scenario_status.get('escalation_level')}")
+            console.print(f"[bold]Last Updated:[/bold] {scenario_status.get('last_updated')}")
 
     except Exception as e:
         console.print(f"[red]Error:[/red] {str(e)}")
@@ -214,9 +206,7 @@ def simulate(
 
 @app.command()
 def query(
-    query_type: str = typer.Argument(
-        ..., help="Query type (active, critical, history)"
-    ),
+    query_type: str = typer.Argument(..., help="Query type (active, critical, history)"),
     json_output: bool = typer.Option(False, "--json", help="Output as JSON"),
 ) -> None:
     """Query scenario data"""
@@ -321,19 +311,11 @@ def monitor(
 
             console.clear()
             console.print("[bold cyan]HYDRA-50 System Monitor[/bold cyan]")
-            console.print(
-                f"[dim]{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}[/dim]\n"
-            )
+            console.print(f"[dim]{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}[/dim]\n")
 
-            console.print(
-                f"[bold]Active Scenarios:[/bold] {status.get('active_count', 0)}"
-            )
-            console.print(
-                f"[bold]Critical Scenarios:[/bold] {status.get('critical_count', 0)}"
-            )
-            console.print(
-                f"[bold]System Health:[/bold] {status.get('health', 'UNKNOWN')}"
-            )
+            console.print(f"[bold]Active Scenarios:[/bold] {status.get('active_count', 0)}")
+            console.print(f"[bold]Critical Scenarios:[/bold] {status.get('critical_count', 0)}")
+            console.print(f"[bold]System Health:[/bold] {status.get('health', 'UNKNOWN')}")
 
             time.sleep(interval)
 

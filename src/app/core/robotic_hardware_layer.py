@@ -266,16 +266,10 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
                         if "position" in cmd:
                             target_pos = cmd["position"]
                             # Check limits
-                            if (
-                                joint.limits.min_value
-                                <= target_pos
-                                <= joint.limits.max_value
-                            ):
+                            if joint.limits.min_value <= target_pos <= joint.limits.max_value:
                                 joint.position = target_pos
                             else:
-                                logger.warning(
-                                    "Joint %s position %s exceeds limits", i, target_pos
-                                )
+                                logger.warning("Joint %s position %s exceeds limits", i, target_pos)
                                 return False
 
                         # Apply velocity command
@@ -336,9 +330,7 @@ class SimulatedHardwareInterface(HardwareAbstractionLayer):
             # Check all joints for temperature limits
             for joint in self._joint_states:
                 if joint.temperature > 80.0:
-                    logger.error(
-                        "Joint %s overheating: %s°C", joint.joint_id, joint.temperature
-                    )
+                    logger.error("Joint %s overheating: %s°C", joint.joint_id, joint.temperature)
                     return False
 
             return True
@@ -386,9 +378,7 @@ class RoboticSafetyValidator:
                 return False, reason
 
         # Hardware limits validation
-        limits_valid, reason = self._validate_hardware_limits(
-            joint_commands, joint_states
-        )
+        limits_valid, reason = self._validate_hardware_limits(joint_commands, joint_states)
         if not limits_valid:
             self._log_violation("hardware_limits", action, reason)
             return False, reason
@@ -407,9 +397,7 @@ class RoboticSafetyValidator:
 
         return True, "Action validated successfully"
 
-    def _validate_four_laws(
-        self, action: str, context: dict[str, Any]
-    ) -> tuple[bool, str]:
+    def _validate_four_laws(self, action: str, context: dict[str, Any]) -> tuple[bool, str]:
         """Validate action against Asimov's Four Laws"""
 
         # Zeroth Law: Protect humanity
@@ -436,9 +424,7 @@ class RoboticSafetyValidator:
 
         return True, "Four Laws validated"
 
-    def _validate_hardware_limits(
-        self, commands: list[dict[str, float]], states: list[JointState]
-    ) -> tuple[bool, str]:
+    def _validate_hardware_limits(self, commands: list[dict[str, float]], states: list[JointState]) -> tuple[bool, str]:
         """Validate commands against hardware limits"""
 
         for i, (cmd, state) in enumerate(zip(commands, states, strict=False)):
@@ -471,9 +457,7 @@ class RoboticSafetyValidator:
 
         return True, "Hardware limits validated"
 
-    def _check_collisions(
-        self, states: list[JointState], context: dict[str, Any]
-    ) -> tuple[bool, str]:
+    def _check_collisions(self, states: list[JointState], context: dict[str, Any]) -> tuple[bool, str]:
         """Check for potential collisions"""
 
         # Simplified collision detection
@@ -493,10 +477,7 @@ class RoboticSafetyValidator:
         # In production, this would use forward kinematics
 
         for state in states:
-            if (
-                state.position < state.limits.min_value
-                or state.position > state.limits.max_value
-            ):
+            if state.position < state.limits.min_value or state.position > state.limits.max_value:
                 return False, f"Joint {state.joint_id} outside workspace"
 
         return True, "Workspace validated"

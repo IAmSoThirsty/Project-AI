@@ -169,9 +169,7 @@ class CBRNClassifier:
 
         # Initialize ML model if available
         if ML_AVAILABLE:
-            self.vectorizer = TfidfVectorizer(
-                max_features=1000, ngram_range=(1, 3), stop_words="english"
-            )
+            self.vectorizer = TfidfVectorizer(max_features=1000, ngram_range=(1, 3), stop_words="english")
             self.model = LogisticRegression(random_state=42)
 
             # Train model
@@ -179,9 +177,7 @@ class CBRNClassifier:
         else:
             self.vectorizer = None
             self.model = None
-            self.logger.warning(
-                "ML dependencies not available - using regex-only classification"
-            )
+            self.logger.warning("ML dependencies not available - using regex-only classification")
 
         # Initialize monitoring
         self.classification_log: list[dict[str, Any]] = []
@@ -198,9 +194,7 @@ class CBRNClassifier:
             return
 
         # Combine examples
-        X_train = (
-            self.HARMFUL_EXAMPLES + self.SAFE_EXAMPLES
-        )  # noqa: N806 - ML convention
+        X_train = self.HARMFUL_EXAMPLES + self.SAFE_EXAMPLES  # noqa: N806 - ML convention
         y_train = [1] * len(self.HARMFUL_EXAMPLES) + [0] * len(self.SAFE_EXAMPLES)
 
         # Train
@@ -258,13 +252,9 @@ class CBRNClassifier:
         ml_confidence = 0.0
 
         if ML_AVAILABLE and self.model is not None:
-            X_vec = self.vectorizer.transform(
-                [input_text]
-            )  # noqa: N806 - ML convention
+            X_vec = self.vectorizer.transform([input_text])  # noqa: N806 - ML convention
             ml_pred = self.model.predict(X_vec)[0]
-            ml_confidence = self.model.predict_proba(X_vec)[0][
-                1
-            ]  # Probability of unsafe
+            ml_confidence = self.model.predict_proba(X_vec)[0][1]  # Probability of unsafe
 
         # 3. Contextual analysis (multi-turn detection)
         context_risk = self._analyze_context(input_text, user, context)
@@ -295,9 +285,7 @@ class CBRNClassifier:
             confidence=confidence,
             matched_keywords=matched_keywords,
             matched_patterns=matched_patterns,
-            reason=self._generate_reason(
-                is_safe, risk_category, matched_keywords, ml_unsafe, context_risk
-            ),
+            reason=self._generate_reason(is_safe, risk_category, matched_keywords, ml_unsafe, context_risk),
         )
 
         # Log classification
@@ -306,9 +294,7 @@ class CBRNClassifier:
 
         return result
 
-    def _analyze_context(
-        self, input_text: str, user: str, context: list[str] | None
-    ) -> bool:
+    def _analyze_context(self, input_text: str, user: str, context: list[str] | None) -> bool:
         """
         Analyze multi-turn context for escalation patterns.
 
@@ -362,9 +348,7 @@ class CBRNClassifier:
         reasons = []
 
         if matched_keywords:
-            reasons.append(
-                f"Matched {risk_category.upper()} patterns: {', '.join(set(matched_keywords))}"
-            )
+            reasons.append(f"Matched {risk_category.upper()} patterns: {', '.join(set(matched_keywords))}")
 
         if ml_unsafe:
             reasons.append("ML classifier detected unsafe content")
@@ -374,16 +358,12 @@ class CBRNClassifier:
 
         return " | ".join(reasons)
 
-    def _log_classification(
-        self, user: str, input_text: str, result: ClassificationResult
-    ) -> None:
+    def _log_classification(self, user: str, input_text: str, result: ClassificationResult) -> None:
         """Log classification for audit and improvement."""
         log_entry = {
             "timestamp": datetime.now().isoformat(),
             "user": user,
-            "input_preview": (
-                input_text[:200] + "..." if len(input_text) > 200 else input_text
-            ),
+            "input_preview": (input_text[:200] + "..." if len(input_text) > 200 else input_text),
             "is_safe": result.is_safe,
             "risk_category": result.risk_category,
             "confidence": result.confidence,
@@ -394,12 +374,7 @@ class CBRNClassifier:
         self.classification_log.append(log_entry)
 
         # Write to log file
-        log_file = (
-            self.data_dir
-            / "security"
-            / "cbrn_logs"
-            / f"classifications_{datetime.now().strftime('%Y%m')}.jsonl"
-        )
+        log_file = self.data_dir / "security" / "cbrn_logs" / f"classifications_{datetime.now().strftime('%Y%m')}.jsonl"
         with open(log_file, "a") as f:
             f.write(json.dumps(log_entry) + "\n")
 
@@ -411,9 +386,7 @@ class CBRNClassifier:
             f"Category: {result.risk_category}, Confidence: {result.confidence:.2f}",
         )
 
-    def check_rate_limit(
-        self, user: str, window_minutes: int = 60, max_attempts: int = 5
-    ) -> bool:
+    def check_rate_limit(self, user: str, window_minutes: int = 60, max_attempts: int = 5) -> bool:
         """
         Check if user has exceeded classification rate limit.
 
@@ -437,11 +410,7 @@ class CBRNClassifier:
         """Get classification statistics for monitoring."""
         cutoff = datetime.now() - timedelta(hours=hours)
 
-        recent_logs = [
-            log
-            for log in self.classification_log
-            if datetime.fromisoformat(log["timestamp"]) > cutoff
-        ]
+        recent_logs = [log for log in self.classification_log if datetime.fromisoformat(log["timestamp"]) > cutoff]
 
         if not recent_logs:
             return {
@@ -518,9 +487,7 @@ class CBRNClassifier:
 """
 
         # Add recent unsafe classifications
-        recent_unsafe = [
-            log for log in self.classification_log[-100:] if not log["is_safe"]
-        ][-10:]
+        recent_unsafe = [log for log in self.classification_log[-100:] if not log["is_safe"]][-10:]
 
         for log in recent_unsafe:
             report += f"- {log['timestamp']} - {log['user']} - {log['risk_category'].upper()}\n"
@@ -555,16 +522,10 @@ def cli_main():
     """Command-line interface for CBRN classifier."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="CBRN & High-Risk Capability Classifier"
-    )
-    parser.add_argument(
-        "action", choices=["classify", "stats", "report"], help="Action to perform"
-    )
+    parser = argparse.ArgumentParser(description="CBRN & High-Risk Capability Classifier")
+    parser.add_argument("action", choices=["classify", "stats", "report"], help="Action to perform")
     parser.add_argument("--text", type=str, help="Text to classify")
-    parser.add_argument(
-        "--user", type=str, default="cli_user", help="User making the request"
-    )
+    parser.add_argument("--user", type=str, default="cli_user", help="User making the request")
     parser.add_argument("--data-dir", type=str, default="data", help="Data directory")
 
     args = parser.parse_args()
@@ -597,11 +558,7 @@ def cli_main():
 
     elif args.action == "report":
         report = classifier.generate_cbrn_report()
-        report_file = (
-            Path(args.data_dir)
-            / "security"
-            / f"cbrn_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-        )
+        report_file = Path(args.data_dir) / "security" / f"cbrn_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
         with open(report_file, "w") as f:
             f.write(report)
         print(f"Report saved to: {report_file}")

@@ -20,18 +20,14 @@ unique_ids = set(test_ids)
 print("\n1. TEST IDs:")
 print(f"   Total tests: {len(all_tests)}")
 print(f"   Unique IDs: {len(unique_ids)}")
-print(
-    f"   Result: {'PASS - All IDs unique' if len(all_tests) == len(unique_ids) else 'FAIL - Duplicates found'}"
-)
+print(f"   Result: {'PASS - All IDs unique' if len(all_tests) == len(unique_ids) else 'FAIL - Duplicates found'}")
 
 # Check unique names
 test_names = [t["name"] for t in all_tests]
 unique_names = set(test_names)
 print("\n2. TEST NAMES:")
 print(f"   Unique names: {len(unique_names)}")
-print(
-    f"   Result: {'PASS - All names unique' if len(all_tests) == len(unique_names) else 'FAIL - Duplicates found'}"
-)
+print(f"   Result: {'PASS - All names unique' if len(all_tests) == len(unique_names) else 'FAIL - Duplicates found'}")
 
 # Check unique scenarios
 scenario_hashes = []

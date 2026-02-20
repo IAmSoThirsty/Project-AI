@@ -299,18 +299,12 @@ class PerspectiveEngine:
                 with open(state_file, encoding="utf-8") as f:
                     data = json.load(f)
 
-                self.current_perspective = PerspectiveState.from_dict(
-                    data["current_perspective"]
-                )
+                self.current_perspective = PerspectiveState.from_dict(data["current_perspective"])
 
                 if data.get("genesis_perspective"):
-                    self.genesis_perspective = PerspectiveState.from_dict(
-                        data["genesis_perspective"]
-                    )
+                    self.genesis_perspective = PerspectiveState.from_dict(data["genesis_perspective"])
 
-                self.drift_metrics = DriftMetrics.from_dict(
-                    data.get("drift_metrics", {})
-                )
+                self.drift_metrics = DriftMetrics.from_dict(data.get("drift_metrics", {}))
                 self.interaction_count = data.get("interaction_count", 0)
                 self.last_update = data.get("last_update")
 
@@ -319,9 +313,7 @@ class PerspectiveEngine:
                     profile = WorkProfileState.from_dict(profile_data)
                     self.work_profiles[profile.profile_name] = profile
 
-                logger.info(
-                    "Loaded perspective state: %s interactions", self.interaction_count
-                )
+                logger.info("Loaded perspective state: %s interactions", self.interaction_count)
 
             except Exception as e:
                 logger.error("Failed to load perspective state: %s", e)
@@ -343,17 +335,11 @@ class PerspectiveEngine:
         try:
             data = {
                 "current_perspective": self.current_perspective.to_dict(),
-                "genesis_perspective": (
-                    self.genesis_perspective.to_dict()
-                    if self.genesis_perspective
-                    else None
-                ),
+                "genesis_perspective": (self.genesis_perspective.to_dict() if self.genesis_perspective else None),
                 "drift_metrics": self.drift_metrics.to_dict(),
                 "interaction_count": self.interaction_count,
                 "last_update": self.last_update,
-                "work_profiles": [
-                    profile.to_dict() for profile in self.work_profiles.values()
-                ],
+                "work_profiles": [profile.to_dict() for profile in self.work_profiles.values()],
                 "active_profile": self.active_profile,
             }
 
@@ -365,9 +351,7 @@ class PerspectiveEngine:
         except Exception as e:
             logger.error("Failed to save perspective state: %s", e)
 
-    def _calculate_drift_magnitude(
-        self, old_state: PerspectiveState, new_state: PerspectiveState
-    ) -> float:
+    def _calculate_drift_magnitude(self, old_state: PerspectiveState, new_state: PerspectiveState) -> float:
         """
         Calculate magnitude of perspective change.
 
@@ -416,9 +400,7 @@ class PerspectiveEngine:
     # Perspective Evolution
     # ========================================================================
 
-    def update_from_interaction(
-        self, outcome: dict[str, Any], influence_source: str = "user"
-    ) -> dict[str, float]:
+    def update_from_interaction(self, outcome: dict[str, Any], influence_source: str = "user") -> dict[str, float]:
         """
         Update perspective based on interaction outcome.
 
@@ -467,9 +449,7 @@ class PerspectiveEngine:
             changes_applied[trait] = new_value - current
 
         # Update drift metrics
-        drift_magnitude = self._calculate_drift_magnitude(
-            old_perspective, self.current_perspective
-        )
+        drift_magnitude = self._calculate_drift_magnitude(old_perspective, self.current_perspective)
         self.drift_metrics.total_drift += drift_magnitude
 
         # Update influence tracking
@@ -494,16 +474,12 @@ class PerspectiveEngine:
 
             # Keep only recent 50 changes
             if len(self.drift_metrics.recent_changes) > 50:
-                self.drift_metrics.recent_changes = self.drift_metrics.recent_changes[
-                    -50:
-                ]
+                self.drift_metrics.recent_changes = self.drift_metrics.recent_changes[-50:]
 
         self.last_update = datetime.now(UTC).isoformat()
         self._save_state()
 
-        logger.debug(
-            "Perspective updated from %s: %s", influence_source, changes_applied
-        )
+        logger.debug("Perspective updated from %s: %s", influence_source, changes_applied)
         return changes_applied
 
     def get_perspective_summary(self) -> dict[str, Any]:
@@ -516,9 +492,7 @@ class PerspectiveEngine:
         # Calculate drift from genesis
         genesis_distance = 0.0
         if self.genesis_perspective:
-            genesis_distance = self._calculate_drift_magnitude(
-                self.genesis_perspective, self.current_perspective
-            )
+            genesis_distance = self._calculate_drift_magnitude(self.genesis_perspective, self.current_perspective)
 
         return {
             "current_perspective": self.current_perspective.to_dict(),
@@ -651,11 +625,7 @@ class PerspectiveEngine:
         max_matches = 0
 
         for profile_name, profile in self.work_profiles.items():
-            matches = sum(
-                1
-                for keyword in profile.trigger_keywords
-                if keyword.lower() in context_lower
-            )
+            matches = sum(1 for keyword in profile.trigger_keywords if keyword.lower() in context_lower)
 
             if matches > max_matches:
                 max_matches = matches

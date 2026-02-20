@@ -49,17 +49,13 @@ class CodexAdapter:
                     report = self.codex.integrate_approved()
                     logger.info("Codex integration report: %s", report)
                 except Exception:
-                    logger.exception(
-                        "Codex failed to auto-integrate approved request %s", req_id
-                    )
+                    logger.exception("Codex failed to auto-integrate approved request %s", req_id)
 
             # Coordinate with Cerberus for style rotation (best-effort)
             coord = self.codex.coordinate_with_cerberus()
             logger.info("Cerberus coordination result: %s", coord)
         except Exception:
-            logger.exception(
-                "CodexAdapter failed to process approved request %s", req_id
-            )
+            logger.exception("CodexAdapter failed to process approved request %s", req_id)
 
     def receive_message(self, from_id: str, message: str) -> None:
         # Codex may log or process messages from the hub

@@ -260,9 +260,7 @@ class TestOverrideTrigger:
         assert record.super_unanimity_vote["passes"]
         assert record.super_unanimity_vote["approval_rate"] == 1.0
 
-    def test_trigger_fails_dual_confirmation(
-        self, override_system, sample_violations
-    ):
+    def test_trigger_fails_dual_confirmation(self, override_system, sample_violations):
         """Test override trigger fails without dual confirmation"""
         with pytest.raises(ValueError, match="Dual confirmation requirement not met"):
             override_system.trigger_override(
@@ -273,9 +271,7 @@ class TestOverrideTrigger:
                 external_confirmation=False,  # External fails
             )
 
-    def test_trigger_fails_super_unanimity(
-        self, override_system, sample_violations
-    ):
+    def test_trigger_fails_super_unanimity(self, override_system, sample_violations):
         """Test override trigger fails without super-unanimity"""
         votes = {f"user{i}": i < 90 for i in range(100)}  # Only 90%
 
@@ -331,9 +327,7 @@ class TestLedgerDrivenState:
             for v in violations:
                 f.write(json.dumps(v) + "\n")
 
-        count, loaded_violations = override_system.get_ledger_violation_count(
-            ledger_path
-        )
+        count, loaded_violations = override_system.get_ledger_violation_count(ledger_path)
         assert count == 3
         assert len(loaded_violations) == 3
 
@@ -366,9 +360,7 @@ class TestRefoundation:
             old_genesis = f.read()
 
         # Trigger refoundation
-        result = override_system.initiate_refoundation(
-            authorization_signature=b"authorized"
-        )
+        result = override_system.initiate_refoundation(authorization_signature=b"authorized")
 
         assert "new_genesis_seal" in result
         assert "new_oracle_seed" in result
@@ -394,9 +386,7 @@ class TestRefoundation:
         assert override_system.override_ledger_path.exists()
 
         # Initiate refoundation
-        result = override_system.initiate_refoundation(
-            authorization_signature=b"authorized"
-        )
+        result = override_system.initiate_refoundation(authorization_signature=b"authorized")
 
         archive_dir = Path(result["archive_location"])
         assert archive_dir.exists()

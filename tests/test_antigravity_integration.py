@@ -54,9 +54,7 @@ class TestAntigravityConfiguration:
         with open(config_path) as f:
             config = json.load(f)
 
-        assert (
-            config["project"]["name"] == "Project-AI"
-        ), "Project name should be 'Project-AI'"
+        assert config["project"]["name"] == "Project-AI", "Project name should be 'Project-AI'"
 
     def test_config_ai_systems(self):
         """Test that AI systems are configured."""
@@ -113,9 +111,7 @@ class TestAntigravityAgent:
 
     def test_agent_analyze_safe_task(self, agent):
         """Test analysis of a safe task."""
-        analysis = agent.analyze_task(
-            "Add a docstring to the calculate_area function", ["src/app/utils.py"]
-        )
+        analysis = agent.analyze_task("Add a docstring to the calculate_area function", ["src/app/utils.py"])
 
         assert isinstance(analysis, dict)
         assert "requires_ethical_review" in analysis
@@ -125,41 +121,31 @@ class TestAntigravityAgent:
 
     def test_agent_analyze_ethical_task(self, agent):
         """Test analysis of a task requiring ethical review."""
-        analysis = agent.analyze_task(
-            "Modify the AI persona's memory system", ["src/app/core/ai_systems.py"]
-        )
+        analysis = agent.analyze_task("Modify the AI persona's memory system", ["src/app/core/ai_systems.py"])
 
         assert analysis["requires_ethical_review"], "Should require ethical review"
         # Note: personhood-critical is file-path based, not just keyword based
         # Test with actual personhood-critical file
 
-        analysis2 = agent.analyze_task(
-            "Update AI persona state", ["data/ai_persona/state.json"]
-        )
+        analysis2 = agent.analyze_task("Update AI persona state", ["data/ai_persona/state.json"])
         assert analysis2["is_personhood_critical"], "Should be personhood-critical"
 
     def test_agent_analyze_security_task(self, agent):
         """Test analysis of a security-critical task."""
-        analysis = agent.analyze_task(
-            "Update password hashing algorithm", ["src/app/core/user_manager.py"]
-        )
+        analysis = agent.analyze_task("Update password hashing algorithm", ["src/app/core/user_manager.py"])
 
         assert analysis["requires_security_scan"], "Should require security scan"
 
     def test_agent_analyze_restricted_files(self, agent):
         """Test detection of restricted file modifications."""
-        analysis = agent.analyze_task(
-            "Update configuration", ["data/ai_persona/state.json"]
-        )
+        analysis = agent.analyze_task("Update configuration", ["data/ai_persona/state.json"])
 
         assert len(analysis["restricted_files"]) > 0, "Should detect restricted file"
         assert analysis["is_personhood_critical"], "Should be personhood-critical"
 
     def test_agent_generate_recommendations(self, agent):
         """Test recommendation generation."""
-        recommendations = agent.generate_recommendations(
-            "Add a new feature", ["src/app/core/new_feature.py"]
-        )
+        recommendations = agent.generate_recommendations("Add a new feature", ["src/app/core/new_feature.py"])
 
         assert isinstance(recommendations, list)
         assert len(recommendations) > 0
@@ -181,22 +167,12 @@ class TestAntigravityWorkflows:
 
     def test_feature_development_workflow_exists(self):
         """Test that feature development workflow exists."""
-        workflow_path = (
-            Path(__file__).parent.parent
-            / ".antigravity"
-            / "workflows"
-            / "feature-development.yaml"
-        )
+        workflow_path = Path(__file__).parent.parent / ".antigravity" / "workflows" / "feature-development.yaml"
         assert workflow_path.exists(), "Feature development workflow not found"
 
     def test_security_fix_workflow_exists(self):
         """Test that security fix workflow exists."""
-        workflow_path = (
-            Path(__file__).parent.parent
-            / ".antigravity"
-            / "workflows"
-            / "security-fix.yaml"
-        )
+        workflow_path = Path(__file__).parent.parent / ".antigravity" / "workflows" / "security-fix.yaml"
         assert workflow_path.exists(), "Security fix workflow not found"
 
 
@@ -205,22 +181,12 @@ class TestAntigravitySetup:
 
     def test_setup_script_exists(self):
         """Test that setup script exists."""
-        setup_path = (
-            Path(__file__).parent.parent
-            / ".antigravity"
-            / "scripts"
-            / "setup_antigravity.py"
-        )
+        setup_path = Path(__file__).parent.parent / ".antigravity" / "scripts" / "setup_antigravity.py"
         assert setup_path.exists(), "Setup script not found"
 
     def test_setup_script_is_executable(self):
         """Test that setup script has valid syntax."""
-        setup_path = (
-            Path(__file__).parent.parent
-            / ".antigravity"
-            / "scripts"
-            / "setup_antigravity.py"
-        )
+        setup_path = Path(__file__).parent.parent / ".antigravity" / "scripts" / "setup_antigravity.py"
 
         # Try to compile the script
         with open(setup_path) as f:
@@ -239,16 +205,10 @@ class TestAntigravityDocumentation:
 
     def test_quickstart_exists(self):
         """Test that quickstart guide exists."""
-        quickstart_path = (
-            Path(__file__).parent.parent / "docs" / "ANTIGRAVITY_QUICKSTART.md"
-        )
+        quickstart_path = Path(__file__).parent.parent / "docs" / "ANTIGRAVITY_QUICKSTART.md"
         assert quickstart_path.exists(), "Antigravity quickstart guide not found"
 
     def test_integration_guide_exists(self):
         """Test that integration guide exists."""
-        guide_path = (
-            Path(__file__).parent.parent
-            / "docs"
-            / "GOOGLE_ANTIGRAVITY_IDE_INTEGRATION.md"
-        )
+        guide_path = Path(__file__).parent.parent / "docs" / "GOOGLE_ANTIGRAVITY_IDE_INTEGRATION.md"
         assert guide_path.exists(), "Antigravity integration guide not found"

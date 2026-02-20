@@ -63,9 +63,9 @@ class ResourceUsage:
     Mirrors the ResourceUsage struct declared in resource_limiter.thirsty.
     """
 
-    cpu_ms: float           # Wall-clock elapsed during shadow execution
-    peak_memory_mb: float   # Peak heap delta measured via tracemalloc
-    violated: bool          # True if any quota was exceeded
+    cpu_ms: float  # Wall-clock elapsed during shadow execution
+    peak_memory_mb: float  # Peak heap delta measured via tracemalloc
+    violated: bool  # True if any quota was exceeded
     violation_reason: str | None = None  # Human-readable reason or None
 
 
@@ -108,9 +108,7 @@ def _try_compile_thirsty(source: str) -> Any:
             )
             return result.bytecode
         else:
-            logger.warning(
-                "resource_limiter.thirsty compilation failed: %s", result.errors
-            )
+            logger.warning("resource_limiter.thirsty compilation failed: %s", result.errors)
             return None
     except Exception as exc:
         logger.warning("Shadow Thirst compiler unavailable: %s", exc)
@@ -184,9 +182,7 @@ class ShadowResourceLimiter:
         usage = self._measure(callable_obj, cpu_quota_ms, memory_quota_mb)
 
         if usage.violated:
-            logger.warning(
-                "Shadow resource quota violated: %s", usage.violation_reason
-            )
+            logger.warning("Shadow resource quota violated: %s", usage.violation_reason)
             raise ShadowResourceViolation(
                 reason=usage.violation_reason or "resource limit exceeded",
                 cpu_ms=usage.cpu_ms,
@@ -242,9 +238,12 @@ class ShadowResourceLimiter:
         any_violated = cpu_violated or mem_violated
 
         reason = _build_violation_reason(
-            cpu_violated, mem_violated,
-            cpu_used_ms, cpu_quota_ms,
-            peak_memory_mb, memory_quota_mb,
+            cpu_violated,
+            mem_violated,
+            cpu_used_ms,
+            cpu_quota_ms,
+            peak_memory_mb,
+            memory_quota_mb,
         )
 
         return ResourceUsage(
@@ -279,7 +278,8 @@ class ShadowResourceLimiter:
             future.cancel()
             logger.warning(
                 "Shadow callable timed out after %.1fms (quota: %.1fms)",
-                cpu_quota_ms, cpu_quota_ms,
+                cpu_quota_ms,
+                cpu_quota_ms,
             )
             return None, True
         except Exception:
@@ -357,10 +357,7 @@ def _build_violation_reason(
     if cpu_violated:
         return f"CPU quota exceeded: used {cpu_used:.1f}ms, limit {cpu_quota_ms:.1f}ms"
     if mem_violated:
-        return (
-            f"Memory quota exceeded: used {peak_mem_mb:.2f}MB, "
-            f"limit {memory_quota_mb:.2f}MB"
-        )
+        return f"Memory quota exceeded: used {peak_mem_mb:.2f}MB, " f"limit {memory_quota_mb:.2f}MB"
     return None
 
 

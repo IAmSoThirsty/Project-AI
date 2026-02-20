@@ -30,9 +30,7 @@ async def validate_learning_content(request: dict) -> bool:
     Returns:
         True if content is valid, False otherwise
     """
-    activity.logger.info(
-        "Validating learning content for category: %s", request.get("category")
-    )
+    activity.logger.info("Validating learning content for category: %s", request.get("category"))
 
     content = request.get("content", "")
 
@@ -109,9 +107,7 @@ async def process_learning_request(request: dict) -> str:
 
     # Generate unique knowledge ID
     timestamp = datetime.now().isoformat()
-    knowledge_id = hashlib.sha256(
-        f"{request.get('content')}{timestamp}".encode()
-    ).hexdigest()[:16]
+    knowledge_id = hashlib.sha256(f"{request.get('content')}{timestamp}".encode()).hexdigest()[:16]
 
     activity.logger.info("Generated knowledge ID: %s", knowledge_id)
     return knowledge_id
@@ -438,9 +434,7 @@ async def store_memories(data: dict) -> int:
     conversation_id = data.get("conversation_id")
     info = data.get("info", [])
 
-    activity.logger.info(
-        "Storing %s memories for conversation: %s", len(info), conversation_id
-    )
+    activity.logger.info("Storing %s memories for conversation: %s", len(info), conversation_id)
 
     memory_path = Path("data/memory/conversations.json")
     memory_path.parent.mkdir(parents=True, exist_ok=True)
@@ -505,9 +499,7 @@ async def validate_crisis_request(request: dict) -> bool:
     Returns:
         True if request is valid, False otherwise
     """
-    activity.logger.info(
-        "Validating crisis request for target: %s", request.get("target_member")
-    )
+    activity.logger.info("Validating crisis request for target: %s", request.get("target_member"))
 
     # Validate target member
     target = request.get("target_member")
@@ -523,9 +515,7 @@ async def validate_crisis_request(request: dict) -> bool:
 
     # Validate each mission has required fields
     for mission in missions:
-        if not all(
-            key in mission for key in ["phase_id", "agent_id", "action", "target"]
-        ):
+        if not all(key in mission for key in ["phase_id", "agent_id", "action", "target"]):
             activity.logger.warning("Invalid mission structure: %s", mission)
             return False
 
@@ -547,9 +537,7 @@ async def initialize_crisis_response(data: dict) -> bool:
     crisis_id = data.get("crisis_id")
     target = data.get("target")
 
-    activity.logger.info(
-        "Initializing crisis response: %s for target: %s", crisis_id, target
-    )
+    activity.logger.info("Initializing crisis response: %s for target: %s", crisis_id, target)
 
     # Ensure data directory exists
     crisis_path = Path("data/crises")
@@ -595,8 +583,7 @@ async def perform_agent_mission(mission: dict) -> bool:
     target = mission.get("target")
 
     activity.logger.info(
-        f"AGENT DEPLOYMENT - Phase: {phase_id} | "
-        f"Agent: {agent_id} | Action: {action} | Target: {target}"
+        f"AGENT DEPLOYMENT - Phase: {phase_id} | " f"Agent: {agent_id} | Action: {action} | Target: {target}"
     )
 
     # Simulate agent mission execution
@@ -606,9 +593,7 @@ async def perform_agent_mission(mission: dict) -> bool:
     # - Monitor agent progress
     # - Handle agent-specific errors
 
-    activity.logger.info(
-        "Agent %s deployed successfully for mission phase %s", agent_id, phase_id
-    )
+    activity.logger.info("Agent %s deployed successfully for mission phase %s", agent_id, phase_id)
 
     return True
 
@@ -678,10 +663,7 @@ async def finalize_crisis_response(data: dict) -> bool:
     completed = data.get("completed", 0)
     failed = data.get("failed", 0)
 
-    activity.logger.info(
-        f"Finalizing crisis response: {crisis_id} "
-        f"(Completed: {completed}, Failed: {failed})"
-    )
+    activity.logger.info(f"Finalizing crisis response: {crisis_id} " f"(Completed: {completed}, Failed: {failed})")
 
     crisis_file = Path("data/crises") / f"{crisis_id}.json"
     if not crisis_file.exists():

@@ -133,9 +133,7 @@ class CommandMessage:
     encrypted: bool = False
 
 
-class CommandControlSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable, ICommunication
-):
+class CommandControlSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable, ICommunication):
     """
     Command & Control Subsystem
 
@@ -175,9 +173,7 @@ class CommandControlSubsystem(
         # Configuration
         self.max_concurrent_missions = config.get("max_concurrent_missions", 10)
         self.task_timeout = timedelta(seconds=config.get("task_timeout_seconds", 3600))
-        self.message_retention = timedelta(
-            seconds=config.get("message_retention_seconds", 86400)
-        )
+        self.message_retention = timedelta(seconds=config.get("message_retention_seconds", 86400))
         self.enable_encryption = config.get("enable_message_encryption", True)
 
         # Mission management
@@ -288,18 +284,12 @@ class CommandControlSubsystem(
             return False
 
         # Check that processing thread is running
-        if (
-            not self._processing_active
-            or not self._processing_thread
-            or not self._processing_thread.is_alive()
-        ):
+        if not self._processing_active or not self._processing_thread or not self._processing_thread.is_alive():
             self.logger.warning("Command processing thread not running")
             return False
 
         # Check for mission overload
-        active_missions = sum(
-            1 for m in self._missions.values() if m.status == MissionStatus.ACTIVE
-        )
+        active_missions = sum(1 for m in self._missions.values() if m.status == MissionStatus.ACTIVE)
         if active_missions > self.max_concurrent_missions:
             self.logger.warning("Too many active missions: %s", active_missions)
             return False
@@ -312,15 +302,11 @@ class CommandControlSubsystem(
 
         with self._mission_lock:
             status["total_missions"] = len(self._missions)
-            status["active_missions"] = sum(
-                1 for m in self._missions.values() if m.status == MissionStatus.ACTIVE
-            )
+            status["active_missions"] = sum(1 for m in self._missions.values() if m.status == MissionStatus.ACTIVE)
 
         with self._task_lock:
             status["total_tasks"] = len(self._tasks)
-            status["pending_tasks"] = sum(
-                1 for t in self._tasks.values() if t.status == TaskStatus.PENDING
-            )
+            status["pending_tasks"] = sum(1 for t in self._tasks.values() if t.status == TaskStatus.PENDING)
 
         with self._message_lock:
             status["queued_messages"] = len(self._message_queue)
@@ -496,9 +482,7 @@ class CommandControlSubsystem(
         with self._subscription_lock:
             for event_type in self._subscriptions:
                 self._subscriptions[event_type] = [
-                    (sid, cb)
-                    for sid, cb in self._subscriptions[event_type]
-                    if sid != subscription_id
+                    (sid, cb) for sid, cb in self._subscriptions[event_type] if sid != subscription_id
                 ]
             return True
 
@@ -511,9 +495,7 @@ class CommandControlSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error(
-                        "Error in event callback %s: %s", subscription_id, e
-                    )
+                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
 
             return len(subscribers)
 
@@ -538,10 +520,7 @@ class CommandControlSubsystem(
                 if task.status == TaskStatus.PENDING:
                     # Check dependencies
                     deps_completed = all(
-                        self._tasks.get(
-                            dep_id, Task("", "", "", TaskStatus.FAILED)
-                        ).status
-                        == TaskStatus.COMPLETED
+                        self._tasks.get(dep_id, Task("", "", "", TaskStatus.FAILED)).status == TaskStatus.COMPLETED
                         for dep_id in task.dependencies
                     )
 
@@ -567,9 +546,7 @@ class CommandControlSubsystem(
         with self._message_lock:
             # Keep only recent history
             cutoff = datetime.now() - self.message_retention * 2
-            self._message_history = [
-                m for m in self._message_history if m.timestamp > cutoff
-            ]
+            self._message_history = [m for m in self._message_history if m.timestamp > cutoff]
 
     def _create_mission(self, params: dict[str, Any]) -> Mission | None:
         """Create a new mission."""
@@ -614,10 +591,7 @@ class CommandControlSubsystem(
             old_status = mission.status
             mission.status = MissionStatus[new_status]
 
-            if (
-                mission.status == MissionStatus.ACTIVE
-                and old_status == MissionStatus.PLANNED
-            ):
+            if mission.status == MissionStatus.ACTIVE and old_status == MissionStatus.PLANNED:
                 mission.started_at = datetime.now()
             elif mission.status in [MissionStatus.COMPLETED, MissionStatus.FAILED]:
                 mission.completed_at = datetime.now()
@@ -713,9 +687,7 @@ class CommandControlSubsystem(
             # Get task statuses
             with self._task_lock:
                 task_statuses = {
-                    task_id: self._tasks[task_id].status.value
-                    for task_id in mission.tasks
-                    if task_id in self._tasks
+                    task_id: self._tasks[task_id].status.value for task_id in mission.tasks if task_id in self._tasks
                 }
 
             return {
@@ -724,12 +696,8 @@ class CommandControlSubsystem(
                 "status": mission.status.value,
                 "priority": mission.priority.value,
                 "created_at": mission.created_at.isoformat(),
-                "started_at": (
-                    mission.started_at.isoformat() if mission.started_at else None
-                ),
-                "completed_at": (
-                    mission.completed_at.isoformat() if mission.completed_at else None
-                ),
+                "started_at": (mission.started_at.isoformat() if mission.started_at else None),
+                "completed_at": (mission.completed_at.isoformat() if mission.completed_at else None),
                 "tasks": task_statuses,
                 "assigned_resources": mission.assigned_resources,
             }
@@ -748,14 +716,10 @@ class CommandControlSubsystem(
                 "plan_id": str(uuid.uuid4()),
                 "situation": situation,
                 "recommended_actions": self._generate_recommended_actions(situation),
-                "resource_requirements": self._estimate_resource_requirements(
-                    situation
-                ),
+                "resource_requirements": self._estimate_resource_requirements(situation),
                 "estimated_duration": self._estimate_duration(situation),
                 "risk_level": self._assess_risk(situation),
-                "success_probability": self._estimate_success_probability(
-                    situation, available_resources
-                ),
+                "success_probability": self._estimate_success_probability(situation, available_resources),
             }
 
             self.emit_event("tactical_plan_created", {"plan_id": plan["plan_id"]})
@@ -801,9 +765,7 @@ class CommandControlSubsystem(
     def _can_allocate_task_resources(self, task: Task) -> bool:
         """Check if resources can be allocated for task."""
         # Simplified check - would integrate with resource management in production
-        return (
-            len(task.resources_required) == 0 or len(self._resource_allocations) < 100
-        )
+        return len(task.resources_required) == 0 or len(self._resource_allocations) < 100
 
     def _generate_recommended_actions(self, situation: dict[str, Any]) -> list[str]:
         """Generate recommended actions for a situation."""
@@ -822,9 +784,7 @@ class CommandControlSubsystem(
 
         return actions
 
-    def _estimate_resource_requirements(
-        self, situation: dict[str, Any]
-    ) -> dict[str, float]:
+    def _estimate_resource_requirements(self, situation: dict[str, Any]) -> dict[str, float]:
         """Estimate resource requirements."""
         threat_level = situation.get("threat_level", 0)
 
@@ -853,9 +813,7 @@ class CommandControlSubsystem(
         else:
             return "LOW"
 
-    def _estimate_success_probability(
-        self, situation: dict[str, Any], resources: dict[str, float]
-    ) -> float:
+    def _estimate_success_probability(self, situation: dict[str, Any], resources: dict[str, float]) -> float:
         """Estimate probability of mission success."""
         threat_level = situation.get("threat_level", 0)
         required = self._estimate_resource_requirements(situation)

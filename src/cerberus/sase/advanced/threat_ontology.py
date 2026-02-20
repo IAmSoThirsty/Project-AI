@@ -199,9 +199,7 @@ class ThreatActorClassifier:
             "all_scores": {k.value: v for k, v in scores.items()},
         }
 
-        logger.info(
-            f"Actor classified: {best_class.value} (risk={best_profile.risk_level})"
-        )
+        logger.info(f"Actor classified: {best_class.value} (risk={best_profile.risk_level})")
 
         return result
 

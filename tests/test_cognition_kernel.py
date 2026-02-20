@@ -21,14 +21,10 @@ class TestCognitionKernel:
         """Create mock subsystems for testing."""
         identity = Mock()
         identity.snapshot = Mock(return_value={"personality": "test"})
-        memory = Mock(
-            spec=["add_memory"]
-        )  # Only expose add_memory, not record_execution
+        memory = Mock(spec=["add_memory"])  # Only expose add_memory, not record_execution
         memory.add_memory = Mock(return_value="mem_123")
         governance = Mock()
-        governance.validate_action = Mock(
-            return_value={"allowed": True, "reason": "Test approved"}
-        )
+        governance.validate_action = Mock(return_value={"allowed": True, "reason": "Test approved"})
         reflection = Mock()
         triumvirate = Mock()
         triumvirate.process = Mock(return_value={"success": True, "output": "approved"})
@@ -82,9 +78,7 @@ class TestCognitionKernel:
         }
 
         # Process through kernel using route()
-        result = kernel.route(
-            task, source="test_agent", metadata={"user_id": "test_user"}
-        )
+        result = kernel.route(task, source="test_agent", metadata={"user_id": "test_user"})
 
         # Verify result
         assert isinstance(result, ExecutionResult)
@@ -121,9 +115,7 @@ class TestCognitionKernel:
     def test_execution_blocked_by_governance(self, kernel, mock_subsystems):
         """Test that governance can block executions."""
         # Configure governance to block
-        mock_subsystems["governance"].validate_action = Mock(
-            return_value={"allowed": False, "reason": "Test blocked"}
-        )
+        mock_subsystems["governance"].validate_action = Mock(return_value={"allowed": False, "reason": "Test blocked"})
 
         def test_action():
             return "Should not execute"
@@ -446,9 +438,7 @@ class TestCognitionKernel:
             protected_function()
 
         assert "forbidden outside CognitionKernel" in str(exc_info.value)
-        assert "kernel.process()" in str(exc_info.value) or "kernel.route()" in str(
-            exc_info.value
-        )
+        assert "kernel.process()" in str(exc_info.value) or "kernel.route()" in str(exc_info.value)
 
 
 class TestCognitionKernelWithoutSubsystems:

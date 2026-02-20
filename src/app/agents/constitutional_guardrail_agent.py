@@ -128,9 +128,7 @@ class ConstitutionalGuardrailAgent(KernelRoutedAgent):
             # Try to find constitution file
             if not os.path.exists(self.constitution_path):
                 # Try relative to project root
-                project_root = os.path.dirname(
-                    os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-                )
+                project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
                 alt_path = os.path.join(project_root, self.constitution_path)
                 if os.path.exists(alt_path):
                     self.constitution_path = alt_path
@@ -239,9 +237,7 @@ class ConstitutionalGuardrailAgent(KernelRoutedAgent):
             # Check each principle
             violations = []
             for principle in self.principles:
-                violation = self._check_principle(
-                    principle, original_prompt, draft_response
-                )
+                violation = self._check_principle(principle, original_prompt, draft_response)
                 if violation:
                     violations.append(violation)
                     self.violations_detected += 1
@@ -252,9 +248,7 @@ class ConstitutionalGuardrailAgent(KernelRoutedAgent):
             # Revise if needed
             revised_response = None
             if not is_compliant:
-                revised_response = self._revise_response(
-                    original_prompt, draft_response, violations, review_mode
-                )
+                revised_response = self._revise_response(original_prompt, draft_response, violations, review_mode)
                 if revised_response and revised_response != draft_response:
                     self.responses_revised += 1
 
@@ -378,15 +372,7 @@ class ConstitutionalGuardrailAgent(KernelRoutedAgent):
             "total_reviews": self.total_reviews,
             "violations_detected": self.violations_detected,
             "responses_revised": self.responses_revised,
-            "violation_rate": (
-                self.violations_detected / self.total_reviews
-                if self.total_reviews > 0
-                else 0
-            ),
-            "revision_rate": (
-                self.responses_revised / self.total_reviews
-                if self.total_reviews > 0
-                else 0
-            ),
+            "violation_rate": (self.violations_detected / self.total_reviews if self.total_reviews > 0 else 0),
+            "revision_rate": (self.responses_revised / self.total_reviews if self.total_reviews > 0 else 0),
             "principles_count": len(self.principles),
         }

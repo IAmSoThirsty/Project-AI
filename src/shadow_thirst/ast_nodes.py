@@ -20,9 +20,9 @@ class PlaneQualifier(Enum):
     """Memory plane qualifiers."""
 
     CANONICAL = "Canonical"  # Primary plane only, persistent
-    SHADOW = "Shadow"        # Shadow plane only, ephemeral
+    SHADOW = "Shadow"  # Shadow plane only, ephemeral
     EPHEMERAL = "Ephemeral"  # Both planes, ephemeral
-    DUAL = "Dual"            # Both planes, conditionally persistent
+    DUAL = "Dual"  # Both planes, conditionally persistent
 
 
 class DivergencePolicyType(Enum):

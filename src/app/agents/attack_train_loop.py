@@ -99,9 +99,7 @@ class AttackTrainLoop:
 
         return epoch_result
 
-    def execute_attack_defense_cycle(
-        self, attack: dict[str, Any], defense_context: dict[str, Any]
-    ) -> dict[str, Any]:
+    def execute_attack_defense_cycle(self, attack: dict[str, Any], defense_context: dict[str, Any]) -> dict[str, Any]:
         """Execute a single attack-defense cycle.
 
         This is a stub implementation. Future versions will:
@@ -127,9 +125,7 @@ class AttackTrainLoop:
             "timestamp": datetime.now().isoformat(),
         }
 
-    def compute_adaptation_updates(
-        self, cycle_results: list[dict[str, Any]]
-    ) -> dict[str, Any]:
+    def compute_adaptation_updates(self, cycle_results: list[dict[str, Any]]) -> dict[str, Any]:
         """Compute parameter updates for agents based on training results.
 
         This is a stub implementation. Future versions will:
@@ -159,15 +155,11 @@ class AttackTrainLoop:
             Training statistics dictionary
         """
         avg_attacker_perf = (
-            sum(self.attacker_performance) / len(self.attacker_performance)
-            if self.attacker_performance
-            else 0.0
+            sum(self.attacker_performance) / len(self.attacker_performance) if self.attacker_performance else 0.0
         )
 
         avg_defender_perf = (
-            sum(self.defender_performance) / len(self.defender_performance)
-            if self.defender_performance
-            else 0.0
+            sum(self.defender_performance) / len(self.defender_performance) if self.defender_performance else 0.0
         )
 
         return {

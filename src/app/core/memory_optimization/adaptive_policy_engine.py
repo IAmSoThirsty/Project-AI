@@ -38,9 +38,7 @@ class AdaptivePolicyEngine:
     def __init__(self, learning_rate: float = 0.1):
         self.learning_rate = learning_rate
         self.rules: list[PolicyRule] = []
-        logger.info(
-            "AdaptivePolicyEngine initialized with learning_rate=%.2f", learning_rate
-        )
+        logger.info("AdaptivePolicyEngine initialized with learning_rate=%.2f", learning_rate)
 
     def evaluate_policies(self, metrics: dict[str, Any]) -> list[PolicyAction]:
         """Evaluate policies based on current metrics."""

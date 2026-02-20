@@ -82,9 +82,7 @@ class MeshNetworkEngine:
             True if mesh created/joined successfully
         """
         try:
-            self.logger.info(
-                "Creating mesh network '%s' as %s", self.mesh_id, role.value
-            )
+            self.logger.info("Creating mesh network '%s' as %s", self.mesh_id, role.value)
 
             # Generate unique node ID
             self.my_node_id = self._generate_node_id()
@@ -159,9 +157,7 @@ class MeshNetworkEngine:
                 if path:
                     self.routing_table[node_id] = path
 
-            self.logger.debug(
-                "Routing table updated: %s routes", len(self.routing_table)
-            )
+            self.logger.debug("Routing table updated: %s routes", len(self.routing_table))
 
         except Exception as e:
             self.logger.error("Routing table update failed: %s", e)
@@ -187,9 +183,7 @@ class MeshNetworkEngine:
     def add_node(self, node: MeshNode) -> None:
         """Add discovered node to mesh topology"""
         self.nodes[node.node_id] = node
-        self.logger.info(
-            "Added mesh node: %s (role: %s)", node.node_id, node.role.value
-        )
+        self.logger.info("Added mesh node: %s (role: %s)", node.node_id, node.role.value)
 
         # Update total pool bandwidth
         if self.enable_bandwidth_pooling:
@@ -261,10 +255,6 @@ class MeshNetworkEngine:
         self.enable_bandwidth_pooling = True
 
         # Recalculate total pool bandwidth
-        self.total_pool_bandwidth_mbps = sum(
-            node.bandwidth_mbps for node in self.nodes.values()
-        )
+        self.total_pool_bandwidth_mbps = sum(node.bandwidth_mbps for node in self.nodes.values())
 
-        self.logger.info(
-            "Marketplace pooling enabled: %s Mbps total", self.total_pool_bandwidth_mbps
-        )
+        self.logger.info("Marketplace pooling enabled: %s Mbps total", self.total_pool_bandwidth_mbps)

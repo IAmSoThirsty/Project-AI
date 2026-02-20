@@ -299,9 +299,7 @@ POPULATION_TIERS = {
 }
 
 
-def get_country_list(
-    category: str = "comprehensive", region: str | None = None, bloc: str | None = None
-) -> list[str]:
+def get_country_list(category: str = "comprehensive", region: str | None = None, bloc: str | None = None) -> list[str]:
     """
     Get country list based on category, region, or economic bloc.
 

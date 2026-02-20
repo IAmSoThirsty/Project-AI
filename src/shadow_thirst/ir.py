@@ -25,8 +25,8 @@ from typing import Any
 class ExecutionPlane(Enum):
     """Execution plane identifier."""
 
-    PRIMARY = "P"      # Primary canonical plane
-    SHADOW = "Sh"      # Shadow validation plane
+    PRIMARY = "P"  # Primary canonical plane
+    SHADOW = "Sh"  # Shadow validation plane
     INVARIANT = "Inv"  # Invariant checking plane
 
 
@@ -34,23 +34,23 @@ class IROpcode(Enum):
     """IR instruction opcodes."""
 
     # Stack operations
-    PUSH = auto()      # Push value onto stack
-    POP = auto()       # Pop value from stack
-    DUP = auto()       # Duplicate top of stack
-    SWAP = auto()      # Swap top two stack values
+    PUSH = auto()  # Push value onto stack
+    POP = auto()  # Pop value from stack
+    DUP = auto()  # Duplicate top of stack
+    SWAP = auto()  # Swap top two stack values
 
     # Memory operations
-    LOAD_VAR = auto()      # Load variable
-    STORE_VAR = auto()     # Store variable
-    LOAD_CONST = auto()    # Load constant
-    LOAD_PARAM = auto()    # Load parameter
+    LOAD_VAR = auto()  # Load variable
+    STORE_VAR = auto()  # Store variable
+    LOAD_CONST = auto()  # Load constant
+    LOAD_PARAM = auto()  # Load parameter
 
     # Arithmetic operations
     ADD = auto()
     SUB = auto()
     MUL = auto()
     DIV = auto()
-    NEG = auto()       # Unary negation
+    NEG = auto()  # Unary negation
 
     # Logical operations
     AND = auto()
@@ -58,34 +58,34 @@ class IROpcode(Enum):
     NOT = auto()
 
     # Comparison operations
-    EQ = auto()        # Equal
-    NE = auto()        # Not equal
-    LT = auto()        # Less than
-    LE = auto()        # Less than or equal
-    GT = auto()        # Greater than
-    GE = auto()        # Greater than or equal
+    EQ = auto()  # Equal
+    NE = auto()  # Not equal
+    LT = auto()  # Less than
+    LE = auto()  # Less than or equal
+    GT = auto()  # Greater than
+    GE = auto()  # Greater than or equal
 
     # Control flow
-    JUMP = auto()          # Unconditional jump
-    JUMP_IF_FALSE = auto() # Conditional jump
-    RETURN = auto()        # Return from function
-    CALL = auto()          # Function call
+    JUMP = auto()  # Unconditional jump
+    JUMP_IF_FALSE = auto()  # Conditional jump
+    RETURN = auto()  # Return from function
+    CALL = auto()  # Function call
 
     # I/O operations
-    OUTPUT = auto()    # Output (pour)
-    INPUT = auto()     # Input (sip)
+    OUTPUT = auto()  # Output (pour)
+    INPUT = auto()  # Input (sip)
 
     # Shadow-specific operations
-    ACTIVATE_SHADOW = auto()       # Activate shadow execution
-    CHECK_INVARIANT = auto()       # Check invariant condition
-    RECORD_DIVERGENCE = auto()     # Record divergence metric
-    COMMIT_PRIMARY = auto()        # Commit primary result
-    QUARANTINE = auto()            # Quarantine result
+    ACTIVATE_SHADOW = auto()  # Activate shadow execution
+    CHECK_INVARIANT = auto()  # Check invariant condition
+    RECORD_DIVERGENCE = auto()  # Record divergence metric
+    COMMIT_PRIMARY = auto()  # Commit primary result
+    QUARANTINE = auto()  # Quarantine result
 
     # Constitutional operations
-    VALIDATE_AND_COMMIT = auto()   # Constitutional validation + commit
-    SEAL_AUDIT = auto()            # Cryptographically seal audit
-    INVOKE_TARL = auto()           # Invoke T.A.R.L. policy check
+    VALIDATE_AND_COMMIT = auto()  # Constitutional validation + commit
+    SEAL_AUDIT = auto()  # Cryptographically seal audit
+    INVOKE_TARL = auto()  # Invoke T.A.R.L. policy check
 
 
 class PlaneQualifierIR(Enum):
@@ -114,7 +114,7 @@ class IRInstruction:
     line: int = 0
     column: int = 0
     resource_bound_ms: float | None = None  # CPU time bound
-    memory_bound_mb: float | None = None    # Memory bound
+    memory_bound_mb: float | None = None  # Memory bound
 
     def __str__(self) -> str:
         operands_str = ", ".join(str(op) for op in self.operands)
@@ -187,12 +187,7 @@ class IRFunction:
 
     def get_all_blocks(self) -> list[IRBasicBlock]:
         """Get all basic blocks across all planes."""
-        return (
-            self.primary_blocks +
-            self.shadow_blocks +
-            self.invariant_blocks +
-            self.activation_predicate_blocks
-        )
+        return self.primary_blocks + self.shadow_blocks + self.invariant_blocks + self.activation_predicate_blocks
 
 
 @dataclass
@@ -257,12 +252,7 @@ class IRBuilder:
         return block
 
     def emit(
-        self,
-        opcode: IROpcode,
-        *operands: Any,
-        plane: ExecutionPlane | None = None,
-        line: int = 0,
-        column: int = 0
+        self, opcode: IROpcode, *operands: Any, plane: ExecutionPlane | None = None, line: int = 0, column: int = 0
     ) -> IRInstruction:
         """
         Emit an instruction.
@@ -304,11 +294,7 @@ class IRBuilder:
         return temp_name
 
     def add_variable(
-        self,
-        name: str,
-        qualifier: PlaneQualifierIR,
-        type_name: str | None = None,
-        is_parameter: bool = False
+        self, name: str, qualifier: PlaneQualifierIR, type_name: str | None = None, is_parameter: bool = False
     ) -> IRVariable:
         """Add variable to current function."""
         var = IRVariable(

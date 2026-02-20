@@ -410,9 +410,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
         # Check worker threads
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
-            self.logger.warning(
-                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
-            )
+            self.logger.warning("Only %s/%s workers alive", alive_threads, len(self.worker_threads))
             return False
 
         return True
@@ -426,9 +424,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 "role": self.cell_identity.role.value,
                 "status": self.cell_identity.status.value,
                 "registered_cells": len(self.cells),
-                "active_cells": sum(
-                    1 for c in self.cells.values() if c.status == CellStatus.ACTIVE
-                ),
+                "active_cells": sum(1 for c in self.cells.values() if c.status == CellStatus.ACTIVE),
                 "work_queue_size": len(self.work_queue),
                 "active_work_count": len(self.active_work),
                 "raft_term": self.raft_state.current_term,
@@ -462,9 +458,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             self._persist_cell(identity)
 
             self.metrics["registered_cells"] = len(self.cells)
-            self.logger.info(
-                "Registered cell: %s (%s)", identity.cell_id, identity.name
-            )
+            self.logger.info("Registered cell: %s (%s)", identity.cell_id, identity.name)
 
             self.emit_event("cell_registered", {"cell_id": identity.cell_id})
 
@@ -487,9 +481,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
     def _start_election(self):
         """Start leader election"""
         try:
-            self.logger.info(
-                "Starting election for term %s", self.raft_state.current_term + 1
-            )
+            self.logger.info("Starting election for term %s", self.raft_state.current_term + 1)
 
             # Increment term and become candidate
             self.raft_state.current_term += 1
@@ -502,9 +494,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 "term": self.raft_state.current_term,
                 "candidate_id": self.cell_id,
                 "last_log_index": len(self.raft_state.log) - 1,
-                "last_log_term": (
-                    self.raft_state.log[-1]["term"] if self.raft_state.log else 0
-                ),
+                "last_log_term": (self.raft_state.log[-1]["term"] if self.raft_state.log else 0),
             }
 
             self._broadcast_message(MessageType.VOTE_REQUEST, vote_request)
@@ -528,22 +518,16 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 self.raft_state.voted_for = None
                 self.cell_identity.role = CellRole.FOLLOWER
 
-            if (
-                self.raft_state.voted_for is None
-                or self.raft_state.voted_for == candidate_id
-            ):
+            if self.raft_state.voted_for is None or self.raft_state.voted_for == candidate_id:
                 # Check log freshness
                 last_log_index = len(self.raft_state.log) - 1
-                last_log_term = (
-                    self.raft_state.log[-1]["term"] if self.raft_state.log else 0
-                )
+                last_log_term = self.raft_state.log[-1]["term"] if self.raft_state.log else 0
 
                 candidate_log_index = message.payload["last_log_index"]
                 candidate_log_term = message.payload["last_log_term"]
 
                 if candidate_log_term > last_log_term or (
-                    candidate_log_term == last_log_term
-                    and candidate_log_index >= last_log_index
+                    candidate_log_term == last_log_term and candidate_log_index >= last_log_index
                 ):
                     grant_vote = True
                     self.raft_state.voted_for = candidate_id
@@ -689,9 +673,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                     }
                     for cid, health in self.cell_health.items()
                 },
-                "active_cells": len(
-                    [c for c in self.cells.values() if c.status == CellStatus.ACTIVE]
-                ),
+                "active_cells": len([c for c in self.cells.values() if c.status == CellStatus.ACTIVE]),
             }
 
             for target_id in gossip_targets:
@@ -719,17 +701,12 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 for cell_id, health_data in peer_health.items():
                     if cell_id in self.cell_health:
                         # Only update if peer data is newer
-                        if (
-                            health_data["last_heartbeat"]
-                            > self.cell_health[cell_id].last_heartbeat
-                        ):
+                        if health_data["last_heartbeat"] > self.cell_health[cell_id].last_heartbeat:
                             updates_to_apply[cell_id] = health_data
 
                 # Apply all updates at once (reduces iterations)
                 for cell_id, health_data in updates_to_apply.items():
-                    self.cell_health[cell_id].last_heartbeat = health_data[
-                        "last_heartbeat"
-                    ]
+                    self.cell_health[cell_id].last_heartbeat = health_data["last_heartbeat"]
                     self.cell_health[cell_id].healthy = health_data["healthy"]
 
         except Exception as e:
@@ -752,9 +729,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             # Otherwise, forward to leader
             leader_id = self._find_leader()
             if leader_id:
-                self._send_message(
-                    leader_id, MessageType.WORK_REQUEST, {"work": work.__dict__}
-                )
+                self._send_message(leader_id, MessageType.WORK_REQUEST, {"work": work.__dict__})
 
             return True
 
@@ -795,14 +770,10 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
             self.active_work[work.work_id] = work
 
             # Send work to selected cell
-            self._send_message(
-                selected_cell_id, MessageType.WORK_REQUEST, {"work": work.__dict__}
-            )
+            self._send_message(selected_cell_id, MessageType.WORK_REQUEST, {"work": work.__dict__})
 
             self.metrics["work_distributed"] += 1
-            self.logger.info(
-                "Assigned work %s to cell %s", work.work_id, selected_cell_id
-            )
+            self.logger.info("Assigned work %s to cell %s", work.work_id, selected_cell_id)
 
             return True
 
@@ -847,9 +818,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
     # MESSAGING
     # ========================================================================
 
-    def _send_message(
-        self, recipient_id: str, message_type: MessageType, payload: dict[str, Any]
-    ):
+    def _send_message(self, recipient_id: str, message_type: MessageType, payload: dict[str, Any]):
         """Send message to specific cell"""
         try:
             if recipient_id not in self.cell_endpoints:
@@ -940,9 +909,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                                 self.cells[cell_id].status = CellStatus.DEGRADED
 
                 # Update active cell count
-                self.metrics["active_cells"] = sum(
-                    1 for c in self.cells.values() if c.status == CellStatus.ACTIVE
-                )
+                self.metrics["active_cells"] = sum(1 for c in self.cells.values() if c.status == CellStatus.ACTIVE)
 
                 time.sleep(10)  # Every 10 seconds
 
@@ -1060,9 +1027,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
     def unsubscribe(self, subscription_id: str) -> bool:
         """Unsubscribe from events"""
         for event_type, subs in self.subscribers.items():
-            self.subscribers[event_type] = [
-                (sid, cb) for sid, cb in subs if sid != subscription_id
-            ]
+            self.subscribers[event_type] = [(sid, cb) for sid, cb in subs if sid != subscription_id]
         return True
 
     def emit_event(self, event_type: str, data: Any) -> int:

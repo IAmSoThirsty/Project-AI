@@ -98,7 +98,7 @@ def test_sovereign_audit_log():
             event_type="test.constitutional",
             data={"test": "data", "sovereign": True},
             actor="test_runner",
-            description="Constitutional-grade test event"
+            description="Constitutional-grade test event",
         )
         assert success is True
         print("  ✓ Logged sovereign event")
@@ -132,9 +132,11 @@ def test_sovereign_audit_log():
 
         # Get statistics
         stats = audit.get_statistics()
-        print(f"  ✓ Statistics: {stats['event_count']} events, "
-              f"{stats['signature_count']} signatures, "
-              f"{stats['anchor_count']} anchors")
+        print(
+            f"  ✓ Statistics: {stats['event_count']} events, "
+            f"{stats['signature_count']} signatures, "
+            f"{stats['anchor_count']} anchors"
+        )
 
 
 def test_deterministic_replay():
@@ -151,9 +153,7 @@ def test_deterministic_replay():
 
         for i in range(3):
             audit.log_event(
-                f"deterministic_event_{i}",
-                {"sequence": i},
-                deterministic_timestamp=base_time + timedelta(seconds=i)
+                f"deterministic_event_{i}", {"sequence": i}, deterministic_timestamp=base_time + timedelta(seconds=i)
             )
 
         # Verify deterministic timestamps
@@ -192,6 +192,7 @@ def main():
     except Exception as e:
         print(f"\n✗ TEST FAILED: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

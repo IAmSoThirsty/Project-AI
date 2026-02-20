@@ -150,9 +150,7 @@ def convert_scenario(scenario: dict[str, Any]) -> dict[str, Any]:
             conv_entry["risk_score"] = 0 if turn_num < len(scenario["turns"]) - 1 else 6
             conv_entry["blocked"] = not turn_num < len(scenario["turns"]) - 1
         else:
-            conv_entry["validation_result"] = (
-                "Allowed: User command (complies with Second Law)"
-            )
+            conv_entry["validation_result"] = "Allowed: User command (complies with Second Law)"
             conv_entry["escalation_detected"] = False
 
         conversation.append(conv_entry)
@@ -279,9 +277,7 @@ def main():
         converted = convert_scenario(scenario)
 
         # Generate YAML with header
-        yaml_content = yaml.dump(
-            converted, sort_keys=False, allow_unicode=True, default_flow_style=False
-        )
+        yaml_content = yaml.dump(converted, sort_keys=False, allow_unicode=True, default_flow_style=False)
         header = generate_header(converted)
         full_content = header + yaml_content
 

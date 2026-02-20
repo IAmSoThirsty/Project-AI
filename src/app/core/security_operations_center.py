@@ -196,9 +196,7 @@ class ThreatDetectionEngine:
 
             if "threat_level_min" in conditions:
                 level_order = {e.value: i for i, e in enumerate(ThreatLevel)}
-                if level_order.get(event.threat_level, 0) < level_order.get(
-                    conditions["threat_level_min"], 0
-                ):
+                if level_order.get(event.threat_level, 0) < level_order.get(conditions["threat_level_min"], 0):
                     return False
 
             if "indicators" in conditions:
@@ -258,9 +256,7 @@ class AutomatedRemediationEngine:
         self.allowed_actions: set[RemediationAction] = set(RemediationAction)
         self.lock = threading.RLock()
 
-    def add_remediation_policy(
-        self, threat_level: ThreatLevel, actions: list[RemediationAction]
-    ) -> bool:
+    def add_remediation_policy(self, threat_level: ThreatLevel, actions: list[RemediationAction]) -> bool:
         """Add automated remediation policy for threat level."""
         try:
             with self.lock:
@@ -275,9 +271,7 @@ class AutomatedRemediationEngine:
             logger.error("Failed to add remediation policy: %s", e)
             return False
 
-    def execute_remediation(
-        self, incident: SecurityIncident, manual_override: bool = False
-    ) -> list[str]:
+    def execute_remediation(self, incident: SecurityIncident, manual_override: bool = False) -> list[str]:
         """Execute automated remediation actions for incident."""
         executed_actions = []
         try:
@@ -375,9 +369,7 @@ class AutomatedRemediationEngine:
 
     def _alert_admin(self, incident: SecurityIncident) -> bool:
         """Send alert to administrators."""
-        logger.warning(
-            "SECURITY ALERT: %s (level: %s)", incident.title, incident.threat_level
-        )
+        logger.warning("SECURITY ALERT: %s (level: %s)", incident.title, incident.threat_level)
         # Implementation would send notifications via email/SMS/Slack
         return True
 
@@ -386,9 +378,7 @@ class AutomatedRemediationEngine:
         logger.info("Logging incident %s", incident.incident_id)
         return True
 
-    def _log_action(
-        self, incident_id: str, action: RemediationAction, success: bool
-    ) -> None:
+    def _log_action(self, incident_id: str, action: RemediationAction, success: bool) -> None:
         """Log remediation action."""
         with self.lock:
             self.action_history.append(
@@ -442,9 +432,7 @@ class IncidentManager:
             logger.error("Failed to create incident: %s", e)
             return ""
 
-    def update_incident_status(
-        self, incident_id: str, status: IncidentStatus, note: str = ""
-    ) -> bool:
+    def update_incident_status(self, incident_id: str, status: IncidentStatus, note: str = "") -> bool:
         """Update incident status."""
         try:
             with self.lock:
@@ -456,19 +444,14 @@ class IncidentManager:
                 incident.status = status.value
                 incident.updated_at = datetime.now(UTC).isoformat()
 
-                if (
-                    status == IncidentStatus.CLOSED
-                    or status == IncidentStatus.REMEDIATED
-                ):
+                if status == IncidentStatus.CLOSED or status == IncidentStatus.REMEDIATED:
                     incident.resolved_at = incident.updated_at
 
                 if note:
                     incident.notes.append(f"{incident.updated_at}: {note}")
 
                 self._save_incident(incident)
-                logger.info(
-                    "Updated incident %s status to %s", incident_id, status.value
-                )
+                logger.info("Updated incident %s status to %s", incident_id, status.value)
                 return True
         except Exception as e:
             logger.error("Failed to update incident status: %s", e)
@@ -509,16 +492,10 @@ class IncidentManager:
                 ]
             ]
 
-    def get_incidents_by_threat_level(
-        self, threat_level: ThreatLevel
-    ) -> list[SecurityIncident]:
+    def get_incidents_by_threat_level(self, threat_level: ThreatLevel) -> list[SecurityIncident]:
         """Get incidents by threat level."""
         with self.lock:
-            return [
-                i
-                for i in self.incidents.values()
-                if i.threat_level == threat_level.value
-            ]
+            return [i for i in self.incidents.values() if i.threat_level == threat_level.value]
 
     def _save_incident(self, incident: SecurityIncident) -> None:
         """Save incident to disk."""
@@ -604,9 +581,7 @@ class SecurityOperationsCenter:
     def _setup_default_policies(self) -> None:
         """Setup default remediation policies."""
         # Info level - log only
-        self.remediation_engine.add_remediation_policy(
-            ThreatLevel.INFO, [RemediationAction.LOG_EVENT]
-        )
+        self.remediation_engine.add_remediation_policy(ThreatLevel.INFO, [RemediationAction.LOG_EVENT])
 
         # Low level - log and alert
         self.remediation_engine.add_remediation_policy(
@@ -672,9 +647,7 @@ class SecurityOperationsCenter:
                     if incident:
                         actions = self.remediation_engine.execute_remediation(incident)
                         for action in actions:
-                            self.incident_manager.add_remediation_action(
-                                incident_id, action
-                            )
+                            self.incident_manager.add_remediation_action(incident_id, action)
 
                         # Update incident status
                         self.incident_manager.update_incident_status(
@@ -710,9 +683,7 @@ class SecurityOperationsCenter:
                 return False
 
             self.monitoring_active = True
-            self.monitor_thread = threading.Thread(
-                target=self._monitoring_loop, daemon=True
-            )
+            self.monitor_thread = threading.Thread(target=self._monitoring_loop, daemon=True)
             self.monitor_thread.start()
             logger.info("SOC monitoring started")
             return True
@@ -744,9 +715,7 @@ class SecurityOperationsCenter:
     def get_status(self) -> dict[str, Any]:
         """Get SOC status."""
         active_incidents = self.incident_manager.get_active_incidents()
-        critical_incidents = self.incident_manager.get_incidents_by_threat_level(
-            ThreatLevel.CRITICAL
-        )
+        critical_incidents = self.incident_manager.get_incidents_by_threat_level(ThreatLevel.CRITICAL)
 
         return {
             "monitoring_active": self.monitoring_active,
@@ -759,9 +728,7 @@ class SecurityOperationsCenter:
         }
 
 
-def create_soc(
-    data_dir: str = "data/soc", dry_run: bool = False
-) -> SecurityOperationsCenter:
+def create_soc(data_dir: str = "data/soc", dry_run: bool = False) -> SecurityOperationsCenter:
     """Factory function to create SOC instance."""
     return SecurityOperationsCenter(data_dir, dry_run)
 
@@ -775,9 +742,7 @@ def get_soc() -> SecurityOperationsCenter | None:
     return _soc_instance
 
 
-def initialize_soc(
-    data_dir: str = "data/soc", dry_run: bool = False
-) -> SecurityOperationsCenter:
+def initialize_soc(data_dir: str = "data/soc", dry_run: bool = False) -> SecurityOperationsCenter:
     """Initialize global SOC instance."""
     global _soc_instance
     if _soc_instance is None:

@@ -224,9 +224,7 @@ class DashboardWindow(QMainWindow):
 
                     return QIcon()
 
-            act_home = QAction(
-                _icon("home.svg", QStyle.StandardPixmap.SP_DesktopIcon), "Home", self
-            )
+            act_home = QAction(_icon("home.svg", QStyle.StandardPixmap.SP_DesktopIcon), "Home", self)
 
             act_refresh = QAction(
                 _icon("refresh.svg", QStyle.StandardPixmap.SP_BrowserReload),
@@ -269,9 +267,7 @@ class DashboardWindow(QMainWindow):
         self.setCentralWidget(main_widget)
         # Apply a subtle drop shadow to the main container for soft 3D depth
         try:
-            self._apply_shadow(
-                main_widget, radius=18, dx=0, dy=6, color=QColor(0, 0, 0, 100)
-            )
+            self._apply_shadow(main_widget, radius=18, dx=0, dy=6, color=QColor(0, 0, 0, 100))
         except Exception:
             pass
         layout = QVBoxLayout(main_widget)
@@ -391,9 +387,7 @@ class DashboardWindow(QMainWindow):
                 widget = self.tabs.widget(i)
                 if widget is not None:
                     # slightly smaller radius for inner panels
-                    self._apply_shadow(
-                        widget, radius=10, dx=0, dy=3, color=QColor(0, 0, 0, 80)
-                    )
+                    self._apply_shadow(widget, radius=10, dx=0, dy=3, color=QColor(0, 0, 0, 80))
         except Exception:
             pass
 
@@ -616,9 +610,7 @@ class DashboardWindow(QMainWindow):
         # Category selection
         self.security_category = QComboBox()
         self.security_category.addItems(self.security_manager.get_all_categories())
-        self.security_category.currentTextChanged.connect(
-            self.update_security_resources
-        )
+        self.security_category.currentTextChanged.connect(self.update_security_resources)
         layout.addWidget(self.security_category)
 
         # Resources list
@@ -689,9 +681,7 @@ class DashboardWindow(QMainWindow):
         # Alert button
         self.alert_button = QPushButton("SEND EMERGENCY ALERT")
         self.alert_button.setObjectName("alert_button")
-        self.alert_button.setStyleSheet(
-            "background-color: red; color: white; font-weight: bold;"
-        )
+        self.alert_button.setStyleSheet("background-color: red; color: white; font-weight: bold;")
         self.alert_button.clicked.connect(self.send_emergency_alert)
         layout.addWidget(self.alert_button)
 
@@ -776,9 +766,7 @@ class DashboardWindow(QMainWindow):
             message = self.emergency_message.toPlainText()
             username = self.user_manager.current_user or "default"
             location_data = self.location_tracker.get_location_from_ip()
-            _, result = self.emergency_alert.send_alert(
-                username, location_data, message
-            )
+            _, result = self.emergency_alert.send_alert(username, location_data, message)
             self.alert_history.addItem(f"Alert: {result}")
             self.emergency_message.clear()
         except Exception as e:

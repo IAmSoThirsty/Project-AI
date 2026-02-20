@@ -209,9 +209,7 @@ class SpectrumAnalyzer:
 
         return channel_data
 
-    def get_optimal_channel(
-        self, band: str, bandwidth_mhz: int = 20
-    ) -> ChannelInfo | None:
+    def get_optimal_channel(self, band: str, bandwidth_mhz: int = 20) -> ChannelInfo | None:
         """Get optimal channel for specified band"""
         channels = self._get_channel_data(band)
 
@@ -248,12 +246,8 @@ class SpectrumAnalyzer:
                 return {}
             return {
                 "total_channels": len(channels),
-                "average_interference": statistics.mean(
-                    c.interference_score for c in channels.values()
-                ),
-                "recommended_channels": [
-                    c.channel for c in channels.values() if c.recommended
-                ],
+                "average_interference": statistics.mean(c.interference_score for c in channels.values()),
+                "recommended_channels": [c.channel for c in channels.values() if c.recommended],
             }
 
         return {

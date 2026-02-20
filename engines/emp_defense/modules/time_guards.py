@@ -43,11 +43,7 @@ def is_food_water_shock_phase(state: SectorizedWorldState) -> bool:
     Returns:
         True if in food/water shock phase
     """
-    return (
-        TimeConstants.FOOD_SHOCK_START_HOURS
-        <= state.simulation_hour
-        < TimeConstants.FOOD_SHOCK_END_HOURS
-    )
+    return TimeConstants.FOOD_SHOCK_START_HOURS <= state.simulation_hour < TimeConstants.FOOD_SHOCK_END_HOURS
 
 
 def is_governance_failure_phase(state: SectorizedWorldState) -> bool:
@@ -60,11 +56,7 @@ def is_governance_failure_phase(state: SectorizedWorldState) -> bool:
     Returns:
         True if in governance failure phase
     """
-    return (
-        TimeConstants.FOOD_SHOCK_END_HOURS
-        <= state.simulation_hour
-        < TimeConstants.GOVERNANCE_FAILURE_END_HOURS
-    )
+    return TimeConstants.FOOD_SHOCK_END_HOURS <= state.simulation_hour < TimeConstants.GOVERNANCE_FAILURE_END_HOURS
 
 
 def is_demographic_collapse_phase(state: SectorizedWorldState) -> bool:
@@ -122,9 +114,7 @@ def should_use_hourly_timestep(state: SectorizedWorldState) -> bool:
     return is_early_phase(state)
 
 
-def validate_time_transition(
-    state: SectorizedWorldState, hours_to_advance: int
-) -> tuple[bool, str]:
+def validate_time_transition(state: SectorizedWorldState, hours_to_advance: int) -> tuple[bool, str]:
     """
     Validate that a time transition is allowed.
 
@@ -187,9 +177,7 @@ def get_coupling_strength_modifier(state: SectorizedWorldState) -> float:
         return 0.60  # Fragmented systems
 
 
-def phase_allows_event(
-    state: SectorizedWorldState, event_name: str
-) -> tuple[bool, str]:
+def phase_allows_event(state: SectorizedWorldState, event_name: str) -> tuple[bool, str]:
     """
     Check if current phase allows specific event execution.
 

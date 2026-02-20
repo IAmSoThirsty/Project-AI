@@ -173,9 +173,7 @@ class RuntimeEnforcer:
                 )
 
             # Check for initial MSA acceptance
-            has_msa = any(
-                a.acceptance_type == AcceptanceType.INITIAL_MSA for a in acceptances
-            )
+            has_msa = any(a.acceptance_type == AcceptanceType.INITIAL_MSA for a in acceptances)
             if not has_msa:
                 return EnforcementResult(
                     verdict=EnforcementVerdict.DENY,
@@ -208,11 +206,7 @@ class RuntimeEnforcer:
             acceptances = self.ledger.get_user_acceptances(user_id)
 
             # Check for termination entry
-            terminations = [
-                a
-                for a in acceptances
-                if a.acceptance_type == AcceptanceType.TERMINATION
-            ]
+            terminations = [a for a in acceptances if a.acceptance_type == AcceptanceType.TERMINATION]
 
             if terminations:
                 latest_termination = max(terminations, key=lambda a: a.timestamp)
@@ -243,9 +237,7 @@ class RuntimeEnforcer:
                 details={"error": str(e)},
             )
 
-    def _check_pagl_prohibitions(
-        self, context: EnforcementContext
-    ) -> EnforcementResult:
+    def _check_pagl_prohibitions(self, context: EnforcementContext) -> EnforcementResult:
         """Check PAGL prohibited actions"""
         # Check if action is in prohibited list
         if context.action in self.prohibited_actions:
@@ -261,8 +253,7 @@ class RuntimeEnforcer:
 
         # Check for governance tampering indicators
         if "governance" in context.action.lower() and any(
-            word in context.action.lower()
-            for word in ["disable", "bypass", "remove", "tamper"]
+            word in context.action.lower() for word in ["disable", "bypass", "remove", "tamper"]
         ):
             return EnforcementResult(
                 verdict=EnforcementVerdict.DENY,
@@ -281,17 +272,13 @@ class RuntimeEnforcer:
             blocking=False,
         )
 
-    def _check_sovereign_restrictions(
-        self, context: EnforcementContext
-    ) -> EnforcementResult:
+    def _check_sovereign_restrictions(self, context: EnforcementContext) -> EnforcementResult:
         """Check Sovereign Use License restrictions"""
         # Government must have explicit authorization
         acceptances = self.ledger.get_user_acceptances(context.user_id)
 
         # Check for government authorization acceptance
-        has_gov_auth = any(
-            a.metadata.get("government_authorized", False) for a in acceptances
-        )
+        has_gov_auth = any(a.metadata.get("government_authorized", False) for a in acceptances)
 
         if not has_gov_auth:
             return EnforcementResult(
@@ -330,18 +317,12 @@ class RuntimeEnforcer:
             blocking=False,
         )
 
-    def _check_commercial_license(
-        self, context: EnforcementContext
-    ) -> EnforcementResult:
+    def _check_commercial_license(self, context: EnforcementContext) -> EnforcementResult:
         """Check Commercial Use License requirements"""
         acceptances = self.ledger.get_user_acceptances(context.user_id)
 
         # Check for commercial tier acceptance
-        commercial_acceptances = [
-            a
-            for a in acceptances
-            if a.tier in [TierLevel.COMPANY, TierLevel.GOVERNMENT]
-        ]
+        commercial_acceptances = [a for a in acceptances if a.tier in [TierLevel.COMPANY, TierLevel.GOVERNMENT]]
 
         if not commercial_acceptances:
             return EnforcementResult(
@@ -362,9 +343,7 @@ class RuntimeEnforcer:
             blocking=False,
         )
 
-    def _check_tier_entitlements(
-        self, context: EnforcementContext
-    ) -> EnforcementResult:
+    def _check_tier_entitlements(self, context: EnforcementContext) -> EnforcementResult:
         """Check if user's tier has access to requested feature"""
         acceptances = self.ledger.get_user_acceptances(context.user_id)
 
@@ -499,12 +478,8 @@ def get_government_pricing_for_user(user_id: str) -> dict | None:
         return None
 
     # Calculate pricing
-    monthly_pricing = calculate_government_price(
-        seat_count, GovernmentBillingCycle.MONTHLY
-    )
-    yearly_pricing = calculate_government_price(
-        seat_count, GovernmentBillingCycle.YEARLY
-    )
+    monthly_pricing = calculate_government_price(seat_count, GovernmentBillingCycle.MONTHLY)
+    yearly_pricing = calculate_government_price(seat_count, GovernmentBillingCycle.YEARLY)
 
     return {
         "seat_count": seat_count,

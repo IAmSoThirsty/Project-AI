@@ -564,9 +564,7 @@ class TestCuratorAuthority:
         """Verify curator produces statistical simulations, not commands."""
         curator = GlobalCurator(data_dir=temp_data_dir)
 
-        overseer = DomainOverseer(
-            domain=IntelligenceDomain.ECONOMIC, data_dir=temp_data_dir
-        )
+        overseer = DomainOverseer(domain=IntelligenceDomain.ECONOMIC, data_dir=temp_data_dir)
         overseer.create_agents(count=5)
         curator.add_overseer(overseer)
 
@@ -589,9 +587,7 @@ class TestCuratorAuthority:
 
     def test_overseer_has_no_recommendations(self, temp_data_dir):
         """Verify overseers do not make recommendations."""
-        overseer = DomainOverseer(
-            domain=IntelligenceDomain.MILITARY, data_dir=temp_data_dir
-        )
+        overseer = DomainOverseer(domain=IntelligenceDomain.MILITARY, data_dir=temp_data_dir)
         overseer.create_agents(count=10)
 
         analysis = overseer.analyze_domain()

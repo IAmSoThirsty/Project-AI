@@ -57,9 +57,7 @@ class PatientRecord:
     location: str | None = None
 
 
-class BiomedicalDefenseSubsystem(
-    BaseSubsystem, ICommandable, IMonitorable, IObservable
-):
+class BiomedicalDefenseSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable):
 
     SUBSYSTEM_METADATA = {
         "id": "biomedical_defense",
@@ -141,9 +139,7 @@ class BiomedicalDefenseSubsystem(
             return False
 
         return not (
-            not self._processing_active
-            or not self._processing_thread
-            or not self._processing_thread.is_alive()
+            not self._processing_active or not self._processing_thread or not self._processing_thread.is_alive()
         )
 
     def get_status(self) -> dict[str, Any]:
@@ -226,9 +222,7 @@ class BiomedicalDefenseSubsystem(
         with self._subscription_lock:
             for event_type in self._subscriptions:
                 self._subscriptions[event_type] = [
-                    (sid, cb)
-                    for sid, cb in self._subscriptions[event_type]
-                    if sid != subscription_id
+                    (sid, cb) for sid, cb in self._subscriptions[event_type] if sid != subscription_id
                 ]
             return True
 
@@ -240,9 +234,7 @@ class BiomedicalDefenseSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error(
-                        "Error in event callback %s: %s", subscription_id, e
-                    )
+                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
 
             return len(subscribers)
 
@@ -263,9 +255,7 @@ class BiomedicalDefenseSubsystem(
             patient = PatientRecord(
                 patient_id=str(uuid.uuid4()),
                 name=params["name"],
-                infection_status=InfectionStatus[
-                    params.get("infection_status", "UNINFECTED")
-                ],
+                infection_status=InfectionStatus[params.get("infection_status", "UNINFECTED")],
                 location=params.get("location"),
             )
 

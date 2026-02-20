@@ -248,7 +248,7 @@ class TestSovereignAuditLog:
                 event_type="test_event",
                 data={"key": "value"},
                 actor="test_actor",
-                description="Test event with signature"
+                description="Test event with signature",
             )
 
             assert success is True
@@ -265,11 +265,7 @@ class TestSovereignAuditLog:
             audit = SovereignAuditLog(data_dir=tmpdir)
 
             # Log event
-            audit.log_event(
-                event_type="verifiable_event",
-                data={"test": "data"},
-                actor="verifier"
-            )
+            audit.log_event(event_type="verifiable_event", data={"test": "data"}, actor="verifier")
 
             # Get event ID from logged events
             events = audit.operational_log.get_events()
@@ -292,9 +288,7 @@ class TestSovereignAuditLog:
             fixed_time = datetime(2025, 1, 1, 12, 0, 0, tzinfo=UTC)
 
             audit.log_event(
-                event_type="deterministic_event",
-                data={"replay": "test"},
-                deterministic_timestamp=fixed_time
+                event_type="deterministic_event", data={"replay": "test"}, deterministic_timestamp=fixed_time
             )
 
             # Verify event has deterministic timestamp
@@ -311,10 +305,7 @@ class TestSovereignAuditLog:
             audit = SovereignAuditLog(data_dir=tmpdir)
 
             # Log event
-            audit.log_event(
-                event_type="provable_event",
-                data={"proof": "data"}
-            )
+            audit.log_event(event_type="provable_event", data={"proof": "data"})
 
             # Get event ID
             events = audit.operational_log.get_events()
@@ -339,10 +330,7 @@ class TestSovereignAuditLog:
             audit = SovereignAuditLog(data_dir=tmpdir)
 
             # Log event
-            audit.log_event(
-                event_type="verifiable_proof_event",
-                data={"verify": "proof"}
-            )
+            audit.log_event(event_type="verifiable_proof_event", data={"verify": "proof"})
 
             # Get event ID and generate proof
             events = audit.operational_log.get_events()
@@ -432,7 +420,7 @@ class TestSovereignAuditLog:
             assert bytes1 == bytes2 == bytes3
 
             # Should have sorted keys
-            decoded = bytes1.decode('utf-8')
+            decoded = bytes1.decode("utf-8")
             assert decoded.index("key1") < decoded.index("key2") < decoded.index("key3")
 
     def test_thread_safety(self):
@@ -442,10 +430,7 @@ class TestSovereignAuditLog:
 
             # Log multiple events (simulates concurrent access)
             for i in range(10):
-                success = audit.log_event(
-                    f"concurrent_event_{i}",
-                    {"thread": i}
-                )
+                success = audit.log_event(f"concurrent_event_{i}", {"thread": i})
                 assert success is True
 
             # All events should be logged
@@ -492,7 +477,7 @@ class TestConstitutionalGradeFeatures:
                 audit.log_event(
                     f"deterministic_event_{i}",
                     {"sequence": i},
-                    deterministic_timestamp=base_time + timedelta(seconds=i)
+                    deterministic_timestamp=base_time + timedelta(seconds=i),
                 )
 
             # Verify all events have expected timestamps

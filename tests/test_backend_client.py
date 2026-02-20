@@ -72,16 +72,12 @@ class DummySession:
 
 
 def make_client(session: DummySession) -> BackendAPIClient:
-    return BackendAPIClient(
-        base_url="http://backend", session=cast(requests.Session, session)
-    )
+    return BackendAPIClient(base_url="http://backend", session=cast(requests.Session, session))
 
 
 def test_get_status_calls_endpoint():
     session = DummySession()
-    session.register(
-        "get", "http://backend/api/status", DummyResponse({"status": "ok"})
-    )
+    session.register("get", "http://backend/api/status", DummyResponse({"status": "ok"}))
     client = make_client(session)
 
     payload = client.get_status()
@@ -95,9 +91,7 @@ def test_authenticate_success_flow():
     session.register(
         "post",
         "http://backend/api/auth/login",
-        DummyResponse(
-            {"token": "token-admin", "user": {"username": "admin", "role": "superuser"}}
-        ),
+        DummyResponse({"token": "token-admin", "user": {"username": "admin", "role": "superuser"}}),
     )
     client = make_client(session)
 
@@ -120,9 +114,7 @@ def test_authenticate_handles_invalid_credentials():
     session.register(
         "post",
         "http://backend/api/auth/login",
-        DummyResponse(
-            {"error": "invalid-credentials", "message": "nope"}, status_code=401
-        ),
+        DummyResponse({"error": "invalid-credentials", "message": "nope"}, status_code=401),
     )
     client = make_client(session)
 
@@ -142,17 +134,13 @@ def test_authenticate_handles_profile_failure():
     session.register(
         "get",
         "http://backend/api/auth/profile",
-        DummyResponse(
-            {"error": "invalid-token", "message": "Token expired"}, status_code=403
-        ),
+        DummyResponse({"error": "invalid-token", "message": "Token expired"}, status_code=403),
     )
     client = make_client(session)
 
     result = client.authenticate("admin", "open-sesame")
 
-    assert result == AuthResult(
-        success=False, message="Token expired", token=None, user=None
-    )
+    assert result == AuthResult(success=False, message="Token expired", token=None, user=None)
 
 
 def test_authenticate_fetches_profile_when_login_missing_user():

@@ -156,9 +156,7 @@ class TestHealthReporter:
             audit_log_path = Path(tmpdir) / "audit.yaml"
 
             audit = AuditLog(log_file=audit_log_path)
-            reporter = HealthReporter(
-                snapshot_dir=snapshot_dir, report_dir=report_dir, audit_log=audit
-            )
+            reporter = HealthReporter(snapshot_dir=snapshot_dir, report_dir=report_dir, audit_log=audit)
 
             success, snapshot_path, report_path = reporter.generate_full_report()
 
@@ -183,14 +181,10 @@ class TestHealthReporter:
             audit_log_path = Path(tmpdir) / "audit.yaml"
             audit = AuditLog(log_file=audit_log_path)
 
-            reporter = HealthReporter(
-                snapshot_dir=snapshot_dir, report_dir=report_dir, audit_log=audit
-            )
+            reporter = HealthReporter(snapshot_dir=snapshot_dir, report_dir=report_dir, audit_log=audit)
 
             # Mock generate_yaml_snapshot to fail
-            with patch.object(
-                reporter, "generate_yaml_snapshot", return_value=(False, None)
-            ):
+            with patch.object(reporter, "generate_yaml_snapshot", return_value=(False, None)):
                 success, snapshot_path, report_path = reporter.generate_full_report()
 
                 assert success is False
@@ -218,9 +212,7 @@ class TestHealthReporter:
             audit_log_path = Path(tmpdir) / "audit.yaml"
             audit = AuditLog(log_file=audit_log_path)
 
-            reporter = HealthReporter(
-                snapshot_dir=Path(tmpdir) / "snapshots", audit_log=audit
-            )
+            reporter = HealthReporter(snapshot_dir=Path(tmpdir) / "snapshots", audit_log=audit)
 
             # Generate report
             success, _, _ = reporter.generate_full_report()

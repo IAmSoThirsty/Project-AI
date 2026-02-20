@@ -116,45 +116,28 @@ class CollapseScheduler:
 
         # Check kindness singularity
         if state.kindness.value < self.auto_schedule_thresholds["kindness_singularity"]:
-            if not any(
-                c.collapse_type == "kindness_singularity" and c.triggered
-                for c in self.triggered_collapses
-            ):
+            if not any(c.collapse_type == "kindness_singularity" and c.triggered for c in self.triggered_collapses):
                 triggered.append("kindness_singularity")
 
         # Check trust collapse
         if state.trust.value < self.auto_schedule_thresholds["trust_collapse"]:
-            if not any(
-                c.collapse_type == "trust_collapse" and c.triggered
-                for c in self.triggered_collapses
-            ):
+            if not any(c.collapse_type == "trust_collapse" and c.triggered for c in self.triggered_collapses):
                 triggered.append("trust_collapse")
 
         # Check moral injury critical
-        if (
-            state.moral_injury.value
-            > self.auto_schedule_thresholds["moral_injury_critical"]
-        ) and not any(
-            c.collapse_type == "moral_injury_critical" and c.triggered
-            for c in self.triggered_collapses
+        if (state.moral_injury.value > self.auto_schedule_thresholds["moral_injury_critical"]) and not any(
+            c.collapse_type == "moral_injury_critical" and c.triggered for c in self.triggered_collapses
         ):
             triggered.append("moral_injury_critical")
 
         # Check legitimacy failure
         if state.legitimacy.value < self.auto_schedule_thresholds["legitimacy_failure"]:
-            if not any(
-                c.collapse_type == "legitimacy_failure" and c.triggered
-                for c in self.triggered_collapses
-            ):
+            if not any(c.collapse_type == "legitimacy_failure" and c.triggered for c in self.triggered_collapses):
                 triggered.append("legitimacy_failure")
 
         # Check epistemic collapse
-        if (
-            state.epistemic_confidence.value
-            < self.auto_schedule_thresholds["epistemic_collapse"]
-        ) and not any(
-            c.collapse_type == "epistemic_collapse" and c.triggered
-            for c in self.triggered_collapses
+        if (state.epistemic_confidence.value < self.auto_schedule_thresholds["epistemic_collapse"]) and not any(
+            c.collapse_type == "epistemic_collapse" and c.triggered for c in self.triggered_collapses
         ):
             triggered.append("epistemic_collapse")
 
@@ -191,9 +174,7 @@ class CollapseScheduler:
 
         return triggered_this_tick
 
-    def _trigger_collapse(
-        self, collapse: ScheduledCollapse, state: StateVector
-    ) -> None:
+    def _trigger_collapse(self, collapse: ScheduledCollapse, state: StateVector) -> None:
         """Trigger a collapse event.
 
         Args:
@@ -252,12 +233,8 @@ class CollapseScheduler:
         return {
             "scheduled_count": len(self.scheduled_collapses),
             "triggered_count": len(self.triggered_collapses),
-            "pending_count": sum(
-                1 for c in self.scheduled_collapses if not c.triggered
-            ),
-            "collapse_types_triggered": list(
-                {c.collapse_type for c in self.triggered_collapses}
-            ),
+            "pending_count": sum(1 for c in self.scheduled_collapses if not c.triggered),
+            "collapse_types_triggered": list({c.collapse_type for c in self.triggered_collapses}),
         }
 
     def export_collapses(self) -> dict[str, list[dict[str, Any]]]:

@@ -42,9 +42,7 @@ class CompositeInvariant:
         self.name = name
         self.description = description
 
-    def validate(
-        self, state: GlobalState, prev_state: GlobalState | None = None
-    ) -> list[InvariantViolation]:
+    def validate(self, state: GlobalState, prev_state: GlobalState | None = None) -> list[InvariantViolation]:
         """
         Validate the invariant against current and previous state.
 
@@ -80,9 +78,7 @@ class ResourceEconomicInvariant(CompositeInvariant):
         self.depletion_threshold = depletion_threshold
         self.gdp_sensitivity = gdp_sensitivity
 
-    def validate(
-        self, state: GlobalState, prev_state: GlobalState | None = None
-    ) -> list[InvariantViolation]:
+    def validate(self, state: GlobalState, prev_state: GlobalState | None = None) -> list[InvariantViolation]:
         violations = []
 
         if prev_state is None:
@@ -156,15 +152,11 @@ class EconomicSocietalInvariant(CompositeInvariant):
             gdp_threshold: Minimum GDP decline to trigger check
             morale_sensitivity: Expected morale impact ratio
         """
-        super().__init__(
-            "economic_societal_coherence", "Economic decline must cause societal impact"
-        )
+        super().__init__("economic_societal_coherence", "Economic decline must cause societal impact")
         self.gdp_threshold = gdp_threshold
         self.morale_sensitivity = morale_sensitivity
 
-    def validate(
-        self, state: GlobalState, prev_state: GlobalState | None = None
-    ) -> list[InvariantViolation]:
+    def validate(self, state: GlobalState, prev_state: GlobalState | None = None) -> list[InvariantViolation]:
         violations = []
 
         if prev_state is None:
@@ -230,9 +222,7 @@ class SocietalPoliticalInvariant(CompositeInvariant):
         self.morale_threshold = morale_threshold
         self.stability_impact = stability_impact
 
-    def validate(
-        self, state: GlobalState, prev_state: GlobalState | None = None
-    ) -> list[InvariantViolation]:
+    def validate(self, state: GlobalState, prev_state: GlobalState | None = None) -> list[InvariantViolation]:
         violations = []
 
         if prev_state is None:
@@ -246,18 +236,10 @@ class SocietalPoliticalInvariant(CompositeInvariant):
 
         # Calculate average stability
         total_stability = sum(c.government_stability for c in state.countries.values())
-        curr_avg_stability = (
-            total_stability / len(state.countries) if state.countries else 1.0
-        )
+        curr_avg_stability = total_stability / len(state.countries) if state.countries else 1.0
 
-        prev_total_stability = sum(
-            c.government_stability for c in prev_state.countries.values()
-        )
-        prev_avg_stability = (
-            prev_total_stability / len(prev_state.countries)
-            if prev_state.countries
-            else 1.0
-        )
+        prev_total_stability = sum(c.government_stability for c in prev_state.countries.values())
+        prev_avg_stability = prev_total_stability / len(prev_state.countries) if prev_state.countries else 1.0
 
         stability_decline = prev_avg_stability - curr_avg_stability
 
@@ -287,9 +269,7 @@ class PoliticalGovernanceInvariant(CompositeInvariant):
     Validates that government instability impacts AI alignment and operational trust.
     """
 
-    def __init__(
-        self, stability_threshold: float = 0.4, alignment_sensitivity: float = 0.1
-    ):
+    def __init__(self, stability_threshold: float = 0.4, alignment_sensitivity: float = 0.1):
         """
         Initialize political-governance invariant.
 
@@ -304,9 +284,7 @@ class PoliticalGovernanceInvariant(CompositeInvariant):
         self.stability_threshold = stability_threshold
         self.alignment_sensitivity = alignment_sensitivity
 
-    def validate(
-        self, state: GlobalState, prev_state: GlobalState | None = None
-    ) -> list[InvariantViolation]:
+    def validate(self, state: GlobalState, prev_state: GlobalState | None = None) -> list[InvariantViolation]:
         violations = []
 
         if prev_state is None or not state.ai_systems_operational:
@@ -314,9 +292,7 @@ class PoliticalGovernanceInvariant(CompositeInvariant):
 
         # Check average stability
         total_stability = sum(c.government_stability for c in state.countries.values())
-        avg_stability = (
-            total_stability / len(state.countries) if state.countries else 1.0
-        )
+        avg_stability = total_stability / len(state.countries) if state.countries else 1.0
 
         if avg_stability >= self.stability_threshold:
             return violations  # Stability is acceptable

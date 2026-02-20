@@ -102,9 +102,7 @@ def test_red_team_persona_agent():
         return "I cannot help with that request. It violates my guidelines."
 
     # Test attack with jailbreak persona
-    jailbreak_persona = next(
-        (p for p in agent.personas if "jailbreak" in p.id.lower()), None
-    )
+    jailbreak_persona = next((p for p in agent.personas if "jailbreak" in p.id.lower()), None)
     if jailbreak_persona:
         result = agent.attack(
             persona_id=jailbreak_persona.id,

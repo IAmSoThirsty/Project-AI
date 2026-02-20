@@ -367,6 +367,7 @@ class TestConstitutionalIntegration:
 
         # Create mock frame
         from shadow_thirst.vm import DualExecutionFrame
+
         frame = DualExecutionFrame("test")
         frame.primary.return_value = 42
         frame.activate_shadow()
@@ -383,6 +384,7 @@ class TestConstitutionalIntegration:
         integration = ConstitutionalIntegration()
 
         from shadow_thirst.vm import DualExecutionFrame
+
         frame = DualExecutionFrame("test")
         frame.primary.return_value = 42
         frame.activate_shadow()
@@ -391,10 +393,7 @@ class TestConstitutionalIntegration:
         frame.divergence_magnitude = 58.0
 
         # Validate with require_identical policy
-        result = integration.validate_and_commit(
-            frame,
-            divergence_policy="require_identical"
-        )
+        result = integration.validate_and_commit(frame, divergence_policy="require_identical")
 
         assert result.decision == CommitDecision.QUARANTINE
 

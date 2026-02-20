@@ -76,9 +76,7 @@ class TestIntelligenceRouter:
     def test_route_conversation_search(self, router_with_components):
         """Test routing conversation search query."""
         # Add a conversation first
-        router_with_components.memory_system.log_conversation(
-            "test message", "test response"
-        )
+        router_with_components.memory_system.log_conversation("test message", "test response")
 
         result = router_with_components.route_query("remember test")
 
@@ -162,9 +160,7 @@ class TestIntelligenceRouter:
 
     def test_route_query_with_context(self, router_with_components):
         """Test routing query with context."""
-        result = router_with_components.route_query(
-            "test query", context={"user": "test_user"}
-        )
+        result = router_with_components.route_query("test query", context={"user": "test_user"})
 
         assert "route" in result
         assert "response" in result

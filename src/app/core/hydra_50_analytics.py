@@ -265,9 +265,7 @@ class StatisticalAnalyzer:
         return float(statistic), float(p_value), significant
 
     @staticmethod
-    def distribution_fit(
-        data: list[float], distributions: list[str] | None = None
-    ) -> dict[str, dict[str, float]]:
+    def distribution_fit(data: list[float], distributions: list[str] | None = None) -> dict[str, dict[str, float]]:
         """Fit data to various distributions and compare"""
         if distributions is None:
             distributions = ["norm", "expon", "lognorm", "gamma"]
@@ -304,9 +302,7 @@ class CorrelationAnalyzer:
     """Correlation analysis across variables"""
 
     @staticmethod
-    def compute_correlation(
-        data1: list[float], data2: list[float], method: str = "pearson"
-    ) -> tuple[float, float]:
+    def compute_correlation(data1: list[float], data2: list[float], method: str = "pearson") -> tuple[float, float]:
         """Compute correlation coefficient and p-value"""
         arr1 = np.array(data1)
         arr2 = np.array(data2)
@@ -323,9 +319,7 @@ class CorrelationAnalyzer:
         return float(corr), float(p_value)
 
     @staticmethod
-    def correlation_matrix(
-        data: dict[str, list[float]], method: str = "pearson"
-    ) -> dict[str, dict[str, float]]:
+    def correlation_matrix(data: dict[str, list[float]], method: str = "pearson") -> dict[str, dict[str, float]]:
         """Compute correlation matrix for multiple variables"""
         variables = list(data.keys())
         len(variables)
@@ -339,9 +333,7 @@ class CorrelationAnalyzer:
                 elif var2 in matrix and var1 in matrix[var2]:
                     matrix[var1][var2] = matrix[var2][var1]
                 else:
-                    corr, _ = CorrelationAnalyzer.compute_correlation(
-                        data[var1], data[var2], method
-                    )
+                    corr, _ = CorrelationAnalyzer.compute_correlation(data[var1], data[var2], method)
                     matrix[var1][var2] = corr
 
         return matrix
@@ -356,9 +348,7 @@ class CorrelationAnalyzer:
 
         for i, var1 in enumerate(variables):
             for _j, var2 in enumerate(variables[i + 1 :], i + 1):
-                corr, p_value = CorrelationAnalyzer.compute_correlation(
-                    data[var1], data[var2], method
-                )
+                corr, p_value = CorrelationAnalyzer.compute_correlation(data[var1], data[var2], method)
 
                 if abs(corr) >= threshold:
                     results.append(
@@ -391,9 +381,7 @@ class PredictiveModeler:
         self, model_name: str, X: np.ndarray, y: np.ndarray, feature_names: list[str]
     ) -> dict[str, float]:
         """Train regression model"""
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42
-        )
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
         # Scale features
         scaler = StandardScaler()
@@ -432,9 +420,7 @@ class PredictiveModeler:
         model_type: str = "random_forest",
     ) -> dict[str, Any]:
         """Train classification model"""
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42
-        )
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
         # Scale features
         scaler = StandardScaler()
@@ -468,9 +454,7 @@ class PredictiveModeler:
             "model_type": model_type,
         }
 
-    def predict(
-        self, model_name: str, X: np.ndarray, confidence_level: float = 0.95
-    ) -> PredictionResult:
+    def predict(self, model_name: str, X: np.ndarray, confidence_level: float = 0.95) -> PredictionResult:
         """Make prediction with confidence interval"""
         if model_name not in self.models:
             raise ValueError(f"Model {model_name} not found")
@@ -522,9 +506,7 @@ class RiskQuantifier:
         return float(cvar)
 
     @staticmethod
-    def quantify_risk(
-        loss_distribution: list[float], confidence_level: float = 0.95
-    ) -> RiskMetrics:
+    def quantify_risk(loss_distribution: list[float], confidence_level: float = 0.95) -> RiskMetrics:
         """Comprehensive risk quantification"""
         arr = np.array(loss_distribution)
 
@@ -594,9 +576,7 @@ class SensitivityAnalyzer:
         # Find critical threshold (where output changes significantly)
         critical_threshold = None
         for i in range(len(values) - 1):
-            if abs(outputs[values[i + 1]] - outputs[values[i]]) > 0.1 * abs(
-                base_output
-            ):
+            if abs(outputs[values[i + 1]] - outputs[values[i]]) > 0.1 * abs(base_output):
                 critical_threshold = float(values[i])
                 break
 
@@ -674,9 +654,7 @@ class AnomalyDetector:
         self.fitted = True
         logger.info("Anomaly detector fitted")
 
-    def detect(
-        self, data_point: dict[str, float], feature_names: list[str]
-    ) -> AnomalyDetectionResult:
+    def detect(self, data_point: dict[str, float], feature_names: list[str]) -> AnomalyDetectionResult:
         """Detect if data point is anomalous"""
         if not self.fitted:
             raise ValueError("Model not fitted. Call fit() first.")
@@ -746,9 +724,7 @@ class ClusterAnalyzer:
         )
 
     @staticmethod
-    def perform_dbscan(
-        X: np.ndarray, eps: float = 0.5, min_samples: int = 5
-    ) -> ClusterAnalysisResult:
+    def perform_dbscan(X: np.ndarray, eps: float = 0.5, min_samples: int = 5) -> ClusterAnalysisResult:
         """Perform DBSCAN clustering"""
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
@@ -806,9 +782,7 @@ class HYDRA50AnalyticsEngine:
 
         logger.info("HYDRA-50 Analytics Engine initialized")
 
-    def analyze_scenario_progression(
-        self, progressions: list[ScenarioProgression]
-    ) -> dict[str, Any]:
+    def analyze_scenario_progression(self, progressions: list[ScenarioProgression]) -> dict[str, Any]:
         """Comprehensive analysis of scenario progressions"""
         if not progressions:
             return {}
@@ -822,9 +796,7 @@ class HYDRA50AnalyticsEngine:
         # Time series analysis
         timestamps = [p.timestamp for p in progressions]
         time_diffs = np.diff(timestamps)
-        avg_progression_rate = (
-            float(np.mean(time_diffs)) if len(time_diffs) > 0 else 0.0
-        )
+        avg_progression_rate = float(np.mean(time_diffs)) if len(time_diffs) > 0 else 0.0
 
         return {
             "statistical_summary": asdict(stats_summary),
@@ -833,9 +805,7 @@ class HYDRA50AnalyticsEngine:
             "unique_scenarios": len({p.scenario_id for p in progressions}),
         }
 
-    def export_analysis(
-        self, analysis_type: AnalysisType, results: dict[str, Any], filename: str
-    ) -> str:
+    def export_analysis(self, analysis_type: AnalysisType, results: dict[str, Any], filename: str) -> str:
         """Export analysis results to file"""
         output_path = self.data_dir / filename
 

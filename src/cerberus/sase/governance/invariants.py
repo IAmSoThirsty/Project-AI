@@ -35,9 +35,7 @@ class PosteriorImmutabilityGuard:
     def __init__(self):
         self.posterior_hashes: Dict[str, str] = {}
 
-    def lock_posterior(
-        self, event_id: str, confidence_assessment: Dict[str, Any]
-    ) -> str:
+    def lock_posterior(self, event_id: str, confidence_assessment: Dict[str, Any]) -> str:
         """
         Lock posterior confidence for event
 
@@ -49,9 +47,7 @@ class PosteriorImmutabilityGuard:
                 "confidence_score": confidence_assessment["confidence_score"],
                 "confidence_percentage": confidence_assessment["confidence_percentage"],
                 "prior": confidence_assessment.get("prior", 0.01),
-                "likelihood_malicious": confidence_assessment.get(
-                    "likelihood_malicious", 0
-                ),
+                "likelihood_malicious": confidence_assessment.get("likelihood_malicious", 0),
                 "likelihood_benign": confidence_assessment.get("likelihood_benign", 0),
             },
             sort_keys=True,
@@ -80,9 +76,7 @@ class PosteriorImmutabilityGuard:
                 "confidence_score": current_confidence["confidence_score"],
                 "confidence_percentage": current_confidence["confidence_percentage"],
                 "prior": current_confidence.get("prior", 0.01),
-                "likelihood_malicious": current_confidence.get(
-                    "likelihood_malicious", 0
-                ),
+                "likelihood_malicious": current_confidence.get("likelihood_malicious", 0),
                 "likelihood_benign": current_confidence.get("likelihood_benign", 0),
             },
             sort_keys=True,
@@ -175,10 +169,7 @@ class FeatureDoubleWeightingDetector:
             )
 
         # Check if VPS flag is being double-weighted
-        if (
-            features.get("vps_flag")
-            and threat_class.get("actor_class") == "cloud_vps_actor"
-        ):
+        if features.get("vps_flag") and threat_class.get("actor_class") == "cloud_vps_actor":
             logger.warning(
                 "Potential double-weighting: VPS flag in features AND "
                 "Cloud VPS classification. Ensure prior is not being adjusted."

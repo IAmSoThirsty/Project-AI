@@ -312,9 +312,7 @@ class SecureEnclaveInterface(HardwareInterface):
         self._keychain: dict[str, bytes] = {}
         self._enclave_id = self._generate_enclave_id()
         # Generate unique salt from enclave ID instead of hard-coding
-        self._salt = hashlib.sha256(
-            f"SECURE_ENCLAVE_{self._enclave_id}".encode()
-        ).digest()
+        self._salt = hashlib.sha256(f"SECURE_ENCLAVE_{self._enclave_id}".encode()).digest()
         self._lock = threading.Lock()
 
     def initialize(self) -> bool:

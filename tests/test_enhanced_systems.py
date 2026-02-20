@@ -65,9 +65,7 @@ class TestEventSpine(unittest.TestCase):
 
         # Check received
         self.assertEqual(len(self.received_events), 1)
-        self.assertEqual(
-            self.received_events[0].category, EventCategory.THREAT_DETECTED
-        )
+        self.assertEqual(self.received_events[0].category, EventCategory.THREAT_DETECTED)
 
         # Cleanup
         self.spine.unsubscribe(sub_id)
@@ -184,21 +182,15 @@ class TestGovernanceGraph(unittest.TestCase):
 
         # Check order (bottom to top)
         self.assertEqual(chain[0], "tactical_edge_ai")
-        self.assertTrue(
-            chain.index("ethics_governance") < chain.index("agi_safeguards")
-        )
+        self.assertTrue(chain.index("ethics_governance") < chain.index("agi_safeguards"))
 
     def test_override_authority(self):
         """Test override authority checks."""
         # Ethics can override tactical
-        self.assertTrue(
-            self.graph.can_override("ethics_governance", "tactical_edge_ai")
-        )
+        self.assertTrue(self.graph.can_override("ethics_governance", "tactical_edge_ai"))
 
         # Tactical cannot override ethics
-        self.assertFalse(
-            self.graph.can_override("tactical_edge_ai", "ethics_governance")
-        )
+        self.assertFalse(self.graph.can_override("tactical_edge_ai", "ethics_governance"))
 
         # AGI can override ethics
         self.assertTrue(self.graph.can_override("agi_safeguards", "ethics_governance"))
@@ -206,9 +198,7 @@ class TestGovernanceGraph(unittest.TestCase):
     def test_consultation_requirements(self):
         """Test consultation requirements."""
         # Tactical must consult ethics
-        self.assertTrue(
-            self.graph.requires_consultation("tactical_edge_ai", "ethics_governance")
-        )
+        self.assertTrue(self.graph.requires_consultation("tactical_edge_ai", "ethics_governance"))
 
         # Supply must consult ethics for scarce resources
         self.assertTrue(

@@ -136,9 +136,7 @@ class ControlPlaneHardeningSystem:
 
     def _start_monitoring(self):
         """Start background monitoring thread"""
-        self.monitoring_thread = threading.Thread(
-            target=self._monitor_loop, daemon=True
-        )
+        self.monitoring_thread = threading.Thread(target=self._monitor_loop, daemon=True)
         self.monitoring_thread.start()
         logger.info("Started control plane monitoring")
 
@@ -227,9 +225,7 @@ class ControlPlaneHardeningSystem:
         """Determine if event should trigger lockdown"""
         # Lockdown for critical resources
         critical_keywords = ["kyverno", "argocd", "admission", "webhook"]
-        return any(
-            keyword in event.resource_name.lower() for keyword in critical_keywords
-        )
+        return any(keyword in event.resource_name.lower() for keyword in critical_keywords)
 
     def _trigger_lockdown(self, event: TamperEvent):
         """Trigger cluster lockdown"""
@@ -282,9 +278,7 @@ class ControlPlaneHardeningSystem:
                 "Authorization": f"Bearer {self.siem_api_key}",
             }
 
-            response = requests.post(
-                self.siem_endpoint, json=payload, headers=headers, timeout=5
-            )
+            response = requests.post(self.siem_endpoint, json=payload, headers=headers, timeout=5)
 
             if response.status_code == 200:
                 logger.info(f"SIEM alert sent for {event.resource_name}")
@@ -316,9 +310,7 @@ class ControlPlaneHardeningSystem:
                 "Authorization": f"Bearer {self.siem_api_key}",
             }
 
-            response = requests.post(
-                self.siem_endpoint, json=payload, headers=headers, timeout=5
-            )
+            response = requests.post(self.siem_endpoint, json=payload, headers=headers, timeout=5)
 
             if response.status_code == 200:
                 logger.info("SIEM critical alert sent")
@@ -416,9 +408,7 @@ class ControlPlaneHardeningSystem:
         # Check if enough approvals
         if len(request.approvers) >= request.approvers_required:
             request.status = ApprovalStatus.APPROVED
-            logger.info(
-                f"Request {request_id} APPROVED with {len(request.approvers)} approvals"
-            )
+            logger.info(f"Request {request_id} APPROVED with {len(request.approvers)} approvals")
 
         self._save_approval_request(request)
         return True
@@ -475,9 +465,7 @@ class ControlPlaneHardeningSystem:
 
         return events
 
-    def get_approval_requests(
-        self, status: ApprovalStatus | None = None
-    ) -> list[ApprovalRequest]:
+    def get_approval_requests(self, status: ApprovalStatus | None = None) -> list[ApprovalRequest]:
         """Get approval requests, optionally filtered by status"""
         requests = list(self.approval_requests.values())
 

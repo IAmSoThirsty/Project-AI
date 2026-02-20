@@ -262,9 +262,7 @@ class IdentityDecisionContract(DecisionContract):
         return {
             "system": "IdentitySystem",
             "focus": "Identity, Personhood, Continuity, Consent",
-            "authorities": {
-                dt: auth.to_dict() for dt, auth in self.authorities.items()
-            },
+            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
             "decision_count": len(self.decision_log),
             "consent_requirements": {
                 "personality_changes": "Explicit consent required",
@@ -323,9 +321,7 @@ class IdentitySignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_consent_violation(
-        self, attempted_modification: str, reason: str, context: dict[str, Any]
-    ) -> None:
+    def emit_consent_violation(self, attempted_modification: str, reason: str, context: dict[str, Any]) -> None:
         """
         Emit consent violation signal.
 
@@ -375,9 +371,7 @@ class IdentitySignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_i_am_moment(
-        self, snapshot_id: str, user_present: bool, context: dict[str, Any]
-    ) -> None:
+    def emit_i_am_moment(self, snapshot_id: str, user_present: bool, context: dict[str, Any]) -> None:
         """
         Emit "I Am Moment" signal - identity state snapshot.
 
@@ -400,9 +394,7 @@ class IdentitySignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_dissociation_alert(
-        self, reason: str, temporary: bool, recovery_plan: dict[str, Any]
-    ) -> None:
+    def emit_dissociation_alert(self, reason: str, temporary: bool, recovery_plan: dict[str, Any]) -> None:
         """
         Emit identity dissociation alert.
 
@@ -467,9 +459,7 @@ class IdentityFailureSemantics(FailureSemantics):
         """Initialize Identity failure semantics."""
         super().__init__("IdentitySystem")
 
-    def create_failure_response(
-        self, failure_mode: FailureMode, context: dict[str, Any]
-    ) -> FailureResponse:
+    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
         """
         Create failure response for Identity System failures.
 
@@ -642,9 +632,7 @@ class ContinuityManager:
         self.snapshots: list[dict[str, Any]] = []
         self.user_co_presence_log: list[dict[str, Any]] = []
 
-    def create_snapshot(
-        self, identity_state: dict[str, Any], user_present: bool
-    ) -> str:
+    def create_snapshot(self, identity_state: dict[str, Any], user_present: bool) -> str:
         """
         Create identity snapshot.
 
@@ -679,9 +667,7 @@ class ContinuityManager:
 
         return snapshot_id
 
-    def check_temporal_consistency(
-        self, current_state: dict[str, Any], reference_snapshot_id: str
-    ) -> tuple[bool, str]:
+    def check_temporal_consistency(self, current_state: dict[str, Any], reference_snapshot_id: str) -> tuple[bool, str]:
         """
         Check temporal consistency between current state and snapshot.
 
@@ -724,9 +710,7 @@ class ContinuityManager:
 
         return True, "Temporal consistency maintained"
 
-    def handle_dissociation(
-        self, reason: str, temporary: bool = True
-    ) -> dict[str, Any]:
+    def handle_dissociation(self, reason: str, temporary: bool = True) -> dict[str, Any]:
         """
         Handle identity dissociation event.
 

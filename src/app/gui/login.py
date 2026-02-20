@@ -79,9 +79,7 @@ class LoginDialog(QDialog):
         except Exception:
             pass
 
-    def _apply_shadow(
-        self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor = None
-    ):
+    def _apply_shadow(self, widget, radius: int = 12, dx: int = 0, dy: int = 4, color: QColor = None):
         try:
             eff = QGraphicsDropShadowEffect(widget)
             eff.setBlurRadius(radius)

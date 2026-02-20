@@ -323,9 +323,7 @@ class RepositoryInspector:
             with open(file_info.path, encoding="utf-8") as f:
                 content = f.read()
 
-            file_info.lines_of_code = len(
-                [line for line in content.splitlines() if line.strip()]
-            )
+            file_info.lines_of_code = len([line for line in content.splitlines() if line.strip()])
 
             # Parse AST for structure
             try:
@@ -353,14 +351,10 @@ class RepositoryInspector:
                             file_info.imports.append(node.module)
 
                 # Simple complexity score (number of classes + functions)
-                file_info.complexity_score = len(file_info.classes) + len(
-                    file_info.functions
-                )
+                file_info.complexity_score = len(file_info.classes) + len(file_info.functions)
 
                 # Module name from path
-                file_info.module_name = self._path_to_module_name(
-                    file_info.relative_path
-                )
+                file_info.module_name = self._path_to_module_name(file_info.relative_path)
 
             except SyntaxError as e:
                 logger.debug("Syntax error in %s: %s", file_info.path, e)
@@ -393,9 +387,7 @@ class RepositoryInspector:
             with open(file_info.path, encoding="utf-8") as f:
                 content = f.read()
 
-            file_info.lines_of_code = len(
-                [line for line in content.splitlines() if line.strip()]
-            )
+            file_info.lines_of_code = len([line for line in content.splitlines() if line.strip()])
 
         except Exception as e:
             logger.debug("Error reading config file %s: %s", file_info.path, e)
@@ -548,11 +540,7 @@ class RepositoryInspector:
 
     def _is_test_file(self, filepath: Path) -> bool:
         """Check if a file is a test file."""
-        return (
-            "test" in str(filepath).lower()
-            or filepath.name.startswith("test_")
-            or "spec" in filepath.name.lower()
-        )
+        return "test" in str(filepath).lower() or filepath.name.startswith("test_") or "spec" in filepath.name.lower()
 
     def _should_exclude(self, name: str) -> bool:
         """Check if a file or directory should be excluded."""

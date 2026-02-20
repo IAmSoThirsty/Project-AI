@@ -32,10 +32,7 @@ class TestExternalMerkleAnchor:
     def test_initialization(self):
         """Test external anchor initialization."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            anchor = ExternalMerkleAnchor(
-                backends=["filesystem"],
-                filesystem_dir=tmpdir
-            )
+            anchor = ExternalMerkleAnchor(backends=["filesystem"], filesystem_dir=tmpdir)
 
             assert anchor.backends == ["filesystem"]
             assert Path(tmpdir).exists()
@@ -48,10 +45,7 @@ class TestExternalMerkleAnchor:
     def test_pin_merkle_root_filesystem(self):
         """Test pinning Merkle root to filesystem."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            anchor = ExternalMerkleAnchor(
-                backends=["filesystem"],
-                filesystem_dir=tmpdir
-            )
+            anchor = ExternalMerkleAnchor(backends=["filesystem"], filesystem_dir=tmpdir)
 
             # Pin a test Merkle root
             merkle_root = "abc123def456" * 5  # 60 chars
@@ -88,10 +82,7 @@ class TestExternalMerkleAnchor:
     def test_verify_merkle_root_filesystem(self):
         """Test verifying Merkle root from filesystem."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            anchor = ExternalMerkleAnchor(
-                backends=["filesystem"],
-                filesystem_dir=tmpdir
-            )
+            anchor = ExternalMerkleAnchor(backends=["filesystem"], filesystem_dir=tmpdir)
 
             # Pin a test Merkle root
             merkle_root = "test_merkle_root_hash_123456789"
@@ -115,16 +106,10 @@ class TestExternalMerkleAnchor:
     def test_verify_nonexistent_merkle_root(self):
         """Test verifying nonexistent Merkle root."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            anchor = ExternalMerkleAnchor(
-                backends=["filesystem"],
-                filesystem_dir=tmpdir
-            )
+            anchor = ExternalMerkleAnchor(backends=["filesystem"], filesystem_dir=tmpdir)
 
             # Try to verify nonexistent root
-            is_valid, record = anchor.verify_merkle_root(
-                merkle_root="nonexistent_root",
-                genesis_id="GENESIS-FAKE"
-            )
+            is_valid, record = anchor.verify_merkle_root(merkle_root="nonexistent_root", genesis_id="GENESIS-FAKE")
 
             assert is_valid is False
             assert record is None
@@ -132,10 +117,7 @@ class TestExternalMerkleAnchor:
     def test_verify_genesis_id_mismatch(self):
         """Test that Genesis ID mismatch fails verification."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            anchor = ExternalMerkleAnchor(
-                backends=["filesystem"],
-                filesystem_dir=tmpdir
-            )
+            anchor = ExternalMerkleAnchor(backends=["filesystem"], filesystem_dir=tmpdir)
 
             # Pin with one Genesis ID
             merkle_root = "test_merkle_root_mismatch"
@@ -149,10 +131,7 @@ class TestExternalMerkleAnchor:
             )
 
             # Try to verify with different Genesis ID
-            is_valid, record = anchor.verify_merkle_root(
-                merkle_root=merkle_root,
-                genesis_id="GENESIS-WRONG"
-            )
+            is_valid, record = anchor.verify_merkle_root(merkle_root=merkle_root, genesis_id="GENESIS-WRONG")
 
             # Should fail due to Genesis ID mismatch
             assert is_valid is False
@@ -160,10 +139,7 @@ class TestExternalMerkleAnchor:
     def test_list_anchors(self):
         """Test listing all anchored Merkle roots."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            anchor = ExternalMerkleAnchor(
-                backends=["filesystem"],
-                filesystem_dir=tmpdir
-            )
+            anchor = ExternalMerkleAnchor(backends=["filesystem"], filesystem_dir=tmpdir)
 
             # Pin multiple roots
             genesis_id = "GENESIS-LIST123"
@@ -218,10 +194,7 @@ class TestExternalMerkleAnchor:
     def test_get_statistics(self):
         """Test getting anchoring statistics."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            anchor = ExternalMerkleAnchor(
-                backends=["filesystem"],
-                filesystem_dir=tmpdir
-            )
+            anchor = ExternalMerkleAnchor(backends=["filesystem"], filesystem_dir=tmpdir)
 
             # Pin a few roots
             for i in range(2):
@@ -258,16 +231,11 @@ class TestSovereignAuditLogIntegration:
 
             # Log enough events to trigger Merkle anchor
             for i in range(3):
-                audit.log_event(
-                    f"external_anchor_test_{i}",
-                    {"index": i}
-                )
+                audit.log_event(f"external_anchor_test_{i}", {"index": i})
 
             # Should have created external anchor
             if audit.external_anchor:
-                anchors = audit.external_anchor.list_anchors(
-                    genesis_id=audit.genesis_keypair.genesis_id
-                )
+                anchors = audit.external_anchor.list_anchors(genesis_id=audit.genesis_keypair.genesis_id)
                 # May have 0 or more anchors depending on timing
                 assert isinstance(anchors, list)
 
@@ -310,8 +278,8 @@ class TestSovereignAuditLogIntegration:
 class TestIPFSBackend:
     """Test suite for IPFS backend (requires mocking since IPFS daemon may not be running)."""
 
-    @patch('src.app.governance.external_merkle_anchor.IPFS_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.ipfshttpclient')
+    @patch("src.app.governance.external_merkle_anchor.IPFS_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.ipfshttpclient")
     def test_ipfs_backend_initialization(self, mock_ipfs_module):
         """Test IPFS backend can be initialized."""
         with tempfile.TemporaryDirectory():
@@ -320,16 +288,13 @@ class TestIPFSBackend:
             mock_ipfs_module.connect.return_value = mock_client
 
             # Initialize with IPFS backend
-            anchor = ExternalMerkleAnchor(
-                backends=["ipfs"],
-                ipfs_api_url="http://localhost:5001"
-            )
+            anchor = ExternalMerkleAnchor(backends=["ipfs"], ipfs_api_url="http://localhost:5001")
 
             assert "ipfs" in anchor.backends
             assert anchor.ipfs_api_url == "http://localhost:5001"
 
-    @patch('src.app.governance.external_merkle_anchor.IPFS_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.ipfshttpclient')
+    @patch("src.app.governance.external_merkle_anchor.IPFS_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.ipfshttpclient")
     def test_ipfs_pin_merkle_root(self, mock_ipfs_module):
         """Test pinning Merkle root to IPFS."""
         with tempfile.TemporaryDirectory():
@@ -341,10 +306,7 @@ class TestIPFSBackend:
             mock_ipfs_module.connect.return_value = mock_client
 
             # Initialize with IPFS backend
-            anchor = ExternalMerkleAnchor(
-                backends=["ipfs"],
-                ipfs_api_url="http://localhost:5001"
-            )
+            anchor = ExternalMerkleAnchor(backends=["ipfs"], ipfs_api_url="http://localhost:5001")
 
             # Pin a test Merkle root
             merkle_root = "ipfs_test_merkle_root_hash"
@@ -372,8 +334,8 @@ class TestIPFSBackend:
             mock_client.add_bytes.assert_called_once()
             mock_client.pin.add.assert_called_once_with(mock_cid)
 
-    @patch('src.app.governance.external_merkle_anchor.IPFS_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.ipfshttpclient')
+    @patch("src.app.governance.external_merkle_anchor.IPFS_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.ipfshttpclient")
     def test_ipfs_verify_merkle_root(self, mock_ipfs_module):
         """Test verifying Merkle root from IPFS."""
         with tempfile.TemporaryDirectory():
@@ -390,26 +352,18 @@ class TestIPFSBackend:
             }
 
             # Mock pin.ls to return CIDs
-            mock_client.pin.ls.return_value = {
-                "Keys": {
-                    mock_cid: {"Type": "recursive"}
-                }
-            }
+            mock_client.pin.ls.return_value = {"Keys": {mock_cid: {"Type": "recursive"}}}
 
             # Mock cat to return anchor record
-            mock_client.cat.return_value = json.dumps(anchor_record).encode('utf-8')
+            mock_client.cat.return_value = json.dumps(anchor_record).encode("utf-8")
             mock_ipfs_module.connect.return_value = mock_client
 
             # Initialize with IPFS backend
-            anchor = ExternalMerkleAnchor(
-                backends=["ipfs"],
-                ipfs_api_url="http://localhost:5001"
-            )
+            anchor = ExternalMerkleAnchor(backends=["ipfs"], ipfs_api_url="http://localhost:5001")
 
             # Verify the Merkle root
             is_valid, record = anchor.verify_merkle_root(
-                merkle_root="ipfs_verify_test",
-                genesis_id="GENESIS-IPFS-VERIFY"
+                merkle_root="ipfs_verify_test", genesis_id="GENESIS-IPFS-VERIFY"
             )
 
             assert is_valid is True
@@ -421,7 +375,7 @@ class TestIPFSBackend:
             mock_client.pin.ls.assert_called_once()
             mock_client.cat.assert_called_once_with(mock_cid)
 
-    @patch('src.app.governance.external_merkle_anchor.IPFS_AVAILABLE', False)
+    @patch("src.app.governance.external_merkle_anchor.IPFS_AVAILABLE", False)
     def test_ipfs_not_available(self):
         """Test that IPFS backend raises error when ipfshttpclient not installed."""
         with pytest.raises(ValueError, match="ipfshttpclient not installed"):
@@ -431,8 +385,8 @@ class TestIPFSBackend:
 class TestS3Backend:
     """Test suite for S3 backend with WORM object lock."""
 
-    @patch('src.app.governance.external_merkle_anchor.S3_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.boto3')
+    @patch("src.app.governance.external_merkle_anchor.S3_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.boto3")
     def test_s3_backend_initialization(self, mock_boto3):
         """Test S3 backend can be initialized."""
         with tempfile.TemporaryDirectory():
@@ -453,8 +407,8 @@ class TestS3Backend:
             assert anchor.s3_region == "us-east-1"
             assert anchor.s3_retention_days == 3650
 
-    @patch('src.app.governance.external_merkle_anchor.S3_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.boto3')
+    @patch("src.app.governance.external_merkle_anchor.S3_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.boto3")
     def test_s3_pin_merkle_root_with_worm(self, mock_boto3):
         """Test pinning Merkle root to S3 with WORM object lock."""
         with tempfile.TemporaryDirectory():
@@ -502,8 +456,8 @@ class TestS3Backend:
             assert call_kwargs["ObjectLockMode"] == "GOVERNANCE"
             assert "ObjectLockRetainUntilDate" in call_kwargs
 
-    @patch('src.app.governance.external_merkle_anchor.S3_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.boto3')
+    @patch("src.app.governance.external_merkle_anchor.S3_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.boto3")
     def test_s3_verify_merkle_root(self, mock_boto3):
         """Test verifying Merkle root from S3."""
         with tempfile.TemporaryDirectory():
@@ -520,18 +474,12 @@ class TestS3Backend:
 
             # Mock paginator for list_objects_v2
             mock_paginator = MagicMock()
-            mock_page = {
-                "Contents": [
-                    {"Key": "merkle_anchors/s3_verify_1.json"}
-                ]
-            }
+            mock_page = {"Contents": [{"Key": "merkle_anchors/s3_verify_1.json"}]}
             mock_paginator.paginate.return_value = [mock_page]
             mock_client.get_paginator.return_value = mock_paginator
 
             # Mock get_object to return anchor record
-            mock_response = {
-                "Body": Mock(read=Mock(return_value=json.dumps(anchor_record).encode('utf-8')))
-            }
+            mock_response = {"Body": Mock(read=Mock(return_value=json.dumps(anchor_record).encode("utf-8")))}
             mock_client.get_object.return_value = mock_response
             mock_boto3.client.return_value = mock_client
 
@@ -543,10 +491,7 @@ class TestS3Backend:
             )
 
             # Verify the Merkle root
-            is_valid, record = anchor.verify_merkle_root(
-                merkle_root="s3_verify_test",
-                genesis_id="GENESIS-S3-VERIFY"
-            )
+            is_valid, record = anchor.verify_merkle_root(merkle_root="s3_verify_test", genesis_id="GENESIS-S3-VERIFY")
 
             assert is_valid is True
             assert record is not None
@@ -554,10 +499,10 @@ class TestS3Backend:
             assert record["genesis_id"] == "GENESIS-S3-VERIFY"
 
             # Verify S3 client was called
-            mock_client.get_paginator.assert_called_once_with('list_objects_v2')
+            mock_client.get_paginator.assert_called_once_with("list_objects_v2")
             mock_client.get_object.assert_called_once()
 
-    @patch('src.app.governance.external_merkle_anchor.S3_AVAILABLE', False)
+    @patch("src.app.governance.external_merkle_anchor.S3_AVAILABLE", False)
     def test_s3_not_available(self):
         """Test that S3 backend raises error when boto3 not installed."""
         with pytest.raises(ValueError, match="boto3 not installed"):
@@ -567,10 +512,10 @@ class TestS3Backend:
 class TestMultiBackendIntegration:
     """Test suite for multiple backend integration (filesystem + IPFS + S3)."""
 
-    @patch('src.app.governance.external_merkle_anchor.IPFS_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.S3_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.ipfshttpclient')
-    @patch('src.app.governance.external_merkle_anchor.boto3')
+    @patch("src.app.governance.external_merkle_anchor.IPFS_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.S3_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.ipfshttpclient")
+    @patch("src.app.governance.external_merkle_anchor.boto3")
     def test_triple_backend_pinning(self, mock_boto3, mock_ipfs_module):
         """Test pinning to all three backends simultaneously."""
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -630,10 +575,10 @@ class TestMultiBackendIntegration:
             # Verify S3 was called
             mock_s3_client.put_object.assert_called_once()
 
-    @patch('src.app.governance.external_merkle_anchor.IPFS_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.S3_AVAILABLE', True)
-    @patch('src.app.governance.external_merkle_anchor.ipfshttpclient')
-    @patch('src.app.governance.external_merkle_anchor.boto3')
+    @patch("src.app.governance.external_merkle_anchor.IPFS_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.S3_AVAILABLE", True)
+    @patch("src.app.governance.external_merkle_anchor.ipfshttpclient")
+    @patch("src.app.governance.external_merkle_anchor.boto3")
     def test_multi_backend_verification(self, mock_boto3, mock_ipfs_module):
         """Test verification can succeed from any backend."""
         with tempfile.TemporaryDirectory():
@@ -648,10 +593,8 @@ class TestMultiBackendIntegration:
                 "batch_info": {"batch_size": 800},
             }
 
-            mock_ipfs_client.pin.ls.return_value = {
-                "Keys": {mock_cid: {"Type": "recursive"}}
-            }
-            mock_ipfs_client.cat.return_value = json.dumps(anchor_record).encode('utf-8')
+            mock_ipfs_client.pin.ls.return_value = {"Keys": {mock_cid: {"Type": "recursive"}}}
+            mock_ipfs_client.cat.return_value = json.dumps(anchor_record).encode("utf-8")
             mock_ipfs_module.connect.return_value = mock_ipfs_client
 
             # Mock S3 client (won't be called since IPFS finds it first)
@@ -667,8 +610,7 @@ class TestMultiBackendIntegration:
 
             # Verify the Merkle root (should find in IPFS)
             is_valid, record = anchor.verify_merkle_root(
-                merkle_root="multi_verify_test",
-                genesis_id="GENESIS-MULTI-VERIFY"
+                merkle_root="multi_verify_test", genesis_id="GENESIS-MULTI-VERIFY"
             )
 
             assert is_valid is True
@@ -681,4 +623,3 @@ class TestMultiBackendIntegration:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "-s"])
-

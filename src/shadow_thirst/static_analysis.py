@@ -77,10 +77,7 @@ class AnalysisReport:
 
     def get_errors(self) -> list[AnalysisFinding]:
         """Get all error-level findings."""
-        return [
-            f for f in self.findings
-            if f.severity in (AnalysisSeverity.ERROR, AnalysisSeverity.CRITICAL)
-        ]
+        return [f for f in self.findings if f.severity in (AnalysisSeverity.ERROR, AnalysisSeverity.CRITICAL)]
 
     def get_warnings(self) -> list[AnalysisFinding]:
         """Get all warning-level findings."""
@@ -137,14 +134,16 @@ class PlaneIsolationAnalyzer:
                     if var_name:
                         var = self._find_variable(function, var_name)
                         if var and var.qualifier == PlaneQualifierIR.CANONICAL:
-                            findings.append(AnalysisFinding(
-                                analyzer="PlaneIsolationAnalyzer",
-                                severity=AnalysisSeverity.CRITICAL,
-                                message=f"Shadow plane attempts to mutate canonical variable '{var_name}'",
-                                function=function.name,
-                                block_id=block.block_id,
-                                instruction_index=i,
-                            ))
+                            findings.append(
+                                AnalysisFinding(
+                                    analyzer="PlaneIsolationAnalyzer",
+                                    severity=AnalysisSeverity.CRITICAL,
+                                    message=f"Shadow plane attempts to mutate canonical variable '{var_name}'",
+                                    function=function.name,
+                                    block_id=block.block_id,
+                                    instruction_index=i,
+                                )
+                            )
 
         return findings
 
@@ -198,14 +197,16 @@ class DeterminismAnalyzer:
         for block in function.shadow_blocks + function.invariant_blocks:
             for i, instruction in enumerate(block.instructions):
                 if instruction.opcode in self.NON_DETERMINISTIC_OPCODES:
-                    findings.append(AnalysisFinding(
-                        analyzer="DeterminismAnalyzer",
-                        severity=AnalysisSeverity.ERROR,
-                        message=f"Non-deterministic operation in shadow/invariant: {instruction.opcode.name}",
-                        function=function.name,
-                        block_id=block.block_id,
-                        instruction_index=i,
-                    ))
+                    findings.append(
+                        AnalysisFinding(
+                            analyzer="DeterminismAnalyzer",
+                            severity=AnalysisSeverity.ERROR,
+                            message=f"Non-deterministic operation in shadow/invariant: {instruction.opcode.name}",
+                            function=function.name,
+                            block_id=block.block_id,
+                            instruction_index=i,
+                        )
+                    )
 
         return findings
 
@@ -250,12 +251,14 @@ class PrivilegeEscalationAnalyzer:
                         has_validation = True
 
             if not has_validation:
-                findings.append(AnalysisFinding(
-                    analyzer="PrivilegeEscalationAnalyzer",
-                    severity=AnalysisSeverity.ERROR,
-                    message="Function requires validated_canonical but missing VALIDATE_AND_COMMIT",
-                    function=function.name,
-                ))
+                findings.append(
+                    AnalysisFinding(
+                        analyzer="PrivilegeEscalationAnalyzer",
+                        severity=AnalysisSeverity.ERROR,
+                        message="Function requires validated_canonical but missing VALIDATE_AND_COMMIT",
+                        function=function.name,
+                    )
+                )
 
         return findings
 
@@ -296,26 +299,26 @@ class ResourceEstimator:
         findings = []
 
         # Estimate shadow execution cost
-        shadow_instructions = sum(
-            len(block.instructions) for block in function.shadow_blocks
-        )
+        shadow_instructions = sum(len(block.instructions) for block in function.shadow_blocks)
 
         estimated_cpu_ms = shadow_instructions / self.INSTRUCTIONS_PER_MS
 
         # Check against quota
         cpu_quota = function.shadow_cpu_quota_ms or self.DEFAULT_CPU_QUOTA_MS
         if estimated_cpu_ms > cpu_quota:
-            findings.append(AnalysisFinding(
-                analyzer="ResourceEstimator",
-                severity=AnalysisSeverity.WARNING,
-                message=f"Estimated shadow CPU usage ({estimated_cpu_ms:.2f}ms) exceeds quota ({cpu_quota}ms)",
-                function=function.name,
-                metadata={
-                    "estimated_cpu_ms": estimated_cpu_ms,
-                    "cpu_quota_ms": cpu_quota,
-                    "shadow_instructions": shadow_instructions,
-                },
-            ))
+            findings.append(
+                AnalysisFinding(
+                    analyzer="ResourceEstimator",
+                    severity=AnalysisSeverity.WARNING,
+                    message=f"Estimated shadow CPU usage ({estimated_cpu_ms:.2f}ms) exceeds quota ({cpu_quota}ms)",
+                    function=function.name,
+                    metadata={
+                        "estimated_cpu_ms": estimated_cpu_ms,
+                        "cpu_quota_ms": cpu_quota,
+                        "shadow_instructions": shadow_instructions,
+                    },
+                )
+            )
 
         # Estimate memory usage (simple heuristic)
         num_variables = len(function.variables)
@@ -323,16 +326,18 @@ class ResourceEstimator:
 
         memory_quota = function.shadow_memory_quota_mb or self.DEFAULT_MEMORY_QUOTA_MB
         if estimated_memory_mb > memory_quota:
-            findings.append(AnalysisFinding(
-                analyzer="ResourceEstimator",
-                severity=AnalysisSeverity.WARNING,
-                message=f"Estimated memory usage ({estimated_memory_mb:.2f}MB) exceeds quota ({memory_quota}MB)",
-                function=function.name,
-                metadata={
-                    "estimated_memory_mb": estimated_memory_mb,
-                    "memory_quota_mb": memory_quota,
-                },
-            ))
+            findings.append(
+                AnalysisFinding(
+                    analyzer="ResourceEstimator",
+                    severity=AnalysisSeverity.WARNING,
+                    message=f"Estimated memory usage ({estimated_memory_mb:.2f}MB) exceeds quota ({memory_quota}MB)",
+                    function=function.name,
+                    metadata={
+                        "estimated_memory_mb": estimated_memory_mb,
+                        "memory_quota_mb": memory_quota,
+                    },
+                )
+            )
 
         return findings
 
@@ -379,26 +384,30 @@ class DivergenceRiskEstimator:
         if shadow_count > 0:
             diff_ratio = abs(primary_count - shadow_count) / shadow_count
             if diff_ratio > 0.5:  # >50% difference
-                findings.append(AnalysisFinding(
-                    analyzer="DivergenceRiskEstimator",
-                    severity=AnalysisSeverity.INFO,
-                    message=f"High divergence risk: primary and shadow have significantly different complexity ({diff_ratio:.1%} difference)",
-                    function=function.name,
-                    metadata={
-                        "primary_instructions": primary_count,
-                        "shadow_instructions": shadow_count,
-                        "difference_ratio": diff_ratio,
-                    },
-                ))
+                findings.append(
+                    AnalysisFinding(
+                        analyzer="DivergenceRiskEstimator",
+                        severity=AnalysisSeverity.INFO,
+                        message=f"High divergence risk: primary and shadow have significantly different complexity ({diff_ratio:.1%} difference)",
+                        function=function.name,
+                        metadata={
+                            "primary_instructions": primary_count,
+                            "shadow_instructions": shadow_count,
+                            "difference_ratio": diff_ratio,
+                        },
+                    )
+                )
 
         # Check if divergence policy is set
         if not function.divergence_policy:
-            findings.append(AnalysisFinding(
-                analyzer="DivergenceRiskEstimator",
-                severity=AnalysisSeverity.WARNING,
-                message="Function has shadow execution but no divergence policy specified",
-                function=function.name,
-            ))
+            findings.append(
+                AnalysisFinding(
+                    analyzer="DivergenceRiskEstimator",
+                    severity=AnalysisSeverity.WARNING,
+                    message="Function has shadow execution but no divergence policy specified",
+                    function=function.name,
+                )
+            )
 
         return findings
 
@@ -443,26 +452,30 @@ class InvariantPurityChecker:
         for block in function.invariant_blocks:
             for i, instruction in enumerate(block.instructions):
                 if instruction.opcode in self.IMPURE_OPCODES:
-                    findings.append(AnalysisFinding(
-                        analyzer="InvariantPurityChecker",
-                        severity=AnalysisSeverity.ERROR,
-                        message=f"Invariant contains impure operation: {instruction.opcode.name}",
-                        function=function.name,
-                        block_id=block.block_id,
-                        instruction_index=i,
-                    ))
+                    findings.append(
+                        AnalysisFinding(
+                            analyzer="InvariantPurityChecker",
+                            severity=AnalysisSeverity.ERROR,
+                            message=f"Invariant contains impure operation: {instruction.opcode.name}",
+                            function=function.name,
+                            block_id=block.block_id,
+                            instruction_index=i,
+                        )
+                    )
 
                 # Function calls in invariants must be pure
                 if instruction.opcode == IROpcode.CALL:
                     func_name = instruction.operands[0] if instruction.operands else "unknown"
-                    findings.append(AnalysisFinding(
-                        analyzer="InvariantPurityChecker",
-                        severity=AnalysisSeverity.WARNING,
-                        message=f"Invariant calls function '{func_name}' - verify it is pure",
-                        function=function.name,
-                        block_id=block.block_id,
-                        instruction_index=i,
-                    ))
+                    findings.append(
+                        AnalysisFinding(
+                            analyzer="InvariantPurityChecker",
+                            severity=AnalysisSeverity.WARNING,
+                            message=f"Invariant calls function '{func_name}' - verify it is pure",
+                            function=function.name,
+                            block_id=block.block_id,
+                            instruction_index=i,
+                        )
+                    )
 
         return findings
 
@@ -521,10 +534,12 @@ class StaticAnalyzer:
             "analyzers_run": len(self.analyzers),
         }
 
-        logger.info("Static analysis complete: %d findings (%d errors, %d warnings)",
-                    report.summary["total_findings"],
-                    report.summary["errors"],
-                    report.summary["warnings"])
+        logger.info(
+            "Static analysis complete: %d findings (%d errors, %d warnings)",
+            report.summary["total_findings"],
+            report.summary["errors"],
+            report.summary["warnings"],
+        )
 
         return report
 

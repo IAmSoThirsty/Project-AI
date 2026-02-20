@@ -44,9 +44,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
         os.makedirs(self.data_dir, exist_ok=True)
 
         self.alert_log_path = os.path.join(self.data_dir, "defense_alerts.jsonl")
-        self.implementation_log_path = os.path.join(
-            self.data_dir, "implementations.jsonl"
-        )
+        self.implementation_log_path = os.path.join(self.data_dir, "implementations.jsonl")
 
         # Track defense upgrades
         self.pending_upgrades = []
@@ -84,9 +82,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
         )
 
         # Analyze threat for defensive opportunities
-        opportunities = self._identify_defense_opportunities(
-            threat_data, cerberus_response
-        )
+        opportunities = self._identify_defense_opportunities(threat_data, cerberus_response)
 
         if opportunities:
             # Alert Codex of potential upgrades
@@ -185,9 +181,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
 
         return opportunities
 
-    def _create_codex_alert(
-        self, threat_data: dict[str, Any], opportunities: list[dict[str, Any]]
-    ) -> dict[str, Any]:
+    def _create_codex_alert(self, threat_data: dict[str, Any], opportunities: list[dict[str, Any]]) -> dict[str, Any]:
         """Create an alert for Codex Deus Maximus."""
         return {
             "timestamp": datetime.now(UTC).isoformat(),
@@ -217,9 +211,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
         except Exception as e:
             logger.error("Failed to log alert: %s", e)
 
-    def codex_implement_upgrade(
-        self, upgrade_spec: dict[str, Any], codex_instance: Any = None
-    ) -> dict[str, Any]:
+    def codex_implement_upgrade(self, upgrade_spec: dict[str, Any], codex_instance: Any = None) -> dict[str, Any]:
         """Called by Codex to implement approved defense upgrades.
 
         Args:
@@ -239,9 +231,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
             metadata={"upgrade_type": upgrade_spec.get("upgrade_type")},
         )
 
-    def _do_codex_implement_upgrade(
-        self, upgrade_spec: dict[str, Any], codex_instance: Any = None
-    ) -> dict[str, Any]:
+    def _do_codex_implement_upgrade(self, upgrade_spec: dict[str, Any], codex_instance: Any = None) -> dict[str, Any]:
         """Internal implementation of upgrade."""
         logger.info("Codex implementing upgrade: %s", upgrade_spec.get("upgrade_type"))
 

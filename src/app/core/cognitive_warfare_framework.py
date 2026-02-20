@@ -102,10 +102,7 @@ class CognitiveDefenseEngine:
                     detected.append(f"{category}:{pattern}")
                     if category == "memetic":
                         hazard_level = CognitiveHazardLevel.MEMETIC
-                    elif (
-                        category == "manipulation"
-                        and hazard_level != CognitiveHazardLevel.MEMETIC
-                    ):
+                    elif category == "manipulation" and hazard_level != CognitiveHazardLevel.MEMETIC:
                         hazard_level = CognitiveHazardLevel.WARNING
 
         # Determine recommendation
@@ -135,8 +132,7 @@ class CognitiveDefenseEngine:
             "patterns": assessment.detected_patterns,
             "target": target,
             "intentional_harm_to_human": False,  # Defensive only
-            "existential_threat": assessment.hazard_level
-            == CognitiveHazardLevel.MEMETIC,
+            "existential_threat": assessment.hazard_level == CognitiveHazardLevel.MEMETIC,
         }
 
         intent = f"deploy_countermeasures_{assessment.hazard_level.value}"

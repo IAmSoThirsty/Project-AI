@@ -43,9 +43,7 @@ class TemporalClientManager:
         """
         self.target_host = target_host or os.getenv("TEMPORAL_HOST", "localhost:7233")
         self.namespace = namespace or os.getenv("TEMPORAL_NAMESPACE", "default")
-        self.task_queue = task_queue or os.getenv(
-            "TEMPORAL_TASK_QUEUE", "project-ai-tasks"
-        )
+        self.task_queue = task_queue or os.getenv("TEMPORAL_TASK_QUEUE", "project-ai-tasks")
         self.tls_config = tls_config
         self._client: Client | None = None
         self._workers: list[Worker] = []
@@ -61,10 +59,7 @@ class TemporalClientManager:
             ConnectionError: If unable to connect to Temporal server
         """
         try:
-            logger.info(
-                f"Connecting to Temporal server at {self.target_host}, "
-                f"namespace: {self.namespace}"
-            )
+            logger.info(f"Connecting to Temporal server at {self.target_host}, " f"namespace: {self.namespace}")
 
             self._client = await Client.connect(
                 self.target_host,
@@ -77,9 +72,7 @@ class TemporalClientManager:
 
         except Exception as e:
             logger.error("Failed to connect to Temporal server: %s", e)
-            raise ConnectionError(
-                f"Unable to connect to Temporal at {self.target_host}"
-            ) from e
+            raise ConnectionError(f"Unable to connect to Temporal at {self.target_host}") from e
 
     async def disconnect(self):
         """Close connection and cleanup resources."""

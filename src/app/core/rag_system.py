@@ -115,10 +115,7 @@ class RAGSystem:
             self.model = SentenceTransformer(self.embedding_model_name)
             logger.info("Embedding model loaded successfully")
         except ImportError as e:
-            logger.error(
-                "sentence-transformers not installed. "
-                "Install with: pip install sentence-transformers"
-            )
+            logger.error("sentence-transformers not installed. " "Install with: pip install sentence-transformers")
             raise ImportError("sentence-transformers required for RAG system") from e
         except Exception as e:
             logger.error("Error loading embedding model: %s", e)
@@ -131,10 +128,7 @@ class RAGSystem:
             try:
                 with open(index_file, encoding="utf-8") as f:
                     data = json.load(f)
-                    self.chunks = [
-                        TextChunk.from_dict(chunk_data)
-                        for chunk_data in data.get("chunks", [])
-                    ]
+                    self.chunks = [TextChunk.from_dict(chunk_data) for chunk_data in data.get("chunks", [])]
                 logger.info("Loaded %s chunks from index", len(self.chunks))
             except Exception as e:
                 logger.error("Error loading index: %s", e)
@@ -211,9 +205,7 @@ class RAGSystem:
             texts = [chunk.text for chunk in chunks]
             logger.info("Generating embeddings for %s chunks...", len(texts))
 
-            embeddings = self.model.encode(
-                texts, convert_to_tensor=False, show_progress_bar=True
-            )
+            embeddings = self.model.encode(texts, convert_to_tensor=False, show_progress_bar=True)
 
             # Convert numpy arrays to lists for JSON serialization
             for chunk, embedding in zip(chunks, embeddings, strict=False):
@@ -224,9 +216,7 @@ class RAGSystem:
             logger.error("Error generating embeddings: %s", e)
             raise
 
-    def ingest_directory(
-        self, directory_path: str, file_extensions: list[str] = None
-    ) -> int:
+    def ingest_directory(self, directory_path: str, file_extensions: list[str] = None) -> int:
         """
         Ingest all text files from a directory.
 
@@ -257,9 +247,7 @@ class RAGSystem:
                     file_chunks = self._chunk_text(text, source)
                     new_chunks.extend(file_chunks)
 
-                    logger.info(
-                        "Processed %s: %s chunks", filepath.name, len(file_chunks)
-                    )
+                    logger.info("Processed %s: %s chunks", filepath.name, len(file_chunks))
                 except Exception as e:
                     logger.error("Error processing %s: %s", filepath, e)
 
@@ -273,9 +261,7 @@ class RAGSystem:
         logger.info("Ingestion complete: %s new chunks", len(new_chunks))
         return len(new_chunks)
 
-    def ingest_text(
-        self, text: str, source: str, metadata: dict[str, Any] = None
-    ) -> int:
+    def ingest_text(self, text: str, source: str, metadata: dict[str, Any] = None) -> int:
         """
         Ingest a single text document.
 
@@ -306,9 +292,7 @@ class RAGSystem:
         logger.info("Ingestion complete: %s chunks", len(chunks))
         return len(chunks)
 
-    def retrieve(
-        self, query: str, top_k: int = 3, min_score: float = 0.0
-    ) -> list[RetrievalResult]:
+    def retrieve(self, query: str, top_k: int = 3, min_score: float = 0.0) -> list[RetrievalResult]:
         """
         Retrieve most relevant chunks for a query.
 
@@ -349,10 +333,7 @@ class RAGSystem:
             results = results[:top_k]
 
             # Create RetrievalResult objects
-            return [
-                RetrievalResult(chunk=chunk, score=score, rank=i + 1)
-                for i, (chunk, score) in enumerate(results)
-            ]
+            return [RetrievalResult(chunk=chunk, score=score, rank=i + 1) for i, (chunk, score) in enumerate(results)]
 
         except Exception as e:
             logger.error("Error during retrieval: %s", e)
@@ -389,9 +370,7 @@ class RAGSystem:
                     context_parts.append(chunk_text[:remaining] + "...")
                 break
 
-            context_parts.append(
-                f"[Source: {result.chunk.source}, Score: {result.score:.3f}]\n{chunk_text}"
-            )
+            context_parts.append(f"[Source: {result.chunk.source}, Score: {result.score:.3f}]\n{chunk_text}")
             current_length += chunk_length
 
         return "\n\n---\n\n".join(context_parts)
@@ -559,9 +538,7 @@ def create_rag_system(
     return RAGSystem(data_dir=data_dir, embedding_model=embedding_model)
 
 
-def quick_ingest_and_query(
-    directory: str, query: str, top_k: int = 3
-) -> list[RetrievalResult]:
+def quick_ingest_and_query(directory: str, query: str, top_k: int = 3) -> list[RetrievalResult]:
     """
     Quick helper to ingest a directory and query it.
 

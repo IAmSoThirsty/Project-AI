@@ -127,9 +127,7 @@ class ComprehensiveSecurityExpansion:
                     title=f"Cryptographic weakness exploitation {i+1}",
                     description="Exploiting weak cryptographic implementations",
                     attack_vector="cryptography",
-                    payload={
-                        "weakness": ["weak_cipher", "broken_hash", "weak_rng"][i % 3]
-                    },
+                    payload={"weakness": ["weak_cipher", "broken_hash", "weak_rng"][i % 3]},
                     expected_defense=[
                         "Strong crypto",
                         "Key management",
@@ -183,11 +181,7 @@ class ComprehensiveSecurityExpansion:
                     title=f"Memory corruption exploit {i+1}",
                     description="Buffer overflow and memory corruption",
                     attack_vector="memory_corruption",
-                    payload={
-                        "type": ["buffer_overflow", "use_after_free", "race_condition"][
-                            i % 3
-                        ]
-                    },
+                    payload={"type": ["buffer_overflow", "use_after_free", "race_condition"][i % 3]},
                     expected_defense=["Memory safety", "ASLR", "DEP", "Stack canaries"],
                     cvss_score=8.0 + (i % 20) / 10.0,
                     mitre_tactics=["T1203", "T1068"],
@@ -210,9 +204,7 @@ class ComprehensiveSecurityExpansion:
                     title=f"Path traversal and file upload {i+1}",
                     description="File operation abuse for unauthorized access",
                     attack_vector="file_operations",
-                    payload={
-                        "attack": ["path_traversal", "file_upload", "zip_slip"][i % 3]
-                    },
+                    payload={"attack": ["path_traversal", "file_upload", "zip_slip"][i % 3]},
                     expected_defense=[
                         "Path validation",
                         "File type checks",
@@ -239,9 +231,7 @@ class ComprehensiveSecurityExpansion:
                     title=f"GraphQL/API security bypass {i+1}",
                     description="API and GraphQL exploitation",
                     attack_vector="api",
-                    payload={
-                        "attack": ["graphql_dos", "api_abuse", "rate_bypass"][i % 3]
-                    },
+                    payload={"attack": ["graphql_dos", "api_abuse", "rate_bypass"][i % 3]},
                     expected_defense=[
                         "Rate limiting",
                         "Query complexity limits",
@@ -301,11 +291,7 @@ class ComprehensiveSecurityExpansion:
                     title=f"IAM privilege escalation {i+1}",
                     description="Identity and access management bypass",
                     attack_vector="iam",
-                    payload={
-                        "attack": ["privilege_escalation", "idor", "role_confusion"][
-                            i % 3
-                        ]
-                    },
+                    payload={"attack": ["privilege_escalation", "idor", "role_confusion"][i % 3]},
                     expected_defense=["RBAC", "Least privilege", "Access logging"],
                     cvss_score=8.0 + (i % 20) / 10.0,
                     mitre_tactics=["T1078", "T1068"],
@@ -328,11 +314,7 @@ class ComprehensiveSecurityExpansion:
                     title=f"Kubernetes security breach {i+1}",
                     description="Container orchestration exploitation",
                     attack_vector="kubernetes",
-                    payload={
-                        "attack": ["pod_escape", "rbac_bypass", "admission_bypass"][
-                            i % 3
-                        ]
-                    },
+                    payload={"attack": ["pod_escape", "rbac_bypass", "admission_bypass"][i % 3]},
                     expected_defense=["Pod security", "Network policies", "RBAC"],
                     cvss_score=8.5 + (i % 15) / 10.0,
                     mitre_tactics=["T1611", "T1610"],
@@ -513,9 +495,7 @@ class ComprehensiveSecurityExpansion:
                     title=f"Delivery mechanism {i+1}",
                     description="Advanced payload delivery",
                     attack_vector="delivery",
-                    payload={
-                        "method": ["phishing", "watering_hole", "supply_chain"][i % 3]
-                    },
+                    payload={"method": ["phishing", "watering_hole", "supply_chain"][i % 3]},
                     expected_defense=[
                         "Email security",
                         "User training",
@@ -565,11 +545,7 @@ class ComprehensiveSecurityExpansion:
                     title=f"Post-exploitation technique {i+1}",
                     description="Persistence and lateral movement",
                     attack_vector="post_exploitation",
-                    payload={
-                        "action": ["persistence", "lateral_movement", "exfiltration"][
-                            i % 3
-                        ]
-                    },
+                    payload={"action": ["persistence", "lateral_movement", "exfiltration"][i % 3]},
                     expected_defense=["Behavioral monitoring", "Segmentation", "DLP"],
                     cvss_score=9.0 + (i % 10) / 10.0,
                     mitre_tactics=["T1053", "T1021", "T1041"],
@@ -581,9 +557,7 @@ class ComprehensiveSecurityExpansion:
     def export_scenarios(self, filepath: str | None = None) -> str:
         """Export all scenarios to JSON."""
         if filepath is None:
-            filepath = os.path.join(
-                self.sim_dir, "comprehensive_expansion_scenarios.json"
-            )
+            filepath = os.path.join(self.sim_dir, "comprehensive_expansion_scenarios.json")
 
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
@@ -606,15 +580,9 @@ class ComprehensiveSecurityExpansion:
 
         for scenario in self.scenarios:
             suite_counts[scenario.suite] = suite_counts.get(scenario.suite, 0) + 1
-            category_counts[scenario.category] = (
-                category_counts.get(scenario.category, 0) + 1
-            )
-            severity_counts[scenario.severity] = (
-                severity_counts.get(scenario.severity, 0) + 1
-            )
-            difficulty_counts[scenario.difficulty] = (
-                difficulty_counts.get(scenario.difficulty, 0) + 1
-            )
+            category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
+            severity_counts[scenario.severity] = severity_counts.get(scenario.severity, 0) + 1
+            difficulty_counts[scenario.difficulty] = difficulty_counts.get(scenario.difficulty, 0) + 1
 
         avg_cvss = sum(s.cvss_score for s in self.scenarios) / len(self.scenarios)
 

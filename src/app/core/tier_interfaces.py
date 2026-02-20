@@ -195,9 +195,7 @@ class ITier1Governance(ABC):
     """
 
     @abstractmethod
-    def evaluate_action(
-        self, request: GovernanceDecisionRequest
-    ) -> GovernanceDecisionResponse:
+    def evaluate_action(self, request: GovernanceDecisionRequest) -> GovernanceDecisionResponse:
         """
         Evaluate an action against governance policies.
 
@@ -212,9 +210,7 @@ class ITier1Governance(ABC):
         """
 
     @abstractmethod
-    def enforce_policy(
-        self, policy_id: str, target_tier: int, target_component: str
-    ) -> bool:
+    def enforce_policy(self, policy_id: str, target_tier: int, target_component: str) -> bool:
         """
         Enforce a policy on a lower tier.
 
@@ -228,9 +224,7 @@ class ITier1Governance(ABC):
         """
 
     @abstractmethod
-    def audit_operation(
-        self, operation: str, tier: int, component: str, details: dict[str, Any]
-    ) -> str:
+    def audit_operation(self, operation: str, tier: int, component: str, details: dict[str, Any]) -> str:
         """
         Record an audit entry for an operation.
 
@@ -270,9 +264,7 @@ class ITier2Infrastructure(ABC):
     """
 
     @abstractmethod
-    def allocate_resources(
-        self, request: ResourceAllocationRequest
-    ) -> ResourceAllocationResponse:
+    def allocate_resources(self, request: ResourceAllocationRequest) -> ResourceAllocationResponse:
         """
         Allocate resources for a component.
 
@@ -421,9 +413,7 @@ class TierInterfaceRouter:
         self._tier2_interface = interface
         logger.info("Registered Tier 2 Infrastructure interface")
 
-    def register_tier3_interface(
-        self, component_id: str, interface: ITier3Application
-    ) -> None:
+    def register_tier3_interface(self, component_id: str, interface: ITier3Application) -> None:
         """Register Tier 3 application interface."""
         self._tier3_interfaces[component_id] = interface
         logger.info("Registered Tier 3 Application interface: %s", component_id)

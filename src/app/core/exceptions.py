@@ -72,11 +72,7 @@ class ProjectAIError(Exception):
         self.category = category
         self.context = context or {}
         self.original_exception = original_exception
-        self.timestamp = (
-            datetime.now(datetime.UTC)
-            if hasattr(datetime, "UTC")
-            else datetime.utcnow()
-        )
+        self.timestamp = datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow()
         self.traceback = traceback.format_exc() if original_exception else None
 
     def to_dict(self) -> dict[str, Any]:
@@ -89,9 +85,7 @@ class ProjectAIError(Exception):
             "context": self.context,
             "timestamp": self.timestamp.isoformat(),
             "traceback": self.traceback,
-            "original_exception": (
-                str(self.original_exception) if self.original_exception else None
-            ),
+            "original_exception": (str(self.original_exception) if self.original_exception else None),
         }
 
     def __str__(self) -> str:
@@ -223,9 +217,7 @@ class TimeoutError(NetworkError):
     """Operation timed out."""
 
     def __init__(self, message: str, **kwargs):
-        super().__init__(
-            message, error_code="TIMEOUT", category=ErrorCategory.TIMEOUT, **kwargs
-        )
+        super().__init__(message, error_code="TIMEOUT", category=ErrorCategory.TIMEOUT, **kwargs)
 
 
 # Resource Errors

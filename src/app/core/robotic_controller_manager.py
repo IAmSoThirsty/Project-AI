@@ -118,9 +118,7 @@ class TriumvirateRobotValidator:
 
         try:
             # Stage 1: Cerberus - Policy Enforcement
-            cerberus_valid, cerberus_reason = self._cerberus_validate(
-                command, joint_states
-            )
+            cerberus_valid, cerberus_reason = self._cerberus_validate(command, joint_states)
             metadata["validation_stages"]["cerberus"] = {
                 "valid": cerberus_valid,
                 "reason": cerberus_reason,
@@ -131,9 +129,7 @@ class TriumvirateRobotValidator:
                 return False, f"Cerberus rejection: {cerberus_reason}", metadata
 
             # Stage 2: Codex - Command Analysis
-            codex_valid, codex_reason, codex_optimization = self._codex_analyze(
-                command, joint_states
-            )
+            codex_valid, codex_reason, codex_optimization = self._codex_analyze(command, joint_states)
             metadata["validation_stages"]["codex"] = {
                 "valid": codex_valid,
                 "reason": codex_reason,
@@ -162,9 +158,7 @@ class TriumvirateRobotValidator:
             duration_ms = (time.time() - start_time) * 1000
             metadata["validation_duration_ms"] = duration_ms
 
-            self._log_validation(
-                command, True, "All Triumvirate stages passed", metadata
-            )
+            self._log_validation(command, True, "All Triumvirate stages passed", metadata)
 
             return True, "Command validated by Triumvirate", metadata
 
@@ -173,9 +167,7 @@ class TriumvirateRobotValidator:
             metadata["error"] = str(e)
             return False, f"Validation error: {e}", metadata
 
-    def _cerberus_validate(
-        self, command: RobotCommand, joint_states: list[JointState]
-    ) -> tuple[bool, str]:
+    def _cerberus_validate(self, command: RobotCommand, joint_states: list[JointState]) -> tuple[bool, str]:
         """
         Cerberus stage: Enforce policies and safety constraints.
         """
@@ -204,9 +196,7 @@ class TriumvirateRobotValidator:
 
         return True, "Cerberus validation passed"
 
-    def _codex_analyze(
-        self, command: RobotCommand, joint_states: list[JointState]
-    ) -> tuple[bool, str, dict[str, Any]]:
+    def _codex_analyze(self, command: RobotCommand, joint_states: list[JointState]) -> tuple[bool, str, dict[str, Any]]:
         """
         Codex stage: Analyze command and suggest optimizations.
         """
@@ -219,9 +209,7 @@ class TriumvirateRobotValidator:
 
         # Check for large position changes that might need trajectory planning
         max_delta = 0.0
-        for i, (target, state) in enumerate(
-            zip(command.joint_targets, joint_states, strict=False)
-        ):
+        for i, (target, state) in enumerate(zip(command.joint_targets, joint_states, strict=False)):
             delta = abs(target - state.position)
             max_delta = max(max_delta, delta)
 
@@ -255,17 +243,13 @@ class TriumvirateRobotValidator:
         }
 
         # Assess command feasibility
-        for i, (target, state) in enumerate(
-            zip(command.joint_targets, joint_states, strict=False)
-        ):
+        for i, (target, state) in enumerate(zip(command.joint_targets, joint_states, strict=False)):
             # Check if target is reachable given current velocity
             delta = target - state.position
             time_required = abs(delta) / max(abs(state.limits.max_velocity), 0.1)
 
             if time_required > command.duration * 1.5:
-                assessment["potential_issues"].append(
-                    f"Joint {i} may not reach target in time"
-                )
+                assessment["potential_issues"].append(f"Joint {i} may not reach target in time")
                 assessment["success_probability"] *= 0.8
 
         # Check for contradictions in command
@@ -283,9 +267,7 @@ class TriumvirateRobotValidator:
         hot_joints = [s for s in joint_states if s.temperature > 60.0]
         if hot_joints:
             assessment["safety_risk"] = "medium"
-            assessment["potential_issues"].append(
-                f"{len(hot_joints)} joints showing elevated temperature"
-            )
+            assessment["potential_issues"].append(f"{len(hot_joints)} joints showing elevated temperature")
 
         # Final decision
         if assessment["success_probability"] < 0.5:
@@ -373,9 +355,7 @@ class RobotControllerManager:
                 self._should_run = True
                 self._state = RobotState.READY
 
-                self._control_thread = threading.Thread(
-                    target=self._control_loop, daemon=True
-                )
+                self._control_thread = threading.Thread(target=self._control_loop, daemon=True)
                 self._control_thread.start()
 
                 logger.info("Robot controller started")
@@ -454,9 +434,7 @@ class RobotControllerManager:
                 logger.info("Resetting emergency stop")
 
                 # Clear alarms
-                self._active_alarms = [
-                    a for a in self._active_alarms if a != "EMERGENCY_STOP_ACTIVATED"
-                ]
+                self._active_alarms = [a for a in self._active_alarms if a != "EMERGENCY_STOP_ACTIVATED"]
 
                 # Check hardware health
                 if not self.hardware.is_healthy():
@@ -526,9 +504,7 @@ class RobotControllerManager:
             joint_states = self.hardware.read_joint_states()
 
             # Triumvirate validation
-            is_valid, reason, metadata = self.triumvirate_validator.validate_command(
-                command, joint_states
-            )
+            is_valid, reason, metadata = self.triumvirate_validator.validate_command(command, joint_states)
 
             if not is_valid:
                 logger.error("Command rejected: %s", reason)

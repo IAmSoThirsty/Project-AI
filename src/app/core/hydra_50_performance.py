@@ -158,9 +158,7 @@ class TTLCache:
         """Remove expired entries"""
         with self.lock:
             current_time = time.time()
-            expired_keys = [
-                k for k, v in self.cache.items() if current_time >= v.expires_at
-            ]
+            expired_keys = [k for k, v in self.cache.items() if current_time >= v.expires_at]
             for key in expired_keys:
                 del self.cache[key]
             return len(expired_keys)
@@ -408,9 +406,7 @@ class BackgroundTaskProcessor:
 
         self.running = True
         for i in range(self.num_workers):
-            worker = threading.Thread(
-                target=self._worker_loop, name=f"BackgroundWorker-{i}", daemon=True
-            )
+            worker = threading.Thread(target=self._worker_loop, name=f"BackgroundWorker-{i}", daemon=True)
             worker.start()
             self.workers.append(worker)
 
@@ -494,9 +490,7 @@ class HYDRA50PerformanceOptimizer:
                 self.ttl_cache.cleanup_expired()
                 self.memory_optimizer.suggest_gc()
 
-        cleanup_thread = threading.Thread(
-            target=cleanup_loop, daemon=True, name="PerformanceCleanup"
-        )
+        cleanup_thread = threading.Thread(target=cleanup_loop, daemon=True, name="PerformanceCleanup")
         cleanup_thread.start()
 
     def get_performance_stats(self) -> dict[str, Any]:

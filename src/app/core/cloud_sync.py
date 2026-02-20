@@ -23,9 +23,7 @@ logger = logging.getLogger(__name__)
 class CloudSyncManager:
     """Manages encrypted cloud synchronization for user data."""
 
-    def __init__(
-        self, encryption_key: str | bytes | None = None, data_dir: str = "data"
-    ):
+    def __init__(self, encryption_key: str | bytes | None = None, data_dir: str = "data"):
         """Initialize cloud sync manager.
 
         Args:
@@ -249,9 +247,7 @@ class CloudSyncManager:
             logger.error("Error during sync download: %s", e)
             return None
 
-    def resolve_conflict(
-        self, local_data: dict[str, Any], cloud_data: dict[str, Any]
-    ) -> dict[str, Any]:
+    def resolve_conflict(self, local_data: dict[str, Any], cloud_data: dict[str, Any]) -> dict[str, Any]:
         """Resolve conflicts between local and cloud data.
 
         Uses timestamp-based resolution: most recent data wins.
@@ -264,12 +260,8 @@ class CloudSyncManager:
             dict: Resolved data (most recent)
         """
         try:
-            local_timestamp = datetime.fromisoformat(
-                local_data.get("timestamp", "1970-01-01T00:00:00")
-            )
-            cloud_timestamp = datetime.fromisoformat(
-                cloud_data.get("timestamp", "1970-01-01T00:00:00")
-            )
+            local_timestamp = datetime.fromisoformat(local_data.get("timestamp", "1970-01-01T00:00:00"))
+            cloud_timestamp = datetime.fromisoformat(cloud_data.get("timestamp", "1970-01-01T00:00:00"))
 
             if local_timestamp >= cloud_timestamp:
                 logger.info("Using local data (more recent)")
@@ -283,9 +275,7 @@ class CloudSyncManager:
             # Default to local data if resolution fails
             return local_data
 
-    def bidirectional_sync(
-        self, username: str, local_data: dict[str, Any]
-    ) -> dict[str, Any]:
+    def bidirectional_sync(self, username: str, local_data: dict[str, Any]) -> dict[str, Any]:
         """Perform bidirectional sync with conflict resolution.
 
         Args:
@@ -335,9 +325,7 @@ class CloudSyncManager:
                         resolved_data = cloud_data.get("data", cloud_data)
                         return resolved_data
                 except (ValueError, TypeError) as e:
-                    logger.warning(
-                        "Error comparing timestamps: %s, defaulting to local data", e
-                    )
+                    logger.warning("Error comparing timestamps: %s, defaulting to local data", e)
                     return local_data
             else:
                 # Fallback: use timestamp-based conflict resolution

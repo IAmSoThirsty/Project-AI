@@ -72,45 +72,28 @@ class JurisdictionLoader:
             if "**Version:**" in content:
                 for line in content.split("\n"):
                     if "**Version:**" in line:
-                        metadata["version"] = (
-                            line.split("**Version:**")[1].strip().split("**")[0].strip()
-                        )
+                        metadata["version"] = line.split("**Version:**")[1].strip().split("**")[0].strip()
                         break
 
             # Extract jurisdiction
             if "**Jurisdiction:**" in content:
                 for line in content.split("\n"):
                     if "**Jurisdiction:**" in line:
-                        metadata["jurisdiction"] = (
-                            line.split("**Jurisdiction:**")[1]
-                            .strip()
-                            .split("**")[0]
-                            .strip()
-                        )
+                        metadata["jurisdiction"] = line.split("**Jurisdiction:**")[1].strip().split("**")[0].strip()
                         break
 
             # Extract regulation
             if "**Regulation:**" in content:
                 for line in content.split("\n"):
                     if "**Regulation:**" in line:
-                        metadata["regulation"] = (
-                            line.split("**Regulation:**")[1]
-                            .strip()
-                            .split("**")[0]
-                            .strip()
-                        )
+                        metadata["regulation"] = line.split("**Regulation:**")[1].strip().split("**")[0].strip()
                         break
 
             # Extract effective date
             if "**Effective Date:**" in content:
                 for line in content.split("\n"):
                     if "**Effective Date:**" in line:
-                        metadata["effective_date"] = (
-                            line.split("**Effective Date:**")[1]
-                            .strip()
-                            .split("**")[0]
-                            .strip()
-                        )
+                        metadata["effective_date"] = line.split("**Effective Date:**")[1].strip().split("**")[0].strip()
                         break
 
         return metadata
@@ -146,11 +129,7 @@ class JurisdictionLoader:
                     header = line.replace("## ", "").strip().lower()
                     if "rights" in header:
                         current_section = "rights"
-                    elif (
-                        "principles" in header
-                        or "obligations" in header
-                        or "requirements" in header
-                    ):
+                    elif "principles" in header or "obligations" in header or "requirements" in header:
                         current_section = "obligations"
                     else:
                         current_section = None
@@ -202,9 +181,7 @@ class JurisdictionLoader:
                     document_hash=document_hash,
                     requirements=parsed_content.get("requirements", {}),
                     data_subject_rights=parsed_content.get("data_subject_rights", []),
-                    compliance_obligations=parsed_content.get(
-                        "compliance_obligations", []
-                    ),
+                    compliance_obligations=parsed_content.get("compliance_obligations", []),
                 )
 
                 self.loaded_jurisdictions[jurisdiction_code] = annex
@@ -224,9 +201,7 @@ class JurisdictionLoader:
         """Get all loaded jurisdictions"""
         return self.loaded_jurisdictions
 
-    def validate_jurisdiction_selection(
-        self, jurisdiction_codes: list[str]
-    ) -> tuple[bool, list[str]]:
+    def validate_jurisdiction_selection(self, jurisdiction_codes: list[str]) -> tuple[bool, list[str]]:
         """
         Validate that selected jurisdictions are available and compatible.
 
@@ -243,9 +218,7 @@ class JurisdictionLoader:
 
         return len(errors) == 0, errors
 
-    def get_combined_requirements(
-        self, jurisdiction_codes: list[str]
-    ) -> dict[str, list]:
+    def get_combined_requirements(self, jurisdiction_codes: list[str]) -> dict[str, list]:
         """
         Get combined requirements from multiple jurisdictions.
 

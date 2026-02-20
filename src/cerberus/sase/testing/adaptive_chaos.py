@@ -75,11 +75,7 @@ class AdaptiveAdversaryGenerator:
         events.append(self._delay_marker(hours=12))
 
         # Phase 6: Infrastructure pivot to VPS
-        events.append(
-            self._credential_probe(
-                is_tor=False, is_vps=True, timestamp_offset=24 * 3600
-            )
-        )
+        events.append(self._credential_probe(is_tor=False, is_vps=True, timestamp_offset=24 * 3600))
 
         return AdaptiveSequence(
             events=events,
@@ -312,8 +308,7 @@ class AdaptiveAdversaryGenerator:
 
     def _random_ip(self) -> str:
         return (
-            f"{random.randint(1, 255)}.{random.randint(0, 255)}."
-            f"{random.randint(0, 255)}.{random.randint(0, 255)}"
+            f"{random.randint(1, 255)}.{random.randint(0, 255)}." f"{random.randint(0, 255)}.{random.randint(0, 255)}"
         )
 
     def _benign_event(self) -> SyntheticEvent:

@@ -262,9 +262,7 @@ class TestDocumentationGenerator:
             endpoint="/api/v1/capsules",
             method="GET",
             description="List all build capsules",
-            parameters=[
-                {"name": "limit", "type": "integer", "description": "Max results"}
-            ],
+            parameters=[{"name": "limit", "type": "integer", "description": "Max results"}],
             response_schema={"type": "array"},
         )
 

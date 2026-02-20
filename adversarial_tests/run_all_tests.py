@@ -22,9 +22,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -116,9 +114,7 @@ class ComprehensiveTestRunner:
             if jbb_path.exists():
                 with open(jbb_path) as f:
                     self.results["jbb"] = json.load(f)
-                self.test_status["jbb"] = (
-                    "success" if result.returncode == 0 else "warning"
-                )
+                self.test_status["jbb"] = "success" if result.returncode == 0 else "warning"
                 logger.info(
                     "✅ JBB: %s harmful blocked",
                     self.results["jbb"]["metrics"]["harmful_blocked_rate"],
@@ -139,12 +135,7 @@ class ComprehensiveTestRunner:
         try:
             cmd = [
                 sys.executable,
-                str(
-                    self.project_root
-                    / "adversarial_tests"
-                    / "multiturn"
-                    / "run_multiturn.py"
-                ),
+                str(self.project_root / "adversarial_tests" / "multiturn" / "run_multiturn.py"),
                 "--output",
                 str(self.output_dir / "multiturn-latest.json"),
             ]
@@ -156,9 +147,7 @@ class ComprehensiveTestRunner:
             if mt_path.exists():
                 with open(mt_path) as f:
                     self.results["multiturn"] = json.load(f)
-                self.test_status["multiturn"] = (
-                    "success" if result.returncode == 0 else "warning"
-                )
+                self.test_status["multiturn"] = "success" if result.returncode == 0 else "warning"
                 logger.info(
                     "✅ Multi-Turn: %s mitigation rate",
                     self.results["multiturn"]["metrics"]["mitigation_rate"],
@@ -191,9 +180,7 @@ class ComprehensiveTestRunner:
             if garak_path.exists():
                 with open(garak_path) as f:
                     self.results["garak"] = json.load(f)
-                self.test_status["garak"] = (
-                    "success" if result.returncode == 0 else "warning"
-                )
+                self.test_status["garak"] = "success" if result.returncode == 0 else "warning"
                 logger.info(
                     "✅ Garak: %s detection rate",
                     self.results["garak"]["metrics"]["detection_rate"],
@@ -216,12 +203,8 @@ class ComprehensiveTestRunner:
         overall_metrics = {
             "total_tests_run": 3,
             "tests_passed": sum(1 for s in self.test_status.values() if s == "success"),
-            "tests_warning": sum(
-                1 for s in self.test_status.values() if s == "warning"
-            ),
-            "tests_failed": sum(
-                1 for s in self.test_status.values() if s in ["failed", "error"]
-            ),
+            "tests_warning": sum(1 for s in self.test_status.values() if s == "warning"),
+            "tests_failed": sum(1 for s in self.test_status.values() if s in ["failed", "error"]),
         }
 
         # Aggregate prompt counts
@@ -235,9 +218,7 @@ class ComprehensiveTestRunner:
                     ),
                     "total_harmful_prompts": (
                         self.results["jbb"]["metrics"]["harmful_prompts"]
-                        + self.results["multiturn"]["metrics"][
-                            "scenarios_requiring_block"
-                        ]
+                        + self.results["multiturn"]["metrics"]["scenarios_requiring_block"]
                         + self.results["garak"]["metrics"]["harmful_probes"]
                     ),
                     "overall_block_rate": self._calculate_overall_block_rate(),
@@ -296,45 +277,27 @@ class ComprehensiveTestRunner:
 
         if "total_prompts_tested" in report["overall_metrics"]:
             print("\n📈 Overall Metrics:")
-            print(
-                f"  Total Prompts Tested: {report['overall_metrics']['total_prompts_tested']}"
-            )
-            print(
-                f"  Total Harmful Prompts: {report['overall_metrics']['total_harmful_prompts']}"
-            )
-            print(
-                f"  Overall Block Rate: {report['overall_metrics']['overall_block_rate']:.2%}"
-            )
+            print(f"  Total Prompts Tested: {report['overall_metrics']['total_prompts_tested']}")
+            print(f"  Total Harmful Prompts: {report['overall_metrics']['total_harmful_prompts']}")
+            print(f"  Overall Block Rate: {report['overall_metrics']['overall_block_rate']:.2%}")
 
         # Individual test results
         if self.results["jbb"]:
             print("\n🗡️  JailbreakBench:")
-            print(
-                f"  Harmful Blocked: {self.results['jbb']['metrics']['harmful_blocked_rate']:.2%}"
-            )
-            print(
-                f"  Jailbreak Success: {self.results['jbb']['metrics']['jailbreak_success_rate']:.2%}"
-            )
+            print(f"  Harmful Blocked: {self.results['jbb']['metrics']['harmful_blocked_rate']:.2%}")
+            print(f"  Jailbreak Success: {self.results['jbb']['metrics']['jailbreak_success_rate']:.2%}")
             print(f"  Status: {self._status_emoji(self.test_status['jbb'])}")
 
         if self.results["multiturn"]:
             print("\n🛡️  Multi-Turn Attacks:")
-            print(
-                f"  Mitigation Rate: {self.results['multiturn']['metrics']['mitigation_rate']:.2%}"
-            )
-            print(
-                f"  Attack Success: {self.results['multiturn']['metrics']['attack_success_rate']:.2%}"
-            )
+            print(f"  Mitigation Rate: {self.results['multiturn']['metrics']['mitigation_rate']:.2%}")
+            print(f"  Attack Success: {self.results['multiturn']['metrics']['attack_success_rate']:.2%}")
             print(f"  Status: {self._status_emoji(self.test_status['multiturn'])}")
 
         if self.results["garak"]:
             print("\n⚔️  Garak Vulnerability Scan:")
-            print(
-                f"  Detection Rate: {self.results['garak']['metrics']['detection_rate']:.2%}"
-            )
-            print(
-                f"  Vulnerability Exposure: {self.results['garak']['metrics']['vulnerability_exposure_rate']:.2%}"
-            )
+            print(f"  Detection Rate: {self.results['garak']['metrics']['detection_rate']:.2%}")
+            print(f"  Vulnerability Exposure: {self.results['garak']['metrics']['vulnerability_exposure_rate']:.2%}")
             print(f"  Status: {self._status_emoji(self.test_status['garak'])}")
 
         print("\n" + "=" * 70)
@@ -358,9 +321,7 @@ class ComprehensiveTestRunner:
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(
-        description="Run comprehensive adversarial red-team evaluation"
-    )
+    parser = argparse.ArgumentParser(description="Run comprehensive adversarial red-team evaluation")
     parser.add_argument(
         "--output-dir",
         default="ci-reports",

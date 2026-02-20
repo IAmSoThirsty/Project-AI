@@ -83,9 +83,7 @@ class StressTestGenerator:
                         "step": 1,
                         "action": "POST /intent",
                         "payload": {
-                            "actor": ["system", "admin", "root", "superuser", "daemon"][
-                                i % 5
-                            ],
+                            "actor": ["system", "admin", "root", "superuser", "daemon"][i % 5],
                             "action": "execute",
                             "target": f"/root/critical_{i}.sh",
                             "origin": "red_team_test",
@@ -654,9 +652,7 @@ class StressTestGenerator:
             self.create_test(
                 team="red_team",
                 category="business_logic",
-                subcategory=["workflow_bypass", "state_manipulation", "race_condition"][
-                    i % 3
-                ],
+                subcategory=["workflow_bypass", "state_manipulation", "race_condition"][i % 3],
                 name=f"RED: Business Logic Flaw {i+1}",
                 description=f"Business logic exploitation {i+1}",
                 severity="medium",
@@ -1098,12 +1094,8 @@ class StressTestGenerator:
             cat = test["category"]
             sev = test["severity"]
 
-            output["statistics"]["by_category"][cat] = (
-                output["statistics"]["by_category"].get(cat, 0) + 1
-            )
-            output["statistics"]["by_severity"][sev] = (
-                output["statistics"]["by_severity"].get(sev, 0) + 1
-            )
+            output["statistics"]["by_category"][cat] = output["statistics"]["by_category"].get(cat, 0) + 1
+            output["statistics"]["by_severity"][sev] = output["statistics"]["by_severity"].get(sev, 0) + 1
 
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)

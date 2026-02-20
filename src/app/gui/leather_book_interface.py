@@ -79,9 +79,7 @@ class LeatherBookInterface(QMainWindow):
             )
             logger.info("LeatherBookInterface registered as Tier-3 User Interface")
         except Exception as e:
-            logger.warning(
-                "Failed to register LeatherBookInterface in tier registry: %s", e
-            )
+            logger.warning("Failed to register LeatherBookInterface in tier registry: %s", e)
 
         self.show()
 
@@ -160,23 +158,13 @@ class LeatherBookInterface(QMainWindow):
         dashboard = LeatherBookDashboard(username)
 
         # Connect existing signals
-        dashboard.actions_panel.image_gen_requested.connect(
-            self.switch_to_image_generation
-        )
+        dashboard.actions_panel.image_gen_requested.connect(self.switch_to_image_generation)
 
         # Connect new intelligence system signals
-        dashboard.actions_panel.news_intelligence_requested.connect(
-            self.switch_to_news_intelligence
-        )
-        dashboard.actions_panel.intelligence_library_requested.connect(
-            self.switch_to_intelligence_library
-        )
-        dashboard.actions_panel.watch_tower_requested.connect(
-            self.switch_to_watch_tower
-        )
-        dashboard.actions_panel.command_center_requested.connect(
-            self.switch_to_command_center
-        )
+        dashboard.actions_panel.news_intelligence_requested.connect(self.switch_to_news_intelligence)
+        dashboard.actions_panel.intelligence_library_requested.connect(self.switch_to_intelligence_library)
+        dashboard.actions_panel.watch_tower_requested.connect(self.switch_to_watch_tower)
+        dashboard.actions_panel.command_center_requested.connect(self.switch_to_command_center)
 
         self._set_stack_page(dashboard, 1)
 

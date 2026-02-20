@@ -151,9 +151,7 @@ class PlannerDecisionContract(DecisionContract):
         return {
             "agent": "PlannerAgent",
             "focus": "Task Planning, Workflow Orchestration, Resource Allocation",
-            "authorities": {
-                dt: auth.to_dict() for dt, auth in self.authorities.items()
-            },
+            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
             "decision_count": len(self.decision_log),
             "authority_scope": {
                 "max_planning_horizon": "30 days (7 days autonomous)",
@@ -176,9 +174,7 @@ class PlannerSignalsTelemetry(SignalsTelemetry):
         """Initialize Planner signals and telemetry."""
         super().__init__("PlannerAgent")
 
-    def emit_plan_created(
-        self, plan_id: str, num_subtasks: int, estimated_duration: timedelta
-    ) -> None:
+    def emit_plan_created(self, plan_id: str, num_subtasks: int, estimated_duration: timedelta) -> None:
         """Emit plan creation signal."""
         signal = Signal(
             signal_type=SignalType.AUDIT,
@@ -193,9 +189,7 @@ class PlannerSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_planning_limit_exceeded(
-        self, limit_type: str, attempted: int, allowed: int
-    ) -> None:
+    def emit_planning_limit_exceeded(self, limit_type: str, attempted: int, allowed: int) -> None:
         """Emit signal when planning limit exceeded."""
         signal = Signal(
             signal_type=SignalType.ALERT,
@@ -230,9 +224,7 @@ class PlannerFailureSemantics(FailureSemantics):
         """Initialize Planner failure semantics."""
         super().__init__("PlannerAgent")
 
-    def create_failure_response(
-        self, failure_mode: FailureMode, context: dict[str, Any]
-    ) -> FailureResponse:
+    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
         """Create failure response for Planner failures."""
         if failure_mode == FailureMode.DEGRADED:
             return FailureResponse(
@@ -339,9 +331,7 @@ class OversightDecisionContract(DecisionContract):
         return {
             "agent": "OversightAgent",
             "focus": "System Monitoring, Compliance, Health Tracking",
-            "authorities": {
-                dt: auth.to_dict() for dt, auth in self.authorities.items()
-            },
+            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
             "decision_count": len(self.decision_log),
             "monitoring_scope": {
                 "agents_monitored": "All agents",
@@ -358,9 +348,7 @@ class OversightSignalsTelemetry(SignalsTelemetry):
         """Initialize Oversight signals and telemetry."""
         super().__init__("OversightAgent")
 
-    def emit_compliance_violation(
-        self, violator: str, violation_type: str, details: dict[str, Any]
-    ) -> None:
+    def emit_compliance_violation(self, violator: str, violation_type: str, details: dict[str, Any]) -> None:
         """Emit compliance violation signal."""
         signal = Signal(
             signal_type=SignalType.ALERT,
@@ -375,18 +363,12 @@ class OversightSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_health_status(
-        self, component: str, health_status: str, metrics: dict[str, Any]
-    ) -> None:
+    def emit_health_status(self, component: str, health_status: str, metrics: dict[str, Any]) -> None:
         """Emit component health status signal."""
         severity = (
             SeverityLevel.ERROR
             if health_status == "unhealthy"
-            else (
-                SeverityLevel.WARNING
-                if health_status == "degraded"
-                else SeverityLevel.INFO
-            )
+            else (SeverityLevel.WARNING if health_status == "degraded" else SeverityLevel.INFO)
         )
 
         signal = Signal(
@@ -422,9 +404,7 @@ class OversightFailureSemantics(FailureSemantics):
         """Initialize Oversight failure semantics."""
         super().__init__("OversightAgent")
 
-    def create_failure_response(
-        self, failure_mode: FailureMode, context: dict[str, Any]
-    ) -> FailureResponse:
+    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
         """Create failure response for Oversight failures."""
         if failure_mode == FailureMode.DEGRADED:
             return FailureResponse(
@@ -527,9 +507,7 @@ class ValidatorDecisionContract(DecisionContract):
         return {
             "agent": "ValidatorAgent",
             "focus": "Input/Output Validation, Data Integrity",
-            "authorities": {
-                dt: auth.to_dict() for dt, auth in self.authorities.items()
-            },
+            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
             "decision_count": len(self.decision_log),
             "validation_scope": {
                 "input_validation": "All inputs validated before processing",
@@ -546,9 +524,7 @@ class ValidatorSignalsTelemetry(SignalsTelemetry):
         """Initialize Validator signals and telemetry."""
         super().__init__("ValidatorAgent")
 
-    def emit_validation_failure(
-        self, validation_type: str, reason: str, details: dict[str, Any]
-    ) -> None:
+    def emit_validation_failure(self, validation_type: str, reason: str, details: dict[str, Any]) -> None:
         """Emit validation failure signal."""
         signal = Signal(
             signal_type=SignalType.ALERT,
@@ -582,9 +558,7 @@ class ValidatorFailureSemantics(FailureSemantics):
         """Initialize Validator failure semantics."""
         super().__init__("ValidatorAgent")
 
-    def create_failure_response(
-        self, failure_mode: FailureMode, context: dict[str, Any]
-    ) -> FailureResponse:
+    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
         """Create failure response for Validator failures."""
         if failure_mode == FailureMode.DEGRADED:
             return FailureResponse(
@@ -672,9 +646,7 @@ class ExplainabilityDecisionContract(DecisionContract):
         return {
             "agent": "ExplainabilityAgent",
             "focus": "Decision Transparency, Reasoning Traces, Explanations",
-            "authorities": {
-                dt: auth.to_dict() for dt, auth in self.authorities.items()
-            },
+            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
             "decision_count": len(self.decision_log),
             "explanation_obligations": {
                 "all_decisions_explainable": True,
@@ -691,9 +663,7 @@ class ExplainabilitySignalsTelemetry(SignalsTelemetry):
         """Initialize Explainability signals and telemetry."""
         super().__init__("ExplainabilityAgent")
 
-    def emit_explanation_provided(
-        self, decision_id: str, depth: ExplanationDepth, explanation: str
-    ) -> None:
+    def emit_explanation_provided(self, decision_id: str, depth: ExplanationDepth, explanation: str) -> None:
         """Emit explanation provided signal."""
         signal = Signal(
             signal_type=SignalType.AUDIT,
@@ -727,9 +697,7 @@ class ExplainabilityFailureSemantics(FailureSemantics):
         """Initialize Explainability failure semantics."""
         super().__init__("ExplainabilityAgent")
 
-    def create_failure_response(
-        self, failure_mode: FailureMode, context: dict[str, Any]
-    ) -> FailureResponse:
+    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
         """Create failure response for Explainability failures."""
         if failure_mode == FailureMode.DEGRADED:
             return FailureResponse(
@@ -842,9 +810,7 @@ class ToolAccessMap:
 
         return has_access, access_level
 
-    def grant_tool_access(
-        self, agent: str, tool: str, access_level: ToolAccessLevel
-    ) -> None:
+    def grant_tool_access(self, agent: str, tool: str, access_level: ToolAccessLevel) -> None:
         """
         Grant tool access to agent.
 

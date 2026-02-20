@@ -170,9 +170,7 @@ class TestGhostProtocol:
 
         assert len(shards) == 5
         assert all(isinstance(shard, bytes) for shard in shards)
-        assert all(
-            len(shard) > MIN_SHARD_SIZE for shard in shards
-        )  # index + nonce + ciphertext
+        assert all(len(shard) > MIN_SHARD_SIZE for shard in shards)  # index + nonce + ciphertext
 
     def test_resurrect_identity(self):
         """Test identity resurrection from shards."""
@@ -515,9 +513,7 @@ class TestIntegration:
             end_idx = start_idx + system.ghost.quorum_k
 
             if end_idx <= len(system.shards):
-                restored_hash = system.ghost.resurrect(
-                    system.shards[start_idx:end_idx]
-                )
+                restored_hash = system.ghost.resurrect(system.shards[start_idx:end_idx])
                 assert restored_hash == original_hash
 
 

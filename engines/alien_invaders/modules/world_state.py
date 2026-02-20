@@ -105,9 +105,7 @@ class GlobalState:
         if total_pop == 0:
             return 0.0
 
-        weighted_morale = sum(
-            c.public_morale * c.population for c in self.countries.values()
-        )
+        weighted_morale = sum(c.public_morale * c.population for c in self.countries.values())
         return weighted_morale / total_pop
 
     def get_alien_control_percentage(self) -> float:
@@ -119,9 +117,7 @@ class GlobalState:
         if total_pop == 0:
             return 0.0
 
-        controlled_pop = sum(
-            c.population * c.alien_influence for c in self.countries.values()
-        )
+        controlled_pop = sum(c.population * c.alien_influence for c in self.countries.values())
         return (controlled_pop / total_pop) * 100.0
 
 

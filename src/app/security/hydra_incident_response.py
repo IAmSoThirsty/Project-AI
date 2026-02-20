@@ -45,9 +45,7 @@ class HydraIncidentResponse:
         incident_id = incident.get("operation_id", "unknown")
         threat_level = incident.get("threat_level", "low")
 
-        logger.critical(
-            f"Hydra-50 ACTIVATED: Handling incident {incident_id} (Threat: {threat_level})"
-        )
+        logger.critical(f"Hydra-50 ACTIVATED: Handling incident {incident_id} (Threat: {threat_level})")
 
         # 1. Log incident
         self._log_incident(incident)

@@ -232,15 +232,9 @@ class AcceptanceLedger:
         )
 
         # Indexes for efficient queries
-        conn.execute(
-            "CREATE INDEX IF NOT EXISTS idx_user_id ON acceptance_ledger(user_id)"
-        )
-        conn.execute(
-            "CREATE INDEX IF NOT EXISTS idx_timestamp ON acceptance_ledger(timestamp)"
-        )
-        conn.execute(
-            "CREATE INDEX IF NOT EXISTS idx_entry_hash ON acceptance_ledger(entry_hash)"
-        )
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_user_id ON acceptance_ledger(user_id)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON acceptance_ledger(timestamp)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_entry_hash ON acceptance_ledger(entry_hash)")
 
         conn.commit()
         conn.close()
@@ -329,9 +323,7 @@ class AcceptanceLedger:
             ValueError: If ledger integrity check fails
         """
         if not CRYPTO_AVAILABLE:
-            raise RuntimeError(
-                "Cryptography library not available. Install: pip install cryptography"
-            )
+            raise RuntimeError("Cryptography library not available. Install: pip install cryptography")
 
         # Generate or load key pair
         if private_key is None:
@@ -345,14 +337,10 @@ class AcceptanceLedger:
             private_key_obj = ed25519.Ed25519PrivateKey.from_private_bytes(private_key)
 
         public_key_obj = private_key_obj.public_key()
-        public_key = public_key_obj.public_bytes(
-            encoding=Encoding.Raw, format=PublicFormat.Raw
-        ).hex()
+        public_key = public_key_obj.public_bytes(encoding=Encoding.Raw, format=PublicFormat.Raw).hex()
 
         # Create entry
-        entry_id = hashlib.sha256(
-            f"{user_id}{user_email}{time.time()}".encode()
-        ).hexdigest()[:16]
+        entry_id = hashlib.sha256(f"{user_id}{user_email}{time.time()}".encode()).hexdigest()[:16]
 
         previous_hash = self._get_last_entry_hash()
 
@@ -456,9 +444,7 @@ class AcceptanceLedger:
         """Get a specific entry by ID"""
         if self.enable_sqlite:
             conn = sqlite3.connect(str(self.db_path))
-            cursor = conn.execute(
-                "SELECT * FROM acceptance_ledger WHERE entry_id = ?", (entry_id,)
-            )
+            cursor = conn.execute("SELECT * FROM acceptance_ledger WHERE entry_id = ?", (entry_id,))
             row = cursor.fetchone()
             conn.close()
 
@@ -568,9 +554,7 @@ class AcceptanceLedger:
             results["hash_chain_valid"] = True
 
         # Timestamp validation
-        results["timestamp_valid"] = (
-            entry.timestamp > 0 and entry.timestamp <= time.time()
-        )
+        results["timestamp_valid"] = entry.timestamp > 0 and entry.timestamp <= time.time()
 
         # Extended TSA Validation
         if entry.timestamp_authority and TSA_AVAILABLE:
@@ -627,18 +611,12 @@ class TSAClient:
     def get_timestamp(self, data: bytes) -> bytes:
         """Get RFC 3161 timestamp token for data"""
         if not TSA_AVAILABLE:
-            raise RuntimeError(
-                "TSA libraries not available. Install: pip install rfc3161ng pyasn1"
-            )
+            raise RuntimeError("TSA libraries not available. Install: pip install rfc3161ng pyasn1")
 
-        tst = rfc3161ng.RemoteTimestamper(
-            self.url, hashname="sha256", include_tsa_certificate=True
-        )
+        tst = rfc3161ng.RemoteTimestamper(self.url, hashname="sha256", include_tsa_certificate=True)
         return tst.timestamp(data=data)
 
-    def verify_timestamp(
-        self, token: bytes, data: bytes, ca_certs: bytes = None
-    ) -> bool:
+    def verify_timestamp(self, token: bytes, data: bytes, ca_certs: bytes = None) -> bool:
         """Verify RFC 3161 timestamp token"""
         if not TSA_AVAILABLE:
             return False

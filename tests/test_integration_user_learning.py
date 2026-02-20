@@ -37,9 +37,7 @@ def test_user_learning_request_persona_flow(tmp_path: Path):
     assert refreshed_persona.total_interactions >= persona_stats["interactions"]
 
     request_manager = LearningRequestManager(data_dir=str(data_dir))
-    description = (
-        "Integration test prompt that references user hero and learning flows."
-    )
+    description = "Integration test prompt that references user hero and learning flows."
     req_id = request_manager.create_request(
         topic="Integration workflows",
         description=description,

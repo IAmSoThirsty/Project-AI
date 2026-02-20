@@ -64,9 +64,7 @@ class MultiHopRouter:
         scored_nodes.sort(reverse=True)
         return scored_nodes[0][1] if scored_nodes else available_nodes[0]
 
-    def optimize_route(
-        self, current_route: list[dict[str, Any]]
-    ) -> list[dict[str, Any]]:
+    def optimize_route(self, current_route: list[dict[str, Any]]) -> list[dict[str, Any]]:
         """Optimize existing route for better performance"""
         # Check if route needs optimization
         total_load = sum(node["load"] for node in current_route)

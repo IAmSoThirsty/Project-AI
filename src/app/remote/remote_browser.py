@@ -72,9 +72,7 @@ class RemoteBrowser:
             return {"error": "Remote browser not active"}
 
         # Encrypt client ID
-        encrypted_client_id = self.god_tier_encryption.encrypt_god_tier(
-            client_id.encode()
-        )
+        encrypted_client_id = self.god_tier_encryption.encrypt_god_tier(client_id.encode())
 
         # Generate session ID
         session_id = f"session_{len(self._sessions)}"

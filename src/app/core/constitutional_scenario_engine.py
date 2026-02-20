@@ -116,13 +116,9 @@ class ConstitutionalScenarioEngine(GlobalScenarioEngine):
         logger.info("Simulation authorized under action_id: %s", action_id)
 
         # Perform actual simulation
-        return super().run_monte_carlo_simulation(
-            start_year, projection_years, num_simulations
-        )
+        return super().run_monte_carlo_simulation(start_year, projection_years, num_simulations)
 
-    def generate_alerts(
-        self, scenarios: list[ScenarioProjection], threshold: float = 0.7
-    ) -> list[CrisisAlert]:
+    def generate_alerts(self, scenarios: list[ScenarioProjection], threshold: float = 0.7) -> list[CrisisAlert]:
         """
         Generate crisis alerts through Constitutional Core.
 
@@ -137,14 +133,10 @@ class ConstitutionalScenarioEngine(GlobalScenarioEngine):
             List of crisis alerts
         """
         # Determine existential threat level
-        catastrophic_scenarios = [
-            s for s in scenarios if s.severity.value == "catastrophic"
-        ]
+        catastrophic_scenarios = [s for s in scenarios if s.severity.value == "catastrophic"]
         high_risk_scenarios = [s for s in scenarios if s.likelihood >= 0.8]
 
-        existential_threat = (
-            len(catastrophic_scenarios) > 0 and len(high_risk_scenarios) > 0
-        )
+        existential_threat = len(catastrophic_scenarios) > 0 and len(high_risk_scenarios) > 0
 
         # Route through planetary interposition
         action_id = planetary_interposition(
@@ -160,9 +152,7 @@ class ConstitutionalScenarioEngine(GlobalScenarioEngine):
                     f"Generated {len(scenarios)} scenario projections",
                     f"Detected {len(catastrophic_scenarios)} catastrophic-level scenarios",
                 ],
-                "threat_level": (
-                    5 if existential_threat else min(3, len(high_risk_scenarios))
-                ),
+                "threat_level": (5 if existential_threat else min(3, len(high_risk_scenarios))),
                 "human_risk": "high" if existential_threat else "moderate",
             },
             authorized_by="MonitoringSystem",
@@ -175,15 +165,12 @@ class ConstitutionalScenarioEngine(GlobalScenarioEngine):
 
         # Log accountability
         logger.warning(
-            f"Constitutional Core logged {len(alerts)} crisis alerts. "
-            f"Existential threat: {existential_threat}"
+            f"Constitutional Core logged {len(alerts)} crisis alerts. " f"Existential threat: {existential_threat}"
         )
 
         return alerts
 
-    def execute_response_action(
-        self, alert: CrisisAlert, action: str, authorized_by: str
-    ) -> str:
+    def execute_response_action(self, alert: CrisisAlert, action: str, authorized_by: str) -> str:
         """
         Execute a response action to a crisis alert.
 
@@ -226,8 +213,7 @@ class ConstitutionalScenarioEngine(GlobalScenarioEngine):
         )
 
         logger.warning(
-            f"Response action '{action}' executed under Constitutional authority. "
-            f"Action ID: {action_id}"
+            f"Response action '{action}' executed under Constitutional authority. " f"Action ID: {action_id}"
         )
 
         return action_id

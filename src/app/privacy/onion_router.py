@@ -61,16 +61,12 @@ class OnionRouter:
         circuit = []
 
         # Select entry node
-        entry_nodes = [
-            n for n in self._nodes if n["type"] == "entry" and n["available"]
-        ]
+        entry_nodes = [n for n in self._nodes if n["type"] == "entry" and n["available"]]
         if entry_nodes:
             circuit.append(random.choice(entry_nodes))
 
         # Select middle node
-        middle_nodes = [
-            n for n in self._nodes if n["type"] == "middle" and n["available"]
-        ]
+        middle_nodes = [n for n in self._nodes if n["type"] == "middle" and n["available"]]
         if middle_nodes:
             circuit.append(random.choice(middle_nodes))
 
@@ -99,9 +95,7 @@ class OnionRouter:
         encrypted_request["circuit"] = [node["id"] for node in circuit]
         encrypted_request["encrypted_layers"] = len(circuit)
 
-        self.logger.debug(
-            "Request routed through circuit: %s", encrypted_request["circuit"]
-        )
+        self.logger.debug("Request routed through circuit: %s", encrypted_request["circuit"])
         return encrypted_request
 
     def get_circuits(self) -> list[list[dict[str, Any]]]:

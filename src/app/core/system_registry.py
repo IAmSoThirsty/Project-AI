@@ -77,12 +77,8 @@ class SubsystemMetadata:
         data = asdict(self)
         data["state"] = self.state.value
         data["priority"] = self.priority.value
-        data["last_health_check"] = (
-            self.last_health_check.isoformat() if self.last_health_check else None
-        )
-        data["initialization_time"] = (
-            self.initialization_time.isoformat() if self.initialization_time else None
-        )
+        data["last_health_check"] = self.last_health_check.isoformat() if self.last_health_check else None
+        data["initialization_time"] = self.initialization_time.isoformat() if self.initialization_time else None
         # Remove non-serializable fields
         data.pop("instance", None)
         data.pop("health_check_fn", None)
@@ -125,12 +121,8 @@ class SystemRegistry:
         # Core registry data structures
         self._subsystems: dict[str, SubsystemMetadata] = {}
         self._capability_map: dict[str, list[str]] = {}  # capability -> [subsystem_ids]
-        self._dependency_graph: dict[str, set[str]] = (
-            {}
-        )  # subsystem_id -> {dependencies}
-        self._reverse_dependencies: dict[str, set[str]] = (
-            {}
-        )  # subsystem_id -> {dependents}
+        self._dependency_graph: dict[str, set[str]] = {}  # subsystem_id -> {dependencies}
+        self._reverse_dependencies: dict[str, set[str]] = {}  # subsystem_id -> {dependents}
 
         # Thread safety
         self._lock = threading.RLock()
@@ -189,9 +181,7 @@ class SystemRegistry:
         """
         with self._lock:
             if subsystem_id in self._subsystems:
-                logger.warning(
-                    "Subsystem %s already registered, updating...", subsystem_id
-                )
+                logger.warning("Subsystem %s already registered, updating...", subsystem_id)
 
             subsystem_meta = SubsystemMetadata(
                 name=name,
@@ -264,9 +254,7 @@ class SystemRegistry:
             # Check dependencies
             for dep_id in subsystem.dependencies:
                 if dep_id not in self._subsystems:
-                    logger.error(
-                        "Missing dependency %s for subsystem %s", dep_id, subsystem_id
-                    )
+                    logger.error("Missing dependency %s for subsystem %s", dep_id, subsystem_id)
                     return False
 
                 dep_subsystem = self._subsystems[dep_id]
@@ -352,8 +340,7 @@ class SystemRegistry:
             return [
                 self._subsystems[sid].instance
                 for sid in subsystem_ids
-                if sid in self._subsystems
-                and self._subsystems[sid].state == SubsystemState.ACTIVE
+                if sid in self._subsystems and self._subsystems[sid].state == SubsystemState.ACTIVE
             ]
 
     def get_initialization_order(self) -> list[str]:
@@ -384,11 +371,7 @@ class SystemRegistry:
                 logger.error("Circular dependency detected in subsystem graph")
                 # Return what we can, sorted by priority
                 remaining = set(self._subsystems.keys()) - set(result)
-                result.extend(
-                    sorted(
-                        remaining, key=lambda sid: self._subsystems[sid].priority.value
-                    )
-                )
+                result.extend(sorted(remaining, key=lambda sid: self._subsystems[sid].priority.value))
 
             return result
 
@@ -492,9 +475,7 @@ class SystemRegistry:
         )
         self._health_check_thread.start()
 
-        logger.info(
-            "Health monitoring started (interval=%ss)", self._health_check_interval
-        )
+        logger.info("Health monitoring started (interval=%ss)", self._health_check_interval)
 
     def stop_health_monitoring(self):
         """Stop background health monitoring thread."""
@@ -517,9 +498,7 @@ class SystemRegistry:
                     result = self.health_check(subsystem_id)
 
                     if not result.healthy:
-                        logger.warning(
-                            "Health check failed for %s: %s", subsystem_id, result.error
-                        )
+                        logger.warning("Health check failed for %s: %s", subsystem_id, result.error)
                         self._attempt_recovery(subsystem_id)
 
                 # Wait for next interval
@@ -606,10 +585,7 @@ class SystemRegistry:
         try:
             state = {
                 "timestamp": datetime.now().isoformat(),
-                "subsystems": {
-                    sid: subsystem.to_dict()
-                    for sid, subsystem in self._subsystems.items()
-                },
+                "subsystems": {sid: subsystem.to_dict() for sid, subsystem in self._subsystems.items()},
                 "capability_map": self._capability_map,
                 "audit_log": self._audit_log[-1000:],  # Keep last 1000 entries
             }
@@ -666,9 +642,7 @@ class SystemRegistry:
                     logger.info("Shutdown subsystem: %s", subsystem_id)
 
                 except Exception as e:
-                    logger.error(
-                        "Error shutting down subsystem %s: %s", subsystem_id, e
-                    )
+                    logger.error("Error shutting down subsystem %s: %s", subsystem_id, e)
 
             self._save_state()
 
@@ -695,7 +669,5 @@ def get_registry(data_dir: str = "data", config_dir: str = "config") -> SystemRe
 
     with _registry_lock:
         if _registry_instance is None:
-            _registry_instance = SystemRegistry(
-                data_dir=data_dir, config_dir=config_dir
-            )
+            _registry_instance = SystemRegistry(data_dir=data_dir, config_dir=config_dir)
         return _registry_instance

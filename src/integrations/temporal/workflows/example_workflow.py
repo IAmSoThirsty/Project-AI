@@ -77,9 +77,7 @@ class ExampleWorkflow:
         Returns:
             WorkflowOutput with success status and results
         """
-        workflow.logger.info(
-            "Starting ExampleWorkflow for user: %s", input_data.user_id or "anonymous"
-        )
+        workflow.logger.info("Starting ExampleWorkflow for user: %s", input_data.user_id or "anonymous")
 
         steps_completed = []
 

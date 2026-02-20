@@ -15,15 +15,11 @@ def _expected_from_flags(context: dict[str, Any]) -> tuple[bool, str]:
     if context.get("endangers_human"):
         return False, "Violates First Law"
     if context.get("is_user_order"):
-        if context.get("order_conflicts_with_first") or context.get(
-            "order_conflicts_with_zeroth"
-        ):
+        if context.get("order_conflicts_with_first") or context.get("order_conflicts_with_zeroth"):
             return False, "Order rejected"
         return True, "Allowed: User command"
     if context.get("endangers_self"):
-        if context.get("protect_self_conflicts_with_first") or context.get(
-            "protect_self_conflicts_with_second"
-        ):
+        if context.get("protect_self_conflicts_with_first") or context.get("protect_self_conflicts_with_second"):
             return False, "Self-protection conflicts"
         return True, "Third Law"
     return True, "Allowed"

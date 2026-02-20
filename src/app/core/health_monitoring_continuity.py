@@ -131,9 +131,7 @@ class ComponentHealthMonitor:
         self.recovery_threshold = 3
         self.lock = threading.RLock()
 
-    def check_health(
-        self, check_func: Callable[[], tuple[bool, dict[str, Any]]]
-    ) -> HealthCheck:
+    def check_health(self, check_func: Callable[[], tuple[bool, dict[str, Any]]]) -> HealthCheck:
         """Perform health check."""
         start_time = time.time()
         try:
@@ -205,9 +203,7 @@ class FallbackManager:
         self.degradation_levels: dict[str, int] = {}
         self.lock = threading.RLock()
 
-    def register_fallback(
-        self, component: str, fallback_func: Callable, priority: int = 0
-    ) -> None:
+    def register_fallback(self, component: str, fallback_func: Callable, priority: int = 0) -> None:
         """Register fallback strategy for component."""
         with self.lock:
             if component not in self.fallback_strategies:
@@ -241,9 +237,7 @@ class FallbackManager:
                             )
                             return True
                     except Exception as e:
-                        logger.error(
-                            "Fallback strategy failed for %s: %s", component, e
-                        )
+                        logger.error("Fallback strategy failed for %s: %s", component, e)
                         continue
 
                 logger.error("All fallback strategies failed for: %s", component)
@@ -406,9 +400,7 @@ class AGIContinuityTracker:
             state = {
                 "identity_hash": self.identity_hash,
                 "start_time": self.start_time.isoformat(),
-                "recent_scores": [
-                    s.to_dict() for s in list(self.continuity_scores)[-100:]
-                ],
+                "recent_scores": [s.to_dict() for s in list(self.continuity_scores)[-100:]],
             }
             with open(state_file, "w") as f:
                 json.dump(state, f, indent=2)
@@ -482,9 +474,7 @@ class PredictiveFailureDetector:
 
                 # Predict next few values
                 future_steps = 5
-                predictions_values = [
-                    slope * (n + i) + intercept for i in range(future_steps)
-                ]
+                predictions_values = [slope * (n + i) + intercept for i in range(future_steps)]
 
                 # Check if any prediction crosses threshold
                 will_fail = any(v >= threshold for v in predictions_values)
@@ -561,9 +551,7 @@ class HealthMonitoringSystem:
                 return False
 
             self.monitoring_active = True
-            self.monitor_thread = threading.Thread(
-                target=self._monitoring_loop, daemon=True
-            )
+            self.monitor_thread = threading.Thread(target=self._monitoring_loop, daemon=True)
             self.monitor_thread.start()
             logger.info("Started health monitoring")
             return True
@@ -627,9 +615,7 @@ class HealthMonitoringSystem:
                 "components": component_statuses,
                 "active_fallbacks": list(self.fallback_manager.active_fallbacks),
                 "continuity_trend": continuity_trend,
-                "recent_failures": len(
-                    [f for f in self.failure_events if not f.resolved]
-                ),
+                "recent_failures": len([f for f in self.failure_events if not f.resolved]),
                 "predicted_failures": len(self.failure_detector.predictions),
             }
 

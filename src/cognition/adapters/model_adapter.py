@@ -71,12 +71,8 @@ class HuggingFaceAdapter(ModelAdapter):
             logger.info("Loading HuggingFace model: %s", model_path)
             # Pin to a specific revision for security (use 'main' or specific commit hash)
             revision = kwargs.pop("revision", "main")
-            self.tokenizer = AutoTokenizer.from_pretrained(
-                model_path, revision=revision
-            )
-            self.model = AutoModel.from_pretrained(
-                model_path, device_map=self.device, revision=revision, **kwargs
-            )
+            self.tokenizer = AutoTokenizer.from_pretrained(model_path, revision=revision)
+            self.model = AutoModel.from_pretrained(model_path, device_map=self.device, revision=revision, **kwargs)
             return self.model
         except Exception as e:
             logger.error("Failed to load HuggingFace model: %s", e)
@@ -88,9 +84,7 @@ class HuggingFaceAdapter(ModelAdapter):
             raise RuntimeError("Model not loaded. Call load_model() first.")
 
         try:
-            inputs = self.tokenizer(
-                input_data, return_tensors="pt", padding=True, truncation=True
-            )
+            inputs = self.tokenizer(input_data, return_tensors="pt", padding=True, truncation=True)
             outputs = self.model(**inputs, **kwargs)
             return outputs
         except Exception as e:
@@ -126,9 +120,7 @@ class PyTorchAdapter(ModelAdapter):
                 self.device = device
             self.model = None
         except ImportError as e:
-            raise ImportError(
-                "PyTorch not available. Install with: pip install torch"
-            ) from e
+            raise ImportError("PyTorch not available. Install with: pip install torch") from e
 
     def load_model(self, model_path: str, **kwargs) -> Any:
         """Load a PyTorch model."""
@@ -137,9 +129,7 @@ class PyTorchAdapter(ModelAdapter):
 
             logger.info("Loading PyTorch model: %s", model_path)
             # Use weights_only=True to prevent arbitrary code execution
-            self.model = torch.load(
-                model_path, map_location=self.device, weights_only=True, **kwargs
-            )
+            self.model = torch.load(model_path, map_location=self.device, weights_only=True, **kwargs)
             self.model.eval()
             return self.model
         except Exception as e:
@@ -234,10 +224,7 @@ def get_adapter(adapter_type: str = "auto", **kwargs) -> ModelAdapter:
     }
 
     if adapter_type not in adapters:
-        raise ValueError(
-            f"Unknown adapter type: {adapter_type}. "
-            f"Available: {list(adapters.keys())}"
-        )
+        raise ValueError(f"Unknown adapter type: {adapter_type}. " f"Available: {list(adapters.keys())}")
 
     adapter_class = adapters[adapter_type]
     adapter = adapter_class(**kwargs)

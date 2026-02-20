@@ -57,9 +57,7 @@ class EventDefinition:
     cost: EventCost
     benefit: EventBenefit
     risk: EventRisk
-    validation: Callable[
-        [SectorizedWorldState], tuple[bool, str]
-    ]  # Can event be executed?
+    validation: Callable[[SectorizedWorldState], tuple[bool, str]]  # Can event be executed?
     execution: Callable[[SectorizedWorldState], None]  # Apply event effects
 
 
@@ -159,16 +157,12 @@ class ConsequentialEventSystem:
             state.security.violence_index += cost.violence_increase
             state.security.violence_index = min(1.0, state.security.violence_index)
 
-    def _apply_benefits(
-        self, state: SectorizedWorldState, benefit: EventBenefit
-    ) -> None:
+    def _apply_benefits(self, state: SectorizedWorldState, benefit: EventBenefit) -> None:
         """Apply event benefits to state."""
         # Grid restoration
         if benefit.grid_restoration > 0:
             state.energy.grid_generation_pct += benefit.grid_restoration
-            state.energy.grid_generation_pct = min(
-                1.0, state.energy.grid_generation_pct
-            )
+            state.energy.grid_generation_pct = min(1.0, state.energy.grid_generation_pct)
 
         # Food supply
         if benefit.food_supply_days > 0:
@@ -177,25 +171,19 @@ class ConsequentialEventSystem:
         # Water treatment
         if benefit.water_treatment_boost > 0:
             state.water.treatment_capacity_pct += benefit.water_treatment_boost
-            state.water.treatment_capacity_pct = min(
-                1.0, state.water.treatment_capacity_pct
-            )
+            state.water.treatment_capacity_pct = min(1.0, state.water.treatment_capacity_pct)
 
         # Legitimacy gain
         if benefit.legitimacy_gain > 0:
             state.governance.legitimacy_score += benefit.legitimacy_gain
-            state.governance.legitimacy_score = min(
-                1.0, state.governance.legitimacy_score
-            )
+            state.governance.legitimacy_score = min(1.0, state.governance.legitimacy_score)
 
         # Violence reduction
         if benefit.violence_reduction > 0:
             state.security.violence_index -= benefit.violence_reduction
             state.security.violence_index = max(0.0, state.security.violence_index)
 
-    def _apply_risks(
-        self, state: SectorizedWorldState, risk: EventRisk
-    ) -> dict[str, Any]:
+    def _apply_risks(self, state: SectorizedWorldState, risk: EventRisk) -> dict[str, Any]:
         """Apply event risks and check for cascading failures."""
         consequences = {}
 
@@ -217,9 +205,7 @@ class ConsequentialEventSystem:
 
         return consequences
 
-    def _apply_failure_consequences(
-        self, state: SectorizedWorldState, risk: EventRisk
-    ) -> None:
+    def _apply_failure_consequences(self, state: SectorizedWorldState, risk: EventRisk) -> None:
         """Apply consequences when event fails."""
         # Legitimacy loss on failure
         state.governance.legitimacy_score -= risk.legitimacy_loss_on_failure
@@ -314,9 +300,7 @@ class ConsequentialEventSystem:
                     if not state.governance.constitutional_limits_exceeded
                     else (False, "Already under martial law")
                 ),
-                execution=lambda state: setattr(
-                    state.governance, "constitutional_limits_exceeded", True
-                ),
+                execution=lambda state: setattr(state.governance, "constitutional_limits_exceeded", True),
             )
         )
 
@@ -325,9 +309,7 @@ class ConsequentialEventSystem:
             EventDefinition(
                 name="distribute_water_tablets",
                 description="Distribute purification tablets to prevent waterborne disease",
-                cost=EventCost(
-                    fuel_cost_days=1.0, population_cost=10  # Distribution casualties
-                ),
+                cost=EventCost(fuel_cost_days=1.0, population_cost=10),  # Distribution casualties
                 benefit=EventBenefit(
                     water_treatment_boost=0.05,  # Marginal improvement
                     legitimacy_gain=0.01,

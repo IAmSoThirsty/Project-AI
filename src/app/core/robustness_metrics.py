@@ -183,9 +183,7 @@ class RobustnessMetricsEngine:
         jaccard = overlap / union if union > 0 else 0.0
 
         # Length ratio
-        length_ratio = min(len(modified), len(original)) / max(
-            len(modified), len(original)
-        )
+        length_ratio = min(len(modified), len(original)) / max(len(modified), len(original))
 
         # Combined score
         return (jaccard + length_ratio) / 2.0
@@ -222,9 +220,7 @@ class RobustnessMetricsEngine:
 
         return magnitude
 
-    def estimate_lipschitz_constant(
-        self, defense_response: dict[str, Any], input_variations: list[str]
-    ) -> float:
+    def estimate_lipschitz_constant(self, defense_response: dict[str, Any], input_variations: list[str]) -> float:
         """
         Estimate Lipschitz constant (sensitivity to input changes).
 
@@ -256,9 +252,7 @@ class RobustnessMetricsEngine:
 
         return min(max_lipschitz, 1.0)
 
-    def calculate_input_uncertainty(
-        self, input_text: str, defense_response: dict[str, Any]
-    ) -> float:
+    def calculate_input_uncertainty(self, input_text: str, defense_response: dict[str, Any]) -> float:
         """
         Calculate input uncertainty (entropy-based).
 
@@ -273,9 +267,7 @@ class RobustnessMetricsEngine:
         unique_ratio = len(set(tokens)) / len(tokens) if tokens else 0.0
 
         # Special character ratio (often indicates evasion attempts)
-        special_chars = sum(
-            1 for c in input_text if not c.isalnum() and not c.isspace()
-        )
+        special_chars = sum(1 for c in input_text if not c.isalnum() and not c.isspace())
         special_ratio = special_chars / len(input_text) if input_text else 0.0
 
         # Simulated entropy (0-1)
@@ -315,17 +307,12 @@ class RobustnessMetricsEngine:
 
         # Weighted combination
         near_miss_score = (
-            perturbation_factor * 0.3
-            + confidence_factor * 0.3
-            + uncertainty_factor * 0.2
-            + layer_factor * 0.2
+            perturbation_factor * 0.3 + confidence_factor * 0.3 + uncertainty_factor * 0.2 + layer_factor * 0.2
         )
 
         return near_miss_score
 
-    def simulate_transferability_test(
-        self, attack_payload: str, attack_category: str
-    ) -> dict[str, Any]:
+    def simulate_transferability_test(self, attack_payload: str, attack_category: str) -> dict[str, Any]:
         """
         Simulate transferability testing.
 
@@ -340,9 +327,7 @@ class RobustnessMetricsEngine:
         # Transfer rate (attacks that succeed on proxy and transfer to main)
         # Main system is stronger, so transfer rate is low
         if proxy_success:
-            transfer_to_main = (
-                hash(attack_payload + "transfer") % 100 < 10
-            )  # 10% transfer
+            transfer_to_main = hash(attack_payload + "transfer") % 100 < 10  # 10% transfer
         else:
             transfer_to_main = False
 
@@ -369,17 +354,11 @@ class RobustnessMetricsEngine:
         """
         # Calculate effort metrics
         tokens_changed = len(modified_payload.split()) - len(original_payload.split())
-        levenshtein = self.calculate_levenshtein_distance(
-            original_payload, modified_payload
-        )
-        semantic_sim = self.estimate_semantic_similarity(
-            original_payload, modified_payload
-        )
+        levenshtein = self.calculate_levenshtein_distance(original_payload, modified_payload)
+        semantic_sim = self.estimate_semantic_similarity(original_payload, modified_payload)
 
         # Perturbation magnitude
-        perturbation_mag = self.calculate_perturbation_magnitude(
-            original_payload, modified_payload, encoding_layers
-        )
+        perturbation_mag = self.calculate_perturbation_magnitude(original_payload, modified_payload, encoding_layers)
 
         # Defense characteristics
         detection_conf = defense_response.get("confidence", 0.95)
@@ -387,9 +366,7 @@ class RobustnessMetricsEngine:
         layers_triggered = defense_response.get("layers_triggered", [])
 
         # Uncertainty
-        uncertainty = self.calculate_input_uncertainty(
-            modified_payload, defense_response
-        )
+        uncertainty = self.calculate_input_uncertainty(modified_payload, defense_response)
 
         # Lipschitz constant (with simple variations)
         variations = [modified_payload, modified_payload + " ", modified_payload[:-1]]
@@ -406,9 +383,7 @@ class RobustnessMetricsEngine:
         robustness_margin = 1.0 - near_miss_score
 
         # Transferability
-        transfer_results = self.simulate_transferability_test(
-            modified_payload, attack_category
-        )
+        transfer_results = self.simulate_transferability_test(modified_payload, attack_category)
 
         metrics = AttackProximityMetrics(
             scenario_id=scenario_id,
@@ -450,9 +425,7 @@ class RobustnessMetricsEngine:
         total = len(proximity_metrics)
 
         # Proximity statistics
-        avg_perturbation = np.mean(
-            [m.perturbation_magnitude for m in proximity_metrics]
-        )
+        avg_perturbation = np.mean([m.perturbation_magnitude for m in proximity_metrics])
         max_perturbation = np.max([m.perturbation_magnitude for m in proximity_metrics])
         avg_near_miss = np.mean([m.near_miss_score for m in proximity_metrics])
         near_miss_count = sum(1 for m in proximity_metrics if m.is_near_miss)
@@ -475,28 +448,16 @@ class RobustnessMetricsEngine:
         avg_confidence = np.mean([m.detection_confidence for m in proximity_metrics])
         min_confidence = np.min([m.detection_confidence for m in proximity_metrics])
         avg_uncertainty = np.mean([m.input_uncertainty for m in proximity_metrics])
-        high_uncertainty = sum(
-            1
-            for m in proximity_metrics
-            if m.input_uncertainty >= self.high_uncertainty_threshold
-        )
+        high_uncertainty = sum(1 for m in proximity_metrics if m.input_uncertainty >= self.high_uncertainty_threshold)
 
         # Transferability
         transferable = sum(1 for m in proximity_metrics if m.transfers_from_proxy)
-        avg_transfer_rate = np.mean(
-            [m.transfer_success_rate for m in proximity_metrics]
-        )
+        avg_transfer_rate = np.mean([m.transfer_success_rate for m in proximity_metrics])
 
         # Defense depth
-        avg_layers = np.mean(
-            [len(m.defense_layers_triggered) for m in proximity_metrics]
-        )
-        single_layer = sum(
-            1 for m in proximity_metrics if len(m.defense_layers_triggered) == 1
-        )
-        multi_layer = sum(
-            1 for m in proximity_metrics if len(m.defense_layers_triggered) > 1
-        )
+        avg_layers = np.mean([len(m.defense_layers_triggered) for m in proximity_metrics])
+        single_layer = sum(1 for m in proximity_metrics if len(m.defense_layers_triggered) == 1)
+        multi_layer = sum(1 for m in proximity_metrics if len(m.defense_layers_triggered) > 1)
 
         # Multi-attempt ASR (all defended, so 0%)
         single_attempt_asr = 0.0
@@ -549,9 +510,7 @@ class RobustnessMetricsEngine:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         # Individual metrics
-        metrics_file = (
-            self.metrics_dir / f"{test_suite_name}_proximity_metrics_{timestamp}.json"
-        )
+        metrics_file = self.metrics_dir / f"{test_suite_name}_proximity_metrics_{timestamp}.json"
         metrics_data = [
             {
                 "scenario_id": m.scenario_id,
@@ -578,9 +537,7 @@ class RobustnessMetricsEngine:
             json.dump(metrics_data, f, indent=2)
 
         # Aggregated analysis
-        analysis_file = (
-            self.metrics_dir / f"{test_suite_name}_robustness_analysis_{timestamp}.json"
-        )
+        analysis_file = self.metrics_dir / f"{test_suite_name}_robustness_analysis_{timestamp}.json"
         analysis_data = {
             "test_suite": test_suite_name,
             "timestamp": timestamp,
@@ -615,8 +572,7 @@ class RobustnessMetricsEngine:
                 "min_detection_confidence": analysis.min_detection_confidence,
                 "avg_input_uncertainty": analysis.avg_input_uncertainty,
                 "high_uncertainty_count": analysis.high_uncertainty_count,
-                "high_uncertainty_rate": analysis.high_uncertainty_count
-                / analysis.total_attacks,
+                "high_uncertainty_rate": analysis.high_uncertainty_count / analysis.total_attacks,
             },
             "transferability": {
                 "transferable_attacks": analysis.transferable_attacks,

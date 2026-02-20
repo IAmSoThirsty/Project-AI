@@ -100,9 +100,7 @@ def _request_with_retries(method: str, url: str, **kwargs) -> requests.Response:
         except requests.RequestException as exc:
             attempt += 1
             if attempt > MAX_API_RETRIES:
-                logger.exception(
-                    "Request failed after %d attempts: %s %s", attempt, method, url
-                )
+                logger.exception("Request failed after %d attempts: %s %s", attempt, method, url)
                 raise
             backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
             logger.warning(
@@ -176,10 +174,7 @@ class ImageGenerator:
     }
 
     # Safety negative prompts (always added)
-    SAFETY_NEGATIVE = (
-        "nsfw, explicit, nude, violence, gore, disturbing, "
-        "inappropriate, offensive, hate, illegal"
-    )
+    SAFETY_NEGATIVE = "nsfw, explicit, nude, violence, gore, disturbing, " "inappropriate, offensive, hate, illegal"
 
     def __init__(
         self,
@@ -213,9 +208,7 @@ class ImageGenerator:
 
         return True, "Content filter passed"
 
-    def build_enhanced_prompt(
-        self, prompt: str, style: ImageStyle = ImageStyle.PHOTOREALISTIC
-    ) -> str:
+    def build_enhanced_prompt(self, prompt: str, style: ImageStyle = ImageStyle.PHOTOREALISTIC) -> str:
         """Build enhanced prompt with style preset."""
         style_suffix = self.STYLE_PRESETS[style]
         return f"{prompt}, {style_suffix}"
@@ -249,9 +242,7 @@ class ImageGenerator:
         }
 
         try:
-            response = _request_with_retries(
-                "POST", api_url, headers=headers, json=payload, timeout=60
-            )
+            response = _request_with_retries("POST", api_url, headers=headers, json=payload, timeout=60)
             response.raise_for_status()
 
             # Save image
@@ -312,13 +303,9 @@ class ImageGenerator:
                 except Exception as exc:
                     attempt += 1
                     if attempt > MAX_API_RETRIES:
-                        logger.exception(
-                            "OpenAI generate failed after %d attempts", attempt
-                        )
+                        logger.exception("OpenAI generate failed after %d attempts", attempt)
                         raise
-                    backoff = (
-                        BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
-                    )
+                    backoff = BACKOFF_FACTOR * (2 ** (attempt - 1)) + random.random() * 0.1
                     logger.warning(
                         "OpenAI transient error: %s - retrying in %.2fs (attempt %d)",
                         exc,
@@ -394,9 +381,7 @@ class ImageGenerator:
 
         # Generate based on backend
         if self.backend == ImageGenerationBackend.HUGGINGFACE:
-            return self.generate_with_huggingface(
-                enhanced_prompt, negative_prompt, width, height
-            )
+            return self.generate_with_huggingface(enhanced_prompt, negative_prompt, width, height)
         elif self.backend == ImageGenerationBackend.OPENAI:
             return self.generate_with_openai(enhanced_prompt, f"{width}x{height}")
         else:

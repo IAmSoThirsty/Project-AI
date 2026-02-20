@@ -229,12 +229,8 @@ class TestFunctionRegistry:
 
     def test_get_help_all_functions(self, registry):
         """Test getting help for all functions."""
-        registry.register(
-            "func1", lambda: 1, description="First function", category="cat1"
-        )
-        registry.register(
-            "func2", lambda: 2, description="Second function", category="cat2"
-        )
+        registry.register("func1", lambda: 1, description="First function", category="cat1")
+        registry.register("func2", lambda: 2, description="Second function", category="cat2")
 
         help_text = registry.get_help()
 

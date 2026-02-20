@@ -107,26 +107,20 @@ def initialize_kernel() -> CognitionKernel:
         try:
             governance_system = GovernanceTriumvirate()
         except Exception as e:
-            logger.warning(
-                "GovernanceTriumvirate initialization failed: %s, using fallback", e
-            )
+            logger.warning("GovernanceTriumvirate initialization failed: %s, using fallback", e)
             governance_system = None
 
         # 4. Reflection Engine (post-hoc reasoning)
         try:
             reflection_engine = ReflectionCycle(data_dir="data")
         except Exception as e:
-            logger.warning(
-                "ReflectionCycle initialization failed: %s, using fallback", e
-            )
+            logger.warning("ReflectionCycle initialization failed: %s, using fallback", e)
             reflection_engine = None
 
         # 5. Triumvirate (Galahad, Cerberus, Codex)
         try:
             triumvirate = Triumvirate()
-            logger.info(
-                "Triumvirate initialized: Galahad, Cerberus, Codex Deus Maximus"
-            )
+            logger.info("Triumvirate initialized: Galahad, Cerberus, Codex Deus Maximus")
         except Exception as e:
             logger.warning("Triumvirate initialization failed: %s, using fallback", e)
             triumvirate = None
@@ -134,9 +128,7 @@ def initialize_kernel() -> CognitionKernel:
         # 6. Bio-Inspired Brain Mapping System
         try:
             if yaml is None:
-                logger.warning(
-                    "PyYAML not available, using default bio brain mapper config"
-                )
+                logger.warning("PyYAML not available, using default bio brain mapper config")
                 bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
             else:
                 # Load configuration from YAML
@@ -158,22 +150,16 @@ def initialize_kernel() -> CognitionKernel:
                                 bio_config_data[key].update(value)
                             elif key in bio_config_data:
                                 bio_config_data[key] = value
-                    bio_brain_mapper = BioBrainMappingSystem(
-                        config=bio_config_data, data_dir="data"
-                    )
+                    bio_brain_mapper = BioBrainMappingSystem(config=bio_config_data, data_dir="data")
                     logger.info(
                         "✅ BioBrainMappingSystem initialized with preset: %s",
                         active_preset,
                     )
                 else:
                     bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
-                    logger.info(
-                        "✅ BioBrainMappingSystem initialized with default config"
-                    )
+                    logger.info("✅ BioBrainMappingSystem initialized with default config")
         except Exception as e:
-            logger.warning(
-                "BioBrainMappingSystem initialization failed: %s, using fallback", e
-            )
+            logger.warning("BioBrainMappingSystem initialization failed: %s, using fallback", e)
             bio_brain_mapper = None
 
         # 7. Create CognitionKernel with all subsystems
@@ -197,9 +183,7 @@ def initialize_kernel() -> CognitionKernel:
         logger.info("   - Governance: %s", "✓" if governance_system else "✗ (fallback)")
         logger.info("   - Reflection: %s", "✓" if reflection_engine else "✗ (fallback)")
         logger.info("   - Triumvirate: %s", "✓" if triumvirate else "✗ (fallback)")
-        logger.info(
-            "   - BioBrainMapper: %s", "✓" if bio_brain_mapper else "✗ (fallback)"
-        )
+        logger.info("   - BioBrainMapper: %s", "✓" if bio_brain_mapper else "✗ (fallback)")
         logger.info("🔒 Kernel syscall boundary active - all execution governed")
 
         # Register bio brain mapper with kernel if available
@@ -242,9 +226,7 @@ def initialize_council_hub(kernel: CognitionKernel) -> CouncilHub:
     return hub
 
 
-def initialize_security_systems(
-    kernel: CognitionKernel, council_hub: CouncilHub
-) -> dict[str, Any]:
+def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub) -> dict[str, Any]:
     """Initialize comprehensive security countermeasures and defense systems.
 
     Activates:
@@ -304,9 +286,7 @@ def initialize_security_systems(
     try:
         from app.agents.safety_guard_agent import SafetyGuardAgent
 
-        safety_guard = SafetyGuardAgent(
-            model_name="llama-guard-3-8b", strict_mode=True, kernel=kernel
-        )
+        safety_guard = SafetyGuardAgent(model_name="llama-guard-3-8b", strict_mode=True, kernel=kernel)
         security_components["safety_guard"] = safety_guard
 
         # Register with CouncilHub
@@ -467,9 +447,7 @@ def initialize_security_systems(
             if security_components.get("safety_guard"):
                 tower.register_security_agent("active_defense", "safety_guard_main")
             if security_components.get("constitutional_guard"):
-                tower.register_security_agent(
-                    "active_defense", "constitutional_guard_main"
-                )
+                tower.register_security_agent("active_defense", "constitutional_guard_main")
             if security_components.get("tarl_protector"):
                 tower.register_security_agent("active_defense", "tarl_protector_main")
 
@@ -492,12 +470,8 @@ def initialize_security_systems(
                 "   - Active Defense agents: %s",
                 status["registered_agents"]["active_defense"],
             )
-            logger.info(
-                "   - Red Team agents: %s", status["registered_agents"]["red_team"]
-            )
-            logger.info(
-                "   - Oversight agents: %s", status["registered_agents"]["oversight"]
-            )
+            logger.info("   - Red Team agents: %s", status["registered_agents"]["red_team"])
+            logger.info("   - Oversight agents: %s", status["registered_agents"]["oversight"])
         except Exception as e:
             logger.warning("Failed to register agents with Watch Tower: %s", e)
 
@@ -546,9 +520,7 @@ def initialize_security_systems(
     # Summary
     active_count = sum(1 for v in security_components.values() if v is not None)
     logger.info("=" * 60)
-    logger.info(
-        "🔒 Security Systems Initialized: %s/%s", active_count, len(security_components)
-    )
+    logger.info("🔒 Security Systems Initialized: %s/%s", active_count, len(security_components))
     logger.info("=" * 60)
     logger.info("Security Posture: DEFENSIVE - NO OFFENSIVE CAPABILITIES")
     logger.info("Aligned with: Asimov's Laws, FourLaws Governance")
@@ -558,9 +530,7 @@ def initialize_security_systems(
     return security_components
 
 
-def initialize_enhanced_defenses(
-    kernel: CognitionKernel, security_systems: dict[str, Any]
-) -> dict[str, Any]:
+def initialize_enhanced_defenses(kernel: CognitionKernel, security_systems: dict[str, Any]) -> dict[str, Any]:
     """Initialize enhanced defensive capabilities.
 
     Adds advanced detection, response, and hardening beyond basic agents.
@@ -619,9 +589,7 @@ def initialize_enhanced_defenses(
         enhanced_components["honeypot"] = honeypot
 
         logger.info("✅ Honeypot Detection System activated")
-        logger.info(
-            "   - Attack pattern detection: SQL, XSS, Path Traversal, Cmd Injection"
-        )
+        logger.info("   - Attack pattern detection: SQL, XSS, Path Traversal, Cmd Injection")
         logger.info("   - Tool fingerprinting: sqlmap, nikto, burp, metasploit, etc.")
         logger.info("   - Attacker profiling and threat intelligence")
     except Exception as e:
@@ -656,9 +624,7 @@ def initialize_enhanced_defenses(
         except Exception as e:
             logger.warning("IP Blocker integration failed: %s", e)
 
-    if enhanced_components.get("honeypot") and enhanced_components.get(
-        "incident_responder"
-    ):
+    if enhanced_components.get("honeypot") and enhanced_components.get("incident_responder"):
         try:
             # Link honeypot detections to incident responder
             logger.info("   - Honeypot linked to Incident Responder")
@@ -782,9 +748,7 @@ def report_tier_health():
                 logger.info("     %s %s", status_icon, comp.component_name)
 
             if len(tier_health.component_reports) > 5:
-                logger.info(
-                    "     ... and %s more", len(tier_health.component_reports) - 5
-                )
+                logger.info("     ... and %s more", len(tier_health.component_reports) - 5)
 
         # Overall status
         logger.info("")
@@ -798,9 +762,7 @@ def report_tier_health():
         if violations:
             logger.warning("⚠️  %s tier boundary violations detected:", len(violations))
             for violation in violations[:3]:  # First 3
-                logger.warning(
-                    "   - %s: %s", violation.violation_type, violation.description
-                )
+                logger.warning("   - %s: %s", violation.violation_type, violation.description)
         else:
             logger.info("✓ No tier boundary violations")
 

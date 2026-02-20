@@ -116,11 +116,7 @@ class ActivationPredicate:
         try:
             return self.evaluator(context)
         except Exception as e:
-            logger.error(
-                "Activation predicate %s failed: %s",
-                self.predicate_id,
-                e
-            )
+            logger.error("Activation predicate %s failed: %s", self.predicate_id, e)
             return False
 
 
@@ -142,11 +138,7 @@ class InvariantDefinition:
     is_critical: bool = True  # If false, log violation but don't quarantine
     metadata: dict[str, Any] = field(default_factory=dict)
 
-    def validate(
-        self,
-        primary_result: Any,
-        shadow_result: Any
-    ) -> tuple[bool, str]:
+    def validate(self, primary_result: Any, shadow_result: Any) -> tuple[bool, str]:
         """
         Validate the invariant.
 
@@ -160,11 +152,7 @@ class InvariantDefinition:
         try:
             return self.validator(primary_result, shadow_result)
         except Exception as e:
-            logger.error(
-                "Invariant validation %s failed: %s",
-                self.invariant_id,
-                e
-            )
+            logger.error("Invariant validation %s failed: %s", self.invariant_id, e)
             return False, f"Validation error: {e}"
 
 
@@ -240,11 +228,7 @@ class ShadowContext:
         self.audit_hash = hashlib.sha256(audit_string.encode()).hexdigest()
         self.audit_sealed = True
 
-        logger.info(
-            "[%s] Shadow audit sealed: %s",
-            self.shadow_id,
-            self.audit_hash[:16]
-        )
+        logger.info("[%s] Shadow audit sealed: %s", self.shadow_id, self.audit_hash[:16])
 
         return self.audit_hash
 
@@ -332,9 +316,7 @@ class ShadowTelemetry:
         """Record a shadow activation."""
         self.total_activations += 1
         reason_key = reason.value
-        self.activations_by_reason[reason_key] = (
-            self.activations_by_reason.get(reason_key, 0) + 1
-        )
+        self.activations_by_reason[reason_key] = self.activations_by_reason.get(reason_key, 0) + 1
 
         if reason == ActivationReason.THREAT_SCORE:
             self.threat_triggered_activations += 1
@@ -347,9 +329,7 @@ class ShadowTelemetry:
 
         # Update running average
         n = self.total_divergences
-        self.avg_divergence_magnitude = (
-            (self.avg_divergence_magnitude * (n - 1) + magnitude) / n
-        )
+        self.avg_divergence_magnitude = (self.avg_divergence_magnitude * (n - 1) + magnitude) / n
 
         # Update divergence rate
         if self.total_activations > 0:
@@ -364,9 +344,7 @@ class ShadowTelemetry:
 
         # Update violation rate
         if self.total_invariant_checks > 0:
-            self.invariant_violation_rate = (
-                self.invariant_violations / self.total_invariant_checks
-            )
+            self.invariant_violation_rate = self.invariant_violations / self.total_invariant_checks
 
     def record_execution(self, duration_ms: float, cpu_ms: float, memory_mb: float) -> None:
         """Record shadow execution metrics."""
@@ -375,12 +353,8 @@ class ShadowTelemetry:
         n = self.total_activations
         if n > 0:
             self.avg_shadow_overhead_ms = self.total_shadow_time_ms / n
-            self.avg_cpu_usage_ms = (
-                (self.avg_cpu_usage_ms * (n - 1) + cpu_ms) / n
-            )
-            self.avg_memory_usage_mb = (
-                (self.avg_memory_usage_mb * (n - 1) + memory_mb) / n
-            )
+            self.avg_cpu_usage_ms = (self.avg_cpu_usage_ms * (n - 1) + cpu_ms) / n
+            self.avg_memory_usage_mb = (self.avg_memory_usage_mb * (n - 1) + memory_mb) / n
 
     def get_summary(self) -> dict[str, Any]:
         """Get telemetry summary."""
@@ -401,11 +375,7 @@ class ShadowTelemetry:
 # ============================================================================
 
 
-def create_epsilon_invariant(
-    name: str,
-    epsilon: float = 0.01,
-    is_critical: bool = True
-) -> InvariantDefinition:
+def create_epsilon_invariant(name: str, epsilon: float = 0.01, is_critical: bool = True) -> InvariantDefinition:
     """
     Create an epsilon-based numerical invariant.
 
@@ -417,6 +387,7 @@ def create_epsilon_invariant(
     Returns:
         InvariantDefinition for numerical comparison
     """
+
     def validator(primary: Any, shadow: Any) -> tuple[bool, str]:
         try:
             if isinstance(primary, (int, float)) and isinstance(shadow, (int, float)):
@@ -439,10 +410,7 @@ def create_epsilon_invariant(
     )
 
 
-def create_identity_invariant(
-    name: str,
-    is_critical: bool = True
-) -> InvariantDefinition:
+def create_identity_invariant(name: str, is_critical: bool = True) -> InvariantDefinition:
     """
     Create an identity invariant (results must be identical).
 
@@ -453,6 +421,7 @@ def create_identity_invariant(
     Returns:
         InvariantDefinition for identity comparison
     """
+
     def validator(primary: Any, shadow: Any) -> tuple[bool, str]:
         if primary == shadow:
             return True, "Results identical"
@@ -468,9 +437,7 @@ def create_identity_invariant(
     )
 
 
-def create_threat_activation_predicate(
-    threshold: float = 0.7
-) -> ActivationPredicate:
+def create_threat_activation_predicate(threshold: float = 0.7) -> ActivationPredicate:
     """
     Create a threat-score activation predicate.
 
@@ -480,6 +447,7 @@ def create_threat_activation_predicate(
     Returns:
         ActivationPredicate for threat scores
     """
+
     def evaluator(context: dict[str, Any]) -> bool:
         threat_score = context.get("threat_score", 0.0)
         return threat_score > threshold
@@ -500,6 +468,7 @@ def create_high_stakes_activation_predicate() -> ActivationPredicate:
     Returns:
         ActivationPredicate for high-stakes operations
     """
+
     def evaluator(context: dict[str, Any]) -> bool:
         is_high_stakes = context.get("is_high_stakes", False)
         risk_level = context.get("risk_level", "low")

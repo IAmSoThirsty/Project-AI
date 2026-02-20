@@ -106,9 +106,7 @@ class OptimizationMiddleware:
         # Compression engine
         if self.config.enable_compression and self.config.compression.enabled:
             self.compression_engine = CompressionEngine(
-                default_strategy=CompressionStrategy[
-                    self.config.compression.default_strategy.upper()
-                ],
+                default_strategy=CompressionStrategy[self.config.compression.default_strategy.upper()],
                 compression_level=self.config.compression.compression_level,
                 quantization_bits=self.config.compression.quantization_bits,
                 sparse_threshold=self.config.compression.sparse_threshold,
@@ -119,15 +117,9 @@ class OptimizationMiddleware:
         # Tiered storage
         if self.config.enable_tiered_storage and self.config.tiered_storage.enabled:
             tier_policy = TierPolicy(
-                hot_capacity_bytes=self.config.tiered_storage.hot_capacity_mb
-                * 1024
-                * 1024,
-                warm_capacity_bytes=self.config.tiered_storage.warm_capacity_mb
-                * 1024
-                * 1024,
-                cold_capacity_bytes=(
-                    -1 if self.config.tiered_storage.cold_capacity_unlimited else 0
-                ),
+                hot_capacity_bytes=self.config.tiered_storage.hot_capacity_mb * 1024 * 1024,
+                warm_capacity_bytes=self.config.tiered_storage.warm_capacity_mb * 1024 * 1024,
+                cold_capacity_bytes=(-1 if self.config.tiered_storage.cold_capacity_unlimited else 0),
                 hot_to_warm_idle_hours=self.config.tiered_storage.hot_to_warm_idle_hours,
                 warm_to_cold_idle_hours=self.config.tiered_storage.warm_to_cold_idle_hours,
                 eviction_policy=self.config.tiered_storage.eviction_policy,
@@ -172,17 +164,13 @@ class OptimizationMiddleware:
         # Streaming recall
         if self.config.enable_streaming_recall and self.config.streaming_recall.enabled:
             self.streaming_recall = StreamingRecallEngine(
-                default_strategy=RecallStrategy[
-                    self.config.streaming_recall.default_strategy.upper()
-                ]
+                default_strategy=RecallStrategy[self.config.streaming_recall.default_strategy.upper()]
             )
             logger.info("Streaming recall enabled")
 
         # Adaptive policy engine
         if self.config.enable_adaptive_policy and self.config.adaptive_policy.enabled:
-            self.adaptive_policy = AdaptivePolicyEngine(
-                learning_rate=self.config.adaptive_policy.policy_learning_rate
-            )
+            self.adaptive_policy = AdaptivePolicyEngine(learning_rate=self.config.adaptive_policy.policy_learning_rate)
             logger.info("Adaptive policy engine enabled")
 
         # Telemetry collector
@@ -240,9 +228,7 @@ class OptimizationMiddleware:
 
             # Step 2: Deduplicate if enabled
             if self.dedup_engine:
-                content_hash, was_duplicate = self.dedup_engine.write(
-                    key, data_to_store
-                )
+                content_hash, was_duplicate = self.dedup_engine.write(key, data_to_store)
                 if was_duplicate:
                     logger.debug("Dedup hit for %s", key)
                     self.stats["cache_hits"] += 1
@@ -324,16 +310,10 @@ class OptimizationMiddleware:
 
                     logger.debug("Decompressed %s", key)
                 else:
-                    logger.warning(
-                        "Data is compressed but compression engine not available"
-                    )
+                    logger.warning("Data is compressed but compression engine not available")
                     data = data_retrieved
             else:
-                data = (
-                    data_retrieved.get("data")
-                    if isinstance(data_retrieved, dict)
-                    else data_retrieved
-                )
+                data = data_retrieved.get("data") if isinstance(data_retrieved, dict) else data_retrieved
 
             # Update statistics
             self.stats["total_reads"] += 1

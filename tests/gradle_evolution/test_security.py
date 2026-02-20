@@ -84,9 +84,7 @@ class TestSecurityEngine:
         """Test path access validation denies unpermitted paths."""
         engine = SecurityEngine(config_path=security_config_file)
 
-        is_allowed, reason = engine.validate_path_access(
-            agent="build_agent", path="/etc/passwd", operation="read"
-        )
+        is_allowed, reason = engine.validate_path_access(agent="build_agent", path="/etc/passwd", operation="read")
 
         assert not is_allowed
         assert "path" in reason.lower() or "not" in reason.lower()
@@ -95,9 +93,7 @@ class TestSecurityEngine:
         """Test operation validation allows permitted operations."""
         engine = SecurityEngine(config_path=security_config_file)
 
-        is_allowed, reason = engine.validate_operation(
-            agent="build_agent", operation="read"
-        )
+        is_allowed, reason = engine.validate_operation(agent="build_agent", operation="read")
 
         assert is_allowed
 
@@ -116,9 +112,7 @@ class TestSecurityEngine:
         engine = SecurityEngine(config_path=security_config_file)
 
         # Perform validation which logs access
-        engine.validate_path_access(
-            agent="build_agent", path="src/Main.java", operation="read"
-        )
+        engine.validate_path_access(agent="build_agent", path="src/Main.java", operation="read")
 
         assert len(engine.access_log) == 1
         assert engine.access_log[0]["agent"] == "build_agent"
@@ -128,9 +122,7 @@ class TestSecurityEngine:
         engine = SecurityEngine(config_path=security_config_file)
 
         # Perform validation that will be denied
-        engine.validate_path_access(
-            agent="test_agent", path="/etc/passwd", operation="write"
-        )
+        engine.validate_path_access(agent="test_agent", path="/etc/passwd", operation="write")
 
         assert len(engine.denied_operations) == 1
 
@@ -140,9 +132,7 @@ class TestSecurityEngine:
 
         # Create some access logs via validation
         for i in range(5):
-            engine.validate_path_access(
-                agent="build_agent", path=f"src/File{i}.java", operation="read"
-            )
+            engine.validate_path_access(agent="build_agent", path=f"src/File{i}.java", operation="read")
 
         summary = engine.get_security_summary()
 
@@ -273,9 +263,7 @@ class TestPolicyScheduler:
         scheduler = PolicyScheduler()
 
         # Record some policy events manually
-        scheduler._record_policy_event(
-            "policy_001", "activated", {"timestamp": datetime.utcnow().isoformat()}
-        )
+        scheduler._record_policy_event("policy_001", "activated", {"timestamp": datetime.utcnow().isoformat()})
 
         history = scheduler.get_policy_history()
 

@@ -173,9 +173,7 @@ class ANNToSNNConverter:
         self.framework = framework
         self.conversion_log: list[str] = []
 
-    def convert_pytorch_to_snn(
-        self, ann_model: Any, time_steps: int = 100, threshold: float = 1.0
-    ) -> Any | None:
+    def convert_pytorch_to_snn(self, ann_model: Any, time_steps: int = 100, threshold: float = 1.0) -> Any | None:
         """
         Convert PyTorch ANN to SNN using rate coding
 
@@ -213,11 +211,7 @@ class ANNToSNNConverter:
                             "type": "linear",
                             "name": name,
                             "weight": module.weight.detach().cpu().numpy(),
-                            "bias": (
-                                module.bias.detach().cpu().numpy()
-                                if module.bias is not None
-                                else None
-                            ),
+                            "bias": (module.bias.detach().cpu().numpy() if module.bias is not None else None),
                         }
                     )
                 elif isinstance(module, nn.Conv2d):
@@ -227,17 +221,11 @@ class ANNToSNNConverter:
                             "type": "conv2d",
                             "name": name,
                             "weight": module.weight.detach().cpu().numpy(),
-                            "bias": (
-                                module.bias.detach().cpu().numpy()
-                                if module.bias is not None
-                                else None
-                            ),
+                            "bias": (module.bias.detach().cpu().numpy() if module.bias is not None else None),
                         }
                     )
 
-            self.conversion_log.append(
-                f"Converted {len(snn_layers)} layers from PyTorch ANN"
-            )
+            self.conversion_log.append(f"Converted {len(snn_layers)} layers from PyTorch ANN")
 
             # Return SNN configuration (actual SNN creation depends on target library)
             return {
@@ -251,9 +239,7 @@ class ANNToSNNConverter:
             logger.error("PyTorch→SNN conversion failed: %s", e)
             return None
 
-    def convert_jax_to_snn(
-        self, params: dict[str, Any], time_steps: int = 100
-    ) -> dict[str, Any] | None:
+    def convert_jax_to_snn(self, params: dict[str, Any], time_steps: int = 100) -> dict[str, Any] | None:
         """
         Convert JAX model parameters to SNN
 
@@ -275,16 +261,8 @@ class ANNToSNNConverter:
             for layer_name, layer_params in params.items():
                 logger.info("Converting JAX layer: %s", layer_name)
                 snn_params[layer_name] = {
-                    "weight": (
-                        np.array(layer_params["weight"])
-                        if "weight" in layer_params
-                        else None
-                    ),
-                    "bias": (
-                        np.array(layer_params["bias"])
-                        if "bias" in layer_params
-                        else None
-                    ),
+                    "weight": (np.array(layer_params["weight"]) if "weight" in layer_params else None),
+                    "bias": (np.array(layer_params["bias"]) if "bias" in layer_params else None),
                 }
 
             self.conversion_log.append(f"Converted {len(snn_params)} layers from JAX")
@@ -366,9 +344,7 @@ class ModelQuantizer:
                 )
                 return None, metrics
 
-            self.quantization_log.append(
-                f"Quantized to {mode.value}: accuracy={metrics.accuracy:.2%}"
-            )
+            self.quantization_log.append(f"Quantized to {mode.value}: accuracy={metrics.accuracy:.2%}")
             return quantized, metrics
 
         except Exception as e:
@@ -398,9 +374,7 @@ class ModelQuantizer:
         # First layers: INT8, middle layers: INT4, final layers: INT8
         return {"quantized": True, "bits": "mixed", "model": model}
 
-    def _measure_quantized_accuracy(
-        self, quantized_model: Any, baseline: float
-    ) -> ModelMetrics:
+    def _measure_quantized_accuracy(self, quantized_model: Any, baseline: float) -> ModelMetrics:
         """Measure accuracy of quantized model"""
         # Simulate accuracy measurement (would run validation dataset)
         simulated_drop = np.random.uniform(0.01, 0.04)  # 1-4% accuracy drop
@@ -435,9 +409,7 @@ class NIRCompiler:
         self.target_hardware = target_hardware
         self.compilation_log: list[str] = []
 
-    def compile_to_nir(
-        self, snn_model: dict[str, Any], output_path: Path
-    ) -> tuple[bool, Path | None]:
+    def compile_to_nir(self, snn_model: dict[str, Any], output_path: Path) -> tuple[bool, Path | None]:
         """
         Compile SNN to NIR hardware binary
 
@@ -464,9 +436,7 @@ class NIRCompiler:
             binary_path = output_path / f"{self.target_hardware}_model.nir"
             self._save_nir_binary(optimized, binary_path)
 
-            self.compilation_log.append(
-                f"Compiled to {self.target_hardware}: {binary_path}"
-            )
+            self.compilation_log.append(f"Compiled to {self.target_hardware}: {binary_path}")
             return True, binary_path
 
         except Exception as e:
@@ -505,13 +475,9 @@ class NIRCompiler:
             is_valid = mismatch_rate <= tolerance
 
             if is_valid:
-                logger.info(
-                    "✓ Sim-to-real validation passed: %s mismatch", mismatch_rate
-                )
+                logger.info("✓ Sim-to-real validation passed: %s mismatch", mismatch_rate)
             else:
-                logger.error(
-                    "✗ Sim-to-real validation failed: %s > %s", mismatch_rate, tolerance
-                )
+                logger.error("✗ Sim-to-real validation failed: %s > %s", mismatch_rate, tolerance)
 
             self.compilation_log.append(f"Sim-to-real: {mismatch_rate:.2%} mismatch")
             return is_valid, mismatch_rate
@@ -560,9 +526,7 @@ class OTADeployer:
         self.mqtt_client: Any | None = None
         self.deployment_log: list[str] = []
 
-    def deploy_via_mqtt(
-        self, model_binary: Path, target_devices: list[str]
-    ) -> dict[str, bool]:
+    def deploy_via_mqtt(self, model_binary: Path, target_devices: list[str]) -> dict[str, bool]:
         """
         Deploy model via MQTT to target devices
 
@@ -598,18 +562,14 @@ class OTADeployer:
                 else:
                     logger.error("✗ Failed to deploy to %s", device_id)
 
-            self.deployment_log.append(
-                f"MQTT deployment: {sum(results.values())}/{len(results)} succeeded"
-            )
+            self.deployment_log.append(f"MQTT deployment: {sum(results.values())}/{len(results)} succeeded")
             return results
 
         except Exception as e:
             logger.error("MQTT deployment failed: %s", e)
             return dict.fromkeys(target_devices, False)
 
-    def deploy_via_coap(
-        self, model_binary: Path, target_endpoints: list[str]
-    ) -> dict[str, bool]:
+    def deploy_via_coap(self, model_binary: Path, target_endpoints: list[str]) -> dict[str, bool]:
         """
         Deploy model via CoAP to target endpoints
 
@@ -638,9 +598,7 @@ class OTADeployer:
                 else:
                     logger.error("✗ Failed to deploy to %s", endpoint)
 
-            self.deployment_log.append(
-                f"CoAP deployment: {sum(results.values())}/{len(results)} succeeded"
-            )
+            self.deployment_log.append(f"CoAP deployment: {sum(results.values())}/{len(results)} succeeded")
             return results
 
         except Exception as e:
@@ -704,9 +662,7 @@ class CanaryDeployment:
         Returns:
             True if canary succeeded, False if rolled back
         """
-        logger.info(
-            "Starting canary deployment: %s traffic", self.config.canary_percentage
-        )
+        logger.info("Starting canary deployment: %s traffic", self.config.canary_percentage)
 
         start_time = time.time()
         duration = self.config.canary_duration_sec
@@ -826,9 +782,7 @@ class ShadowModelFallback:
         self.ann_shadow = ann_shadow
         logger.info("Shadow model configured")
 
-    def predict_with_fallback(
-        self, input_data: np.ndarray
-    ) -> tuple[np.ndarray, str, float]:
+    def predict_with_fallback(self, input_data: np.ndarray) -> tuple[np.ndarray, str, float]:
         """
         Predict with automatic fallback to shadow model on anomaly
 
@@ -924,13 +878,9 @@ class SNNMLOpsPipeline:
 
         # Prometheus metrics
         if PROMETHEUS_AVAILABLE:
-            self.deployment_counter = Counter(
-                "snn_deployments_total", "Total SNN deployments", ["status"]
-            )
+            self.deployment_counter = Counter("snn_deployments_total", "Total SNN deployments", ["status"])
             self.accuracy_gauge = Gauge("snn_model_accuracy", "SNN model accuracy")
-            self.latency_histogram = Histogram(
-                "snn_inference_latency_ms", "SNN inference latency"
-            )
+            self.latency_histogram = Histogram("snn_inference_latency_ms", "SNN inference latency")
 
     def run_full_pipeline(
         self,
@@ -984,9 +934,7 @@ class SNNMLOpsPipeline:
             # Stage 3: Compile to NIR
             self.status = DeploymentStatus.COMPILING
             logger.info("\n[3/7] Compiling to NIR hardware binary...")
-            success, nir_binary = self.compiler.compile_to_nir(
-                snn_model, self.data_dir / "models"
-            )
+            success, nir_binary = self.compiler.compile_to_nir(snn_model, self.data_dir / "models")
             if not success:
                 raise ValueError("NIR compilation failed")
             results["stages"]["compilation"] = "success"
@@ -995,13 +943,9 @@ class SNNMLOpsPipeline:
             self.status = DeploymentStatus.VALIDATING
             logger.info("\n[4/7] Validating sim-to-real match...")
             inputs, expected = validation_data
-            is_valid, mismatch = self.compiler.validate_sim_to_real(
-                nir_binary, inputs, expected
-            )
+            is_valid, mismatch = self.compiler.validate_sim_to_real(nir_binary, inputs, expected)
             if not is_valid:
-                raise ValueError(
-                    f"Sim-to-real validation failed: {mismatch:.2%} mismatch"
-                )
+                raise ValueError(f"Sim-to-real validation failed: {mismatch:.2%} mismatch")
             results["stages"]["validation"] = "success"
             results["metrics"]["sim_to_real_mismatch"] = mismatch
 
@@ -1016,9 +960,7 @@ class SNNMLOpsPipeline:
 
             # Stage 6: Canary rollout
             self.status = DeploymentStatus.MONITORING
-            logger.info(
-                "\n[6/7] Canary rollout (%s traffic)...", self.config.canary_percentage
-            )
+            logger.info("\n[6/7] Canary rollout (%s traffic)...", self.config.canary_percentage)
             canary_success = self.canary.start_canary(snn_model, ann_model)
             if not canary_success:
                 raise ValueError("Canary rollout failed - rolled back")
@@ -1261,9 +1203,7 @@ if __name__ == "__main__":
 
         # Run pipeline
         target_devices = ["device_001", "device_002", "device_003"]
-        success, results = pipeline.run_full_pipeline(
-            ann_model, validation_data, target_devices
-        )
+        success, results = pipeline.run_full_pipeline(ann_model, validation_data, target_devices)
 
         print("\n" + "=" * 80)
         print("PIPELINE RESULTS")

@@ -81,9 +81,7 @@ class TestStateMachineAnalyzer:
 
         # Should find at least one: elevated_without_mfa
         assert len(illegal_reachable) > 0
-        assert any(
-            state.state_id == "elevated_without_mfa" for state in illegal_reachable
-        )
+        assert any(state.state_id == "elevated_without_mfa" for state in illegal_reachable)
 
 
 class TestTemporalSecurityAnalyzer:

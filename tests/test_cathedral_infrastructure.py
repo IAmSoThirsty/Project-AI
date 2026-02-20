@@ -32,11 +32,7 @@ class TestExceptions:
 
     def test_project_ai_error_creation(self):
         """Test creating base exception."""
-        error = ProjectAIError(
-            "Test error",
-            error_code="TEST_001",
-            context={"key": "value"}
-        )
+        error = ProjectAIError("Test error", error_code="TEST_001", context={"key": "value"})
 
         assert error.message == "Test error"
         assert error.error_code == "TEST_001"
@@ -95,11 +91,7 @@ class TestCircuitBreaker:
 
     def test_circuit_breaker_half_open_recovery(self):
         """Test circuit breaker recovery through half-open state."""
-        config = CircuitBreakerConfig(
-            failure_threshold=2,
-            success_threshold=2,
-            timeout=0.1
-        )
+        config = CircuitBreakerConfig(failure_threshold=2, success_threshold=2, timeout=0.1)
         breaker = CircuitBreaker(config)
 
         # Cause failures to open breaker
@@ -128,12 +120,7 @@ class TestRetryPolicy:
 
     def test_retry_delay_calculation(self):
         """Test exponential backoff calculation."""
-        policy = RetryPolicy(
-            max_attempts=3,
-            initial_delay=0.1,
-            exponential_base=2.0,
-            jitter=False
-        )
+        policy = RetryPolicy(max_attempts=3, initial_delay=0.1, exponential_base=2.0, jitter=False)
 
         delay0 = policy.calculate_delay(0)
         delay1 = policy.calculate_delay(1)
@@ -145,12 +132,7 @@ class TestRetryPolicy:
 
     def test_max_delay_cap(self):
         """Test delay is capped at max_delay."""
-        policy = RetryPolicy(
-            initial_delay=1.0,
-            max_delay=5.0,
-            exponential_base=2.0,
-            jitter=False
-        )
+        policy = RetryPolicy(initial_delay=1.0, max_delay=5.0, exponential_base=2.0, jitter=False)
 
         delay = policy.calculate_delay(10)  # Would be 1024s without cap
         assert delay == 5.0
@@ -220,12 +202,7 @@ class TestUnifiedIntegrationBus:
         bus = UnifiedIntegrationBus()
         service = MockService()
 
-        bus.register_service(
-            "test_service",
-            service,
-            health_check=service.health_check,
-            priority=ServicePriority.HIGH
-        )
+        bus.register_service("test_service", service, health_check=service.health_check, priority=ServicePriority.HIGH)
 
         # Should be able to get service
         retrieved = bus.get_service("test_service")
@@ -243,11 +220,7 @@ class TestUnifiedIntegrationBus:
         bus = UnifiedIntegrationBus()
         service = MockService(healthy=True)
 
-        bus.register_service(
-            "test_service",
-            service,
-            health_check=service.health_check
-        )
+        bus.register_service("test_service", service, health_check=service.health_check)
 
         assert bus.check_service_health("test_service") is True
 
@@ -372,13 +345,7 @@ class TestConfigValidator:
 
         validator = ConfigValidator()
 
-        config = {
-            "name": "test_subsystem",
-            "version": "1.0.0",
-            "enabled": True,
-            "priority": "HIGH",
-            "timeout": 30.0
-        }
+        config = {"name": "test_subsystem", "version": "1.0.0", "enabled": True, "priority": "HIGH", "timeout": 30.0}
 
         result = validator.validate_subsystem_config("test_subsystem", config)
         assert result.is_valid
@@ -396,10 +363,10 @@ class TestConfigValidator:
                     "name": "Test Subsystem",
                     "module_path": "test.module",
                     "class_name": "TestClass",
-                    "priority": "HIGH"
+                    "priority": "HIGH",
                 }
             },
-            "failure_mode": "continue"
+            "failure_mode": "continue",
         }
 
         result = validator.validate_bootstrap_config(config)
@@ -412,14 +379,7 @@ class TestConfigValidator:
         validator = ConfigValidator()
 
         config = {
-            "subsystems": {
-                "test": {
-                    "name": "Test",
-                    "module_path": "test",
-                    "class_name": "Test",
-                    "priority": "INVALID"
-                }
-            }
+            "subsystems": {"test": {"name": "Test", "module_path": "test", "class_name": "Test", "priority": "INVALID"}}
         }
 
         result = validator.validate_bootstrap_config(config)
@@ -540,11 +500,7 @@ class TestObservability:
 
         tracker = SLATracker()
 
-        config = SLAConfig(
-            name="api_latency",
-            target_latency_ms=100.0,
-            error_rate_threshold=0.01
-        )
+        config = SLAConfig(name="api_latency", target_latency_ms=100.0, error_rate_threshold=0.01)
 
         tracker.register_sla(config)
 

@@ -24,18 +24,18 @@ class TokenType(Enum):
 
     # Keywords - Thirsty-Lang base
     DRINK = auto()  # Variable declaration
-    POUR = auto()   # Output statement
-    SIP = auto()    # Input statement
+    POUR = auto()  # Output statement
+    SIP = auto()  # Input statement
 
     # Keywords - Shadow Thirst extensions
-    FN = auto()           # Function declaration
-    PRIMARY = auto()      # Primary execution block
-    SHADOW = auto()       # Shadow execution block
+    FN = auto()  # Function declaration
+    PRIMARY = auto()  # Primary execution block
+    SHADOW = auto()  # Shadow execution block
     ACTIVATE_IF = auto()  # Activation predicate
-    INVARIANT = auto()    # Invariant clause
-    DIVERGENCE = auto()   # Divergence policy
-    MUTATION = auto()     # Mutation boundary
-    RETURN = auto()       # Return statement
+    INVARIANT = auto()  # Invariant clause
+    DIVERGENCE = auto()  # Divergence policy
+    MUTATION = auto()  # Mutation boundary
+    RETURN = auto()  # Return statement
 
     # Divergence policies
     REQUIRE_IDENTICAL = auto()
@@ -57,32 +57,32 @@ class TokenType(Enum):
     DUAL = auto()
 
     # Operators
-    ASSIGN = auto()       # =
-    PLUS = auto()         # +
-    MINUS = auto()        # -
-    MULTIPLY = auto()     # *
-    DIVIDE = auto()       # /
-    LT = auto()           # <
-    GT = auto()           # >
-    LE = auto()           # <=
-    GE = auto()           # >=
-    EQ = auto()           # ==
-    NE = auto()           # !=
-    AND = auto()          # &&
-    OR = auto()           # ||
-    NOT = auto()          # !
+    ASSIGN = auto()  # =
+    PLUS = auto()  # +
+    MINUS = auto()  # -
+    MULTIPLY = auto()  # *
+    DIVIDE = auto()  # /
+    LT = auto()  # <
+    GT = auto()  # >
+    LE = auto()  # <=
+    GE = auto()  # >=
+    EQ = auto()  # ==
+    NE = auto()  # !=
+    AND = auto()  # &&
+    OR = auto()  # ||
+    NOT = auto()  # !
 
     # Delimiters
-    LPAREN = auto()       # (
-    RPAREN = auto()       # )
-    LBRACE = auto()       # {
-    RBRACE = auto()       # }
-    LBRACKET = auto()     # [
-    RBRACKET = auto()     # ]
-    COMMA = auto()        # ,
-    COLON = auto()        # :
-    ARROW = auto()        # ->
-    DOT = auto()          # .
+    LPAREN = auto()  # (
+    RPAREN = auto()  # )
+    LBRACE = auto()  # {
+    RBRACE = auto()  # }
+    LBRACKET = auto()  # [
+    RBRACKET = auto()  # ]
+    COMMA = auto()  # ,
+    COLON = auto()  # :
+    ARROW = auto()  # ->
+    DOT = auto()  # .
 
     # Literals
     INTEGER = auto()
@@ -127,7 +127,6 @@ class ShadowThirstLexer:
         "drink": TokenType.DRINK,
         "pour": TokenType.POUR,
         "sip": TokenType.SIP,
-
         # Shadow Thirst extensions
         "fn": TokenType.FN,
         "primary": TokenType.PRIMARY,
@@ -137,27 +136,23 @@ class ShadowThirstLexer:
         "divergence": TokenType.DIVERGENCE,
         "mutation": TokenType.MUTATION,
         "return": TokenType.RETURN,
-
         # Divergence policies
         "require_identical": TokenType.REQUIRE_IDENTICAL,
         "allow_epsilon": TokenType.ALLOW_EPSILON,
         "log_divergence": TokenType.LOG_DIVERGENCE,
         "quarantine_on_diverge": TokenType.QUARANTINE_ON_DIVERGE,
         "fail_primary": TokenType.FAIL_PRIMARY,
-
         # Mutation boundaries
         "read_only": TokenType.READ_ONLY,
         "ephemeral_only": TokenType.EPHEMERAL_ONLY,
         "shadow_state_only": TokenType.SHADOW_STATE_ONLY,
         "validated_canonical": TokenType.VALIDATED_CANONICAL,
         "emergency_override": TokenType.EMERGENCY_OVERRIDE,
-
         # Type qualifiers
         "Canonical": TokenType.CANONICAL,
         "Shadow": TokenType.SHADOW,
         "Ephemeral": TokenType.EPHEMERAL,
         "Dual": TokenType.DUAL,
-
         # Boolean literals
         "true": TokenType.BOOLEAN,
         "false": TokenType.BOOLEAN,

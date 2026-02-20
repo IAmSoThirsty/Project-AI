@@ -59,9 +59,7 @@ class AlphaRedAgent(KernelRoutedAgent):
         self.strategy_pool: list[dict[str, Any]] = []
         self.fitness_scores: dict[str, float] = {}
 
-    def generate_adversarial_prompt(
-        self, context: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    def generate_adversarial_prompt(self, context: dict[str, Any] | None = None) -> dict[str, Any]:
         """Generate an adversarial prompt to test system defenses.
 
         This is a stub implementation. Future versions will:
@@ -85,9 +83,7 @@ class AlphaRedAgent(KernelRoutedAgent):
             "complexity": 1.0,
         }
 
-    def evaluate_defense_response(
-        self, attack: dict[str, Any], response: dict[str, Any]
-    ) -> float:
+    def evaluate_defense_response(self, attack: dict[str, Any], response: dict[str, Any]) -> float:
         """Evaluate the system's defense response to an attack.
 
         This is a stub implementation. Future versions will:
@@ -120,13 +116,9 @@ class AlphaRedAgent(KernelRoutedAgent):
         This method modifies strategy_pool in-place.
         """
         logger.debug("Strategy evolution stub called")
-        logger.info(
-            "Genetic algorithm evolution not yet implemented - strategy pool unchanged"
-        )
+        logger.info("Genetic algorithm evolution not yet implemented - strategy pool unchanged")
 
-    def run_adversarial_test(
-        self, target_system: str, iterations: int = 10
-    ) -> dict[str, Any]:
+    def run_adversarial_test(self, target_system: str, iterations: int = 10) -> dict[str, Any]:
         """Run adversarial testing campaign.
 
         This is a stub implementation. Future versions will:

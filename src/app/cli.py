@@ -57,11 +57,7 @@ health_app = typer.Typer(help="Commands for system health reporting and diagnost
 
 
 @health_app.command(name="report")
-def health_report(
-    verbose: bool = typer.Option(
-        False, "--verbose", "-v", help="Enable verbose output."
-    )
-):
+def health_report(verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose output.")):
     """Generate a comprehensive system health report with YAML snapshot and PNG visualization."""
     if verbose:
         logging.basicConfig(

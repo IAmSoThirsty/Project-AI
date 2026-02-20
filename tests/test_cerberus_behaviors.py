@@ -103,18 +103,14 @@ class TestSpawnConstraintBehaviors:
         constraints.enter_cooldown(duration=60.0, reason="test")
 
         # Try to spawn
-        can_spawn, reason = constraints.can_spawn(
-            generation=0, incident_id="test-inc", current_agent_count=5
-        )
+        can_spawn, reason = constraints.can_spawn(generation=0, incident_id="test-inc", current_agent_count=5)
 
         assert not can_spawn
         assert reason == "in_cooldown_period"
 
     def test_adaptive_spawn_factor_respects_bounds(self):
         """Assert: Adaptive spawn factor always in range [1, 5]."""
-        constraints = SpawnConstraints(
-            max_concurrent_agents=50, enable_adaptive_spawning=True
-        )
+        constraints = SpawnConstraints(max_concurrent_agents=50, enable_adaptive_spawning=True)
 
         # Test various scenarios
         test_cases = [
@@ -131,32 +127,22 @@ class TestSpawnConstraintBehaviors:
             factor = constraints.compute_adaptive_spawn_factor(risk, conf, load, gen)
 
             # Assert bounds
-            assert (
-                1 <= factor <= 5
-            ), f"Factor {factor} out of bounds for risk={risk}, gen={gen}"
+            assert 1 <= factor <= 5, f"Factor {factor} out of bounds for risk={risk}, gen={gen}"
 
     def test_budget_tracking_prevents_overrun(self):
         """Assert: Resource budgets prevent spawning when exceeded."""
-        constraints = SpawnConstraints(
-            max_concurrent_agents=100
-        )  # Higher than incident budget
+        constraints = SpawnConstraints(max_concurrent_agents=100)  # Higher than incident budget
 
         incident_id = "budget-test"
 
         # Consume budget up to incident limit (incident budget is 50 spawns)
         for i in range(50):
-            can_spawn, reason = constraints.can_spawn(
-                generation=0, incident_id=incident_id, current_agent_count=i
-            )
+            can_spawn, reason = constraints.can_spawn(generation=0, incident_id=incident_id, current_agent_count=i)
             if can_spawn:
-                constraints.record_spawn(
-                    incident_id, resource_cost={"cpu_seconds": 0.5, "memory_mb": 10.0}
-                )
+                constraints.record_spawn(incident_id, resource_cost={"cpu_seconds": 0.5, "memory_mb": 10.0})
 
         # Now incident budget should be exceeded
-        can_spawn, reason = constraints.can_spawn(
-            generation=0, incident_id=incident_id, current_agent_count=50
-        )
+        can_spawn, reason = constraints.can_spawn(generation=0, incident_id=incident_id, current_agent_count=50)
 
         # Should hit incident budget limit
         assert not can_spawn
@@ -220,9 +206,7 @@ class TestLockdownBehaviors:
             # Compute stage multiple times with same inputs
             stages = []
             for _ in range(5):
-                stage = controller.compute_lockdown_stage(
-                    risk_score=0.75, bypass_depth=3
-                )
+                stage = controller.compute_lockdown_stage(risk_score=0.75, bypass_depth=3)
                 stages.append(stage)
 
             # All stages should be identical
@@ -243,9 +227,7 @@ class TestLockdownBehaviors:
 
         for risk, depth in test_cases:
             stage = controller.compute_lockdown_stage(risk, depth)
-            assert (
-                0 <= stage <= 25
-            ), f"Stage {stage} out of bounds for risk={risk}, depth={depth}"
+            assert 0 <= stage <= 25, f"Stage {stage} out of bounds for risk={risk}, depth={depth}"
 
     def test_sections_lock_progressively(self, lockdown_controller):
         """Assert: Higher stages lock more sections (monotonic)."""
@@ -270,9 +252,7 @@ class TestDeterministicBehaviors:
             # Create language database
             from app.core.cerberus_hydra import CerberusHydraDefense
 
-            cerberus = CerberusHydraDefense(
-                data_dir=tmpdir, enable_polyglot_execution=False, max_agents=50
-            )
+            cerberus = CerberusHydraDefense(data_dir=tmpdir, enable_polyglot_execution=False, max_agents=50)
 
             # Spawn agents with same incident ID multiple times
             incident_id = "deterministic-test"
@@ -280,9 +260,7 @@ class TestDeterministicBehaviors:
             language_pairs = []
             for _run in range(3):
                 # Reset and spawn with same incident ID
-                agent_id = cerberus._spawn_single_agent(
-                    generation=0, parent_agent_id=None, reason=incident_id
-                )
+                agent_id = cerberus._spawn_single_agent(generation=0, parent_agent_id=None, reason=incident_id)
 
                 if agent_id:
                     agent = cerberus.agents[agent_id]
@@ -294,18 +272,14 @@ class TestDeterministicBehaviors:
 
     def test_spawn_constraints_statistics_accurate(self):
         """Assert: Spawn statistics accurately track all attempts."""
-        constraints = SpawnConstraints(
-            max_concurrent_agents=50, max_spawns_per_minute=100
-        )
+        constraints = SpawnConstraints(max_concurrent_agents=50, max_spawns_per_minute=100)
 
         # Attempt several spawns
         allowed = 0
         rejected = 0
 
         for i in range(60):  # Try more than max agents
-            can_spawn, reason = constraints.can_spawn(
-                generation=0, incident_id=f"inc-{i}", current_agent_count=allowed
-            )
+            can_spawn, reason = constraints.can_spawn(generation=0, incident_id=f"inc-{i}", current_agent_count=allowed)
 
             if can_spawn:
                 constraints.record_spawn(f"inc-{i}")
@@ -329,9 +303,7 @@ class TestIntegrationBehaviors:
         with tempfile.TemporaryDirectory() as tmpdir:
             from app.core.cerberus_hydra import CerberusHydraDefense
 
-            cerberus = CerberusHydraDefense(
-                data_dir=tmpdir, enable_polyglot_execution=False, max_agents=50
-            )
+            cerberus = CerberusHydraDefense(data_dir=tmpdir, enable_polyglot_execution=False, max_agents=50)
 
             # Initialize
             initial_ids = cerberus.spawn_initial_agents(count=3)
@@ -354,9 +326,7 @@ class TestIntegrationBehaviors:
         with tempfile.TemporaryDirectory() as tmpdir:
             from app.core.cerberus_hydra import CerberusHydraDefense
 
-            cerberus = CerberusHydraDefense(
-                data_dir=tmpdir, enable_polyglot_execution=False, max_agents=50
-            )
+            cerberus = CerberusHydraDefense(data_dir=tmpdir, enable_polyglot_execution=False, max_agents=50)
 
             # Attempt rapid spawning (simulating attack)
             initial_count = 0
@@ -368,9 +338,7 @@ class TestIntegrationBehaviors:
 
                     # Verify growth is controlled
                     assert current_count <= 50  # Hard cap
-                    assert current_count - initial_count <= 3 * (
-                        generation + 1
-                    )  # 3x per gen max
+                    assert current_count - initial_count <= 3 * (generation + 1)  # 3x per gen max
 
                     initial_count = current_count
                 except Exception:

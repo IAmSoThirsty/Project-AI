@@ -68,17 +68,13 @@ def run_demo():
     final_state = engine.observe()
     print(f"    • Simulation Day: {final_state['simulation_day']}")
     print(f"    • Final Population: {final_state['global_population']:,}")
-    print(
-        f"    • Population Loss: {initial_state['global_population'] - final_state['global_population']:,}"
-    )
+    print(f"    • Population Loss: {initial_state['global_population'] - final_state['global_population']:,}")
     print(f"    • Grid Recovery: {final_state['grid_operational_pct']:.1%}")
     print(f"    • GDP Recovery: ${final_state['gdp_trillion']:.1f}T")
     print(f"    • Total Deaths: {final_state['total_deaths']:,}")
 
     # Calculate metrics
-    survival_rate = (
-        final_state["global_population"] / initial_state["global_population"]
-    ) * 100
+    survival_rate = (final_state["global_population"] / initial_state["global_population"]) * 100
     grid_recovery = final_state["grid_operational_pct"] * 100
     gdp_recovery = (final_state["gdp_trillion"] / initial_state["gdp_trillion"]) * 100
 
