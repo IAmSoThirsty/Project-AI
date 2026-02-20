@@ -392,7 +392,7 @@ ______________________________________________________________________
 
 **Smart Contract Security** \[1,2\]: Our constitutional rules implement runtime invariants similar to those used in blockchain protocols. Unlike smart contracts which enforce invariants only on-chain state, we enforce across arbitrary system actions.
 
-**Protocol Verification** \[6\]: Formal methods have long proven protocol correctness. We bring runtime enforcement of formally-specified invariants to general-purpose systems.
+**Protocol Verification** \[6\]: Formal methods have long proven protocol correctness. This system implements runtime enforcement of formally-specified invariants to general-purpose systems (implementation complete, adversarial validation ongoing).
 
 ### 8.2 Moving-Target Defense
 
@@ -460,6 +460,39 @@ The key insight—that attackers optimize for reuse while defenders must optimiz
 **The game has been rewritten.**
 
 ______________________________________________________________________
+
+---
+
+## Validation Status Disclaimer
+
+**Document Classification:** Technical Specification
+
+This whitepaper describes the design, architecture, and implementation of the system. The information presented represents:
+
+- ✅ **Code Complete:** Implementation finished, unit tests passing
+- ✅ **Configuration Validated:** Automated tests confirm configuration correctness
+- 🔄 **Runtime Validation:** Full adversarial validation is ongoing
+- 🔄 **Production Hardening:** Security controls align with enterprise hardening patterns
+
+### Important Notes
+
+1. **Not Production-Certified:** This system has not completed the full runtime validation protocol required for production-ready certification as defined in `.github/SECURITY_VALIDATION_POLICY.md`.
+
+2. **Design Intent:** All security features, enforcement capabilities, and operational metrics described represent design intent and implementation goals. Actual runtime behavior should be independently validated in your specific deployment environment.
+
+3. **Ongoing Validation:** The Project-AI team is actively conducting adversarial testing and runtime validation. This section will be updated as validation milestones are achieved.
+
+4. **Use at Your Own Risk:** Organizations deploying this system should conduct their own comprehensive security assessments, penetration testing, and operational validation before production use.
+
+5. **Metrics Context:** Any performance or reliability metrics mentioned (e.g., uptime percentages, latency measurements, readiness scores) are based on development environment testing and may not reflect production performance.
+
+**Validation Status:** In Progress
+**Last Updated:** 2026-02-20
+**Next Review:** Upon completion of runtime validation protocol
+
+For the complete validation protocol requirements, see `.github/SECURITY_VALIDATION_POLICY.md`.
+
+---
 
 ## References
 

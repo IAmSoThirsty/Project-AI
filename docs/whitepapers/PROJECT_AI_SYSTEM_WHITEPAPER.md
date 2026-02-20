@@ -5,7 +5,7 @@
 **Version:** 1.0.0  
 **Date:** February 19, 2026  
 **Authors:** Project-AI Team  
-**Status:** Production Implementation  
+**Status:** Technical Specification (Implementation Complete, Validation Ongoing)  
 **Classification:** Public Technical Specification
 
 ---
@@ -33,7 +33,7 @@
 - **Four Agent Subsystems**: Oversight, Planner, Validator, Explainability
 - **Three-Tier Sovereignty**: Governance (immutable), Infrastructure (constrained), Application (sandboxed)
 - **Multiple Deployment Modes**: Desktop (PyQt6), Web (React/Flask), CLI, Docker, Kubernetes
-- **Production-Ready**: 94/100 readiness score, 99.98% uptime, P95 latency 234ms
+- **Implementation Status**: Development complete with 94/100 configuration validation score. High availability design (target 99.98% uptime, P95 latency 234ms). Full operational validation is ongoing.
 - **Repository Scale**: 397 Python files, ~160K LOC, 965 docs, 191 tests, 38 workflows
 
 ### Architecture Overview
@@ -166,7 +166,7 @@ class OrchestrationSubsystem(Protocol):
 
 ## 4. Deployment Modes
 
-### Desktop Application (Production-Ready)
+### Desktop Application (Feature Complete, Validation Ongoing)
 
 **Technology**: PyQt6, Python 3.11+  
 **Entry Point**: `python -m src.app.main`  
@@ -312,7 +312,7 @@ Layer 7: Audit (Cryptographic logging, tamper-proof trail)
 2025 Q3: Production Hardening - Testing, CI/CD, monitoring
 2025 Q4: Open Source Release - MIT license, comprehensive docs
 2026 Q1: ASL-3 Security - 30 security controls, compliance
-2026 Q2: Current - Production-ready, 94/100 readiness score
+2026 Q2: Current - Development complete, 94/100 readiness score, full production hardening in progress
 ```
 
 **Major Milestones**:
@@ -501,3 +501,36 @@ POST /api/learning/request
 
 **Approval**: Project-AI Core Team  
 **Next Review**: 2026-05-19
+
+---
+
+## Validation Status Disclaimer
+
+**Document Classification:** Technical Specification
+
+This whitepaper describes the design, architecture, and implementation of the system. The information presented represents:
+
+- ✅ **Code Complete:** Implementation finished, unit tests passing
+- ✅ **Configuration Validated:** Automated tests confirm configuration correctness
+- 🔄 **Runtime Validation:** Full adversarial validation is ongoing
+- 🔄 **Production Hardening:** Security controls align with enterprise hardening patterns
+
+### Important Notes
+
+1. **Not Production-Certified:** This system has not completed the full runtime validation protocol required for production-ready certification as defined in `.github/SECURITY_VALIDATION_POLICY.md`.
+
+2. **Design Intent:** All security features, enforcement capabilities, and operational metrics described represent design intent and implementation goals. Actual runtime behavior should be independently validated in your specific deployment environment.
+
+3. **Ongoing Validation:** The Project-AI team is actively conducting adversarial testing and runtime validation. This section will be updated as validation milestones are achieved.
+
+4. **Use at Your Own Risk:** Organizations deploying this system should conduct their own comprehensive security assessments, penetration testing, and operational validation before production use.
+
+5. **Metrics Context:** Any performance or reliability metrics mentioned (e.g., uptime percentages, latency measurements, readiness scores) are based on development environment testing and may not reflect production performance.
+
+**Validation Status:** In Progress
+**Last Updated:** 2026-02-20
+**Next Review:** Upon completion of runtime validation protocol
+
+For the complete validation protocol requirements, see `.github/SECURITY_VALIDATION_POLICY.md`.
+
+---
