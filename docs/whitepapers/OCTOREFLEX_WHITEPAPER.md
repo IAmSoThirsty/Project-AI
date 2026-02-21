@@ -2450,7 +2450,15 @@ gossip:
 
 **Target**: ≤ 0.5% FPR — ✅ **PASS**
 
-**Dataset Labeling Methodology**: Ground truth labels were established through manual inspection of 500 randomly sampled processes (5% of total dataset). Each sample was reviewed by two independent security engineers who classified behavior as "malicious" (true attack simulation) or "benign" (legitimate workload). Disagreements (8 cases) were resolved by a third reviewer. The remaining 9,500 processes were unlabeled and used only for FPR/FNR calculation under the assumption that attacks are rare (< 1% prevalence in production). This labeling approach may introduce bias if the unlabeled set contains undetected attacks, potentially underestimating FNR. For adversarial validation, all 60 red-team attack simulations were explicitly labeled as malicious ground truth.
+**Dataset Labeling Methodology**:
+
+*Labeling Process*: Ground truth labels were established through manual inspection of 500 randomly sampled processes (5% of total dataset). Each sample was reviewed by two independent security engineers who classified behavior as "malicious" (true attack simulation) or "benign" (legitimate workload). Disagreements (8 cases) were resolved by a third reviewer.
+
+*Sample Coverage*: The remaining 9,500 processes were unlabeled and used only for FPR/FNR calculation under the assumption that attacks are rare (< 1% prevalence in production).
+
+*Potential Bias*: This labeling approach may introduce bias if the unlabeled set contains undetected attacks, potentially underestimating FNR.
+
+*Adversarial Validation*: For red-team validation, all 60 attack simulations were explicitly labeled as malicious ground truth, ensuring 100% labeling coverage for adversarial scenarios.
 
 **False positive causes**:
 - Legitimate software updates (6 cases)
