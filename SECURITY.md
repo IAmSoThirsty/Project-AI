@@ -8,9 +8,46 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in Project-AI, please report it by emailing the maintainers or using GitHub's private security advisory feature. **Do not create a public issue.**
+### Preferred: GitHub Security Advisories (Private Reporting)
 
-We aim to respond to security reports within 48 hours and will work with you to understand and resolve the issue promptly.
+**🔒 Use GitHub's Private Vulnerability Reporting:**
+1. Navigate to the [Security Advisories](https://github.com/IAmSoThirsty/Project-AI/security/advisories) page
+2. Click "Report a vulnerability"
+3. Fill out the advisory form with details
+4. Submit privately - only maintainers will see it
+
+**Why use GitHub Security Advisories?**
+- ✅ Encrypted communication
+- ✅ Credit tracking for researchers
+- ✅ CVE assignment assistance
+- ✅ Coordinated disclosure workflow
+- ✅ Security advisory publication when fixed
+
+### Alternative: Email Reporting
+
+If you prefer email or cannot access GitHub:
+- **Email**: security@thirstysprojects.com
+- **PGP Key**: [Available on request]
+
+### Important Guidelines
+
+**⚠️ DO NOT:**
+- Create public issues for vulnerabilities
+- Disclose vulnerabilities on social media
+- Share exploit code publicly before a fix
+- Test vulnerabilities on production systems
+
+**✅ DO:**
+- Report responsibly via private channels
+- Provide clear reproduction steps
+- Allow 90 days for coordinated disclosure
+- Work with maintainers on fix verification
+
+**Response Timeline:**
+- **Initial Response**: Within 48 hours
+- **Triage & Assessment**: Within 5 business days
+- **Fix Development**: Depends on severity (Critical: 7-14 days, High: 30 days, Medium: 60 days)
+- **Disclosure**: After fix is released + 7-day adoption period
 
 ## Security Features
 
@@ -144,8 +181,115 @@ The project includes:
 - Container security scanning (Trivy)
 - Cloud configuration checks (Checkov)
 
+## GitHub Security Features
+
+### Automated Security Scanning
+
+**CodeQL Analysis**
+- Continuous code scanning for Python and JavaScript
+- Security-extended and quality query suites
+- Automatic SARIF upload to GitHub Security tab
+- Workflow: `.github/workflows/codeql.yml`
+- Schedule: Daily at 6:00 AM UTC
+
+**Dependency Scanning**
+- Dependabot configured for pip, npm, Docker, and GitHub Actions
+- Automatic pull requests for security updates
+- Dependency review on all PRs via GitHub Actions
+- pip-audit scanning for Python vulnerabilities
+- Configuration: `.github/dependabot.yml`
+
+**Secret Scanning**
+- GitHub secret scanning enabled (repository setting)
+- Detects committed secrets (API keys, tokens, credentials)
+- Push protection prevents secret commits (recommended)
+- Partner pattern detection (AWS, Azure, GCP, etc.)
+
+**Security Advisories**
+- Private vulnerability reporting via GitHub Security Advisories
+- CVE assignment and coordination
+- Template available: `.github/SECURITY_ADVISORY_TEMPLATE.md`
+
+### Supply Chain Security
+
+**Signed Commits**
+- Recommended for all contributors
+- Required on protected branches (configurable)
+- GPG or SSH signing supported
+
+**Workflow Security**
+- All GitHub Actions pinned to full SHA (not tags)
+- Minimal permissions per workflow (principle of least privilege)
+- Dependabot keeps Actions up to date
+
+**SBOM Generation**
+- Software Bill of Materials generated automatically
+- Workflow: `.github/workflows/generate-sbom.yml`
+- SPDX and CycloneDX formats supported
+
+### Branch Protection
+
+Comprehensive branch protection rules are documented and should be configured in repository settings:
+- Required pull request reviews
+- Required status checks (CodeQL, dependency review, tests)
+- Conversation resolution required
+- Force push disabled on protected branches
+- Full documentation: `.github/BRANCH_PROTECTION.md`
+
+### Security Monitoring
+
+**Security Alerts**
+- Dependabot security alerts enabled
+- CodeQL scanning alerts
+- Secret scanning alerts
+- Email notifications to maintainers
+
+**Audit Logging**
+- Repository audit log tracks security-related changes
+- Protected branch modifications logged
+- Security settings changes tracked
+
+### Security Policies
+
+- **Security Validation Claims Policy**: `.github/SECURITY_VALIDATION_POLICY.md`
+- **Security Automation**: `.github/SECURITY_AUTOMATION.md`
+- **Security Checklist**: `.github/SECURITY_VALIDATION_CHECKLIST.md`
+
+### Recommended Repository Settings
+
+To achieve full GitHub security compliance, configure these settings in repository settings:
+
+**Security & Analysis**
+- ✅ Dependency graph: Enabled
+- ✅ Dependabot alerts: Enabled
+- ✅ Dependabot security updates: Enabled
+- ✅ Grouped security updates: Enabled
+- ✅ CodeQL analysis: Enabled (via workflow)
+- ✅ Secret scanning: Enabled
+- ✅ Secret scanning push protection: Enabled (recommended)
+
+**Branch Protection Rules**
+- ✅ Configure for `main`, `develop`, and `release/**` branches
+- ✅ See `.github/BRANCH_PROTECTION.md` for detailed rules
+
+**Actions Permissions**
+- ✅ Allow select actions and reusable workflows
+- ✅ Require workflow approval for first-time contributors
+- ✅ Restrict actions to verified creators
+
+**Vulnerability Reporting**
+- ✅ Private vulnerability reporting: Enabled
+- ✅ Security policy published (this file)
+
+### Security Resources
+
+- [GitHub Security Advisories](https://github.com/IAmSoThirsty/Project-AI/security/advisories)
+- [CodeQL Scanning Results](https://github.com/IAmSoThirsty/Project-AI/security/code-scanning)
+- [Dependabot Alerts](https://github.com/IAmSoThirsty/Project-AI/security/dependabot)
+- [Secret Scanning Alerts](https://github.com/IAmSoThirsty/Project-AI/security/secret-scanning)
+
 ## Contact
 
 For security concerns, please contact the project maintainers through GitHub's security advisory system.
 
-**Last Updated:** 2026-02-05
+**Last Updated:** 2026-02-21

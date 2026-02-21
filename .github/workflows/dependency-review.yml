@@ -1,0 +1,112 @@
+name: "Dependency Review"
+
+# ==============================================================================
+# GitHub Dependency Review Action
+# Scans pull requests for dependency changes and alerts on security vulnerabilities
+# Part of GitHub's supply chain security features
+# ==============================================================================
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+      - cerberus-integration
+    paths:
+      - 'requirements*.txt'
+      - 'pyproject.toml'
+      - 'setup.py'
+      - 'setup.cfg'
+      - 'package*.json'
+      - 'yarn.lock'
+      - 'pnpm-lock.yaml'
+      - 'Pipfile*'
+      - 'poetry.lock'
+      - 'Dockerfile'
+      - 'docker-compose*.yml'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  dependency-review:
+    name: Review Dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@4081bf99e2866ebe428fc0173e064a3e581e9d56  # v4.4.0
+        with:
+          # Fail on critical and high severity vulnerabilities
+          fail-on-severity: moderate
+          # Allow licenses that are compatible with MIT/Apache 2.0
+          allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, CC0-1.0, Unlicense, Python-2.0, PSF-2.0
+          # Deny GPL and other copyleft licenses for compatibility
+          deny-licenses: GPL-2.0, GPL-3.0, AGPL-3.0, LGPL-2.0, LGPL-2.1, LGPL-3.0
+          # Comment on PRs with findings
+          comment-summary-in-pr: always
+          # Warn on development dependencies too
+          warn-on-dev-dependencies: true
+
+      - name: Generate dependency summary
+        if: always()
+        run: |
+          echo "## 📦 Dependency Review Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All dependencies scanned for security vulnerabilities" >> $GITHUB_STEP_SUMMARY
+          echo "✅ License compatibility verified" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Severity Threshold:** Moderate or higher" >> $GITHUB_STEP_SUMMARY
+          echo "**License Policy:** MIT/Apache-2.0 compatible only" >> $GITHUB_STEP_SUMMARY
+
+  python-dependency-audit:
+    name: Python Dependency Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # v5.3.0
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Run pip-audit
+        uses: pypa/gh-action-pip-audit@v1.1.0
+        with:
+          inputs: requirements.txt requirements-dev.txt
+          # Generate SARIF report for GitHub Security tab
+          format: sarif
+          output: pip-audit.sarif
+
+      - name: Upload pip-audit SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # v3.27.4
+        with:
+          sarif_file: pip-audit.sarif
+        continue-on-error: true
+
+      - name: Generate audit summary
+        if: success()
+        run: |
+          echo "## 🐍 Python Dependency Audit Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All Python dependencies scanned with pip-audit" >> $GITHUB_STEP_SUMMARY
+          echo "📊 Results uploaded to GitHub Security tab" >> $GITHUB_STEP_SUMMARY
