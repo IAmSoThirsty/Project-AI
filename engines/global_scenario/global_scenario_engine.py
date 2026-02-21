@@ -43,7 +43,7 @@ from urllib.parse import urlencode
 import numpy as np
 import requests
 
-from engines.simulation_contract.simulation_contingency_root import (
+from app.core.simulation_contingency_root import (
     AlertLevel,
     CausalLink,
     CrisisAlert,

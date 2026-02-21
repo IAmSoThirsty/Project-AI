@@ -14,7 +14,7 @@ import re
 from dataclasses import dataclass
 from enum import Enum
 
-from engines.planetary_defense.planetary_defense_monolith import planetary_interposition
+from app.governance.planetary_defense_monolith import planetary_interposition
 
 logger = logging.getLogger(__name__)
 

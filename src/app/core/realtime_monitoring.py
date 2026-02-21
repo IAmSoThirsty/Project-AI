@@ -55,7 +55,7 @@ class IncrementalUpdateManager:
         Returns:
             bool: Success status
         """
-        from engines.simulation_contract.simulation_contingency_root import RiskDomain
+        from app.core.simulation_contingency_root import RiskDomain
 
         try:
             with self.lock:

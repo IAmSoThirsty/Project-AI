@@ -304,7 +304,7 @@ def integrate_imf_data(
     Returns:
         bool: Success status
     """
-    from engines.simulation_contract.simulation_contingency_root import RiskDomain
+    from app.core.simulation_contingency_root import RiskDomain
 
     try:
         cache_dir = engine.data_dir / "cache" / "imf"
@@ -346,7 +346,7 @@ def integrate_who_data(
     Returns:
         bool: Success status
     """
-    from engines.simulation_contract.simulation_contingency_root import RiskDomain
+    from app.core.simulation_contingency_root import RiskDomain
 
     try:
         cache_dir = engine.data_dir / "cache" / "who"

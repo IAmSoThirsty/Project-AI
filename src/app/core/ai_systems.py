@@ -284,7 +284,7 @@ class FourLaws:
         - protect_self_conflicts_with_first: bool
         - protect_self_conflicts_with_second: bool
         """
-        from engines.planetary_defense.planetary_defense_monolith import (
+        from app.governance.planetary_defense_monolith import (
             PLANETARY_CORE,
         )
 

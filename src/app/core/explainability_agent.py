@@ -12,7 +12,7 @@ import logging
 from dataclasses import dataclass
 from typing import Any
 
-from engines.planetary_defense.planetary_defense_monolith import (
+from app.governance.planetary_defense_monolith import (
     get_accountability_ledger,
 )
 

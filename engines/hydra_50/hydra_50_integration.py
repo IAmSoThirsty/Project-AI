@@ -42,7 +42,7 @@ class PlanetaryDefenseIntegration:
         """Lazy load Planetary Defense Monolith"""
         if self.planetary_defense is None:
             try:
-                from engines.planetary_defense.planetary_defense_monolith import PlanetaryDefenseMonolith
+                from app.governance.planetary_defense_monolith import PlanetaryDefenseMonolith
 
                 self.planetary_defense = PlanetaryDefenseMonolith()
             except ImportError:

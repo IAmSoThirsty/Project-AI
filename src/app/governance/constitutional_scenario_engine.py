@@ -10,8 +10,8 @@ the Constitutional Core for accountability and law enforcement.
 import logging
 
 from engines.global_scenario.global_scenario_engine import GlobalScenarioEngine
-from engines.planetary_defense.planetary_defense_monolith import planetary_interposition
-from engines.simulation_contract.simulation_contingency_root import (
+from app.governance.planetary_defense_monolith import planetary_interposition
+from app.core.simulation_contingency_root import (
     CrisisAlert,
     RiskDomain,
     ScenarioProjection,
