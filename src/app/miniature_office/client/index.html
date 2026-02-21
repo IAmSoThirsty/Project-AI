@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miniature Office - Cognitive IDE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #0a0e1a;
+            color: #00ff41;
+            overflow: hidden;
+        }
+
+        /* Vault-Tec Aesthetic */
+        .vault-tec-header {
+            background: linear-gradient(180deg, #1a3a4a 0%, #0d1f2a 100%);
+            border-bottom: 3px solid #ff9f00;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .vault-tec-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff9f00;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .vault-tec-logo::before {
+            content: "⚙ ";
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .status-item {
+            padding: 5px 10px;
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid #00ff41;
+            border-radius: 3px;
+        }
+
+        .status-item.active {
+            background: rgba(255, 159, 0, 0.2);
+            border-color: #ff9f00;
+            color: #ff9f00;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            height: calc(100vh - 70px);
+        }
+
+        /* World Canvas */
+        .world-view {
+            flex: 1;
+            position: relative;
+            background-color: #0d1f2a;
+            border-right: 2px solid #00ff41;
+        }
+
+        #worldCanvas {
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            width: 350px;
+            background: linear-gradient(180deg, #0d1f2a 0%, #061018 100%);
+            padding: 20px;
+            overflow-y: auto;
+            border-left: 2px solid #ff9f00;
+        }
+
+        .panel-section {
+            margin-bottom: 25px;
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            padding: 15px;
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .panel-section h2 {
+            font-size: 18px;
+            color: #ff9f00;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #ff9f00;
+            padding-bottom: 5px;
+        }
+
+        .button {
+            padding: 10px 15px;
+            background: linear-gradient(180deg, #1a3a4a 0%, #0d1f2a 100%);
+            border: 2px solid #00ff41;
+            color: #00ff41;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            border-radius: 3px;
+            margin: 5px;
+            transition: all 0.2s;
+        }
+
+        .button:hover {
+            background: linear-gradient(180deg, #2a5a6a 0%, #1a3a4a 100%);
+            border-color: #ff9f00;
+            color: #ff9f00;
+            box-shadow: 0 0 10px rgba(255, 159, 0, 0.5);
+        }
+
+        .button:active {
+            transform: scale(0.95);
+        }
+
+        .button.danger {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+
+        .info-list {
+            list-style: none;
+            font-size: 12px;
+        }
+
+        .info-list li {
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #00ff41;
+            border-radius: 2px;
+        }
+
+        .info-list li:hover {
+            background: rgba(0, 255, 65, 0.1);
+            border-left-color: #ff9f00;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 13px;
+        }
+
+        .metric-label {
+            color: #88ccff;
+        }
+
+        .metric-value {
+            color: #ff9f00;
+            font-weight: bold;
+        }
+
+        /* Scanline effect */
+        .world-view::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+        }
+
+        /* CRT effect */
+        .world-view::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%);
+            pointer-events: none;
+        }
+
+        .log-entry {
+            font-size: 11px;
+            padding: 4px;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            color: #88ccff;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-container {
+            max-height: 200px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px;
+            border-radius: 3px;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00ff41;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff9f00;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="vault-tec-header">
+        <div class="vault-tec-logo">MINIATURE OFFICE IDE</div>
+        <div class="status-bar">
+            <div class="status-item" id="connectionStatus">CONNECTING...</div>
+            <div class="status-item" id="simulationStatus">STOPPED</div>
+            <div class="status-item">TIME: <span id="worldTime">0</span></div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- World View -->
+        <div class="world-view">
+            <canvas id="worldCanvas"></canvas>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <!-- Simulation Controls -->
+            <div class="panel-section">
+                <h2>⚙ Simulation Control</h2>
+                <button class="button" onclick="stepSimulation()">STEP (+1 Tick)</button>
+                <button class="button" onclick="startSimulation()" id="startBtn">START</button>
+                <button class="button danger" onclick="stopSimulation()" id="stopBtn">STOP</button>
+                <button class="button" onclick="refreshState()">REFRESH STATE</button>
+            </div>
+
+            <!-- World Metrics -->
+            <div class="panel-section">
+                <h2>📊 World Metrics</h2>
+                <div class="metric">
+                    <span class="metric-label">Floors:</span>
+                    <span class="metric-value" id="floorCount">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Agents:</span>
+                    <span class="metric-value" id="agentCount">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Tasks:</span>
+                    <span class="metric-value" id="taskCount">0</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Tools Available:</span>
+                    <span class="metric-value" id="toolCount">0</span>
+                </div>
+            </div>
+
+            <!-- Active Agents -->
+            <div class="panel-section">
+                <h2>👤 Active Agents</h2>
+                <ul class="info-list" id="agentList">
+                    <li>No agents yet...</li>
+                </ul>
+            </div>
+
+            <!-- Recent Events -->
+            <div class="panel-section">
+                <h2>📜 Event Log</h2>
+                <div class="log-container" id="eventLog">
+                    <div class="log-entry">System initialized...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        // API Configuration
+        const API_BASE = window.location.origin;
+        const socket = io(API_BASE);
+
+        // Canvas Setup
+        const canvas = document.getElementById('worldCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas size
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            renderWorld();
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // State
+        let worldState = null;
+
+        // WebSocket Events
+        socket.on('connect', () => {
+            document.getElementById('connectionStatus').textContent = 'CONNECTED';
+            document.getElementById('connectionStatus').classList.add('active');
+            addLog('Connected to simulation server');
+            refreshState();
+        });
+
+        socket.on('disconnect', () => {
+            document.getElementById('connectionStatus').textContent = 'DISCONNECTED';
+            document.getElementById('connectionStatus').classList.remove('active');
+            addLog('Disconnected from server');
+        });
+
+        socket.on('tick_start', (data) => {
+            document.getElementById('worldTime').textContent = data.time;
+        });
+
+        socket.on('tick_end', (data) => {
+            refreshState();
+        });
+
+        socket.on('state_update', (data) => {
+            worldState = data;
+            updateUI();
+        });
+
+        // API Functions
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            if (body) {
+                options.body = JSON.stringify(body);
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api${endpoint}`, options);
+                return await response.json();
+            } catch (error) {
+                addLog(`Error: ${error.message}`, true);
+                return null;
+            }
+        }
+
+        async function refreshState() {
+            const state = await apiCall('/world/state');
+            if (state) {
+                worldState = state;
+                updateUI();
+            }
+        }
+
+        async function stepSimulation() {
+            const result = await apiCall('/world/step', 'POST');
+            if (result && result.success) {
+                addLog(`Stepped simulation to tick ${result.tick_count}`);
+                await refreshState();
+            }
+        }
+
+        async function startSimulation() {
+            const result = await apiCall('/world/start', 'POST');
+            if (result && result.success) {
+                document.getElementById('simulationStatus').textContent = 'RUNNING';
+                document.getElementById('simulationStatus').classList.add('active');
+                addLog('Simulation started');
+            }
+        }
+
+        async function stopSimulation() {
+            const result = await apiCall('/world/stop', 'POST');
+            if (result && result.success) {
+                document.getElementById('simulationStatus').textContent = 'STOPPED';
+                document.getElementById('simulationStatus').classList.remove('active');
+                addLog('Simulation stopped');
+            }
+        }
+
+        // UI Updates
+        function updateUI() {
+            if (!worldState) return;
+
+            const world = worldState.world;
+            
+            // Update metrics
+            document.getElementById('worldTime').textContent = world.time;
+            document.getElementById('floorCount').textContent = world.floors.length;
+            
+            // Update world visualization
+            renderWorld();
+            
+            // Fetch additional data
+            updateAgentsList();
+            updateTasksCount();
+            updateToolsCount();
+        }
+
+        async function updateAgentsList() {
+            const data = await apiCall('/agents');
+            if (data && data.agents) {
+                const agentList = document.getElementById('agentList');
+                agentList.innerHTML = data.agents.map(agent => 
+                    `<li>${agent.name} [${agent.role}] - ${agent.status}</li>`
+                ).join('') || '<li>No agents</li>';
+                
+                document.getElementById('agentCount').textContent = data.agents.length;
+            }
+        }
+
+        async function updateTasksCount() {
+            const data = await apiCall('/tasks');
+            if (data && data.tasks) {
+                document.getElementById('taskCount').textContent = data.tasks.length;
+            }
+        }
+
+        async function updateToolsCount() {
+            const data = await apiCall('/supply-store');
+            if (data) {
+                document.getElementById('toolCount').textContent = data.available_count;
+            }
+        }
+
+        function addLog(message, isError = false) {
+            const logContainer = document.getElementById('eventLog');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.style.color = isError ? '#ff4444' : '#88ccff';
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.insertBefore(entry, logContainer.firstChild);
+            
+            // Keep only last 50 entries
+            while (logContainer.children.length > 50) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+        }
+
+        // World Rendering
+        function renderWorld() {
+            if (!worldState) return;
+
+            ctx.fillStyle = '#0d1f2a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const world = worldState.world;
+            
+            // Draw title
+            ctx.font = '24px Courier New';
+            ctx.fillStyle = '#ff9f00';
+            ctx.fillText(world.name, 20, 40);
+            
+            // Draw floors
+            const floorHeight = 120;
+            const floorSpacing = 20;
+            const startY = 80;
+            
+            world.floors.forEach((floor, index) => {
+                const y = startY + (index * (floorHeight + floorSpacing));
+                
+                // Floor background
+                ctx.fillStyle = '#1a3a4a';
+                ctx.fillRect(20, y, canvas.width - 40, floorHeight);
+                
+                // Floor border
+                ctx.strokeStyle = '#00ff41';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(20, y, canvas.width - 40, floorHeight);
+                
+                // Floor label
+                ctx.font = '16px Courier New';
+                ctx.fillStyle = '#00ff41';
+                ctx.fillText(`Floor ${index + 1}: ${floor.language}`, 30, y + 25);
+                
+                // Draw offices
+                const offices = floor.offices || [];
+                const officeWidth = 80;
+                const officeSpacing = 10;
+                
+                offices.forEach((office, officeIndex) => {
+                    const x = 30 + (officeIndex * (officeWidth + officeSpacing));
+                    const officeY = y + 40;
+                    
+                    // Office box
+                    ctx.fillStyle = '#0d1f2a';
+                    ctx.fillRect(x, officeY, officeWidth, 60);
+                    
+                    ctx.strokeStyle = '#88ccff';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x, officeY, officeWidth, 60);
+                    
+                    // Office name
+                    ctx.font = '10px Courier New';
+                    ctx.fillStyle = '#88ccff';
+                    ctx.fillText('Office', x + 5, officeY + 15);
+                    
+                    // Agent count
+                    const agentCount = office.roles ? office.roles.length : 0;
+                    ctx.fillStyle = '#ff9f00';
+                    ctx.fillText(`Agents: ${agentCount}`, x + 5, officeY + 30);
+                });
+            });
+            
+            // Draw info box
+            ctx.font = '14px Courier New';
+            ctx.fillStyle = '#00ff41';
+            ctx.fillText(`Time: ${world.time} ticks`, 20, canvas.height - 20);
+        }
+
+        // Initialize
+        refreshState();
+        setInterval(refreshState, 5000); // Refresh every 5 seconds
+    </script>
+</body>
+</html>

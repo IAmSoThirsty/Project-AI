@@ -60,3 +60,10 @@ boto3==1.34.24  # AWS S3 with WORM (Write-Once-Read-Many) object lock
 # Monitoring and Metrics
 prometheus-client>=0.18.0  # Metrics export and monitoring
 grafana-client>=5.0.0  # Grafana API client for dashboard management
+
+# Miniature Office (Cognitive IDE + Repair Crew)
+flask==3.0.0  # MO Flask server
+flask-socketio==5.3.5  # MO real-time WebSocket support
+python-socketio==5.14.0  # MO socket.io engine
+eventlet==0.40.3  # MO async networking
+pillow>=10.3.0  # MO image processing

@@ -812,6 +812,43 @@ def main():
     # Report tier platform health
     report_tier_health()
 
+    # Initialize Miniature Office (Cognitive IDE + Repair Crew + Meta Security)
+    miniature_office = None
+    try:
+        from app.plugins.miniature_office_adapter import MiniatureOfficeAdapter
+
+        miniature_office = MiniatureOfficeAdapter()
+        if miniature_office.initialize():
+            logger.info("✅ Miniature Office initialized (IDE + Repair + Lounge + Security)")
+        else:
+            miniature_office = None
+            logger.info("ℹ️  Miniature Office disabled or init returned False")
+    except Exception as e:
+        logger.warning("Miniature Office init failed (graceful degradation): %s", e)
+        miniature_office = None
+
+    # Register Miniature Office agents with CouncilHub
+    if miniature_office and council_hub:
+        try:
+            ide = miniature_office.get_cognitive_ide()
+            if ide:
+                council_hub.register_agent("cognitive_ide", ide)
+            crew = miniature_office.get_repair_crew()
+            if crew:
+                council_hub.register_agent("repair_crew", crew)
+                # Hook repair crew into kernel post-execution for auto-diagnosis
+                if kernel and hasattr(kernel, "post_execution_hooks"):
+                    kernel.post_execution_hooks.append(crew.on_execution_failure)
+            lounge = miniature_office.get_agent_lounge()
+            if lounge:
+                council_hub.register_agent("agent_lounge", lounge)
+            meta_sec = miniature_office.get_meta_security()
+            if meta_sec:
+                council_hub.register_agent("meta_security", meta_sec)
+            logger.info("✅ Miniature Office agents registered with CouncilHub")
+        except Exception as e:
+            logger.warning("Failed to register MO agents with CouncilHub: %s", e)
+
     # Start autonomous learning (optional)
     # council_hub.start_autonomous_learning()
 
