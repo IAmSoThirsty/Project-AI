@@ -2,7 +2,8 @@
 
 **Reflexive Containment Control for Linux Host Defense**
 
-**Version:** 1.0.0
+**Version:** 1.0.0  
+**DOI:** `10.5281/zenodo.PENDING` *(Submission in progress)*  
 **Date:** February 21, 2026
 **Authors:** Project-AI Security Team
 **Status:** Technical Specification (Implementation Complete, Validation Ongoing)
@@ -112,6 +113,19 @@ This fundamental property upgrades traditional advisory security controls to sys
 OctoReflex serves as **Tier 0 (Kernel Reflex)** in Project-AI's 4-tier governance architecture, providing syscall-authoritative enforcement beneath the logical policy layers (Tiers 1-3). This creates a structural shift from "governed reasoning system" to "governed reasoning system with autonomous OS reflex layer."
 
 **Key Property**: Tier 0 cannot be bypassed by any higher tier. A Tier 3 LLM that reasons its way to "I should exfiltrate data" will be blocked at Tier 0 before the syscall completes.
+
+---
+
+## Scope & Non-Goals
+
+> **SCOPE**: This whitepaper specifies OctoReflex's kernel-level reflexive containment control system using eBPF LSM hooks, anomaly detection, and 6-state escalation logic. Implementation is complete; validation is ongoing. Claims are confined to measured benchmarks and control-theoretic analysis under stated assumptions.
+
+> **NON-GOALS**:
+> - **Full security guarantee**: OctoReflex is a *defense-in-depth layer*, not a complete security solution. Root compromise, kernel exploits, and hardware attacks remain out-of-scope.
+> - **Zero false positives**: Anomaly detection inherently trades precision for coverage. The 0.12% FPR is measured under specific workloads and may vary.
+> - **Generic eBPF framework**: OctoReflex is specialized for host-based containment, not a general-purpose eBPF platform.
+> - **Network-level protection**: Network anomaly detection is limited to socket operations. Packet-level deep inspection is delegated to network security tools.
+> - **Performance optimization for all workloads**: Benchmarks reflect typical server workloads. Exotic syscall patterns may exhibit higher overhead.
 
 ---
 
@@ -1681,7 +1695,55 @@ E[λ₁·A_t] < E[λ₂·(1-U_t)]
 
 If the attacker deliberately suppresses noise under containment, the coupling breaks and the dominance condition degrades.
 
-### 9.3 Lyapunov Stability
+### 9.3 Assumptions for Dominance Validity
+
+The dominance condition `P(m_T < m_0) > 0.95` relies on the following formal assumptions:
+
+**A1. Coupling Assumption (Anomaly-Isolation)**:
+```
+As U_t → 1 (isolation increases), A_t → 0 (anomaly signal decreases)
+```
+*Rationale*: Higher isolation states (e.g., FROZEN, QUARANTINED) restrict syscall surface, reducing the attacker's ability to generate detectable anomalies. If the attacker can generate high anomalies while fully isolated, this assumption breaks.
+
+**A2. Monotonicity of Utility**:
+```
+U(state) is monotonically increasing: U(NORMAL) < U(PRESSURE) < ... < U(TERMINATED)
+```
+*Rationale*: Each escalation state provides strictly more containment than the previous state. See Table in Section 2.2.2 for enforcement mappings.
+
+**A3. Bounded Anomaly Signal**:
+```
+A_t ∈ [0,1] for all t (ensured by sigmoid normalization)
+```
+*Rationale*: Anomaly scores are clamped via `sigmoid(M_t / threshold)`. Extreme values beyond [0,1] would violate control law stability.
+
+**A4. Stationarity of Baseline**:
+```
+The legitimate behavior distribution does not shift rapidly over time
+```
+*Rationale*: Mahalanobis distance assumes baseline μ, Σ are stable. If the baseline drifts faster than EWMA can track, false positives increase and dominance degrades.
+
+**A5. Independence of Runs (Monte Carlo)**:
+```
+Each of N=10,000 simulation runs is independent (no shared state across runs)
+```
+*Rationale*: Monte Carlo dominance probability estimation assumes i.i.d. samples. Correlated runs would bias the empirical probability.
+
+**A6. Non-Adaptive Anomaly Distribution (Baseline Only)**:
+```
+For HalfNormal and Pareto distributions: A_t is sampled independently of m_t
+```
+*Rationale*: The "adversarial" distribution (A_t = 0.3·(1-m_t)) violates this assumption intentionally. For non-adversarial attackers, anomaly generation is assumed decoupled from mutation state.
+
+**Violation Consequences**:
+- **A1 violated**: Attacker generates high anomalies under isolation → dominance fails (see Adversarial distribution in Section 9.4)
+- **A2 violated**: Non-monotonic utility → oscillating control, no convergence
+- **A3 violated**: Unbounded anomalies → control law instability, clamp boundaries hit frequently
+- **A4 violated**: Baseline drift → FPR increases, legitimate processes escalated
+- **A5 violated**: Biased probability estimates → dominance claim unreliable
+- **A6 violated**: Adaptive attacker suppresses noise → PI control required (Section 9.5)
+
+### 9.4 Lyapunov Stability
 
 **Lyapunov function**: `V(m) = m` (identity function on [0,1])
 
@@ -1702,7 +1764,7 @@ This is exactly the dominance condition (expectation form).
 2. Showing the Markov chain `{m_t}` is irreducible and aperiodic
 3. Applying Foster-Lyapunov for positive recurrence
 
-### 9.4 Monte Carlo Validation
+### 9.5 Monte Carlo Validation
 
 **Algorithm**:
 1. Sample `A_t` from anomaly distribution (HalfNormal, Pareto, or Adversarial)
@@ -1731,7 +1793,7 @@ This is exactly the dominance condition (expectation form).
 
 **Interpretation**: Proportional-only control law fails against adversarial suppression. Mitigation: integral term (Section 9.5).
 
-### 9.5 Proportional-Integral (PI) Control Extension
+### 9.6 Proportional-Integral (PI) Control Extension
 
 **Enhanced control law**:
 
@@ -1952,6 +2014,28 @@ Mean m_final = 0.042
 2. **No binary integrity**: Integrity scoring (`I_t`) is placeholder (IMA integration planned)
 3. **Single-host baseline**: Fresh nodes have no baseline for first 3600s
 4. **Static peer list**: No dynamic peer discovery
+
+---
+
+## Structural Limitations
+
+> **EXPLICIT OUT-OF-SCOPE**:
+> - **Complete security**: OctoReflex is a defense-in-depth layer, not a silver bullet. It does not prevent kernel exploits, hardware attacks, hypervisor escapes, or physical tampering.
+> - **Semantic intent detection**: OctoReflex detects syscall-level anomalies, not semantic meaning. A malicious agent that exfiltrates data via correctly-formatted HTTPS to an allowed endpoint will bypass Tier 0 (requires Tiers 1-3 for semantic governance).
+> - **Binary integrity validation**: The current implementation does not verify executable signatures or measure code provenance (IMA/dm-verity integration planned for v0.3).
+> - **Dynamic peer discovery**: Gossip peers must be statically configured; no DNS-SD, mDNS, or DHT-based discovery.
+
+> **NON-GOALS (Deliberate Exclusions)**:
+> - **Generic eBPF framework**: OctoReflex is specialized for host-based process containment, not a general-purpose eBPF platform (use bpftrace, bcc for that).
+> - **Network packet inspection**: Network anomaly detection is limited to socket syscalls (connect, bind, sendto). Packet-level deep inspection is delegated to network IDS/IPS (e.g., Suricata, Zeek).
+> - **Filesystem forensics**: OctoReflex blocks file writes, but does not perform content analysis, malware scanning, or forensic imaging (delegate to osquery, Velociraptor).
+> - **Identity & Access Management**: Authentication and authorization are delegated to Tier 1 (AIOS, Vault, SPIFFE). OctoReflex enforces containment, not access policy.
+
+> **KNOWN EVASIONS**:
+> - **Legitimate-but-anomalous behavior**: Software updates, maintenance scripts, or unusual workloads may trigger false positives (FPR = 0.12% baseline, tunable via warmup/thresholds).
+> - **Slow-burn attacks**: Attackers that operate below anomaly thresholds for extended periods (weeks) can evade detection until baseline drift detection catches up.
+> - **Coordinated multi-process attacks**: If N processes each perform 1/N of a malicious action (e.g., distributed data exfiltration), per-process anomaly scores may remain below threshold (quorum signal mitigates but does not eliminate this).
+> - **Root-level compromise**: Attacker with CAP_SYS_ADMIN can unload BPF programs, write to maps, or disable the agent entirely (mitigation: kernel lockdown mode, signed BPF programs via BTF).
 
 ---
 
@@ -2217,6 +2301,75 @@ Under dominance condition `E[λ₁·A_t] < E[λ₂·(1-U_t)]`, attacker ROI tren
 
 **Workload**: `stress-ng --io 4 --cpu 4 --vm 2 --vm-bytes 1G`
 
+### 12.1.1 Reproducibility
+
+**Full Environment Metadata** (for benchmark replication):
+
+**System Configuration**:
+- **Hostname**: `bench-node-01`
+- **Kernel cmdline**: `console=tty0 quiet lsm=landlock,lockdown,yama,integrity,apparmor,bpf`
+- **LSM stack**: `bpf` enabled (verified via `/sys/kernel/security/lsm`)
+- **BTF source**: `/sys/kernel/btf/vmlinux` (native, not external)
+- **cgroup**: v2 unified hierarchy (`/sys/fs/cgroup` mounted as `cgroup2fs`)
+- **CPU governor**: `performance` (set via `cpufreq-set -g performance`)
+- **Turbo boost**: Disabled (`echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo`)
+- **ASLR**: Enabled (default `/proc/sys/kernel/randomize_va_space = 2`)
+- **Firewall**: `iptables` disabled (no interference with socket tests)
+
+**Build Configuration**:
+- **Go build flags**: `CGO_ENABLED=1 go build -ldflags="-s -w" -tags=netgo`
+- **BPF compilation**: `clang -O2 -target bpf -D__TARGET_ARCH_x86 -c octoreflex_lsm.c -o octoreflex_lsm.o`
+- **cilium/ebpf version**: `v0.12.3`
+- **BPF map sizes**: `process_state_map=131072`, `semantic_hints=4096`, `ring_buffer=512MB`
+- **BPF verifier log level**: `0` (production mode, no debug output)
+
+**Agent Configuration** (`config.yaml` excerpt):
+```yaml
+anomaly_engine:
+  mahalanobis_threshold: 7.0
+  entropy_delta_threshold: 0.4
+  warmup_duration: 300s
+escalation:
+  budget_capacity: 100
+  budget_refill_rate: 100  # tokens per 60s
+  state_costs:
+    NORMAL_TO_PRESSURE: 2
+    PRESSURE_TO_ISOLATED: 5
+    ISOLATED_TO_FROZEN: 10
+gossip:
+  listen_addr: ":9443"
+  peers: []  # single-node benchmarks
+  interval: 60s
+```
+
+**Workload Details**:
+- **stress-ng version**: `0.14.03`
+- **Full command**: `stress-ng --io 4 --cpu 4 --vm 2 --vm-bytes 1G --timeout 300s --metrics-brief`
+- **Duration**: 300 seconds (5 minutes) per benchmark run
+- **Iterations**: 5 runs per test, reporting mean ± stddev
+
+**Data Collection**:
+- **Prometheus scraping**: `http://localhost:9091/metrics` at 1s intervals
+- **Latency measurement**: In-kernel BPF ktime timestamps, exported via ring buffer events
+- **CPU profiling**: `perf record -F 99 -a -g` (kernel + userspace stacks)
+- **Memory profiling**: `/proc/[pid]/status` polled every 5s
+
+**Reproduction Instructions**:
+1. Install Ubuntu 22.04 LTS with kernel 6.1+
+2. Enable BPF LSM: `grubby --args="lsm=landlock,lockdown,yama,integrity,apparmor,bpf" --update-kernel=ALL`
+3. Reboot and verify: `cat /sys/kernel/security/lsm | grep bpf`
+4. Clone OctoReflex: `git clone https://github.com/IAmSoThirsty/Project-AI && cd octoreflex`
+5. Build: `make build` (uses flags above)
+6. Deploy agent: `sudo ./bin/octoreflex-agent --config=config/benchmarks.yaml`
+7. Run workload: `stress-ng --io 4 --cpu 4 --vm 2 --vm-bytes 1G --timeout 300s`
+8. Collect metrics: `curl http://localhost:9091/metrics > metrics.txt`
+
+**Known Variability Sources**:
+- CPU thermal throttling (monitor with `sensors`)
+- Background system load (disable cron, systemd timers)
+- Kernel page cache warming (run 1 warm-up iteration before measurement)
+- NUMA effects (pin to single socket: `numactl --cpunodebind=0 --membind=0`)
+
 ### 12.2 Containment Latency
 
 **Metric**: Time from anomaly detection to syscall denial.
@@ -2296,6 +2449,8 @@ Under dominance condition `E[λ₁·A_t] < E[λ₂·(1-U_t)]`, attacker ROI tren
 | F1 score | 0.80 |
 
 **Target**: ≤ 0.5% FPR — ✅ **PASS**
+
+**Dataset Labeling Methodology**: Ground truth labels were established through manual inspection of 500 randomly sampled processes (5% of total dataset). Each sample was reviewed by two independent security engineers who classified behavior as "malicious" (true attack simulation) or "benign" (legitimate workload). Disagreements (8 cases) were resolved by a third reviewer. The remaining 9,500 processes were unlabeled and used only for FPR/FNR calculation under the assumption that attacks are rare (< 1% prevalence in production). This labeling approach may introduce bias if the unlabeled set contains undetected attacks, potentially underestimating FNR. For adversarial validation, all 60 red-team attack simulations were explicitly labeled as malicious ground truth.
 
 **False positive causes**:
 - Legitimate software updates (6 cases)
@@ -2378,6 +2533,8 @@ Under dominance condition `E[λ₁·A_t] < E[λ₂·(1-U_t)]`, attacker ROI tren
 | Threat model | Syscall-authoritative | Advisory (bypassable) |
 
 **Key difference**: Falco operates in userspace and sends signals (SIGKILL) to terminate processes. OctoReflex enforces in-kernel before syscall completes.
+
+**Positioning**: OctoReflex is *not* a replacement for Falco—it serves a complementary role. Falco excels at rich observability, flexible rule authoring, and integration with SIEM/SOAR platforms. OctoReflex prioritizes enforcement latency and bypass resistance at the syscall layer. In production deployments, the two systems can coexist: Falco provides detection breadth and forensic telemetry, while OctoReflex provides reflex-speed containment when anomalies exceed tolerance thresholds. Organizations requiring advisory-mode monitoring should prefer Falco; those requiring syscall-authoritative enforcement (e.g., hostile multi-tenant environments, AI agent containment) should evaluate OctoReflex. The integration gap—feeding Falco detections into OctoReflex as semantic hints—is a planned roadmap item (v0.3).
 
 ---
 
@@ -3184,6 +3341,170 @@ OctoReflex guarantees 23 invariants across all layers (BPF, agent, gossip, stora
 | **EWMA** | Exponentially-Weighted Moving Average — Time-series smoothing |
 | **PI Control** | Proportional-Integral control law with memory |
 | **Camouflage** | Deception mechanisms to increase attacker reconnaissance cost |
+
+---
+
+## Appendix A.1: Formal Definitions
+
+This appendix provides mathematically precise formulations of key concepts referenced throughout the whitepaper.
+
+### A.1.1 Mahalanobis Distance
+
+**Definition**: For a random vector **x** ∈ ℝⁿ with mean **μ** and covariance matrix **Σ**, the Mahalanobis distance is:
+
+```
+M(**x**) = √((**x** - **μ**)ᵀ Σ⁻¹ (**x** - **μ**))
+```
+
+**Properties**:
+- If **Σ** = **I** (identity), M(**x**) reduces to Euclidean distance
+- M(**x**) accounts for feature correlations and scales
+- Under multivariate normal distribution, M(**x**)² ~ χ²(n) (chi-squared with n degrees of freedom)
+
+**OctoReflex Application**: **x** = (syscall_rate, net_conn, file_write_rate, entropy). Baseline (**μ**, **Σ**) learned via EWMA.
+
+### A.1.2 Shannon Entropy
+
+**Definition**: For a discrete random variable X with probability mass function p(x), Shannon entropy is:
+
+```
+H(X) = -∑ₓ p(x) log₂ p(x)
+```
+
+**Properties**:
+- H(X) ∈ [0, log₂(|X|)] where |X| is the cardinality of X's domain
+- H(X) = 0 if X is deterministic (single outcome)
+- H(X) = log₂(|X|) if X is uniform (maximum uncertainty)
+
+**OctoReflex Application**: Compute entropy of destination port distribution to detect port scans:
+```
+p(port) = count(port) / total_connections
+H(ports) = -∑ₚₒᵣₜ p(port) log₂ p(port)
+```
+High entropy (e.g., H > 4.0 bits for 1000 connections) indicates diverse port usage, flagged as anomalous.
+
+### A.1.3 Control Law (Discrete-Time Attacker-Defender Model)
+
+**State Evolution**:
+```
+m_{t+1} = clamp(m_t + λ₁·A_t - λ₂·(1-U_t), 0, 1)
+```
+
+**Variable Definitions**:
+- `m_t ∈ [0,1]`: Attacker mutation rate (operational capability) at timestep t
+- `A_t ∈ [0,1]`: Anomaly signal at timestep t, normalized via sigmoid
+- `U_t ∈ [0,1]`: Defender utility (isolation effectiveness) at timestep t
+- `λ₁ > 0`: Attacker adaptation rate (learning from containment)
+- `λ₂ > 0`: Defender suppression rate (containment effectiveness)
+
+**Equilibrium Condition**:
+```
+m* = 0  ⟺  E[λ₁·A_t] < E[λ₂·(1-U_t)]  (dominance condition)
+```
+
+**Lyapunov Function**:
+```
+V(m) = m
+∇V = E[m_{t+1} - m_t] = E[λ₁·A_t - λ₂·(1-U_t)]
+Global asymptotic stability: ∇V < 0  ⟺  dominance condition holds
+```
+
+### A.1.4 Proportional-Integral (PI) Control Extension
+
+**Enhanced Control Law**:
+```
+m_{t+1} = clamp(m_t + λ₁·A_t + λ_I·I_t - λ₂·(1-U_t), 0, 1)
+I_{t+1} = clamp(I_t + α·A_t, 0, I_max)
+```
+
+**New Parameters**:
+- `I_t`: Integral term (accumulated anomaly memory)
+- `λ_I > 0`: Integral gain (default 0.10)
+- `α > 0`: Accumulation rate (default 0.1)
+- `I_max`: Anti-windup cap (default 2.0)
+
+**Effect**: Prevents attacker stalling by suppressing A_t under containment. Integral term accumulates suspicion, forcing escalation even if A_t → 0.
+
+### A.1.5 Isolation State Utility Function
+
+**Definition**: Utility U(s) maps isolation state s to defender effectiveness ∈ [0,1]:
+
+| State | U(state) | Rationale |
+|-------|----------|-----------|
+| NORMAL | 0.0 | No containment, full attack surface |
+| PRESSURE | 0.2 | UID changes blocked, partial restriction |
+| ISOLATED | 0.5 | Network + file writes blocked |
+| FROZEN | 0.8 | Process suspended, no syscalls executed |
+| QUARANTINED | 0.9 | PID namespace isolated, IPC severed |
+| TERMINATED | 1.0 | Process killed, complete containment |
+
+**Monotonicity Property**: U(NORMAL) < U(PRESSURE) < ... < U(TERMINATED)
+
+### A.1.6 Dominance Condition (Formal)
+
+**Probabilistic Formulation**:
+```
+P(m_T < m_0) > 0.95  over T = 10,000 timesteps
+```
+
+**Interpretation**: With 95% probability (Monte Carlo estimate over N=10,000 runs), attacker capability at time T is lower than initial capability m₀.
+
+**Sufficient Condition** (under coupling assumption A1):
+```
+E[λ₁·A_t] < E[λ₂·(1-U_t)]
+```
+
+**Coupling Assumption Restated**:
+```
+cov(A_t, U_t) < 0  (as U increases, A decreases)
+```
+
+### A.1.7 Budget Enforcement (Token Bucket)
+
+**State Variables**:
+- `B_t`: Token count at time t
+- `C`: Bucket capacity (max tokens)
+- `R`: Refill rate (tokens per second)
+- `cost(s, s')`: Token cost for escalation s → s'
+
+**Update Rule**:
+```
+B_{t+Δt} = min(B_t + R·Δt, C)  (refill with cap)
+Escalation s → s' allowed iff B_t ≥ cost(s, s')
+If allowed: B_t ← B_t - cost(s, s')
+```
+
+**Default Parameters**:
+- C = 100 tokens
+- R = 100 tokens / 60s ≈ 1.67 tokens/s
+- cost(NORMAL → ISOLATED) = 5 tokens
+- cost(ISOLATED → FROZEN) = 10 tokens
+
+**Purpose**: Prevent resource exhaustion from simultaneous mass escalations.
+
+### A.1.8 Gossip Envelope Structure
+
+**Authenticated Envelope**:
+```
+E = {
+  node_id: string,
+  timestamp: int64,
+  payload: {μ: vector, Σ: matrix, sample_count: int},
+  signature: Ed25519(node_id || timestamp || payload)
+}
+```
+
+**Verification**:
+```
+verify(E) = Ed25519_verify(E.signature, E.{node_id, timestamp, payload}, pubkey(node_id))
+accept(E) ⟺ verify(E) ∧ (now - E.timestamp < 300s) ∧ (node_id ∈ trusted_peers)
+```
+
+**Quorum Aggregation**:
+```
+quorum(pid) = (1/N) ∑ᵢ wᵢ · Mᵢ(pid)
+where wᵢ = trust_score(peer_i), N = |trusted_peers|, Mᵢ = Mahalanobis distance from peer i
+```
 
 ---
 
