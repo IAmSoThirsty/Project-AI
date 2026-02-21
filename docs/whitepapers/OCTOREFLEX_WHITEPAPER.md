@@ -3,7 +3,7 @@
 **Reflexive Containment Control for Linux Host Defense**
 
 **Version:** 1.0.0  
-**DOI:** `10.5281/zenodo.PENDING` *(Submission in progress)*  
+**DOI:** `10.5281/zenodo.18726221`  
 **Date:** February 21, 2026
 **Authors:** Project-AI Security Team
 **Status:** Technical Specification (Implementation Complete, Validation Ongoing)
