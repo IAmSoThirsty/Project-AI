@@ -19,10 +19,7 @@ from enum import Enum
 from typing import Any
 
 from shadow_thirst.ir import (
-    ExecutionPlane,
-    IRBasicBlock,
     IRFunction,
-    IRInstruction,
     IROpcode,
     IRProgram,
     PlaneQualifierIR,

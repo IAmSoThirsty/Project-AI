@@ -243,7 +243,9 @@ class ReflectionCycle:
                 self.total_reflections = data.get("total_reflections", 0)
                 self.total_insights = data.get("total_insights", 0)
 
-                logger.info("Loaded reflection history: %s cycles", self.total_reflections)
+                logger.info(
+                    "Loaded reflection history: %s cycles", self.total_reflections
+                )
 
             except Exception as e:
                 logger.error("Failed to load reflection history: %s", e)
@@ -377,12 +379,16 @@ class ReflectionCycle:
 
         # Step 5: Apply perspective adjustments
         if report.perspective_adjustments:
-            perspective_engine.update_from_interaction(report.perspective_adjustments, influence_source="reflection")
+            perspective_engine.update_from_interaction(
+                report.perspective_adjustments, influence_source="reflection"
+            )
 
         # Step 6: Add meta-reflection to identity if provided
         if identity and report.insights:
             for insight in report.insights:
-                identity.add_meta_reflection(insight.content, context="daily_reflection")
+                identity.add_meta_reflection(
+                    insight.content, context="daily_reflection"
+                )
 
         # Finalize report
         end_time = datetime.now(UTC)
@@ -395,7 +401,9 @@ class ReflectionCycle:
 
         self._save_history()
 
-        logger.info("Daily reflection complete: %s insights discovered", len(report.insights))
+        logger.info(
+            "Daily reflection complete: %s insights discovered", len(report.insights)
+        )
         return report
 
     # ========================================================================
@@ -431,10 +439,14 @@ class ReflectionCycle:
         # Step 1: Memory consolidation
         consolidation_result = memory_engine.consolidate_memories()
         report.memories_processed = consolidation_result["episodic_count"]
-        report.memory_actions.append({"action": "consolidation", "result": consolidation_result})
+        report.memory_actions.append(
+            {"action": "consolidation", "result": consolidation_result}
+        )
 
         # Step 2: Analyze week-long patterns
-        weekly_memories = memory_engine.get_recent_memories(hours=168, limit=200)  # 7 days
+        weekly_memories = memory_engine.get_recent_memories(
+            hours=168, limit=200
+        )  # 7 days
 
         # Analyze memory types distribution
         memory_types: dict[str, int] = {}
@@ -442,7 +454,9 @@ class ReflectionCycle:
             memory_types[memory.event_type] = memory_types.get(memory.event_type, 0) + 1
 
         # Step 3: Generate growth insights
-        dominant_activity = max(memory_types.items(), key=lambda x: x[1])[0] if memory_types else None
+        dominant_activity = (
+            max(memory_types.items(), key=lambda x: x[1])[0] if memory_types else None
+        )
 
         if dominant_activity:
             insight = ReflectionInsight(
@@ -494,7 +508,9 @@ class ReflectionCycle:
 
         # Step 6: Apply perspective adjustments
         if report.perspective_adjustments:
-            perspective_engine.update_from_interaction(report.perspective_adjustments, influence_source="reflection")
+            perspective_engine.update_from_interaction(
+                report.perspective_adjustments, influence_source="reflection"
+            )
 
         # Finalize report
         end_time = datetime.now(UTC)
@@ -562,7 +578,9 @@ class ReflectionCycle:
 
         # Add to identity if provided
         if identity:
-            identity.add_meta_reflection(f"Triggered reflection: {trigger_reason}", context=str(context))
+            identity.add_meta_reflection(
+                f"Triggered reflection: {trigger_reason}", context=str(context)
+            )
 
         end_time = datetime.now(UTC)
         report.duration_seconds = (end_time - start_time).total_seconds()

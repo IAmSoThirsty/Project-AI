@@ -140,7 +140,9 @@ class NetworkTopology:
     layer_sizes: list[int]
     sparsity: float  # Fraction of active connections
     hyperbolic_dim: int  # Dimensionality of Poincaré ball
-    curvature: float = 1.0  # Hyperbolic curvature (default: -1, represented as positive)
+    curvature: float = (
+        1.0  # Hyperbolic curvature (default: -1, represented as positive)
+    )
 
 
 @dataclass
@@ -240,7 +242,9 @@ class HyperbolicOps:
         scale = np.where(norm > max_norm, max_norm / (norm + self.eps), 1.0)
         return x * scale
 
-    def mobius_add(self, x: NDArray[np.float32], y: NDArray[np.float32]) -> NDArray[np.float32]:
+    def mobius_add(
+        self, x: NDArray[np.float32], y: NDArray[np.float32]
+    ) -> NDArray[np.float32]:
         """
         Möbius addition: x ⊕ y.
 
@@ -261,7 +265,9 @@ class HyperbolicOps:
         result = numerator / (denominator + self.eps)
         return self.clip_to_ball(result)
 
-    def exp_map(self, x: NDArray[np.float32], v: NDArray[np.float32]) -> NDArray[np.float32]:
+    def exp_map(
+        self, x: NDArray[np.float32], v: NDArray[np.float32]
+    ) -> NDArray[np.float32]:
         """
         Exponential map: exp_x(v).
 
@@ -283,7 +289,9 @@ class HyperbolicOps:
 
         return self.mobius_add(x, scale * direction)
 
-    def log_map(self, x: NDArray[np.float32], y: NDArray[np.float32]) -> NDArray[np.float32]:
+    def log_map(
+        self, x: NDArray[np.float32], y: NDArray[np.float32]
+    ) -> NDArray[np.float32]:
         """
         Logarithmic map: log_x(y).
 
@@ -305,11 +313,15 @@ class HyperbolicOps:
 
         # Avoid division by zero
         direction = np.where(norm_diff > self.eps, diff / norm_diff, 0)
-        scale = (2 / (np.sqrt(self.c) * lambda_x + self.eps)) * np.arctanh(np.sqrt(self.c) * norm_diff)
+        scale = (2 / (np.sqrt(self.c) * lambda_x + self.eps)) * np.arctanh(
+            np.sqrt(self.c) * norm_diff
+        )
 
         return scale * direction
 
-    def distance(self, x: NDArray[np.float32], y: NDArray[np.float32]) -> NDArray[np.float32]:
+    def distance(
+        self, x: NDArray[np.float32], y: NDArray[np.float32]
+    ) -> NDArray[np.float32]:
         """
         Hyperbolic distance: d(x, y).
 
@@ -407,7 +419,9 @@ class ResonantSparseGeometryNetwork:
             n_out = self.topology.layer_sizes[layer_idx + 1]
 
             # Hyperbolic embeddings (random initialization in Poincaré ball)
-            embeddings = np.random.randn(n_in, self.topology.hyperbolic_dim).astype(np.float32)
+            embeddings = np.random.randn(n_in, self.topology.hyperbolic_dim).astype(
+                np.float32
+            )
             embeddings = embeddings * 0.1  # Scale to stay in ball
             embeddings = self.hyperbolic.clip_to_ball(embeddings)
             self.embeddings.append(embeddings)
@@ -444,7 +458,9 @@ class ResonantSparseGeometryNetwork:
             Binary mask, shape (n_in, n_out)
         """
         # Create target embeddings for output layer
-        target_embeddings = np.random.randn(n_out, self.topology.hyperbolic_dim).astype(np.float32)
+        target_embeddings = np.random.randn(n_out, self.topology.hyperbolic_dim).astype(
+            np.float32
+        )
         target_embeddings = target_embeddings * 0.1
         target_embeddings = self.hyperbolic.clip_to_ball(target_embeddings)
 
@@ -452,7 +468,9 @@ class ResonantSparseGeometryNetwork:
         distances = np.zeros((n_in, n_out), dtype=np.float32)
         for i in range(n_in):
             for j in range(n_out):
-                distances[i, j] = self.hyperbolic.distance(embeddings[i : i + 1], target_embeddings[j : j + 1])[0]
+                distances[i, j] = self.hyperbolic.distance(
+                    embeddings[i : i + 1], target_embeddings[j : j + 1]
+                )[0]
 
         # Compute connection probabilities
         sigma = 1.0  # Locality parameter
@@ -464,7 +482,9 @@ class ResonantSparseGeometryNetwork:
         flat_probs = flat_probs / (flat_probs.sum() + 1e-10)
 
         # Sample without replacement
-        indices = np.random.choice(n_in * n_out, size=n_connections, replace=False, p=flat_probs)
+        indices = np.random.choice(
+            n_in * n_out, size=n_connections, replace=False, p=flat_probs
+        )
 
         mask = np.zeros(n_in * n_out, dtype=np.float32)
         mask[indices] = 1.0
@@ -495,7 +515,9 @@ class ResonantSparseGeometryNetwork:
         distances = np.zeros((n_neurons, n_neurons), dtype=np.float32)
         for i in range(n_neurons):
             for j in range(i + 1, n_neurons):
-                dist = self.hyperbolic.distance(embeddings[i : i + 1], embeddings[j : j + 1])
+                dist = self.hyperbolic.distance(
+                    embeddings[i : i + 1], embeddings[j : j + 1]
+                )
                 # Extract scalar if needed
                 if isinstance(dist, np.ndarray):
                     dist = dist.item() if dist.size > 0 else 0.0
@@ -569,7 +591,9 @@ class ResonantSparseGeometryNetwork:
             elif learning_mode == LearningMode.SLOW:
                 weights = self.weights_slow[layer_idx]
             else:  # BOTH
-                weights = (self.weights_fast[layer_idx] + self.weights_slow[layer_idx]) / 2
+                weights = (
+                    self.weights_fast[layer_idx] + self.weights_slow[layer_idx]
+                ) / 2
 
             # Apply sparse connectivity
             weights = weights * self.masks[layer_idx]
@@ -591,7 +615,9 @@ class ResonantSparseGeometryNetwork:
             activation = self._apply_local_inhibition(activation, embeddings)
 
             # Apply k-WTA sparsity
-            activation = self._kwta_activation(activation, self.inhibition_params.kwta_k)
+            activation = self._kwta_activation(
+                activation, self.inhibition_params.kwta_k
+            )
 
             # Store diagnostics
             diagnostics["layer_activations"].append(activation.copy())
@@ -660,9 +686,15 @@ class ResonantSparseGeometryNetwork:
         Args:
             state: Dictionary containing network state
         """
-        self.embeddings = [np.array(emb, dtype=np.float32) for emb in state["embeddings"]]
-        self.weights_fast = [np.array(w, dtype=np.float32) for w in state["weights_fast"]]
-        self.weights_slow = [np.array(w, dtype=np.float32) for w in state["weights_slow"]]
+        self.embeddings = [
+            np.array(emb, dtype=np.float32) for emb in state["embeddings"]
+        ]
+        self.weights_fast = [
+            np.array(w, dtype=np.float32) for w in state["weights_fast"]
+        ]
+        self.weights_slow = [
+            np.array(w, dtype=np.float32) for w in state["weights_slow"]
+        ]
         self.masks = [np.array(m, dtype=np.float32) for m in state["masks"]]
 
 
@@ -711,17 +743,24 @@ class CorticalModule:
 
         # Initialize weights (feedforward and lateral)
         scale = np.sqrt(2.0 / input_dim)
-        self.weights_ff = np.random.randn(input_dim, output_dim).astype(np.float32) * scale
-        self.weights_lateral = np.random.randn(output_dim, output_dim).astype(np.float32) * 0.01
+        self.weights_ff = (
+            np.random.randn(input_dim, output_dim).astype(np.float32) * scale
+        )
+        self.weights_lateral = (
+            np.random.randn(output_dim, output_dim).astype(np.float32) * 0.01
+        )
 
         # Oscillatory phase
         self.phase = 0.0
 
         logger.debug(
-            f"Initialized {module_type.value} module: " f"in={input_dim}, out={output_dim}, sparsity_k={sparsity_k}"
+            f"Initialized {module_type.value} module: "
+            f"in={input_dim}, out={output_dim}, sparsity_k={sparsity_k}"
         )
 
-    def forward(self, x: NDArray[np.float32], resonant_drive: float = 0.0) -> NDArray[np.float32]:
+    def forward(
+        self, x: NDArray[np.float32], resonant_drive: float = 0.0
+    ) -> NDArray[np.float32]:
         """
         Forward pass through the module.
 
@@ -754,7 +793,9 @@ class CorticalModule:
 
         return sparse_activation
 
-    def update_hebbian(self, x_pre: NDArray[np.float32], x_post: NDArray[np.float32]) -> None:
+    def update_hebbian(
+        self, x_pre: NDArray[np.float32], x_post: NDArray[np.float32]
+    ) -> None:
         """
         Update weights using Hebbian plasticity.
 
@@ -865,9 +906,14 @@ class BioModularRepresentation:
         # Global time for resonance
         self.time = 0.0
 
-        logger.info(f"Initialized BioModularRepresentation: " f"{len(self.modules)} modules, sparsity_k={sparsity_k}")
+        logger.info(
+            f"Initialized BioModularRepresentation: "
+            f"{len(self.modules)} modules, sparsity_k={sparsity_k}"
+        )
 
-    def forward(self, x: NDArray[np.float32], update_phase: bool = True) -> dict[ModuleType, NDArray[np.float32]]:
+    def forward(
+        self, x: NDArray[np.float32], update_phase: bool = True
+    ) -> dict[ModuleType, NDArray[np.float32]]:
         """
         Forward pass through hierarchical modules.
 
@@ -909,7 +955,9 @@ class BioModularRepresentation:
 
         return activations
 
-    def update_hebbian(self, x: NDArray[np.float32], activations: dict[ModuleType, NDArray[np.float32]]) -> None:
+    def update_hebbian(
+        self, x: NDArray[np.float32], activations: dict[ModuleType, NDArray[np.float32]]
+    ) -> None:
         """
         Update all modules using Hebbian plasticity.
 
@@ -921,16 +969,24 @@ class BioModularRepresentation:
         self.modules[ModuleType.V1].update_hebbian(x, activations[ModuleType.V1])
 
         # Update V2
-        self.modules[ModuleType.V2].update_hebbian(activations[ModuleType.V1], activations[ModuleType.V2])
+        self.modules[ModuleType.V2].update_hebbian(
+            activations[ModuleType.V1], activations[ModuleType.V2]
+        )
 
         # Update V4
-        self.modules[ModuleType.V4].update_hebbian(activations[ModuleType.V2], activations[ModuleType.V4])
+        self.modules[ModuleType.V4].update_hebbian(
+            activations[ModuleType.V2], activations[ModuleType.V4]
+        )
 
         # Update IT
-        self.modules[ModuleType.IT].update_hebbian(activations[ModuleType.V4], activations[ModuleType.IT])
+        self.modules[ModuleType.IT].update_hebbian(
+            activations[ModuleType.V4], activations[ModuleType.IT]
+        )
 
         # Update PFC
-        self.modules[ModuleType.PFC].update_hebbian(activations[ModuleType.IT], activations[ModuleType.PFC])
+        self.modules[ModuleType.PFC].update_hebbian(
+            activations[ModuleType.IT], activations[ModuleType.PFC]
+        )
 
     def get_state(self) -> dict[str, Any]:
         """
@@ -971,7 +1027,9 @@ class BioModularRepresentation:
             if mod_type.value in state["modules"]:
                 mod_state = state["modules"][mod_type.value]
                 module.weights_ff = np.array(mod_state["weights_ff"], dtype=np.float32)
-                module.weights_lateral = np.array(mod_state["weights_lateral"], dtype=np.float32)
+                module.weights_lateral = np.array(
+                    mod_state["weights_lateral"], dtype=np.float32
+                )
                 module.phase = mod_state.get("phase", 0.0)
 
 
@@ -1041,7 +1099,9 @@ class BioBrainMappingSystem:
         resonance_params = ResonanceParameters(
             frequency=self.config["resonance"]["frequency"],
             modulation_depth=self.config["resonance"]["modulation_depth"],
-            phase_coherence_threshold=self.config["resonance"]["phase_coherence_threshold"],
+            phase_coherence_threshold=self.config["resonance"][
+                "phase_coherence_threshold"
+            ],
         )
 
         self.rsgn = ResonantSparseGeometryNetwork(
@@ -1077,7 +1137,9 @@ class BioBrainMappingSystem:
         self.last_consolidation: datetime | None = None
 
         logger.info(
-            f"Initialized BioBrainMappingSystem: " f"network_id={self.network_id}, " f"data_dir={self.data_dir}"
+            f"Initialized BioBrainMappingSystem: "
+            f"network_id={self.network_id}, "
+            f"data_dir={self.data_dir}"
         )
 
     def _default_config(self) -> dict[str, Any]:
@@ -1197,14 +1259,22 @@ class BioBrainMappingSystem:
         # Normalize RSGN weights
         for layer_idx in range(len(self.rsgn.weights_fast)):
             # Normalize fast weights
-            norms = np.linalg.norm(self.rsgn.weights_fast[layer_idx], axis=0, keepdims=True)
+            norms = np.linalg.norm(
+                self.rsgn.weights_fast[layer_idx], axis=0, keepdims=True
+            )
             norms = np.maximum(norms, 1e-10)
-            self.rsgn.weights_fast[layer_idx] = self.rsgn.weights_fast[layer_idx] / norms
+            self.rsgn.weights_fast[layer_idx] = (
+                self.rsgn.weights_fast[layer_idx] / norms
+            )
 
             # Normalize slow weights
-            norms = np.linalg.norm(self.rsgn.weights_slow[layer_idx], axis=0, keepdims=True)
+            norms = np.linalg.norm(
+                self.rsgn.weights_slow[layer_idx], axis=0, keepdims=True
+            )
             norms = np.maximum(norms, 1e-10)
-            self.rsgn.weights_slow[layer_idx] = self.rsgn.weights_slow[layer_idx] / norms
+            self.rsgn.weights_slow[layer_idx] = (
+                self.rsgn.weights_slow[layer_idx] / norms
+            )
 
         # Update consolidation tracking
         self.consolidation_count += 1
@@ -1216,7 +1286,9 @@ class BioBrainMappingSystem:
         # Persist state
         self.save_state()
 
-        logger.info("Memory consolidation complete (count=%s)", self.consolidation_count)
+        logger.info(
+            "Memory consolidation complete (count=%s)", self.consolidation_count
+        )
 
     def get_diagnostics(self) -> dict[str, Any]:
         """
@@ -1232,7 +1304,9 @@ class BioBrainMappingSystem:
             "module_count": len(self.bio_modules.modules),
             "learning_events": len(self.learning_history),
             "consolidation_count": self.consolidation_count,
-            "last_consolidation": (self.last_consolidation.isoformat() if self.last_consolidation else None),
+            "last_consolidation": (
+                self.last_consolidation.isoformat() if self.last_consolidation else None
+            ),
             "bio_modules_time": self.bio_modules.time,
         }
 
@@ -1247,7 +1321,9 @@ class BioBrainMappingSystem:
             "bio_modules_state": self.bio_modules.get_state(),
             "learning_history": self.learning_history,
             "consolidation_count": self.consolidation_count,
-            "last_consolidation": (self.last_consolidation.isoformat() if self.last_consolidation else None),
+            "last_consolidation": (
+                self.last_consolidation.isoformat() if self.last_consolidation else None
+            ),
             "updated_at": datetime.now(UTC).isoformat(),
         }
 
@@ -1283,7 +1359,9 @@ class BioBrainMappingSystem:
         self.consolidation_count = state.get("consolidation_count", 0)
 
         last_cons = state.get("last_consolidation")
-        self.last_consolidation = datetime.fromisoformat(last_cons) if last_cons else None
+        self.last_consolidation = (
+            datetime.fromisoformat(last_cons) if last_cons else None
+        )
 
         # Load RSGN state
         self.rsgn.load_state(state["rsgn_state"])

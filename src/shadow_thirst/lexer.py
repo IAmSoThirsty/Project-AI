@@ -13,7 +13,6 @@ STATUS: PRODUCTION
 VERSION: 1.0.0
 """
 
-import re
 from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Any

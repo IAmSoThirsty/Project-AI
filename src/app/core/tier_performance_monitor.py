@@ -172,12 +172,16 @@ class TierPerformanceMonitor:
         self._slas = DEFAULT_SLAS.copy()
 
         # Performance tracking
-        self._active_requests: dict[str, dict[str, float]] = {}  # request_id -> start_time
+        self._active_requests: dict[
+            str, dict[str, float]
+        ] = {}  # request_id -> start_time
 
         logger.info("TierPerformanceMonitor initialized")
         logger.info("  Window size: %s samples", window_size)
         logger.info("  Sample retention: %s", sample_retention)
-        logger.info("  Predictions: %s", "enabled" if enable_predictions else "disabled")
+        logger.info(
+            "  Predictions: %s", "enabled" if enable_predictions else "disabled"
+        )
 
     def start_request_tracking(
         self,
@@ -335,14 +339,22 @@ class TierPerformanceMonitor:
             num_latencies = len(latencies)
 
             avg_latency = sum(latencies) / num_latencies
-            p50_latency = latencies[int(num_latencies * 0.50)] if num_latencies > 0 else 0.0
-            p95_latency = latencies[int(num_latencies * 0.95)] if num_latencies > 0 else 0.0
-            p99_latency = latencies[int(num_latencies * 0.99)] if num_latencies > 0 else 0.0
+            p50_latency = (
+                latencies[int(num_latencies * 0.50)] if num_latencies > 0 else 0.0
+            )
+            p95_latency = (
+                latencies[int(num_latencies * 0.95)] if num_latencies > 0 else 0.0
+            )
+            p99_latency = (
+                latencies[int(num_latencies * 0.99)] if num_latencies > 0 else 0.0
+            )
             max_latency = latencies[-1] if latencies else 0.0
 
             # Calculate throughput (requests per second)
             if len(latency_samples) >= 2:
-                time_span = (latency_samples[-1].timestamp - latency_samples[0].timestamp).total_seconds()
+                time_span = (
+                    latency_samples[-1].timestamp - latency_samples[0].timestamp
+                ).total_seconds()
                 throughput = len(latency_samples) / time_span if time_span > 0 else 0.0
             else:
                 throughput = 0.0
@@ -372,28 +384,44 @@ class TierPerformanceMonitor:
 
             if sla:
                 if avg_latency > sla.max_latency_ms:
-                    violations.append(f"Average latency ({avg_latency:.2f}ms) exceeds SLA ({sla.max_latency_ms}ms)")
-                    recommendations.append("Consider optimizing component logic or adding caching")
+                    violations.append(
+                        f"Average latency ({avg_latency:.2f}ms) exceeds SLA ({sla.max_latency_ms}ms)"
+                    )
+                    recommendations.append(
+                        "Consider optimizing component logic or adding caching"
+                    )
 
                 if throughput < sla.min_throughput_rps:
-                    violations.append(f"Throughput ({throughput:.2f} rps) below SLA ({sla.min_throughput_rps} rps)")
-                    recommendations.append("Review request processing pipeline for bottlenecks")
+                    violations.append(
+                        f"Throughput ({throughput:.2f} rps) below SLA ({sla.min_throughput_rps} rps)"
+                    )
+                    recommendations.append(
+                        "Review request processing pipeline for bottlenecks"
+                    )
 
                 if error_rate > sla.max_error_rate:
-                    violations.append(f"Error rate ({error_rate:.3f}) exceeds SLA ({sla.max_error_rate:.3f})")
-                    recommendations.append("Investigate error causes and improve error handling")
+                    violations.append(
+                        f"Error rate ({error_rate:.3f}) exceeds SLA ({sla.max_error_rate:.3f})"
+                    )
+                    recommendations.append(
+                        "Investigate error causes and improve error handling"
+                    )
 
                 if cpu_utilization > sla.max_cpu_utilization:
                     violations.append(
                         f"CPU utilization ({cpu_utilization:.1%}) exceeds SLA ({sla.max_cpu_utilization:.1%})"
                     )
-                    recommendations.append("Consider load shedding or horizontal scaling")
+                    recommendations.append(
+                        "Consider load shedding or horizontal scaling"
+                    )
 
                 if memory_utilization > sla.max_memory_utilization:
                     violations.append(
                         f"Memory utilization ({memory_utilization:.1%}) exceeds SLA ({sla.max_memory_utilization:.1%})"
                     )
-                    recommendations.append("Review memory usage and implement garbage collection strategies")
+                    recommendations.append(
+                        "Review memory usage and implement garbage collection strategies"
+                    )
 
             # Determine performance level
             if not violations:
@@ -406,7 +434,9 @@ class TierPerformanceMonitor:
                 performance_level = PerformanceLevel.FAILING
 
             # Calculate measurement period
-            measurement_period = latency_samples[-1].timestamp - latency_samples[0].timestamp
+            measurement_period = (
+                latency_samples[-1].timestamp - latency_samples[0].timestamp
+            )
 
             return PerformanceReport(
                 entity_id=component_id,
@@ -459,7 +489,11 @@ class TierPerformanceMonitor:
         error_rates = [r.error_rate for r in component_reports]
 
         total_violations = sum(len(r.sla_violations) for r in component_reports)
-        components_degraded = sum(1 for r in component_reports if r.performance_level != PerformanceLevel.OPTIMAL)
+        components_degraded = sum(
+            1
+            for r in component_reports
+            if r.performance_level != PerformanceLevel.OPTIMAL
+        )
 
         return {
             "tier": tier.name,
@@ -510,9 +544,13 @@ class TierPerformanceMonitor:
             tier_reports[tier.name] = self.get_tier_report(tier)
 
         # Calculate platform-wide metrics
-        all_violations = sum(r.get("total_sla_violations", 0) for r in tier_reports.values())
+        all_violations = sum(
+            r.get("total_sla_violations", 0) for r in tier_reports.values()
+        )
 
-        all_components = sum(r.get("components_tracked", 0) for r in tier_reports.values())
+        all_components = sum(
+            r.get("components_tracked", 0) for r in tier_reports.values()
+        )
 
         return {
             "timestamp": datetime.now().isoformat(),
@@ -561,7 +599,9 @@ def performance_tracked(tier: PlatformTier, component_id: str):
                 monitor.end_request_tracking(request_id, success=True)
                 return result
             except Exception as e:
-                monitor.end_request_tracking(request_id, success=False, metadata={"error": str(e)})
+                monitor.end_request_tracking(
+                    request_id, success=False, metadata={"error": str(e)}
+                )
                 raise
 
         return wrapper

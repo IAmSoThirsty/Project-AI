@@ -134,7 +134,9 @@ class BasicTTSVoiceModel(VoiceModel):
     ) -> VoiceResponse:
         """Synthesize speech from text"""
         if not self._initialized:
-            return VoiceResponse(text=text, success=False, error="Model not initialized")
+            return VoiceResponse(
+                text=text, success=False, error="Model not initialized"
+            )
 
         try:
             start_time = time.time()
@@ -200,7 +202,9 @@ class EmotionalTTSVoiceModel(VoiceModel):
     ) -> VoiceResponse:
         """Synthesize speech with emotional expression"""
         if not self._initialized:
-            return VoiceResponse(text=text, success=False, error="Model not initialized")
+            return VoiceResponse(
+                text=text, success=False, error="Model not initialized"
+            )
 
         cache_key = f"{text}:{emotion.value}"
 
@@ -273,7 +277,9 @@ class ConversationalVoiceModel(VoiceModel):
         """Initialize conversational model"""
         try:
             with self._lock:
-                logger.info("Initializing ConversationalVoice: %s", self.metadata.model_id)
+                logger.info(
+                    "Initializing ConversationalVoice: %s", self.metadata.model_id
+                )
                 self._initialized = True
                 return True
         except Exception as e:
@@ -288,7 +294,9 @@ class ConversationalVoiceModel(VoiceModel):
     ) -> VoiceResponse:
         """Synthesize with conversational context"""
         if not self._initialized:
-            return VoiceResponse(text=text, success=False, error="Model not initialized")
+            return VoiceResponse(
+                text=text, success=False, error="Model not initialized"
+            )
 
         try:
             start_time = time.time()
@@ -297,10 +305,14 @@ class ConversationalVoiceModel(VoiceModel):
             context_analysis = self._analyze_context(text, context or {})
 
             # Adjust based on conversation flow
-            adjusted_emotion = self._adjust_emotion_from_context(emotion, context_analysis)
+            adjusted_emotion = self._adjust_emotion_from_context(
+                emotion, context_analysis
+            )
 
             # Generate audio
-            audio_data = self._generate_conversational_audio(text, adjusted_emotion, context_analysis)
+            audio_data = self._generate_conversational_audio(
+                text, adjusted_emotion, context_analysis
+            )
             duration_ms = (time.time() - start_time) * 1000
 
             # Update history
@@ -333,7 +345,9 @@ class ConversationalVoiceModel(VoiceModel):
         }
         return analysis
 
-    def _adjust_emotion_from_context(self, base_emotion: VoiceEmotionType, context: dict[str, Any]) -> VoiceEmotionType:
+    def _adjust_emotion_from_context(
+        self, base_emotion: VoiceEmotionType, context: dict[str, Any]
+    ) -> VoiceEmotionType:
         """Adjust emotion based on conversational context"""
         # Context-aware emotion adjustment
         mood = context.get("detected_mood", "neutral")
@@ -345,12 +359,16 @@ class ConversationalVoiceModel(VoiceModel):
 
         return base_emotion
 
-    def _generate_conversational_audio(self, text: str, emotion: VoiceEmotionType, context: dict[str, Any]) -> bytes:
+    def _generate_conversational_audio(
+        self, text: str, emotion: VoiceEmotionType, context: dict[str, Any]
+    ) -> bytes:
         """Generate audio with conversational nuances"""
         data = f"{text}:{emotion.value}:{context.get('turn_count', 0)}".encode()
         return hashlib.sha256(data).digest()
 
-    def _update_history(self, text: str, emotion: VoiceEmotionType, context: dict[str, Any]) -> None:
+    def _update_history(
+        self, text: str, emotion: VoiceEmotionType, context: dict[str, Any]
+    ) -> None:
         """Update conversation history"""
         with self._lock:
             self._conversation_history.append(
@@ -364,7 +382,9 @@ class ConversationalVoiceModel(VoiceModel):
 
             # Trim history
             if len(self._conversation_history) > self._max_history:
-                self._conversation_history = self._conversation_history[-self._max_history :]
+                self._conversation_history = self._conversation_history[
+                    -self._max_history :
+                ]
 
     def _calculate_avg_length(self) -> float:
         """Calculate average response length"""
@@ -453,7 +473,9 @@ class VoiceModelRegistry:
     def get_models_by_type(self, model_type: VoiceModelType) -> list[VoiceModel]:
         """Get all models of a specific type"""
         with self._lock:
-            return [m for m in self._models.values() if m.metadata.model_type == model_type]
+            return [
+                m for m in self._models.values() if m.metadata.model_type == model_type
+            ]
 
     def initialize_all(self) -> dict[str, bool]:
         """Initialize all registered models"""

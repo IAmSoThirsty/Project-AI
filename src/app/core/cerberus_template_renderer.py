@@ -86,16 +86,22 @@ class TemplateRenderer:
         if validate_required:
             missing_vars = self._validate_required_vars(placeholders, context)
             if missing_vars:
-                raise ValueError(f"Missing required variables: {', '.join(sorted(missing_vars))}")
+                raise ValueError(
+                    f"Missing required variables: {', '.join(sorted(missing_vars))}"
+                )
 
         # Validate allowed variables
         if allowed_vars is not None:
             invalid_vars = placeholders - allowed_vars
             if invalid_vars:
-                raise ValueError(f"Invalid variables in template: {', '.join(sorted(invalid_vars))}")
+                raise ValueError(
+                    f"Invalid variables in template: {', '.join(sorted(invalid_vars))}"
+                )
 
         # Apply escaping if language specified
-        escaped_context = self._escape_context(context, language) if language else context
+        escaped_context = (
+            self._escape_context(context, language) if language else context
+        )
 
         # Perform substitution
         rendered = template_content
@@ -107,7 +113,9 @@ class TemplateRenderer:
         # Verify no unsubstituted placeholders remain
         remaining = self._extract_placeholders(rendered)
         if remaining:
-            logger.warning("Unsubstituted placeholders remain: %s", ", ".join(sorted(remaining)))
+            logger.warning(
+                "Unsubstituted placeholders remain: %s", ", ".join(sorted(remaining))
+            )
 
         return rendered
 
@@ -170,7 +178,9 @@ class TemplateRenderer:
         matches = re.findall(pattern, template)
         return set(matches)
 
-    def _validate_required_vars(self, placeholders: set[str], context: dict[str, Any]) -> set[str]:
+    def _validate_required_vars(
+        self, placeholders: set[str], context: dict[str, Any]
+    ) -> set[str]:
         """
         Validate that required variables are present in context.
 

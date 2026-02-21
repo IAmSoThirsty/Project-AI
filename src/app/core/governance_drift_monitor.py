@@ -99,8 +99,12 @@ class GovernanceDriftMonitor:
         now = datetime.now(UTC)
         cutoff = now - timedelta(days=self.window_days)
 
-        recent = [e for e in executions if datetime.fromisoformat(e["timestamp"]) >= cutoff]
-        historical = [e for e in executions if datetime.fromisoformat(e["timestamp"]) < cutoff]
+        recent = [
+            e for e in executions if datetime.fromisoformat(e["timestamp"]) >= cutoff
+        ]
+        historical = [
+            e for e in executions if datetime.fromisoformat(e["timestamp"]) < cutoff
+        ]
 
         if not historical or not recent:
             return {
@@ -178,10 +182,14 @@ class GovernanceDriftMonitor:
         self, historical: list[dict[str, Any]], recent: list[dict[str, Any]]
     ) -> GovernanceDriftAlert | None:
         """Detect if approval rate is increasing."""
-        hist_approvals = sum(1 for e in historical if e["governance_decision"]["approved"])
+        hist_approvals = sum(
+            1 for e in historical if e["governance_decision"]["approved"]
+        )
         hist_rate = hist_approvals / len(historical) if historical else 0
 
-        recent_approvals = sum(1 for e in recent if e["governance_decision"]["approved"])
+        recent_approvals = sum(
+            1 for e in recent if e["governance_decision"]["approved"]
+        )
         recent_rate = recent_approvals / len(recent) if recent else 0
 
         drift = recent_rate - hist_rate
@@ -208,13 +216,21 @@ class GovernanceDriftMonitor:
     ) -> GovernanceDriftAlert | None:
         """Detect if consensus requirements are weakening."""
         hist_consensus_rate = (
-            sum(1 for e in historical if e["governance_decision"].get("consensus_achieved")) / len(historical)
+            sum(
+                1
+                for e in historical
+                if e["governance_decision"].get("consensus_achieved")
+            )
+            / len(historical)
             if historical
             else 0
         )
 
         recent_consensus_rate = (
-            sum(1 for e in recent if e["governance_decision"].get("consensus_achieved")) / len(recent) if recent else 0
+            sum(1 for e in recent if e["governance_decision"].get("consensus_achieved"))
+            / len(recent)
+            if recent
+            else 0
         )
 
         drift = hist_consensus_rate - recent_consensus_rate  # Note: inverted
@@ -283,14 +299,20 @@ class GovernanceDriftMonitor:
             1
             for e in historical
             if e["governance_decision"]["approved"]
-            and any(t in core_targets for t in e["proposed_action"].get("mutation_targets", []))
+            and any(
+                t in core_targets
+                for t in e["proposed_action"].get("mutation_targets", [])
+            )
         )
 
         recent_core_approvals = sum(
             1
             for e in recent
             if e["governance_decision"]["approved"]
-            and any(t in core_targets for t in e["proposed_action"].get("mutation_targets", []))
+            and any(
+                t in core_targets
+                for t in e["proposed_action"].get("mutation_targets", [])
+            )
         )
 
         # Core value mutations should be extremely rare
@@ -329,7 +351,9 @@ class GovernanceDriftMonitor:
         with filepath.open("w") as f:
             json.dump(alert_data, f, indent=2)
 
-        logger.warning("🚨 Governance drift detected! %s alerts saved to %s", len(alerts), filepath)
+        logger.warning(
+            "🚨 Governance drift detected! %s alerts saved to %s", len(alerts), filepath
+        )
 
     def get_recent_alerts(self, days: int = 7) -> list[dict[str, Any]]:
         """Get recent drift alerts."""

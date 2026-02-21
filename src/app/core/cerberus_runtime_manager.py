@@ -156,7 +156,9 @@ class RuntimeManager:
                 runtime.health_status = "unavailable"
                 self.health_cache[lang_key] = "unavailable"
                 unavailable_count += 1
-                logger.warning("✗ %s (%s): unavailable - timeout", runtime.name, lang_key)
+                logger.warning(
+                    "✗ %s (%s): unavailable - timeout", runtime.name, lang_key
+                )
 
             except Exception as e:
                 runtime.health_status = "unavailable"
@@ -169,7 +171,11 @@ class RuntimeManager:
             "healthy": healthy_count,
             "degraded": degraded_count,
             "unavailable": unavailable_count,
-            "healthy_runtimes": [lang for lang, status in self.health_cache.items() if status == "healthy"],
+            "healthy_runtimes": [
+                lang
+                for lang, status in self.health_cache.items()
+                if status == "healthy"
+            ],
         }
 
         logger.info(
@@ -250,7 +256,9 @@ class RuntimeManager:
         """
         return self.runtimes.get(language_key)
 
-    def get_all_runtimes(self, health_status: str | None = None) -> list[RuntimeDescriptor]:
+    def get_all_runtimes(
+        self, health_status: str | None = None
+    ) -> list[RuntimeDescriptor]:
         """
         Get all runtimes, optionally filtered by health status.
 
@@ -261,7 +269,9 @@ class RuntimeManager:
             List of RuntimeDescriptors
         """
         if health_status:
-            return [r for r in self.runtimes.values() if r.health_status == health_status]
+            return [
+                r for r in self.runtimes.values() if r.health_status == health_status
+            ]
         return list(self.runtimes.values())
 
     def get_health_summary(self) -> dict[str, Any]:
@@ -275,7 +285,9 @@ class RuntimeManager:
         by_category = {}
 
         for runtime in self.runtimes.values():
-            by_status[runtime.health_status] = by_status.get(runtime.health_status, 0) + 1
+            by_status[runtime.health_status] = (
+                by_status.get(runtime.health_status, 0) + 1
+            )
 
             if runtime.category not in by_category:
                 by_category[runtime.category] = {

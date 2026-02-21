@@ -12,9 +12,7 @@ BLIND SPOTS IN STATIC CHAOS:
 """
 
 import random
-import time
 from dataclasses import dataclass
-from typing import List
 
 from .chaos_suite import SyntheticEvent
 
@@ -23,7 +21,7 @@ from .chaos_suite import SyntheticEvent
 class AdaptiveSequence:
     """Sequence of related events showing adversarial adaptation"""
 
-    events: List[SyntheticEvent]
+    events: list[SyntheticEvent]
     sequence_type: str
     description: str
 
@@ -295,7 +293,7 @@ class AdaptiveAdversaryGenerator:
             description="Interleaved attack/benign to evade detection",
         )
 
-    def generate_all_adaptive_scenarios(self) -> List[AdaptiveSequence]:
+    def generate_all_adaptive_scenarios(self) -> list[AdaptiveSequence]:
         """Generate all adaptive scenarios"""
         return [
             self.generate_low_and_slow_credential_probe(),

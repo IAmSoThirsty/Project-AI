@@ -338,7 +338,9 @@ class ConversationContextEngine:
 
         return entities
 
-    def _find_context_references(self, text: str, session: ConversationSession) -> list[str]:
+    def _find_context_references(
+        self, text: str, session: ConversationSession
+    ) -> list[str]:
         """Find references to previous context"""
         text_lower = text.lower()
         references = []
@@ -347,13 +349,17 @@ class ConversationContextEngine:
         reference_words = ["that", "this", "previous", "earlier", "before", "mentioned"]
         if any(word in text_lower for word in reference_words):
             # Look at recent turns
-            recent_turns = session.turns[-5:] if len(session.turns) >= 5 else session.turns
+            recent_turns = (
+                session.turns[-5:] if len(session.turns) >= 5 else session.turns
+            )
             for turn in recent_turns:
                 references.append(turn.turn_id)
 
         return references
 
-    def get_context(self, session_id: str, window_size: int | None = None) -> dict[str, Any]:
+    def get_context(
+        self, session_id: str, window_size: int | None = None
+    ) -> dict[str, Any]:
         """Get conversation context for a session"""
         try:
             with self._lock:
@@ -364,7 +370,11 @@ class ConversationContextEngine:
                 window_size = window_size or self._context_window
 
                 # Get recent turns
-                recent_turns = session.turns[-window_size:] if len(session.turns) > window_size else session.turns
+                recent_turns = (
+                    session.turns[-window_size:]
+                    if len(session.turns) > window_size
+                    else session.turns
+                )
 
                 # Get user history
                 user_history = self._user_histories.get(session.user_id, None)
@@ -376,8 +386,14 @@ class ConversationContextEngine:
                     "recent_turns": [asdict(t) for t in recent_turns],
                     "active_topics": list(session.active_topics),
                     "session_mood": session.session_mood,
-                    "user_history_summary": (self._summarize_user_history(user_history) if user_history else {}),
-                    "interaction_patterns": (user_history.interaction_patterns if user_history else {}),
+                    "user_history_summary": (
+                        self._summarize_user_history(user_history)
+                        if user_history
+                        else {}
+                    ),
+                    "interaction_patterns": (
+                        user_history.interaction_patterns if user_history else {}
+                    ),
                 }
 
                 return context
@@ -388,8 +404,12 @@ class ConversationContextEngine:
 
     def _summarize_user_history(self, history: UserHistory) -> dict[str, Any]:
         """Summarize user history"""
-        top_topics = sorted(history.frequent_topics.items(), key=lambda x: x[1], reverse=True)[:5]
-        top_intents = sorted(history.frequent_intents.items(), key=lambda x: x[1], reverse=True)[:3]
+        top_topics = sorted(
+            history.frequent_topics.items(), key=lambda x: x[1], reverse=True
+        )[:5]
+        top_intents = sorted(
+            history.frequent_intents.items(), key=lambda x: x[1], reverse=True
+        )[:3]
 
         return {
             "total_sessions": history.total_sessions,
@@ -416,7 +436,9 @@ class ConversationContextEngine:
 
                 # Update typical session length (running average)
                 user_history.typical_session_length = (
-                    user_history.typical_session_length * (user_history.total_sessions - 1) + session_length
+                    user_history.typical_session_length
+                    * (user_history.total_sessions - 1)
+                    + session_length
                 ) / user_history.total_sessions
 
                 # Save and archive
@@ -438,7 +460,9 @@ class ConversationContextEngine:
         with self._lock:
             return self._user_histories.get(user_id)
 
-    def update_user_preference(self, user_id: str, preference_key: str, preference_value: Any) -> bool:
+    def update_user_preference(
+        self, user_id: str, preference_key: str, preference_value: Any
+    ) -> bool:
         """Update user preference"""
         try:
             with self._lock:
@@ -564,23 +588,28 @@ class PolicyManager:
         """Initialize default policy configurations"""
         return {
             AdaptivePolicy.RESPONSE_LENGTH: PolicyConfiguration(
-                policy_type=AdaptivePolicy.RESPONSE_LENGTH, value=0.5  # Medium length
+                policy_type=AdaptivePolicy.RESPONSE_LENGTH,
+                value=0.5,  # Medium length
             ),
             AdaptivePolicy.FORMALITY_LEVEL: PolicyConfiguration(
-                policy_type=AdaptivePolicy.FORMALITY_LEVEL, value=0.5  # Balanced
+                policy_type=AdaptivePolicy.FORMALITY_LEVEL,
+                value=0.5,  # Balanced
             ),
             AdaptivePolicy.DETAIL_LEVEL: PolicyConfiguration(
-                policy_type=AdaptivePolicy.DETAIL_LEVEL, value=0.6  # Moderate detail
+                policy_type=AdaptivePolicy.DETAIL_LEVEL,
+                value=0.6,  # Moderate detail
             ),
             AdaptivePolicy.EMPATHY_LEVEL: PolicyConfiguration(
-                policy_type=AdaptivePolicy.EMPATHY_LEVEL, value=0.7  # High empathy
+                policy_type=AdaptivePolicy.EMPATHY_LEVEL,
+                value=0.7,  # High empathy
             ),
             AdaptivePolicy.PROACTIVITY: PolicyConfiguration(
                 policy_type=AdaptivePolicy.PROACTIVITY,
                 value=0.4,  # Moderate proactivity
             ),
             AdaptivePolicy.HUMOR_USAGE: PolicyConfiguration(
-                policy_type=AdaptivePolicy.HUMOR_USAGE, value=0.3  # Light humor
+                policy_type=AdaptivePolicy.HUMOR_USAGE,
+                value=0.3,  # Light humor
             ),
             AdaptivePolicy.TOPIC_SENSITIVITY: PolicyConfiguration(
                 policy_type=AdaptivePolicy.TOPIC_SENSITIVITY,
@@ -614,7 +643,9 @@ class PolicyManager:
                 adjusted_policies = {}
 
                 for policy_type, policy_config in policies.items():
-                    adjusted_value = self._adjust_policy_for_context(policy_config, context, user_history)
+                    adjusted_value = self._adjust_policy_for_context(
+                        policy_config, context, user_history
+                    )
                     adjusted_policies[policy_type.value] = adjusted_value
 
                 return adjusted_policies
@@ -675,14 +706,20 @@ class PolicyManager:
             # Context-aware sensitivity - NO FALSE ALARMS
             # If user has high swearing tolerance (from history), don't overreact
             if history:
-                swear_tolerance = history.interaction_patterns.get("swearing_tolerance", 0.5)
+                swear_tolerance = history.interaction_patterns.get(
+                    "swearing_tolerance", 0.5
+                )
                 if swear_tolerance > 0.7:
                     # User is comfortable with casual language - reduce sensitivity
                     adjusted = max(0.3, adjusted - 0.3)
 
                 # Check if sensitive topics are user's frequent topics
                 frequent_topics = history.frequent_topics
-                sensitive_count = sum(1 for topic in frequent_topics if topic == TopicCategory.SENSITIVE.value)
+                sensitive_count = sum(
+                    1
+                    for topic in frequent_topics
+                    if topic == TopicCategory.SENSITIVE.value
+                )
                 if sensitive_count > 5:
                     # User frequently discusses sensitive topics - they're okay with it
                     adjusted = max(0.4, adjusted - 0.2)
@@ -690,7 +727,9 @@ class PolicyManager:
         elif policy.policy_type == AdaptivePolicy.HUMOR_USAGE:
             # Adjust humor based on user appreciation
             if history:
-                humor_appreciation = history.interaction_patterns.get("humor_appreciation", 0.5)
+                humor_appreciation = history.interaction_patterns.get(
+                    "humor_appreciation", 0.5
+                )
                 adjusted = (adjusted + humor_appreciation) / 2
 
         # Clamp to valid range
@@ -698,7 +737,9 @@ class PolicyManager:
 
         return adjusted
 
-    def update_policy_from_feedback(self, user_id: str, policy_type: AdaptivePolicy, feedback: str) -> bool:
+    def update_policy_from_feedback(
+        self, user_id: str, policy_type: AdaptivePolicy, feedback: str
+    ) -> bool:
         """
         Update policy based on user feedback.
         feedback: 'increase', 'decrease', or 'reset'
@@ -711,9 +752,13 @@ class PolicyManager:
                 policy = self._user_policies[user_id][policy_type]
 
                 if feedback == "increase":
-                    policy.value = min(policy.max_value, policy.value + policy.adjustment_rate)
+                    policy.value = min(
+                        policy.max_value, policy.value + policy.adjustment_rate
+                    )
                 elif feedback == "decrease":
-                    policy.value = max(policy.min_value, policy.value - policy.adjustment_rate)
+                    policy.value = max(
+                        policy.min_value, policy.value - policy.adjustment_rate
+                    )
                 elif feedback == "reset":
                     policy.value = self._global_defaults[policy_type].value
 
@@ -736,7 +781,10 @@ class PolicyManager:
 
             policy_file = os.path.join(self.data_dir, f"policies_{user_id}.json")
 
-            policies_data = {policy_type.value: asdict(config) for policy_type, config in policies.items()}
+            policies_data = {
+                policy_type.value: asdict(config)
+                for policy_type, config in policies.items()
+            }
 
             with open(policy_file, "w") as f:
                 json.dump(policies_data, f, indent=2)

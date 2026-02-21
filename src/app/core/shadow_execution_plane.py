@@ -123,7 +123,9 @@ class ShadowExecutionPlane:
         self._resource_limiter = ShadowResourceLimiter()
         logger.info(
             "  Resource Limiter: %s",
-            "Shadow Thirst bytecode" if self._resource_limiter.is_bytecode_active() else "Python runtime",
+            "Shadow Thirst bytecode"
+            if self._resource_limiter.is_bytecode_active()
+            else "Python runtime",
         )
 
         # Register in Tier Registry as Tier-2 Infrastructure Controller
@@ -142,7 +144,9 @@ class ShadowExecutionPlane:
             )
             logger.info("ShadowExecutionPlane registered as Tier-2 Infrastructure")
         except Exception as e:
-            logger.warning("Failed to register ShadowExecutionPlane in tier registry: %s", e)
+            logger.warning(
+                "Failed to register ShadowExecutionPlane in tier registry: %s", e
+            )
 
         logger.info("ShadowExecutionPlane initialized")
         logger.info("  CPU Quota: %.0fms", default_cpu_quota_ms)
@@ -170,10 +174,16 @@ class ShadowExecutionPlane:
         for predicate in activation_predicates:
             try:
                 if predicate.evaluate(context):
-                    logger.info("Shadow activation triggered: %s (%s)", predicate.name, predicate.reason.value)
+                    logger.info(
+                        "Shadow activation triggered: %s (%s)",
+                        predicate.name,
+                        predicate.reason.value,
+                    )
                     return True, predicate.reason
             except Exception as e:
-                logger.error("Activation predicate %s failed: %s", predicate.predicate_id, e)
+                logger.error(
+                    "Activation predicate %s failed: %s", predicate.predicate_id, e
+                )
 
         return False, None
 
@@ -226,7 +236,9 @@ class ShadowExecutionPlane:
         logger.info("[%s] Starting dual-plane execution", shadow_id)
 
         # Phase 1: Check activation
-        should_activate, activation_reason = self.should_activate_shadow(context, activation_predicates)
+        should_activate, activation_reason = self.should_activate_shadow(
+            context, activation_predicates
+        )
 
         # If no activation, run primary only
         if not should_activate:
@@ -288,7 +300,9 @@ class ShadowExecutionPlane:
 
         try:
             # Execute shadow with resource limits
-            shadow_result = self._execute_shadow_with_limits(shadow_callable, shadow_ctx)
+            shadow_result = self._execute_shadow_with_limits(
+                shadow_callable, shadow_ctx
+            )
 
             shadow_duration = (time.time() - shadow_start) * 1000
             shadow_ctx.duration_ms = shadow_duration
@@ -335,7 +349,12 @@ class ShadowExecutionPlane:
                 self.telemetry.record_invariant_check(is_valid)
 
                 if not is_valid:
-                    logger.warning("[%s] Invariant violated: %s - %s", shadow_id, invariant.name, reason)
+                    logger.warning(
+                        "[%s] Invariant violated: %s - %s",
+                        shadow_id,
+                        invariant.name,
+                        reason,
+                    )
                     invariants_violated.append(invariant.name)
 
                     if invariant.is_critical:
@@ -353,8 +372,13 @@ class ShadowExecutionPlane:
             self.telemetry.record_divergence(divergence_magnitude)
 
         # Phase 7: Determine commit/quarantine decision
-        should_commit, should_quarantine, quarantine_reason = self._determine_commit_decision(
-            invariants_passed, divergence_detected, divergence_policy, invariants_violated
+        should_commit, should_quarantine, quarantine_reason = (
+            self._determine_commit_decision(
+                invariants_passed,
+                divergence_detected,
+                divergence_policy,
+                invariants_violated,
+            )
         )
 
         # Phase 8: Seal audit trail
@@ -383,7 +407,10 @@ class ShadowExecutionPlane:
         )
 
         logger.info(
-            "[%s] Dual-plane execution complete: commit=%s, quarantine=%s", shadow_id, should_commit, should_quarantine
+            "[%s] Dual-plane execution complete: commit=%s, quarantine=%s",
+            shadow_id,
+            should_commit,
+            should_quarantine,
         )
 
         return result
@@ -438,7 +465,9 @@ class ShadowExecutionPlane:
             shadow_ctx.status = ShadowStatus.COMPLETED
             shadow_ctx.result = result
 
-            logger.info("[%s] Simulation completed in %.2fms", shadow_id, shadow_ctx.duration_ms)
+            logger.info(
+                "[%s] Simulation completed in %.2fms", shadow_id, shadow_ctx.duration_ms
+            )
 
         except Exception as e:
             logger.error("[%s] Simulation failed: %s", shadow_id, e)
@@ -472,7 +501,9 @@ class ShadowExecutionPlane:
             duration_ms=shadow_ctx.duration_ms,
         )
 
-    def _execute_shadow_with_limits(self, callable_obj: Callable, shadow_ctx: ShadowContext) -> Any:
+    def _execute_shadow_with_limits(
+        self, callable_obj: Callable, shadow_ctx: ShadowContext
+    ) -> Any:
         """
         Execute shadow callable with resource limits.
 
@@ -555,7 +586,9 @@ class ShadowExecutionPlane:
                 return diverged, 1.0 if diverged else 0.0
 
             elif policy == DivergencePolicy.ALLOW_EPSILON:
-                if isinstance(primary_result, (int, float)) and isinstance(shadow_result, (int, float)):
+                if isinstance(primary_result, (int, float)) and isinstance(
+                    shadow_result, (int, float)
+                ):
                     diff = abs(primary_result - shadow_result)
                     diverged = diff > 0.01  # Default epsilon
                     return diverged, diff
@@ -609,7 +642,9 @@ class ShadowExecutionPlane:
         # Default: commit
         return True, False, None
 
-    def _build_failed_result(self, shadow_ctx: ShadowContext, primary_result: Any, shadow_result: Any) -> ShadowResult:
+    def _build_failed_result(
+        self, shadow_ctx: ShadowContext, primary_result: Any, shadow_result: Any
+    ) -> ShadowResult:
         """Build a failed ShadowResult."""
         audit_hash = shadow_ctx.seal_audit_trail()
         self.shadow_history.append(shadow_ctx)

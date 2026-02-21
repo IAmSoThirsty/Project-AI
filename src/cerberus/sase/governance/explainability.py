@@ -13,7 +13,7 @@ OUTPUT:
 """
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 
 @dataclass
@@ -40,10 +40,10 @@ class ExplainabilityReport:
     verdict: str  # "CONTAINED", "MONITORED", "ALLOWED"
 
     # Feature contributions (sorted by impact)
-    top_features: List[FeatureContribution]
+    top_features: list[FeatureContribution]
 
     # HMM state sequence
-    hmm_state_path: List[str]
+    hmm_state_path: list[str]
 
     # Bayesian breakdown
     prior_confidence: float
@@ -82,10 +82,10 @@ class ExplainabilityEngine:
     def explain(
         self,
         event_id: str,
-        feature_vector: Dict[str, Any],
-        confidence_assessment: Dict[str, Any],
+        feature_vector: dict[str, Any],
+        confidence_assessment: dict[str, Any],
         hmm_state: str,
-        threat_class: Dict[str, Any],
+        threat_class: dict[str, Any],
     ) -> ExplainabilityReport:
         """
         Generate comprehensive explainability report
@@ -138,8 +138,8 @@ class ExplainabilityEngine:
         )
 
     def _rank_feature_contributions(
-        self, feature_vector: Dict[str, Any], final_confidence: float
-    ) -> List[FeatureContribution]:
+        self, feature_vector: dict[str, Any], final_confidence: float
+    ) -> list[FeatureContribution]:
         """
         Rank features by contribution to final confidence
 
@@ -205,9 +205,9 @@ class ExplainabilityEngine:
     def _generate_summary(
         self,
         confidence_pct: float,
-        top_features: List[FeatureContribution],
+        top_features: list[FeatureContribution],
         hmm_state: str,
-        threat_class: Dict[str, Any],
+        threat_class: dict[str, Any],
     ) -> str:
         """
         Generate human-readable summary for SOC
@@ -254,16 +254,16 @@ class ExplainabilityEngine:
         Returns multi-line string suitable for logging/display
         """
         lines = [
-            f"=" * 60,
+            "=" * 60,
             f"THREAT DETECTION EXPLANATION - {report.event_id}",
-            f"=" * 60,
+            "=" * 60,
             f"VERDICT: {report.verdict}",
             f"CONFIDENCE: {report.final_confidence * 100:.1f}%",
-            f"",
-            f"SUMMARY:",
+            "",
+            "SUMMARY:",
             f"{report.human_summary}",
-            f"",
-            f"TOP CONTRIBUTING FACTORS:",
+            "",
+            "TOP CONTRIBUTING FACTORS:",
         ]
 
         for i, feat in enumerate(report.top_features, 1):
@@ -274,19 +274,19 @@ class ExplainabilityEngine:
 
         lines.extend(
             [
-                f"",
-                f"BAYESIAN ANALYSIS:",
+                "",
+                "BAYESIAN ANALYSIS:",
                 f"  Prior: {report.prior_confidence * 100:.1f}%",
                 f"  Likelihood boost: +{report.likelihood_boost * 100:.1f}%",
                 f"  Posterior: {report.posterior_confidence * 100:.1f}%",
-                f"",
-                f"THREAT CLASSIFICATION:",
+                "",
+                "THREAT CLASSIFICATION:",
                 f"  Actor class: {report.actor_class}",
                 f"  Probability: {report.actor_probability * 100:.1f}%",
-                f"",
-                f"BEHAVIORAL STATE PATH:",
+                "",
+                "BEHAVIORAL STATE PATH:",
                 f"  {' → '.join(report.hmm_state_path)}",
-                f"=" * 60,
+                "=" * 60,
             ]
         )
 

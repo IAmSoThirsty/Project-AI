@@ -18,9 +18,8 @@ Output: 0-100 confidence score
 """
 
 import logging
-import math
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger("SASE.L6.BayesianScoring")
 
@@ -194,7 +193,7 @@ class BayesianScorer:
         self,
         feature_vector: Any,
         behavior_state: Any = None,
-        evidence: Dict[str, Any] = None,
+        evidence: dict[str, Any] = None,
     ) -> float:
         """
         Compute Bayesian confidence score
@@ -250,11 +249,11 @@ class ConfidenceAggregator:
 
     def __init__(self):
         self.scorer = BayesianScorer()
-        self.score_history: Dict[str, list] = {}  # ip -> [scores]
+        self.score_history: dict[str, list] = {}  # ip -> [scores]
 
         logger.info("L6 Confidence Aggregator initialized")
 
-    def aggregate(self, event: Any, feature_vector: Any, behavior_state: Any = None) -> Dict[str, Any]:
+    def aggregate(self, event: Any, feature_vector: Any, behavior_state: Any = None) -> dict[str, Any]:
         """
         Aggregate confidence score for event
 

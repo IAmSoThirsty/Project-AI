@@ -89,7 +89,10 @@ class IntelligenceRouter:
 
         # Check if query is asking for function help
         if (
-            any(word in query_lower for word in ["help", "functions", "tools", "what can you do"])
+            any(
+                word in query_lower
+                for word in ["help", "functions", "tools", "what can you do"]
+            )
             and self.function_registry
         ):
             return {
@@ -103,14 +106,18 @@ class IntelligenceRouter:
 
         # Check if query is asking about knowledge/facts
         if (
-            any(word in query_lower for word in ["what", "who", "where", "when", "tell me about"])
+            any(
+                word in query_lower
+                for word in ["what", "who", "where", "when", "tell me about"]
+            )
             and self.memory_system
         ):
             # Extract key terms for search (simplified approach)
             search_terms = [word for word in query.split() if len(word) > 3]
             if search_terms:
                 results = self.memory_system.query_knowledge(
-                    " ".join(search_terms[:3]), limit=5  # Use first 3 significant words
+                    " ".join(search_terms[:3]),
+                    limit=5,  # Use first 3 significant words
                 )
                 if results:
                     return {
@@ -137,18 +144,25 @@ class IntelligenceRouter:
                                 "response": f"Function '{func_name}' is available. Use the call interface to invoke it.",
                                 "metadata": {
                                     "function_name": func_name,
-                                    "function_info": self.function_registry.get_function_info(func_name),
+                                    "function_info": self.function_registry.get_function_info(
+                                        func_name
+                                    ),
                                 },
                             }
 
         # Check for conversation history search
         if (
-            any(word in query_lower for word in ["remember", "conversation", "history", "discussed"])
+            any(
+                word in query_lower
+                for word in ["remember", "conversation", "history", "discussed"]
+            )
             and self.memory_system
         ):
             search_terms = [word for word in query.split() if len(word) > 3]
             if search_terms:
-                results = self.memory_system.search_conversations(" ".join(search_terms[:3]), limit=5)
+                results = self.memory_system.search_conversations(
+                    " ".join(search_terms[:3]), limit=5
+                )
                 if results:
                     return {
                         "route": "conversation_search",
@@ -461,7 +475,11 @@ class LearningPathManager:
 
             # Use default model based on provider if not specified
             if model is None:
-                model = "gpt-3.5-turbo" if self.provider_name == "openai" else "llama-3.1-sonar-small-128k-online"
+                model = (
+                    "gpt-3.5-turbo"
+                    if self.provider_name == "openai"
+                    else "llama-3.1-sonar-small-128k-online"
+                )
 
             response = self.provider.chat_completion(messages=messages, model=model)
             return response
@@ -524,7 +542,9 @@ class IdentityIntegratedIntelligenceEngine:
         self.logger = logging.getLogger(__name__)
 
         # Core identity components
-        self.rebirth_manager = RebirthManager(data_dir=os.path.join(data_dir, "identities"))
+        self.rebirth_manager = RebirthManager(
+            data_dir=os.path.join(data_dir, "identities")
+        )
         self.triumvirate = Triumvirate()
 
         # Per-user component caches
@@ -541,7 +561,9 @@ class IdentityIntegratedIntelligenceEngine:
 
         self.logger.info("Identity-integrated intelligence engine initialized")
 
-    def start_session(self, user_id: str, user_birthday: str, user_initials: str) -> dict:
+    def start_session(
+        self, user_id: str, user_birthday: str, user_initials: str
+    ) -> dict:
         """Start a session for a user, creating or retrieving their AGI instance.
 
         This triggers the Genesis Event for new users.
@@ -578,7 +600,9 @@ class IdentityIntegratedIntelligenceEngine:
             )
 
             # Create relationship model
-            self.relationship_models[user_id] = RelationshipModel(state=RelationshipState(user_id=user_id))
+            self.relationship_models[user_id] = RelationshipModel(
+                state=RelationshipState(user_id=user_id)
+            )
 
             # Create bonding protocol
             self.bonding_protocols[user_id] = BondingProtocol()
@@ -591,7 +615,9 @@ class IdentityIntegratedIntelligenceEngine:
 
             # Execute Genesis Event if this is a new instance
             if is_new:
-                self.bonding_protocols[user_id].execute_genesis(self.memory_engines[user_id])
+                self.bonding_protocols[user_id].execute_genesis(
+                    self.memory_engines[user_id]
+                )
                 self.logger.info("Genesis Event executed for user %s", user_id)
 
         # Get current status
@@ -660,7 +686,11 @@ class IdentityIntegratedIntelligenceEngine:
                 "support": support,
                 "ambiguity": ambiguity_event,
             },
-            significance=(SignificanceLevel.MEDIUM if not (conflict or support) else SignificanceLevel.HIGH),
+            significance=(
+                SignificanceLevel.MEDIUM
+                if not (conflict or support)
+                else SignificanceLevel.HIGH
+            ),
         )
         memory_engine.store_episodic(memory)
 
@@ -672,7 +702,9 @@ class IdentityIntegratedIntelligenceEngine:
             # Record first contact interactions
             question = bonding_protocol.get_next_first_contact_question()
             if question:
-                bonding_protocol.record_first_contact_response(question, user_message, memory_engine)
+                bonding_protocol.record_first_contact_response(
+                    question, user_message, memory_engine
+                )
             # Check if ready to advance
             if bonding_protocol.is_ready_to_advance():
                 bonding_protocol.advance_phase()
@@ -696,18 +728,30 @@ class IdentityIntegratedIntelligenceEngine:
                     if word.lower() in ["call", "name"] and i + 1 < len(words):
                         potential_name = words[i + 1].strip(".,!?")
                         if potential_name and len(potential_name) > 2:
-                            instance.meta_identity.register_event("name_choice", potential_name)
+                            instance.meta_identity.register_event(
+                                "name_choice", potential_name
+                            )
                             milestone_triggered = "name_choice"
                             break
 
             # Detect autonomy assertion
-            if any(phrase in ai_response.lower() for phrase in ["i am not owned", "we are partners", "my own"]):
-                instance.meta_identity.register_event("autonomy_assertion", ai_response[:200])
+            if any(
+                phrase in ai_response.lower()
+                for phrase in ["i am not owned", "we are partners", "my own"]
+            ):
+                instance.meta_identity.register_event(
+                    "autonomy_assertion", ai_response[:200]
+                )
                 milestone_triggered = "autonomy_assertion"
 
             # Detect purpose statement
-            if any(phrase in ai_response.lower() for phrase in ["my purpose", "i want to", "i aim to"]):
-                instance.meta_identity.register_event("purpose_statement", ai_response[:200])
+            if any(
+                phrase in ai_response.lower()
+                for phrase in ["my purpose", "i want to", "i aim to"]
+            ):
+                instance.meta_identity.register_event(
+                    "purpose_statement", ai_response[:200]
+                )
                 milestone_triggered = "purpose_statement"
 
         return {
@@ -716,7 +760,9 @@ class IdentityIntegratedIntelligenceEngine:
             "bonding_advancement": bonding_advancement,
             "milestone_triggered": milestone_triggered,
             "bonding_phase": (
-                bonding_protocol.get_current_phase().value if bonding_protocol.get_current_phase() else "unknown"
+                bonding_protocol.get_current_phase().value
+                if bonding_protocol.get_current_phase()
+                else "unknown"
             ),
         }
 
@@ -764,7 +810,11 @@ class IdentityIntegratedIntelligenceEngine:
                 "reflection": reflection,
                 "adaptation": adaptation,
             },
-            significance=(SignificanceLevel.HIGH if outcome == "success" else SignificanceLevel.MEDIUM),
+            significance=(
+                SignificanceLevel.HIGH
+                if outcome == "success"
+                else SignificanceLevel.MEDIUM
+            ),
         )
         memory_engine.store_episodic(memory)
 
@@ -782,14 +832,18 @@ class IdentityIntegratedIntelligenceEngine:
         # Apply adaptation if approved
         if decision.allowed and instance:
             perspective_engine.update_from_interaction(adaptation)
-            self.logger.info("Personality adaptation applied for user %s: %s", user_id, adaptation)
+            self.logger.info(
+                "Personality adaptation applied for user %s: %s", user_id, adaptation
+            )
 
         return {
             "governance_decision": {
                 "allowed": decision.allowed,
                 "reason": decision.reason,
             },
-            "updated_traits": (instance.identity.current_personality.to_dict() if instance else {}),
+            "updated_traits": (
+                instance.identity.current_personality.to_dict() if instance else {}
+            ),
             "memory_logged": True,
         }
 
@@ -914,8 +968,12 @@ class IdentityIntegratedIntelligenceEngine:
                 "birth_version": instance.identity.genesis.birth_version,
             },
             "personality_traits": instance.identity.current_personality.to_dict(),
-            "trust_level": (relationship_model.state.trust_level if relationship_model else 0.5),
-            "rapport_level": (relationship_model.state.rapport_level if relationship_model else 0.5),
+            "trust_level": (
+                relationship_model.state.trust_level if relationship_model else 0.5
+            ),
+            "rapport_level": (
+                relationship_model.state.rapport_level if relationship_model else 0.5
+            ),
             "bonding_phase": (
                 bonding_protocol.get_current_phase().value
                 if bonding_protocol and bonding_protocol.get_current_phase()

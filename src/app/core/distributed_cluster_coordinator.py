@@ -179,7 +179,9 @@ class FederatedRegistry:
         self._registry: dict[str, dict[str, Any]] = {}
         self._lock = threading.RLock()
 
-    def register_service(self, node_id: str, service_name: str, metadata: dict[str, Any] | None = None) -> bool:
+    def register_service(
+        self, node_id: str, service_name: str, metadata: dict[str, Any] | None = None
+    ) -> bool:
         """Register a service provided by a node"""
         with self._lock:
             key = f"{node_id}:{service_name}"
@@ -199,7 +201,9 @@ class FederatedRegistry:
             key = f"{node_id}:{service_name}"
             if key in self._registry:
                 del self._registry[key]
-                logger.info("Service %s unregistered from node %s", service_name, node_id)
+                logger.info(
+                    "Service %s unregistered from node %s", service_name, node_id
+                )
                 return True
             return False
 
@@ -225,7 +229,9 @@ class FederatedRegistry:
         """Remove all services from a node (e.g., when node goes offline)"""
         with self._lock:
             removed = 0
-            keys_to_remove = [k for k, v in self._registry.items() if v["node_id"] == node_id]
+            keys_to_remove = [
+                k for k, v in self._registry.items() if v["node_id"] == node_id
+            ]
             for key in keys_to_remove:
                 del self._registry[key]
                 removed += 1
@@ -321,10 +327,14 @@ class ClusterCoordinator:
                 # Start background threads
                 self._running = True
 
-                self._heartbeat_thread = threading.Thread(target=self._heartbeat_loop, daemon=True)
+                self._heartbeat_thread = threading.Thread(
+                    target=self._heartbeat_loop, daemon=True
+                )
                 self._heartbeat_thread.start()
 
-                self._monitor_thread = threading.Thread(target=self._monitor_loop, daemon=True)
+                self._monitor_thread = threading.Thread(
+                    target=self._monitor_loop, daemon=True
+                )
                 self._monitor_thread.start()
 
                 self.state = NodeState.READY
@@ -488,7 +498,9 @@ class ClusterCoordinator:
 
             # Count active nodes
             active_nodes = [
-                n for n in self._nodes.values() if n.state not in [NodeState.OFFLINE, NodeState.MAINTENANCE]
+                n
+                for n in self._nodes.values()
+                if n.state not in [NodeState.OFFLINE, NodeState.MAINTENANCE]
             ]
 
             if not active_nodes:
@@ -509,7 +521,9 @@ class ClusterCoordinator:
     def _become_leader(self) -> None:
         """Become cluster leader"""
         with self._lock:
-            logger.info("Node %s became LEADER for term %s", self.node_id, self._election_term)
+            logger.info(
+                "Node %s became LEADER for term %s", self.node_id, self._election_term
+            )
             self.role = NodeRole.LEADER
             self._leader_id = self.node_id
             self._last_leader_contact = time.time()
@@ -577,7 +591,11 @@ class ClusterCoordinator:
     def _assign_task(self, task: ClusterTask) -> None:
         """Assign task to appropriate node (leader only)"""
         # Simple round-robin assignment to active nodes
-        active_nodes = [n for n in self._nodes.values() if n.state in [NodeState.READY, NodeState.ACTIVE]]
+        active_nodes = [
+            n
+            for n in self._nodes.values()
+            if n.state in [NodeState.READY, NodeState.ACTIVE]
+        ]
 
         if active_nodes:
             # Assign to node with fewest tasks
@@ -590,7 +608,9 @@ class ClusterCoordinator:
 
             task.assigned_node = assigned_node.node_id
             task.status = "assigned"
-            logger.info("Task %s assigned to node %s", task.task_id, assigned_node.node_id)
+            logger.info(
+                "Task %s assigned to node %s", task.task_id, assigned_node.node_id
+            )
 
     def get_task_status(self, task_id: str) -> dict[str, Any] | None:
         """Get status of a task"""
@@ -610,12 +630,20 @@ class ClusterCoordinator:
                 "election_term": self._election_term,
                 "total_nodes": len(self._nodes),
                 "active_nodes": len(
-                    [n for n in self._nodes.values() if n.state not in [NodeState.OFFLINE, NodeState.MAINTENANCE]]
+                    [
+                        n
+                        for n in self._nodes.values()
+                        if n.state not in [NodeState.OFFLINE, NodeState.MAINTENANCE]
+                    ]
                 ),
                 "total_locks": len(self._locks),
                 "total_tasks": len(self._tasks),
-                "pending_tasks": len([t for t in self._tasks.values() if t.status == "pending"]),
-                "running_tasks": len([t for t in self._tasks.values() if t.status == "running"]),
+                "pending_tasks": len(
+                    [t for t in self._tasks.values() if t.status == "pending"]
+                ),
+                "running_tasks": len(
+                    [t for t in self._tasks.values() if t.status == "running"]
+                ),
                 "nodes": [node.to_dict() for node in self._nodes.values()],
             }
 
@@ -629,10 +657,14 @@ class ClusterCoordinator:
             try:
                 handler(data)
             except Exception as e:
-                logger.error("Error in event handler for %s: %s", event_type, e, exc_info=True)
+                logger.error(
+                    "Error in event handler for %s: %s", event_type, e, exc_info=True
+                )
 
 
-def create_cluster_coordinator(node_id: str | None = None, bind_port: int = 7777) -> ClusterCoordinator:
+def create_cluster_coordinator(
+    node_id: str | None = None, bind_port: int = 7777
+) -> ClusterCoordinator:
     """
     Factory function to create a cluster coordinator.
 

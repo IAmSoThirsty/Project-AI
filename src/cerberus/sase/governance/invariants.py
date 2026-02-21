@@ -13,7 +13,7 @@ CRITICAL INVARIANTS:
 import hashlib
 import json
 import logging
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger("SASE.Invariants")
 
@@ -33,9 +33,9 @@ class PosteriorImmutabilityGuard:
     """
 
     def __init__(self):
-        self.posterior_hashes: Dict[str, str] = {}
+        self.posterior_hashes: dict[str, str] = {}
 
-    def lock_posterior(self, event_id: str, confidence_assessment: Dict[str, Any]) -> str:
+    def lock_posterior(self, event_id: str, confidence_assessment: dict[str, Any]) -> str:
         """
         Lock posterior confidence for event
 
@@ -61,7 +61,7 @@ class PosteriorImmutabilityGuard:
 
         return posterior_hash
 
-    def verify_immutability(self, event_id: str, current_confidence: Dict[str, Any]):
+    def verify_immutability(self, event_id: str, current_confidence: dict[str, Any]):
         """
         Verify posterior has not been mutated
 
@@ -105,7 +105,7 @@ class ClassificationDecouplingGuard:
     """
 
     @staticmethod
-    def validate_classification_output(threat_class: Dict[str, Any]):
+    def validate_classification_output(threat_class: dict[str, Any]):
         """
         Validate L15 output does not contain posterior mutations
 
@@ -143,8 +143,8 @@ class FeatureDoubleWeightingDetector:
     @staticmethod
     def check_for_double_weighting(
         feature_vector: Any,
-        confidence_assessment: Dict[str, Any],
-        threat_class: Dict[str, Any],
+        confidence_assessment: dict[str, Any],
+        threat_class: dict[str, Any],
     ):
         """
         Check if actor class risk score is derived from same

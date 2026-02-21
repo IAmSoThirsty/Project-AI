@@ -93,7 +93,8 @@ def route_through_kernel(
             # If no kernel available, fall back to direct execution
             if kernel is None:
                 logger.warning(
-                    f"No CognitionKernel configured for {actual_action_name}, " "executing directly (BYPASS)"
+                    f"No CognitionKernel configured for {actual_action_name}, "
+                    "executing directly (BYPASS)"
                 )
                 return func(*args, **kwargs)
 
@@ -120,7 +121,9 @@ def route_through_kernel(
                 # If execution failed, raise an exception
                 error_msg = result.error or "Execution failed"
                 if result.blocked_reason:
-                    raise PermissionError(f"Blocked by governance: {result.blocked_reason}")
+                    raise PermissionError(
+                        f"Blocked by governance: {result.blocked_reason}"
+                    )
                 raise RuntimeError(error_msg)
 
         # Mark function as kernel-routed for introspection
@@ -332,7 +335,9 @@ class KernelRoutedTool:
             raise RuntimeError(result.error or "Invocation failed")
 
 
-def kernel_safe_wrapper(func: Callable, kernel: CognitionKernel | None = None) -> Callable:
+def kernel_safe_wrapper(
+    func: Callable, kernel: CognitionKernel | None = None
+) -> Callable:
     """
     Create a wrapper function that routes through kernel without modifying original.
 
@@ -359,7 +364,9 @@ def kernel_safe_wrapper(func: Callable, kernel: CognitionKernel | None = None) -
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if kernel is None:
-            logger.warning("No kernel available for %s, executing directly", func.__qualname__)
+            logger.warning(
+                "No kernel available for %s, executing directly", func.__qualname__
+            )
             return func(*args, **kwargs)
 
         result = kernel.process(
@@ -383,7 +390,9 @@ def kernel_safe_wrapper(func: Callable, kernel: CognitionKernel | None = None) -
 
 
 # Convenience function for dynamic kernel injection
-def inject_kernel_into_object(obj: Any, kernel: CognitionKernel, method_names: list[str]) -> None:
+def inject_kernel_into_object(
+    obj: Any, kernel: CognitionKernel, method_names: list[str]
+) -> None:
     """
     Inject kernel routing into specific methods of an object instance.
 

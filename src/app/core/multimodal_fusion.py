@@ -133,12 +133,22 @@ class MultiModalFusionEngine:
 
     def _register_visual_events(self) -> None:
         """Register handlers for visual events"""
-        self.visual_controller.register_event_handler(VisualEvent.EMOTION_CHANGED, self._on_visual_emotion_changed)
-        self.visual_controller.register_event_handler(VisualEvent.FOCUS_CHANGED, self._on_focus_changed)
-        self.visual_controller.register_event_handler(VisualEvent.USER_PRESENT, self._on_user_presence_changed)
-        self.visual_controller.register_event_handler(VisualEvent.GAZE_DIRECTED, self._on_gaze_changed)
+        self.visual_controller.register_event_handler(
+            VisualEvent.EMOTION_CHANGED, self._on_visual_emotion_changed
+        )
+        self.visual_controller.register_event_handler(
+            VisualEvent.FOCUS_CHANGED, self._on_focus_changed
+        )
+        self.visual_controller.register_event_handler(
+            VisualEvent.USER_PRESENT, self._on_user_presence_changed
+        )
+        self.visual_controller.register_event_handler(
+            VisualEvent.GAZE_DIRECTED, self._on_gaze_changed
+        )
 
-    def process_multimodal_input(self, user_id: str, session_id: str, input_data: MultiModalInput) -> FusedContext:
+    def process_multimodal_input(
+        self, user_id: str, session_id: str, input_data: MultiModalInput
+    ) -> FusedContext:
         """
         Process multi-modal input and return fused context.
         Main entry point for multi-modal fusion.
@@ -154,10 +164,14 @@ class MultiModalFusionEngine:
 
                 # Process each modality
                 if input_data.text_input:
-                    self._process_text_modality(user_id, session_id, input_data.text_input, fused)
+                    self._process_text_modality(
+                        user_id, session_id, input_data.text_input, fused
+                    )
 
                 if input_data.visual_frame is not None:
-                    self._process_visual_modality(user_id, input_data.visual_frame, fused)
+                    self._process_visual_modality(
+                        user_id, input_data.visual_frame, fused
+                    )
 
                 # Apply fusion strategy
                 if self.fusion_strategy == FusionStrategy.EARLY_FUSION:
@@ -168,7 +182,9 @@ class MultiModalFusionEngine:
                     self._apply_hybrid_fusion(fused)
 
                 # Get adaptive policies
-                policies = self.policy_manager.get_adaptive_policy(user_id, session_id, asdict(fused))
+                policies = self.policy_manager.get_adaptive_policy(
+                    user_id, session_id, asdict(fused)
+                )
                 fused.recommended_response_style = policies
 
                 # Store fusion result
@@ -185,9 +201,13 @@ class MultiModalFusionEngine:
 
         except Exception as e:
             logger.error("Multi-modal fusion error: %s", e)
-            return FusedContext(user_id=user_id, session_id=session_id, timestamp=input_data.timestamp)
+            return FusedContext(
+                user_id=user_id, session_id=session_id, timestamp=input_data.timestamp
+            )
 
-    def _process_text_modality(self, user_id: str, session_id: str, text: str, fused: FusedContext) -> None:
+    def _process_text_modality(
+        self, user_id: str, session_id: str, text: str, fused: FusedContext
+    ) -> None:
         """Process text/conversation modality"""
         try:
             # Analyze with engagement profiler
@@ -195,7 +215,9 @@ class MultiModalFusionEngine:
 
             # Update fused context
             fused.speech_detected = True
-            fused.voice_emotion = voice_analysis.get("recommended_emotion", VoiceEmotionType.NEUTRAL)
+            fused.voice_emotion = voice_analysis.get(
+                "recommended_emotion", VoiceEmotionType.NEUTRAL
+            )
 
             # Get conversation context
             conv_context = self.context_engine.get_context(session_id)
@@ -204,15 +226,23 @@ class MultiModalFusionEngine:
                 recent_turns = conv_context.get("recent_turns", [])
                 if recent_turns and len(recent_turns) > 0:
                     last_turn = recent_turns[-1]
-                    fused.detected_intent = Intent(last_turn.get("detected_intent", "unknown"))
+                    fused.detected_intent = Intent(
+                        last_turn.get("detected_intent", "unknown")
+                    )
 
                 fused.active_topics = conv_context.get("active_topics", [])
-                fused.context_references = recent_turns[-1].get("context_references", []) if recent_turns else []
+                fused.context_references = (
+                    recent_turns[-1].get("context_references", [])
+                    if recent_turns
+                    else []
+                )
 
         except Exception as e:
             logger.error("Text modality processing error: %s", e)
 
-    def _process_visual_modality(self, user_id: str, frame: np.ndarray, fused: FusedContext) -> None:
+    def _process_visual_modality(
+        self, user_id: str, frame: np.ndarray, fused: FusedContext
+    ) -> None:
         """Process visual modality"""
         try:
             # Get last visual cue data
@@ -296,7 +326,9 @@ class MultiModalFusionEngine:
         visual_weight = 0.6 if fused.user_present else 0.3
         voice_weight = 1.0 - visual_weight
 
-        combined_emotion = voice_emotion_val * voice_weight + visual_emotion_val * visual_weight
+        combined_emotion = (
+            voice_emotion_val * voice_weight + visual_emotion_val * visual_weight
+        )
         fused.overall_emotional_state = self._value_to_emotion(combined_emotion)
 
         # Late fusion for engagement
@@ -418,7 +450,9 @@ class MultiModalFusionEngine:
         except Exception as e:
             logger.error("Error handling gaze change: %s", e)
 
-    def register_fusion_event_handler(self, handler: Callable[[str, FusedContext], None]) -> None:
+    def register_fusion_event_handler(
+        self, handler: Callable[[str, FusedContext], None]
+    ) -> None:
         """Register handler for fusion events"""
         with self._lock:
             if "fusion_complete" not in self._event_handlers:
@@ -473,6 +507,8 @@ def get_default_fusion_engine() -> MultiModalFusionEngine:
         context_engine = get_default_context_engine()
         policy_mgr = get_default_policy_manager(context_engine)
 
-        _default_fusion_engine = MultiModalFusionEngine(profiler, visual_ctrl, context_engine, policy_mgr)
+        _default_fusion_engine = MultiModalFusionEngine(
+            profiler, visual_ctrl, context_engine, policy_mgr
+        )
 
     return _default_fusion_engine

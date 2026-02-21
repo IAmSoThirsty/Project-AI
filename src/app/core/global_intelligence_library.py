@@ -251,7 +251,9 @@ class IntelligenceAgent(KernelRoutedAgent):
             "specialty": self.specialty,
             "status": self.status.value,
             "report_count": self.report_count,
-            "last_report_time": (self.last_report.timestamp if self.last_report else None),
+            "last_report_time": (
+                self.last_report.timestamp if self.last_report else None
+            ),
         }
 
 
@@ -298,7 +300,9 @@ class DomainOverseer(KernelRoutedAgent):
             agent: IntelligenceAgent instance to add
         """
         if agent.domain != self.domain:
-            raise ValueError(f"Agent domain {agent.domain} doesn't match overseer domain {self.domain}")
+            raise ValueError(
+                f"Agent domain {agent.domain} doesn't match overseer domain {self.domain}"
+            )
 
         self.agents.append(agent)
         logger.info("Added agent %s to %s overseer", agent.agent_id, self.domain.value)
@@ -583,7 +587,11 @@ class DomainOverseer(KernelRoutedAgent):
             return "No data for risk assessment"
 
         # Check for critical/crisis level changes
-        critical_count = sum(1 for r in reports if r.change_level in [ChangeLevel.CRITICAL, ChangeLevel.CRISIS])
+        critical_count = sum(
+            1
+            for r in reports
+            if r.change_level in [ChangeLevel.CRITICAL, ChangeLevel.CRISIS]
+        )
 
         if critical_count > 0:
             return f"HIGH RISK: {critical_count} critical/crisis level changes detected"
@@ -619,7 +627,9 @@ class DomainOverseer(KernelRoutedAgent):
             "domain": self.domain.value,
             "agent_count": len(self.agents),
             "analysis_count": self.analysis_count,
-            "last_analysis_time": (self.last_analysis.timestamp if self.last_analysis else None),
+            "last_analysis_time": (
+                self.last_analysis.timestamp if self.last_analysis else None
+            ),
             "agents": [agent.get_status() for agent in self.agents],
         }
 
@@ -745,9 +755,14 @@ class GlobalCurator(KernelRoutedAgent):
             return "Insufficient data for statistical analysis"
 
         # Count high-risk domains (statistical observation)
-        high_risk_domains = [a.domain.value for a in analyses if "HIGH RISK" in a.risk_assessment]
+        high_risk_domains = [
+            a.domain.value for a in analyses if "HIGH RISK" in a.risk_assessment
+        ]
 
-        summary = f"Statistical Simulation #{self.theory_count + 1}: " f"Analyzed {len(analyses)} domains. "
+        summary = (
+            f"Statistical Simulation #{self.theory_count + 1}: "
+            f"Analyzed {len(analyses)} domains. "
+        )
 
         if high_risk_domains:
             summary += (
@@ -762,7 +777,9 @@ class GlobalCurator(KernelRoutedAgent):
 
         return summary
 
-    def _calculate_predicted_outcomes(self, analyses: list[DomainAnalysis]) -> list[str]:
+    def _calculate_predicted_outcomes(
+        self, analyses: list[DomainAnalysis]
+    ) -> list[str]:
         """Calculate statistical outcome probabilities based on analyses.
 
         Pure probabilistic predictions - no action directives.
@@ -787,11 +804,15 @@ class GlobalCurator(KernelRoutedAgent):
                 )
 
         if not outcomes:
-            outcomes.append("Statistical model predicts <5% probability of major disruptions in monitored domains")
+            outcomes.append(
+                "Statistical model predicts <5% probability of major disruptions in monitored domains"
+            )
 
         return outcomes
 
-    def _identify_cross_domain_patterns(self, analyses: list[DomainAnalysis]) -> dict[str, Any]:
+    def _identify_cross_domain_patterns(
+        self, analyses: list[DomainAnalysis]
+    ) -> dict[str, Any]:
         """Identify patterns across multiple domains.
 
         Args:
@@ -807,20 +828,36 @@ class GlobalCurator(KernelRoutedAgent):
         }
 
         # Look for correlations between domains
-        domains_with_high_risk = [a.domain.value for a in analyses if "HIGH RISK" in a.risk_assessment]
+        domains_with_high_risk = [
+            a.domain.value for a in analyses if "HIGH RISK" in a.risk_assessment
+        ]
 
         if len(domains_with_high_risk) >= 2:
-            patterns["correlations"].append(f"Multiple high-risk domains detected: {', '.join(domains_with_high_risk)}")
-            patterns["cascading_effects"].append("Potential for cascading effects across domains")
+            patterns["correlations"].append(
+                f"Multiple high-risk domains detected: {', '.join(domains_with_high_risk)}"
+            )
+            patterns["cascading_effects"].append(
+                "Potential for cascading effects across domains"
+            )
 
         # Check for specific domain combinations
         domain_set = {a.domain for a in analyses}
 
-        if IntelligenceDomain.ECONOMIC in domain_set and IntelligenceDomain.POLITICAL in domain_set:
-            patterns["synergies"].append("Economic-Political nexus active - policy impacts on markets")
+        if (
+            IntelligenceDomain.ECONOMIC in domain_set
+            and IntelligenceDomain.POLITICAL in domain_set
+        ):
+            patterns["synergies"].append(
+                "Economic-Political nexus active - policy impacts on markets"
+            )
 
-        if IntelligenceDomain.ENVIRONMENTAL in domain_set and IntelligenceDomain.ECONOMIC in domain_set:
-            patterns["synergies"].append("Environmental-Economic intersection - climate impacts on resources")
+        if (
+            IntelligenceDomain.ENVIRONMENTAL in domain_set
+            and IntelligenceDomain.ECONOMIC in domain_set
+        ):
+            patterns["synergies"].append(
+                "Environmental-Economic intersection - climate impacts on resources"
+            )
 
         return patterns
 
@@ -879,9 +916,14 @@ class GlobalCurator(KernelRoutedAgent):
         return {
             "overseer_count": len(self.overseers),
             "theory_count": self.theory_count,
-            "last_theory_time": (self.last_theory.timestamp if self.last_theory else None),
+            "last_theory_time": (
+                self.last_theory.timestamp if self.last_theory else None
+            ),
             "domains": list(self.overseers.keys()),
-            "overseers": {domain.value: overseer.get_status() for domain, overseer in self.overseers.items()},
+            "overseers": {
+                domain.value: overseer.get_status()
+                for domain, overseer in self.overseers.items()
+            },
         }
 
 
@@ -906,7 +948,9 @@ class GlobalIntelligenceLibrary:
     def __init__(self) -> None:
         """Private constructor. Use get_instance() or initialize() instead."""
         if GlobalIntelligenceLibrary._initialized:
-            raise RuntimeError("GlobalIntelligenceLibrary is a singleton. Use get_instance() or initialize()")
+            raise RuntimeError(
+                "GlobalIntelligenceLibrary is a singleton. Use get_instance() or initialize()"
+            )
 
         self.watch_tower: GlobalWatchTower | None = None
         self.curator: GlobalCurator | None = None
@@ -941,7 +985,9 @@ class GlobalIntelligenceLibrary:
         """
         with cls._lock:
             if cls._instance is not None:
-                logger.warning("GlobalIntelligenceLibrary already initialized, returning existing instance")
+                logger.warning(
+                    "GlobalIntelligenceLibrary already initialized, returning existing instance"
+                )
                 return cls._instance
 
             instance = cls.__new__(cls)
@@ -960,7 +1006,9 @@ class GlobalIntelligenceLibrary:
 
             # Create overseers for all domains with minimum 20 agents each
             for domain in IntelligenceDomain:
-                overseer = DomainOverseer(domain=domain, data_dir=data_dir, kernel=kernel)
+                overseer = DomainOverseer(
+                    domain=domain, data_dir=data_dir, kernel=kernel
+                )
                 # Create agents with global coverage
                 overseer.create_agents(count=agents_per_domain)
                 instance.curator.add_overseer(overseer)
@@ -977,7 +1025,9 @@ class GlobalIntelligenceLibrary:
                         monitoring_interval=monitoring_interval,
                     )
 
-                    logger.info("Continuous 24/7 monitoring system initialized with secure storage")
+                    logger.info(
+                        "Continuous 24/7 monitoring system initialized with secure storage"
+                    )
                 except Exception as e:
                     logger.warning("Could not initialize continuous monitoring: %s", e)
 
@@ -989,14 +1039,18 @@ class GlobalIntelligenceLibrary:
                     else:
                         instance.watch_tower = GlobalWatchTower.get_instance()
 
-                    logger.info("Global Intelligence Library integrated with Global Watch Tower command center")
+                    logger.info(
+                        "Global Intelligence Library integrated with Global Watch Tower command center"
+                    )
                 except Exception as e:
                     logger.warning("Could not integrate with Global Watch Tower: %s", e)
 
             cls._instance = instance
             cls._initialized = True
 
-            total_agents = sum(len(o.agents) for o in instance.curator.overseers.values())
+            total_agents = sum(
+                len(o.agents) for o in instance.curator.overseers.values()
+            )
 
             logger.info(
                 f"GlobalIntelligenceLibrary initialized: "
@@ -1019,7 +1073,9 @@ class GlobalIntelligenceLibrary:
             RuntimeError: If not initialized
         """
         if cls._instance is None:
-            raise RuntimeError("GlobalIntelligenceLibrary not initialized. Call initialize() first")
+            raise RuntimeError(
+                "GlobalIntelligenceLibrary not initialized. Call initialize() first"
+            )
         return cls._instance
 
     @classmethod
@@ -1135,11 +1191,15 @@ class GlobalIntelligenceLibrary:
         # Generate statistical simulation (curator's analytical role)
         simulation = self.generate_statistical_simulation()
 
-        logger.info("Analysis cycle complete. Simulation %s generated", simulation.simulation_id)
+        logger.info(
+            "Analysis cycle complete. Simulation %s generated", simulation.simulation_id
+        )
 
         # Note: Watch Tower reviews simulations and makes command decisions
         if self.watch_tower:
-            logger.info("Statistical simulation available to Global Watch Tower command center for decision-making")
+            logger.info(
+                "Statistical simulation available to Global Watch Tower command center for decision-making"
+            )
 
         return simulation
 

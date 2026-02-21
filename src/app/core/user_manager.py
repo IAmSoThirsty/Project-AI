@@ -11,12 +11,17 @@ STATUS: PRODUCTION
 """
 
 import json
+import logging
 import os
 
-from cryptography.fernet import Fernet
 from dotenv import load_dotenv
 from passlib.context import CryptContext
 from passlib.hash import pbkdf2_sha256
+
+from app.core.utils.path_validator import validate_path
+from app.core.utils.secure_storage import SecureStorage
+
+logger = logging.getLogger(__name__)
 
 # Setup password hashing context.
 # Prefer pbkdf2_sha256 to avoid bcrypt backend issues in some environments.
@@ -38,44 +43,47 @@ class UserManager:
         - Migrates any plaintext passwords to bcrypt hashes on load.
         """
         load_dotenv()
-        self.users_file = users_file
-        self.users = {}
-        self.current_user = None
+        self.users: dict = {}
+        self.current_user: str | None = None
 
-        self._setup_cipher()
+        # Setup secure storage
+        self.storage = SecureStorage()
+
+        # Validate path (P1 compliance)
+        self.users_file = validate_path(users_file, os.getcwd()) or "users.json"
+
         self._load_users()
 
-    def _setup_cipher(self):
-        """Setup Fernet cipher from environment or generate new key."""
-        env_key = os.getenv("FERNET_KEY")
-        if env_key:
-            try:
-                key = env_key.encode()
-                self.cipher_suite = Fernet(key)
-            except Exception:
-                # invalid key -> generate a runtime key
-                self.cipher_suite = Fernet(Fernet.generate_key())
-        else:
-            self.cipher_suite = Fernet(Fernet.generate_key())
-
     def _load_users(self):
-        """Load users from file and migrate plaintext passwords if needed."""
-        # Load users (if file exists); do NOT create default plaintext users
-        if os.path.exists(self.users_file):
-            with open(self.users_file) as f:
-                try:
-                    self.users = json.load(f)
-                except Exception:
-                    self.users = {}
+        """Load users from file (encrypted or plain) and migrate if needed."""
+        if not os.path.exists(self.users_file):
+            return
 
-            # Migrate any plaintext passwords to hashes
-            self._migrate_plaintext_passwords()
+        # Attempt to load as encrypted
+        self.users = self.storage.load_encrypted_json(self.users_file)
+
+        if self.users is None:
+            # Fallback for plain JSON (migration)
+            try:
+                with open(self.users_file) as f:
+                    self.users = json.load(f)
+                logger.info("Migrated plain JSON to encrypted storage.")
+                self.save_users()  # Save back as encrypted
+            except Exception:
+                self.users = {}
+
+        # Migrate any plaintext passwords to hashes
+        self._migrate_plaintext_passwords()
 
     def _migrate_plaintext_passwords(self):
         """Migrate plaintext passwords to hashed versions."""
         migrated = False
         for uname, udata in self.users.items():
-            if isinstance(udata, dict) and "password" in udata and "password_hash" not in udata:
+            if (
+                isinstance(udata, dict)
+                and "password" in udata
+                and "password_hash" not in udata
+            ):
                 pw = udata.get("password")
                 if not pw:
                     # Skip if password is empty/None
@@ -110,9 +118,12 @@ class UserManager:
                 return False
 
     def save_users(self):
-        """Save users to file"""
-        with open(self.users_file, "w") as f:
-            json.dump(self.users, f)
+        """Save users to file securely using SecureStorage"""
+        try:
+            self.storage.save_encrypted_json(self.users_file, self.users)
+        except Exception as e:
+            logger.error(f"Failed to save users securely: {e}")
+            raise
 
     def authenticate(self, username, password):
         """Authenticate a user using stored bcrypt password hash."""

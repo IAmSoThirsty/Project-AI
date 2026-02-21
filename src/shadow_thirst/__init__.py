@@ -26,11 +26,11 @@ STATUS: PRODUCTION
 VERSION: 1.0.0
 """
 
-from shadow_thirst.lexer import Token, TokenType, ShadowThirstLexer, tokenize
-from shadow_thirst.parser import parse
-from shadow_thirst.compiler import compile_source, compile_file, ShadowThirstCompiler
-from shadow_thirst.vm import ShadowAwareVM
+from shadow_thirst.compiler import ShadowThirstCompiler, compile_file, compile_source
 from shadow_thirst.constitutional import ConstitutionalIntegration
+from shadow_thirst.lexer import ShadowThirstLexer, Token, TokenType, tokenize
+from shadow_thirst.parser import parse
+from shadow_thirst.vm import ShadowAwareVM
 
 __version__ = "1.0.0"
 

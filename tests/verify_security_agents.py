@@ -4,17 +4,13 @@ This script verifies that the new agents can be instantiated and basic
 operations work without requiring pytest.
 """
 
-import os
 import sys
 import tempfile
 
-# Set up module path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
-
-from app.agents.jailbreak_bench_agent import JailbreakBenchAgent  # noqa: E402
-from app.agents.long_context_agent import LongContextAgent  # noqa: E402
-from app.agents.red_team_agent import AttackStrategy, RedTeamAgent  # noqa: E402
-from app.agents.safety_guard_agent import SafetyGuardAgent  # noqa: E402
+from app.agents.jailbreak_bench_agent import JailbreakBenchAgent
+from app.agents.long_context_agent import LongContextAgent
+from app.agents.red_team_agent import AttackStrategy, RedTeamAgent
+from app.agents.safety_guard_agent import SafetyGuardAgent
 
 
 def test_long_context_agent():

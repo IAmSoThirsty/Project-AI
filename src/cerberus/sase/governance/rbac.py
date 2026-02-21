@@ -17,9 +17,8 @@ Multi-party approval required for irreversible policy change.
 
 import logging
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional, Set
 
 logger = logging.getLogger("SASE.L10.Governance")
 
@@ -103,7 +102,7 @@ class RolePermissions:
     }
 
     @classmethod
-    def get_permissions(cls, role: Role) -> List[Permission]:
+    def get_permissions(cls, role: Role) -> list[Permission]:
         """Get permissions for role"""
         return cls.ROLE_PERMISSIONS.get(role, [])
 
@@ -115,9 +114,9 @@ class ApprovalRequest:
     request_id: str
     action: str
     requestor: str
-    required_approvers: Set[Role]
-    approvals: Set[str] = None  # user_ids who approved
-    denials: Set[str] = None
+    required_approvers: set[Role]
+    approvals: set[str] = field(default_factory=set)  # user_ids who approved
+    denials: set[str] = field(default_factory=set)
     status: str = "PENDING"
 
     def __post_init__(self):
@@ -135,9 +134,9 @@ class MultiPartyApproval:
     """
 
     def __init__(self):
-        self.pending_requests: Dict[str, ApprovalRequest] = {}
+        self.pending_requests: dict[str, ApprovalRequest] = {}
 
-    def request_approval(self, action: str, requestor: str, required_approvers: Set[Role]) -> ApprovalRequest:
+    def request_approval(self, action: str, requestor: str, required_approvers: set[Role]) -> ApprovalRequest:
         """Initiate approval request"""
         import hashlib
 
@@ -196,7 +195,7 @@ class RBACEngine:
 
     def __init__(self):
         self.multi_party = MultiPartyApproval()
-        self.user_roles: Dict[str, Set[Role]] = {}  # user_id -> {roles}
+        self.user_roles: dict[str, set[Role]] = {}  # user_id -> {roles}
 
         logger.info("L10 RBAC Engine initialized")
 
@@ -219,7 +218,7 @@ class RBACEngine:
 
         return permission in user_perms
 
-    def require_approval(self, action: str, user_id: str, required_roles: Set[Role]) -> ApprovalRequest:
+    def require_approval(self, action: str, user_id: str, required_roles: set[Role]) -> ApprovalRequest:
         """Require multi-party approval"""
         return self.multi_party.request_approval(action, user_id, required_roles)
 

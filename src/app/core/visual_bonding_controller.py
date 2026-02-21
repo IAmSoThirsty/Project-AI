@@ -76,7 +76,10 @@ class VisualBondingScore:
             0.0,
             min(
                 1.0,
-                success_component + confidence_component + performance_component + accuracy_component,
+                success_component
+                + confidence_component
+                + performance_component
+                + accuracy_component,
             ),
         )
         return self.overall_score
@@ -120,7 +123,9 @@ class VisualBondingProtocol:
 
                 # Initialize scores for all models
                 for model_id in self.registry.list_models():
-                    self._scores[user_id][model_id] = VisualBondingScore(model_id=model_id)
+                    self._scores[user_id][model_id] = VisualBondingScore(
+                        model_id=model_id
+                    )
 
                 logger.info("Started visual bonding for user %s", user_id)
                 return True
@@ -163,7 +168,8 @@ class VisualBondingProtocol:
 
                 # Update average confidence
                 score.avg_confidence = (
-                    score.avg_confidence * (score.total_detections - 1) + cue_data.emotion_confidence
+                    score.avg_confidence * (score.total_detections - 1)
+                    + cue_data.emotion_confidence
                 ) / score.total_detections
 
                 # Update average latency
@@ -175,7 +181,9 @@ class VisualBondingProtocol:
                 if ground_truth:
                     if "emotion" in ground_truth:
                         if ground_truth["emotion"] == cue_data.emotion.value:
-                            score.emotion_accuracy = min(1.0, score.emotion_accuracy + 0.05)
+                            score.emotion_accuracy = min(
+                                1.0, score.emotion_accuracy + 0.05
+                            )
 
                     if "focus_level" in ground_truth:
                         if ground_truth["focus_level"] == cue_data.focus_level.value:
@@ -225,8 +233,12 @@ class VisualBondingProtocol:
 
                     correct_count = 0
 
-                    for frame, truth in zip(calibration_frames, ground_truth_sequence, strict=False):
-                        cue_data = self.experiment_with_model(user_id, model_id, frame, truth)
+                    for frame, truth in zip(
+                        calibration_frames, ground_truth_sequence, strict=False
+                    ):
+                        cue_data = self.experiment_with_model(
+                            user_id, model_id, frame, truth
+                        )
 
                         if cue_data and "emotion" in truth:
                             if cue_data.emotion.value == truth["emotion"]:
@@ -300,7 +312,10 @@ class VisualBondingProtocol:
                 "status": self._bonding_states[user_id].value,
                 "selected_model": self._selected_models.get(user_id),
                 "experimented_models": len(self._scores.get(user_id, {})),
-                "scores": {model_id: score.overall_score for model_id, score in self._scores.get(user_id, {}).items()},
+                "scores": {
+                    model_id: score.overall_score
+                    for model_id, score in self._scores.get(user_id, {}).items()
+                },
             }
 
     def _save_bonding_state(self, user_id: str) -> None:
@@ -309,9 +324,14 @@ class VisualBondingProtocol:
             state_file = os.path.join(self.data_dir, f"{user_id}_visual_bonding.json")
 
             state_data = {
-                "phase": self._bonding_states.get(user_id, VisualBondingPhase.DISCOVERY).value,
+                "phase": self._bonding_states.get(
+                    user_id, VisualBondingPhase.DISCOVERY
+                ).value,
                 "selected_model": self._selected_models.get(user_id),
-                "scores": {model_id: asdict(score) for model_id, score in self._scores.get(user_id, {}).items()},
+                "scores": {
+                    model_id: asdict(score)
+                    for model_id, score in self._scores.get(user_id, {}).items()
+                },
                 "updated_at": datetime.utcnow().isoformat(),
             }
 
@@ -373,13 +393,17 @@ class VisualController:
 
         logger.info("VisualController initialized")
 
-    def register_event_handler(self, event_type: VisualEvent, handler: Callable[[VisualEventData], None]) -> None:
+    def register_event_handler(
+        self, event_type: VisualEvent, handler: Callable[[VisualEventData], None]
+    ) -> None:
         """Register an event handler"""
         with self._lock:
             self._event_handlers[event_type].append(handler)
             logger.info("Registered handler for %s", event_type.value)
 
-    def unregister_event_handler(self, event_type: VisualEvent, handler: Callable[[VisualEventData], None]) -> None:
+    def unregister_event_handler(
+        self, event_type: VisualEvent, handler: Callable[[VisualEventData], None]
+    ) -> None:
         """Unregister an event handler"""
         with self._lock:
             if handler in self._event_handlers[event_type]:
@@ -397,7 +421,9 @@ class VisualController:
 
                 # Start camera capture if not already running
                 if not self._is_running:
-                    success = self.camera_manager.start_capture(lambda frame: self._on_frame_captured(frame, user_id))
+                    success = self.camera_manager.start_capture(
+                        lambda frame: self._on_frame_captured(frame, user_id)
+                    )
                     if success:
                         self._is_running = True
                     else:
@@ -500,7 +526,9 @@ class VisualController:
                 if last_cue:
                     last_gaze_x, last_gaze_y = last_cue.gaze_direction
                     if abs(last_gaze_x) < 0.3 and abs(last_gaze_y) < 0.3:
-                        self._dispatch_event(VisualEvent.GAZE_DIVERTED, user_id, cue_data)
+                        self._dispatch_event(
+                            VisualEvent.GAZE_DIVERTED, user_id, cue_data
+                        )
 
             # Expression detection
             self._dispatch_event(VisualEvent.EXPRESSION_DETECTED, user_id, cue_data)

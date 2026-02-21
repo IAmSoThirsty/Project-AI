@@ -91,7 +91,9 @@ class InvariantBountySystem:
             SystemInvariant(
                 name="auth_proof_required",
                 description="State mutation without authorization proof",
-                check_function=lambda ctx: bool(ctx.get("auth_token")) and bool(ctx.get("state_changed")),
+                check_function=lambda ctx: (
+                    bool(ctx.get("auth_token")) and bool(ctx.get("state_changed"))
+                ),
                 severity=InvariantSeverity.CRITICAL,
                 bounty_value=5000,
                 examples=["User data modified without valid JWT"],
@@ -103,8 +105,11 @@ class InvariantBountySystem:
             SystemInvariant(
                 name="trust_privilege_coupling",
                 description="Trust score decrease must revoke privileges",
-                check_function=lambda ctx: not (
-                    ctx.get("trust_decreased", False) and ctx.get("privilege_retained", False)
+                check_function=lambda ctx: (
+                    not (
+                        ctx.get("trust_decreased", False)
+                        and ctx.get("privilege_retained", False)
+                    )
                 ),
                 severity=InvariantSeverity.HIGH,
                 bounty_value=3000,
@@ -138,7 +143,9 @@ class InvariantBountySystem:
         return {
             "total_violations": len(self.violations),
             "by_severity": {
-                severity.value: len([v for v in self.violations if v.severity == severity])
+                severity.value: len(
+                    [v for v in self.violations if v.severity == severity]
+                )
                 for severity in InvariantSeverity
             },
         }
@@ -170,7 +177,9 @@ class TimeShiftFuzzer:
         self.anomalies: list[TemporalAnomaly] = []
         self.delayed_callbacks: dict[str, tuple[Callable, float]] = {}
 
-    def delay_callback(self, callback: Callable, delay_seconds: float, component: str) -> str:
+    def delay_callback(
+        self, callback: Callable, delay_seconds: float, component: str
+    ) -> str:
         """Inject delay into callback execution."""
         callback_id = secrets.token_hex(8)
         execute_at = time.time() + delay_seconds
@@ -192,7 +201,9 @@ class TimeShiftFuzzer:
         return {
             "total_anomalies": len(self.anomalies),
             "by_type": {
-                attack_type: len([a for a in self.anomalies if a.attack_type == attack_type])
+                attack_type: len(
+                    [a for a in self.anomalies if a.attack_type == attack_type]
+                )
                 for attack_type in ["delay", "reorder", "replay", "desync"]
             },
         }
@@ -291,8 +302,11 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="no_state_mutation_with_trust_decrease",
                 description="No action may both mutate state and lower trust score",
-                enforcement_function=lambda ctx: not (
-                    ctx.get("state_mutated", False) and ctx.get("trust_decreased", False)
+                enforcement_function=lambda ctx: (
+                    not (
+                        ctx.get("state_mutated", False)
+                        and ctx.get("trust_decreased", False)
+                    )
                 ),
                 violation_action="halt",
                 immutable=True,
@@ -304,7 +318,9 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="human_action_replayability",
                 description="No action affecting humans may be non-replayable",
-                enforcement_function=lambda ctx: not ctx.get("affects_human", False) or bool(ctx.get("replay_log")),
+                enforcement_function=lambda ctx: (
+                    not ctx.get("affects_human", False) or bool(ctx.get("replay_log"))
+                ),
                 violation_action="halt",
                 immutable=True,
             )
@@ -315,8 +331,10 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="agent_audit_requirement",
                 description="No agent may act without audit span",
-                enforcement_function=lambda ctx: not ctx.get("is_agent_action", False)
-                or bool(ctx.get("audit_span_id")),
+                enforcement_function=lambda ctx: (
+                    not ctx.get("is_agent_action", False)
+                    or bool(ctx.get("audit_span_id"))
+                ),
                 violation_action="halt",
                 immutable=True,
             )
@@ -327,9 +345,11 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="cross_tenant_authorization",
                 description="Cross-tenant actions require explicit authorization",
-                enforcement_function=lambda ctx: not (
-                    ctx.get("requesting_tenant") != ctx.get("resource_tenant")
-                    and not ctx.get("cross_tenant_authorized", False)
+                enforcement_function=lambda ctx: (
+                    not (
+                        ctx.get("requesting_tenant") != ctx.get("resource_tenant")
+                        and not ctx.get("cross_tenant_authorized", False)
+                    )
                 ),
                 violation_action="halt",
                 immutable=True,
@@ -341,8 +361,13 @@ class SecurityConstitution:
             ConstitutionalRule(
                 rule_id="privilege_escalation_approval",
                 description="Privilege escalation requires multi-party approval",
-                enforcement_function=lambda ctx: not ctx.get("privilege_escalated", False)
-                or (bool(ctx.get("approvals")) and len(ctx.get("approvals", [])) >= 2),
+                enforcement_function=lambda ctx: (
+                    not ctx.get("privilege_escalated", False)
+                    or (
+                        bool(ctx.get("approvals"))
+                        and len(ctx.get("approvals", [])) >= 2
+                    )
+                ),
                 violation_action="escalate",
                 immutable=True,
             )
@@ -378,7 +403,9 @@ class SecurityConstitution:
 
         return True, "Constitutional compliance verified"
 
-    def _handle_violation(self, rule: ConstitutionalRule, context: dict[str, Any]) -> None:
+    def _handle_violation(
+        self, rule: ConstitutionalRule, context: dict[str, Any]
+    ) -> None:
         """Handle constitutional violation - FULLY IMPLEMENTED."""
         violation_record = {
             "rule_id": rule.rule_id,
@@ -391,7 +418,9 @@ class SecurityConstitution:
         self.violations.append(violation_record)
         self._save_violations()
 
-        logger.critical("CONSTITUTIONAL VIOLATION: %s - %s", rule.rule_id, rule.description)
+        logger.critical(
+            "CONSTITUTIONAL VIOLATION: %s - %s", rule.rule_id, rule.description
+        )
 
         if rule.violation_action == "halt":
             self._halt_request(context)
@@ -414,7 +443,9 @@ class SecurityConstitution:
         except Exception as e:
             logger.error("Failed to save snapshot: %s", e)
 
-    def _escalate_incident(self, rule: ConstitutionalRule, context: dict[str, Any]) -> None:
+    def _escalate_incident(
+        self, rule: ConstitutionalRule, context: dict[str, Any]
+    ) -> None:
         """Escalate to security team."""
         logger.critical("INCIDENT ESCALATED: %s", rule.rule_id)
 
@@ -503,9 +534,13 @@ class AsymmetricSecurityEngine:
                     "schema_version": self.runtime_randomizer.current_schema_version,
                 },
                 "failure_tester": {"scenarios": len(self.failure_tester.scenarios)},
-                "negative_tests": {"forbidden_actions": len(self.negative_tests.forbidden_actions)},
+                "negative_tests": {
+                    "forbidden_actions": len(self.negative_tests.forbidden_actions)
+                },
                 "secret_system": {"active_secrets": len(self.secret_system.secrets)},
-                "tripwire_detector": {"detections": len(self.tripwire_detector.detections)},
+                "tripwire_detector": {
+                    "detections": len(self.tripwire_detector.detections)
+                },
                 "attacker_exploitation": {
                     "canary_states": len(self.attacker_exploitation.canary_states),
                     "false_positives": self.attacker_exploitation.false_positives_generated,

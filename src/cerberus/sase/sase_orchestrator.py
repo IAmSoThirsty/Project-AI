@@ -7,13 +7,13 @@ Integrates all 16 layers into unified adversarial detection pipeline.
 
 import logging
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 from .advanced.model_drift import DriftDetector, RetrainingTrigger
 from .advanced.raft_consensus import RaftNode
 from .advanced.threat_ontology import ThreatActorClassifier
 from .audit.evidence_vault import EvidenceVault
-from .core.ingestion_gateway import AdversarialEvent, TelemetryGateway
+from .core.ingestion_gateway import TelemetryGateway
 from .core.network_enforcement import EdgeEnforcementPlane
 from .core.normalization import EventEnrichmentPipeline
 
@@ -26,7 +26,7 @@ from .intelligence.attribution import AttributionEngine
 from .intelligence.bayesian_scoring import ConfidenceAggregator
 from .intelligence.behavioral_model import BehavioralModelEngine
 from .policy.adaptive_policy import AdaptivePolicyEngine
-from .policy.containment import ContainmentOrchestrator, ContainmentRequest
+from .policy.containment import ContainmentOrchestrator
 
 logger = logging.getLogger("SASE.Orchestrator")
 
@@ -119,7 +119,7 @@ class SASEOrchestrator:
         logger.critical("SASE INITIALIZED - ALL 16 LAYERS ACTIVE")
         logger.critical("=" * 60)
 
-    def process_telemetry(self, raw_telemetry: Dict[str, Any]) -> Dict[str, Any]:
+    def process_telemetry(self, raw_telemetry: dict[str, Any]) -> dict[str, Any]:
         """
         Process telemetry event through full SASE pipeline
 
@@ -244,7 +244,7 @@ class SASEOrchestrator:
             logger.error(f"Pipeline error: {e}")
             return {"success": False, "error": str(e)}
 
-    def get_system_status(self) -> Dict[str, Any]:
+    def get_system_status(self) -> dict[str, Any]:
         """Get comprehensive system status"""
         return {
             "substrate": self.substrate.get_health_status(),

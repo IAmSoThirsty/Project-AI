@@ -197,7 +197,9 @@ class FailureResponse:
     """
 
     failure_mode: FailureMode
-    detection_timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    detection_timestamp: str = field(
+        default_factory=lambda: datetime.now(UTC).isoformat()
+    )
     degradation_path: list[str] = field(default_factory=list)
     failover_target: str | None = None
     escalation_required: bool = False
@@ -255,7 +257,9 @@ class DecisionContract(ABC):
             authority.decision_type,
         )
 
-    def check_authorization(self, decision_type: str, context: dict[str, Any] | None = None) -> tuple[bool, str]:
+    def check_authorization(
+        self, decision_type: str, context: dict[str, Any] | None = None
+    ) -> tuple[bool, str]:
         """
         Check if a decision is authorized.
 
@@ -385,7 +389,9 @@ class SignalsTelemetry(ABC):
                         exc_info=True,
                     )
 
-    def register_signal_handler(self, signal_type: SignalType, handler: Callable[[Signal], None]) -> None:
+    def register_signal_handler(
+        self, signal_type: SignalType, handler: Callable[[Signal], None]
+    ) -> None:
         """
         Register a handler for a signal type.
 
@@ -448,7 +454,9 @@ class FailureSemantics(ABC):
         self.failure_history: list[FailureResponse] = []
         self.recovery_callbacks: dict[FailureMode, list[Callable]] = {}
 
-    def detect_failure(self, failure_mode: FailureMode, context: dict[str, Any] | None = None) -> FailureResponse:
+    def detect_failure(
+        self, failure_mode: FailureMode, context: dict[str, Any] | None = None
+    ) -> FailureResponse:
         """
         Detect and respond to failure.
 
@@ -501,10 +509,14 @@ class FailureSemantics(ABC):
     def clear_failure(self) -> None:
         """Clear current failure state."""
         self.current_failure_mode = None
-        logger.info("[%s] Failure cleared - returning to normal operation", self.component_name)
+        logger.info(
+            "[%s] Failure cleared - returning to normal operation", self.component_name
+        )
 
     @abstractmethod
-    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
+    def create_failure_response(
+        self, failure_mode: FailureMode, context: dict[str, Any]
+    ) -> FailureResponse:
         """
         Create a failure response for a given failure mode.
 

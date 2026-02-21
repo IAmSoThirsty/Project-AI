@@ -119,7 +119,9 @@ class EncryptedStateManager:
         # Thread safety
         self._lock = threading.Lock()
 
-        logger.info("Encrypted State Manager initialized (algorithm=%s)", algorithm.value)
+        logger.info(
+            "Encrypted State Manager initialized (algorithm=%s)", algorithm.value
+        )
 
     def _load_or_generate_master_key(self) -> bytes:
         """Load existing master key or generate new one."""
@@ -271,7 +273,9 @@ class EncryptedStateManager:
             with open(metadata_file, "w") as f:
                 json.dump(metadata, f, indent=2)
 
-            logger.info("Saved encrypted state: %s (%s bytes)", state_id, len(encrypted))
+            logger.info(
+                "Saved encrypted state: %s (%s bytes)", state_id, len(encrypted)
+            )
             return True
 
         except Exception as e:
@@ -394,7 +398,9 @@ class DataMigrationManager:
 
         logger.info("Data Migration Manager initialized")
 
-    def register_migration(self, from_version: str, to_version: str, migration_fn: callable):
+    def register_migration(
+        self, from_version: str, to_version: str, migration_fn: callable
+    ):
         """Register a migration function."""
         key = f"{from_version}->{to_version}"
         self.migrations[key] = migration_fn
@@ -405,7 +411,9 @@ class DataMigrationManager:
         version_str = data.get("version", "1.0.0")
         return DataVersion.from_string(version_str)
 
-    def migrate_data(self, data: dict[str, Any], target_version: DataVersion | None = None) -> dict[str, Any]:
+    def migrate_data(
+        self, data: dict[str, Any], target_version: DataVersion | None = None
+    ) -> dict[str, Any]:
         """
         Migrate data to target version.
 
@@ -598,7 +606,9 @@ class BackupManager:
                 return False
 
             # Create backup of current data before restore
-            self.create_backup("pre_restore_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+            self.create_backup(
+                "pre_restore_" + datetime.now().strftime("%Y%m%d_%H%M%S")
+            )
 
             # Remove current data
             if self.data_dir.exists():
@@ -686,12 +696,16 @@ class BackupManager:
 # Convenience functions
 
 
-def create_encrypted_state_manager(data_dir: str = "data", algorithm: str = "AES-256-GCM") -> EncryptedStateManager:
+def create_encrypted_state_manager(
+    data_dir: str = "data", algorithm: str = "AES-256-GCM"
+) -> EncryptedStateManager:
     """Create an encrypted state manager with default settings."""
     algo_enum = EncryptionAlgorithm(algorithm)
     return EncryptedStateManager(data_dir=data_dir, algorithm=algo_enum)
 
 
-def create_backup_manager(data_dir: str = "data", max_backups: int = 7) -> BackupManager:
+def create_backup_manager(
+    data_dir: str = "data", max_backups: int = 7
+) -> BackupManager:
     """Create a backup manager with default settings."""
     return BackupManager(data_dir=data_dir, max_backups=max_backups)

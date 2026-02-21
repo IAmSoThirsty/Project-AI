@@ -11,7 +11,7 @@ import json
 import logging
 import os
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class ImmutableAuditLog:
     def _get_last_entry(self) -> dict[str, Any]:
         """Read the last entry from the log."""
         try:
-            with open(self.log_path, "r", encoding="utf-8") as f:
+            with open(self.log_path, encoding="utf-8") as f:
                 lines = f.readlines()
                 if not lines:
                     return {}  # Should not happen if initialized

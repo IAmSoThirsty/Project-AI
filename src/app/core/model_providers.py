@@ -126,7 +126,9 @@ class PerplexityProvider(ModelProvider):
     ) -> str:
         """Create a chat completion using Perplexity API."""
         if not self._client:
-            raise RuntimeError("Perplexity not available. Check API key and installation.")
+            raise RuntimeError(
+                "Perplexity not available. Check API key and installation."
+            )
 
         try:
             response = self._client.chat.completions.create(
@@ -145,7 +147,9 @@ class PerplexityProvider(ModelProvider):
         return self._client is not None and self.api_key is not None
 
 
-def get_provider(provider_name: str = "openai", api_key: str | None = None) -> ModelProvider:
+def get_provider(
+    provider_name: str = "openai", api_key: str | None = None
+) -> ModelProvider:
     """
     Factory function to get a model provider.
 
@@ -166,7 +170,10 @@ def get_provider(provider_name: str = "openai", api_key: str | None = None) -> M
 
     provider_name_lower = provider_name.lower()
     if provider_name_lower not in providers:
-        raise ValueError(f"Unknown provider: {provider_name}. " f"Available providers: {list(providers.keys())}")
+        raise ValueError(
+            f"Unknown provider: {provider_name}. "
+            f"Available providers: {list(providers.keys())}"
+        )
 
     provider_class = providers[provider_name_lower]
     provider = provider_class(api_key=api_key)

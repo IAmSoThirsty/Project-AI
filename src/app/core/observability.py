@@ -60,7 +60,11 @@ class PerformanceMetric:
     value: float
     unit: str
     timestamp: datetime = field(
-        default_factory=lambda: (datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow())
+        default_factory=lambda: (
+            datetime.now(datetime.UTC)
+            if hasattr(datetime, "UTC")
+            else datetime.utcnow()
+        )
     )
     labels: dict[str, str] = field(default_factory=dict)
 
@@ -85,7 +89,11 @@ class SLAMetrics:
     error_count: int = 0
     latencies: list[float] = field(default_factory=list)
     last_check: datetime = field(
-        default_factory=lambda: (datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow())
+        default_factory=lambda: (
+            datetime.now(datetime.UTC)
+            if hasattr(datetime, "UTC")
+            else datetime.utcnow()
+        )
     )
 
     def calculate_percentile(self, percentile: float) -> float:
@@ -144,7 +152,9 @@ class DistributedTracer:
             logger.info(f"OpenTelemetry tracing initialized for {service_name}")
         else:
             self.tracer = None
-            logger.warning("OpenTelemetry not available. Install with: pip install opentelemetry-api opentelemetry-sdk")
+            logger.warning(
+                "OpenTelemetry not available. Install with: pip install opentelemetry-api opentelemetry-sdk"
+            )
 
     @contextmanager
     def start_span(self, name: str, **attributes):
@@ -209,27 +219,37 @@ class MetricsCollector:
         else:
             self.registry = None
             self._metrics = {}
-            logger.warning("Prometheus client not available. Install with: pip install prometheus-client")
+            logger.warning(
+                "Prometheus client not available. Install with: pip install prometheus-client"
+            )
 
-    def create_counter(self, name: str, description: str, labels: list[str] | None = None) -> Any | None:
+    def create_counter(
+        self, name: str, description: str, labels: list[str] | None = None
+    ) -> Any | None:
         """Create a counter metric."""
         if not self.enabled:
             return None
 
         key = f"counter_{name}"
         if key not in self._metrics:
-            self._metrics[key] = Counter(name, description, labelnames=labels or [], registry=self.registry)
+            self._metrics[key] = Counter(
+                name, description, labelnames=labels or [], registry=self.registry
+            )
 
         return self._metrics[key]
 
-    def create_gauge(self, name: str, description: str, labels: list[str] | None = None) -> Any | None:
+    def create_gauge(
+        self, name: str, description: str, labels: list[str] | None = None
+    ) -> Any | None:
         """Create a gauge metric."""
         if not self.enabled:
             return None
 
         key = f"gauge_{name}"
         if key not in self._metrics:
-            self._metrics[key] = Gauge(name, description, labelnames=labels or [], registry=self.registry)
+            self._metrics[key] = Gauge(
+                name, description, labelnames=labels or [], registry=self.registry
+            )
 
         return self._metrics[key]
 
@@ -259,18 +279,24 @@ class MetricsCollector:
 
         return self._metrics[key]
 
-    def create_summary(self, name: str, description: str, labels: list[str] | None = None) -> Any | None:
+    def create_summary(
+        self, name: str, description: str, labels: list[str] | None = None
+    ) -> Any | None:
         """Create a summary metric."""
         if not self.enabled:
             return None
 
         key = f"summary_{name}"
         if key not in self._metrics:
-            self._metrics[key] = Summary(name, description, labelnames=labels or [], registry=self.registry)
+            self._metrics[key] = Summary(
+                name, description, labelnames=labels or [], registry=self.registry
+            )
 
         return self._metrics[key]
 
-    def inc_counter(self, name: str, value: float = 1.0, labels: dict[str, str] | None = None) -> None:
+    def inc_counter(
+        self, name: str, value: float = 1.0, labels: dict[str, str] | None = None
+    ) -> None:
         """Increment a counter."""
         if not self.enabled:
             return
@@ -283,7 +309,9 @@ class MetricsCollector:
             else:
                 metric.inc(value)
 
-    def set_gauge(self, name: str, value: float, labels: dict[str, str] | None = None) -> None:
+    def set_gauge(
+        self, name: str, value: float, labels: dict[str, str] | None = None
+    ) -> None:
         """Set a gauge value."""
         if not self.enabled:
             return
@@ -296,7 +324,9 @@ class MetricsCollector:
             else:
                 metric.set(value)
 
-    def observe_histogram(self, name: str, value: float, labels: dict[str, str] | None = None) -> None:
+    def observe_histogram(
+        self, name: str, value: float, labels: dict[str, str] | None = None
+    ) -> None:
         """Observe a histogram value."""
         if not self.enabled:
             return
@@ -324,7 +354,9 @@ class SLATracker:
             self._slas[config.name] = SLAMetrics(config=config)
             logger.info(f"Registered SLA: {config.name}")
 
-    def record_request(self, sla_name: str, latency_ms: float, success: bool = True) -> None:
+    def record_request(
+        self, sla_name: str, latency_ms: float, success: bool = True
+    ) -> None:
         """
         Record a request for SLA tracking.
 
@@ -390,7 +422,9 @@ class PerformanceProfiler:
         self._lock = Lock()
 
     @contextmanager
-    def measure(self, name: str, unit: str = "ms", labels: dict[str, str] | None = None):
+    def measure(
+        self, name: str, unit: str = "ms", labels: dict[str, str] | None = None
+    ):
         """
         Context manager to measure performance.
 
@@ -409,7 +443,9 @@ class PerformanceProfiler:
         finally:
             duration = (time.time() - start_time) * 1000  # Convert to ms
 
-            metric = PerformanceMetric(name=name, value=duration, unit=unit, labels=labels or {})
+            metric = PerformanceMetric(
+                name=name, value=duration, unit=unit, labels=labels or {}
+            )
 
             with self._lock:
                 self._measurements[name].append(metric)
@@ -480,7 +516,9 @@ class ObservabilitySystem:
     def _initialize_standard_metrics(self) -> None:
         """Initialize standard metrics."""
         # Request metrics
-        self.metrics.create_counter("requests_total", "Total number of requests", labels=["method", "status"])
+        self.metrics.create_counter(
+            "requests_total", "Total number of requests", labels=["method", "status"]
+        )
 
         self.metrics.create_histogram(
             "request_duration_ms",
@@ -490,7 +528,9 @@ class ObservabilitySystem:
         )
 
         # Error metrics
-        self.metrics.create_counter("errors_total", "Total number of errors", labels=["error_type", "severity"])
+        self.metrics.create_counter(
+            "errors_total", "Total number of errors", labels=["error_type", "severity"]
+        )
 
         # System metrics
         self.metrics.create_gauge("subsystems_active", "Number of active subsystems")
@@ -529,13 +569,19 @@ class ObservabilitySystem:
 
                 # Record metrics
                 status = "success" if success else "error"
-                self.metrics.inc_counter("requests_total", labels={"method": method, "status": status})
+                self.metrics.inc_counter(
+                    "requests_total", labels={"method": method, "status": status}
+                )
 
-                self.metrics.observe_histogram("request_duration_ms", duration_ms, labels={"method": method})
+                self.metrics.observe_histogram(
+                    "request_duration_ms", duration_ms, labels={"method": method}
+                )
 
     def record_error(self, error_type: str, severity: str) -> None:
         """Record an error occurrence."""
-        self.metrics.inc_counter("errors_total", labels={"error_type": error_type, "severity": severity})
+        self.metrics.inc_counter(
+            "errors_total", labels={"error_type": error_type, "severity": severity}
+        )
 
     def update_subsystem_count(self, count: int) -> None:
         """Update active subsystem count."""
@@ -545,7 +591,9 @@ class ObservabilitySystem:
         """Update memory usage metric."""
         self.metrics.set_gauge("memory_usage_bytes", bytes_used)
 
-    def record_circuit_breaker_change(self, service: str, from_state: str, to_state: str) -> None:
+    def record_circuit_breaker_change(
+        self, service: str, from_state: str, to_state: str
+    ) -> None:
         """Record circuit breaker state change."""
         self.metrics.inc_counter(
             "circuit_breaker_state_changes",
@@ -561,7 +609,11 @@ class ObservabilitySystem:
         """
         return {
             "service_name": self.service_name,
-            "timestamp": (datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow()).isoformat(),
+            "timestamp": (
+                datetime.now(datetime.UTC)
+                if hasattr(datetime, "UTC")
+                else datetime.utcnow()
+            ).isoformat(),
             "sla_status": self.sla_tracker.get_all_sla_status(),
             "performance": self.profiler.get_all_statistics(),
             "tracing_enabled": self.tracer.enabled,

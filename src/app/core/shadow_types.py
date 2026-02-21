@@ -69,7 +69,9 @@ class MutationBoundary(Enum):
     READ_ONLY = "read_only"  # Shadow cannot mutate anything
     EPHEMERAL_ONLY = "ephemeral_only"  # Shadow can mutate ephemeral state only
     SHADOW_STATE_ONLY = "shadow_state_only"  # Shadow can mutate shadow state
-    VALIDATED_CANONICAL = "validated_canonical"  # Shadow can mutate canonical after validation
+    VALIDATED_CANONICAL = (
+        "validated_canonical"  # Shadow can mutate canonical after validation
+    )
     EMERGENCY_OVERRIDE = "emergency_override"  # Emergency containment mutations
 
 
@@ -134,7 +136,9 @@ class InvariantDefinition:
     invariant_id: str
     name: str
     description: str
-    validator: Callable[[Any, Any], tuple[bool, str]]  # (primary_result, shadow_result) -> (valid, reason)
+    validator: Callable[
+        [Any, Any], tuple[bool, str]
+    ]  # (primary_result, shadow_result) -> (valid, reason)
     is_critical: bool = True  # If false, log violation but don't quarantine
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -228,7 +232,9 @@ class ShadowContext:
         self.audit_hash = hashlib.sha256(audit_string.encode()).hexdigest()
         self.audit_sealed = True
 
-        logger.info("[%s] Shadow audit sealed: %s", self.shadow_id, self.audit_hash[:16])
+        logger.info(
+            "[%s] Shadow audit sealed: %s", self.shadow_id, self.audit_hash[:16]
+        )
 
         return self.audit_hash
 
@@ -316,7 +322,9 @@ class ShadowTelemetry:
         """Record a shadow activation."""
         self.total_activations += 1
         reason_key = reason.value
-        self.activations_by_reason[reason_key] = self.activations_by_reason.get(reason_key, 0) + 1
+        self.activations_by_reason[reason_key] = (
+            self.activations_by_reason.get(reason_key, 0) + 1
+        )
 
         if reason == ActivationReason.THREAT_SCORE:
             self.threat_triggered_activations += 1
@@ -329,7 +337,9 @@ class ShadowTelemetry:
 
         # Update running average
         n = self.total_divergences
-        self.avg_divergence_magnitude = (self.avg_divergence_magnitude * (n - 1) + magnitude) / n
+        self.avg_divergence_magnitude = (
+            self.avg_divergence_magnitude * (n - 1) + magnitude
+        ) / n
 
         # Update divergence rate
         if self.total_activations > 0:
@@ -344,9 +354,13 @@ class ShadowTelemetry:
 
         # Update violation rate
         if self.total_invariant_checks > 0:
-            self.invariant_violation_rate = self.invariant_violations / self.total_invariant_checks
+            self.invariant_violation_rate = (
+                self.invariant_violations / self.total_invariant_checks
+            )
 
-    def record_execution(self, duration_ms: float, cpu_ms: float, memory_mb: float) -> None:
+    def record_execution(
+        self, duration_ms: float, cpu_ms: float, memory_mb: float
+    ) -> None:
         """Record shadow execution metrics."""
         self.total_shadow_time_ms += duration_ms
 
@@ -354,7 +368,9 @@ class ShadowTelemetry:
         if n > 0:
             self.avg_shadow_overhead_ms = self.total_shadow_time_ms / n
             self.avg_cpu_usage_ms = (self.avg_cpu_usage_ms * (n - 1) + cpu_ms) / n
-            self.avg_memory_usage_mb = (self.avg_memory_usage_mb * (n - 1) + memory_mb) / n
+            self.avg_memory_usage_mb = (
+                self.avg_memory_usage_mb * (n - 1) + memory_mb
+            ) / n
 
     def get_summary(self) -> dict[str, Any]:
         """Get telemetry summary."""
@@ -375,7 +391,9 @@ class ShadowTelemetry:
 # ============================================================================
 
 
-def create_epsilon_invariant(name: str, epsilon: float = 0.01, is_critical: bool = True) -> InvariantDefinition:
+def create_epsilon_invariant(
+    name: str, epsilon: float = 0.01, is_critical: bool = True
+) -> InvariantDefinition:
     """
     Create an epsilon-based numerical invariant.
 
@@ -410,7 +428,9 @@ def create_epsilon_invariant(name: str, epsilon: float = 0.01, is_critical: bool
     )
 
 
-def create_identity_invariant(name: str, is_critical: bool = True) -> InvariantDefinition:
+def create_identity_invariant(
+    name: str, is_critical: bool = True
+) -> InvariantDefinition:
     """
     Create an identity invariant (results must be identical).
 

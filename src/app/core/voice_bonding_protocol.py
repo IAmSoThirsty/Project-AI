@@ -74,7 +74,10 @@ class BondingScore:
             return 0.0
 
         # Feedback score (40%)
-        feedback_score = ((self.positive_feedback * 2 - self.negative_feedback) / max(1, self.total_interactions)) * 0.4
+        feedback_score = (
+            (self.positive_feedback * 2 - self.negative_feedback)
+            / max(1, self.total_interactions)
+        ) * 0.4
 
         # Performance score (20%)
         performance_score = max(0, 1.0 - (self.avg_response_time_ms / 1000.0)) * 0.2
@@ -83,13 +86,18 @@ class BondingScore:
         preference_component = self.user_preference_score * 0.2
 
         # Emotional/context scores (20%)
-        awareness_component = self.emotional_match_score * 0.1 + self.context_awareness_score * 0.1
+        awareness_component = (
+            self.emotional_match_score * 0.1 + self.context_awareness_score * 0.1
+        )
 
         self.overall_score = max(
             0.0,
             min(
                 1.0,
-                feedback_score + performance_score + preference_component + awareness_component,
+                feedback_score
+                + performance_score
+                + preference_component
+                + awareness_component,
             ),
         )
         return self.overall_score
@@ -112,7 +120,9 @@ class UserEngagementProfile:
     last_interaction: str = field(default_factory=lambda: datetime.utcnow().isoformat())
     created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
 
-    def update_from_expression(self, expression_type: UserExpressionType, text: str, context: dict[str, Any]) -> None:
+    def update_from_expression(
+        self, expression_type: UserExpressionType, text: str, context: dict[str, Any]
+    ) -> None:
         """Update profile based on user expression"""
         self.expression_counts[expression_type.value] += 1
         self.interaction_count += 1
@@ -208,7 +218,9 @@ class EngagementProfiler:
                 logger.info("Created engagement profile for user: %s", user_id)
             return self._profiles[user_id]
 
-    def analyze_user_input(self, user_id: str, text: str, context: dict[str, Any] | None = None) -> dict[str, Any]:
+    def analyze_user_input(
+        self, user_id: str, text: str, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """
         Analyze user input for expression types and patterns.
         Returns comprehensive analysis for adaptive response.
@@ -252,7 +264,9 @@ class EngagementProfiler:
 
         # Detect sensitive topics
         text_lower = text.lower()
-        detected_topics = [topic for topic in self._sensitive_topics if topic in text_lower]
+        detected_topics = [
+            topic for topic in self._sensitive_topics if topic in text_lower
+        ]
         if detected_topics:
             analysis["contains_sensitive_topics"] = True
             analysis["sensitive_topics"] = detected_topics
@@ -260,7 +274,9 @@ class EngagementProfiler:
             analysis["recommended_emotion"] = VoiceEmotionType.EMPATHETIC
             analysis["expression_types"].append(UserExpressionType.SENSITIVE_TOPIC)
 
-            profile.update_from_expression(UserExpressionType.SENSITIVE_TOPIC, text, context)
+            profile.update_from_expression(
+                UserExpressionType.SENSITIVE_TOPIC, text, context
+            )
 
         # Detect emotional content
         if self._contains_positive_words(text):
@@ -269,14 +285,18 @@ class EngagementProfiler:
             analysis["recommended_emotion"] = VoiceEmotionType.HAPPY
             analysis["expression_types"].append(UserExpressionType.EMOTION_POSITIVE)
 
-            profile.update_from_expression(UserExpressionType.EMOTION_POSITIVE, text, context)
+            profile.update_from_expression(
+                UserExpressionType.EMOTION_POSITIVE, text, context
+            )
         elif self._contains_negative_words(text):
             analysis["sentiment"] = "negative"
             analysis["emotion_intensity"] = 0.7
             analysis["recommended_emotion"] = VoiceEmotionType.EMPATHETIC
             analysis["expression_types"].append(UserExpressionType.EMOTION_NEGATIVE)
 
-            profile.update_from_expression(UserExpressionType.EMOTION_NEGATIVE, text, context)
+            profile.update_from_expression(
+                UserExpressionType.EMOTION_NEGATIVE, text, context
+            )
 
         # Detect formality
         if analysis["formality_level"] > 0.7:
@@ -333,7 +353,9 @@ class EngagementProfiler:
         negative = ["bad", "terrible", "awful", "hate", "sad", "angry", "frustrated"]
         return any(word in text.lower() for word in negative)
 
-    def get_adaptive_response_params(self, user_id: str, analysis: dict[str, Any]) -> dict[str, Any]:
+    def get_adaptive_response_params(
+        self, user_id: str, analysis: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Get parameters for adaptive voice response based on user profile and analysis.
         """
@@ -423,7 +445,9 @@ class VoiceBondingProtocol:
         os.makedirs(data_dir, exist_ok=True)
 
         self._bonding_states: dict[str, BondingPhase] = {}
-        self._scores: dict[str, dict[str, BondingScore]] = {}  # user_id -> {model_id -> score}
+        self._scores: dict[
+            str, dict[str, BondingScore]
+        ] = {}  # user_id -> {model_id -> score}
         self._selected_models: dict[str, str] = {}  # user_id -> model_id
         self._lock = threading.RLock()
 
@@ -442,7 +466,9 @@ class VoiceBondingProtocol:
 
                 # Initialize scores for all available models
                 for metadata in self.registry.list_models():
-                    self._scores[user_id][metadata.model_id] = BondingScore(model_id=metadata.model_id)
+                    self._scores[user_id][metadata.model_id] = BondingScore(
+                        model_id=metadata.model_id
+                    )
 
                 logger.info("Started bonding for user %s", user_id)
                 return True
@@ -482,7 +508,9 @@ class VoiceBondingProtocol:
             merged_context.update(analysis)
             merged_context.update(params)
 
-            response = model.synthesize(text=text, emotion=params["emotion"], context=merged_context)
+            response = model.synthesize(
+                text=text, emotion=params["emotion"], context=merged_context
+            )
             response_time_ms = (time.time() - start_time) * 1000
 
             # Update bonding score
@@ -492,12 +520,15 @@ class VoiceBondingProtocol:
 
                 # Update average response time
                 score.avg_response_time_ms = (
-                    score.avg_response_time_ms * (score.total_interactions - 1) + response_time_ms
+                    score.avg_response_time_ms * (score.total_interactions - 1)
+                    + response_time_ms
                 ) / score.total_interactions
 
                 # Context awareness score based on how well emotion matched
                 if params["emotion"] == response.emotion:
-                    score.context_awareness_score = min(1.0, score.context_awareness_score + 0.1)
+                    score.context_awareness_score = min(
+                        1.0, score.context_awareness_score + 0.1
+                    )
 
                 score.calculate_overall_score()
                 score.last_updated = datetime.utcnow().isoformat()
@@ -522,10 +553,14 @@ class VoiceBondingProtocol:
 
                 if feedback == "positive":
                     score.positive_feedback += 1
-                    score.user_preference_score = min(1.0, score.user_preference_score + 0.1)
+                    score.user_preference_score = min(
+                        1.0, score.user_preference_score + 0.1
+                    )
                 elif feedback == "negative":
                     score.negative_feedback += 1
-                    score.user_preference_score = max(0.0, score.user_preference_score - 0.1)
+                    score.user_preference_score = max(
+                        0.0, score.user_preference_score - 0.1
+                    )
                 else:
                     score.neutral_feedback += 1
 
@@ -593,7 +628,10 @@ class VoiceBondingProtocol:
                 "status": self._bonding_states[user_id].value,
                 "selected_model": self._selected_models.get(user_id),
                 "experimented_models": len(self._scores.get(user_id, {})),
-                "scores": {model_id: score.overall_score for model_id, score in self._scores.get(user_id, {}).items()},
+                "scores": {
+                    model_id: score.overall_score
+                    for model_id, score in self._scores.get(user_id, {}).items()
+                },
             }
 
     def _save_bonding_state(self, user_id: str) -> None:
@@ -602,9 +640,14 @@ class VoiceBondingProtocol:
             state_file = os.path.join(self.data_dir, f"{user_id}_bonding.json")
 
             state_data = {
-                "phase": self._bonding_states.get(user_id, BondingPhase.DISCOVERY).value,
+                "phase": self._bonding_states.get(
+                    user_id, BondingPhase.DISCOVERY
+                ).value,
                 "selected_model": self._selected_models.get(user_id),
-                "scores": {model_id: asdict(score) for model_id, score in self._scores.get(user_id, {}).items()},
+                "scores": {
+                    model_id: asdict(score)
+                    for model_id, score in self._scores.get(user_id, {}).items()
+                },
                 "updated_at": datetime.utcnow().isoformat(),
             }
 

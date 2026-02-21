@@ -58,7 +58,9 @@ class ExecutionType(Enum):
 
     AGENT_ACTION = "agent_action"  # Agent execution (e.g., ExpertAgent, PlannerAgent)
     TOOL_INVOCATION = "tool_invocation"  # Tool/utility execution
-    SYSTEM_OPERATION = "system_operation"  # Core system operation (Persona, Memory, etc.)
+    SYSTEM_OPERATION = (
+        "system_operation"  # Core system operation (Persona, Memory, etc.)
+    )
     PLUGIN_EXECUTION = "plugin_execution"  # Plugin runner execution
     COUNCIL_DECISION = "council_decision"  # Council/governance decision
     LEARNING_REQUEST = "learning_request"  # Learning engine request
@@ -80,7 +82,9 @@ class MutationIntent(Enum):
     """Intent classification for mutations to identity/memory."""
 
     CORE = "core"  # genesis, law_hierarchy, core_values - requires full consensus
-    STANDARD = "standard"  # personality_weights, preferences - requires standard consensus
+    STANDARD = (
+        "standard"  # personality_weights, preferences - requires standard consensus
+    )
     ROUTINE = "routine"  # regular operations - allowed
 
 
@@ -498,7 +502,9 @@ class CognitionKernel:
         Raises:
             PermissionError: If governance blocks the action
         """
-        logger.info("[%s] Enforcing governance for %s", context.trace_id, action.action_name)
+        logger.info(
+            "[%s] Enforcing governance for %s", context.trace_id, action.action_name
+        )
 
         # Freeze identity snapshot (immutable, governance can only observe)
         identity_snapshot = self._freeze_identity_snapshot()
@@ -595,7 +601,9 @@ class CognitionKernel:
         if not self.shadow_plane:
             return self.act(action, context)
 
-        logger.info("[%s] Shadow-aware execution: %s", context.trace_id, action.action_name)
+        logger.info(
+            "[%s] Shadow-aware execution: %s", context.trace_id, action.action_name
+        )
 
         # Build shadow context from execution context
         shadow_context = {
@@ -639,17 +647,31 @@ class CognitionKernel:
             if shadow_result.should_quarantine:
                 context.status = ExecutionStatus.BLOCKED
                 context.error = shadow_result.quarantine_reason
-                logger.warning("[%s] Shadow quarantine: %s", context.trace_id, shadow_result.quarantine_reason)
-                raise PermissionError(f"Shadow quarantine: {shadow_result.quarantine_reason}")
+                logger.warning(
+                    "[%s] Shadow quarantine: %s",
+                    context.trace_id,
+                    shadow_result.quarantine_reason,
+                )
+                raise PermissionError(
+                    f"Shadow quarantine: {shadow_result.quarantine_reason}"
+                )
 
-            logger.info("[%s] Shadow execution complete: commit=%s", context.trace_id, shadow_result.should_commit)
+            logger.info(
+                "[%s] Shadow execution complete: commit=%s",
+                context.trace_id,
+                shadow_result.should_commit,
+            )
 
         except PermissionError:
             # Re-raise quarantine
             raise
         except Exception as e:
             # Shadow failure - fall back to primary only with warning
-            logger.warning("[%s] Shadow execution failed, falling back to primary: %s", context.trace_id, e)
+            logger.warning(
+                "[%s] Shadow execution failed, falling back to primary: %s",
+                context.trace_id,
+                e,
+            )
             return self.act(action, context)
 
     def reflect(self, context: ExecutionContext) -> None:
@@ -678,7 +700,9 @@ class CognitionKernel:
                     "action": context.proposed_action.action_name,
                     "result_success": context.status == ExecutionStatus.COMPLETED,
                     "governance_decision": (
-                        context.governance_decision.reason if context.governance_decision else None
+                        context.governance_decision.reason
+                        if context.governance_decision
+                        else None
                     ),
                     "duration_ms": context.duration_ms,
                 }
@@ -816,7 +840,9 @@ class CognitionKernel:
         return {
             "intent": "execute",
             "action_name": (
-                str(user_input) if not isinstance(user_input, dict) else user_input.get("action", "unknown")
+                str(user_input)
+                if not isinstance(user_input, dict)
+                else user_input.get("action", "unknown")
             ),
             "requires_approval": metadata.get("requires_approval", False),
             "risk_level": metadata.get("risk_level", "low"),
@@ -837,7 +863,9 @@ class CognitionKernel:
             return Action(
                 action_id=action_id,
                 action_name=interpretation["action_name"],
-                action_type=ExecutionType[interpretation.get("execution_type", "AGENT_ACTION").upper()],
+                action_type=ExecutionType[
+                    interpretation.get("execution_type", "AGENT_ACTION").upper()
+                ],
                 callable=interpretation["_callable"],
                 args=interpretation.get("_args", ()),
                 kwargs=interpretation.get("_kwargs", {}),
@@ -945,7 +973,9 @@ class CognitionKernel:
                     input_data=action.action_name,
                     context={
                         "identity_snapshot": identity_snapshot,
-                        "mutation_intent": (mutation_intent.value if mutation_intent else None),
+                        "mutation_intent": (
+                            mutation_intent.value if mutation_intent else None
+                        ),
                         **action.metadata,
                     },
                     skip_validation=False,
@@ -956,7 +986,11 @@ class CognitionKernel:
                     decision_id=decision_id,
                     action_id=action.action_id,
                     approved=approved,
-                    reason=(result.get("error", "Triumvirate approved") if not approved else "Triumvirate approved"),
+                    reason=(
+                        result.get("error", "Triumvirate approved")
+                        if not approved
+                        else "Triumvirate approved"
+                    ),
                     council_votes=result.get("pipeline", {}),
                     mutation_intent=mutation_intent,
                     consensus_required=consensus_required,
@@ -1027,18 +1061,34 @@ class CognitionKernel:
         success: bool,
     ) -> ExecutionResult:
         """Build an ExecutionResult from the context."""
-        governance_approved = context.governance_decision.approved if context.governance_decision else False
+        governance_approved = (
+            context.governance_decision.approved
+            if context.governance_decision
+            else False
+        )
 
         return ExecutionResult(
             trace_id=context.trace_id,
             success=success,
             result=context.result,
             governance_approved=governance_approved,
-            governance_reason=(context.governance_decision.reason if context.governance_decision else None),
-            triumvirate_votes=(context.governance_decision.council_votes if context.governance_decision else None),
+            governance_reason=(
+                context.governance_decision.reason
+                if context.governance_decision
+                else None
+            ),
+            triumvirate_votes=(
+                context.governance_decision.council_votes
+                if context.governance_decision
+                else None
+            ),
             duration_ms=context.duration_ms,
             error=context.error,
-            blocked_reason=(context.error if not success and context.status == ExecutionStatus.BLOCKED else None),
+            blocked_reason=(
+                context.error
+                if not success and context.status == ExecutionStatus.BLOCKED
+                else None
+            ),
             metadata=context.metadata,
         )
 
@@ -1091,9 +1141,17 @@ class CognitionKernel:
     def get_statistics(self) -> dict[str, Any]:
         """Get kernel execution statistics."""
         total = len(self.execution_history)
-        completed = sum(1 for ctx in self.execution_history if ctx.status == ExecutionStatus.COMPLETED)
-        failed = sum(1 for ctx in self.execution_history if ctx.status == ExecutionStatus.FAILED)
-        blocked = sum(1 for ctx in self.execution_history if ctx.status == ExecutionStatus.BLOCKED)
+        completed = sum(
+            1
+            for ctx in self.execution_history
+            if ctx.status == ExecutionStatus.COMPLETED
+        )
+        failed = sum(
+            1 for ctx in self.execution_history if ctx.status == ExecutionStatus.FAILED
+        )
+        blocked = sum(
+            1 for ctx in self.execution_history if ctx.status == ExecutionStatus.BLOCKED
+        )
 
         return {
             "total_executions": total,

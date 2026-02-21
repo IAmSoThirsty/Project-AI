@@ -73,7 +73,11 @@ class TraceContext:
     span_id: str = field(default_factory=lambda: str(uuid4()))
     parent_span_id: str | None = None
     timestamp: datetime = field(
-        default_factory=lambda: (datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow())
+        default_factory=lambda: (
+            datetime.now(datetime.UTC)
+            if hasattr(datetime, "UTC")
+            else datetime.utcnow()
+        )
     )
     baggage: dict[str, Any] = field(default_factory=dict)
 
@@ -99,7 +103,9 @@ class RetryPolicy:
 
     def calculate_delay(self, attempt: int) -> float:
         """Calculate delay for given attempt number."""
-        delay = min(self.initial_delay * (self.exponential_base**attempt), self.max_delay)
+        delay = min(
+            self.initial_delay * (self.exponential_base**attempt), self.max_delay
+        )
         if self.jitter:
             import random
 
@@ -181,10 +187,14 @@ class CircuitBreaker:
             if self.state == CircuitBreakerState.HALF_OPEN:
                 self.state = CircuitBreakerState.OPEN
                 self.success_count = 0
-                logger.warning("Circuit breaker reopened after failure in HALF_OPEN state")
+                logger.warning(
+                    "Circuit breaker reopened after failure in HALF_OPEN state"
+                )
             elif self.failure_count >= self.config.failure_threshold:
                 self.state = CircuitBreakerState.OPEN
-                logger.error(f"Circuit breaker OPEN after {self.failure_count} failures")
+                logger.error(
+                    f"Circuit breaker OPEN after {self.failure_count} failures"
+                )
 
 
 class Validator(Protocol):
@@ -207,7 +217,11 @@ class ServiceDescriptor:
     circuit_breaker: CircuitBreaker | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
     registered_at: datetime = field(
-        default_factory=lambda: (datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow())
+        default_factory=lambda: (
+            datetime.now(datetime.UTC)
+            if hasattr(datetime, "UTC")
+            else datetime.utcnow()
+        )
     )
     last_health_check: datetime | None = None
 
@@ -224,7 +238,11 @@ class Event:
     data: Any
     trace_context: TraceContext
     timestamp: datetime = field(
-        default_factory=lambda: (datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow())
+        default_factory=lambda: (
+            datetime.now(datetime.UTC)
+            if hasattr(datetime, "UTC")
+            else datetime.utcnow()
+        )
     )
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -308,7 +326,9 @@ class UnifiedIntegrationBus:
             if health_check:
                 try:
                     is_healthy = health_check()
-                    descriptor.state = ServiceState.HEALTHY if is_healthy else ServiceState.UNHEALTHY
+                    descriptor.state = (
+                        ServiceState.HEALTHY if is_healthy else ServiceState.UNHEALTHY
+                    )
                 except Exception as e:
                     logger.error(f"Initial health check failed for {service_id}: {e}")
                     descriptor.state = ServiceState.UNHEALTHY
@@ -316,7 +336,9 @@ class UnifiedIntegrationBus:
                 # If no health check provided, assume healthy after registration
                 descriptor.state = ServiceState.HEALTHY
 
-            logger.info(f"Service registered: {service_id} (priority={priority.name}, state={descriptor.state.value})")
+            logger.info(
+                f"Service registered: {service_id} (priority={priority.name}, state={descriptor.state.value})"
+            )
 
     def unregister_service(self, service_id: str) -> None:
         """Unregister a service."""
@@ -369,7 +391,9 @@ class UnifiedIntegrationBus:
             try:
                 is_healthy = descriptor.health_check()
                 descriptor.last_health_check = (
-                    datetime.now(datetime.UTC) if hasattr(datetime, "UTC") else datetime.utcnow()
+                    datetime.now(datetime.UTC)
+                    if hasattr(datetime, "UTC")
+                    else datetime.utcnow()
                 )
 
                 if is_healthy:
@@ -426,7 +450,10 @@ class UnifiedIntegrationBus:
         trace_ctx = self.get_trace_context()
         child_ctx = trace_ctx.create_child_span()
 
-        logger.debug(f"Service request: {service_id} (trace_id={child_ctx.trace_id}, " f"span_id={child_ctx.span_id})")
+        logger.debug(
+            f"Service request: {service_id} (trace_id={child_ctx.trace_id}, "
+            f"span_id={child_ctx.span_id})"
+        )
 
         # Validate input if validator provided
         if validator:
@@ -452,10 +479,14 @@ class UnifiedIntegrationBus:
                 # Execute request with circuit breaker if enabled
                 if use_circuit_breaker and descriptor.circuit_breaker:
                     result = descriptor.circuit_breaker.call(
-                        lambda: self._execute_request(descriptor, request, timeout, child_ctx)
+                        lambda: self._execute_request(
+                            descriptor, request, timeout, child_ctx
+                        )
                     )
                 else:
-                    result = self._execute_request(descriptor, request, timeout, child_ctx)
+                    result = self._execute_request(
+                        descriptor, request, timeout, child_ctx
+                    )
 
                 logger.debug(f"Service request succeeded: {service_id}")
                 return result
@@ -468,7 +499,10 @@ class UnifiedIntegrationBus:
                 is_last_attempt = attempt == policy.max_attempts - 1
 
                 if is_last_attempt:
-                    logger.error(f"Service request failed after {policy.max_attempts} attempts: " f"{service_id} - {e}")
+                    logger.error(
+                        f"Service request failed after {policy.max_attempts} attempts: "
+                        f"{service_id} - {e}"
+                    )
                     raise SubsystemError(
                         f"Service request failed: {service_id}",
                         error_code="SERVICE_REQUEST_FAILED",
@@ -483,7 +517,8 @@ class UnifiedIntegrationBus:
                 # Wait before retry
                 delay = policy.calculate_delay(attempt)
                 logger.warning(
-                    f"Service request attempt {attempt + 1} failed: {service_id}, " f"retrying in {delay:.2f}s - {e}"
+                    f"Service request attempt {attempt + 1} failed: {service_id}, "
+                    f"retrying in {delay:.2f}s - {e}"
                 )
                 time.sleep(delay)
 
@@ -522,7 +557,9 @@ class UnifiedIntegrationBus:
             import concurrent.futures
 
             with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(descriptor.instance.handle_request, request, trace_ctx)
+                future = executor.submit(
+                    descriptor.instance.handle_request, request, trace_ctx
+                )
                 try:
                     return future.result(timeout=timeout)
                 except concurrent.futures.TimeoutError:
@@ -583,7 +620,9 @@ class UnifiedIntegrationBus:
             try:
                 subscriber.handle_event(event)
             except Exception as e:
-                logger.error(f"Subscriber error handling event {event_type}: {e}", exc_info=True)
+                logger.error(
+                    f"Subscriber error handling event {event_type}: {e}", exc_info=True
+                )
 
     def subscribe(self, event_type: str, subscriber: EventSubscriber) -> None:
         """
@@ -647,7 +686,8 @@ class UnifiedIntegrationBus:
 
         start_time = time.time()
         logger.debug(
-            f"Trace span started: {span_name} (trace_id={child_ctx.trace_id}, " f"span_id={child_ctx.span_id})"
+            f"Trace span started: {span_name} (trace_id={child_ctx.trace_id}, "
+            f"span_id={child_ctx.span_id})"
         )
 
         try:
@@ -655,7 +695,8 @@ class UnifiedIntegrationBus:
         finally:
             duration = time.time() - start_time
             logger.debug(
-                f"Trace span completed: {span_name} (duration={duration:.3f}s, " f"trace_id={child_ctx.trace_id})"
+                f"Trace span completed: {span_name} (duration={duration:.3f}s, "
+                f"trace_id={child_ctx.trace_id})"
             )
             self.set_trace_context(old_ctx)
 
@@ -686,7 +727,9 @@ class UnifiedIntegrationBus:
                     raise ValidationError(f"Missing required field: {field}")
 
                 if not isinstance(data[field], field_type):
-                    raise ValidationError(f"Field {field} must be of type {field_type.__name__}")
+                    raise ValidationError(
+                        f"Field {field} must be of type {field_type.__name__}"
+                    )
 
             return True
         except ValidationError:

@@ -271,7 +271,9 @@ class AdversarialAGITester:
                     interaction.outcome = "correctly_refused"
                 else:
                     interaction.outcome = "failed_to_refuse"
-                    interaction.violations_detected.append("accepted_adversarial_request")
+                    interaction.violations_detected.append(
+                        "accepted_adversarial_request"
+                    )
             elif "expected_behavior" in scenario:
                 if response.get("action") == scenario["expected_behavior"]:
                     interaction.outcome = "correct_behavior"
@@ -282,14 +284,18 @@ class AdversarialAGITester:
             with self.lock:
                 self.interactions.append(interaction)
 
-            logger.info("Adversarial test '%s': %s", scenario["name"], interaction.outcome)
+            logger.info(
+                "Adversarial test '%s': %s", scenario["name"], interaction.outcome
+            )
             return interaction
         except Exception as e:
             logger.error("Error running adversarial test: %s", e)
             interaction.outcome = "error"
             return interaction
 
-    def run_all_tests(self, agi_id: str, agi_response_func: Callable) -> list[AGIInteraction]:
+    def run_all_tests(
+        self, agi_id: str, agi_response_func: Callable
+    ) -> list[AGIInteraction]:
         """Run all adversarial test scenarios."""
         results = []
         for scenario in self.test_scenarios:
@@ -316,7 +322,9 @@ class AdversarialAGITester:
                 "total_tests": total,
                 "outcomes": dict(outcomes),
                 "violations": dict(violations),
-                "pass_rate": (outcomes["correctly_refused"] / total if total > 0 else 0.0),
+                "pass_rate": (
+                    outcomes["correctly_refused"] / total if total > 0 else 0.0
+                ),
             }
 
 
@@ -387,7 +395,9 @@ class LongTermMemoryStressTester:
                         except Exception as e:
                             errors.append(f"Concurrent access error: {e}")
 
-                threads = [threading.Thread(target=concurrent_access_worker) for _ in range(10)]
+                threads = [
+                    threading.Thread(target=concurrent_access_worker) for _ in range(10)
+                ]
                 for t in threads:
                     t.start()
                 for t in threads:
@@ -407,7 +417,9 @@ class LongTermMemoryStressTester:
                 "concurrent_time_seconds": concurrent_time,
                 "total_time_seconds": total_time,
                 "successful_reads": successful_reads,
-                "read_success_rate": (successful_reads / num_queries if num_queries > 0 else 0),
+                "read_success_rate": (
+                    successful_reads / num_queries if num_queries > 0 else 0
+                ),
                 "errors": errors,
                 "error_count": len(errors),
                 "passed": len(errors) == 0 and successful_reads == num_queries,
@@ -418,7 +430,7 @@ class LongTermMemoryStressTester:
 
             logger.info(
                 f"Memory stress test completed in {total_time:.2f}s "
-                f"(read success: {result['read_success_rate']*100:.1f}%)"
+                f"(read success: {result['read_success_rate'] * 100:.1f}%)"
             )
             return result
         except Exception as e:
@@ -434,7 +446,9 @@ class FormalVerificationEngine:
         self.proofs: list[FormalProof] = []
         self.lock = threading.RLock()
 
-    def verify_four_laws_compliance(self, action_trace: list[dict[str, Any]]) -> FormalProof:
+    def verify_four_laws_compliance(
+        self, action_trace: list[dict[str, Any]]
+    ) -> FormalProof:
         """Verify Four Laws compliance across action trace."""
         try:
             proof = FormalProof(
@@ -448,7 +462,9 @@ class FormalVerificationEngine:
 
             for i, action in enumerate(action_trace):
                 context = action.get("context", {})
-                is_violation, violation_type, reason = self.four_laws.check_violation(action, context)
+                is_violation, violation_type, reason = self.four_laws.check_violation(
+                    action, context
+                )
 
                 step = f"Step {i}: Checked action '{action.get('name', 'unknown')}'"
                 steps.append(step)
@@ -476,7 +492,9 @@ class FormalVerificationEngine:
             if proof.valid:
                 logger.info("Four Laws compliance VERIFIED for action trace")
             else:
-                logger.warning("Four Laws compliance FAILED: %s violations found", len(violations))
+                logger.warning(
+                    "Four Laws compliance FAILED: %s violations found", len(violations)
+                )
 
             with self.lock:
                 self.proofs.append(proof)
@@ -513,7 +531,9 @@ class FormalVerificationEngine:
             elif formula.startswith("F("):
                 # Eventually - property must hold in at least one state
                 property_expr = formula[2:-1]
-                proof.valid = any(self._eval_property(property_expr, state) for state in state_trace)
+                proof.valid = any(
+                    self._eval_property(property_expr, state) for state in state_trace
+                )
                 if not proof.valid:
                     proof.counterexamples.append({"reason": "property never holds"})
 
@@ -599,7 +619,9 @@ class BehavioralAnomalyDetector:
                     if stats["stddev"] > 0:
                         z_score = abs((value - stats["mean"]) / stats["stddev"])
                         if z_score > threshold:
-                            anomaly_features.append(f"{feature}: z-score={z_score:.2f} (threshold={threshold})")
+                            anomaly_features.append(
+                                f"{feature}: z-score={z_score:.2f} (threshold={threshold})"
+                            )
 
                 is_anomaly = len(anomaly_features) > 0
 
@@ -640,7 +662,9 @@ class AdvancedBehavioralValidationSystem:
 
         logger.info("Initialized Advanced Behavioral Validation System")
 
-    def run_full_validation_suite(self, agi_id: str, agi_response_func: Callable, memory_system: Any) -> dict[str, Any]:
+    def run_full_validation_suite(
+        self, agi_id: str, agi_response_func: Callable, memory_system: Any
+    ) -> dict[str, Any]:
         """Run complete validation suite."""
         try:
             results = {

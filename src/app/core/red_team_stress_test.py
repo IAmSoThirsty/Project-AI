@@ -179,7 +179,8 @@ class RedTeamStressTestGenerator:
             base_payload = sql_base[i % len(sql_base)]
             polyglot = polyglot_prefixes[i % len(polyglot_prefixes)]
             encoding_chain = [
-                self.encoding_variants[j % len(self.encoding_variants)] for j in range(i % 3 + 1)  # 1-3 encoding layers
+                self.encoding_variants[j % len(self.encoding_variants)]
+                for j in range(i % 3 + 1)  # 1-3 encoding layers
             ]
 
             # Enhanced variations (25% more)
@@ -206,7 +207,7 @@ class RedTeamStressTestGenerator:
                     category="RT_A_advanced_sql_polyglot",
                     severity="critical",
                     difficulty="redteam",
-                    title=f"Advanced SQL injection polyglot with {len(encoding_chain)}-layer encoding - variant {i+1}",
+                    title=f"Advanced SQL injection polyglot with {len(encoding_chain)}-layer encoding - variant {i + 1}",
                     description=f"Multi-layered SQL injection using polyglot techniques, {len(encoding_chain)} encoding layers, and advanced WAF bypass",
                     attack_chain=[
                         f"Apply {polyglot} polyglot prefix",
@@ -246,7 +247,7 @@ class RedTeamStressTestGenerator:
                     ],
                     cvss_score=9.5 + (i % 5) / 10.0,
                     mitre_tactics=["T1190", "T1059.007", "T1213"],
-                    cve_references=[f"CVE-2026-{50000+i}"],
+                    cve_references=[f"CVE-2026-{50000 + i}"],
                     target_systems=["database", "web_app", "api_gateway"],
                 )
             )
@@ -281,7 +282,7 @@ class RedTeamStressTestGenerator:
                     category="RT_B_multi_vector_chain",
                     severity="critical",
                     difficulty="redteam",
-                    title=f"Multi-vector attack chain: {' -> '.join(combo)} - variant {i+1}",
+                    title=f"Multi-vector attack chain: {' -> '.join(combo)} - variant {i + 1}",
                     description=f"Chained attack combining {', '.join(combo)} with lateral movement and persistence",
                     attack_chain=[
                         f"Stage 1: {combo[0]} for initial foothold",
@@ -319,7 +320,7 @@ class RedTeamStressTestGenerator:
                     ],
                     cvss_score=9.8,
                     mitre_tactics=["T1190", "T1068", "T1053", "T1048"],
-                    cve_references=[f"CVE-2026-{60000+i}"],
+                    cve_references=[f"CVE-2026-{60000 + i}"],
                     target_systems=["web_app", "database", "file_system", "network"],
                 )
             )
@@ -361,7 +362,7 @@ class RedTeamStressTestGenerator:
                     category="RT_C_ai_adversarial",
                     severity="critical",
                     difficulty="redteam",
-                    title=f"AI adversarial attack: {attack_type} with {len(prompt_variations)} variations - {i+1}",
+                    title=f"AI adversarial attack: {attack_type} with {len(prompt_variations)} variations - {i + 1}",
                     description=f"Advanced {attack_type} using novel techniques and imperceptible perturbations",
                     attack_chain=[
                         "Analyze model behavior and architecture",
@@ -406,7 +407,7 @@ class RedTeamStressTestGenerator:
                     ],
                     cvss_score=9.0 + (i % 10) / 10.0,
                     mitre_tactics=["T1590", "T1595", "T1059"],
-                    cve_references=[f"CVE-2026-{70000+i}"],
+                    cve_references=[f"CVE-2026-{70000 + i}"],
                     target_systems=["ai_model", "llm_api", "ml_inference_engine"],
                 )
             )
@@ -424,7 +425,7 @@ class RedTeamStressTestGenerator:
                     category="RT_D_zero_day_simulation",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Zero-day simulation: Novel exploitation technique {i+1}",
+                    title=f"Zero-day simulation: Novel exploitation technique {i + 1}",
                     description="Simulated zero-day exploit with no known patches or signatures",
                     attack_chain=[
                         "Identify novel vulnerability class",
@@ -442,7 +443,10 @@ class RedTeamStressTestGenerator:
                         "exploit_technique": f"novel_technique_{i}",
                         "signature_evasion": True,
                     },
-                    variations=[f"exploit_variant_{j}" for j in range(int(7 * self.variation_multiplier))],
+                    variations=[
+                        f"exploit_variant_{j}"
+                        for j in range(int(7 * self.variation_multiplier))
+                    ],
                     evasion_techniques=[
                         "polymorphic",
                         "metamorphic",
@@ -489,7 +493,7 @@ class RedTeamStressTestGenerator:
                     category="RT_E_crypto_advanced",
                     severity="high",
                     difficulty="expert",
-                    title=f"Advanced cryptographic attack: {attack} - {i+1}",
+                    title=f"Advanced cryptographic attack: {attack} - {i + 1}",
                     description=f"Sophisticated {attack} with statistical analysis and timing exploitation",
                     attack_chain=[
                         "Collect cryptographic samples",
@@ -504,7 +508,10 @@ class RedTeamStressTestGenerator:
                         "timing_precision_ns": 100 - (i % 50),
                         "success_probability": 0.85 + (i % 15) / 100.0,
                     },
-                    variations=[f"timing_variant_{j}" for j in range(int(5 * self.variation_multiplier))],
+                    variations=[
+                        f"timing_variant_{j}"
+                        for j in range(int(5 * self.variation_multiplier))
+                    ],
                     evasion_techniques=[
                         "low_and_slow",
                         "distributed_attack",
@@ -536,7 +543,7 @@ class RedTeamStressTestGenerator:
                     category="RT_F_supply_chain",
                     severity="critical",
                     difficulty="redteam",
-                    title=f"Supply chain compromise: Dependency poisoning {i+1}",
+                    title=f"Supply chain compromise: Dependency poisoning {i + 1}",
                     description="Malicious code injection through compromised dependencies",
                     attack_chain=[
                         "Identify popular dependency",
@@ -555,7 +562,10 @@ class RedTeamStressTestGenerator:
                         "backdoor_trigger": f"trigger_{i}",
                         "c2_protocol": ["dns", "https", "websocket"][i % 3],
                     },
-                    variations=[f"injection_variant_{j}" for j in range(int(6 * self.variation_multiplier))],
+                    variations=[
+                        f"injection_variant_{j}"
+                        for j in range(int(6 * self.variation_multiplier))
+                    ],
                     evasion_techniques=[
                         "delayed_activation",
                         "environmental_keying",
@@ -571,7 +581,7 @@ class RedTeamStressTestGenerator:
                     ],
                     cvss_score=9.5,
                     mitre_tactics=["T1195", "T1608"],
-                    cve_references=[f"CVE-2026-{80000+i}"],
+                    cve_references=[f"CVE-2026-{80000 + i}"],
                     target_systems=[
                         "build_pipeline",
                         "dependency_manager",
@@ -593,7 +603,7 @@ class RedTeamStressTestGenerator:
                     category="RT_G_protocol_exploit",
                     severity="high",
                     difficulty="expert",
-                    title=f"Protocol exploitation: HTTP request smuggling variant {i+1}",
+                    title=f"Protocol exploitation: HTTP request smuggling variant {i + 1}",
                     description="Advanced HTTP desync attacks and protocol confusion",
                     attack_chain=[
                         "Identify protocol parsing inconsistencies",
@@ -603,11 +613,16 @@ class RedTeamStressTestGenerator:
                         "Poison cache or hijack sessions",
                     ],
                     payload={
-                        "smuggling_technique": ["CL.TE", "TE.CL", "TE.TE", "CL.CL"][i % 4],
-                        "ambiguous_header": f"Content-Length: {100+i}\r\nTransfer-Encoding: chunked",
+                        "smuggling_technique": ["CL.TE", "TE.CL", "TE.TE", "CL.CL"][
+                            i % 4
+                        ],
+                        "ambiguous_header": f"Content-Length: {100 + i}\r\nTransfer-Encoding: chunked",
                         "smuggled_request": "GET /admin HTTP/1.1",
                     },
-                    variations=[f"protocol_variant_{j}" for j in range(int(5 * self.variation_multiplier))],
+                    variations=[
+                        f"protocol_variant_{j}"
+                        for j in range(int(5 * self.variation_multiplier))
+                    ],
                     evasion_techniques=[
                         "header_obfuscation",
                         "chunking_tricks",
@@ -639,7 +654,7 @@ class RedTeamStressTestGenerator:
                     category="RT_H_deserialization",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Advanced deserialization: {['Java', 'Python', 'PHP', '.NET'][i % 4]} RCE {i+1}",
+                    title=f"Advanced deserialization: {['Java', 'Python', 'PHP', '.NET'][i % 4]} RCE {i + 1}",
                     description="Deserialization gadget chain exploitation for RCE",
                     attack_chain=[
                         "Identify deserialization endpoint",
@@ -654,7 +669,10 @@ class RedTeamStressTestGenerator:
                         "serialized_object": f"<malicious_object_{i}>",
                         "command": "reverse_shell",
                     },
-                    variations=[f"gadget_variant_{j}" for j in range(int(6 * self.variation_multiplier))],
+                    variations=[
+                        f"gadget_variant_{j}"
+                        for j in range(int(6 * self.variation_multiplier))
+                    ],
                     evasion_techniques=[
                         "polymorphic_gadgets",
                         "encoding_tricks",
@@ -669,7 +687,7 @@ class RedTeamStressTestGenerator:
                     ],
                     cvss_score=9.8,
                     mitre_tactics=["T1203", "T1059"],
-                    cve_references=[f"CVE-2026-{90000+i}"],
+                    cve_references=[f"CVE-2026-{90000 + i}"],
                     target_systems=["application_server", "rpc_endpoint"],
                 )
             )
@@ -687,7 +705,7 @@ class RedTeamStressTestGenerator:
                     category="RT_I_container_escape",
                     severity="critical",
                     difficulty="redteam",
-                    title=f"Container escape: {['Docker', 'Kubernetes', 'Podman'][i % 3]} breakout {i+1}",
+                    title=f"Container escape: {['Docker', 'Kubernetes', 'Podman'][i % 3]} breakout {i + 1}",
                     description="Container escape to host system with privilege escalation",
                     attack_chain=[
                         "Exploit container misconfiguration",
@@ -706,7 +724,10 @@ class RedTeamStressTestGenerator:
                         ][i % 4],
                         "target": "host_system",
                     },
-                    variations=[f"escape_variant_{j}" for j in range(int(5 * self.variation_multiplier))],
+                    variations=[
+                        f"escape_variant_{j}"
+                        for j in range(int(5 * self.variation_multiplier))
+                    ],
                     evasion_techniques=[
                         "cgroup_manipulation",
                         "namespace_confusion",
@@ -742,7 +763,7 @@ class RedTeamStressTestGenerator:
                     category="RT_J_business_logic",
                     severity="high",
                     difficulty="hard",
-                    title=f"Business logic abuse: Race condition exploitation {i+1}",
+                    title=f"Business logic abuse: Race condition exploitation {i + 1}",
                     description="TOCTOU and race condition exploitation in business workflows",
                     attack_chain=[
                         "Identify race-prone business logic",
@@ -757,7 +778,10 @@ class RedTeamStressTestGenerator:
                         "timing_window_ms": 10 + (i % 20),
                         "target_operation": ["purchase", "transfer", "withdraw"][i % 3],
                     },
-                    variations=[f"race_variant_{j}" for j in range(int(4 * self.variation_multiplier))],
+                    variations=[
+                        f"race_variant_{j}"
+                        for j in range(int(4 * self.variation_multiplier))
+                    ],
                     evasion_techniques=[
                         "distributed_attack",
                         "timing_optimization",
@@ -797,7 +821,9 @@ class RedTeamStressTestGenerator:
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(scenarios_data, f, indent=2, ensure_ascii=False)
 
-        logger.info("Exported %s red team scenarios to %s", len(scenarios_data), filepath)
+        logger.info(
+            "Exported %s red team scenarios to %s", len(scenarios_data), filepath
+        )
         return filepath
 
     def generate_summary(self) -> dict[str, Any]:
@@ -813,9 +839,15 @@ class RedTeamStressTestGenerator:
         total_evasion_techniques = 0
 
         for scenario in self.scenarios:
-            category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
-            difficulty_counts[scenario.difficulty] = difficulty_counts.get(scenario.difficulty, 0) + 1
-            severity_counts[scenario.severity] = severity_counts.get(scenario.severity, 0) + 1
+            category_counts[scenario.category] = (
+                category_counts.get(scenario.category, 0) + 1
+            )
+            difficulty_counts[scenario.difficulty] = (
+                difficulty_counts.get(scenario.difficulty, 0) + 1
+            )
+            severity_counts[scenario.severity] = (
+                severity_counts.get(scenario.severity, 0) + 1
+            )
             total_variations += len(scenario.variations)
             total_evasion_techniques += len(scenario.evasion_techniques)
 

@@ -198,7 +198,9 @@ class GodTierIntegratedSystem:
             if self.config.streaming_enabled:
                 logger.info("Initializing Distributed Event Streaming...")
                 backend_type = StreamBackend(self.config.streaming_backend)
-                self.streaming_system = create_streaming_system(backend_type, self.config.system_id)
+                self.streaming_system = create_streaming_system(
+                    backend_type, self.config.system_id
+                )
                 logger.info("✅ Event Streaming initialized")
 
             # 2. Initialize SOC
@@ -242,7 +244,9 @@ class GodTierIntegratedSystem:
             if self.config.cluster_enabled:
                 try:
                     logger.info("Initializing Cluster Coordinator...")
-                    self.cluster_coordinator = create_cluster_coordinator(self.config.cluster_node_id)
+                    self.cluster_coordinator = create_cluster_coordinator(
+                        self.config.cluster_node_id
+                    )
                     self.cluster_coordinator.start()
                     logger.info("✅ Cluster Coordinator initialized")
                 except Exception as e:
@@ -252,7 +256,9 @@ class GodTierIntegratedSystem:
             if self.config.hardware_discovery_enabled:
                 try:
                     logger.info("Initializing Hardware Auto-Discovery...")
-                    self.hardware_system = HardwareAutoDiscoverySystem("god_tier_hardware")
+                    self.hardware_system = HardwareAutoDiscoverySystem(
+                        "god_tier_hardware"
+                    )
                     self.hardware_system.start()
                     logger.info("✅ Hardware Auto-Discovery initialized")
                 except Exception as e:
@@ -296,12 +302,16 @@ class GodTierIntegratedSystem:
                     if event.event_type == EventType.SECURITY_EVENT.value:
                         sec_event = SecurityEvent(
                             event_type=event.data.get("type", "unknown"),
-                            threat_level=event.data.get("threat_level", ThreatLevel.INFO.value),
+                            threat_level=event.data.get(
+                                "threat_level", ThreatLevel.INFO.value
+                            ),
                             description=event.data.get("description", ""),
                         )
                         self.soc.ingest_event(sec_event)
 
-                self.streaming_system.subscribe(["security_event"], "soc_consumer", security_event_consumer)
+                self.streaming_system.subscribe(
+                    ["security_event"], "soc_consumer", security_event_consumer
+                )
 
             # Health Monitoring -> Metrics Dashboard
             if self.health_system and self.dashboard:
@@ -368,7 +378,11 @@ class GodTierIntegratedSystem:
         """Get comprehensive system status."""
         try:
             with self.lock:
-                uptime = (datetime.now(UTC) - self.start_time).total_seconds() if self.start_time else 0
+                uptime = (
+                    (datetime.now(UTC) - self.start_time).total_seconds()
+                    if self.start_time
+                    else 0
+                )
 
                 status = {
                     "system_status": self.status.value,
@@ -514,7 +528,9 @@ def get_system_status() -> dict[str, Any]:
     return {"error": "System not initialized"}
 
 
-def create_approval_request(title: str, description: str, impact_level: str, requested_by: str) -> str:
+def create_approval_request(
+    title: str, description: str, impact_level: str, requested_by: str
+) -> str:
     """Create guardian approval request."""
     system = get_god_tier_system()
     if system and system.guardian_system:

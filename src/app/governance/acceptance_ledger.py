@@ -16,7 +16,6 @@ Features:
 
 import hashlib
 import json
-import os
 import sqlite3
 import time
 from dataclasses import dataclass, field

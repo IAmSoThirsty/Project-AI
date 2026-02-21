@@ -15,7 +15,6 @@ METRICS:
 import logging
 import time
 from dataclasses import dataclass
-from typing import Dict, List, Optional
 
 logger = logging.getLogger("SASE.L11.Observability")
 
@@ -27,7 +26,7 @@ class Metric:
     name: str
     value: float
     timestamp: float
-    labels: Dict[str, str] = None
+    labels: dict[str, str] = None
 
     def __post_init__(self):
         if self.labels is None:
@@ -42,9 +41,9 @@ class MetricsExporter:
     """
 
     def __init__(self):
-        self.metrics: Dict[str, List[Metric]] = {}
+        self.metrics: dict[str, list[Metric]] = {}
 
-    def record(self, name: str, value: float, labels: Dict = None):
+    def record(self, name: str, value: float, labels: dict = None):
         """Record metric"""
         metric = Metric(name=name, value=value, timestamp=time.time(), labels=labels or {})
 
@@ -100,7 +99,7 @@ class ObservabilityFabric:
         # Tracking state
         self.event_count = 0
         self.false_positives = 0
-        self.detection_times: List[float] = []
+        self.detection_times: list[float] = []
 
         logger.info("L11 Observability Fabric initialized")
 

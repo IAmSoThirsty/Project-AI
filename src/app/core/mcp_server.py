@@ -51,7 +51,9 @@ class ProjectAIMCPServer:
             data_dir: Optional directory for data persistence. Defaults to ./data
         """
         self.server = Server("project-ai")
-        self.data_dir = data_dir or os.path.join(os.path.dirname(__file__), "../../../data")
+        self.data_dir = data_dir or os.path.join(
+            os.path.dirname(__file__), "../../../data"
+        )
 
         # Ensure data directory exists
         os.makedirs(self.data_dir, exist_ok=True)
@@ -635,7 +637,9 @@ class ProjectAIMCPServer:
         }
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
 
-    async def _approve_learning_request(self, args: dict[str, Any]) -> list[TextContent]:
+    async def _approve_learning_request(
+        self, args: dict[str, Any]
+    ) -> list[TextContent]:
         """Approve a learning request."""
         if not self.learning:
             return [TextContent(type="text", text="Learning system not available")]
@@ -713,7 +717,9 @@ class ProjectAIMCPServer:
         backend = args.get("backend", "huggingface")
 
         try:
-            image_path, metadata = self.image_gen.generate(prompt, style=style, backend=backend)
+            image_path, metadata = self.image_gen.generate(
+                prompt, style=style, backend=backend
+            )
             result = {"success": True, "image_path": image_path, "metadata": metadata}
             return [TextContent(type="text", text=json.dumps(result, indent=2))]
         except Exception as e:
@@ -758,7 +764,9 @@ class ProjectAIMCPServer:
     async def run(self):
         """Run the MCP server using STDIO transport."""
         async with stdio_server() as (read_stream, write_stream):
-            await self.server.run(read_stream, write_stream, self.server.create_initialization_options())
+            await self.server.run(
+                read_stream, write_stream, self.server.create_initialization_options()
+            )
 
 
 async def main():

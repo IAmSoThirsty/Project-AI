@@ -12,20 +12,16 @@ import logging
 from typing import Any
 
 from shadow_thirst.ast_nodes import (
-    ActivationPredicate,
     Assignment,
     ASTNode,
     BinaryOp,
-    DivergencePolicyType,
     Expression,
     ExpressionStatement,
     FunctionCall,
     FunctionDefinition,
     Identifier,
-    InvariantClause,
     Literal,
     MemberAccess,
-    MutationBoundaryType,
     OutputStatement,
     PlaneQualifier,
     Program,
@@ -35,10 +31,8 @@ from shadow_thirst.ast_nodes import (
 )
 from shadow_thirst.ir import (
     ExecutionPlane,
-    IRBasicBlock,
     IRBuilder,
     IRFunction,
-    IRInstruction,
     IROpcode,
     IRProgram,
     PlaneQualifierIR,

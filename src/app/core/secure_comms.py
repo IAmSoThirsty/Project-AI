@@ -375,7 +375,9 @@ class SecureCommunicationsKernel(
         # Check if worker threads are alive
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
-            self.logger.warning("Only %s/%s workers alive", alive_threads, len(self.worker_threads))
+            self.logger.warning(
+                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
+            )
             return False
 
         return True
@@ -386,7 +388,9 @@ class SecureCommunicationsKernel(
         status.update(
             {
                 "node_id": self.node_id,
-                "active_transports": len([t for t in self.transports.values() if t.enabled]),
+                "active_transports": len(
+                    [t for t in self.transports.values() if t.enabled]
+                ),
                 "pending_messages": len(self.pending_messages),
                 "routing_table_size": len(self.routing_table),
                 "known_peers": len(self.peer_public_keys),
@@ -406,10 +410,14 @@ class SecureCommunicationsKernel(
         shared_secret = self.ephemeral_private_key.exchange(peer_x25519_key)
 
         # Derive encryption key using HKDF
-        kdf = HKDF(algorithm=hashes.SHA256(), length=32, salt=None, info=b"secure_comms_v1")
+        kdf = HKDF(
+            algorithm=hashes.SHA256(), length=32, salt=None, info=b"secure_comms_v1"
+        )
         return kdf.derive(shared_secret)
 
-    def _encrypt_message(self, plaintext: bytes, recipient_public_key: bytes) -> tuple[bytes, bytes]:
+    def _encrypt_message(
+        self, plaintext: bytes, recipient_public_key: bytes
+    ) -> tuple[bytes, bytes]:
         """Encrypt message with ChaCha20-Poly1305"""
         self.metrics["encryption_operations"] += 1
 
@@ -425,7 +433,9 @@ class SecureCommunicationsKernel(
 
         return ciphertext, nonce
 
-    def _decrypt_message(self, ciphertext: bytes, nonce: bytes, sender_public_key: bytes) -> bytes | None:
+    def _decrypt_message(
+        self, ciphertext: bytes, nonce: bytes, sender_public_key: bytes
+    ) -> bytes | None:
         """Decrypt message with ChaCha20-Poly1305"""
         try:
             # Derive shared secret
@@ -445,11 +455,15 @@ class SecureCommunicationsKernel(
         """Sign message with Ed25519"""
         return self.identity_private_key.sign(message)
 
-    def _verify_signature(self, message: bytes, signature: bytes, sender_public_key_bytes: bytes) -> bool:
+    def _verify_signature(
+        self, message: bytes, signature: bytes, sender_public_key_bytes: bytes
+    ) -> bool:
         """Verify Ed25519 signature"""
         try:
             self.metrics["signature_verifications"] += 1
-            sender_public_key = ed25519.Ed25519PublicKey.from_public_bytes(sender_public_key_bytes)
+            sender_public_key = ed25519.Ed25519PublicKey.from_public_bytes(
+                sender_public_key_bytes
+            )
             sender_public_key.verify(signature, message)
             return True
         except Exception as e:
@@ -575,7 +589,9 @@ class SecureCommunicationsKernel(
             self.logger.error("Failed to register transport: %s", e)
             return False
 
-    def _transmit_message(self, msg: SecureMessage, transport: TransportEndpoint) -> bool:
+    def _transmit_message(
+        self, msg: SecureMessage, transport: TransportEndpoint
+    ) -> bool:
         """Transmit message over specific transport"""
         try:
             if transport.transport_type == TransportType.TCP:
@@ -586,7 +602,9 @@ class SecureCommunicationsKernel(
                 return self._transmit_store_forward(msg, transport)
             else:
                 # Placeholder for RF/acoustic/optical transports
-                self.logger.warning("Transport %s not fully implemented", transport.transport_type)
+                self.logger.warning(
+                    "Transport %s not fully implemented", transport.transport_type
+                )
                 return False
 
         except Exception as e:
@@ -633,7 +651,9 @@ class SecureCommunicationsKernel(
             self.logger.error("UDP transmission failed: %s", e)
             return False
 
-    def _transmit_store_forward(self, msg: SecureMessage, transport: TransportEndpoint) -> bool:
+    def _transmit_store_forward(
+        self, msg: SecureMessage, transport: TransportEndpoint
+    ) -> bool:
         """Store message for delayed forwarding (air-gapped mode)"""
         try:
             self.store_forward_queue.append(msg)
@@ -717,7 +737,9 @@ class SecureCommunicationsKernel(
     # BYZANTINE CONSENSUS
     # ========================================================================
 
-    def propose_consensus(self, proposal_id: str, proposal_data: dict[str, Any]) -> bool:
+    def propose_consensus(
+        self, proposal_id: str, proposal_data: dict[str, Any]
+    ) -> bool:
         """Initiate Byzantine consensus round"""
         try:
             # Sign proposal
@@ -820,7 +842,9 @@ class SecureCommunicationsKernel(
                 # Clean stale routes
                 current_time = time.time()
                 stale_routes = [
-                    dest for dest, route in self.routing_table.items() if current_time - route.last_updated > 300
+                    dest
+                    for dest, route in self.routing_table.items()
+                    if current_time - route.last_updated > 300
                 ]
 
                 for dest in stale_routes:
@@ -841,7 +865,9 @@ class SecureCommunicationsKernel(
 
                 # Clean expired messages
                 expired = [
-                    msg_id for msg_id, msg in self.pending_messages.items() if current_time - msg.timestamp > msg.ttl
+                    msg_id
+                    for msg_id, msg in self.pending_messages.items()
+                    if current_time - msg.timestamp > msg.ttl
                 ]
 
                 for msg_id in expired:
@@ -889,7 +915,11 @@ class SecureCommunicationsKernel(
 
         # Clean old entries
         self.rate_limits[peer_id] = deque(
-            [t for t in self.rate_limits[peer_id] if current_time - t < self.rate_limit_window],
+            [
+                t
+                for t in self.rate_limits[peer_id]
+                if current_time - t < self.rate_limit_window
+            ],
             maxlen=self.rate_limit_max,
         )
 
@@ -1002,7 +1032,9 @@ class SecureCommunicationsKernel(
     def unsubscribe(self, subscription_id: str) -> bool:
         """Unsubscribe from events"""
         for event_type, subs in self.subscribers.items():
-            self.subscribers[event_type] = [(sid, cb) for sid, cb in subs if sid != subscription_id]
+            self.subscribers[event_type] = [
+                (sid, cb) for sid, cb in subs if sid != subscription_id
+            ]
         return True
 
     def emit_event(self, event_type: str, data: Any) -> int:

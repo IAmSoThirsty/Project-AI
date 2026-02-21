@@ -165,9 +165,13 @@ class IPBlockingSystem:
                             # Unblock
                             record.blocked = False
                             record.block_timestamp = None
-                            logger.info("Auto-unblocked IP after expiry: %s", ip_address)
+                            logger.info(
+                                "Auto-unblocked IP after expiry: %s", ip_address
+                            )
                         else:
-                            logger.warning("Blocked IP attempted access: %s", ip_address)
+                            logger.warning(
+                                "Blocked IP attempted access: %s", ip_address
+                            )
                             return False, f"IP blocked: {record.block_reason}"
 
             # Check rate limits
@@ -264,7 +268,11 @@ class IPBlockingSystem:
             requests_in_window=len(self.rate_windows[f"{ip_address}:{endpoint}"]),
             limit=self.max_requests_per_hour,
             endpoint=endpoint,
-            action_taken=("blocked" if record.violation_count >= self.violation_threshold else "logged"),
+            action_taken=(
+                "blocked"
+                if record.violation_count >= self.violation_threshold
+                else "logged"
+            ),
         )
         self.violations.append(violation)
 
@@ -372,7 +380,9 @@ class IPBlockingSystem:
             if self.records_file.exists():
                 with open(self.records_file) as f:
                     data = json.load(f)
-                    self.ip_records = {ip: IPRecord(**record) for ip, record in data.items()}
+                    self.ip_records = {
+                        ip: IPRecord(**record) for ip, record in data.items()
+                    }
                 logger.info("Loaded %s IP records", len(self.ip_records))
 
             if self.blacklist_file.exists():

@@ -20,7 +20,6 @@ Each defined by probability vector.
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Optional
 
 import numpy as np
 
@@ -70,7 +69,7 @@ class OntologyDatabase:
     """
 
     def __init__(self):
-        self.profiles: Dict[ThreatActorClass, ActorProfile] = {}
+        self.profiles: dict[ThreatActorClass, ActorProfile] = {}
         self._initialize_profiles()
 
         logger.info("Ontology database initialized")
@@ -142,11 +141,11 @@ class OntologyDatabase:
             risk_level=10,
         )
 
-    def get_profile(self, actor_class: ThreatActorClass) -> Optional[ActorProfile]:
+    def get_profile(self, actor_class: ThreatActorClass) -> ActorProfile | None:
         """Get actor profile"""
         return self.profiles.get(actor_class)
 
-    def list_profiles(self) -> List[ActorProfile]:
+    def list_profiles(self) -> list[ActorProfile]:
         """List all profiles"""
         return list(self.profiles.values())
 
@@ -163,7 +162,7 @@ class ThreatActorClassifier:
 
         logger.info("L15 Threat Actor Classifier initialized")
 
-    def classify(self, feature_vector: Any) -> Dict:
+    def classify(self, feature_vector: Any) -> dict:
         """
         Classify threat actor
 

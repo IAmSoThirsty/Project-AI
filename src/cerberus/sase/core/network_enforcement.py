@@ -11,12 +11,11 @@ INVARIANTS:
 """
 
 import hashlib
-import ipaddress
 import logging
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 logger = logging.getLogger("SASE.L1.NetworkEnforcement")
 
@@ -36,9 +35,9 @@ class EnforcementAction(Enum):
 class GeoFenceRule:
     """Geographical access control rule"""
 
-    allowed_countries: Set[str]  # ISO 3166-1 alpha-2
-    blocked_countries: Set[str]
-    allowed_regions: Set[str]  # e.g., "us-east-1"
+    allowed_countries: set[str]  # ISO 3166-1 alpha-2
+    blocked_countries: set[str]
+    allowed_regions: set[str]  # e.g., "us-east-1"
     default_action: EnforcementAction = EnforcementAction.ALLOW
 
 
@@ -64,7 +63,7 @@ class IPReputation:
     is_vpn: bool = False
     is_datacenter: bool = False
     is_residential: bool = True
-    threat_intel_flags: List[str] = None
+    threat_intel_flags: list[str] = None
 
     def __post_init__(self):
         if self.threat_intel_flags is None:
@@ -111,9 +110,9 @@ class RateLimiter:
 
     def __init__(self, policy: RateLimitPolicy = None):
         self.policy = policy or RateLimitPolicy()
-        self.buckets: Dict[str, Dict] = {}  # key -> {tokens, last_update, penalty_until}
+        self.buckets: dict[str, dict] = {}  # key -> {tokens, last_update, penalty_until}
 
-    def check_limit(self, key: str) -> tuple[bool, Optional[str]]:
+    def check_limit(self, key: str) -> tuple[bool, str | None]:
         """
         Check if request is within rate limits
 
@@ -194,10 +193,10 @@ class IPReputationService:
     """
 
     def __init__(self):
-        self.reputation_cache: Dict[str, IPReputation] = {}
-        self.tor_exit_nodes: Set[str] = set()  # TODO: Load from feed
-        self.known_vpns: Set[str] = set()  # TODO: Load from feed
-        self.datacenter_asns: Set[str] = set()  # TODO: Load from feed
+        self.reputation_cache: dict[str, IPReputation] = {}
+        self.tor_exit_nodes: set[str] = set()  # TODO: Load from feed
+        self.known_vpns: set[str] = set()  # TODO: Load from feed
+        self.datacenter_asns: set[str] = set()  # TODO: Load from feed
 
     def lookup(self, ip_address: str, asn: str = None) -> IPReputation:
         """Look up IP reputation"""
@@ -258,9 +257,9 @@ class EdgeEnforcementPlane:
         self.geo_fence = GeoFenceController()
         self.rate_limiter = RateLimiter()
         self.ip_reputation = IPReputationService()
-        self.request_hashes: Set[str] = set()  # For deduplication
+        self.request_hashes: set[str] = set()  # For deduplication
 
-    def enforce(self, request: Dict[str, Any]) -> tuple[EnforcementAction, Dict[str, Any]]:
+    def enforce(self, request: dict[str, Any]) -> tuple[EnforcementAction, dict[str, Any]]:
         """
         Enforce all edge controls on incoming request
 
@@ -317,7 +316,7 @@ class EdgeEnforcementPlane:
         context["enforcement_checks"].append("all_passed")
         return EnforcementAction.ALLOW, context
 
-    def _hash_request(self, request: Dict[str, Any]) -> str:
+    def _hash_request(self, request: dict[str, Any]) -> str:
         """Hash request for deduplication and audit"""
         # Create deterministic hash of request
         canonical = {

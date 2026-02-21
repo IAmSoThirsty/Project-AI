@@ -62,7 +62,11 @@ class LearningPathManager:
 
             # Use default model based on provider if not specified
             if model is None:
-                model = "gpt-3.5-turbo" if self.provider_name == "openai" else "llama-3.1-sonar-small-128k-online"
+                model = (
+                    "gpt-3.5-turbo"
+                    if self.provider_name == "openai"
+                    else "llama-3.1-sonar-small-128k-online"
+                )
 
             response = self.provider.chat_completion(messages=messages, model=model)
             return response

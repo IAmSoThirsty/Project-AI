@@ -338,4 +338,7 @@ class AgentProcess:
 
     def __repr__(self) -> str:
         """String representation of AgentProcess."""
-        return f"AgentProcess(agent_id={self.agent_id}, " f"pid={self.info.pid}, status={self.info.status})"
+        return (
+            f"AgentProcess(agent_id={self.agent_id}, "
+            f"pid={self.info.pid}, status={self.info.status})"
+        )

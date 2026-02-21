@@ -143,7 +143,9 @@ class GodTierCommandCenter:
                 data_dir=data_dir,
                 num_workers=num_workers,
             )
-            logger.info("✅ God-Tier systems initialized (self-healing, distributed processing, analytics)")
+            logger.info(
+                "✅ God-Tier systems initialized (self-healing, distributed processing, analytics)"
+            )
 
             # 3. Initialize Global Intelligence Library
             logger.info("Step 3/5: Initializing Global Intelligence Library...")
@@ -201,13 +203,19 @@ class GodTierCommandCenter:
                 "Intelligence Agents: %s (20 per domain × 6 domains)",
                 agents_per_domain * 6,
             )
-            logger.info("Monitoring Agents: %s (global coverage)", total_monitoring_agents)
-            logger.info("Watch Tower Gates: %s", instance.watch_tower.get_stats()["num_gates"])
+            logger.info(
+                "Monitoring Agents: %s (global coverage)", total_monitoring_agents
+            )
+            logger.info(
+                "Watch Tower Gates: %s", instance.watch_tower.get_stats()["num_gates"]
+            )
             logger.info(
                 "Processing Workers: %s",
                 instance.god_tier_system.load_balancer.num_workers,
             )
-            logger.info("Features: Self-Healing | Distributed | Analytics | 24/7 | Encrypted")
+            logger.info(
+                "Features: Self-Healing | Distributed | Analytics | 24/7 | Encrypted"
+            )
             logger.info("=" * 80)
 
             return instance
@@ -223,7 +231,9 @@ class GodTierCommandCenter:
             RuntimeError: If not initialized
         """
         if cls._instance is None:
-            raise RuntimeError("GodTierCommandCenter not initialized. Call initialize() first")
+            raise RuntimeError(
+                "GodTierCommandCenter not initialized. Call initialize() first"
+            )
         return cls._instance
 
     @classmethod
@@ -280,7 +290,9 @@ class GodTierCommandCenter:
             system_health=gt_stats.get("health", "unknown"),
             resource_usage=gt_stats.get("resources", {}),
             cache_hit_rate=gt_stats.get("cache", {}).get("hit_rate", 0.0),
-            processing_success_rate=gt_stats.get("load_balancer", {}).get("success_rate", 0.0),
+            processing_success_rate=gt_stats.get("load_balancer", {}).get(
+                "success_rate", 0.0
+            ),
         )
 
         self.metrics_history.append(metrics)
@@ -319,9 +331,15 @@ class GodTierCommandCenter:
             "resource_usage": metrics.resource_usage,
             "components": {
                 "watch_tower": "operational" if self.watch_tower else "unavailable",
-                "intelligence_library": ("operational" if self.intelligence_library else "unavailable"),
-                "monitoring_system": ("operational" if self.monitoring_system else "unavailable"),
-                "god_tier_system": ("operational" if self.god_tier_system else "unavailable"),
+                "intelligence_library": (
+                    "operational" if self.intelligence_library else "unavailable"
+                ),
+                "monitoring_system": (
+                    "operational" if self.monitoring_system else "unavailable"
+                ),
+                "god_tier_system": (
+                    "operational" if self.god_tier_system else "unavailable"
+                ),
             },
             "capabilities": [
                 "Real-time intelligence monitoring (6 domains)",
@@ -376,7 +394,9 @@ class GodTierCommandCenter:
             },
             "domain_summaries": domain_summaries,
             "watch_tower_alerts": len(wt_incidents),
-            "command_assessment": self._assess_global_situation(simulation, domain_summaries),
+            "command_assessment": self._assess_global_situation(
+                simulation, domain_summaries
+            ),
             "note": "Statistical simulation provided by curator (librarian/statistician). Command decisions made by Watch Tower.",
         }
 
@@ -398,7 +418,9 @@ class GodTierCommandCenter:
             Overall command assessment string
         """
         high_risk_domains = [
-            domain for domain, summary in domain_summaries.items() if "HIGH RISK" in summary["risk_level"]
+            domain
+            for domain, summary in domain_summaries.items()
+            if "HIGH RISK" in summary["risk_level"]
         ]
 
         if len(high_risk_domains) >= 3:
@@ -410,7 +432,9 @@ class GodTierCommandCenter:
         else:
             return "WATCH TOWER COMMAND DECISION: STABLE - All domains within normal parameters. Routine monitoring continues."
 
-    def export_intelligence_report(self, output_dir: str = "data/intelligence/reports") -> str:
+    def export_intelligence_report(
+        self, output_dir: str = "data/intelligence/reports"
+    ) -> str:
         """Export comprehensive intelligence report.
 
         Args:

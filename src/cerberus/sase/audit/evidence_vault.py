@@ -16,7 +16,7 @@ import hashlib
 import logging
 import time
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Optional
 
 logger = logging.getLogger("SASE.L9.EvidenceVault")
 
@@ -41,7 +41,7 @@ class MerkleTree:
     Provides cryptographic proof of event inclusion
     """
 
-    def __init__(self, leaf_hashes: List[str]):
+    def __init__(self, leaf_hashes: list[str]):
         if not leaf_hashes:
             raise ValueError("Must provide at least one hash")
 
@@ -50,7 +50,7 @@ class MerkleTree:
 
         logger.info(f"Merkle tree built with {len(leaf_hashes)} leaves")
 
-    def _build_tree(self, hashes: List[str]) -> MerkleNode:
+    def _build_tree(self, hashes: list[str]) -> MerkleNode:
         """Build Merkle tree from leaf hashes"""
         # Create leaf nodes
         nodes = [MerkleNode(hash_value=h) for h in hashes]
@@ -78,7 +78,7 @@ class MerkleTree:
         """Get Merkle root hash"""
         return self.root.hash_value
 
-    def generate_proof(self, leaf_hash: str) -> Optional[List[str]]:
+    def generate_proof(self, leaf_hash: str) -> list[str] | None:
         """
         Generate Merkle proof for leaf
 
@@ -96,7 +96,7 @@ class MerkleTree:
 
         return proof
 
-    def _generate_proof_recursive(self, node: MerkleNode, target_hash: str, proof: List[str]) -> bool:
+    def _generate_proof_recursive(self, node: MerkleNode, target_hash: str, proof: list[str]) -> bool:
         """Recursively generate proof path"""
         if node.is_leaf():
             return node.hash_value == target_hash
@@ -115,7 +115,7 @@ class MerkleTree:
         return False
 
     @staticmethod
-    def verify_proof(leaf_hash: str, proof: List[str], root_hash: str) -> bool:
+    def verify_proof(leaf_hash: str, proof: list[str], root_hash: str) -> bool:
         """Verify Merkle proof"""
         current = leaf_hash
 
@@ -172,9 +172,9 @@ class ProofGenerator:
     """
 
     def __init__(self):
-        self.generated_proofs: Dict[str, Dict] = {}
+        self.generated_proofs: dict[str, dict] = {}
 
-    def generate(self, event_hash: str, merkle_tree: MerkleTree, signature: str) -> Dict:
+    def generate(self, event_hash: str, merkle_tree: MerkleTree, signature: str) -> dict:
         """
         Generate full cryptographic proof
 
@@ -184,7 +184,7 @@ class ProofGenerator:
         merkle_proof = merkle_tree.generate_proof(event_hash)
 
         if merkle_proof is None:
-            logger.error(f"Cannot generate proof: event not in tree")
+            logger.error("Cannot generate proof: event not in tree")
             return {}
 
         proof = {
@@ -215,15 +215,15 @@ class EvidenceVault:
         self.proof_generator = ProofGenerator()
 
         # Daily Merkle trees
-        self.daily_trees: Dict[str, MerkleTree] = {}  # date -> tree
-        self.daily_signatures: Dict[str, str] = {}  # date -> signature
+        self.daily_trees: dict[str, MerkleTree] = {}  # date -> tree
+        self.daily_signatures: dict[str, str] = {}  # date -> signature
 
         # Blockchain anchoring (optional)
-        self.blockchain_anchors: Dict[str, str] = {}  # root_hash -> tx_id
+        self.blockchain_anchors: dict[str, str] = {}  # root_hash -> tx_id
 
         logger.info("L9 Evidence Vault initialized")
 
-    def aggregate_daily_events(self, date: str, event_hashes: List[str]) -> str:
+    def aggregate_daily_events(self, date: str, event_hashes: list[str]) -> str:
         """
         Aggregate daily events into Merkle tree
 
@@ -261,7 +261,7 @@ class EvidenceVault:
 
         logger.info(f"Blockchain anchor: {tx_id[:16]}")
 
-    def generate_event_proof(self, event_hash: str, date: str) -> Optional[Dict]:
+    def generate_event_proof(self, event_hash: str, date: str) -> dict | None:
         """
         Generate proof of event inclusion
 
@@ -278,7 +278,7 @@ class EvidenceVault:
 
         return proof
 
-    def verify_proof(self, proof: Dict) -> bool:
+    def verify_proof(self, proof: dict) -> bool:
         """
         Verify cryptographic proof
 

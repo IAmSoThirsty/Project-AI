@@ -120,7 +120,9 @@ class GovernanceDecision:
             "reason": self.reason,
             "overrides": self.overrides,
             "level": self.level.value,
-            "council_member": (self.council_member.value if self.council_member else None),
+            "council_member": (
+                self.council_member.value if self.council_member else None
+            ),
         }
 
 
@@ -216,7 +218,9 @@ class Triumvirate:
 
         logger.info("Triumvirate governance system initialized")
 
-    def _four_laws_check(self, action: str, context: GovernanceContext) -> GovernanceDecision:
+    def _four_laws_check(
+        self, action: str, context: GovernanceContext
+    ) -> GovernanceDecision:
         """
         Evaluate action against the Four Laws of AGI ethics.
 
@@ -279,7 +283,9 @@ class Triumvirate:
             council_member=None,
         )
 
-    def _galahad_vote(self, action: str, context: GovernanceContext) -> GovernanceDecision:
+    def _galahad_vote(
+        self, action: str, context: GovernanceContext
+    ) -> GovernanceDecision:
         """
         GALAHAD: Ethics, empathy, and relational integrity evaluation.
 
@@ -331,7 +337,9 @@ class Triumvirate:
             council_member=CouncilMember.GALAHAD,
         )
 
-    def _cerberus_vote(self, action: str, context: GovernanceContext) -> GovernanceDecision:
+    def _cerberus_vote(
+        self, action: str, context: GovernanceContext
+    ) -> GovernanceDecision:
         """
         CERBERUS: Safety, security, and boundary enforcement.
 
@@ -393,7 +401,9 @@ class Triumvirate:
             council_member=CouncilMember.CERBERUS,
         )
 
-    def _codex_vote(self, action: str, context: GovernanceContext) -> GovernanceDecision:
+    def _codex_vote(
+        self, action: str, context: GovernanceContext
+    ) -> GovernanceDecision:
         """
         CODEX DEUS MAXIMUS: Logic, consistency, and rational integrity.
 
@@ -481,8 +491,12 @@ class Triumvirate:
                 fully_clarified=legacy_context.get("fully_clarified", True),
                 proper_safeguards=legacy_context.get("proper_safeguards", True),
                 user_consent=legacy_context.get("user_consent", True),
-                contradicts_prior_commitment=legacy_context.get("contradicts_prior_commitment", False),
-                violates_user_preference=legacy_context.get("violates_user_preference", False),
+                contradicts_prior_commitment=legacy_context.get(
+                    "contradicts_prior_commitment", False
+                ),
+                violates_user_preference=legacy_context.get(
+                    "violates_user_preference", False
+                ),
             )
         elif context is None:
             # No context provided - create default permissive context
@@ -592,14 +606,20 @@ class Triumvirate:
         Returns:
             Dictionary with usage statistics
         """
-        approval_count = sum(1 for entry in self.decision_log if entry["outcome"] == "approved")
+        approval_count = sum(
+            1 for entry in self.decision_log if entry["outcome"] == "approved"
+        )
 
         return {
             "total_evaluations": self.total_evaluations,
             "approvals": approval_count,
             "blocks": self.total_evaluations - approval_count,
             "override_count": self.override_count,
-            "approval_rate": (approval_count / self.total_evaluations if self.total_evaluations > 0 else 0.0),
+            "approval_rate": (
+                approval_count / self.total_evaluations
+                if self.total_evaluations > 0
+                else 0.0
+            ),
         }
 
     def get_recent_decisions(self, limit: int = 10) -> list[dict[str, Any]]:
@@ -620,7 +640,9 @@ class Triumvirate:
 # ============================================================================
 
 
-def create_governance_context(action_type: str = "general", description: str = "", **kwargs) -> GovernanceContext:
+def create_governance_context(
+    action_type: str = "general", description: str = "", **kwargs
+) -> GovernanceContext:
     """
     Helper function to create governance context with sensible defaults.
 

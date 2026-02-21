@@ -144,7 +144,9 @@ class OperatorIntentCaptureContract(DecisionContract):
         return {
             "system": "IntentCaptureSystem",
             "focus": "Understanding and Validating User Intent",
-            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
+            "authorities": {
+                dt: auth.to_dict() for dt, auth in self.authorities.items()
+            },
             "decision_count": len(self.decision_log),
             "intent_capture_rules": {
                 "confidence_threshold": 0.7,
@@ -162,7 +164,9 @@ class IntentCaptureSignalsTelemetry(SignalsTelemetry):
         """Initialize Intent Capture signals and telemetry."""
         super().__init__("IntentCaptureSystem")
 
-    def emit_intent_captured(self, user_input: str, interpreted_intent: str, confidence: float) -> None:
+    def emit_intent_captured(
+        self, user_input: str, interpreted_intent: str, confidence: float
+    ) -> None:
         """Emit intent capture signal."""
         signal = Signal(
             signal_type=SignalType.AUDIT,
@@ -177,7 +181,9 @@ class IntentCaptureSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_clarification_requested(self, reason: str, alternatives: list[str]) -> None:
+    def emit_clarification_requested(
+        self, reason: str, alternatives: list[str]
+    ) -> None:
         """Emit clarification request signal."""
         signal = Signal(
             signal_type=SignalType.COORDINATION,
@@ -212,7 +218,9 @@ class IntentCaptureFailureSemantics(FailureSemantics):
         """Initialize Intent Capture failure semantics."""
         super().__init__("IntentCaptureSystem")
 
-    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
+    def create_failure_response(
+        self, failure_mode: FailureMode, context: dict[str, Any]
+    ) -> FailureResponse:
         """Create failure response for Intent Capture failures."""
         if failure_mode == FailureMode.DEGRADED:
             return FailureResponse(
@@ -322,7 +330,9 @@ class MisuseDetectionContract(DecisionContract):
         return {
             "system": "MisuseDetectionSystem",
             "focus": "Detecting and Preventing Harmful Use",
-            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
+            "authorities": {
+                dt: auth.to_dict() for dt, auth in self.authorities.items()
+            },
             "decision_count": len(self.decision_log),
             "detection_capabilities": {
                 "pattern_matching": "Known misuse patterns",
@@ -340,7 +350,9 @@ class MisuseDetectionSignalsTelemetry(SignalsTelemetry):
         """Initialize Misuse Detection signals and telemetry."""
         super().__init__("MisuseDetectionSystem")
 
-    def emit_misuse_detected(self, category: MisuseCategory, pattern: str, details: dict[str, Any]) -> None:
+    def emit_misuse_detected(
+        self, category: MisuseCategory, pattern: str, details: dict[str, Any]
+    ) -> None:
         """Emit misuse detection signal."""
         severity_map = {
             MisuseCategory.HARMLESS: SeverityLevel.DEBUG,
@@ -398,7 +410,9 @@ class MisuseDetectionFailureSemantics(FailureSemantics):
         """Initialize Misuse Detection failure semantics."""
         super().__init__("MisuseDetectionSystem")
 
-    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
+    def create_failure_response(
+        self, failure_mode: FailureMode, context: dict[str, Any]
+    ) -> FailureResponse:
         """Create failure response for Misuse Detection failures."""
         if failure_mode == FailureMode.DEGRADED:
             return FailureResponse(
@@ -509,7 +523,9 @@ class CognitiveLoadGuardrailsContract(DecisionContract):
         return {
             "system": "CognitiveLoadGuardrails",
             "focus": "Protecting User Cognitive Capacity",
-            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
+            "authorities": {
+                dt: auth.to_dict() for dt, auth in self.authorities.items()
+            },
             "decision_count": len(self.decision_log),
             "guardrail_rules": {
                 "max_information_chunks": 7,
@@ -527,7 +543,9 @@ class CognitiveLoadGuardrailsSignalsTelemetry(SignalsTelemetry):
         """Initialize Cognitive Load Guardrails signals and telemetry."""
         super().__init__("CognitiveLoadGuardrails")
 
-    def emit_overload_detected(self, load_level: CognitiveLoadLevel, mitigation: str) -> None:
+    def emit_overload_detected(
+        self, load_level: CognitiveLoadLevel, mitigation: str
+    ) -> None:
         """Emit cognitive overload detection signal."""
         signal = Signal(
             signal_type=SignalType.ALERT,
@@ -542,7 +560,9 @@ class CognitiveLoadGuardrailsSignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_complexity_reduced(self, original_complexity: float, reduced_complexity: float) -> None:
+    def emit_complexity_reduced(
+        self, original_complexity: float, reduced_complexity: float
+    ) -> None:
         """Emit complexity reduction signal."""
         signal = Signal(
             signal_type=SignalType.AUDIT,
@@ -551,7 +571,11 @@ class CognitiveLoadGuardrailsSignalsTelemetry(SignalsTelemetry):
                 "message": "Information complexity reduced",
                 "original_complexity": original_complexity,
                 "reduced_complexity": reduced_complexity,
-                "reduction_ratio": (reduced_complexity / original_complexity if original_complexity > 0 else 0),
+                "reduction_ratio": (
+                    reduced_complexity / original_complexity
+                    if original_complexity > 0
+                    else 0
+                ),
             },
             destination=["AuditLog"],
         )
@@ -577,7 +601,9 @@ class CognitiveLoadGuardrailsFailureSemantics(FailureSemantics):
         """Initialize Cognitive Load Guardrails failure semantics."""
         super().__init__("CognitiveLoadGuardrails")
 
-    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
+    def create_failure_response(
+        self, failure_mode: FailureMode, context: dict[str, Any]
+    ) -> FailureResponse:
         """Create failure response for Cognitive Load Guardrails failures."""
         if failure_mode == FailureMode.DEGRADED:
             return FailureResponse(
@@ -687,7 +713,9 @@ class CommandAuthenticationContract(DecisionContract):
         return {
             "system": "CommandAuthenticationSystem",
             "focus": "Command Verification and Safe Rollback",
-            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
+            "authorities": {
+                dt: auth.to_dict() for dt, auth in self.authorities.items()
+            },
             "decision_count": len(self.decision_log),
             "authentication_rules": {
                 "all_commands_verified": True,
@@ -704,7 +732,9 @@ class CommandAuthenticationSignalsTelemetry(SignalsTelemetry):
         """Initialize Command Authentication signals and telemetry."""
         super().__init__("CommandAuthenticationSystem")
 
-    def emit_command_authenticated(self, command: str, auth_level: CommandAuthenticationLevel) -> None:
+    def emit_command_authenticated(
+        self, command: str, auth_level: CommandAuthenticationLevel
+    ) -> None:
         """Emit command authentication signal."""
         signal = Signal(
             signal_type=SignalType.AUDIT,
@@ -752,7 +782,9 @@ class CommandAuthenticationFailureSemantics(FailureSemantics):
         """Initialize Command Authentication failure semantics."""
         super().__init__("CommandAuthenticationSystem")
 
-    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
+    def create_failure_response(
+        self, failure_mode: FailureMode, context: dict[str, Any]
+    ) -> FailureResponse:
         """Create failure response for Command Authentication failures."""
         if failure_mode == FailureMode.DEGRADED:
             return FailureResponse(

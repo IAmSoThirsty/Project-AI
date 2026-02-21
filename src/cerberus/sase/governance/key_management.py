@@ -21,7 +21,6 @@ import logging
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, Optional
 
 logger = logging.getLogger("SASE.L12.KeyManagement")
 
@@ -66,7 +65,7 @@ class KeyRotationScheduler:
     ROTATION_INTERVAL_DAYS = 90
 
     def __init__(self):
-        self.last_rotation: Dict[KeyType, float] = {}
+        self.last_rotation: dict[KeyType, float] = {}
 
     def should_rotate(self, key_type: KeyType) -> bool:
         """Check if key should be rotated"""
@@ -142,7 +141,7 @@ class KeyManagementCeremony:
     def __init__(self, hsm_available: bool = False):
         self.hsm = HSMInterface(hsm_available)
         self.scheduler = KeyRotationScheduler()
-        self.active_keys: Dict[KeyType, CryptographicKey] = {}
+        self.active_keys: dict[KeyType, CryptographicKey] = {}
 
         # Initialize keys
         self._initialize_keys()
@@ -205,7 +204,7 @@ class KeyManagementCeremony:
         # Rotate immediately
         self.rotate_key(key_type)
 
-    def get_active_key(self, key_type: KeyType) -> Optional[CryptographicKey]:
+    def get_active_key(self, key_type: KeyType) -> CryptographicKey | None:
         """Get currently active key"""
         return self.active_keys.get(key_type)
 

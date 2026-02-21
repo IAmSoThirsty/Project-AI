@@ -233,7 +233,9 @@ class OptimizationConfig:
     deduplication: DeduplicationConfig = field(default_factory=DeduplicationConfig)
     pruning: PruningConfig = field(default_factory=PruningConfig)
     federation: FederationConfig = field(default_factory=FederationConfig)
-    streaming_recall: StreamingRecallConfig = field(default_factory=StreamingRecallConfig)
+    streaming_recall: StreamingRecallConfig = field(
+        default_factory=StreamingRecallConfig
+    )
     adaptive_policy: AdaptivePolicyConfig = field(default_factory=AdaptivePolicyConfig)
     audit: AuditConfig = field(default_factory=AuditConfig)
 
@@ -340,7 +342,9 @@ def load_optimization_config(config_path: str | None = None) -> OptimizationConf
         return OptimizationConfig()
 
 
-def save_optimization_config(config: OptimizationConfig, config_path: str | None = None):
+def save_optimization_config(
+    config: OptimizationConfig, config_path: str | None = None
+):
     """
     Save optimization configuration to file.
 

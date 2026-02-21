@@ -5,7 +5,7 @@ External service configuration for production deployment
 """
 
 import os
-from typing import Any, Dict
+from typing import Any
 
 
 class SASEConfig:
@@ -70,7 +70,7 @@ class SASEConfig:
     CONFIDENCE_THRESHOLD_CRITICAL = int(os.getenv("SASE_THRESHOLD_CRITICAL", "70"))
 
     @classmethod
-    def to_dict(cls) -> Dict[str, Any]:
+    def to_dict(cls) -> dict[str, Any]:
         """Export configuration as dictionary"""
         return {
             "deployment": {

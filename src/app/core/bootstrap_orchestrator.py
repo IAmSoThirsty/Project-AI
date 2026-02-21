@@ -85,7 +85,9 @@ class BootstrapOrchestrator:
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
         # Get or create registry
-        self.registry = registry if registry else get_registry(data_dir=str(self.data_dir))
+        self.registry = (
+            registry if registry else get_registry(data_dir=str(self.data_dir))
+        )
 
         # Configuration
         self.config: dict[str, Any] = {}
@@ -128,7 +130,9 @@ class BootstrapOrchestrator:
                     self._parse_subsystem_definition(subsystem_id, subsystem_config)
 
             logger.info("Loaded configuration from %s", self.config_path)
-            logger.info("Discovered %s subsystem definitions", len(self.subsystem_definitions))
+            logger.info(
+                "Discovered %s subsystem definitions", len(self.subsystem_definitions)
+            )
 
         except Exception as e:
             logger.error("Failed to load config from %s: %s", self.config_path, e)
@@ -154,7 +158,9 @@ class BootstrapOrchestrator:
             self.subsystem_definitions[subsystem_id] = definition
 
         except KeyError as e:
-            logger.error("Invalid subsystem definition for %s: missing %s", subsystem_id, e)
+            logger.error(
+                "Invalid subsystem definition for %s: missing %s", subsystem_id, e
+            )
 
     def _initialize_default_config(self):
         """Initialize with default configuration."""
@@ -201,7 +207,9 @@ class BootstrapOrchestrator:
 
                 try:
                     # Convert path to module notation
-                    module_path = str(py_file.relative_to(Path.cwd())).replace(os.sep, ".")[:-3]
+                    module_path = str(py_file.relative_to(Path.cwd())).replace(
+                        os.sep, "."
+                    )[:-3]
 
                     # Try to import and inspect
                     module = importlib.import_module(module_path)
@@ -222,7 +230,9 @@ class BootstrapOrchestrator:
                                     module_path=module_path,
                                     class_name=name,
                                     dependencies=metadata.get("dependencies", []),
-                                    provides_capabilities=metadata.get("provides_capabilities", []),
+                                    provides_capabilities=metadata.get(
+                                        "provides_capabilities", []
+                                    ),
                                     config=metadata.get("config", {}),
                                     enabled=metadata.get("enabled", True),
                                     auto_init=metadata.get("auto_init", True),
@@ -231,7 +241,9 @@ class BootstrapOrchestrator:
                                 self.subsystem_definitions[subsystem_id] = definition
                                 discovered += 1
 
-                                logger.info("Discovered subsystem: %s (%s)", name, subsystem_id)
+                                logger.info(
+                                    "Discovered subsystem: %s (%s)", name, subsystem_id
+                                )
 
                 except Exception as e:
                     logger.debug("Could not inspect %s: %s", py_file, e)
@@ -288,7 +300,9 @@ class BootstrapOrchestrator:
             return True
 
         except Exception as e:
-            logger.error("Failed to register subsystem class %s: %s", subsystem_class, e)
+            logger.error(
+                "Failed to register subsystem class %s: %s", subsystem_class, e
+            )
             return False
 
     def bootstrap(self, auto_start_monitoring: bool = True) -> bool:
@@ -376,30 +390,40 @@ class BootstrapOrchestrator:
                     )
 
                     # Handle failure based on failure mode
-                    failure_mode = self.config.get("bootstrap", {}).get("failure_mode", "continue")
+                    failure_mode = self.config.get("bootstrap", {}).get(
+                        "failure_mode", "continue"
+                    )
 
                     if failure_mode == "stop":
                         logger.error("Failure mode is 'stop', aborting bootstrap")
                         return False
                     elif failure_mode == "rollback":
-                        logger.error("Failure mode is 'rollback', rolling back bootstrap")
+                        logger.error(
+                            "Failure mode is 'rollback', rolling back bootstrap"
+                        )
                         self._rollback_bootstrap()
                         return False
                     else:
-                        logger.warning("Failed to initialize %s, continuing...", subsystem_id)
+                        logger.warning(
+                            "Failed to initialize %s, continuing...", subsystem_id
+                        )
 
             # Phase 4: Post-initialization
             logger.info("Phase 4: Post-Bootstrap Configuration")
 
             if auto_start_monitoring:
-                health_check_interval = self.config.get("bootstrap", {}).get("health_check_interval", 30)
+                health_check_interval = self.config.get("bootstrap", {}).get(
+                    "health_check_interval", 30
+                )
                 self.registry.start_health_monitoring(interval=health_check_interval)
 
             # Save bootstrap state
             self._save_bootstrap_state()
 
             self.bootstrap_end_time = datetime.now()
-            duration = (self.bootstrap_end_time - self.bootstrap_start_time).total_seconds()
+            duration = (
+                self.bootstrap_end_time - self.bootstrap_start_time
+            ).total_seconds()
 
             logger.info("=" * 80)
             logger.info("BOOTSTRAP COMPLETE")
@@ -481,8 +505,16 @@ class BootstrapOrchestrator:
         try:
             state = {
                 "timestamp": datetime.now().isoformat(),
-                "bootstrap_start": (self.bootstrap_start_time.isoformat() if self.bootstrap_start_time else None),
-                "bootstrap_end": (self.bootstrap_end_time.isoformat() if self.bootstrap_end_time else None),
+                "bootstrap_start": (
+                    self.bootstrap_start_time.isoformat()
+                    if self.bootstrap_start_time
+                    else None
+                ),
+                "bootstrap_end": (
+                    self.bootstrap_end_time.isoformat()
+                    if self.bootstrap_end_time
+                    else None
+                ),
                 "initialized_subsystems": self.initialized_subsystems,
                 "failed_subsystems": self.failed_subsystems,
                 "bootstrap_log": self.bootstrap_log,
@@ -546,8 +578,14 @@ class BootstrapOrchestrator:
         """
         status = {
             "bootstrap_complete": self.bootstrap_end_time is not None,
-            "start_time": (self.bootstrap_start_time.isoformat() if self.bootstrap_start_time else None),
-            "end_time": (self.bootstrap_end_time.isoformat() if self.bootstrap_end_time else None),
+            "start_time": (
+                self.bootstrap_start_time.isoformat()
+                if self.bootstrap_start_time
+                else None
+            ),
+            "end_time": (
+                self.bootstrap_end_time.isoformat() if self.bootstrap_end_time else None
+            ),
             "duration_seconds": None,
             "initialized_subsystems": self.initialized_subsystems,
             "failed_subsystems": self.failed_subsystems,
@@ -556,7 +594,9 @@ class BootstrapOrchestrator:
         }
 
         if self.bootstrap_start_time and self.bootstrap_end_time:
-            status["duration_seconds"] = (self.bootstrap_end_time - self.bootstrap_start_time).total_seconds()
+            status["duration_seconds"] = (
+                self.bootstrap_end_time - self.bootstrap_start_time
+            ).total_seconds()
 
         return status
 
@@ -571,7 +611,9 @@ class BootstrapOrchestrator:
 
 
 # Convenience functions
-def create_orchestrator(config_path: str = None, data_dir: str = "data") -> BootstrapOrchestrator:
+def create_orchestrator(
+    config_path: str = None, data_dir: str = "data"
+) -> BootstrapOrchestrator:
     """
     Create and configure a bootstrap orchestrator.
 
@@ -585,7 +627,9 @@ def create_orchestrator(config_path: str = None, data_dir: str = "data") -> Boot
     return BootstrapOrchestrator(config_path=config_path, data_dir=data_dir)
 
 
-def bootstrap_defense_engine(config_path: str = None, data_dir: str = "data") -> BootstrapOrchestrator:
+def bootstrap_defense_engine(
+    config_path: str = None, data_dir: str = "data"
+) -> BootstrapOrchestrator:
     """
     Bootstrap the complete defense engine.
 

@@ -93,7 +93,11 @@ class BackendAPIClient:
         user_payload = login_payload.get("user")
 
         try:
-            profile_payload = {"user": user_payload} if user_payload is not None else self.get_profile(token)
+            profile_payload = (
+                {"user": user_payload}
+                if user_payload is not None
+                else self.get_profile(token)
+            )
         except requests.HTTPError as exc:
             message = self._extract_error(exc)
             logger.warning("Profile fetch failed: %s", message)

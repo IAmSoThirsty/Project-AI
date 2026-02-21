@@ -123,7 +123,9 @@ class RoboticMainframeSystem:
 
                 # Step 3: Initialize Controller
                 logger.info("3/4 - Initializing Robot Controller Manager...")
-                self.controller = RobotControllerManager(self.hardware, self.safety_validator, self.config)
+                self.controller = RobotControllerManager(
+                    self.hardware, self.safety_validator, self.config
+                )
 
                 if not self.controller.start():
                     logger.error("Controller start failed")
@@ -176,7 +178,9 @@ class RoboticMainframeSystem:
                 logger.error("Cannot read joint states")
                 return False
 
-            logger.info("System validation passed: %s joints responsive", len(joint_states))
+            logger.info(
+                "System validation passed: %s joints responsive", len(joint_states)
+            )
             return True
 
         except Exception as e:
@@ -249,7 +253,9 @@ class RoboticMainframeSystem:
                     self.status.active_alarms.append("EMERGENCY_STOP")
 
                     # Trigger emergency stop event
-                    self._trigger_event("emergency_stop", {"timestamp": datetime.utcnow().isoformat()})
+                    self._trigger_event(
+                        "emergency_stop", {"timestamp": datetime.utcnow().isoformat()}
+                    )
 
                     return True
 
@@ -269,7 +275,9 @@ class RoboticMainframeSystem:
 
             if success:
                 self.status.robot_state = "ready"
-                self.status.active_alarms = [a for a in self.status.active_alarms if a != "EMERGENCY_STOP"]
+                self.status.active_alarms = [
+                    a for a in self.status.active_alarms if a != "EMERGENCY_STOP"
+                ]
 
                 logger.info("Emergency stop reset")
                 return True
@@ -311,7 +319,11 @@ class RoboticMainframeSystem:
                 "robot_state": robot_status.state.value,
                 "joint_states": [asdict(js) for js in robot_status.joint_states],
                 "sensor_readings": [asdict(sr) for sr in robot_status.sensor_readings],
-                "current_command": (asdict(robot_status.current_command) if robot_status.current_command else None),
+                "current_command": (
+                    asdict(robot_status.current_command)
+                    if robot_status.current_command
+                    else None
+                ),
                 "active_alarms": robot_status.active_alarms,
                 "uptime": robot_status.uptime_seconds,
                 "last_updated": robot_status.last_updated,
@@ -323,7 +335,9 @@ class RoboticMainframeSystem:
             logger.error("Get robot state error: %s", e)
             return {"error": str(e)}
 
-    def register_event_handler(self, event_type: str, handler: Callable[[dict[str, Any]], None]) -> None:
+    def register_event_handler(
+        self, event_type: str, handler: Callable[[dict[str, Any]], None]
+    ) -> None:
         """Register event handler"""
         with self._lock:
             if event_type not in self._event_handlers:
@@ -383,7 +397,9 @@ class RoboticIntegrationAPI:
         self._initialized = success
         return success
 
-    def move_joints(self, positions: list[float], duration: float = 1.0, safe_mode: bool = True) -> bool:
+    def move_joints(
+        self, positions: list[float], duration: float = 1.0, safe_mode: bool = True
+    ) -> bool:
         """
         Move robot joints to specified positions.
 

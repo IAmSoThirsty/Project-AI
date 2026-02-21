@@ -24,7 +24,7 @@ import logging
 import math
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger("SASE.L4.Attribution")
 
@@ -48,7 +48,7 @@ class FeatureVector:
     VPS_flag: bool
     NAT_density_estimate: float  # 0.0-1.0
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary"""
         return {
             "ASN_risk": self.ASN_risk,
@@ -87,8 +87,8 @@ class FeatureExtractor:
 
     def __init__(self):
         # Historical baselines for anomaly detection
-        self.geo_baselines: Dict[str, Dict[str, int]] = {}  # artifact_id -> {country: count}
-        self.time_baselines: Dict[str, list] = {}  # artifact_id -> [timestamps]
+        self.geo_baselines: dict[str, dict[str, int]] = {}  # artifact_id -> {country: count}
+        self.time_baselines: dict[str, list] = {}  # artifact_id -> [timestamps]
 
         logger.info("Feature extractor initialized")
 

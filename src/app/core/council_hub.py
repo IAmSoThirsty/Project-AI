@@ -148,8 +148,12 @@ class CouncilHub:
             self._project["red_team"] = RedTeamAgent(kernel=self.kernel)
 
             # NEW: Advanced Security Agents
-            self._project["constitutional_guardrail"] = ConstitutionalGuardrailAgent(kernel=self.kernel)
-            self._project["code_adversary"] = CodeAdversaryAgent(repo_path=".", kernel=self.kernel)
+            self._project["constitutional_guardrail"] = ConstitutionalGuardrailAgent(
+                kernel=self.kernel
+            )
+            self._project["code_adversary"] = CodeAdversaryAgent(
+                repo_path=".", kernel=self.kernel
+            )
             self._project["red_team_persona"] = RedTeamPersonaAgent(kernel=self.kernel)
 
             # default all agents enabled
@@ -188,7 +192,9 @@ class CouncilHub:
                     can_be_replaced=True,  # All agents are replaceable
                 )
             except Exception as e:
-                logger.warning("Failed to register agent %s in tier registry: %s", agent_id, e)
+                logger.warning(
+                    "Failed to register agent %s in tier registry: %s", agent_id, e
+                )
 
             logger.info("Registered agent %s", agent_id)
 
@@ -208,7 +214,9 @@ class CouncilHub:
         if self._autolearn_thread and self._autolearn_thread.is_alive():
             return
         self._autolearn_stop.clear()
-        self._autolearn_thread = threading.Thread(target=self._autolearn_loop, daemon=True)
+        self._autolearn_thread = threading.Thread(
+            target=self._autolearn_loop, daemon=True
+        )
         self._autolearn_thread.start()
         logger.info(
             "CouncilHub autonomous learning started (interval=%s)",
@@ -250,8 +258,12 @@ class CouncilHub:
                 with open(path, encoding="utf-8") as f:
                     content = f.read()
                 topic = os.path.splitext(fn)[0]
-                report = engine.absorb_information(topic, content, metadata={"source": "autolearn"})
-                logger.info("Autolearn absorbed %s -> report facts=%s", fn, report.facts)
+                report = engine.absorb_information(
+                    topic, content, metadata={"source": "autolearn"}
+                )
+                logger.info(
+                    "Autolearn absorbed %s -> report facts=%s", fn, report.facts
+                )
                 # Optionally archive consumed file
                 archive = path + ".consumed"
                 os.rename(path, archive)
@@ -270,7 +282,13 @@ class CouncilHub:
                         # locate latest generated artifact and run QA pipeline
                         gen_dir = os.path.join("src", "app", "generated", topic)
                         if os.path.exists(gen_dir):
-                            files = sorted([os.path.join(gen_dir, f) for f in os.listdir(gen_dir) if f.endswith(".py")])
+                            files = sorted(
+                                [
+                                    os.path.join(gen_dir, f)
+                                    for f in os.listdir(gen_dir)
+                                    if f.endswith(".py")
+                                ]
+                            )
                             if files:
                                 latest = files[-1]
                                 # COGNITION KERNEL ROUTING - all agent calls routed through kernel
@@ -325,7 +343,9 @@ class CouncilHub:
                                     }
                                 )
                         except Exception as e:
-                            logger.exception("Dependency check exception for %s: %s", path, e)
+                            logger.exception(
+                                "Dependency check exception for %s: %s", path, e
+                            )
                             failures.append(
                                 {
                                     "module": path,
@@ -350,7 +370,9 @@ class CouncilHub:
                             # Agent methods already route through kernel via _execute_through_kernel
                             run = qa.run_tests()
                             if not run.get("success"):
-                                failures.append({"module": path, "stage": "qa_run", "detail": run})
+                                failures.append(
+                                    {"module": path, "stage": "qa_run", "detail": run}
+                                )
                         except Exception as e:
                             logger.exception("QA check exception for %s: %s", path, e)
                             failures.append(
@@ -400,7 +422,9 @@ class CouncilHub:
                 recipient.receive_message(from_id, message)
             return {"delivered": True}
         except Exception as e:
-            logger.exception("Failed to deliver message from %s to %s: %s", from_id, to_id, e)
+            logger.exception(
+                "Failed to deliver message from %s to %s: %s", from_id, to_id, e
+            )
             return {"delivered": False, "error": str(e)}
 
     def _consult_cerberus(self, content: str) -> dict[str, Any]:
@@ -435,7 +459,9 @@ class CouncilHub:
                     agent_id,
                 )
             else:
-                logger.warning("Attempted to cut communication for unknown agent %s", agent_id)
+                logger.warning(
+                    "Attempted to cut communication for unknown agent %s", agent_id
+                )
 
     def enable_agent(self, agent_id: str) -> None:
         """Enable an optional agent."""

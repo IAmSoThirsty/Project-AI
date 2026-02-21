@@ -50,7 +50,9 @@ class BootProfileConfig:
     description: str
     subsystem_whitelist: list[str] | None = None  # If set, only these subsystems
     subsystem_blacklist: list[str] = field(default_factory=list)  # Never load these
-    priority_overrides: dict[str, str] = field(default_factory=dict)  # Subsystem priority changes
+    priority_overrides: dict[str, str] = field(
+        default_factory=dict
+    )  # Subsystem priority changes
     require_ethics_approval: bool = False  # Require ethics approval before init
     enable_health_monitoring: bool = True
     enable_audit_logging: bool = True
@@ -341,7 +343,9 @@ class AdvancedBootSystem:
                 # Require ethics approval for this subsystem
                 if subsystem_id not in self._ethics_approvals:
                     # Request approval (would integrate with ethics subsystem)
-                    approval = self._request_ethics_approval(subsystem_id, subsystem_metadata)
+                    approval = self._request_ethics_approval(
+                        subsystem_id, subsystem_metadata
+                    )
                     self._ethics_approvals[subsystem_id] = approval
 
                 if not self._ethics_approvals.get(subsystem_id, False):
@@ -349,7 +353,9 @@ class AdvancedBootSystem:
 
         return True, None
 
-    def _request_ethics_approval(self, subsystem_id: str, metadata: dict[str, Any]) -> bool:
+    def _request_ethics_approval(
+        self, subsystem_id: str, metadata: dict[str, Any]
+    ) -> bool:
         """
         Request ethics approval for subsystem initialization.
 
@@ -433,7 +439,10 @@ class AdvancedBootSystem:
             result=approved,
         )
 
-        logger.info(f"Ethics approval for {subsystem_id}: {approved} " f"(reasoning: {reasoning}, event: {event_id})")
+        logger.info(
+            f"Ethics approval for {subsystem_id}: {approved} "
+            f"(reasoning: {reasoning}, event: {event_id})"
+        )
 
         return approved
 
@@ -529,7 +538,9 @@ class AdvancedBootSystem:
 
         logger.critical("🚨 EMERGENCY MODE ACTIVATED: %s", reason)
         logger.critical("   Only critical subsystems will be available")
-        logger.critical("   Critical subsystems: %s", self.EMERGENCY_CRITICAL_SUBSYSTEMS)
+        logger.critical(
+            "   Critical subsystems: %s", self.EMERGENCY_CRITICAL_SUBSYSTEMS
+        )
 
     def deactivate_emergency_mode(self):
         """
@@ -545,7 +556,9 @@ class AdvancedBootSystem:
             self._emergency_mode_active = False
             duration = None
             if self._emergency_activation_time:
-                duration = (datetime.now() - self._emergency_activation_time).total_seconds()
+                duration = (
+                    datetime.now() - self._emergency_activation_time
+                ).total_seconds()
 
         # Emit event through event spine
         try:
@@ -646,7 +659,9 @@ class AdvancedBootSystem:
     def _write_audit_event(self, event: AuditEvent):
         """Write audit event to disk."""
         try:
-            audit_file = self.audit_dir / f"audit_{datetime.now().strftime('%Y%m%d')}.jsonl"
+            audit_file = (
+                self.audit_dir / f"audit_{datetime.now().strftime('%Y%m%d')}.jsonl"
+            )
 
             with open(audit_file, "a") as f:
                 f.write(json.dumps(event.to_dict()) + "\n")
@@ -658,7 +673,9 @@ class AdvancedBootSystem:
         """Capture current system state snapshot."""
         return {
             "timestamp": datetime.now().isoformat(),
-            "boot_profile": (self._current_profile.value if self._current_profile else None),
+            "boot_profile": (
+                self._current_profile.value if self._current_profile else None
+            ),
             "emergency_mode": self._emergency_mode_active,
             "ethics_checkpoint": self._ethics_checkpoint_passed,
             "boot_stats": self._boot_stats.copy(),
@@ -828,7 +845,9 @@ class AdvancedBootSystem:
         with self._lock:
             return {
                 **self._boot_stats,
-                "current_profile": (self._current_profile.value if self._current_profile else None),
+                "current_profile": (
+                    self._current_profile.value if self._current_profile else None
+                ),
                 "emergency_mode": self._emergency_mode_active,
                 "ethics_checkpoint_passed": self._ethics_checkpoint_passed,
                 "total_audit_events": len(self._audit_log),
@@ -845,13 +864,19 @@ class AdvancedBootSystem:
             self.set_boot_profile(profile)
 
         with self._lock:
-            self._boot_stats["profile"] = self._current_profile.value if self._current_profile else None
+            self._boot_stats["profile"] = (
+                self._current_profile.value if self._current_profile else None
+            )
             self._boot_stats["start_time"] = datetime.now().isoformat()
 
         self._audit_event(
             event_type="boot",
             action="start",
-            context={"profile": (self._current_profile.value if self._current_profile else None)},
+            context={
+                "profile": (
+                    self._current_profile.value if self._current_profile else None
+                )
+            },
             result="started",
             include_snapshot=True,
         )
@@ -879,7 +904,9 @@ class AdvancedBootSystem:
         logger.info("=" * 80)
         logger.info("BOOT SEQUENCE COMPLETE")
         logger.info("Profile: %s", self._boot_stats["profile"])
-        logger.info("Subsystems initialized: %s", self._boot_stats["subsystems_initialized"])
+        logger.info(
+            "Subsystems initialized: %s", self._boot_stats["subsystems_initialized"]
+        )
         logger.info("Subsystems skipped: %s", self._boot_stats["subsystems_skipped"])
         if self._boot_stats.get("ethics_approvals_required", 0) > 0:
             logger.info(

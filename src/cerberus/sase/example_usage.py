@@ -83,7 +83,7 @@ def main():
         result = sase.process_telemetry(test["telemetry"])
 
         if result.get("success"):
-            print(f"\n✓ Processing successful")
+            print("\n✓ Processing successful")
             print(f"  Event ID: {result['event_id']}")
             print(f"  Confidence: {result['confidence']['confidence_percentage']}%")
             print(f"  Threat Class: {result['confidence']['threat_classification']}")

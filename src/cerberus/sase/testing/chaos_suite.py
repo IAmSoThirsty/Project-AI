@@ -5,9 +5,7 @@ SASE Chaos Engineering Test Suite
 """
 
 import random
-import time
 from dataclasses import dataclass
-from typing import Any, Dict, List
 
 
 @dataclass
@@ -118,7 +116,7 @@ class EventGenerator:
             confidence_expected=0.35,  # Moderate suspicion, below containment threshold
         )
 
-    def generate_10k_mix(self) -> List[SyntheticEvent]:
+    def generate_10k_mix(self) -> list[SyntheticEvent]:
         """
         Generate 10k event mix:
         - 5% true attacks (credential harvesting)
@@ -189,7 +187,7 @@ class ChaosValidator:
         else:
             self.results["true_negatives"] += 1
 
-    def get_metrics(self) -> Dict[str, float]:
+    def get_metrics(self) -> dict[str, float]:
         """Calculate validation metrics"""
         tp = self.results["true_positives"]
         tn = self.results["true_negatives"]

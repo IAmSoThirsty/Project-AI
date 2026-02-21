@@ -13,7 +13,6 @@ FEATURES:
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Optional
 
 logger = logging.getLogger("SASE.L14.RaftConsensus")
 
@@ -33,7 +32,7 @@ class LogEntry:
     term: int
     index: int
     command: str
-    data: Dict
+    data: dict
 
 
 class LeaderElection:
@@ -41,7 +40,7 @@ class LeaderElection:
 
     ELECTION_TIMEOUT_MS = (150, 300)  # Random between 150-300ms
 
-    def __init__(self, node_id: str, cluster_nodes: List[str]):
+    def __init__(self, node_id: str, cluster_nodes: list[str]):
         self.node_id = node_id
         self.cluster_nodes = cluster_nodes
         self.current_term = 0
@@ -71,10 +70,10 @@ class LogReplication:
     """Raft log replication"""
 
     def __init__(self):
-        self.log: List[LogEntry] = []
+        self.log: list[LogEntry] = []
         self.commit_index = 0
 
-    def append_entry(self, term: int, command: str, data: Dict) -> LogEntry:
+    def append_entry(self, term: int, command: str, data: dict) -> LogEntry:
         """Append entry to log"""
         index = len(self.log)
 
@@ -106,7 +105,7 @@ class RaftNode:
     Implements Raft consensus algorithm for distributed SASE
     """
 
-    def __init__(self, node_id: str, cluster_nodes: List[str]):
+    def __init__(self, node_id: str, cluster_nodes: list[str]):
         self.node_id = node_id
         self.cluster_nodes = cluster_nodes
 
@@ -144,7 +143,7 @@ class RaftNode:
         logger.info(f"Node {self.node_id} became FOLLOWER")
         self.state = NodeState.FOLLOWER
 
-    def append_log(self, command: str, data: Dict) -> Optional[LogEntry]:
+    def append_log(self, command: str, data: dict) -> LogEntry | None:
         """Append to log (leader only)"""
         if self.state != NodeState.LEADER:
             logger.error("Only leader can append to log")

@@ -18,7 +18,7 @@ Transition matrix stored per model version.
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import numpy as np
 
@@ -45,7 +45,7 @@ class StateTransitionMatrix:
     """
 
     version: str
-    states: List[BehaviorState]
+    states: list[BehaviorState]
     matrix: np.ndarray  # NxN matrix
 
     def __post_init__(self):
@@ -76,8 +76,8 @@ class EmissionProbabilities:
     """
 
     version: str
-    states: List[BehaviorState]
-    observations: List[str]  # Observation types (e.g., "HTTP_CALLBACK", "DNS_RESOLUTION")
+    states: list[BehaviorState]
+    observations: list[str]  # Observation types (e.g., "HTTP_CALLBACK", "DNS_RESOLUTION")
     matrix: np.ndarray  # States x Observations
 
     def __post_init__(self):
@@ -201,7 +201,7 @@ class HiddenMarkovModel:
             matrix=matrix,
         )
 
-    def viterbi(self, observations: List[str]) -> Tuple[List[BehaviorState], float]:
+    def viterbi(self, observations: list[str]) -> tuple[list[BehaviorState], float]:
         """
         Viterbi algorithm: Find most likely state sequence
 
@@ -284,11 +284,11 @@ class BehavioralModelEngine:
 
     def __init__(self, model_version: str = "1.0.0"):
         self.hmm = HiddenMarkovModel(version=model_version)
-        self.event_sequences: Dict[str, List[str]] = {}  # ip -> [observations]
+        self.event_sequences: dict[str, list[str]] = {}  # ip -> [observations]
 
         logger.info("L5 Behavioral Model Engine initialized")
 
-    def process_event(self, event: Any) -> Optional[BehaviorState]:
+    def process_event(self, event: Any) -> BehaviorState | None:
         """
         Process event and infer current behavioral state
 
@@ -326,7 +326,7 @@ class BehavioralModelEngine:
 
         return current_state
 
-    def get_state_sequence(self, ip: str) -> Optional[List[BehaviorState]]:
+    def get_state_sequence(self, ip: str) -> list[BehaviorState] | None:
         """Get full inferred state sequence for IP"""
         if ip not in self.event_sequences:
             return None

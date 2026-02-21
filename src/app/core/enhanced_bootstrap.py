@@ -172,7 +172,9 @@ class EnhancedBootstrapOrchestrator:
                                 version=metadata.get("version", "1.0.0"),
                                 priority=metadata.get("priority", "MEDIUM"),
                                 dependencies=metadata.get("dependencies", []),
-                                provides_capabilities=metadata.get("provides_capabilities", []),
+                                provides_capabilities=metadata.get(
+                                    "provides_capabilities", []
+                                ),
                                 module_path=module_name,
                                 class_name=name,
                                 class_ref=obj,
@@ -180,7 +182,9 @@ class EnhancedBootstrapOrchestrator:
                             )
 
                             self._subsystem_metadata[subsystem_id] = info
-                            self._subsystem_lifecycle[subsystem_id] = SubsystemLifecycleState.UNINITIALIZED
+                            self._subsystem_lifecycle[subsystem_id] = (
+                                SubsystemLifecycleState.UNINITIALIZED
+                            )
 
                             discovered += 1
 
@@ -243,7 +247,9 @@ class EnhancedBootstrapOrchestrator:
             remaining = set(self._subsystem_metadata.keys()) - set(result)
             logger.error("Circular dependency detected: %s", remaining)
             # Add remaining in priority order
-            result.extend(sorted(remaining, key=lambda sid: self._get_priority_value(sid)))
+            result.extend(
+                sorted(remaining, key=lambda sid: self._get_priority_value(sid))
+            )
 
         self._init_order = result
 
@@ -293,7 +299,9 @@ class EnhancedBootstrapOrchestrator:
 
         # Check for ethics-first mode
         ethics_priority_subsystems = {"ethics_governance", "agi_safeguards"}
-        ethics_first = self.advanced_boot.get_current_profile() == BootProfile.ETHICS_FIRST
+        ethics_first = (
+            self.advanced_boot.get_current_profile() == BootProfile.ETHICS_FIRST
+        )
 
         for subsystem_id in self._init_order:
             info = self._subsystem_metadata.get(subsystem_id)
@@ -301,7 +309,9 @@ class EnhancedBootstrapOrchestrator:
                 continue
 
             # Check if should initialize based on boot profile
-            should_init, reason = self.advanced_boot.should_initialize_subsystem(subsystem_id, info.metadata)
+            should_init, reason = self.advanced_boot.should_initialize_subsystem(
+                subsystem_id, info.metadata
+            )
 
             if not should_init:
                 logger.info("Skipping %s: %s", info.name, reason)
@@ -313,7 +323,9 @@ class EnhancedBootstrapOrchestrator:
             priority_override = self.advanced_boot.get_priority_override(subsystem_id)
             if priority_override:
                 info.priority = priority_override
-                logger.info("Priority override for %s: %s", subsystem_id, priority_override)
+                logger.info(
+                    "Priority override for %s: %s", subsystem_id, priority_override
+                )
 
             logger.info("Initializing: %s (%s)", info.name, subsystem_id)
 
@@ -325,7 +337,8 @@ class EnhancedBootstrapOrchestrator:
                 if ethics_first and subsystem_id in ethics_priority_subsystems:
                     # Check if all ethics subsystems are done
                     all_ethics_done = all(
-                        self._subsystem_lifecycle.get(es) == SubsystemLifecycleState.RUNNING
+                        self._subsystem_lifecycle.get(es)
+                        == SubsystemLifecycleState.RUNNING
                         for es in ethics_priority_subsystems
                         if es in self._subsystem_lifecycle
                     )
@@ -341,7 +354,9 @@ class EnhancedBootstrapOrchestrator:
 
                     # Check if should activate emergency mode
                     if not self.advanced_boot.is_emergency_mode():
-                        logger.warning("Critical subsystem failure - considering emergency mode")
+                        logger.warning(
+                            "Critical subsystem failure - considering emergency mode"
+                        )
 
                     self.advanced_boot.finish_boot()
                     return False
@@ -374,7 +389,9 @@ class EnhancedBootstrapOrchestrator:
             return False
 
         with self._lock:
-            self._subsystem_lifecycle[subsystem_id] = SubsystemLifecycleState.INITIALIZING
+            self._subsystem_lifecycle[subsystem_id] = (
+                SubsystemLifecycleState.INITIALIZING
+            )
 
         try:
             # Check dependencies
@@ -382,9 +399,13 @@ class EnhancedBootstrapOrchestrator:
                 dep_state = self._subsystem_lifecycle.get(dep_id)
 
                 if dep_state != SubsystemLifecycleState.RUNNING:
-                    logger.error("Dependency not running: %s (state: %s)", dep_id, dep_state)
+                    logger.error(
+                        "Dependency not running: %s (state: %s)", dep_id, dep_state
+                    )
                     with self._lock:
-                        self._subsystem_lifecycle[subsystem_id] = SubsystemLifecycleState.FAILED
+                        self._subsystem_lifecycle[subsystem_id] = (
+                            SubsystemLifecycleState.FAILED
+                        )
                         self._stats["failed"] += 1
                     return False
 
@@ -416,7 +437,9 @@ class EnhancedBootstrapOrchestrator:
             # Store instance
             with self._lock:
                 self._subsystem_instances[subsystem_id] = instance
-                self._subsystem_lifecycle[subsystem_id] = SubsystemLifecycleState.RUNNING
+                self._subsystem_lifecycle[subsystem_id] = (
+                    SubsystemLifecycleState.RUNNING
+                )
                 self._stats["running"] += 1
                 self._stats["initialized"] += 1
 
@@ -626,7 +649,9 @@ class EnhancedBootstrapOrchestrator:
                 "isolated": self._stats["isolated"],
                 "failed": self._stats["failed"],
                 "health_monitoring": self._health_monitor_active,
-                "subsystem_states": {sid: state.value for sid, state in self._subsystem_lifecycle.items()},
+                "subsystem_states": {
+                    sid: state.value for sid, state in self._subsystem_lifecycle.items()
+                },
                 "initialization_order": self._init_order,
             }
 

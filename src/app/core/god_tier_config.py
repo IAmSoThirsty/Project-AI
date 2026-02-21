@@ -19,7 +19,9 @@ class VoiceModelConfig:
     """Voice model configuration"""
 
     enabled: bool = True
-    models: list[str] = field(default_factory=lambda: ["basic_tts", "emotional_tts", "conversational"])
+    models: list[str] = field(
+        default_factory=lambda: ["basic_tts", "emotional_tts", "conversational"]
+    )
     default_model: str = "conversational"
     bonding_enabled: bool = True
     experimentation_rounds: int = 5
@@ -31,7 +33,9 @@ class VisualModelConfig:
     """Visual model configuration"""
 
     enabled: bool = True
-    models: list[str] = field(default_factory=lambda: ["facial_emotion", "focus_attention"])
+    models: list[str] = field(
+        default_factory=lambda: ["facial_emotion", "focus_attention"]
+    )
     default_model: str = "facial_emotion"
     bonding_enabled: bool = True
     calibration_frames: int = 30
@@ -78,7 +82,9 @@ class PolicyConfig:
     default_humor: float = 0.3
 
     # Context-aware adjustments
-    no_false_alarms: bool = True  # Critical: no overreaction to swearing/sensitive topics
+    no_false_alarms: bool = (
+        True  # Critical: no overreaction to swearing/sensitive topics
+    )
     user_adaptation: bool = True
 
 

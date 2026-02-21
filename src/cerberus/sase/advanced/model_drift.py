@@ -14,7 +14,6 @@ Trigger retraining when drift exceeds threshold.
 
 import logging
 import time
-from typing import Dict, List
 
 import numpy as np
 
@@ -71,9 +70,9 @@ class DriftDetector:
 
     def __init__(self):
         # Historical baselines
-        self.historical_features: List[np.ndarray] = []
-        self.historical_confidences: List[float] = []
-        self.historical_asn_entropy: List[float] = []
+        self.historical_features: list[np.ndarray] = []
+        self.historical_confidences: list[float] = []
+        self.historical_asn_entropy: list[float] = []
 
         self.kl_calc = KLDivergenceCalculator()
 
@@ -93,10 +92,10 @@ class DriftDetector:
 
     def detect_drift(
         self,
-        current_features: List[np.ndarray],
-        current_confidences: List[float],
-        current_asn_entropy: List[float],
-    ) -> Dict:
+        current_features: list[np.ndarray],
+        current_confidences: list[float],
+        current_asn_entropy: list[float],
+    ) -> dict:
         """
         Detect drift in current distribution
 
@@ -147,7 +146,7 @@ class DriftDetector:
 
         return result
 
-    def _compute_feature_distribution(self, features: List[np.ndarray]) -> np.ndarray:
+    def _compute_feature_distribution(self, features: list[np.ndarray]) -> np.ndarray:
         """Compute feature distribution histogram"""
         if not features:
             return np.array([1.0])  # Uniform
@@ -171,7 +170,7 @@ class RetrainingTrigger:
         self.retrain_count = 0
         self.last_retrain = 0
 
-    def should_retrain(self, drift: Dict) -> bool:
+    def should_retrain(self, drift: dict) -> bool:
         """Check if retraining should be triggered"""
         return drift.get("drift_detected", False)
 

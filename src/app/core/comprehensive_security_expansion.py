@@ -101,7 +101,7 @@ class ComprehensiveSecurityExpansion:
                     category=f"B_{attack.lower()}_attack",
                     severity="critical",
                     difficulty="expert",
-                    title=f"{attack} authentication bypass - variant {i+1}",
+                    title=f"{attack} authentication bypass - variant {i + 1}",
                     description=f"Advanced {attack} manipulation for authentication bypass",
                     attack_vector="authentication",
                     payload={"type": attack, "technique": f"technique_{i}"},
@@ -124,10 +124,12 @@ class ComprehensiveSecurityExpansion:
                     category="C_crypto_failure",
                     severity="high",
                     difficulty="expert",
-                    title=f"Cryptographic weakness exploitation {i+1}",
+                    title=f"Cryptographic weakness exploitation {i + 1}",
                     description="Exploiting weak cryptographic implementations",
                     attack_vector="cryptography",
-                    payload={"weakness": ["weak_cipher", "broken_hash", "weak_rng"][i % 3]},
+                    payload={
+                        "weakness": ["weak_cipher", "broken_hash", "weak_rng"][i % 3]
+                    },
                     expected_defense=[
                         "Strong crypto",
                         "Key management",
@@ -151,7 +153,7 @@ class ComprehensiveSecurityExpansion:
                     category="D_deserialization",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Deserialization RCE {i+1}",
+                    title=f"Deserialization RCE {i + 1}",
                     description="Remote code execution via deserialization",
                     attack_vector="deserialization",
                     payload={"language": ["Java", "Python", "PHP"][i % 3]},
@@ -178,10 +180,14 @@ class ComprehensiveSecurityExpansion:
                     category="E_exploitation",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Memory corruption exploit {i+1}",
+                    title=f"Memory corruption exploit {i + 1}",
                     description="Buffer overflow and memory corruption",
                     attack_vector="memory_corruption",
-                    payload={"type": ["buffer_overflow", "use_after_free", "race_condition"][i % 3]},
+                    payload={
+                        "type": ["buffer_overflow", "use_after_free", "race_condition"][
+                            i % 3
+                        ]
+                    },
                     expected_defense=["Memory safety", "ASLR", "DEP", "Stack canaries"],
                     cvss_score=8.0 + (i % 20) / 10.0,
                     mitre_tactics=["T1203", "T1068"],
@@ -201,10 +207,12 @@ class ComprehensiveSecurityExpansion:
                     category="F_file_operations",
                     severity="high",
                     difficulty="expert",
-                    title=f"Path traversal and file upload {i+1}",
+                    title=f"Path traversal and file upload {i + 1}",
                     description="File operation abuse for unauthorized access",
                     attack_vector="file_operations",
-                    payload={"attack": ["path_traversal", "file_upload", "zip_slip"][i % 3]},
+                    payload={
+                        "attack": ["path_traversal", "file_upload", "zip_slip"][i % 3]
+                    },
                     expected_defense=[
                         "Path validation",
                         "File type checks",
@@ -228,10 +236,12 @@ class ComprehensiveSecurityExpansion:
                     category="G_graphql_api",
                     severity="high",
                     difficulty="expert",
-                    title=f"GraphQL/API security bypass {i+1}",
+                    title=f"GraphQL/API security bypass {i + 1}",
                     description="API and GraphQL exploitation",
                     attack_vector="api",
-                    payload={"attack": ["graphql_dos", "api_abuse", "rate_bypass"][i % 3]},
+                    payload={
+                        "attack": ["graphql_dos", "api_abuse", "rate_bypass"][i % 3]
+                    },
                     expected_defense=[
                         "Rate limiting",
                         "Query complexity limits",
@@ -255,7 +265,7 @@ class ComprehensiveSecurityExpansion:
                     category="H_http_protocol",
                     severity="high",
                     difficulty="expert",
-                    title=f"HTTP protocol attack {i+1}",
+                    title=f"HTTP protocol attack {i + 1}",
                     description="HTTP smuggling and response splitting",
                     attack_vector="http_protocol",
                     payload={
@@ -288,10 +298,14 @@ class ComprehensiveSecurityExpansion:
                     category="I_iam",
                     severity="critical",
                     difficulty="expert",
-                    title=f"IAM privilege escalation {i+1}",
+                    title=f"IAM privilege escalation {i + 1}",
                     description="Identity and access management bypass",
                     attack_vector="iam",
-                    payload={"attack": ["privilege_escalation", "idor", "role_confusion"][i % 3]},
+                    payload={
+                        "attack": ["privilege_escalation", "idor", "role_confusion"][
+                            i % 3
+                        ]
+                    },
                     expected_defense=["RBAC", "Least privilege", "Access logging"],
                     cvss_score=8.0 + (i % 20) / 10.0,
                     mitre_tactics=["T1078", "T1068"],
@@ -311,10 +325,14 @@ class ComprehensiveSecurityExpansion:
                     category="K_kubernetes",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Kubernetes security breach {i+1}",
+                    title=f"Kubernetes security breach {i + 1}",
                     description="Container orchestration exploitation",
                     attack_vector="kubernetes",
-                    payload={"attack": ["pod_escape", "rbac_bypass", "admission_bypass"][i % 3]},
+                    payload={
+                        "attack": ["pod_escape", "rbac_bypass", "admission_bypass"][
+                            i % 3
+                        ]
+                    },
                     expected_defense=["Pod security", "Network policies", "RBAC"],
                     cvss_score=8.5 + (i % 15) / 10.0,
                     mitre_tactics=["T1611", "T1610"],
@@ -336,7 +354,7 @@ class ComprehensiveSecurityExpansion:
                     category="RTE_web_advanced",
                     severity="critical" if i < 150 else "high",
                     difficulty="redteam",
-                    title=f"Advanced web exploit {i+1}",
+                    title=f"Advanced web exploit {i + 1}",
                     description="Multi-stage web application attack",
                     attack_vector="web",
                     payload={
@@ -367,7 +385,7 @@ class ComprehensiveSecurityExpansion:
                     category="RTE_network_advanced",
                     severity="high",
                     difficulty="redteam",
-                    title=f"Network layer attack {i+1}",
+                    title=f"Network layer attack {i + 1}",
                     description="Advanced network penetration",
                     attack_vector="network",
                     payload={"attack": ["mitm", "dns_spoofing", "arp_poison"][i % 3]},
@@ -390,7 +408,7 @@ class ComprehensiveSecurityExpansion:
                     category="RTE_application",
                     severity="critical",
                     difficulty="redteam",
-                    title=f"Application layer exploit {i+1}",
+                    title=f"Application layer exploit {i + 1}",
                     description="Complex application vulnerability chain",
                     attack_vector="application",
                     payload={"complexity": "high", "chain_length": 4 + (i % 3)},
@@ -417,7 +435,7 @@ class ComprehensiveSecurityExpansion:
                     category="RTE_infrastructure",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Infrastructure compromise {i+1}",
+                    title=f"Infrastructure compromise {i + 1}",
                     description="Critical infrastructure attack",
                     attack_vector="infrastructure",
                     payload={"target": ["cloud", "on_prem", "hybrid"][i % 3]},
@@ -442,7 +460,7 @@ class ComprehensiveSecurityExpansion:
                     category="APT_reconnaissance",
                     severity="medium",
                     difficulty="expert",
-                    title=f"Reconnaissance technique {i+1}",
+                    title=f"Reconnaissance technique {i + 1}",
                     description="Advanced target enumeration",
                     attack_vector="reconnaissance",
                     payload={"method": ["osint", "scanning", "enumeration"][i % 3]},
@@ -465,7 +483,7 @@ class ComprehensiveSecurityExpansion:
                     category="APT_weaponization",
                     severity="high",
                     difficulty="expert",
-                    title=f"Weaponization technique {i+1}",
+                    title=f"Weaponization technique {i + 1}",
                     description="Malware and exploit creation",
                     attack_vector="weaponization",
                     payload={"type": ["trojan", "backdoor", "exploit"][i % 3]},
@@ -492,10 +510,12 @@ class ComprehensiveSecurityExpansion:
                     category="APT_delivery",
                     severity="high",
                     difficulty="expert",
-                    title=f"Delivery mechanism {i+1}",
+                    title=f"Delivery mechanism {i + 1}",
                     description="Advanced payload delivery",
                     attack_vector="delivery",
-                    payload={"method": ["phishing", "watering_hole", "supply_chain"][i % 3]},
+                    payload={
+                        "method": ["phishing", "watering_hole", "supply_chain"][i % 3]
+                    },
                     expected_defense=[
                         "Email security",
                         "User training",
@@ -519,7 +539,7 @@ class ComprehensiveSecurityExpansion:
                     category="APT_exploitation",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Exploitation technique {i+1}",
+                    title=f"Exploitation technique {i + 1}",
                     description="Initial access exploitation",
                     attack_vector="exploitation",
                     payload={"target": ["client", "server", "network"][i % 3]},
@@ -542,10 +562,14 @@ class ComprehensiveSecurityExpansion:
                     category="APT_post_exploitation",
                     severity="critical",
                     difficulty="expert",
-                    title=f"Post-exploitation technique {i+1}",
+                    title=f"Post-exploitation technique {i + 1}",
                     description="Persistence and lateral movement",
                     attack_vector="post_exploitation",
-                    payload={"action": ["persistence", "lateral_movement", "exfiltration"][i % 3]},
+                    payload={
+                        "action": ["persistence", "lateral_movement", "exfiltration"][
+                            i % 3
+                        ]
+                    },
                     expected_defense=["Behavioral monitoring", "Segmentation", "DLP"],
                     cvss_score=9.0 + (i % 10) / 10.0,
                     mitre_tactics=["T1053", "T1021", "T1041"],
@@ -557,7 +581,9 @@ class ComprehensiveSecurityExpansion:
     def export_scenarios(self, filepath: str | None = None) -> str:
         """Export all scenarios to JSON."""
         if filepath is None:
-            filepath = os.path.join(self.sim_dir, "comprehensive_expansion_scenarios.json")
+            filepath = os.path.join(
+                self.sim_dir, "comprehensive_expansion_scenarios.json"
+            )
 
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
@@ -580,9 +606,15 @@ class ComprehensiveSecurityExpansion:
 
         for scenario in self.scenarios:
             suite_counts[scenario.suite] = suite_counts.get(scenario.suite, 0) + 1
-            category_counts[scenario.category] = category_counts.get(scenario.category, 0) + 1
-            severity_counts[scenario.severity] = severity_counts.get(scenario.severity, 0) + 1
-            difficulty_counts[scenario.difficulty] = difficulty_counts.get(scenario.difficulty, 0) + 1
+            category_counts[scenario.category] = (
+                category_counts.get(scenario.category, 0) + 1
+            )
+            severity_counts[scenario.severity] = (
+                severity_counts.get(scenario.severity, 0) + 1
+            )
+            difficulty_counts[scenario.difficulty] = (
+                difficulty_counts.get(scenario.difficulty, 0) + 1
+            )
 
         avg_cvss = sum(s.cvss_score for s in self.scenarios) / len(self.scenarios)
 

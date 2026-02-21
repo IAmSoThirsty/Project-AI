@@ -6,7 +6,7 @@ Comprehensive validation against synthetic adversarial events.
 
 import logging
 import time
-from typing import Any, Dict
+from typing import Any
 
 from ..sase_orchestrator import SASEOrchestrator
 from ..testing.chaos_suite import ChaosValidator, EventGenerator, SyntheticEvent
@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelna
 logger = logging.getLogger("SASE.ChaosTest")
 
 
-def run_chaos_test() -> Dict[str, Any]:
+def run_chaos_test() -> dict[str, Any]:
     """
     Run 10k synthetic event chaos test
 
@@ -120,7 +120,7 @@ def run_chaos_test() -> Dict[str, Any]:
     }
 
 
-def _synthetic_to_telemetry(event: SyntheticEvent) -> Dict[str, Any]:
+def _synthetic_to_telemetry(event: SyntheticEvent) -> dict[str, Any]:
     """Convert synthetic event to SASE telemetry format"""
     return {
         "artifact_type": event.event_type,

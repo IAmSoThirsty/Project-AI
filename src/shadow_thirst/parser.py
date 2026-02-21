@@ -9,14 +9,11 @@ VERSION: 1.0.0
 """
 
 import logging
-from typing import Any
 
 from shadow_thirst.ast_nodes import (
     ActivationPredicate,
     Assignment,
-    ASTNode,
     BinaryOp,
-    Block,
     DivergencePolicy,
     DivergencePolicyType,
     Expression,

@@ -391,7 +391,9 @@ class CybersecurityKnowledge:
                         results.append(
                             {
                                 "path": new_path,
-                                "content": (value[:200] + "..." if len(value) > 200 else value),
+                                "content": (
+                                    value[:200] + "..." if len(value) > 200 else value
+                                ),
                             }
                         )
                     search_recursive(value, new_path)
@@ -461,7 +463,9 @@ class CybersecurityKnowledge:
                 value=self.content["title"],
             )
 
-            logger.info("Successfully integrated cybersecurity knowledge with memory system")
+            logger.info(
+                "Successfully integrated cybersecurity knowledge with memory system"
+            )
         except Exception as e:
             logger.error("Error integrating cybersecurity knowledge: %s", e)
             raise
@@ -473,7 +477,11 @@ class CybersecurityKnowledge:
         summary += "1. **Introduction**: Modern threat landscape overview\n"
         summary += "2. **Malware**: Viruses, worms, trojans, and case studies\n"
         summary += "3. **System Exploitation**: Buffer overflows, shellcode, format string vulnerabilities\n"
-        summary += "4. **Web Attacks**: Reconnaissance, scanning, and proxy exploitation\n"
+        summary += (
+            "4. **Web Attacks**: Reconnaissance, scanning, and proxy exploitation\n"
+        )
         summary += "5. **Proactive Defense**: Security frameworks and policies\n"
-        summary += "6. **Secure Implementation**: Data integrity and secure coding practices\n"
+        summary += (
+            "6. **Secure Implementation**: Data integrity and secure coding practices\n"
+        )
         return summary

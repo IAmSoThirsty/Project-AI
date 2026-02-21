@@ -148,7 +148,9 @@ class DeduplicationEngine:
         self.key_to_hash: dict[str, str] = {}
 
         # Bloom filter for fast duplicate detection
-        self.bloom_filter = BloomFilter(size=bloom_filter_size) if enable_bloom_filter else None
+        self.bloom_filter = (
+            BloomFilter(size=bloom_filter_size) if enable_bloom_filter else None
+        )
 
         # Statistics
         self.stats = {
@@ -190,7 +192,9 @@ class DeduplicationEngine:
                 content = data.encode("utf-8")
                 content_type = "text"
             else:
-                content = json.dumps(data, ensure_ascii=False, sort_keys=True).encode("utf-8")
+                content = json.dumps(data, ensure_ascii=False, sort_keys=True).encode(
+                    "utf-8"
+                )
                 content_type = "json"
 
             # Calculate content hash
@@ -202,22 +206,30 @@ class DeduplicationEngine:
 
             with self.index_lock:
                 # Check bloom filter first (if enabled)
-                if self.enable_bloom_filter and self.bloom_filter.might_contain(content_hash):
+                if self.enable_bloom_filter and self.bloom_filter.might_contain(
+                    content_hash
+                ):
                     # Bloom filter says it might exist, verify in index
                     if content_hash in self.content_index:
                         # Duplicate found, increment reference count
                         self.content_index[content_hash].reference_count += 1
-                        self.content_index[content_hash].last_accessed = datetime.now(UTC)
+                        self.content_index[content_hash].last_accessed = datetime.now(
+                            UTC
+                        )
                         was_duplicate = True
 
                         # Update stats
                         self.stats["dedup_hits"] += 1
                         self.stats["space_saved_bytes"] += size_bytes
 
-                        logger.debug("Dedup hit for key %s (hash %s)", key, content_hash[:16])
+                        logger.debug(
+                            "Dedup hit for key %s (hash %s)", key, content_hash[:16]
+                        )
                     else:
                         # False positive from bloom filter
-                        logger.debug("Bloom filter false positive for hash %s", content_hash[:16])
+                        logger.debug(
+                            "Bloom filter false positive for hash %s", content_hash[:16]
+                        )
 
                 if not was_duplicate:
                     # New content, write to storage
@@ -239,7 +251,9 @@ class DeduplicationEngine:
                     self.stats["dedup_misses"] += 1
                     self.stats["unique_contents"] += 1
 
-                    logger.debug("New content for key %s (hash %s)", key, content_hash[:16])
+                    logger.debug(
+                        "New content for key %s (hash %s)", key, content_hash[:16]
+                    )
 
                 # Map key to content hash
                 old_hash = self.key_to_hash.get(key)
@@ -251,7 +265,9 @@ class DeduplicationEngine:
 
                 # Update stats
                 self.stats["total_writes"] += 1
-                self.stats["total_references"] = sum(addr.reference_count for addr in self.content_index.values())
+                self.stats["total_references"] = sum(
+                    addr.reference_count for addr in self.content_index.values()
+                )
 
             return content_hash, was_duplicate
         except Exception as e:
@@ -279,7 +295,9 @@ class DeduplicationEngine:
                 # Get content address
                 addr = self.content_index.get(content_hash)
                 if not addr:
-                    logger.warning("Content hash %s not found in index", content_hash[:16])
+                    logger.warning(
+                        "Content hash %s not found in index", content_hash[:16]
+                    )
                     return None
 
                 # Update last accessed
@@ -433,7 +451,10 @@ class DeduplicationEngine:
         try:
             with self.index_lock:
                 data = {
-                    "content_index": {hash_str: addr.to_dict() for hash_str, addr in self.content_index.items()},
+                    "content_index": {
+                        hash_str: addr.to_dict()
+                        for hash_str, addr in self.content_index.items()
+                    },
                     "key_to_hash": self.key_to_hash,
                     "stats": self.stats,
                 }
@@ -445,7 +466,9 @@ class DeduplicationEngine:
 
             temp_file.replace(index_file)
 
-            logger.debug("Saved dedup index with %d unique contents", len(self.content_index))
+            logger.debug(
+                "Saved dedup index with %d unique contents", len(self.content_index)
+            )
         except Exception as e:
             logger.error("Failed to save dedup index: %s", e)
 
@@ -458,10 +481,19 @@ class DeduplicationEngine:
     def get_statistics(self) -> dict[str, Any]:
         """Get deduplication statistics."""
         with self.index_lock:
-            total_content_size = sum(addr.size_bytes * addr.reference_count for addr in self.content_index.values())
-            unique_content_size = sum(addr.size_bytes for addr in self.content_index.values())
+            total_content_size = sum(
+                addr.size_bytes * addr.reference_count
+                for addr in self.content_index.values()
+            )
+            unique_content_size = sum(
+                addr.size_bytes for addr in self.content_index.values()
+            )
 
-            dedup_ratio = 1.0 - (unique_content_size / total_content_size) if total_content_size > 0 else 0.0
+            dedup_ratio = (
+                1.0 - (unique_content_size / total_content_size)
+                if total_content_size > 0
+                else 0.0
+            )
 
             return {
                 **self.stats,

@@ -22,7 +22,7 @@ import time
 import uuid
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger("SASE.L2.Ingestion")
 
@@ -55,10 +55,10 @@ class GeoLocation:
     """Geographic location data"""
 
     country: str  # ISO 3166-1 alpha-2
-    city: Optional[str] = None
-    lat: Optional[float] = None
-    lon: Optional[float] = None
-    region: Optional[str] = None
+    city: str | None = None
+    lat: float | None = None
+    lon: float | None = None
+    region: str | None = None
 
 
 @dataclass
@@ -81,10 +81,10 @@ class AdversarialEvent:
     raw_payload_hash: str
     model_version: str
     signature: str
-    user_agent: Optional[str] = None
-    enrichment: Optional[Dict[str, Any]] = None  # Added by L3
+    user_agent: str | None = None
+    enrichment: dict[str, Any] | None = None  # Added by L3
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary (for Avro/JSON)"""
         return {
             "event_id": self.event_id,
@@ -163,7 +163,7 @@ class ImmutableEventStore:
     def __init__(self, storage_path: str = "sase_events.log"):
         self.storage_path = storage_path
         self.event_count = 0
-        self.event_hashes: List[str] = []
+        self.event_hashes: list[str] = []
 
     def store(self, event: AdversarialEvent) -> str:
         """
@@ -189,7 +189,7 @@ class ImmutableEventStore:
 
         return event_hash
 
-    def get_event_hashes(self, start: int = 0, end: int = None) -> List[str]:
+    def get_event_hashes(self, start: int = 0, end: int = None) -> list[str]:
         """Get event hashes for Merkle tree construction"""
         if end is None:
             end = len(self.event_hashes)
@@ -207,9 +207,9 @@ class TelemetryGateway:
         self.model_version = model_version
         self.serializer = EventSerializer()
         self.store = ImmutableEventStore()
-        self.pending_queue: List[AdversarialEvent] = []
+        self.pending_queue: list[AdversarialEvent] = []
 
-    def ingest(self, raw_telemetry: Dict[str, Any]) -> AdversarialEvent:
+    def ingest(self, raw_telemetry: dict[str, Any]) -> AdversarialEvent:
         """
         Ingest raw telemetry event
 
@@ -269,7 +269,7 @@ class TelemetryGateway:
 
         return event
 
-    def _sanitize_input(self, raw: Dict[str, Any]) -> Dict[str, Any]:
+    def _sanitize_input(self, raw: dict[str, Any]) -> dict[str, Any]:
         """Sanitize and validate input"""
         # Basic sanitization
         return {

@@ -9,7 +9,7 @@ import logging
 import time
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger("SASE.L0.Substrate")
 
@@ -45,7 +45,7 @@ class ResourceRequirements:
     network_latency_ms: int = 10  # Low-latency requirement
     hsm_fips_level: str = "FIPS_140_2"  # Or higher
 
-    def validate(self) -> tuple[bool, List[str]]:
+    def validate(self) -> tuple[bool, list[str]]:
         """Validate current system meets requirements"""
         issues = []
 
@@ -56,7 +56,7 @@ class ResourceRequirements:
             issues.append(f"Memory insufficient: {self.memory_gb}GB < 32GB")
 
         if self.storage_type not in ["immutable_object_store", "append_only_log"]:
-            issues.append(f"Storage type must be immutable or append-only")
+            issues.append("Storage type must be immutable or append-only")
 
         return len(issues) == 0, issues
 
@@ -76,7 +76,7 @@ class FailureRecoveryOrchestrator:
         self.recovery_log = []
         self.monotonic_clock = time.monotonic()
 
-    def handle_failure(self, mode: FailureMode, context: Dict[str, Any]) -> Dict[str, Any]:
+    def handle_failure(self, mode: FailureMode, context: dict[str, Any]) -> dict[str, Any]:
         """
         Execute recovery procedure for specific failure mode
 
@@ -111,7 +111,7 @@ class FailureRecoveryOrchestrator:
 
         return result
 
-    def _recover_regional_outage(self, context: Dict) -> Dict:
+    def _recover_regional_outage(self, context: dict) -> dict:
         """Automated region failover"""
         logger.warning("RECOVERY: Initiating region failover")
 
@@ -127,7 +127,7 @@ class FailureRecoveryOrchestrator:
             ],
         }
 
-    def _recover_quorum_loss(self, context: Dict) -> Dict:
+    def _recover_quorum_loss(self, context: dict) -> dict:
         """Raft-based quorum re-election"""
         logger.warning("RECOVERY: Initiating Raft quorum re-election")
 
@@ -142,7 +142,7 @@ class FailureRecoveryOrchestrator:
             ],
         }
 
-    def _recover_disk_corruption(self, context: Dict) -> Dict:
+    def _recover_disk_corruption(self, context: dict) -> dict:
         """Immutable log replay"""
         logger.warning("RECOVERY: Replaying immutable log from backup")
 
@@ -158,7 +158,7 @@ class FailureRecoveryOrchestrator:
             ],
         }
 
-    def _recover_clock_skew(self, context: Dict) -> Dict:
+    def _recover_clock_skew(self, context: dict) -> dict:
         """Monotonic timestamp enforcement"""
         logger.warning("RECOVERY: Enforcing monotonic timestamps")
 
@@ -177,7 +177,7 @@ class FailureRecoveryOrchestrator:
             ],
         }
 
-    def _recover_network_partition(self, context: Dict) -> Dict:
+    def _recover_network_partition(self, context: dict) -> dict:
         """Partition healing and state reconciliation"""
         logger.warning("RECOVERY: Healing network partition")
 
@@ -208,7 +208,7 @@ class SubstrateManager:
 
         logger.info(f"SASE L0 initialized with topology: {topology.value}")
 
-    def validate_deployment(self) -> Dict[str, Any]:
+    def validate_deployment(self) -> dict[str, Any]:
         """Validate deployment meets requirements"""
         is_valid, issues = self.requirements.validate()
 
@@ -229,11 +229,11 @@ class SubstrateManager:
             },
         }
 
-    def handle_failure(self, mode: FailureMode, context: Dict = None) -> Dict:
+    def handle_failure(self, mode: FailureMode, context: dict = None) -> dict:
         """Delegate failure handling to recovery orchestrator"""
         return self.recovery.handle_failure(mode, context or {})
 
-    def get_health_status(self) -> Dict[str, Any]:
+    def get_health_status(self) -> dict[str, Any]:
         """Get current substrate health status"""
         return {
             "topology": self.topology.value,

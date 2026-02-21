@@ -372,7 +372,9 @@ class CrossTierPolicyEngine:
             Tuple of (success, reason, block_record)
         """
         # Validate request
-        is_valid, validation_reason, policy = self.validate_block_request(blocking_tier, tier, block_type)
+        is_valid, validation_reason, policy = self.validate_block_request(
+            blocking_tier, tier, block_type
+        )
 
         if not is_valid:
             logger.warning("Block request denied: %s", validation_reason)
@@ -600,8 +602,12 @@ class CrossTierPolicyEngine:
             "active_blocks": len([b for b in self._blocks.values() if b.is_active]),
             "total_appeals": len(self._appeals),
             "pending_appeals": len(self.get_pending_appeals()),
-            "approved_appeals": len([a for a in self._appeals.values() if a.status == AppealStatus.APPROVED]),
-            "denied_appeals": len([a for a in self._appeals.values() if a.status == AppealStatus.DENIED]),
+            "approved_appeals": len(
+                [a for a in self._appeals.values() if a.status == AppealStatus.APPROVED]
+            ),
+            "denied_appeals": len(
+                [a for a in self._appeals.values() if a.status == AppealStatus.DENIED]
+            ),
         }
 
 

@@ -26,8 +26,9 @@ from __future__ import annotations
 import logging
 import time
 import tracemalloc
-from concurrent.futures import Future, ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 from collections.abc import Callable
+from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeoutError
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -108,7 +109,9 @@ def _try_compile_thirsty(source: str) -> Any:
             )
             return result.bytecode
         else:
-            logger.warning("resource_limiter.thirsty compilation failed: %s", result.errors)
+            logger.warning(
+                "resource_limiter.thirsty compilation failed: %s", result.errors
+            )
             return None
     except Exception as exc:
         logger.warning("Shadow Thirst compiler unavailable: %s", exc)
@@ -146,7 +149,9 @@ class ShadowResourceLimiter:
         self._last_result: Any = None  # Shared between _measure and execute()
 
         if self._bytecode:
-            logger.info("ShadowResourceLimiter: running compiled Shadow Thirst bytecode")
+            logger.info(
+                "ShadowResourceLimiter: running compiled Shadow Thirst bytecode"
+            )
         else:
             logger.info("ShadowResourceLimiter: running Python runtime directly")
 
@@ -357,7 +362,10 @@ def _build_violation_reason(
     if cpu_violated:
         return f"CPU quota exceeded: used {cpu_used:.1f}ms, limit {cpu_quota_ms:.1f}ms"
     if mem_violated:
-        return f"Memory quota exceeded: used {peak_mem_mb:.2f}MB, " f"limit {memory_quota_mb:.2f}MB"
+        return (
+            f"Memory quota exceeded: used {peak_mem_mb:.2f}MB, "
+            f"limit {memory_quota_mb:.2f}MB"
+        )
     return None
 
 

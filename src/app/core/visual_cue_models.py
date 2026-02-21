@@ -100,7 +100,9 @@ class VisualCueModel(ABC):
         logger.info("Visual model created: %s", model_id)
 
     @abstractmethod
-    def detect(self, frame_data: np.ndarray, context: dict[str, Any] | None = None) -> VisualCueData:
+    def detect(
+        self, frame_data: np.ndarray, context: dict[str, Any] | None = None
+    ) -> VisualCueData:
         """Detect visual cues from frame"""
 
     @abstractmethod
@@ -136,7 +138,9 @@ class FacialEmotionModel(VisualCueModel):
             logger.error("Failed to initialize %s: %s", self.model_name, e)
             return False
 
-    def detect(self, frame_data: np.ndarray, context: dict[str, Any] | None = None) -> VisualCueData:
+    def detect(
+        self, frame_data: np.ndarray, context: dict[str, Any] | None = None
+    ) -> VisualCueData:
         """Detect facial emotions"""
         if not self._initialized:
             return VisualCueData(is_present=False)
@@ -159,7 +163,9 @@ class FacialEmotionModel(VisualCueModel):
                     metadata={
                         "detection_count": self._detection_count,
                         "model": self.model_id,
-                        "recent_emotions": [e.value for e in list(self._emotion_history)[-5:]],
+                        "recent_emotions": [
+                            e.value for e in list(self._emotion_history)[-5:]
+                        ],
                     },
                 )
 
@@ -230,7 +236,9 @@ class FocusAttentionModel(VisualCueModel):
             logger.error("Failed to initialize %s: %s", self.model_name, e)
             return False
 
-    def detect(self, frame_data: np.ndarray, context: dict[str, Any] | None = None) -> VisualCueData:
+    def detect(
+        self, frame_data: np.ndarray, context: dict[str, Any] | None = None
+    ) -> VisualCueData:
         """Detect focus and attention levels"""
         if not self._initialized:
             return VisualCueData(is_present=False)
@@ -331,7 +339,9 @@ class FocusAttentionModel(VisualCueModel):
             FocusLevel.INTENSE_FOCUS: 1.0,
         }
 
-        avg = sum(focus_values[f] for f in self._focus_history) / len(self._focus_history)
+        avg = sum(focus_values[f] for f in self._focus_history) / len(
+            self._focus_history
+        )
         return avg
 
     def _get_focus_trend(self) -> str:
@@ -532,7 +542,9 @@ class CameraManager:
                 self._frame_callback = callback
                 self._should_capture = True
 
-                self._capture_thread = threading.Thread(target=self._capture_loop, daemon=True)
+                self._capture_thread = threading.Thread(
+                    target=self._capture_loop, daemon=True
+                )
                 self._capture_thread.start()
 
                 logger.info("Started camera capture")
@@ -571,7 +583,9 @@ class CameraManager:
 
                 # Update device info
                 if self._active_device:
-                    self._devices[self._active_device].last_frame_time = datetime.utcnow().isoformat()
+                    self._devices[
+                        self._active_device
+                    ].last_frame_time = datetime.utcnow().isoformat()
 
                 time.sleep(1.0 / 30.0)  # 30 FPS
 

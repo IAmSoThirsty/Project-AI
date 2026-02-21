@@ -16,8 +16,8 @@ VERSION: 1.0.0
 import logging
 
 from shadow_thirst.compiler import compile_source
-from shadow_thirst.vm import ShadowAwareVM
 from shadow_thirst.constitutional import create_constitutional_integration
+from shadow_thirst.vm import ShadowAwareVM
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -148,7 +148,7 @@ def demo_static_analysis():
     print(f"\nCompilation Success: {result.success}")
 
     if result.analysis_report:
-        print(f"\nStatic Analysis Report:")
+        print("\nStatic Analysis Report:")
         print(f"  Total Findings: {result.analysis_report.summary['total_findings']}")
         print(f"  Errors: {result.analysis_report.summary['errors']}")
         print(f"  Warnings: {result.analysis_report.summary['warnings']}")
@@ -197,7 +197,7 @@ def demo_constitutional_validation():
         print(f"Compilation failed: {result.errors}")
         return
 
-    print(f"Compilation successful")
+    print("Compilation successful")
 
     print("\n--- Executing with Constitutional Validation ---")
     vm = ShadowAwareVM(enable_shadow=True, enable_audit=True)
@@ -260,12 +260,12 @@ def demo_complete_pipeline():
 
     print("\n--- Pipeline Stage 3-10: Semantic Analysis & Static Analyzers ---")
     if result.analysis_report:
-        print(f"✓ Plane Isolation: checked")
-        print(f"✓ Determinism: checked")
-        print(f"✓ Privilege Escalation: checked")
-        print(f"✓ Resource Estimation: checked")
-        print(f"✓ Divergence Risk: checked")
-        print(f"✓ Invariant Purity: checked")
+        print("✓ Plane Isolation: checked")
+        print("✓ Determinism: checked")
+        print("✓ Privilege Escalation: checked")
+        print("✓ Resource Estimation: checked")
+        print("✓ Divergence Risk: checked")
+        print("✓ Invariant Purity: checked")
         print(f"  Analysis Result: {result.analysis_report.summary['passed']}")
 
     print("\n--- Pipeline Stage 11-13: IR & Bytecode Generation ---")
@@ -282,7 +282,7 @@ def demo_complete_pipeline():
 
     output = vm.execute("calculate_risk", args=[150])
 
-    print(f"\n✓ Execution completed")
+    print("\n✓ Execution completed")
     print(f"  Result: {output}")
     print(f"  VM Stats: {vm.get_stats()}")
 

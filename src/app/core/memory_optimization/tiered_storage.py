@@ -56,7 +56,11 @@ class AccessPattern:
 
     def get_average_access_time_ms(self) -> float:
         """Get average access time."""
-        return self.total_access_time_ms / self.access_count if self.access_count > 0 else 0.0
+        return (
+            self.total_access_time_ms / self.access_count
+            if self.access_count > 0
+            else 0.0
+        )
 
     def get_age_hours(self) -> float:
         """Get age since creation in hours."""
@@ -137,7 +141,9 @@ class TieredStorageManager:
     - Hardware-aware storage allocation
     """
 
-    def __init__(self, policy: TierPolicy | None = None, enable_background_tasks: bool = True):
+    def __init__(
+        self, policy: TierPolicy | None = None, enable_background_tasks: bool = True
+    ):
         """
         Initialize tiered storage manager.
 
@@ -214,7 +220,9 @@ class TieredStorageManager:
             start_time = time.time()
 
             # Serialize data
-            serialized = json.dumps(data, ensure_ascii=False, indent=None).encode("utf-8")
+            serialized = json.dumps(data, ensure_ascii=False, indent=None).encode(
+                "utf-8"
+            )
             size_bytes = len(serialized)
 
             # Check tier capacity
@@ -397,7 +405,9 @@ class TieredStorageManager:
             else:
                 self.stats["promotions"] += 1
 
-            logger.info("Migrated %s from %s to %s", key, current_tier, target_tier.value)
+            logger.info(
+                "Migrated %s from %s to %s", key, current_tier, target_tier.value
+            )
             return True
         except Exception as e:
             logger.error("Migration failed for key %s: %s", key, e)
@@ -439,9 +449,15 @@ class TieredStorageManager:
         # Calculate current tier usage
         current_usage = self._get_tier_usage(tier)
 
-        capacity = self.policy.hot_capacity_bytes if tier == StorageTier.HOT else self.policy.warm_capacity_bytes
+        capacity = (
+            self.policy.hot_capacity_bytes
+            if tier == StorageTier.HOT
+            else self.policy.warm_capacity_bytes
+        )
 
-        return (current_usage + required_bytes) < (capacity * self.policy.eviction_threshold)
+        return (current_usage + required_bytes) < (
+            capacity * self.policy.eviction_threshold
+        )
 
     def _get_tier_usage(self, tier: StorageTier) -> int:
         """Get current storage usage for tier in bytes."""
@@ -459,7 +475,9 @@ class TieredStorageManager:
 
     def _evict_from_tier(self, tier: StorageTier, required_bytes: int):
         """Evict data from tier to make space."""
-        logger.info("Evicting from tier %s to free %d bytes", tier.value, required_bytes)
+        logger.info(
+            "Evicting from tier %s to free %d bytes", tier.value, required_bytes
+        )
 
         # Get all keys in tier
         with self.access_lock:
@@ -522,7 +540,9 @@ class TieredStorageManager:
 
     def _start_background_tasks(self):
         """Start background migration and pruning threads."""
-        self.migration_thread = threading.Thread(target=self._migration_worker, daemon=True)
+        self.migration_thread = threading.Thread(
+            target=self._migration_worker, daemon=True
+        )
         self.pruning_thread = threading.Thread(target=self._pruning_worker, daemon=True)
 
         self.migration_thread.start()
@@ -558,7 +578,9 @@ class TieredStorageManager:
                             self._demote_tier(key, pattern)
 
                 if keys_to_migrate:
-                    logger.info("Background migration: %d keys migrated", len(keys_to_migrate))
+                    logger.info(
+                        "Background migration: %d keys migrated", len(keys_to_migrate)
+                    )
             except Exception as e:
                 logger.error("Migration worker error: %s", e)
 
@@ -583,13 +605,17 @@ class TieredStorageManager:
                     self.delete(key)
 
                 if keys_to_prune:
-                    logger.info("Background pruning: %d keys deleted", len(keys_to_prune))
+                    logger.info(
+                        "Background pruning: %d keys deleted", len(keys_to_prune)
+                    )
             except Exception as e:
                 logger.error("Pruning worker error: %s", e)
 
     def _load_access_patterns(self):
         """Load access patterns from disk."""
-        patterns_file = Path(self.policy.hot_storage_path).parent / "access_patterns.json"
+        patterns_file = (
+            Path(self.policy.hot_storage_path).parent / "access_patterns.json"
+        )
 
         if patterns_file.exists():
             try:
@@ -602,11 +628,15 @@ class TieredStorageManager:
                         last_access=datetime.fromisoformat(pattern_data["last_access"]),
                         access_count=pattern_data["access_count"],
                         total_access_time_ms=pattern_data["total_access_time_ms"],
-                        creation_time=datetime.fromisoformat(pattern_data["creation_time"]),
+                        creation_time=datetime.fromisoformat(
+                            pattern_data["creation_time"]
+                        ),
                         size_bytes=pattern_data["size_bytes"],
                         current_tier=StorageTier(pattern_data["current_tier"]),
                         pin_to_tier=(
-                            StorageTier(pattern_data["pin_to_tier"]) if pattern_data.get("pin_to_tier") else None
+                            StorageTier(pattern_data["pin_to_tier"])
+                            if pattern_data.get("pin_to_tier")
+                            else None
                         ),
                     )
 
@@ -616,7 +646,9 @@ class TieredStorageManager:
 
     def _save_access_patterns(self):
         """Save access patterns to disk."""
-        patterns_file = Path(self.policy.hot_storage_path).parent / "access_patterns.json"
+        patterns_file = (
+            Path(self.policy.hot_storage_path).parent / "access_patterns.json"
+        )
         patterns_file.parent.mkdir(parents=True, exist_ok=True)
 
         try:
@@ -629,7 +661,9 @@ class TieredStorageManager:
                         "creation_time": pattern.creation_time.isoformat(),
                         "size_bytes": pattern.size_bytes,
                         "current_tier": pattern.current_tier.value,
-                        "pin_to_tier": (pattern.pin_to_tier.value if pattern.pin_to_tier else None),
+                        "pin_to_tier": (
+                            pattern.pin_to_tier.value if pattern.pin_to_tier else None
+                        ),
                     }
                     for key, pattern in self.access_patterns.items()
                 }
@@ -674,9 +708,13 @@ class TieredStorageManager:
             "hot_capacity_bytes": self.policy.hot_capacity_bytes,
             "warm_capacity_bytes": self.policy.warm_capacity_bytes,
             "hot_usage_percent": (
-                (hot_usage / self.policy.hot_capacity_bytes * 100) if self.policy.hot_capacity_bytes > 0 else 0
+                (hot_usage / self.policy.hot_capacity_bytes * 100)
+                if self.policy.hot_capacity_bytes > 0
+                else 0
             ),
             "warm_usage_percent": (
-                (warm_usage / self.policy.warm_capacity_bytes * 100) if self.policy.warm_capacity_bytes > 0 else 0
+                (warm_usage / self.policy.warm_capacity_bytes * 100)
+                if self.policy.warm_capacity_bytes > 0
+                else 0
             ),
         }

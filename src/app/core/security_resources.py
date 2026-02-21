@@ -3,14 +3,21 @@ Security resources and repository management.
 """
 
 import json
+import logging
 import os
 from datetime import datetime
 
 import requests
 
+from app.core.utils.path_validator import validate_path
+from app.core.utils.secure_storage import SecureStorage
+
+logger = logging.getLogger(__name__)
+
 
 class SecurityResourceManager:
     def __init__(self):
+        self.storage = SecureStorage()
         # break long entries across multiple lines to keep line
         # lengths reasonable
         self.resources = {
@@ -71,7 +78,9 @@ class SecurityResourceManager:
         """Get security resources filtered by category"""
         resources = []
         for category_resources in self.resources.values():
-            resources.extend([r for r in category_resources if r["category"] == category])
+            resources.extend(
+                [r for r in category_resources if r["category"] == category]
+            )
         return resources
 
     def get_all_categories(self):
@@ -101,12 +110,23 @@ class SecurityResourceManager:
             return None
 
     def save_favorite(self, username, repo):
-        """Save a repository as favorite for a user"""
-        filename = f"security_favorites_{username}.json"
-        favorites = {}
-        if os.path.exists(filename):
-            with open(filename) as f:
-                favorites = json.load(f)
+        """Save a repository as favorite for a user securely"""
+        filename = (
+            validate_path(f"security_favorites_{username}.json", os.getcwd())
+            or f"security_favorites_{username}.json"
+        )
+
+        # Load existing (encrypted or plain)
+        favorites = self.storage.load_encrypted_json(filename)
+        if favorites is None:
+            if os.path.exists(filename):
+                try:
+                    with open(filename) as f:
+                        favorites = json.load(f)
+                except Exception:
+                    favorites = {}
+            else:
+                favorites = {}
 
         if repo not in favorites:
             favorites[repo] = {
@@ -114,13 +134,29 @@ class SecurityResourceManager:
                 "details": self.get_repo_details(repo),
             }
 
-        with open(filename, "w") as f:
-            json.dump(favorites, f)
+        try:
+            self.storage.save_encrypted_json(filename, favorites)
+        except Exception as e:
+            logger.error(f"Failed to save favorites securely: {e}")
+            raise
 
     def get_favorites(self, username):
-        """Get user's favorite security resources"""
-        filename = f"security_favorites_{username}.json"
+        """Get user's favorite security resources securely"""
+        filename = (
+            validate_path(f"security_favorites_{username}.json", os.getcwd())
+            or f"security_favorites_{username}.json"
+        )
+
+        # Try encrypted first
+        favorites = self.storage.load_encrypted_json(filename)
+        if favorites is not None:
+            return favorites
+
+        # Fallback to plain if it exists (migration)
         if os.path.exists(filename):
-            with open(filename) as f:
-                return json.load(f)
+            try:
+                with open(filename) as f:
+                    return json.load(f)
+            except Exception:
+                return {}
         return {}

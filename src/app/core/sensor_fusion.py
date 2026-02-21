@@ -233,7 +233,9 @@ class KalmanFilter:
         # Predict covariance
         self.P = self.F @ self.P @ self.F.T + self.Q
 
-    def update(self, measurement: np.ndarray, measurement_noise: np.ndarray | None = None):
+    def update(
+        self, measurement: np.ndarray, measurement_noise: np.ndarray | None = None
+    ):
         """
         Update step with new measurement.
 
@@ -343,7 +345,9 @@ class ParticleFilter:
 
     def resample(self):
         """Systematic resampling"""
-        indices = np.random.choice(self.num_particles, size=self.num_particles, replace=True, p=self.weights)
+        indices = np.random.choice(
+            self.num_particles, size=self.num_particles, replace=True, p=self.weights
+        )
 
         self.particles = self.particles[indices]
         self.weights = np.ones(self.num_particles) / self.num_particles
@@ -591,11 +595,15 @@ class SensorFusionEngine(
         # Check worker threads
         alive_threads = sum(1 for t in self.worker_threads if t.is_alive())
         if alive_threads < len(self.worker_threads):
-            self.logger.warning("Only %s/%s workers alive", alive_threads, len(self.worker_threads))
+            self.logger.warning(
+                "Only %s/%s workers alive", alive_threads, len(self.worker_threads)
+            )
             return False
 
         # Check sensor health
-        healthy_sensors = sum(1 for s in self.sensors.values() if s.health == SensorHealth.HEALTHY)
+        healthy_sensors = sum(
+            1 for s in self.sensors.values() if s.health == SensorHealth.HEALTHY
+        )
         if len(self.sensors) > 0 and healthy_sensors == 0:
             self.logger.warning("No healthy sensors")
             return False
@@ -608,7 +616,9 @@ class SensorFusionEngine(
         status.update(
             {
                 "registered_sensors": len(self.sensors),
-                "healthy_sensors": sum(1 for s in self.sensors.values() if s.health == SensorHealth.HEALTHY),
+                "healthy_sensors": sum(
+                    1 for s in self.sensors.values() if s.health == SensorHealth.HEALTHY
+                ),
                 "active_threats": len(self.active_threats),
                 "current_threat_level": self.get_threat_level(),
                 "data_quality": self.metrics["data_quality_score"],
@@ -671,7 +681,9 @@ class SensorFusionEngine(
             "metadata": self.current_state.metadata,
         }
 
-    def register_sensor(self, sensor_id: str, sensor_type: str, metadata: dict[str, Any]) -> bool:
+    def register_sensor(
+        self, sensor_id: str, sensor_type: str, metadata: dict[str, Any]
+    ) -> bool:
         """Register a new sensor"""
         try:
             sensor = SensorMetadata(
@@ -721,7 +733,9 @@ class SensorFusionEngine(
 
                     if threat_indicators:
                         for indicator in threat_indicators:
-                            threat = self._create_threat_from_indicator(indicator, reading)
+                            threat = self._create_threat_from_indicator(
+                                indicator, reading
+                            )
                             threats.append(threat)
 
         except Exception as e:
@@ -800,7 +814,9 @@ class SensorFusionEngine(
 
                 # Update latency metric
                 latency = (time.time() - start_time) * 1000
-                self.metrics["avg_latency_ms"] = 0.9 * self.metrics["avg_latency_ms"] + 0.1 * latency
+                self.metrics["avg_latency_ms"] = (
+                    0.9 * self.metrics["avg_latency_ms"] + 0.1 * latency
+                )
 
             except queue.Empty:
                 continue
@@ -827,8 +843,12 @@ class SensorFusionEngine(
                         # New threat
                         threat = Threat(
                             threat_id=threat_id,
-                            threat_type=ThreatType[threat_dict.get("threat_type", "UNKNOWN").upper()],
-                            threat_level=ThreatLevel(threat_dict.get("threat_level", 1)),
+                            threat_type=ThreatType[
+                                threat_dict.get("threat_type", "UNKNOWN").upper()
+                            ],
+                            threat_level=ThreatLevel(
+                                threat_dict.get("threat_level", 1)
+                            ),
                             position=tuple(threat_dict.get("position", [0, 0, 0])),
                             velocity=tuple(threat_dict.get("velocity", [0, 0, 0])),
                             confidence=threat_dict.get("confidence", 0.5),
@@ -845,7 +865,11 @@ class SensorFusionEngine(
 
                 # Remove stale threats
                 current_time = time.time()
-                stale = [tid for tid, threat in self.active_threats.items() if current_time - threat.last_updated > 60]
+                stale = [
+                    tid
+                    for tid, threat in self.active_threats.items()
+                    if current_time - threat.last_updated > 60
+                ]
 
                 for tid in stale:
                     del self.active_threats[tid]
@@ -873,8 +897,12 @@ class SensorFusionEngine(
                         sensor.health = SensorHealth.HEALTHY
 
                 # Calculate sensor coverage
-                healthy_count = sum(1 for s in self.sensors.values() if s.health == SensorHealth.HEALTHY)
-                self.metrics["sensor_coverage"] = healthy_count / max(len(self.sensors), 1)
+                healthy_count = sum(
+                    1 for s in self.sensors.values() if s.health == SensorHealth.HEALTHY
+                )
+                self.metrics["sensor_coverage"] = healthy_count / max(
+                    len(self.sensors), 1
+                )
 
                 # Calculate data quality
                 self.metrics["data_quality_score"] = self._calculate_data_quality()
@@ -944,14 +972,26 @@ class SensorFusionEngine(
 
         # Factors: sensor health, data freshness, coverage
         health_score = sum(
-            (1.0 if s.health == SensorHealth.HEALTHY else 0.5 if s.health == SensorHealth.DEGRADED else 0.0)
+            (
+                1.0
+                if s.health == SensorHealth.HEALTHY
+                else 0.5
+                if s.health == SensorHealth.DEGRADED
+                else 0.0
+            )
             for s in self.sensors.values()
         ) / len(self.sensors)
 
         # Freshness score
         current_time = time.time()
         freshness_score = sum(
-            (1.0 if current_time - s.last_seen < 5 else 0.5 if current_time - s.last_seen < 15 else 0.0)
+            (
+                1.0
+                if current_time - s.last_seen < 5
+                else 0.5
+                if current_time - s.last_seen < 15
+                else 0.0
+            )
             for s in self.sensors.values()
         ) / len(self.sensors)
 
@@ -994,7 +1034,9 @@ class SensorFusionEngine(
 
         return threats
 
-    def _create_threat_from_indicator(self, indicator: dict[str, Any], reading: SensorReading) -> dict[str, Any]:
+    def _create_threat_from_indicator(
+        self, indicator: dict[str, Any], reading: SensorReading
+    ) -> dict[str, Any]:
         """Create threat object from indicator"""
         threat_id = f"threat_{reading.sensor_id}_{int(reading.timestamp)}"
 
@@ -1114,7 +1156,9 @@ class SensorFusionEngine(
     def unsubscribe(self, subscription_id: str) -> bool:
         """Unsubscribe from events"""
         for event_type, subs in self.subscribers.items():
-            self.subscribers[event_type] = [(sid, cb) for sid, cb in subs if sid != subscription_id]
+            self.subscribers[event_type] = [
+                (sid, cb) for sid, cb in subs if sid != subscription_id
+            ]
         return True
 
     def emit_event(self, event_type: str, data: Any) -> int:

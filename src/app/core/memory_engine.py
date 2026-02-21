@@ -154,7 +154,9 @@ class EpisodicMemory:
     duration_seconds: float = 0.0
 
     # Event details
-    event_type: str = "interaction"  # interaction, learning, reflection, achievement, etc.
+    event_type: str = (
+        "interaction"  # interaction, learning, reflection, achievement, etc.
+    )
     description: str = ""
     participants: list[str] = field(default_factory=list)  # Entity IDs
 
@@ -264,7 +266,9 @@ class SemanticConcept:
     last_validated: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     # Relationships to other concepts
-    relationships: dict[str, list[str]] = field(default_factory=dict)  # RelationType -> concept_ids
+    relationships: dict[str, list[str]] = field(
+        default_factory=dict
+    )  # RelationType -> concept_ids
 
     # Supporting evidence (episodic memories)
     evidence: list[str] = field(default_factory=list)  # Memory IDs
@@ -502,7 +506,9 @@ class MemoryEngine:
         semantic_file = os.path.join(self.data_dir, "semantic_concepts.json")
         try:
             with open(semantic_file, "w", encoding="utf-8") as f:
-                data = [concept.to_dict() for concept in self.semantic_concepts.values()]
+                data = [
+                    concept.to_dict() for concept in self.semantic_concepts.values()
+                ]
                 json.dump(data, f, indent=2)
         except Exception as e:
             logger.error("Failed to save semantic concepts: %s", e)
@@ -635,7 +641,9 @@ class MemoryEngine:
         if participants:
             participant_matches = set()
             for participant in participants:
-                participant_matches.update(self.memories_by_participant.get(participant, set()))
+                participant_matches.update(
+                    self.memories_by_participant.get(participant, set())
+                )
             candidate_ids &= participant_matches
 
         if event_type:
@@ -656,7 +664,9 @@ class MemoryEngine:
                     SignificanceLevel.HIGH: 2,
                     SignificanceLevel.CRITICAL: 3,
                 }
-                if sig_order.get(memory.significance, 0) < sig_order.get(min_significance, 0):
+                if sig_order.get(memory.significance, 0) < sig_order.get(
+                    min_significance, 0
+                ):
                     continue
 
             memories.append(memory)
@@ -665,7 +675,9 @@ class MemoryEngine:
         memories.sort(key=lambda m: m.timestamp, reverse=True)
         return memories[:limit]
 
-    def get_recent_memories(self, hours: int = 24, limit: int = 10) -> list[EpisodicMemory]:
+    def get_recent_memories(
+        self, hours: int = 24, limit: int = 10
+    ) -> list[EpisodicMemory]:
         """
         Get recent episodic memories within time window.
 
@@ -679,7 +691,11 @@ class MemoryEngine:
         cutoff = datetime.now(UTC) - timedelta(hours=hours)
         cutoff_str = cutoff.isoformat()
 
-        recent = [mem for mem in self.episodic_memories.values() if mem.timestamp >= cutoff_str]
+        recent = [
+            mem
+            for mem in self.episodic_memories.values()
+            if mem.timestamp >= cutoff_str
+        ]
 
         recent.sort(key=lambda m: m.timestamp, reverse=True)
         return recent[:limit]
@@ -774,7 +790,9 @@ class MemoryEngine:
         concept.add_evidence(memory_id)
         self._save_memories()
 
-    def get_related_concepts(self, concept_id: str, relation_type: RelationType | None = None) -> list[SemanticConcept]:
+    def get_related_concepts(
+        self, concept_id: str, relation_type: RelationType | None = None
+    ) -> list[SemanticConcept]:
         """
         Get concepts related to given concept.
 
@@ -840,7 +858,9 @@ class MemoryEngine:
         logger.debug("Stored procedural skill: %s", name)
         return skill.skill_id
 
-    def record_skill_execution(self, skill_id: str, success: bool, duration: float, notes: str = ""):
+    def record_skill_execution(
+        self, skill_id: str, success: bool, duration: float, notes: str = ""
+    ):
         """
         Record execution of a skill.
 
@@ -859,7 +879,8 @@ class MemoryEngine:
         self._save_memories()
 
         logger.debug(
-            f"Recorded skill execution: {skill.name} - " f"Success: {success}, Proficiency: {skill.proficiency:.2f}"
+            f"Recorded skill execution: {skill.name} - "
+            f"Success: {success}, Proficiency: {skill.proficiency:.2f}"
         )
 
     def get_skill_by_name(self, name: str) -> ProceduralSkill | None:
@@ -869,7 +890,9 @@ class MemoryEngine:
                 return skill
         return None
 
-    def get_proficient_skills(self, min_proficiency: float = 0.7) -> list[ProceduralSkill]:
+    def get_proficient_skills(
+        self, min_proficiency: float = 0.7
+    ) -> list[ProceduralSkill]:
         """
         Get skills above proficiency threshold.
 
@@ -879,7 +902,11 @@ class MemoryEngine:
         Returns:
             List of proficient skills
         """
-        return [skill for skill in self.procedural_skills.values() if skill.proficiency >= min_proficiency]
+        return [
+            skill
+            for skill in self.procedural_skills.values()
+            if skill.proficiency >= min_proficiency
+        ]
 
     # ========================================================================
     # Memory Consolidation
@@ -950,21 +977,31 @@ class MemoryEngine:
     def get_memory_statistics(self) -> dict[str, Any]:
         """Get comprehensive memory statistics."""
         # Calculate episodic statistics
-        total_vivid = sum(1 for m in self.episodic_memories.values() if m.vividness > 0.7)
+        total_vivid = sum(
+            1 for m in self.episodic_memories.values() if m.vividness > 0.7
+        )
         critical_memories = sum(
-            1 for m in self.episodic_memories.values() if m.significance == SignificanceLevel.CRITICAL
+            1
+            for m in self.episodic_memories.values()
+            if m.significance == SignificanceLevel.CRITICAL
         )
 
         # Calculate semantic statistics
         avg_confidence = (
-            (sum(c.confidence for c in self.semantic_concepts.values()) / len(self.semantic_concepts))
+            (
+                sum(c.confidence for c in self.semantic_concepts.values())
+                / len(self.semantic_concepts)
+            )
             if self.semantic_concepts
             else 0.0
         )
 
         # Calculate procedural statistics
         avg_proficiency = (
-            (sum(s.proficiency for s in self.procedural_skills.values()) / len(self.procedural_skills))
+            (
+                sum(s.proficiency for s in self.procedural_skills.values())
+                / len(self.procedural_skills)
+            )
             if self.procedural_skills
             else 0.0
         )

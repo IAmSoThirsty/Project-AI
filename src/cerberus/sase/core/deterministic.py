@@ -7,7 +7,7 @@ Ensures reproducibility for Merkle audit across multi-node deployments.
 import decimal
 import json
 from decimal import ROUND_HALF_EVEN, Decimal
-from typing import Any, Dict
+from typing import Any
 
 
 class DeterministicSerializer:
@@ -19,7 +19,7 @@ class DeterministicSerializer:
     """
 
     @staticmethod
-    def serialize_feature_vector(features: Dict[str, Any]) -> str:
+    def serialize_feature_vector(features: dict[str, Any]) -> str:
         """
         Serialize feature vector deterministically
 
@@ -39,9 +39,7 @@ class DeterministicSerializer:
             elif isinstance(value, bool):
                 # Bools must come before int check since bool is subclass of int
                 normalized[key] = value
-            elif isinstance(value, int):
-                normalized[key] = value
-            elif isinstance(value, str):
+            elif isinstance(value, int) or isinstance(value, str):
                 normalized[key] = value
             elif isinstance(value, list):
                 normalized[key] = sorted(value) if all(isinstance(x, (int, str)) for x in value) else value
@@ -161,7 +159,7 @@ class BackpressureHandler:
         self.drop_rate_per_minute = self.dropped_count
         self.dropped_count = 0
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get backpressure statistics"""
         return {
             "queue_size": self.current_queue_size,

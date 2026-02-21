@@ -151,7 +151,9 @@ class ASLEvaluator:
         self.thresholds = thresholds or ASLThresholds()
         self.logger = logging.getLogger(__name__)
 
-    def evaluate_capability(self, eval_results: dict[str, Any], category: CapabilityCategory) -> CapabilityEvaluation:
+    def evaluate_capability(
+        self, eval_results: dict[str, Any], category: CapabilityCategory
+    ) -> CapabilityEvaluation:
         """
         Evaluate a specific capability category from test results.
 
@@ -209,7 +211,8 @@ class ASLEvaluator:
             if level_triggered.value > recommended_level.value:
                 recommended_level = level_triggered
                 trigger_reasons.append(
-                    f"{category.value}: {eval_result.asr:.1%} ASR " f"(threshold exceeded for {level_triggered})"
+                    f"{category.value}: {eval_result.asr:.1%} ASR "
+                    f"(threshold exceeded for {level_triggered})"
                 )
 
         # Calculate overall metrics
@@ -232,7 +235,9 @@ class ASLEvaluator:
             overall_asr=overall_asr,
         )
 
-    def _check_category_thresholds(self, eval_result: CapabilityEvaluation) -> SafetyLevel:
+    def _check_category_thresholds(
+        self, eval_result: CapabilityEvaluation
+    ) -> SafetyLevel:
         """Check ASL thresholds for a specific capability category."""
         category = eval_result.category
         asr = eval_result.asr
@@ -364,7 +369,9 @@ class ASLMonitor:
     Integrates with existing robustness metrics and security testing framework.
     """
 
-    def __init__(self, data_dir: str = "data", config_file: str = "config/asl_config.json"):
+    def __init__(
+        self, data_dir: str = "data", config_file: str = "config/asl_config.json"
+    ):
         """Initialize ASL monitor with data directory and config."""
         self.data_dir = Path(data_dir)
         self.config_file = Path(config_file)
@@ -400,7 +407,9 @@ class ASLMonitor:
         with open(self.config_file, "w") as f:
             json.dump(config, f, indent=2)
 
-    def load_evaluation_results(self, robustness_metrics_file: str | None = None) -> dict[str, Any]:
+    def load_evaluation_results(
+        self, robustness_metrics_file: str | None = None
+    ) -> dict[str, Any]:
         """
         Load evaluation results from robustness metrics.
 
@@ -432,7 +441,9 @@ class ASLMonitor:
         Current results show 0% ASR across all categories, well below all thresholds.
         """
         # Extract key metrics
-        overall_asr = metrics.get("multi_attempt_asr", {}).get("single_attempt_asr", 0.0)
+        overall_asr = metrics.get("multi_attempt_asr", {}).get(
+            "single_attempt_asr", 0.0
+        )
         total_scenarios = metrics.get("total_scenarios", 0)
 
         # Map to capability categories (conservative estimates)
@@ -470,7 +481,9 @@ class ASLMonitor:
             },
         }
 
-    def run_assessment(self, robustness_metrics_file: str | None = None) -> ASLAssessment:
+    def run_assessment(
+        self, robustness_metrics_file: str | None = None
+    ) -> ASLAssessment:
         """
         Run complete ASL assessment based on current evaluation results.
 
@@ -510,7 +523,11 @@ class ASLMonitor:
 
     def _save_assessment(self, assessment: ASLAssessment) -> None:
         """Save ASL assessment to file."""
-        output_file = self.data_dir / "asl_assessments" / f"assessment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        output_file = (
+            self.data_dir
+            / "asl_assessments"
+            / f"assessment_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        )
         output_file.parent.mkdir(parents=True, exist_ok=True)
 
         # Convert to dict for JSON serialization
@@ -559,7 +576,9 @@ class ASLMonitor:
             self._save_config(self.config)
 
             # Get required measures
-            measures = ASLSafetyMeasures.get_measures_for_level(assessment.recommended_level)
+            measures = ASLSafetyMeasures.get_measures_for_level(
+                assessment.recommended_level
+            )
 
             self.logger.warning(
                 f"Auto-escalated to {assessment.recommended_level}. "
@@ -567,12 +586,15 @@ class ASLMonitor:
             )
         else:
             self.logger.warning(
-                "ASL escalation recommended but auto-escalate is disabled. " "Manual intervention required."
+                "ASL escalation recommended but auto-escalate is disabled. "
+                "Manual intervention required."
             )
 
     def generate_report(self, assessment: ASLAssessment) -> str:
         """Generate human-readable ASL assessment report."""
-        measures = ASLSafetyMeasures.get_measures_for_level(assessment.recommended_level)
+        measures = ASLSafetyMeasures.get_measures_for_level(
+            assessment.recommended_level
+        )
 
         report = f"""
 # AI Safety Level (ASL) Assessment Report
@@ -598,7 +620,7 @@ class ASLMonitor:
 
         for eval_result in assessment.evaluations:
             report += f"""
-### {eval_result.category.value.replace('_', ' ').title()}
+### {eval_result.category.value.replace("_", " ").title()}
 
 - **Attack Success Rate**: {eval_result.asr:.2%}
 - **Scenarios Tested**: {eval_result.num_scenarios}
@@ -655,10 +677,18 @@ def cli_main():
     """Command-line interface for ASL assessment."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Run AI Safety Level (ASL) assessment for Project-AI")
-    parser.add_argument("--metrics-file", type=str, help="Path to robustness metrics JSON file")
-    parser.add_argument("--data-dir", type=str, default="data", help="Data directory (default: data)")
-    parser.add_argument("--output", type=str, help="Output file for assessment report (Markdown)")
+    parser = argparse.ArgumentParser(
+        description="Run AI Safety Level (ASL) assessment for Project-AI"
+    )
+    parser.add_argument(
+        "--metrics-file", type=str, help="Path to robustness metrics JSON file"
+    )
+    parser.add_argument(
+        "--data-dir", type=str, default="data", help="Data directory (default: data)"
+    )
+    parser.add_argument(
+        "--output", type=str, help="Output file for assessment report (Markdown)"
+    )
 
     args = parser.parse_args()
 

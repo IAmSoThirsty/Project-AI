@@ -149,7 +149,9 @@ class ISubsystem(ABC):
         Returns:
             bool: True if mode change successful
         """
-        logger.info("Setting operational mode to %s for %s", mode.value, self.__class__.__name__)
+        logger.info(
+            "Setting operational mode to %s for %s", mode.value, self.__class__.__name__
+        )
         return True
 
 
@@ -345,7 +347,9 @@ class ISensorFusion(Protocol):
         """Get the current fused state estimate"""
         ...
 
-    def register_sensor(self, sensor_id: str, sensor_type: str, metadata: dict[str, Any]) -> bool:
+    def register_sensor(
+        self, sensor_id: str, sensor_type: str, metadata: dict[str, Any]
+    ) -> bool:
         """Register a new sensor"""
         ...
 
@@ -529,7 +533,9 @@ def validate_subsystem_interface(instance: Any) -> tuple[bool, list[str]]:
 
     missing = []
     for method_name in required_methods:
-        if not hasattr(instance, method_name) or not callable(getattr(instance, method_name)):
+        if not hasattr(instance, method_name) or not callable(
+            getattr(instance, method_name)
+        ):
             missing.append(method_name)
 
     return len(missing) == 0, missing
@@ -555,7 +561,9 @@ def create_subsystem_proxy(subsystem_id: str, registry) -> Any | None:
         def __getattr__(self, name: str):
             subsystem = self.registry.get_subsystem(self.subsystem_id)
             if subsystem is None:
-                raise AttributeError(f"Subsystem {self.subsystem_id} not found in registry")
+                raise AttributeError(
+                    f"Subsystem {self.subsystem_id} not found in registry"
+                )
             return getattr(subsystem, name)
 
     return SubsystemProxy(subsystem_id, registry)

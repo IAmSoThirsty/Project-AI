@@ -81,7 +81,9 @@ class LockdownController:
         self._load_state()
 
         if self.observation_only:
-            logger.warning("⚠️ LockdownController in OBSERVATION-ONLY mode - no actual lockdowns will be applied")
+            logger.warning(
+                "⚠️ LockdownController in OBSERVATION-ONLY mode - no actual lockdowns will be applied"
+            )
 
     def _load_state(self) -> None:
         """Load lockdown state from disk."""
@@ -100,7 +102,8 @@ class LockdownController:
             self.lockdown_history = state.get("lockdown_history", [])
 
             logger.info(
-                f"Loaded lockdown state: stage {self.current_stage}, " f"{len(self.locked_sections)} sections locked"
+                f"Loaded lockdown state: stage {self.current_stage}, "
+                f"{len(self.locked_sections)} sections locked"
             )
 
         except Exception as e:
@@ -147,11 +150,16 @@ class LockdownController:
         stage = math.ceil(risk_score * 10) + bypass_depth
         stage = min(25, max(0, stage))
 
-        logger.debug(f"Computed lockdown stage: risk={risk_score:.2f}, " f"depth={bypass_depth} → stage {stage}")
+        logger.debug(
+            f"Computed lockdown stage: risk={risk_score:.2f}, "
+            f"depth={bypass_depth} → stage {stage}"
+        )
 
         return stage
 
-    def apply_lockdown(self, stage: int, reason: str = "security_breach") -> dict[str, Any]:
+    def apply_lockdown(
+        self, stage: int, reason: str = "security_breach"
+    ) -> dict[str, Any]:
         """
         Apply lockdown to specified stage (idempotent).
 
@@ -169,7 +177,9 @@ class LockdownController:
 
         # Check if already at or above this stage
         if stage <= self.current_stage:
-            logger.debug("Already at or above stage %s (current: %s)", stage, self.current_stage)
+            logger.debug(
+                "Already at or above stage %s (current: %s)", stage, self.current_stage
+            )
             return {
                 "success": True,
                 "previous_stage": self.current_stage,
@@ -279,7 +289,9 @@ class LockdownController:
             "locked_count": locked_count,
             "remaining_count": remaining_count,
             "total_sections": total_sections,
-            "lockdown_percentage": ((locked_count / total_sections * 100) if total_sections > 0 else 0),
+            "lockdown_percentage": (
+                (locked_count / total_sections * 100) if total_sections > 0 else 0
+            ),
             "recent_events": self.lockdown_history[-10:],
         }
 
@@ -324,7 +336,9 @@ class LockdownController:
 
             # Unlock sections beyond target stage
             sections_to_keep = self.LOCKABLE_SECTIONS[:stage]
-            released_sections = [s for s in self.locked_sections if s not in sections_to_keep]
+            released_sections = [
+                s for s in self.locked_sections if s not in sections_to_keep
+            ]
 
             self.locked_sections = set(sections_to_keep)
             self.current_stage = stage

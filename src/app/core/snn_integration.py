@@ -169,7 +169,9 @@ class BindsNetRLAgent:
             data_dir: Directory for saving/loading models
         """
         if not BINDSNET_AVAILABLE:
-            raise ImportError("BindsNet is not installed. Install with: pip install bindsnet")
+            raise ImportError(
+                "BindsNet is not installed. Install with: pip install bindsnet"
+            )
 
         self.input_size = input_size
         self.hidden_size = hidden_size
@@ -182,7 +184,9 @@ class BindsNetRLAgent:
         self.network = Network(dt=dt)
 
         # Input layer (Poisson encoding)
-        self.network.add_layer(Input(n=input_size, traces=True, trace_tc=5e-2), name="input")
+        self.network.add_layer(
+            Input(n=input_size, traces=True, trace_tc=5e-2), name="input"
+        )
 
         # Hidden layer (Leaky Integrate-and-Fire neurons)
         self.network.add_layer(
@@ -255,7 +259,9 @@ class BindsNetRLAgent:
             output_size,
         )
 
-    def process_observation(self, observation: np.ndarray, time: int = 100) -> torch.Tensor:
+    def process_observation(
+        self, observation: np.ndarray, time: int = 100
+    ) -> torch.Tensor:
         """
         Process observation through SNN and return spike outputs.
 
@@ -267,7 +273,9 @@ class BindsNetRLAgent:
             Output spike trains
         """
         # Normalize observation
-        obs_normalized = (observation - observation.min()) / (observation.max() - observation.min() + 1e-8)
+        obs_normalized = (observation - observation.min()) / (
+            observation.max() - observation.min() + 1e-8
+        )
         obs_tensor = torch.from_numpy(obs_normalized).float().flatten()
 
         # Encode as spikes
@@ -387,7 +395,9 @@ class SinabsVisionSNN:
             data_dir: Directory for saving/loading models
         """
         if not SINABS_AVAILABLE:
-            raise ImportError("Sinabs is not installed. Install with: pip install sinabs")
+            raise ImportError(
+                "Sinabs is not installed. Install with: pip install sinabs"
+            )
 
         self.input_shape = input_shape
         self.num_classes = num_classes
@@ -397,7 +407,9 @@ class SinabsVisionSNN:
         # Build SNN model
         self.model = self._build_model()
 
-        logger.info("Sinabs vision SNN initialized: %s → %s classes", input_shape, num_classes)
+        logger.info(
+            "Sinabs vision SNN initialized: %s → %s classes", input_shape, num_classes
+        )
 
     def _build_model(self) -> nn.Module:
         """Build Sinabs SNN model for vision tasks."""
@@ -576,7 +588,9 @@ class SNNManager:
 
         logger.info("SNNManager initialized")
 
-    def create_rl_agent(self, input_size: int = 784, hidden_size: int = 400, output_size: int = 10) -> BindsNetRLAgent:
+    def create_rl_agent(
+        self, input_size: int = 784, hidden_size: int = 400, output_size: int = 10
+    ) -> BindsNetRLAgent:
         """Create BindsNet RL agent for continual learning.
 
         Args:
@@ -595,7 +609,9 @@ class SNNManager:
         )
         return self.bindsnet_agent
 
-    def create_vision_snn(self, input_shape: tuple = (1, 28, 28), num_classes: int = 10) -> SinabsVisionSNN:
+    def create_vision_snn(
+        self, input_shape: tuple = (1, 28, 28), num_classes: int = 10
+    ) -> SinabsVisionSNN:
         """Create Sinabs vision SNN.
 
         Args:
@@ -637,7 +653,9 @@ class SNNManager:
             # Feature capabilities
             "rl_continual_learning": BINDSNET_AVAILABLE,
             "vision_snn": SINABS_AVAILABLE or SNNTORCH_AVAILABLE,
-            "hardware_deployment": SINABS_AVAILABLE or LAVA_AVAILABLE or ROCKPOOL_AVAILABLE,
+            "hardware_deployment": SINABS_AVAILABLE
+            or LAVA_AVAILABLE
+            or ROCKPOOL_AVAILABLE,
             "neural_engineering": NENGO_AVAILABLE,
             "intermediate_representation": NIR_AVAILABLE,
             "intel_loihi": LAVA_AVAILABLE,

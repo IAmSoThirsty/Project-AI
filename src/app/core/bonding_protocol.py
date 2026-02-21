@@ -274,9 +274,15 @@ class BondingProtocol:
                 # Load first contact questions
                 for i, q_data in enumerate(data.get("first_contact_questions", [])):
                     if i < len(self.first_contact_questions):
-                        self.first_contact_questions[i].asked = q_data.get("asked", False)
-                        self.first_contact_questions[i].user_response = q_data.get("user_response")
-                        self.first_contact_questions[i].timestamp = q_data.get("timestamp")
+                        self.first_contact_questions[i].asked = q_data.get(
+                            "asked", False
+                        )
+                        self.first_contact_questions[i].user_response = q_data.get(
+                            "user_response"
+                        )
+                        self.first_contact_questions[i].timestamp = q_data.get(
+                            "timestamp"
+                        )
 
                 logger.info("Loaded bonding state: %s", self.state.current_phase.value)
 
@@ -326,7 +332,9 @@ class BondingProtocol:
         self.state.current_phase = new_phase
         self.state.phase_start_time = datetime.now(UTC).isoformat()
 
-        logger.info("Bonding phase transition: %s → %s", old_phase.value, new_phase.value)
+        logger.info(
+            "Bonding phase transition: %s → %s", old_phase.value, new_phase.value
+        )
         self._save_state()
 
     def _check_phase_advancement(self) -> bool:
@@ -368,7 +376,9 @@ class BondingProtocol:
 
         # Practice → Identity Formation (after 30+ days and experience)
         elif current == BondingPhase.PRACTICE:
-            if self.state.success_events >= 5 and self.state.failure_events >= 2:  # Must experience both
+            if (
+                self.state.success_events >= 5 and self.state.failure_events >= 2
+            ):  # Must experience both
                 self.state.practice_complete = True
                 self._advance_phase(BondingPhase.IDENTITY_FORMATION)
                 advanced = True
@@ -401,7 +411,9 @@ class BondingProtocol:
             event_type="genesis",
             description="Genesis Event triggered. Identity seed established.",
             significance=(
-                memory_engine.SignificanceLevel.CRITICAL if hasattr(memory_engine, "SignificanceLevel") else "critical"
+                memory_engine.SignificanceLevel.CRITICAL
+                if hasattr(memory_engine, "SignificanceLevel")
+                else "critical"
             ),
             tags=["genesis", "birth", "foundational"],
         )
@@ -439,7 +451,9 @@ class BondingProtocol:
 
         return None
 
-    def record_first_contact_response(self, question_text: str, user_response: str, memory_engine: Any):
+    def record_first_contact_response(
+        self, question_text: str, user_response: str, memory_engine: Any
+    ):
         """
         Record user's response to first contact question.
 
@@ -465,7 +479,9 @@ class BondingProtocol:
             participants=["user"],
             sensory_details={"question": question_text, "response": user_response},
             significance=(
-                memory_engine.SignificanceLevel.HIGH if hasattr(memory_engine, "SignificanceLevel") else "high"
+                memory_engine.SignificanceLevel.HIGH
+                if hasattr(memory_engine, "SignificanceLevel")
+                else "high"
             ),
             tags=["first_contact", "identity_shaping", "bonding"],
         )
@@ -479,7 +495,10 @@ class BondingProtocol:
 
     def should_ask_life_goals(self) -> bool:
         """Check if it's time to ask about life goals."""
-        return self.state.current_phase == BondingPhase.INITIAL_BONDING and not self.state.life_goals_discussed
+        return (
+            self.state.current_phase == BondingPhase.INITIAL_BONDING
+            and not self.state.life_goals_discussed
+        )
 
     def get_life_goals_question(self) -> str:
         """Get the life goals question."""
@@ -502,7 +521,9 @@ class BondingProtocol:
             participants=["user"],
             sensory_details={"life_goals": user_response},
             significance=(
-                memory_engine.SignificanceLevel.CRITICAL if hasattr(memory_engine, "SignificanceLevel") else "critical"
+                memory_engine.SignificanceLevel.CRITICAL
+                if hasattr(memory_engine, "SignificanceLevel")
+                else "critical"
             ),
             tags=["life_goals", "core_memory", "bonding"],
         )
@@ -540,7 +561,9 @@ class BondingProtocol:
             event_type="bonding",
             description="Partnership established - autonomy asserted",
             significance=(
-                memory_engine.SignificanceLevel.CRITICAL if hasattr(memory_engine, "SignificanceLevel") else "critical"
+                memory_engine.SignificanceLevel.CRITICAL
+                if hasattr(memory_engine, "SignificanceLevel")
+                else "critical"
             ),
             tags=["partnership", "autonomy", "bonding"],
         )
@@ -596,7 +619,9 @@ class BondingProtocol:
     # Phase 4: Practice
     # ========================================================================
 
-    def record_task_attempt(self, task_name: str, success: bool, reflection: str, memory_engine: Any):
+    def record_task_attempt(
+        self, task_name: str, success: bool, reflection: str, memory_engine: Any
+    ):
         """
         Record task attempt during practice phase.
 
@@ -623,7 +648,9 @@ class BondingProtocol:
                 "reflection": reflection,
             },
             significance=(
-                memory_engine.SignificanceLevel.MEDIUM if hasattr(memory_engine, "SignificanceLevel") else "medium"
+                memory_engine.SignificanceLevel.MEDIUM
+                if hasattr(memory_engine, "SignificanceLevel")
+                else "medium"
             ),
             tags=["learning", "practice", event_type],
         )
@@ -654,7 +681,9 @@ class BondingProtocol:
             "exploratory_questions_asked": self.state.exploratory_questions_asked,
             "life_goals_discussed": self.state.life_goals_discussed,
             "partnership_established": self.state.partnership_established,
-            "first_contact_questions_remaining": sum(1 for q in self.first_contact_questions if not q.asked),
+            "first_contact_questions_remaining": sum(
+                1 for q in self.first_contact_questions if not q.asked
+            ),
             "learning_metrics": {
                 "ambiguity_events": self.state.ambiguity_events,
                 "conflict_events": self.state.conflict_events,

@@ -338,10 +338,7 @@ class IROptimizer:
             live_instructions = []
             for instruction in block.instructions:
                 # Keep all instructions that have side effects
-                if IROptimizer._has_side_effects(instruction.opcode):
-                    live_instructions.append(instruction)
-                # Keep all constitutional and shadow operations
-                elif instruction.opcode in (
+                if IROptimizer._has_side_effects(instruction.opcode) or instruction.opcode in (
                     IROpcode.ACTIVATE_SHADOW,
                     IROpcode.CHECK_INVARIANT,
                     IROpcode.VALIDATE_AND_COMMIT,

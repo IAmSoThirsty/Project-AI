@@ -5,7 +5,7 @@ Connects SASE adversarial signals to Cerberus Triumvirate authorization system.
 """
 
 import logging
-from typing import Any, Dict, Optional
+from typing import Any
 
 logger = logging.getLogger("SASE.CerberusBridge")
 
@@ -81,7 +81,7 @@ class SASECerberusBridge:
         else:
             return "EXISTENTIAL"  # SEVERE maps to EXISTENTIAL
 
-    def request_cerberus_action(self, sase_result: Dict[str, Any]) -> Dict[str, Any]:
+    def request_cerberus_action(self, sase_result: dict[str, Any]) -> dict[str, Any]:
         """
         Request Cerberus action based on SASE analysis
 
@@ -158,7 +158,7 @@ class SASECerberusBridge:
                 "threat_description": threat_desc,
             }
 
-    def _build_threat_description(self, sase_result: Dict) -> str:
+    def _build_threat_description(self, sase_result: dict) -> str:
         """Build human-readable threat description"""
         confidence = sase_result["confidence"]
         threat_class = sase_result.get("threat_class", {})
@@ -181,7 +181,7 @@ class SASECerberusBridge:
 
         return " | ".join(desc_parts)
 
-    def _suggest_tool(self, confidence: Dict, threat_class: Dict) -> str:
+    def _suggest_tool(self, confidence: dict, threat_class: dict) -> str:
         """Suggest appropriate security tool"""
         confidence_pct = confidence["confidence_percentage"]
 

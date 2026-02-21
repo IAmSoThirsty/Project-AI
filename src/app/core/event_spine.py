@@ -126,7 +126,9 @@ class EventSpine:
         self.max_queue_size = max_queue_size
 
         # Event queue with priority
-        self._event_queue: queue.PriorityQueue = queue.PriorityQueue(maxsize=max_queue_size)
+        self._event_queue: queue.PriorityQueue = queue.PriorityQueue(
+            maxsize=max_queue_size
+        )
 
         # Subscriptions
         self._subscriptions: dict[str, Subscription] = {}
@@ -388,7 +390,8 @@ class EventSpine:
                             self._stats["events_vetoed"] += 1
 
                         logger.info(
-                            f"Event vetoed: {event.event_id} by {subscriber_id} " f"({subscription.subscriber_domain})"
+                            f"Event vetoed: {event.event_id} by {subscriber_id} "
+                            f"({subscription.subscriber_domain})"
                         )
                         return  # Event is vetoed, don't process further
 

@@ -205,7 +205,9 @@ class MemoryDecisionContract(DecisionContract):
 
         return True, "Write authorized"
 
-    def check_access_authorization(self, requester: str, memory_type: str, context: dict[str, Any]) -> tuple[bool, str]:
+    def check_access_authorization(
+        self, requester: str, memory_type: str, context: dict[str, Any]
+    ) -> tuple[bool, str]:
         """
         Check if cross-pillar memory access is authorized.
 
@@ -235,7 +237,9 @@ class MemoryDecisionContract(DecisionContract):
         return {
             "system": "MemoryEngine",
             "focus": "Episodic, Semantic, and Procedural Memory",
-            "authorities": {dt: auth.to_dict() for dt, auth in self.authorities.items()},
+            "authorities": {
+                dt: auth.to_dict() for dt, auth in self.authorities.items()
+            },
             "decision_count": len(self.decision_log),
             "write_authorization_rules": {
                 "episodic": "Autonomous - all episodes recorded with temporal context",
@@ -269,7 +273,9 @@ class MemorySignalsTelemetry(SignalsTelemetry):
         """Initialize Memory signals and telemetry."""
         super().__init__("MemoryEngine")
 
-    def emit_memory_created(self, memory_type: str, memory_id: str, significance: float) -> None:
+    def emit_memory_created(
+        self, memory_type: str, memory_id: str, significance: float
+    ) -> None:
         """
         Emit signal for memory creation.
 
@@ -291,7 +297,9 @@ class MemorySignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_tamper_detected(self, memory_id: str, tamper_type: str, details: dict[str, Any]) -> None:
+    def emit_tamper_detected(
+        self, memory_id: str, tamper_type: str, details: dict[str, Any]
+    ) -> None:
         """
         Emit tamper detection signal.
 
@@ -338,7 +346,9 @@ class MemorySignalsTelemetry(SignalsTelemetry):
         )
         self.emit_signal(signal)
 
-    def emit_cross_pillar_access(self, requester: str, memory_type: str, access_granted: bool, reason: str) -> None:
+    def emit_cross_pillar_access(
+        self, requester: str, memory_type: str, access_granted: bool, reason: str
+    ) -> None:
         """
         Emit cross-pillar access event.
 
@@ -350,7 +360,9 @@ class MemorySignalsTelemetry(SignalsTelemetry):
         """
         signal = Signal(
             signal_type=SignalType.AUDIT,
-            severity=(SeverityLevel.WARNING if not access_granted else SeverityLevel.INFO),
+            severity=(
+                SeverityLevel.WARNING if not access_granted else SeverityLevel.INFO
+            ),
             payload={
                 "message": f"Cross-pillar memory access: {requester} -> {memory_type}",
                 "requester": requester,
@@ -426,7 +438,9 @@ class MemoryFailureSemantics(FailureSemantics):
         """Initialize Memory failure semantics."""
         super().__init__("MemoryEngine")
 
-    def create_failure_response(self, failure_mode: FailureMode, context: dict[str, Any]) -> FailureResponse:
+    def create_failure_response(
+        self, failure_mode: FailureMode, context: dict[str, Any]
+    ) -> FailureResponse:
         """
         Create failure response for Memory System failures.
 
@@ -664,7 +678,9 @@ class RetentionDecayCurves:
 
         return new_strength
 
-    def calculate_strengthening(self, memory_type: str, current_strength: float, interaction_type: str) -> float:
+    def calculate_strengthening(
+        self, memory_type: str, current_strength: float, interaction_type: str
+    ) -> float:
         """
         Calculate memory strengthening from retrieval or practice.
 

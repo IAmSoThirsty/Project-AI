@@ -55,7 +55,9 @@ class IncidentGraph:
     incident_id: str
     start_time: float
     nodes: dict[str, dict[str, Any]] = field(default_factory=dict)  # agent_id -> data
-    edges: list[tuple[str, str, dict[str, Any]]] = field(default_factory=list)  # (from, to, metadata)
+    edges: list[tuple[str, str, dict[str, Any]]] = field(
+        default_factory=list
+    )  # (from, to, metadata)
     resolution_time: float | None = None
     outcome: str | None = None
 
@@ -63,7 +65,9 @@ class IncidentGraph:
         """Add agent node to graph."""
         self.nodes[agent_id] = node_data
 
-    def add_edge(self, from_agent: str, to_agent: str, metadata: dict[str, Any]) -> None:
+    def add_edge(
+        self, from_agent: str, to_agent: str, metadata: dict[str, Any]
+    ) -> None:
         """Add information/command flow edge."""
         self.edges.append((from_agent, to_agent, metadata))
 
@@ -83,15 +87,21 @@ class SLOMetrics:
     """Service Level Objective metrics."""
 
     # Detection and response times
-    detect_to_lockdown_times: deque[float] = field(default_factory=lambda: deque(maxlen=1000))
+    detect_to_lockdown_times: deque[float] = field(
+        default_factory=lambda: deque(maxlen=1000)
+    )
 
     # False positives
     total_lockdowns: int = 0
     false_positive_lockdowns: int = 0
 
     # Resource usage
-    max_concurrent_agents_samples: deque[int] = field(default_factory=lambda: deque(maxlen=1000))
-    resource_overhead_samples: deque[float] = field(default_factory=lambda: deque(maxlen=1000))
+    max_concurrent_agents_samples: deque[int] = field(
+        default_factory=lambda: deque(maxlen=1000)
+    )
+    resource_overhead_samples: deque[float] = field(
+        default_factory=lambda: deque(maxlen=1000)
+    )
 
     # Availability
     total_incidents: int = 0
@@ -203,7 +213,9 @@ class CerberusObservability:
 
     def start_agent_timeline(self, agent_id: str) -> None:
         """Start tracking agent timeline."""
-        self.agent_timelines[agent_id] = AgentTimeline(agent_id=agent_id, spawn_time=time.time())
+        self.agent_timelines[agent_id] = AgentTimeline(
+            agent_id=agent_id, spawn_time=time.time()
+        )
 
     def add_agent_task(self, agent_id: str, task: dict[str, Any]) -> None:
         """Add task to agent timeline."""
@@ -222,9 +234,13 @@ class CerberusObservability:
 
     def start_incident_graph(self, incident_id: str) -> None:
         """Start tracking incident graph."""
-        self.incident_graphs[incident_id] = IncidentGraph(incident_id=incident_id, start_time=time.time())
+        self.incident_graphs[incident_id] = IncidentGraph(
+            incident_id=incident_id, start_time=time.time()
+        )
 
-    def add_agent_to_incident(self, incident_id: str, agent_id: str, node_data: dict[str, Any]) -> None:
+    def add_agent_to_incident(
+        self, incident_id: str, agent_id: str, node_data: dict[str, Any]
+    ) -> None:
         """Add agent node to incident graph."""
         if incident_id in self.incident_graphs:
             self.incident_graphs[incident_id].add_node(agent_id, node_data)
@@ -263,7 +279,9 @@ class CerberusObservability:
             self.slo_metrics.record_agent_count(sample["concurrent_agents"])
 
         if "resource_overhead_percent" in sample:
-            self.slo_metrics.record_resource_overhead(sample["resource_overhead_percent"])
+            self.slo_metrics.record_resource_overhead(
+                sample["resource_overhead_percent"]
+            )
 
     def get_agent_timeline_report(self, agent_id: str) -> dict[str, Any]:
         """Get detailed agent timeline report."""
@@ -352,23 +370,37 @@ class CerberusObservability:
         metrics = []
 
         # Detect-to-lockdown metrics
-        metrics.append(f"cerberus_detect_to_lockdown_median_seconds {slo['detect_to_lockdown']['median_seconds']}")
-        metrics.append(f"cerberus_detect_to_lockdown_p95_seconds {slo['detect_to_lockdown']['p95_seconds']}")
+        metrics.append(
+            f"cerberus_detect_to_lockdown_median_seconds {slo['detect_to_lockdown']['median_seconds']}"
+        )
+        metrics.append(
+            f"cerberus_detect_to_lockdown_p95_seconds {slo['detect_to_lockdown']['p95_seconds']}"
+        )
 
         # Lockdown metrics
         metrics.append(f"cerberus_lockdowns_total {slo['lockdowns']['total']}")
-        metrics.append(f"cerberus_lockdowns_false_positive_total {slo['lockdowns']['false_positives']}")
-        metrics.append(f"cerberus_lockdowns_false_positive_rate {slo['lockdowns']['false_positive_rate']}")
+        metrics.append(
+            f"cerberus_lockdowns_false_positive_total {slo['lockdowns']['false_positives']}"
+        )
+        metrics.append(
+            f"cerberus_lockdowns_false_positive_rate {slo['lockdowns']['false_positive_rate']}"
+        )
 
         # Resource metrics
-        metrics.append(f"cerberus_max_concurrent_agents {slo['resources']['max_concurrent_agents']}")
-        metrics.append(f"cerberus_resource_overhead_percent {slo['resources']['avg_overhead_percent']}")
+        metrics.append(
+            f"cerberus_max_concurrent_agents {slo['resources']['max_concurrent_agents']}"
+        )
+        metrics.append(
+            f"cerberus_resource_overhead_percent {slo['resources']['avg_overhead_percent']}"
+        )
 
         # Incident metrics
         metrics.append(f"cerberus_incidents_total {slo['incidents']['total']}")
         metrics.append(f"cerberus_incidents_contained {slo['incidents']['contained']}")
         metrics.append(f"cerberus_incidents_failed {slo['incidents']['failed']}")
-        metrics.append(f"cerberus_incidents_containment_rate {slo['incidents']['containment_rate']}")
+        metrics.append(
+            f"cerberus_incidents_containment_rate {slo['incidents']['containment_rate']}"
+        )
 
         return "\n".join(metrics)
 

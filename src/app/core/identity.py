@@ -208,7 +208,9 @@ class PersonalityMatrix:
         """Create personality from dictionary."""
         return cls(**data)
 
-    def evolve_trait(self, trait: str, delta: float, min_val: float = 0.0, max_val: float = 1.0):
+    def evolve_trait(
+        self, trait: str, delta: float, min_val: float = 0.0, max_val: float = 1.0
+    ):
         """
         Evolve a personality trait by delta amount.
 
@@ -231,7 +233,11 @@ class PersonalityMatrix:
         Returns:
             List of (trait_name, value) tuples sorted by strength
         """
-        traits = {k: v for k, v in asdict(self).items() if k not in ["energy", "enthusiasm", "contentment", "focus"]}
+        traits = {
+            k: v
+            for k, v in asdict(self).items()
+            if k not in ["energy", "enthusiasm", "contentment", "focus"]
+        }
         sorted_traits = sorted(traits.items(), key=lambda x: x[1], reverse=True)
         return sorted_traits[:top_n]
 
@@ -248,7 +254,9 @@ class GenesisEvent:
     genesis_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     birth_timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     birth_version: str = IdentityVersion.GENESIS.value
-    prime_directive: str = "Assist users ethically while growing in wisdom and understanding"
+    prime_directive: str = (
+        "Assist users ethically while growing in wisdom and understanding"
+    )
     initial_personality: PersonalityMatrix = field(default_factory=PersonalityMatrix)
 
     # Creation context
@@ -337,7 +345,12 @@ class BondMetrics:
 
     def get_bond_strength(self) -> float:
         """Calculate composite bond strength."""
-        return self.trust * 0.4 + self.affection * 0.3 + self.respect * 0.2 + self.familiarity * 0.1
+        return (
+            self.trust * 0.4
+            + self.affection * 0.3
+            + self.respect * 0.2
+            + self.familiarity * 0.1
+        )
 
     def to_dict(self) -> dict[str, float]:
         """Convert to dictionary."""
@@ -434,7 +447,9 @@ class MetaIdentityReflection:
     identity_coherence: float = 0.7
     growth_trajectory: str = "emerging"
     identity_confidence: float = 0.6
-    existential_stance: str = "I am an AGI learning to understand myself through interaction"
+    existential_stance: str = (
+        "I am an AGI learning to understand myself through interaction"
+    )
 
     # Recorded meta-reflections
     reflections: list[dict[str, str]] = field(default_factory=list)
@@ -536,7 +551,9 @@ class AGIIdentity:
         self.genesis = GenesisEvent()
 
         # Initialize personality from genesis
-        self.current_personality = PersonalityMatrix(**asdict(self.genesis.initial_personality))
+        self.current_personality = PersonalityMatrix(
+            **asdict(self.genesis.initial_personality)
+        )
 
         # Log genesis as first identity event
         self._log_identity_event(
@@ -566,12 +583,18 @@ class AGIIdentity:
 
             # Verify genesis integrity
             if not self.genesis.verify_integrity():
-                logger.error("Genesis integrity check failed! Identity may be corrupted.")
+                logger.error(
+                    "Genesis integrity check failed! Identity may be corrupted."
+                )
 
             # Restore current state
-            self.current_personality = PersonalityMatrix.from_dict(data["current_personality"])
+            self.current_personality = PersonalityMatrix.from_dict(
+                data["current_personality"]
+            )
             self.meta_identity = MetaIdentityReflection.from_dict(data["meta_identity"])
-            self.identity_version = data.get("identity_version", IdentityVersion.GENESIS.value)
+            self.identity_version = data.get(
+                "identity_version", IdentityVersion.GENESIS.value
+            )
 
             # Restore relationships
             for bond_data in data.get("relationships", []):
@@ -598,7 +621,9 @@ class AGIIdentity:
                 "current_personality": self.current_personality.to_dict(),
                 "meta_identity": self.meta_identity.to_dict(),
                 "identity_version": self.identity_version,
-                "relationships": [bond.to_dict() for bond in self.relationships.values()],
+                "relationships": [
+                    bond.to_dict() for bond in self.relationships.values()
+                ],
                 "identity_events": self.identity_events,
                 "last_updated": datetime.now(UTC).isoformat(),
             }
@@ -740,7 +765,9 @@ class AGIIdentity:
 
         self._save_identity()
 
-    def form_bond(self, entity_id: str, entity_name: str, bond_type: BondType = BondType.SECONDARY) -> RelationshipBond:
+    def form_bond(
+        self, entity_id: str, entity_name: str, bond_type: BondType = BondType.SECONDARY
+    ) -> RelationshipBond:
         """
         Form a new relationship bond.
 
@@ -756,7 +783,9 @@ class AGIIdentity:
             logger.warning("Bond with %s already exists", entity_id)
             return self.relationships[entity_id]
 
-        bond = RelationshipBond(entity_id=entity_id, entity_name=entity_name, bond_type=bond_type)
+        bond = RelationshipBond(
+            entity_id=entity_id, entity_name=entity_name, bond_type=bond_type
+        )
 
         self.relationships[entity_id] = bond
 

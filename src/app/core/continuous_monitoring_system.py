@@ -330,7 +330,9 @@ class Continuous24x7Agent(IntelligenceAgent):
         self.auto_labels: set[str] = set()
         self._initialize_labels()
 
-        logger.info("Continuous24x7Agent %s initialized for %s", agent_id, coverage.region.value)
+        logger.info(
+            "Continuous24x7Agent %s initialized for %s", agent_id, coverage.region.value
+        )
 
     def _initialize_labels(self) -> None:
         """Initialize automatic labels for this agent."""
@@ -406,7 +408,9 @@ class Continuous24x7Agent(IntelligenceAgent):
         classification = self._classify_report(report)
 
         # Store securely
-        data_id = self.storage_manager.store_intelligence(report, classification=classification)
+        data_id = self.storage_manager.store_intelligence(
+            report, classification=classification
+        )
 
         # Update statistics
         self.total_collections += 1
@@ -459,7 +463,9 @@ class GlobalCoverageCoordinator:
 
     def __init__(self):
         """Initialize global coverage coordinator."""
-        self.region_assignments: dict[GlobalRegion, list[Continuous24x7Agent]] = {region: [] for region in GlobalRegion}
+        self.region_assignments: dict[GlobalRegion, list[Continuous24x7Agent]] = {
+            region: [] for region in GlobalRegion
+        }
 
         self.country_coverage: dict[str, list[str]] = {}  # country -> agent_ids
 
@@ -493,11 +499,17 @@ class GlobalCoverageCoordinator:
             Dictionary with coverage statistics
         """
         return {
-            "regions": {region.value: len(agents) for region, agents in self.region_assignments.items()},
+            "regions": {
+                region.value: len(agents)
+                for region, agents in self.region_assignments.items()
+            },
             "countries_covered": len(self.country_coverage),
-            "total_agents": sum(len(agents) for agents in self.region_assignments.values()),
+            "total_agents": sum(
+                len(agents) for agents in self.region_assignments.values()
+            ),
             "coverage_details": {
-                region.value: [agent.agent_id for agent in agents] for region, agents in self.region_assignments.items()
+                region.value: [agent.agent_id for agent in agents]
+                for region, agents in self.region_assignments.items()
             },
         }
 
@@ -542,7 +554,9 @@ class ContinuousMonitoringSystem:
         self.monitoring_interval = monitoring_interval
 
         # Initialize components
-        self.storage_manager = SecureStorageManager(storage_dir=str(self.data_dir / "secure"))
+        self.storage_manager = SecureStorageManager(
+            storage_dir=str(self.data_dir / "secure")
+        )
         self.coverage_coordinator = GlobalCoverageCoordinator()
 
         # Agent registry
@@ -689,7 +703,9 @@ class ContinuousMonitoringSystem:
         for agent in self.agents.values():
             agent.start_monitoring()
 
-        logger.info("Started 24/7 monitoring for %s agents across all regions", len(self.agents))
+        logger.info(
+            "Started 24/7 monitoring for %s agents across all regions", len(self.agents)
+        )
 
     def stop_all_monitoring(self) -> None:
         """Stop all monitoring."""
@@ -709,9 +725,13 @@ class ContinuousMonitoringSystem:
         Returns:
             Dictionary with system status
         """
-        active_agents = sum(1 for agent in self.agents.values() if agent.monitoring_active)
+        active_agents = sum(
+            1 for agent in self.agents.values() if agent.monitoring_active
+        )
 
-        total_collections = sum(agent.total_collections for agent in self.agents.values())
+        total_collections = sum(
+            agent.total_collections for agent in self.agents.values()
+        )
 
         return {
             "system_active": self.system_active,

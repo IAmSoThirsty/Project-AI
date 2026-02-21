@@ -48,7 +48,9 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
                 return ["my_command_1", "my_command_2"]
     """
 
-    def __init__(self, data_dir: str = "data", subsystem_name: str = "unknown", **config):
+    def __init__(
+        self, data_dir: str = "data", subsystem_name: str = "unknown", **config
+    ):
         """
         Initialize domain subsystem with common infrastructure.
 
@@ -91,7 +93,9 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
             # Start processing loop if needed
             if self._should_start_processing_loop():
                 self._processing_active = True
-                self._processing_thread = threading.Thread(target=self._processing_loop, daemon=True)
+                self._processing_thread = threading.Thread(
+                    target=self._processing_loop, daemon=True
+                )
                 self._processing_thread.start()
 
             # Custom initialization
@@ -102,7 +106,9 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
             self.logger.info(f"{self.__class__.__name__} initialized successfully")
             return True
         except Exception as error:
-            self.logger.error(f"Failed to initialize {self.__class__.__name__}: {error}")
+            self.logger.error(
+                f"Failed to initialize {self.__class__.__name__}: {error}"
+            )
             return False
 
     def shutdown(self) -> bool:
@@ -218,7 +224,9 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
                 self._subscriptions[event_type] = []
 
             self._subscriptions[event_type].append((subscription_id, callback))
-            self.logger.debug(f"Subscription {subscription_id} added for event {event_type}")
+            self.logger.debug(
+                f"Subscription {subscription_id} added for event {event_type}"
+            )
             return subscription_id
 
     def unsubscribe(self, subscription_id: str) -> bool:
@@ -226,7 +234,9 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
         with self._subscription_lock:
             for event_type, subscribers in self._subscriptions.items():
                 self._subscriptions[event_type] = [
-                    (sub_id, callback) for sub_id, callback in subscribers if sub_id != subscription_id
+                    (sub_id, callback)
+                    for sub_id, callback in subscribers
+                    if sub_id != subscription_id
                 ]
             return True
 
@@ -298,7 +308,9 @@ class DomainSubsystemBase(BaseSubsystem, ICommandable, IMonitorable, IObservable
         """Override to add domain-specific status information."""
         return {}
 
-    def _execute_domain_command(self, command: SubsystemCommand) -> SubsystemResponse | None:
+    def _execute_domain_command(
+        self, command: SubsystemCommand
+    ) -> SubsystemResponse | None:
         """
         Override to handle domain-specific commands.
 

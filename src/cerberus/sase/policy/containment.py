@@ -17,7 +17,7 @@ import hashlib
 import logging
 import time
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger("SASE.L8.Containment")
 
@@ -29,7 +29,7 @@ class ContainmentRequest:
     event_id: str
     source_ip: str
     confidence_score: float
-    actions: List
+    actions: list
     model_version: str
     requestor: str  # System component requesting containment
 
@@ -53,7 +53,7 @@ class ActionValidator:
         self,
         request: ContainmentRequest,
         feature_vector: Any,
-        confidence_assessment: Dict,
+        confidence_assessment: dict,
     ) -> tuple[bool, str]:
         """
         Validate containment request
@@ -96,7 +96,7 @@ class ActionValidator:
         self,
         request: ContainmentRequest,
         feature_vector: Any,
-        confidence_assessment: Dict,
+        confidence_assessment: dict,
     ) -> tuple[bool, str]:
         """Verify scoring integrity"""
         # Check confidence matches assessment
@@ -128,7 +128,7 @@ class MerkleProofGenerator:
     Used by L9 evidence vault
     """
 
-    def generate_proof(self, action_hash: str, event_hash: str) -> Dict:
+    def generate_proof(self, action_hash: str, event_hash: str) -> dict:
         """
         Generate Merkle proof linking action to event
 
@@ -159,7 +159,7 @@ class ContainmentOrchestrator:
     def __init__(self):
         self.validator = ActionValidator()
         self.proof_generator = MerkleProofGenerator()
-        self.containment_log: List[Dict] = []
+        self.containment_log: list[dict] = []
 
         logger.info("L8 Containment Orchestrator initialized")
 
@@ -167,9 +167,9 @@ class ContainmentOrchestrator:
         self,
         request: ContainmentRequest,
         feature_vector: Any,
-        confidence_assessment: Dict,
+        confidence_assessment: dict,
         event_hash: str,
-    ) -> Dict:
+    ) -> dict:
         """
         Orchestrate containment action execution
 
@@ -229,7 +229,7 @@ class ContainmentOrchestrator:
             "stage": "complete",
         }
 
-    def _log_action(self, request: ContainmentRequest, executions: List) -> str:
+    def _log_action(self, request: ContainmentRequest, executions: list) -> str:
         """Log containment action and return hash"""
         log_entry = {
             "request_hash": request.to_hash(),
@@ -246,7 +246,7 @@ class ContainmentOrchestrator:
 
         return action_hash
 
-    def _notify_governance(self, request: ContainmentRequest, executions: List, proof: Dict):
+    def _notify_governance(self, request: ContainmentRequest, executions: list, proof: dict):
         """Notify governance layer of containment"""
         logger.info("Governance notified of containment action")
         # TODO: Integrate with L10 governance RBAC

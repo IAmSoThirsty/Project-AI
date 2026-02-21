@@ -21,7 +21,7 @@ INVARIANTS:
 import logging
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, Optional, Set
+from typing import Any
 
 logger = logging.getLogger("SASE.L3.Normalization")
 
@@ -44,16 +44,16 @@ class InfrastructureType(Enum):
 class EnrichmentData:
     """Event enrichment metadata (L3)"""
 
-    asn_risk_index: Optional[float] = None  # 0.0-1.0
+    asn_risk_index: float | None = None  # 0.0-1.0
     is_tor: bool = False
     is_vpn: bool = False
-    cloud_provider: Optional[str] = None
-    infrastructure_type: Optional[str] = None
+    cloud_provider: str | None = None
+    infrastructure_type: str | None = None
     historical_reuse_count: int = 0
-    token_sensitivity: Optional[float] = None  # 0.0-1.0
+    token_sensitivity: float | None = None  # 0.0-1.0
     enrichment_version: str = "1.0.0"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary"""
         return {
             "asn_risk_index": self.asn_risk_index,
@@ -76,10 +76,10 @@ class ASNRiskIndexer:
 
     def __init__(self):
         # Known high-risk ASNs (example data)
-        self.high_risk_asns: Set[str] = {"AS12345", "AS67890"}  # Example malicious ASN
+        self.high_risk_asns: set[str] = {"AS12345", "AS67890"}  # Example malicious ASN
 
         # ASN risk scores (0.0-1.0)
-        self.asn_scores: Dict[str, float] = {}
+        self.asn_scores: dict[str, float] = {}
 
     def get_risk_index(self, asn: str) -> float:
         """
@@ -117,7 +117,7 @@ class TorDetector:
 
     def __init__(self):
         # TODO: Load from public Tor directory
-        self.tor_exit_nodes: Set[str] = set()
+        self.tor_exit_nodes: set[str] = set()
         self._load_tor_list()
 
     def _load_tor_list(self):
@@ -140,7 +140,7 @@ class CloudProviderClassifier:
 
     def __init__(self):
         # ASN to cloud provider mapping
-        self.cloud_asns: Dict[str, str] = {
+        self.cloud_asns: dict[str, str] = {
             "AS16509": "AWS",
             "AS14618": "AWS",
             "AS8075": "Microsoft Azure",
@@ -150,9 +150,9 @@ class CloudProviderClassifier:
         }
 
         # IP ranges (TODO: implement CIDR matching)
-        self.cloud_ranges: Dict[str, str] = {}
+        self.cloud_ranges: dict[str, str] = {}
 
-    def classify(self, asn: str, ip: str = None) -> Optional[str]:
+    def classify(self, asn: str, ip: str = None) -> str | None:
         """Classify cloud provider"""
         return self.cloud_asns.get(asn)
 
@@ -184,8 +184,8 @@ class HistoricalCorrelator:
     """
 
     def __init__(self):
-        self.interaction_counts: Dict[str, int] = {}  # artifact_id -> count
-        self.ip_artifact_map: Dict[str, Set[str]] = {}  # ip -> {artifact_ids}
+        self.interaction_counts: dict[str, int] = {}  # artifact_id -> count
+        self.ip_artifact_map: dict[str, set[str]] = {}  # ip -> {artifact_ids}
 
     def record_interaction(self, ip: str, artifact_id: str):
         """Record artifact interaction"""
@@ -218,7 +218,7 @@ class TokenSensitivityMapper:
     """
 
     def __init__(self):
-        self.sensitivity_map: Dict[str, float] = {}  # artifact_id -> sensitivity (0.0-1.0)
+        self.sensitivity_map: dict[str, float] = {}  # artifact_id -> sensitivity (0.0-1.0)
 
     def set_sensitivity(self, artifact_id: str, sensitivity: float):
         """Set token sensitivity"""
