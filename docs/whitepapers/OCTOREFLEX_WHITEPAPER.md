@@ -2452,6 +2452,8 @@ gossip:
 
 **Dataset Labeling Methodology**:
 
+*Dataset Size*: 10,000 total processes (web servers, databases, batch jobs) over 24 hours.
+
 *Labeling Process*: Ground truth labels were established through manual inspection of 500 randomly sampled processes (5% of total dataset). Each sample was reviewed by two independent security engineers who classified behavior as "malicious" (true attack simulation) or "benign" (legitimate workload). Disagreements (8 cases) were resolved by a third reviewer.
 
 *Sample Coverage*: The remaining 9,500 processes were unlabeled and used only for FPR/FNR calculation under the assumption that attacks are rare (< 1% prevalence in production).
