@@ -238,7 +238,9 @@ class MetricsCollector:
         self.histograms: dict[str, list[float]] = defaultdict(list)
         self.lock = threading.RLock()
 
-    def record_counter(self, name: str, value: float = 1.0, tags: dict[str, str] | None = None) -> None:
+    def record_counter(
+        self, name: str, value: float = 1.0, tags: dict[str, str] | None = None
+    ) -> None:
         """Record counter metric (monotonically increasing)"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -252,7 +254,9 @@ class MetricsCollector:
             )
             self.metrics[key].append(metric)
 
-    def record_gauge(self, name: str, value: float, tags: dict[str, str] | None = None) -> None:
+    def record_gauge(
+        self, name: str, value: float, tags: dict[str, str] | None = None
+    ) -> None:
         """Record gauge metric (point-in-time value)"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -266,7 +270,9 @@ class MetricsCollector:
             )
             self.metrics[key].append(metric)
 
-    def record_histogram(self, name: str, value: float, tags: dict[str, str] | None = None) -> None:
+    def record_histogram(
+        self, name: str, value: float, tags: dict[str, str] | None = None
+    ) -> None:
         """Record histogram metric (distribution)"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -292,7 +298,9 @@ class MetricsCollector:
             key = self._make_key(name, tags or {})
             return self.gauges.get(key)
 
-    def get_histogram_stats(self, name: str, tags: dict[str, str] | None = None) -> dict[str, float]:
+    def get_histogram_stats(
+        self, name: str, tags: dict[str, str] | None = None
+    ) -> dict[str, float]:
         """Get histogram statistics"""
         with self.lock:
             key = self._make_key(name, tags or {})
@@ -408,7 +416,9 @@ class AlertManager:
                 return True
             return False
 
-    def get_active_alerts(self, min_severity: AlertSeverity | None = None) -> list[Alert]:
+    def get_active_alerts(
+        self, min_severity: AlertSeverity | None = None
+    ) -> list[Alert]:
         """Get all active (unresolved) alerts"""
         with self.lock:
             alerts = [a for a in self.alerts.values() if not a.resolved]
@@ -450,7 +460,10 @@ class AlertManager:
                 severity=AlertSeverity.WARNING,
                 title="High CPU Usage",
                 message_template="CPU usage at {cpu_percent}%",
-                condition=lambda m: any(metric.name == "system_cpu_percent" and metric.value > 80 for metric in m),
+                condition=lambda m: any(
+                    metric.name == "system_cpu_percent" and metric.value > 80
+                    for metric in m
+                ),
                 source="telemetry",
             ),
             AlertRule(
@@ -458,7 +471,10 @@ class AlertManager:
                 severity=AlertSeverity.WARNING,
                 title="High Memory Usage",
                 message_template="Memory usage at {memory_percent}%",
-                condition=lambda m: any(metric.name == "system_memory_percent" and metric.value > 85 for metric in m),
+                condition=lambda m: any(
+                    metric.name == "system_memory_percent" and metric.value > 85
+                    for metric in m
+                ),
                 source="telemetry",
             ),
         ]
@@ -511,7 +527,9 @@ class DistributedTracer:
         self.completed_traces: deque = deque(maxlen=10000)
         self.lock = threading.RLock()
 
-    def start_trace(self, operation_name: str, tags: dict[str, str] | None = None) -> TraceSpan:
+    def start_trace(
+        self, operation_name: str, tags: dict[str, str] | None = None
+    ) -> TraceSpan:
         """Start new trace"""
         trace_id = str(uuid.uuid4())
         span = self._create_span(trace_id, None, operation_name, tags)
@@ -711,7 +729,8 @@ class PerformanceProfileContext:
             duration_ms=duration_ms,
             cpu_percent=self.process.cpu_percent(),
             memory_mb=self.process.memory_info().rss / 1024 / 1024,
-            io_operations=self.process.io_counters().read_count + self.process.io_counters().write_count,
+            io_operations=self.process.io_counters().read_count
+            + self.process.io_counters().write_count,
             context_switches=self.process.num_ctx_switches().voluntary,
         )
 
@@ -899,7 +918,9 @@ class HYDRA50TelemetrySystem:
             return
 
         self._stop_monitoring.clear()
-        self._monitoring_thread = threading.Thread(target=self._monitoring_loop, args=(interval_seconds,), daemon=True)
+        self._monitoring_thread = threading.Thread(
+            target=self._monitoring_loop, args=(interval_seconds,), daemon=True
+        )
         self._monitoring_thread.start()
         logger.info("Monitoring started with %ss interval", interval_seconds)
 
@@ -932,7 +953,9 @@ class HYDRA50TelemetrySystem:
         # Memory metrics
         memory = psutil.virtual_memory()
         self.metrics_collector.record_gauge("system_memory_percent", memory.percent)
-        self.metrics_collector.record_gauge("system_memory_used_mb", memory.used / 1024 / 1024)
+        self.metrics_collector.record_gauge(
+            "system_memory_used_mb", memory.used / 1024 / 1024
+        )
 
         # Disk metrics
         disk = psutil.disk_usage("/")
@@ -940,8 +963,12 @@ class HYDRA50TelemetrySystem:
 
         # Network metrics
         net_io = psutil.net_io_counters()
-        self.metrics_collector.record_counter("system_network_bytes_sent", net_io.bytes_sent)
-        self.metrics_collector.record_counter("system_network_bytes_recv", net_io.bytes_recv)
+        self.metrics_collector.record_counter(
+            "system_network_bytes_sent", net_io.bytes_sent
+        )
+        self.metrics_collector.record_counter(
+            "system_network_bytes_recv", net_io.bytes_recv
+        )
 
     def _register_default_health_checks(self) -> None:
         """Register default health checks"""

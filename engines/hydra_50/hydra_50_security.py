@@ -254,7 +254,9 @@ class AccessControl:
         self.users: dict[str, User] = {}
         self._load_users()
 
-    def create_user(self, username: str, password: str, role: Role) -> tuple[bool, str, User | None]:
+    def create_user(
+        self, username: str, password: str, role: Role
+    ) -> tuple[bool, str, User | None]:
         """Create new user"""
         # Validate username
         is_valid, msg = InputValidator.validate_username(username)
@@ -336,7 +338,9 @@ class AccessControl:
                     data = json.load(f)
                     for user_data in data.values():
                         user_data["role"] = Role(user_data["role"])
-                        user_data["permissions"] = {Permission(p) for p in user_data["permissions"]}
+                        user_data["permissions"] = {
+                            Permission(p) for p in user_data["permissions"]
+                        }
                         self.users[user_data["username"]] = User(**user_data)
                 logger.info("Loaded %s users", len(self.users))
             except Exception as e:
@@ -380,7 +384,11 @@ class RateLimiter:
         window_start = current_time - self.window_seconds
 
         # Remove old requests
-        self.requests[identifier] = [req_time for req_time in self.requests[identifier] if req_time > window_start]
+        self.requests[identifier] = [
+            req_time
+            for req_time in self.requests[identifier]
+            if req_time > window_start
+        ]
 
         # Check limit
         if len(self.requests[identifier]) >= self.max_requests:

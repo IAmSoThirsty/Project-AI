@@ -162,7 +162,9 @@ class SimulationSystem(ABC):
         """
 
     @abstractmethod
-    def detect_threshold_events(self, year: int, domains: list[RiskDomain] | None = None) -> list[ThresholdEvent]:
+    def detect_threshold_events(
+        self, year: int, domains: list[RiskDomain] | None = None
+    ) -> list[ThresholdEvent]:
         """
         Detect threshold exceedance events for a given year.
 
@@ -175,7 +177,9 @@ class SimulationSystem(ABC):
         """
 
     @abstractmethod
-    def build_causal_model(self, historical_events: list[ThresholdEvent]) -> list[CausalLink]:
+    def build_causal_model(
+        self, historical_events: list[ThresholdEvent]
+    ) -> list[CausalLink]:
         """
         Build causal relationships from historical event data.
 
@@ -187,7 +191,9 @@ class SimulationSystem(ABC):
         """
 
     @abstractmethod
-    def simulate_scenarios(self, projection_years: int = 10, num_simulations: int = 1000) -> list[ScenarioProjection]:
+    def simulate_scenarios(
+        self, projection_years: int = 10, num_simulations: int = 1000
+    ) -> list[ScenarioProjection]:
         """
         Run probabilistic scenario simulations for future years.
 
@@ -200,7 +206,9 @@ class SimulationSystem(ABC):
         """
 
     @abstractmethod
-    def generate_alerts(self, scenarios: list[ScenarioProjection], threshold: float = 0.7) -> list[CrisisAlert]:
+    def generate_alerts(
+        self, scenarios: list[ScenarioProjection], threshold: float = 0.7
+    ) -> list[CrisisAlert]:
         """
         Generate crisis alerts for high-probability scenarios.
 
@@ -288,7 +296,9 @@ class SimulationRegistry:
         )
 
     @classmethod
-    def register(cls, name: str, system: SimulationSystem, from_monolith: bool = False) -> None:
+    def register(
+        cls, name: str, system: SimulationSystem, from_monolith: bool = False
+    ) -> None:
         """
         Register a simulation system.
 
@@ -312,7 +322,9 @@ class SimulationRegistry:
                     context={"from_monolith": from_monolith},
                 )
 
-                allowed, reason = cls._monolith_authority.authorize_registry_access(access_request)
+                allowed, reason = cls._monolith_authority.authorize_registry_access(
+                    access_request
+                )
 
                 if not allowed:
                     logger.error("Registration of %s DENIED: %s", name, reason)
@@ -324,7 +336,9 @@ class SimulationRegistry:
         logger.info("Registered simulation system: %s", name)
 
     @classmethod
-    def get(cls, name: str, mutable: bool = False, from_monolith: bool = False) -> SimulationSystem | None:
+    def get(
+        cls, name: str, mutable: bool = False, from_monolith: bool = False
+    ) -> SimulationSystem | None:
         """
         Retrieve a registered simulation system.
 
@@ -359,7 +373,9 @@ class SimulationRegistry:
                     context={"from_monolith": from_monolith},
                 )
 
-                allowed, reason = cls._monolith_authority.authorize_registry_access(access_request)
+                allowed, reason = cls._monolith_authority.authorize_registry_access(
+                    access_request
+                )
 
                 if not allowed:
                     logger.warning("Mutable access to %s DENIED: %s", name, reason)
@@ -406,7 +422,9 @@ class SimulationRegistry:
                     context={"from_monolith": from_monolith},
                 )
 
-                allowed, reason = cls._monolith_authority.authorize_registry_access(access_request)
+                allowed, reason = cls._monolith_authority.authorize_registry_access(
+                    access_request
+                )
 
                 if not allowed:
                     logger.error("Unregistration of %s DENIED: %s", name, reason)

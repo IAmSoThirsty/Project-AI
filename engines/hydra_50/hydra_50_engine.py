@@ -101,7 +101,9 @@ class TriggerEvent:
         if not self.activated and self.current_value >= self.threshold_value:
             self.activated = True
             self.activation_time = datetime.utcnow()
-            logger.warning("Trigger activated: %s (value=%s)", self.name, self.current_value)
+            logger.warning(
+                "Trigger activated: %s (value=%s)", self.name, self.current_value
+            )
         return self.activated
 
 
@@ -290,7 +292,9 @@ class IrreversibilityLock:
                 }
                 for vc in self.variable_constraints
             ],
-            "disabled_recovery_events": [dre.to_dict() for dre in self.disabled_recovery_events],
+            "disabled_recovery_events": [
+                dre.to_dict() for dre in self.disabled_recovery_events
+            ],
             "governance_ceilings": [gc.to_dict() for gc in self.governance_ceilings],
             "triggered_collapses": self.triggered_collapses,
         }
@@ -407,7 +411,9 @@ class BaseScenario(ABC):
                     is_valid, reason = constraint.validate(new_value)
                     if not is_valid:
                         logger.error("CONSTRAINT VIOLATION: %s", reason)
-                        raise ValueError(f"Irreversibility constraint violated: {reason}")
+                        raise ValueError(
+                            f"Irreversibility constraint violated: {reason}"
+                        )
 
         # Update metrics if all constraints pass
         self.metrics.update(metrics)
@@ -426,7 +432,10 @@ class BaseScenario(ABC):
         elapsed = datetime.utcnow() - self.activation_time
         for step in self.escalation_ladder:
             if not step.reached and elapsed >= step.time_horizon:
-                conditions_met = all(self.metrics.get(cond, 0.0) > 0.5 for cond in step.required_conditions)
+                conditions_met = all(
+                    self.metrics.get(cond, 0.0) > 0.5
+                    for cond in step.required_conditions
+                )
                 if conditions_met:
                     step.reached = True
                     step.reached_time = datetime.utcnow()
@@ -679,7 +688,9 @@ class AutonomousTradingWarScenario(BaseScenario):
     """S02: Algorithmic trading systems engage in adversarial optimization"""
 
     def __init__(self):
-        super().__init__("S02", "Autonomous Trading War", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S02", "Autonomous Trading War", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -784,7 +795,9 @@ class InternetFragmentationScenario(BaseScenario):
     """S03: Global internet splits into incompatible regional networks"""
 
     def __init__(self):
-        super().__init__("S03", "Internet Fragmentation", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S03", "Internet Fragmentation", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -979,7 +992,9 @@ class CognitiveLoadScenario(BaseScenario):
     """S05: Information overload exceeds human cognitive processing capacity"""
 
     def __init__(self):
-        super().__init__("S05", "Cognitive Load Collapse", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S05", "Cognitive Load Collapse", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -1070,7 +1085,9 @@ class AlgorithmicCulturalDriftScenario(BaseScenario):
     """S06: Recommendation algorithms reshape culture in unintended directions"""
 
     def __init__(self):
-        super().__init__("S06", "Algorithmic Cultural Drift", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S06", "Algorithmic Cultural Drift", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -1170,7 +1187,9 @@ class ModelWeightPoisoningScenario(BaseScenario):
     """S07: Adversarial manipulation of foundation model training data"""
 
     def __init__(self):
-        super().__init__("S07", "Model Weight Poisoning", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S07", "Model Weight Poisoning", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -1267,7 +1286,9 @@ class DNSTrustCollapseScenario(BaseScenario):
     """S08: DNS system compromised, internet naming untrustworthy"""
 
     def __init__(self):
-        super().__init__("S08", "DNS Trust Collapse", ScenarioCategory.DIGITAL_COGNITIVE)
+        super().__init__(
+            "S08", "DNS Trust Collapse", ScenarioCategory.DIGITAL_COGNITIVE
+        )
         self.initialize_triggers()
         self.initialize_escalation_ladder()
         self.initialize_couplings()
@@ -1665,7 +1686,9 @@ class SovereignDebtCascadeScenario(BaseScenario):
 
 class CurrencyConfidenceDeathSpiralScenario(BaseScenario):
     def __init__(self):
-        super().__init__("S12", "Currency Confidence Death Spiral", ScenarioCategory.ECONOMIC)
+        super().__init__(
+            "S12", "Currency Confidence Death Spiral", ScenarioCategory.ECONOMIC
+        )
         self.triggers = [
             TriggerEvent("inflation_acceleration", "Inflation >20%", ["CPI"], 0.2),
             TriggerEvent(
@@ -1744,7 +1767,9 @@ class CurrencyConfidenceDeathSpiralScenario(BaseScenario):
 
 class EnergyBackedBlocsScenario(BaseScenario):
     def __init__(self):
-        super().__init__("S13", "Energy-Backed Currency Blocs", ScenarioCategory.ECONOMIC)
+        super().__init__(
+            "S13", "Energy-Backed Currency Blocs", ScenarioCategory.ECONOMIC
+        )
         self.triggers = [
             TriggerEvent(
                 "petrodollar_decline",
@@ -1822,8 +1847,12 @@ class InsuranceMarketFailureScenario(BaseScenario):
     def __init__(self):
         super().__init__("S14", "Insurance Market Collapse", ScenarioCategory.ECONOMIC)
         self.triggers = [
-            TriggerEvent("catastrophic_loss_events", "Loss events >$50B", ["insured losses"], 5.0),
-            TriggerEvent("insurer_insolvency_rate", "Insurers insolvent", ["bankruptcies"], 0.1),
+            TriggerEvent(
+                "catastrophic_loss_events", "Loss events >$50B", ["insured losses"], 5.0
+            ),
+            TriggerEvent(
+                "insurer_insolvency_rate", "Insurers insolvent", ["bankruptcies"], 0.1
+            ),
         ]
         self.escalation_ladder = [
             EscalationStep(
@@ -2035,8 +2064,12 @@ class SupplyChainAICollusionScenario(BaseScenario):
     def __init__(self):
         super().__init__("S17", "Supply Chain AI Collusion", ScenarioCategory.ECONOMIC)
         self.triggers = [
-            TriggerEvent("ai_logistics_dominance", "AI decisions >80%", ["AI adoption"], 0.8),
-            TriggerEvent("price_synchronization", "Price convergence", ["correlation"], 0.9),
+            TriggerEvent(
+                "ai_logistics_dominance", "AI decisions >80%", ["AI adoption"], 0.8
+            ),
+            TriggerEvent(
+                "price_synchronization", "Price convergence", ["correlation"], 0.9
+            ),
         ]
         self.escalation_ladder = [
             EscalationStep(
@@ -2102,7 +2135,9 @@ class PermanentInflationLockScenario(BaseScenario):
         super().__init__("S18", "Permanent Inflation Lock", ScenarioCategory.ECONOMIC)
         self.triggers = [
             TriggerEvent("structural_inflation", "Core inflation >5%", ["CPI"], 0.05),
-            TriggerEvent("deglobalization_shock", "Trade costs +30%", ["shipping costs"], 0.3),
+            TriggerEvent(
+                "deglobalization_shock", "Trade costs +30%", ["shipping costs"], 0.3
+            ),
         ]
         self.escalation_ladder = [
             EscalationStep(
@@ -2173,7 +2208,9 @@ class LaborAlgorithmicCollapseScenario(BaseScenario):
                 ["unemployment rate"],
                 0.15,
             ),
-            TriggerEvent("automation_acceleration", "Jobs at risk >30%", ["AI capabilities"], 0.3),
+            TriggerEvent(
+                "automation_acceleration", "Jobs at risk >30%", ["AI capabilities"], 0.3
+            ),
         ]
         self.escalation_ladder = [
             EscalationStep(
@@ -2238,8 +2275,12 @@ class LiquidityBlackHoleScenario(BaseScenario):
     def __init__(self):
         super().__init__("S20", "Liquidity Black Hole", ScenarioCategory.ECONOMIC)
         self.triggers = [
-            TriggerEvent("market_maker_exodus", "Market makers -50%", ["bid-ask spreads"], 0.5),
-            TriggerEvent("redemption_lockup", "Funds halt redemptions", ["fund gates"], 5.0),
+            TriggerEvent(
+                "market_maker_exodus", "Market makers -50%", ["bid-ask spreads"], 0.5
+            ),
+            TriggerEvent(
+                "redemption_lockup", "Funds halt redemptions", ["fund gates"], 5.0
+            ),
         ]
         self.escalation_ladder = [
             EscalationStep(
@@ -2315,8 +2356,12 @@ class PowerGridFrequencyWarfareScenario(BaseScenario):
     """S21: Power Grid Frequency Warfare"""
 
     def __init__(self):
-        super().__init__("S21", "Power Grid Frequency Warfare", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent("s21_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S21", "Power Grid Frequency Warfare", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s21_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
@@ -2336,8 +2381,16 @@ class PowerGridFrequencyWarfareScenario(BaseScenario):
             ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
     def initialize_triggers(self) -> None:
         pass
@@ -2359,8 +2412,12 @@ class SatelliteOrbitCongestionScenario(BaseScenario):
     """S22: Satellite Orbit Congestion"""
 
     def __init__(self):
-        super().__init__("S22", "Satellite Orbit Congestion", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent("s22_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S22", "Satellite Orbit Congestion", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s22_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
@@ -2380,8 +2437,16 @@ class SatelliteOrbitCongestionScenario(BaseScenario):
             ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
     def initialize_triggers(self) -> None:
         pass
@@ -2403,8 +2468,12 @@ class UnderseaCableSabotageScenario(BaseScenario):
     """S23: Undersea Cable Sabotage"""
 
     def __init__(self):
-        super().__init__("S23", "Undersea Cable Sabotage", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent("s23_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S23", "Undersea Cable Sabotage", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s23_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
@@ -2424,8 +2493,16 @@ class UnderseaCableSabotageScenario(BaseScenario):
             ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
     def initialize_triggers(self) -> None:
         pass
@@ -2448,7 +2525,9 @@ class WaterSystemAttacksScenario(BaseScenario):
 
     def __init__(self):
         super().__init__("S24", "Water System Attacks", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent("s24_trigger", "Automated trigger", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s24_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
@@ -2468,8 +2547,16 @@ class WaterSystemAttacksScenario(BaseScenario):
             ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
     def initialize_triggers(self) -> None:
         pass
@@ -2491,8 +2578,12 @@ class TrafficGridlockScenario(BaseScenario):
     """S25: Traffic Gridlock Warfare"""
 
     def __init__(self):
-        super().__init__("S25", "Traffic Gridlock Warfare", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent("s25_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S25", "Traffic Gridlock Warfare", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s25_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
@@ -2512,8 +2603,16 @@ class TrafficGridlockScenario(BaseScenario):
             ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
     def initialize_triggers(self) -> None:
         pass
@@ -2535,8 +2634,12 @@ class SmartCityKillSwitchScenario(BaseScenario):
     """S26: Smart City Kill-Switch"""
 
     def __init__(self):
-        super().__init__("S26", "Smart City Kill-Switch", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent("s26_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S26", "Smart City Kill-Switch", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s26_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
@@ -2556,8 +2659,16 @@ class SmartCityKillSwitchScenario(BaseScenario):
             ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
     def initialize_triggers(self) -> None:
         pass
@@ -2579,8 +2690,12 @@ class PortAutomationFailuresScenario(BaseScenario):
     """S27: Port Automation Failures"""
 
     def __init__(self):
-        super().__init__("S27", "Port Automation Failures", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent("s27_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S27", "Port Automation Failures", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s27_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
@@ -2600,8 +2715,16 @@ class PortAutomationFailuresScenario(BaseScenario):
             ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
     def initialize_triggers(self) -> None:
         pass
@@ -2623,8 +2746,12 @@ class ConstructionMaterialLockoutsScenario(BaseScenario):
     """S28: Construction Material Lockouts"""
 
     def __init__(self):
-        super().__init__("S28", "Construction Material Lockouts", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent("s28_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S28", "Construction Material Lockouts", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s28_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
@@ -2644,8 +2771,16 @@ class ConstructionMaterialLockoutsScenario(BaseScenario):
             ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
     def initialize_triggers(self) -> None:
         pass
@@ -2668,7 +2803,9 @@ class GPSDegradationScenario(BaseScenario):
 
     def __init__(self):
         super().__init__("S29", "GPS Degradation", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent("s29_trigger", "Automated trigger", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s29_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
@@ -2688,8 +2825,16 @@ class GPSDegradationScenario(BaseScenario):
             ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
     def initialize_triggers(self) -> None:
         pass
@@ -2711,8 +2856,12 @@ class UrbanHeatFeedbackScenario(BaseScenario):
     """S30: Urban Heat Feedback Loop"""
 
     def __init__(self):
-        super().__init__("S30", "Urban Heat Feedback Loop", ScenarioCategory.INFRASTRUCTURE)
-        self.triggers = [TriggerEvent("s30_trigger", "Automated trigger", ["metric"], 0.5)]
+        super().__init__(
+            "S30", "Urban Heat Feedback Loop", ScenarioCategory.INFRASTRUCTURE
+        )
+        self.triggers = [
+            TriggerEvent("s30_trigger", "Automated trigger", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_2_SIGNIFICANT_DEGRADATION,
@@ -2732,8 +2881,16 @@ class UrbanHeatFeedbackScenario(BaseScenario):
             ),
         ]
         self.couplings = []
-        self.collapse_modes = [CollapseMode("collapse", "System failure", 0.5, timedelta(days=365), 0.7, [])]
-        self.recovery_poisons = [RecoveryPoison("poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0)]
+        self.collapse_modes = [
+            CollapseMode(
+                "collapse", "System failure", 0.5, timedelta(days=365), 0.7, []
+            )
+        ]
+        self.recovery_poisons = [
+            RecoveryPoison(
+                "poison", "False recovery", "Appears fixed", "Hidden damage", 0.6, 2.0
+            )
+        ]
 
     def initialize_triggers(self) -> None:
         pass
@@ -2760,8 +2917,12 @@ class SlowBurnPandemicScenario(BaseScenario):
     """S31: Slow-Burn Pandemic"""
 
     def __init__(self):
-        super().__init__("S31", "Slow-Burn Pandemic", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent("s31_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S31", "Slow-Burn Pandemic", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL
+        )
+        self.triggers = [
+            TriggerEvent("s31_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -2835,7 +2996,9 @@ class AntibioticCollapseScenario(BaseScenario):
             "Antibiotic Resistance Collapse",
             ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL,
         )
-        self.triggers = [TriggerEvent("s32_metric", "Trigger condition", ["indicator"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s32_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -2904,8 +3067,12 @@ class MassCropFailureScenario(BaseScenario):
     """S33: Mass Crop Failure"""
 
     def __init__(self):
-        super().__init__("S33", "Mass Crop Failure", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent("s33_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S33", "Mass Crop Failure", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL
+        )
+        self.triggers = [
+            TriggerEvent("s33_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -2979,7 +3146,9 @@ class AIDesignedInvasiveSpeciesScenario(BaseScenario):
             "AI-Designed Invasive Species",
             ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL,
         )
-        self.triggers = [TriggerEvent("s34_metric", "Trigger condition", ["indicator"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s34_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3053,7 +3222,9 @@ class OceanicFoodChainScenario(BaseScenario):
             "Oceanic Food Chain Collapse",
             ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL,
         )
-        self.triggers = [TriggerEvent("s35_metric", "Trigger condition", ["indicator"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s35_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3127,7 +3298,9 @@ class AtmosphericAerosolGovernanceScenario(BaseScenario):
             "Atmospheric Aerosol Governance Failure",
             ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL,
         )
-        self.triggers = [TriggerEvent("s36_metric", "Trigger condition", ["indicator"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s36_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3196,8 +3369,12 @@ class UrbanAirToxicityScenario(BaseScenario):
     """S37: Urban Air Toxicity"""
 
     def __init__(self):
-        super().__init__("S37", "Urban Air Toxicity", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent("s37_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S37", "Urban Air Toxicity", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL
+        )
+        self.triggers = [
+            TriggerEvent("s37_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3266,8 +3443,12 @@ class SyntheticBiologyLeaksScenario(BaseScenario):
     """S38: Synthetic Biology Leaks"""
 
     def __init__(self):
-        super().__init__("S38", "Synthetic Biology Leaks", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent("s38_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S38", "Synthetic Biology Leaks", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL
+        )
+        self.triggers = [
+            TriggerEvent("s38_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3336,8 +3517,12 @@ class FertilityDeclineShockScenario(BaseScenario):
     """S39: Fertility Decline Shock"""
 
     def __init__(self):
-        super().__init__("S39", "Fertility Decline Shock", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL)
-        self.triggers = [TriggerEvent("s39_metric", "Trigger condition", ["indicator"], 0.5)]
+        super().__init__(
+            "S39", "Fertility Decline Shock", ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL
+        )
+        self.triggers = [
+            TriggerEvent("s39_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3411,7 +3596,9 @@ class EcosystemFalsePositivesScenario(BaseScenario):
             "Ecosystem False Positives",
             ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL,
         )
-        self.triggers = [TriggerEvent("s40_metric", "Trigger condition", ["indicator"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s40_metric", "Trigger condition", ["indicator"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3486,7 +3673,9 @@ class LegitimacyCollapseScenario(BaseScenario):
 
     def __init__(self):
         super().__init__("S41", "Legitimacy Collapse", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent("s41_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s41_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3555,8 +3744,12 @@ class PermanentEmergencyGovernanceScenario(BaseScenario):
     """S42: Permanent Emergency Governance"""
 
     def __init__(self):
-        super().__init__("S42", "Permanent Emergency Governance", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent("s42_indicator", "Social indicator", ["metric"], 0.5)]
+        super().__init__(
+            "S42", "Permanent Emergency Governance", ScenarioCategory.SOCIETAL
+        )
+        self.triggers = [
+            TriggerEvent("s42_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3626,7 +3819,9 @@ class AIBackedAuthoritarianismScenario(BaseScenario):
 
     def __init__(self):
         super().__init__("S43", "AI-Backed Authoritarianism", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent("s43_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s43_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3696,7 +3891,9 @@ class DemocracyFatigueScenario(BaseScenario):
 
     def __init__(self):
         super().__init__("S44", "Democracy Fatigue", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent("s44_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s44_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3766,7 +3963,9 @@ class ReligiousAIProphetsScenario(BaseScenario):
 
     def __init__(self):
         super().__init__("S45", "Religious AI Prophets", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent("s45_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s45_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3835,8 +4034,12 @@ class GenerationalCivilColdWarsScenario(BaseScenario):
     """S46: Generational Civil Cold Wars"""
 
     def __init__(self):
-        super().__init__("S46", "Generational Civil Cold Wars", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent("s46_indicator", "Social indicator", ["metric"], 0.5)]
+        super().__init__(
+            "S46", "Generational Civil Cold Wars", ScenarioCategory.SOCIETAL
+        )
+        self.triggers = [
+            TriggerEvent("s46_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3906,7 +4109,9 @@ class MassMigrationScenario(BaseScenario):
 
     def __init__(self):
         super().__init__("S47", "Mass Migration Crisis", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent("s47_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s47_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -3975,8 +4180,12 @@ class CulturalMemoryFragmentationScenario(BaseScenario):
     """S48: Cultural Memory Fragmentation"""
 
     def __init__(self):
-        super().__init__("S48", "Cultural Memory Fragmentation", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent("s48_indicator", "Social indicator", ["metric"], 0.5)]
+        super().__init__(
+            "S48", "Cultural Memory Fragmentation", ScenarioCategory.SOCIETAL
+        )
+        self.triggers = [
+            TriggerEvent("s48_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -4046,7 +4255,9 @@ class LawBecomesAdvisoryScenario(BaseScenario):
 
     def __init__(self):
         super().__init__("S49", "Law Becomes Advisory", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent("s49_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s49_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -4116,7 +4327,9 @@ class SpeciesLevelApathyScenario(BaseScenario):
 
     def __init__(self):
         super().__init__("S50", "Species-Level Apathy", ScenarioCategory.SOCIETAL)
-        self.triggers = [TriggerEvent("s50_indicator", "Social indicator", ["metric"], 0.5)]
+        self.triggers = [
+            TriggerEvent("s50_indicator", "Social indicator", ["metric"], 0.5)
+        ]
         self.escalation_ladder = [
             EscalationStep(
                 EscalationLevel.LEVEL_1_EARLY_WARNING,
@@ -4209,7 +4422,9 @@ class AdversarialRealityGenerator:
                     threat_network[key] = coupling.coupling_strength
 
         # Calculate compound severity
-        base_severity = sum(s.escalation_level.value for s in active_scenarios) / len(active_scenarios)
+        base_severity = sum(s.escalation_level.value for s in active_scenarios) / len(
+            active_scenarios
+        )
         coupling_multiplier = 1.0 + (len(threat_network) * 0.2)
         compound_severity = min(base_severity * coupling_multiplier, 10.0)
 
@@ -4230,7 +4445,9 @@ class AdversarialRealityGenerator:
         for scenario in all_scenarios:
             coupling_counts[scenario.scenario_id] = len(scenario.couplings)
             for coupling in scenario.couplings:
-                coupling_counts[coupling.target_scenario_id] = coupling_counts.get(coupling.target_scenario_id, 0) + 1
+                coupling_counts[coupling.target_scenario_id] = (
+                    coupling_counts.get(coupling.target_scenario_id, 0) + 1
+                )
 
         # Return top 10 most coupled scenarios
         sorted_nodes = sorted(coupling_counts.items(), key=lambda x: x[1], reverse=True)
@@ -4251,7 +4468,9 @@ class CrossScenarioCoupler:
         self.coupling_history: list[dict[str, Any]] = []
         logger.info("CrossScenarioCoupler initialized")
 
-    def propagate_activation(self, source_scenario: BaseScenario, all_scenarios: dict[str, BaseScenario]) -> list[str]:
+    def propagate_activation(
+        self, source_scenario: BaseScenario, all_scenarios: dict[str, BaseScenario]
+    ) -> list[str]:
         """Propagate activation to coupled scenarios"""
         activated = []
 
@@ -4277,8 +4496,13 @@ class CrossScenarioCoupler:
 
             elif coupling.coupling_type == "synchronizing":
                 # Synchronize escalation levels
-                if target.escalation_level.value < source_scenario.escalation_level.value:
-                    target.escalation_level = EscalationLevel(min(source_scenario.escalation_level.value, 5))
+                if (
+                    target.escalation_level.value
+                    < source_scenario.escalation_level.value
+                ):
+                    target.escalation_level = EscalationLevel(
+                        min(source_scenario.escalation_level.value, 5)
+                    )
                     activated.append(target_id)
 
             # Record coupling event
@@ -4313,7 +4537,9 @@ class HumanFailureEmulator:
         self.failure_history: list[dict[str, Any]] = []
         logger.info("HumanFailureEmulator initialized")
 
-    def simulate_decision_failure(self, stress_level: float, decision_type: str) -> dict[str, Any]:  # 0.0-1.0
+    def simulate_decision_failure(
+        self, stress_level: float, decision_type: str
+    ) -> dict[str, Any]:  # 0.0-1.0
         """Simulate probability of human decision failure"""
         # Failure modes by decision type
         failure_modes = {
@@ -4334,7 +4560,8 @@ class HumanFailureEmulator:
             [
                 f
                 for f in self.failure_history
-                if datetime.fromisoformat(f["timestamp"]) > datetime.utcnow() - timedelta(days=7)
+                if datetime.fromisoformat(f["timestamp"])
+                > datetime.utcnow() - timedelta(days=7)
             ]
         )
         stress_multiplier = 1.0 + (recent_failures * 0.1)
@@ -4352,7 +4579,11 @@ class HumanFailureEmulator:
             "stress_level": stress_level,
             "failure_probability": failure_probability,
             "failed": failed,
-            "failure_mode": (random.choice(failure_modes.get(decision_type, ["unknown"])) if failed else None),
+            "failure_mode": (
+                random.choice(failure_modes.get(decision_type, ["unknown"]))
+                if failed
+                else None
+            ),
         }
 
         self.failure_history.append(result)
@@ -4384,7 +4615,9 @@ class IrreversibilityDetector:
         self.active_locks: dict[str, IrreversibilityLock] = {}  # lock_id -> lock
         logger.info("IrreversibilityDetector initialized with state lock enforcement")
 
-    def assess_irreversibility(self, scenario: BaseScenario, time_elapsed: timedelta) -> dict[str, Any]:
+    def assess_irreversibility(
+        self, scenario: BaseScenario, time_elapsed: timedelta
+    ) -> dict[str, Any]:
         """Assess if scenario has crossed irreversibility threshold"""
         # Check collapse modes
         irreversibility_scores = []
@@ -4399,7 +4632,9 @@ class IrreversibilityDetector:
             return {"irreversible": False, "score": 0.0}
 
         max_irreversibility = max(irreversibility_scores)
-        is_irreversible = max_irreversibility > 0.7  # Threshold for "point of no return"
+        is_irreversible = (
+            max_irreversibility > 0.7
+        )  # Threshold for "point of no return"
 
         assessment = {
             "scenario_id": scenario.scenario_id,
@@ -4412,7 +4647,9 @@ class IrreversibilityDetector:
 
         if is_irreversible:
             self.irreversible_states.append(assessment)
-            logger.error("IRREVERSIBLE STATE: %s - %s", scenario.name, triggered_collapses)
+            logger.error(
+                "IRREVERSIBLE STATE: %s - %s", scenario.name, triggered_collapses
+            )
 
         return assessment
 
@@ -4436,13 +4673,19 @@ class IrreversibilityDetector:
         lock_id = f"{scenario.scenario_id}_LOCK_{uuid.uuid4().hex[:8]}"
 
         # Create variable constraints based on scenario type and collapse modes
-        variable_constraints = self._generate_variable_constraints(scenario, irreversibility_score, triggered_collapses)
+        variable_constraints = self._generate_variable_constraints(
+            scenario, irreversibility_score, triggered_collapses
+        )
 
         # Identify permanently disabled recovery events
-        disabled_recovery_events = self._generate_disabled_recovery_events(scenario, triggered_collapses)
+        disabled_recovery_events = self._generate_disabled_recovery_events(
+            scenario, triggered_collapses
+        )
 
         # Lower governance ceilings
-        governance_ceilings = self._generate_governance_ceilings(scenario, irreversibility_score)
+        governance_ceilings = self._generate_governance_ceilings(
+            scenario, irreversibility_score
+        )
 
         lock = IrreversibilityLock(
             lock_id=lock_id,
@@ -4481,7 +4724,10 @@ class IrreversibilityDetector:
         # Category-specific constraint generation
         if scenario.category == ScenarioCategory.DIGITAL_COGNITIVE:
             # Truth verification capacity can never recover
-            if "epistemic_collapse" in triggered_collapses or "trust_collapse" in triggered_collapses:
+            if (
+                "epistemic_collapse" in triggered_collapses
+                or "trust_collapse" in triggered_collapses
+            ):
                 constraints.append(
                     VariableConstraint(
                         variable_name="verification_capacity",
@@ -4505,7 +4751,10 @@ class IrreversibilityDetector:
 
         elif scenario.category == ScenarioCategory.ECONOMIC:
             # Currency confidence and liquidity can never fully recover
-            if "currency_collapse" in triggered_collapses or "liquidity_crisis" in triggered_collapses:
+            if (
+                "currency_collapse" in triggered_collapses
+                or "liquidity_crisis" in triggered_collapses
+            ):
                 constraints.append(
                     VariableConstraint(
                         variable_name="currency_confidence",
@@ -4529,12 +4778,18 @@ class IrreversibilityDetector:
 
         elif scenario.category == ScenarioCategory.INFRASTRUCTURE:
             # Infrastructure capacity permanently degraded
-            if "cascade_failure" in triggered_collapses or "grid_collapse" in triggered_collapses:
+            if (
+                "cascade_failure" in triggered_collapses
+                or "grid_collapse" in triggered_collapses
+            ):
                 constraints.append(
                     VariableConstraint(
                         variable_name="infrastructure_capacity",
                         constraint_type="ceiling",
-                        locked_value=scenario.metrics.get("infrastructure_capacity", 0.6) * 0.8,
+                        locked_value=scenario.metrics.get(
+                            "infrastructure_capacity", 0.6
+                        )
+                        * 0.8,
                         locked_at=current_time,
                         reason="Cascade failure: physical infrastructure cannot return to pre-collapse capacity",
                         can_never_increase=True,
@@ -4543,7 +4798,10 @@ class IrreversibilityDetector:
 
         elif scenario.category == ScenarioCategory.BIOLOGICAL_ENVIRONMENTAL:
             # Ecological damage irreversible on human timescales
-            if "ecosystem_collapse" in triggered_collapses or "species_extinction" in triggered_collapses:
+            if (
+                "ecosystem_collapse" in triggered_collapses
+                or "species_extinction" in triggered_collapses
+            ):
                 constraints.append(
                     VariableConstraint(
                         variable_name="ecosystem_health",
@@ -4558,7 +4816,9 @@ class IrreversibilityDetector:
                     VariableConstraint(
                         variable_name="resource_regeneration_rate",
                         constraint_type="ceiling",
-                        locked_value=scenario.metrics.get("resource_regeneration_rate", 0.3),
+                        locked_value=scenario.metrics.get(
+                            "resource_regeneration_rate", 0.3
+                        ),
                         locked_at=current_time,
                         reason="Resource depletion: regeneration capacity permanently impaired",
                         can_never_increase=True,
@@ -4567,7 +4827,10 @@ class IrreversibilityDetector:
 
         elif scenario.category == ScenarioCategory.SOCIETAL:
             # Social cohesion and legitimacy never fully recover
-            if "legitimacy_collapse" in triggered_collapses or "social_fracture" in triggered_collapses:
+            if (
+                "legitimacy_collapse" in triggered_collapses
+                or "social_fracture" in triggered_collapses
+            ):
                 constraints.append(
                     VariableConstraint(
                         variable_name="social_cohesion",
@@ -4745,7 +5008,9 @@ class IrreversibilityDetector:
         for lock in scenario.active_locks:
             for constraint in lock.variable_constraints:
                 if constraint.variable_name in proposed_metrics:
-                    is_valid, reason = constraint.validate(proposed_metrics[constraint.variable_name])
+                    is_valid, reason = constraint.validate(
+                        proposed_metrics[constraint.variable_name]
+                    )
                     if not is_valid:
                         violations.append(reason)
 
@@ -4776,7 +5041,9 @@ class FalseRecoveryEngine:
         self.poison_deployments: list[dict[str, Any]] = []
         logger.info("FalseRecoveryEngine initialized")
 
-    def evaluate_recovery_attempt(self, scenario: BaseScenario, recovery_action: str) -> dict[str, Any]:
+    def evaluate_recovery_attempt(
+        self, scenario: BaseScenario, recovery_action: str
+    ) -> dict[str, Any]:
         """Evaluate if recovery action is a trap"""
         # Check if action matches known recovery poisons
         for poison in scenario.recovery_poisons:
@@ -4794,7 +5061,9 @@ class FalseRecoveryEngine:
                 }
 
                 self.poison_deployments.append(deployment)
-                logger.warning("RECOVERY POISON DETECTED: %s for %s", poison.name, scenario.name)
+                logger.warning(
+                    "RECOVERY POISON DETECTED: %s for %s", poison.name, scenario.name
+                )
                 return deployment
 
         # Not a known poison
@@ -4927,7 +5196,9 @@ class Hydra50Engine:
         self.scenarios["S49"] = LawBecomesAdvisoryScenario()
         self.scenarios["S50"] = SpeciesLevelApathyScenario()
 
-    def update_scenario_metrics(self, scenario_id: str, metrics: dict[str, float], user_id: str | None = None) -> None:
+    def update_scenario_metrics(
+        self, scenario_id: str, metrics: dict[str, float], user_id: str | None = None
+    ) -> None:
         """Update metrics for a scenario and trigger event sourcing"""
         if scenario_id not in self.scenarios:
             raise ValueError(f"Unknown scenario: {scenario_id}")
@@ -4939,7 +5210,10 @@ class Hydra50Engine:
         scenario.update_metrics(metrics)
 
         # Check for status changes
-        if any(t.activated for t in scenario.triggers) and old_status == ScenarioStatus.DORMANT:
+        if (
+            any(t.activated for t in scenario.triggers)
+            and old_status == ScenarioStatus.DORMANT
+        ):
             scenario.status = ScenarioStatus.TRIGGERED
             scenario.activation_time = datetime.utcnow()
 
@@ -4966,7 +5240,9 @@ class Hydra50Engine:
 
         # Propagate couplings
         if scenario.status in [ScenarioStatus.TRIGGERED, ScenarioStatus.ESCALATING]:
-            activated = self.scenario_coupler.propagate_activation(scenario, self.scenarios)
+            activated = self.scenario_coupler.propagate_activation(
+                scenario, self.scenarios
+            )
             if activated:
                 event = EventRecord(
                     event_id=str(uuid.uuid4()),
@@ -5015,7 +5291,9 @@ class Hydra50Engine:
                 # Check irreversibility and create state locks
                 if scenario.activation_time:
                     elapsed = datetime.utcnow() - scenario.activation_time
-                    assessment = self.irreversibility_detector.assess_irreversibility(scenario, elapsed)
+                    assessment = self.irreversibility_detector.assess_irreversibility(
+                        scenario, elapsed
+                    )
 
                     if assessment["irreversible"]:
                         tick_results["irreversible_scenarios"].append(scenario_id)
@@ -5040,9 +5318,15 @@ class Hydra50Engine:
                                     "lock_id": lock.lock_id,
                                     "scenario_id": scenario_id,
                                     "scenario_name": scenario.name,
-                                    "variable_constraints": len(lock.variable_constraints),
-                                    "disabled_recovery_events": len(lock.disabled_recovery_events),
-                                    "governance_ceilings": len(lock.governance_ceilings),
+                                    "variable_constraints": len(
+                                        lock.variable_constraints
+                                    ),
+                                    "disabled_recovery_events": len(
+                                        lock.disabled_recovery_events
+                                    ),
+                                    "governance_ceilings": len(
+                                        lock.governance_ceilings
+                                    ),
                                 }
                             )
 
@@ -5055,7 +5339,9 @@ class Hydra50Engine:
 
         # Generate compound scenarios
         if len(active_scenarios) >= 2:
-            compound = self.adversarial_generator.generate_compound_scenario(active_scenarios)
+            compound = self.adversarial_generator.generate_compound_scenario(
+                active_scenarios
+            )
             tick_results["compound_threats"] = compound
 
         # Record tick event
@@ -5154,7 +5440,9 @@ class Hydra50Engine:
         scenario = self.scenarios[scenario_id]
 
         # Check if recovery event is permanently disabled
-        is_allowed, disable_reason = scenario.check_recovery_event_allowed(recovery_action)
+        is_allowed, disable_reason = scenario.check_recovery_event_allowed(
+            recovery_action
+        )
 
         if not is_allowed:
             logger.error("Recovery attempt BLOCKED: %s", disable_reason)
@@ -5182,7 +5470,9 @@ class Hydra50Engine:
             }
 
         # Check for recovery poison
-        poison_eval = self.false_recovery_engine.evaluate_recovery_attempt(scenario, recovery_action)
+        poison_eval = self.false_recovery_engine.evaluate_recovery_attempt(
+            scenario, recovery_action
+        )
 
         # Record recovery attempt
         event = EventRecord(
@@ -5200,7 +5490,10 @@ class Hydra50Engine:
         self.event_log.append(event)
 
         if poison_eval["is_poison"]:
-            logger.warning(f"Recovery attempt succeeded but IS A POISON: {recovery_action} " f"for {scenario.name}")
+            logger.warning(
+                f"Recovery attempt succeeded but IS A POISON: {recovery_action} "
+                f"for {scenario.name}"
+            )
 
         return {
             "success": True,
@@ -5224,12 +5517,18 @@ class Hydra50Engine:
         all_locks = self.irreversibility_detector.get_all_active_locks()
 
         if scenario_id:
-            all_locks = [lock for lock in all_locks if lock["scenario_id"] == scenario_id]
+            all_locks = [
+                lock for lock in all_locks if lock["scenario_id"] == scenario_id
+            ]
 
         # Calculate aggregate statistics
         total_constraints = sum(len(lock["variable_constraints"]) for lock in all_locks)
-        total_disabled_events = sum(len(lock["disabled_recovery_events"]) for lock in all_locks)
-        total_governance_reductions = sum(len(lock["governance_ceilings"]) for lock in all_locks)
+        total_disabled_events = sum(
+            len(lock["disabled_recovery_events"]) for lock in all_locks
+        )
+        total_governance_reductions = sum(
+            len(lock["governance_ceilings"]) for lock in all_locks
+        )
 
         return {
             "timestamp": datetime.utcnow().isoformat(),
@@ -5248,11 +5547,15 @@ class Hydra50Engine:
 
     def get_dashboard_state(self) -> dict[str, Any]:
         """Get current state for dashboard/GUI"""
-        active = [s for s in self.scenarios.values() if s.status != ScenarioStatus.DORMANT]
+        active = [
+            s for s in self.scenarios.values() if s.status != ScenarioStatus.DORMANT
+        ]
         critical = [s for s in active if s.escalation_level.value >= 4]
 
         # Count scenarios with active locks
-        locked_scenarios = [s for s in self.scenarios.values() if len(s.active_locks) > 0]
+        locked_scenarios = [
+            s for s in self.scenarios.values() if len(s.active_locks) > 0
+        ]
 
         return {
             "timestamp": datetime.utcnow().isoformat(),
@@ -5270,12 +5573,16 @@ class Hydra50Engine:
                     "status": s.status.value,
                     "escalation_level": s.escalation_level.value,
                     "active_locks": len(s.active_locks),
-                    "locked_variables": sum(len(lock.variable_constraints) for lock in s.active_locks),
+                    "locked_variables": sum(
+                        len(lock.variable_constraints) for lock in s.active_locks
+                    ),
                 }
                 for s in active
             ],
             "event_log_size": len(self.event_log),
-            "irreversible_states": len(self.irreversibility_detector.irreversible_states),
+            "irreversible_states": len(
+                self.irreversibility_detector.irreversible_states
+            ),
             "active_state_locks": len(self.irreversibility_detector.active_locks),
             "poison_deployments": len(self.false_recovery_engine.poison_deployments),
         }
@@ -5307,7 +5614,9 @@ class Hydra50Engine:
             "timestamp": datetime.utcnow().isoformat(),
             "control_plane": self.active_control_plane.value,
             "human_override_active": self.human_override_active,
-            "event_log": [e.to_dict() for e in self.event_log[-1000:]],  # Last 1000 events
+            "event_log": [
+                e.to_dict() for e in self.event_log[-1000:]
+            ],  # Last 1000 events
             "scenario_states": {
                 sid: {
                     "status": s.status.value,
@@ -5337,7 +5646,9 @@ class Hydra50Engine:
             with open(state_file) as f:
                 state_data = json.load(f)
 
-            self.active_control_plane = ControlPlane(state_data.get("control_plane", "operational"))
+            self.active_control_plane = ControlPlane(
+                state_data.get("control_plane", "operational")
+            )
             self.human_override_active = state_data.get("human_override_active", False)
 
             # Restore scenario states
@@ -5345,7 +5656,9 @@ class Hydra50Engine:
             for sid, state in scenario_states.items():
                 if sid in self.scenarios:
                     self.scenarios[sid].status = ScenarioStatus(state["status"])
-                    self.scenarios[sid].escalation_level = EscalationLevel(state["escalation_level"])
+                    self.scenarios[sid].escalation_level = EscalationLevel(
+                        state["escalation_level"]
+                    )
                     self.scenarios[sid].metrics = state["metrics"]
 
             logger.info("State loaded from %s", state_file)

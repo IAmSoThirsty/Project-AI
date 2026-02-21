@@ -42,14 +42,16 @@ class PlanetaryDefenseIntegration:
         """Lazy load Planetary Defense Monolith"""
         if self.planetary_defense is None:
             try:
-                from app.core.planetary_defense_monolith import PlanetaryDefenseMonolith
+                from engines.planetary_defense.planetary_defense_monolith import PlanetaryDefenseMonolith
 
                 self.planetary_defense = PlanetaryDefenseMonolith()
             except ImportError:
                 logger.warning("Planetary Defense Monolith not available")
         return self.planetary_defense
 
-    def validate_mitigation_action(self, scenario_id: str, mitigation_action: str) -> tuple[bool, str]:
+    def validate_mitigation_action(
+        self, scenario_id: str, mitigation_action: str
+    ) -> tuple[bool, str]:
         """
         Validate mitigation action through Constitutional Core
 
@@ -77,13 +79,17 @@ class PlanetaryDefenseIntegration:
             "escalation_level": scenario.escalation_level.value,
             "is_emergency": scenario.escalation_level.value >= 4,
             "mitigation_type": (
-                "automated" if self.hydra.active_control_plane != ControlPlane.HUMAN_OVERRIDE else "human"
+                "automated"
+                if self.hydra.active_control_plane != ControlPlane.HUMAN_OVERRIDE
+                else "human"
             ),
         }
 
         # Validate through Constitutional Core
         try:
-            is_allowed, reason = pd.validate_action(action=mitigation_action, context=context)
+            is_allowed, reason = pd.validate_action(
+                action=mitigation_action, context=context
+            )
 
             if not is_allowed:
                 logger.warning(
@@ -152,7 +158,9 @@ class PlanetaryDefenseIntegration:
 
                 if current_step:
                     for mitigation in current_step.mitigation_actions:
-                        is_allowed, reason = self.validate_mitigation_action(scenario_id, mitigation)
+                        is_allowed, reason = self.validate_mitigation_action(
+                            scenario_id, mitigation
+                        )
                         validated_mitigations.append(
                             {
                                 "scenario_id": scenario_id,
@@ -209,7 +217,9 @@ class GlobalScenarioEngineIntegration:
             ],
         }
 
-    def query(self, query_type: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+    def query(
+        self, query_type: str, params: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """
         Handle queries from Global Scenario Engine
 
@@ -359,7 +369,11 @@ class CommandCenterIntegration:
 
     def get_threat_network_widget_data(self) -> dict[str, Any]:
         """Return data for threat network visualization"""
-        active_scenarios = [s for s in self.hydra.scenarios.values() if s.status != ScenarioStatus.DORMANT]
+        active_scenarios = [
+            s
+            for s in self.hydra.scenarios.values()
+            if s.status != ScenarioStatus.DORMANT
+        ]
 
         # Build network graph
         nodes = []
@@ -451,12 +465,20 @@ class CommandCenterIntegration:
 
             elif action == "activate_human_override":
                 reason = params.get("reason", "Manual override from Command Center")
-                self.hydra.activate_human_override(user_id=user_id or "command_center", reason=reason)
+                self.hydra.activate_human_override(
+                    user_id=user_id or "command_center", reason=reason
+                )
                 return {"success": True, "message": "Human override activated"}
 
             elif action == "generate_compound_scenario":
-                active_scenarios = [s for s in self.hydra.scenarios.values() if s.status != ScenarioStatus.DORMANT]
-                compound = self.hydra.adversarial_generator.generate_compound_scenario(active_scenarios)
+                active_scenarios = [
+                    s
+                    for s in self.hydra.scenarios.values()
+                    if s.status != ScenarioStatus.DORMANT
+                ]
+                compound = self.hydra.adversarial_generator.generate_compound_scenario(
+                    active_scenarios
+                )
                 return {"success": True, "compound_scenario": compound}
 
             elif action == "set_control_plane":
@@ -514,7 +536,9 @@ class GUIExportHooks:
                     "activated": t.activated,
                     "current_value": t.current_value,
                     "threshold": t.threshold_value,
-                    "activation_time": (t.activation_time.isoformat() if t.activation_time else None),
+                    "activation_time": (
+                        t.activation_time.isoformat() if t.activation_time else None
+                    ),
                 }
                 for t in scenario.triggers
             ],
@@ -533,7 +557,9 @@ class GUIExportHooks:
             "couplings": [
                 {
                     "target_id": c.target_scenario_id,
-                    "target_name": SCENARIO_REGISTRY.get(c.target_scenario_id, "Unknown"),
+                    "target_name": SCENARIO_REGISTRY.get(
+                        c.target_scenario_id, "Unknown"
+                    ),
                     "strength": c.coupling_strength,
                     "type": c.coupling_type,
                     "description": c.description,

@@ -11,7 +11,7 @@ Implements ETL connectors for:
 import logging
 from typing import Any
 
-from app.core.global_scenario_engine import DataSource
+from engines.global_scenario.global_scenario_engine import DataSource
 
 logger = logging.getLogger(__name__)
 
@@ -111,7 +111,9 @@ class IMFDataSource(DataSource):
             # For demo purposes, return empty dict
             # In production, this would be handled with proper error recovery
 
-        logger.info("Loaded IMF data for %s countries, indicator %s", len(result), indicator)
+        logger.info(
+            "Loaded IMF data for %s countries, indicator %s", len(result), indicator
+        )
         return result
 
     def fetch_fiscal_data(
@@ -224,7 +226,9 @@ class WHODataSource(DataSource):
         except Exception as e:
             logger.warning("Error parsing WHO data: %s", e)
 
-        logger.info("Loaded WHO data for %s countries, indicator %s", len(result), indicator)
+        logger.info(
+            "Loaded WHO data for %s countries, indicator %s", len(result), indicator
+        )
         return result
 
     def fetch_covid19_data(
@@ -285,7 +289,9 @@ class WHODataSource(DataSource):
 # Integration helper functions
 
 
-def integrate_imf_data(engine, start_year: int, end_year: int, countries: list[str] | None = None) -> bool:
+def integrate_imf_data(
+    engine, start_year: int, end_year: int, countries: list[str] | None = None
+) -> bool:
     """
     Integrate IMF data into the Global Scenario Engine.
 
@@ -298,7 +304,7 @@ def integrate_imf_data(engine, start_year: int, end_year: int, countries: list[s
     Returns:
         bool: Success status
     """
-    from app.core.simulation_contingency_root import RiskDomain
+    from engines.simulation_contract.simulation_contingency_root import RiskDomain
 
     try:
         cache_dir = engine.data_dir / "cache" / "imf"
@@ -325,7 +331,9 @@ def integrate_imf_data(engine, start_year: int, end_year: int, countries: list[s
         return False
 
 
-def integrate_who_data(engine, start_year: int, end_year: int, countries: list[str] | None = None) -> bool:
+def integrate_who_data(
+    engine, start_year: int, end_year: int, countries: list[str] | None = None
+) -> bool:
     """
     Integrate WHO data into the Global Scenario Engine.
 
@@ -338,7 +346,7 @@ def integrate_who_data(engine, start_year: int, end_year: int, countries: list[s
     Returns:
         bool: Success status
     """
-    from app.core.simulation_contingency_root import RiskDomain
+    from engines.simulation_contract.simulation_contingency_root import RiskDomain
 
     try:
         cache_dir = engine.data_dir / "cache" / "who"
@@ -356,7 +364,9 @@ def integrate_who_data(engine, start_year: int, end_year: int, countries: list[s
                     engine.historical_data[RiskDomain.PANDEMIC][country] = {}
                 # Invert life expectancy to risk metric (lower = higher risk)
                 for year, value in years.items():
-                    engine.historical_data[RiskDomain.PANDEMIC][country][year] = 100 - value
+                    engine.historical_data[RiskDomain.PANDEMIC][country][year] = (
+                        100 - value
+                    )
 
         logger.info("WHO data integration completed")
         return True
