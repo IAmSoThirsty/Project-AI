@@ -18,6 +18,15 @@
 		"chat.tools.terminal.autoReplyToPrompts": true,
 		"inlineChat.enableV2": true,
 		"inlineChat.notebookAgent": true,
-		"terminal.integrated.suggest.enabled": true
+		"terminal.integrated.suggest.enabled": true,
+		"php.validate.executablePath": "php",
+		"java.configuration.runtimes": [
+			{
+				"name": "JavaSE-17",
+				"path": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.18.8-hotspot",
+				"default": true
+			}
+		],
+		"java.jdt.ls.java.home": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.18.8-hotspot"
 	}
 }

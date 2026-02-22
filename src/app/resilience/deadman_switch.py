@@ -5,21 +5,13 @@ This module implements a deadman switch system that monitors system heartbeats
 and triggers failsafe actions if the system becomes unresponsive or compromised.
 
 Key Features:
-- Heartbeat monitoring
-- Timeout detection
-- Failsafe triggers
-- Emergency lockdown
-- Recovery procedures
+- Background daemon thread for heartbeat monitoring
+- Configurable timeout thresholds
+- Registered failsafe action execution with exception isolation
+- Thread-safe heartbeat and state management
+- Status reporting
 
-This is a stub implementation providing the foundation for future development
-of comprehensive deadman switch capabilities.
-
-Future Enhancements:
-- Distributed heartbeat monitoring
-- Multi-level failsafe actions
-- Automatic recovery attempts
-- External notification systems
-- Tamper-resistant implementation
+STATUS: PRODUCTION
 """
 
 import logging
@@ -38,6 +30,10 @@ class DeadmanSwitch:
     The deadman switch monitors system health through regular heartbeats.
     If heartbeats stop or anomalies are detected, failsafe actions are
     triggered to prevent harm or secure the system.
+
+    Thread Safety:
+        All mutable state is guarded by ``_lock``. The background
+        monitoring thread is a daemon so it will not block process exit.
     """
 
     def __init__(self, timeout_seconds: int = 300):
@@ -45,9 +41,6 @@ class DeadmanSwitch:
 
         Args:
             timeout_seconds: Seconds without heartbeat before trigger
-
-        This method initializes the switch state. Full feature implementation
-        is deferred to future development phases.
         """
         self.timeout_seconds = timeout_seconds
         self.last_heartbeat: datetime | None = None
@@ -55,160 +48,172 @@ class DeadmanSwitch:
         self.monitoring_thread: threading.Thread | None = None
         self.failsafe_actions: list[Callable[[], None]] = []
         self.triggered: bool = False
+        self._lock = threading.Lock()
+        self._stop_event = threading.Event()
+        self.trigger_history: list[dict[str, Any]] = []
 
     def start_monitoring(self) -> bool:
         """Start heartbeat monitoring.
 
-        This is a stub implementation. Future versions will:
-        - Launch background monitoring thread
-        - Set up watchdog timers
-        - Initialize failsafe systems
-        - Begin heartbeat tracking
+        Launches a daemon background thread that checks for heartbeat
+        timeouts once per second. Sets the initial heartbeat timestamp.
 
         Returns:
-            True if started successfully, False otherwise
+            True if started successfully, False if already monitoring
         """
-        if self.enabled:
-            logger.warning("Deadman switch already monitoring")
-            return False
+        with self._lock:
+            if self.enabled:
+                logger.warning("Deadman switch already monitoring")
+                return False
 
-        self.enabled = True
-        self.last_heartbeat = datetime.now()
-        self.triggered = False
+            self.enabled = True
+            self.last_heartbeat = datetime.now()
+            self.triggered = False
+            self._stop_event.clear()
 
-        logger.info("Deadman switch monitoring started (timeout: %ss)", self.timeout_seconds)
+        logger.info(
+            "Deadman switch monitoring started (timeout: %ss)",
+            self.timeout_seconds,
+        )
 
-        # Stub: Would launch monitoring thread here
-        # self.monitoring_thread = threading.Thread(target=self._monitor_loop)
-        # self.monitoring_thread.daemon = True
-        # self.monitoring_thread.start()
+        self.monitoring_thread = threading.Thread(
+            target=self._monitor_loop, name="deadman-switch-monitor", daemon=True
+        )
+        self.monitoring_thread.start()
 
         return True
 
     def stop_monitoring(self) -> bool:
         """Stop heartbeat monitoring.
 
+        Signals the monitoring thread to exit and waits for it to join.
+
         Returns:
-            True if stopped successfully, False otherwise
+            True if stopped successfully, False if not monitoring
         """
-        if not self.enabled:
-            logger.warning("Deadman switch not monitoring")
-            return False
+        with self._lock:
+            if not self.enabled:
+                logger.warning("Deadman switch not monitoring")
+                return False
+            self.enabled = False
 
-        self.enabled = False
+        self._stop_event.set()
+
+        if self.monitoring_thread and self.monitoring_thread.is_alive():
+            self.monitoring_thread.join(timeout=5.0)
+
         logger.info("Deadman switch monitoring stopped")
-
         return True
 
     def send_heartbeat(self) -> bool:
         """Send a heartbeat signal to reset the timeout.
 
-        This is a stub implementation. Future versions will:
-        - Validate heartbeat authenticity
-        - Update monitoring state
-        - Log heartbeat times
-        - Trigger health checks
+        Thread-safe. Resets the heartbeat timestamp so the timeout
+        window starts anew.
 
         Returns:
-            True if heartbeat accepted, False otherwise
+            True if heartbeat accepted, False if monitoring is disabled
         """
-        if not self.enabled:
-            logger.debug("Heartbeat ignored - monitoring not enabled")
-            return False
+        with self._lock:
+            if not self.enabled:
+                logger.debug("Heartbeat ignored - monitoring not enabled")
+                return False
 
-        self.last_heartbeat = datetime.now()
+            self.last_heartbeat = datetime.now()
+
         logger.debug("Heartbeat received")
-
         return True
 
     def check_timeout(self) -> bool:
         """Check if heartbeat timeout has occurred.
 
-        This is a stub implementation. Future versions will:
-        - Compare current time to last heartbeat
-        - Account for clock skew
-        - Handle suspended/resumed systems
-        - Generate timeout events
+        Thread-safe comparison of current time against last heartbeat.
 
         Returns:
             True if timeout occurred, False otherwise
         """
-        if not self.enabled or self.last_heartbeat is None:
-            return False
+        with self._lock:
+            if not self.enabled or self.last_heartbeat is None:
+                return False
 
-        elapsed = datetime.now() - self.last_heartbeat
-        timeout_delta = timedelta(seconds=self.timeout_seconds)
+            elapsed = datetime.now() - self.last_heartbeat
+            timeout_delta = timedelta(seconds=self.timeout_seconds)
 
         return elapsed > timeout_delta
 
     def trigger_failsafe(self, reason: str = "timeout") -> bool:
         """Trigger failsafe actions.
 
-        This is a stub implementation. Future versions will:
-        - Execute registered failsafe actions
-        - Log trigger event to tamperproof log
-        - Notify administrators
-        - Attempt emergency recovery
+        Executes all registered failsafe actions in order. Each action
+        is isolated — if one raises, the remaining actions still run.
 
         Args:
             reason: Reason for triggering failsafe
 
         Returns:
-            True if triggered successfully, False otherwise
+            True if triggered (even if some actions fail), False if
+            already triggered
         """
-        if self.triggered:
-            logger.warning("Failsafe already triggered")
-            return False
+        with self._lock:
+            if self.triggered:
+                logger.warning("Failsafe already triggered")
+                return False
+            self.triggered = True
 
-        self.triggered = True
         trigger_time = datetime.now().isoformat()
-
         logger.critical("DEADMAN SWITCH TRIGGERED: %s at %s", reason, trigger_time)
 
-        # Stub: Execute failsafe actions
-        for i, _action in enumerate(self.failsafe_actions):
+        action_results: list[dict[str, Any]] = []
+        for i, action in enumerate(self.failsafe_actions):
             try:
                 logger.info("Executing failsafe action %s", i + 1)
-                # _action()  # Would execute in production
-                logger.info("Failsafe action stub - not executed")
+                action()
+                action_results.append({"index": i, "status": "success"})
             except Exception as e:
                 logger.error("Failsafe action %s failed: %s", i + 1, e)
+                action_results.append({"index": i, "status": "error", "error": str(e)})
+
+        record = {
+            "reason": reason,
+            "trigger_time": trigger_time,
+            "action_results": action_results,
+        }
+        self.trigger_history.append(record)
 
         return True
 
     def register_failsafe_action(self, action: Callable[[], None]) -> bool:
         """Register a failsafe action to execute on trigger.
 
-        This is a stub implementation. Future versions will:
-        - Validate action safety
-        - Order actions by priority
-        - Support action dependencies
-        - Test actions periodically
-
         Args:
             action: Callable to execute on failsafe trigger
 
         Returns:
-            True if registered successfully, False otherwise
+            True if registered successfully
         """
-        self.failsafe_actions.append(action)
-        logger.info("Registered failsafe action (total: %s)", len(self.failsafe_actions))
+        if not callable(action):
+            logger.error("Attempted to register non-callable failsafe action")
+            return False
 
+        self.failsafe_actions.append(action)
+        logger.info(
+            "Registered failsafe action (total: %s)", len(self.failsafe_actions)
+        )
         return True
 
     def _monitor_loop(self):
-        """Internal monitoring loop (stub).
+        """Internal monitoring loop.
 
-        This method would run in a background thread to continuously
-        monitor heartbeats and trigger failsafe if needed.
+        Runs in a background daemon thread. Checks heartbeat timeout
+        every second and triggers failsafe if a timeout is detected.
         """
-        while self.enabled:
+        while not self._stop_event.is_set():
             if self.check_timeout():
                 logger.warning("Heartbeat timeout detected")
                 self.trigger_failsafe("heartbeat_timeout")
                 break
 
-            time.sleep(1)
+            self._stop_event.wait(timeout=1.0)
 
     def get_status(self) -> dict[str, Any]:
         """Get deadman switch status.
@@ -216,13 +221,19 @@ class DeadmanSwitch:
         Returns:
             Status dictionary
         """
-        return {
-            "enabled": self.enabled,
-            "triggered": self.triggered,
-            "timeout_seconds": self.timeout_seconds,
-            "last_heartbeat": (self.last_heartbeat.isoformat() if self.last_heartbeat else None),
-            "failsafe_actions_registered": len(self.failsafe_actions),
-        }
+        with self._lock:
+            return {
+                "enabled": self.enabled,
+                "triggered": self.triggered,
+                "timeout_seconds": self.timeout_seconds,
+                "last_heartbeat": (
+                    self.last_heartbeat.isoformat()
+                    if self.last_heartbeat
+                    else None
+                ),
+                "failsafe_actions_registered": len(self.failsafe_actions),
+                "trigger_count": len(self.trigger_history),
+            }
 
 
 __all__ = ["DeadmanSwitch"]

@@ -6,12 +6,21 @@ Deployment topology management, resource validation, and failure recovery.
 """
 
 import logging
+import os
+import shutil
 import time
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
 logger = logging.getLogger("SASE.L0.Substrate")
+
+try:
+    import psutil  # type: ignore[import-untyped]
+
+    _HAS_PSUTIL = True
+except ImportError:
+    _HAS_PSUTIL = False
 
 
 class DeploymentTopology(Enum):
@@ -234,10 +243,34 @@ class SubstrateManager:
         return self.recovery.handle_failure(mode, context or {})
 
     def get_health_status(self) -> dict[str, Any]:
-        """Get current substrate health status"""
+        """Get current substrate health status with real metrics."""
+        metrics: dict[str, Any] = {}
+        healthy = True
+
+        if _HAS_PSUTIL:
+            cpu = psutil.cpu_percent(interval=0.1)
+            mem = psutil.virtual_memory()
+            disk = psutil.disk_usage("/")
+            metrics["cpu_percent"] = cpu
+            metrics["memory_percent"] = mem.percent
+            metrics["disk_percent"] = disk.percent
+
+            if cpu > 90 or mem.percent > 90 or disk.percent > 90:
+                healthy = False
+        else:
+            try:
+                usage = shutil.disk_usage("/")
+                disk_pct = round(usage.used / usage.total * 100, 1)
+                metrics["disk_percent"] = disk_pct
+                if disk_pct > 90:
+                    healthy = False
+            except Exception:
+                pass
+
         return {
             "topology": self.topology.value,
-            "healthy": True,  # TODO: Implement actual health checks
+            "healthy": healthy,
+            "metrics": metrics,
             "recent_failures": len(self.recovery.recovery_log),
             "monotonic_time": self.recovery.monotonic_clock,
         }

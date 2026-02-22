@@ -112,12 +112,86 @@ class ImmutableAuditLog:
         logger.info(f"Audit Logged: {event_type} - {entry_hash}")
         return entry_hash
 
-    def verify_integrity(self) -> bool:
+    def verify_integrity(self) -> tuple[bool, str]:
         """
         Verify the entire chain of hashes.
+
+        Walks every entry in the log, recomputes the SHA-256 from the
+        stored content (excluding the ``hash`` field), and confirms:
+          1. The recomputed hash matches the stored ``hash``.
+          2. Each entry's ``previous_hash`` matches the ``hash`` of the
+             prior entry.
+
+        Returns:
+            Tuple of (is_valid, diagnostic_message).
         """
-        # TODO: Implement verification loop
-        return True
+        try:
+            with open(self.log_path, encoding="utf-8") as f:
+                lines = f.readlines()
+
+            if not lines:
+                return False, "Empty audit log"
+
+            entries: list[dict] = []
+            for i, line in enumerate(lines):
+                stripped = line.strip()
+                if not stripped:
+                    continue
+                try:
+                    entries.append(json.loads(stripped))
+                except json.JSONDecodeError:
+                    return False, f"Invalid JSON at line {i + 1}"
+
+            if not entries:
+                return False, "No valid entries in audit log"
+
+            # First entry must be the genesis block
+            if entries[0].get("type") != "GENESIS":
+                return False, "Missing genesis block (first entry type != GENESIS)"
+
+            # Verify each non-genesis entry
+            for idx in range(1, len(entries)):
+                entry = entries[idx]
+
+                # ── 1. Hash integrity ──────────────────────────────────
+                stored_hash = entry.get("hash")
+                if not stored_hash:
+                    return False, f"Entry {idx}: missing 'hash' field"
+
+                # Recompute hash from content, excluding the 'hash' key
+                content = {k: v for k, v in entry.items() if k != "hash"}
+                computed_hash = hashlib.sha256(
+                    json.dumps(content, sort_keys=True).encode()
+                ).hexdigest()
+
+                if computed_hash != stored_hash:
+                    return (
+                        False,
+                        f"Entry {idx}: hash mismatch — "
+                        f"expected {computed_hash[:16]}…, "
+                        f"stored {stored_hash[:16]}…",
+                    )
+
+                # ── 2. Chain linkage ───────────────────────────────────
+                prev_entry = entries[idx - 1]
+                expected_prev = prev_entry.get("hash", "0" * 64)
+                actual_prev = entry.get("previous_hash")
+
+                if actual_prev != expected_prev:
+                    return (
+                        False,
+                        f"Entry {idx}: chain break — "
+                        f"previous_hash={str(actual_prev)[:16]}… "
+                        f"does not match prior entry hash={expected_prev[:16]}…",
+                    )
+
+            return True, f"Chain verified: {len(entries)} entries, integrity OK"
+
+        except FileNotFoundError:
+            return False, f"Audit log not found at {self.log_path}"
+        except Exception as e:
+            logger.error("Verification error: %s", e)
+            return False, f"Verification error: {e}"
 
 
 # Singleton

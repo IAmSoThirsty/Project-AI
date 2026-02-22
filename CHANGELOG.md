@@ -4,6 +4,47 @@ All notable changes to Project-AI will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-02-21
+
+### Added
+
+- **CLI Command Implementation** — replaced all 5 stub command groups with real implementations
+  - `user` group: `list`, `info`, `create`, `delete` → wired to `UserManager`
+  - `memory` group: `store`, `recall`, `list`, `stats` → wired to `MemoryExpansionSystem`
+  - `learning` group: `request`, `list`, `approve`, `deny` → wired to `LearningRequestManager`
+  - `plugin` group: `list`, `enable`, `disable`, `info` → wired to `PluginManager`
+  - `system` group: `status`, `governance`, `audit` → governance/security subsystems
+  - `ai` group: `persona`, `adjust`, `validate`, `chat` → wired to `AIPersona`/`FourLaws`
+- **Audit Log Verification** — implemented `ImmutableAuditLog.verify_integrity()` hash-chain verification
+  - Walks all entries, recomputes SHA-256, verifies chain linkage
+  - Returns `tuple[bool, str]` with diagnostic messages
+- **Self-Repair Agent** — psutil-based health monitoring, z-score anomaly detection, root-cause diagnosis, automated repair actions (clear_cache, reduce_load), post-repair recovery validation
+- **Deadman Switch** — live daemon monitoring thread, real failsafe execution with exception isolation, thread-safe heartbeat management
+- **Governance Manager** — stakeholder permission validation, duplicate vote prevention, weighted voting, quorum calculation, automatic policy rule application on proposal execution
+- **Attack-Train Loop** — randomised adversarial attack generation (8 types × 6 vectors), probabilistic defence evaluation, ELO-style rating co-evolution, JSON checkpoint save/load
+- **Substrate Health Checks** — real CPU/memory/disk metrics via psutil with graceful fallback, unhealthy flag above 90% utilisation
+- **Test Suites** — 87 new tests across 5 suites + 58 from earlier phases
+  - `tests/test_cli_commands.py` (45 tests): all command groups, help output, key commands
+  - `tests/test_immutable_audit_log.py` (13 tests): valid chain, tamper detection, edge cases
+  - `tests/test_self_repair_agent.py` (21 tests): health monitoring, anomaly detection, repair
+  - `tests/test_deadman_switch.py` (16 tests): start/stop, heartbeat, failsafe, auto-trigger
+  - `tests/test_governance_manager.py` (21 tests): stakeholders, voting, quorum, execution
+  - `tests/test_attack_train_loop.py` (18 tests): epochs, cycles, ELO, checkpoints
+  - `tests/test_substrate.py` (11 tests): health status, metrics, failure handling
+
+---
+
+### Added
+
+- **Developer Toolchain — PHP & JDK**
+  - Installed **PHP 8.4.18** via `winget install PHP.PHP.8.4`
+  - Installed **Eclipse Temurin JDK 17.0.18** via `winget install EclipseAdoptium.Temurin.17.JDK`
+  - Created `.vscode/settings.json` with `php.validate.executablePath`, `java.configuration.runtimes` (JavaSE-17), and `java.jdt.ls.java.home`
+  - Updated `Project-AI.code-workspace` with matching PHP and JDK settings
+  - Resolves VS Code warnings for missing PHP executable and JDK
+
+---
+
 ## [Unreleased] - 2026-02-20
 
 ### Added
