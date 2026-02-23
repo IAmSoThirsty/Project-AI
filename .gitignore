@@ -140,15 +140,18 @@ config/temporal/*.local
 data/temporal/
 actionlint*
 
-# Unity
-unity/Library/
-unity/Temp/
-unity/Obj/
-unity/Build/
-unity/Builds/
-unity/Logs/
-unity/MemoryCaptures/
-unity/UserSettings/
+# Unity — generated/cache directories (any depth under unity/)
+unity/**/Library/
+unity/**/Temp/
+unity/**/Obj/
+unity/**/Build/
+unity/**/Builds/
+unity/**/Logs/
+unity/**/MemoryCaptures/
+unity/**/UserSettings/
+unity/**/ProjectSettings/
+
+# Unity — IDE/build artifacts
 unity/**/*.csproj
 unity/**/*.unityproj
 unity/**/*.sln
@@ -164,23 +167,24 @@ unity/**/*.mdb
 unity/**/*.opendb
 unity/**/*.VC.db
 
-# Unity3D generated meta files
+# Unity3D generated meta files for binaries
 unity/**/*.pidb.meta
 unity/**/*.pdb.meta
 unity/**/*.mdb.meta
 
-# Unity3D generated file on crash reports
-unity/sysinfo.txt
+# Unity3D crash reports
+unity/**/sysinfo.txt
 
 # Keep StreamingAssets files
-!unity/StreamingAssets/
-!unity/StreamingAssets/**
+!unity/**/StreamingAssets/
+!unity/**/StreamingAssets/**
 
 # Antigravity IDE artifacts
 .antigravity/artifacts/
 .antigravity/.cache/
 .antigravity/logs/
 node_modules/
+
 
 # Inspection & Audit System outputs
 audit_reports/
