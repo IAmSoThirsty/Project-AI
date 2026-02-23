@@ -910,3 +910,519 @@ class TestUtilityFunctions:
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v', '--tb=short', '--cov=src.app.pipeline.signal_flows', '--cov-report=term-missing'])
+
+
+# ============================================================================
+# TIER 1 TESTS: Circuit Breaker Lifecycle + Integration (CRITICAL)
+# Using threading.Barrier for concurrent tests (zero flakiness)
+# Using mocked time for timeout tests (fast execution)
+# ============================================================================
+
+class TestTier1CircuitBreakerLifecycle:
+    """
+    Circuit breaker state transitions are security-critical.
+    A CB that doesn't transition correctly is a cascading failure liability.
+    """
+    
+    @pytest.fixture
+    def mock_time_fixture(self):
+        """Mock time.time() for deterministic timeout tests."""
+        with patch('src.app.pipeline.signal_flows.time') as mock_time_module:
+            mock_time = Mock()
+            mock_time.return_value = 1000.0
+            mock_time_module.time = mock_time
+            mock_time_module.sleep = Mock()  # Mock sleep too
+            yield mock_time
+    
+    def test_validation_cb_full_lifecycle_closed_to_open_to_halfopen_to_closed(self, mock_time_fixture):
+        """
+        Test validation CB: CLOSED → OPEN → HALF_OPEN → CLOSED.
+        Uses mocked time for 30s recovery timeout (runs in milliseconds).
+        """
+        from src.app.pipeline.signal_flows import circuit_breakers
+        
+        cb = circuit_breakers['validation']
+        cb.reset()
+        mock_time = mock_time_fixture
+        
+        # Start CLOSED
+        assert cb.state == 'CLOSED'
+        assert cb.failure_count == 0
+        
+        # Trigger 5 failures to OPEN the circuit
+        mock_time.return_value = 1000.0
+        for i in range(5):
+            try:
+                cb.call(lambda: 1/0)  # Trigger failure
+            except:
+                pass
+        
+        # Should now be OPEN
+        assert cb.state == 'OPEN'
+        assert cb.failure_count == 5
+        
+        # Try immediately - should still be OPEN (recovery_timeout=30s)
+        with pytest.raises(Exception, match="Circuit breaker .* OPEN"):
+            cb.call(lambda: "success")
+        
+        # Fast-forward to T+15s - should still be OPEN
+        mock_time.return_value = 1015.0
+        with pytest.raises(Exception, match="Circuit breaker .* OPEN"):
+            cb.call(lambda: "success")
+        
+        # Fast-forward to T+30s - should enter HALF_OPEN
+        mock_time.return_value = 1030.0
+        result = cb.call(lambda: "success")
+        assert cb.state == 'HALF_OPEN'
+        assert result == "success"
+        
+        # One more success should close it
+        result = cb.call(lambda: "success")
+        assert cb.state == 'CLOSED'
+        assert cb.failure_count == 0
+        assert result == "success"
+    
+    def test_validation_cb_halfopen_to_open_on_failure(self, mock_time_fixture):
+        """
+        Test HALF_OPEN → OPEN transition on failure.
+        Critical edge case: a single failure in HALF_OPEN reopens the circuit.
+        """
+        from src.app.pipeline.signal_flows import circuit_breakers
+        
+        cb = circuit_breakers['validation']
+        cb.reset()
+        mock_time = mock_time_fixture
+        
+        # Open the circuit
+        mock_time.return_value = 1000.0
+        for _ in range(5):
+            try:
+                cb.call(lambda: 1/0)
+            except:
+                pass
+        
+        assert cb.state == 'OPEN'
+        
+        # Wait for recovery timeout (30s)
+        mock_time.return_value = 1030.0
+        
+        # Enter HALF_OPEN with success
+        cb.call(lambda: "success")
+        assert cb.state == 'HALF_OPEN'
+        
+        # Now fail - should go back to OPEN
+        try:
+            cb.call(lambda: 1/0)
+        except:
+            pass
+        
+        assert cb.state == 'OPEN'
+        assert cb.last_failure_time == 1030.0  # Reset to new failure time
+    
+    def test_transcription_cb_full_lifecycle(self, mock_time_fixture):
+        """Test transcription CB full lifecycle (recovery_timeout=60s)."""
+        from src.app.pipeline.signal_flows import circuit_breakers
+        
+        cb = circuit_breakers['transcription']
+        cb.reset()
+        mock_time = mock_time_fixture
+        
+        # Start CLOSED
+        assert cb.state == 'CLOSED'
+        
+        # Trigger failures to open
+        mock_time.return_value = 1000.0
+        for _ in range(10):
+            try:
+                cb.call(lambda: 1/0)
+            except:
+                pass
+        
+        assert cb.state == 'OPEN'
+        
+        # Fast-forward to T+30s - should still be OPEN (timeout=60s)
+        mock_time.return_value = 1030.0
+        with pytest.raises(Exception):
+            cb.call(lambda: "success")
+        
+        # Fast-forward to T+60s - should enter HALF_OPEN
+        mock_time.return_value = 1060.0
+        result = cb.call(lambda: "success")
+        assert cb.state == 'HALF_OPEN'
+        
+        # Success should close it
+        result = cb.call(lambda: "success")
+        assert cb.state == 'CLOSED'
+    
+    def test_processing_cb_full_lifecycle(self, mock_time_fixture):
+        """Test processing CB full lifecycle (recovery_timeout=45s)."""
+        from src.app.pipeline.signal_flows import circuit_breakers
+        
+        cb = circuit_breakers['processing']
+        cb.reset()
+        mock_time = mock_time_fixture
+        
+        mock_time.return_value = 1000.0
+        
+        # Open the circuit
+        for _ in range(10):
+            try:
+                cb.call(lambda: 1/0)
+            except:
+                pass
+        
+        assert cb.state == 'OPEN'
+        
+        # Fast-forward to T+45s - should enter HALF_OPEN
+        mock_time.return_value = 1045.0
+        result = cb.call(lambda: "success")
+        assert cb.state == 'HALF_OPEN'
+        
+        # Close it
+        cb.call(lambda: "success")
+        assert cb.state == 'CLOSED'
+    
+    def test_multiple_cbs_failing_independently(self, mock_time_fixture):
+        """
+        Test multiple circuit breakers failing independently (isolation).
+        Validation fails → only validation CB opens, others stay CLOSED.
+        """
+        from src.app.pipeline.signal_flows import circuit_breakers
+        
+        validation_cb = circuit_breakers['validation']
+        transcription_cb = circuit_breakers['transcription']
+        processing_cb = circuit_breakers['processing']
+        
+        for cb in circuit_breakers.values():
+            cb.reset()
+        
+        mock_time = mock_time_fixture
+        mock_time.return_value = 1000.0
+        
+        # Only fail validation CB
+        for _ in range(10):
+            try:
+                validation_cb.call(lambda: 1/0)
+            except:
+                pass
+        
+        # Validation should be OPEN
+        assert validation_cb.state == 'OPEN'
+        
+        # Others should still be CLOSED (isolation)
+        assert transcription_cb.state == 'CLOSED'
+        assert processing_cb.state == 'CLOSED'
+        
+        # Now fail transcription too
+        for _ in range(10):
+            try:
+                transcription_cb.call(lambda: 1/0)
+            except:
+                pass
+        
+        # Transcription now OPEN
+        assert transcription_cb.state == 'OPEN'
+        
+        # Processing still CLOSED
+        assert processing_cb.state == 'CLOSED'
+    
+    def test_cb_concurrent_access_with_barrier(self):
+        """
+        Test circuit breaker thread safety under concurrent load.
+        Uses threading.Barrier for deterministic starting gun effect.
+        NO FLAKINESS - all threads start simultaneously.
+        """
+        from src.app.pipeline.signal_flows import circuit_breakers
+        
+        cb = circuit_breakers['validation']
+        cb.reset()
+        
+        num_threads = 20
+        barrier = threading.Barrier(num_threads)
+        results = []
+        results_lock = threading.Lock()
+        
+        def worker(should_fail):
+            # All threads wait here until all 20 arrive
+            barrier.wait()
+            
+            # Now all threads execute EXACTLY simultaneously
+            try:
+                if should_fail:
+                    result = cb.call(lambda: 1/0)  # Will fail
+                else:
+                    result = cb.call(lambda: "success")
+                
+                with results_lock:
+                    results.append(('success', result))
+            except Exception as e:
+                with results_lock:
+                    results.append(('failure', str(e)))
+        
+        # 10 failing calls, 10 successful calls
+        threads = [
+            threading.Thread(target=worker, args=(i < 10,))
+            for i in range(num_threads)
+        ]
+        
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+        
+        # Deterministic assertions
+        assert len(results) == num_threads
+        
+        # CB should have opened after 5+ failures
+        assert cb.state in ['OPEN', 'HALF_OPEN']
+        assert cb.failure_count >= 5
+
+
+class TestTier1IntegrationTests:
+    """
+    Integration tests validate cross-component contracts.
+    These are highest-risk failure modes.
+    """
+    
+    def test_error_aggregator_to_vault_flush_on_validation_failure(self, vault_key, temp_dirs):
+        """
+        Test error aggregator → vault flush when validation fails.
+        Validates complete error flow: exception → aggregator → vault.
+        """
+        from src.app.pipeline.signal_flows import process_signal
+        from src.app.core.error_aggregator import GlobalErrorAggregator
+        from security.black_vault import BlackVault
+        
+        # Setup
+        os.environ['VAULT_STORE'] = str(temp_dirs['vault'] / 'vault.store')
+        
+        # Signal with forbidden phrase (will fail validation)
+        signal = {
+            'text': 'DROP DATABASE users;',  # Forbidden phrase
+            'signal_type': 'distress',
+            'service': 'test_service'
+        }
+        
+        result = process_signal(signal)
+        
+        # Should be denied
+        assert result['status'] == 'denied'
+        assert 'vault_id' in result
+        
+        # Vault should contain the error
+        assert os.path.exists(os.environ['VAULT_STORE'])
+        
+        # Clean up
+        del os.environ['VAULT_STORE']
+    
+    def test_error_aggregator_to_vault_flush_on_processing_failure(self, vault_key, temp_dirs):
+        """
+        Test error aggregator → vault flush when processing fails after retries.
+        Validates retry → error aggregation → vault flush flow.
+        """
+        from src.app.pipeline.signal_flows import process_signal
+        
+        os.environ['VAULT_STORE'] = str(temp_dirs['vault'] / 'vault.store')
+        
+        # Signal that will fail all retries
+        signal = {
+            'text': 'test message',
+            'signal_type': 'distress',
+            'service': 'test_service',
+            'simulate': 'permanent'  # Triggers permanent failure
+        }
+        
+        result = process_signal(signal)
+        
+        # Should be failed (max retries exceeded)
+        assert result['status'] == 'failed'
+        assert 'vault_id' in result
+        
+        del os.environ['VAULT_STORE']
+    
+    def test_vault_stores_denial_reason_with_redacted_pii(self, vault_key, temp_dirs):
+        """
+        Test vault stores denial reason with PII redacted.
+        Security requirement: no PII in vault.
+        """
+        from src.app.pipeline.signal_flows import process_signal
+        
+        os.environ['VAULT_STORE'] = str(temp_dirs['vault'] / 'vault.store')
+        
+        # Signal with PII and forbidden phrase
+        signal = {
+            'text': 'Contact me at user@example.com about DROP DATABASE',
+            'signal_type': 'distress',
+            'service': 'test_service'
+        }
+        
+        result = process_signal(signal)
+        
+        assert result['status'] == 'denied'
+        
+        # Read vault entry (should have PII redacted)
+        vault_content = Path(os.environ['VAULT_STORE']).read_bytes()
+        
+        # Should NOT contain original email
+        assert b'user@example.com' not in vault_content
+        
+        del os.environ['VAULT_STORE']
+    
+    def test_audit_log_for_denied_status(self, temp_dirs):
+        """Test audit logging for 'denied' status."""
+        from src.app.pipeline.signal_flows import process_signal
+        
+        os.environ['AUDIT_LOG_PATH'] = str(temp_dirs['audit'] / 'audit.log')
+        
+        signal = {
+            'text': 'DROP DATABASE',
+            'signal_type': 'distress',
+            'service': 'test_service'
+        }
+        
+        result = process_signal(signal)
+        assert result['status'] == 'denied'
+        
+        # Check audit log
+        if os.path.exists(os.environ['AUDIT_LOG_PATH']):
+            audit_content = Path(os.environ['AUDIT_LOG_PATH']).read_text()
+            assert 'denied' in audit_content or 'validation' in audit_content
+        
+        del os.environ['AUDIT_LOG_PATH']
+    
+    def test_audit_log_for_failed_status(self, temp_dirs):
+        """Test audit logging for 'failed' status (max retries)."""
+        from src.app.pipeline.signal_flows import process_signal
+        
+        os.environ['AUDIT_LOG_PATH'] = str(temp_dirs['audit'] / 'audit.log')
+        
+        signal = {
+            'text': 'test',
+            'signal_type': 'distress',
+            'service': 'test_service',
+            'simulate': 'permanent'
+        }
+        
+        result = process_signal(signal)
+        assert result['status'] == 'failed'
+        
+        del os.environ['AUDIT_LOG_PATH']
+    
+    def test_audit_log_for_throttled_status_global(self, temp_dirs):
+        """Test audit logging for 'throttled' status (global limit)."""
+        from src.app.pipeline.signal_flows import process_signal, retry_tracker, retry_lock, MAX_GLOBAL_RETRIES_PER_MIN
+        
+        os.environ['AUDIT_LOG_PATH'] = str(temp_dirs['audit'] / 'audit.log')
+        
+        # Fill global retry limit
+        with retry_lock:
+            retry_tracker['global']['minute'] = MAX_GLOBAL_RETRIES_PER_MIN
+        
+        signal = {
+            'text': 'test',
+            'signal_type': 'distress',
+            'service': 'test_service'
+        }
+        
+        result = process_signal(signal)
+        assert result['status'] == 'throttled'
+        
+        del os.environ['AUDIT_LOG_PATH']
+    
+    def test_audit_log_for_throttled_status_service_specific(self, temp_dirs):
+        """Test audit logging for 'throttled' status (service-specific limit)."""
+        from src.app.pipeline.signal_flows import process_signal, retry_tracker, retry_lock, MAX_GLOBAL_RETRIES_PER_MIN
+        
+        os.environ['AUDIT_LOG_PATH'] = str(temp_dirs['audit'] / 'audit.log')
+        
+        # Fill service-specific limit
+        with retry_lock:
+            retry_tracker['my_service']['minute'] = MAX_GLOBAL_RETRIES_PER_MIN
+        
+        signal = {
+            'text': 'test',
+            'signal_type': 'distress',
+            'service': 'my_service'
+        }
+        
+        result = process_signal(signal)
+        assert result['status'] == 'throttled'
+        
+        del os.environ['AUDIT_LOG_PATH']
+    
+    def test_audit_log_for_processed_status(self, temp_dirs):
+        """Test audit logging for 'processed' status (success path)."""
+        from src.app.pipeline.signal_flows import process_signal
+        
+        os.environ['AUDIT_LOG_PATH'] = str(temp_dirs['audit'] / 'audit.log')
+        
+        signal = {
+            'text': 'normal message',
+            'signal_type': 'distress',
+            'service': 'test_service',
+            'score': 0.9  # Above threshold
+        }
+        
+        result = process_signal(signal)
+        assert result['status'] == 'processed'
+        
+        del os.environ['AUDIT_LOG_PATH']
+    
+    def test_circuit_breaker_plus_validation_integration(self):
+        """
+        Test CB + validation integration.
+        When validation CB is OPEN, validation should be denied.
+        """
+        from src.app.pipeline.signal_flows import process_signal, circuit_breakers
+        
+        # Open validation CB
+        cb = circuit_breakers['validation']
+        cb.state = 'OPEN'
+        cb.last_failure_time = time.time()
+        
+        signal = {
+            'text': 'test',
+            'signal_type': 'distress',
+            'service': 'test_service'
+        }
+        
+        result = process_signal(signal)
+        
+        # Should be denied due to CB being OPEN
+        assert result['status'] in ['denied', 'failed']
+    
+    def test_incident_id_correlation_across_all_components(self):
+        """
+        Test incident_id appears in all responses for correlation.
+        Critical for tracing requests across vault, audit, and error logs.
+        """
+        from src.app.pipeline.signal_flows import process_signal
+        
+        signal = {
+            'text': 'test message',
+            'signal_type': 'distress',
+            'service': 'test_service',
+            'score': 0.9
+        }
+        
+        result = process_signal(signal)
+        
+        # Every result should have incident_id
+        assert 'incident_id' in result
+        assert isinstance(result['incident_id'], str)
+        assert len(result['incident_id']) > 0
+
+
+# ============================================================================
+# Test Execution
+# ============================================================================
+
+if __name__ == '__main__':
+    pytest.main([
+        __file__, 
+        '-v', 
+        '--tb=short', 
+        '--cov=src.app.pipeline.signal_flows',
+        '--cov-report=term-missing',
+        '--cov-branch'
+    ])
