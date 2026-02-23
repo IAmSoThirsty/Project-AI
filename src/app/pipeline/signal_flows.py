@@ -176,6 +176,14 @@ class CircuitBreaker:
                     self.success_count = 0
             
             raise
+    
+    def reset(self):
+        """Reset circuit breaker to initial CLOSED state."""
+        with self.lock:
+            self.failure_count = 0
+            self.success_count = 0
+            self.last_failure_time = None
+            self.state = 'CLOSED'
 
 
 # Global circuit breakers for different services

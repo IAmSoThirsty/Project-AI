@@ -54,6 +54,7 @@
 - [OctoReflex — Kernel-Level Containment](#-octoreflex--kernel-level-containment)
 - [Simulation Engines](#-simulation-engines)
 - [Security Architecture](#-security-architecture)
+- [Enterprise Monolithic Architecture](#-enterprise-monolithic-architecture)
 - [Configuration](#-configuration)
 - [CI/CD Pipeline](#-cicd-pipeline)
 - [Quick Start](#-quick-start)
@@ -996,6 +997,117 @@ atlas status
 
 ---
 
+## 🏭 Enterprise Monolithic Architecture
+
+The **Enterprise Monolithic Core** implements the runtime signal processing substrate — the governed pipeline through which all signals flow before reaching any AI subsystem. This layer enforces fault tolerance, PII protection, and cryptographic audit at every stage.
+
+### Signal Processing Pipeline
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     SIGNAL PROCESSING PIPELINE                      │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Signal In ──► ┌──────────────┐    ┌──────────────┐                │
+│                │  Validation  │───►│ PII Redaction│                │
+│                │  + Forbidden │    │  (6 Types)   │                │
+│                │  Phrase Gate │    └──────┬───────┘                │
+│                └──────────────┘           │                         │
+│                       │                   ▼                         │
+│                ┌──────────────┐    ┌──────────────┐                │
+│                │   Threshold  │◄───│ Transcription│                │
+│                │    Check     │    │   (Plugin)   │                │
+│                └──────┬───────┘    └──────────────┘                │
+│                       │                                             │
+│                       ▼                                             │
+│                ┌──────────────┐    ┌──────────────┐                │
+│                │   Retry +    │───►│ Audit Log +  │──► Signal Out  │
+│                │  Processing  │    │ Vault Store  │                │
+│                └──────────────┘    └──────────────┘                │
+│                                                                     │
+│  Circuit Breakers: [validation] [transcription] [processing]        │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Circuit Breaker Pattern
+
+Three independent circuit breakers protect against cascading failures:
+
+| Circuit Breaker | Failure Threshold | Recovery Timeout | Success Threshold |
+|----------------|:-----------------:|:----------------:|:-----------------:|
+| **validation** | 5 | 30s | 2 |
+| **transcription** | 10 | 60s | 3 |
+| **processing** | 10 | 45s | 3 |
+
+```mermaid
+stateDiagram-v2
+    [*] --> CLOSED
+    CLOSED --> OPEN : failure_count >= threshold
+    OPEN --> HALF_OPEN : recovery_timeout elapsed
+    HALF_OPEN --> CLOSED : success_count >= success_threshold
+    HALF_OPEN --> OPEN : any failure
+    CLOSED --> CLOSED : success (resets failure_count)
+```
+
+> **Thread Safety:** All circuit breakers use `threading.Lock` for concurrent access. Validated with `threading.Barrier`-based concurrent test suites.
+
+### PII Redaction Pipeline
+
+A composable pipeline of 6 redaction functions, configurable via `PII_REDACTORS` environment variable:
+
+| Redactor | Pattern | Replacement |
+|----------|---------|-------------|
+| **email** | RFC 5322 addresses | `[REDACTED-EMAIL]` |
+| **phone** | US phone formats | `[REDACTED-PHONE]` |
+| **ssn** | `XXX-XX-XXXX` | `[REDACTED-SSN]` |
+| **credit_card** | 16-digit card numbers | `[REDACTED-CARD]` |
+| **ip** | IPv4 addresses | `[REDACTED-IP]` |
+| **address** | Street address patterns | `[REDACTED-ADDRESS]` |
+
+### Retry Tracking & Throttling
+
+| Feature | Implementation |
+|---------|---------------|
+| **Global throttle** | `MAX_GLOBAL_RETRIES_PER_MIN` (default: 50) |
+| **Per-service isolation** | Independent counters per service name |
+| **Primary store** | Redis `INCR` + `EXPIRE` (60s TTL) |
+| **Fallback store** | In-memory `defaultdict` with `threading.Lock` |
+| **Backoff** | Exponential: `min(RETRY_BACKOFF_BASE^attempt, RETRY_MAX_DELAY)` |
+
+### Distress Kernel (`distress_kernel.py`)
+
+The kernel entry point for all signal processing, providing:
+
+- **`SignalContext`** — Immutable context object carrying `incident_id`, `signal_type`, and metadata through the pipeline
+- **`forbidden_validator`** — Null-safe forbidden phrase detection with fuzzy matching and audit logging
+- **`redact_pii_comprehensive`** — Full PII pipeline with per-redaction audit events
+- **`process_signal`** — Governed substrate entry point: validation → PII → transcription → threshold → retry → audit
+
+### Error Aggregator (Singleton)
+
+| Property | Value |
+|----------|-------|
+| **Pattern** | Thread-safe Singleton (`__new__` + `threading.Lock`) |
+| **Capacity** | `MAX_ENTRIES = 100` (bounded, prevents memory leaks) |
+| **Flush target** | Any `IVault` implementation (typically `BlackVault`) |
+| **Serialization** | JSON with exception type, message, traceback, and context |
+
+### Environment Variables
+
+| Variable | Default | Purpose |
+|----------|---------|--------|
+| `MAX_GLOBAL_RETRIES_PER_MIN` | `50` | Global retry throttle |
+| `MAX_RETRIES_PER_SIGNAL` | `3` | Per-signal retry limit |
+| `RETRY_BACKOFF_BASE` | `2` | Exponential backoff base |
+| `RETRY_MAX_DELAY` | `30` | Maximum backoff delay (seconds) |
+| `REDIS_HOST` | `localhost` | Redis host for distributed throttling |
+| `REDIS_PORT` | `6379` | Redis port |
+| `REDIS_DB` | `0` | Redis database number |
+| `VAULT_KEY` | — | Fernet encryption key for Black Vault |
+| `PII_REDACTORS` | all | Comma-separated list of active redactors |
+
+---
+
 ## ⚙️ Configuration
 
 ### Key Configuration Files
@@ -1187,6 +1299,13 @@ pytest tests/test_sovereign_runtime.py -v
 pytest tests/test_iron_path.py -v
 pytest tests/test_existential_proof.py -v
 
+# Enterprise Monolithic tests (signal flows, circuit breakers, PII, integration)
+pytest tests/test_enterprise_monolithic.py -v
+pytest tests/test_signal_flows_comprehensive.py -v
+
+# Tier 1 Critical tests only (circuit breaker lifecycle + integration)
+pytest tests/test_signal_flows_comprehensive.py -v -k "Tier1"
+
 # Engine tests
 pytest engines/ai_takeover/tests/ -v
 pytest engines/sovereign_war_room/tests/ -v
@@ -1242,6 +1361,20 @@ Project-AI/
 │   └── ...
 │
 ├── src/
+│   ├── app/                    # Enterprise Monolithic Core
+│   │   ├── core/               # Kernel components
+│   │   │   ├── distress_kernel.py  # Signal processing kernel (772 LOC)
+│   │   │   ├── config_loader.py    # Hot-reloading configuration
+│   │   │   └── error_aggregator.py # Singleton error aggregation
+│   │   ├── pipeline/           # Signal processing pipeline
+│   │   │   └── signal_flows.py # Circuit breakers, PII, retry tracking (764 LOC)
+│   │   ├── security/           # Security subsystems
+│   │   │   ├── pii_redaction_enhanced.py  # Enhanced PII pipeline
+│   │   │   ├── immutable_audit_log.py     # Cryptographic audit trail
+│   │   │   └── ...             # 10+ security modules
+│   │   └── governance/         # Runtime governance
+│   │       ├── audit_log.py    # Immutable audit logging
+│   │       └── ...             # Jurisdiction, pricing, TSA anchoring
 │   ├── thirsty_lang/           # Thirsty-Lang (4 editions, defensive programming)
 │   ├── shadow_thirst/          # Dual-plane compiler (4,800+ LOC)
 │   │   ├── compiler.py         # CompilerFrontend
@@ -1289,6 +1422,9 @@ Project-AI/
 ├── scripts/                    # Utility and deployment scripts
 ├── demos/                      # Demonstration scripts
 ├── tests/                      # Test suites
+│   ├── test_signal_flows_comprehensive.py  # 83+ tests, Tier 1 lifecycle
+│   ├── test_enterprise_monolithic.py       # Integration + CB lifecycle
+│   └── ...                     # 20+ test files
 │
 ├── demo_shadow_analyzers.py    # Shadow Thirst analyzer demo
 ├── requirements.txt            # Python dependencies
