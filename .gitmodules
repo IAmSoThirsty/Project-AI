@@ -17,3 +17,6 @@
 [submodule "external/The_Triumvirate"]
 	path = external/The_Triumvirate
 	url = https://github.com/IAmSoThirsty/The_Triumvirate.git
+[submodule "security/penetration-testing-tools"]
+	path = security/penetration-testing-tools
+	url = https://github.com/mgeeky/Penetration-Testing-Tools.git
