@@ -81,6 +81,11 @@ def check_and_rotate_vault_key(force: bool = False) -> bool:
     """
     Check if vault key rotation is needed and perform rotation if required.
     
+    IMPORTANT: Key rotation is DESTRUCTIVE by design (cryptographic shred).
+    Old vault entries become intentionally unrecoverable after rotation.
+    This implements forward secrecy - even if old keys are compromised,
+    previously vaulted content cannot be decrypted.
+    
     Args:
         force: Force rotation regardless of schedule
         
@@ -106,6 +111,11 @@ def check_and_rotate_vault_key(force: bool = False) -> bool:
                         return False
             except Exception as e:
                 logger.warning(f"Could not read rotation schedule: {e}")
+    
+    # Clear ROTATE_KEY environment variable to prevent repeated rotation
+    if 'ROTATE_KEY' in os.environ:
+        del os.environ['ROTATE_KEY']
+        logger.info("Cleared ROTATE_KEY environment variable")
     
     try:
         # Generate new key
@@ -260,7 +270,12 @@ class BlackVault:
             )
     
     def _compute_content_hash(self, content: str) -> str:
-        """Compute SHA-256 hash of content."""
+        """
+        Compute stable SHA-256 hash of content.
+        
+        Uses SHA-256 instead of Python's built-in hash() for stability
+        across process restarts and cross-process correlation.
+        """
         return hashlib.sha256(content.encode('utf-8')).hexdigest()
     
     def deny(self, doc: str, reason: str, metadata: Optional[Dict[str, Any]] = None) -> str:
