@@ -583,8 +583,16 @@ class SovereignAuditLog:
                 anchor_path=tsa_anchor_file,
             )
             logger.info("TSA anchor manager initialized (VECTOR 3, 4, 10 protection)")
+            # Initialize TSAProvider for RFC 3161 notarization
+            try:
+                self.tsa_provider = TSAProvider()
+                logger.info("TSAProvider initialized for RFC 3161 notarization")
+            except Exception as e:
+                logger.warning("Failed to initialize TSAProvider: %s (notarization degraded)", e)
+                self.tsa_provider = None
         else:
             self.tsa_anchor_manager = None
+            self.tsa_provider = None
             logger.warning("TSA disabled - VECTOR 3, 4, 10 protection unavailable")
 
         # Configuration
@@ -802,20 +810,34 @@ class SovereignAuditLog:
         return json.dumps(data, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
     def _request_notarization(self, data: bytes) -> str | None:
-        """Request RFC 3161 timestamp notarization.
+        """Request RFC 3161 timestamp notarization via TSAProvider.
 
-        This is a stub for RFC 3161 Time Stamp Protocol support.
-        In production, this would connect to a trusted timestamp authority.
+        Sends the data to a trusted TSA endpoint and returns the
+        base64-encoded DER timestamp token.  Falls back to ``None``
+        on any TSA error so that the caller can continue without
+        blocking the audit log pipeline.
 
         Args:
-            data: Data to notarize
+            data: Data to notarize (typically canonical event bytes)
 
         Returns:
-            Notarization token or None if unavailable
+            Base64-encoded DER notarization token, or ``None`` on failure
         """
-        # TODO: Implement RFC 3161 TSA integration
-        logger.warning("RFC 3161 notarization requested but not implemented")
-        return None
+        if not self.notarization_enabled or self.tsa_provider is None:
+            return None
+
+        try:
+            token = self.tsa_provider.request_timestamp(data)
+            encoded = base64.b64encode(token.raw_der).decode("ascii")
+            logger.debug(
+                "RFC 3161 notarization succeeded (serial=%s, tsa_time=%s)",
+                token.serial_number,
+                token.tsa_time.isoformat() if token.tsa_time else "unknown",
+            )
+            return encoded
+        except Exception as e:
+            logger.warning("RFC 3161 notarization failed (non-fatal): %s", e)
+            return None
 
     def verify_event_signature(self, event_id: str) -> tuple[bool, str]:
         """Verify Ed25519 signature for a specific event.

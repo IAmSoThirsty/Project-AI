@@ -1,25 +1,24 @@
 """
 OSINT Loader Module
 
-This module loads OSINT tools from the OSINT-BIBLE JSON data and provides
-interfaces for registering them as Project-AI plugins or knowledge base entries.
+Loads OSINT tools from the OSINT-BIBLE JSON data and provides interfaces
+for registering them as Project-AI plugins or knowledge base entries.
 
-The loader supports:
-- Loading tools from JSON files
-- Registering tools as plugins
-- Querying tools by category
-- Tool metadata management
-- Integration with the plugin system
+Capabilities:
+- Load tools from JSON files
+- Register tools as live SampleOSINTPlugin instances
+- Query tools by category / free-text search
+- Plugin lifecycle management (unregister, batch register)
+- Export to knowledge-base format
 
-Future Enhancements:
-- Dynamic plugin generation from tool metadata
-- Tool execution wrappers
-- Integration with security validation
-- Batch tool registration
+STATUS: PRODUCTION
 """
+
+from __future__ import annotations
 
 import json
 import logging
+import time
 from pathlib import Path
 from typing import Any
 
@@ -44,6 +43,12 @@ class OSINTLoader:
         self.tools: dict[str, list[dict[str, Any]]] = {}
         self.metadata: dict[str, Any] = {}
 
+        # Plugin registry — maps plugin name → plugin instance
+        self._registered_plugins: dict[str, Any] = {}
+        self._registration_log: list[dict[str, Any]] = []
+
+    # ── Data loading ──────────────────────────────────────────
+
     def load_osint_data(self, filename: str = DEFAULT_OSINT_FILE) -> bool:
         """Load OSINT tools from JSON file.
 
@@ -51,7 +56,7 @@ class OSINTLoader:
             filename: Name of the JSON file to load
 
         Returns:
-            True if loaded successfully, False otherwise
+            True if loaded successfully
         """
         osint_file = self.data_dir / filename
 
@@ -78,33 +83,24 @@ class OSINTLoader:
             logger.error("Error loading OSINT data: %s", e)
             return False
 
-    def get_categories(self) -> list[str]:
-        """Get list of available tool categories.
+    # ── Category / search ────────────────────────────────────
 
-        Returns:
-            List of category names
-        """
+    def get_categories(self) -> list[str]:
+        """Get list of available tool categories."""
         return list(self.tools.keys())
 
     def get_tools_by_category(self, category: str) -> list[dict[str, Any]]:
-        """Get all tools in a specific category.
-
-        Args:
-            category: Category name
-
-        Returns:
-            List of tool dictionaries
-        """
+        """Get all tools in a specific category."""
         return self.tools.get(category, [])
 
     def search_tools(self, query: str) -> list[dict[str, Any]]:
-        """Search for tools by name or description.
+        """Search for tools by name or description (case-insensitive).
 
         Args:
             query: Search query string
 
         Returns:
-            List of matching tools
+            List of matching tool dicts with ``category`` added
         """
         query_lower = query.lower()
         results = []
@@ -119,32 +115,141 @@ class OSINTLoader:
 
         return results
 
-    def register_as_plugin(self, tool: dict[str, Any]) -> bool:
-        """Register an OSINT tool as a Project-AI plugin.
+    # ── Plugin registration ──────────────────────────────────
 
-        This is a stub implementation. Future versions will:
-        - Generate plugin wrappers dynamically
-        - Validate tool metadata
-        - Register with the plugin manager
-        - Create tool execution contexts
+    def register_as_plugin(self, tool: dict[str, Any]) -> bool:
+        """Register an OSINT tool as a live SampleOSINTPlugin instance.
+
+        Validation checks:
+        1. ``name`` must be present and non-empty
+        2. Must not already be registered (idempotent — returns True if already present)
+
+        On success the plugin is initialized and tracked in ``_registered_plugins``.
 
         Args:
-            tool: Tool metadata dictionary
+            tool: Tool metadata dictionary (must contain ``name``)
 
         Returns:
-            True if registered successfully, False otherwise
+            True if registered (or already registered) successfully
         """
-        tool_name = tool.get("name", "unknown")
-        logger.info("Plugin registration stub called for: %s", tool_name)
-        logger.debug("Future implementation will create plugin wrapper and register with system")
-        return False  # Not yet implemented
+        tool_name = tool.get("name", "").strip()
+
+        if not tool_name:
+            logger.warning("Cannot register tool without a name: %s", tool)
+            self._log_registration(tool_name or "UNKNOWN", False, "missing name")
+            return False
+
+        # Idempotent — already registered
+        plugin_key = f"osint_{tool_name}"
+        if plugin_key in self._registered_plugins:
+            logger.debug("Plugin already registered: %s", plugin_key)
+            return True
+
+        # Lazy import to avoid circular dependency at module level
+        try:
+            from plugins.osint.sample_osint_plugin import SampleOSINTPlugin
+        except ImportError:
+            # Fallback for different import root
+            try:
+                from src.plugins.osint.sample_osint_plugin import SampleOSINTPlugin
+            except ImportError:
+                logger.error("Cannot import SampleOSINTPlugin — plugin registration unavailable")
+                self._log_registration(tool_name, False, "import error")
+                return False
+
+        # Create and initialise plugin
+        plugin = SampleOSINTPlugin(
+            tool_name=tool_name,
+            tool_url=tool.get("url", tool.get("link", "")),
+            tool_description=tool.get("description", ""),
+            tool_type=tool.get("type", "default"),
+        )
+
+        # Default context (non-restricted init)
+        init_ok = plugin.initialize({"is_user_order": True})
+
+        if not init_ok:
+            logger.warning("Plugin initialization failed for %s", tool_name)
+            self._log_registration(tool_name, False, "init failed")
+            return False
+
+        self._registered_plugins[plugin_key] = plugin
+        self._log_registration(tool_name, True, "OK")
+        logger.info("Registered plugin: %s (total=%d)", plugin_key, len(self._registered_plugins))
+        return True
+
+    def unregister_plugin(self, tool_name: str) -> bool:
+        """Unregister a previously registered plugin.
+
+        Calls ``shutdown()`` on the plugin before removal.
+
+        Args:
+            tool_name: Tool name (without ``osint_`` prefix)
+
+        Returns:
+            True if plugin was found and removed
+        """
+        plugin_key = f"osint_{tool_name}"
+        plugin = self._registered_plugins.pop(plugin_key, None)
+        if plugin is None:
+            return False
+
+        if hasattr(plugin, "shutdown"):
+            plugin.shutdown()
+
+        self._log_registration(tool_name, True, "unregistered")
+        logger.info("Unregistered plugin: %s", plugin_key)
+        return True
+
+    def batch_register(self, category: str | None = None) -> dict[str, bool]:
+        """Register all tools — optionally filtered by category.
+
+        Args:
+            category: If provided, only register tools in this category
+
+        Returns:
+            Dict mapping tool name → registration success
+        """
+        results: dict[str, bool] = {}
+
+        if category:
+            tools = self.get_tools_by_category(category)
+        else:
+            tools = [t for cat_tools in self.tools.values() for t in cat_tools]
+
+        for tool in tools:
+            name = tool.get("name", "unknown")
+            results[name] = self.register_as_plugin(tool)
+
+        logger.info(
+            "Batch registration complete: %d/%d succeeded",
+            sum(results.values()),
+            len(results),
+        )
+        return results
+
+    def get_registered_plugins(self) -> dict[str, Any]:
+        """Return map of registered plugin name → plugin instance."""
+        return dict(self._registered_plugins)
+
+    def get_registration_log(self, limit: int = 100) -> list[dict[str, Any]]:
+        """Return the most recent registration log entries."""
+        return self._registration_log[-limit:]
+
+    def _log_registration(self, tool_name: str, success: bool, detail: str) -> None:
+        self._registration_log.append(
+            {
+                "tool_name": tool_name,
+                "success": success,
+                "detail": detail,
+                "timestamp": time.time(),
+            }
+        )
+
+    # ── Metadata / export ────────────────────────────────────
 
     def get_metadata(self) -> dict[str, Any]:
-        """Get OSINT data metadata.
-
-        Returns:
-            Metadata dictionary containing source, update time, etc.
-        """
+        """Get OSINT data metadata."""
         return self.metadata.copy()
 
     def export_knowledge_base(self, output_file: Path) -> bool:
@@ -154,10 +259,10 @@ class OSINTLoader:
             output_file: Path to write knowledge base JSON
 
         Returns:
-            True if exported successfully, False otherwise
+            True if exported successfully
         """
         try:
-            knowledge_data = {
+            knowledge_data: dict[str, Any] = {
                 "source": "osint-bible",
                 "metadata": self.metadata,
                 "tools": [],

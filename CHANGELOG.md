@@ -4,6 +4,56 @@ All notable changes to Project-AI will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-02-22
+
+### Added
+
+- **PSIA Desktop Deployment (Phase 9)** — Full desktop application bridge connecting PSIA, Triumvirate, and TARL to the Electron shell
+  - `src/psia/server/runtime.py`: PSIARuntime singleton — boots genesis ceremony, readiness gate, canonical plane (ledger, commit coordinator, capability authority), observability (failure detector, autoimmune dampener), waterfall engine, and Triumvirate governance council; provides `process_intent()`, `get_health()`, `get_audit_records()`, `get_tarl_rules()` methods
+  - `src/psia/server/governance_server.py`: FastAPI application on port 8001 with 4 REST endpoints (`GET /health`, `POST /intent`, `GET /audit`, `GET /tarl`) matching the desktop frontend API contract; Pydantic request/response models; CORS for Electron; lifespan-managed runtime boot
+  - `src/psia/server/__init__.py`: Package init exposing `create_app()`
+  - `start.ps1`: PowerShell launcher that starts the API server, waits for `/health` readiness, launches Electron desktop app, and cleanly shuts down both on exit
+  - `desktop/build/icon.png`: 256×256 app icon for electron-builder
+  - `tests/test_governance_server.py`: 22 tests covering all 4 endpoints — health status, TARL rules, Triumvirate 3-pillar voting, ledger integration, input validation
+
+- **PSIA Research Paper Integration** — Formal research paper (`docs/research/paper.tex`) integrated as a first-class repository artifact
+  - `docs/research/README.md`: Build instructions, cross-reference table mapping paper sections (§6–§8) to source modules and test files
+  - `Makefile` targets: `paper` (pdflatex build), `test-paper` (run fact-verification tests)
+- **Fact-Verification Test Suite** — 66 tests across 5 formal modules verifying paper claims
+  - `tests/test_psia_concurrency.py` (14 tests): Snapshot isolation, OCC commit, version vectors, retry/abort, linearizability (§6.3)
+  - `tests/test_psia_liveness.py` (14 tests): Head health monitoring, timeout enforcement, deadlock detection, pipeline progress bounds (§6.4)
+  - `tests/test_psia_threat_model.py` (17 tests): Threat taxonomy, resilience profiles, collusion detection, veto abuse scenarios (§6.5)
+  - `tests/test_shadow_operational_semantics.py` (12 tests): SealedContext determinism, ExecutionTrace replay hashes, DeterminismOracle classification (§7)
+  - `tests/test_shadow_thirst_type_system.py` (9 tests): Plane-safety subtyping lattice, canonical write rules, T-Promote protocol, INV-ROOT-2 corollary (§8.4)
+
+### Changed
+
+- `Makefile` — Added `paper` and `test-paper` targets for LaTeX compilation and fact-verification test execution
+
+## [Unreleased] - 2026-02-22
+
+### Added
+
+- **PSIA Foundation (Phase 1)** — Project-AI Sovereign Immune Architecture v1.0: 8 canonical Pydantic schemas (`IdentityDocument`, `CapabilityToken`, `RequestEnvelope`, `PolicyGraph`, `InvariantDefinition`, `ShadowReport`, `CerberusDecision`, `LedgerBlock`); 9 immutable root invariants (INV-ROOT-1 through INV-ROOT-9); 6 plane isolation contracts; 30+ structured event types with `EventBus` pub/sub
+- **PSIA Waterfall Engine (Phase 2)** — 7-stage sequential request pipeline: structural validation, threat fingerprinting, behavioral analysis, shadow simulation, Cerberus triple-head gate, canonical commit, append-only ledger with Merkle-root block sealing; 67 tests passing
+- **PSIA Gate Plane (Phase 3)** — production Cerberus heads replacing stubs: `IdentityHead` (7-check DID verification: format, resolution, revocation, key validity, device attestation, cross-identity, risk tier); `CapabilityHead` (8-check token enforcement: resolution, revocation, expiry with clock skew, scope matching, delegation depth, binding, constraint propagation); `InvariantHead` (heuristic INV-ROOT-* evaluation, shadow cross-check, severity aggregation); `ProductionQuorumEngine` (weighted BFT consensus: unanimous/2of3/simple/bft policies, monotonic severity escalation, constraint merging); 100 total PSIA tests passing
+- **PSIA Canonical Plane (Phase 4)** — `CommitCoordinator` (ACID-like transactional commits: versioned KV store with optimistic concurrency, WAL for crash recovery, CerberusDecision precondition validation, multi-key atomic commits, automatic rollback, diff hashing); `DurableLedger` (append-only with INV-ROOT-9 enforcement, auto block sealing, Merkle-root computation, genesis-chained blocks, external anchoring, chain verification); `CapabilityAuthority` (token issuance with INV-ROOT-5/6 enforcement, revocation with CRL, atomic rotation, expiry validation, full audit trail); 149 total PSIA tests passing
+- **PSIA Bootstrap + Lifecycle (Phase 5)** — `GenesisCoordinator` (one-time key ceremony: Ed25519 key generation for 7 components, build attestation with binary/invariant/schema/config hashing, genesis anchor creation, idempotent re-execution guard); `ReadinessGate` (registered check framework with genesis/ledger/capability built-in checks, critical vs warning classification, strict mode, NodeStatus lifecycle transitions: INITIALIZING→CHECKING→OPERATIONAL/DEGRADED/FAILED); `SafeHaltController` (monotonic halt with write blocking, read passthrough, in-flight transaction tracking, event audit trail, manual reset with authorization); 182 total PSIA tests passing
+- **PSIA Observability + Failure Recovery (Phase 6)** — `FailureDetector` (per-component sliding-window failure rate tracking, z-score anomaly detection over historical baselines, 3-state circuit breaker: closed→open→half_open→closed, cascade detection across components with configurable threshold and callback); `AutoimmuneDampener` (per-rule false positive tracking, dynamic sensitivity adjustment bounded by min/max with cooldown periods, dampened score evaluation, rule reset, full audit trail of adjustments); 208 total PSIA tests passing
+- **PSIA Integration Tests (Phase 7)** — `test_psia_invariants.py` (108 tests: all 9 INV-ROOT-* registry validation, parametrized schema integrity, embedded test case structure, mutation fuzzing via Pydantic rejection); `test_psia_integration.py` (13 cross-plane end-to-end tests: bootstrap→operational flow, full request lifecycle through waterfall→canonical→ledger, cascading failure→SAFE-HALT escalation, autoimmune dampener suppression, capability authority issuance/revocation, full-stack lifecycle boot→process→halt→recover); **329 total PSIA tests passing**
+- **PSIA Canonical Specification (Phase 8)** — `docs/spec/psia_v1_full.md`: comprehensive 12-section specification covering architectural planes, capability matrix, 8 canonical schemas, 9 root invariants with formal expressions, 7-stage waterfall pipeline, Cerberus triple-head gate with BFT quorum, canonical plane (ACID commits, Merkle ledger, capability authority), bootstrap lifecycle (genesis, readiness, SAFE-HALT), observability (circuit breaker, autoimmune dampener), 34-event taxonomy, security model with threat mitigations, and deployment/operations guide
+- **Alpha Red Agent** — evolutionary adversarial agent with genetic algorithm: fitness-weighted selection, tournament crossover, mutation, elitism, adversarial test campaigns
+- **Jurisdiction Loader** — fixed dead code, added cross-border conflict detection, retention gap checks, security requirement auto-extraction, sorted combined requirements
+- **Sovereign Audit Log TSA** — wired `_request_notarization` to `TSAProvider`, returns base64-encoded DER timestamp tokens, graceful fallback on TSA errors
+- **Containment Orchestration** — model registry with version/hash/deprecation, allowlist-based action validation accepting enums and strings, 4-leaf Merkle tree with inclusion proofs, deterministic JSON hashing
+- **OSINT Plugins** — `SampleOSINTPlugin` with param validation, Four Laws re-check, execution timing, statistics tracking, graceful shutdown; `OSINTLoader` with real plugin registration, unregister, batch register by category, export to knowledge base
+- **Test Suites** — 70 new tests across 5 suites
+  - `tests/test_alpha_red.py` (15 tests): init, prompt generation, fitness, evolution, campaigns
+  - `tests/test_jurisdiction_loader.py` (10 tests): load, validate, combined requirements, hash
+  - `tests/test_sovereign_notarization.py` (3 tests): disabled, enabled, error handling
+  - `tests/test_containment.py` (16 tests): request hash, action validation, Merkle proofs
+  - `tests/test_osint_plugins.py` (26 tests): plugin lifecycle, Four Laws, loader registration
+
 ## [Unreleased] - 2026-02-21
 
 ### Added
