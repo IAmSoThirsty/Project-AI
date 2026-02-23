@@ -38,9 +38,17 @@ from collections import defaultdict
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
+# Try to import Redis, fallback to None if unavailable
+try:
+    import redis
+    REDIS_AVAILABLE = True
+except ImportError:
+    redis = None
+    REDIS_AVAILABLE = False
+
 logger = logging.getLogger(__name__)
 
-# Global retry tracker with lock
+# Global retry tracker with lock (fallback when Redis unavailable)
 retry_tracker = defaultdict(lambda: defaultdict(int))
 retry_lock = threading.Lock()
 
@@ -49,6 +57,28 @@ MAX_GLOBAL_RETRIES_PER_MIN = int(os.environ.get('MAX_GLOBAL_RETRIES_PER_MIN', 50
 MAX_RETRIES_PER_SIGNAL = int(os.environ.get('MAX_RETRIES_PER_SIGNAL', 3))
 RETRY_BACKOFF_BASE = float(os.environ.get('RETRY_BACKOFF_BASE', 2.0))
 RETRY_MAX_DELAY = int(os.environ.get('RETRY_MAX_DELAY', 30))
+REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
+REDIS_PORT = int(os.environ.get('REDIS_PORT', 6379))
+REDIS_DB = int(os.environ.get('REDIS_DB', 0))
+
+# Initialize Redis client if available
+redis_client = None
+if REDIS_AVAILABLE:
+    try:
+        redis_client = redis.Redis(
+            host=REDIS_HOST,
+            port=REDIS_PORT,
+            db=REDIS_DB,
+            decode_responses=True,
+            socket_timeout=1.0,
+            socket_connect_timeout=1.0
+        )
+        # Test connection
+        redis_client.ping()
+        logger.info(f"Redis connected: {REDIS_HOST}:{REDIS_PORT}")
+    except Exception as e:
+        logger.warning(f"Redis connection failed, using in-memory fallback: {e}")
+        redis_client = None
 
 
 def reset_retry_tracker():
@@ -160,37 +190,144 @@ def check_retry_limit(service: str = 'global') -> bool:
     """
     Check if retry limit has been exceeded for a service.
     
+    Uses Redis if available for truly global (cross-process/container) throttling.
+    Falls back to in-memory tracking if Redis unavailable.
+    
     Args:
         service: Service name for granular tracking
         
     Returns:
         True if limit exceeded
     """
+    if redis_client:
+        try:
+            key = f"signal_retry:{service}:minute"
+            count = redis_client.get(key)
+            return int(count or 0) >= MAX_GLOBAL_RETRIES_PER_MIN
+        except Exception as e:
+            logger.warning(f"Redis read failed for {service}, using fallback: {e}")
+            # Fall through to in-memory fallback
+    
+    # In-memory fallback
     with retry_lock:
         return retry_tracker[service]['minute'] >= MAX_GLOBAL_RETRIES_PER_MIN
 
 
 def increment_retry_counter(service: str = 'global'):
-    """Increment retry counter for a service."""
+    """
+    Increment retry counter for a service.
+    
+    Uses Redis INCR + EXPIRE pattern if available for truly global throttling.
+    Falls back to in-memory tracking if Redis unavailable.
+    
+    Args:
+        service: Service name for granular tracking
+    """
+    if redis_client:
+        try:
+            key = f"signal_retry:{service}:minute"
+            pipe = redis_client.pipeline()
+            pipe.incr(key)
+            pipe.expire(key, 60)  # TTL of 60 seconds
+            pipe.incr(f"signal_retry:{service}:total")
+            pipe.execute()
+            return
+        except Exception as e:
+            logger.warning(f"Redis write failed for {service}, using fallback: {e}")
+            # Fall through to in-memory fallback
+    
+    # In-memory fallback
     with retry_lock:
         retry_tracker[service]['minute'] += 1
         retry_tracker[service]['total'] += 1
 
 
-def redact_pii(text: Optional[str]) -> str:
+# ============================================================================
+# PII Redaction Pipeline
+# ============================================================================
+
+def redact_email(text: str) -> str:
+    """Redact email addresses."""
+    return re.sub(r'\b[\w\.-]+@[\w\.-]+\.\w{2,}\b', '[REDACTED-EMAIL]', text)
+
+
+def redact_phone(text: str) -> str:
+    """Redact phone numbers (US, Canada, and international)."""
+    # US/Canada format
+    text = re.sub(r'\b(?:\+1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b', '[REDACTED-PHONE]', text)
+    # International format
+    text = re.sub(r'\b\+\d{1,3}[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}\b', '[REDACTED-PHONE]', text)
+    return text
+
+
+def redact_ssn(text: str) -> str:
+    """Redact Social Security Numbers."""
+    text = re.sub(r'\b\d{3}-\d{2}-\d{4}\b', '[REDACTED-SSN]', text)  # With dashes
+    text = re.sub(r'\b\d{9}\b', '[REDACTED-SSN]', text)  # Without dashes
+    return text
+
+
+def redact_credit_card(text: str) -> str:
+    """Redact credit card numbers."""
+    return re.sub(r'\b(?:\d{4}[-\s]?){3}\d{4}\b', '[REDACTED-CARD]', text)
+
+
+def redact_ip(text: str) -> str:
+    """Redact IPv4 and IPv6 addresses."""
+    # IPv4
+    text = re.sub(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', '[REDACTED-IP]', text)
+    # IPv6 full format
+    text = re.sub(r'\b(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b', '[REDACTED-IP6]', text)
+    # IPv6 compressed format (with ::)
+    text = re.sub(r'\b(?:[0-9a-fA-F]{1,4}:){0,7}:(?:[0-9a-fA-F]{1,4}:){0,7}[0-9a-fA-F]{1,4}\b', '[REDACTED-IP6]', text)
+    # IPv6 localhost
+    text = re.sub(r'\b::1\b', '[REDACTED-IP6]', text, flags=re.IGNORECASE)
+    return text
+
+
+def redact_address(text: str) -> str:
+    """Redact physical addresses."""
+    # Street addresses with common suffixes
+    return re.sub(
+        r'\b\d{1,5}\s+(?:[A-Z][a-z]+\s+){1,3}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct|Way|Place|Pl)\b',
+        '[REDACTED-ADDRESS]',
+        text,
+        flags=re.IGNORECASE
+    )
+
+
+# PII Redaction pipeline configuration
+PII_REDACTORS = {
+    'email': redact_email,
+    'phone': redact_phone,
+    'ssn': redact_ssn,
+    'credit_card': redact_credit_card,
+    'ip': redact_ip,
+    'address': redact_address,
+}
+
+# Default enabled redactors (can be configured via environment)
+ENABLED_REDACTORS = os.environ.get('PII_REDACTORS', 'email,phone,ssn,credit_card,ip,address').split(',')
+
+
+def redact_pii(text: Optional[str], redactors: Optional[List[str]] = None) -> str:
     """
-    Comprehensive PII redaction from text.
+    Comprehensive PII redaction pipeline.
     
-    Redacts:
+    Applies multiple redaction passes in sequence to catch all PII types.
+    Composable architecture allows enabling/disabling specific redactors.
+    
+    Redacts (by default):
     - Email addresses
     - Phone numbers (US and international)
     - SSN (Social Security Numbers)
     - Credit card numbers
-    - IP addresses (IPv4 and IPv6)
-    - Addresses (basic pattern)
+    - IP addresses (IPv4 and IPv6, including compressed and localhost)
+    - Physical addresses
     
     Args:
         text: Text to redact
+        redactors: List of redactor names to apply (uses ENABLED_REDACTORS if None)
         
     Returns:
         Redacted text
@@ -198,30 +335,17 @@ def redact_pii(text: Optional[str]) -> str:
     if not text:
         return ""
     
-    # Email redaction
-    text = re.sub(r'\b[\w\.-]+@[\w\.-]+\.\w{2,}\b', '[REDACTED-EMAIL]', text)
+    if redactors is None:
+        redactors = ENABLED_REDACTORS
     
-    # Phone number redaction (US/Canada)
-    text = re.sub(r'\b(?:\+1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b', '[REDACTED-PHONE]', text)
-    
-    # International phone numbers
-    text = re.sub(r'\b\+\d{1,3}[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}\b', '[REDACTED-PHONE]', text)
-    
-    # SSN redaction
-    text = re.sub(r'\b\d{3}-\d{2}-\d{4}\b', '[REDACTED-SSN]', text)
-    text = re.sub(r'\b\d{9}\b', '[REDACTED-SSN]', text)  # SSN without dashes
-    
-    # Credit card redaction
-    text = re.sub(r'\b(?:\d{4}[-\s]?){3}\d{4}\b', '[REDACTED-CARD]', text)
-    
-    # IPv4 address redaction
-    text = re.sub(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', '[REDACTED-IP]', text)
-    
-    # IPv6 address redaction
-    text = re.sub(r'\b(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b', '[REDACTED-IP6]', text)
-    
-    # Basic address pattern (street numbers)
-    text = re.sub(r'\b\d{1,5}\s+(?:[A-Z][a-z]+\s+){1,3}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct)\b', '[REDACTED-ADDRESS]', text, flags=re.IGNORECASE)
+    # Apply each redactor in pipeline
+    for redactor_name in redactors:
+        redactor_func = PII_REDACTORS.get(redactor_name.strip())
+        if redactor_func:
+            try:
+                text = redactor_func(text)
+            except Exception as e:
+                logger.warning(f"PII redactor '{redactor_name}' failed: {e}")
     
     return text
 
