@@ -47,6 +47,89 @@ _global_cognition_kernel = None
 _global_council_hub = None
 
 
+# ============================================================================
+# Dependency Checking - Enterprise Monolithic Integration
+# ============================================================================
+
+def check_dependencies():
+    """
+    Check for optional dependencies and gracefully disable features if missing.
+    
+    This enables soft degradation instead of hard failures for optional features.
+    Logs missing dependencies and updates configuration accordingly.
+    """
+    import importlib
+    from src.app.governance.audit_log import audit_event
+    
+    # Optional dependencies with their corresponding config flags
+    optional_deps = [
+        ('cv2', 'enable_video', 'OpenCV for video processing'),
+        ('whisper', 'enable_transcript', 'Whisper for audio transcription'),
+        ('redis', 'redis_enabled', 'Redis for audit log fallback'),
+        ('pydub', 'enable_audio_processing', 'PyDub for audio format conversion'),
+    ]
+    
+    missing_deps = []
+    disabled_features = []
+    
+    for module_name, config_key, description in optional_deps:
+        try:
+            importlib.import_module(module_name)
+            logger.info(f"✓ Dependency available: {module_name} - {description}")
+        except ImportError:
+            logger.warning(f"✗ Optional dependency missing: {module_name} - {description}")
+            missing_deps.append({
+                'module': module_name,
+                'description': description,
+                'config_key': config_key
+            })
+            disabled_features.append(config_key)
+            
+            # Audit missing dependency
+            try:
+                audit_event(
+                    'dependency_missing',
+                    {
+                        'dependency': module_name,
+                        'description': description,
+                        'config_key': config_key,
+                        'feature_disabled': True
+                    },
+                    actor='system_startup'
+                )
+            except Exception:
+                pass  # Don't fail startup if audit fails
+    
+    # Update configuration to disable features for missing dependencies
+    if disabled_features:
+        try:
+            from src.app.core.config_loader import get_config_loader
+            
+            config_loader = get_config_loader()
+            
+            # Get distress config
+            distress_config = config_loader.get('distress', {})
+            
+            # Disable features
+            for feature in disabled_features:
+                if feature in distress_config:
+                    distress_config[feature] = False
+                    logger.info(f"Disabled feature due to missing dependency: {feature}")
+            
+            logger.info(f"Dependency check complete: {len(missing_deps)} missing, {len(disabled_features)} features disabled")
+            
+        except Exception as e:
+            logger.error(f"Failed to update configuration for missing dependencies: {e}")
+    else:
+        logger.info("All optional dependencies available")
+    
+    return {
+        'missing_count': len(missing_deps),
+        'missing_deps': missing_deps,
+        'disabled_features': disabled_features
+    }
+
+
 def get_identity_engine() -> IdentityIntegratedIntelligenceEngine:
     """Get the global identity-integrated intelligence engine instance.
 
@@ -787,6 +870,14 @@ def main():
     logger.info("=" * 60)
     logger.info("🚀 Starting Project-AI with CognitionKernel governance")
     logger.info("=" * 60)
+    
+    # Check dependencies and gracefully disable unavailable features
+    logger.info("Checking dependencies...")
+    dep_status = check_dependencies()
+    if dep_status['missing_count'] > 0:
+        logger.warning(f"Running with {dep_status['missing_count']} optional dependencies missing")
+    else:
+        logger.info("All dependencies available")
 
     # Initialize Three-Tier Platform Registry
     initialize_tier_registry()
