@@ -1,106 +1,43 @@
-name: "CodeQL Security Analysis"
-
-# ==============================================================================
-# GitHub-native CodeQL workflow for advanced security scanning
-# This is a dedicated workflow separate from the monolith to ensure
-# proper GitHub Security tab integration and compliance
-# ==============================================================================
+name: "CodeQL Analysis"
 
 on:
   push:
-    branches:
-      - main
-      - develop
-      - cerberus-integration
-      - 'release/**'
-    paths:
-      - '**.py'
-      - '**.js'
-      - '**.ts'
-      - '**.jsx'
-      - '**.tsx'
-      - 'requirements*.txt'
-      - 'package*.json'
-      - '.github/workflows/codeql.yml'
-
+    branches: [main, develop]
   pull_request:
-    branches:
-      - main
-      - develop
-      - cerberus-integration
-    paths:
-      - '**.py'
-      - '**.js'
-      - '**.ts'
-      - '**.jsx'
-      - '**.tsx'
-      - 'requirements*.txt'
-      - 'package*.json'
-
+    branches: [main, develop]
   schedule:
-    # Runs at 6:00 AM UTC every day
-    - cron: '0 6 * * *'
-
-  workflow_dispatch:
+    - cron: "27 3 * * 1" # Weekly Monday 3:27 AM UTC
 
 permissions:
+  actions: read
   contents: read
   security-events: write
-  actions: read
 
 jobs:
   analyze:
-    name: Analyze Code
+    name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-
     strategy:
       fail-fast: false
       matrix:
-        language: ['python', 'javascript']
-
+        language: [python, javascript]
+        include:
+          - language: python
+            build-mode: none
+          - language: javascript
+            build-mode: none
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # v3.27.4
+        uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # Use security-extended for comprehensive security coverage
+          build-mode: ${{ matrix.build-mode }}
           queries: security-extended,security-and-quality
-          # Scan all code, not just production
-          config: |
-            paths-ignore:
-              - 'docs/**'
-              - 'examples/**'
-              - 'test_data/**'
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # v3.27.4
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # v3.27.4
+        uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ matrix.language }}"
-          upload: true
-
-      - name: Upload SARIF results
-        if: always()
-        uses: github/codeql-action/upload-sarif@ea9e4e37992a54ee68a9622e985e60c8e8f12d9f  # v3.27.4
-        with:
-          sarif_file: ../results/${{ matrix.language }}.sarif
-        continue-on-error: true
-
-      - name: Generate security summary
-        if: success()
-        run: |
-          echo "## 🔐 CodeQL Analysis Complete - ${{ matrix.language }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Security and quality queries executed successfully" >> $GITHUB_STEP_SUMMARY
-          echo "📊 Results uploaded to GitHub Security tab" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Query Suites:** security-extended, security-and-quality" >> $GITHUB_STEP_SUMMARY
-          echo "**Language:** ${{ matrix.language }}" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,62 @@
+name: Security - Bandit Python Analysis
+
+on:
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main, develop]
+
+permissions:
+    contents: read
+
+jobs:
+    bandit:
+        name: Bandit Security Linter
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install Bandit
+              run: pip install bandit[toml]
+
+            - name: Run Bandit scan
+              run: |
+                  bandit -r src/ \
+                    -f json \
+                    -o bandit-report.json \
+                    --severity-level medium \
+                    --confidence-level medium \
+                    -x "src/app/testing/*,src/app/generated/*" \
+                    || true
+
+            - name: Parse Bandit results
+              run: |
+                  python -c "
+                  import json, sys
+                  with open('bandit-report.json') as f:
+                      report = json.load(f)
+                  metrics = report.get('metrics', {}).get('_totals', {})
+                  results = report.get('results', [])
+                  high_sev = [r for r in results if r['issue_severity'] == 'HIGH']
+                  med_sev = [r for r in results if r['issue_severity'] == 'MEDIUM']
+                  print(f'Bandit Results: {len(high_sev)} HIGH, {len(med_sev)} MEDIUM severity issues')
+                  for issue in high_sev:
+                      print(f\"::error file={issue['filename']},line={issue['line_number']}::{issue['issue_text']} [{issue['test_id']}]\")
+                  for issue in med_sev:
+                      print(f\"::warning file={issue['filename']},line={issue['line_number']}::{issue['issue_text']} [{issue['test_id']}]\")
+                  if high_sev:
+                      print('::error::Bandit found HIGH severity security issues. Fix before merging.')
+                      sys.exit(1)
+                  "
+
+            - name: Upload Bandit report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: bandit-report
+                  path: bandit-report.json

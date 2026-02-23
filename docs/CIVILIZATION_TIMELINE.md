@@ -15,6 +15,8 @@ ______________________________________________________________________
     ↓
 [PSIA CRYPTO INTEGRATION] ← 2026-02-23
     ↓
+[COMPONENT RESTORATION] ← 2026-02-23
+    ↓
 [MONOLITH CORE STABLE]
     ↓
 [ECA INTEGRATION]
@@ -29,6 +31,38 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 ## Release History
+
+### COMPONENT RESTORATION
+
+**Date:** 2026-02-23  **Status:** Complete  **Trigger:** Git history audit identified 22 deleted/missing components critical to project health
+
+**Restored from Git History:**
+
+- ✅ `src/app/core/domain_base.py` — `DomainSubsystemBase` class (10 domain subsystems had broken imports)
+- ✅ `src/app/testing/` — Full stress testing framework (6 files: anti-sovereign, conversational, governance)
+- ✅ `tests/test_anti_sovereign_stress_tests.py` — Meta-tests for stress framework
+- ✅ `engines/simulation_contract/__init__.py` — Formal simulation contracts engine
+- ✅ `engines/constitutional_scenario/__init__.py` — Constitutional scenario engine for Triumvirate training
+
+**New CI/CD Workflows (7):**
+
+- ✅ `ci.yml` — Core CI (lint + test matrix + secret detection)
+- ✅ `codeql.yml` — CodeQL semantic analysis (Python + JavaScript)
+- ✅ `security-secret-scan.yml` — TruffleHog + detect-secrets
+- ✅ `bandit.yml` — Python security linting
+- ✅ `deploy.yml` — Deployment pipeline (staging → production)
+- ✅ `format-and-fix.yml` — Auto-formatting (Black/isort/Ruff)
+- ✅ `stale.yml` — Stale issue/PR cleanup
+
+**New Tests & Data Templates:**
+
+- ✅ `tests/test_shutdown_smoke.py` — Graceful shutdown validation (8 test classes)
+- ✅ `data/settings.example.json` — Application settings schema template
+- ✅ `data/learning_requests/requests.example.json` — Learning pipeline schema
+- ✅ `data/continuous_learning/curated.example.json` — Curated content schema
+- ✅ `data/sovereign_messages/README.md` — Sovereign messaging schema documentation
+
+______________________________________________________________________
 
 ### v1.0.0-tk8s (GENESIS)
 

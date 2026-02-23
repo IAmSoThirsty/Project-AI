@@ -1,0 +1,71 @@
+name: Auto Format & Fix
+
+on:
+    push:
+        branches: [develop]
+    pull_request:
+        branches: [main, develop]
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    format:
+        name: Auto-format Code
+        runs-on: ubuntu-latest
+        # Only auto-commit on push to develop, not on PRs
+        if: github.event_name == 'push'
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.head_ref || github.ref }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install formatters
+              run: pip install black ruff isort
+
+            - name: Run Black
+              run: black src/ tests/ --quiet
+
+            - name: Run isort
+              run: isort src/ tests/ --profile black --quiet
+
+            - name: Run Ruff auto-fix
+              run: ruff check src/ tests/ --fix --quiet || true
+
+            - name: Commit changes
+              uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                  commit_message: "style: auto-format with black, isort, ruff"
+                  commit_user_name: "github-actions[bot]"
+                  commit_user_email: "github-actions[bot]@users.noreply.github.com"
+
+    format-check:
+        name: Format Check (PR)
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install formatters
+              run: pip install black ruff isort
+
+            - name: Check Black formatting
+              run: black --check --diff src/ tests/
+
+            - name: Check isort ordering
+              run: isort --check --diff src/ tests/ --profile black
+
+            - name: Check Ruff
+              run: ruff check src/ tests/

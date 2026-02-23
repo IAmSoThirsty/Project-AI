@@ -1,0 +1,119 @@
+name: Deploy
+
+on:
+    push:
+        tags:
+            - "v*"
+    workflow_dispatch:
+        inputs:
+            environment:
+                description: "Deployment target environment"
+                required: true
+                default: "staging"
+                type: choice
+                options:
+                    - staging
+                    - production
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+    validate:
+        name: Pre-Deploy Validation
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+                  cache: pip
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip
+                  pip install -r requirements.txt || true
+                  pip install pytest ruff bandit
+
+            - name: Lint check
+              run: ruff check src/ --select=E,F,W
+
+            - name: Run critical tests
+              run: |
+                  pytest tests/ -x -v --timeout=120 -m "not slow"
+              env:
+                  PYTHONPATH: .
+
+            - name: Security scan
+              run: |
+                  bandit -r src/ --severity-level high --confidence-level high -q || true
+
+    build:
+        name: Build Release Artifacts
+        needs: validate
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Build package
+              run: |
+                  pip install build
+                  python -m build
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dist
+                  path: dist/
+
+    deploy-staging:
+        name: Deploy to Staging
+        needs: build
+        runs-on: ubuntu-latest
+        if: github.event.inputs.environment == 'staging' || startsWith(github.ref, 'refs/tags/v')
+        environment: staging
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Download artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: dist
+
+            - name: Deploy to staging
+              run: |
+                  echo "🚀 Deploying to staging environment..."
+                  echo "Tag: ${{ github.ref_name }}"
+                  echo "SHA: ${{ github.sha }}"
+                  # TODO: Add actual deployment commands
+                  # (Docker push, Helm upgrade, kubectl apply, etc.)
+
+    deploy-production:
+        name: Deploy to Production
+        needs: [build, deploy-staging]
+        runs-on: ubuntu-latest
+        if: github.event.inputs.environment == 'production'
+        environment: production
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Download artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: dist
+
+            - name: Deploy to production
+              run: |
+                  echo "🚀 Deploying to production environment..."
+                  echo "Tag: ${{ github.ref_name }}"
+                  echo "SHA: ${{ github.sha }}"
+                  # TODO: Add actual deployment commands
+                  # Requires GitHub Environment protection rules

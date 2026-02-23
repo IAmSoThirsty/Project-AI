@@ -1,0 +1,19 @@
+{
+    "_schema_version": "1.0.0",
+    "_description": "Curated learning content template. Copy to curated.json. Entries are added by human review of learning outputs.",
+    "curated_items": [
+        {
+            "id": "example-001",
+            "topic": "example_topic",
+            "content": "Human-verified learning content goes here.",
+            "quality_score": 0.95,
+            "curated_by": "user",
+            "curated_at": "2026-01-01T00:00:00Z",
+            "source_request_id": "req-001",
+            "tags": [
+                "example"
+            ],
+            "metadata": {}
+        }
+    ]
+}
