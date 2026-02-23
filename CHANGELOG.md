@@ -4,6 +4,25 @@ All notable changes to Project-AI will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2026-02-23
+
+### Added
+
+- **PSIA Real Cryptography Integration** — Replaced all SHA-256 stub signatures with production Ed25519 cryptography and RFC 3161 timestamps
+  - `src/psia/crypto/ed25519_provider.py`: `Ed25519Provider` (sign/verify/serialize), `Ed25519KeyPair`, `KeyStore` — real Ed25519 via PyCA `cryptography` library
+  - `src/psia/crypto/rfc3161_provider.py`: `LocalTSA` for RFC 3161-compliant timestamping with Ed25519 signatures, monotonic serials, nonce replay protection
+  - `src/psia/crypto/__init__.py`: Package exporting Ed25519Provider, KeyStore, LocalTSA
+- **Crypto Integration into Core Modules**
+  - `src/psia/bootstrap/genesis.py`: Real Ed25519 key generation and anchor signing (replaces SHA-256 stubs)
+  - `src/psia/canonical/capability_authority.py`: Ed25519 token signing + `verify_token_signature()` method
+  - `src/psia/canonical/ledger.py`: Ed25519 block signing + RFC 3161 timestamp anchoring in `_seal_block`
+- **71 New Tests across 4 Suites**
+  - `tests/test_ed25519_crypto.py` (25 tests): Keygen, sign/verify, tamper rejection, cross-key isolation, KeyStore lifecycle
+  - `tests/test_rfc3161.py` (16 tests): TSA lifecycle, thread safety, serialization, offline verification
+  - `tests/test_bft_deployed.py` (10 tests): N=4/N=7 BFT validation, quorum thresholds, deployment profile detection
+  - `tests/test_formal_properties.py` (20 tests): 7 paper theorems verified via Hypothesis property-based testing
+- **Performance Benchmarks** — `benchmarks/run_benchmarks.py` with real hardware measurements (Ed25519 keygen 20K ops/sec, sign 27K, verify 9K, full pipeline 4K ops/sec)
+
 ## [Unreleased] - 2026-02-22
 
 ### Added

@@ -1,0 +1,177 @@
+{
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+    "machine": "AMD64",
+    "python_version": "3.12.10",
+    "cpu_count": 16,
+    "timestamp": "2026-02-23T07:12:20.992417+00:00"
+  },
+  "results": [
+    {
+      "name": "ed25519_keygen",
+      "iterations": 1000,
+      "total_time_sec": 0.048689,
+      "ops_per_sec": 20538.48,
+      "latency_mean_us": 48.48,
+      "latency_p50_us": 47.7,
+      "latency_p95_us": 53.5,
+      "latency_p99_us": 69.1,
+      "latency_stdev_us": 3.88
+    },
+    {
+      "name": "ed25519_sign_32B",
+      "iterations": 1000,
+      "total_time_sec": 0.035949,
+      "ops_per_sec": 27817.26,
+      "latency_mean_us": 35.69,
+      "latency_p50_us": 35.2,
+      "latency_p95_us": 39.91,
+      "latency_p99_us": 44.81,
+      "latency_stdev_us": 2.56
+    },
+    {
+      "name": "ed25519_sign_256B",
+      "iterations": 1000,
+      "total_time_sec": 0.036495,
+      "ops_per_sec": 27400.79,
+      "latency_mean_us": 36.33,
+      "latency_p50_us": 35.7,
+      "latency_p95_us": 40.5,
+      "latency_p99_us": 51.3,
+      "latency_stdev_us": 3.08
+    },
+    {
+      "name": "ed25519_sign_1024B",
+      "iterations": 1000,
+      "total_time_sec": 0.040137,
+      "ops_per_sec": 24914.79,
+      "latency_mean_us": 39.89,
+      "latency_p50_us": 36.6,
+      "latency_p95_us": 56.7,
+      "latency_p99_us": 66.82,
+      "latency_stdev_us": 8.07
+    },
+    {
+      "name": "ed25519_sign_4096B",
+      "iterations": 1000,
+      "total_time_sec": 0.044596,
+      "ops_per_sec": 22423.28,
+      "latency_mean_us": 44.43,
+      "latency_p50_us": 44.1,
+      "latency_p95_us": 49.1,
+      "latency_p99_us": 54.7,
+      "latency_stdev_us": 2.45
+    },
+    {
+      "name": "ed25519_verify_32B",
+      "iterations": 1000,
+      "total_time_sec": 0.10447,
+      "ops_per_sec": 9572.14,
+      "latency_mean_us": 104.27,
+      "latency_p50_us": 103.1,
+      "latency_p95_us": 117.84,
+      "latency_p99_us": 136.4,
+      "latency_stdev_us": 7.78
+    },
+    {
+      "name": "ed25519_verify_256B",
+      "iterations": 1000,
+      "total_time_sec": 0.111616,
+      "ops_per_sec": 8959.31,
+      "latency_mean_us": 111.32,
+      "latency_p50_us": 103.2,
+      "latency_p95_us": 154.42,
+      "latency_p99_us": 210.71,
+      "latency_stdev_us": 30.96
+    },
+    {
+      "name": "ed25519_verify_1024B",
+      "iterations": 1000,
+      "total_time_sec": 0.115893,
+      "ops_per_sec": 8628.65,
+      "latency_mean_us": 115.64,
+      "latency_p50_us": 105.6,
+      "latency_p95_us": 205.11,
+      "latency_p99_us": 209.0,
+      "latency_stdev_us": 26.95
+    },
+    {
+      "name": "ed25519_verify_4096B",
+      "iterations": 1000,
+      "total_time_sec": 0.111064,
+      "ops_per_sec": 9003.81,
+      "latency_mean_us": 110.85,
+      "latency_p50_us": 108.3,
+      "latency_p95_us": 134.54,
+      "latency_p99_us": 152.01,
+      "latency_stdev_us": 9.2
+    },
+    {
+      "name": "rfc3161_issue",
+      "iterations": 1000,
+      "total_time_sec": 0.052343,
+      "ops_per_sec": 19104.61,
+      "latency_mean_us": 52.08,
+      "latency_p50_us": 48.7,
+      "latency_p95_us": 71.14,
+      "latency_p99_us": 86.11,
+      "latency_stdev_us": 11.63
+    },
+    {
+      "name": "rfc3161_verify",
+      "iterations": 1000,
+      "total_time_sec": 0.105007,
+      "ops_per_sec": 9523.2,
+      "latency_mean_us": 104.8,
+      "latency_p50_us": 103.9,
+      "latency_p95_us": 116.22,
+      "latency_p99_us": 134.7,
+      "latency_stdev_us": 6.22
+    },
+    {
+      "name": "ledger_append",
+      "iterations": 1000,
+      "total_time_sec": 0.010593,
+      "ops_per_sec": 94399.29,
+      "latency_mean_us": 10.44,
+      "latency_p50_us": 8.9,
+      "latency_p95_us": 11.91,
+      "latency_p99_us": 27.21,
+      "latency_stdev_us": 24.22
+    },
+    {
+      "name": "ledger_seal_64_records",
+      "iterations": 100,
+      "total_time_sec": 0.109828,
+      "ops_per_sec": 910.51,
+      "latency_mean_us": 1097.88,
+      "latency_p50_us": 1055.2,
+      "latency_p95_us": 1326.32,
+      "latency_p99_us": 1461.58,
+      "latency_stdev_us": 94.21
+    },
+    {
+      "name": "capability_issue",
+      "iterations": 1000,
+      "total_time_sec": 0.064676,
+      "ops_per_sec": 15461.78,
+      "latency_mean_us": 64.41,
+      "latency_p50_us": 60.7,
+      "latency_p95_us": 87.91,
+      "latency_p99_us": 112.34,
+      "latency_stdev_us": 36.0
+    },
+    {
+      "name": "full_pipeline",
+      "iterations": 500,
+      "total_time_sec": 0.124086,
+      "ops_per_sec": 4029.45,
+      "latency_mean_us": 247.85,
+      "latency_p50_us": 241.95,
+      "latency_p95_us": 273.31,
+      "latency_p99_us": 320.43,
+      "latency_stdev_us": 17.11
+    }
+  ]
+}

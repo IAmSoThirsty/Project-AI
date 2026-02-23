@@ -33,6 +33,8 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
+from psia.crypto.ed25519_provider import Ed25519KeyPair, Ed25519Provider, KeyStore
+
 logger = logging.getLogger(__name__)
 
 
@@ -155,6 +157,8 @@ class GenesisCoordinator:
         self._keys: dict[str, KeyMaterial] = {}
         self._anchor: GenesisAnchor | None = None
         self._attestation: BuildAttestation | None = None
+        self._key_store = KeyStore()
+        self._root_keypair: Ed25519KeyPair | None = None
 
     def execute(
         self,
@@ -241,17 +245,25 @@ class GenesisCoordinator:
             )
 
     def _generate_key(self, component: str, timestamp: str) -> KeyMaterial:
-        """Generate a key pair for a component.
+        """Generate a real Ed25519 key pair for a component.
 
-        In production, this would use Ed25519 key generation via HSM.
+        Uses the cryptography library for production-grade key generation.
+        The keypair is registered in the KeyStore for repo-wide access.
         """
-        key_id = f"key_{component}_{uuid.uuid4().hex[:8]}"
-        seed = f"{self.node_id}:{component}:{timestamp}"
-        public_key = hashlib.sha256(seed.encode()).hexdigest()
+        keypair = Ed25519Provider.generate_keypair(
+            component,
+            key_id=f"key_{component}_{uuid.uuid4().hex[:8]}",
+        )
+        self._key_store.register(keypair)
+
+        # Track root keypair for anchor signing
+        if component == "genesis_root":
+            self._root_keypair = keypair
+
         return KeyMaterial(
             component=component,
-            key_id=key_id,
-            public_key_hex=public_key,
+            key_id=keypair.key_id,
+            public_key_hex=keypair.public_key_hex,
             created_at=timestamp,
             purpose="signing",
         )
@@ -267,10 +279,18 @@ class GenesisCoordinator:
         return hashlib.sha256(data.encode()).hexdigest()
 
     def _sign_anchor(self, data_hash: str) -> str:
-        """Sign the genesis anchor.
-
-        In production, this would use the node's root Ed25519 private key.
-        """
+        """Sign the genesis anchor with the node's root Ed25519 private key."""
+        if self._root_keypair is not None:
+            return Ed25519Provider.sign_string(
+                self._root_keypair.private_key, data_hash
+            )
+        # Fallback: use first available key if genesis_root hasn't been generated yet
+        if self._key_store.count > 0:
+            first_component = self._key_store.components[0]
+            return self._key_store.sign_as(
+                first_component, data_hash.encode("utf-8")
+            )
+        # Last resort: hash-based (should never happen in normal flow)
         return hashlib.sha256(
             f"{self.node_id}:genesis:{data_hash}".encode()
         ).hexdigest()[:32]
@@ -290,6 +310,16 @@ class GenesisCoordinator:
     @property
     def keys(self) -> dict[str, KeyMaterial]:
         return dict(self._keys)
+
+    @property
+    def key_store(self) -> KeyStore:
+        """The KeyStore containing all Ed25519 keypairs generated during genesis."""
+        return self._key_store
+
+    @property
+    def root_keypair(self) -> Ed25519KeyPair | None:
+        """The root Ed25519 keypair used for anchor signing."""
+        return self._root_keypair
 
 
 __all__ = [

@@ -31,6 +31,9 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any
 
+from psia.crypto.ed25519_provider import Ed25519Provider, KeyStore
+from psia.crypto.rfc3161_provider import LocalTSA
+
 logger = logging.getLogger(__name__)
 
 
@@ -84,6 +87,9 @@ class LedgerBlock:
     record_count: int
     anchor_hash: str | None = None
     anchor_timestamp: str | None = None
+    block_signature: str | None = None
+    signer_public_key: str | None = None
+    tsa_token: dict | None = None
 
     def compute_block_hash(self) -> str:
         """Compute SHA-256 hash of this block (includes Merkle root and chain link)."""
@@ -118,9 +124,13 @@ class DurableLedger:
         *,
         block_size: int = 64,
         on_block_sealed: Any | None = None,
+        key_store: KeyStore | None = None,
+        tsa: LocalTSA | None = None,
     ) -> None:
         self.block_size = block_size
         self.on_block_sealed = on_block_sealed
+        self._key_store = key_store
+        self._tsa = tsa
         self._sealed_blocks: list[LedgerBlock] = []
         self._current_records: list[ExecutionRecord] = []
         self._record_index: dict[str, ExecutionRecord] = {}
@@ -156,7 +166,7 @@ class DurableLedger:
         return record_hash
 
     def _seal_block(self) -> LedgerBlock:
-        """Seal the current block with a Merkle root."""
+        """Seal the current block with a Merkle root, Ed25519 signature, and RFC 3161 timestamp."""
         records = list(self._current_records)
         self._current_records = []
 
@@ -169,14 +179,52 @@ class DurableLedger:
         else:
             prev_hash = self.GENESIS_HASH
 
+        sealed_at = datetime.now(timezone.utc).isoformat()
+
         block = LedgerBlock(
             block_id=len(self._sealed_blocks),
             records=records,
             merkle_root=merkle_root,
             previous_block_hash=prev_hash,
-            sealed_at=datetime.now(timezone.utc).isoformat(),
+            sealed_at=sealed_at,
             record_count=len(records),
         )
+
+        # Ed25519 block signing
+        block_hash = block.compute_block_hash()
+        if self._key_store is not None and self._key_store.get("ledger") is not None:
+            signature = self._key_store.sign_as("ledger", block_hash.encode("utf-8"))
+            pub_key = Ed25519Provider.serialize_public_key(
+                self._key_store.get_public_key("ledger")  # type: ignore[arg-type]
+            )
+            block = LedgerBlock(
+                block_id=block.block_id,
+                records=block.records,
+                merkle_root=block.merkle_root,
+                previous_block_hash=block.previous_block_hash,
+                sealed_at=block.sealed_at,
+                record_count=block.record_count,
+                block_signature=signature,
+                signer_public_key=pub_key,
+            )
+
+        # RFC 3161 timestamp anchoring
+        if self._tsa is not None:
+            response = self._tsa.request_timestamp(block_hash)
+            if response.status == 0 and response.token is not None:
+                block = LedgerBlock(
+                    block_id=block.block_id,
+                    records=block.records,
+                    merkle_root=block.merkle_root,
+                    previous_block_hash=block.previous_block_hash,
+                    sealed_at=block.sealed_at,
+                    record_count=block.record_count,
+                    block_signature=block.block_signature,
+                    signer_public_key=block.signer_public_key,
+                    anchor_hash=block_hash,
+                    anchor_timestamp=response.token.gen_time,
+                    tsa_token=response.token.to_dict(),
+                )
 
         self._sealed_blocks.append(block)
 

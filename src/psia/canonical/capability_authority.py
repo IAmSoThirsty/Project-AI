@@ -23,14 +23,14 @@ Production notes:
 
 from __future__ import annotations
 
-import hashlib
-import json
+
 import logging
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from psia.crypto.ed25519_provider import Ed25519KeyPair, Ed25519Provider, KeyStore
 from psia.schemas.capability import (
     CapabilityScope,
     CapabilityToken,
@@ -80,6 +80,7 @@ class CapabilityAuthority:
         max_scope_actions: int = 10,
         allow_delegation: bool = False,
         max_delegation_depth: int = 2,
+        key_store: KeyStore | None = None,
     ) -> None:
         self.authority_did = authority_did
         self.default_ttl_hours = default_ttl_hours
@@ -90,6 +91,13 @@ class CapabilityAuthority:
         self._tokens: dict[str, CapabilityToken] = {}
         self._revocation_list: dict[str, RevocationEntry] = {}
         self._audit_log: list[TokenLifecycleEvent] = []
+
+        # Ed25519 keypair for token signing
+        if key_store is not None and key_store.get("capability_authority") is not None:
+            self._keypair: Ed25519KeyPair = key_store.get("capability_authority")  # type: ignore[assignment]
+        else:
+            # Generate standalone keypair if no KeyStore provided
+            self._keypair = Ed25519Provider.generate_keypair("capability_authority")
 
     def issue(
         self,
@@ -279,13 +287,32 @@ class CapabilityAuthority:
         return self._tokens.get(token_id)
 
     def _sign_token(self, token_id: str) -> str:
-        """Generate a stub signature for a token.
+        """Sign a token ID with the authority's Ed25519 private key."""
+        return Ed25519Provider.sign_string(
+            self._keypair.private_key,
+            f"{self.authority_did}:{token_id}",
+        )
 
-        In production, this would use Ed25519 with the authority's private key.
+    def verify_token_signature(self, token: CapabilityToken) -> bool:
+        """Verify a token's Ed25519 signature.
+
+        Args:
+            token: The CapabilityToken to verify.
+
+        Returns:
+            True if the signature is valid.
         """
-        return hashlib.sha256(
-            f"{self.authority_did}:{token_id}".encode()
-        ).hexdigest()[:32]
+        expected_data = f"{self.authority_did}:{token.token_id}"
+        return Ed25519Provider.verify_string(
+            self._keypair.public_key,
+            token.signature.sig,
+            expected_data,
+        )
+
+    @property
+    def public_key_hex(self) -> str:
+        """The authority's Ed25519 public key in hex."""
+        return self._keypair.public_key_hex
 
     @property
     def issued_count(self) -> int:
