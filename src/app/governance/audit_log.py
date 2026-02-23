@@ -636,3 +636,257 @@ class AuditLog:
 
 
 __all__ = ["AuditLog"]
+
+
+# ============================================================================
+# Redis Fallback Enhancement for High Availability
+# ============================================================================
+
+class AuditLogWithRedis(AuditLog):
+    """
+    Enhanced audit log with Redis fallback for high availability.
+    
+    Features:
+    - Dual-write to file and Redis
+    - Automatic fallback on primary failure
+    - Redis queue for event buffering
+    - Replay capability for recovery
+    - Configurable sync modes
+    """
+    
+    def __init__(
+        self,
+        log_file: Path | None = None,
+        auto_rotate: bool = True,
+        max_size_mb: int = MAX_LOG_SIZE_MB,
+        compression: bool = COMPRESSION_ENABLED,
+        redis_host: str | None = None,
+        redis_port: int = 6379,
+        redis_db: int = 0,
+        redis_password: str | None = None,
+        redis_enabled: bool = True,
+        sync_mode: str = "write_through"
+    ):
+        """
+        Initialize audit log with Redis fallback.
+        
+        Args:
+            redis_host: Redis server host (default from env: REDIS_HOST)
+            redis_port: Redis server port
+            redis_db: Redis database number
+            redis_password: Redis password (default from env: REDIS_PASSWORD)
+            redis_enabled: Enable Redis fallback
+            sync_mode: Sync mode (write_through, write_on_primary_failure)
+        """
+        super().__init__(log_file, auto_rotate, max_size_mb, compression)
+        
+        self.redis_enabled = redis_enabled
+        self.sync_mode = sync_mode
+        self.redis_client = None
+        self.redis_available = False
+        
+        if redis_enabled:
+            try:
+                import redis as redis_module
+                
+                host = redis_host or os.environ.get('REDIS_HOST', 'localhost')
+                password = redis_password or os.environ.get('REDIS_PASSWORD')
+                
+                self.redis_client = redis_module.Redis(
+                    host=host,
+                    port=redis_port,
+                    db=redis_db,
+                    password=password,
+                    socket_timeout=5,
+                    socket_connect_timeout=5,
+                    decode_responses=True
+                )
+                
+                # Test connection
+                self.redis_client.ping()
+                self.redis_available = True
+                
+                logger.info(f"Redis fallback initialized: {host}:{redis_port}/{redis_db}")
+                
+            except ImportError:
+                logger.warning("Redis module not available - fallback disabled")
+                self.redis_enabled = False
+            except Exception as e:
+                logger.warning(f"Redis connection failed - fallback disabled: {e}")
+                self.redis_enabled = False
+    
+    def log_event(
+        self,
+        event_type: str,
+        data: dict[str, Any] | None = None,
+        actor: str = "system",
+        description: str = "",
+        severity: str = "info",
+        metadata: dict[str, Any] | None = None,
+    ) -> bool:
+        """
+        Log event with Redis fallback.
+        
+        Implements dual-write or fallback-on-failure depending on sync_mode.
+        """
+        # Prepare event data
+        event_data = {
+            "event_type": event_type,
+            "data": data,
+            "actor": actor,
+            "description": description,
+            "severity": severity,
+            "metadata": metadata,
+            "timestamp": datetime.now(UTC).isoformat()
+        }
+        
+        primary_success = False
+        redis_success = False
+        
+        # Try primary (file) storage
+        try:
+            primary_success = super().log_event(
+                event_type=event_type,
+                data=data,
+                actor=actor,
+                description=description,
+                severity=severity,
+                metadata=metadata
+            )
+        except Exception as e:
+            logger.error(f"Primary audit log failed: {e}")
+        
+        # Redis handling based on sync mode
+        if self.redis_enabled and self.redis_available:
+            try:
+                if self.sync_mode == "write_through":
+                    # Always write to Redis
+                    redis_success = self._write_to_redis(event_data)
+                    
+                elif self.sync_mode == "write_on_primary_failure":
+                    # Only write to Redis if primary failed
+                    if not primary_success:
+                        redis_success = self._write_to_redis(event_data)
+                        logger.warning("Using Redis fallback due to primary failure")
+                
+            except Exception as e:
+                logger.error(f"Redis audit log failed: {e}")
+        
+        # Return success if either storage succeeded
+        return primary_success or redis_success
+    
+    def _write_to_redis(self, event_data: dict[str, Any]) -> bool:
+        """Write event to Redis queue."""
+        try:
+            if not self.redis_client:
+                return False
+            
+            # Serialize event
+            event_json = json.dumps(event_data)
+            
+            # Push to Redis list (queue)
+            self.redis_client.lpush('audit_queue', event_json)
+            
+            # Also set with TTL for recent events
+            event_key = f"audit:{event_data['event_type']}:{event_data['timestamp']}"
+            self.redis_client.setex(event_key, 86400, event_json)  # 24h TTL
+            
+            logger.debug(f"Event written to Redis: {event_data['event_type']}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to write to Redis: {e}")
+            self.redis_available = False
+            return False
+    
+    def replay_from_redis(self, max_events: int = 100) -> int:
+        """
+        Replay events from Redis to primary storage.
+        
+        Args:
+            max_events: Maximum number of events to replay
+            
+        Returns:
+            Number of events replayed
+        """
+        if not self.redis_available or not self.redis_client:
+            logger.warning("Redis not available for replay")
+            return 0
+        
+        replayed = 0
+        
+        try:
+            # Get events from Redis queue
+            for _ in range(max_events):
+                event_json = self.redis_client.rpop('audit_queue')
+                
+                if not event_json:
+                    break
+                
+                # Parse event
+                event_data = json.loads(event_json)
+                
+                # Write to primary storage
+                success = super().log_event(
+                    event_type=event_data.get('event_type', 'unknown'),
+                    data=event_data.get('data'),
+                    actor=event_data.get('actor', 'system'),
+                    description=event_data.get('description', ''),
+                    severity=event_data.get('severity', 'info'),
+                    metadata=event_data.get('metadata')
+                )
+                
+                if success:
+                    replayed += 1
+            
+            logger.info(f"Replayed {replayed} events from Redis to primary storage")
+            
+        except Exception as e:
+            logger.error(f"Replay from Redis failed: {e}")
+        
+        return replayed
+    
+    def get_redis_stats(self) -> dict[str, Any]:
+        """Get Redis fallback statistics."""
+        stats = {
+            'redis_enabled': self.redis_enabled,
+            'redis_available': self.redis_available,
+            'sync_mode': self.sync_mode,
+            'queue_length': 0
+        }
+        
+        if self.redis_available and self.redis_client:
+            try:
+                stats['queue_length'] = self.redis_client.llen('audit_queue')
+            except Exception as e:
+                logger.warning(f"Failed to get Redis stats: {e}")
+        
+        return stats
+
+
+# Convenience function for easy Redis-enabled audit logging
+def audit_event(event_type: str, details: dict[str, Any], actor: str = "system"):
+    """
+    Convenience function for audit logging with automatic Redis fallback.
+    
+    Args:
+        event_type: Type of event
+        details: Event details dictionary
+        actor: Actor performing the action
+    """
+    import os
+    
+    # Check if Redis is configured
+    redis_enabled = os.environ.get('REDIS_HOST') is not None
+    
+    if redis_enabled:
+        audit = AuditLogWithRedis()
+    else:
+        audit = AuditLog()
+    
+    audit.log_event(
+        event_type=event_type,
+        data=details,
+        actor=actor,
+        description=f"{event_type} event"
+    )
