@@ -43,27 +43,7 @@ ______________________________________________________________________
 
 **Project-AI** is a **production-grade, constitutionally-governed AI platform** designed to put ethics, user sovereignty, and transparency first. Unlike proprietary AI services, Project-AI enforces ethical behavior through code, maintains cryptographic audit trails, and operates under an immutable governance framework.
 
-### Key Differentiators
-
-<table>
-<tr>
-<td width="50%" valign="top">
-
-#### ❌ Big Tech AI (ChatGPT, Claude, Gemini)
-
-- 🚫 Limited free messages (20-50/month)
-- 🚫 No persistent memory between sessions
-- 🚫 Your data becomes their training data
-- 🚫 No enforceable ethics framework
-- 🚫 Vendor lock-in
-- 🚫 Closed source black box
-- 🚫 No audit trail
-- 🚫 "Terms subject to change"
-
-</td>
-<td width="50%" valign="top">
-
-#### ✅ Project-AI
+### Key Features
 
 - ✅ Unlimited usage, forever free (open source)
 - ✅ Persistent memory and knowledge base
@@ -73,10 +53,6 @@ ______________________________________________________________________
 - ✅ 100% open source (MIT + comprehensive governance)
 - ✅ Cryptographic audit ledger (SHA-256 + Ed25519)
 - ✅ Immutable governance framework
-
-</td>
-</tr>
-</table>
 
 ______________________________________________________________________
 
@@ -547,7 +523,7 @@ ______________________________________________________________________
 
 | Document                                                                                   | Size  | Description                                                                              |
 | ------------------------------------------------------------------------------------------ | ----- | ---------------------------------------------------------------------------------------- |
-| [Executive Whitepaper](docs/executive/EXECUTIVE_WHITEPAPER.md)                             | 23KB  | Current state, capabilities, limitations, roadmap, compliance, ROI analysis (1,157% ROI) |
+| [Executive Whitepaper](docs/executive/EXECUTIVE_WHITEPAPER.md)                             | 23KB  | Current state, capabilities, limitations, roadmap, compliance analysis |
 | [Core AI Systems Deep-Dive](docs/architecture/CORE_AI_SYSTEMS_TECHNICAL_DEEPDIVE.md)       | 51KB  | Six core systems, integration patterns, API reference (1,830 lines)                      |
 | [Agent Framework Deep-Dive](docs/architecture/AGENT_FRAMEWORK_TECHNICAL_DEEPDIVE.md)       | 5KB   | Four agent subsystems, decision flows, performance benchmarks                            |
 | [Platform Architecture Blueprint](docs/architecture/PLATFORM_ARCHITECTURE_BLUEPRINT.md)    | 9KB   | Layered diagrams, data flows, deployment topology                                        |
@@ -1553,114 +1529,25 @@ ______________________________________________________________________
 
 **🔗 CROSS-REFERENCE NOTE:** This section provides simplified TCO comparisons. For detailed cost breakdowns, methodology, disclaimers, and tier-specific use case examples, see the comprehensive [Internal Budget & Cost Structure](#-internal-budget--cost-structure) section above.
 
-### Total Cost of Ownership (TCO) Comparison
+### Total Cost of Ownership (TCO)
 
-**⚠️ SIMPLIFIED COMPARISON:** These numbers show USER-FACING costs only for Solo tier. For Company/Government tiers and complete operational cost breakdowns, see detailed use cases above.
+**⚠️ SIMPLIFIED OVERVIEW:** These numbers show USER-FACING costs only for Solo tier. For Company/Government tiers and complete operational cost breakdowns, see the comprehensive [Internal Budget & Cost Structure](#-internal-budget--cost-structure) section above.
 
-**3-Year TCO Analysis (Solo User Comparison):**
+**3-Year TCO Analysis (Solo Tier):**
 
-| Provider                               | Licensing (3yr) | Infrastructure¹ | Support | **Total (3yr)**     |
-| -------------------------------------- | --------------- | --------------- | ------- | ------------------- |
-| **Big Tech AI** (ChatGPT Plus)         | $720²           | $0              | $0      | **$720/user**       |
-| **Enterprise AI** (Copilot Enterprise) | $1,200³         | $1,200⁴         | $300    | **$2,700/user**     |
-| **Project-AI** (Self-hosted Solo)      | **$0**          | $150⁵           | **$0**  | **$150 (one-time)** |
-
-**Footnotes:**
-
-1. Infrastructure = hardware amortization only (workstation/laptop)
-1. ChatGPT Plus: $20/mo × 36 months = $720 (verified at [openai.com/chatgpt/pricing](https://openai.com/chatgpt/pricing))
-1. GitHub Copilot Enterprise: Custom pricing, $39/seat/mo typical = $1,404 (using conservative $1,200 estimate)
-1. Assumes enterprise needs dedicated server; consumer/solo wouldn't incur this
-1. Minimal API costs for optional features ($15/mo × 10 months moderate usage example)
-
-**Illustrative Savings: 79-94% vs proprietary solutions (Solo tier, moderate usage)**
+| Component          | Cost            | Notes                                                    |
+| ------------------ | --------------- | -------------------------------------------------------- |
+| **Licensing**      | **$0**          | Open source, MIT licensed                                |
+| **Infrastructure** | $150 (one-time) | Hardware amortization only (workstation/laptop)          |
+| **Support**        | **$0**          | Community support included                               |
+| **Total (3yr)**    | **$150**        | Minimal API costs for optional features (~$15/mo usage)  |
 
 **⚠️ IMPORTANT CONTEXT:**
 
-- This comparison is for **Solo tier users only** (free tier)
+- This analysis is for **Solo tier users only** (free tier)
 - Operational costs (APIs, hosting) vary by **actual usage** (could be $0-$200/mo)
 - Company/Government tiers have different cost structures (see detailed use cases above)
-- "Savings" assume comparable feature sets (Project-AI includes memory, plugins, source code access)
 - Your actual costs depend on: usage patterns, infrastructure choices, support needs
-
-______________________________________________________________________
-
-### Return on Investment (ROI)
-
-**⚠️ THEORETICAL ANALYSIS:** The following ROI calculations are ILLUSTRATIVE EXAMPLES based on published research. They are NOT guarantees of your results. See detailed disclaimer in [Internal Budget section](#-internal-budget--cost-structure) above.
-
-**For a 10-person team over 3 years (Company Tier):**
-
-| Metric               | Big Tech AI Stack¹ | Project-AI²                             | Difference          |
-| -------------------- | ------------------ | --------------------------------------- | ------------------- |
-| **Licensing**        | $7,200³            | $8,000⁴ or $25,000⁵                     | -$800 to +$18,000   |
-| **Infrastructure**   | $0⁶                | $5,000⁷                                 | -$5,000             |
-| **Operational APIs** | Included           | $3,600⁸                                 | -$3,600             |
-| **Support**          | Included           | $0                                      | $0                  |
-| **Training**         | $0                 | $500⁹                                   | -$500               |
-| **TOTAL (3 years)**  | $7,200             | $17,100 (monthly) or $34,100 (lifetime) | -$9,900 to -$26,900 |
-
-**Cost Analysis:**
-
-- **Monthly subscription path:** Project-AI costs MORE upfront ($17,100 vs $7,200)
-- **Lifetime purchase path:** Project-AI costs MORE ($34,100 vs $7,200)
-
-**So why consider Project-AI? The value proposition is in features, not pure cost savings:**
-
-- ✅ Unlimited users (Big Tech is $7,200 for 10 seats only; more seats = more cost)
-- ✅ Full source code access (audit, modify, customize)
-- ✅ Data sovereignty (nothing leaves your infrastructure)
-- ✅ No vendor lock-in (MIT license = you own it)
-- ✅ Unlimited usage (no message caps or rate limiting)
-- ✅ Persistent memory and knowledge base
-- ✅ White-labeling and custom branding
-
-**Footnotes:**
-
-1. Big Tech Stack: ChatGPT Plus for general AI, assumes 10 seats minimum
-1. Project-AI: Company tier pricing from PRICING_FRAMEWORK.md
-1. ChatGPT Plus: $20/mo × 10 users × 36 months = $7,200
-1. Project-AI Monthly: $1,000/mo × 36 months = $36,000 subscription + ops - CORRECTING CALCULATION
-1. Project-AI Lifetime: $25,000 one-time (from PRICING_FRAMEWORK.md)
-1. Big Tech is cloud-hosted (no infrastructure cost to user)
-1. Server hardware estimate: $5,000 for shared 10-person team server
-1. OpenAI API: $100/mo × 36 months = $3,600 (estimate for team usage)
-1. Training and onboarding estimate for team
-
-**CORRECTED CALCULATION:**
-
-| Metric                   | Big Tech AI Stack | Project-AI (Monthly) | Project-AI (Lifetime) |
-| ------------------------ | ----------------- | -------------------- | --------------------- |
-| **Subscription (3yr)**   | $7,200            | $36,000              | $25,000 (one-time)    |
-| **Infrastructure (3yr)** | $0                | $5,000               | $5,000                |
-| **APIs (3yr)**           | Included          | $3,600               | $3,600                |
-| **Training**             | $0                | $500                 | $500                  |
-| **TOTAL**                | **$7,200**        | **$45,100**          | **$34,100**           |
-
-**Financial Reality Check:**
-
-- Project-AI monthly subscription costs **6.3x MORE** than ChatGPT Plus over 3 years
-- Project-AI lifetime costs **4.7x MORE** than ChatGPT Plus over 3 years
-
-**Why the price difference?**
-
-- ChatGPT Plus: Cloud service with limited features, 10 users max, message caps
-- Project-AI: Full platform, unlimited users, unlimited usage, full source code, complete control
-
-**The value proposition is in CAPABILITIES, not cost savings:**
-
-- If you need: Self-hosting, data sovereignty, unlimited users, source code access, customization
-- Then: Project-AI provides capabilities Big Tech cannot/will not offer
-- If you just need: Basic AI chat for individuals
-- Then: ChatGPT Plus is more cost-effective
-
-**Previous "ROI: 300% (for 10 users)" claim is WITHDRAWN** - it was based on productivity gains that are speculative and not financially guaranteed. See detailed ROI analysis in use case examples above for properly-disclaimed productivity calculations.
-
-**Previous "ROI: 1,157% (for 50+ users)" claim needs context:**
-
-- This ROI assumes high productivity gains (20-35%) that may not materialize
-- It also benefits from economies of scale (50 users under one Company license vs 50 individual Big Tech licenses)
-- See Use Case 3 (Mid-Size Software Company) above for detailed breakdown and disclaimers
 
 ______________________________________________________________________
 
