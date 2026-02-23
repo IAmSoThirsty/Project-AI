@@ -1,0 +1,296 @@
+# ============================================================================
+# Project-AI Simplified Distress Configuration
+# ============================================================================
+# Streamlined configuration with essential settings and clear organization
+# ============================================================================
+
+version: "2.1.0"
+schema_version: "1.1"
+last_updated: "2026-02-23T15:40:00Z"
+
+# ============================================================================
+# VAULT CONFIGURATION
+# ============================================================================
+vault:
+  # Provider: aws, azure, hashicorp, or local (dev only)
+  provider: "${VAULT_PROVIDER:-local}"
+  
+  # Rotation settings
+  rotation:
+    enabled: true
+    interval_days: 90
+    schedule_cron: "0 2 * * 0"  # Weekly Sunday 2 AM
+  
+  # Size limits
+  max_size_mb: 1024  # 1GB
+  backup_count: 5
+
+# ============================================================================
+# PII REDACTION - Enhanced with addresses and more patterns
+# ============================================================================
+pii_redaction:
+  enabled: true
+  
+  # Detection confidence threshold (0.0-1.0)
+  confidence_threshold: 0.75
+  
+  # Machine learning enhanced detection
+  ml_detection:
+    enabled: true
+    model: "distilbert-pii-classifier"
+    batch_size: 32
+  
+  # Pattern categories (all enabled by default)
+  patterns:
+    - ssn              # Social Security Numbers
+    - email            # Email addresses
+    - phone            # Phone numbers (US/International)
+    - credit_card      # Credit card numbers
+    - ip_address       # IP addresses (IPv4/IPv6)
+    - passport         # Passport numbers
+    - driver_license   # Driver's license numbers
+    - address          # Street addresses
+    - zipcode          # ZIP/postal codes
+    - coordinates      # GPS coordinates
+    - api_keys         # API keys and tokens
+    - medical_record   # Medical record numbers
+
+# ============================================================================
+# FUZZY PHRASE BLOCKING - Configurable matching
+# ============================================================================
+fuzzy_blocking:
+  enabled: true
+  
+  # Matching algorithm: levenshtein, jaro_winkler, soundex
+  algorithm: "levenshtein"
+  
+  # Similarity threshold (0.0-1.0, higher = stricter)
+  similarity_threshold: 0.80
+  
+  # Maximum edit distance for levenshtein
+  max_edit_distance: 2
+  
+  # Case sensitivity
+  case_sensitive: false
+  
+  # Blocked phrase categories
+  categories:
+    sql_injection:
+      enabled: true
+      phrases: ["DROP DATABASE", "DROP TABLE", "DELETE FROM"]
+    
+    command_injection:
+      enabled: true
+      phrases: ["rm -rf", "shutdown -h", "exec malicious"]
+    
+    custom:
+      enabled: true
+      phrases: []  # Add custom phrases here
+
+# ============================================================================
+# RETRY & THROTTLING - Per-Service Granular Control
+# ============================================================================
+retry_throttling:
+  # Global settings
+  global:
+    enabled: true
+    max_per_minute: 50
+    
+  # Per-service limits
+  services:
+    vault_access:
+      max_retries: 3
+      max_per_minute: 20
+      timeout_seconds: 10
+      backoff_multiplier: 2.0
+      
+    pii_redaction:
+      max_retries: 2
+      max_per_minute: 100
+      timeout_seconds: 5
+      backoff_multiplier: 1.5
+      
+    signal_processing:
+      max_retries: 5
+      max_per_minute: 200
+      timeout_seconds: 30
+      backoff_multiplier: 2.0
+      
+    transcription:
+      max_retries: 3
+      max_per_minute: 10
+      timeout_seconds: 60
+      backoff_multiplier: 2.5
+      
+    audit_logging:
+      max_retries: 10
+      max_per_minute: 500
+      timeout_seconds: 60
+      backoff_multiplier: 1.5
+  
+  # Circuit breaker configuration
+  circuit_breaker:
+    enabled: true
+    failure_threshold: 5
+    success_threshold: 3
+    recovery_timeout_seconds: 60
+
+# ============================================================================
+# HOT RELOAD
+# ============================================================================
+hot_reload:
+  enabled: true
+  poll_interval_seconds: 10
+  debounce_milliseconds: 500
+  
+  # Files to watch
+  watched_patterns:
+    - "config/*.yaml"
+    - "config/schemas/*.py"
+  
+  # Validation before reload
+  validation:
+    enabled: true
+    rollback_on_error: true
+    max_backup_count: 10
+
+# ============================================================================
+# DEPENDENCY CHECKING - Version-specific validation
+# ============================================================================
+dependencies:
+  # Required dependencies with version constraints
+  required:
+    python:
+      min_version: "3.11.0"
+      max_version: "3.12.999"
+    
+    pydantic:
+      min_version: "2.0.0"
+      max_version: "2.999.999"
+    
+    cryptography:
+      min_version: "43.0.0"
+      max_version: "43.999.999"
+  
+  # Optional dependencies
+  optional:
+    opencv-python:
+      min_version: "4.8.0"
+      feature: "enable_video"
+      
+    openai-whisper:
+      min_version: "1.0.0"
+      feature: "enable_transcript"
+      
+    redis:
+      min_version: "5.0.0"
+      feature: "redis_enabled"
+      
+    pydub:
+      min_version: "0.25.0"
+      feature: "enable_audio_processing"
+  
+  # Check on startup
+  check_on_startup: true
+  fail_on_missing_required: true
+  warn_on_missing_optional: true
+
+# ============================================================================
+# AUDIT LOG - Structured JSON format
+# ============================================================================
+audit_log:
+  # Primary storage format: json (structured) or yaml (readable)
+  format: "json"
+  
+  # Storage configuration
+  primary:
+    type: "file"
+    path: "var/audit.json"
+    max_size_mb: 2048  # 2GB
+    rotation_enabled: true
+    compression: true
+  
+  # Redis fallback
+  redis_fallback:
+    enabled: true
+    host: "${REDIS_HOST:-localhost}"
+    port: 6379
+    db: 0
+    queue_name: "audit_queue"
+    ttl_seconds: 86400  # 24 hours
+    
+  # Structured fields
+  fields:
+    - timestamp        # ISO 8601 timestamp
+    - event_type       # Event type/category
+    - actor            # Who performed the action
+    - action           # What action was performed
+    - target           # What was the target
+    - outcome          # Success/failure
+    - severity         # info/warning/error/critical
+    - metadata         # Additional context
+    - trace_id         # OpenTelemetry trace ID
+    - span_id          # OpenTelemetry span ID
+  
+  # Retention
+  retention_days: 2555  # 7 years for compliance
+  archive_enabled: true
+  archive_compression: "gzip"
+
+# ============================================================================
+# MONITORING
+# ============================================================================
+monitoring:
+  prometheus:
+    enabled: true
+    port: 9090
+    path: "/metrics"
+    
+  opentelemetry:
+    enabled: true
+    endpoint: "${OTEL_ENDPOINT:-localhost:4317}"
+    protocol: "grpc"
+    sampling_rate: 1.0
+
+# ============================================================================
+# SIGNAL PROCESSING
+# ============================================================================
+signals:
+  # Score thresholds
+  thresholds:
+    distress: 0.85
+    incident: 0.95
+    security_alert: 0.90
+  
+  # Processing limits
+  processing:
+    max_size_mb: 10
+    timeout_seconds: 300
+    enable_transcript: false
+    enable_video: false
+
+# ============================================================================
+# NOTIFICATIONS
+# ============================================================================
+notifications:
+  email:
+    enabled: false
+    smtp_host: "${SMTP_HOST}"
+    smtp_port: 587
+    from: "alerts@project-ai.local"
+    
+  slack:
+    enabled: false
+    webhook_url: "${SLACK_WEBHOOK_URL}"
+    
+  webhook:
+    enabled: false
+    url: "${WEBHOOK_URL}"
+
+# ============================================================================
+# COMPLIANCE
+# ============================================================================
+compliance:
+  gdpr_enabled: true
+  hipaa_enabled: false
+  soc2_enabled: true
