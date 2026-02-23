@@ -22,6 +22,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - `tests/test_bft_deployed.py` (10 tests): N=4/N=7 BFT validation, quorum thresholds, deployment profile detection
   - `tests/test_formal_properties.py` (20 tests): 7 paper theorems verified via Hypothesis property-based testing
 - **Performance Benchmarks** — `benchmarks/run_benchmarks.py` with real hardware measurements (Ed25519 keygen 20K ops/sec, sign 27K, verify 9K, full pipeline 4K ops/sec)
+- **Unity Project Meta Files** — Added `.meta` files for Editor, Scripts, and Tests asset directories
+- **Web Frontend Updates** — Updated `layout.tsx`, `page.tsx`, `globals.css`, and `package-lock.json`
 
 ## [Unreleased] - 2026-02-22
 
