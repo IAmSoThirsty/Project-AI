@@ -584,5 +584,3 @@ MIT License - See LICENSE file
 This system implements a God-Tier, monolithic architecture with zero placeholders, complete production-grade implementation, and non-bypassable constitutional enforcement.
 
 **ATLAS Ω is an instrument of Project-AI, not a replacement.**
-
-**No technical debt. No shortcuts. No compromises.**

@@ -1422,7 +1422,7 @@ Project-AI/
 ├── scripts/                    # Utility and deployment scripts
 ├── demos/                      # Demonstration scripts
 ├── tests/                      # Test suites
-│   ├── test_signal_flows_comprehensive.py  # 83+ tests, Tier 1 lifecycle
+│   ├── test_signal_flows_comprehensive.py  # 55 tests, Tier 1 lifecycle
 │   ├── test_enterprise_monolithic.py       # Integration + CB lifecycle
 │   └── ...                     # 20+ test files
 │
@@ -1462,10 +1462,6 @@ Apache 2.0 — See [LICENSE](LICENSE) for details.
 
 <p align="center">
   <strong>Project-AI — Sovereign by Design, Ethical by Constitution, Verifiable by Cryptography.</strong>
-</p>
-
-<p align="center">
-  <em>No technical debt. No shortcuts. No compromises.</em>
 </p>
 
 <p align="center">
