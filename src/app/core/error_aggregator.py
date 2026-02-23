@@ -23,6 +23,10 @@ from typing import Any, Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
+# Singleton instance
+_global_aggregator: Optional['GlobalErrorAggregator'] = None
+_aggregator_lock = threading.Lock()
+
 
 class GlobalErrorAggregator:
     """
@@ -121,7 +125,27 @@ class GlobalErrorAggregator:
             reason = f"Aggregated Errors (JSON): {self.serialize()}"
             
             # Store in vault
-            vault_id = vault.deny(doc, reason=reason)
+            vault_id = vault.deny(doc, reason=reason, metadata={
+                'error_count': len(self.entries),
+                'overflow_count': self.overflow_count
+            })
+            
+            # Audit the flush
+            try:
+                from src.app.governance.audit_log import AuditLog
+                audit = AuditLog()
+                audit.log_event(
+                    event_type='errors_flushed_to_vault',
+                    data={
+                        'vault_id': vault_id,
+                        'error_count': len(self.entries),
+                        'overflow_count': self.overflow_count
+                    },
+                    actor='error_aggregator',
+                    description=f'Flushed {len(self.entries)} errors to vault'
+                )
+            except Exception as e:
+                logger.error(f"Failed to audit error flush: {e}")
             
             # Clear entries after flushing
             entry_count = len(self.entries)
@@ -151,6 +175,25 @@ class GlobalErrorAggregator:
         with self.lock:
             self.entries.clear()
             logger.info("Error aggregator cleared")
+
+
+def get_error_aggregator() -> GlobalErrorAggregator:
+    """
+    Get the global error aggregator singleton instance.
+    
+    Returns:
+        GlobalErrorAggregator: Singleton instance
+    """
+    global _global_aggregator
+    
+    if _global_aggregator is None:
+        with _aggregator_lock:
+            # Double-check locking
+            if _global_aggregator is None:
+                _global_aggregator = GlobalErrorAggregator()
+                logger.info("GlobalErrorAggregator singleton created")
+    
+    return _global_aggregator
 
 
 if __name__ == '__main__':

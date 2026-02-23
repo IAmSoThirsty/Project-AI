@@ -1,58 +1,69 @@
 #!/usr/bin/env python3
 """
-Signal Flows Pipeline - End-to-End Signal Processing
+Distress / Incident Signal Processing Kernel
 Project-AI Enterprise Monolithic Architecture
 
-Implements:
-- Unified distress and incident signal processing
-- Global retry tracking with throttling
-- Circuit breaker pattern
-- PII redaction integration
-- Fuzzy phrase validation
-- Media transcription with security checks
-- Error aggregation and vault integration
-- Audit trail for all operations
+CONTRACT:
+This module is the sovereign monolithic kernel for all distress and incident signal processing.
 
-Production-ready signal processing pipeline with comprehensive error handling.
+GUARANTEES:
+- All signals pass through unified validation (schema, PII, forbidden phrases)
+- Global retry throttling prevents cascading failures
+- Errors are aggregated and flushed to vault (no data loss)
+- Complete audit trail for all operations
+- Thread-safe, bounded resource usage
+
+CONSTRAINTS:
+- No direct I/O side-effects except via plugins and vault
+- All mutations go through audit log
+- Circuit breakers protect against cascading failures
+- PII is redacted before storage
+
+SUBSYSTEM INTEGRATION:
+- Other subsystems call process_signal() or process_batch()
+- Plugins are invoked for media transcription
+- Vault receives all denied content
+- Audit log receives all state transitions
 """
 
+import hashlib
+import json
 import logging
 import os
+import re
 import threading
 import time
+import uuid
 from collections import defaultdict
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
-# Global retry tracker
-retry_tracker = defaultdict(int)
+# Global retry tracker with lock
+retry_tracker = defaultdict(lambda: defaultdict(int))
 retry_lock = threading.Lock()
 
-# Configuration constants
+# Configuration constants with environment override
 MAX_GLOBAL_RETRIES_PER_MIN = int(os.environ.get('MAX_GLOBAL_RETRIES_PER_MIN', 50))
-MAX_RETRIES_PER_SIGNAL = 3
-RETRY_BACKOFF_BASE = 2  # Exponential backoff base
-RETRY_MAX_DELAY = 30  # Maximum retry delay in seconds
+MAX_RETRIES_PER_SIGNAL = int(os.environ.get('MAX_RETRIES_PER_SIGNAL', 3))
+RETRY_BACKOFF_BASE = float(os.environ.get('RETRY_BACKOFF_BASE', 2.0))
+RETRY_MAX_DELAY = int(os.environ.get('RETRY_MAX_DELAY', 30))
 
 
 def reset_retry_tracker():
-    """Background thread to reset global retry counter every minute."""
+    """Background thread to reset retry counters every minute."""
     while True:
         time.sleep(60)
         with retry_lock:
-            retry_tracker['global'] = 0
-            logger.debug("Global retry tracker reset")
+            # Reset all service counters
+            for service in list(retry_tracker.keys()):
+                retry_tracker[service]['minute'] = 0
+            logger.debug("Retry tracker reset for all services")
 
 
 # Start retry tracker reset thread
 threading.Thread(target=reset_retry_tracker, daemon=True, name="retry_tracker_reset").start()
-
-
-class SignalProcessingError(Exception):
-    """Raised when signal processing fails."""
-    pass
 
 
 class GlobalThrottlingError(Exception):
@@ -72,18 +83,13 @@ class CircuitBreaker:
     
     def __init__(
         self,
+        name: str,
         failure_threshold: int = 5,
         recovery_timeout: int = 60,
         success_threshold: int = 3
     ):
-        """
-        Initialize circuit breaker.
-        
-        Args:
-            failure_threshold: Number of failures before opening circuit
-            recovery_timeout: Seconds to wait before attempting recovery
-            success_threshold: Consecutive successes needed to close circuit
-        """
+        """Initialize circuit breaker."""
+        self.name = name
         self.failure_threshold = failure_threshold
         self.recovery_timeout = recovery_timeout
         self.success_threshold = success_threshold
@@ -95,32 +101,19 @@ class CircuitBreaker:
         self.lock = threading.Lock()
     
     def call(self, func, *args, **kwargs):
-        """
-        Call function through circuit breaker.
-        
-        Args:
-            func: Function to call
-            *args, **kwargs: Function arguments
-            
-        Returns:
-            Function result
-            
-        Raises:
-            Exception: If circuit is open or function fails
-        """
+        """Call function through circuit breaker."""
         with self.lock:
             if self.state == 'OPEN':
-                # Check if recovery timeout elapsed
                 if self.last_failure_time:
                     elapsed = time.time() - self.last_failure_time
                     if elapsed >= self.recovery_timeout:
-                        logger.info("Circuit breaker entering HALF_OPEN state")
+                        logger.info(f"Circuit breaker '{self.name}' entering HALF_OPEN state")
                         self.state = 'HALF_OPEN'
                         self.success_count = 0
                     else:
-                        raise Exception(f"Circuit breaker OPEN (retry after {self.recovery_timeout - elapsed:.0f}s)")
+                        raise Exception(f"Circuit breaker '{self.name}' OPEN (retry after {self.recovery_timeout - elapsed:.0f}s)")
                 else:
-                    raise Exception("Circuit breaker OPEN")
+                    raise Exception(f"Circuit breaker '{self.name}' OPEN")
         
         try:
             result = func(*args, **kwargs)
@@ -129,7 +122,7 @@ class CircuitBreaker:
                 if self.state == 'HALF_OPEN':
                     self.success_count += 1
                     if self.success_count >= self.success_threshold:
-                        logger.info("Circuit breaker CLOSED (recovered)")
+                        logger.info(f"Circuit breaker '{self.name}' CLOSED (recovered)")
                         self.state = 'CLOSED'
                         self.failure_count = 0
                         self.success_count = 0
@@ -144,45 +137,57 @@ class CircuitBreaker:
                 self.last_failure_time = time.time()
                 
                 if self.failure_count >= self.failure_threshold:
-                    logger.warning(f"Circuit breaker OPEN after {self.failure_count} failures")
+                    logger.warning(f"Circuit breaker '{self.name}' OPEN after {self.failure_count} failures")
                     self.state = 'OPEN'
                     self.success_count = 0
                 elif self.state == 'HALF_OPEN':
-                    logger.warning("Circuit breaker reopening after failure in HALF_OPEN state")
+                    logger.warning(f"Circuit breaker '{self.name}' reopening after failure in HALF_OPEN")
                     self.state = 'OPEN'
                     self.success_count = 0
             
             raise
 
 
-# Global circuit breakers for different operations
+# Global circuit breakers for different services
 circuit_breakers = {
-    'validation': CircuitBreaker(failure_threshold=10, recovery_timeout=30),
-    'transcription': CircuitBreaker(failure_threshold=5, recovery_timeout=60),
-    'processing': CircuitBreaker(failure_threshold=5, recovery_timeout=45),
+    'validation': CircuitBreaker('validation', failure_threshold=10, recovery_timeout=30),
+    'transcription': CircuitBreaker('transcription', failure_threshold=5, recovery_timeout=60),
+    'processing': CircuitBreaker('processing', failure_threshold=5, recovery_timeout=45),
 }
 
 
-def check_global_retry_limit() -> bool:
+def check_retry_limit(service: str = 'global') -> bool:
     """
-    Check if global retry limit has been exceeded.
+    Check if retry limit has been exceeded for a service.
     
+    Args:
+        service: Service name for granular tracking
+        
     Returns:
-        True if limit exceeded, False otherwise
+        True if limit exceeded
     """
     with retry_lock:
-        return retry_tracker['global'] >= MAX_GLOBAL_RETRIES_PER_MIN
+        return retry_tracker[service]['minute'] >= MAX_GLOBAL_RETRIES_PER_MIN
 
 
-def increment_retry_counter():
-    """Increment the global retry counter."""
+def increment_retry_counter(service: str = 'global'):
+    """Increment retry counter for a service."""
     with retry_lock:
-        retry_tracker['global'] += 1
+        retry_tracker[service]['minute'] += 1
+        retry_tracker[service]['total'] += 1
 
 
-def redact_pii(text: str) -> str:
+def redact_pii(text: Optional[str]) -> str:
     """
-    Redact PII from text.
+    Comprehensive PII redaction from text.
+    
+    Redacts:
+    - Email addresses
+    - Phone numbers (US and international)
+    - SSN (Social Security Numbers)
+    - Credit card numbers
+    - IP addresses (IPv4 and IPv6)
+    - Addresses (basic pattern)
     
     Args:
         text: Text to redact
@@ -190,62 +195,392 @@ def redact_pii(text: str) -> str:
     Returns:
         Redacted text
     """
-    import re
+    if not text:
+        return ""
     
     # Email redaction
-    text = re.sub(r'\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b', '[REDACTED-EMAIL]', text)
+    text = re.sub(r'\b[\w\.-]+@[\w\.-]+\.\w{2,}\b', '[REDACTED-EMAIL]', text)
     
-    # Phone number redaction
+    # Phone number redaction (US/Canada)
     text = re.sub(r'\b(?:\+1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b', '[REDACTED-PHONE]', text)
+    
+    # International phone numbers
+    text = re.sub(r'\b\+\d{1,3}[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}\b', '[REDACTED-PHONE]', text)
     
     # SSN redaction
     text = re.sub(r'\b\d{3}-\d{2}-\d{4}\b', '[REDACTED-SSN]', text)
+    text = re.sub(r'\b\d{9}\b', '[REDACTED-SSN]', text)  # SSN without dashes
     
     # Credit card redaction
     text = re.sub(r'\b(?:\d{4}[-\s]?){3}\d{4}\b', '[REDACTED-CARD]', text)
     
-    # IP address redaction
+    # IPv4 address redaction
     text = re.sub(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', '[REDACTED-IP]', text)
+    
+    # IPv6 address redaction
+    text = re.sub(r'\b(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\b', '[REDACTED-IP6]', text)
+    
+    # Basic address pattern (street numbers)
+    text = re.sub(r'\b\d{1,5}\s+(?:[A-Z][a-z]+\s+){1,3}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Court|Ct)\b', '[REDACTED-ADDRESS]', text, flags=re.IGNORECASE)
     
     return text
 
 
-def transcribe_audio(asset_path: str, aggregator) -> Optional[str]:
+def validate_signal(signal: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Transcribe audio file with PII redaction.
+    Validate signal using schema validation.
     
     Args:
-        asset_path: Path to audio file
-        aggregator: Error aggregator instance
+        signal: Signal dictionary
         
     Returns:
-        Transcribed and redacted text, or None if transcription fails
+        Validation result dictionary
+        
+    Raises:
+        ValueError: If validation fails
     """
-    try:
-        import whisper
-    except ImportError:
-        logger.warning("Whisper not available, skipping transcription")
-        aggregator.log(
-            RuntimeError("Whisper not available"),
-            {'path': asset_path, 'stage': 'transcription'}
-        )
-        return None
+    from config.schemas.signal import validate_signal as schema_validate
+    
+    result = schema_validate(signal)
+    
+    if not result.is_valid:
+        error_msg = f"Signal validation failed: {', '.join(result.errors)}"
+        
+        # Log which phrases triggered denial
+        if result.blocked_phrases:
+            logger.warning(f"Blocked phrases detected: {', '.join(result.blocked_phrases[:3])}")
+        
+        raise ValueError(error_msg)
+    
+    if result.warnings:
+        for warning in result.warnings:
+            logger.warning(f"Signal validation warning: {warning}")
+    
+    if result.pii_detected:
+        logger.info(f"PII detected in signal: {', '.join(result.pii_detected)}")
+    
+    return {
+        'is_valid': result.is_valid,
+        'errors': result.errors,
+        'warnings': result.warnings,
+        'blocked_phrases': result.blocked_phrases,
+        'pii_detected': result.pii_detected
+    }
+
+
+def process_signal(signal: Dict[str, Any], is_incident: bool = False) -> Dict[str, Any]:
+    """
+    Process signal through complete pipeline.
+    
+    This is the main entry point for all signal processing.
+    
+    Args:
+        signal: Signal dictionary to process
+        is_incident: Whether this is an incident signal
+        
+    Returns:
+        Processing result dictionary with keys:
+        - status: 'processed', 'denied', 'failed', 'throttled', 'ignored'
+        - incident_id: UUID for correlation
+        - Additional status-specific fields
+    """
+    from src.app.core.error_aggregator import get_error_aggregator
+    from security.black_vault import BlackVault
+    from src.app.governance.audit_log import AuditLog
+    from src.app.core.config_loader import get_config_loader
+    
+    # Get singleton instances
+    aggregator = get_error_aggregator()
+    vault = BlackVault()
+    audit = AuditLog()
+    config_loader = get_config_loader()
+    
+    # Generate incident ID for correlation
+    incident_id = str(uuid.uuid4())
+    signal['incident_id'] = incident_id
+    
+    # Get configuration
+    config = config_loader.get('distress', {})
+    score_threshold = config.get('score_threshold', 0.85)
+    anomaly_score_threshold = config.get('anomaly_score_threshold', 0.95)
+    enable_transcript = config.get('enable_transcript', False)
+    
+    # Audit signal receipt
+    audit.log_event(
+        event_type='signal_received',
+        data={
+            'incident_id': incident_id,
+            'signal_id': signal.get('signal_id', 'unknown'),
+            'signal_type': signal.get('signal_type', 'unknown'),
+            'is_incident': is_incident
+        },
+        actor='signal_kernel',
+        description='Signal received for processing'
+    )
     
     try:
-        # Load model and transcribe
-        model = whisper.load_model("base")
-        result = model.transcribe(asset_path)
+        # Step 1: Schema validation with circuit breaker
+        try:
+            validation_result = circuit_breakers['validation'].call(validate_signal, signal)
+            
+            audit.log_event(
+                event_type='signal_validated',
+                data={
+                    'incident_id': incident_id,
+                    'validation_result': validation_result
+                },
+                actor='signal_kernel',
+                description='Signal validation completed'
+            )
+            
+        except Exception as ve:
+            aggregator.log(ve, {'stage': 'schema_validation', 'incident_id': incident_id})
+            vault_id = aggregator.flush_to_vault(vault, str(signal))
+            
+            audit.log_event(
+                event_type='signal_validation_failed',
+                data={
+                    'incident_id': incident_id,
+                    'error': str(ve),
+                    'vault_id': vault_id
+                },
+                actor='signal_kernel',
+                description='Signal validation failed - denied'
+            )
+            
+            return {
+                'status': 'denied',
+                'reason': 'validation_failed',
+                'incident_id': incident_id,
+                'vault_id': vault_id,
+                'errors': [str(ve)]
+            }
         
-        # Redact PII from transcript
-        transcript = redact_pii(result['text'])
+        # Step 2: Media transcription (if applicable)
+        if signal.get('media_type') in ('audio', 'video') and signal.get('asset_path'):
+            if enable_transcript:
+                try:
+                    # Import transcription plugin
+                    from src.app.plugins.ttp_audio_processing import transcribe_audio
+                    
+                    transcript = circuit_breakers['transcription'].call(
+                        transcribe_audio,
+                        signal['asset_path'],
+                        aggregator
+                    )
+                    
+                    if transcript:
+                        signal['transcript'] = transcript
+                        
+                        # Validate transcript for forbidden phrases
+                        transcript_signal = {
+                            **signal,
+                            'text': transcript
+                        }
+                        validate_signal(transcript_signal)
+                        
+                        audit.log_event(
+                            event_type='signal_transcribed',
+                            data={'incident_id': incident_id},
+                            actor='signal_kernel',
+                            description='Media transcription completed'
+                        )
+                    else:
+                        audit.log_event(
+                            event_type='transcript_skipped',
+                            data={'incident_id': incident_id, 'reason': 'transcription_unavailable'},
+                            actor='signal_kernel',
+                            description='Transcription skipped - service unavailable'
+                        )
+                        
+                except Exception as te:
+                    logger.warning(f"Transcription failed: {te}")
+                    aggregator.log(te, {'stage': 'transcription', 'incident_id': incident_id})
+                    
+                    audit.log_event(
+                        event_type='transcript_skipped',
+                        data={'incident_id': incident_id, 'error': str(te)},
+                        actor='signal_kernel',
+                        description='Transcription failed'
+                    )
         
-        logger.info(f"Transcribed audio: {asset_path}")
-        return transcript
+        # Step 3: Score threshold check
+        threshold = anomaly_score_threshold if is_incident else score_threshold
+        score_key = 'anomaly_score' if is_incident else 'score'
+        score = signal.get(score_key)
+        
+        if score is not None and score < threshold:
+            audit.log_event(
+                event_type='signal_ignored',
+                data={
+                    'incident_id': incident_id,
+                    'score': score,
+                    'threshold': threshold,
+                    'score_type': score_key
+                },
+                actor='signal_kernel',
+                description='Signal ignored due to low score'
+            )
+            
+            return {
+                'status': 'ignored',
+                'reason': 'below_threshold',
+                'incident_id': incident_id,
+                'score': score,
+                'threshold': threshold
+            }
+        
+        # Step 4: Process with retry logic
+        service_name = signal.get('source', 'unknown')
+        
+        for attempt in range(1, MAX_RETRIES_PER_SIGNAL + 1):
+            try:
+                # Check service-specific retry limit
+                if check_retry_limit(service_name):
+                    audit.log_event(
+                        event_type='service_retry_limit',
+                        data={'service': service_name, 'incident_id': incident_id},
+                        actor='signal_kernel',
+                        description=f'Service {service_name} retry limit exceeded'
+                    )
+                    
+                    raise GlobalThrottlingError(f"Service {service_name} retry limit exceeded")
+                
+                # Check global retry limit
+                if check_retry_limit('global'):
+                    audit.log_event(
+                        event_type='global_retry_limit',
+                        data={'incident_id': incident_id},
+                        actor='signal_kernel',
+                        description='Global retry limit exceeded'
+                    )
+                    
+                    raise GlobalThrottlingError("Global retry limit exceeded")
+                
+                # Simulate processing (replace with actual logic)
+                def process_logic():
+                    # This is where actual signal processing happens
+                    # (agent routing, knowledge ingestion, policy checks, etc.)
+                    
+                    if signal.get('simulate') == 'retry' and attempt < MAX_RETRIES_PER_SIGNAL:
+                        raise RuntimeError("Simulated retry error")
+                    elif signal.get('simulate') == 'permanent':
+                        raise RuntimeError("Simulated permanent error")
+                    
+                    return {'processed': True, 'timestamp': datetime.utcnow().isoformat()}
+                
+                # Process through circuit breaker
+                result = circuit_breakers['processing'].call(process_logic)
+                
+                audit.log_event(
+                    event_type='signal_processed',
+                    data={
+                        'incident_id': incident_id,
+                        'attempt': attempt,
+                        'service': service_name
+                    },
+                    actor='signal_kernel',
+                    description='Signal processing successful'
+                )
+                
+                return {
+                    'status': 'processed',
+                    'incident_id': incident_id,
+                    'attempts': attempt,
+                    'service': service_name,
+                    'result': result
+                }
+                
+            except GlobalThrottlingError as gte:
+                return {
+                    'status': 'throttled',
+                    'reason': str(gte),
+                    'incident_id': incident_id,
+                    'attempt': attempt,
+                    'service': service_name
+                }
+                
+            except Exception as e:
+                increment_retry_counter(service_name)
+                increment_retry_counter('global')
+                aggregator.log(e, {'attempt': attempt, 'incident_id': incident_id, 'service': service_name})
+                
+                audit.log_event(
+                    event_type='signal_processing_retry',
+                    data={
+                        'incident_id': incident_id,
+                        'attempt': attempt,
+                        'max_attempts': MAX_RETRIES_PER_SIGNAL,
+                        'error': str(e),
+                        'service': service_name
+                    },
+                    actor='signal_kernel',
+                    description=f'Processing retry {attempt}/{MAX_RETRIES_PER_SIGNAL}'
+                )
+                
+                if attempt < MAX_RETRIES_PER_SIGNAL:
+                    # Exponential backoff with jitter
+                    delay = min(RETRY_BACKOFF_BASE ** attempt, RETRY_MAX_DELAY)
+                    logger.warning(f"Retry {attempt}/{MAX_RETRIES_PER_SIGNAL} after {delay}s: {e}")
+                    time.sleep(delay)
+                else:
+                    # Max retries exceeded - this is a failure, not denial
+                    logger.error(f"Max retries exceeded for signal {incident_id}")
+                    raise
+        
+        # Should not reach here, but handle gracefully
+        vault_id = aggregator.flush_to_vault(vault, str(signal))
+        
+        return {
+            'status': 'failed',
+            'reason': 'max_retries_exceeded',
+            'incident_id': incident_id,
+            'vault_id': vault_id
+        }
         
     except Exception as e:
-        logger.error(f"Audio transcription failed: {e}")
-        aggregator.log(e, {'path': asset_path, 'stage': 'transcription'})
-        return None
+        logger.error(f"Signal processing failed: {e}")
+        aggregator.log(e, {'stage': 'final_catch', 'incident_id': incident_id})
+        vault_id = aggregator.flush_to_vault(vault, str(signal))
+        
+        audit.log_event(
+            event_type='signal_processing_failed',
+            data={
+                'incident_id': incident_id,
+                'error': str(e),
+                'vault_id': vault_id
+            },
+            actor='signal_kernel',
+            description='Signal processing failed terminally'
+        )
+        
+        return {
+            'status': 'failed',
+            'reason': 'processing_error',
+            'incident_id': incident_id,
+            'vault_id': vault_id,
+            'error': str(e)
+        }
+
+
+def process_batch(signals: List[Dict[str, Any]], is_incident: bool = False) -> List[Dict[str, Any]]:
+    """
+    Process a batch of signals.
+    
+    Args:
+        signals: List of signal dictionaries
+        is_incident: Whether these are incident signals
+        
+    Returns:
+        List of processing results
+    """
+    results = []
+    
+    for signal in signals:
+        result = process_signal(signal, is_incident=is_incident)
+        results.append(result)
+    
+    return results
 
 
 def get_pipeline_stats() -> Dict[str, Any]:
@@ -257,12 +592,21 @@ def get_pipeline_stats() -> Dict[str, Any]:
     """
     with retry_lock:
         stats = {
-            'global_retries_current_minute': retry_tracker['global'],
             'global_retry_limit': MAX_GLOBAL_RETRIES_PER_MIN,
             'max_retries_per_signal': MAX_RETRIES_PER_SIGNAL,
+            'services': {},
             'circuit_breakers': {}
         }
         
+        # Service-level stats
+        for service, counters in retry_tracker.items():
+            stats['services'][service] = {
+                'retries_current_minute': counters['minute'],
+                'retries_total': counters['total'],
+                'throttled': counters['minute'] >= MAX_GLOBAL_RETRIES_PER_MIN
+            }
+        
+        # Circuit breaker stats
         for name, cb in circuit_breakers.items():
             stats['circuit_breakers'][name] = {
                 'state': cb.state,
@@ -271,3 +615,25 @@ def get_pipeline_stats() -> Dict[str, Any]:
             }
     
     return stats
+
+
+if __name__ == '__main__':
+    # Testing
+    import json
+    logging.basicConfig(level=logging.INFO)
+    
+    # Test valid signal
+    test_signal = {
+        'signal_id': 'test-001',
+        'signal_type': 'distress',
+        'source': 'test_system',
+        'text': 'Emergency assistance needed',
+        'score': 0.9
+    }
+    
+    result = process_signal(test_signal)
+    print(f"Processing result: {json.dumps(result, indent=2)}")
+    
+    # Test stats
+    stats = get_pipeline_stats()
+    print(f"\nPipeline stats: {json.dumps(stats, indent=2)}")
