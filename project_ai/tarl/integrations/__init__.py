@@ -23,54 +23,12 @@ Golden Path Recipes & Configuration Presets:
 - Compliance-specific configurations (healthcare, financial, EU)
 - Golden path recipes for common use cases
 - Quick-start one-line configuration
+
+Imports are lazy to prevent circular import issues when submodules
+are imported directly (e.g., ``from .orchestration import X``).
 """
 
-from .config_presets import (
-    ComplianceProfile,
-    ConfigBuilder,
-    ConfigPresets,
-    DeploymentProfile,
-    TarlConfig,
-    quick_start,
-)
-from .golden_paths import GoldenPathRecipes
-from .orchestration import (
-    AgentOrchestrator,
-    Artifact,
-    ArtifactRelationship,
-    Capability,
-    CapabilityEngine,
-    DeterministicVM,
-    EventRecorder,
-    Policy,
-    ProvenanceManager,
-    TarlStackBox,
-    Workflow,
-    WorkflowEventKind,
-)
-from .orchestration_extended import (
-    Activity,
-    ActivityExecutor,
-    ExtendedTarlStackBox,
-    HumanInTheLoopManager,
-    LongRunningWorkflowManager,
-    MetaOrchestrator,
-    MultiTenantManager,
-    ResourceQuota,
-    TaskQueue,
-    TaskQueuePriority,
-    WorkerPool,
-    WorkflowHierarchyManager,
-)
-from .orchestration_governance import (
-    AIProvenanceManager,
-    CICDEnforcementManager,
-    ComplianceFramework,
-    ComplianceManager,
-    FullGovernanceStack,
-    GovernanceEngine,
-    RuntimeSafetyManager,
-)
+import importlib as _importlib
 
 __all__ = [
     # Core orchestration
@@ -116,3 +74,48 @@ __all__ = [
     "ComplianceProfile",
     "quick_start",
 ]
+
+# ---------------------------------------------------------------------------
+# Lazy-import mapping: name -> (submodule, attribute)
+# ---------------------------------------------------------------------------
+_LAZY_MAP: dict[str, tuple[str, str]] = {}
+for _name in [
+    "TarlStackBox", "Workflow", "Capability", "Policy", "DeterministicVM",
+    "AgentOrchestrator", "CapabilityEngine", "EventRecorder",
+    "ProvenanceManager", "WorkflowEventKind", "Artifact", "ArtifactRelationship",
+]:
+    _LAZY_MAP[_name] = ("orchestration", _name)
+
+for _name in [
+    "ExtendedTarlStackBox", "TaskQueue", "TaskQueuePriority", "ResourceQuota",
+    "WorkerPool", "LongRunningWorkflowManager", "Activity", "ActivityExecutor",
+    "MultiTenantManager", "HumanInTheLoopManager", "MetaOrchestrator",
+    "WorkflowHierarchyManager",
+]:
+    _LAZY_MAP[_name] = ("orchestration_extended", _name)
+
+for _name in [
+    "FullGovernanceStack", "GovernanceEngine", "ComplianceManager",
+    "ComplianceFramework", "RuntimeSafetyManager", "AIProvenanceManager",
+    "CICDEnforcementManager",
+]:
+    _LAZY_MAP[_name] = ("orchestration_governance", _name)
+
+for _name in [
+    "GoldenPathRecipes",
+]:
+    _LAZY_MAP[_name] = ("golden_paths", _name)
+
+for _name in [
+    "ConfigPresets", "ConfigBuilder", "TarlConfig", "DeploymentProfile",
+    "ComplianceProfile", "ComplianceProfile", "quick_start",
+]:
+    _LAZY_MAP[_name] = ("config_presets", _name)
+
+
+def __getattr__(name: str):
+    if name in _LAZY_MAP:
+        submod, attr = _LAZY_MAP[name]
+        module = _importlib.import_module(f".{submod}", __name__)
+        return getattr(module, attr)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

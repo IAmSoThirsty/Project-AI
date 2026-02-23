@@ -13,6 +13,8 @@ ______________________________________________________________________
 ```text
 [GENESIS]
     ↓
+[TEST INFRASTRUCTURE MATURITY] ← 2026-02-23
+    ↓
 [PSIA CRYPTO INTEGRATION] ← 2026-02-23
     ↓
 [COMPONENT RESTORATION] ← 2026-02-23
@@ -31,6 +33,26 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 ## Release History
+
+### TEST INFRASTRUCTURE MATURITY
+
+**Date:** 2026-02-23  **Status:** Complete  **Trigger:** Test suite audit revealed 4 collection errors, stale config, and deprecated FastAPI patterns
+
+**Test Fixes:**
+
+- ✅ `tests/test_defense_engine_integration.py` — Fixed import: `src.app.defense_engine` → `engines.zombie_defense.defense_engine`
+- ✅ `tests/test_planetary_defense_monolith.py` — Fixed import: `app.core` → `app.governance`
+- ✅ `tests/test_hydra_50_engine.py` — Fixed import: `app.core.hydra_50_integration` → `engines.hydra_50.hydra_50_integration`
+- ✅ `tests/test_policy_guard.py` — Rewrote from scratch with `policies/__init__.py` (7 tests)
+
+**Configuration Hardening:**
+
+- ✅ Deleted stale `pytest.ini` — Single source of truth in `pyproject.toml`
+- ✅ Registered missing markers (`load`, `chaos`, `soak`)
+- ✅ Migrated `api/main.py` from deprecated `@app.on_event()` to `lifespan` context manager
+- ✅ Fixed 3 broken `app.core.planetary_defense_monolith` → `app.governance.planetary_defense_monolith` in runtime
+
+**Metrics:** 7,500+ tests collected, 0 collection errors, 0 import failures
 
 ### COMPONENT RESTORATION
 

@@ -24,7 +24,8 @@ from src.app.core.interface_abstractions import (
     validate_subsystem_interface,
 )
 from src.app.core.system_registry import SubsystemPriority, SystemRegistry
-from src.app.defense_engine import DefenseEngine
+sys.path.insert(0, str(Path(__file__).parent.parent / "engines" / "zombie_defense"))
+from defense_engine import DefenseEngine
 
 # Suppress logging during tests
 logging.getLogger().setLevel(logging.ERROR)

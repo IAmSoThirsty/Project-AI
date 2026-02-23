@@ -90,25 +90,61 @@ try:
 except ImportError as e:
     print(f"[WARN] Legion endpoints not available: {e}")
 
+# ---- Lifespan (replaces deprecated @app.on_event) ----
+
+import contextlib
+
+
+@contextlib.asynccontextmanager
+async def lifespan(application: FastAPI):
+    """Startup / shutdown lifecycle for the application."""
+    # ---- startup ----
+    try:
+        from api.save_points_routes import start_auto_save
+
+        await start_auto_save()
+        print("[OK] Auto-save service started (15-min intervals)")
+    except ImportError:
+        pass
+
+    try:
+        from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
+
+        orchestrator = get_orchestrator()
+        await orchestrator.start()
+        print("[OK] Contrarian Firewall Orchestrator started")
+    except ImportError:
+        pass
+
+    yield  # application is running
+
+    # ---- shutdown ----
+    try:
+        from api.save_points_routes import stop_auto_save
+
+        await stop_auto_save()
+        print("[OK] Auto-save service stopped")
+    except ImportError:
+        pass
+
+    try:
+        from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
+
+        orchestrator = get_orchestrator()
+        await orchestrator.stop()
+        print("[OK] Contrarian Firewall Orchestrator stopped")
+    except ImportError:
+        pass
+
+
+# Attach lifespan to the app
+app.router.lifespan_context = lifespan
+
 # Include Save Points router
 try:
     from api.save_points_routes import router as save_points_router
-    from api.save_points_routes import start_auto_save, stop_auto_save
 
     app.include_router(save_points_router)
-
-    @app.on_event("startup")
-    async def startup_auto_save():
-        """Start auto-save service on app startup"""
-        await start_auto_save()
-        print("[OK] Auto-save service started (15-min intervals)")
-
-    @app.on_event("shutdown")
-    async def shutdown_auto_save():
-        """Stop auto-save service on app shutdown"""
-        await stop_auto_save()
-        print("[OK] Auto-save service stopped")
-
     print("[OK] Save Points API endpoints registered")
 except ImportError as e:
     print(f"[WARN] Save Points endpoints not available: {e}")
@@ -119,26 +155,6 @@ try:
 
     app.include_router(firewall_router)
     print("[OK] Contrarian Firewall endpoints registered")
-
-    # Initialize orchestrator on startup
-    from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
-
-    @app.on_event("startup")
-    async def startup_firewall_orchestrator():
-        """Start the Contrarian Firewall Orchestrator"""
-        orchestrator = get_orchestrator()
-        await orchestrator.start()
-        print("[OK] Contrarian Firewall Orchestrator started")
-
-    @app.on_event("shutdown")
-    async def shutdown_firewall_orchestrator():
-        """Stop the Contrarian Firewall Orchestrator"""
-        from src.app.security.contrarian_firewall_orchestrator import get_orchestrator
-
-        orchestrator = get_orchestrator()
-        await orchestrator.stop()
-        print("[OK] Contrarian Firewall Orchestrator stopped")
-
 except ImportError as e:
     print(f"[WARN] Contrarian Firewall endpoints not available: {e}")
 
@@ -255,7 +271,7 @@ class Galahad:
 
         This wraps the Planetary Defense Core's advisory system.
         """
-        from app.core.planetary_defense_monolith import PLANETARY_CORE
+        from app.governance.planetary_defense_monolith import PLANETARY_CORE
 
         # Map intent to context for Galahad assessment
         context = {
@@ -287,7 +303,7 @@ class Cerberus:
 
         This wraps the Planetary Defense Core's advisory system.
         """
-        from app.core.planetary_defense_monolith import PLANETARY_CORE
+        from app.governance.planetary_defense_monolith import PLANETARY_CORE
 
         # Get advisory assessment from Constitutional Cerberus
         context = {}
@@ -316,7 +332,7 @@ class CodexDeus:
 
         This wraps the Planetary Defense Core's advisory system.
         """
-        from app.core.planetary_defense_monolith import PLANETARY_CORE
+        from app.governance.planetary_defense_monolith import PLANETARY_CORE
 
         # Get advisory assessment from Constitutional CodexDeus
         context = {}

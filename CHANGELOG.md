@@ -9,27 +9,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - **Re-Integration of Removed Components** — Full audit-driven restoration of deleted subsystems, CI/CD, and infrastructure (22 files total)
-  - **Priority 1 — Critical Fix:** Restored `src/app/core/domain_base.py` (328 lines) — `DomainSubsystemBase` class required by all 10 domain subsystems; deletion left broken imports across `agi_safeguards.py`, `biomedical_defense.py`, `command_control.py`, etc.
-  - **Priority 2-3 — CI/CD Workflows (7 new):**
-    - `.github/workflows/ci.yml`: Core CI pipeline (Ruff + Black + MyPy lint, pytest with coverage, Python 3.11/3.12 matrix, basic secret detection)
-    - `.github/workflows/codeql.yml`: GitHub CodeQL semantic analysis for Python and JavaScript (push/PR + weekly schedule)
-    - `.github/workflows/security-secret-scan.yml`: TruffleHog + detect-secrets scanning, .env file detection, private key detection
-    - `.github/workflows/bandit.yml`: Bandit Python security linter (fails on HIGH, warns on MEDIUM, JSON report artifact)
-    - `.github/workflows/deploy.yml`: Deployment pipeline (tag-triggered or manual dispatch, validate → build → staging → production with environment gates)
-    - `.github/workflows/format-and-fix.yml`: Auto-format with Black/isort/Ruff on push to develop, check-only on PRs
-    - `.github/workflows/stale.yml`: Stale issue/PR cleanup (60/30 day thresholds, exempt pinned/security/critical/P0)
-  - **Priority 4 — Shutdown Smoke Test:** New `tests/test_shutdown_smoke.py` (274 lines) — 8 test classes covering clean shutdown, thread termination, state persistence, concurrent shutdown safety, zombie thread detection, health check transitions
-  - **Priority 5 — Stress Testing Framework (7 files restored from git):**
-    - `src/app/testing/__init__.py`, `anti_sovereign_stress_tests.py`, `conversational_stress_orchestrator.py`, `governance_integration.py`, `run_anti_sovereign_tests.py`, `stress_test_dashboard.py`
-    - `tests/test_anti_sovereign_stress_tests.py` — meta-test for the stress framework
-  - **Priority 6 — Engine Packages (2 restored from git):**
-    - `engines/simulation_contract/__init__.py` — Formal simulation contracts (preconditions, postconditions, invariants)
-    - `engines/constitutional_scenario/__init__.py` — Constitutional scenario simulation for Triumvirate governance training
-  - **Priority 8 — Data Templates (4 new):**
-    - `data/settings.example.json`: Application settings schema template
-    - `data/learning_requests/requests.example.json`: Learning pipeline request schema
-    - `data/continuous_learning/curated.example.json`: Curated learning content schema
-    - `data/sovereign_messages/README.md`: Sovereign messaging data layer schema documentation
+
+### Fixed
+
+- **Test Infrastructure Hardening** — Resolved all 4 test collection errors, achieving 7,500+ passing tests
+  - Fixed `test_defense_engine_integration.py`: Corrected import from `src.app.defense_engine` → `engines.zombie_defense.defense_engine`
+  - Fixed `test_planetary_defense_monolith.py`: Corrected import from `app.core` → `app.governance`
+  - Fixed `test_hydra_50_engine.py`: Corrected import from `app.core.hydra_50_integration` → `engines.hydra_50.hydra_50_integration`
+  - Rewrote `test_policy_guard.py`: Added `policies/__init__.py`, comprehensive test coverage (7 tests)
+  - Consolidated pytest config: Deleted stale `pytest.ini`, single source of truth in `pyproject.toml`
+  - Registered missing markers (`load`, `chaos`, `soak`) to eliminate warnings
+- **Runtime Import Fix** — Fixed 3 broken `app.core.planetary_defense_monolith` imports in `api/main.py` → `app.governance.planetary_defense_monolith`
+- **FastAPI Deprecation Migration** — Replaced 4 deprecated `@app.on_event()` handlers with modern `lifespan` async context manager
+- **Documentation Accuracy** — Updated `PROJECT_STATUS.md` test counts from 38 to 7,500+
+
+### Changed
+
+- **Priority 1 — Critical Fix:** Restored `src/app/core/domain_base.py` (328 lines) — `DomainSubsystemBase` class required by all 10 domain subsystems; deletion left broken imports across `agi_safeguards.py`, `biomedical_defense.py`, `command_control.py`, etc.
+- **Priority 2-3 — CI/CD Workflows (7 new):**
+  - `.github/workflows/ci.yml`: Core CI pipeline (Ruff + Black + MyPy lint, pytest with coverage, Python 3.11/3.12 matrix, basic secret detection)
+  - `.github/workflows/codeql.yml`: GitHub CodeQL semantic analysis for Python and JavaScript (push/PR + weekly schedule)
+  - `.github/workflows/security-secret-scan.yml`: TruffleHog + detect-secrets scanning, .env file detection, private key detection
+  - `.github/workflows/bandit.yml`: Bandit Python security linter (fails on HIGH, warns on MEDIUM, JSON report artifact)
+  - `.github/workflows/deploy.yml`: Deployment pipeline (tag-triggered or manual dispatch, validate → build → staging → production with environment gates)
+  - `.github/workflows/format-and-fix.yml`: Auto-format with Black/isort/Ruff on push to develop, check-only on PRs
+  - `.github/workflows/stale.yml`: Stale issue/PR cleanup (60/30 day thresholds, exempt pinned/security/critical/P0)
+- **Priority 4 — Shutdown Smoke Test:** New `tests/test_shutdown_smoke.py` (274 lines) — 8 test classes covering clean shutdown, thread termination, state persistence, concurrent shutdown safety, zombie thread detection, health check transitions
+- **Priority 5 — Stress Testing Framework (7 files restored from git):**
+  - `src/app/testing/__init__.py`, `anti_sovereign_stress_tests.py`, `conversational_stress_orchestrator.py`, `governance_integration.py`, `run_anti_sovereign_tests.py`, `stress_test_dashboard.py`
+  - `tests/test_anti_sovereign_stress_tests.py` — meta-test for the stress framework
+- **Priority 6 — Engine Packages (2 restored from git):**
+  - `engines/simulation_contract/__init__.py` — Formal simulation contracts (preconditions, postconditions, invariants)
+  - `engines/constitutional_scenario/__init__.py` — Constitutional scenario simulation for Triumvirate governance training
+- **Priority 8 — Data Templates (4 new):**
+  - `data/settings.example.json`: Application settings schema template
+  - `data/learning_requests/requests.example.json`: Learning pipeline request schema
+  - `data/continuous_learning/curated.example.json`: Curated learning content schema
+  - `data/sovereign_messages/README.md`: Sovereign messaging data layer schema documentation
 
 - **PSIA Real Cryptography Integration** — Replaced all SHA-256 stub signatures with production Ed25519 cryptography and RFC 3161 timestamps
   - `src/psia/crypto/ed25519_provider.py`: `Ed25519Provider` (sign/verify/serialize), `Ed25519KeyPair`, `KeyStore` — real Ed25519 via PyCA `cryptography` library

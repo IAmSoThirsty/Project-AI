@@ -6,7 +6,7 @@ from datetime import UTC
 
 import pytest
 
-from app.core.planetary_defense_monolith import (
+from app.governance.planetary_defense_monolith import (
     PLANETARY_CORE,
     AccountabilityRecord,
     Cerberus,

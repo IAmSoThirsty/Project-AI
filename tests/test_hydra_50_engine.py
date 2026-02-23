@@ -25,7 +25,10 @@ from app.core.hydra_50_engine import (
     SlowBurnPandemicScenario,
     SovereignDebtCascadeScenario,
 )
-from app.core.hydra_50_integration import (
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).parent.parent / "engines" / "hydra_50"))
+from hydra_50_integration import (
     CommandCenterIntegration,
     GlobalScenarioEngineIntegration,
     GUIExportHooks,

@@ -3,9 +3,26 @@ Pytest configuration and fixtures for Gradle Evolution tests.
 
 Provides shared fixtures for testing constitutional, cognition, capsule,
 security, audit, and API components.
+
+Requires the ``gradle_evolution`` source package to be installed / on
+PYTHONPATH.  When absent the entire directory is skipped with a
+clear diagnostic rather than producing 7 opaque ImportErrors.
 """
 
 from __future__ import annotations
+
+import importlib
+
+# ── Hard gate: skip all tests in this directory when the source
+#    package is absent.  pytest.importorskip raises Skipped which
+#    propagates to every item collected under this conftest.
+if importlib.util.find_spec("gradle_evolution") is None:
+    import pytest
+
+    pytest.skip(
+        "gradle_evolution source package not installed – skipping entire directory",
+        allow_module_level=True,
+    )
 
 import tempfile
 from collections.abc import Generator

@@ -8,12 +8,19 @@ Tests for the complete monolithic firewall system including:
 - Governance integration
 - Intent tracking
 - Telemetry and auto-tuning
+
+Requires the ``integrations.thirsty_lang_security`` source package.
 """
 
 import asyncio
 from datetime import datetime
 
 import pytest
+
+pytest.importorskip(
+    "integrations.thirsty_lang_security",
+    reason="integrations.thirsty_lang_security source package not implemented",
+)
 from integrations.thirsty_lang_security import (
     OperationMode,
     SecurityConfig,

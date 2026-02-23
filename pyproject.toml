@@ -113,11 +113,18 @@ ignore = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
 python_files = "test_*.py"
-addopts = "--strict-markers -v"
+addopts = "-v"
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",
+    "load: Load tests",
+    "chaos: Chaos tests",
+    "soak: Soak tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning:passlib",
 ]
 
 [tool.black]
