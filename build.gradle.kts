@@ -445,6 +445,55 @@ tasks.register<Exec>("pythonRunApi") {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// TAAR — Thirstys Active Agent Runner (Intelligent Build Orchestration)
+// ═══════════════════════════════════════════════════════════════════════════
+
+tasks.register<Exec>("taarRun") {
+    group = "taar"
+    description = "Run affected tasks for uncommitted changes (change-aware)"
+    
+    dependsOn("pythonInstall")
+    
+    val pythonExec = if (System.getProperty("os.name").lowercase().contains("windows")) {
+        file("${pythonVenvDir}/Scripts/python.exe").absolutePath
+    } else {
+        file("${pythonVenvDir}/bin/python").absolutePath
+    }
+    
+    commandLine(pythonExec, "-m", "taar.cli", "run")
+}
+
+tasks.register<Exec>("taarWatch") {
+    group = "taar"
+    description = "Start TAAR active watch mode — auto-run on file save"
+    
+    dependsOn("pythonInstall")
+    
+    val pythonExec = if (System.getProperty("os.name").lowercase().contains("windows")) {
+        file("${pythonVenvDir}/Scripts/python.exe").absolutePath
+    } else {
+        file("${pythonVenvDir}/bin/python").absolutePath
+    }
+    
+    commandLine(pythonExec, "-m", "taar.cli", "watch")
+}
+
+tasks.register<Exec>("taarCI") {
+    group = "taar"
+    description = "TAAR CI mode — fresh run, no cache, fail-fast"
+    
+    dependsOn("pythonInstall")
+    
+    val pythonExec = if (System.getProperty("os.name").lowercase().contains("windows")) {
+        file("${pythonVenvDir}/Scripts/python.exe").absolutePath
+    } else {
+        file("${pythonVenvDir}/bin/python").absolutePath
+    }
+    
+    commandLine(pythonExec, "-m", "taar.cli", "ci")
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // NODE.JS / NPM ORCHESTRATION (Electron Desktop, Web Frontend)
 // ═══════════════════════════════════════════════════════════════════════════
 

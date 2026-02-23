@@ -12,6 +12,9 @@ license = {text = "MIT"}
 authors = [{name = "Project AI Team"}]
 keywords = ["ai", "assistant", "pyqt6", "machine-learning", "constitutional-ai", "asimov-laws", "cryptographic-audit", "ethical-ai", "open-source", "governance"]
 dynamic = ["scripts"]
+
+[project.scripts]
+taar = "taar.cli:cli_main"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -62,6 +65,10 @@ dev = [
     "pytest-cov>=4.0.0",
     "black>=22.0.0",
     "flake8>=7.0.0",
+]
+taar = [
+    "rich>=13.0.0",
+    "watchdog>=3.0.0",
 ]
 
 [project.urls]

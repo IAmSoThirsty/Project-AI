@@ -9,6 +9,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - **Re-Integration of Removed Components** — Full audit-driven restoration of deleted subsystems, CI/CD, and infrastructure (22 files total)
+- **TAAR v1.0.0 — Thirstys Active Agent Runner (Phase 1)** — Intelligent build/test/lint orchestration for the polyglot monorepo
+  - `taar/config.py`: Typed config loader with `tomllib`, dataclasses for runners, commands, priorities
+  - `taar/change_detector.py`: Git-aware change detection (staged, unstaged, untracked, revision diffs) with SHA-256 content hashing
+  - `taar/graph.py`: Cross-language impact analysis — maps changed files → affected runners via glob matching and heuristic test discovery
+  - `taar/cache.py`: Content-addressed result cache with TTL expiration and cache statistics
+  - `taar/executor.py`: Async concurrent command executor with semaphore-controlled parallelism
+  - `taar/scheduler.py`: DAG-based task scheduler — priority groups run sequentially, same-priority tasks run concurrently
+  - `taar/reporter.py`: Rich terminal UI with ANSI fallback — startup banner, live results, summary table with cache hit rates
+  - `taar/watcher.py`: Debounced file system watcher via `watchdog` with filtered directories/extensions
+  - `taar/cli.py`: Typer CLI with 6 commands: `run`, `watch`, `status`, `clean`, `graph`, `ci`
+  - `taar.toml`: Configuration defining 6 runners (Python, JavaScript, Kotlin, Unity, Docker, Markdown) with cross-language impact mappings
+  - Integrated into `Makefile` (4 targets), `package.json` (4 scripts), `build.gradle.kts` (3 Gradle tasks), `pyproject.toml` (console script entry point)
 
 ### Fixed
 

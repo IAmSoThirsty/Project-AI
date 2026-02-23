@@ -1,0 +1,154 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# TAAR — Thirstys Active Agent Runner
+# Configuration for Project-AI
+# ═══════════════════════════════════════════════════════════════════════════
+
+[taar]
+version = "1.0.0"
+parallelism = "auto"           # "auto" = os.cpu_count(), or set an integer
+cache_dir = ".taar-cache"
+debounce_ms = 500              # Milliseconds to wait after last file change
+fail_fast = true               # Stop on first failure in a runner category
+notifications = true           # Desktop toast notifications on pass/fail
+
+# ─────────────────────────────────────────────────────────────────────────
+# PYTHON RUNNER
+# ─────────────────────────────────────────────────────────────────────────
+[taar.runners.python]
+enabled = true
+paths = [
+    "src/**/*.py",
+    "tests/**/*.py",
+    "api/**/*.py",
+    "engines/**/*.py",
+    "kernel/**/*.py",
+    "plugins/**/*.py",
+    "taar/**/*.py",
+]
+test_paths = ["tests/**/*.py", "e2e/**/*.py"]
+
+[taar.runners.python.commands]
+lint      = "ruff check {files}"
+lint_fix  = "ruff check {files} --fix"
+format    = "black {files}"
+test      = "pytest {test_files} -x --tb=short -q"
+typecheck = "mypy {files} --ignore-missing-imports"
+security  = "bandit -r {files} -c .bandit"
+
+[taar.runners.python.priority]
+# Lower number = runs first. Same priority = runs in parallel.
+security  = 1
+lint      = 2
+test      = 2
+typecheck = 3
+format    = 4
+
+# ─────────────────────────────────────────────────────────────────────────
+# JAVASCRIPT / NODE RUNNER
+# ─────────────────────────────────────────────────────────────────────────
+[taar.runners.javascript]
+enabled = true
+paths = [
+    "web/**/*.js",
+    "desktop/**/*.js",
+    "desktop/**/*.ts",
+    "*.js",
+]
+test_paths = ["web/**/*.test.js", "desktop/**/*.test.js"]
+
+[taar.runners.javascript.commands]
+lint     = "eslint {files}"
+lint_fix = "eslint {files} --fix"
+test     = "node --test {test_files}"
+format   = "prettier --write {files}"
+
+[taar.runners.javascript.priority]
+lint   = 2
+test   = 2
+format = 4
+
+# ─────────────────────────────────────────────────────────────────────────
+# KOTLIN / ANDROID RUNNER
+# ─────────────────────────────────────────────────────────────────────────
+[taar.runners.kotlin]
+enabled = true
+paths = ["android/**/*.kt"]
+
+[taar.runners.kotlin.commands]
+build = "gradlew :app:assembleDebug"
+test  = "gradlew :app:testDebugUnitTest"
+lint  = "gradlew :app:lint"
+
+[taar.runners.kotlin.priority]
+lint  = 2
+test  = 2
+build = 3
+
+# ─────────────────────────────────────────────────────────────────────────
+# UNITY / C# RUNNER
+# ─────────────────────────────────────────────────────────────────────────
+[taar.runners.unity]
+enabled = false                # Enable when Unity CLI is configured
+paths = ["unity/ProjectAI/Assets/**/*.cs"]
+
+[taar.runners.unity.commands]
+build = "Unity -batchmode -projectPath unity/ProjectAI -buildTarget Win64 -quit"
+test  = "Unity -batchmode -projectPath unity/ProjectAI -runTests -quit"
+
+[taar.runners.unity.priority]
+test  = 2
+build = 3
+
+# ─────────────────────────────────────────────────────────────────────────
+# DOCKER RUNNER
+# ─────────────────────────────────────────────────────────────────────────
+[taar.runners.docker]
+enabled = true
+paths = [
+    "Dockerfile",
+    "Dockerfile.*",
+    "docker-compose*.yml",
+]
+
+[taar.runners.docker.commands]
+build   = "docker build -t project-ai:latest ."
+compose = "docker-compose config --quiet"
+
+[taar.runners.docker.priority]
+compose = 2
+build   = 5   # Deprioritized — slow
+
+# ─────────────────────────────────────────────────────────────────────────
+# MARKDOWN / DOCS RUNNER
+# ─────────────────────────────────────────────────────────────────────────
+[taar.runners.markdown]
+enabled = true
+paths = ["**/*.md"]
+
+[taar.runners.markdown.commands]
+lint = "markdownlint {files}"
+
+[taar.runners.markdown.priority]
+lint = 4
+
+# ─────────────────────────────────────────────────────────────────────────
+# DEPENDENCY GRAPH — Cross-language impact mappings
+# ─────────────────────────────────────────────────────────────────────────
+# When a source file changes, these patterns tell TAAR which test files
+# are affected beyond the auto-discovery heuristic (same-name matching).
+
+[taar.graph.impact]
+"src/core/audit.py"          = ["tests/test_audit*.py"]
+"src/core/simulation.py"     = ["tests/test_simulation*.py", "e2e/scenarios/test_multi_agent_e2e.py"]
+"src/core/mission.py"        = ["tests/test_mission*.py"]
+"src/server/app.py"          = ["tests/test_server*.py", "e2e/scenarios/test_api_integration.py"]
+"api/circuit_breaker.py"     = ["tests/test_circuit_breaker*.py", "e2e/scenarios/test_failover_recovery_e2e.py"]
+"api/rate_limiter.py"        = ["tests/test_rate_limiter*.py"]
+"tarl/**"                    = ["tarl/tests/*.py", "tests/test_tarl*.py"]
+"kernel/**"                  = ["tests/test_kernel*.py"]
+"engines/**"                 = ["tests/test_engine*.py"]
+"security/**/*.py"           = ["tests/test_security*.py", "adversarial_tests/**/*.py"]
+"governance/**"              = ["tests/test_governance*.py"]
+"plugins/**"                 = ["tests/test_plugin*.py", "tests/test_osint*.py"]
+"android/**/*.kt"            = []   # Self-contained — Gradle handles deps
+"Dockerfile"                 = []   # No test impact

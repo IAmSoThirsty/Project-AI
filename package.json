@@ -23,7 +23,11 @@
     "tarl:build": "python -m tarl.build.cli build",
     "tarl:clean": "python -m tarl.build.cli clean",
     "tarl:list": "python -m tarl.build.cli list",
-    "tarl:cache": "python -m tarl.build.cli cache stats"
+    "tarl:cache": "python -m tarl.build.cli cache stats",
+    "taar": "python -m taar.cli run",
+    "taar:watch": "python -m taar.cli watch",
+    "taar:clean": "python -m taar.cli clean",
+    "taar:graph": "python -m taar.cli graph"
   },
   "keywords": [
     "ai",

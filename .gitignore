@@ -67,6 +67,9 @@ cover/
 # Ruff
 .ruff_cache/
 
+# TAAR (Thirstys Active Agent Runner)
+.taar-cache/
+
 # Environments
 .env
 .env.local

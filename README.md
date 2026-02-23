@@ -56,6 +56,7 @@
 - [Security Architecture](#-security-architecture)
 - [Enterprise Monolithic Architecture](#-enterprise-monolithic-architecture)
 - [Configuration](#-configuration)
+- [TAAR — Active Agent Runner](#-taar--active-agent-runner)
 - [CI/CD Pipeline](#-cicd-pipeline)
 - [Quick Start](#-quick-start)
 - [Demo Scripts](#-demo-scripts)
@@ -1121,6 +1122,67 @@ The kernel entry point for all signal processing, providing:
 | `cerberus_config.yaml` | `config/` | Cerberus threat detection configuration |
 | `stacks.yaml` | `engines/atlas/config/` | Atlas stack definitions and transition rules |
 | `config.yaml` | `octoreflex/config/` | OctoReflex agent configuration |
+| `taar.toml` | root | TAAR runner definitions, priorities, and cross-language impact mappings |
+
+---
+
+## 🏎️ TAAR — Active Agent Runner
+
+`taar/` — **Thirstys Active Agent Runner** — intelligent, change-aware build/test/lint orchestration for the polyglot monorepo.
+
+<p align="center">
+  <img src="https://img.shields.io/badge/TAAR-v1.0.0-00BFFF?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Runners-6_Languages-orange?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Cache-Content_Addressed-green?style=for-the-badge" />
+</p>
+
+**The core gap TAAR fills:** None of the existing tools (Gradle, Make, npm, `validate_all_code.py`) know *what changed*, *what depends on it*, or *what's safe to skip*. TAAR does.
+
+### How It Works
+
+```
+File Save → Git Change Detection → Impact Analysis → Scheduler → Async Executor → Result Cache
+                                       ↓
+                              Cross-language DAG
+                      (src/core/audit.py → tests/test_audit*.py)
+```
+
+### Commands
+
+| Command | Description | Invocations |
+|---------|-------------|-------------|
+| `taar run` | Run tasks for uncommitted changes | `make taar` · `npm run taar` · `gradlew taarRun` |
+| `taar watch` | Active agent mode — auto-run on file save | `make taar-watch` · `npm run taar:watch` · `gradlew taarWatch` |
+| `taar status` | Cache stats and last run results | `make taar-status` |
+| `taar clean` | Clear result cache | `make taar-clean` · `npm run taar:clean` |
+| `taar graph` | Visualize dependency graph | `npm run taar:graph` |
+| `taar ci` | CI mode — fresh, no cache, fail-fast | `gradlew taarCI` |
+
+### Runners
+
+| Runner | Language | Commands |
+|--------|----------|----------|
+| `python` | Python | ruff, black, pytest, mypy, bandit |
+| `javascript` | JavaScript | eslint, node --test |
+| `kotlin` | Kotlin | gradlew assembleDebug, testDebugUnitTest |
+| `unity` | C# | Unity batch mode CLI |
+| `docker` | Docker | docker build |
+| `markdown` | Markdown | markdownlint |
+
+### Key Features
+
+- **Change-Aware** — Git diff + content hashing means only affected tasks run
+- **Cross-Language Impact** — Editing `Dockerfile` triggers docker build; editing `src/core/audit.py` triggers `test_audit*.py`
+- **Content-Addressed Cache** — SHA-256 of file contents + command → skip unchanged work
+- **Parallel Execution** — Same-priority tasks run concurrently via `asyncio`
+- **Rich Terminal UI** — Live progress, timing, pass/fail with ANSI fallback
+
+### Installation
+
+```bash
+pip install -e ".[taar]"
+taar --help
+```
 
 ---
 
