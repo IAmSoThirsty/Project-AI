@@ -84,6 +84,7 @@ class WaterfallResult:
     cerberus_decision: CerberusDecision | None = None
     total_duration_ms: float = 0.0
     aborted_at_stage: WaterfallStage | None = None
+    reasoning_entry_id: str | None = None
 
     @property
     def is_allowed(self) -> bool:
@@ -124,8 +125,10 @@ class WaterfallEngine:
         gate_stage: Any = None,
         commit_stage: Any = None,
         memory_stage: Any = None,
+        reasoning_matrix: Any = None,
     ) -> None:
         self.event_bus = event_bus or EventBus()
+        self._matrix = reasoning_matrix
         self._stages: list[tuple[WaterfallStage, Any]] = [
             (WaterfallStage.STRUCTURAL, structural_stage),
             (WaterfallStage.SIGNATURE, signature_stage),
@@ -154,19 +157,29 @@ class WaterfallEngine:
         request_id = envelope.request_id
 
         # Emit waterfall start event
-        self.event_bus.emit(create_event(
-            EventType.WATERFALL_START,
-            trace_id=envelope.context.trace_id,
-            request_id=request_id,
-            subject=envelope.subject,
-            severity=EventSeverity.INFO,
-            payload={"actor": envelope.actor, "action": envelope.intent.action},
-        ))
+        self.event_bus.emit(
+            create_event(
+                EventType.WATERFALL_START,
+                trace_id=envelope.context.trace_id,
+                request_id=request_id,
+                subject=envelope.subject,
+                severity=EventSeverity.INFO,
+                payload={"actor": envelope.actor, "action": envelope.intent.action},
+            )
+        )
 
         max_severity_rank = 0
         final_decision = StageDecision.ALLOW
         aborted_at: WaterfallStage | None = None
         cerberus_decision: CerberusDecision | None = None
+
+        # Begin reasoning trace (if matrix available)
+        rm_entry_id = None
+        if self._matrix:
+            rm_entry_id = self._matrix.begin_reasoning(
+                "waterfall_pipeline",
+                {"request_id": request_id},
+            )
 
         for stage_enum, stage_impl in self._stages:
             if stage_impl is None:
@@ -175,14 +188,19 @@ class WaterfallEngine:
                 continue
 
             # Emit stage enter
-            self.event_bus.emit(create_event(
-                EventType.STAGE_ENTER,
-                trace_id=envelope.context.trace_id,
-                request_id=request_id,
-                subject=envelope.subject,
-                severity=EventSeverity.DEBUG,
-                payload={"stage": stage_enum.name, "stage_ordinal": stage_enum.value},
-            ))
+            self.event_bus.emit(
+                create_event(
+                    EventType.STAGE_ENTER,
+                    trace_id=envelope.context.trace_id,
+                    request_id=request_id,
+                    subject=envelope.subject,
+                    severity=EventSeverity.DEBUG,
+                    payload={
+                        "stage": stage_enum.name,
+                        "stage_ordinal": stage_enum.value,
+                    },
+                )
+            )
 
             stage_start = time.monotonic()
             try:
@@ -218,25 +236,58 @@ class WaterfallEngine:
                 cerberus_decision = result.metadata["cerberus_decision"]
 
             # Emit stage exit
-            self.event_bus.emit(create_event(
-                EventType.STAGE_EXIT,
-                trace_id=envelope.context.trace_id,
-                request_id=request_id,
-                subject=envelope.subject,
-                severity=EventSeverity.DEBUG,
-                payload={
-                    "stage": stage_enum.name,
-                    "decision": result.decision.value,
-                    "duration_ms": result.duration_ms,
-                    "reasons": result.reasons,
-                },
-            ))
+            self.event_bus.emit(
+                create_event(
+                    EventType.STAGE_EXIT,
+                    trace_id=envelope.context.trace_id,
+                    request_id=request_id,
+                    subject=envelope.subject,
+                    severity=EventSeverity.DEBUG,
+                    payload={
+                        "stage": stage_enum.name,
+                        "decision": result.decision.value,
+                        "duration_ms": result.duration_ms,
+                        "reasons": result.reasons,
+                    },
+                )
+            )
 
             # Abort pipeline on deny or quarantine
             if result.decision in (StageDecision.DENY, StageDecision.QUARANTINE):
                 aborted_at = stage_enum
                 final_decision = result.decision
+                # Record abort factor
+                if self._matrix and rm_entry_id:
+                    self._matrix.add_factor(
+                        rm_entry_id,
+                        f"stage_{stage_enum.name}_abort",
+                        result.decision.value,
+                        weight=1.0,
+                        score=0.0,
+                        source="waterfall",
+                        rationale=(
+                            f"Pipeline aborted at {stage_enum.name}: "
+                            f"{'; '.join(result.reasons)}"
+                        ),
+                    )
                 break
+            else:
+                # Record passing stage as factor
+                if self._matrix and rm_entry_id:
+                    # Score: allow=1.0, escalate=0.5
+                    stage_score = 1.0 if result.decision == StageDecision.ALLOW else 0.5
+                    self._matrix.add_factor(
+                        rm_entry_id,
+                        f"stage_{stage_enum.name}",
+                        result.decision.value,
+                        weight=0.8,
+                        score=stage_score,
+                        source="waterfall",
+                        rationale=(
+                            f"{stage_enum.name} → {result.decision.value}"
+                            f"{': ' + '; '.join(result.reasons) if result.reasons else ''}"
+                        ),
+                    )
 
         total_duration_ms = (time.monotonic() - start_time) * 1000
 
@@ -248,20 +299,42 @@ class WaterfallEngine:
             StageDecision.ESCALATE: EventType.REQUEST_QUARANTINED,
         }[final_decision]
 
-        self.event_bus.emit(create_event(
-            terminal_event_type,
-            trace_id=envelope.context.trace_id,
-            request_id=request_id,
-            subject=envelope.subject,
-            severity=EventSeverity.WARNING
-            if final_decision != StageDecision.ALLOW
-            else EventSeverity.INFO,
-            payload={
-                "final_decision": final_decision.value,
-                "stages_completed": len(stage_results),
-                "total_duration_ms": total_duration_ms,
-            },
-        ))
+        self.event_bus.emit(
+            create_event(
+                terminal_event_type,
+                trace_id=envelope.context.trace_id,
+                request_id=request_id,
+                subject=envelope.subject,
+                severity=EventSeverity.WARNING
+                if final_decision != StageDecision.ALLOW
+                else EventSeverity.INFO,
+                payload={
+                    "final_decision": final_decision.value,
+                    "stages_completed": len(stage_results),
+                    "total_duration_ms": total_duration_ms,
+                },
+            )
+        )
+
+        # Render reasoning verdict
+        if self._matrix and rm_entry_id:
+            # Map decision to confidence
+            confidence_map = {
+                StageDecision.ALLOW: 0.95,
+                StageDecision.ESCALATE: 0.6,
+                StageDecision.QUARANTINE: 0.85,
+                StageDecision.DENY: 0.9,
+            }
+            self._matrix.render_verdict(
+                rm_entry_id,
+                decision=final_decision.value,
+                confidence=confidence_map.get(final_decision, 0.7),
+                explanation=(
+                    f"Waterfall pipeline: {len(stage_results)} stage(s) "
+                    f"completed, final={final_decision.value}"
+                    f"{f', aborted at {aborted_at.name}' if aborted_at else ''}"
+                ),
+            )
 
         return WaterfallResult(
             request_id=request_id,
@@ -270,6 +343,7 @@ class WaterfallEngine:
             cerberus_decision=cerberus_decision,
             total_duration_ms=total_duration_ms,
             aborted_at_stage=aborted_at,
+            reasoning_entry_id=rm_entry_id,
         )
 
 

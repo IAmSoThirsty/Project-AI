@@ -36,16 +36,23 @@ class GalahadEngine:
     - Explanation generation
     """
 
-    def __init__(self, config: GalahadConfig | None = None):
+    def __init__(
+        self,
+        config: GalahadConfig | None = None,
+        reasoning_matrix=None,
+    ):
         """
         Initialize Galahad engine.
 
         Args:
             config: Engine configuration
+            reasoning_matrix: Optional ReasoningMatrix for formalized
+                reasoning traces.
         """
         self.config = config or GalahadConfig()
         self.curiosity_score = 0.0
         self.reasoning_history: list[dict] = []
+        self._matrix = reasoning_matrix
 
         logger.info("Galahad engine initialized")
         logger.info("Config: %s", self.config)
@@ -63,25 +70,96 @@ class GalahadEngine:
         """
         logger.info("Reasoning over %s inputs", len(inputs))
 
+        # Begin reasoning trace
+        rm_entry_id = None
+        if self._matrix:
+            rm_entry_id = self._matrix.begin_reasoning(
+                "galahad_reasoning",
+                {"input_count": len(inputs), "depth": self.config.reasoning_depth},
+            )
+
         try:
             # Step 1: Analyze inputs
             analyses = self._analyze_inputs(inputs, context)
 
+            # Record each analysis as a factor
+            if self._matrix and rm_entry_id:
+                for analysis in analyses:
+                    conf = analysis["confidence"]
+                    self._matrix.add_factor(
+                        rm_entry_id,
+                        f"input_{analysis['index']}_analysis",
+                        analysis["type"],
+                        weight=conf,
+                        score=conf,
+                        source="galahad",
+                        rationale=f"Input {analysis['index']} analyzed with confidence {conf:.2f}",
+                    )
+
             # Step 2: Detect contradictions
             contradictions = self._detect_contradictions(analyses)
+
+            # Record contradictions as factors
+            if self._matrix and rm_entry_id and contradictions:
+                self._matrix.add_factor(
+                    rm_entry_id,
+                    "contradictions_detected",
+                    len(contradictions),
+                    weight=0.8,
+                    score=max(0.0, 1.0 - len(contradictions) * 0.3),
+                    source="galahad",
+                    rationale=f"{len(contradictions)} contradiction(s) detected between inputs",
+                )
 
             # Step 3: Arbitrate if needed
             if contradictions:
                 result = self._arbitrate(analyses, contradictions)
+                strategy_used = self.config.arbitration_strategy
             else:
                 result = self._synthesize(analyses)
+                strategy_used = "synthesis"
+
+            # Record strategy as factor
+            if self._matrix and rm_entry_id:
+                self._matrix.add_factor(
+                    rm_entry_id,
+                    "resolution_strategy",
+                    strategy_used,
+                    weight=0.6,
+                    score=0.8 if not contradictions else 0.6,
+                    source="galahad",
+                    rationale=f"Used '{strategy_used}' to {'resolve conflicts' if contradictions else 'synthesize'}",
+                )
 
             # Step 4: Update curiosity
             if self.config.enable_curiosity:
                 self._update_curiosity(result)
+                # Record curiosity as factor
+                if self._matrix and rm_entry_id:
+                    self._matrix.add_factor(
+                        rm_entry_id,
+                        "curiosity_signal",
+                        self.curiosity_score,
+                        weight=0.3,
+                        score=self.curiosity_score,
+                        source="galahad",
+                        rationale=f"Curiosity {'high — exploration recommended' if self.curiosity_score >= self.config.curiosity_threshold else 'normal'}",
+                    )
 
             # Step 5: Generate explanation
             explanation = self._generate_explanation(result, contradictions)
+
+            # Render verdict
+            confidence = 0.7
+            if analyses:
+                confidence = max(a["confidence"] for a in analyses)
+            if self._matrix and rm_entry_id:
+                self._matrix.render_verdict(
+                    rm_entry_id,
+                    decision="synthesized" if not contradictions else "arbitrated",
+                    confidence=confidence,
+                    explanation=explanation,
+                )
 
             # Record in history
             reasoning_record = {
@@ -91,6 +169,7 @@ class GalahadEngine:
                 "result": result,
                 "explanation": explanation,
                 "context": context or {},
+                "reasoning_entry_id": rm_entry_id,
             }
             self.reasoning_history.append(reasoning_record)
 
@@ -100,6 +179,8 @@ class GalahadEngine:
                 "explanation": explanation,
                 "contradictions": contradictions,
                 "curiosity_score": self.curiosity_score,
+                "confidence": confidence,
+                "reasoning_entry_id": rm_entry_id,
                 "metadata": {
                     "depth": self.config.reasoning_depth,
                     "context": context or {},
@@ -108,6 +189,16 @@ class GalahadEngine:
 
         except Exception as e:
             logger.error("Reasoning error: %s", e)
+            if self._matrix and rm_entry_id:
+                try:
+                    self._matrix.render_verdict(
+                        rm_entry_id,
+                        decision="error",
+                        confidence=0.0,
+                        explanation=f"Reasoning failed: {e}",
+                    )
+                except ValueError:
+                    pass
             return {
                 "success": False,
                 "error": str(e),
@@ -236,7 +327,10 @@ class GalahadEngine:
             return {"decision": None, "reason": "No inputs"}
 
         # Assign weights based on confidence or order
-        weights = [inp.get("confidence", 1.0) if isinstance(inp, dict) else 1.0 for inp in inputs]
+        weights = [
+            inp.get("confidence", 1.0) if isinstance(inp, dict) else 1.0
+            for inp in inputs
+        ]
 
         total_weight = sum(weights)
         if total_weight == 0:

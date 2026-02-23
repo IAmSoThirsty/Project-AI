@@ -45,17 +45,25 @@ class Triumvirate:
     4. Output enforcement (Cerberus)
     """
 
-    def __init__(self, config: TriumvirateConfig | None = None):
+    def __init__(
+        self,
+        config: TriumvirateConfig | None = None,
+        reasoning_matrix=None,
+    ):
         """
         Initialize Triumvirate orchestrator.
 
         Args:
             config: Orchestrator configuration
+            reasoning_matrix: Optional ReasoningMatrix for formalized
+                decision tracking.  When provided, every pipeline
+                execution produces an auditable reasoning trace.
         """
         if config is None:
             config = TriumvirateConfig()
 
         self.config = config
+        self._matrix = reasoning_matrix
 
         # Initialize engines
         logger.info("Initializing Triumvirate orchestrator")
@@ -92,6 +100,14 @@ class Triumvirate:
 
         logger.info("Triumvirate processing [correlation_id: %s]", correlation_id)
 
+        # Begin reasoning trace (if matrix available)
+        rm_entry_id = None
+        if self._matrix:
+            rm_entry_id = self._matrix.begin_reasoning(
+                "triumvirate_pipeline",
+                {"correlation_id": correlation_id},
+            )
+
         try:
             # Enrich context
             full_context = {
@@ -103,7 +119,22 @@ class Triumvirate:
             # Phase 1: Input Validation (Cerberus)
             if not skip_validation:
                 validation_result = self._validate_input(input_data, full_context)
+                self._rm_add(
+                    rm_entry_id,
+                    "cerberus_input_validation",
+                    validation_result.get("valid", False),
+                    weight=1.0,
+                    source="cerberus",
+                    rationale="Input must pass policy enforcement",
+                    score=1.0 if validation_result.get("valid") else 0.0,
+                )
                 if not validation_result["valid"]:
+                    self._rm_verdict(
+                        rm_entry_id,
+                        "deny",
+                        0.9,
+                        explanation="Cerberus input validation failed",
+                    )
                     return self._build_error_response(
                         correlation_id,
                         "Input validation failed",
@@ -113,15 +144,53 @@ class Triumvirate:
                 input_data = validation_result["input"]
             else:
                 validation_result = {"valid": True, "skipped": True}
+                self._rm_add(
+                    rm_entry_id,
+                    "cerberus_input_validation",
+                    True,
+                    weight=0.5,
+                    source="cerberus",
+                    rationale="Validation skipped by caller",
+                    score=0.5,
+                )
 
             # Phase 2: ML Inference (Codex)
             codex_result = self._run_inference(input_data, full_context)
+            self._rm_add(
+                rm_entry_id,
+                "codex_inference",
+                codex_result.get("success", False),
+                weight=0.8,
+                source="codex",
+                rationale="ML model inference result",
+                score=0.9 if codex_result.get("success") else 0.1,
+            )
             if not codex_result["success"]:
-                return self._build_error_response(correlation_id, "Codex inference failed", codex_result, start_time)
+                self._rm_verdict(
+                    rm_entry_id, "deny", 0.85, explanation="Codex inference failed"
+                )
+                return self._build_error_response(
+                    correlation_id, "Codex inference failed", codex_result, start_time
+                )
 
             # Phase 3: Reasoning (Galahad)
-            reasoning_result = self._run_reasoning([input_data, codex_result["output"]], full_context)
+            reasoning_result = self._run_reasoning(
+                [input_data, codex_result["output"]], full_context
+            )
+            galahad_confidence = reasoning_result.get("confidence", 0.7)
+            self._rm_add(
+                rm_entry_id,
+                "galahad_reasoning",
+                reasoning_result.get("success", False),
+                weight=0.9,
+                source="galahad",
+                rationale="Reasoning arbitration and synthesis",
+                score=galahad_confidence if reasoning_result.get("success") else 0.1,
+            )
             if not reasoning_result["success"]:
+                self._rm_verdict(
+                    rm_entry_id, "deny", 0.8, explanation="Galahad reasoning failed"
+                )
                 return self._build_error_response(
                     correlation_id,
                     "Galahad reasoning failed",
@@ -130,8 +199,25 @@ class Triumvirate:
                 )
 
             # Phase 4: Output Enforcement (Cerberus)
-            enforcement_result = self._enforce_output(reasoning_result["conclusion"], full_context)
+            enforcement_result = self._enforce_output(
+                reasoning_result["conclusion"], full_context
+            )
+            self._rm_add(
+                rm_entry_id,
+                "cerberus_output_enforcement",
+                enforcement_result.get("allowed", False),
+                weight=1.0,
+                source="cerberus",
+                rationale="Output must pass policy enforcement",
+                score=1.0 if enforcement_result.get("allowed") else 0.0,
+            )
             if not enforcement_result["allowed"]:
+                self._rm_verdict(
+                    rm_entry_id,
+                    "deny",
+                    0.95,
+                    explanation="Cerberus output enforcement blocked",
+                )
                 return self._build_error_response(
                     correlation_id,
                     "Output enforcement blocked",
@@ -143,11 +229,26 @@ class Triumvirate:
             end_time = datetime.now()
             duration_ms = (end_time - start_time).total_seconds() * 1000
 
+            # Compute overall confidence from reasoning matrix
+            overall_confidence = 0.95
+            if self._matrix and rm_entry_id:
+                entry = self._matrix.get_entry(rm_entry_id)
+                if entry and entry.aggregate_score is not None:
+                    overall_confidence = entry.aggregate_score
+
+            self._rm_verdict(
+                rm_entry_id,
+                "allow",
+                overall_confidence,
+                explanation="All pipeline phases passed successfully",
+            )
+
             result = {
                 "success": True,
                 "output": enforcement_result["output"],
                 "correlation_id": correlation_id,
                 "duration_ms": duration_ms,
+                "reasoning_entry_id": rm_entry_id,
                 "pipeline": {
                     "validation": validation_result,
                     "codex": codex_result,
@@ -175,6 +276,9 @@ class Triumvirate:
 
         except Exception as e:
             logger.error("Triumvirate processing error [%s]: %s", correlation_id, e)
+            self._rm_verdict(
+                rm_entry_id, "error", 0.0, explanation=f"Processing error: {e}"
+            )
             return self._build_error_response(
                 correlation_id,
                 f"Processing error: {e}",
@@ -257,7 +361,9 @@ class Triumvirate:
         }
         self.telemetry_events.append(event)
 
-    def _build_error_response(self, correlation_id: str, error: str, details: dict, start_time: datetime) -> dict:
+    def _build_error_response(
+        self, correlation_id: str, error: str, details: dict, start_time: datetime
+    ) -> dict:
         """Build standardized error response."""
         end_time = datetime.now()
         duration_ms = (end_time - start_time).total_seconds() * 1000
@@ -278,3 +384,31 @@ class Triumvirate:
             self._record_telemetry_event("error", result)
 
         return result
+
+    # -- Reasoning Matrix helpers ------------------------------------------
+
+    def _rm_add(self, entry_id, name, value, *, weight, source, rationale, score=None):
+        """Add a factor to the reasoning matrix (no-op if matrix absent)."""
+        if self._matrix and entry_id:
+            self._matrix.add_factor(
+                entry_id,
+                name,
+                value,
+                weight=weight,
+                score=score,
+                source=source,
+                rationale=rationale,
+            )
+
+    def _rm_verdict(self, entry_id, decision, confidence, *, explanation=""):
+        """Render a verdict on the reasoning matrix (no-op if absent)."""
+        if self._matrix and entry_id:
+            try:
+                self._matrix.render_verdict(
+                    entry_id,
+                    decision,
+                    confidence,
+                    explanation=explanation,
+                )
+            except ValueError:
+                pass  # Already finalized (e.g., early-exit path)
