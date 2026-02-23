@@ -191,6 +191,15 @@ pytest tests/test_signal_flows_comprehensive.py::TestIntegration -v
 pytest tests/test_signal_flows_comprehensive.py --durations=10
 ```
 
+### Check for Flaky Tests
+```bash
+# Run tests 10 times to detect flakiness
+pytest tests/test_signal_flows_comprehensive.py --count=10
+
+# Run in parallel for speed
+pytest tests/test_signal_flows_comprehensive.py -n auto
+```
+
 ---
 
 ## Implementation Checklist
@@ -230,6 +239,9 @@ pytest tests/test_signal_flows_comprehensive.py --durations=10
 5. **CB Without Lifecycle**: Testing CB in isolation != testing state transitions
 6. **Mock Overuse**: Integration tests should use real components where safe
 7. **Ignoring Thread Safety**: Retry tracking has shared state - test concurrency
+8. **❌ CRITICAL: Timing-Based Concurrent Tests**: Using `time.sleep()` for synchronization creates flaky tests. Use `threading.Barrier` instead.
+9. **❌ CRITICAL: Real Sleeps in Tests**: Don't use real `time.sleep(60)` for timeout tests. Mock `time.time()` and `time.sleep()` instead.
+10. **❌ Race Conditions**: Concurrent tests without proper synchronization are environment-dependent and flaky.
 
 ---
 
@@ -240,8 +252,10 @@ pytest tests/test_signal_flows_comprehensive.py --durations=10
 2. All Tier 1 tests passing
 3. All Tier 2 tests passing
 4. Coverage report shows no critical branches missed
-5. Test suite runs in <30 seconds
-6. No flaky tests (run 10 times, all pass)
+5. **Test suite runs in <10 seconds** (with mocked time)
+6. **No flaky tests** (run 10 times via `pytest --count=10`, all pass)
+7. All concurrent tests use `threading.Barrier` (deterministic)
+8. All time-based tests mock `time.time()` and `time.sleep()`
 
 **You can stop before 102 tests if**:
 - Branch coverage ≥ 95%
