@@ -695,6 +695,10 @@ result = runtime.execute(bytecode)
   <img src="https://img.shields.io/badge/Coverage-82%25-green?style=for-the-badge" />
 </p>
 
+<p align="center">
+  <a href="https://doi.org/10.5281/zenodo.18726064"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.18726064.svg" alt="DOI"></a>
+</p>
+
 ### Key Property
 
 > **Enforcement happens inside the kernel, before the syscall completes.**
