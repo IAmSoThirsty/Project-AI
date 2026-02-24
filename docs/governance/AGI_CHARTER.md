@@ -1,5 +1,7 @@
 # AGI Charter for Project-AI
 
+**DOI:** `10.5281/zenodo.18763076`
+
 **Document Version:** 2.1 **Effective Date:** 2026-02-03 **Status:** Binding Contract **Review Frequency:** Quarterly
 
 ______________________________________________________________________
