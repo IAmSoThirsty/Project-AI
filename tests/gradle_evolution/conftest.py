@@ -11,7 +11,7 @@ clear diagnostic rather than producing 7 opaque ImportErrors.
 
 from __future__ import annotations
 
-import importlib
+import importlib.util
 
 # ── Hard gate: skip all tests in this directory when the source
 #    package is absent.  pytest.importorskip raises Skipped which

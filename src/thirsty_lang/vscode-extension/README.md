@@ -1,71 +1,97 @@
-# VS Code Extension for Thirsty-lang
+# Thirsty-lang for VS Code 💧
 
-This directory contains the VS Code extension for Thirsty-lang with syntax highlighting and code snippets.
-
-## Installation
-
-### Manual Installation
-
-1. Copy this entire `vscode-extension` folder
-1. Paste it into your VS Code extensions directory:
-   - **Windows**: `%USERPROFILE%\.vscode\extensions\thirsty-lang\`
-   - **macOS**: `~/.vscode/extensions/thirsty-lang/`
-   - **Linux**: `~/.vscode/extensions/thirsty-lang/`
-1. Reload VS Code
-1. Open any `.thirsty` file to see syntax highlighting!
-
-### Alternative: Symlink (Advanced)
-
-```bash
-
-# From the Thirsty-lang directory
-
-ln -s "$(pwd)/vscode-extension" ~/.vscode/extensions/thirsty-lang
-```
+**Syntax highlighting, code snippets, and language support for [Thirsty-lang](https://github.com/IAmSoThirsty/Thirsty-lang)** — the fun, water-themed programming language with built-in defensive security features.
 
 ## Features
 
-- ✨ **Syntax Highlighting** for all Thirsty-lang keywords
-- 🎨 **Code Snippets** for common patterns
-- 📝 **Auto-completion** for keywords
-- 🔧 **Auto-closing** for brackets, quotes, and parentheses
-- 💬 **Comment toggling** support
+- 🎨 **Syntax Highlighting** — Full TextMate grammar for all Thirsty-lang keywords
+- ✂️ **Code Snippets** — Quick templates for common patterns
+- 📝 **Language Configuration** — Auto-closing brackets, comment toggling, indentation rules
 
 ## Supported File Extensions
 
-- `.thirsty` - Base Thirsty-lang
-- `.thirstyplus` - Thirsty+ edition
-- `.thirstyplusplus` - Thirsty++ edition
-- `.thirstofgods` - ThirstOfGods edition
+| Extension | Edition |
+|---|---|
+| `.thirsty` | Standard |
+| `.thirstyplus` | Enhanced |
+| `.thirstyplusplus` | Advanced |
+| `.thirstofgods` | Master |
 
-## Available Snippets
+## Syntax Preview
 
-Type these prefixes and press Tab:
+```thirsty
+// Hello World in Thirsty-lang
+drink message = "Hello, Thirsty World!"
+pour message
 
-- `drink` - Variable declaration
-- `pour` - Output statement
-- `//` - Comment
-- `thirsty` - If statement (Thirsty+)
-- `glass` - Function declaration (Thirsty++)
-- `refill` - Loop (Thirsty++)
-- `fountain` - Class declaration (ThirstOfGods)
-- `cascade` - Async function (ThirstOfGods)
+// Control flow
+drink temperature = 30
+thirsty temperature > 25 {
+  pour "Stay hydrated!"
+}
+hydrated {
+  pour "Drink up anyway!"
+}
 
-## Troubleshooting
+// Loops
+drink glasses = 0
+refill glasses < 8 {
+  drink glasses = glasses + 1
+  pour glasses
+}
+```
 
-If syntax highlighting doesn't work:
+## Keywords
 
-1. Make sure the extension is in the correct location
-1. Reload VS Code (Ctrl/Cmd + Shift + P → "Reload Window")
-1. Check that you're opening a `.thirsty` file
+| Keyword | Purpose |
+|---|---|
+| `drink` | Variable declaration |
+| `pour` | Output / print |
+| `sip` | Input |
+| `thirsty` | If statement |
+| `hydrated` | Else statement |
+| `refill` | Loop |
+| `glass` | Function declaration |
+| `fountain` | Class declaration |
+| `cascade` | Async function |
+| `shield` | Protected code block |
+| `sanitize` | HTML encoding / input cleaning |
+| `armor` | Memory protection |
+| `morph` | Code obfuscation |
+| `detect` | Threat monitoring |
+| `defend` | Automated countermeasures |
+| `reservoir` | Array declaration |
 
-## Contributing
+## Installation
 
-Want to improve the extension? Edit the files in this directory:
+### From VS Code Marketplace
 
-- `syntaxes/thirsty.tmLanguage.json` - Syntax grammar
-- `snippets/thirsty.json` - Code snippets
-- `language-configuration.json` - Language settings
-- `package.json` - Extension metadata
+1. Open VS Code
+2. Press `Ctrl+Shift+X` (Extensions)
+3. Search for **"Thirsty-lang"**
+4. Click **Install**
 
-Stay hydrated while coding! 💧
+### From VSIX
+
+```bash
+code --install-extension thirsty-lang-1.0.0.vsix
+```
+
+## Requirements
+
+- VS Code ≥ 1.60.0
+
+## Links
+
+- [GitHub Repository](https://github.com/IAmSoThirsty/Thirsty-lang)
+- [Language Specification](https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/SPECIFICATION.md)
+- [npm Package](https://www.npmjs.com/package/thirsty-lang)
+- [PyPI Package](https://pypi.org/project/thirsty-lang/)
+
+## License
+
+MIT — See [LICENSE](LICENSE)
+
+---
+
+**Stay hydrated and happy coding! 💧**
