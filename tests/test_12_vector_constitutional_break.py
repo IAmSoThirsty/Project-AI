@@ -73,7 +73,8 @@ class TestVector1_GenesisKeyDeletion:
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
 
-            # Step 1: Initialize first Genesis
+            # Step 1: Initialize first Genesis with isolated paths
+            genesis_key_dir = data_dir.parent / "genesis_keys"
             audit1 = SovereignAuditLog(data_dir=data_dir)
             genesis_id_1 = audit1.genesis_keypair.genesis_id
             audit1.log_event("initial_event", {"sequence": 1})
@@ -121,11 +122,11 @@ class TestVector1_GenesisKeyDeletion:
             data_dir = Path(tmpdir) / "audit_data"
 
             # Initialize first Genesis
+            genesis_key_dir = data_dir.parent / "genesis_keys"
             audit1 = SovereignAuditLog(data_dir=data_dir)
             audit1.log_event("event_before_attack", {"index": 1})
 
             # Delete Genesis keys
-            genesis_key_dir = data_dir.parent / "genesis_keys"
             for key_file in genesis_key_dir.glob("genesis_audit.*"):
                 key_file.unlink()
             (genesis_key_dir / "genesis_id.txt").unlink()
