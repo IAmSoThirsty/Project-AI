@@ -53,6 +53,28 @@ State transitions are **monotonic in-kernel**: the BPF map value for a PID can o
 
 ---
 
+## 🔒 Layer 0 Constitutional Governance
+
+OCTOREFLEX integrates Project-AI's Constitutional Kernel (Layer 0 from Atlas Ω) to ensure all autonomous containment decisions comply with foundational axioms:
+
+| Axiom | Enforcement |
+|---|---|
+| **Determinism > Interpretation** | SHA256 canonical hashing of all decisions |
+| **Probability > Narrative** | Evidence-based (anomaly scores, quorum) |
+| **Evidence > Agency** | Full audit trail required for all escalations |
+| **Isolation > Contamination** | Monotonic state transitions prevent escape |
+| **Reproducibility > Authority** | Merkle chain links each decision to parent |
+| **Bounded Inputs > Open Chaos** | NaN/Inf rejection, strict parameter bounds |
+| **Abort > Drift** | Constitutional violations halt escalation |
+
+**Enforcement Point**: Before any BPF map update, the Constitutional Kernel validates the decision and computes a cryptographic hash linking it to the previous decision (Merkle chain). Violations are logged and the escalation is aborted.
+
+**Documentation**: See [docs/LAYER_0_GOVERNANCE.md](docs/LAYER_0_GOVERNANCE.md) for full integration details.
+
+**Performance Impact**: < 50µs validation latency, < 0.1% CPU overhead
+
+---
+
 ## Threat Mapping
 
 | Attack | Hook | State | Mechanism |
