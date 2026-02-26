@@ -34,6 +34,8 @@
   <strong>Version:</strong> 1.0.0
 
 </p>
+© 2026 Jeremy Karrick (IAmSoThirsty). All Rights Reserved.
+The AGI Charter, Legion Commission, and all associated governance documents are protected under copyright. The source code is open source under MIT License. The governance framework and constitutional documents are not.
 
 ---
 
