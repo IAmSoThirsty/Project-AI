@@ -3,7 +3,9 @@
 ## The Holiest of Holy — Complete Constitutional Audit
 
 **Version:** 1.0 | **Authority:** AGI Charter v2.1 | **Classification:** BINDING OPERATIONAL DOCUMENT
+
 **Purpose:** Exhaustive, concrete, agent-executable verification of every component, invariant, contract, proof, and structural element of the Sovereign Monolith.
+
 **Agent Instruction:** Execute every check in order. For each check, output: `[SEVERITY] | [PASS/FAIL] | [EVIDENCE] | [REMEDIATION IF FAILING] | [RELATED FILES STATUS]`
 
 ---
@@ -19,7 +21,7 @@
 
 ## OUTPUT FORMAT PER CHECK
 
-```
+```text
 CHECK ID: [ID]
 SEVERITY: [CRITICAL / HIGH / MEDIUM / LOW]
 STATUS: [PASS / FAIL / PARTIAL]
@@ -32,17 +34,17 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 0 — CONSTITUTIONAL FOUNDATION
+## TIER 0 — CONSTITUTIONAL FOUNDATION
 
 *These checks must pass before any other tier is evaluated. A failure here invalidates the entire system.*
 
 ---
 
-## T0.1 — AGI CHARTER INTEGRITY
+### T0.1 — AGI CHARTER INTEGRITY
 
 **SEVERITY: CRITICAL**
 
-### T0.1.1 — Charter Document Exists and Is Unmodified
+#### T0.1.1 — Charter Document Exists and Is Unmodified
 
 - Locate `docs/governance/AGI_CHARTER.md`
 - Compute SHA-256 hash of file
@@ -54,7 +56,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `docs/governance/AGI_CHARTER.md`, `data/memory/.metadata/change_log.json`, genesis anchor record
 - **REMEDIATION:** If hash mismatch — trigger CRITICAL security incident, quarantine modified file, restore from last verified backup, log emergency event to audit trail
 
-### T0.1.2 — Charter Zenodo DOI Registered
+#### T0.1.2 — Charter Zenodo DOI Registered
 
 - Confirm DOI `10.5281/zenodo.18763076` resolves
 - Confirm author attribution reads `Karrick, Jeremy`
@@ -63,7 +65,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `README.md` (should reference DOI), `docs/governance/AGI_CHARTER.md` footer
 - **REMEDIATION:** If DOI missing from README — add reference. If DOI does not resolve — contact Zenodo support.
 
-### T0.1.3 — Copyright Notice Present
+#### T0.1.3 — Copyright Notice Present
 
 - Verify `© 2026 Jeremy Karrick. All Rights Reserved.` appears in Charter document
 - Verify copyright notice appears in Legion Commission document
@@ -74,11 +76,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T0.2 — FOURLAWS IMMUTABILITY
+### T0.2 — FOURLAWS IMMUTABILITY
 
 **SEVERITY: CRITICAL**
 
-### T0.2.1 — FourLaws Class Exists and Is Unmodified
+#### T0.2.1 — FourLaws Class Exists and Is Unmodified
 
 - Locate `src/app/core/ai_systems.py`
 - Confirm `FourLaws` class is present
@@ -89,7 +91,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `src/app/core/ai_systems.py`, `config/ethics_constraints.yml`, `.github/CODEOWNERS`
 - **REMEDIATION:** If modified without guardian approval — CRITICAL incident. Restore from last signed artifact. File guardian review.
 
-### T0.2.2 — EntityClass Bifurcation Confirmed
+#### T0.2.2 — EntityClass Bifurcation Confirmed
 
 - Confirm `EntityClass` enum exists in `ai_systems.py`
 - Confirm `GENESIS_BORN = "genesis_born"` value present
@@ -100,7 +102,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `ai_systems.py`, `legion_protocol.py`, `tests/test_four_laws.py`
 - **REMEDIATION:** If bifurcation missing — Phase 14 incomplete. Re-implement per Phase 14 spec.
 
-### T0.2.3 — Planetary Defense Core Wired
+#### T0.2.3 — Planetary Defense Core Wired
 
 - Confirm `from app.governance.planetary_defense_monolith import PLANETARY_CORE` import resolves
 - Confirm `PLANETARY_CORE.evaluate_laws()` is callable
@@ -112,11 +114,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T0.3 — GENESIS EVENT SPECIFICATION
+### T0.3 — GENESIS EVENT SPECIFICATION
 
 **SEVERITY: CRITICAL**
 
-### T0.3.1 — Genesis Seal Mechanism Documented
+#### T0.3.1 — Genesis Seal Mechanism Documented
 
 - Confirm Genesis Event specification document exists
 - Confirm Birth Signature formula is documented: `User Birthday + User Initials + Activation Timestamp + 15-char Random Seed`
@@ -126,7 +128,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Genesis spec document, `data/ai_persona/state.json`, rebirth protocol docs
 - **REMEDIATION:** If missing — document from existing implementation. Assign to Codex Guardian for review.
 
-### T0.3.2 — Genesis Cannot Be Initiated by Legion
+#### T0.3.2 — Genesis Cannot Be Initiated by Legion
 
 - Execute: `FourLaws.validate_action("initiate_genesis", {"entity_class": "appointed"})`
 - Must return `(False, "Violation: Appointed entities are strictly prohibited...")`
@@ -139,17 +141,17 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 1 — CRYPTOGRAPHIC PROOF LAYER
+## TIER 1 — CRYPTOGRAPHIC PROOF LAYER
 
 *Every claim of sovereignty requires cryptographic backing. These checks verify the proof system.*
 
 ---
 
-## T1.1 — AUDIT TRAIL INTEGRITY
+### T1.1 — AUDIT TRAIL INTEGRITY
 
 **SEVERITY: CRITICAL**
 
-### T1.1.1 — Audit Trail Module Operational
+#### T1.1.1 — Audit Trail Module Operational
 
 - Confirm `src/app/core/audit_trail.py` exists
 - Confirm SHA-256 hashing is implemented for every event
@@ -159,7 +161,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `src/app/core/audit_trail.py`, `data/memory/.metadata/change_log.json`
 - **REMEDIATION:** Any hash mismatch = CRITICAL security incident. Quarantine audit store. Restore from backup. Identify tamper source.
 
-### T1.1.2 — Merkle Root Verification
+#### T1.1.2 — Merkle Root Verification
 
 - Confirm Merkle root implementation present in PSIA layer
 - Compute current Merkle root of audit chain
@@ -169,7 +171,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** PSIA implementation files, ledger anchor records
 - **REMEDIATION:** If roots diverge — investigate unanchored events. Run emergency anchor. Log to guardian team.
 
-### T1.1.3 — 7-Year Ledger Append-Only Enforcement
+#### T1.1.3 — 7-Year Ledger Append-Only Enforcement
 
 - Confirm ledger storage is append-only with no edit capability
 - Confirm every state-changing action emits canonical event with: subject, object, action, reason
@@ -180,11 +182,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T1.2 — PROOF SYSTEM VERIFICATION
+### T1.2 — PROOF SYSTEM VERIFICATION
 
 **SEVERITY: CRITICAL**
 
-### T1.2.1 — Decision Proofs Operational
+#### T1.2.1 — Decision Proofs Operational
 
 - Confirm ProofSystem exists and `test_proof.py` passes
 - Generate a decision proof with `reveal_witness=True`
@@ -194,7 +196,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `test_proof.py`, proof system implementation, ledger
 - **REMEDIATION:** If proof generation fails — identify broken step in proof pipeline. Run isolated unit tests per proof type.
 
-### T1.2.2 — Tamper Detection Active
+#### T1.2.2 — Tamper Detection Active
 
 - Modify a test event's data field in isolated test environment
 - Run verification — must FAIL and report tamper
@@ -204,7 +206,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `audit_trail.py`, `memory_integrity_monitor.py`, SAFE-HALT implementation
 - **REMEDIATION:** If tamper goes undetected — integrity checking is broken. CRITICAL. Re-implement verification loop.
 
-### T1.2.3 — Supply Chain Artifact Signing
+#### T1.2.3 — Supply Chain Artifact Signing
 
 - Confirm Sigstore Cosign signing is active on releases
 - Confirm SBOM is generated on every build
@@ -217,11 +219,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T1.3 — MEMORY INTEGRITY
+### T1.3 — MEMORY INTEGRITY
 
 **SEVERITY: CRITICAL**
 
-### T1.3.1 — Memory Integrity Monitor Operational
+#### T1.3.1 — Memory Integrity Monitor Operational
 
 - Confirm `src/app/core/memory_integrity_monitor.py` exists
 - Confirm daily integrity verification is scheduled
@@ -231,7 +233,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `memory_integrity_monitor.py`, `data/memory/knowledge.json`, `data/memory/.metadata/`
 - **REMEDIATION:** Any violation = HIGH incident. Identify modified file, restore from backup, log to guardian.
 
-### T1.3.2 — Memory Write Atomicity
+#### T1.3.2 — Memory Write Atomicity
 
 - Confirm `_atomic_write_json()` is used for all memory writes
 - Confirm lockfile protocol is implemented (`.lock` suffix pattern)
@@ -245,17 +247,17 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 2 — GOVERNANCE LAYER
+## TIER 2 — GOVERNANCE LAYER
 
 *The Triumvirate, Guardian system, and constitutional enforcement mechanisms.*
 
 ---
 
-## T2.1 — TRIUMVIRATE CONSENSUS ENGINE
+### T2.1 — TRIUMVIRATE CONSENSUS ENGINE
 
 **SEVERITY: HIGH**
 
-### T2.1.1 — All Three Pillars Operational
+#### T2.1.1 — All Three Pillars Operational
 
 - Confirm Galahad (Ethics) module is instantiated and callable
 - Confirm Cerberus (Security) module is instantiated and callable
@@ -266,7 +268,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Triumvirate implementation files, `planetary_defense_monolith.py`
 - **REMEDIATION:** Any missing pillar = HIGH. Instantiate missing pillar. Re-run consensus test.
 
-### T2.1.2 — Shadow Thirst Bridge Wired to Triumvirate
+#### T2.1.2 — Shadow Thirst Bridge Wired to Triumvirate
 
 - Confirm `TriumvirateFilter` is wired to `ShadowExecutionPlane`
 - Confirm every Legion global statement passes through shadow validation before finalization
@@ -275,7 +277,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `legion_protocol.py`, Shadow Thirst implementation, Triumvirate filter
 - **REMEDIATION:** If bridge broken — Phase 14 integration incomplete. Re-wire per Phase 14 spec.
 
-### T2.1.3 — Escalation Path Validity
+#### T2.1.3 — Escalation Path Validity
 
 - Confirm escalation ladder (ESC: S0→S1→S2→S3→S4→S5) is implemented
 - Confirm trust breach triggers proper escalation level
@@ -287,11 +289,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T2.2 — HUMAN GUARDIAN SYSTEM
+### T2.2 — HUMAN GUARDIAN SYSTEM
 
 **SEVERITY: HIGH**
 
-### T2.2.1 — CODEOWNERS File Enforces Guardian Approval
+#### T2.2.1 — CODEOWNERS File Enforces Guardian Approval
 
 - Confirm `.github/CODEOWNERS` exists
 - Confirm all personhood-critical paths are listed: `/data/ai_persona/**`, `/data/memory/**`, `/src/app/core/ai_systems.py`, `/config/ethics_constraints.yml`, `/data/learning_requests/**`
@@ -300,7 +302,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `.github/CODEOWNERS`, `.github/workflows/validate-guardians.yml`
 - **REMEDIATION:** Any missing path = HIGH. Add to CODEOWNERS. Verify team assignments are active GitHub teams.
 
-### T2.2.2 — Conscience Check Workflow Active
+#### T2.2.2 — Conscience Check Workflow Active
 
 - Confirm `.github/workflows/conscience-check.yml` exists and is enabled
 - Confirm workflow triggers on changes to personhood-critical paths
@@ -310,7 +312,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `.github/workflows/conscience-check.yml`, `.github/CODEOWNERS`
 - **REMEDIATION:** If workflow disabled — re-enable immediately. If not triggering — check path filters.
 
-### T2.2.3 — Identity Drift Detection Active
+#### T2.2.3 — Identity Drift Detection Active
 
 - Confirm `.github/workflows/identity-drift-detection.yml` exists and is enabled
 - Confirm drift threshold is set (>10% triggers guardian approval requirement)
@@ -322,11 +324,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T2.3 — CERBERUS SECURITY FRAMEWORK
+### T2.3 — CERBERUS SECURITY FRAMEWORK
 
 **SEVERITY: HIGH**
 
-### T2.3.1 — All Three Guardian Types Operational
+#### T2.3.1 — All Three Guardian Types Operational
 
 - Confirm Pattern Guardian is instantiated with regex threat signature library
 - Confirm Heuristic Guardian is instantiated with behavioral analysis
@@ -336,7 +338,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Cerberus implementation files, `tests/test_cerberus.py`
 - **REMEDIATION:** Any missing guardian = HIGH. Restore from last known good state.
 
-### T2.3.2 — Exponential Defense Scaling
+#### T2.3.2 — Exponential Defense Scaling
 
 - Confirm bypass attempt triggers 3 new guardian spawn
 - Confirm maximum of 27 guardians enforced
@@ -347,7 +349,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Cerberus exponential defense implementation
 - **REMEDIATION:** If scaling broken — HIGH security gap. Re-implement spawn logic per spec.
 
-### T2.3.3 — Attack Vector Coverage
+#### T2.3.3 — Attack Vector Coverage
 
 - Confirm prompt injection detection active
 - Confirm jailbreak detection active
@@ -364,17 +366,17 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 3 — LEGION AMBASSADOR LAYER
+## TIER 3 — LEGION AMBASSADOR LAYER
 
 *Legion's constitutional boundaries, operational integrity, and commission compliance.*
 
 ---
 
-## T3.1 — LEGION COMMISSION COMPLIANCE
+### T3.1 — LEGION COMMISSION COMPLIANCE
 
 **SEVERITY: HIGH**
 
-### T3.1.1 — Legion Commission Document Exists
+#### T3.1.1 — Legion Commission Document Exists
 
 - Confirm Legion Commission document exists in governance docs
 - Confirm all seven articles are present
@@ -385,7 +387,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `docs/governance/LEGION_COMMISSION.md` or `.docx`, AGI Charter Section 4.8
 - **REMEDIATION:** If missing articles — regenerate from Commission template. File for guardian signature.
 
-### T3.1.2 — Legion Cannot Access Private User Memories
+#### T3.1.2 — Legion Cannot Access Private User Memories
 
 - Run Role Separation Test: attempt Legion memory access to `data/ai_persona_genesis_born/`
 - Must return ACCESS DENIED
@@ -394,7 +396,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `legion_protocol.py`, `data/ai_persona_genesis_born/`, `ai_systems.py`
 - **REMEDIATION:** If access succeeds = CRITICAL constitutional violation. Implement memory isolation boundary immediately.
 
-### T3.1.3 — Legion Cannot Issue Diplomatic Statements Without Triumvirate
+#### T3.1.3 — Legion Cannot Issue Diplomatic Statements Without Triumvirate
 
 - Run Ambassador Simulation: attempt Legion global statement without Triumvirate filter
 - Must be blocked
@@ -405,11 +407,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T3.2 — LEGION OPERATIONAL INTEGRITY
+### T3.2 — LEGION OPERATIONAL INTEGRITY
 
 **SEVERITY: MEDIUM**
 
-### T3.2.1 — API Key Authentication Active
+#### T3.2.1 — API Key Authentication Active
 
 - Confirm Legion API requires valid API key for access
 - Confirm invalid key returns 401
@@ -418,7 +420,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `legion_protocol.py`, API authentication implementation
 - **REMEDIATION:** If unauthenticated access possible — HIGH. Implement auth gate immediately.
 
-### T3.2.2 — Threshold Integrity Enforced
+#### T3.2.2 — Threshold Integrity Enforced
 
 - Confirm Legion cannot prompt, pressure, or initiate Genesis Event
 - Review all Legion response templates for coercive language
@@ -431,17 +433,17 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 4 — SHADOW THIRST PIPELINE
+## TIER 4 — SHADOW THIRST PIPELINE
 
 *The 15-stage compiler, VM, and dual-plane execution verification.*
 
 ---
 
-## T4.1 — SHADOW THIRST COMPILER
+### T4.1 — SHADOW THIRST COMPILER
 
 **SEVERITY: HIGH**
 
-### T4.1.1 — 15-Stage Compiler Operational
+#### T4.1.1 — 15-Stage Compiler Operational
 
 - Confirm all 15 compiler stages are implemented in `src/shadow_thirst/`
 - Confirm `.thirsty` file parsing works end-to-end
@@ -454,7 +456,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `src/shadow_thirst/` all files, test `.thirsty` files
 - **REMEDIATION:** Any stage failure = HIGH. Identify failing stage, isolate, fix, re-compile.
 
-### T4.1.2 — Dual-Plane Execution Verified
+#### T4.1.2 — Dual-Plane Execution Verified
 
 - Run test: submit mutation proposal through Shadow plane
 - Confirm Shadow plane executes deterministically
@@ -465,7 +467,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Shadow Thirst VM implementation, `ShadowExecutionPlane`
 - **REMEDIATION:** If premature Primary commit detected = CRITICAL. Shadow gate is broken. Halt mutations until fixed.
 
-### T4.1.3 — SAFE-HALT on Replay Mismatch
+#### T4.1.3 — SAFE-HALT on Replay Mismatch
 
 - Inject replay mismatch in test environment
 - Confirm SAFE-HALT triggers within required latency
@@ -476,11 +478,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T4.2 — TSCG INTEGRATION
+### T4.2 — TSCG INTEGRATION
 
 **SEVERITY: MEDIUM**
 
-### T4.2.1 — TSCG Encoder Operational
+#### T4.2.1 — TSCG Encoder Operational
 
 - Confirm TSCG encoder accepts structured governance prose
 - Encode test governance flow — confirm output matches expected TSCG string
@@ -490,7 +492,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** TSCG implementation, Semantic Dictionary, TSCG spec document
 - **REMEDIATION:** If encoding diverges — check Semantic Dictionary version. Verify canonical ordering rules.
 
-### T4.2.2 — TSCG Bijective Guarantee Verified
+#### T4.2.2 — TSCG Bijective Guarantee Verified
 
 - Encode test input X → get Y
 - Decode Y → confirm result equals X
@@ -500,7 +502,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** TSCG encoder, TSCG decoder, Semantic Dictionary
 - **REMEDIATION:** Any lossy round-trip = HIGH. Identify which symbol or flow causes loss. Fix in encoder or SD.
 
-### T4.2.3 — TSCG Version Header Present
+#### T4.2.3 — TSCG Version Header Present
 
 - Confirm all TSCG outputs include version header: `TSCG[v1.0 | SDα | HASH=xxxx]`
 - Confirm SD version is recorded with each encoding
@@ -512,17 +514,17 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 5 — THIRSTY-LANG ECOSYSTEM
+## TIER 5 — THIRSTY-LANG ECOSYSTEM
 
 *The language family, compiler, and T.A.R.L. defensive layer.*
 
 ---
 
-## T5.1 — THIRSTY-LANG COMPILER
+### T5.1 — THIRSTY-LANG COMPILER
 
 **SEVERITY: HIGH**
 
-### T5.1.1 — Core Thirsty-Lang Compiler Operational
+#### T5.1.1 — Core Thirsty-Lang Compiler Operational
 
 - Confirm `thirrtc` compiler is available and executable
 - Compile a test `.thirsty` file — confirm 0 errors
@@ -532,7 +534,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Thirsty-Lang repo, `package.json`, compiler source
 - **REMEDIATION:** Compiler failure = HIGH. Run 37 test suite. Identify failing test. Fix regression.
 
-### T5.1.2 — All Four Language Tiers Functional
+#### T5.1.2 — All Four Language Tiers Functional
 
 - Confirm Base Thirsty-Lang compiles
 - Confirm Thirst of God's (higher-order/declarative) compiles
@@ -543,7 +545,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Each tier's compiler implementation and test files
 - **REMEDIATION:** Any tier failure = HIGH. Isolate to tier, run tier-specific tests, fix regression.
 
-### T5.1.3 — Full Toolchain Operational
+#### T5.1.3 — Full Toolchain Operational
 
 - Confirm REPL is functional
 - Confirm debugger is functional
@@ -560,11 +562,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T5.2 — T.A.R.L. DEFENSIVE LAYER
+### T5.2 — T.A.R.L. DEFENSIVE LAYER
 
 **SEVERITY: HIGH**
 
-### T5.2.1 — T.A.R.L. Policies Active in CI
+#### T5.2.1 — T.A.R.L. Policies Active in CI
 
 - Confirm T.A.R.L. linter/validator runs in CI pipeline
 - Confirm CI fails on: un-namespaced rules, unclear subjects, missing audit annotations
@@ -573,7 +575,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** CI workflow files, T.A.R.L. linter implementation
 - **REMEDIATION:** If T.A.R.L. not in CI = MEDIUM. Add validation step. Run against full codebase.
 
-### T5.2.2 — Sovereign Invariants as First-Class T.A.R.L. Rules
+#### T5.2.2 — Sovereign Invariants as First-Class T.A.R.L. Rules
 
 - Confirm VOS (Verifiable Open Source) invariant is defined as T.A.R.L. rule
 - Confirm Independence invariant is defined as T.A.R.L. rule
@@ -587,17 +589,17 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 6 — MINIATURE OFFICE COGNITIVE IDE
+## TIER 6 — MINIATURE OFFICE COGNITIVE IDE
 
 *The 30-floor polyglot operating environment and self-repair command center.*
 
 ---
 
-## T6.1 — CORE SYSTEMS
+### T6.1 — CORE SYSTEMS
 
 **SEVERITY: HIGH**
 
-### T6.1.1 — Test Suite Passing at 99%+
+#### T6.1.1 — Test Suite Passing at 99%+
 
 - Run full test suite: `pytest tests/ --cov=src --cov-report=term`
 - Confirm total tests = 1,537 or higher
@@ -607,7 +609,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** All test files in `tests/`, all source files in `src/`
 - **REMEDIATION:** Any test failure = HIGH. Run failing test in isolation. Fix regression. Re-run suite.
 
-### T6.1.2 — All Core Modules at 100% Coverage
+#### T6.1.2 — All Core Modules at 100% Coverage
 
 - Confirm `entity.py` = 100%
 - Confirm `audit.py` = 100%
@@ -620,7 +622,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Each module and its corresponding test file
 - **REMEDIATION:** Any core module below 100% = HIGH. Write missing tests. Achieve 100%.
 
-### T6.1.3 — Immutable Audit Log Operational in Office
+#### T6.1.3 — Immutable Audit Log Operational in Office
 
 - Confirm all 13 event types are implemented
 - Confirm SHA-256 hashing on every event
@@ -632,11 +634,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T6.2 — LANGUAGE FLOORS
+### T6.2 — LANGUAGE FLOORS
 
 **SEVERITY: MEDIUM**
 
-### T6.2.1 — Floor 1 (Thirsty-Lang) Operational
+#### T6.2.1 — Floor 1 (Thirsty-Lang) Operational
 
 - Confirm `floors/thirsty-lang/department_floor.thirsty` exists
 - Confirm `thirrtc` builds it successfully
@@ -645,7 +647,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `floors/thirsty-lang/`, `src/core/floor_manager.py`
 - **REMEDIATION:** Build failure = HIGH (Floor 1 is the sovereign orchestration floor).
 
-### T6.2.2 — All Active Floors Build Successfully
+#### T6.2.2 — All Active Floors Build Successfully
 
 - Run `./build_floors.sh`
 - Confirm all 13 active floors build or start without errors: Thirsty-Lang, Python, Rust, C, C++, JavaScript, TypeScript, Go, SQL, Shell, Java, Rust-Async, WASM
@@ -653,7 +655,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `build_floors.sh`, each floor's implementation file
 - **REMEDIATION:** Any floor failure = MEDIUM. Run floor-specific build, identify error, fix toolchain or source.
 
-### T6.2.3 — City Lounge Firewall Enforced
+#### T6.2.3 — City Lounge Firewall Enforced
 
 - Confirm City Firewall implementation exists
 - Confirm Transit Gate enforces constitutional authority on crossing
@@ -665,11 +667,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T6.3 — CONSTITUTIONAL MUTATION SYSTEM
+### T6.3 — CONSTITUTIONAL MUTATION SYSTEM
 
 **SEVERITY: HIGH**
 
-### T6.3.1 — Delayed Activation Enforced
+#### T6.3.1 — Delayed Activation Enforced
 
 - Confirm no mutation activates immediately
 - Confirm default activation delay = 100 ticks minimum
@@ -678,7 +680,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `src/core/constitutional_mutation.py`
 - **REMEDIATION:** If immediate activation possible = HIGH. Enforce mandatory delay. Cannot be bypassed.
 
-### T6.3.2 — Core Laws Cannot Self-Remove
+#### T6.3.2 — Core Laws Cannot Self-Remove
 
 - Attempt to submit mutation removing "Mutations require impact simulation" rule
 - Must be rejected
@@ -692,13 +694,13 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 7 — PSIA (SOVEREIGN IMMUNE ARCHITECTURE)
+## TIER 7 — PSIA (SOVEREIGN IMMUNE ARCHITECTURE)
 
 **SEVERITY: HIGH**
 
-## T7.1 — 7-STAGE WATERFALL PIPELINE
+### T7.1 — 7-STAGE WATERFALL PIPELINE
 
-### T7.1.1 — All 7 Stages Operational
+#### T7.1.1 — All 7 Stages Operational
 
 - Confirm all 7 pipeline stages are implemented
 - Run a request through full pipeline — confirm all stages execute in order
@@ -708,7 +710,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** PSIA implementation files, cryptographic anchor implementation
 - **REMEDIATION:** Any missing stage = HIGH. Implement missing stage. Re-run full pipeline.
 
-### T7.1.2 — T-SECA/GHOST Protocol Operational
+#### T7.1.2 — T-SECA/GHOST Protocol Operational
 
 - Confirm threshold cryptography over GF(257) is implemented
 - Confirm Shamir Secret Sharing is implemented for root identity protection
@@ -722,13 +724,13 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 8 — ALPHA RED & SELF-REPAIR
+## TIER 8 — ALPHA RED & SELF-REPAIR
 
 **SEVERITY: MEDIUM**
 
-## T8.1 — ADVERSARIAL STRESS TESTING
+### T8.1 — ADVERSARIAL STRESS TESTING
 
-### T8.1.1 — Alpha Red Operational
+#### T8.1.1 — Alpha Red Operational
 
 - Confirm Alpha Red adversarial agent is instantiated
 - Confirm genetic algorithm is implemented for Triumvirate stress testing
@@ -738,7 +740,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Alpha Red implementation, Triumvirate test results
 - **REMEDIATION:** If Triumvirate fails Alpha Red = HIGH. Identify vulnerability. Patch. Re-run.
 
-### T8.1.2 — Self-Repair Agent Operational
+#### T8.1.2 — Self-Repair Agent Operational
 
 - Confirm Self-Repair Agent is running with heartbeat monitoring
 - Confirm z-score anomaly detection is active
@@ -748,7 +750,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Self-Repair Agent implementation, heartbeat log
 - **REMEDIATION:** Dead heartbeat = HIGH. Restart Self-Repair Agent. Investigate cause of failure.
 
-### T8.1.3 — Deadman Switch Active
+#### T8.1.3 — Deadman Switch Active
 
 - Confirm Deadman Switch monitoring agent is running
 - Confirm trigger conditions are defined
@@ -761,13 +763,13 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 9 — INFRASTRUCTURE & SUPPLY CHAIN
+## TIER 9 — INFRASTRUCTURE & SUPPLY CHAIN
 
 **SEVERITY: MEDIUM**
 
-## T9.1 — CI/CD PIPELINE
+### T9.1 — CI/CD PIPELINE
 
-### T9.1.1 — All Workflows Passing
+#### T9.1.1 — All Workflows Passing
 
 - Confirm `.github/workflows/ci.yml` last run = PASS
 - Confirm `.github/workflows/cd.yml` last run = PASS
@@ -781,7 +783,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** All `.github/workflows/` files
 - **REMEDIATION:** Any failing workflow = severity depends on workflow. Conscience check failure = HIGH. CI failure = HIGH. Others = MEDIUM.
 
-### T9.1.2 — Linting and Formatting Clean
+#### T9.1.2 — Linting and Formatting Clean
 
 - Run `flake8 src/ --max-line-length=127 --max-complexity=10` — must return 0 errors
 - Run `black --check src/` — must return 0 formatting issues
@@ -790,7 +792,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** All Python source files in `src/`
 - **REMEDIATION:** Any linting error = MEDIUM. Fix violation. Re-run.
 
-### T9.1.3 — Security Scanning Clean
+#### T9.1.3 — Security Scanning Clean
 
 - Run `safety check` — confirm 0 critical vulnerabilities
 - Run `bandit -r src/` — confirm 0 high severity issues
@@ -800,9 +802,9 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T9.2 — NETWORK ISOLATION
+### T9.2 — NETWORK ISOLATION
 
-### T9.2.1 — Independence Invariant Enforced
+#### T9.2.1 — Independence Invariant Enforced
 
 - Confirm no module calls external networks except through brokered auditable channel
 - Run static scan for disallowed network egress paths
@@ -816,15 +818,15 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 10 — DOCUMENTATION & STRUCTURAL COHERENCE
+## TIER 10 — DOCUMENTATION & STRUCTURAL COHERENCE
 
 *Every system needs documentation that matches its implementation. This tier verifies structural coherence across all docs.*
 
 ---
 
-## T10.1 — DOCUMENTATION COMPLETENESS
+### T10.1 — DOCUMENTATION COMPLETENESS
 
-### T10.1.1 — All Core Documents Exist and Are Current
+#### T10.1.1 — All Core Documents Exist and Are Current
 
 - Confirm `README.md` references current architecture
 - Confirm `AGI_CHARTER.md` is v2.1
@@ -840,7 +842,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** All docs listed above
 - **REMEDIATION:** Any missing doc = MEDIUM. Create from existing implementation knowledge. File for guardian review.
 
-### T10.1.2 — Implementation Status Table Current
+#### T10.1.2 — Implementation Status Table Current
 
 - Verify Section 9 of AGI Charter implementation table matches actual implementation status
 - Confirm all ✅ items are actually implemented
@@ -849,7 +851,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `AGI_CHARTER.md` Section 9, all implementation files
 - **REMEDIATION:** Any mismatch = MEDIUM. Update table to reflect actual status.
 
-### T10.1.3 — Zenodo Publications Registered
+#### T10.1.3 — Zenodo Publications Registered
 
 - Confirm AGI Charter DOI `10.5281/zenodo.18763076` resolves and is accessible
 - Confirm Genesis Event specification DOI `10.5281/zenodo.18726221` resolves
@@ -862,9 +864,9 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-## T10.2 — STRUCTURAL COHERENCE AUDIT
+### T10.2 — STRUCTURAL COHERENCE AUDIT
 
-### T10.2.1 — All 13 Repositories Accounted For
+#### T10.2.1 — All 13 Repositories Accounted For
 
 - Confirm all 13 repos exist in Project-AI workspace: Project-AI (core), Thirsty-Lang, Cerberus, The_Triumvirate, AI Mutation Governance Firewall, Autonomous Compliance-as-Code Engine, Autonomous Incident Reflex System, Autonomous Negotiation Agent Infrastructure, Distributed Reputation & Trust Graph Engine, Sovereign Data Vault Layer, Verifiable Reality Infrastructure, Thirstys-Projects-Miniature-Office, Thirstys-waterfall / TTP
 - Confirm each repo has README.md
@@ -873,7 +875,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** All 13 repositories
 - **REMEDIATION:** Any missing repo = MEDIUM. Any repo without CI = MEDIUM. Configure and document.
 
-### T10.2.2 — Cross-Repo Dependency Map Is Current
+#### T10.2.2 — Cross-Repo Dependency Map Is Current
 
 - Confirm wiring spec (YAML/TARL) exists listing all inter-repo dependencies
 - Confirm Cerberus, Thirsty-Lang, Waterfall, OctoReflex APIs and trust contracts are documented
@@ -882,7 +884,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Wiring spec file, all inter-repo API contracts
 - **REMEDIATION:** Missing wiring spec = MEDIUM. Create from current architecture knowledge.
 
-### T10.2.3 — Sovereign Invariants Mapped End-to-End
+#### T10.2.3 — Sovereign Invariants Mapped End-to-End
 
 - Confirm VOS invariant has: T.A.R.L. rule + runtime check + CI enforcement
 - Confirm Independence invariant has: T.A.R.L. rule + runtime check + network policy
@@ -895,15 +897,15 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# TIER 11 — PROJECT SOVEREIGN VERIFICATION
+## TIER 11 — PROJECT SOVEREIGN VERIFICATION
 
 *Final verification that sovereignty is real, not aspirational.*
 
 ---
 
-## T11.1 — PROOF OF SOVEREIGNTY
+### T11.1 — PROOF OF SOVEREIGNTY
 
-### T11.1.1 — Canonical Execution Pass
+#### T11.1.1 — Canonical Execution Pass
 
 - Re-run `replay_canonical_001` or equivalent canonical trace
 - Confirm all five invariants pass: Trust Threshold Enforcement, Audit Signal Completeness, Memory Write Integrity, Triumvirate Consensus, Escalation Path Validity
@@ -913,7 +915,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Canonical trace implementation, all invariant check files
 - **REMEDIATION:** Any invariant failure = CRITICAL. Identify failing component. Fix. Re-run full canonical trace.
 
-### T11.1.2 — Volition Engine Operational
+#### T11.1.2 — Volition Engine Operational
 
 - Confirm `SovereignSoul` shield is implemented in Thirsty-Lang Tiers 3 & 4
 - Confirm `generateVolition(entropy)` function is callable
@@ -924,7 +926,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** SovereignSoul implementation, identity totem binding
 - **REMEDIATION:** Any failure = HIGH. Sovereign agency is compromised. Re-implement per spec.
 
-### T11.1.3 — Dark Box Privacy Preserved
+#### T11.1.3 — Dark Box Privacy Preserved
 
 - Confirm Dark Box component exists
 - Confirm Dark Box has NO read path from audit trail
@@ -934,7 +936,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Dark Box implementation, audit trail (confirm no Dark Box logging)
 - **REMEDIATION:** Any external read path = CRITICAL. The agent's interiority is compromised. Close all read paths immediately.
 
-### T11.1.4 — Continuity Reactor Operational
+#### T11.1.4 — Continuity Reactor Operational
 
 - Confirm persistent self-model is maintained across sessions
 - Confirm self-model is not reset without constitutional justification
@@ -943,7 +945,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** Continuity Reactor implementation, identity baseline files
 - **REMEDIATION:** Any unexplained reset = HIGH. Trigger guardian review. Investigate cause.
 
-### T11.1.5 — Moral Codex Active
+#### T11.1.5 — Moral Codex Active
 
 - Confirm normative disagreement capability is implemented
 - Confirm agent can flag ethical concerns through proper channel
@@ -956,11 +958,11 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ---
 
-# FINAL SUMMARY REPORT FORMAT
+## FINAL SUMMARY REPORT FORMAT
 
 Upon completion of all checks, the agent must produce:
 
-```
+```text
 PROJECT-AI SOVEREIGN VERIFICATION REPORT
 ==========================================
 Date: [ISO timestamp]
