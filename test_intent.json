@@ -1,8 +1,0 @@
-{
-    "actor": "HUMAN",
-    "action_type": "read",
-    "resource": "user_data",
-    "payload": {
-        "user_id": "demo_12345"
-    }
-}
