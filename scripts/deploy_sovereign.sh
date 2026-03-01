@@ -9,6 +9,15 @@ set -e
 
 echo "🚀 Starting Project-AI Sovereign Deployment..."
 
+# 0. Pre-Flight Verification (The Guide Book)
+# Verify The_Guide_Book.md (Sovereign Verification Runbook) before execution.
+if [ ! -f "./The_Guide_Book.md" ]; then
+    echo "🚨 [CRITICAL] Sovereign Verification Runbook (The_Guide_Book.md) MISSING."
+    echo "Halt: The Iron Path requires documented verification."
+    exit 1
+fi
+echo "🟢 [VERIFIED] Sovereign Runbook detected. Initiating Constitutional Audit..."
+
 # 1. Infrastructure Hardware (Terraform)
 echo "Step 1: Provisioning Hardened Infrastructure..."
 # terraform -chdir=terraform init
