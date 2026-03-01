@@ -35,6 +35,8 @@ class TokenType(Enum):
     DIVERGENCE = auto()  # Divergence policy
     MUTATION = auto()  # Mutation boundary
     RETURN = auto()  # Return statement
+    IF = auto()  # If statement
+    ELSE = auto()  # Else statement
 
     # Divergence policies
     REQUIRE_IDENTICAL = auto()
@@ -135,6 +137,8 @@ class ShadowThirstLexer:
         "divergence": TokenType.DIVERGENCE,
         "mutation": TokenType.MUTATION,
         "return": TokenType.RETURN,
+        "if": TokenType.IF,
+        "else": TokenType.ELSE,
         # Divergence policies
         "require_identical": TokenType.REQUIRE_IDENTICAL,
         "allow_epsilon": TokenType.ALLOW_EPSILON,

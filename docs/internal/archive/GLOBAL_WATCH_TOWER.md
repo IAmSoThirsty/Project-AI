@@ -1,4 +1,13 @@
-# Global Watch Tower System - Security Command Center
+## GLOBAL_WATCH_TOWER.md
+
+Productivity: Out-Dated(archive)                                2026-03-01T08:58:15-07:00
+>
+> [!WARNING]
+> **RELEVANCE STATUS**: ARCHIVED / HISTORICAL
+> **CURRENT ROLE**: Architecture and usage guide for the Security Command Center (Cerberus) hub (Jan 2026).
+> **LAST VERIFIED**: 2026-03-01
+
+## Global Watch Tower System - Security Command Center
 
 The Global Watch Tower System serves as the **Security Command Center** for Project-AI, operating under **Cerberus (Chief of Security)**. This centralized security hub provides system-wide monitoring, file verification, and coordinates all security agents and operations.
 

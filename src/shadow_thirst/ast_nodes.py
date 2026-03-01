@@ -180,6 +180,15 @@ class ReturnStatement(Statement):
 
 
 @dataclass
+class IfStatement(Statement):
+    """If-else control flow statement."""
+
+    condition: Expression = None
+    then_branch: list[Statement] = field(default_factory=list)
+    else_branch: list[Statement] | None = None
+
+
+@dataclass
 class OutputStatement(Statement):
     """Output statement (pour x)."""
 
@@ -391,6 +400,7 @@ __all__ = [
     "OutputStatement",
     "InputStatement",
     "ExpressionStatement",
+    "IfStatement",
     "Block",
     # Shadow Thirst constructs
     "PrimaryBlock",

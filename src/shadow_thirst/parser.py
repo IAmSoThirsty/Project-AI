@@ -23,6 +23,7 @@ from shadow_thirst.ast_nodes import (
     Identifier,
     InputStatement,
     InvariantClause,
+    IfStatement,
     Literal,
     MemberAccess,
     MutationBoundary,
@@ -166,7 +167,7 @@ class ShadowThirstParser:
 
     def _parse_parameter_list(self) -> list[Parameter]:
         """Parse function parameter list."""
-        parameters = []
+        parameters: list[Parameter] = []
 
         if self._check(TokenType.RPAREN):
             return parameters
@@ -198,8 +199,10 @@ class ShadowThirstParser:
 
     def _parse_type_annotation(self) -> TypeAnnotation:
         """Parse type annotation with optional plane qualifier."""
-        # Check for plane qualifier
+        # 1. Plane Qualifier (Optional)
         qualifier = None
+        start_token = self._peek()
+
         if self._check(TokenType.CANONICAL):
             self._advance()
             qualifier = PlaneQualifier.CANONICAL
@@ -213,28 +216,35 @@ class ShadowThirstParser:
             self._advance()
             qualifier = PlaneQualifier.DUAL
 
-        # Type name
-        type_token = self._consume(TokenType.TYPE_IDENTIFIER, "Expected type name")
-        type_name = type_token.value
-
-        # Type parameters (optional)
+        # 2. Type Name and Params
+        type_name = ""
         type_params = []
-        if self._match(TokenType.LT):
-            while True:
-                param = self._parse_type_annotation()
-                type_params.append(param)
 
-                if not self._match(TokenType.COMMA):
-                    break
+        # If qualifier is followed by '<', the 'name' is parsed from inside the brackets
+        if qualifier and self._match(TokenType.LT):
+            inner = self._parse_type_annotation()
+            type_name = inner.name
+            type_params = inner.type_params
+            self._consume(TokenType.GT, "Expected '>' to close qualifier bracket")
+        else:
+            # Standard: [Qualifier] TypeName [<Params>]
+            type_token = self._consume(TokenType.TYPE_IDENTIFIER, "Expected type name")
+            type_name = type_token.value
 
-            self._consume(TokenType.GT, "Expected '>' after type parameters")
+            if self._match(TokenType.LT):
+                while True:
+                    param = self._parse_type_annotation()
+                    type_params.append(param)
+                    if not self._match(TokenType.COMMA):
+                        break
+                self._consume(TokenType.GT, "Expected '>' after type parameters")
 
         return TypeAnnotation(
             name=type_name,
             qualifier=qualifier,
             type_params=type_params,
-            line=type_token.line,
-            column=type_token.column,
+            line=start_token.line,
+            column=start_token.column,
         )
 
     # ========================================================================
@@ -397,6 +407,10 @@ class ShadowThirstParser:
         if self._check(TokenType.RETURN):
             return self._parse_return_statement()
 
+        # If statement
+        if self._check(TokenType.IF):
+            return self._parse_if_statement()
+
         # Expression statement or assignment
         return self._parse_expression_or_assignment()
 
@@ -454,6 +468,42 @@ class ShadowThirstParser:
 
         return ReturnStatement(
             value=value,
+            line=start_token.line,
+            column=start_token.column,
+        )
+
+    def _parse_if_statement(self) -> IfStatement:
+        """Parse an if statement."""
+        start_token = self._consume(TokenType.IF, "Expected 'if'")
+        condition = self._parse_expression()
+
+        self._consume(TokenType.LBRACE, "Expected '{' after if condition")
+        then_branch = []
+        while not self._check(TokenType.RBRACE) and not self._is_at_end():
+            stmt = self._parse_statement()
+            if stmt:
+                then_branch.append(stmt)
+        self._consume(TokenType.RBRACE, "Expected '}' to end if block")
+
+        else_branch = None
+        if self._match(TokenType.ELSE):
+            if self._match(TokenType.IF):
+                # Handle else if
+                self.pos -= 1  # Put IF back for the next call
+                else_branch = [self._parse_if_statement()]
+            else:
+                self._consume(TokenType.LBRACE, "Expected '{' for else block")
+                else_branch = []
+                while not self._check(TokenType.RBRACE) and not self._is_at_end():
+                    stmt = self._parse_statement()
+                    if stmt:
+                        else_branch.append(stmt)
+                self._consume(TokenType.RBRACE, "Expected '}' to end else block")
+
+        return IfStatement(
+            condition=condition,
+            then_branch=then_branch,
+            else_branch=else_branch,
             line=start_token.line,
             column=start_token.column,
         )
@@ -605,7 +655,7 @@ class ShadowThirstParser:
 
     def _parse_argument_list(self) -> list[Expression]:
         """Parse function argument list."""
-        arguments = []
+        arguments: list[Expression] = []
 
         if self._check(TokenType.RPAREN):
             return arguments
@@ -631,9 +681,44 @@ class ShadowThirstParser:
         if self._match(TokenType.BOOLEAN):
             return Literal(value=self._previous().value)
 
-        # Identifiers
-        if self._match(TokenType.IDENTIFIER):
-            return Identifier(name=self._previous().value)
+        # Identifiers (including type names and plane keywords for output access)
+        if self._match(
+            TokenType.IDENTIFIER,
+            TokenType.TYPE_IDENTIFIER,
+            TokenType.PRIMARY,
+            TokenType.SHADOW,
+        ):
+            token = self._previous()
+            name = token.value
+
+            # Check for struct literal: TypeName { field: value, ... }
+            # Only trigger if it's a TYPE_IDENTIFIER and NOT a plane keyword or regular identifier
+            if token.type == TokenType.TYPE_IDENTIFIER and self._match(
+                TokenType.LBRACE
+            ):
+                fields = {}
+                while not self._check(TokenType.RBRACE) and not self._is_at_end():
+                    field_name_token = self._consume(
+                        TokenType.IDENTIFIER, "Expected field name"
+                    )
+                    self._consume(TokenType.COLON, "Expected ':' after field name")
+                    value = self._parse_expression()
+                    fields[field_name_token.value] = value
+
+                    if not self._match(TokenType.COMMA):
+                        break
+                self._consume(TokenType.RBRACE, "Expected '}' after struct fields")
+                return FunctionCall(function=name, arguments=list(fields.values()))
+
+            # If it's a plane keyword, ensure it's not being used as a block start here
+            if token.type in (TokenType.PRIMARY, TokenType.SHADOW) and self._check(
+                TokenType.LBRACE
+            ):
+                # This shouldn't happen in an expression context unless it's an error
+                # but we'll return the identifier and let the caller handle it.
+                pass
+
+            return Identifier(name=name)
 
         # Parenthesized expression
         if self._match(TokenType.LPAREN):

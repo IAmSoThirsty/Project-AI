@@ -1,4 +1,11 @@
-# Batch Merge Summary: UI & Frontend Features
+## BATCH_MERGE_SUMMARY.md                                       Productivity: Out-Dated(archive)
+>
+> [!WARNING]
+> **RELEVANCE STATUS**: ARCHIVED / HISTORICAL
+> **CURRENT ROLE**: Executive summary of UI & Frontend Features batch merge (Jan 2026).
+> **LAST VERIFIED**: 2026-03-01
+
+## Batch Merge Summary: UI & Frontend Features
 
 ## Executive Summary
 
@@ -396,7 +403,7 @@ if override.authenticate("secure-password"):
 **Web Interface** (preview):
 
 1. Start backend: `cd web/backend && flask run`
-1. Open: http://localhost:5000
+1. Open: <http://localhost:5000>
 1. Status indicator shows connectivity
 
 ## Known Issues

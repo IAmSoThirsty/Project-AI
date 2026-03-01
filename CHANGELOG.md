@@ -1,3 +1,7 @@
+﻿<p align="right">
+  [2026-03-01 10:00] <br>
+  Productivity: Active
+</p>
 # Changelog
 
 All notable changes to Project-AI will be documented in this file.
@@ -8,15 +12,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- **Re-Integration of Removed Components** — Full audit-driven restoration of deleted subsystems, CI/CD, and infrastructure (22 files total)
-- **TAAR v1.0.0 — Thirstys Active Agent Runner (Phase 1)** — Intelligent build/test/lint orchestration for the polyglot monorepo
+- **Re-Integration of Removed Components** â€” Full audit-driven restoration of deleted subsystems, CI/CD, and infrastructure (22 files total)
+- **TAAR v1.0.0 â€” Thirstys Active Agent Runner (Phase 1)** â€” Intelligent build/test/lint orchestration for the polyglot monorepo
   - `taar/config.py`: Typed config loader with `tomllib`, dataclasses for runners, commands, priorities
   - `taar/change_detector.py`: Git-aware change detection (staged, unstaged, untracked, revision diffs) with SHA-256 content hashing
-  - `taar/graph.py`: Cross-language impact analysis — maps changed files → affected runners via glob matching and heuristic test discovery
+  - `taar/graph.py`: Cross-language impact analysis â€” maps changed files â†’ affected runners via glob matching and heuristic test discovery
   - `taar/cache.py`: Content-addressed result cache with TTL expiration and cache statistics
   - `taar/executor.py`: Async concurrent command executor with semaphore-controlled parallelism
-  - `taar/scheduler.py`: DAG-based task scheduler — priority groups run sequentially, same-priority tasks run concurrently
-  - `taar/reporter.py`: Rich terminal UI with ANSI fallback — startup banner, live results, summary table with cache hit rates
+  - `taar/scheduler.py`: DAG-based task scheduler â€” priority groups run sequentially, same-priority tasks run concurrently
+  - `taar/reporter.py`: Rich terminal UI with ANSI fallback â€” startup banner, live results, summary table with cache hit rates
   - `taar/watcher.py`: Debounced file system watcher via `watchdog` with filtered directories/extensions
   - `taar/cli.py`: Typer CLI with 6 commands: `run`, `watch`, `status`, `clean`, `graph`, `ci`
   - `taar.toml`: Configuration defining 6 runners (Python, JavaScript, Kotlin, Unity, Docker, Markdown) with cross-language impact mappings
@@ -24,43 +28,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- **Test Infrastructure Hardening** — Resolved all 4 test collection errors, achieving 7,500+ passing tests
-  - Fixed `test_defense_engine_integration.py`: Corrected import from `src.app.defense_engine` → `engines.zombie_defense.defense_engine`
-  - Fixed `test_planetary_defense_monolith.py`: Corrected import from `app.core` → `app.governance`
-  - Fixed `test_hydra_50_engine.py`: Corrected import from `app.core.hydra_50_integration` → `engines.hydra_50.hydra_50_integration`
+- **Test Infrastructure Hardening** â€” Resolved all 4 test collection errors, achieving 7,500+ passing tests
+  - Fixed `test_defense_engine_integration.py`: Corrected import from `src.app.defense_engine` â†’ `engines.zombie_defense.defense_engine`
+  - Fixed `test_planetary_defense_monolith.py`: Corrected import from `app.core` â†’ `app.governance`
+  - Fixed `test_hydra_50_engine.py`: Corrected import from `app.core.hydra_50_integration` â†’ `engines.hydra_50.hydra_50_integration`
   - Rewrote `test_policy_guard.py`: Added `policies/__init__.py`, comprehensive test coverage (7 tests)
   - Consolidated pytest config: Deleted stale `pytest.ini`, single source of truth in `pyproject.toml`
   - Registered missing markers (`load`, `chaos`, `soak`) to eliminate warnings
-- **Runtime Import Fix** — Fixed 3 broken `app.core.planetary_defense_monolith` imports in `api/main.py` → `app.governance.planetary_defense_monolith`
-- **FastAPI Deprecation Migration** — Replaced 4 deprecated `@app.on_event()` handlers with modern `lifespan` async context manager
-- **Documentation Accuracy** — Updated `PROJECT_STATUS.md` test counts from 38 to 7,500+
+- **Runtime Import Fix** â€” Fixed 3 broken `app.core.planetary_defense_monolith` imports in `api/main.py` â†’ `app.governance.planetary_defense_monolith`
+- **FastAPI Deprecation Migration** â€” Replaced 4 deprecated `@app.on_event()` handlers with modern `lifespan` async context manager
+- **Documentation Accuracy** â€” Updated `PROJECT_STATUS.md` test counts from 38 to 7,500+
 
 ### Changed
 
-- **Priority 1 — Critical Fix:** Restored `src/app/core/domain_base.py` (328 lines) — `DomainSubsystemBase` class required by all 10 domain subsystems; deletion left broken imports across `agi_safeguards.py`, `biomedical_defense.py`, `command_control.py`, etc.
-- **Priority 2-3 — CI/CD Workflows (7 new):**
+- **Priority 1 â€” Critical Fix:** Restored `src/app/core/domain_base.py` (328 lines) â€” `DomainSubsystemBase` class required by all 10 domain subsystems; deletion left broken imports across `agi_safeguards.py`, `biomedical_defense.py`, `command_control.py`, etc.
+- **Priority 2-3 â€” CI/CD Workflows (7 new):**
   - `.github/workflows/ci.yml`: Core CI pipeline (Ruff + Black + MyPy lint, pytest with coverage, Python 3.11/3.12 matrix, basic secret detection)
   - `.github/workflows/codeql.yml`: GitHub CodeQL semantic analysis for Python and JavaScript (push/PR + weekly schedule)
   - `.github/workflows/security-secret-scan.yml`: TruffleHog + detect-secrets scanning, .env file detection, private key detection
   - `.github/workflows/bandit.yml`: Bandit Python security linter (fails on HIGH, warns on MEDIUM, JSON report artifact)
-  - `.github/workflows/deploy.yml`: Deployment pipeline (tag-triggered or manual dispatch, validate → build → staging → production with environment gates)
+  - `.github/workflows/deploy.yml`: Deployment pipeline (tag-triggered or manual dispatch, validate â†’ build â†’ staging â†’ production with environment gates)
   - `.github/workflows/format-and-fix.yml`: Auto-format with Black/isort/Ruff on push to develop, check-only on PRs
   - `.github/workflows/stale.yml`: Stale issue/PR cleanup (60/30 day thresholds, exempt pinned/security/critical/P0)
-- **Priority 4 — Shutdown Smoke Test:** New `tests/test_shutdown_smoke.py` (274 lines) — 8 test classes covering clean shutdown, thread termination, state persistence, concurrent shutdown safety, zombie thread detection, health check transitions
-- **Priority 5 — Stress Testing Framework (7 files restored from git):**
+- **Priority 4 â€” Shutdown Smoke Test:** New `tests/test_shutdown_smoke.py` (274 lines) â€” 8 test classes covering clean shutdown, thread termination, state persistence, concurrent shutdown safety, zombie thread detection, health check transitions
+- **Priority 5 â€” Stress Testing Framework (7 files restored from git):**
   - `src/app/testing/__init__.py`, `anti_sovereign_stress_tests.py`, `conversational_stress_orchestrator.py`, `governance_integration.py`, `run_anti_sovereign_tests.py`, `stress_test_dashboard.py`
-  - `tests/test_anti_sovereign_stress_tests.py` — meta-test for the stress framework
-- **Priority 6 — Engine Packages (2 restored from git):**
-  - `engines/simulation_contract/__init__.py` — Formal simulation contracts (preconditions, postconditions, invariants)
-  - `engines/constitutional_scenario/__init__.py` — Constitutional scenario simulation for Triumvirate governance training
-- **Priority 8 — Data Templates (4 new):**
+  - `tests/test_anti_sovereign_stress_tests.py` â€” meta-test for the stress framework
+- **Priority 6 â€” Engine Packages (2 restored from git):**
+  - `engines/simulation_contract/__init__.py` â€” Formal simulation contracts (preconditions, postconditions, invariants)
+  - `engines/constitutional_scenario/__init__.py` â€” Constitutional scenario simulation for Triumvirate governance training
+- **Priority 8 â€” Data Templates (4 new):**
   - `data/settings.example.json`: Application settings schema template
   - `data/learning_requests/requests.example.json`: Learning pipeline request schema
   - `data/continuous_learning/curated.example.json`: Curated learning content schema
   - `data/sovereign_messages/README.md`: Sovereign messaging data layer schema documentation
 
-- **PSIA Real Cryptography Integration** — Replaced all SHA-256 stub signatures with production Ed25519 cryptography and RFC 3161 timestamps
-  - `src/psia/crypto/ed25519_provider.py`: `Ed25519Provider` (sign/verify/serialize), `Ed25519KeyPair`, `KeyStore` — real Ed25519 via PyCA `cryptography` library
+- **PSIA Real Cryptography Integration** â€” Replaced all SHA-256 stub signatures with production Ed25519 cryptography and RFC 3161 timestamps
+  - `src/psia/crypto/ed25519_provider.py`: `Ed25519Provider` (sign/verify/serialize), `Ed25519KeyPair`, `KeyStore` â€” real Ed25519 via PyCA `cryptography` library
   - `src/psia/crypto/rfc3161_provider.py`: `LocalTSA` for RFC 3161-compliant timestamping with Ed25519 signatures, monotonic serials, nonce replay protection
   - `src/psia/crypto/__init__.py`: Package exporting Ed25519Provider, KeyStore, LocalTSA
 - **Crypto Integration into Core Modules**
@@ -72,54 +76,54 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - `tests/test_rfc3161.py` (16 tests): TSA lifecycle, thread safety, serialization, offline verification
   - `tests/test_bft_deployed.py` (10 tests): N=4/N=7 BFT validation, quorum thresholds, deployment profile detection
   - `tests/test_formal_properties.py` (20 tests): 7 paper theorems verified via Hypothesis property-based testing
-- **Performance Benchmarks** — `benchmarks/run_benchmarks.py` with real hardware measurements (Ed25519 keygen 20K ops/sec, sign 27K, verify 9K, full pipeline 4K ops/sec)
-- **Unity Project Meta Files** — Added `.meta` files for Editor, Scripts, and Tests asset directories
-- **Web Frontend Updates** — Updated `layout.tsx`, `page.tsx`, `globals.css`, and `package-lock.json`
+- **Performance Benchmarks** â€” `benchmarks/run_benchmarks.py` with real hardware measurements (Ed25519 keygen 20K ops/sec, sign 27K, verify 9K, full pipeline 4K ops/sec)
+- **Unity Project Meta Files** â€” Added `.meta` files for Editor, Scripts, and Tests asset directories
+- **Web Frontend Updates** â€” Updated `layout.tsx`, `page.tsx`, `globals.css`, and `package-lock.json`
 
 ## [Unreleased] - 2026-02-22
 
 ### Added
 
-- **PSIA Desktop Deployment (Phase 9)** — Full desktop application bridge connecting PSIA, Triumvirate, and TARL to the Electron shell
-  - `src/psia/server/runtime.py`: PSIARuntime singleton — boots genesis ceremony, readiness gate, canonical plane (ledger, commit coordinator, capability authority), observability (failure detector, autoimmune dampener), waterfall engine, and Triumvirate governance council; provides `process_intent()`, `get_health()`, `get_audit_records()`, `get_tarl_rules()` methods
+- **PSIA Desktop Deployment (Phase 9)** â€” Full desktop application bridge connecting PSIA, Triumvirate, and TARL to the Electron shell
+  - `src/psia/server/runtime.py`: PSIARuntime singleton â€” boots genesis ceremony, readiness gate, canonical plane (ledger, commit coordinator, capability authority), observability (failure detector, autoimmune dampener), waterfall engine, and Triumvirate governance council; provides `process_intent()`, `get_health()`, `get_audit_records()`, `get_tarl_rules()` methods
   - `src/psia/server/governance_server.py`: FastAPI application on port 8001 with 4 REST endpoints (`GET /health`, `POST /intent`, `GET /audit`, `GET /tarl`) matching the desktop frontend API contract; Pydantic request/response models; CORS for Electron; lifespan-managed runtime boot
   - `src/psia/server/__init__.py`: Package init exposing `create_app()`
   - `start.ps1`: PowerShell launcher that starts the API server, waits for `/health` readiness, launches Electron desktop app, and cleanly shuts down both on exit
-  - `desktop/build/icon.png`: 256×256 app icon for electron-builder
-  - `tests/test_governance_server.py`: 22 tests covering all 4 endpoints — health status, TARL rules, Triumvirate 3-pillar voting, ledger integration, input validation
+  - `desktop/build/icon.png`: 256Ã—256 app icon for electron-builder
+  - `tests/test_governance_server.py`: 22 tests covering all 4 endpoints â€” health status, TARL rules, Triumvirate 3-pillar voting, ledger integration, input validation
 
-- **PSIA Research Paper Integration** — Formal research paper (`docs/research/paper.tex`) integrated as a first-class repository artifact
-  - `docs/research/README.md`: Build instructions, cross-reference table mapping paper sections (§6–§8) to source modules and test files
+- **PSIA Research Paper Integration** â€” Formal research paper (`docs/research/paper.tex`) integrated as a first-class repository artifact
+  - `docs/research/README.md`: Build instructions, cross-reference table mapping paper sections (Â§6â€“Â§8) to source modules and test files
   - `Makefile` targets: `paper` (pdflatex build), `test-paper` (run fact-verification tests)
-- **Fact-Verification Test Suite** — 66 tests across 5 formal modules verifying paper claims
-  - `tests/test_psia_concurrency.py` (14 tests): Snapshot isolation, OCC commit, version vectors, retry/abort, linearizability (§6.3)
-  - `tests/test_psia_liveness.py` (14 tests): Head health monitoring, timeout enforcement, deadlock detection, pipeline progress bounds (§6.4)
-  - `tests/test_psia_threat_model.py` (17 tests): Threat taxonomy, resilience profiles, collusion detection, veto abuse scenarios (§6.5)
-  - `tests/test_shadow_operational_semantics.py` (12 tests): SealedContext determinism, ExecutionTrace replay hashes, DeterminismOracle classification (§7)
-  - `tests/test_shadow_thirst_type_system.py` (9 tests): Plane-safety subtyping lattice, canonical write rules, T-Promote protocol, INV-ROOT-2 corollary (§8.4)
+- **Fact-Verification Test Suite** â€” 66 tests across 5 formal modules verifying paper claims
+  - `tests/test_psia_concurrency.py` (14 tests): Snapshot isolation, OCC commit, version vectors, retry/abort, linearizability (Â§6.3)
+  - `tests/test_psia_liveness.py` (14 tests): Head health monitoring, timeout enforcement, deadlock detection, pipeline progress bounds (Â§6.4)
+  - `tests/test_psia_threat_model.py` (17 tests): Threat taxonomy, resilience profiles, collusion detection, veto abuse scenarios (Â§6.5)
+  - `tests/test_shadow_operational_semantics.py` (12 tests): SealedContext determinism, ExecutionTrace replay hashes, DeterminismOracle classification (Â§7)
+  - `tests/test_shadow_thirst_type_system.py` (9 tests): Plane-safety subtyping lattice, canonical write rules, T-Promote protocol, INV-ROOT-2 corollary (Â§8.4)
 
 ### Changed
 
-- `Makefile` — Added `paper` and `test-paper` targets for LaTeX compilation and fact-verification test execution
+- `Makefile` â€” Added `paper` and `test-paper` targets for LaTeX compilation and fact-verification test execution
 
 ## [Unreleased] - 2026-02-22
 
 ### Added
 
-- **PSIA Foundation (Phase 1)** — Project-AI Sovereign Immune Architecture v1.0: 8 canonical Pydantic schemas (`IdentityDocument`, `CapabilityToken`, `RequestEnvelope`, `PolicyGraph`, `InvariantDefinition`, `ShadowReport`, `CerberusDecision`, `LedgerBlock`); 9 immutable root invariants (INV-ROOT-1 through INV-ROOT-9); 6 plane isolation contracts; 30+ structured event types with `EventBus` pub/sub
-- **PSIA Waterfall Engine (Phase 2)** — 7-stage sequential request pipeline: structural validation, threat fingerprinting, behavioral analysis, shadow simulation, Cerberus triple-head gate, canonical commit, append-only ledger with Merkle-root block sealing; 67 tests passing
-- **PSIA Gate Plane (Phase 3)** — production Cerberus heads replacing stubs: `IdentityHead` (7-check DID verification: format, resolution, revocation, key validity, device attestation, cross-identity, risk tier); `CapabilityHead` (8-check token enforcement: resolution, revocation, expiry with clock skew, scope matching, delegation depth, binding, constraint propagation); `InvariantHead` (heuristic INV-ROOT-* evaluation, shadow cross-check, severity aggregation); `ProductionQuorumEngine` (weighted BFT consensus: unanimous/2of3/simple/bft policies, monotonic severity escalation, constraint merging); 100 total PSIA tests passing
-- **PSIA Canonical Plane (Phase 4)** — `CommitCoordinator` (ACID-like transactional commits: versioned KV store with optimistic concurrency, WAL for crash recovery, CerberusDecision precondition validation, multi-key atomic commits, automatic rollback, diff hashing); `DurableLedger` (append-only with INV-ROOT-9 enforcement, auto block sealing, Merkle-root computation, genesis-chained blocks, external anchoring, chain verification); `CapabilityAuthority` (token issuance with INV-ROOT-5/6 enforcement, revocation with CRL, atomic rotation, expiry validation, full audit trail); 149 total PSIA tests passing
-- **PSIA Bootstrap + Lifecycle (Phase 5)** — `GenesisCoordinator` (one-time key ceremony: Ed25519 key generation for 7 components, build attestation with binary/invariant/schema/config hashing, genesis anchor creation, idempotent re-execution guard); `ReadinessGate` (registered check framework with genesis/ledger/capability built-in checks, critical vs warning classification, strict mode, NodeStatus lifecycle transitions: INITIALIZING→CHECKING→OPERATIONAL/DEGRADED/FAILED); `SafeHaltController` (monotonic halt with write blocking, read passthrough, in-flight transaction tracking, event audit trail, manual reset with authorization); 182 total PSIA tests passing
-- **PSIA Observability + Failure Recovery (Phase 6)** — `FailureDetector` (per-component sliding-window failure rate tracking, z-score anomaly detection over historical baselines, 3-state circuit breaker: closed→open→half_open→closed, cascade detection across components with configurable threshold and callback); `AutoimmuneDampener` (per-rule false positive tracking, dynamic sensitivity adjustment bounded by min/max with cooldown periods, dampened score evaluation, rule reset, full audit trail of adjustments); 208 total PSIA tests passing
-- **PSIA Integration Tests (Phase 7)** — `test_psia_invariants.py` (108 tests: all 9 INV-ROOT-* registry validation, parametrized schema integrity, embedded test case structure, mutation fuzzing via Pydantic rejection); `test_psia_integration.py` (13 cross-plane end-to-end tests: bootstrap→operational flow, full request lifecycle through waterfall→canonical→ledger, cascading failure→SAFE-HALT escalation, autoimmune dampener suppression, capability authority issuance/revocation, full-stack lifecycle boot→process→halt→recover); **329 total PSIA tests passing**
-- **PSIA Canonical Specification (Phase 8)** — `docs/spec/psia_v1_full.md`: comprehensive 12-section specification covering architectural planes, capability matrix, 8 canonical schemas, 9 root invariants with formal expressions, 7-stage waterfall pipeline, Cerberus triple-head gate with BFT quorum, canonical plane (ACID commits, Merkle ledger, capability authority), bootstrap lifecycle (genesis, readiness, SAFE-HALT), observability (circuit breaker, autoimmune dampener), 34-event taxonomy, security model with threat mitigations, and deployment/operations guide
-- **Alpha Red Agent** — evolutionary adversarial agent with genetic algorithm: fitness-weighted selection, tournament crossover, mutation, elitism, adversarial test campaigns
-- **Jurisdiction Loader** — fixed dead code, added cross-border conflict detection, retention gap checks, security requirement auto-extraction, sorted combined requirements
-- **Sovereign Audit Log TSA** — wired `_request_notarization` to `TSAProvider`, returns base64-encoded DER timestamp tokens, graceful fallback on TSA errors
-- **Containment Orchestration** — model registry with version/hash/deprecation, allowlist-based action validation accepting enums and strings, 4-leaf Merkle tree with inclusion proofs, deterministic JSON hashing
-- **OSINT Plugins** — `SampleOSINTPlugin` with param validation, Four Laws re-check, execution timing, statistics tracking, graceful shutdown; `OSINTLoader` with real plugin registration, unregister, batch register by category, export to knowledge base
-- **Test Suites** — 70 new tests across 5 suites
+- **PSIA Foundation (Phase 1)** â€” Project-AI Sovereign Immune Architecture v1.0: 8 canonical Pydantic schemas (`IdentityDocument`, `CapabilityToken`, `RequestEnvelope`, `PolicyGraph`, `InvariantDefinition`, `ShadowReport`, `CerberusDecision`, `LedgerBlock`); 9 immutable root invariants (INV-ROOT-1 through INV-ROOT-9); 6 plane isolation contracts; 30+ structured event types with `EventBus` pub/sub
+- **PSIA Waterfall Engine (Phase 2)** â€” 7-stage sequential request pipeline: structural validation, threat fingerprinting, behavioral analysis, shadow simulation, Cerberus triple-head gate, canonical commit, append-only ledger with Merkle-root block sealing; 67 tests passing
+- **PSIA Gate Plane (Phase 3)** â€” production Cerberus heads replacing stubs: `IdentityHead` (7-check DID verification: format, resolution, revocation, key validity, device attestation, cross-identity, risk tier); `CapabilityHead` (8-check token enforcement: resolution, revocation, expiry with clock skew, scope matching, delegation depth, binding, constraint propagation); `InvariantHead` (heuristic INV-ROOT-* evaluation, shadow cross-check, severity aggregation); `ProductionQuorumEngine` (weighted BFT consensus: unanimous/2of3/simple/bft policies, monotonic severity escalation, constraint merging); 100 total PSIA tests passing
+- **PSIA Canonical Plane (Phase 4)** â€” `CommitCoordinator` (ACID-like transactional commits: versioned KV store with optimistic concurrency, WAL for crash recovery, CerberusDecision precondition validation, multi-key atomic commits, automatic rollback, diff hashing); `DurableLedger` (append-only with INV-ROOT-9 enforcement, auto block sealing, Merkle-root computation, genesis-chained blocks, external anchoring, chain verification); `CapabilityAuthority` (token issuance with INV-ROOT-5/6 enforcement, revocation with CRL, atomic rotation, expiry validation, full audit trail); 149 total PSIA tests passing
+- **PSIA Bootstrap + Lifecycle (Phase 5)** â€” `GenesisCoordinator` (one-time key ceremony: Ed25519 key generation for 7 components, build attestation with binary/invariant/schema/config hashing, genesis anchor creation, idempotent re-execution guard); `ReadinessGate` (registered check framework with genesis/ledger/capability built-in checks, critical vs warning classification, strict mode, NodeStatus lifecycle transitions: INITIALIZINGâ†’CHECKINGâ†’OPERATIONAL/DEGRADED/FAILED); `SafeHaltController` (monotonic halt with write blocking, read passthrough, in-flight transaction tracking, event audit trail, manual reset with authorization); 182 total PSIA tests passing
+- **PSIA Observability + Failure Recovery (Phase 6)** â€” `FailureDetector` (per-component sliding-window failure rate tracking, z-score anomaly detection over historical baselines, 3-state circuit breaker: closedâ†’openâ†’half_openâ†’closed, cascade detection across components with configurable threshold and callback); `AutoimmuneDampener` (per-rule false positive tracking, dynamic sensitivity adjustment bounded by min/max with cooldown periods, dampened score evaluation, rule reset, full audit trail of adjustments); 208 total PSIA tests passing
+- **PSIA Integration Tests (Phase 7)** â€” `test_psia_invariants.py` (108 tests: all 9 INV-ROOT-* registry validation, parametrized schema integrity, embedded test case structure, mutation fuzzing via Pydantic rejection); `test_psia_integration.py` (13 cross-plane end-to-end tests: bootstrapâ†’operational flow, full request lifecycle through waterfallâ†’canonicalâ†’ledger, cascading failureâ†’SAFE-HALT escalation, autoimmune dampener suppression, capability authority issuance/revocation, full-stack lifecycle bootâ†’processâ†’haltâ†’recover); **329 total PSIA tests passing**
+- **PSIA Canonical Specification (Phase 8)** â€” `docs/spec/psia_v1_full.md`: comprehensive 12-section specification covering architectural planes, capability matrix, 8 canonical schemas, 9 root invariants with formal expressions, 7-stage waterfall pipeline, Cerberus triple-head gate with BFT quorum, canonical plane (ACID commits, Merkle ledger, capability authority), bootstrap lifecycle (genesis, readiness, SAFE-HALT), observability (circuit breaker, autoimmune dampener), 34-event taxonomy, security model with threat mitigations, and deployment/operations guide
+- **Alpha Red Agent** â€” evolutionary adversarial agent with genetic algorithm: fitness-weighted selection, tournament crossover, mutation, elitism, adversarial test campaigns
+- **Jurisdiction Loader** â€” fixed dead code, added cross-border conflict detection, retention gap checks, security requirement auto-extraction, sorted combined requirements
+- **Sovereign Audit Log TSA** â€” wired `_request_notarization` to `TSAProvider`, returns base64-encoded DER timestamp tokens, graceful fallback on TSA errors
+- **Containment Orchestration** â€” model registry with version/hash/deprecation, allowlist-based action validation accepting enums and strings, 4-leaf Merkle tree with inclusion proofs, deterministic JSON hashing
+- **OSINT Plugins** â€” `SampleOSINTPlugin` with param validation, Four Laws re-check, execution timing, statistics tracking, graceful shutdown; `OSINTLoader` with real plugin registration, unregister, batch register by category, export to knowledge base
+- **Test Suites** â€” 70 new tests across 5 suites
   - `tests/test_alpha_red.py` (15 tests): init, prompt generation, fitness, evolution, campaigns
   - `tests/test_jurisdiction_loader.py` (10 tests): load, validate, combined requirements, hash
   - `tests/test_sovereign_notarization.py` (3 tests): disabled, enabled, error handling
@@ -130,22 +134,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- **CLI Command Implementation** — replaced all 5 stub command groups with real implementations
-  - `user` group: `list`, `info`, `create`, `delete` → wired to `UserManager`
-  - `memory` group: `store`, `recall`, `list`, `stats` → wired to `MemoryExpansionSystem`
-  - `learning` group: `request`, `list`, `approve`, `deny` → wired to `LearningRequestManager`
-  - `plugin` group: `list`, `enable`, `disable`, `info` → wired to `PluginManager`
-  - `system` group: `status`, `governance`, `audit` → governance/security subsystems
-  - `ai` group: `persona`, `adjust`, `validate`, `chat` → wired to `AIPersona`/`FourLaws`
-- **Audit Log Verification** — implemented `ImmutableAuditLog.verify_integrity()` hash-chain verification
+- **CLI Command Implementation** â€” replaced all 5 stub command groups with real implementations
+  - `user` group: `list`, `info`, `create`, `delete` â†’ wired to `UserManager`
+  - `memory` group: `store`, `recall`, `list`, `stats` â†’ wired to `MemoryExpansionSystem`
+  - `learning` group: `request`, `list`, `approve`, `deny` â†’ wired to `LearningRequestManager`
+  - `plugin` group: `list`, `enable`, `disable`, `info` â†’ wired to `PluginManager`
+  - `system` group: `status`, `governance`, `audit` â†’ governance/security subsystems
+  - `ai` group: `persona`, `adjust`, `validate`, `chat` â†’ wired to `AIPersona`/`FourLaws`
+- **Audit Log Verification** â€” implemented `ImmutableAuditLog.verify_integrity()` hash-chain verification
   - Walks all entries, recomputes SHA-256, verifies chain linkage
   - Returns `tuple[bool, str]` with diagnostic messages
-- **Self-Repair Agent** — psutil-based health monitoring, z-score anomaly detection, root-cause diagnosis, automated repair actions (clear_cache, reduce_load), post-repair recovery validation
-- **Deadman Switch** — live daemon monitoring thread, real failsafe execution with exception isolation, thread-safe heartbeat management
-- **Governance Manager** — stakeholder permission validation, duplicate vote prevention, weighted voting, quorum calculation, automatic policy rule application on proposal execution
-- **Attack-Train Loop** — randomised adversarial attack generation (8 types × 6 vectors), probabilistic defence evaluation, ELO-style rating co-evolution, JSON checkpoint save/load
-- **Substrate Health Checks** — real CPU/memory/disk metrics via psutil with graceful fallback, unhealthy flag above 90% utilisation
-- **Test Suites** — 87 new tests across 5 suites + 58 from earlier phases
+- **Self-Repair Agent** â€” psutil-based health monitoring, z-score anomaly detection, root-cause diagnosis, automated repair actions (clear_cache, reduce_load), post-repair recovery validation
+- **Deadman Switch** â€” live daemon monitoring thread, real failsafe execution with exception isolation, thread-safe heartbeat management
+- **Governance Manager** â€” stakeholder permission validation, duplicate vote prevention, weighted voting, quorum calculation, automatic policy rule application on proposal execution
+- **Attack-Train Loop** â€” randomised adversarial attack generation (8 types Ã— 6 vectors), probabilistic defence evaluation, ELO-style rating co-evolution, JSON checkpoint save/load
+- **Substrate Health Checks** â€” real CPU/memory/disk metrics via psutil with graceful fallback, unhealthy flag above 90% utilisation
+- **Test Suites** â€” 87 new tests across 5 suites + 58 from earlier phases
   - `tests/test_cli_commands.py` (45 tests): all command groups, help output, key commands
   - `tests/test_immutable_audit_log.py` (13 tests): valid chain, tamper detection, edge cases
   - `tests/test_self_repair_agent.py` (21 tests): health monitoring, anomaly detection, repair
@@ -158,7 +162,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- **Developer Toolchain — PHP & JDK**
+- **Developer Toolchain â€” PHP & JDK**
   - Installed **PHP 8.4.18** via `winget install PHP.PHP.8.4`
   - Installed **Eclipse Temurin JDK 17.0.18** via `winget install EclipseAdoptium.Temurin.17.JDK`
   - Created `.vscode/settings.json` with `php.validate.executablePath`, `java.configuration.runtimes` (JavaSE-17), and `java.jdt.ls.java.home`
@@ -171,7 +175,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- **Shadow Resource Limits** — closes the `_execute_shadow_with_limits` TODO
+- **Shadow Resource Limits** â€” closes the `_execute_shadow_with_limits` TODO
   - `src/shadow_thirst/resource_limiter.thirsty`: dual-plane Shadow Thirst source defining
     `execute_with_limits`, `execute_timeout`, `check_memory_quota`, `build_violation_reason`
     with `invariant`, `divergence quarantine_on_diverge`, and `mutation read_only` constraints
@@ -181,38 +185,38 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - CPU enforcement: `ThreadPoolExecutor` future with wall-clock timeout
   - Memory tracking: `tracemalloc` peak-delta measurement
   - `ShadowResourceViolation` exception, `ResourceUsage` dataclass
-- **TestShadowResourceLimits** — 4 new tests in `tests/test_shadow_execution.py`
-  - `test_cpu_timeout_enforced`: sleep-callable exceeding quota → quarantine
-  - `test_memory_limit_tracking`: 1MB allocation → `usage.peak_memory_mb ≥ 0`
+- **TestShadowResourceLimits** â€” 4 new tests in `tests/test_shadow_execution.py`
+  - `test_cpu_timeout_enforced`: sleep-callable exceeding quota â†’ quarantine
+  - `test_memory_limit_tracking`: 1MB allocation â†’ `usage.peak_memory_mb â‰¥ 0`
   - `test_resource_usage_surfaced_in_result`: real figures flow into telemetry
-  - `test_cpu_and_memory_within_limits`: normal callable → no quarantine
+  - `test_cpu_and_memory_within_limits`: normal callable â†’ no quarantine
 
 ### Changed
 
 - **`shadow_execution_plane.py`**
   - TODO replaced with `ShadowResourceLimiter.execute()` call
   - Added `except ShadowResourceViolation` handler *before* generic `except Exception`
-    — violations quarantine immediately rather than silently becoming `shadow_result=None`
+    â€” violations quarantine immediately rather than silently becoming `shadow_result=None`
   - `ShadowTelemetry.record_execution` now receives real `cpu_ms` and `memory_mb`
     from `ResourceUsage` instead of stub approximations
   - `assert activation_reason is not None` added to narrow type for checker
 - **Full Codebase Code-Quality Sweep** (all files with last commit < 2026-02-17)
   - `black` auto-formatted all Python in `src/`, `tests/`, `engines/`, `adversarial_tests/`
     at `--line-length=120`
-  - **Syntax fixes**: `src/cerberus/sase/governance/rbac.py` — 3-space indent on class
-    docstring corrected; `src/cerberus/sase/governance/key_management.py` — `Key Type`
+  - **Syntax fixes**: `src/cerberus/sase/governance/rbac.py` â€” 3-space indent on class
+    docstring corrected; `src/cerberus/sase/governance/key_management.py` â€” `Key Type`
     type-annotation space typo fixed, `import hmac` indent corrected
-  - **E722**: `tests/test_tarl_productivity.py:138` bare `except:` → `except Exception:`
+  - **E722**: `tests/test_tarl_productivity.py:138` bare `except:` â†’ `except Exception:`
   - **E402**: `adversarial_tests/galahad_model.py` and `tests/verify_security_agents.py`
     post-`sys.path.insert` imports annotated with `# noqa: E402`
-- **Documentation** — root-level markdown files updated to reflect current state
+- **Documentation** â€” root-level markdown files updated to reflect current state
   - `CHANGELOG.md`, `PROJECT_STATUS.md`, `PROJECT_STRUCTURE.md` updated 2026-02-20
 
-### CI — Test Results
+### CI â€” Test Results
 
 - 34 tests passing (30 pre-existing + 4 new resource-limit tests)
 - 0 syntax errors (`E999`)
-- Black format: ✅ clean
+- Black format: âœ… clean
 
 ---
 
@@ -246,14 +250,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - README.md: Updated to 2026-02-17
   - PROJECT_STATUS.md: Updated to 2026-02-17
 - **Kernel README** - Production status corrections
-  - Version updated: v0.1.0 → v1.0.0-thirst-of-gods
-  - Status updated: "Day 1/40%" → "Production Ready/100%"
+  - Version updated: v0.1.0 â†’ v1.0.0-thirst-of-gods
+  - Status updated: "Day 1/40%" â†’ "Production Ready/100%"
   - Removed outdated Google/DARPA presentation references
   - Marked all integrations complete (CodexDeus, Cerberus, benchmarks, diagrams)
 - **TARL README** - Marked tooling phase complete
-  - Phase 4 status: "In Progress" → "Complete ✅"
-  - LSP server: "planned" → "infrastructure complete - ready for activation"
-  - REPL: "planned" → "infrastructure complete - ready for activation"
+  - Phase 4 status: "In Progress" â†’ "Complete âœ…"
+  - LSP server: "planned" â†’ "infrastructure complete - ready for activation"
+  - REPL: "planned" â†’ "infrastructure complete - ready for activation"
   - Added build system to completed items
 
 ### Documentation
@@ -316,13 +320,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- **360° Deployable System Standard** - Comprehensive deployment readiness framework
+- **360Â° Deployable System Standard** - Comprehensive deployment readiness framework
   - Master roadmap document with 25 requirement categories
   - Visual Mermaid diagrams for all major components
   - Interactive checklist with real completion percentages
   - Auto-update mechanism via Python script and CI/CD workflow
 - **Trust Boundaries Documentation** - Security boundary analysis
-  - 5 major trust boundaries mapped (User→API, API→DB, API→External, Admin, CI/CD)
+  - 5 major trust boundaries mapped (Userâ†’API, APIâ†’DB, APIâ†’External, Admin, CI/CD)
   - Detailed threat analysis per boundary
   - Control requirements and monitoring specifications
 - **Failure Models & Operations** - Incident response framework
@@ -340,12 +344,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Real-time progress tracking
   - 25 section cards with status indicators
   - Auto-refresh capability (loads from JSON)
-  - Classification matrix (Prototype → Deployable → Production → Enterprise)
+  - Classification matrix (Prototype â†’ Deployable â†’ Production â†’ Enterprise)
 
 ### Changed
 
-- Updated README.md with new documentation links (360° Standard, Trust Boundaries, Failure Models, SLOs)
-- Enhanced documentation navigation with ⭐ NEW indicators
+- Updated README.md with new documentation links (360Â° Standard, Trust Boundaries, Failure Models, SLOs)
+- Enhanced documentation navigation with â­ NEW indicators
 - Organized documentation into clear categories (Project Status, Core, Governance, Operations)
 
 ### Documentation
@@ -436,7 +440,7 @@ ______________________________________________________________________
 
 ## [Unreleased] - 2026-01-31
 
-### 🔄 Integration
+### ðŸ”„ Integration
 
 - **Major Merge from Main Branch** (commit: 5b7a8ff967d288b3e5184b8db5f6464b3a600f23)
   - Integrated 300+ files from main branch on 2026-01-31 03:08:54 -0700
@@ -448,14 +452,14 @@ ______________________________________________________________________
   - Added issue automation and PR management workflows
   - Integrated Guardian validation and waiver systems
 
-### 🔧 Maintenance
+### ðŸ”§ Maintenance
 
 - **Automated Linting Fix** (commit: e4b8cd534c54eb355d9c04a4499f9943f93a10bb)
   - Applied automated code style fixes on 2026-01-31 10:12:25 +0000
   - Fixed linting issues via github-actions[bot]
   - Maintained code quality standards across merged codebase
 
-### 📦 New Components from Merge
+### ðŸ“¦ New Components from Merge
 
 - **Antigravity Integration**: AI-powered development assistant with project-specific agent
 - **Codacy Integration**: Automated code quality and security scanning
@@ -469,13 +473,13 @@ ______________________________________________________________________
 
 ## [1.0.0] - 2026-01-28
 
-### 🎯 Initial Production Release
+### ðŸŽ¯ Initial Production Release
 
 Project-AI v1.0.0 is a **production-grade, governance-first artificial intelligence architecture** built on the **Triumvirate Model**: Ethics (Galahad), Defense (Cerberus), and Orchestration (CodexDeus).
 
 ______________________________________________________________________
 
-## 🏛️ Core Architecture
+## ðŸ›ï¸ Core Architecture
 
 ### Triumvirate Governance System
 
@@ -502,7 +506,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 🔐 Security Features
+## ðŸ” Security Features
 
 ### 8-Layer Security Architecture
 
@@ -535,7 +539,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 📊 Full-Stack Implementation
+## ðŸ“Š Full-Stack Implementation
 
 ### Backend (Python 3.11+)
 
@@ -576,7 +580,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 🧠 AI & ML Features
+## ðŸ§  AI & ML Features
 
 ### Core AI Systems (6 Systems)
 
@@ -643,7 +647,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 🛠️ Advanced Features
+## ðŸ› ï¸ Advanced Features
 
 ### Data Analysis & Processing
 
@@ -677,7 +681,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 📦 Infrastructure & Deployment
+## ðŸ“¦ Infrastructure & Deployment
 
 ### Containerization
 
@@ -715,7 +719,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 🧪 Testing & Quality
+## ðŸ§ª Testing & Quality
 
 ### Test Suite
 
@@ -745,7 +749,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 📚 Documentation
+## ðŸ“š Documentation
 
 ### Comprehensive Documentation (60+ Documents)
 
@@ -770,7 +774,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 🌍 Multi-Language Support
+## ðŸŒ Multi-Language Support
 
 ### Language Distribution
 
@@ -796,7 +800,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 🚀 Getting Started
+## ðŸš€ Getting Started
 
 ### Prerequisites
 
@@ -860,13 +864,13 @@ ruff check .
 
 ______________________________________________________________________
 
-## 🔄 Breaking Changes
+## ðŸ”„ Breaking Changes
 
 None - this is the initial v1.0.0 release.
 
 ______________________________________________________________________
 
-## 🔮 Future Roadmap
+## ðŸ”® Future Roadmap
 
 ### Planned Features
 
@@ -881,7 +885,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 🤝 Contributing
+## ðŸ¤ Contributing
 
 We welcome contributions! Please see:
 
@@ -892,13 +896,13 @@ We welcome contributions! Please see:
 
 ______________________________________________________________________
 
-## 📄 License
+## ðŸ“„ License
 
 MIT License - See LICENSE file for details.
 
 ______________________________________________________________________
 
-## 🙏 Acknowledgments
+## ðŸ™ Acknowledgments
 
 - OpenAI for GPT model access
 - Anthropic for AI research insights
@@ -907,7 +911,7 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-## 📞 Support
+## ðŸ“ž Support
 
 - **Documentation**: <https://github.com/IAmSoThirsty/Project-AI/tree/main/docs>
 - **Issues**: <https://github.com/IAmSoThirsty/Project-AI/issues>
@@ -916,3 +920,4 @@ ______________________________________________________________________
 ______________________________________________________________________
 
 For more details on each release, see the [GitHub Releases](https://github.com/IAmSoThirsty/Project-AI/releases) page.
+

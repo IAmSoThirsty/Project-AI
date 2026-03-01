@@ -1,6 +1,6 @@
 # Thirsty-Lang / T.A.R.L. - Technical Whitepaper
 
-**Thirsty's Active Resistance Language & Trusted Autonomous Reasoning Layer**
+**Thirsty's Active Resistance Language**
 
 **Version:** 2.0.0  
 **Date:** February 19, 2026  
@@ -865,7 +865,7 @@ if heap_usage > config.get("runtime.max_memory"):
 
 ## 8. T.A.R.L. Security Layer
 
-**T.A.R.L. (Trusted Autonomous Reasoning Layer)** is the runtime security subsystem that enforces policies, detects threats, and applies defensive compilation.
+**T.A.R.L. (Thirsty's Active Resistance Language)** is the runtime security subsystem that enforces policies, detects threats, and applies defensive compilation.
 
 ### 8.1 Architecture
 
@@ -1720,22 +1720,23 @@ def on_threat_detected(threat: Threat):
    }
    ```
 
-4. T.A.R.L. Compilation:
+1. T.A.R.L. Compilation:
    - Parse code
    - Type check
    - Security analysis (file access, division by zero)
    - Generate bytecode
 
-5. Cerberus Validation:
+2. Cerberus Validation:
    - Check file access capability
    - Verify no malicious operations
    - Approve execution
 
-6. Execution:
+3. Execution:
    - Run in sandboxed VM
    - Enforce 5s timeout
    - Limit memory to 64 MB
    - Return result or error
+
 ```
 
 ---
@@ -1969,10 +1970,10 @@ For the complete validation protocol requirements, see `.github/SECURITY_VALIDAT
 
 ### 21.1 Language Design
 
-1. **Rust Language**: https://www.rust-lang.org/
-2. **Go Language**: https://go.dev/
-3. **TypeScript**: https://www.typescriptlang.org/
-4. **Python**: https://www.python.org/
+1. **Rust Language**: <https://www.rust-lang.org/>
+2. **Go Language**: <https://go.dev/>
+3. **TypeScript**: <https://www.typescriptlang.org/>
+4. **Python**: <https://www.python.org/>
 
 ### 21.2 Security Research
 
@@ -2042,6 +2043,7 @@ See separate document: `TARL_POLICY_EXAMPLES.md`
 **Document End**
 
 **Revision History**:
+
 - v2.0.0 (2026-02-19): Comprehensive expansion with RAG, transpilation, formal verification
 - v1.0.0 (2026-01-24): Initial publication
 

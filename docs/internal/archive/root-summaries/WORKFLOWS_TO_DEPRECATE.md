@@ -1,4 +1,12 @@
-# Workflows That Can Be Safely Deprecated
+## WORKFLOWS_TO_DEPRECATE.md
+
+Productivity: Out-Dated(archive)                                [2026-03-01 09:27]
+> [!WARNING]
+> **RELEVANCE STATUS**: ARCHIVED / HISTORICAL
+> **CURRENT ROLE**: List of CI/CD workflows deprecated after Codex Deus consolidation (2024).
+> **LAST VERIFIED**: 2026-03-01
+
+## Workflows That Can Be Safely Deprecated
 
 ## Overview
 
@@ -38,7 +46,7 @@ git rm .github/workflows/<workflow>.yml
 
 ### ✅ Phase 10-11: Automation (6 workflows)
 
-13. **pr-automation-consolidated.yml** → Replaced by Phase 11 (PR Automation)
+1. **pr-automation-consolidated.yml** → Replaced by Phase 11 (PR Automation)
 01. **issue-management-consolidated.yml** → Replaced by Phase 11 (Issue Triage)
 01. **auto-create-branch-prs.yml** → Replaced by Phase 10 (Auto-Fix)
 01. **dependabot.yml** → Keep for configuration, but automation in Phase 11
@@ -47,18 +55,18 @@ git rm .github/workflows/<workflow>.yml
 
 ### ✅ Phase 12: Release (5 workflows)
 
-19. **build-release.yml** → Replaced by Phase 7 + 12 (Build + Release)
+1. **build-release.yml** → Replaced by Phase 7 + 12 (Build + Release)
 01. **sbom.yml** → Replaced by Phase 8 (SBOM Generation)
 01. **sign-release-artifacts.yml** → Replaced by Phase 8 + 12 (Signing)
 01. **release.yml** → Replaced by Phase 12 (Release Management)
 
 ### ✅ Phase 14: Cleanup (1 workflow)
 
-23. **prune-artifacts.yml** → Replaced by Phase 14 (Artifact Cleanup)
+1. **prune-artifacts.yml** → Replaced by Phase 14 (Artifact Cleanup)
 
 ### ✅ Specialty Workflows (5 workflows)
 
-24. **main.yml** → Likely duplicate of ci.yml, verify before removing
+1. **main.yml** → Likely duplicate of ci.yml, verify before removing
 01. **codex-deus-monolith.yml** → Predecessor to this workflow, can deprecate
 01. **snn-mlops-cicd.yml** → Check if specialized logic needed, else deprecate
 01. **gpt_oss_integration.yml** → Check if specialized logic needed, else deprecate

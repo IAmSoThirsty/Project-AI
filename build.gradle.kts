@@ -508,17 +508,9 @@ configure<com.github.gradle.node.NodeExtension> {
     npmWorkDir.set(file("${projectRoot}/.gradle/npm"))
 }
 
-// Root npm install - ensure task is registered or configured safely
-tasks.maybeCreate<com.github.gradle.node.npm.task.NpmTask>("npmInstall").apply {
-    group = "npm"
-    description = "Install root npm dependencies"
-    
-    args.set(listOf("install"))
-    
-    inputs.file("package.json")
-    inputs.file("package-lock.json")
-    outputs.dir("node_modules")
-}
+// Root npm install - handled automatically by gradle-node-plugin
+// Configuration is done via the configure<NodeExtension> block above
+// This manual registration was causing "Duplicate task name 'npmInstall'" errors
 
 // Root npm build
 tasks.register<com.github.gradle.node.npm.task.NpmTask>("npmBuild") {

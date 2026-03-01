@@ -1,4 +1,11 @@
-# T.A.R.L. Deterministic Orchestration - Implementation Report
+# TARL_ORCHESTRATION_IMPLEMENTATION_REPORT.md
+>
+> [!WARNING]
+> **RELEVANCE STATUS**: ARCHIVED / HISTORICAL
+> **CURRENT ROLE**: Implementation report for T.A.R.L. (Thirsty's Active Resistance Language) deterministic orchestration.
+> **LAST VERIFIED**: 2026-03-01
+
+# T.A.R.L. (Thirsty's Active Resistance Language) Deterministic Orchestration - Implementation Report
 
 ## Executive Summary
 

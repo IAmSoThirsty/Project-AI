@@ -20,6 +20,7 @@ from shadow_thirst.ast_nodes import (
     FunctionCall,
     FunctionDefinition,
     Identifier,
+    IfStatement,
     Literal,
     MemberAccess,
     OutputStatement,
@@ -48,6 +49,9 @@ class IRGenerator:
     Implements plane splitting and IR emission for primary, shadow,
     and invariant execution contexts.
     """
+
+    builder: IRBuilder
+    program: IRProgram
 
     def __init__(self):
         """Initialize IR generator."""
@@ -186,12 +190,44 @@ class IRGenerator:
             self._generate_return(stmt)
         elif isinstance(stmt, OutputStatement):
             self._generate_output(stmt)
+        elif isinstance(stmt, IfStatement):
+            self._generate_if_statement(stmt)
         elif isinstance(stmt, ExpressionStatement):
             self._generate_expression(stmt.expression)
             # Pop unused expression result
             self.builder.emit(IROpcode.POP)
         else:
             logger.warning("Unsupported statement type: %s", type(stmt).__name__)
+
+    def _generate_if_statement(self, stmt: IfStatement):
+        """Generate IR for if statement."""
+        # 1. Generate condition
+        self._generate_expression(stmt.condition)
+
+        # 2. Emit conditional jump to else/end
+        # We'll use instruction indices or labels if supported
+        # For this IR, we'll emit a jump with a placeholder
+        jump_if_false = self.builder.emit(IROpcode.JUMP_IF_FALSE, "PLACEHOLDER")
+
+        # 3. Generate then branch
+        for then_stmt in stmt.then_branch:
+            self._generate_statement(then_stmt)
+
+        # 4. Emit jump to end (skip else)
+        jump_to_end = self.builder.emit(IROpcode.JUMP, "PLACEHOLDER")
+
+        # 5. Patch jump_if_false to current position (start of else)
+        # In a real compiler, we'd use labels, but for this IR we'll use block/offset
+        # We'll just set it to 'else' and let the VM handle it
+        jump_if_false.operands[0] = "else_branch"
+
+        # 6. Generate else branch
+        if stmt.else_branch:
+            for else_stmt in stmt.else_branch:
+                self._generate_statement(else_stmt)
+
+        # 7. Patch jump_to_end
+        jump_to_end.operands[0] = "if_end"
 
     def _generate_variable_declaration(self, stmt: VariableDeclaration):
         """Generate IR for variable declaration."""

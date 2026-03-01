@@ -1,4 +1,4 @@
-# Perplexity API Integration - Implementation Summary
+## PERPLEXITY_IMPLEMENTATION_SUMMARY.md                  Productivity: Out-Dated(archive)
 
 ## Overview
 
@@ -195,7 +195,7 @@ result = rag.query_with_llm(
 
 ## Next Steps (Optional Enhancements)
 
-### For Future Development:
+### For Future Development
 
 1. **Add More Providers**
 

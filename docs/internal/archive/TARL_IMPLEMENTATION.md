@@ -1,4 +1,11 @@
-# TARL Integration - Implementation Summary
+# TARL_IMPLEMENTATION.md
+>
+> [!WARNING]
+> **RELEVANCE STATUS**: ARCHIVED / HISTORICAL
+> **CURRENT ROLE**: Documentation for the original T.A.R.L. (Thirsty's Active Resistance Language) implementation (v1.0).
+> **LAST VERIFIED**: 2026-03-01
+
+# T.A.R.L. (Thirsty's Active Resistance Language) Integration - Implementation Summary
 
 ## Overview
 
@@ -70,7 +77,7 @@ This document describes the successful implementation of the TARL (Trust and Aut
 
 ### 3. Codex Escalation System (`src/cognition/codex/escalation.py`)
 
-#### Components:
+#### Components
 
 - **EscalationLevel Enum**: LOW, MEDIUM, HIGH severity levels
 - **EscalationEvent Dataclass**: Event with level, reason, and context

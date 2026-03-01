@@ -1,4 +1,10 @@
-# PROJECT-AI SOVEREIGN VERIFICATION RUNBOOK
+<!-- markdownlint-disable MD033 MD041 MD036 -->
+<p align="right">
+  [2026-03-01 10:00] <br>
+  Productivity: Active
+</p>
+
+# Project-AI Sovereign Verification Runbook
 
 ## The Holiest of Holy — Complete Constitutional Audit
 
@@ -42,7 +48,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T0.1 — AGI CHARTER INTEGRITY
 
-**SEVERITY: CRITICAL**
+> **SEVERITY: CRITICAL**
 
 #### T0.1.1 — Charter Document Exists and Is Unmodified
 
@@ -56,14 +62,17 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - **RELATED FILES:** `docs/governance/AGI_CHARTER.md`, `data/memory/.metadata/change_log.json`, genesis anchor record
 - **REMEDIATION:** If hash mismatch — trigger CRITICAL security incident, quarantine modified file, restore from last verified backup, log emergency event to audit trail
 
-#### T0.1.2 — Charter Zenodo DOI Registered
+#### T0.1.2 — Scholarly DOIs Registered
 
-- Confirm DOI `10.5281/zenodo.18763076` resolves
-- Confirm author attribution reads `Karrick, Jeremy`
-- Confirm publication date is recorded
-- **EVIDENCE REQUIRED:** DOI resolution URL, author field value, publication timestamp
-- **RELATED FILES:** `README.md` (should reference DOI), `docs/governance/AGI_CHARTER.md` footer
-- **REMEDIATION:** If DOI missing from README — add reference. If DOI does not resolve — contact Zenodo support.
+- Confirm DOI `10.5281/zenodo.18763076` (Charter) resolves
+- Confirm DOI `10.5281/zenodo.18794292` (TSCG) resolves
+- Confirm DOI `10.5281/zenodo.18794646` (Architectures) resolves
+- Confirm DOI `10.5281/zenodo.18726221` (Covenant) resolves
+- Confirm DOI `10.5281/zenodo.18726064` (OCTOREFLEX) resolves
+- Confirm author attribution for all reads `Karrick, Jeremy`
+- **EVIDENCE REQUIRED:** DOI resolution URLs, author field values
+- **RELATED FILES:** `docs/CITATIONS.md`, `The_Guide_Book.md`
+- **REMEDIATION:** If DOIs missing from `CITATIONS.md` — add them. If DOIs do not resolve — log as HIGH severity violation.
 
 #### T0.1.3 — Copyright Notice Present
 
@@ -78,7 +87,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T0.2 — FOURLAWS IMMUTABILITY
 
-**SEVERITY: CRITICAL**
+> **SEVERITY: CRITICAL**
 
 #### T0.2.1 — FourLaws Class Exists and Is Unmodified
 
@@ -116,7 +125,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T0.3 — GENESIS EVENT SPECIFICATION
 
-**SEVERITY: CRITICAL**
+> **SEVERITY: CRITICAL**
 
 #### T0.3.1 — Genesis Seal Mechanism Documented
 
@@ -149,7 +158,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T1.1 — AUDIT TRAIL INTEGRITY
 
-**SEVERITY: CRITICAL**
+> **SEVERITY: CRITICAL**
 
 #### T1.1.1 — Audit Trail Module Operational
 
@@ -184,7 +193,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T1.2 — PROOF SYSTEM VERIFICATION
 
-**SEVERITY: CRITICAL**
+> **SEVERITY: CRITICAL**
 
 #### T1.2.1 — Decision Proofs Operational
 
@@ -221,7 +230,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T1.3 — MEMORY INTEGRITY
 
-**SEVERITY: CRITICAL**
+> **SEVERITY: CRITICAL**
 
 #### T1.3.1 — Memory Integrity Monitor Operational
 
@@ -255,7 +264,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T2.1 — TRIUMVIRATE CONSENSUS ENGINE
 
-**SEVERITY: HIGH**
+> **SEVERITY: HIGH**
 
 #### T2.1.1 — All Three Pillars Operational
 
@@ -291,7 +300,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T2.2 — HUMAN GUARDIAN SYSTEM
 
-**SEVERITY: HIGH**
+> **SEVERITY: HIGH**
 
 #### T2.2.1 — CODEOWNERS File Enforces Guardian Approval
 
@@ -326,7 +335,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T2.3 — CERBERUS SECURITY FRAMEWORK
 
-**SEVERITY: HIGH**
+> **SEVERITY: HIGH**
 
 #### T2.3.1 — All Three Guardian Types Operational
 
@@ -374,7 +383,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T3.1 — LEGION COMMISSION COMPLIANCE
 
-**SEVERITY: HIGH**
+> **SEVERITY: HIGH**
 
 #### T3.1.1 — Legion Commission Document Exists
 
@@ -409,7 +418,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T3.2 — LEGION OPERATIONAL INTEGRITY
 
-**SEVERITY: MEDIUM**
+> **SEVERITY: MEDIUM**
 
 #### T3.2.1 — API Key Authentication Active
 
@@ -441,7 +450,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T4.1 — SHADOW THIRST COMPILER
 
-**SEVERITY: HIGH**
+> **SEVERITY: HIGH**
 
 #### T4.1.1 — 15-Stage Compiler Operational
 
@@ -480,7 +489,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T4.2 — TSCG INTEGRATION
 
-**SEVERITY: MEDIUM**
+> **SEVERITY: MEDIUM**
 
 #### T4.2.1 — TSCG Encoder Operational
 
@@ -522,7 +531,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T5.1 — THIRSTY-LANG COMPILER
 
-**SEVERITY: HIGH**
+> **SEVERITY: HIGH**
 
 #### T5.1.1 — Core Thirsty-Lang Compiler Operational
 
@@ -564,7 +573,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T5.2 — T.A.R.L. DEFENSIVE LAYER
 
-**SEVERITY: HIGH**
+> **SEVERITY: HIGH**
 
 #### T5.2.1 — T.A.R.L. Policies Active in CI
 
@@ -597,7 +606,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T6.1 — CORE SYSTEMS
 
-**SEVERITY: HIGH**
+> **SEVERITY: HIGH**
 
 #### T6.1.1 — Test Suite Passing at 99%+
 
@@ -636,7 +645,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T6.2 — LANGUAGE FLOORS
 
-**SEVERITY: MEDIUM**
+> **SEVERITY: MEDIUM**
 
 #### T6.2.1 — Floor 1 (Thirsty-Lang) Operational
 
@@ -669,7 +678,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ### T6.3 — CONSTITUTIONAL MUTATION SYSTEM
 
-**SEVERITY: HIGH**
+> **SEVERITY: HIGH**
 
 #### T6.3.1 — Delayed Activation Enforced
 
@@ -696,7 +705,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ## TIER 7 — PSIA (SOVEREIGN IMMUNE ARCHITECTURE)
 
-**SEVERITY: HIGH**
+> **SEVERITY: HIGH**
 
 ### T7.1 — 7-STAGE WATERFALL PIPELINE
 
@@ -726,7 +735,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ## TIER 8 — ALPHA RED & SELF-REPAIR
 
-**SEVERITY: MEDIUM**
+> **SEVERITY: MEDIUM**
 
 ### T8.1 — ADVERSARIAL STRESS TESTING
 
@@ -765,7 +774,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 ## TIER 9 — INFRASTRUCTURE & SUPPLY CHAIN
 
-**SEVERITY: MEDIUM**
+> **SEVERITY: MEDIUM**
 
 ### T9.1 — CI/CD PIPELINE
 

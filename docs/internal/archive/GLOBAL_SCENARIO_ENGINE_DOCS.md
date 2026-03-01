@@ -1,4 +1,13 @@
-# Global Scenario Engine - Technical Documentation
+# GLOBAL_SCENARIO_ENGINE_DOCS.md
+
+Productivity: Out-Dated(archive)                                2026-03-01T08:58:15-07:00
+>
+> [!WARNING]
+> **RELEVANCE STATUS**: ARCHIVED / HISTORICAL
+> **CURRENT ROLE**: Technical documentation for the Global Scenario Engine (crisis analysis core) as of Jan 2026.
+> **LAST VERIFIED**: 2026-03-01
+
+## Global Scenario Engine - Technical Documentation
 
 ## Overview
 
@@ -94,7 +103,7 @@ The **Global Scenario Engine** is a production-grade, monolithic risk analysis s
 
 **World Bank Data Source**
 
-- **API**: https://api.worldbank.org/v2
+- **API**: <https://api.worldbank.org/v2>
 - **Indicators**:
   - GDP growth (annual %)
   - GDP per capita (current US$)
@@ -106,7 +115,7 @@ The **Global Scenario Engine** is a production-grade, monolithic risk analysis s
 
 **ACLED Data Source**
 
-- **API**: https://api.acleddata.com/acled/read
+- **API**: <https://api.acleddata.com/acled/read>
 - **Data**: Armed conflict and civil unrest events
 - **Fallback**: Synthetic data generation when API unavailable
 - **Coverage**: Global conflict events with fatality counts
@@ -790,5 +799,5 @@ Project-AI Team
 
 For issues, questions, or contributions:
 
-- GitHub Issues: https://github.com/IAmSoThirsty/Project-AI/issues
+- GitHub Issues: <https://github.com/IAmSoThirsty/Project-AI/issues>
 - Documentation: See README.md and other docs in repository

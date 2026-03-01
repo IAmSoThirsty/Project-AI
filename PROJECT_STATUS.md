@@ -1,8 +1,14 @@
+<!-- markdownlint-disable MD033 MD025 MD041 -->
+<div align="right">
+  [2026-03-01 10:00] <br>
+  Productivity: Active
+</div>
+
 # Project-AI - Sovereign Status Manifest
 
 ## The Iron Path / Thirsty-Lang Family Substrate
 
-**Last Updated**: 2026-02-28
+**Last Updated**: 2026-03-01
 **Version**: 1.0.0-REFLEXIVE
 **Status**: 🟢 CRYPTOGRAPHICALLY SOVEREIGN (HARDENED)
 
@@ -80,7 +86,7 @@ When an invariant is breached (e.g., $INV-ROOT-9$), the system enters **SAFE-HAL
 | System | Status | Coverage | Sovereign Invariant |
 | :--- | :--- | :--- | :--- |
 | **Tier 0: OctoReflex** | 🟢 Operational | Verified | Reflexive Substrate active |
-| **Tier 1: Governance** | 🟢 Operational | Verified | Thirsty-Lang / Shadow active |
+| **Tier 1: Governance** | 🟢 Operational | Verified | Thirsty-Lang / Shadow / TSCG-B active |
 | **Tier 2: Infrastructure** | 🟢 Operational | Verified | Immutable Audit / K8s active |
 | **Tier 3: Application** | 🟢 Operational | Verified | Hardened Interface active |
 | **Audit Chain** | 🟢 Intact | Verified | Deterministic Hash Chain active |
@@ -227,6 +233,7 @@ Cognitive and ethical guardrails. The "Thirsty-Lang Family" seat of authority.
 - ✅ **CODE_OF_CONDUCT.md**: Community standards
 - ✅ **DEVELOPER_QUICK_REFERENCE.md**: Quick dev guide
 - ✅ **PRODUCTION_DEPLOYMENT.md**: Deployment procedures
+- ✅ **TSCG_B_SPECIFICATION_v1.0.md**: Binary encoding standard ([10.5281/zenodo.18826409](https://doi.org/10.5281/zenodo.18826409))
 
 ### Documentation Structure (`/docs/`)
 
@@ -480,7 +487,11 @@ All historical implementation summaries and point-in-time reports have been move
 
 ---
 
-## 📝 Recent Major Changes
+### March 2026
+
+- ✅ **Autonomous Audit Completion**: 100% Pass across all Sovereignty Tiers (T0-T4).
+- ✅ **Shadow Thirst Compiler Hardened**: Full support for generics, struct literals, and control flow.
+- ✅ **Foundational Scholarly Integration**: Registered five Zenodo DOIs for Jeremy Karrick's work.
 
 ### February 2026
 
@@ -512,7 +523,7 @@ Project-AI is committed to:
 
 ---
 
-**For historical implementation summaries and point-in-time reports, see `/docs/internal/archive/ARCHIVE_INDEX.md`**
+**Last comprehensive audit**: 2026-03-01
+**Next scheduled review**: 2026-04-01
 
-**Last comprehensive audit**: 2026-02-28
-**Next scheduled review**: 2026-03-28
+**For historical implementation summaries and point-in-time reports, see `/docs/internal/archive/ARCHIVE_INDEX.md`**

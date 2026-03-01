@@ -1,4 +1,11 @@
-# T.A.R.L. Extended Orchestration - Implementation Summary
+# TARL_EXTENDED_IMPLEMENTATION_SUMMARY.md
+>
+> [!WARNING]
+> **RELEVANCE STATUS**: ARCHIVED / HISTORICAL
+> **CURRENT ROLE**: Implementation summary for T.A.R.L. (Thirsty's Active Resistance Language) extended orchestration features.
+> **LAST VERIFIED**: 2026-03-01
+
+# T.A.R.L. (Thirsty's Active Resistance Language) Extended Orchestration - Implementation Summary
 
 ## Executive Summary
 

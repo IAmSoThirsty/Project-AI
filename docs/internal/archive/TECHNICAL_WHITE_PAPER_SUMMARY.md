@@ -1,3 +1,10 @@
+# TECHNICAL_WHITE_PAPER_SUMMARY.md
+>
+> [!WARNING]
+> **RELEVANCE STATUS**: ARCHIVED / HISTORICAL
+> **CURRENT ROLE**: Summary of the original Technical White Paper (v1.0). Outdated by the current sovereign Thirsty-Lang ecosystem.
+> **LAST VERIFIED**: 2026-03-01
+
 # Technical White Paper - Summary
 
 ## Document Overview

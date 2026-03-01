@@ -1,3 +1,9 @@
+<!-- markdownlint-disable MD033 MD025 MD041 -->
+<div align="right">
+[2026-03-01 10:00]  
+Productivity: Active
+</div>
+
 <p align="center">
   <img src="https://img.shields.io/badge/STATUS-PRODUCTION--GRADE-brightgreen?style=for-the-badge&logo=statuspal&logoColor=white" alt="Status: Production-Grade" />
   <img src="https://img.shields.io/badge/ARCHITECTURE-SOVEREIGN_MONOLITH-blueviolet?style=for-the-badge&logo=blueprint&logoColor=white" alt="Architecture: Sovereign Monolith" />
@@ -5,21 +11,21 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Go-1.22+-00ADD8?style=flat-square&logo=go&logoColor=white" />
-  <img src="https://img.shields.io/badge/Node.js-14+-339933?style=flat-square&logo=nodedotjs&logoColor=white" />
-  <img src="https://img.shields.io/badge/Docker-Supported-2496ED?style=flat-square&logo=docker&logoColor=white" />
-  <img src="https://img.shields.io/badge/Kernel-5.15+_eBPF-orange?style=flat-square&logo=linux&logoColor=white" />
-  <img src="https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square&logo=apache&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.11+" />
+  <img src="https://img.shields.io/badge/Go-1.22+-00ADD8?style=flat-square&logo=go&logoColor=white" alt="Go 1.22+" />
+  <img src="https://img.shields.io/badge/Node.js-14+-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js 14+" />
+  <img src="https://img.shields.io/badge/Docker-Supported-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker Supported" />
+  <img src="https://img.shields.io/badge/Kernel-5.15+_eBPF-orange?style=flat-square&logo=linux&logoColor=white" alt="Kernel 5.15+ eBPF" />
+  <img src="https://img.shields.io/badge/License-Apache_2.0-blue?style=flat-square&logo=apache&logoColor=white" alt="License: Apache 2.0" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/CI-40+_Workflows-blue?style=flat-square&logo=githubactions&logoColor=white" />
-  <img src="https://img.shields.io/badge/CodeQL-Enabled-green?style=flat-square&logo=github&logoColor=white" />
-  <img src="https://img.shields.io/badge/Bandit-Scanning-green?style=flat-square&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/pip--audit-Active-green?style=flat-square&logo=pypi&logoColor=white" />
-  <img src="https://img.shields.io/badge/SBOM-Generated-green?style=flat-square&logo=dependabot&logoColor=white" />
-  <img src="https://img.shields.io/badge/Ed25519-Signed-critical?style=flat-square&logo=keybase&logoColor=white" />
+  <img src="https://img.shields.io/badge/CI-40+_Workflows-blue?style=flat-square&logo=githubactions&logoColor=white" alt="CI: 40+ Workflows" />
+  <img src="https://img.shields.io/badge/CodeQL-Enabled-green?style=flat-square&logo=github&logoColor=white" alt="CodeQL Enabled" />
+  <img src="https://img.shields.io/badge/Bandit-Scanning-green?style=flat-square&logo=python&logoColor=white" alt="Bandit Scanning" />
+  <img src="https://img.shields.io/badge/pip--audit-Active-green?style=flat-square&logo=pypi&logoColor=white" alt="pip-audit Active" />
+  <img src="https://img.shields.io/badge/SBOM-Generated-green?style=flat-square&logo=dependabot&logoColor=white" alt="SBOM Generated" />
+  <img src="https://img.shields.io/badge/Ed25519-Signed-critical?style=flat-square&logo=keybase&logoColor=white" alt="Ed25519 Signed" />
 </p>
 
 ---
@@ -40,31 +46,35 @@ The AGI Charter, Legion Commission, and all associated governance documents are 
 
 ## Table of Contents
 
-- [Mission](#-mission)
-- [Architecture Overview](#-architecture-overview)
-- [The Triumvirate — Governance Layer](#-the-triumvirate--governance-layer)
-- [Sovereign Runtime](#-sovereign-runtime)
-- [Iron Path Executor](#-iron-path-executor)
-- [Existential Proof System](#-existential-proof-system)
-- [Liara Kernel Failover](#-liara-kernel-failover)
-- [Thirsty's Waterfall (PSIA)](#-thirstys-waterfall--psia)
-- [Thirsty-Lang — The Language](#-thirsty-lang--the-language)
-- [Thirsty-Lang Shadow — Dual-Plane Compiler](#-thirsty-lang-shadow--dual-plane-compiler)
-- [T.A.R.L. — Active Resistance Language](#-tarl--thirstys-active-resistance-language)
-- [TARL OS — AI Operating System](#-tarl-os--ai-operating-system)
-- [OctoReflex — Kernel-Level Containment](#-octoreflex--kernel-level-containment)
-- [Simulation Engines](#-simulation-engines)
-- [Security Architecture](#-security-architecture)
-- [Enterprise Monolithic Architecture](#-enterprise-monolithic-architecture)
-- [Configuration](#-configuration)
-- [TAAR — Active Agent Runner](#-taar--active-agent-runner)
-- [CI/CD Pipeline](#-cicd-pipeline)
-- [Quick Start](#-quick-start)
-- [Demo Scripts](#-demo-scripts)
-- [Testing](#-testing)
-- [Project Structure](#-project-structure)
-- [Contributing](#-contributing)
-- [License](#-license)
+<!-- markdownlint-disable MD051 -->
+
+- [Mission](#mission)
+- [Architecture Overview](#🏗️-four-tier-sovereign-architecture)
+- [The Triumvirate — Governance Layer](#the-triumvirate-governance-layer)
+- [Sovereign Runtime](#sovereign-runtime)
+- [Iron Path Executor](#iron-path-executor)
+- [Existential Proof System](#existential-proof-system)
+- [Liara Kernel Failover](#liara-kernel-failover)
+- [Thirsty's Waterfall (PSIA)](#thirstys-waterfall-psia)
+- [Thirsty-Lang — The Language](#thirsty-lang-the-language)
+- [Thirsty-Lang Shadow — Dual-Plane Compiler](#thirsty-lang-shadow-dual-plane-compiler)
+- [TSCG & TSCG-B — Symbolic Compression & Binary Encoding](#-tscg--tscg-b--symbolic-compression--binary-encoding)
+- [T.A.R.L. — Active Resistance Language](#tarl-thirstys-active-resistance-language)
+- [TARL OS — AI Operating System](#tarl-os-ai-operating-system)
+- [OctoReflex — Kernel-Level Containment](#octoreflex-kernel-level-containment)
+- [Simulation Engines](#simulation-engines)
+- [Security Architecture](#security-architecture)
+- [Enterprise Monolithic Architecture](#enterprise-monolithic-architecture)
+- [Configuration](#configuration)
+- [TAAR — Active Agent Runner](#taar-active-agent-runner)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Quick Start](#quick-start)
+- [Demo Scripts](#demo-scripts)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
+<!-- markdownlint-enable MD051 -->
 
 ---
 
@@ -127,7 +137,7 @@ Project-AI is an **unbreakable, sovereign-grade substrate** built on three immut
 
 | Tier | Name | Enforcement |
 |------|------|-------------|
-| **Floor 1** | Sovereign Orchestration | Thirsty-Lang, TSCG Ledger, Git-based Audit Trail |
+| **Floor 1** | Sovereign Orchestration | Thirsty-Lang, TSCG & TSCG-B, Git-based Audit Trail |
 | **Tier 1** | Constitutional Core | Four Laws, Existential Proofs, Immutable Audit Trail |
 | **Tier 2** | Governance Enforcement | Triumvirate Consensus, Sovereign Runtime, Iron Path |
 | **Tier 3** | Operational Security | OctoReflex, PSIA Waterfall, Cerberus, T-SECA/GHOST |
@@ -416,7 +426,7 @@ The PSIA Waterfall is a **7-stage, 6-plane defense pipeline** with monotonically
 | 5 | `stage_5_commit.py` | Commit validation — state transition verification |
 | 6 | `stage_6_memory.py` | Memory anchoring — Merkle-anchored persistence |
 
-### Key Properties
+### PSIA Key Properties
 
 - **Monotonic Strictness** — Each stage is strictly more restrictive than the previous
 - **Capability-Based Authorization** — Least-privilege via capability tokens
@@ -444,9 +454,9 @@ for stage, verdict in result.stage_verdicts.items():
 `src/thirsty_lang/` — **A complete programming language** with water-themed syntax and enterprise-grade defensive programming capabilities.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Thirsty--Lang-REFLEXIVE-00CED1?style=for-the-badge&logo=dropbox&logoColor=white" />
-  <img src="https://img.shields.io/badge/Editions-Hydrated-purple?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Transpile_To-6_Languages-orange?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Thirsty--Lang-REFLEXIVE-00CED1?style=for-the-badge&logo=dropbox&logoColor=white" alt="Thirsty-Lang Reflexive" />
+  <img src="https://img.shields.io/badge/Editions-Hydrated-purple?style=for-the-badge" alt="Editions: Hydrated" />
+  <img src="https://img.shields.io/badge/Transpile_To-6_Languages-orange?style=for-the-badge" alt="Transpiles To: 6 Languages" />
 </p>
 
 ### Language Editions
@@ -553,9 +563,9 @@ shield mySecureApp {
 `src/shadow_thirst/` — **4,800+ lines** of production code implementing dual-plane computing with formal verification.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Shadow_Thirst-REFLEXIVE-8B0000?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Static_Analyzers-Enabled-gold?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Dual--Plane-Canonical+Shadow-crimson?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Shadow_Thirst-REFLEXIVE-8B0000?style=for-the-badge" alt="Shadow Thirst Reflexive" />
+  <img src="https://img.shields.io/badge/Static_Analyzers-Enabled-gold?style=for-the-badge" alt="Static Analyzers Enabled" />
+  <img src="https://img.shields.io/badge/Dual--Plane-Canonical+Shadow-crimson?style=for-the-badge" alt="Dual-Plane Architecture" />
 </p>
 
 ### What Is Dual-Plane Computing?
@@ -635,14 +645,42 @@ Source → Lexer → Parser → AST → Semantic Analysis → Static Analyzers �
 
 ---
 
+## 💧 TSCG & TSCG-B — Symbolic Compression & Binary Encoding
+
+`docs/spec/` — **Thirsty's Symbolic Compression Grammar** (TSCG) and its **Binary Encoding Layer** (TSCG-B).
+
+<p align="center">
+  <img src="https://img.shields.io/badge/TSCG-v1.0-blue?style=for-the-badge" alt="TSCG v1.0" />
+  <img src="https://img.shields.io/badge/TSCG--B-v1.0-darkblue?style=for-the-badge" alt="TSCG-B v1.0" />
+  <img src="https://img.shields.io/badge/Compression-97.5%25-green?style=for-the-badge" alt="Compression: 97.5%" />
+</p>
+
+### The Governance Stack
+
+| Layer | Format | Purpose | Yield |
+| :--- | :--- | :--- | :--- |
+| **Prose** | Natural Language | Human-readable constitutional intent | Baseline |
+| **TSCG** | Symbolic Grammar | Token-reduced formal meta-language | ~92% Reduction |
+| **TSCG-B** | Binary Encoding | Deterministic, bijective wire protocol | ~97.5% Total Reduction |
+
+### TSCG Key Properties
+
+- **Formal Bijectivity** — Guaranteed round-trip without information loss.
+- **Hash Stability** — Bit-identical encoding across all architectures (Network Byte Order).
+- **Constitutional Versioning** — Native support for protocol and constitution upgrades.
+
+[TSCG_B_SPECIFICATION_v1.0.md](docs/spec/TSCG_B_SPECIFICATION_v1.0.md) | **DOI:** [10.5281/zenodo.18826409](https://doi.org/10.5281/zenodo.18826409)
+
+---
+
 ## ⚡ T.A.R.L. — Thirsty's Active Resistance Language
 
 `tarl/` — A complete, sovereign programming language implementation with compiler, VM, JIT, and standard library.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/T.A.R.L.-v1.0.0-FF4500?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Architecture-Monolithic_Sovereign-blueviolet?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Subsystems-8_Complete-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/T.A.R.L.-v1.0.0-FF4500?style=for-the-badge" alt="T.A.R.L. v1.0.0" />
+  <img src="https://img.shields.io/badge/Architecture-Monolithic_Sovereign-blueviolet?style=for-the-badge" alt="Architecture: Monolithic Sovereign" />
+  <img src="https://img.shields.io/badge/Subsystems-8_Complete-green?style=for-the-badge" alt="Subsystems: 8 Complete" />
 </p>
 
 ### Eight Subsystems
@@ -689,9 +727,9 @@ result = runtime.execute(bytecode)
 `tarl_os/` — A monolithic AI Operating System implemented entirely in Thirsty-Lang/T.A.R.L.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/TARL_OS-v1.0.0-4B0082?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Components-8_Subsystems-teal?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Design-Type--Safe_Security--First-red?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/TARL_OS-v1.0.0-4B0082?style=for-the-badge" alt="TARL OS v1.0.0" />
+  <img src="https://img.shields.io/badge/Components-8_Subsystems-teal?style=for-the-badge" alt="Components: 8 Subsystems" />
+  <img src="https://img.shields.io/badge/Design-Type--Safe_Security--First-red?style=for-the-badge" alt="Design: Type-Safe Security-First" />
 </p>
 
 ### Core Components
@@ -707,7 +745,7 @@ result = runtime.execute(bytecode)
 | **Observability** | Metrics, logging, tracing, alerting |
 | **Deployment** | Package management, update system, rollback |
 
-### Key Properties
+### TARL OS Key Properties
 
 - **Production-Grade** — No stubs, no placeholders, no TODOs
 - **Type-Safe** — Full type system with compile-time verification
@@ -721,10 +759,10 @@ result = runtime.execute(bytecode)
 `octoreflex/` — A reflexive containment control model for Linux using eBPF LSM hooks.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/OctoReflex-v0.2.0-FF6347?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Go-1.22-00ADD8?style=for-the-badge&logo=go&logoColor=white" />
-  <img src="https://img.shields.io/badge/Kernel-5.15+_eBPF-orange?style=for-the-badge&logo=linux&logoColor=white" />
-  <img src="https://img.shields.io/badge/Coverage-82%25-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/OctoReflex-v0.2.0-FF6347?style=for-the-badge" alt="OctoReflex v0.2.0" />
+  <img src="https://img.shields.io/badge/Go-1.22-00ADD8?style=for-the-badge&logo=go&logoColor=white" alt="Go 1.22" />
+  <img src="https://img.shields.io/badge/Kernel-5.15+_eBPF-orange?style=for-the-badge&logo=linux&logoColor=white" alt="Kernel 5.15+ eBPF" />
+  <img src="https://img.shields.io/badge/Coverage-82%25-green?style=for-the-badge" alt="Coverage: 82%" />
 </p>
 
 <p align="center">
@@ -829,9 +867,9 @@ curl -s http://127.0.0.1:9091/metrics | grep octoreflex_events_processed_total
 `engines/` — Production-grade engines for modeling catastrophic, adversarial, and governance scenarios.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Engines-14+-FF1493?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Scenarios-100+-gold?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Purpose-Stress_Testing-red?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Engines-14+-FF1493?style=for-the-badge" alt="Engines: 14+" />
+  <img src="https://img.shields.io/badge/Scenarios-100+-gold?style=for-the-badge" alt="Scenarios: 100+" />
+  <img src="https://img.shields.io/badge/Purpose-Stress_Testing-red?style=for-the-badge" alt="Purpose: Stress Testing" />
 </p>
 
 ### Engine Catalog
@@ -1167,9 +1205,9 @@ The kernel entry point for all signal processing, providing:
 `taar/` — **Thirstys Active Agent Runner** — intelligent, change-aware build/test/lint orchestration for the polyglot monorepo.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/TAAR-v1.0.0-00BFFF?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Runners-6_Languages-orange?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Cache-Content_Addressed-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/TAAR-v1.0.0-00BFFF?style=for-the-badge" alt="TAAR v1.0.0" />
+  <img src="https://img.shields.io/badge/Runners-6_Languages-orange?style=for-the-badge" alt="Runners: 6 Languages" />
+  <img src="https://img.shields.io/badge/Cache-Content_Addressed-green?style=for-the-badge" alt="Cache: Content Addressed" />
 </p>
 
 **The core gap TAAR fills:** None of the existing tools (Gradle, Make, npm, `validate_all_code.py`) know *what changed*, *what depends on it*, or *what's safe to skip*. TAAR does.
@@ -1569,5 +1607,5 @@ Apache 2.0 — See [LICENSE](LICENSE) for details.
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Built_with-❤️_and_Sovereignty-red?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Built_with-❤️_and_Sovereignty-red?style=for-the-badge" alt="Built with Love and Sovereignty" />
 </p>

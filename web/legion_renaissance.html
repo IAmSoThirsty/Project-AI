@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constitutional Resonance | Legion Art</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --sidebar-bg: #0d1117;
+            --accent-cyan: #00f2ff;
+            --accent-magenta: #ff00ff;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --border-color: #30363d;
+            --input-bg: #161b22;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            display: flex;
+            height: 100vh;
+        }
+
+        #sidebar {
+            width: 320px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        #main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+            margin: 0 0 8px 0;
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .control-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .value-label {
+            color: var(--accent-cyan);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            -webkit-appearance: none;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+        }
+
+        .seed-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .seed-display {
+            flex-grow: 1;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        button {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        button.primary {
+            background: var(--accent-cyan);
+            color: var(--bg-color);
+            border: none;
+            font-weight: 600;
+            width: 100%;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        button.primary:hover {
+            opacity: 0.9;
+            color: var(--bg-color);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .button-row button {
+            flex: 1;
+        }
+
+        #canvas-wrap {
+            position: relative;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+        }
+
+        .footer {
+            margin-top: auto;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h1>Legion Architecture</h1>
+        <span class="subtitle">Constitutional Resonance v1.0</span>
+
+        <div class="section">
+            <div class="section-title">Seed Invariant</div>
+            <div class="seed-box">
+                <div class="seed-display" id="seed-val">12345</div>
+            </div>
+            <div class="button-row">
+                <button onclick="prevSeed()">Prev</button>
+                <button onclick="nextSeed()">Next</button>
+                <button onclick="randomSeedValue()">Random</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Constitutional Parameters</div>
+            
+            <div class="control-group">
+                <label>Charter Strength <span class="value-label" id="p-strength-val">0.5</span></label>
+                <input type="range" id="p-strength" min="0" max="1" step="0.01" value="0.5" oninput="updateParam('strength', this.value)">
+            </div>
+
+            <div class="control-group">
+                <label>Legion Density <span class="value-label" id="p-density-val">500</span></label>
+                <input type="range" id="p-density" min="100" max="2000" step="50" value="500" oninput="updateParam('density', this.value)">
+            </div>
+
+            <div class="control-group">
+                <label>Reflex Resolution <span class="value-label" id="p-res-val">0.5</span></label>
+                <input type="range" id="p-res" min="0.01" max="1" step="0.01" value="0.5" oninput="updateParam('resolution', this.value)">
+            </div>
+
+            <div class="control-group">
+                <label>Execution Orbit <span class="value-label" id="p-orbit-val">250</span></label>
+                <input type="range" id="p-orbit" min="50" max="500" step="10" value="250" oninput="updateParam('orbit', this.value)">
+            </div>
+
+            <div class="control-group">
+                <label>Flow Complexity <span class="value-label" id="p-flow-val">5</span></label>
+                <input type="range" id="p-flow" min="1" max="10" step="1" value="5" oninput="updateParam('flow', this.value)">
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Actions</div>
+            <button onclick="regenerate()">Retranspile Logic</button>
+            <button onclick="resetParams()" style="margin-top: 8px;">Restore Defaults</button>
+            <button class="primary" onclick="saveArt()">Download Evidence</button>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 Jeremy Karrick<br>Sovereign Monolith Verified
+        </div>
+    </div>
+
+    <div id="main">
+        <div id="canvas-wrap"></div>
+    </div>
+
+    <script>
+        let seed = Math.floor(Math.random() * 99999);
+        let params = {
+            strength: 0.5,
+            density: 500,
+            resolution: 0.5,
+            orbit: 250,
+            flow: 5
+        };
+
+        let particles = [];
+        let canvas;
+
+        function setup() {
+            canvas = createCanvas(800, 800);
+            canvas.parent('canvas-wrap');
+            pixelDensity(1);
+            initSystem();
+        }
+
+        function initSystem() {
+            randomSeed(seed);
+            noiseSeed(seed);
+            particles = [];
+            for (let i = 0; i < params.density; i++) {
+                particles.push(new Particle());
+            }
+            background(5, 7, 10);
+            document.getElementById('seed-val').innerText = seed;
+        }
+
+        function draw() {
+            // Motion blur effect
+            background(5, 7, 10, 15);
+            
+            translate(width / 2, height / 2);
+
+            for (let p of particles) {
+                p.update();
+                p.show();
+            }
+        }
+
+        class Particle {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                let angle = random(TWO_PI);
+                let r = random(width / 2, width);
+                this.pos = createVector(cos(angle) * r, sin(angle) * r);
+                this.vel = createVector(0, 0);
+                this.acc = createVector(0, 0);
+                this.maxSpeed = random(2, 5);
+                this.prevPos = this.pos.copy();
+                this.plane = random() > 0.5 ? 'shadow' : 'canonical';
+                this.life = random(0.5, 1.0);
+            }
+
+            update() {
+                this.prevPos = this.pos.copy();
+
+                // Attorney Field (Charter)
+                let d = this.pos.magnitude();
+                let force = this.pos.copy().normalize().mult(-params.strength * 5);
+                
+                // Noise Field (OctoReflex)
+                let nScale = params.resolution * 0.005;
+                let angle = noise(this.pos.x * nScale, this.pos.y * nScale, frameCount * 0.005) * TWO_PI * params.flow;
+                let nForce = p5.Vector.fromAngle(angle).mult(1.5);
+
+                this.acc.add(force);
+                this.acc.add(nForce);
+
+                // Rotational Orbit
+                let rotForce = createVector(-this.pos.y, this.pos.x).normalize().mult(params.orbit / 100);
+                this.acc.add(rotForce);
+
+                this.vel.add(this.acc);
+                this.vel.limit(this.maxSpeed);
+                this.pos.add(this.vel);
+                this.acc.mult(0);
+
+                // Boundary check
+                if (this.pos.magnitude() > width * 0.8 || this.pos.magnitude() < 5) {
+                    this.init();
+                }
+            }
+
+            show() {
+                let d = this.pos.magnitude();
+                let alpha = map(d, 0, width/2, 255, 50);
+                
+                // Plane color transition
+                if (d < params.orbit) {
+                    // Canonical Plane
+                    stroke(0, 242, 255, alpha);
+                    strokeWeight(1.5);
+                } else {
+                    // Shadow Plane
+                    stroke(255, 0, 255, alpha * 0.4);
+                    strokeWeight(0.5);
+                }
+
+                line(this.pos.x, this.pos.y, this.prevPos.x, this.prevPos.y);
+            }
+        }
+
+        // UI Handlers
+        function updateParam(k, v) {
+            params[k] = parseFloat(v);
+            document.getElementById(`p-${k}-val`).innerText = v;
+            if (k === 'density') initSystem();
+        }
+
+        function prevSeed() { seed--; initSystem(); }
+        function nextSeed() { seed++; initSystem(); }
+        function randomSeedValue() { seed = Math.floor(Math.random() * 99999); initSystem(); }
+        function regenerate() { initSystem(); }
+        function resetParams() {
+            params = { strength: 0.5, density: 500, resolution: 0.5, orbit: 250, flow: 5 };
+            // Update UI
+            for (let k in params) {
+                document.getElementById(`p-${k}`).value = params[k];
+                document.getElementById(`p-${k}-val`).innerText = params[k];
+            }
+            initSystem();
+        }
+        function saveArt() {
+            saveCanvas(canvas, `legion_evidence_${seed}`, 'png');
+        }
+    </script>
+</body>
+</html>
