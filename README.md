@@ -56,10 +56,11 @@ The AGI Charter, Legion Commission, and all associated governance documents are 
 - [Existential Proof System](#existential-proof-system)
 - [Liara Kernel Failover](#liara-kernel-failover)
 - [Thirsty's Waterfall (PSIA)](#thirstys-waterfall-psia)
-- [Thirsty-Lang — The Language](#thirsty-lang-the-language)
-- [Thirsty-Lang Shadow — Dual-Plane Compiler](#thirsty-lang-shadow-dual-plane-compiler)
+- [Thirsty-Lang — End-to-End Orchestration](#thirsty-lang--end-to-end-orchestration)
+- [Thirst of Gods — Advanced Cognitive Logic](#thirst-of-gods--advanced-cognitive-logic)
+- [T.A.R.L. — Active Resistance Language](#tarl--active-resistance-language)
+- [Shadow Thirst — Dual-Plane Verified Compiler](#shadow-thirst--dual-plane-verified-compiler)
 - [TSCG & TSCG-B — Symbolic Compression & Binary Encoding](#-tscg--tscg-b--symbolic-compression--binary-encoding)
-- [T.A.R.L. — Active Resistance Language](#tarl-thirstys-active-resistance-language)
 - [TARL OS — AI Operating System](#tarl-os-ai-operating-system)
 - [OctoReflex — Kernel-Level Containment](#octoreflex-kernel-level-containment)
 - [Simulation Engines](#simulation-engines)
@@ -116,9 +117,9 @@ Project-AI is an **unbreakable, sovereign-grade substrate** built on three immut
 
 │                              │                                              │
 │  ┌──────── LANGUAGE LAYER ────────┐  ┌──── DEFENSE LAYER ────────┐        │
-│  │  Thirsty-Lang (4 Editions)     │  │  PSIA Waterfall (7-Stage) │        │
+│  │  Thirsty-Lang (Sovereign Stack) │  │  PSIA Waterfall (7-Stage) │        │
 │  │  Shadow Thirst (Dual-Plane)    │  │  OctoReflex (eBPF/LSM)    │        │
-│  │  T.A.R.L. (Compiler + VM)     │  │  T-SECA / GHOST Protocol  │        │
+│  │  T.A.R.L. (Compiler + VM)      │  │  T-SECA / GHOST Protocol  │        │
 │  │  TARL OS (AI Operating Sys.)   │  │  Cerberus Security Fmwk   │        │
 │  └────────────────────────────────┘  └───────────────────────────┘        │
 │                              │                                              │
@@ -449,24 +450,28 @@ for stage, verdict in result.stage_verdicts.items():
 
 ---
 
-## 💧 Thirsty-Lang — The Language
+## 💧 The Sovereign Language Stack
 
 `src/thirsty_lang/` — **A complete programming language** with water-themed syntax and enterprise-grade defensive programming capabilities.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Thirsty--Lang-REFLEXIVE-00CED1?style=for-the-badge&logo=dropbox&logoColor=white" alt="Thirsty-Lang Reflexive" />
-  <img src="https://img.shields.io/badge/Editions-Hydrated-purple?style=for-the-badge" alt="Editions: Hydrated" />
+  <img src="https://img.shields.io/badge/Thirsty--Lang-AUTHORITATIVE-00CED1?style=for-the-badge&logo=dropbox&logoColor=white" alt="Thirsty-Lang Authoritative" />
+  <img src="https://img.shields.io/badge/Stack-Sovereign-purple?style=for-the-badge" alt="Stack: Sovereign" />
   <img src="https://img.shields.io/badge/Transpile_To-6_Languages-orange?style=for-the-badge" alt="Transpiles To: 6 Languages" />
 </p>
 
-### Language Editions
+### The Sovereign Language Stack
 
-| Edition | Level | Features |
-|---------|-------|----------|
-| 💧 **Base** | Beginner | Variables (`drink`), output (`pour`), input (`sip`) |
-| 💧+ **Thirsty+** | Intermediate | Conditionals (`thirsty`/`hydrated`), control flow |
-| 💧++ **Thirsty++** | Advanced | Functions (`glass`), loops (`refill`), arrays |
-| ⚡ **ThirstOfGods** | Master | Classes, async/await, modules, full OOP |
+The Project-AI substrate is built on a multi-layered, polyglot language stack designed for high-integrity governance and reflexive containment.
+
+| Tier | Component | Function | Status |
+| :--- | :--- | :--- | :--- |
+| **Orchestration** | **Thirsty-Lang** | Primary sovereign system orchestration | Active |
+| **Cognition** | **Thirst of Gods** | Advanced OOP and async cognitive logic | Active |
+| **System** | **T.A.R.L.** | Thirsty's Active Resistance Language — kernel-level OS primitives | Active |
+| **Verification** | **Shadow Thirst** | Dual-plane compiled verification engine | Active |
+| **Grammar** | **TSCG** | Thirsty's Symbolic Compression Grammar | Active |
+| **Encoding** | **TSCG-B** | Binary Encoding Layer — bijective, deterministic protocol | Active |
 
 ### Core Syntax
 
@@ -558,7 +563,7 @@ shield mySecureApp {
 
 ---
 
-## 🔮 Thirsty-Lang Shadow — Dual-Plane Compiler
+## 🔮 Shadow Thirst — Dual-Plane Verified Compiler
 
 `src/shadow_thirst/` — **4,800+ lines** of production code implementing dual-plane computing with formal verification.
 

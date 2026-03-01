@@ -545,10 +545,10 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 #### T5.1.2 — All Four Language Tiers Functional
 
-- Confirm Base Thirsty-Lang compiles
-- Confirm Thirst of God's (higher-order/declarative) compiles
-- Confirm T.A.R.L. (reactive/defensive) compiles
-- Confirm Thirsty Shadow (dual-timeline) compiles
+- Confirm Thirsty-Lang (Floor 1 Orchestration) compiles
+- Confirm Thirst of Gods (Advanced Cognitive Logic) compiles
+- Confirm T.A.R.L. (Active Resistance Language) compiles
+- Confirm Shadow Thirst (Dual-Plane Verification) compiles
 - Run representative test file for each tier
 - **EVIDENCE REQUIRED:** Compilation success for each tier, test output for each
 - **RELATED FILES:** Each tier's compiler implementation and test files

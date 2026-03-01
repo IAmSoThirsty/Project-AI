@@ -27,7 +27,6 @@
 | **Compiler IR** | [src/shadow_thirst/](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/src/shadow_thirst/) | [SHADOW_THIRST_IR.md](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/architecture/SHADOW_THIRST_IR.md) |
 | **Symbolic Grammar** | [build.tarl](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/build.tarl) | [TSCG_SPEC.md](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/architecture/TSCG_SPEC.md) |
 | **Binary Encoding** | [TSCG-B (v1.0)](https://doi.org/10.5281/zenodo.18826409) | [TSCG_B_SPECIFICATION_v1.0.md](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/spec/TSCG_B_SPECIFICATION_v1.0.md) |
-| **Binary Encoding** | [TSCG-B (v1.0)](https://doi.org/10.5281/zenodo.18826409) | [TSCG_B_SPECIFICATION_v1.0.md](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/spec/TSCG_B_SPECIFICATION_v1.0.md) |
 | **Active Resistance** | [tarl_os/](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/tarl_os/) | [TARL_ARCHITECTURE.md](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/architecture/TARL_ARCHITECTURE.md) |
 
 ## 🖥️ 4. Application & Interface

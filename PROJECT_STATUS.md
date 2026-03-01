@@ -86,7 +86,7 @@ When an invariant is breached (e.g., $INV-ROOT-9$), the system enters **SAFE-HAL
 | System | Status | Coverage | Sovereign Invariant |
 | :--- | :--- | :--- | :--- |
 | **Tier 0: OctoReflex** | 🟢 Operational | Verified | Reflexive Substrate active |
-| **Tier 1: Governance** | 🟢 Operational | Verified | Thirsty-Lang / Shadow / TSCG-B active |
+| **Tier 1: Governance** | 🟢 Operational | Verified | Sovereign Language Stack (TSCG-B) active |
 | **Tier 2: Infrastructure** | 🟢 Operational | Verified | Immutable Audit / K8s active |
 | **Tier 3: Application** | 🟢 Operational | Verified | Hardened Interface active |
 | **Audit Chain** | 🟢 Intact | Verified | Deterministic Hash Chain active |
@@ -108,8 +108,11 @@ The absolute foundation of the Iron Path. High-speed, kernel-level reflexive def
 
 Cognitive and ethical guardrails. The "Thirsty-Lang Family" seat of authority.
 
-- ✅ **Floor 1: Thirsty-Lang**: End-to-End Sovereign Orchestration.
-- ✅ **Shadow Thirst**: Dual-plane execution for non-bypassable logic.
+- ✅ **Floor 1: Thirsty-Lang**: Primary sovereign orchestration.
+- ✅ **Thirst of Gods**: Advanced OOP and async cognitive orchestration.
+- ✅ **T.A.R.L.**: Thirsty's Active Resistance Language — kernel-level primitives.
+- ✅ **Shadow Thirst**: Dual-plane verified execution and compiler logic.
+- ✅ **TSCG / TSCG-B**: Symbolic grammar and binary encoding wire protocol.
 - ✅ **Galahad & Cerberus**: Thirsty Family Ethics and Threat Defense.
 - ✅ **Acceptance Ledger**: Cryptographic audit trail (SHA-256 + Ed25519).
 - ✅ **Asimov's Four Laws**: Immutable ethical framework (Thirsty-Lang).
@@ -301,8 +304,7 @@ All historical implementation summaries and point-in-time reports have been move
 
 #### Sovereign Orchestration (Floor 1)
 
-- ✅ **Thirsty-Lang Core**: System-wide orchestration
-- ✅ **TSCG Ledger**: Compressed architectural state tracking
+- ✅ **Sovereign Language Stack**: Full integration of Thirsty-Lang, Thirst of Gods, T.A.R.L., Shadow Thirst, TSCG, and TSCG-B.
 - ✅ **Jurisdiction Shields**: Cross-repo security policies (JUR-0-2)
 - ✅ **Ecosystem Bootstrap**: Unified Floor 1 initialization for all microservices
 
