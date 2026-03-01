@@ -26,7 +26,9 @@ class ScopeConstraints(BaseModel):
     """Per-scope constraints on capability usage."""
 
     rate_limit_per_min: int = Field(120, ge=0, description="Max requests per minute")
-    time_window: str = Field("00:00-23:59", description="Allowed time window (HH:MM-HH:MM)")
+    time_window: str = Field(
+        "00:00-23:59", description="Allowed time window (HH:MM-HH:MM)"
+    )
     network_zones: list[str] = Field(
         default_factory=lambda: ["ingress"],
         description="Allowed network zones",
@@ -38,8 +40,12 @@ class ScopeConstraints(BaseModel):
 class CapabilityScope(BaseModel):
     """A single scope entry granting actions on a resource pattern."""
 
-    resource: str = Field(..., description="Resource URI pattern (e.g. policy://registry/*)")
-    actions: list[str] = Field(..., min_length=1, description="Allowed actions (e.g. read, write)")
+    resource: str = Field(
+        ..., description="Resource URI pattern (e.g. policy://registry/*)"
+    )
+    actions: list[str] = Field(
+        ..., min_length=1, description="Allowed actions (e.g. read, write)"
+    )
     constraints: ScopeConstraints = Field(default_factory=ScopeConstraints)
 
     model_config = {"frozen": True}
@@ -91,8 +97,12 @@ class CapabilityToken(BaseModel):
     subject: str = Field(..., description="DID of the authorized subject")
     issued_at: str = Field(..., description="RFC 3339 issuance timestamp")
     expires_at: str = Field(..., description="RFC 3339 expiry timestamp")
-    nonce: str = Field(..., description="128-bit random nonce (hex) for replay prevention")
-    scope: list[CapabilityScope] = Field(..., min_length=1, description="Granted scopes")
+    nonce: str = Field(
+        ..., description="128-bit random nonce (hex) for replay prevention"
+    )
+    scope: list[CapabilityScope] = Field(
+        ..., min_length=1, description="Granted scopes"
+    )
     delegation: DelegationPolicy = Field(default_factory=DelegationPolicy)
     binding: TokenBinding = Field(default_factory=TokenBinding)
     signature: Signature = Field(..., description="Ed25519 signature by issuer")

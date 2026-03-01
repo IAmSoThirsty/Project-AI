@@ -45,36 +45,7 @@ dependencyResolutionManagement {
         gradlePluginPortal()
     }
     
-    // Version catalog for centralized dependency management
-    versionCatalogs {
-        create("libs") {
-            // Android versions
-            version("androidGradlePlugin", "8.2.1")
-            version("kotlin", "1.9.22")
-            version("hilt", "2.50")
-            
-            // Node.js versions
-            version("node", "20.11.0")
-            version("npm", "10.2.4")
-            
-            // Python versions (tracked for reference)
-            version("python", "3.11")
-            version("pythonMax", "3.12")
-            
-            // Build tool versions
-            version("gradleNodePlugin", "7.0.1")
-            version("dokka", "1.9.10")
-            version("sonarqube", "4.4.1.3373")
-            version("cyclonedx", "1.8.2")
-            version("releasePlugin", "3.0.2")
-            
-            // Library versions
-            library("android-gradle", "com.android.tools.build:gradle:8.2.1")
-            library("kotlin-gradle", "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22")
-            library("hilt-gradle", "com.google.dagger:hilt-android-gradle-plugin:2.50")
-            library("node-gradle", "com.github.node-gradle:gradle-node-plugin:7.0.1")
-        }
-    }
+    // Version catalog is automatically loaded from gradle/libs.versions.toml
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -82,9 +53,9 @@ dependencyResolutionManagement {
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Android modules
-if (file("app/build.gradle").exists()) {
+if (file("android/app/build.gradle").exists()) {
     include(":app")
-    project(":app").projectDir = file("app")
+    project(":app").projectDir = file("android/app")
 }
 
 // Additional subprojects can be auto-discovered here
@@ -109,8 +80,9 @@ buildCache {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
-println("═══════════════════════════════════════════════════════════════════════════")
-println("THIRSTY'S GRADLE SETTINGS - Monolithic Build System Initialized")
-println("Root Project: ${rootProject.name}")
-println("Build Cache: Enabled (30 day retention)")
-println("═══════════════════════════════════════════════════════════════════════════")
+// Status logging disabled for IDE compatibility
+// println("═══════════════════════════════════════════════════════════════════════════")
+// println("THIRSTY'S GRADLE SETTINGS - Monolithic Build System Initialized")
+// println("Root Project: ${rootProject.name}")
+// println("Build Cache: Enabled (30 day retention)")
+// println("═══════════════════════════════════════════════════════════════════════════")

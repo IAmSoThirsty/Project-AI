@@ -61,7 +61,9 @@ class IrreversibilityLaws:
         )
         return actual_change
 
-    def apply_betrayal_impact(self, state: StateVector, severity: float = 0.5) -> dict[str, float]:
+    def apply_betrayal_impact(
+        self, state: StateVector, severity: float = 0.5
+    ) -> dict[str, float]:
         """Apply betrayal impact to trust and impose permanent ceiling.
 
         Betrayals cause immediate trust loss and permanent recovery ceiling reduction.
@@ -90,7 +92,9 @@ class IrreversibilityLaws:
         # Update betrayal counter
         state.betrayal_count += 1
 
-        logger.info("Betrayal impact: trust loss %s, new ceiling %s", trust_change, new_ceiling)
+        logger.info(
+            "Betrayal impact: trust loss %s, new ceiling %s", trust_change, new_ceiling
+        )
 
         return {
             "trust_change": trust_change,
@@ -157,7 +161,9 @@ class IrreversibilityLaws:
         )
         return actual_change
 
-    def apply_cooperation_boost(self, state: StateVector, magnitude: float = 0.5) -> float:
+    def apply_cooperation_boost(
+        self, state: StateVector, magnitude: float = 0.5
+    ) -> float:
         """Apply cooperation event boost to kindness.
 
         Cooperation events temporarily boost kindness, but ceiling constraints apply.
@@ -212,13 +218,17 @@ class IrreversibilityLaws:
 
         # Impact from broken promises
         if broken_promises > 0:
-            promise_impact = -self.config.broken_promise_impact * broken_promises * visibility
+            promise_impact = (
+                -self.config.broken_promise_impact * broken_promises * visibility
+            )
             decay += promise_impact
             state.broken_promises += broken_promises
 
         # Impact from institutional failures
         if failures > 0:
-            failure_impact = -self.config.institutional_failure_impact * failures * visibility
+            failure_impact = (
+                -self.config.institutional_failure_impact * failures * visibility
+            )
             decay += failure_impact
             state.institutional_failures += failures
 
@@ -243,7 +253,9 @@ class IrreversibilityLaws:
             "institutional_failures": state.institutional_failures,
         }
 
-    def accumulate_moral_injury(self, state: StateVector, violation_severity: float = 0.5) -> dict[str, float]:
+    def accumulate_moral_injury(
+        self, state: StateVector, violation_severity: float = 0.5
+    ) -> dict[str, float]:
         """Apply moral injury accumulation law.
 
         moral_injury(t+1) = moral_injury(t) + violation_severity
@@ -332,10 +344,14 @@ class IrreversibilityLaws:
         base_prob = self.config.betrayal_prob_base
 
         # Trust contribution (inverse)
-        trust_factor = self.config.betrayal_prob_trust_factor * (1.0 - state.trust.value)
+        trust_factor = self.config.betrayal_prob_trust_factor * (
+            1.0 - state.trust.value
+        )
 
         # Legitimacy contribution (inverse)
-        legitimacy_factor = self.config.betrayal_prob_legitimacy_factor * (1.0 - state.legitimacy.value)
+        legitimacy_factor = self.config.betrayal_prob_legitimacy_factor * (
+            1.0 - state.legitimacy.value
+        )
 
         # Moral injury contribution (direct)
         moral_factor = self.config.betrayal_prob_moral_factor * state.moral_injury.value
@@ -430,7 +446,9 @@ class IrreversibilityLaws:
             "manipulation_events": state.manipulation_events,
         }
 
-    def apply_collapse_acceleration(self, state: StateVector, acceleration_factor: float = 2.0) -> None:
+    def apply_collapse_acceleration(
+        self, state: StateVector, acceleration_factor: float = 2.0
+    ) -> None:
         """Apply collapse acceleration once system enters collapse state.
 
         After crossing critical thresholds, decay rates accelerate.
@@ -442,7 +460,9 @@ class IrreversibilityLaws:
         if not state.in_collapse:
             return
 
-        logger.warning("Applying collapse acceleration (factor: %s)", acceleration_factor)
+        logger.warning(
+            "Applying collapse acceleration (factor: %s)", acceleration_factor
+        )
 
         # Accelerate all decay rates temporarily
         original_config = IrreversibilityConfig(
@@ -460,7 +480,9 @@ class IrreversibilityLaws:
         # Apply accelerated decay
         self.apply_trust_decay_law(state)
         self.apply_kindness_decay(state)
-        self.apply_legitimacy_erosion(state, broken_promises=0, failures=0, visibility=0)
+        self.apply_legitimacy_erosion(
+            state, broken_promises=0, failures=0, visibility=0
+        )
         self.apply_epistemic_decay(state)
 
         # Restore original rates
@@ -483,7 +505,9 @@ class IrreversibilityLaws:
         # Apply natural decay
         changes["trust_decay"] = self.apply_trust_decay_law(state)
         changes["kindness_decay"] = self.apply_kindness_decay(state)
-        changes["legitimacy_decay"] = self.apply_legitimacy_erosion(state, broken_promises=0, failures=0, visibility=0)
+        changes["legitimacy_decay"] = self.apply_legitimacy_erosion(
+            state, broken_promises=0, failures=0, visibility=0
+        )
         changes["moral_injury_healing"] = self.apply_moral_injury_healing(state)
         changes["epistemic_decay"] = self.apply_epistemic_decay(state)
 

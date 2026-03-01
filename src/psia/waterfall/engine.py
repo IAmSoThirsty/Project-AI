@@ -305,9 +305,11 @@ class WaterfallEngine:
                 trace_id=envelope.context.trace_id,
                 request_id=request_id,
                 subject=envelope.subject,
-                severity=EventSeverity.WARNING
-                if final_decision != StageDecision.ALLOW
-                else EventSeverity.INFO,
+                severity=(
+                    EventSeverity.WARNING
+                    if final_decision != StageDecision.ALLOW
+                    else EventSeverity.INFO
+                ),
                 payload={
                     "final_decision": final_decision.value,
                     "stages_completed": len(stage_results),

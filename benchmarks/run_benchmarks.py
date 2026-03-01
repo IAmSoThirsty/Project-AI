@@ -33,12 +33,11 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
+from psia.canonical.capability_authority import CapabilityAuthority
+from psia.canonical.ledger import DurableLedger, ExecutionRecord
 from psia.crypto.ed25519_provider import Ed25519Provider, KeyStore
 from psia.crypto.rfc3161_provider import LocalTSA
-from psia.canonical.ledger import DurableLedger, ExecutionRecord
-from psia.canonical.capability_authority import CapabilityAuthority
 from psia.schemas.capability import CapabilityScope
-
 
 # ── Configuration ───────────────────────────────────────────────────────
 
@@ -48,6 +47,7 @@ PAYLOAD_SIZES = [32, 256, 1024, 4096]
 
 
 # ── Utilities ───────────────────────────────────────────────────────────
+
 
 def get_hardware_info() -> dict:
     """Collect hardware information for the benchmark report."""
@@ -106,18 +106,23 @@ def run_benchmark(
         "latency_p50_us": round(percentile(latencies, 50) * 1e6, 2),
         "latency_p95_us": round(percentile(latencies, 95) * 1e6, 2),
         "latency_p99_us": round(percentile(latencies, 99) * 1e6, 2),
-        "latency_stdev_us": round(statistics.stdev(latencies) * 1e6, 2) if len(latencies) > 1 else 0,
+        "latency_stdev_us": (
+            round(statistics.stdev(latencies) * 1e6, 2) if len(latencies) > 1 else 0
+        ),
     }
 
 
 # ── Benchmarks ──────────────────────────────────────────────────────────
 
+
 def bench_keygen() -> dict:
     """Benchmark Ed25519 key generation."""
     counter = [0]
+
     def op():
         Ed25519Provider.generate_keypair(f"bench_{counter[0]}")
         counter[0] += 1
+
     return run_benchmark("ed25519_keygen", op)
 
 
@@ -125,8 +130,10 @@ def bench_sign(payload_size: int) -> dict:
     """Benchmark Ed25519 signing for a given payload size."""
     kp = Ed25519Provider.generate_keypair("bench_sign")
     data = os.urandom(payload_size)
+
     def op():
         Ed25519Provider.sign(kp.private_key, data)
+
     return run_benchmark(f"ed25519_sign_{payload_size}B", op)
 
 
@@ -135,8 +142,10 @@ def bench_verify(payload_size: int) -> dict:
     kp = Ed25519Provider.generate_keypair("bench_verify")
     data = os.urandom(payload_size)
     sig = Ed25519Provider.sign(kp.private_key, data)
+
     def op():
         Ed25519Provider.verify(kp.public_key, sig, data)
+
     return run_benchmark(f"ed25519_verify_{payload_size}B", op)
 
 
@@ -144,9 +153,11 @@ def bench_rfc3161_issue() -> dict:
     """Benchmark RFC 3161 timestamp issuance."""
     tsa = LocalTSA()
     counter = [0]
+
     def op():
         tsa.request_timestamp(f"{counter[0]:064x}")
         counter[0] += 1
+
     return run_benchmark("rfc3161_issue", op)
 
 
@@ -156,8 +167,10 @@ def bench_rfc3161_verify() -> dict:
     resp = tsa.request_timestamp("a" * 64)
     token = resp.token
     assert token is not None
+
     def op():
         tsa.verify_timestamp(token)
+
     return run_benchmark("rfc3161_verify", op)
 
 
@@ -165,16 +178,20 @@ def bench_ledger_append() -> dict:
     """Benchmark ledger append (no signing/TSA)."""
     ledger = DurableLedger(block_size=10000)
     counter = [0]
+
     def op():
-        ledger.append(ExecutionRecord(
-            record_id=f"bench_rec_{counter[0]}",
-            request_id=f"bench_req_{counter[0]}",
-            actor="bench_agent",
-            action="bench_action",
-            resource="bench_resource",
-            decision="allow",
-        ))
+        ledger.append(
+            ExecutionRecord(
+                record_id=f"bench_rec_{counter[0]}",
+                request_id=f"bench_req_{counter[0]}",
+                actor="bench_agent",
+                action="bench_action",
+                resource="bench_resource",
+                decision="allow",
+            )
+        )
         counter[0] += 1
+
     return run_benchmark("ledger_append", op)
 
 
@@ -188,14 +205,16 @@ def bench_ledger_seal() -> dict:
     def op():
         ledger = DurableLedger(block_size=64, key_store=ks, tsa=tsa)
         for i in range(64):
-            ledger.append(ExecutionRecord(
-                record_id=f"seal_{id(ledger)}_{i}",
-                request_id=f"req_{i}",
-                actor="agent",
-                action="action",
-                resource="res",
-                decision="allow",
-            ))
+            ledger.append(
+                ExecutionRecord(
+                    record_id=f"seal_{id(ledger)}_{i}",
+                    request_id=f"req_{i}",
+                    actor="agent",
+                    action="action",
+                    resource="res",
+                    decision="allow",
+                )
+            )
         # Block should be auto-sealed at 64 records
 
     return run_benchmark("ledger_seal_64_records", op, iterations=100, warmup=5)
@@ -206,9 +225,11 @@ def bench_capability_issue() -> dict:
     ca = CapabilityAuthority()
     scope = CapabilityScope(resource="bench_resource", actions=["read"])
     counter = [0]
+
     def op():
         ca.issue(subject=f"user_{counter[0]}", scopes=[scope])
         counter[0] += 1
+
     return run_benchmark("capability_issue", op)
 
 
@@ -216,16 +237,19 @@ def bench_full_pipeline() -> dict:
     """Benchmark full pipeline: keygen → sign → verify → timestamp."""
     tsa = LocalTSA()
     counter = [0]
+
     def op():
         kp = Ed25519Provider.generate_keypair(f"pipe_{counter[0]}")
         sig = Ed25519Provider.sign(kp.private_key, b"pipeline_data")
         Ed25519Provider.verify(kp.public_key, sig, b"pipeline_data")
         tsa.request_timestamp(sig[:64])
         counter[0] += 1
+
     return run_benchmark("full_pipeline", op, iterations=500, warmup=10)
 
 
 # ── Main ────────────────────────────────────────────────────────────────
+
 
 def main() -> None:
     """Run all benchmarks and print results."""
@@ -280,7 +304,9 @@ def main() -> None:
     # Print results table
     print()
     print("=" * 80)
-    print(f"{'Benchmark':<35} {'Ops/sec':>12} {'Mean μs':>12} {'P50 μs':>10} {'P95 μs':>10} {'P99 μs':>10}")
+    print(
+        f"{'Benchmark':<35} {'Ops/sec':>12} {'Mean μs':>12} {'P50 μs':>10} {'P95 μs':>10} {'P99 μs':>10}"
+    )
     print("-" * 80)
     for r in results:
         print(
@@ -300,6 +326,7 @@ def main() -> None:
     }
     report_path = os.path.join(os.path.dirname(__file__), "benchmark_report.json")
     import json
+
     with open(report_path, "w") as f:
         json.dump(report, f, indent=2)
     print(f"Report saved to: {report_path}")

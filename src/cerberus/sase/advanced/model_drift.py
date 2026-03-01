@@ -78,7 +78,9 @@ class DriftDetector:
 
         logger.info("Drift detector initialized")
 
-    def update_baseline(self, features: np.ndarray, confidence: float, asn_entropy: float):
+    def update_baseline(
+        self, features: np.ndarray, confidence: float, asn_entropy: float
+    ):
         """Update historical baseline"""
         self.historical_features.append(features)
         self.historical_confidences.append(confidence)

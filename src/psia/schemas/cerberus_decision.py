@@ -28,7 +28,9 @@ from psia.schemas.identity import Signature
 class DenyReason(BaseModel):
     """A single reason for denying or quarantining a request."""
 
-    code: str = Field(..., description="Machine-readable reason code (e.g. CAP_SCOPE_MISMATCH)")
+    code: str = Field(
+        ..., description="Machine-readable reason code (e.g. CAP_SCOPE_MISMATCH)"
+    )
     detail: str = Field("", description="Human-readable detail")
 
     model_config = {"frozen": True}
@@ -38,8 +40,12 @@ class ConstraintsApplied(BaseModel):
     """Constraints applied by a Cerberus head's evaluation."""
 
     rate_limit_per_min: int = Field(0, ge=0, description="Applied rate limit")
-    require_shadow: bool = Field(False, description="Whether shadow simulation is required")
-    require_quorum: str = Field("2of3", description="Quorum requirement: unanimous, 2of3, simple")
+    require_shadow: bool = Field(
+        False, description="Whether shadow simulation is required"
+    )
+    require_quorum: str = Field(
+        "2of3", description="Quorum requirement: unanimous, 2of3, simple"
+    )
 
     model_config = {"frozen": True}
 
@@ -59,7 +65,9 @@ class CerberusVote(BaseModel):
     decision: Literal["allow", "deny", "quarantine"] = Field(
         ..., description="Head's decision"
     )
-    reasons: list[DenyReason] = Field(default_factory=list, description="Reasons for non-allow")
+    reasons: list[DenyReason] = Field(
+        default_factory=list, description="Reasons for non-allow"
+    )
     constraints_applied: ConstraintsApplied = Field(default_factory=ConstraintsApplied)
     timestamp: str = Field(..., description="RFC 3339 vote timestamp")
     signature: Signature = Field(..., description="Head's Ed25519 signature")
@@ -74,7 +82,9 @@ class QuorumInfo(BaseModel):
         "2of3", description="Quorum policy"
     )
     achieved: bool = Field(False, description="Whether quorum was achieved")
-    voters: list[str] = Field(default_factory=list, description="Node IDs that participated")
+    voters: list[str] = Field(
+        default_factory=list, description="Node IDs that participated"
+    )
 
     model_config = {"frozen": True}
 

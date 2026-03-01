@@ -125,7 +125,9 @@ class GlobalStatisticsPanel(QFrame):
 
             # Political trends
             output.append("🏛️ POLITICAL DEVELOPMENTS:")
-            output.append("  ├─ Policy Changes: 20 agents tracking legislative activity")
+            output.append(
+                "  ├─ Policy Changes: 20 agents tracking legislative activity"
+            )
             output.append("  ├─ Diplomatic Relations: International monitoring")
             output.append("  ├─ Election Cycles: Democratic process tracking")
             output.append("  └─ Civil Stability: Social movement analysis")
@@ -352,7 +354,9 @@ class MainstreamContextPanel(QFrame):
         layout.addWidget(title)
 
         # Info label
-        info = QLabel("Mainstream sources with contextual analysis for factual accuracy")
+        info = QLabel(
+            "Mainstream sources with contextual analysis for factual accuracy"
+        )
         info.setStyleSheet(
             """
             QLabel {

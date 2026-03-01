@@ -31,7 +31,9 @@ class MemoryRecord:
         return {
             "id": self.id,
             "content": self.content,
-            "embedding": (self.embedding.tolist() if self.embedding is not None else None),
+            "embedding": (
+                self.embedding.tolist() if self.embedding is not None else None
+            ),
             "metadata": self.metadata or {},
             "timestamp": self.timestamp or datetime.now().isoformat(),
         }
@@ -102,7 +104,9 @@ class MemoryAdapter:
             logger.warning("Using dummy embeddings for testing")
             self.encoder = None
 
-    def add_memory(self, content: str, memory_id: str | None = None, metadata: dict | None = None) -> str:
+    def add_memory(
+        self, content: str, memory_id: str | None = None, metadata: dict | None = None
+    ) -> str:
         """
         Add a new memory record.
 
@@ -146,7 +150,9 @@ class MemoryAdapter:
         logger.info("Added memory: %s", memory_id)
         return memory_id
 
-    def search(self, query: str, top_k: int = 5, min_similarity: float = 0.0) -> list[dict]:
+    def search(
+        self, query: str, top_k: int = 5, min_similarity: float = 0.0
+    ) -> list[dict]:
         """
         Search for similar memories using semantic similarity.
 

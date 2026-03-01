@@ -14,13 +14,13 @@ Integration Pattern:
 - This maintain "native but removable" property.
 """
 
+import logging
 import os
 import shutil
-import logging
 from pathlib import Path
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # Canonical Source Paths (relative to Project-AI root)
@@ -42,10 +42,11 @@ TARGET_REPOS = [
     "Thirstys-waterfall",
 ]
 
+
 def sync_repos(base_dir: Path):
     """Synchronize Project-AI specs to target repositories."""
     project_ai_root = base_dir / "Project-AI"
-    
+
     if not project_ai_root.exists():
         logger.error(f"Project-AI root not found at {project_ai_root}")
         return
@@ -53,17 +54,19 @@ def sync_repos(base_dir: Path):
     for repo_name in TARGET_REPOS:
         target_root = base_dir / repo_name
         if not target_root.exists():
-            logger.warning(f"Target repository {repo_name} not found at {target_root}. Skipping.")
+            logger.warning(
+                f"Target repository {repo_name} not found at {target_root}. Skipping."
+            )
             continue
-            
+
         logger.info(f"Syncing specs to {repo_name}...")
-        
+
         # Standardized integration path
         # For Thirsty-Lang and others, we use src/core/specs or similar
         # To be "native but removable", we create a unified 'integrated_specs' dir
         integration_dir = target_root / "src" / "core" / "integrated_specs"
         integration_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Add a README to explain the removable nature
         readme_path = integration_dir / "README.md"
         readme_path.write_text(
@@ -77,14 +80,17 @@ def sync_repos(base_dir: Path):
         for spec_name, rel_path in SOURCE_SPECS.items():
             src_path = project_ai_root / rel_path
             dst_path = integration_dir / os.path.basename(rel_path)
-            
+
             if src_path.exists():
                 shutil.copy2(src_path, dst_path)
-                logger.info(f"  [+] Synced {spec_name} -> {dst_path.relative_to(target_root)}")
+                logger.info(
+                    f"  [+] Synced {spec_name} -> {dst_path.relative_to(target_root)}"
+                )
             else:
                 logger.warning(f"  [!] Source spec {spec_name} not found at {src_path}")
 
     logger.info("Synchronization complete.")
+
 
 if __name__ == "__main__":
     # Assuming the current working directory is the sovereign-repos folder

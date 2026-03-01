@@ -39,7 +39,9 @@ class SettingsDialog(QDialog):
             self.size_spin.setValue(10)
 
         # Compose button flags on a separate line to keep line lengths short
-        btns_flags = QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        btns_flags = (
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         btns = QDialogButtonBox(btns_flags)
         btns.accepted.connect(self.accept)
         btns.rejected.connect(self.reject)

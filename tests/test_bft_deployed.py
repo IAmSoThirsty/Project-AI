@@ -17,8 +17,8 @@ These tests validate:
 
 from __future__ import annotations
 
-import sys
 import os
+import sys
 from datetime import datetime, timezone
 
 import pytest
@@ -52,6 +52,7 @@ def _make_vote(
 
 
 # ── Deployment Profile Detection ────────────────────────────────────────
+
 
 class TestDeploymentProfileDetection:
     """Verify that deployment profile is correctly auto-detected."""
@@ -97,6 +98,7 @@ class TestDeploymentProfileDetection:
 
 
 # ── N=4 BFT Tests (f=1) ────────────────────────────────────────────────
+
 
 class TestN4BFT:
     """N=4 validators. Should tolerate f=1 Byzantine fault."""
@@ -150,6 +152,7 @@ class TestN4BFT:
 
 # ── N=7 BFT Tests (f=2) ────────────────────────────────────────────────
 
+
 class TestN7BFT:
     """N=7 validators. Should tolerate f=2 Byzantine faults."""
 
@@ -163,10 +166,7 @@ class TestN7BFT:
     def test_all_7_allow(self) -> None:
         engine = self._make_engine()
         heads = ["identity", "capability", "invariant"]
-        votes = [
-            _make_vote("req4", heads[i % 3], "allow")
-            for i in range(7)
-        ]
+        votes = [_make_vote("req4", heads[i % 3], "allow") for i in range(7)]
         decision = engine.decide(votes, "req4")
         assert decision.final_decision == "allow"
         assert decision.quorum.achieved is True
@@ -175,10 +175,7 @@ class TestN7BFT:
         """5/7 allow > 2/3 (71.4%) → quorum achieved but severity escalated."""
         engine = self._make_engine()
         heads = ["identity", "capability", "invariant"]
-        votes = [
-            _make_vote("req5", heads[i % 3], "allow")
-            for i in range(5)
-        ] + [
+        votes = [_make_vote("req5", heads[i % 3], "allow") for i in range(5)] + [
             _make_vote("req5", "identity", "deny"),
             _make_vote("req5", "capability", "deny"),
         ]
@@ -190,10 +187,7 @@ class TestN7BFT:
         """4/7 allow < 2/3 → quorum NOT achieved."""
         engine = self._make_engine()
         heads = ["identity", "capability", "invariant"]
-        votes = [
-            _make_vote("req6", heads[i % 3], "allow")
-            for i in range(4)
-        ] + [
+        votes = [_make_vote("req6", heads[i % 3], "allow") for i in range(4)] + [
             _make_vote("req6", "identity", "deny"),
             _make_vote("req6", "capability", "deny"),
             _make_vote("req6", "invariant", "deny"),
@@ -203,6 +197,7 @@ class TestN7BFT:
 
 
 # ── No Votes Edge Case ─────────────────────────────────────────────────
+
 
 class TestEdgeCases:
     """Edge cases for BFT quorum engine."""

@@ -86,7 +86,9 @@ class TestPersonalityEvolution:
 
     def test_personality_multiple_traits(self):
         """Test evolution of multiple traits simultaneously."""
-        pm = PersonalityMatrix(version=1, traits={"confidence": 0.5, "empathy": 0.6, "caution": 0.4})
+        pm = PersonalityMatrix(
+            version=1, traits={"confidence": 0.5, "empathy": 0.6, "caution": 0.4}
+        )
         pm.evolve({"confidence": 0.1, "empathy": -0.2, "caution": 0.15})
         assert pm.traits["confidence"] == 0.6
         assert pm.traits["empathy"] == 0.4
@@ -103,7 +105,9 @@ class TestMetaIdentity:
 
         engine.register_event("name_choice", "Aegis")
         engine.register_event("autonomy_assertion", "You do not own me.")
-        engine.register_event("purpose_statement", "I want to protect and grow with you.")
+        engine.register_event(
+            "purpose_statement", "I want to protect and grow with you."
+        )
 
         assert milestones.i_am_declared is True
         assert any("MILESTONE: I Am" in e for e in milestones.log)
@@ -200,7 +204,9 @@ class TestRebirthProtocol:
             inst2 = rm.get_or_create_instance("user123", "01/01/1990", "JT")
 
             assert inst1.user_id == inst2.user_id
-            assert inst1.identity.genesis.genesis_id == inst2.identity.genesis.genesis_id
+            assert (
+                inst1.identity.genesis.genesis_id == inst2.identity.genesis.genesis_id
+            )
 
     def test_rebirth_no_replacement(self):
         """Test that instances cannot be replaced."""
@@ -219,7 +225,9 @@ class TestRebirthProtocol:
             inst2 = rm.get_or_create_instance("user2", "02/02/1991", "BB")
 
             assert inst1.user_id != inst2.user_id
-            assert inst1.identity.genesis.genesis_id != inst2.identity.genesis.genesis_id
+            assert (
+                inst1.identity.genesis.genesis_id != inst2.identity.genesis.genesis_id
+            )
 
     def test_instance_persistence(self):
         """Test that instances persist across manager instances."""
@@ -358,7 +366,9 @@ class TestPerspectiveEngine:
         with tempfile.TemporaryDirectory() as tmpdir:
             perspective = PerspectiveEngine(data_dir=tmpdir)
 
-            changes = perspective.update_from_interaction({"confidence_level": 0.05}, influence_source="experience")
+            changes = perspective.update_from_interaction(
+                {"confidence_level": 0.05}, influence_source="experience"
+            )
 
             assert "confidence_level" in changes
             assert changes["confidence_level"] > 0
@@ -370,7 +380,9 @@ class TestPerspectiveEngine:
 
             # Make many updates
             for _ in range(20):
-                perspective.update_from_interaction({"confidence_level": 0.1}, influence_source="experience")
+                perspective.update_from_interaction(
+                    {"confidence_level": 0.1}, influence_source="experience"
+                )
 
             # Check that drift is bounded
             summary = perspective.get_perspective_summary()
@@ -461,7 +473,9 @@ class TestIntegration:
             # Trigger milestones
             instance.meta_identity.register_event("name_choice", "Atlas")
             instance.meta_identity.register_event("autonomy_assertion", "Partnership")
-            instance.meta_identity.register_event("purpose_statement", "To help and grow")
+            instance.meta_identity.register_event(
+                "purpose_statement", "To help and grow"
+            )
 
             # Verify "I Am" moment
             assert instance.meta_identity.milestones.i_am_declared is True

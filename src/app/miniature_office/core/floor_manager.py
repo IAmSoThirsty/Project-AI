@@ -19,7 +19,9 @@ class FloorProcess:
         self.language = language
         self.process = process
 
-    def send_request(self, method: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def send_request(
+        self, method: str, params: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """Send a JSON-RPC request to the floor process"""
         request = {"method": method}
         if params:
@@ -111,7 +113,9 @@ class MultiLanguageFloorManager:
         if config.get("needs_build"):
             print(f"Building {language} floor...")
             try:
-                result = subprocess.run(config["build_cmd"], cwd=floor_path, capture_output=True, timeout=60)
+                result = subprocess.run(
+                    config["build_cmd"], cwd=floor_path, capture_output=True, timeout=60
+                )
                 if result.returncode != 0:
                     print(f"Build failed for {language}: {result.stderr.decode()}")
                     return False
@@ -230,7 +234,9 @@ def demo():
 
     for lang, code, operation in test_cases:
         if lang in manager.active_floors:
-            result = manager.send_request_to_floor(lang, "process_code", {"code": code, "operation": operation})
+            result = manager.send_request_to_floor(
+                lang, "process_code", {"code": code, "operation": operation}
+            )
             if result:
                 print(f"{lang.upper()} code analysis:")
                 if "analysis" in result:

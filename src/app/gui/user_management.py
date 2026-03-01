@@ -164,7 +164,9 @@ class UserManagementWidget(QWidget):
             QMessageBox.warning(self, "Delete", "Select a user to delete")
             return
         if username == self.um.current_user:
-            QMessageBox.warning(self, "Delete", "Cannot delete currently logged-in user")
+            QMessageBox.warning(
+                self, "Delete", "Cannot delete currently logged-in user"
+            )
             return
         confirm = QMessageBox.question(
             self,
@@ -267,7 +269,9 @@ class CreateUserDialog(QDialog):
         pic_row.addWidget(self.pic_btn_d)
         layout.addLayout(pic_row)
 
-        btns = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        btns = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         btns.accepted.connect(self.accept)
         btns.rejected.connect(self.reject)
         layout.addWidget(btns)
@@ -301,7 +305,9 @@ class ResetPasswordDialog(QDialog):
         self.pw = QLineEdit()
         self.pw.setEchoMode(QLineEdit.EchoMode.Password)
         layout.addWidget(self.pw)
-        btns = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        btns = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
         btns.accepted.connect(self.accept)
         btns.rejected.connect(self.reject)
         layout.addWidget(btns)

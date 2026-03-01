@@ -19,7 +19,6 @@ from datetime import datetime
 from enum import Enum
 
 import numpy as np
-
 from atlas.audit.trail import get_audit_trail
 
 logger = logging.getLogger(__name__)

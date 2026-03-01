@@ -94,9 +94,7 @@ class Executor:
         returns the cached result immediately.
         """
         # Check cache first
-        cached = self.cache.lookup(
-            runner.name, command.name, files, command.template
-        )
+        cached = self.cache.lookup(runner.name, command.name, files, command.template)
         if cached and cached.passed:
             return TaskResult(
                 runner_name=runner.name,
@@ -170,8 +168,7 @@ class Executor:
 
             # Execute same-priority commands in parallel
             tasks = [
-                self.execute_command(runner, cmd, files, test_files)
-                for cmd in group
+                self.execute_command(runner, cmd, files, test_files) for cmd in group
             ]
             group_results = await asyncio.gather(*tasks, return_exceptions=True)
 
@@ -192,7 +189,9 @@ class Executor:
                     results.append(gr)
 
             # Fail fast: stop if any command in this priority group failed
-            if self.config.fail_fast and any(not r.passed for r in results if not r.cached):
+            if self.config.fail_fast and any(
+                not r.passed for r in results if not r.cached
+            ):
                 break
 
         return results
@@ -207,9 +206,7 @@ class Executor:
                 stderr=asyncio.subprocess.PIPE,
                 cwd=str(self.config.project_root),
             )
-            stdout, stderr = await asyncio.wait_for(
-                proc.communicate(), timeout=timeout
-            )
+            stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=timeout)
             duration = time.perf_counter() - start
 
             output = stdout.decode("utf-8", errors="replace")

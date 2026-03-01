@@ -72,7 +72,9 @@ class TestDiscussions:
 
 class TestProposals:
     def test_submit_proposal(self, lounge):
-        prop = lounge.submit_proposal("Better Logging", "Add structured logging", ["agent_a"])
+        prop = lounge.submit_proposal(
+            "Better Logging", "Add structured logging", ["agent_a"]
+        )
         assert prop.status == ProposalStatus.DRAFT
         assert "agent_a" in prop.authors
 

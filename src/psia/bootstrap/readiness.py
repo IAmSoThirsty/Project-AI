@@ -38,6 +38,7 @@ logger = logging.getLogger(__name__)
 
 class NodeStatus(str, Enum):
     """Lifecycle status of a PSIA node."""
+
     INITIALIZING = "initializing"
     CHECKING = "checking"
     OPERATIONAL = "operational"
@@ -49,6 +50,7 @@ class NodeStatus(str, Enum):
 @dataclass
 class CheckResult:
     """Result of a single readiness check."""
+
     name: str
     passed: bool
     message: str
@@ -59,9 +61,12 @@ class CheckResult:
 @dataclass
 class ReadinessReport:
     """Full report from readiness gate evaluation."""
+
     status: NodeStatus
     checks: list[CheckResult] = field(default_factory=list)
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+    )
     all_passed: bool = False
     critical_failures: int = 0
     warnings: int = 0
@@ -115,29 +120,44 @@ class ReadinessGate:
 
     def register_genesis_check(self, genesis_coordinator: Any) -> None:
         """Register a check for genesis ceremony completion."""
+
         def check() -> tuple[bool, str]:
             if getattr(genesis_coordinator, "is_completed", False):
                 return True, "Genesis ceremony completed"
-            return False, f"Genesis not completed: status={getattr(genesis_coordinator, 'status', 'unknown')}"
+            return (
+                False,
+                f"Genesis not completed: status={getattr(genesis_coordinator, 'status', 'unknown')}",
+            )
+
         self.register_check("genesis_completed", check)
 
     def register_ledger_check(self, ledger: Any) -> None:
         """Register a check for ledger chain integrity."""
+
         def check() -> tuple[bool, str]:
             if hasattr(ledger, "verify_chain"):
                 if ledger.verify_chain():
-                    return True, f"Ledger chain verified ({getattr(ledger, 'sealed_block_count', 0)} blocks)"
+                    return (
+                        True,
+                        f"Ledger chain verified ({getattr(ledger, 'sealed_block_count', 0)} blocks)",
+                    )
                 return False, "Ledger chain verification failed"
             return True, "Ledger check skipped (no verify_chain method)"
+
         self.register_check("ledger_integrity", check)
 
     def register_capability_check(self, authority: Any) -> None:
         """Register a check for capability authority operational status."""
+
         def check() -> tuple[bool, str]:
             issued = getattr(authority, "issued_count", -1)
             if issued >= 0:
-                return True, f"Capability authority operational ({issued} tokens issued)"
+                return (
+                    True,
+                    f"Capability authority operational ({issued} tokens issued)",
+                )
             return False, "Capability authority not operational"
+
         self.register_check("capability_authority", check, critical=False)
 
     def evaluate(self) -> ReadinessReport:
@@ -153,6 +173,7 @@ class ReadinessGate:
 
         for name, check_fn, critical in self._checks:
             import time
+
             start = time.monotonic()
             try:
                 passed, message = check_fn()
@@ -173,10 +194,14 @@ class ReadinessGate:
             if not passed:
                 if critical:
                     critical_failures += 1
-                    logger.warning("Critical readiness check failed: %s — %s", name, message)
+                    logger.warning(
+                        "Critical readiness check failed: %s — %s", name, message
+                    )
                 else:
                     warnings += 1
-                    logger.info("Non-critical readiness check failed: %s — %s", name, message)
+                    logger.info(
+                        "Non-critical readiness check failed: %s — %s", name, message
+                    )
 
         # Determine overall status
         if critical_failures == 0:

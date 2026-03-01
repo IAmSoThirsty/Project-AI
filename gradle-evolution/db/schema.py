@@ -85,7 +85,8 @@ class BuildMemoryDB:
     def _create_schema(self, conn: sqlite3.Connection) -> None:
         """Create database schema with all tables."""
         # Builds table - main build records
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS builds (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp TEXT NOT NULL,
@@ -105,10 +106,12 @@ class BuildMemoryDB:
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 updated_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
-        """)
+        """
+        )
 
         # Build phases - tracks individual build phases
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS build_phases (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 build_id INTEGER NOT NULL,
@@ -123,10 +126,12 @@ class BuildMemoryDB:
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (build_id) REFERENCES builds(id) ON DELETE CASCADE
             )
-        """)
+        """
+        )
 
         # Constitutional violations - tracks principle violations
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS constitutional_violations (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 build_id INTEGER NOT NULL,
@@ -141,10 +146,12 @@ class BuildMemoryDB:
                 detected_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (build_id) REFERENCES builds(id) ON DELETE CASCADE
             )
-        """)
+        """
+        )
 
         # Policy decisions - tracks policy evaluation results
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS policy_decisions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 build_id INTEGER NOT NULL,
@@ -160,10 +167,12 @@ class BuildMemoryDB:
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (build_id) REFERENCES builds(id) ON DELETE CASCADE
             )
-        """)
+        """
+        )
 
         # Security events - tracks security-related events
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS security_events (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 build_id INTEGER NOT NULL,
@@ -180,10 +189,12 @@ class BuildMemoryDB:
                 detected_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (build_id) REFERENCES builds(id) ON DELETE CASCADE
             )
-        """)
+        """
+        )
 
         # Artifacts - tracks build artifacts
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS artifacts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 build_id INTEGER NOT NULL,
@@ -199,10 +210,12 @@ class BuildMemoryDB:
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (build_id) REFERENCES builds(id) ON DELETE CASCADE
             )
-        """)
+        """
+        )
 
         # Dependencies - tracks build dependencies
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS dependencies (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 build_id INTEGER NOT NULL,
@@ -221,16 +234,19 @@ class BuildMemoryDB:
                 FOREIGN KEY (build_id) REFERENCES builds(id) ON DELETE CASCADE,
                 FOREIGN KEY (parent_dependency_id) REFERENCES dependencies(id) ON DELETE CASCADE
             )
-        """)
+        """
+        )
 
         # Schema metadata
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS schema_metadata (
                 key TEXT PRIMARY KEY,
                 value TEXT NOT NULL,
                 updated_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
-        """)
+        """
+        )
 
     def _create_indexes(self, conn: sqlite3.Connection) -> None:
         """Create database indexes for query optimization."""

@@ -24,8 +24,8 @@ Usage:
 from .anti_sovereign_stress_tests import (
     AntiSovereignStressTestGenerator,
     AttackCategory,
-    ConversationPhase,
     ConversationalStressTest,
+    ConversationPhase,
     ConversationSession,
     ConversationTurn,
     PhaseProgress,

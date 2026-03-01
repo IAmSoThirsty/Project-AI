@@ -16,7 +16,7 @@ with open("iso4217.xml") as xml_file:
                 print("No minor units data available for " + currency_dict["CtryNm"])
             else:
                 formatted_currency_dict[currency_code] = int(currency_minor_units)
-        elif ("CtryNm" in currency_dict):
+        elif "CtryNm" in currency_dict:
             print("No currency data available for " + currency_dict["CtryNm"])
         else:
             print("Currency in file with no data at all, weird.")
@@ -26,4 +26,3 @@ with open("iso4217.xml") as xml_file:
     with open("../../Runtime/Resources/iso4217.json", "w") as json_file:
         json_file.write(json_data)
         json_file.close()
-

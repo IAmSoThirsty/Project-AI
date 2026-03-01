@@ -89,7 +89,9 @@ class _ModelRegistry:
             min_compatible=min_compatible,
             max_compatible=max_compatible,
         )
-        logger.info("Model version '%s' registered (hash=%s...)", version, sha256_hash[:16])
+        logger.info(
+            "Model version '%s' registered (hash=%s...)", version, sha256_hash[:16]
+        )
 
     def lookup(self, version: str) -> _ModelRegistryEntry | None:
         """Look up a model version in the registry."""
@@ -241,7 +243,11 @@ class ActionValidator:
         """
         for action in request.actions:
             # Resolve enum value or plain string
-            action_value = getattr(action, "value", action) if not isinstance(action, str) else action
+            action_value = (
+                getattr(action, "value", action)
+                if not isinstance(action, str)
+                else action
+            )
 
             if action_value not in ALLOWED_ACTION_TYPES:
                 return False, f"Unauthorized action type: {action_value}"
@@ -424,9 +430,11 @@ class ContainmentOrchestrator:
             "request_hash": request.to_hash(),
             "event_id": request.event_id,
             "actions": [
-                getattr(e, "action", {}).value
-                if hasattr(getattr(e, "action", None), "value")
-                else str(e)
+                (
+                    getattr(e, "action", {}).value
+                    if hasattr(getattr(e, "action", None), "value")
+                    else str(e)
+                )
                 for e in executions
             ],
             "timestamp": time.time(),

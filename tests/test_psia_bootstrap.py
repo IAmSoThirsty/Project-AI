@@ -16,19 +16,19 @@ from psia.bootstrap.genesis import (
     GenesisStatus,
 )
 from psia.bootstrap.readiness import (
-    ReadinessGate,
     NodeStatus,
+    ReadinessGate,
 )
 from psia.bootstrap.safe_halt import (
+    HaltReason,
     SafeHaltController,
     SafeHaltError,
-    HaltReason,
 )
-
 
 # ═══════════════════════════════════════════════════════════════════
 #  GenesisCoordinator Tests
 # ═══════════════════════════════════════════════════════════════════
+
 
 class TestGenesisCoordinator:
 
@@ -96,6 +96,7 @@ class TestGenesisCoordinator:
 #  ReadinessGate Tests
 # ═══════════════════════════════════════════════════════════════════
 
+
 class TestReadinessGate:
 
     def test_no_checks_operational(self):
@@ -137,8 +138,10 @@ class TestReadinessGate:
 
     def test_exception_in_check_counts_as_failure(self):
         gate = ReadinessGate()
+
         def bad_check():
             raise RuntimeError("boom")
+
         gate.register_check("boom", bad_check)
         report = gate.evaluate()
         assert report.status == NodeStatus.FAILED
@@ -148,6 +151,7 @@ class TestReadinessGate:
     def test_genesis_check_pass(self):
         class FakeGenesis:
             is_completed = True
+
         gate = ReadinessGate()
         gate.register_genesis_check(FakeGenesis())
         report = gate.evaluate()
@@ -157,6 +161,7 @@ class TestReadinessGate:
         class FakeGenesis:
             is_completed = False
             status = "not_started"
+
         gate = ReadinessGate()
         gate.register_genesis_check(FakeGenesis())
         report = gate.evaluate()
@@ -165,8 +170,10 @@ class TestReadinessGate:
     def test_ledger_check(self):
         class FakeLedger:
             sealed_block_count = 3
+
             def verify_chain(self):
                 return True
+
         gate = ReadinessGate()
         gate.register_ledger_check(FakeLedger())
         report = gate.evaluate()
@@ -189,6 +196,7 @@ class TestReadinessGate:
 #  SafeHaltController Tests
 # ═══════════════════════════════════════════════════════════════════
 
+
 class TestSafeHaltController:
 
     def test_initial_state(self):
@@ -198,7 +206,9 @@ class TestSafeHaltController:
 
     def test_trigger_halt(self):
         ctrl = SafeHaltController()
-        event = ctrl.trigger_halt(HaltReason.INVARIANT_VIOLATION, details="INV-ROOT-4 broken")
+        event = ctrl.trigger_halt(
+            HaltReason.INVARIANT_VIOLATION, details="INV-ROOT-4 broken"
+        )
         assert ctrl.is_halted is True
         assert event.reason == HaltReason.INVARIANT_VIOLATION
         assert "INV-ROOT-4" in event.details

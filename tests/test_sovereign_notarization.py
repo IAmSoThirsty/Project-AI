@@ -44,6 +44,7 @@ _stub_heavy_deps()
 def _find_audit_class():
     """Find the class that has _request_notarization in the sovereign_audit_log module."""
     import importlib
+
     mod = importlib.import_module("app.governance.sovereign_audit_log")
 
     for attr_name in dir(mod):

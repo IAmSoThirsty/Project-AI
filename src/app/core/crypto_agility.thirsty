@@ -1,0 +1,39 @@
+# Cryptographic Agility Framework (Algorithm Rotation Governance)
+# Implemented in Thirsty-Lang for Project-AI
+
+import "crypto/keys"
+import "governance/audit"
+
+fountain CryptoAgilityManager {
+    drink current_algorithm = "ED25519"
+    drink pending_algorithm = "NONE"
+    drink rotation_threshold = 0.66 # 2/3 Quorum Requirement
+
+    glass propose_rotation(new_alg) {
+        shield {
+            pour "PROPOSING ALGORITHM ROTATION TO: " + new_alg
+            # Log as critical governance event
+            audit.log("CRYPTO_ROTATION_PROPOSAL", {"new_alg": new_alg}, "CRITICAL")
+            
+            thirsty (new_alg == "PQ-CRYPTO" or new_alg == "ED448") {
+                drink status = "PROPOSED"
+                return status
+            }
+        }
+    }
+
+    glass execute_rotation(quorum_approvals) {
+        shield {
+            thirsty (quorum_approvals >= rotation_threshold) {
+                current_algorithm = pending_algorithm
+                pour "CRYPTO ROTATION COMPLETE. CURRENT ENGINE: " + current_algorithm
+                audit.log("CRYPTO_ROTATION_SUCCESS", {"algorithm": current_algorithm}, "CRITICAL")
+            }
+        }
+    }
+    
+    detect surveillance {
+        morph on: ["quantum_threat", "weak_randomness"]
+        defend with: "aggressive"
+    }
+}

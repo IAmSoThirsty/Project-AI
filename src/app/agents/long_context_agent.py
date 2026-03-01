@@ -277,7 +277,9 @@ class LongContextAgent(KernelRoutedAgent):
             "current_context_size": self.current_context_size,
             "history_length": len(self.context_history),
             "context_utilization": (
-                self.current_context_size / self.max_context_tokens if self.max_context_tokens > 0 else 0
+                self.current_context_size / self.max_context_tokens
+                if self.max_context_tokens > 0
+                else 0
             ),
         }
 

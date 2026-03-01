@@ -11,7 +11,9 @@ def test_content_filter_blocked_lines_269_270():
     When check_content_filter returns False, we log warning and return error.
     """
     with tempfile.TemporaryDirectory() as tmpdir:
-        generator = ImageGenerator(backend=ImageGenerationBackend.OPENAI, data_dir=tmpdir)
+        generator = ImageGenerator(
+            backend=ImageGenerationBackend.OPENAI, data_dir=tmpdir
+        )
 
         # Ensure content filter is enabled
         assert generator.content_filter_enabled is True

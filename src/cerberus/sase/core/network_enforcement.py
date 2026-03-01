@@ -78,7 +78,9 @@ class GeoFenceController:
     """
 
     def __init__(self, rules: GeoFenceRule = None):
-        self.rules = rules or GeoFenceRule(allowed_countries=set(), blocked_countries=set(), allowed_regions=set())
+        self.rules = rules or GeoFenceRule(
+            allowed_countries=set(), blocked_countries=set(), allowed_regions=set()
+        )
 
     def evaluate(self, country_code: str, region: str = None) -> EnforcementAction:
         """Evaluate geo-fence rules"""
@@ -89,12 +91,19 @@ class GeoFenceController:
             return EnforcementAction.GEO_BLOCK
 
         # Check allowed countries
-        if self.rules.allowed_countries and country_code not in self.rules.allowed_countries:
+        if (
+            self.rules.allowed_countries
+            and country_code not in self.rules.allowed_countries
+        ):
             logger.warning(f"GEO_BLOCK: Country {country_code} not in allowed list")
             return EnforcementAction.GEO_BLOCK
 
         # Check regions
-        if region and self.rules.allowed_regions and region not in self.rules.allowed_regions:
+        if (
+            region
+            and self.rules.allowed_regions
+            and region not in self.rules.allowed_regions
+        ):
             logger.warning(f"GEO_BLOCK: Region {region} not allowed")
             return EnforcementAction.GEO_BLOCK
 
@@ -110,7 +119,9 @@ class RateLimiter:
 
     def __init__(self, policy: RateLimitPolicy = None):
         self.policy = policy or RateLimitPolicy()
-        self.buckets: dict[str, dict] = {}  # key -> {tokens, last_update, penalty_until}
+        self.buckets: dict[str, dict] = (
+            {}
+        )  # key -> {tokens, last_update, penalty_until}
 
     def check_limit(self, key: str) -> tuple[bool, str | None]:
         """
@@ -259,7 +270,9 @@ class EdgeEnforcementPlane:
         self.ip_reputation = IPReputationService()
         self.request_hashes: set[str] = set()  # For deduplication
 
-    def enforce(self, request: dict[str, Any]) -> tuple[EnforcementAction, dict[str, Any]]:
+    def enforce(
+        self, request: dict[str, Any]
+    ) -> tuple[EnforcementAction, dict[str, Any]]:
         """
         Enforce all edge controls on incoming request
 
@@ -302,10 +315,14 @@ class EdgeEnforcementPlane:
         # IP reputation check
         reputation = self.ip_reputation.lookup(source_ip, asn)
         context["ip_reputation"] = reputation.reputation_score
-        context["enforcement_checks"].append(f"reputation: {reputation.reputation_score}")
+        context["enforcement_checks"].append(
+            f"reputation: {reputation.reputation_score}"
+        )
 
         if reputation.reputation_score < 20:
-            logger.warning(f"LOW REPUTATION: {source_ip} score={reputation.reputation_score}")
+            logger.warning(
+                f"LOW REPUTATION: {source_ip} score={reputation.reputation_score}"
+            )
             return EnforcementAction.CHALLENGE, context
 
         if reputation.is_tor and not request.get("allow_tor", False):

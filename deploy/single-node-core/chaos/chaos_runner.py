@@ -29,14 +29,14 @@ from typing import Any
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
 
 class FailureType(Enum):
     """Types of failures that can be injected."""
+
     NETWORK_LATENCY = "network_latency"
     NETWORK_PARTITION = "network_partition"
     NETWORK_LOSS = "network_loss"
@@ -50,6 +50,7 @@ class FailureType(Enum):
 
 class ExperimentStatus(Enum):
     """Status of chaos experiment."""
+
     PENDING = "pending"
     RUNNING = "running"
     COMPLETED = "completed"
@@ -61,23 +62,27 @@ class ExperimentStatus(Enum):
 @dataclass
 class BlastRadius:
     """Defines the blast radius for a chaos experiment."""
+
     max_affected_services: int
     max_affected_containers: int
     max_downtime_seconds: int
     critical_services_excluded: list[str]
     region: str | None = None
 
-    def is_within_limits(self, affected_services: int, affected_containers: int) -> bool:
+    def is_within_limits(
+        self, affected_services: int, affected_containers: int
+    ) -> bool:
         """Check if current impact is within blast radius limits."""
         return (
-            affected_services <= self.max_affected_services and
-            affected_containers <= self.max_affected_containers
+            affected_services <= self.max_affected_services
+            and affected_containers <= self.max_affected_containers
         )
 
 
 @dataclass
 class ChaosExperiment:
     """Definition of a chaos engineering experiment."""
+
     id: str
     name: str
     description: str
@@ -115,27 +120,28 @@ class ChaosRunner:
         """Load experiment definition from YAML/JSON file."""
         content = experiment_file.read_text()
 
-        if experiment_file.suffix in ['.yaml', '.yml']:
+        if experiment_file.suffix in [".yaml", ".yml"]:
             import yaml
+
             data = yaml.safe_load(content)
         else:
             data = json.loads(content)
 
         # Convert to ChaosExperiment
-        blast_radius = BlastRadius(**data['blast_radius'])
-        failure_type = FailureType(data['failure_type'])
+        blast_radius = BlastRadius(**data["blast_radius"])
+        failure_type = FailureType(data["failure_type"])
 
         return ChaosExperiment(
-            id=data['id'],
-            name=data['name'],
-            description=data['description'],
+            id=data["id"],
+            name=data["name"],
+            description=data["description"],
             failure_type=failure_type,
-            target_service=data['target_service'],
+            target_service=data["target_service"],
             blast_radius=blast_radius,
-            duration_seconds=data['duration_seconds'],
-            parameters=data.get('parameters', {}),
-            hypothesis=data['hypothesis'],
-            success_criteria=data['success_criteria']
+            duration_seconds=data["duration_seconds"],
+            parameters=data.get("parameters", {}),
+            hypothesis=data["hypothesis"],
+            success_criteria=data["success_criteria"],
         )
 
     def _check_prerequisites(self, experiment: ChaosExperiment) -> tuple[bool, str]:
@@ -152,25 +158,29 @@ class ChaosRunner:
 
         # Check if target service exists
         result = subprocess.run(
-            ['docker', 'compose', 'ps', '--services'],
-            capture_output=True,
-            text=True
+            ["docker", "compose", "ps", "--services"], capture_output=True, text=True
         )
 
         if result.returncode != 0:
             return (False, "Failed to list docker compose services")
 
-        services = result.stdout.strip().split('\n')
+        services = result.stdout.strip().split("\n")
         if experiment.target_service not in services:
             return (False, f"Target service '{experiment.target_service}' not found")
 
         # Check if service is in critical list
-        if experiment.target_service in experiment.blast_radius.critical_services_excluded:
-            return (False, "Target service is marked as critical and excluded from chaos")
+        if (
+            experiment.target_service
+            in experiment.blast_radius.critical_services_excluded
+        ):
+            return (
+                False,
+                "Target service is marked as critical and excluded from chaos",
+            )
 
         # Check current system health
         health_check = self._check_system_health()
-        if not health_check['healthy']:
+        if not health_check["healthy"]:
             return (False, f"System not healthy: {health_check['reason']}")
 
         logger.info("✓ Pre-flight checks passed")
@@ -181,46 +191,44 @@ class ChaosRunner:
         try:
             # Check if all services are running
             result = subprocess.run(
-                ['docker', 'compose', 'ps', '--format', 'json'],
+                ["docker", "compose", "ps", "--format", "json"],
                 capture_output=True,
-                text=True
+                text=True,
             )
 
             if result.returncode != 0:
-                return {'healthy': False, 'reason': 'Failed to check service status'}
+                return {"healthy": False, "reason": "Failed to check service status"}
 
             services = []
-            for line in result.stdout.strip().split('\n'):
+            for line in result.stdout.strip().split("\n"):
                 if line:
                     services.append(json.loads(line))
 
-            unhealthy = [s for s in services if s.get('State') != 'running']
+            unhealthy = [s for s in services if s.get("State") != "running"]
 
             if unhealthy:
                 return {
-                    'healthy': False,
-                    'reason': f"{len(unhealthy)} services not running",
-                    'unhealthy_services': unhealthy
+                    "healthy": False,
+                    "reason": f"{len(unhealthy)} services not running",
+                    "unhealthy_services": unhealthy,
                 }
 
-            return {'healthy': True, 'reason': 'All services running'}
+            return {"healthy": True, "reason": "All services running"}
 
         except Exception as e:
-            return {'healthy': False, 'reason': f'Health check failed: {e}'}
+            return {"healthy": False, "reason": f"Health check failed: {e}"}
 
     def _inject_network_latency(self, experiment: ChaosExperiment) -> bool:
         """Inject network latency using tc (traffic control)."""
         service = experiment.target_service
-        latency_ms = experiment.parameters.get('latency_ms', 100)
-        jitter_ms = experiment.parameters.get('jitter_ms', 10)
+        latency_ms = experiment.parameters.get("latency_ms", 100)
+        jitter_ms = experiment.parameters.get("jitter_ms", 10)
 
         logger.info(f"Injecting {latency_ms}ms ±{jitter_ms}ms latency to {service}")
 
         # Get container ID
         result = subprocess.run(
-            ['docker', 'compose', 'ps', '-q', service],
-            capture_output=True,
-            text=True
+            ["docker", "compose", "ps", "-q", service], capture_output=True, text=True
         )
 
         if result.returncode != 0:
@@ -231,9 +239,19 @@ class ChaosRunner:
 
         # Inject latency using tc
         cmd = [
-            'docker', 'exec', container_id,
-            'tc', 'qdisc', 'add', 'dev', 'eth0', 'root', 'netem',
-            'delay', f'{latency_ms}ms', f'{jitter_ms}ms'
+            "docker",
+            "exec",
+            container_id,
+            "tc",
+            "qdisc",
+            "add",
+            "dev",
+            "eth0",
+            "root",
+            "netem",
+            "delay",
+            f"{latency_ms}ms",
+            f"{jitter_ms}ms",
         ]
 
         result = subprocess.run(cmd, capture_output=True, text=True)
@@ -248,15 +266,13 @@ class ChaosRunner:
     def _inject_cpu_stress(self, experiment: ChaosExperiment) -> bool:
         """Inject CPU stress using stress-ng."""
         service = experiment.target_service
-        cpu_percent = experiment.parameters.get('cpu_percent', 80)
+        cpu_percent = experiment.parameters.get("cpu_percent", 80)
 
         logger.info(f"Injecting {cpu_percent}% CPU stress to {service}")
 
         # Get container ID
         result = subprocess.run(
-            ['docker', 'compose', 'ps', '-q', service],
-            capture_output=True,
-            text=True
+            ["docker", "compose", "ps", "-q", service], capture_output=True, text=True
         )
 
         if result.returncode != 0:
@@ -267,9 +283,17 @@ class ChaosRunner:
 
         # Inject CPU stress (run in background)
         cmd = [
-            'docker', 'exec', '-d', container_id,
-            'stress-ng', '--cpu', '2', '--cpu-load', str(cpu_percent),
-            '--timeout', f'{experiment.duration_seconds}s'
+            "docker",
+            "exec",
+            "-d",
+            container_id,
+            "stress-ng",
+            "--cpu",
+            "2",
+            "--cpu-load",
+            str(cpu_percent),
+            "--timeout",
+            f"{experiment.duration_seconds}s",
         ]
 
         result = subprocess.run(cmd, capture_output=True, text=True)
@@ -278,8 +302,13 @@ class ChaosRunner:
             logger.warning(f"stress-ng may not be installed in {service}")
             # Try alternative: yes command piped to /dev/null
             cmd = [
-                'docker', 'exec', '-d', container_id,
-                'sh', '-c', f'timeout {experiment.duration_seconds}s yes > /dev/null'
+                "docker",
+                "exec",
+                "-d",
+                container_id,
+                "sh",
+                "-c",
+                f"timeout {experiment.duration_seconds}s yes > /dev/null",
             ]
             result = subprocess.run(cmd, capture_output=True, text=True)
 
@@ -297,9 +326,7 @@ class ChaosRunner:
         logger.info(f"Pausing container: {service}")
 
         result = subprocess.run(
-            ['docker', 'compose', 'pause', service],
-            capture_output=True,
-            text=True
+            ["docker", "compose", "pause", service], capture_output=True, text=True
         )
 
         if result.returncode != 0:
@@ -318,7 +345,9 @@ class ChaosRunner:
         elif experiment.failure_type == FailureType.CONTAINER_PAUSE:
             return self._inject_container_pause(experiment)
         else:
-            logger.warning(f"Failure type {experiment.failure_type} not yet implemented")
+            logger.warning(
+                f"Failure type {experiment.failure_type} not yet implemented"
+            )
             return False
 
     def _cleanup_failure(self, experiment: ChaosExperiment) -> bool:
@@ -330,40 +359,49 @@ class ChaosRunner:
         if experiment.failure_type == FailureType.NETWORK_LATENCY:
             # Remove tc rules
             result = subprocess.run(
-                ['docker', 'compose', 'ps', '-q', service],
+                ["docker", "compose", "ps", "-q", service],
                 capture_output=True,
-                text=True
+                text=True,
             )
             container_id = result.stdout.strip()
 
             subprocess.run(
-                ['docker', 'exec', container_id, 'tc', 'qdisc', 'del', 'dev', 'eth0', 'root'],
-                capture_output=True
+                [
+                    "docker",
+                    "exec",
+                    container_id,
+                    "tc",
+                    "qdisc",
+                    "del",
+                    "dev",
+                    "eth0",
+                    "root",
+                ],
+                capture_output=True,
             )
 
         elif experiment.failure_type == FailureType.CONTAINER_PAUSE:
             # Unpause container
             subprocess.run(
-                ['docker', 'compose', 'unpause', service],
-                capture_output=True
+                ["docker", "compose", "unpause", service], capture_output=True
             )
 
         elif experiment.failure_type == FailureType.CPU_STRESS:
             # Kill stress processes
             result = subprocess.run(
-                ['docker', 'compose', 'ps', '-q', service],
+                ["docker", "compose", "ps", "-q", service],
                 capture_output=True,
-                text=True
+                text=True,
             )
             container_id = result.stdout.strip()
 
             subprocess.run(
-                ['docker', 'exec', container_id, 'pkill', '-9', 'stress-ng'],
-                capture_output=True
+                ["docker", "exec", container_id, "pkill", "-9", "stress-ng"],
+                capture_output=True,
             )
             subprocess.run(
-                ['docker', 'exec', container_id, 'pkill', '-9', 'yes'],
-                capture_output=True
+                ["docker", "exec", container_id, "pkill", "-9", "yes"],
+                capture_output=True,
             )
 
         logger.info(f"✓ Cleanup completed for {service}")
@@ -372,9 +410,9 @@ class ChaosRunner:
     def _monitor_experiment(self, experiment: ChaosExperiment) -> dict[str, Any]:
         """Monitor system during experiment and collect metrics."""
         metrics = {
-            'start_time': datetime.now(UTC).isoformat(),
-            'observations': [],
-            'blast_radius_breached': False
+            "start_time": datetime.now(UTC).isoformat(),
+            "observations": [],
+            "blast_radius_breached": False,
         }
 
         # Monitor for duration
@@ -384,54 +422,56 @@ class ChaosRunner:
             health = self._check_system_health()
 
             observation = {
-                'timestamp': datetime.now(UTC).isoformat(),
-                'elapsed_seconds': int(time.time() - start_time),
-                'system_health': health
+                "timestamp": datetime.now(UTC).isoformat(),
+                "elapsed_seconds": int(time.time() - start_time),
+                "system_health": health,
             }
 
-            metrics['observations'].append(observation)
+            metrics["observations"].append(observation)
 
             # Check blast radius
-            if not health['healthy']:
-                unhealthy_count = len(health.get('unhealthy_services', []))
+            if not health["healthy"]:
+                unhealthy_count = len(health.get("unhealthy_services", []))
                 if unhealthy_count > experiment.blast_radius.max_affected_services:
                     logger.error("Blast radius exceeded! Aborting experiment.")
-                    metrics['blast_radius_breached'] = True
+                    metrics["blast_radius_breached"] = True
                     break
 
             time.sleep(5)  # Check every 5 seconds
 
-        metrics['end_time'] = datetime.now(UTC).isoformat()
+        metrics["end_time"] = datetime.now(UTC).isoformat()
         return metrics
 
     def _evaluate_success_criteria(
-        self,
-        experiment: ChaosExperiment,
-        metrics: dict[str, Any]
+        self, experiment: ChaosExperiment, metrics: dict[str, Any]
     ) -> tuple[bool, str]:
         """Evaluate if experiment met success criteria."""
         criteria = experiment.success_criteria
 
         # Check if system recovered
-        if 'system_recovered' in criteria:
+        if "system_recovered" in criteria:
             final_health = self._check_system_health()
-            if not final_health['healthy']:
+            if not final_health["healthy"]:
                 return (False, "System did not recover after experiment")
 
         # Check max downtime
-        if 'max_downtime_seconds' in criteria:
-            max_allowed = criteria['max_downtime_seconds']
+        if "max_downtime_seconds" in criteria:
+            max_allowed = criteria["max_downtime_seconds"]
             # Calculate actual downtime from observations
-            downtime = sum(
-                1 for obs in metrics['observations']
-                if not obs['system_health']['healthy']
-            ) * 5  # 5 second intervals
+            downtime = (
+                sum(
+                    1
+                    for obs in metrics["observations"]
+                    if not obs["system_health"]["healthy"]
+                )
+                * 5
+            )  # 5 second intervals
 
             if downtime > max_allowed:
                 return (False, f"Downtime {downtime}s exceeded maximum {max_allowed}s")
 
         # Check if blast radius was respected
-        if metrics.get('blast_radius_breached'):
+        if metrics.get("blast_radius_breached"):
             return (False, "Blast radius was breached during experiment")
 
         return (True, "All success criteria met")
@@ -482,12 +522,14 @@ class ChaosRunner:
             success, message = self._evaluate_success_criteria(experiment, metrics)
 
             # Update experiment
-            experiment.status = ExperimentStatus.COMPLETED if success else ExperimentStatus.FAILED
+            experiment.status = (
+                ExperimentStatus.COMPLETED if success else ExperimentStatus.FAILED
+            )
             experiment.completed_at = datetime.now(UTC).isoformat()
             experiment.results = {
-                'success': success,
-                'message': message,
-                'metrics': metrics
+                "success": success,
+                "message": message,
+                "metrics": metrics,
             }
 
             logger.info(f"{'✓' if success else '✗'} Experiment completed: {message}")
@@ -515,25 +557,25 @@ def main():
     """CLI entry point for chaos runner."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Run chaos engineering experiments"
-    )
+    parser = argparse.ArgumentParser(description="Run chaos engineering experiments")
     parser.add_argument(
-        "experiment",
-        type=Path,
-        help="Path to experiment definition file"
+        "experiment", type=Path, help="Path to experiment definition file"
     )
     parser.add_argument(
         "--experiments-dir",
         type=Path,
-        default=Path("/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/chaos/experiments"),
-        help="Directory for experiments"
+        default=Path(
+            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/chaos/experiments"
+        ),
+        help="Directory for experiments",
     )
     parser.add_argument(
         "--results-dir",
         type=Path,
-        default=Path("/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/chaos/results"),
-        help="Directory for results"
+        default=Path(
+            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/chaos/results"
+        ),
+        help="Directory for results",
     )
 
     args = parser.parse_args()
@@ -545,14 +587,14 @@ def main():
     print(f"\n{'='*60}")
     print(f"Chaos Experiment: {result['name']}")
     print(f"Status: {result['status']}")
-    if result.get('results'):
+    if result.get("results"):
         print(f"Success: {result['results']['success']}")
         print(f"Message: {result['results']['message']}")
-    if result.get('error'):
+    if result.get("error"):
         print(f"Error: {result['error']}")
     print(f"{'='*60}\n")
 
-    sys.exit(0 if result['status'] == 'completed' else 1)
+    sys.exit(0 if result["status"] == "completed" else 1)
 
 
 if __name__ == "__main__":

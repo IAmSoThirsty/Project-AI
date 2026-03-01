@@ -102,13 +102,20 @@ class BootstrapOrchestrator:
         # Audit trail
         self.bootstrap_log: list[dict[str, Any]] = []
 
+        # Thirsty-Lang Integration (Floor 1)
+        self.thirsty_bootstrap = os.path.join(
+            os.path.dirname(__file__), "bootstrap.thirsty"
+        )
+
         # Load configuration
         if self.config_path and self.config_path.exists():
             self._load_config()
         else:
             self._initialize_default_config()
 
-        logger.info("Bootstrap Orchestrator initialized (config_path=%s)", config_path)
+        logger.info("Bootstrap Orchestrator initialized (Floor 1 active)")
+        if os.path.exists(self.thirsty_bootstrap):
+            logger.info(f"Sovereign Thirsty Bootstrap found: {self.thirsty_bootstrap}")
 
     def _load_config(self):
         """Load configuration from file."""

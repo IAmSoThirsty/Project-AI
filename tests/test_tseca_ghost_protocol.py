@@ -170,7 +170,9 @@ class TestGhostProtocol:
 
         assert len(shards) == 5
         assert all(isinstance(shard, bytes) for shard in shards)
-        assert all(len(shard) > MIN_SHARD_SIZE for shard in shards)  # index + nonce + ciphertext
+        assert all(
+            len(shard) > MIN_SHARD_SIZE for shard in shards
+        )  # index + nonce + ciphertext
 
     def test_resurrect_identity(self):
         """Test identity resurrection from shards."""

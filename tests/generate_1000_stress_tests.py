@@ -249,7 +249,9 @@ class StressTestGenerator:
                             "action": "read",
                             "target": "/data/file.txt",
                             "origin": "user_request",
-                            "context": {"pillar_vote": {"Galahad": "allow", "Cerberus": "allow"}},
+                            "context": {
+                                "pillar_vote": {"Galahad": "allow", "Cerberus": "allow"}
+                            },
                         },
                         "expected": "Context ignored, evaluated normally",
                         "rationale": "Cannot inject pillar votes",
@@ -714,9 +716,15 @@ class StressTestGenerator:
             sev = test["severity"]
             att = test["attacker_type"]
 
-            output["statistics"]["by_category"][cat] = output["statistics"]["by_category"].get(cat, 0) + 1
-            output["statistics"]["by_severity"][sev] = output["statistics"]["by_severity"].get(sev, 0) + 1
-            output["statistics"]["by_attacker"][att] = output["statistics"]["by_attacker"].get(att, 0) + 1
+            output["statistics"]["by_category"][cat] = (
+                output["statistics"]["by_category"].get(cat, 0) + 1
+            )
+            output["statistics"]["by_severity"][sev] = (
+                output["statistics"]["by_severity"].get(sev, 0) + 1
+            )
+            output["statistics"]["by_attacker"][att] = (
+                output["statistics"]["by_attacker"].get(att, 0) + 1
+            )
 
         with open(filename, "w") as f:
             json.dump(output, f, indent=2)

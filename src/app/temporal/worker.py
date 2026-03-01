@@ -73,7 +73,13 @@ async def main():
             CrisisResponseWorkflow,
         ]
 
-        activities = learning_activities + image_activities + data_activities + memory_activities + crisis_activities
+        activities = (
+            learning_activities
+            + image_activities
+            + data_activities
+            + memory_activities
+            + crisis_activities
+        )
 
         # Create worker
         worker = manager.create_worker(
@@ -83,7 +89,10 @@ async def main():
             max_concurrent_workflow_tasks=50,
         )
 
-        logger.info(f"Worker created with {len(workflows)} workflows " f"and {len(activities)} activities")
+        logger.info(
+            f"Worker created with {len(workflows)} workflows "
+            f"and {len(activities)} activities"
+        )
 
         # Run worker
         logger.info("Worker is running. Press Ctrl+C to stop.")

@@ -84,7 +84,9 @@ class IRGenerator:
         logger.debug("Generating IR for function: %s", function_ast.name)
 
         # Create new function
-        return_type = str(function_ast.return_type) if function_ast.return_type else None
+        return_type = (
+            str(function_ast.return_type) if function_ast.return_type else None
+        )
         ir_function = self.builder.new_function(function_ast.name, return_type)
 
         # Add parameters
@@ -93,7 +95,9 @@ class IRGenerator:
                 param.type_annotation.qualifier if param.type_annotation else None
             )
             type_name = param.type_annotation.name if param.type_annotation else None
-            self.builder.add_variable(param.name, qualifier, type_name, is_parameter=True)
+            self.builder.add_variable(
+                param.name, qualifier, type_name, is_parameter=True
+            )
 
         # Generate primary plane IR
         if function_ast.primary_block:
@@ -134,12 +138,16 @@ class IRGenerator:
 
         # Set divergence policy
         if function_ast.divergence_policy:
-            ir_function.divergence_policy = function_ast.divergence_policy.policy_type.value
+            ir_function.divergence_policy = (
+                function_ast.divergence_policy.policy_type.value
+            )
             ir_function.divergence_epsilon = function_ast.divergence_policy.epsilon
 
         # Set mutation boundary
         if function_ast.mutation_boundary:
-            ir_function.mutation_boundary = function_ast.mutation_boundary.boundary_type.value
+            ir_function.mutation_boundary = (
+                function_ast.mutation_boundary.boundary_type.value
+            )
 
         # Emit constitutional validation if needed
         if ir_function.has_shadow and ir_function.has_invariants:
@@ -188,7 +196,9 @@ class IRGenerator:
     def _generate_variable_declaration(self, stmt: VariableDeclaration):
         """Generate IR for variable declaration."""
         # Determine plane qualifier
-        qualifier = self._convert_plane_qualifier(stmt.type_annotation.qualifier if stmt.type_annotation else None)
+        qualifier = self._convert_plane_qualifier(
+            stmt.type_annotation.qualifier if stmt.type_annotation else None
+        )
 
         type_name = stmt.type_annotation.name if stmt.type_annotation else None
 
@@ -304,7 +314,9 @@ class IRGenerator:
         # In a real implementation, this would need struct/object support
         self.builder.emit(IROpcode.LOAD_VAR, expr.member)
 
-    def _convert_plane_qualifier(self, qualifier: PlaneQualifier | None) -> PlaneQualifierIR:
+    def _convert_plane_qualifier(
+        self, qualifier: PlaneQualifier | None
+    ) -> PlaneQualifierIR:
         """Convert AST plane qualifier to IR plane qualifier."""
         if qualifier == PlaneQualifier.CANONICAL:
             return PlaneQualifierIR.CANONICAL

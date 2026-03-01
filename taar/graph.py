@@ -119,7 +119,7 @@ def _matches_glob(path: str, pattern: str) -> bool:
             if prefix and not path.startswith(prefix):
                 return False
             # Check if the remaining path matches the suffix
-            remaining = path[len(prefix):] if prefix else path
+            remaining = path[len(prefix) :] if prefix else path
             return fnmatch.fnmatch(remaining, suffix) or fnmatch.fnmatch(
                 path, pattern.replace("**/", "*/")
             )

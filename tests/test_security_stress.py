@@ -265,7 +265,9 @@ class TestNumericalAdversaries:
 class TestFuzzingCampaigns:
     """Comprehensive fuzzing tests."""
 
-    @pytest.mark.parametrize("strategy", ["random_string", "boundary_values", "type_confusion", "overflow"])
+    @pytest.mark.parametrize(
+        "strategy", ["random_string", "boundary_values", "type_confusion", "overflow"]
+    )
     @pytest.mark.parametrize("iterations", [10, 20, 50])
     def test_fuzzing_strategies(self, strategy, iterations):
         """Test different fuzzing strategies."""

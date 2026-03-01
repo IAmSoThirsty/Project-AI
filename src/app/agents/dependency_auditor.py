@@ -27,7 +27,9 @@ class DependencyAuditor(KernelRoutedAgent):
     All audit operations route through CognitionKernel for tracking.
     """
 
-    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+    ) -> None:
         """Initialize the dependency auditor.
 
         Args:
@@ -70,7 +72,8 @@ class DependencyAuditor(KernelRoutedAgent):
             imports = [
                 line
                 for line in txt.splitlines()
-                if line.strip().startswith("import ") or line.strip().startswith("from ")
+                if line.strip().startswith("import ")
+                or line.strip().startswith("from ")
             ]
 
             # Run pip-audit (best-effort) - validate tool exists

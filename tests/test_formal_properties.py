@@ -17,26 +17,27 @@ Thesis coverage:
 
 from __future__ import annotations
 
-import sys
-import os
 import hashlib
 import json
+import os
+import sys
 
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 try:
-    from hypothesis import given, settings, assume
+    from hypothesis import assume, given, settings
     from hypothesis import strategies as st
+
     HAS_HYPOTHESIS = True
 except ImportError:
     HAS_HYPOTHESIS = False
 
+from psia.canonical.capability_authority import CapabilityAuthority
+from psia.canonical.ledger import DurableLedger, ExecutionRecord, LedgerBlock
 from psia.crypto.ed25519_provider import Ed25519Provider, KeyStore
 from psia.crypto.rfc3161_provider import LocalTSA
-from psia.canonical.ledger import DurableLedger, ExecutionRecord, LedgerBlock
-from psia.canonical.capability_authority import CapabilityAuthority
 from psia.schemas.capability import CapabilityScope
 
 pytestmark = pytest.mark.skipif(
@@ -64,6 +65,7 @@ component_names = st.text(
 
 
 # ── Theorem 1: Signature Non-Forgeability ──────────────────────────────
+
 
 class TestTheoremSignatureNonForgeability:
     """
@@ -102,6 +104,7 @@ class TestTheoremSignatureNonForgeability:
 
 
 # ── Theorem 2: Ledger Append-Only (INV-ROOT-9) ────────────────────────
+
 
 class TestTheoremLedgerAppendOnly:
     """
@@ -151,6 +154,7 @@ class TestTheoremLedgerAppendOnly:
 
 # ── Theorem 3: Merkle Root Integrity ───────────────────────────────────
 
+
 class TestTheoremMerkleRootIntegrity:
     """
     For all sealed blocks B: recomputing Merkle root from records
@@ -162,14 +166,16 @@ class TestTheoremMerkleRootIntegrity:
     def test_merkle_root_is_deterministic(self, n: int) -> None:
         ledger = DurableLedger(block_size=n)
         for i in range(n):
-            ledger.append(ExecutionRecord(
-                record_id=f"merkle_{i}",
-                request_id=f"req_{i}",
-                actor="agent",
-                action="test",
-                resource="res",
-                decision="allow",
-            ))
+            ledger.append(
+                ExecutionRecord(
+                    record_id=f"merkle_{i}",
+                    request_id=f"req_{i}",
+                    actor="agent",
+                    action="test",
+                    resource="res",
+                    decision="allow",
+                )
+            )
         # Block should have been sealed
         assert ledger.sealed_block_count >= 1
         block = ledger.get_block(0)
@@ -180,6 +186,7 @@ class TestTheoremMerkleRootIntegrity:
 
 
 # ── Theorem 4: Block Chain Monotonicity ────────────────────────────────
+
 
 class TestTheoremBlockChainMonotonicity:
     """
@@ -193,19 +200,22 @@ class TestTheoremBlockChainMonotonicity:
         block_size = 4
         ledger = DurableLedger(block_size=block_size)
         for i in range(n_blocks * block_size):
-            ledger.append(ExecutionRecord(
-                record_id=f"chain_{i}",
-                request_id=f"req_{i}",
-                actor="agent",
-                action="test",
-                resource="res",
-                decision="allow",
-            ))
+            ledger.append(
+                ExecutionRecord(
+                    record_id=f"chain_{i}",
+                    request_id=f"req_{i}",
+                    actor="agent",
+                    action="test",
+                    resource="res",
+                    decision="allow",
+                )
+            )
         assert ledger.sealed_block_count == n_blocks
         assert ledger.verify_chain() is True
 
 
 # ── Theorem 5: Capability Token Lifecycle ──────────────────────────────
+
 
 class TestTheoremTokenLifecycle:
     """
@@ -263,6 +273,7 @@ class TestTheoremTokenLifecycle:
 
 # ── Theorem 6: KeyStore Component Isolation ────────────────────────────
 
+
 class TestTheoremKeyStoreIsolation:
     """
     For components A ≠ B:
@@ -286,6 +297,7 @@ class TestTheoremKeyStoreIsolation:
 
 
 # ── Theorem 7: RFC 3161 Timestamp Ordering ─────────────────────────────
+
 
 class TestTheoremTimestampOrdering:
     """

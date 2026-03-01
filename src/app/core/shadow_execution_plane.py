@@ -123,9 +123,11 @@ class ShadowExecutionPlane:
         self._resource_limiter = ShadowResourceLimiter()
         logger.info(
             "  Resource Limiter: %s",
-            "Shadow Thirst bytecode"
-            if self._resource_limiter.is_bytecode_active()
-            else "Python runtime",
+            (
+                "Shadow Thirst bytecode"
+                if self._resource_limiter.is_bytecode_active()
+                else "Python runtime"
+            ),
         )
 
         # Register in Tier Registry as Tier-2 Infrastructure Controller

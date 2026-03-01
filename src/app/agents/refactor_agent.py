@@ -22,7 +22,9 @@ logger = logging.getLogger(__name__)
 
 
 class RefactorAgent(KernelRoutedAgent):
-    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+    ) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
@@ -68,7 +70,9 @@ class RefactorAgent(KernelRoutedAgent):
                 return {"success": False, "error": "path_traversal"}
         except ValueError:
             # Different drives on Windows or no common path
-            logger.error("Path traversal detected: %s on different drive from %s", abs_path, cwd)
+            logger.error(
+                "Path traversal detected: %s on different drive from %s", abs_path, cwd
+            )
             return {"success": False, "error": "path_traversal"}
 
         # Resolve tool paths - validate they exist
@@ -76,7 +80,9 @@ class RefactorAgent(KernelRoutedAgent):
         ruff_cmd = shutil.which("ruff")
 
         if not black_cmd or not ruff_cmd:
-            logger.error("Required tools not found: black=%s, ruff=%s", black_cmd, ruff_cmd)
+            logger.error(
+                "Required tools not found: black=%s, ruff=%s", black_cmd, ruff_cmd
+            )
             return {"success": False, "error": "tools_not_found"}
 
         try:

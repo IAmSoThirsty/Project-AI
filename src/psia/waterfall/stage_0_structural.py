@@ -76,7 +76,9 @@ class StructuralStage:
         # ── Check 3: Token existence (if token store is populated) ──
         token_data = self._token_store.get(envelope.capability_token_id)
         if self._token_store and token_data is None:
-            reasons.append(f"capability_token_id '{envelope.capability_token_id}' not found")
+            reasons.append(
+                f"capability_token_id '{envelope.capability_token_id}' not found"
+            )
 
         # ── Check 4: Token expiry ──
         if token_data and "expires_at" in token_data:
@@ -113,7 +115,9 @@ class StructuralStage:
                 now = datetime.now(timezone.utc)
                 skew_seconds = (created - now).total_seconds()
                 if skew_seconds > 300:
-                    reasons.append(f"request timestamp is {skew_seconds:.0f}s in the future (max 300s)")
+                    reasons.append(
+                        f"request timestamp is {skew_seconds:.0f}s in the future (max 300s)"
+                    )
             except (ValueError, TypeError):
                 reasons.append("request timestamps.created_at unparseable")
 

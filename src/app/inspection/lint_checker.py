@@ -293,7 +293,9 @@ class LintChecker:
         logger.info("Checking Markdown files...")
 
         markdown_files = [
-            info for info in self.file_inventory.get("files", {}).values() if info.get("file_type") == "markdown"
+            info
+            for info in self.file_inventory.get("files", {}).values()
+            if info.get("file_type") == "markdown"
         ]
 
         for file_info in markdown_files:
@@ -353,7 +355,9 @@ class LintChecker:
         logger.info("Checking configuration files...")
 
         config_files = [
-            info for info in self.file_inventory.get("files", {}).values() if info.get("file_type") in ["yaml", "json"]
+            info
+            for info in self.file_inventory.get("files", {}).values()
+            if info.get("file_type") in ["yaml", "json"]
         ]
 
         for file_info in config_files:
@@ -372,7 +376,11 @@ class LintChecker:
                         issues.append(
                             LintIssue(
                                 file=str(file_path),
-                                line=(getattr(e, "problem_mark", None).line if hasattr(e, "problem_mark") else 0),
+                                line=(
+                                    getattr(e, "problem_mark", None).line
+                                    if hasattr(e, "problem_mark")
+                                    else 0
+                                ),
                                 column=0,
                                 severity="error",
                                 rule="yaml-syntax",
@@ -511,7 +519,11 @@ class LintChecker:
 
                         # Find or create report for this file
                         file_report = next(
-                            (r for r in self.reports if r.file == issue.file and r.tool == "bandit"),
+                            (
+                                r
+                                for r in self.reports
+                                if r.file == issue.file and r.tool == "bandit"
+                            ),
                             None,
                         )
 
@@ -547,10 +559,16 @@ class LintChecker:
 
         for report in self.reports:
             for issue in report.issues:
-                issues_by_severity[issue.severity] = issues_by_severity.get(issue.severity, 0) + 1
-                issues_by_source[issue.source] = issues_by_source.get(issue.source, 0) + 1
+                issues_by_severity[issue.severity] = (
+                    issues_by_severity.get(issue.severity, 0) + 1
+                )
+                issues_by_source[issue.source] = (
+                    issues_by_source.get(issue.source, 0) + 1
+                )
 
-        fixable_issues = sum(len([i for i in r.issues if i.fixable]) for r in self.reports)
+        fixable_issues = sum(
+            len([i for i in r.issues if i.fixable]) for r in self.reports
+        )
 
         return {
             "total_files_checked": total_files,

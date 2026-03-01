@@ -16,7 +16,9 @@ class ExpertAgent(KernelRoutedAgent):
     All actions are routed through CognitionKernel for governance, memory, and reflection.
     """
 
-    def __init__(self, name: str = "expert", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, name: str = "expert", kernel: CognitionKernel | None = None
+    ) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,

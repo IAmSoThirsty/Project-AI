@@ -2,75 +2,55 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: project-ai-app
+  name: project-ai-sovereign-egress
   namespace: project-ai
-  labels:
-    app.kubernetes.io/name: project-ai
-    app.kubernetes.io/component: security
 spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: project-ai
-      app.kubernetes.io/component: application
   policyTypes:
-  - Ingress
-  - Egress
-  ingress:
-  # Allow ingress from ingress controller
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: ingress-nginx
-    ports:
-    - protocol: TCP
-      port: 5000
-  # Allow ingress from same namespace for pod-to-pod communication
-  - from:
-    - podSelector: {}
-    ports:
-    - protocol: TCP
-      port: 5000
-    - protocol: TCP
-      port: 9090
+    - Egress
   egress:
-  # Allow DNS resolution
-  - to:
-    - namespaceSelector: {}
-      podSelector:
-        matchLabels:
-          k8s-app: kube-dns
-    ports:
-    - protocol: UDP
-      port: 53
-  # Allow egress to PostgreSQL
-  - to:
-    - podSelector:
-        matchLabels:
-          app.kubernetes.io/name: postgres
-    ports:
-    - protocol: TCP
-      port: 5432
-  # Allow egress to Redis
-  - to:
-    - podSelector:
-        matchLabels:
-          app.kubernetes.io/name: redis
-    ports:
-    - protocol: TCP
-      port: 6379
-  # Allow egress to Temporal
-  - to:
-    - podSelector:
-        matchLabels:
-          app.kubernetes.io/name: temporal
-    ports:
-    - protocol: TCP
-      port: 7233
-  # Allow egress to internet (for API calls)
-  - to:
-    - namespaceSelector: {}
-    ports:
-    - protocol: TCP
-      port: 443
-    - protocol: TCP
-      port: 80
+    # 1. DNS Resolution (Internal Only)
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+    # 2. Internal Service Mesh (Postgres, Redis, Temporal)
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: postgres
+      ports:
+        - protocol: TCP
+          port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: redis
+      ports:
+        - protocol: TCP
+          port: 6379
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: temporal
+      ports:
+        - protocol: TCP
+          port: 7233
+    # 3. Explicit External API Egress (Zero-Trust)
+    # Only allow 443 to confirmed Sovereign Endpoints
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - protocol: TCP
+          port: 443

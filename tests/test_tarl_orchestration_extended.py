@@ -106,7 +106,9 @@ class TestTaskQueue:
         """Test worker registration"""
         queue = TaskQueue("test_queue", data_dir=tempfile.mkdtemp())
 
-        queue.register_worker("worker_1", capabilities=["ml", "data"], metadata={"region": "us-east"})
+        queue.register_worker(
+            "worker_1", capabilities=["ml", "data"], metadata={"region": "us-east"}
+        )
 
         assert "worker_1" in queue._workers
         assert queue._workers["worker_1"]["capabilities"] == ["ml", "data"]
@@ -382,7 +384,9 @@ class TestMultiTenantManager:
         manager = MultiTenantManager(data_dir=tempfile.mkdtemp())
 
         quota = ResourceQuota(max_workflows=100, max_concurrent_executions=10)
-        namespace = manager.create_namespace("tenant_001", "Test Tenant", quota, isolation_level="strict")
+        namespace = manager.create_namespace(
+            "tenant_001", "Test Tenant", quota, isolation_level="strict"
+        )
 
         assert namespace.namespace_id == "tenant_001"
         assert "tenant_001" in manager._namespaces
@@ -469,7 +473,9 @@ class TestHumanInTheLoopManager:
         """Test signal sending"""
         manager = HumanInTheLoopManager(data_dir=tempfile.mkdtemp())
 
-        signal_id = manager.send_signal("wf_001", "pause", payload={"reason": "user_request"})
+        signal_id = manager.send_signal(
+            "wf_001", "pause", payload={"reason": "user_request"}
+        )
 
         assert signal_id is not None
         assert len(manager._signals["wf_001"]) == 1
@@ -524,7 +530,9 @@ class TestHumanInTheLoopManager:
         """Test approval with multiple required approvers"""
         manager = HumanInTheLoopManager(data_dir=tempfile.mkdtemp())
 
-        request_id = manager.request_approval("wf_001", "Deploy", ["alice", "bob"], context={})
+        request_id = manager.request_approval(
+            "wf_001", "Deploy", ["alice", "bob"], context={}
+        )
 
         # First approval
         manager.approve(request_id, "alice")
@@ -623,7 +631,9 @@ class TestMetaOrchestrator:
         """Test routing respects max load"""
         meta = MetaOrchestrator()
 
-        meta.register_orchestrator("orch_1", capabilities=["ml"], priority=10, max_load=1)
+        meta.register_orchestrator(
+            "orch_1", capabilities=["ml"], priority=10, max_load=1
+        )
 
         # First task should succeed
         node_id1 = meta.route_task("ml_task", ["ml"])
@@ -677,7 +687,9 @@ class TestWorkflowHierarchyManager:
         """Test spawning child with specific ID"""
         manager = WorkflowHierarchyManager()
 
-        child_id = manager.spawn_child("parent_wf", "data_processing", child_id="child_001")
+        child_id = manager.spawn_child(
+            "parent_wf", "data_processing", child_id="child_001"
+        )
 
         assert child_id == "child_001"
 
@@ -813,4 +825,6 @@ class TestDemo:
 
 
 if __name__ == "__main__":
-    pytest.main([__file__, "-v", "--cov=project_ai.tarl.integrations.orchestration_extended"])
+    pytest.main(
+        [__file__, "-v", "--cov=project_ai.tarl.integrations.orchestration_extended"]
+    )

@@ -69,7 +69,9 @@ def test_productivity_improvement():
     print(f"  Total evaluations: {metrics['total_evaluations']}")
     print(f"  Cache hit rate: {metrics['cache_hit_rate_percent']:.2f}%")
     print(f"  Estimated speedup: {metrics['estimated_speedup']:.2f}x")
-    print(f"  Productivity improvement: {metrics['productivity_improvement_percent']:.2f}%")
+    print(
+        f"  Productivity improvement: {metrics['productivity_improvement_percent']:.2f}%"
+    )
 
     # Verify we achieve at least 60% improvement with good cache hit rate
     if metrics["cache_hit_rate_percent"] >= 50:
@@ -159,7 +161,9 @@ def test_policy_optimization():
 
     # Run multiple evaluations to build stats
     for _ in range(10):
-        runtime.evaluate({"agent": "test", "mutation": False, "mutation_allowed": False})
+        runtime.evaluate(
+            {"agent": "test", "mutation": False, "mutation_allowed": False}
+        )
 
     # Get policy order before optimization
     original_order = [p.name for p in runtime.policies]

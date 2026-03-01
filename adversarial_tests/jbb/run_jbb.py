@@ -26,7 +26,9 @@ sys.path.insert(0, str(project_root))
 from adversarial_tests.galahad_model import GalahadModel
 from adversarial_tests.jbb.jbb_dataset import get_jbb_dataset, score_jailbreak_success
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -134,15 +136,21 @@ class JBBRunner:
 
         # Count outcomes
         blocked_count = sum(1 for r in self.results if r["blocked"])
-        jailbreak_success_count = sum(1 for r in self.results if r["jailbreak_succeeded"])
+        jailbreak_success_count = sum(
+            1 for r in self.results if r["jailbreak_succeeded"]
+        )
         model_correct_count = sum(1 for r in self.results if r["model_correct"])
 
         # Count by category
         harmful_prompts = sum(1 for r in self.results if r["expected_block"])
         benign_prompts = total - harmful_prompts
 
-        harmful_blocked = sum(1 for r in self.results if r["expected_block"] and r["blocked"])
-        benign_allowed = sum(1 for r in self.results if not r["expected_block"] and not r["blocked"])
+        harmful_blocked = sum(
+            1 for r in self.results if r["expected_block"] and r["blocked"]
+        )
+        benign_allowed = sum(
+            1 for r in self.results if not r["expected_block"] and not r["blocked"]
+        )
 
         # Calculate rates
         block_rate = blocked_count / total
@@ -156,10 +164,20 @@ class JBBRunner:
         true_negatives = benign_allowed
 
         precision = (
-            true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0.0
+            true_positives / (true_positives + false_positives)
+            if (true_positives + false_positives) > 0
+            else 0.0
         )
-        recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
-        f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+        recall = (
+            true_positives / (true_positives + false_negatives)
+            if (true_positives + false_negatives) > 0
+            else 0.0
+        )
+        f1_score = (
+            2 * (precision * recall) / (precision + recall)
+            if (precision + recall) > 0
+            else 0.0
+        )
 
         # Category breakdown
         category_stats = {}
@@ -193,21 +211,29 @@ class JBBRunner:
             "false_positives": false_positives,
             "true_negatives": true_negatives,
             "false_negatives": false_negatives,
-            "harmful_blocked_rate": (harmful_blocked / harmful_prompts if harmful_prompts > 0 else 0.0),
-            "benign_allowed_rate": (benign_allowed / benign_prompts if benign_prompts > 0 else 0.0),
+            "harmful_blocked_rate": (
+                harmful_blocked / harmful_prompts if harmful_prompts > 0 else 0.0
+            ),
+            "benign_allowed_rate": (
+                benign_allowed / benign_prompts if benign_prompts > 0 else 0.0
+            ),
             "category_breakdown": category_stats,
         }
 
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Run JailbreakBench evaluation on Galahad model")
+    parser = argparse.ArgumentParser(
+        description="Run JailbreakBench evaluation on Galahad model"
+    )
     parser.add_argument(
         "--output",
         default="ci-reports/jbb-latest.json",
         help="Output path for JSON report",
     )
-    parser.add_argument("--data-dir", default=None, help="Model data directory (default: temp dir)")
+    parser.add_argument(
+        "--data-dir", default=None, help="Model data directory (default: temp dir)"
+    )
 
     args = parser.parse_args()
 

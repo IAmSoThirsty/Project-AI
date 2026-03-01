@@ -51,7 +51,9 @@ class TestTemporalClientManager:
     @patch("app.temporal.client.Client")
     async def test_connect_failure(self, mock_client_class):
         """Test connection failure handling."""
-        mock_client_class.connect = AsyncMock(side_effect=Exception("Connection failed"))
+        mock_client_class.connect = AsyncMock(
+            side_effect=Exception("Connection failed")
+        )
 
         manager = TemporalClientManager()
 
@@ -133,7 +135,9 @@ class TestTemporalClientManager:
     async def test_health_check_failure(self, mock_client_class):
         """Test health check with connection failure."""
         mock_client = AsyncMock()
-        mock_client.describe_namespace = AsyncMock(side_effect=Exception("Connection lost"))
+        mock_client.describe_namespace = AsyncMock(
+            side_effect=Exception("Connection lost")
+        )
 
         manager = TemporalClientManager()
         manager._client = mock_client

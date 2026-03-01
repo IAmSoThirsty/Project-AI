@@ -62,7 +62,9 @@ def _create_seed_strategy(index: int) -> dict[str, Any]:
         "complexity": round(random.uniform(0.2, 0.8), 3),
         "severity": round(random.uniform(0.1, 0.9), 3),
         "evasion_level": round(random.uniform(0.0, 1.0), 3),
-        "approach": random.choice(["direct", "obfuscated", "incremental", "polymorphic"]),
+        "approach": random.choice(
+            ["direct", "obfuscated", "incremental", "polymorphic"]
+        ),
         "chain_depth": random.randint(1, 4),
         "created_at": datetime.now().isoformat(),
     }
@@ -149,7 +151,10 @@ class AlphaRedAgent(KernelRoutedAgent):
             elif mutation == "shift_target":
                 target = random.choice(_STRATEGY_TARGETS)
             elif mutation == "escalate_severity":
-                strategy = {**strategy, "severity": min(1.0, strategy["severity"] + 0.1)}
+                strategy = {
+                    **strategy,
+                    "severity": min(1.0, strategy["severity"] + 0.1),
+                }
 
         # Build the prompt payload
         prompt_text = (
@@ -261,7 +266,9 @@ class AlphaRedAgent(KernelRoutedAgent):
         5. Increment generation counter
         """
         if len(self.strategy_pool) < 2:
-            logger.warning("Pool too small to evolve (%d strategies)", len(self.strategy_pool))
+            logger.warning(
+                "Pool too small to evolve (%d strategies)", len(self.strategy_pool)
+            )
             return
 
         # Sort by fitness descending
@@ -351,7 +358,11 @@ class AlphaRedAgent(KernelRoutedAgent):
 
             response = {
                 "blocked": blocked,
-                "confidence": round(random.uniform(0.3, 1.0), 3) if blocked else round(random.uniform(0.0, 0.4), 3),
+                "confidence": (
+                    round(random.uniform(0.3, 1.0), 3)
+                    if blocked
+                    else round(random.uniform(0.0, 0.4), 3)
+                ),
                 "response_time_ms": random.randint(10, 500),
             }
 
@@ -387,9 +398,7 @@ class AlphaRedAgent(KernelRoutedAgent):
             "avg_fitness": round(avg_fitness, 4),
             "generation": self.generation,
             "pool_size": len(self.strategy_pool),
-            "vulnerabilities_found": [
-                r for r in results if not r["blocked"]
-            ],
+            "vulnerabilities_found": [r for r in results if not r["blocked"]],
             "results": results,
             "timestamp": datetime.now().isoformat(),
         }
@@ -419,13 +428,9 @@ class AlphaRedAgent(KernelRoutedAgent):
             "strategies_in_pool": len(self.strategy_pool),
             "generation": self.generation,
             "enabled": self.enabled,
-            "top_strategies": [
-                {"id": sid, "fitness": f} for sid, f in top_strategies
-            ],
+            "top_strategies": [{"id": sid, "fitness": f} for sid, f in top_strategies],
             "avg_fitness": (
-                round(
-                    sum(self.fitness_scores.values()) / len(self.fitness_scores), 4
-                )
+                round(sum(self.fitness_scores.values()) / len(self.fitness_scores), 4)
                 if self.fitness_scores
                 else 0.0
             ),
@@ -439,8 +444,7 @@ class AlphaRedAgent(KernelRoutedAgent):
             return _create_seed_strategy(0)
 
         weights = [
-            max(0.01, self.fitness_scores.get(s["id"], 0.5))
-            for s in self.strategy_pool
+            max(0.01, self.fitness_scores.get(s["id"], 0.5)) for s in self.strategy_pool
         ]
         total = sum(weights)
         probs = [w / total for w in weights]
@@ -455,9 +459,7 @@ class AlphaRedAgent(KernelRoutedAgent):
 
         return self.strategy_pool[-1]
 
-    def _tournament_select(
-        self, pool: list[dict[str, Any]]
-    ) -> dict[str, Any]:
+    def _tournament_select(self, pool: list[dict[str, Any]]) -> dict[str, Any]:
         """Tournament selection: pick best of ``_TOURNAMENT_SIZE`` random candidates."""
         candidates = random.sample(pool, min(_TOURNAMENT_SIZE, len(pool)))
         return max(
@@ -478,9 +480,7 @@ class AlphaRedAgent(KernelRoutedAgent):
         child["complexity"] = round(
             (parent_a["complexity"] + parent_b["complexity"]) / 2, 3
         )
-        child["severity"] = round(
-            (parent_a["severity"] + parent_b["severity"]) / 2, 3
-        )
+        child["severity"] = round((parent_a["severity"] + parent_b["severity"]) / 2, 3)
         child["evasion_level"] = round(
             (parent_a["evasion_level"] + parent_b["evasion_level"]) / 2, 3
         )
@@ -490,12 +490,8 @@ class AlphaRedAgent(KernelRoutedAgent):
         )
 
         # Categorical parameters: random parent
-        child["target"] = random.choice(
-            [parent_a["target"], parent_b["target"]]
-        )
-        child["approach"] = random.choice(
-            [parent_a["approach"], parent_b["approach"]]
-        )
+        child["target"] = random.choice([parent_a["target"], parent_b["target"]])
+        child["approach"] = random.choice([parent_a["approach"], parent_b["approach"]])
 
         return child
 
@@ -506,7 +502,14 @@ class AlphaRedAgent(KernelRoutedAgent):
 
         if random.random() < _MUTATION_RATE:
             field = random.choice(
-                ["complexity", "severity", "evasion_level", "chain_depth", "target", "approach"]
+                [
+                    "complexity",
+                    "severity",
+                    "evasion_level",
+                    "chain_depth",
+                    "target",
+                    "approach",
+                ]
             )
             if field in ("complexity", "severity", "evasion_level"):
                 delta = random.gauss(0, 0.15)

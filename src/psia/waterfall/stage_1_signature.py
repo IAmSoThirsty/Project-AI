@@ -57,7 +57,8 @@ class ThreatFingerprintStore:
     def match_actor(self, actor_did: str) -> list[ThreatFingerprint]:
         """Find fingerprints matching an actor DID."""
         return [
-            fp for fp in self._fingerprints.values()
+            fp
+            for fp in self._fingerprints.values()
             if fp.pattern_type == "actor" and fp.pattern_value == actor_did
         ]
 
@@ -66,14 +67,16 @@ class ThreatFingerprintStore:
         if not device_attestation:
             return []
         return [
-            fp for fp in self._fingerprints.values()
+            fp
+            for fp in self._fingerprints.values()
             if fp.pattern_type == "device" and fp.pattern_value == device_attestation
         ]
 
     def match_resource(self, resource: str) -> list[ThreatFingerprint]:
         """Find fingerprints matching a resource URI."""
         return [
-            fp for fp in self._fingerprints.values()
+            fp
+            for fp in self._fingerprints.values()
             if fp.pattern_type == "resource" and fp.pattern_value == resource
         ]
 

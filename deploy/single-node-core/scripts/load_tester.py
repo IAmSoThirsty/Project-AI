@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class LoadTestConfig:
     """Configuration for load test."""
+
     name: str
     target_url: str
     duration_seconds: int
@@ -53,6 +54,7 @@ class LoadTestConfig:
 @dataclass
 class RequestResult:
     """Result of a single request."""
+
     timestamp: float
     latency_ms: float
     status_code: int
@@ -63,6 +65,7 @@ class RequestResult:
 @dataclass
 class LoadTestResults:
     """Complete load test results."""
+
     config: LoadTestConfig
     start_time: str
     end_time: str
@@ -102,7 +105,7 @@ class LoadTester:
         session: aiohttp.ClientSession,
         url: str,
         headers: dict = None,
-        payload: dict = None
+        payload: dict = None,
     ) -> RequestResult:
         """Make a single HTTP request and measure latency."""
         start = time.time()
@@ -123,7 +126,7 @@ class LoadTester:
                 timestamp=start,
                 latency_ms=latency_ms,
                 status_code=status_code,
-                success=200 <= status_code < 300
+                success=200 <= status_code < 300,
             )
 
         except Exception as e:
@@ -134,7 +137,7 @@ class LoadTester:
                 latency_ms=latency_ms,
                 status_code=0,
                 success=False,
-                error=str(e)
+                error=str(e),
             )
 
     async def _worker(
@@ -142,15 +145,12 @@ class LoadTester:
         session: aiohttp.ClientSession,
         config: LoadTestConfig,
         end_time: float,
-        delay: float
+        delay: float,
     ):
         """Worker coroutine that sends requests."""
         while time.time() < end_time:
             result = await self._make_request(
-                session,
-                config.target_url,
-                config.headers,
-                config.payload
+                session, config.target_url, config.headers, config.payload
             )
 
             self.results.append(result)
@@ -190,7 +190,9 @@ class LoadTester:
         timeout = aiohttp.ClientTimeout(total=30)
         connector = aiohttp.TCPConnector(limit=config.concurrent_users * 2)
 
-        async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
+        async with aiohttp.ClientSession(
+            timeout=timeout, connector=connector
+        ) as session:
             end_time = start_timestamp + config.duration_seconds
 
             # Handle ramp-up
@@ -260,13 +262,15 @@ class LoadTester:
             latency_mean=statistics.mean(latencies),
             error_rate=(failed / total * 100) if total > 0 else 0,
             slo_latency_passed=percentile(latencies, 95) < 500,  # P95 < 500ms
-            slo_error_passed=(failed / total) < 0.05 if total > 0 else False  # < 5% error rate
+            slo_error_passed=(
+                (failed / total) < 0.05 if total > 0 else False
+            ),  # < 5% error rate
         )
 
         # Print results
-        logger.info("\n" + "="*70)
+        logger.info("\n" + "=" * 70)
         logger.info("LOAD TEST RESULTS")
-        logger.info("="*70)
+        logger.info("=" * 70)
         logger.info(f"Test: {config.name}")
         logger.info(f"Duration: {duration:.2f}s")
         logger.info("")
@@ -288,9 +292,13 @@ class LoadTester:
         logger.info(f"Error Rate: {results.error_rate:.2f}%")
         logger.info("")
         logger.info("SLO Validation:")
-        logger.info(f"  Latency (P95 < 500ms):  {'✓ PASS' if results.slo_latency_passed else '✗ FAIL'}")
-        logger.info(f"  Errors (< 5%):          {'✓ PASS' if results.slo_error_passed else '✗ FAIL'}")
-        logger.info("="*70)
+        logger.info(
+            f"  Latency (P95 < 500ms):  {'✓ PASS' if results.slo_latency_passed else '✗ FAIL'}"
+        )
+        logger.info(
+            f"  Errors (< 5%):          {'✓ PASS' if results.slo_error_passed else '✗ FAIL'}"
+        )
+        logger.info("=" * 70)
 
         # Save results
         result_file = self.results_dir / f"{config.name}_{int(start_timestamp)}.json"
@@ -307,9 +315,9 @@ class LoadTester:
         Returns:
             Dictionary of test results
         """
-        logger.info("="*70)
+        logger.info("=" * 70)
         logger.info("COMPREHENSIVE LOAD TESTING SUITE")
-        logger.info("="*70)
+        logger.info("=" * 70)
         logger.info("")
 
         tests = [
@@ -318,28 +326,28 @@ class LoadTester:
                 target_url="http://localhost:5000/health",
                 duration_seconds=30,
                 concurrent_users=10,
-                ramp_up_seconds=5
+                ramp_up_seconds=5,
             ),
             LoadTestConfig(
                 name="moderate_load",
                 target_url="http://localhost:5000/health",
                 duration_seconds=60,
                 concurrent_users=50,
-                ramp_up_seconds=10
+                ramp_up_seconds=10,
             ),
             LoadTestConfig(
                 name="high_load",
                 target_url="http://localhost:5000/health",
                 duration_seconds=60,
                 concurrent_users=100,
-                ramp_up_seconds=15
+                ramp_up_seconds=15,
             ),
             LoadTestConfig(
                 name="stress_test",
                 target_url="http://localhost:5000/health",
                 duration_seconds=120,
                 concurrent_users=200,
-                ramp_up_seconds=20
+                ramp_up_seconds=20,
             ),
         ]
 
@@ -363,18 +371,24 @@ class LoadTester:
                 results[config.name] = None
 
         # Print summary
-        logger.info("\n" + "="*70)
+        logger.info("\n" + "=" * 70)
         logger.info("BENCHMARK SUITE SUMMARY")
-        logger.info("="*70)
+        logger.info("=" * 70)
 
         for name, result in results.items():
             if result:
-                status = "✓ PASS" if result.slo_latency_passed and result.slo_error_passed else "✗ FAIL"
-                logger.info(f"{status} {name}: {result.requests_per_second:.0f} RPS, P95={result.latency_p95:.0f}ms")
+                status = (
+                    "✓ PASS"
+                    if result.slo_latency_passed and result.slo_error_passed
+                    else "✗ FAIL"
+                )
+                logger.info(
+                    f"{status} {name}: {result.requests_per_second:.0f} RPS, P95={result.latency_p95:.0f}ms"
+                )
             else:
                 logger.info(f"✗ FAIL {name}: Test execution failed")
 
-        logger.info("="*70)
+        logger.info("=" * 70)
 
         return results
 
@@ -385,21 +399,27 @@ def main():
 
     parser = argparse.ArgumentParser(description="Load testing and benchmarking")
     parser.add_argument(
-        "command",
-        choices=["test", "benchmark"],
-        help="Command to execute"
+        "command", choices=["test", "benchmark"], help="Command to execute"
     )
     parser.add_argument("--name", default="load_test", help="Test name")
-    parser.add_argument("--url", default="http://localhost:5000/health", help="Target URL")
-    parser.add_argument("--duration", type=int, default=60, help="Test duration (seconds)")
+    parser.add_argument(
+        "--url", default="http://localhost:5000/health", help="Target URL"
+    )
+    parser.add_argument(
+        "--duration", type=int, default=60, help="Test duration (seconds)"
+    )
     parser.add_argument("--users", type=int, default=50, help="Concurrent users")
     parser.add_argument("--rps", type=int, help="Target requests per second")
-    parser.add_argument("--ramp-up", type=int, default=10, help="Ramp-up time (seconds)")
+    parser.add_argument(
+        "--ramp-up", type=int, default=10, help="Ramp-up time (seconds)"
+    )
     parser.add_argument(
         "--results-dir",
         type=Path,
-        default=Path("/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/benchmarks"),
-        help="Results directory"
+        default=Path(
+            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/benchmarks"
+        ),
+        help="Results directory",
     )
 
     args = parser.parse_args()
@@ -413,12 +433,14 @@ def main():
             duration_seconds=args.duration,
             concurrent_users=args.users,
             requests_per_second=args.rps,
-            ramp_up_seconds=args.ramp_up
+            ramp_up_seconds=args.ramp_up,
         )
 
         result = asyncio.run(tester.run_test(config))
 
-        sys.exit(0 if result and result.slo_latency_passed and result.slo_error_passed else 1)
+        sys.exit(
+            0 if result and result.slo_latency_passed and result.slo_error_passed else 1
+        )
 
     elif args.command == "benchmark":
         results = tester.run_benchmark_suite()

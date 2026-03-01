@@ -4,9 +4,10 @@ Standalone Legion API Test
 Tests the OpenClaw integration endpoints without requiring OpenClaw installation
 """
 
-import requests
 import json
 from datetime import datetime
+
+import requests
 
 API_BASE = "http://localhost:8001"
 

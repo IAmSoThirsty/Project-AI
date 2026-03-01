@@ -63,7 +63,9 @@ class WiFiSecurityManager:
 
             # Check for deprecated protocols
             if config.protocol in [WiFiSecurityProtocol.WEP, WiFiSecurityProtocol.WPA]:
-                self.logger.error("%s is deprecated and insecure - REFUSED", config.protocol.value)
+                self.logger.error(
+                    "%s is deprecated and insecure - REFUSED", config.protocol.value
+                )
                 return False
 
             # Warn about non-God-Tier configurations
@@ -71,11 +73,15 @@ class WiFiSecurityManager:
                 WiFiSecurityProtocol.WPA3_PERSONAL,
                 WiFiSecurityProtocol.WPA3_ENTERPRISE,
             ]:
-                self.logger.warning("%s is not God Tier - consider WPA3", config.protocol.value)
+                self.logger.warning(
+                    "%s is not God Tier - consider WPA3", config.protocol.value
+                )
 
             # Enforce PMF (Protected Management Frames)
             if not config.enable_pmf:
-                self.logger.warning("PMF disabled - FORCING ENABLE for God Tier security")
+                self.logger.warning(
+                    "PMF disabled - FORCING ENABLE for God Tier security"
+                )
                 config.enable_pmf = True
 
             self.current_security = config
@@ -100,12 +106,16 @@ class WiFiSecurityManager:
 
             # Enforce strong passphrase
             if len(config.passphrase) < 12:
-                self.logger.error("Passphrase must be at least 12 characters for God Tier security")
+                self.logger.error(
+                    "Passphrase must be at least 12 characters for God Tier security"
+                )
                 return False
 
         return True
 
-    def get_recommended_config(self, network_type: str = "personal") -> WiFiSecurityConfig:
+    def get_recommended_config(
+        self, network_type: str = "personal"
+    ) -> WiFiSecurityConfig:
         """
         Get God Tier recommended security configuration
 
@@ -133,7 +143,9 @@ class WiFiSecurityManager:
 
         elif network_type == "open":
             # Use OWE for encryption on open networks
-            return WiFiSecurityConfig(protocol=WiFiSecurityProtocol.OWE, enable_pmf=True, enable_sae=False)
+            return WiFiSecurityConfig(
+                protocol=WiFiSecurityProtocol.OWE, enable_pmf=True, enable_sae=False
+            )
 
         else:
             # Default to WPA3-Personal
@@ -231,7 +243,9 @@ class WiFiSecurityManager:
 
         if not self.current_security:
             warnings.append("No security configured - CRITICAL")
-            recommendations.append("Configure WPA3-Personal or WPA3-Enterprise immediately")
+            recommendations.append(
+                "Configure WPA3-Personal or WPA3-Enterprise immediately"
+            )
             return {
                 "security_level": "CRITICAL",
                 "warnings": warnings,
@@ -243,7 +257,9 @@ class WiFiSecurityManager:
             WiFiSecurityProtocol.WPA,
             WiFiSecurityProtocol.WEP,
         ]:
-            warnings.append(f"{self.current_security.protocol.value} is DEPRECATED and INSECURE")
+            warnings.append(
+                f"{self.current_security.protocol.value} is DEPRECATED and INSECURE"
+            )
             recommendations.append("IMMEDIATELY upgrade to WPA3")
 
         elif self.current_security.protocol == WiFiSecurityProtocol.WPA2_PERSONAL:
@@ -252,7 +268,9 @@ class WiFiSecurityManager:
 
         # Check PMF
         if not self.current_security.enable_pmf:
-            warnings.append("PMF (Protected Management Frames) DISABLED - vulnerable to attacks")
+            warnings.append(
+                "PMF (Protected Management Frames) DISABLED - vulnerable to attacks"
+            )
             recommendations.append("ENABLE PMF immediately")
 
         # Check SAE for WPA3

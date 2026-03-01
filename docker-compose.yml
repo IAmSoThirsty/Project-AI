@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   project-ai:
@@ -9,7 +9,6 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - PYTHONPATH=/app/src
-      # Override with .env file values
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - SMTP_USERNAME=${SMTP_USERNAME}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
@@ -24,16 +23,11 @@ services:
       - ./logs:/app/logs
       - ./config:/app/config
     ports:
-      # Main application
       - "5000:5000"
-      # Prometheus metrics endpoints
       - "8000:8000"
       - "8001:8001"
       - "8002:8002"
       - "8003:8003"
-    # Uncomment for interactive terminal
-    # stdin_open: true
-    # tty: true
     env_file:
       - .env
     networks:
@@ -46,17 +40,16 @@ services:
       retries: 3
       start_period: 40s
 
-  # Prometheus - Time series database and monitoring
   prometheus:
     image: prom/prometheus:latest
     container_name: project-ai-prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention.time=15d'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.enable-lifecycle'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
     volumes:
       - ./config/prometheus:/etc/prometheus
       - prometheus-data:/prometheus
@@ -67,19 +60,13 @@ services:
     restart: unless-stopped
     depends_on:
       - project-ai
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
-  # AlertManager - Alert routing and management
   alertmanager:
     image: prom/alertmanager:latest
     container_name: project-ai-alertmanager
     command:
-      - '--config.file=/etc/alertmanager/alertmanager.yml'
-      - '--storage.path=/alertmanager'
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
     volumes:
       - ./config/alertmanager:/etc/alertmanager
       - alertmanager-data:/alertmanager
@@ -88,19 +75,7 @@ services:
     networks:
       - project-ai-network
     restart: unless-stopped
-    environment:
-      - SMTP_HOST=${SMTP_HOST:-smtp.gmail.com}
-      - SMTP_PORT=${SMTP_PORT:-587}
-      - SMTP_USERNAME=${SMTP_USERNAME}
-      - SMTP_PASSWORD=${SMTP_PASSWORD}
-      - ALERT_EMAIL_DEFAULT=${ALERT_EMAIL_DEFAULT:-admin@project-ai.local}
-      - ALERT_EMAIL_CRITICAL=${ALERT_EMAIL_CRITICAL:-admin@project-ai.local}
-      - ALERT_EMAIL_ETHICS=${ALERT_EMAIL_ETHICS:-admin@project-ai.local}
-      - ALERT_EMAIL_SECURITY=${ALERT_EMAIL_SECURITY:-admin@project-ai.local}
-      - ALERT_EMAIL_AI_HEALTH=${ALERT_EMAIL_AI_HEALTH:-admin@project-ai.local}
-      - ALERT_EMAIL_PLUGINS=${ALERT_EMAIL_PLUGINS:-admin@project-ai.local}
 
-  # Grafana - Metrics visualization and dashboards
   grafana:
     image: grafana/grafana:latest
     container_name: project-ai-grafana
@@ -115,64 +90,21 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
-      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
-      - GF_SERVER_ROOT_URL=http://localhost:3000
     depends_on:
       - prometheus
-    healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
-  # Node Exporter - System metrics (optional)
-  node-exporter:
-    image: prom/node-exporter:latest
-    container_name: project-ai-node-exporter
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    ports:
-      - "9100:9100"
-    networks:
-      - project-ai-network
-    restart: unless-stopped
-
-  # Temporal.io Server - Workflow orchestration
   temporal:
     image: temporalio/auto-setup:latest
     container_name: project-ai-temporal
     ports:
-      - "7233:7233"   # gRPC
-      - "8233:8233"   # Web UI
-    environment:
-      - DB=postgresql
-      - DB_PORT=5432
-      - POSTGRES_USER=temporal
-      - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=temporal-postgresql
-      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development.yaml
-    volumes:
-      - ./config/temporal:/etc/temporal/config/dynamicconfig
+      - "7233:7233"
+      - "8233:8233"
     networks:
       - project-ai-network
     depends_on:
       - temporal-postgresql
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "tctl", "--address", "temporal:7233", "cluster", "health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
 
-  # PostgreSQL for Temporal
   temporal-postgresql:
     image: postgres:13
     container_name: project-ai-temporal-db
@@ -185,13 +117,7 @@ services:
     networks:
       - project-ai-network
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U temporal"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
-  # Temporal Worker - Processes workflows and activities
   temporal-worker:
     build:
       context: .
@@ -202,15 +128,8 @@ services:
       - PYTHONUNBUFFERED=1
       - PYTHONPATH=/app/src
       - TEMPORAL_HOST=temporal:7233
-      - TEMPORAL_NAMESPACE=default
-      - TEMPORAL_TASK_QUEUE=project-ai-tasks
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
-      - FERNET_KEY=${FERNET_KEY}
     volumes:
       - ./src:/app/src
-      - ./data:/app/data
-      - ./logs:/app/logs
     networks:
       - project-ai-network
     depends_on:
@@ -219,15 +138,93 @@ services:
     env_file:
       - .env
 
+  # --- Emergent Microservices (Governance Tier 2) ---
+
+  mutation-firewall:
+    build:
+      context: ./emergent-microservices/ai-mutation-governance-firewall
+    container_name: ai-mutation-firewall
+    ports: ["8011:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  incident-reflex:
+    build:
+      context: ./emergent-microservices/autonomous-incident-reflex-system
+    container_name: incident-reflex-system
+    ports: ["8012:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  trust-graph:
+    build:
+      context: ./emergent-microservices/trust-graph-engine
+    container_name: trust-graph-engine
+    ports: ["8013:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  data-vault:
+    build:
+      context: ./emergent-microservices/sovereign-data-vault
+    container_name: sovereign-data-vault
+    ports: ["8014:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  negotiation-agent:
+    build:
+      context: ./emergent-microservices/autonomous-negotiation-agent
+    container_name: negotiation-agent
+    ports: ["8015:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  compliance-engine:
+    build:
+      context: ./emergent-microservices/autonomous-compliance
+    container_name: compliance-engine
+    ports: ["8016:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  verifiable-reality:
+    build:
+      context: ./emergent-microservices/verifiable-reality
+    container_name: verifiable-reality
+    ports: ["8017:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  i-believe-in-you:
+    build:
+      context: ./emergent-microservices/i-believe-in-you
+    container_name: i-believe-in-you
+    ports: ["8018:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
 volumes:
   prometheus-data:
-    driver: local
   alertmanager-data:
-    driver: local
   grafana-data:
-    driver: local
   temporal-postgresql-data:
-    driver: local
 
 networks:
   project-ai-network:

@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class SensitivityAdjustment:
     """Record of a sensitivity change."""
+
     rule_id: str
     old_sensitivity: float
     new_sensitivity: float
@@ -50,6 +51,7 @@ class SensitivityAdjustment:
 @dataclass
 class DampenerStats:
     """Statistics for a single rule."""
+
     rule_id: str
     total_decisions: int
     false_positives: int
@@ -240,7 +242,10 @@ class AutoimmuneDampener:
 
         logger.info(
             "Sensitivity adjusted for %s: %.2f → %.2f (FP rate: %.3f)",
-            rule_id, old_sensitivity, new_sensitivity, fp_rate,
+            rule_id,
+            old_sensitivity,
+            new_sensitivity,
+            fp_rate,
         )
 
         if self.on_adjustment:

@@ -26,7 +26,9 @@ class EnergyDomain:
     grid_generation_pct: float = 1.0  # Percentage of generation capacity
     transformer_inventory: int = EnergyThresholds.TOTAL_HV_TRANSFORMERS
     transformers_damaged: int = 0  # Damaged transformers
-    transformer_replacement_rate_yearly: int = EnergyThresholds.TRANSFORMER_REPLACEMENT_RATE_YEARLY
+    transformer_replacement_rate_yearly: int = (
+        EnergyThresholds.TRANSFORMER_REPLACEMENT_RATE_YEARLY
+    )
     fuel_access_days: float = EnergyThresholds.BASELINE_FUEL_RESERVE_DAYS
     nuclear_plants_operational: int = EnergyThresholds.GLOBAL_NUCLEAR_PLANTS
     nuclear_plants_scram: int = 0  # Emergency shutdown count

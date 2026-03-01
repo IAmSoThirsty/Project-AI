@@ -155,8 +155,12 @@ class SituationalAwarenessSubsystem(
         # Configuration
         self.sensor_fusion_interval = config.get("sensor_fusion_interval", 1.0)
         self.threat_detection_threshold = config.get("threat_detection_threshold", 0.7)
-        self.max_threat_age = timedelta(seconds=config.get("max_threat_age_seconds", 300))
-        self.predictive_horizon = timedelta(seconds=config.get("predictive_horizon_seconds", 600))
+        self.max_threat_age = timedelta(
+            seconds=config.get("max_threat_age_seconds", 300)
+        )
+        self.predictive_horizon = timedelta(
+            seconds=config.get("predictive_horizon_seconds", 600)
+        )
 
         # Sensor management
         self._sensors: dict[str, dict[str, Any]] = {}
@@ -220,7 +224,9 @@ class SituationalAwarenessSubsystem(
 
             # Start sensor fusion thread
             self._fusion_active = True
-            self._fusion_thread = threading.Thread(target=self._sensor_fusion_loop, daemon=True, name="SensorFusion")
+            self._fusion_thread = threading.Thread(
+                target=self._sensor_fusion_loop, daemon=True, name="SensorFusion"
+            )
             self._fusion_thread.start()
 
             self._initialized = True
@@ -228,7 +234,9 @@ class SituationalAwarenessSubsystem(
             return True
 
         except Exception as e:
-            self.logger.error("Failed to initialize Situational Awareness subsystem: %s", e)
+            self.logger.error(
+                "Failed to initialize Situational Awareness subsystem: %s", e
+            )
             return False
 
     def shutdown(self) -> bool:
@@ -258,7 +266,11 @@ class SituationalAwarenessSubsystem(
             return False
 
         # Check that fusion thread is running
-        if not self._fusion_active or not self._fusion_thread or not self._fusion_thread.is_alive():
+        if (
+            not self._fusion_active
+            or not self._fusion_thread
+            or not self._fusion_thread.is_alive()
+        ):
             self.logger.warning("Sensor fusion thread not running")
             return False
 
@@ -268,7 +280,9 @@ class SituationalAwarenessSubsystem(
             if last_update:
                 age = datetime.now() - last_update
                 if age > timedelta(seconds=self.sensor_fusion_interval * 10):
-                    self.logger.warning("Fused state is stale (age=%ss)", age.total_seconds())
+                    self.logger.warning(
+                        "Fused state is stale (age=%ss)", age.total_seconds()
+                    )
                     return False
 
         return True
@@ -291,7 +305,9 @@ class SituationalAwarenessSubsystem(
 
     # ISensorFusion implementation
 
-    def register_sensor(self, sensor_id: str, sensor_type: str, metadata: dict[str, Any]) -> bool:
+    def register_sensor(
+        self, sensor_id: str, sensor_type: str, metadata: dict[str, Any]
+    ) -> bool:
         """Register a new sensor."""
         self.logger.info("Registering sensor: %s (type=%s)", sensor_id, sensor_type)
 
@@ -304,7 +320,9 @@ class SituationalAwarenessSubsystem(
             "data_count": 0,
         }
 
-        self.emit_event("sensor_registered", {"sensor_id": sensor_id, "sensor_type": sensor_type})
+        self.emit_event(
+            "sensor_registered", {"sensor_id": sensor_id, "sensor_type": sensor_type}
+        )
         return True
 
     def ingest_sensor_data(self, sensor_id: str, data: Any) -> bool:
@@ -370,7 +388,9 @@ class SituationalAwarenessSubsystem(
     def get_threat_level(self) -> int:
         """Get current overall threat level (0-10)."""
         with self._fused_state_lock:
-            threat_level = self._fused_state.get("overall_threat_level", ThreatLevel.MINIMAL)
+            threat_level = self._fused_state.get(
+                "overall_threat_level", ThreatLevel.MINIMAL
+            )
             return threat_level.value
 
     def _classify_threat_type(self, data: dict[str, Any]) -> ThreatType:
@@ -496,7 +516,9 @@ class SituationalAwarenessSubsystem(
         with self._subscription_lock:
             for event_type in self._subscriptions:
                 self._subscriptions[event_type] = [
-                    (sid, cb) for sid, cb in self._subscriptions[event_type] if sid != subscription_id
+                    (sid, cb)
+                    for sid, cb in self._subscriptions[event_type]
+                    if sid != subscription_id
                 ]
             return True
 
@@ -509,7 +531,9 @@ class SituationalAwarenessSubsystem(
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
+                    self.logger.error(
+                        "Error in event callback %s: %s", subscription_id, e
+                    )
 
             return len(subscribers)
 
@@ -559,13 +583,17 @@ class SituationalAwarenessSubsystem(
             if not location:
                 return
 
-            contact_id = hashlib.md5(f"{location[0]:.3f},{location[1]:.3f}".encode()).hexdigest()[:16]
+            contact_id = hashlib.md5(
+                f"{location[0]:.3f},{location[1]:.3f}".encode()
+            ).hexdigest()[:16]
 
             if contact_id in self._threat_contacts:
                 # Update existing contact
                 contact = self._threat_contacts[contact_id]
                 contact.last_updated = datetime.now()
-                contact.confidence = max(contact.confidence, threat_dict.get("confidence", 0.5))
+                contact.confidence = max(
+                    contact.confidence, threat_dict.get("confidence", 0.5)
+                )
             else:
                 # Create new contact
                 contact = ThreatContact(
@@ -727,7 +755,8 @@ class SituationalAwarenessSubsystem(
                 "current_location": contact.location,
                 "predicted_location": predicted_location,
                 "horizon_seconds": horizon_seconds,
-                "confidence": contact.confidence * 0.7,  # Reduce confidence for predictions
+                "confidence": contact.confidence
+                * 0.7,  # Reduce confidence for predictions
             }
 
     def _save_state(self):

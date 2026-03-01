@@ -27,7 +27,10 @@ class PolicyNode(BaseModel):
     type: Literal["subject", "action", "resource", "constraint", "decision"] = Field(
         ..., description="Node type"
     )
-    value: str = Field(..., description="Node value (DID, action verb, resource URI, expression, or decision)")
+    value: str = Field(
+        ...,
+        description="Node value (DID, action verb, resource URI, expression, or decision)",
+    )
 
     model_config = {"frozen": True}
 
@@ -56,7 +59,9 @@ class PolicyGraph(BaseModel):
     hash: str = Field(..., description="SHA-256 of canonical node+edge serialization")
     nodes: list[PolicyNode] = Field(..., min_length=1, description="Graph nodes")
     edges: list[PolicyEdge] = Field(default_factory=list, description="Graph edges")
-    signatures: list[Signature] = Field(..., min_length=1, description="Governance signer signatures")
+    signatures: list[Signature] = Field(
+        ..., min_length=1, description="Governance signer signatures"
+    )
 
     model_config = {"frozen": True}
 

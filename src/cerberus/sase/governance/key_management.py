@@ -169,7 +169,11 @@ class KeyManagementCeremony:
         expires = created + (self.scheduler.ROTATION_INTERVAL_DAYS * 86400)
 
         key = CryptographicKey(
-            key_id=key_id, key_type=key_type, created_at=created, expires_at=expires, hsm_backed=self.hsm.hsm_available
+            key_id=key_id,
+            key_type=key_type,
+            created_at=created,
+            expires_at=expires,
+            hsm_backed=self.hsm.hsm_available,
         )
 
         # Update active keys
@@ -209,4 +213,10 @@ class KeyManagementCeremony:
         return self.active_keys.get(key_type)
 
 
-__all__ = ["KeyType", "CryptographicKey", "KeyRotationScheduler", "HSMInterface", "KeyManagementCeremony"]
+__all__ = [
+    "KeyType",
+    "CryptographicKey",
+    "KeyRotationScheduler",
+    "HSMInterface",
+    "KeyManagementCeremony",
+]

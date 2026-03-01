@@ -364,7 +364,9 @@ class TestIronPathExecutor:
             assert "artifact_hash" in stage_result
 
             # Verify role signature
-            is_valid_role = executor.sovereign.verify_role_signature(stage_result["role_signature"])
+            is_valid_role = executor.sovereign.verify_role_signature(
+                stage_result["role_signature"]
+            )
             assert is_valid_role
 
         # Verify audit trail integrity

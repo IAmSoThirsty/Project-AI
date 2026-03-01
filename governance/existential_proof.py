@@ -188,9 +188,7 @@ class ExistentialProof:
                 description=f"Four Laws violation: expected {expected_value}, got {current_value}",
                 restorable=False,  # Four Laws violations are existential
                 restoration_steps=[],
-                evidence_hash=hashlib.sha256(
-                    str(current_value).encode()
-                ).hexdigest(),
+                evidence_hash=hashlib.sha256(str(current_value).encode()).hexdigest(),
                 ledger_state_hash=ledger_state_hash,
             )
         return None
@@ -203,9 +201,7 @@ class ExistentialProof:
         ledger_state_hash: str,
     ) -> InvariantViolation | None:
         """Check entropy within acceptable bounds"""
-        if isinstance(current_value, (int, float)) and isinstance(
-            expected_value, dict
-        ):
+        if isinstance(current_value, (int, float)) and isinstance(expected_value, dict):
             min_entropy = expected_value.get("min", 0)
             max_entropy = expected_value.get("max", float("inf"))
 
@@ -253,9 +249,7 @@ class ExistentialProof:
                 description=f"Hash chain broken: expected {expected_value}, got {current_value}",
                 restorable=False,  # Hash chain breaks are fatal
                 restoration_steps=[],
-                evidence_hash=hashlib.sha256(
-                    str(current_value).encode()
-                ).hexdigest(),
+                evidence_hash=hashlib.sha256(str(current_value).encode()).hexdigest(),
                 ledger_state_hash=ledger_state_hash,
             )
         return None
@@ -279,7 +273,10 @@ class ExistentialProof:
                     severity=ViolationSeverity.ERROR,
                     description=f"Temporal violation: timestamp {current_value} < {expected_value}",
                     restorable=True,
-                    restoration_steps=["Synchronize system clock", "Verify NTP sources"],
+                    restoration_steps=[
+                        "Synchronize system clock",
+                        "Verify NTP sources",
+                    ],
                     evidence_hash=hashlib.sha256(
                         str(current_value).encode()
                     ).hexdigest(),
@@ -308,9 +305,7 @@ class ExistentialProof:
                     "Re-execute with same inputs",
                     "Check for external state dependencies",
                 ],
-                evidence_hash=hashlib.sha256(
-                    str(current_value).encode()
-                ).hexdigest(),
+                evidence_hash=hashlib.sha256(str(current_value).encode()).hexdigest(),
                 ledger_state_hash=ledger_state_hash,
             )
         return None
@@ -478,9 +473,7 @@ class ExistentialProof:
             return False, "External signature verification failed"
 
         # Both channels pass
-        logger.info(
-            "Dual-channel restoration validated: internal=True, external=True"
-        )
+        logger.info("Dual-channel restoration validated: internal=True, external=True")
         return True, "Restoration authorized via dual channels"
 
     def record_violation(self, violation: InvariantViolation):
@@ -516,9 +509,7 @@ class ExistentialProof:
                 for line in f:
                     if line.strip():
                         violation_dict = json.loads(line)
-                        violations.append(
-                            InvariantViolation.from_dict(violation_dict)
-                        )
+                        violations.append(InvariantViolation.from_dict(violation_dict))
         except Exception as e:
             logger.error("Failed to load violations: %s", e)
 

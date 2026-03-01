@@ -80,23 +80,44 @@ __all__ = [
 # ---------------------------------------------------------------------------
 _LAZY_MAP: dict[str, tuple[str, str]] = {}
 for _name in [
-    "TarlStackBox", "Workflow", "Capability", "Policy", "DeterministicVM",
-    "AgentOrchestrator", "CapabilityEngine", "EventRecorder",
-    "ProvenanceManager", "WorkflowEventKind", "Artifact", "ArtifactRelationship",
+    "TarlStackBox",
+    "Workflow",
+    "Capability",
+    "Policy",
+    "DeterministicVM",
+    "AgentOrchestrator",
+    "CapabilityEngine",
+    "EventRecorder",
+    "ProvenanceManager",
+    "WorkflowEventKind",
+    "Artifact",
+    "ArtifactRelationship",
 ]:
     _LAZY_MAP[_name] = ("orchestration", _name)
 
 for _name in [
-    "ExtendedTarlStackBox", "TaskQueue", "TaskQueuePriority", "ResourceQuota",
-    "WorkerPool", "LongRunningWorkflowManager", "Activity", "ActivityExecutor",
-    "MultiTenantManager", "HumanInTheLoopManager", "MetaOrchestrator",
+    "ExtendedTarlStackBox",
+    "TaskQueue",
+    "TaskQueuePriority",
+    "ResourceQuota",
+    "WorkerPool",
+    "LongRunningWorkflowManager",
+    "Activity",
+    "ActivityExecutor",
+    "MultiTenantManager",
+    "HumanInTheLoopManager",
+    "MetaOrchestrator",
     "WorkflowHierarchyManager",
 ]:
     _LAZY_MAP[_name] = ("orchestration_extended", _name)
 
 for _name in [
-    "FullGovernanceStack", "GovernanceEngine", "ComplianceManager",
-    "ComplianceFramework", "RuntimeSafetyManager", "AIProvenanceManager",
+    "FullGovernanceStack",
+    "GovernanceEngine",
+    "ComplianceManager",
+    "ComplianceFramework",
+    "RuntimeSafetyManager",
+    "AIProvenanceManager",
     "CICDEnforcementManager",
 ]:
     _LAZY_MAP[_name] = ("orchestration_governance", _name)
@@ -107,8 +128,13 @@ for _name in [
     _LAZY_MAP[_name] = ("golden_paths", _name)
 
 for _name in [
-    "ConfigPresets", "ConfigBuilder", "TarlConfig", "DeploymentProfile",
-    "ComplianceProfile", "ComplianceProfile", "quick_start",
+    "ConfigPresets",
+    "ConfigBuilder",
+    "TarlConfig",
+    "DeploymentProfile",
+    "ComplianceProfile",
+    "ComplianceProfile",
+    "quick_start",
 ]:
     _LAZY_MAP[_name] = ("config_presets", _name)
 

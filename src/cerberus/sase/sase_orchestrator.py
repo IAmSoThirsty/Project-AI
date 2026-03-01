@@ -142,7 +142,9 @@ class SASEOrchestrator:
             posterior_guard = PosteriorImmutabilityGuard()
 
             # L1: Edge enforcement
-            enforcement_action, enforcement_ctx = self.edge_enforcement.enforce(raw_telemetry)
+            enforcement_action, enforcement_ctx = self.edge_enforcement.enforce(
+                raw_telemetry
+            )
 
             if enforcement_action.value not in ["allow"]:
                 logger.warning(f"Event blocked by edge: {enforcement_action.value}")
@@ -163,11 +165,15 @@ class SASEOrchestrator:
             behavior_state = self.behavioral_model.process_event(event)
 
             # L6: Bayesian scoring
-            confidence_assessment = self.confidence_aggregator.aggregate(event, feature_vector, behavior_state)
+            confidence_assessment = self.confidence_aggregator.aggregate(
+                event, feature_vector, behavior_state
+            )
 
             # === CRITICAL INVARIANT: LOCK POSTERIOR ===
             # After L6, posterior MUST NOT be mutated
-            posterior_hash = posterior_guard.lock_posterior(event.event_id, confidence_assessment)
+            posterior_hash = posterior_guard.lock_posterior(
+                event.event_id, confidence_assessment
+            )
             logger.info(
                 f"✓ Posterior locked: {confidence_assessment['confidence_percentage']}% (hash={posterior_hash[:8]})"
             )
@@ -235,7 +241,9 @@ class SASEOrchestrator:
                 "invariants_verified": True,
             }
 
-            logger.info(f"TELEMETRY PROCESSED: confidence={confidence_assessment['confidence_percentage']}%")
+            logger.info(
+                f"TELEMETRY PROCESSED: confidence={confidence_assessment['confidence_percentage']}%"
+            )
             logger.info("=" * 40)
 
             return result

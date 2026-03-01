@@ -12,7 +12,9 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../.."))
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s"
+)
 
 
 def main():
@@ -27,7 +29,9 @@ def main():
 
     # Initialize SASE
     print("Initializing SASE orchestrator...")
-    sase = SASEOrchestrator(deployment=DeploymentTopology.SINGLE_NODE, node_id="example-node-1")
+    sase = SASEOrchestrator(
+        deployment=DeploymentTopology.SINGLE_NODE, node_id="example-node-1"
+    )
     print("✓ SASE initialized\n")
 
     # Example telemetry events

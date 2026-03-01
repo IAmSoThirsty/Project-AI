@@ -36,6 +36,7 @@ logger = logging.getLogger(__name__)
 
 class CommitStatus(str, Enum):
     """Status of a commit operation."""
+
     PENDING = "pending"
     COMMITTED = "committed"
     ROLLED_BACK = "rolled_back"
@@ -45,6 +46,7 @@ class CommitStatus(str, Enum):
 @dataclass
 class VersionedValue:
     """A value with version metadata for optimistic concurrency."""
+
     value: Any
     version: int
     updated_at: str
@@ -68,6 +70,7 @@ class WALEntry:
     In production, WAL entries are persisted to durable storage
     (e.g., disk, replicated log) BEFORE the mutation is applied.
     """
+
     wal_id: str
     commit_id: str
     request_id: str
@@ -83,6 +86,7 @@ class WALEntry:
 @dataclass
 class CommitResult:
     """Result of a commit operation."""
+
     commit_id: str
     request_id: str
     status: CommitStatus
@@ -168,7 +172,7 @@ class CanonicalStore:
         if current:
             self._history[key].append(current)
             if len(self._history[key]) > self._max_history:
-                self._history[key] = self._history[key][-self._max_history:]
+                self._history[key] = self._history[key][-self._max_history :]
 
         self._store[key] = new_val
         return new_val
@@ -303,8 +307,8 @@ class CommitCoordinator:
                         version_before=version_before,
                         duration_ms=(time.monotonic() - start) * 1000,
                         error=f"Version conflict on key '{key}': "
-                              f"expected {expected_versions[key]}, "
-                              f"got {version_before[key]}",
+                        f"expected {expected_versions[key]}, "
+                        f"got {version_before[key]}",
                     )
 
         # ── Phase 2: Write WAL entries ──
@@ -354,7 +358,9 @@ class CommitCoordinator:
 
         # ── Phase 4: Compute diff hash ──
         version_after = {key: self.store.get_version(key) for key in mutations}
-        diff_hash = self._compute_diff_hash(commit_id, mutations, version_before, version_after)
+        diff_hash = self._compute_diff_hash(
+            commit_id, mutations, version_before, version_after
+        )
 
         # Mark WAL as committed
         for entry in wal_entries:

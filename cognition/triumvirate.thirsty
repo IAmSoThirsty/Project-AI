@@ -1,0 +1,57 @@
+# Triumvirate Governance Module
+# Ported from Python to Thirsty-Lang for End-to-End Sovereignty
+
+# Imports (Thirsty-Lang modules)
+import "cognition/audit"
+import "cognition/kernel_liara"
+
+drink ACTIVE_SUBSTITUTION = null
+
+# Core Triumvirate Evaluation Logic
+glass evaluate_triumvirate(health) {
+    # Protection block for governance status
+    shield {
+        drink failed = []
+        
+        # Check pillar health
+        thirsty (not health.galahad.healthy) {
+            failed.push("galahad")
+        }
+        thirsty (not health.cerberus.healthy) {
+            failed.push("cerberus")
+        }
+        thirsty (not health.codex_deus.healthy) {
+            failed.push("codex_deus")
+        }
+
+        # Stable state: All pillars healthy
+        thirsty (failed.length == 0) {
+            thirsty (ACTIVE_SUBSTITUTION != null) {
+                kernel_liara.restore_pillar()
+                audit.audit("TRIUMVIRATE_RESTORED", ACTIVE_SUBSTITUTION)
+                ACTIVE_SUBSTITUTION = null
+            }
+            return "STABLE"
+        }
+
+        # Substituted state: Exactly one pillar failed
+        thirsty (failed.length == 1 and ACTIVE_SUBSTITUTION == null) {
+            drink role = kernel_liara.maybe_activate_liara(failed[0])
+            ACTIVE_SUBSTITUTION = role
+            audit.audit("TRIUMVIRATE_SUBSTITUTION", role)
+            return "SUBSTITUTED"
+        }
+
+        # Governance Hold: Multiple pillar degradation
+        audit.audit("GOVERNANCE_HOLD", failed)
+        
+        # Threat detection and automatic countermeasure
+        detect attacks {
+            morph on: ["governance_bypass", "pillar_sabotage"]
+            defend with: "aggressive"
+        }
+        
+        pour "CRITICAL: Governance Hold - Multiple pillar degradation detected."
+        exit 1
+    }
+}

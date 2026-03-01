@@ -20,7 +20,9 @@ from shadow_thirst.constitutional import create_constitutional_integration
 from shadow_thirst.vm import ShadowAwareVM
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+)
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +46,9 @@ def demo_basic_compilation():
     print(source)
 
     print("\n--- Compiling ---")
-    result = compile_source(source, enable_optimizations=True, enable_static_analysis=True)
+    result = compile_source(
+        source, enable_optimizations=True, enable_static_analysis=True
+    )
 
     print(f"\nCompilation Success: {result.success}")
     print(f"Compilation Time: {result.compilation_time_ms:.2f}ms")
@@ -270,7 +274,9 @@ def demo_complete_pipeline():
 
     print("\n--- Pipeline Stage 11-13: IR & Bytecode Generation ---")
     print(f"✓ IR Generation: {result.stats.get('ir_function_count', 0)} functions")
-    print(f"✓ Bytecode Generation: {result.stats.get('bytecode_function_count', 0)} functions")
+    print(
+        f"✓ Bytecode Generation: {result.stats.get('bytecode_function_count', 0)} functions"
+    )
 
     print("\n--- Pipeline Stage 14-15: Constitutional Hooks & Sealing ---")
     print("✓ Constitutional hooks injected")

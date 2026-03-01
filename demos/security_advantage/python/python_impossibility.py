@@ -16,8 +16,8 @@ Result: IMPOSSIBLE in Python - all protection mechanisms can be bypassed.
 import ctypes
 import gc
 import sys
-from typing import Final
 from inspect import currentframe
+from typing import Final
 
 print("=" * 80)
 print("PYTHON SECRET PROTECTION: IMPOSSIBLE TO ACHIEVE ABSOLUTE SECURITY")

@@ -137,13 +137,15 @@ class GovernanceManager:
                 logger.warning("Stakeholder already exists: %s", stakeholder_id)
                 return False
 
-        self.state["stakeholders"].append({
-            "id": stakeholder_id,
-            "name": name,
-            "role": role,
-            "weight": weight,
-            "joined_at": datetime.now().isoformat(),
-        })
+        self.state["stakeholders"].append(
+            {
+                "id": stakeholder_id,
+                "name": name,
+                "role": role,
+                "weight": weight,
+                "joined_at": datetime.now().isoformat(),
+            }
+        )
         self.save_state()
         logger.info("Added stakeholder: %s (role=%s, weight=%.2f)", name, role, weight)
         return True
@@ -247,7 +249,9 @@ class GovernanceManager:
         logger.info("Created proposal: %s (ID: %s)", title, proposal_id)
         return proposal_id
 
-    def _find_active_proposal(self, proposal_id: str) -> tuple[dict[str, Any] | None, int | None]:
+    def _find_active_proposal(
+        self, proposal_id: str
+    ) -> tuple[dict[str, Any] | None, int | None]:
         """Locate an active proposal and its index."""
         for i, p in enumerate(self.state["active_proposals"]):
             if p["proposal_id"] == proposal_id:
@@ -389,7 +393,12 @@ class GovernanceManager:
         no_votes = proposal["votes"]["no"]
 
         if yes_votes <= no_votes:
-            logger.info("Proposal %s did not pass (yes=%.1f, no=%.1f)", proposal_id, yes_votes, no_votes)
+            logger.info(
+                "Proposal %s did not pass (yes=%.1f, no=%.1f)",
+                proposal_id,
+                yes_votes,
+                no_votes,
+            )
             proposal["status"] = "rejected"
             proposal["resolved_at"] = datetime.now().isoformat()
             # Move to rejected list

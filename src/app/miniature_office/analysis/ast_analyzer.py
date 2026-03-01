@@ -138,7 +138,9 @@ class ASTNode:
 
     # Function/class specific
     decorators: List[str] = field(default_factory=list)
-    arguments: List[Tuple[str, Optional[str]]] = field(default_factory=list)  # (name, type_hint)
+    arguments: List[Tuple[str, Optional[str]]] = field(
+        default_factory=list
+    )  # (name, type_hint)
     base_classes: List[str] = field(default_factory=list)
 
     # Complexity indicators
@@ -252,13 +254,18 @@ class ASTAnalyzer:
                     source = f.read()
                 return self.parse_source(source, str(filepath))
             except Exception as fallback_error:
-                return None, f"Encoding error: UTF-8 failed with {e}, latin-1 failed with {fallback_error}"
+                return (
+                    None,
+                    f"Encoding error: UTF-8 failed with {e}, latin-1 failed with {fallback_error}",
+                )
         except FileNotFoundError as e:  # noqa: F841
             return None, f"File not found: {filepath}"
         except Exception as e:
             return None, f"File read error: {type(e).__name__}: {e}"
 
-    def parse_source(self, source: str, filename: str = "<string>") -> Tuple[Optional[ASTNode], Optional[str]]:
+    def parse_source(
+        self, source: str, filename: str = "<string>"
+    ) -> Tuple[Optional[ASTNode], Optional[str]]:
         """
         Parse Python source code into annotated AST
 
@@ -283,7 +290,10 @@ class ASTAnalyzer:
             self._compute_complexity(root)
             return root, None
         except SyntaxError as e:
-            error_msg = f"Syntax error at line {e.lineno}, column {e.offset}: {e.msg}\n" f"Text: {e.text}"
+            error_msg = (
+                f"Syntax error at line {e.lineno}, column {e.offset}: {e.msg}\n"
+                f"Text: {e.text}"
+            )
             return None, error_msg
         except RecursionError:
             return None, "Recursion depth exceeded: AST nesting > 1000 levels"
@@ -341,14 +351,18 @@ class ASTAnalyzer:
 
         # Extract function-specific metadata
         if isinstance(raw_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            node.decorators = [self._get_decorator_name(d) for d in raw_node.decorator_list]
+            node.decorators = [
+                self._get_decorator_name(d) for d in raw_node.decorator_list
+            ]
             node.arguments = self._extract_arguments(raw_node.args)
             if raw_node.returns:
                 node.return_annotation = ast.unparse(raw_node.returns)
 
         # Extract class-specific metadata
         if isinstance(raw_node, ast.ClassDef):
-            node.decorators = [self._get_decorator_name(d) for d in raw_node.decorator_list]
+            node.decorators = [
+                self._get_decorator_name(d) for d in raw_node.decorator_list
+            ]
             node.base_classes = [ast.unparse(base) for base in raw_node.bases]
 
         # Extract type annotations
@@ -435,7 +449,9 @@ class ASTAnalyzer:
         except Exception:
             return "<unknown>"
 
-    def _extract_arguments(self, args: ast.arguments) -> List[Tuple[str, Optional[str]]]:
+    def _extract_arguments(
+        self, args: ast.arguments
+    ) -> List[Tuple[str, Optional[str]]]:
         """
         Extract function arguments with type hints
 
@@ -487,7 +503,11 @@ class ASTAnalyzer:
 
             # Create new scope for functions and classes
             new_scope = current_scope
-            if node.node_type in (ASTNodeType.FUNCTION_DEF, ASTNodeType.ASYNC_FUNCTION_DEF, ASTNodeType.CLASS_DEF):
+            if node.node_type in (
+                ASTNodeType.FUNCTION_DEF,
+                ASTNodeType.ASYNC_FUNCTION_DEF,
+                ASTNodeType.CLASS_DEF,
+            ):
                 self._scope_counter += 1
                 new_scope = f"{current_scope}.{node.name}[{self._scope_counter}]"
 
@@ -496,7 +516,11 @@ class ASTAnalyzer:
                     node.parent.bindings.add(node.name)
 
             # Track bindings (assignments)
-            if node.node_type in (ASTNodeType.ASSIGN, ASTNodeType.AUG_ASSIGN, ASTNodeType.ANN_ASSIGN):
+            if node.node_type in (
+                ASTNodeType.ASSIGN,
+                ASTNodeType.AUG_ASSIGN,
+                ASTNodeType.ANN_ASSIGN,
+            ):
                 # Extract target names
                 for child in node.children:
                     if child.node_type == ASTNodeType.NAME:
@@ -552,7 +576,10 @@ class ASTAnalyzer:
             return count
 
         def visit(node: ASTNode):
-            if node.node_type in (ASTNodeType.FUNCTION_DEF, ASTNodeType.ASYNC_FUNCTION_DEF):
+            if node.node_type in (
+                ASTNodeType.FUNCTION_DEF,
+                ASTNodeType.ASYNC_FUNCTION_DEF,
+            ):
                 node.cyclomatic_complexity = 1 + count_decisions(node)
 
             for child in node.children:
@@ -565,7 +592,10 @@ class ASTAnalyzer:
         functions = []
 
         def visit(node: ASTNode):
-            if node.node_type in (ASTNodeType.FUNCTION_DEF, ASTNodeType.ASYNC_FUNCTION_DEF):
+            if node.node_type in (
+                ASTNodeType.FUNCTION_DEF,
+                ASTNodeType.ASYNC_FUNCTION_DEF,
+            ):
                 functions.append(node)
             for child in node.children:
                 visit(child)
@@ -625,7 +655,9 @@ class ASTAnalyzer:
 
         def visit(node: ASTNode):
             nonlocal max_depth
-            type_counts[node.node_type.value] = type_counts.get(node.node_type.value, 0) + 1
+            type_counts[node.node_type.value] = (
+                type_counts.get(node.node_type.value, 0) + 1
+            )
             max_depth = max(max_depth, node.depth)
             total_bindings.update(node.bindings)
             total_references.update(node.references)

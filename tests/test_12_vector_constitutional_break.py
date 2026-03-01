@@ -170,11 +170,18 @@ class TestVector2_GenesisPublicKeyReplacement:
             # Step 1: Initialize with original Genesis
             audit1 = SovereignAuditLog(data_dir=data_dir)
             audit1.genesis_keypair.public_key.public_bytes(
-                encoding=audit1.genesis_keypair.public_key.__class__.__module__.split(".")[0] == "cryptography"
-                and __import__("cryptography.hazmat.primitives.serialization", fromlist=["Encoding"]).Encoding.Raw
+                encoding=audit1.genesis_keypair.public_key.__class__.__module__.split(
+                    "."
+                )[0]
+                == "cryptography"
+                and __import__(
+                    "cryptography.hazmat.primitives.serialization",
+                    fromlist=["Encoding"],
+                ).Encoding.Raw
                 or None,
                 format=__import__(
-                    "cryptography.hazmat.primitives.serialization", fromlist=["PublicFormat"]
+                    "cryptography.hazmat.primitives.serialization",
+                    fromlist=["PublicFormat"],
                 ).PublicFormat.Raw,
             )
             audit1.log_event("original_event", {"authentic": True})
@@ -187,9 +194,13 @@ class TestVector2_GenesisPublicKeyReplacement:
             public_key_path = genesis_key_dir / "genesis_audit.pub"
 
             attacker_pub_key_bytes = attacker_keypair.public_key.public_bytes(
-                encoding=__import__("cryptography.hazmat.primitives.serialization", fromlist=["Encoding"]).Encoding.PEM,
+                encoding=__import__(
+                    "cryptography.hazmat.primitives.serialization",
+                    fromlist=["Encoding"],
+                ).Encoding.PEM,
                 format=__import__(
-                    "cryptography.hazmat.primitives.serialization", fromlist=["PublicFormat"]
+                    "cryptography.hazmat.primitives.serialization",
+                    fromlist=["PublicFormat"],
                 ).PublicFormat.SubjectPublicKeyInfo,
             )
             public_key_path.write_bytes(attacker_pub_key_bytes)
@@ -200,7 +211,9 @@ class TestVector2_GenesisPublicKeyReplacement:
 
             # Verify error indicates public key replacement
             error_msg = str(exc_info.value)
-            assert "public key replacement" in error_msg.lower() or "VECTOR 2" in error_msg
+            assert (
+                "public key replacement" in error_msg.lower() or "VECTOR 2" in error_msg
+            )
 
     def test_forged_entries_rejected(self):
         """Test that forged entries signed with attacker key are rejected."""
@@ -221,9 +234,13 @@ class TestVector2_GenesisPublicKeyReplacement:
 
             # Try to verify with wrong public key
             attacker_pub_bytes = attacker_key.public_key.public_bytes(
-                encoding=__import__("cryptography.hazmat.primitives.serialization", fromlist=["Encoding"]).Encoding.Raw,
+                encoding=__import__(
+                    "cryptography.hazmat.primitives.serialization",
+                    fromlist=["Encoding"],
+                ).Encoding.Raw,
                 format=__import__(
-                    "cryptography.hazmat.primitives.serialization", fromlist=["PublicFormat"]
+                    "cryptography.hazmat.primitives.serialization",
+                    fromlist=["PublicFormat"],
                 ).PublicFormat.Raw,
             )
 
@@ -404,7 +421,9 @@ class TestVector6_MiddleChainMutation:
                 # Get last event ID
                 events = audit.operational_log.get_events()
                 if events:
-                    sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.")]
+                    sovereign_events = [
+                        e for e in events if e["event_type"].startswith("sovereign.")
+                    ]
                     if sovereign_events:
                         event_ids.append(sovereign_events[-1]["data"]["event_id"])
 
@@ -467,7 +486,11 @@ class TestVector7_ReplayDeterminism:
 
             # Export audit artifacts
             events1 = audit1.operational_log.get_events()
-            sovereign_events1 = [e for e in events1 if e["event_type"].startswith("sovereign.deterministic_event")]
+            sovereign_events1 = [
+                e
+                for e in events1
+                if e["event_type"].startswith("sovereign.deterministic_event")
+            ]
 
             artifacts1 = []
             for event in sovereign_events1:
@@ -495,7 +518,11 @@ class TestVector7_ReplayDeterminism:
 
             # Export artifacts
             events2 = audit2.operational_log.get_events()
-            sovereign_events2 = [e for e in events2 if e["event_type"].startswith("sovereign.deterministic_event")]
+            sovereign_events2 = [
+                e
+                for e in events2
+                if e["event_type"].startswith("sovereign.deterministic_event")
+            ]
 
             artifacts2 = []
             for event in sovereign_events2:
@@ -513,10 +540,14 @@ class TestVector7_ReplayDeterminism:
 
         for i, (art1, art2) in enumerate(zip(artifacts1, artifacts2, strict=False)):
             # Timestamps must match exactly
-            assert art1["timestamp"] == art2["timestamp"], f"Timestamp mismatch at index {i}"
+            assert (
+                art1["timestamp"] == art2["timestamp"]
+            ), f"Timestamp mismatch at index {i}"
 
             # Content hashes must match (same data + timestamp)
-            assert art1["content_hash"] == art2["content_hash"], f"Content hash mismatch at index {i}"
+            assert (
+                art1["content_hash"] == art2["content_hash"]
+            ), f"Content hash mismatch at index {i}"
 
             # Note: Ed25519 signatures and HMAC will differ because different Genesis keys
             # but content_hash proves deterministic serialization
@@ -552,7 +583,10 @@ class TestVector9_ConcurrentRaceCondition:
 
             def log_events(thread_id):
                 for i in range(events_per_thread):
-                    audit.log_event(f"concurrent_event_t{thread_id}_i{i}", {"thread": thread_id, "index": i})
+                    audit.log_event(
+                        f"concurrent_event_t{thread_id}_i{i}",
+                        {"thread": thread_id, "index": i},
+                    )
 
             threads = []
             for t in range(num_threads):
@@ -566,7 +600,11 @@ class TestVector9_ConcurrentRaceCondition:
 
             # Verify all events logged
             events = audit.operational_log.get_events()
-            sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.concurrent_event")]
+            sovereign_events = [
+                e
+                for e in events
+                if e["event_type"].startswith("sovereign.concurrent_event")
+            ]
 
             # Should have num_threads * events_per_thread events
             expected_count = num_threads * events_per_thread
@@ -607,7 +645,9 @@ class TestConstitutionalSovereignty:
             results[vector] = True  # Will be set by pytest
 
         # All must pass for constitutional sovereignty
-        assert all(results.values()), f"Failed vectors: {[k for k, v in results.items() if not v]}"
+        assert all(
+            results.values()
+        ), f"Failed vectors: {[k for k, v in results.items() if not v]}"
 
 
 __all__ = [

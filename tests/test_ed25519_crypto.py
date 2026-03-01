@@ -13,8 +13,9 @@ Validates:
 
 from __future__ import annotations
 
-import sys
 import os
+import sys
+
 import pytest
 
 # Ensure src is on the path
@@ -22,8 +23,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
 from psia.crypto.ed25519_provider import Ed25519KeyPair, Ed25519Provider, KeyStore
 
-
 # ── Key Generation ──────────────────────────────────────────────────────
+
 
 class TestKeyGeneration:
     """Tests for Ed25519Provider.generate_keypair."""
@@ -51,12 +52,14 @@ class TestKeyGeneration:
 
     def test_created_at_is_iso_timestamp(self) -> None:
         from datetime import datetime
+
         kp = Ed25519Provider.generate_keypair("ts_check")
         # Should parse without error
         datetime.fromisoformat(kp.created_at)
 
 
 # ── Signing & Verification ──────────────────────────────────────────────
+
 
 class TestSigningVerification:
     """Tests for Ed25519Provider.sign / verify."""
@@ -108,6 +111,7 @@ class TestSigningVerification:
 
 # ── String Signing ──────────────────────────────────────────────────────
 
+
 class TestStringSigning:
     """Tests for sign_string / verify_string convenience methods."""
 
@@ -123,6 +127,7 @@ class TestStringSigning:
 
 
 # ── Public Key Serialization ──────────────────────────────────────────
+
 
 class TestPublicKeySerialization:
     """Tests for serialize_public_key / deserialize_public_key."""
@@ -141,6 +146,7 @@ class TestPublicKeySerialization:
 
 
 # ── KeyStore ────────────────────────────────────────────────────────────
+
 
 class TestKeyStore:
     """Tests for KeyStore registry operations."""

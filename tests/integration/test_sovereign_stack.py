@@ -3,16 +3,18 @@ Integration tests for Sovereign Stack
 Verifies real functionality of all subsystems
 """
 
-import pytest
 import logging
 from pathlib import Path
+
+import pytest
+
 from project_ai.orchestrator import BootSequence
 from project_ai.orchestrator.subsystems import (
     CerberusIntegration,
-    ThirstyLangIntegration,
     MonolithIntegration,
-    WaterfallIntegration,
+    ThirstyLangIntegration,
     TriumvirateIntegration,
+    WaterfallIntegration,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +46,9 @@ class TestCerberusIntegration:
 
         cerberus.stop()
 
-    @pytest.mark.skipif(not Path("external/Cerberus/src").exists(), reason="Cerberus not installed")
+    @pytest.mark.skipif(
+        not Path("external/Cerberus/src").exists(), reason="Cerberus not installed"
+    )
     def test_cerberus_analyzes_input(self):
         """Verify Cerberus can analyze threats (if available)"""
         cerberus = CerberusIntegration({})
@@ -71,7 +75,10 @@ class TestThirstyLangIntegration:
         assert "active" in status
         assert "cli_path" in status
 
-    @pytest.mark.skipif(not Path("external/Thirsty-Lang/src/cli.js").exists(), reason="Thirsty-Lang CLI not found")
+    @pytest.mark.skipif(
+        not Path("external/Thirsty-Lang/src/cli.js").exists(),
+        reason="Thirsty-Lang CLI not found",
+    )
     def test_thirsty_lang_starts(self):
         """Verify Thirsty-Lang starts and verifies Node.js"""
         thirsty = ThirstyLangIntegration({})
@@ -87,7 +94,10 @@ class TestThirstyLangIntegration:
             # Expected if Node.js not installed
             pytest.skip(f"Node.js not available: {e}")
 
-    @pytest.mark.skipif(not Path("external/Thirsty-Lang/src/cli.js").exists(), reason="Thirsty-Lang CLI not found")
+    @pytest.mark.skipif(
+        not Path("external/Thirsty-Lang/src/cli.js").exists(),
+        reason="Thirsty-Lang CLI not found",
+    )
     def test_thirsty_lang_compiles_code(self):
         """Verify Thirsty-Lang can actually compile and run code"""
         thirsty = ThirstyLangIntegration({})
@@ -235,7 +245,13 @@ class TestBootSequence:
         boot = BootSequence({})
 
         # Check boot order
-        expected_order = ["cerberus", "monolith", "thirsty_lang", "waterfall", "triumvirate"]
+        expected_order = [
+            "cerberus",
+            "monolith",
+            "thirsty_lang",
+            "waterfall",
+            "triumvirate",
+        ]
         assert boot.boot_order == expected_order
 
     def test_boot_shutdown_graceful(self):

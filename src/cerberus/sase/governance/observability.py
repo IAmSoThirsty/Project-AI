@@ -45,7 +45,9 @@ class MetricsExporter:
 
     def record(self, name: str, value: float, labels: dict = None):
         """Record metric"""
-        metric = Metric(name=name, value=value, timestamp=time.time(), labels=labels or {})
+        metric = Metric(
+            name=name, value=value, timestamp=time.time(), labels=labels or {}
+        )
 
         if name not in self.metrics:
             self.metrics[name] = []
@@ -72,7 +74,9 @@ class MetricsExporter:
                     label_str = "{" + ",".join(label_pairs) + "}"
 
                 # Prometheus format
-                lines.append(f"{metric_name}{label_str} {latest.value} {int(latest.timestamp * 1000)}")
+                lines.append(
+                    f"{metric_name}{label_str} {latest.value} {int(latest.timestamp * 1000)}"
+                )
 
         return "\n".join(lines)
 
@@ -138,7 +142,9 @@ class ObservabilityFabric:
 
     def record_containment_action(self, action_type: str):
         """Record containment action"""
-        self.exporter.record(self.METRIC_CONTAINMENT_ACTIONS, 1.0, {"action": action_type})
+        self.exporter.record(
+            self.METRIC_CONTAINMENT_ACTIONS, 1.0, {"action": action_type}
+        )
 
     def export_metrics(self) -> str:
         """Export all metrics in Prometheus format"""

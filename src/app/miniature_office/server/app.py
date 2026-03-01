@@ -15,15 +15,31 @@ from app.miniature_office.core.audit import EventType, get_audit_log
 from app.miniature_office.core.canonical_bundle import get_canonical_bundle
 from app.miniature_office.core.consigliere import get_consigliere
 from app.miniature_office.core.entity import get_registry
-from app.miniature_office.core.floor_specifications import ProgrammingLanguage, get_all_floors, get_floor_specification
+from app.miniature_office.core.floor_specifications import (
+    ProgrammingLanguage,
+    get_all_floors,
+    get_floor_specification,
+)
 from app.miniature_office.core.head_of_security import ThreatLevel, get_head_of_security
 from app.miniature_office.core.mission import Task
-from app.miniature_office.core.simulation import SimulationConfig, SimulationEngine, create_simulation
+from app.miniature_office.core.simulation import (
+    SimulationConfig,
+    SimulationEngine,
+    create_simulation,
+)
 from app.miniature_office.core.world import Floor, Office, create_world, get_world
-from app.miniature_office.departments.department import Department, get_department_registry
+from app.miniature_office.departments.department import (
+    Department,
+    get_department_registry,
+)
 from app.miniature_office.interfaces.contract import get_elevator_protocol
 from app.miniature_office.server.security import add_security_headers, configure_cors
-from app.miniature_office.tools.supply_store import Tool, ToolMetadata, ToolTag, get_supply_store
+from app.miniature_office.tools.supply_store import (
+    Tool,
+    ToolMetadata,
+    ToolTag,
+    get_supply_store,
+)
 
 # Load environment variables
 load_dotenv()
@@ -118,7 +134,13 @@ def init_simulation():
     supply_store.add_tool(pytest_tool)
 
     # Create a sample task
-    task1 = Task("task-001", "Implement User Authentication", "Create secure user authentication system", None, None)
+    task1 = Task(
+        "task-001",
+        "Implement User Authentication",
+        "Create secure user authentication system",
+        None,
+        None,
+    )
     task1.add_precondition("Requirements document exists")
     task1.add_postcondition("Authentication module is implemented")
     task1.add_acceptance_criterion("Unit tests pass")
@@ -134,12 +156,19 @@ def init_simulation():
 
     # Create simulation
     simulation = create_simulation(
-        world, SimulationConfig(tick_duration_ms=1000, auto_assign_tasks=True)  # 1 second per tick
+        world,
+        SimulationConfig(
+            tick_duration_ms=1000, auto_assign_tasks=True
+        ),  # 1 second per tick
     )
 
     # Register event handlers to broadcast via WebSocket
-    simulation.register_handler("tick_start", lambda data: socketio.emit("tick_start", data))
-    simulation.register_handler("tick_end", lambda data: socketio.emit("tick_end", data))
+    simulation.register_handler(
+        "tick_start", lambda data: socketio.emit("tick_start", data)
+    )
+    simulation.register_handler(
+        "tick_end", lambda data: socketio.emit("tick_end", data)
+    )
 
     return simulation
 
@@ -155,13 +184,25 @@ def health_check():
     """Health check endpoint for monitoring and load balancers"""
     if simulation:
         return (
-            jsonify({"status": "healthy", "service": "miniature-office", "version": "0.1.0", "simulation": "running"}),
+            jsonify(
+                {
+                    "status": "healthy",
+                    "service": "miniature-office",
+                    "version": "0.1.0",
+                    "simulation": "running",
+                }
+            ),
             200,
         )
     else:
         return (
             jsonify(
-                {"status": "starting", "service": "miniature-office", "version": "0.1.0", "simulation": "initializing"}
+                {
+                    "status": "starting",
+                    "service": "miniature-office",
+                    "version": "0.1.0",
+                    "simulation": "initializing",
+                }
             ),
             503,
         )
@@ -179,7 +220,9 @@ def metrics():
 
     # Generate Prometheus format metrics
     metrics_output = []
-    metrics_output.append("# HELP minioffice_world_time Current simulation time in ticks")
+    metrics_output.append(
+        "# HELP minioffice_world_time Current simulation time in ticks"
+    )
     metrics_output.append("# TYPE minioffice_world_time counter")
     metrics_output.append(f"minioffice_world_time {world.time}")
 
@@ -212,11 +255,17 @@ def metrics():
             EventType.SECURITY_EVENT,
         ]
     )
-    metrics_output.append("# HELP minioffice_audit_events_total Total number of audit events")
+    metrics_output.append(
+        "# HELP minioffice_audit_events_total Total number of audit events"
+    )
     metrics_output.append("# TYPE minioffice_audit_events_total counter")
     metrics_output.append(f"minioffice_audit_events_total {event_count}")
 
-    return "\n".join(metrics_output) + "\n", 200, {"Content-Type": "text/plain; version=0.0.4"}
+    return (
+        "\n".join(metrics_output) + "\n",
+        200,
+        {"Content-Type": "text/plain; version=0.0.4"},
+    )
 
 
 @app.route("/api")
@@ -292,7 +341,13 @@ def step_simulation():
 
     simulation.step()
 
-    return jsonify({"success": True, "time": simulation.world.time, "tick_count": simulation.tick_count})
+    return jsonify(
+        {
+            "success": True,
+            "time": simulation.world.time,
+            "tick_count": simulation.tick_count,
+        }
+    )
 
 
 @app.route("/api/world/start", methods=["POST"])
@@ -399,13 +454,16 @@ def get_task(task_id: str):
             "ambiguity_score": task.ambiguity_score,
             "blocked_reason": task.blocked_reason,
             "preconditions": [
-                {"description": c.description, "is_satisfied": c.is_satisfied} for c in task.preconditions
+                {"description": c.description, "is_satisfied": c.is_satisfied}
+                for c in task.preconditions
             ],
             "postconditions": [
-                {"description": c.description, "is_satisfied": c.is_satisfied} for c in task.postconditions
+                {"description": c.description, "is_satisfied": c.is_satisfied}
+                for c in task.postconditions
             ],
             "acceptance_criteria": [
-                {"description": c.description, "is_met": c.is_met} for c in task.acceptance_criteria
+                {"description": c.description, "is_met": c.is_met}
+                for c in task.acceptance_criteria
             ],
             "state_history": task.state_history,
         }
@@ -517,7 +575,9 @@ def get_supply_store_inventory():
         {
             "tools": [t.to_dict() for t in store.tools.values()],
             "available_count": len(store.get_available_tools()),
-            "checked_out_count": len([t for t in store.tools.values() if not t.is_available]),
+            "checked_out_count": len(
+                [t for t in store.tools.values() if not t.is_available]
+            ),
         }
     )
 
@@ -681,7 +741,10 @@ def consigliere_command_agent():
     justification = data.get("justification")
 
     if not agent_id or not new_directive or not justification:
-        return jsonify({"error": "agent_id, new_directive, and justification required"}), 400
+        return (
+            jsonify({"error": "agent_id, new_directive, and justification required"}),
+            400,
+        )
 
     consigliere = get_consigliere()
     result = consigliere.update_agent_directive(agent_id, new_directive, justification)
@@ -735,7 +798,11 @@ def consigliere_assess():
         result = consigliere.tell_human_impossible(
             request=request_text,
             reason="Request contains constraints that appear contradictory or infeasible",
-            alternatives=["Simplify requirements", "Split into multiple tasks", "Adjust constraints"],
+            alternatives=[
+                "Simplify requirements",
+                "Split into multiple tasks",
+                "Adjust constraints",
+            ],
         )
     else:
         result = consigliere.tell_human_feasible(
@@ -776,10 +843,15 @@ def security_grant():
     expires_in_hours = data.get("expires_in_hours")
 
     if not entity_id or not resource or not justification:
-        return jsonify({"error": "entity_id, resource, and justification required"}), 400
+        return (
+            jsonify({"error": "entity_id, resource, and justification required"}),
+            400,
+        )
 
     security = get_head_of_security()
-    permission = security.grant_tool_access(entity_id, resource, justification, expires_in_hours)
+    permission = security.grant_tool_access(
+        entity_id, resource, justification, expires_in_hours
+    )
 
     return jsonify(permission.to_dict())
 
@@ -1096,7 +1168,11 @@ def get_meta_rulings():
                 "ledger_id": ledger.ledger_id,
                 "total_rulings": len(ledger.rulings),
                 "rulings": [
-                    {"ruling_id": r.ruling_id, "ruling_type": r.ruling_type, "timestamp": r.timestamp.isoformat()}
+                    {
+                        "ruling_id": r.ruling_id,
+                        "ruling_type": r.ruling_type,
+                        "timestamp": r.timestamp.isoformat(),
+                    }
                     for r in ledger.rulings[:10]
                 ],
             }
@@ -1113,7 +1189,11 @@ def get_law_failure_matrix():
         matrix = bundle.law_failure_matrix
 
         return jsonify(
-            {"matrix_id": matrix.matrix_id, "version": matrix.version, "total_mappings": len(matrix.responses)}
+            {
+                "matrix_id": matrix.matrix_id,
+                "version": matrix.version,
+                "total_mappings": len(matrix.responses),
+            }
         )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -1131,7 +1211,9 @@ def get_formal_verification():
                 "model_id": models.model_id,
                 "version": models.version,
                 "total_invariants": len(models.invariants),
-                "verified_invariants": len([i for i in models.invariants if i.verified]),
+                "verified_invariants": len(
+                    [i for i in models.invariants if i.verified]
+                ),
             }
         )
     except Exception as e:
@@ -1145,7 +1227,12 @@ def get_violation_playbooks():
         bundle = get_canonical_bundle()
         playbooks = bundle.violation_playbooks
 
-        return jsonify({"playbooks_id": playbooks.playbooks_id, "total_playbooks": len(playbooks.playbooks)})
+        return jsonify(
+            {
+                "playbooks_id": playbooks.playbooks_id,
+                "total_playbooks": len(playbooks.playbooks),
+            }
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1175,7 +1262,9 @@ def get_simulation_traces():
         bundle = get_canonical_bundle()
         corpus = bundle.simulation_traces
 
-        return jsonify({"corpus_id": corpus.corpus_id, "total_traces": len(corpus.traces)})
+        return jsonify(
+            {"corpus_id": corpus.corpus_id, "total_traces": len(corpus.traces)}
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1187,7 +1276,9 @@ def get_reproducibility_packets():
         bundle = get_canonical_bundle()
         packets = bundle.reproducibility_packets
 
-        return jsonify({"packets_id": packets.packets_id, "total_packets": len(packets.packets)})
+        return jsonify(
+            {"packets_id": packets.packets_id, "total_packets": len(packets.packets)}
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1199,7 +1290,12 @@ def get_floor_profiles():
         bundle = get_canonical_bundle()
         profiles = bundle.floor_profiles
 
-        return jsonify({"profiles_id": profiles.profiles_id, "total_profiles": len(profiles.profiles)})
+        return jsonify(
+            {
+                "profiles_id": profiles.profiles_id,
+                "total_profiles": len(profiles.profiles),
+            }
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1229,7 +1325,9 @@ def get_contract_drift():
         bundle = get_canonical_bundle()
         drift = bundle.contract_drift
 
-        return jsonify({"reports_id": drift.reports_id, "total_reports": len(drift.reports)})
+        return jsonify(
+            {"reports_id": drift.reports_id, "total_reports": len(drift.reports)}
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1241,7 +1339,9 @@ def get_tool_provenance():
         bundle = get_canonical_bundle()
         ledger = bundle.tool_provenance
 
-        return jsonify({"ledger_id": ledger.ledger_id, "total_tools": len(ledger.tools)})
+        return jsonify(
+            {"ledger_id": ledger.ledger_id, "total_tools": len(ledger.tools)}
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1257,7 +1357,9 @@ def get_unsafe_exceptions():
             {
                 "records_id": records.records_id,
                 "total_exceptions": len(records.exceptions),
-                "active_exceptions": len([e for e in records.exceptions if not e.revoked]),
+                "active_exceptions": len(
+                    [e for e in records.exceptions if not e.revoked]
+                ),
             }
         )
     except Exception as e:
@@ -1271,7 +1373,9 @@ def get_consigliere_logs():
         bundle = get_canonical_bundle()
         logs = bundle.consigliere_logs
 
-        return jsonify({"logs_id": logs.logs_id, "total_interactions": len(logs.interactions)})
+        return jsonify(
+            {"logs_id": logs.logs_id, "total_interactions": len(logs.interactions)}
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1283,7 +1387,12 @@ def get_security_dossiers():
         bundle = get_canonical_bundle()
         dossiers = bundle.security_dossiers
 
-        return jsonify({"dossiers_id": dossiers.dossiers_id, "total_decisions": len(dossiers.decisions)})
+        return jsonify(
+            {
+                "dossiers_id": dossiers.dossiers_id,
+                "total_decisions": len(dossiers.decisions),
+            }
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1295,7 +1404,9 @@ def get_override_ledger():
         bundle = get_canonical_bundle()
         ledger = bundle.override_ledger
 
-        return jsonify({"ledger_id": ledger.ledger_id, "total_overrides": len(ledger.overrides)})
+        return jsonify(
+            {"ledger_id": ledger.ledger_id, "total_overrides": len(ledger.overrides)}
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1307,7 +1418,12 @@ def get_amendments():
         bundle = get_canonical_bundle()
         registry = bundle.amendment_registry
 
-        return jsonify({"registry_id": registry.registry_id, "total_amendments": len(registry.amendments)})
+        return jsonify(
+            {
+                "registry_id": registry.registry_id,
+                "total_amendments": len(registry.amendments),
+            }
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1319,7 +1435,12 @@ def get_rejected_proposals():
         bundle = get_canonical_bundle()
         archive = bundle.rejected_proposals
 
-        return jsonify({"archive_id": archive.archive_id, "total_proposals": len(archive.proposals)})
+        return jsonify(
+            {
+                "archive_id": archive.archive_id,
+                "total_proposals": len(archive.proposals),
+            }
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1349,7 +1470,9 @@ def get_compliance_reports():
         bundle = get_canonical_bundle()
         reports = bundle.compliance_reports
 
-        return jsonify({"reports_id": reports.reports_id, "total_reports": len(reports.reports)})
+        return jsonify(
+            {"reports_id": reports.reports_id, "total_reports": len(reports.reports)}
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1365,7 +1488,9 @@ def get_freeze_protocol():
             {
                 "protocol_id": protocol.protocol_id,
                 "is_frozen": protocol.is_frozen,
-                "frozen_at": protocol.frozen_at.isoformat() if protocol.frozen_at else None,
+                "frozen_at": (
+                    protocol.frozen_at.isoformat() if protocol.frozen_at else None
+                ),
                 "access_locked": protocol.access_locked,
             }
         )
@@ -1384,7 +1509,9 @@ def get_shutdown_protocol():
             {
                 "protocol_id": protocol.protocol_id,
                 "is_shutdown": protocol.is_shutdown,
-                "shutdown_at": protocol.shutdown_at.isoformat() if protocol.shutdown_at else None,
+                "shutdown_at": (
+                    protocol.shutdown_at.isoformat() if protocol.shutdown_at else None
+                ),
             }
         )
     except Exception as e:
@@ -1427,7 +1554,9 @@ def run_server(host="0.0.0.0", port=5000, debug=False):
 # Only initialize if explicitly in production mode
 if os.getenv("FLASK_ENV") == "production":
     simulation = init_simulation()
-    print(f"Production mode: Simulation initialized with world: {simulation.world.name if simulation else 'None'}")
+    print(
+        f"Production mode: Simulation initialized with world: {simulation.world.name if simulation else 'None'}"
+    )
 
 
 if __name__ == "__main__":

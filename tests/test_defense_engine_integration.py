@@ -24,6 +24,7 @@ from src.app.core.interface_abstractions import (
     validate_subsystem_interface,
 )
 from src.app.core.system_registry import SubsystemPriority, SystemRegistry
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "engines" / "zombie_defense"))
 from defense_engine import DefenseEngine
 
@@ -304,14 +305,18 @@ enable_hot_reload = false
 
     def test_defense_engine_creation(self):
         """Test defense engine creation."""
-        engine = DefenseEngine(config_path=str(self.config_file), data_dir=self.test_dir)
+        engine = DefenseEngine(
+            config_path=str(self.config_file), data_dir=self.test_dir
+        )
 
         self.assertIsNotNone(engine)
         self.assertFalse(engine.running)
 
     def test_defense_engine_initialization(self):
         """Test defense engine initialization."""
-        engine = DefenseEngine(config_path=str(self.config_file), data_dir=self.test_dir)
+        engine = DefenseEngine(
+            config_path=str(self.config_file), data_dir=self.test_dir
+        )
 
         # Note: This will fail without domain modules in path
         # but tests the initialization logic

@@ -58,9 +58,13 @@ class StateTransitionMatrix:
         for i in range(n):
             row_sum = np.sum(self.matrix[i])
             if not np.isclose(row_sum, 1.0):
-                raise ValueError(f"Row {i} probabilities must sum to 1.0, got {row_sum}")
+                raise ValueError(
+                    f"Row {i} probabilities must sum to 1.0, got {row_sum}"
+                )
 
-    def transition_probability(self, from_state: BehaviorState, to_state: BehaviorState) -> float:
+    def transition_probability(
+        self, from_state: BehaviorState, to_state: BehaviorState
+    ) -> float:
         """Get transition probability"""
         i = self.states.index(from_state)
         j = self.states.index(to_state)
@@ -77,7 +81,9 @@ class EmissionProbabilities:
 
     version: str
     states: list[BehaviorState]
-    observations: list[str]  # Observation types (e.g., "HTTP_CALLBACK", "DNS_RESOLUTION")
+    observations: list[
+        str
+    ]  # Observation types (e.g., "HTTP_CALLBACK", "DNS_RESOLUTION")
     matrix: np.ndarray  # States x Observations
 
     def __post_init__(self):
@@ -86,7 +92,9 @@ class EmissionProbabilities:
         n_obs = len(self.observations)
 
         if self.matrix.shape != (n_states, n_obs):
-            raise ValueError(f"Matrix must be {n_states}x{n_obs}, got {self.matrix.shape}")
+            raise ValueError(
+                f"Matrix must be {n_states}x{n_obs}, got {self.matrix.shape}"
+            )
 
         # Validate probabilities sum to 1 for each state
         for i in range(n_states):

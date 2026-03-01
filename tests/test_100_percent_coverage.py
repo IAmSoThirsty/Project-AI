@@ -59,7 +59,7 @@ class TestUserManagerLine84EmptyPassword:
 
             # Initialize UserManager - triggers _load_users and _migrate_plaintext_passwords
             # We mock SecureStorage.load_encrypted_json to return None to trigger plain fallback
-            with patch.object(SecureStorage, 'load_encrypted_json', return_value=None):
+            with patch.object(SecureStorage, "load_encrypted_json", return_value=None):
                 manager = UserManager(users_file=users_file)
 
             # alice and bob should still have plaintext passwords in the dict

@@ -376,9 +376,7 @@ class EntropySlopeMonitor:
             return False, {"reason": "Insufficient snapshots"}
 
         # Filter to recent window
-        window_start = datetime.now().timestamp() - (
-            self.CREEP_WINDOW_DAYS * 24 * 3600
-        )
+        window_start = datetime.now().timestamp() - (self.CREEP_WINDOW_DAYS * 24 * 3600)
         recent_snapshots = [s for s in snapshots if s.timestamp >= window_start]
 
         if len(recent_snapshots) < 2:
@@ -573,12 +571,16 @@ class EntropySlopeMonitor:
             },
             "snapshot_count": len(snapshots),
             "time_range": {
-                "start": datetime.fromtimestamp(snapshots[0].timestamp).isoformat()
-                if snapshots
-                else None,
-                "end": datetime.fromtimestamp(snapshots[-1].timestamp).isoformat()
-                if snapshots
-                else None,
+                "start": (
+                    datetime.fromtimestamp(snapshots[0].timestamp).isoformat()
+                    if snapshots
+                    else None
+                ),
+                "end": (
+                    datetime.fromtimestamp(snapshots[-1].timestamp).isoformat()
+                    if snapshots
+                    else None
+                ),
             },
         }
 

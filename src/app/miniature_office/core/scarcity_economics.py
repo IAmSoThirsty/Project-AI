@@ -96,10 +96,13 @@ class ResourceLedgerEntry:
         """Calculate remaining resources"""
         return ResourceAllocation(
             agent_time=self.allocated.agent_time - self.spent.agent_time,
-            manager_attention=self.allocated.manager_attention - self.spent.manager_attention,
-            consensus_bandwidth=self.allocated.consensus_bandwidth - self.spent.consensus_bandwidth,
+            manager_attention=self.allocated.manager_attention
+            - self.spent.manager_attention,
+            consensus_bandwidth=self.allocated.consensus_bandwidth
+            - self.spent.consensus_bandwidth,
             tool_slots=self.allocated.tool_slots - self.spent.tool_slots,
-            simulation_budget=self.allocated.simulation_budget - self.spent.simulation_budget,
+            simulation_budget=self.allocated.simulation_budget
+            - self.spent.simulation_budget,
         )
 
     def is_exhausted(self) -> bool:
@@ -131,7 +134,10 @@ class TaskCostProfile:
 
     @staticmethod
     def calculate_cost(
-        is_high_risk: bool = False, is_rework: bool = False, is_blocked: bool = False, is_meta_office: bool = False
+        is_high_risk: bool = False,
+        is_rework: bool = False,
+        is_blocked: bool = False,
+        is_meta_office: bool = False,
     ) -> ResourceAllocation:
         """
         Calculate resource cost based on task characteristics.
@@ -143,7 +149,11 @@ class TaskCostProfile:
         - Meta-Office decisions cost the most
         """
         base_cost = ResourceAllocation(
-            agent_time=10, manager_attention=1, consensus_bandwidth=1, tool_slots=1, simulation_budget=0
+            agent_time=10,
+            manager_attention=1,
+            consensus_bandwidth=1,
+            tool_slots=1,
+            simulation_budget=0,
         )
 
         multiplier = 1.0
@@ -209,27 +219,39 @@ class ResourceLedger:
     """
 
     def __init__(self):
-        self.ledger: Dict[str, Dict[int, ResourceLedgerEntry]] = {}  # entity_id -> tick -> entry
+        self.ledger: Dict[str, Dict[int, ResourceLedgerEntry]] = (
+            {}
+        )  # entity_id -> tick -> entry
         self.priority_market: Dict[str, PriorityBid] = {}
 
-    def allocate_resources(self, entity_id: str, tick: int, allocation: ResourceAllocation) -> ResourceLedgerEntry:
+    def allocate_resources(
+        self, entity_id: str, tick: int, allocation: ResourceAllocation
+    ) -> ResourceLedgerEntry:
         """Allocate resources to an entity for a tick"""
         if entity_id not in self.ledger:
             self.ledger[entity_id] = {}
 
-        entry = ResourceLedgerEntry(entity_id=entity_id, tick=tick, allocated=allocation)
+        entry = ResourceLedgerEntry(
+            entity_id=entity_id, tick=tick, allocated=allocation
+        )
 
         self.ledger[entity_id][tick] = entry
 
         get_audit_log().log_event(
             EventType.AGENT_ACTION,
             target_id=entity_id,
-            data={"action": "resources_allocated", "tick": tick, "allocation": allocation.to_dict()},
+            data={
+                "action": "resources_allocated",
+                "tick": tick,
+                "allocation": allocation.to_dict(),
+            },
         )
 
         return entry
 
-    def spend_resource(self, entity_id: str, tick: int, resource_type: ResourceType, amount: int) -> bool:
+    def spend_resource(
+        self, entity_id: str, tick: int, resource_type: ResourceType, amount: int
+    ) -> bool:
         """
         Spend a resource.
         Returns False if insufficient resources (triggers halt/reprioritization)
@@ -260,12 +282,19 @@ class ResourceLedger:
         get_audit_log().log_event(
             EventType.AGENT_ACTION,
             actor_id=entity_id,
-            data={"action": "resource_spent", "tick": tick, "resource_type": resource_type.value, "amount": amount},
+            data={
+                "action": "resource_spent",
+                "tick": tick,
+                "resource_type": resource_type.value,
+                "amount": amount,
+            },
         )
 
         return True
 
-    def _handle_budget_exceeded(self, entity_id: str, tick: int, resource_type: ResourceType):
+    def _handle_budget_exceeded(
+        self, entity_id: str, tick: int, resource_type: ResourceType
+    ):
         """
         Handle budget exceedance (II.2).
         Exceeding budget:
@@ -276,7 +305,12 @@ class ResourceLedger:
         get_audit_log().log_event(
             EventType.SECURITY_EVENT,
             actor_id=entity_id,
-            data={"event": "budget_exceeded", "tick": tick, "resource_type": resource_type.value, "severity": "high"},
+            data={
+                "event": "budget_exceeded",
+                "tick": tick,
+                "resource_type": resource_type.value,
+                "severity": "high",
+            },
         )
 
         # In production, this would trigger:
@@ -284,7 +318,9 @@ class ResourceLedger:
         # 2. Notification to managers
         # 3. Emergency reprioritization
 
-    def get_ledger_entry(self, entity_id: str, tick: int) -> Optional[ResourceLedgerEntry]:
+    def get_ledger_entry(
+        self, entity_id: str, tick: int
+    ) -> Optional[ResourceLedgerEntry]:
         """Get ledger entry for entity at tick"""
         if entity_id in self.ledger and tick in self.ledger[entity_id]:
             return self.ledger[entity_id][tick]
@@ -310,7 +346,9 @@ class ResourceLedger:
         Resolve pending priority bids.
         Returns dict of bid_id -> status
         """
-        pending_bids = [b for b in self.priority_market.values() if b.status == "pending"]
+        pending_bids = [
+            b for b in self.priority_market.values() if b.status == "pending"
+        ]
 
         # Sort by priority (higher priority wins)
         pending_bids.sort(key=lambda b: b.priority_offered, reverse=True)
@@ -320,7 +358,9 @@ class ResourceLedger:
         for bid in pending_bids:
             # Check if resources are available
             entry = self.get_ledger_entry(bid.task_id, tick)
-            if entry and entry.remaining().has_capacity(bid.resource_type, bid.amount_requested):
+            if entry and entry.remaining().has_capacity(
+                bid.resource_type, bid.amount_requested
+            ):
                 bid.status = "accepted"
                 results[bid.bid_id] = "accepted"
             else:
@@ -329,7 +369,9 @@ class ResourceLedger:
 
         return results
 
-    def get_entity_resources(self, entity_id: str, tick: int) -> Optional[ResourceAllocation]:
+    def get_entity_resources(
+        self, entity_id: str, tick: int
+    ) -> Optional[ResourceAllocation]:
         """Get remaining resources for entity at tick"""
         entry = self.get_ledger_entry(entity_id, tick)
         if entry:

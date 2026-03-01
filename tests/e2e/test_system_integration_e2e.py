@@ -46,7 +46,9 @@ def authenticated_flask_admin(flask_client):
 class TestCrossComponentIntegration:
     """Test workflows that span multiple components."""
 
-    def test_e2e_web_to_governance_flow(self, authenticated_flask_admin, governance_api_available):
+    def test_e2e_web_to_governance_flow(
+        self, authenticated_flask_admin, governance_api_available
+    ):
         """
         Test complete flow: User authenticates in web backend,
         then submits governed intent.
@@ -56,7 +58,9 @@ class TestCrossComponentIntegration:
         token = authenticated_flask_admin["token"]
 
         # Step 2: Verify Flask auth works
-        profile_response = client.get("/api/auth/profile", headers={"X-Auth-Token": token})
+        profile_response = client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": token}
+        )
         assert profile_response.status_code == 200
         user_data = profile_response.get_json()["user"]
         username = user_data["username"]
@@ -71,7 +75,9 @@ class TestCrossComponentIntegration:
             "context": {"authenticated_user": username},
         }
 
-        gov_response = requests.post(f"{GOVERNANCE_API_URL}/intent", json=intent, timeout=TIMEOUT)
+        gov_response = requests.post(
+            f"{GOVERNANCE_API_URL}/intent", json=intent, timeout=TIMEOUT
+        )
 
         # Step 4: Verify governance approved request
         assert gov_response.status_code == 200
@@ -88,16 +94,22 @@ class TestCrossComponentIntegration:
         audit_hashes = [r["intent_hash"] for r in audit_data["records"]]
         assert intent_hash in audit_hashes
 
-    def test_e2e_multi_user_governance_isolation(self, flask_client, governance_api_available):
+    def test_e2e_multi_user_governance_isolation(
+        self, flask_client, governance_api_available
+    ):
         """
         Test that multiple authenticated users can submit
         governed intents independently.
         """
         # Step 1: Create two user sessions
-        admin_login = flask_client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        admin_login = flask_client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         admin_login.get_json()["token"]
 
-        guest_login = flask_client.post("/api/auth/login", json={"username": "guest", "password": "letmein"})
+        guest_login = flask_client.post(
+            "/api/auth/login", json={"username": "guest", "password": "letmein"}
+        )
         guest_login.get_json()["token"]
 
         # Step 2: Each user submits their own intent
@@ -117,9 +129,13 @@ class TestCrossComponentIntegration:
             "context": {"user": "guest"},
         }
 
-        admin_response = requests.post(f"{GOVERNANCE_API_URL}/intent", json=admin_intent, timeout=TIMEOUT)
+        admin_response = requests.post(
+            f"{GOVERNANCE_API_URL}/intent", json=admin_intent, timeout=TIMEOUT
+        )
 
-        guest_response = requests.post(f"{GOVERNANCE_API_URL}/intent", json=guest_intent, timeout=TIMEOUT)
+        guest_response = requests.post(
+            f"{GOVERNANCE_API_URL}/intent", json=guest_intent, timeout=TIMEOUT
+        )
 
         # Step 3: Verify both intents processed independently
         assert admin_response.status_code == 200
@@ -136,12 +152,16 @@ class TestCrossComponentIntegration:
         Test that user roles affect governance decisions.
         """
         # Step 1: Login as admin
-        admin_login = flask_client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        admin_login = flask_client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         admin_user = admin_login.get_json()["user"]
         assert admin_user["role"] == "superuser"
 
         # Step 2: Login as guest
-        guest_login = flask_client.post("/api/auth/login", json={"username": "guest", "password": "letmein"})
+        guest_login = flask_client.post(
+            "/api/auth/login", json={"username": "guest", "password": "letmein"}
+        )
         guest_user = guest_login.get_json()["user"]
         assert guest_user["role"] == "viewer"
 
@@ -162,9 +182,13 @@ class TestCrossComponentIntegration:
             "context": {"role": "viewer"},
         }
 
-        admin_response = requests.post(f"{GOVERNANCE_API_URL}/intent", json=admin_intent, timeout=TIMEOUT)
+        admin_response = requests.post(
+            f"{GOVERNANCE_API_URL}/intent", json=admin_intent, timeout=TIMEOUT
+        )
 
-        guest_response = requests.post(f"{GOVERNANCE_API_URL}/intent", json=guest_intent, timeout=TIMEOUT)
+        guest_response = requests.post(
+            f"{GOVERNANCE_API_URL}/intent", json=guest_intent, timeout=TIMEOUT
+        )
 
         # Both should be allowed to read
         assert admin_response.status_code == 200
@@ -174,7 +198,9 @@ class TestCrossComponentIntegration:
 class TestSystemHealthAndMonitoring:
     """Test system-wide health and monitoring workflows."""
 
-    def test_e2e_complete_system_health_check(self, flask_client, governance_api_available):
+    def test_e2e_complete_system_health_check(
+        self, flask_client, governance_api_available
+    ):
         """
         Test complete system health across all components.
         """
@@ -197,7 +223,9 @@ class TestSystemHealthAndMonitoring:
         assert "version" in tarl_data
         assert tarl_data["version"] == gov_data["tarl"]
 
-    def test_e2e_system_availability_under_load(self, flask_client, governance_api_available):
+    def test_e2e_system_availability_under_load(
+        self, flask_client, governance_api_available
+    ):
         """
         Test system remains available under concurrent load.
         """
@@ -228,19 +256,25 @@ class TestSystemHealthAndMonitoring:
 class TestCompleteUserJourneys:
     """Test complete end-to-end user journeys through the entire system."""
 
-    def test_e2e_new_user_onboarding_and_first_action(self, flask_client, governance_api_available):
+    def test_e2e_new_user_onboarding_and_first_action(
+        self, flask_client, governance_api_available
+    ):
         """
         Test complete journey: New user login -> authenticate -> perform action.
         """
         # Step 1: User logs into web backend
-        login_response = flask_client.post("/api/auth/login", json={"username": "guest", "password": "letmein"})
+        login_response = flask_client.post(
+            "/api/auth/login", json={"username": "guest", "password": "letmein"}
+        )
         assert login_response.status_code == 200
         login_data = login_response.get_json()
         token = login_data["token"]
         username = login_data["user"]["username"]
 
         # Step 2: User verifies their profile
-        profile_response = flask_client.get("/api/auth/profile", headers={"X-Auth-Token": token})
+        profile_response = flask_client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": token}
+        )
         assert profile_response.status_code == 200
         profile_data = profile_response.get_json()
         assert profile_data["user"]["username"] == username
@@ -254,7 +288,9 @@ class TestCompleteUserJourneys:
             "context": {"first_action": True, "user": username},
         }
 
-        gov_response = requests.post(f"{GOVERNANCE_API_URL}/intent", json=intent, timeout=TIMEOUT)
+        gov_response = requests.post(
+            f"{GOVERNANCE_API_URL}/intent", json=intent, timeout=TIMEOUT
+        )
 
         # Step 4: Verify action was governed and allowed
         assert gov_response.status_code == 200
@@ -262,7 +298,9 @@ class TestCompleteUserJourneys:
         assert gov_data["governance"]["final_verdict"] == "allow"
 
         # Step 5: Verify action appears in audit log
-        audit_response = requests.get(f"{GOVERNANCE_API_URL}/audit?limit=50", timeout=TIMEOUT)
+        audit_response = requests.get(
+            f"{GOVERNANCE_API_URL}/audit?limit=50", timeout=TIMEOUT
+        )
         assert audit_response.status_code == 200
         audit_data = audit_response.json()
 
@@ -270,18 +308,24 @@ class TestCompleteUserJourneys:
         audit_hashes = [r["intent_hash"] for r in audit_data["records"]]
         assert intent_hash in audit_hashes
 
-    def test_e2e_admin_privileged_workflow(self, flask_client, governance_api_available):
+    def test_e2e_admin_privileged_workflow(
+        self, flask_client, governance_api_available
+    ):
         """
         Test complete admin workflow with multiple operations.
         """
         # Step 1: Admin logs in
-        login_response = flask_client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        login_response = flask_client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         assert login_response.status_code == 200
         admin_data = login_response.get_json()
         token = admin_data["token"]
 
         # Step 2: Admin verifies superuser role
-        profile_response = flask_client.get("/api/auth/profile", headers={"X-Auth-Token": token})
+        profile_response = flask_client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": token}
+        )
         assert profile_response.status_code == 200
         assert profile_response.get_json()["user"]["role"] == "superuser"
 
@@ -309,7 +353,9 @@ class TestCompleteUserJourneys:
 
         results = []
         for op in operations:
-            response = requests.post(f"{GOVERNANCE_API_URL}/intent", json=op, timeout=TIMEOUT)
+            response = requests.post(
+                f"{GOVERNANCE_API_URL}/intent", json=op, timeout=TIMEOUT
+            )
             results.append(response)
 
         # Step 4: Verify all operations were processed
@@ -325,7 +371,9 @@ class TestCompleteUserJourneys:
         Test complete workflow when security denies an action.
         """
         # Step 1: User authenticates
-        login_response = flask_client.post("/api/auth/login", json={"username": "guest", "password": "letmein"})
+        login_response = flask_client.post(
+            "/api/auth/login", json={"username": "guest", "password": "letmein"}
+        )
         assert login_response.status_code == 200
 
         # Step 2: User attempts high-risk action
@@ -336,7 +384,9 @@ class TestCompleteUserJourneys:
             "origin": "web-frontend",
         }
 
-        response = requests.post(f"{GOVERNANCE_API_URL}/intent", json=dangerous_intent, timeout=TIMEOUT)
+        response = requests.post(
+            f"{GOVERNANCE_API_URL}/intent", json=dangerous_intent, timeout=TIMEOUT
+        )
 
         # Step 3: Verify governance denied the action
         assert response.status_code == 403
@@ -348,12 +398,16 @@ class TestCompleteUserJourneys:
         assert governance["final_verdict"] == "deny"
 
         # Step 5: Check audit log contains the denial
-        audit_response = requests.get(f"{GOVERNANCE_API_URL}/audit?limit=50", timeout=TIMEOUT)
+        audit_response = requests.get(
+            f"{GOVERNANCE_API_URL}/audit?limit=50", timeout=TIMEOUT
+        )
         assert audit_response.status_code == 200
         audit_data = audit_response.json()
 
         # Find the denied intent
-        denied_records = [r for r in audit_data["records"] if r["final_verdict"] == "deny"]
+        denied_records = [
+            r for r in audit_data["records"] if r["final_verdict"] == "deny"
+        ]
         assert len(denied_records) > 0
 
 
@@ -365,12 +419,16 @@ class TestSystemResilienceE2E:
         Test Flask backend continues operating even if governance API is down.
         """
         # Step 1: Flask backend operations should work independently
-        login_response = flask_client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        login_response = flask_client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         assert login_response.status_code == 200
         token = login_response.get_json()["token"]
 
         # Step 2: Profile access should work
-        profile_response = flask_client.get("/api/auth/profile", headers={"X-Auth-Token": token})
+        profile_response = flask_client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": token}
+        )
         assert profile_response.status_code == 200
 
         # Step 3: Status check should work
@@ -394,7 +452,9 @@ class TestSystemResilienceE2E:
         assert gov_health.status_code == 200
 
         # Step 4: Verify normal operations work after error
-        login_response = flask_client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        login_response = flask_client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         assert login_response.status_code == 200
 
 
@@ -406,12 +466,16 @@ class TestAuditAndCompliance:
         Test that all user actions create proper audit trail.
         """
         # Step 1: User logs in (Flask audit point)
-        login_response = flask_client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        login_response = flask_client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         assert login_response.status_code == 200
         token = login_response.get_json()["token"]
 
         # Step 2: User accesses profile (Flask audit point)
-        profile_response = flask_client.get("/api/auth/profile", headers={"X-Auth-Token": token})
+        profile_response = flask_client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": token}
+        )
         assert profile_response.status_code == 200
 
         # Step 3: Get initial governance audit count

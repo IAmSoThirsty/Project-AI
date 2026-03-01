@@ -26,7 +26,9 @@ def temp_repo():
             '"""Test module."""\n\nclass TestClass:\n    def method(self):\n        pass\n'
         )
         (repo_path / "tests").mkdir()
-        (repo_path / "tests" / "test_module.py").write_text("def test_something():\n    assert True\n")
+        (repo_path / "tests" / "test_module.py").write_text(
+            "def test_something():\n    assert True\n"
+        )
         (repo_path / "README.md").write_text("# Test\n")
 
         yield repo_path

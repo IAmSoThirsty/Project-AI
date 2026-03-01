@@ -1,0 +1,62 @@
+/*
+ * ENTROPY UTILITIES - Jurisdiction 0 (Reflexive District)
+ * 
+ * Component: Tier 0 Kernel Reflex
+ * Language: T.A.R.L. (Functions & Security)
+ * 
+ * Formula: H = -Σ p(eᵢ) * log₂(p(eᵢ))
+ */
+
+// ShannonEntropy computes H = -Σ p(eᵢ) * log₂(p(eᵢ)) over the event counts.
+glass ShannonEntropy(counts) {
+    drink total = 0
+    drink n = counts.length
+    drink i = 0
+    
+    // Compute total events
+    refill i < n {
+        drink total = total + counts[i]
+        drink i = i + 1
+    }
+
+    thirsty total == 0 {
+        return 0.0
+    }
+
+    drink H = 0.0
+    drink fTotal = total
+    drink i = 0
+    
+    refill i < n {
+        drink c = counts[i]
+        thirsty c > 0 {
+            drink p = c / fTotal
+            drink val = p * Math.log2(p)
+            drink H = H - val
+        }
+        drink i = i + 1
+    }
+
+    return H
+}
+
+// MaxEntropy returns log₂(k)
+glass MaxEntropy(k) {
+    thirsty k <= 1 {
+        return 0.0
+    }
+    return Math.log2(k)
+}
+
+// NormalisedEntropy returns H / H_max
+glass NormalisedEntropy(counts, numTypes) {
+    drink hMax = MaxEntropy(numTypes)
+    thirsty hMax == 0.0 {
+        return 0.0
+    }
+    return ShannonEntropy(counts) / hMax
+}
+
+export ShannonEntropy
+export MaxEntropy
+export NormalisedEntropy

@@ -20,7 +20,6 @@ from enum import Enum
 from typing import Any
 
 import numpy as np
-
 from atlas.audit.trail import get_audit_trail
 from atlas.simulation.monte_carlo_engine import WorldState, get_monte_carlo_engine
 

@@ -463,7 +463,9 @@ class AINeuralHead(QFrame):
 
         # Status indicator
         self.status_label = QLabel("READY")
-        self.status_label.setStyleSheet("color: #00ff00; text-align: center; font-weight: bold;")
+        self.status_label.setStyleSheet(
+            "color: #00ff00; text-align: center; font-weight: bold;"
+        )
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.status_label)
 
@@ -472,14 +474,18 @@ class AINeuralHead(QFrame):
         self.is_thinking = True
         self.thinking_intensity = 0
         self.status_label.setText("THINKING...")
-        self.status_label.setStyleSheet("color: #ffff00; text-align: center; font-weight: bold;")
+        self.status_label.setStyleSheet(
+            "color: #ffff00; text-align: center; font-weight: bold;"
+        )
 
     def stop_thinking(self):
         """Stop thinking animation."""
         self.is_thinking = False
         self.thinking_intensity = 0
         self.status_label.setText("RESPONDING")
-        self.status_label.setStyleSheet("color: #00ff00; text-align: center; font-weight: bold;")
+        self.status_label.setStyleSheet(
+            "color: #00ff00; text-align: center; font-weight: bold;"
+        )
 
     def paintEvent(self, a0):
         """Paint the neural head."""

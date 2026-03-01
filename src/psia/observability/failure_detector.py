@@ -37,14 +37,16 @@ logger = logging.getLogger(__name__)
 
 class CircuitState(str, Enum):
     """Circuit breaker state."""
-    CLOSED = "closed"        # Normal operation
-    OPEN = "open"            # Failures exceed threshold, requests blocked
+
+    CLOSED = "closed"  # Normal operation
+    OPEN = "open"  # Failures exceed threshold, requests blocked
     HALF_OPEN = "half_open"  # Testing recovery
 
 
 @dataclass
 class FailureEvent:
     """A recorded failure event."""
+
     component: str
     error_type: str
     message: str
@@ -55,6 +57,7 @@ class FailureEvent:
 @dataclass
 class ComponentHealth:
     """Health status of a single component."""
+
     component: str
     circuit_state: CircuitState
     failure_rate: float  # 0.0–1.0
@@ -67,6 +70,7 @@ class ComponentHealth:
 @dataclass
 class CascadeAlert:
     """Alert when multiple components fail simultaneously."""
+
     affected_components: list[str]
     correlation_score: float
     timestamp: str
@@ -108,7 +112,9 @@ class FailureDetector:
         self._circuit_state: dict[str, CircuitState] = {}
         self._circuit_opened_at: dict[str, float] = {}
         self._historical_rates: dict[str, list[float]] = {}  # For z-score
-        self._state_transitions: list[tuple[str, CircuitState, CircuitState, float]] = []
+        self._state_transitions: list[tuple[str, CircuitState, CircuitState, float]] = (
+            []
+        )
 
     def register_component(self, component: str) -> None:
         """Register a component for monitoring."""
@@ -205,10 +211,7 @@ class FailureDetector:
 
     def open_circuit_count(self) -> int:
         """Count the number of currently open circuits."""
-        return sum(
-            1 for s in self._circuit_state.values()
-            if s == CircuitState.OPEN
-        )
+        return sum(1 for s in self._circuit_state.values() if s == CircuitState.OPEN)
 
     @property
     def state_transitions(self) -> list[tuple[str, CircuitState, CircuitState, float]]:
@@ -224,7 +227,10 @@ class FailureDetector:
         cutoff = now - self.window_seconds
         while self._successes[component] and self._successes[component][0] < cutoff:
             self._successes[component].popleft()
-        while self._failures[component] and self._failures[component][0].timestamp < cutoff:
+        while (
+            self._failures[component]
+            and self._failures[component][0].timestamp < cutoff
+        ):
             self._failures[component].popleft()
 
     def _compute_failure_rate(self, component: str) -> float:
@@ -255,9 +261,7 @@ class FailureDetector:
         self._state_transitions.append(
             (component, old_state, new_state, time.monotonic())
         )
-        logger.info(
-            "Circuit %s: %s → %s", component, old_state.value, new_state.value
-        )
+        logger.info("Circuit %s: %s → %s", component, old_state.value, new_state.value)
 
         # Record current rate in history when transitioning
         rate = self._compute_failure_rate(component)
@@ -266,15 +270,18 @@ class FailureDetector:
     def _check_cascade(self) -> None:
         """Check if enough circuits are open to constitute a cascade."""
         open_circuits = [
-            c for c, s in self._circuit_state.items()
-            if s == CircuitState.OPEN
+            c for c, s in self._circuit_state.items() if s == CircuitState.OPEN
         ]
         if len(open_circuits) >= self.cascade_threshold:
             alert = CascadeAlert(
                 affected_components=open_circuits,
                 correlation_score=len(open_circuits) / max(len(self._circuit_state), 1),
                 timestamp=datetime.now(timezone.utc).isoformat(),
-                recommended_action="SAFE-HALT" if len(open_circuits) > self.cascade_threshold else "INVESTIGATE",
+                recommended_action=(
+                    "SAFE-HALT"
+                    if len(open_circuits) > self.cascade_threshold
+                    else "INVESTIGATE"
+                ),
             )
             if self.on_cascade:
                 self.on_cascade(alert)

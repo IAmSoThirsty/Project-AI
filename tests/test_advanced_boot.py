@@ -56,7 +56,9 @@ class TestBootProfiles(unittest.TestCase):
         """Test that normal profile allows all subsystems."""
         self.boot_system.set_boot_profile(BootProfile.NORMAL)
 
-        should_init, reason = self.boot_system.should_initialize_subsystem("test_subsystem", {"priority": "MEDIUM"})
+        should_init, reason = self.boot_system.should_initialize_subsystem(
+            "test_subsystem", {"priority": "MEDIUM"}
+        )
 
         self.assertTrue(should_init)
         self.assertIsNone(reason)
@@ -72,7 +74,9 @@ class TestBootProfiles(unittest.TestCase):
         self.assertTrue(should_init)
 
         # Should block non-critical subsystem
-        should_init, reason = self.boot_system.should_initialize_subsystem("random_subsystem", {"priority": "MEDIUM"})
+        should_init, reason = self.boot_system.should_initialize_subsystem(
+            "random_subsystem", {"priority": "MEDIUM"}
+        )
         self.assertFalse(should_init)
         self.assertIn("whitelist", reason.lower())
 
@@ -86,7 +90,9 @@ class TestBootProfiles(unittest.TestCase):
         )
         self.assertTrue(should_init)
 
-        should_init, reason = self.boot_system.should_initialize_subsystem("other_subsystem", {"priority": "HIGH"})
+        should_init, reason = self.boot_system.should_initialize_subsystem(
+            "other_subsystem", {"priority": "HIGH"}
+        )
         self.assertFalse(should_init)
 
     def test_priority_override(self):
@@ -183,7 +189,9 @@ class TestEthicsFirstColdStart(unittest.TestCase):
         self.boot_system.set_boot_profile(BootProfile.ETHICS_FIRST)
 
         # Non-ethics subsystem should wait for checkpoint
-        should_init, reason = self.boot_system.should_initialize_subsystem("tactical_edge_ai", {"priority": "HIGH"})
+        should_init, reason = self.boot_system.should_initialize_subsystem(
+            "tactical_edge_ai", {"priority": "HIGH"}
+        )
 
         self.assertFalse(should_init)
         self.assertIn("ethics checkpoint", reason.lower())
@@ -205,7 +213,9 @@ class TestEthicsFirstColdStart(unittest.TestCase):
         self.boot_system.mark_ethics_checkpoint_passed()
 
         # Should now require approval
-        should_init, reason = self.boot_system.should_initialize_subsystem("tactical_edge_ai", {"priority": "HIGH"})
+        should_init, reason = self.boot_system.should_initialize_subsystem(
+            "tactical_edge_ai", {"priority": "HIGH"}
+        )
 
         # First call requests approval, should be granted
         # (auto-approved in test implementation for HIGH priority)
@@ -253,7 +263,9 @@ class TestAuditReplay(unittest.TestCase):
 
     def test_audit_log_persistence(self):
         """Test that audit events are written to disk."""
-        self.boot_system._audit_event(event_type="test", action="test_action", context={"key": "value"})
+        self.boot_system._audit_event(
+            event_type="test", action="test_action", context={"key": "value"}
+        )
 
         # Check that audit file was created
         audit_files = list(self.boot_system.audit_dir.glob("audit_*.jsonl"))
@@ -263,7 +275,9 @@ class TestAuditReplay(unittest.TestCase):
         """Test loading audit log from disk."""
         # Create some events
         for i in range(3):
-            self.boot_system._audit_event(event_type="test", action=f"action_{i}", context={"index": i})
+            self.boot_system._audit_event(
+                event_type="test", action=f"action_{i}", context={"index": i}
+            )
 
         # Load events
         events = self.boot_system.load_audit_log()
@@ -310,8 +324,12 @@ class TestAuditReplay(unittest.TestCase):
         """Test filtering replay by event types."""
         # Create different event types
         self.boot_system._audit_event(event_type="boot", action="start", context={})
-        self.boot_system._audit_event(event_type="profile_changed", action="set", context={})
-        self.boot_system._audit_event(event_type="emergency_mode", action="activate", context={})
+        self.boot_system._audit_event(
+            event_type="profile_changed", action="set", context={}
+        )
+        self.boot_system._audit_event(
+            event_type="emergency_mode", action="activate", context={}
+        )
 
         # Replay only emergency events
         result = self.boot_system.replay_audit_log(event_types=["emergency_mode"])

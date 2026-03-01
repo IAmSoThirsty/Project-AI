@@ -101,7 +101,9 @@ class ExplainabilityEngine:
             ExplainabilityReport for SOC review
         """
         # 1. Calculate feature contributions
-        top_features = self._rank_feature_contributions(feature_vector, confidence_assessment["confidence_score"])
+        top_features = self._rank_feature_contributions(
+            feature_vector, confidence_assessment["confidence_score"]
+        )
 
         # 2. Extract HMM state path (simplified - in production, track full sequence)
         hmm_state_path = [hmm_state]
@@ -121,7 +123,9 @@ class ExplainabilityEngine:
             verdict = "ALLOWED"
 
         # 5. Generate human summary
-        human_summary = self._generate_summary(confidence_pct, top_features, hmm_state, threat_class)
+        human_summary = self._generate_summary(
+            confidence_pct, top_features, hmm_state, threat_class
+        )
 
         return ExplainabilityReport(
             event_id=event_id,
@@ -159,7 +163,9 @@ class ExplainabilityEngine:
                 activation = 0.0
 
             contribution = weight * activation * final_confidence
-            contribution_pct = (contribution / final_confidence * 100) if final_confidence > 0 else 0.0
+            contribution_pct = (
+                (contribution / final_confidence * 100) if final_confidence > 0 else 0.0
+            )
 
             interpretation = self._interpret_feature(feature_name, value)
 

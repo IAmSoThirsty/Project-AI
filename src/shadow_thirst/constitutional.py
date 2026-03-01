@@ -165,7 +165,11 @@ class ConstitutionalIntegration:
 
         # 2. Invariant validation
         if not context.invariants_passed:
-            logger.error("[%s] Invariant violations: %s", frame.function_name, context.invariant_violations)
+            logger.error(
+                "[%s] Invariant violations: %s",
+                frame.function_name,
+                context.invariant_violations,
+            )
             self.stats["quarantines"] += 1
             return ValidationResult(
                 decision=CommitDecision.QUARANTINE,
@@ -195,7 +199,9 @@ class ConstitutionalIntegration:
             )
 
         # 5. Commit approved
-        logger.info("[%s] Constitutional validation passed - COMMIT", frame.function_name)
+        logger.info(
+            "[%s] Constitutional validation passed - COMMIT", frame.function_name
+        )
         self.stats["commits"] += 1
 
         return ValidationResult(
@@ -232,7 +238,9 @@ class ConstitutionalIntegration:
         if frame.invariant_results:
             context.invariants_passed = all(frame.invariant_results)
             context.invariant_violations = [
-                f"invariant_{i}" for i, passed in enumerate(frame.invariant_results) if not passed
+                f"invariant_{i}"
+                for i, passed in enumerate(frame.invariant_results)
+                if not passed
             ]
 
         # Resource usage
@@ -267,7 +275,10 @@ class ConstitutionalIntegration:
         elif policy == "allow_epsilon":
             # In real implementation, would check epsilon threshold
             if context.divergence_magnitude > 0.01:
-                return False, f"Divergence exceeds epsilon (magnitude: {context.divergence_magnitude})"
+                return (
+                    False,
+                    f"Divergence exceeds epsilon (magnitude: {context.divergence_magnitude})",
+                )
 
         elif policy == "quarantine_on_diverge":
             return False, "Divergence detected with quarantine_on_diverge policy"
@@ -276,7 +287,10 @@ class ConstitutionalIntegration:
             return False, "Divergence detected with fail_primary policy"
 
         # log_divergence - allow but log
-        logger.warning("Divergence detected (policy: log_divergence): magnitude=%f", context.divergence_magnitude)
+        logger.warning(
+            "Divergence detected (policy: log_divergence): magnitude=%f",
+            context.divergence_magnitude,
+        )
         return True, "Divergence logged"
 
     def _check_tarl_policy(self, context: ConstitutionalContext) -> tuple[bool, str]:
@@ -309,7 +323,9 @@ class ConstitutionalIntegration:
 
         return True, "T.A.R.L. policies satisfied"
 
-    def _check_mutation_boundary(self, context: ConstitutionalContext) -> tuple[bool, str]:
+    def _check_mutation_boundary(
+        self, context: ConstitutionalContext
+    ) -> tuple[bool, str]:
         """
         Validate mutation boundary constraints.
 
@@ -336,7 +352,9 @@ class ConstitutionalIntegration:
 
         elif boundary == "emergency_override":
             # Emergency mutations allowed but logged
-            logger.warning("[%s] Emergency override mutation boundary", context.function_name)
+            logger.warning(
+                "[%s] Emergency override mutation boundary", context.function_name
+            )
 
         return True, f"Mutation boundary '{boundary}' validated"
 
@@ -370,7 +388,9 @@ class ConstitutionalIntegration:
         if self.audit_manager:
             try:
                 # Attempt to use audit manager (may not exist yet)
-                self.audit_manager.seal_audit(context.function_name, audit_hash, audit_data)
+                self.audit_manager.seal_audit(
+                    context.function_name, audit_hash, audit_data
+                )
             except Exception as e:
                 logger.warning("Failed to store sealed audit: %s", e)
 

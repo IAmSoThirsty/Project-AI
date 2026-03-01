@@ -1,18 +1,22 @@
+import time
+from typing import Any, Dict, List
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict, Any
-import time
 
 router = APIRouter(prefix="/vr", tags=["VR"])
+
 
 class VRCommand(BaseModel):
     type: str
     params: Dict[str, Any]
     timestamp: float = time.time()
 
+
 # Simple in-memory queue for demo purposes
 # In production, use Redis or similar
 command_queue: List[VRCommand] = []
+
 
 @router.post("/command")
 def send_command(cmd: VRCommand):
@@ -22,6 +26,7 @@ def send_command(cmd: VRCommand):
     if len(command_queue) > 100:
         command_queue.pop(0)
     return {"status": "queued", "queue_size": len(command_queue)}
+
 
 @router.get("/commands")
 def get_commands(since: float = 0):

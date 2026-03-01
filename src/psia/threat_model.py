@@ -95,10 +95,10 @@ class ResilienceProfile:
 
     head_count: int
     quorum_policy: str
-    max_crash_faults: int         # Before liveness loss
-    max_byzantine_faults: int     # Before safety loss
-    veto_power_per_head: bool     # Can a single head veto?
-    collusion_safety_threshold: int   # Heads needed to force allow
+    max_crash_faults: int  # Before liveness loss
+    max_byzantine_faults: int  # Before safety loss
+    veto_power_per_head: bool  # Can a single head veto?
+    collusion_safety_threshold: int  # Heads needed to force allow
     collusion_liveness_threshold: int  # Heads needed to block all
     overall_risk: RiskLevel
 
@@ -125,8 +125,8 @@ RESILIENCE_PROFILES = {
         max_crash_faults=0,
         max_byzantine_faults=0,
         veto_power_per_head=True,
-        collusion_safety_threshold=3,   # All three must collude to allow
-        collusion_liveness_threshold=1, # One head can block
+        collusion_safety_threshold=3,  # All three must collude to allow
+        collusion_liveness_threshold=1,  # One head can block
         overall_risk=RiskLevel.MEDIUM,  # Liveness risk from veto
     ),
     ("2of3", 3): ResilienceProfile(
@@ -135,9 +135,9 @@ RESILIENCE_PROFILES = {
         max_crash_faults=1,
         max_byzantine_faults=0,
         veto_power_per_head=False,
-        collusion_safety_threshold=2,   # Two heads can force allow (RISK)
-        collusion_liveness_threshold=2, # Two heads needed to block
-        overall_risk=RiskLevel.HIGH,    # Safety risk from 2-head collusion
+        collusion_safety_threshold=2,  # Two heads can force allow (RISK)
+        collusion_liveness_threshold=2,  # Two heads needed to block
+        overall_risk=RiskLevel.HIGH,  # Safety risk from 2-head collusion
     ),
     ("bft", 4): ResilienceProfile(
         head_count=4,
@@ -145,7 +145,7 @@ RESILIENCE_PROFILES = {
         max_crash_faults=1,
         max_byzantine_faults=1,
         veto_power_per_head=False,
-        collusion_safety_threshold=2,   # >N/3 rounded up
+        collusion_safety_threshold=2,  # >N/3 rounded up
         collusion_liveness_threshold=2,
         overall_risk=RiskLevel.LOW,
     ),
@@ -188,7 +188,9 @@ class CollusionDetector:
     Significant deviation from expected agreement indicates correlation.
     """
 
-    def __init__(self, *, window_size: int = 100, alert_threshold: float = 0.95) -> None:
+    def __init__(
+        self, *, window_size: int = 100, alert_threshold: float = 0.95
+    ) -> None:
         self._window_size = window_size
         self._alert_threshold = alert_threshold
         self._votes: list[VoteRecord] = []
@@ -199,7 +201,7 @@ class CollusionDetector:
         self._votes.append(vote)
         # Trim to window
         if len(self._votes) > self._window_size * 3:
-            self._votes = self._votes[-self._window_size * 3:]
+            self._votes = self._votes[-self._window_size * 3 :]
 
     def analyze_pair_agreement(self, head_a: str, head_b: str) -> dict[str, Any]:
         """Analyze agreement rate between two heads.
@@ -252,14 +254,20 @@ class CollusionDetector:
         }
 
         if anomaly:
-            self._alerts.append({
-                "type": "high_agreement_anomaly",
-                "timestamp": time.monotonic(),
-                **result,
-            })
+            self._alerts.append(
+                {
+                    "type": "high_agreement_anomaly",
+                    "timestamp": time.monotonic(),
+                    **result,
+                }
+            )
             logger.warning(
                 "COLLUSION ALERT: %s-%s agreement=%.2f%% (expected=%.2f%%, n=%d)",
-                head_a, head_b, agreement_rate * 100, expected_rate * 100, total,
+                head_a,
+                head_b,
+                agreement_rate * 100,
+                expected_rate * 100,
+                total,
             )
 
         return result
@@ -279,11 +287,17 @@ class CollusionDetector:
         if len(head_votes) < 10:
             return {"deny_rate": 0.0, "sample_size": 0, "anomaly": False}
 
-        head_deny_rate = sum(1 for v in head_votes if v.decision == "deny") / len(head_votes)
-        baseline_deny_rate = sum(1 for v in all_votes if v.decision == "deny") / len(all_votes)
+        head_deny_rate = sum(1 for v in head_votes if v.decision == "deny") / len(
+            head_votes
+        )
+        baseline_deny_rate = sum(1 for v in all_votes if v.decision == "deny") / len(
+            all_votes
+        )
 
         # Flag if head denies >2x baseline
-        anomaly = head_deny_rate > 2 * max(baseline_deny_rate, 0.1) and len(head_votes) >= 10
+        anomaly = (
+            head_deny_rate > 2 * max(baseline_deny_rate, 0.1) and len(head_votes) >= 10
+        )
 
         result = {
             "head": head_name,
@@ -294,14 +308,18 @@ class CollusionDetector:
         }
 
         if anomaly:
-            self._alerts.append({
-                "type": "veto_abuse_detected",
-                "timestamp": time.monotonic(),
-                **result,
-            })
+            self._alerts.append(
+                {
+                    "type": "veto_abuse_detected",
+                    "timestamp": time.monotonic(),
+                    **result,
+                }
+            )
             logger.warning(
                 "VETO ABUSE ALERT: %s deny_rate=%.2f%% vs baseline=%.2f%%",
-                head_name, head_deny_rate * 100, baseline_deny_rate * 100,
+                head_name,
+                head_deny_rate * 100,
+                baseline_deny_rate * 100,
             )
 
         return result

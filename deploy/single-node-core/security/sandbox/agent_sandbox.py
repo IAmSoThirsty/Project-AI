@@ -32,6 +32,7 @@ logger = logging.getLogger(__name__)
 
 class SandboxProfile(Enum):
     """Predefined sandbox security profiles."""
+
     MINIMAL = "minimal"  # Bare minimum isolation
     STANDARD = "standard"  # Default production profile
     STRICT = "strict"  # Maximum isolation
@@ -41,6 +42,7 @@ class SandboxProfile(Enum):
 @dataclass
 class ResourceLimits:
     """Resource limits for sandboxed execution."""
+
     cpu_quota_percent: int = 50  # % of 1 CPU core
     memory_limit_mb: int = 512
     disk_io_limit_mbps: int = 10
@@ -53,6 +55,7 @@ class ResourceLimits:
 @dataclass
 class SandboxConfig:
     """Complete sandbox configuration."""
+
     profile: SandboxProfile
     resource_limits: ResourceLimits
     allowed_syscalls: list[str]
@@ -83,9 +86,7 @@ class AgentSandbox:
         self.logs_dir.mkdir(exist_ok=True)
 
     def create_config(
-        self,
-        agent_id: str,
-        profile: SandboxProfile = SandboxProfile.STANDARD
+        self, agent_id: str, profile: SandboxProfile = SandboxProfile.STANDARD
     ) -> SandboxConfig:
         """
         Create sandbox configuration for an agent.
@@ -100,9 +101,7 @@ class AgentSandbox:
         # Define profile-specific settings
         if profile == SandboxProfile.MINIMAL:
             limits = ResourceLimits(
-                cpu_quota_percent=80,
-                memory_limit_mb=1024,
-                max_processes=50
+                cpu_quota_percent=80, memory_limit_mb=1024, max_processes=50
             )
             allowed_syscalls = ["read", "write", "open", "close", "stat", "exit"]
             enable_network = True
@@ -110,17 +109,34 @@ class AgentSandbox:
 
         elif profile == SandboxProfile.STANDARD:
             limits = ResourceLimits(
-                cpu_quota_percent=50,
-                memory_limit_mb=512,
-                max_processes=20
+                cpu_quota_percent=50, memory_limit_mb=512, max_processes=20
             )
             allowed_syscalls = [
-                "read", "write", "open", "close", "stat",
-                "fstat", "lstat", "poll", "lseek", "mmap",
-                "mprotect", "munmap", "brk", "rt_sigaction",
-                "rt_sigprocmask", "rt_sigreturn", "ioctl",
-                "access", "exit", "exit_group", "wait4",
-                "clone", "execve", "getpid", "getuid"
+                "read",
+                "write",
+                "open",
+                "close",
+                "stat",
+                "fstat",
+                "lstat",
+                "poll",
+                "lseek",
+                "mmap",
+                "mprotect",
+                "munmap",
+                "brk",
+                "rt_sigaction",
+                "rt_sigprocmask",
+                "rt_sigreturn",
+                "ioctl",
+                "access",
+                "exit",
+                "exit_group",
+                "wait4",
+                "clone",
+                "execve",
+                "getpid",
+                "getuid",
             ]
             enable_network = True
             enable_internet = False  # Only internal network
@@ -130,11 +146,17 @@ class AgentSandbox:
                 cpu_quota_percent=25,
                 memory_limit_mb=256,
                 max_processes=10,
-                max_network_connections=3
+                max_network_connections=3,
             )
             allowed_syscalls = [
-                "read", "write", "open", "close", "stat",
-                "exit", "exit_group", "getpid"
+                "read",
+                "write",
+                "open",
+                "close",
+                "stat",
+                "exit",
+                "exit_group",
+                "getpid",
             ]
             enable_network = False
             enable_internet = False
@@ -144,7 +166,7 @@ class AgentSandbox:
                 cpu_quota_percent=10,
                 memory_limit_mb=128,
                 max_processes=5,
-                max_network_connections=0
+                max_network_connections=0,
             )
             allowed_syscalls = ["read", "write", "exit"]
             enable_network = False
@@ -157,31 +179,26 @@ class AgentSandbox:
             allowed_syscalls=allowed_syscalls,
             blocked_syscalls=[
                 "ptrace",  # Debugging
-                "mount", "umount",  # Filesystem
-                "reboot", "kexec_load",  # System
-                "setuid", "setgid",  # Privilege escalation
-                "socket", "bind", "listen",  # Network (if disabled)
+                "mount",
+                "umount",  # Filesystem
+                "reboot",
+                "kexec_load",  # System
+                "setuid",
+                "setgid",  # Privilege escalation
+                "socket",
+                "bind",
+                "listen",  # Network (if disabled)
             ],
-            allowed_network_hosts=[
-                "127.0.0.1",
-                "localhost",
-                "postgres",
-                "redis",
-                "mcp-gateway"
-            ] if enable_network else [],
-            allowed_file_paths=[
-                "/app",
-                "/tmp",
-                "/var/tmp"
-            ],
-            read_only_paths=[
-                "/usr",
-                "/lib",
-                "/etc"
-            ],
+            allowed_network_hosts=(
+                ["127.0.0.1", "localhost", "postgres", "redis", "mcp-gateway"]
+                if enable_network
+                else []
+            ),
+            allowed_file_paths=["/app", "/tmp", "/var/tmp"],
+            read_only_paths=["/usr", "/lib", "/etc"],
             enable_network=enable_network,
             enable_internet=enable_internet,
-            enable_ipc=False
+            enable_ipc=False,
         )
 
         # Save configuration
@@ -193,10 +210,7 @@ class AgentSandbox:
         return config
 
     def generate_docker_sandbox_command(
-        self,
-        agent_id: str,
-        image: str,
-        command: list[str]
+        self, agent_id: str, image: str, command: list[str]
     ) -> list[str]:
         """
         Generate Docker command with sandbox constraints.
@@ -220,25 +234,34 @@ class AgentSandbox:
 
         # Build docker run command with constraints
         docker_cmd = [
-            "docker", "run",
+            "docker",
+            "run",
             "--rm",
-            "--name", f"agent-sandbox-{agent_id}",
-
+            "--name",
+            f"agent-sandbox-{agent_id}",
             # Resource limits
-            "--cpus", str(limits.cpu_quota_percent / 100.0),
-            "--memory", f"{limits.memory_limit_mb}m",
-            "--memory-swap", f"{limits.memory_limit_mb}m",  # No swap
-            "--pids-limit", str(limits.max_processes),
-            "--ulimit", f"nofile={limits.max_open_files}:{limits.max_open_files}",
-
+            "--cpus",
+            str(limits.cpu_quota_percent / 100.0),
+            "--memory",
+            f"{limits.memory_limit_mb}m",
+            "--memory-swap",
+            f"{limits.memory_limit_mb}m",  # No swap
+            "--pids-limit",
+            str(limits.max_processes),
+            "--ulimit",
+            f"nofile={limits.max_open_files}:{limits.max_open_files}",
             # Security options
-            "--security-opt", "no-new-privileges:true",
-            "--cap-drop", "ALL",  # Drop all capabilities
-            "--cap-add", "CHOWN",  # Only what's needed
-            "--cap-add", "DAC_OVERRIDE",
+            "--security-opt",
+            "no-new-privileges:true",
+            "--cap-drop",
+            "ALL",  # Drop all capabilities
+            "--cap-add",
+            "CHOWN",  # Only what's needed
+            "--cap-add",
+            "DAC_OVERRIDE",
             "--read-only",  # Read-only root filesystem
-            "--tmpfs", "/tmp:rw,noexec,nosuid,size=100m",
-
+            "--tmpfs",
+            "/tmp:rw,noexec,nosuid,size=100m",
             # Network isolation
         ]
 
@@ -254,11 +277,7 @@ class AgentSandbox:
         return docker_cmd
 
     def execute_sandboxed(
-        self,
-        agent_id: str,
-        image: str,
-        command: list[str],
-        timeout: int = None
+        self, agent_id: str, image: str, command: list[str], timeout: int = None
     ) -> dict[str, Any]:
         """
         Execute command in sandboxed environment.
@@ -295,7 +314,7 @@ class AgentSandbox:
             "image": image,
             "command": command,
             "profile": config.profile.value,
-            "timeout": timeout
+            "timeout": timeout,
         }
 
         logger.info(f"Executing in sandbox: {agent_id}")
@@ -305,21 +324,20 @@ class AgentSandbox:
         try:
             # Execute with timeout
             result = subprocess.run(
-                docker_cmd,
-                capture_output=True,
-                text=True,
-                timeout=timeout
+                docker_cmd, capture_output=True, text=True, timeout=timeout
             )
 
             execution_time = (datetime.now(UTC) - start_time).total_seconds()
 
-            log_entry.update({
-                "status": "success" if result.returncode == 0 else "failed",
-                "return_code": result.returncode,
-                "execution_time_seconds": execution_time,
-                "stdout_length": len(result.stdout),
-                "stderr_length": len(result.stderr)
-            })
+            log_entry.update(
+                {
+                    "status": "success" if result.returncode == 0 else "failed",
+                    "return_code": result.returncode,
+                    "execution_time_seconds": execution_time,
+                    "stdout_length": len(result.stdout),
+                    "stderr_length": len(result.stderr),
+                }
+            )
 
             # Check for escape attempts
             escape_detected = self._check_escape_attempts(result.stderr)
@@ -333,41 +351,28 @@ class AgentSandbox:
                 "stdout": result.stdout,
                 "stderr": result.stderr,
                 "execution_time": execution_time,
-                "escape_detected": escape_detected
+                "escape_detected": escape_detected,
             }
 
         except subprocess.TimeoutExpired:
-            log_entry.update({
-                "status": "timeout",
-                "execution_time_seconds": timeout
-            })
+            log_entry.update({"status": "timeout", "execution_time_seconds": timeout})
 
             logger.error(f"✗ Execution timeout for {agent_id}")
 
-            return {
-                "success": False,
-                "error": "Execution timeout",
-                "timeout": timeout
-            }
+            return {"success": False, "error": "Execution timeout", "timeout": timeout}
 
         except Exception as e:
-            log_entry.update({
-                "status": "error",
-                "error": str(e)
-            })
+            log_entry.update({"status": "error", "error": str(e)})
 
             logger.error(f"✗ Execution error for {agent_id}: {e}")
 
-            return {
-                "success": False,
-                "error": str(e)
-            }
+            return {"success": False, "error": str(e)}
 
         finally:
             # Log to audit trail
             log_file = self.logs_dir / f"{agent_id}.jsonl"
-            with open(log_file, 'a') as f:
-                f.write(json.dumps(log_entry) + '\n')
+            with open(log_file, "a") as f:
+                f.write(json.dumps(log_entry) + "\n")
 
     def _check_escape_attempts(self, stderr: str) -> bool:
         """
@@ -389,7 +394,7 @@ class AgentSandbox:
             "chroot",
             "setuid",
             "privilege",
-            "kernel"
+            "kernel",
         ]
 
         stderr_lower = stderr.lower()
@@ -441,7 +446,7 @@ class AgentSandbox:
             "errors": errors,
             "escape_attempts": escape_attempts,
             "avg_execution_time_seconds": round(avg_time, 2),
-            "success_rate": round(successes / total * 100, 2) if total > 0 else 0
+            "success_rate": round(successes / total * 100, 2) if total > 0 else 0,
         }
 
 
@@ -451,24 +456,24 @@ def main():
 
     parser = argparse.ArgumentParser(description="Agent sandbox management")
     parser.add_argument(
-        "command",
-        choices=["create", "execute", "stats"],
-        help="Command to execute"
+        "command", choices=["create", "execute", "stats"], help="Command to execute"
     )
     parser.add_argument("--agent-id", required=True, help="Agent identifier")
     parser.add_argument(
         "--profile",
         choices=["minimal", "standard", "strict", "paranoid"],
         default="standard",
-        help="Security profile"
+        help="Security profile",
     )
     parser.add_argument("--image", help="Docker image to run")
     parser.add_argument("--cmd", nargs="+", help="Command to execute")
     parser.add_argument(
         "--sandbox-dir",
         type=Path,
-        default=Path("/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/sandbox"),
-        help="Sandbox directory"
+        default=Path(
+            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/sandbox"
+        ),
+        help="Sandbox directory",
     )
 
     args = parser.parse_args()

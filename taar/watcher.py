@@ -15,7 +15,11 @@ from typing import Callable
 
 # Try to use watchdog, fall back to polling
 try:
-    from watchdog.events import FileSystemEventHandler, FileModifiedEvent, FileCreatedEvent
+    from watchdog.events import (
+        FileCreatedEvent,
+        FileModifiedEvent,
+        FileSystemEventHandler,
+    )
     from watchdog.observers import Observer
 
     HAS_WATCHDOG = True
@@ -42,11 +46,26 @@ IGNORE_PATTERNS = {
 
 # Extensions to watch
 WATCH_EXTENSIONS = {
-    ".py", ".js", ".ts", ".jsx", ".tsx",
-    ".kt", ".java", ".cs", ".cpp", ".c", ".h",
-    ".toml", ".yaml", ".yml", ".json",
-    ".md", ".rst",
-    ".sh", ".ps1", ".bat",
+    ".py",
+    ".js",
+    ".ts",
+    ".jsx",
+    ".tsx",
+    ".kt",
+    ".java",
+    ".cs",
+    ".cpp",
+    ".c",
+    ".h",
+    ".toml",
+    ".yaml",
+    ".yml",
+    ".json",
+    ".md",
+    ".rst",
+    ".sh",
+    ".ps1",
+    ".bat",
 }
 
 
@@ -141,8 +160,7 @@ class FileWatcher:
         """Start watching for file changes."""
         if not HAS_WATCHDOG:
             raise RuntimeError(
-                "watchdog is not installed. "
-                "Install it with: pip install watchdog"
+                "watchdog is not installed. " "Install it with: pip install watchdog"
             )
 
         handler = _DebouncedHandler(

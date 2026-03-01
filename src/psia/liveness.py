@@ -86,13 +86,13 @@ class TimeoutConfig:
     default (typically deny).
     """
 
-    head_evaluation_timeout: float = 5.0     # T_max per head
-    stage_timeout: float = 10.0              # T_stage per Waterfall stage
-    pipeline_timeout: float = 60.0           # Total pipeline timeout
-    queue_timeout: float = 30.0              # Max time in request queue
-    retry_timeout: float = 5.0               # T_retry for OCC retries
-    heartbeat_interval: float = 1.0          # Heartbeat check interval
-    max_consecutive_timeouts: int = 3        # Before marking head FAILED
+    head_evaluation_timeout: float = 5.0  # T_max per head
+    stage_timeout: float = 10.0  # T_stage per Waterfall stage
+    pipeline_timeout: float = 60.0  # Total pipeline timeout
+    queue_timeout: float = 30.0  # Max time in request queue
+    retry_timeout: float = 5.0  # T_retry for OCC retries
+    heartbeat_interval: float = 1.0  # Heartbeat check interval
+    max_consecutive_timeouts: int = 3  # Before marking head FAILED
 
 
 @dataclass

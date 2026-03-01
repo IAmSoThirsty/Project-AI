@@ -40,7 +40,7 @@ class VaultClient:
         self,
         vault_addr: str = None,
         vault_token: str = None,
-        vault_namespace: str = None
+        vault_namespace: str = None,
     ):
         """
         Initialize Vault client.
@@ -50,18 +50,18 @@ class VaultClient:
             vault_token: Vault authentication token (default: from VAULT_TOKEN env)
             vault_namespace: Vault namespace for multi-tenancy
         """
-        self.vault_addr = vault_addr or os.getenv('VAULT_ADDR', 'http://localhost:8200')
-        self.vault_token = vault_token or os.getenv('VAULT_TOKEN')
-        self.vault_namespace = vault_namespace or os.getenv('VAULT_NAMESPACE')
+        self.vault_addr = vault_addr or os.getenv("VAULT_ADDR", "http://localhost:8200")
+        self.vault_token = vault_token or os.getenv("VAULT_TOKEN")
+        self.vault_namespace = vault_namespace or os.getenv("VAULT_NAMESPACE")
 
         if not self.vault_token:
-            raise ValueError("VAULT_TOKEN environment variable or vault_token parameter required")
+            raise ValueError(
+                "VAULT_TOKEN environment variable or vault_token parameter required"
+            )
 
         # Initialize hvac client
         self.client = hvac.Client(
-            url=self.vault_addr,
-            token=self.vault_token,
-            namespace=self.vault_namespace
+            url=self.vault_addr, token=self.vault_token, namespace=self.vault_namespace
         )
 
         # Verify authentication
@@ -71,10 +71,7 @@ class VaultClient:
         logger.info(f"✓ Connected to Vault at {self.vault_addr}")
 
     def store_secret(
-        self,
-        path: str,
-        secret_data: dict[str, str],
-        mount_point: str = 'secret'
+        self, path: str, secret_data: dict[str, str], mount_point: str = "secret"
     ) -> dict[str, Any]:
         """
         Store a secret in Vault KV v2 secrets engine.
@@ -89,9 +86,7 @@ class VaultClient:
         """
         try:
             response = self.client.secrets.kv.v2.create_or_update_secret(
-                path=path,
-                secret=secret_data,
-                mount_point=mount_point
+                path=path, secret=secret_data, mount_point=mount_point
             )
 
             logger.info(f"✓ Stored secret at {mount_point}/{path}")
@@ -102,10 +97,7 @@ class VaultClient:
             raise
 
     def read_secret(
-        self,
-        path: str,
-        mount_point: str = 'secret',
-        version: int | None = None
+        self, path: str, mount_point: str = "secret", version: int | None = None
     ) -> dict[str, str]:
         """
         Read a secret from Vault KV v2 secrets engine.
@@ -120,22 +112,16 @@ class VaultClient:
         """
         try:
             response = self.client.secrets.kv.v2.read_secret_version(
-                path=path,
-                mount_point=mount_point,
-                version=version
+                path=path, mount_point=mount_point, version=version
             )
 
-            return response['data']['data']
+            return response["data"]["data"]
 
         except Exception as e:
             logger.error(f"Failed to read secret {path}: {e}")
             raise
 
-    def delete_secret(
-        self,
-        path: str,
-        mount_point: str = 'secret'
-    ) -> None:
+    def delete_secret(self, path: str, mount_point: str = "secret") -> None:
         """
         Delete a secret (mark latest version as deleted).
 
@@ -145,8 +131,7 @@ class VaultClient:
         """
         try:
             self.client.secrets.kv.v2.delete_latest_version_of_secret(
-                path=path,
-                mount_point=mount_point
+                path=path, mount_point=mount_point
             )
 
             logger.info(f"✓ Deleted secret at {mount_point}/{path}")
@@ -155,11 +140,7 @@ class VaultClient:
             logger.error(f"Failed to delete secret: {e}")
             raise
 
-    def list_secrets(
-        self,
-        path: str = '',
-        mount_point: str = 'secret'
-    ) -> list[str]:
+    def list_secrets(self, path: str = "", mount_point: str = "secret") -> list[str]:
         """
         List secrets at a path.
 
@@ -172,21 +153,17 @@ class VaultClient:
         """
         try:
             response = self.client.secrets.kv.v2.list_secrets(
-                path=path,
-                mount_point=mount_point
+                path=path, mount_point=mount_point
             )
 
-            return response['data']['keys']
+            return response["data"]["keys"]
 
         except Exception as e:
             logger.error(f"Failed to list secrets: {e}")
             return []
 
     def encrypt_data(
-        self,
-        plaintext: str,
-        key_name: str = 'project-ai',
-        mount_point: str = 'transit'
+        self, plaintext: str, key_name: str = "project-ai", mount_point: str = "transit"
     ) -> str:
         """
         Encrypt data using Vault's transit engine.
@@ -201,12 +178,10 @@ class VaultClient:
         """
         try:
             response = self.client.secrets.transit.encrypt_data(
-                name=key_name,
-                plaintext=plaintext,
-                mount_point=mount_point
+                name=key_name, plaintext=plaintext, mount_point=mount_point
             )
 
-            return response['data']['ciphertext']
+            return response["data"]["ciphertext"]
 
         except Exception as e:
             logger.error(f"Failed to encrypt data: {e}")
@@ -215,8 +190,8 @@ class VaultClient:
     def decrypt_data(
         self,
         ciphertext: str,
-        key_name: str = 'project-ai',
-        mount_point: str = 'transit'
+        key_name: str = "project-ai",
+        mount_point: str = "transit",
     ) -> str:
         """
         Decrypt data using Vault's transit engine.
@@ -231,21 +206,17 @@ class VaultClient:
         """
         try:
             response = self.client.secrets.transit.decrypt_data(
-                name=key_name,
-                ciphertext=ciphertext,
-                mount_point=mount_point
+                name=key_name, ciphertext=ciphertext, mount_point=mount_point
             )
 
-            return response['data']['plaintext']
+            return response["data"]["plaintext"]
 
         except Exception as e:
             logger.error(f"Failed to decrypt data: {e}")
             raise
 
     def generate_database_credentials(
-        self,
-        role_name: str,
-        mount_point: str = 'database'
+        self, role_name: str, mount_point: str = "database"
     ) -> tuple[str, str, int]:
         """
         Generate dynamic database credentials.
@@ -259,13 +230,12 @@ class VaultClient:
         """
         try:
             response = self.client.secrets.database.generate_credentials(
-                name=role_name,
-                mount_point=mount_point
+                name=role_name, mount_point=mount_point
             )
 
-            username = response['data']['username']
-            password = response['data']['password']
-            lease_duration = response['lease_duration']
+            username = response["data"]["username"]
+            password = response["data"]["password"]
+            lease_duration = response["lease_duration"]
 
             logger.info(f"✓ Generated credentials for role {role_name}")
             logger.info(f"  Username: {username}")
@@ -290,8 +260,7 @@ class VaultClient:
         """
         try:
             response = self.client.sys.renew_lease(
-                lease_id=lease_id,
-                increment=increment
+                lease_id=lease_id, increment=increment
             )
 
             logger.info(f"✓ Renewed lease {lease_id} for {increment}s")
@@ -321,7 +290,7 @@ class VaultClient:
         env_var_name: str,
         vault_path: str,
         secret_key: str,
-        mount_point: str = 'secret'
+        mount_point: str = "secret",
     ) -> bool:
         """
         Migrate a secret from environment variable to Vault.
@@ -338,7 +307,9 @@ class VaultClient:
         value = os.getenv(env_var_name)
 
         if not value:
-            logger.warning(f"Environment variable {env_var_name} not set, skipping migration")
+            logger.warning(
+                f"Environment variable {env_var_name} not set, skipping migration"
+            )
             return False
 
         try:
@@ -354,8 +325,12 @@ class VaultClient:
             # Store updated secrets
             self.store_secret(vault_path, existing, mount_point)
 
-            logger.info(f"✓ Migrated {env_var_name} to Vault at {vault_path}/{secret_key}")
-            logger.warning(f"⚠ Remove {env_var_name} from environment after verifying Vault integration")
+            logger.info(
+                f"✓ Migrated {env_var_name} to Vault at {vault_path}/{secret_key}"
+            )
+            logger.warning(
+                f"⚠ Remove {env_var_name} from environment after verifying Vault integration"
+            )
 
             return True
 
@@ -364,9 +339,7 @@ class VaultClient:
             return False
 
     def audit_log_query(
-        self,
-        start_time: datetime = None,
-        end_time: datetime = None
+        self, start_time: datetime = None, end_time: datetime = None
     ) -> list[dict[str, Any]]:
         """
         Query Vault audit logs (requires audit backend enabled).
@@ -389,12 +362,12 @@ def migrate_all_secrets():
     vault = VaultClient()
 
     migrations = [
-        ('OPENAI_API_KEY', 'project-ai/api-keys', 'openai'),
-        ('HUGGINGFACE_API_KEY', 'project-ai/api-keys', 'huggingface'),
-        ('FERNET_KEY', 'project-ai/encryption', 'fernet'),
-        ('DATABASE_PASSWORD', 'project-ai/database', 'password'),
-        ('REDIS_PASSWORD', 'project-ai/redis', 'password'),
-        ('SMTP_PASSWORD', 'project-ai/email', 'smtp_password'),
+        ("OPENAI_API_KEY", "project-ai/api-keys", "openai"),
+        ("HUGGINGFACE_API_KEY", "project-ai/api-keys", "huggingface"),
+        ("FERNET_KEY", "project-ai/encryption", "fernet"),
+        ("DATABASE_PASSWORD", "project-ai/database", "password"),
+        ("REDIS_PASSWORD", "project-ai/redis", "password"),
+        ("SMTP_PASSWORD", "project-ai/email", "smtp_password"),
     ]
 
     print("Starting secret migration to Vault...")
@@ -420,7 +393,7 @@ def main():
     parser.add_argument(
         "command",
         choices=["store", "read", "delete", "list", "migrate", "encrypt", "decrypt"],
-        help="Command to execute"
+        help="Command to execute",
     )
     parser.add_argument("--path", help="Secret path")
     parser.add_argument("--key", help="Secret key")
@@ -450,7 +423,7 @@ def main():
         vault.delete_secret(args.path)
 
     elif args.command == "list":
-        secrets = vault.list_secrets(args.path or '')
+        secrets = vault.list_secrets(args.path or "")
         for s in secrets:
             print(s)
 

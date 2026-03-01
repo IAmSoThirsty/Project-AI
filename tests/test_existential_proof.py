@@ -113,7 +113,10 @@ class TestInvariantViolationDetection:
 
         assert violation is not None
         assert violation.invariant_type == InvariantType.ENTROPY_BOUNDS
-        assert violation.severity in [ViolationSeverity.CRITICAL, ViolationSeverity.ERROR]
+        assert violation.severity in [
+            ViolationSeverity.CRITICAL,
+            ViolationSeverity.ERROR,
+        ]
         assert violation.restorable  # Can re-seed
 
     def test_entropy_bounds_compliant(self, proof_system):
@@ -308,7 +311,9 @@ class TestExternalSignatureVerification:
         message = b"test message for signature"
         signature = sample_keypair["private_key"].sign(message)
 
-        is_valid = proof_system.verify_external_signature(message, signature, sample_keypair["public_bytes"])
+        is_valid = proof_system.verify_external_signature(
+            message, signature, sample_keypair["public_bytes"]
+        )
 
         assert is_valid
 
@@ -318,7 +323,9 @@ class TestExternalSignatureVerification:
         wrong_message = b"different message"
         signature = sample_keypair["private_key"].sign(message)
 
-        is_valid = proof_system.verify_external_signature(wrong_message, signature, sample_keypair["public_bytes"])
+        is_valid = proof_system.verify_external_signature(
+            wrong_message, signature, sample_keypair["public_bytes"]
+        )
 
         assert not is_valid
 
@@ -336,7 +343,9 @@ class TestExternalSignatureVerification:
             format=serialization.PublicFormat.Raw,
         )
 
-        is_valid = proof_system.verify_external_signature(message, signature, wrong_public_bytes)
+        is_valid = proof_system.verify_external_signature(
+            message, signature, wrong_public_bytes
+        )
 
         assert not is_valid
 
@@ -367,7 +376,9 @@ class TestDualChannelRestoration:
         # Test that signature verification works
         test_message = b"test restoration authorization"
         signature = sample_keypair["private_key"].sign(test_message)
-        is_valid = proof_system.verify_external_signature(test_message, signature, sample_keypair["public_bytes"])
+        is_valid = proof_system.verify_external_signature(
+            test_message, signature, sample_keypair["public_bytes"]
+        )
         assert is_valid
 
         # Note: Full dual-channel test requires signing the exact message

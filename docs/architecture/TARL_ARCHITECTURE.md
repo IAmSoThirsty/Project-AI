@@ -2,7 +2,13 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        APPLICATION LAYER                         │
+│              FLOOR 1: SOVEREIGN ORCHESTRATION (Thirsty-Lang)    │
+│                     (main.thirsty, bootstrap.thirsty)           │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                        FLOOR 2: APPLICATION LAYER               │
 │                     (User Code / API Calls)                      │
 └────────────────────────────┬────────────────────────────────────┘
                              │
@@ -10,7 +16,7 @@
 ┌─────────────────────────────────────────────────────────────────┐
 │                      BOOTSTRAP LAYER                             │
 │  ┌─────────────────────────────────────────────────────────┐    │
-│  │  bootstrap.py - System Initialization & Orchestration   │    │
+│  │  bootstrap_orchestrator.py - System Initialization      │    │
 │  └─────────────────────────────────────────────────────────┘    │
 └──────┬──────────────┬─────────────────┬────────────────────────┘
        │              │                 │
@@ -213,15 +219,18 @@ Project-AI/
 SECURITY LAYERS:
 ════════════════
 
-Layer 1: TARL Runtime
+Layer 1: Floor 1 Sovereign Orchestration
+  └─→ Thirsty-Lang & TSCG Governance
+
+Layer 2: TARL Runtime
   └─→ Policy-based runtime authorization
 
-Layer 2: Execution Kernel
+Layer 3: Execution Kernel
   └─→ Orchestrates secure execution
 
-Layer 3: CodexDeus Escalation
+Layer 4: CodexDeus Escalation
   └─→ Handles critical security events
 
-Layer 4: Governance Core
+Layer 5: Governance Core
   └─→ System-wide policies and audit
 ```

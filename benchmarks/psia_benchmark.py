@@ -59,6 +59,7 @@ class HardwareProfile:
         """Auto-detect current hardware profile."""
         try:
             import multiprocessing
+
             physical = multiprocessing.cpu_count()
         except Exception:
             physical = os.cpu_count() or 1
@@ -80,8 +81,10 @@ def _get_ram_gb() -> float:
     try:
         if platform.system() == "Windows":
             import ctypes
+
             kernel32 = ctypes.windll.kernel32
             c_ulonglong = ctypes.c_ulonglong
+
             class MEMORYSTATUSEX(ctypes.Structure):
                 _fields_ = [
                     ("dwLength", ctypes.c_ulong),
@@ -94,16 +97,17 @@ def _get_ram_gb() -> float:
                     ("ullAvailVirtual", c_ulonglong),
                     ("sullAvailExtendedVirtual", c_ulonglong),
                 ]
+
             stat = MEMORYSTATUSEX()
             stat.dwLength = ctypes.sizeof(stat)
             kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
-            return round(stat.ullTotalPhys / (1024 ** 3), 2)
+            return round(stat.ullTotalPhys / (1024**3), 2)
         else:
             with open("/proc/meminfo") as f:
                 for line in f:
                     if line.startswith("MemTotal:"):
                         kb = int(line.split()[1])
-                        return round(kb / (1024 ** 2), 2)
+                        return round(kb / (1024**2), 2)
     except Exception:
         pass
     return 0.0
@@ -153,7 +157,9 @@ class BenchmarkResult:
 
     @property
     def std_dev_ms(self) -> float:
-        return statistics.stdev(self.latencies_ms) if len(self.latencies_ms) > 1 else 0.0
+        return (
+            statistics.stdev(self.latencies_ms) if len(self.latencies_ms) > 1 else 0.0
+        )
 
     @property
     def p95_ms(self) -> float:
@@ -267,11 +273,15 @@ class BenchmarkHarness:
 
         workload, fn = self._benchmarks[name]
 
-        logger.info("Warming up %s (%d iterations)...", name, workload.iterations_warmup)
+        logger.info(
+            "Warming up %s (%d iterations)...", name, workload.iterations_warmup
+        )
         for _ in range(workload.iterations_warmup):
             fn()
 
-        logger.info("Measuring %s (%d iterations)...", name, workload.iterations_measured)
+        logger.info(
+            "Measuring %s (%d iterations)...", name, workload.iterations_measured
+        )
         latencies: list[float] = []
         for _ in range(workload.iterations_measured):
             start = time.perf_counter()

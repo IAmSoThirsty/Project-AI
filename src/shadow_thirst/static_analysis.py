@@ -55,7 +55,9 @@ class AnalysisFinding:
             location = f" in {self.function}"
         if self.block_id is not None:
             location += f" block {self.block_id}"
-        return f"[{self.severity.value.upper()}] {self.analyzer}: {self.message}{location}"
+        return (
+            f"[{self.severity.value.upper()}] {self.analyzer}: {self.message}{location}"
+        )
 
 
 @dataclass
@@ -74,7 +76,11 @@ class AnalysisReport:
 
     def get_errors(self) -> list[AnalysisFinding]:
         """Get all error-level findings."""
-        return [f for f in self.findings if f.severity in (AnalysisSeverity.ERROR, AnalysisSeverity.CRITICAL)]
+        return [
+            f
+            for f in self.findings
+            if f.severity in (AnalysisSeverity.ERROR, AnalysisSeverity.CRITICAL)
+        ]
 
     def get_warnings(self) -> list[AnalysisFinding]:
         """Get all warning-level findings."""
@@ -296,7 +302,9 @@ class ResourceEstimator:
         findings = []
 
         # Estimate shadow execution cost
-        shadow_instructions = sum(len(block.instructions) for block in function.shadow_blocks)
+        shadow_instructions = sum(
+            len(block.instructions) for block in function.shadow_blocks
+        )
 
         estimated_cpu_ms = shadow_instructions / self.INSTRUCTIONS_PER_MS
 
@@ -374,7 +382,9 @@ class DivergenceRiskEstimator:
             return findings
 
         # Compare primary and shadow instruction counts
-        primary_count = sum(len(block.instructions) for block in function.primary_blocks)
+        primary_count = sum(
+            len(block.instructions) for block in function.primary_blocks
+        )
         shadow_count = sum(len(block.instructions) for block in function.shadow_blocks)
 
         # If shadow is significantly different, risk of divergence
@@ -462,7 +472,9 @@ class InvariantPurityChecker:
 
                 # Function calls in invariants must be pure
                 if instruction.opcode == IROpcode.CALL:
-                    func_name = instruction.operands[0] if instruction.operands else "unknown"
+                    func_name = (
+                        instruction.operands[0] if instruction.operands else "unknown"
+                    )
                     findings.append(
                         AnalysisFinding(
                             analyzer="InvariantPurityChecker",

@@ -229,7 +229,9 @@ class TestSovereignRuntime:
         binding = sovereign.create_policy_state_binding(policy_state, execution_context)
 
         # Verify binding
-        is_valid = sovereign.verify_policy_state_binding(policy_state, execution_context, binding)
+        is_valid = sovereign.verify_policy_state_binding(
+            policy_state, execution_context, binding
+        )
         assert is_valid
 
     def test_policy_binding_verification_fails_on_policy_change(self, sovereign):
@@ -250,7 +252,9 @@ class TestSovereignRuntime:
         policy_state["stage_allowed"] = False
 
         # Verification should fail
-        is_valid = sovereign.verify_policy_state_binding(policy_state, execution_context, binding)
+        is_valid = sovereign.verify_policy_state_binding(
+            policy_state, execution_context, binding
+        )
         assert not is_valid
 
     def test_policy_binding_verification_fails_on_context_change(self, sovereign):
@@ -271,7 +275,9 @@ class TestSovereignRuntime:
         execution_context["environment"] = "staging"
 
         # Verification should fail
-        is_valid = sovereign.verify_policy_state_binding(policy_state, execution_context, binding)
+        is_valid = sovereign.verify_policy_state_binding(
+            policy_state, execution_context, binding
+        )
         assert not is_valid
 
     def test_export_compliance_bundle(self, sovereign):
@@ -319,17 +325,25 @@ class TestSovereignRuntime:
         }
 
         # Create valid binding
-        valid_binding = sovereign.create_policy_state_binding(policy_state, execution_context)
+        valid_binding = sovereign.create_policy_state_binding(
+            policy_state, execution_context
+        )
 
         # Valid binding should verify
-        assert sovereign.verify_policy_state_binding(policy_state, execution_context, valid_binding)
+        assert sovereign.verify_policy_state_binding(
+            policy_state, execution_context, valid_binding
+        )
 
         # Create invalid binding (wrong context)
         wrong_context = {"stage": "different_operation"}
-        invalid_binding = sovereign.create_policy_state_binding(policy_state, wrong_context)
+        invalid_binding = sovereign.create_policy_state_binding(
+            policy_state, wrong_context
+        )
 
         # Invalid binding should NOT verify with correct context
-        assert not sovereign.verify_policy_state_binding(policy_state, execution_context, invalid_binding)
+        assert not sovereign.verify_policy_state_binding(
+            policy_state, execution_context, invalid_binding
+        )
 
         # This proves that execution cannot proceed without correct binding
         # - demonstrating non-bypassability by design

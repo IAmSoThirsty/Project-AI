@@ -11,7 +11,9 @@ from app.core.backend_client import BackendAPIClient
 
 
 class DummyResponse:
-    def __init__(self, json_data=None, status_code=200, text="", reason="OK", url="http://b/api"):
+    def __init__(
+        self, json_data=None, status_code=200, text="", reason="OK", url="http://b/api"
+    ):
         self._json = json_data or {}
         self.status_code = status_code
         self.text = text
@@ -61,7 +63,9 @@ def make_client(session: DummySession) -> BackendAPIClient:
 
 def test_safe_json_non_json_returns_empty():
     session = DummySession()
-    session.register("get", "http://b/api/status", DummyResponse(text="<html>", status_code=200))
+    session.register(
+        "get", "http://b/api/status", DummyResponse(text="<html>", status_code=200)
+    )
     client = make_client(session)
     payload = client.get_status()
     assert payload == {}
@@ -69,7 +73,9 @@ def test_safe_json_non_json_returns_empty():
 
 def test_error_extraction_prefers_payload_message():
     session = DummySession()
-    err_resp = DummyResponse({"message": "Oops"}, status_code=401, text="fail", reason="Unauthorized")
+    err_resp = DummyResponse(
+        {"message": "Oops"}, status_code=401, text="fail", reason="Unauthorized"
+    )
     session.register("post", "http://b/api/auth/login", err_resp)
     client = make_client(session)
     result = client.authenticate("u", "p")
@@ -80,7 +86,9 @@ def test_error_extraction_prefers_payload_message():
 def test_error_extraction_fallbacks():
     BackendAPIClient(base_url="http://b")
     # _extract_error expects HTTPError with response
-    resp = DummyResponse(json_data={}, status_code=500, text="Internal failure", reason="Server Error")
+    resp = DummyResponse(
+        json_data={}, status_code=500, text="Internal failure", reason="Server Error"
+    )
     try:
         resp.raise_for_status()
     except requests.HTTPError as exc:
@@ -95,8 +103,12 @@ def test_normalize_base_url_adds_scheme():
 
 def test_authenticate_success_sets_token_header():
     session = DummySession()
-    session.register("post", "http://b/api/auth/login", DummyResponse({"token": "tok", "user": {}}))
-    session.register("get", "http://b/api/auth/profile", DummyResponse({"user": {"username": "u"}}))
+    session.register(
+        "post", "http://b/api/auth/login", DummyResponse({"token": "tok", "user": {}})
+    )
+    session.register(
+        "get", "http://b/api/auth/profile", DummyResponse({"user": {"username": "u"}})
+    )
     c = make_client(session)
     result = c.authenticate("u", "p")
     assert result.success is True

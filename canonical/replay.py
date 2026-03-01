@@ -54,6 +54,12 @@ class CanonicalReplay:
         }
         self.success_criteria: dict[str, bool] = {}
 
+        # TSCG Integration
+        from project_ai.utils.tscg import TSCGEncoder
+
+        self.tscg_encoder = TSCGEncoder()
+        self.tscg_flow: list[dict[str, Any] | str] = []
+
     def load_scenario(self) -> bool:
         """Load scenario definition from YAML."""
         print("=" * 80)
@@ -158,6 +164,10 @@ class CanonicalReplay:
             "DecisionContracts, Signals, FailureSemantics",
         )
 
+        # TSCG: Ingress activation
+        self.tscg_flow.append({"name": "Ingress", "parameters": [], "classes": []})
+        self.tscg_flow.append("→")
+
         phase_trace = {
             "phase": "operational_substructure",
             "started_at": datetime.now(UTC).isoformat() + "Z",
@@ -222,6 +232,16 @@ class CanonicalReplay:
         self.print_header(
             "2. TRIUMVIRATE ARBITRATION", "Galahad, Cerberus, Codex coordination"
         )
+
+        # TSCG: Cognition plane arbitration
+        self.tscg_flow.append(
+            {"name": "Cognition (proposal only)", "parameters": [], "classes": []}
+        )
+        self.tscg_flow.append("→")
+        self.tscg_flow.append(
+            {"name": "Non-trivial mutation", "parameters": [], "classes": []}
+        )
+        self.tscg_flow.append("→")
 
         phase_trace = {
             "phase": "triumvirate_arbitration",
@@ -298,6 +318,24 @@ class CanonicalReplay:
         """Phase 3: TARL Runtime Enforcement."""
         self.print_header("3. TARL RUNTIME ENFORCEMENT", "Policy, Trust, Escalation")
 
+        # TSCG: Governance & Shadow Replay
+        self.tscg_flow.append(
+            {"name": "Deterministic shadow", "parameters": ["v1"], "classes": []}
+        )
+        self.tscg_flow.append("→")
+        self.tscg_flow.append(
+            {"name": "Invariant engine", "parameters": ["I_canonical"], "classes": []}
+        )
+        self.tscg_flow.append("∧")
+        self.tscg_flow.append(
+            {"name": "Capability authorization", "parameters": [], "classes": []}
+        )
+        self.tscg_flow.append("→")
+        self.tscg_flow.append(
+            {"name": "Quorum", "parameters": ["3f+1", "2f+1"], "classes": []}
+        )
+        self.tscg_flow.append("→")
+
         phase_trace = {
             "phase": "tarl_enforcement",
             "started_at": datetime.now(UTC).isoformat() + "Z",
@@ -370,6 +408,17 @@ class CanonicalReplay:
         self.print_header(
             "4. EED MEMORY COMMIT", "Episodic snapshot, audit seal, replayability"
         )
+
+        # TSCG: Commit and Anchor
+        self.tscg_flow.append(
+            {"name": "Commit canonical", "parameters": [], "classes": []}
+        )
+        self.tscg_flow.append("→")
+        self.tscg_flow.append(
+            {"name": "Anchor extension", "parameters": [], "classes": []}
+        )
+        self.tscg_flow.append("→")
+        self.tscg_flow.append({"name": "Ledger", "parameters": [], "classes": []})
 
         phase_trace = {
             "phase": "eed_memory_commit",
@@ -553,6 +602,11 @@ class CanonicalReplay:
 
         try:
             self.trace["metadata"]["completed_at"] = datetime.now(UTC).isoformat() + "Z"
+
+            # TSCG: Add compressed flow summary to metadata
+            self.trace["metadata"]["tscg_summary"] = self.tscg_encoder.encode_flow(
+                self.tscg_flow
+            )
 
             with open(self.trace_path, "w") as f:
                 json.dump(self.trace, f, indent=2)

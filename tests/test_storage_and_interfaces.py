@@ -326,7 +326,9 @@ class TestMemoryEngineInterface:
                 self.records = []
 
             def record_execution(self, trace_id, channels, status):
-                self.records.append({"trace_id": trace_id, "channels": channels, "status": status})
+                self.records.append(
+                    {"trace_id": trace_id, "channels": channels, "status": status}
+                )
                 return trace_id
 
             def query_executions(self, filters=None, limit=10):
@@ -339,7 +341,9 @@ class TestMemoryEngineInterface:
         memory = SimpleMemory()
 
         # Record execution
-        memory_id = memory.record_execution("trace_123", {"attempt": {}, "result": "success"}, "completed")
+        memory_id = memory.record_execution(
+            "trace_123", {"attempt": {}, "result": "success"}, "completed"
+        )
 
         # Verify
         assert memory_id == "trace_123"

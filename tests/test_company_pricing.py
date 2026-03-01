@@ -52,7 +52,9 @@ class TestCompanyFlatRatePricing:
         # All should have the same price regardless of seats
         pricing_5_seats = calculate_company_price(100, 5, CompanyBillingCycle.MONTHLY)
         pricing_50_seats = calculate_company_price(100, 50, CompanyBillingCycle.MONTHLY)
-        pricing_100_seats = calculate_company_price(100, 100, CompanyBillingCycle.MONTHLY)
+        pricing_100_seats = calculate_company_price(
+            100, 100, CompanyBillingCycle.MONTHLY
+        )
 
         assert pricing_5_seats.total_price == 1000.0
         assert pricing_50_seats.total_price == 1000.0

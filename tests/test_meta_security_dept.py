@@ -37,17 +37,21 @@ def meta_security_with_triumvirate():
 
 class TestViolationDetection:
     def test_detect_governance_bypass(self, meta_security):
-        violations = meta_security.scan_for_violations({"bypass_governance": True, "source": "rogue_agent"})
+        violations = meta_security.scan_for_violations(
+            {"bypass_governance": True, "source": "rogue_agent"}
+        )
         assert len(violations) == 1
         assert violations[0].violation_type == ViolationType.GOVERNANCE_BYPASS
         assert violations[0].severity == EnforcementLevel.CONTAINMENT
 
     def test_detect_privilege_escalation(self, meta_security):
-        violations = meta_security.scan_for_violations({
-            "requested_authority": 10,
-            "granted_authority": 3,
-            "source": "user_123",
-        })
+        violations = meta_security.scan_for_violations(
+            {
+                "requested_authority": 10,
+                "granted_authority": 3,
+                "source": "user_123",
+            }
+        )
         assert len(violations) == 1
         assert violations[0].violation_type == ViolationType.PRIVILEGE_ESCALATION
 
@@ -58,7 +62,9 @@ class TestViolationDetection:
         assert violations[0].severity == EnforcementLevel.LOCKDOWN
 
     def test_clean_context_no_violations(self, meta_security):
-        violations = meta_security.scan_for_violations({"source": "user", "action": "read"})
+        violations = meta_security.scan_for_violations(
+            {"source": "user", "action": "read"}
+        )
         assert len(violations) == 0
 
     def test_report_violation_auto_contains(self, meta_security):
@@ -107,7 +113,9 @@ class TestContainment:
 
 class TestEmergencyShutdown:
     def test_emergency_shutdown(self, meta_security):
-        result = meta_security.emergency_shutdown("compromised_agent", "Detected breach")
+        result = meta_security.emergency_shutdown(
+            "compromised_agent", "Detected breach"
+        )
         assert result.success is True
         assert result.requires_triumvirate_review is True
         assert result.target == "compromised_agent"
@@ -131,23 +139,31 @@ class TestVREnforcement:
         )
 
     def test_warning_level(self, meta_security):
-        action = meta_security.enforce_vr_action("user_1", self._make_violation(EnforcementLevel.WARNING))
+        action = meta_security.enforce_vr_action(
+            "user_1", self._make_violation(EnforcementLevel.WARNING)
+        )
         assert action.action_taken == "notification"
         assert action.access_restricted is False
 
     def test_intervention_level(self, meta_security):
-        action = meta_security.enforce_vr_action("user_1", self._make_violation(EnforcementLevel.INTERVENTION))
+        action = meta_security.enforce_vr_action(
+            "user_1", self._make_violation(EnforcementLevel.INTERVENTION)
+        )
         assert action.action_taken == "blocked"
         assert action.access_restricted is False
 
     def test_containment_level_boots_user(self, meta_security):
-        action = meta_security.enforce_vr_action("user_1", self._make_violation(EnforcementLevel.CONTAINMENT))
+        action = meta_security.enforce_vr_action(
+            "user_1", self._make_violation(EnforcementLevel.CONTAINMENT)
+        )
         assert action.action_taken == "booted"
         assert action.access_restricted is True
         assert meta_security.is_user_restricted("user_1") is True
 
     def test_lockdown_level_requires_triumvirate(self, meta_security):
-        action = meta_security.enforce_vr_action("user_1", self._make_violation(EnforcementLevel.LOCKDOWN))
+        action = meta_security.enforce_vr_action(
+            "user_1", self._make_violation(EnforcementLevel.LOCKDOWN)
+        )
         assert action.action_taken == "locked_out"
         assert action.access_restricted is True
         assert action.requires_triumvirate_reinstatement is True
@@ -172,7 +188,9 @@ class TestTriumvirateReinstatement:
         assert decision.approved is False
         assert meta_security.is_user_restricted("user_1") is True
 
-    def test_reinstatement_approved_with_triumvirate(self, meta_security_with_triumvirate):
+    def test_reinstatement_approved_with_triumvirate(
+        self, meta_security_with_triumvirate
+    ):
         violation = Violation(
             violation_id="v1",
             violation_type=ViolationType.UNAUTHORIZED_ACTION,

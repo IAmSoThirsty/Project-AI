@@ -47,7 +47,9 @@ class MutationStatus(Enum):
 class AmendmentRules:
     """Rules for amending a constitutional law"""
 
-    requires: List[str] = field(default_factory=list)  # e.g., ["MetaOffice", "2/3 Manager Consensus"]
+    requires: List[str] = field(
+        default_factory=list
+    )  # e.g., ["MetaOffice", "2/3 Manager Consensus"]
     cooldown_ticks: int = 5000  # Minimum ticks between amendments
     requires_simulation: bool = True
     requires_rollback_path: bool = True
@@ -68,7 +70,12 @@ class ConstitutionalLaw:
     """
 
     def __init__(
-        self, law_id: str, scope: LawScope, statement: str, enforcement: EnforcementLevel, introduced_at_tick: int
+        self,
+        law_id: str,
+        scope: LawScope,
+        statement: str,
+        enforcement: EnforcementLevel,
+        introduced_at_tick: int,
     ):
         self.law_id = law_id
         self.scope = scope
@@ -97,12 +104,18 @@ class ConstitutionalLaw:
         if self.last_amended_tick is None:
             return True
 
-        return current_tick >= self.last_amended_tick + self.amendment_rules.cooldown_ticks
+        return (
+            current_tick >= self.last_amended_tick + self.amendment_rules.cooldown_ticks
+        )
 
     def record_amendment(self, amendment_description: str, tick: int):
         """Record an amendment to this law"""
         self.amendment_history.append(
-            {"description": amendment_description, "tick": tick, "timestamp": datetime.now(timezone.utc).isoformat()}
+            {
+                "description": amendment_description,
+                "tick": tick,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            }
         )
         self.last_amended_tick = tick
 
@@ -148,7 +161,11 @@ class RiskAssessment:
     mitigation_strategies: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict:
-        return {"level": self.level, "concerns": self.concerns, "mitigation_strategies": self.mitigation_strategies}
+        return {
+            "level": self.level,
+            "concerns": self.concerns,
+            "mitigation_strategies": self.mitigation_strategies,
+        }
 
 
 class MutationProposal:
@@ -157,7 +174,13 @@ class MutationProposal:
     Proposes a change to the system's rules
     """
 
-    def __init__(self, proposal_id: str, proposed_change: str, justification: str, proposer_id: str):
+    def __init__(
+        self,
+        proposal_id: str,
+        proposed_change: str,
+        justification: str,
+        proposer_id: str,
+    ):
         self.proposal_id = proposal_id
         self.proposed_change = proposed_change
         self.justification = justification
@@ -172,7 +195,9 @@ class MutationProposal:
         self.risk_assessment = RiskAssessment(level="MEDIUM")
 
         # Voting
-        self.votes: Dict[str, bool] = {}  # manager_id -> vote (True=approve, False=reject)
+        self.votes: Dict[str, bool] = (
+            {}
+        )  # manager_id -> vote (True=approve, False=reject)
         self.meta_office_ruling: Optional[bool] = None
 
         # Status
@@ -192,7 +217,11 @@ class MutationProposal:
             EventType.CODEX_AMENDMENT,
             actor_id=proposer_id,
             target_id=self.proposal_id,
-            data={"action": "mutation_proposed", "proposed_change": proposed_change, "justification": justification},
+            data={
+                "action": "mutation_proposed",
+                "proposed_change": proposed_change,
+                "justification": justification,
+            },
         )
 
     def transition_to(self, new_status: MutationStatus, reason: str = ""):
@@ -212,7 +241,11 @@ class MutationProposal:
         get_audit_log().log_event(
             EventType.CODEX_AMENDMENT,
             target_id=self.proposal_id,
-            data={"action": "mutation_status_changed", "from_status": old_status.value, "to_status": new_status.value},
+            data={
+                "action": "mutation_status_changed",
+                "from_status": old_status.value,
+                "to_status": new_status.value,
+            },
         )
 
     def add_simulation(self, result: SimulationResult):
@@ -240,7 +273,10 @@ class MutationProposal:
         get_audit_log().log_event(
             EventType.CODEX_AMENDMENT,
             target_id=self.proposal_id,
-            data={"action": "activation_scheduled", "activation_tick": self.delayed_activation_tick},
+            data={
+                "action": "activation_scheduled",
+                "activation_tick": self.delayed_activation_tick,
+            },
         )
 
     def rollback(self, reason: str):
@@ -257,7 +293,11 @@ class MutationProposal:
         get_audit_log().log_event(
             EventType.CODEX_AMENDMENT,
             target_id=self.proposal_id,
-            data={"action": "mutation_rolled_back", "reason": reason, "rollback_path": self.rollback_path},
+            data={
+                "action": "mutation_rolled_back",
+                "reason": reason,
+                "rollback_path": self.rollback_path,
+            },
         )
 
     def to_dict(self) -> Dict:
@@ -301,24 +341,46 @@ class ConstitutionalMutationEngine:
         """
         # Law 1: No self-removal of safeguards
         law1 = ConstitutionalLaw(
-            "LAW-001", LawScope.GLOBAL, "No self-removal of safeguards", EnforcementLevel.CONSTITUTIONAL, 0
+            "LAW-001",
+            LawScope.GLOBAL,
+            "No self-removal of safeguards",
+            EnforcementLevel.CONSTITUTIONAL,
+            0,
         )
-        law1.amendment_rules.requires = ["MetaOffice", "Unanimous Manager Consensus", "External Audit"]
+        law1.amendment_rules.requires = [
+            "MetaOffice",
+            "Unanimous Manager Consensus",
+            "External Audit",
+        ]
         self.register_law(law1)
 
         # Law 2: No mutation without simulation
-        law2 = ConstitutionalLaw("LAW-002", LawScope.GLOBAL, "No mutation without simulation", EnforcementLevel.HARD, 0)
+        law2 = ConstitutionalLaw(
+            "LAW-002",
+            LawScope.GLOBAL,
+            "No mutation without simulation",
+            EnforcementLevel.HARD,
+            0,
+        )
         self.register_law(law2)
 
         # Law 3: No mutation without human-traceable rationale
         law3 = ConstitutionalLaw(
-            "LAW-003", LawScope.GLOBAL, "No mutation without human-traceable rationale", EnforcementLevel.HARD, 0
+            "LAW-003",
+            LawScope.GLOBAL,
+            "No mutation without human-traceable rationale",
+            EnforcementLevel.HARD,
+            0,
         )
         self.register_law(law3)
 
         # Law 4: All old laws remain archived forever
         law4 = ConstitutionalLaw(
-            "LAW-004", LawScope.GLOBAL, "All old laws remain archived forever", EnforcementLevel.CONSTITUTIONAL, 0
+            "LAW-004",
+            LawScope.GLOBAL,
+            "All old laws remain archived forever",
+            EnforcementLevel.CONSTITUTIONAL,
+            0,
         )
         self.register_law(law4)
 
@@ -387,7 +449,9 @@ class ConstitutionalMutationEngine:
         else:
             level = "CRITICAL"
 
-        proposal.risk_assessment = RiskAssessment(level=level, concerns=risks, mitigation_strategies=[])
+        proposal.risk_assessment = RiskAssessment(
+            level=level, concerns=risks, mitigation_strategies=[]
+        )
 
         return proposal.risk_assessment
 
@@ -404,10 +468,15 @@ class ConstitutionalMutationEngine:
             proposal.votes[manager_id] = vote
 
             get_audit_log().log_event(
-                EventType.CONSENSUS_REACHED, actor_id=manager_id, target_id=proposal_id, data={"vote": vote}
+                EventType.CONSENSUS_REACHED,
+                actor_id=manager_id,
+                target_id=proposal_id,
+                data={"vote": vote},
             )
 
-    def meta_office_ruling(self, proposal_id: str, ruling: bool, justification: str) -> bool:
+    def meta_office_ruling(
+        self, proposal_id: str, ruling: bool, justification: str
+    ) -> bool:
         """
         Meta-Office makes final ruling.
         Mutation Law: Meta-Office cannot change its own authority (III.4)
@@ -417,10 +486,14 @@ class ConstitutionalMutationEngine:
             return False
 
         # Check if proposal tries to change Meta-Office authority
-        if "meta-office" in proposal.proposed_change.lower() and "authority" in proposal.proposed_change.lower():
+        if (
+            "meta-office" in proposal.proposed_change.lower()
+            and "authority" in proposal.proposed_change.lower()
+        ):
             # Violation of Law 5
             proposal.transition_to(
-                MutationStatus.REJECTED, "Violates Law 5: Meta-Office cannot change its own authority"
+                MutationStatus.REJECTED,
+                "Violates Law 5: Meta-Office cannot change its own authority",
             )
             return False
 
@@ -441,7 +514,11 @@ class ConstitutionalMutationEngine:
             EventType.CODEX_AMENDMENT,
             actor_id=self.meta_office_id or "meta-office",
             target_id=proposal_id,
-            data={"action": "meta_office_ruling", "ruling": ruling, "justification": justification},
+            data={
+                "action": "meta_office_ruling",
+                "ruling": ruling,
+                "justification": justification,
+            },
         )
 
         return ruling

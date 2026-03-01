@@ -227,9 +227,7 @@ class DeadmanSwitch:
                 "triggered": self.triggered,
                 "timeout_seconds": self.timeout_seconds,
                 "last_heartbeat": (
-                    self.last_heartbeat.isoformat()
-                    if self.last_heartbeat
-                    else None
+                    self.last_heartbeat.isoformat() if self.last_heartbeat else None
                 ),
                 "failsafe_actions_registered": len(self.failsafe_actions),
                 "trigger_count": len(self.trigger_history),

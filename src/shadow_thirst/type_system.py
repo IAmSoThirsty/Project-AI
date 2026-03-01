@@ -133,7 +133,11 @@ class AnnotatedType:
     type_params: tuple[BaseType, ...] = ()
 
     def __str__(self) -> str:
-        params = f"<{', '.join(t.value for t in self.type_params)}>" if self.type_params else ""
+        params = (
+            f"<{', '.join(t.value for t in self.type_params)}>"
+            if self.type_params
+            else ""
+        )
         return f"{self.base.value}{params}@{self.plane.value}"
 
     def is_writable_to_canonical(self) -> bool:
@@ -158,7 +162,10 @@ class AnnotatedType:
         if self.plane == PlaneAnnotation.DUAL:
             return True  # Dual is subtype of everything
 
-        if self.plane == PlaneAnnotation.INVARIANT and other.plane == PlaneAnnotation.SHADOW:
+        if (
+            self.plane == PlaneAnnotation.INVARIANT
+            and other.plane == PlaneAnnotation.SHADOW
+        ):
             return True
 
         return False
@@ -288,51 +295,57 @@ class PlaneSafetyChecker:
             target_plane == PlaneAnnotation.PRIMARY
             and self._current_context == PlaneAnnotation.SHADOW
         ):
-            self._violations.append(TypeViolation(
-                rule_violated="T-WRITE-CANONICAL",
-                line=line,
-                column=column,
-                expression=f"write({target}, ...)",
-                expected_plane=PlaneAnnotation.PRIMARY,
-                actual_plane=PlaneAnnotation.SHADOW,
-                message=(
-                    f"Canonical write to '{target}' in shadow context violates "
-                    f"INV-ROOT-2. Shadow plane cannot mutate canonical state."
-                ),
-            ))
+            self._violations.append(
+                TypeViolation(
+                    rule_violated="T-WRITE-CANONICAL",
+                    line=line,
+                    column=column,
+                    expression=f"write({target}, ...)",
+                    expected_plane=PlaneAnnotation.PRIMARY,
+                    actual_plane=PlaneAnnotation.SHADOW,
+                    message=(
+                        f"Canonical write to '{target}' in shadow context violates "
+                        f"INV-ROOT-2. Shadow plane cannot mutate canonical state."
+                    ),
+                )
+            )
             return False
 
         # Rule: Cannot write to any plane in invariant context
         if self._current_context == PlaneAnnotation.INVARIANT:
-            self._violations.append(TypeViolation(
-                rule_violated="T-INVARIANT-PURE",
-                line=line,
-                column=column,
-                expression=f"write({target}, ...)",
-                expected_plane=PlaneAnnotation.INVARIANT,
-                actual_plane=target_plane,
-                message=(
-                    f"Write to '{target}' in invariant context violates purity. "
-                    f"Invariant functions must be pure (no side effects)."
-                ),
-            ))
+            self._violations.append(
+                TypeViolation(
+                    rule_violated="T-INVARIANT-PURE",
+                    line=line,
+                    column=column,
+                    expression=f"write({target}, ...)",
+                    expected_plane=PlaneAnnotation.INVARIANT,
+                    actual_plane=target_plane,
+                    message=(
+                        f"Write to '{target}' in invariant context violates purity. "
+                        f"Invariant functions must be pure (no side effects)."
+                    ),
+                )
+            )
             return False
 
         # Rule: Value type must be compatible with target plane
         if not value_type.is_subtype_of(AnnotatedType(value_type.base, target_plane)):
-            self._violations.append(TypeViolation(
-                rule_violated="T-SUBTYPE",
-                line=line,
-                column=column,
-                expression=f"write({target}, {value_type})",
-                expected_plane=target_plane,
-                actual_plane=value_type.plane,
-                message=(
-                    f"Type {value_type} is not a subtype of {target_plane.value}. "
-                    f"Cannot write {value_type.plane.value}-typed value to "
-                    f"{target_plane.value} target."
-                ),
-            ))
+            self._violations.append(
+                TypeViolation(
+                    rule_violated="T-SUBTYPE",
+                    line=line,
+                    column=column,
+                    expression=f"write({target}, {value_type})",
+                    expected_plane=target_plane,
+                    actual_plane=value_type.plane,
+                    message=(
+                        f"Type {value_type} is not a subtype of {target_plane.value}. "
+                        f"Cannot write {value_type.plane.value}-typed value to "
+                        f"{target_plane.value} target."
+                    ),
+                )
+            )
             return False
 
         return True
@@ -359,18 +372,20 @@ class PlaneSafetyChecker:
             return True  # Not a shadow value, promotion is a no-op
 
         if not commit_protocol_completed:
-            self._violations.append(TypeViolation(
-                rule_violated="T-PROMOTE",
-                line=line,
-                column=column,
-                expression=f"promote({value_type})",
-                expected_plane=PlaneAnnotation.PRIMARY,
-                actual_plane=PlaneAnnotation.SHADOW,
-                message=(
-                    "Cannot promote shadow value to primary without completing "
-                    "the Commit Protocol (shadow → gate → quorum → commit)."
-                ),
-            ))
+            self._violations.append(
+                TypeViolation(
+                    rule_violated="T-PROMOTE",
+                    line=line,
+                    column=column,
+                    expression=f"promote({value_type})",
+                    expected_plane=PlaneAnnotation.PRIMARY,
+                    actual_plane=PlaneAnnotation.SHADOW,
+                    message=(
+                        "Cannot promote shadow value to primary without completing "
+                        "the Commit Protocol (shadow → gate → quorum → commit)."
+                    ),
+                )
+            )
             return False
 
         return True

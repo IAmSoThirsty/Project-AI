@@ -34,5 +34,7 @@ def test_liara_cooldown_enforced():
     assert role == "Cerberus"
     restore_pillar()
 
-    role2 = maybe_activate_liara({"Cerberus": False, "Galahad": True, "CodexDeus": True})
+    role2 = maybe_activate_liara(
+        {"Cerberus": False, "Galahad": True, "CodexDeus": True}
+    )
     assert role2 is None

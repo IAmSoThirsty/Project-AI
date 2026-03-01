@@ -469,14 +469,18 @@ class TestFactoryFunctions:
 
     def test_create_rl_agent(self, temp_dir):
         """Test RL agent factory"""
-        agent = create_rl_agent(agent_id="factory_agent", actions=["action1", "action2"], data_dir=temp_dir)
+        agent = create_rl_agent(
+            agent_id="factory_agent", actions=["action1", "action2"], data_dir=temp_dir
+        )
 
         assert agent.agent_id == "factory_agent"
         assert len(agent.actions) == 2
 
     def test_create_continual_learning_system(self, temp_dir):
         """Test continual learning system factory"""
-        system = create_continual_learning_system(system_id="factory_system", data_dir=temp_dir)
+        system = create_continual_learning_system(
+            system_id="factory_system", data_dir=temp_dir
+        )
 
         assert system.system_id == "factory_system"
 
@@ -524,7 +528,9 @@ class TestIntegration:
 
     def test_continual_learning_progression(self, temp_dir):
         """Test continual learning over time"""
-        system = ContinualLearningSystem(system_id="progression_system", data_dir=temp_dir)
+        system = ContinualLearningSystem(
+            system_id="progression_system", data_dir=temp_dir
+        )
 
         # Register model
         system.register_model("evolving_model", "fusion", 0.5)

@@ -273,7 +273,9 @@ class TestIrreversibilityLock:
         """Test creating a state lock"""
         # Trigger irreversibility
         elapsed = datetime.utcnow() - active_scenario.activation_time
-        assessment = engine.irreversibility_detector.assess_irreversibility(active_scenario, elapsed)
+        assessment = engine.irreversibility_detector.assess_irreversibility(
+            active_scenario, elapsed
+        )
 
         # Create lock
         lock = engine.irreversibility_detector.create_state_lock(
@@ -292,7 +294,9 @@ class TestIrreversibilityLock:
     def test_lock_enforced_on_scenario(self, engine, active_scenario):
         """Test that lock is added to scenario"""
         elapsed = datetime.utcnow() - active_scenario.activation_time
-        assessment = engine.irreversibility_detector.assess_irreversibility(active_scenario, elapsed)
+        assessment = engine.irreversibility_detector.assess_irreversibility(
+            active_scenario, elapsed
+        )
 
         lock = engine.irreversibility_detector.create_state_lock(
             scenario=active_scenario,
@@ -305,7 +309,9 @@ class TestIrreversibilityLock:
     def test_lock_serialization(self, engine, active_scenario):
         """Test lock to_dict"""
         elapsed = datetime.utcnow() - active_scenario.activation_time
-        assessment = engine.irreversibility_detector.assess_irreversibility(active_scenario, elapsed)
+        assessment = engine.irreversibility_detector.assess_irreversibility(
+            active_scenario, elapsed
+        )
 
         lock = engine.irreversibility_detector.create_state_lock(
             scenario=active_scenario,
@@ -400,7 +406,9 @@ class TestRecoveryEventEnforcement:
 
     def test_recovery_allowed_without_locks(self, engine, active_scenario):
         """Test recovery events allowed without locks"""
-        is_allowed, reason = active_scenario.check_recovery_event_allowed("centralized_fact_checking")
+        is_allowed, reason = active_scenario.check_recovery_event_allowed(
+            "centralized_fact_checking"
+        )
         assert is_allowed is True
 
     def test_recovery_blocked_when_disabled(self, engine, active_scenario):
@@ -424,7 +432,9 @@ class TestRecoveryEventEnforcement:
         active_scenario.active_locks.append(lock)
 
         # Check if event is allowed
-        is_allowed, reason = active_scenario.check_recovery_event_allowed("centralized_fact_checking")
+        is_allowed, reason = active_scenario.check_recovery_event_allowed(
+            "centralized_fact_checking"
+        )
 
         assert is_allowed is False
         assert "permanently disabled" in reason.lower()
@@ -560,7 +570,9 @@ class TestEngineIntegration:
         # Check if lock was created
         if "S01" in result["irreversible_scenarios"]:
             assert len(result["new_state_locks"]) > 0
-            assert any(lock["scenario_id"] == "S01" for lock in result["new_state_locks"])
+            assert any(
+                lock["scenario_id"] == "S01" for lock in result["new_state_locks"]
+            )
 
     def test_dashboard_shows_lock_count(self, engine, active_scenario):
         """Test dashboard includes lock information"""
@@ -708,7 +720,9 @@ class TestCategorySpecificConstraints:
 
         # Should have ecological constraints
         var_names = [c.variable_name for c in lock.variable_constraints]
-        assert "ecosystem_health" in var_names or "resource_regeneration_rate" in var_names
+        assert (
+            "ecosystem_health" in var_names or "resource_regeneration_rate" in var_names
+        )
 
     def test_societal_constraints(self, engine):
         """Test societal scenarios get appropriate constraints and ceilings"""

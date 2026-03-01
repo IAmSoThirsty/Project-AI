@@ -59,7 +59,9 @@ class ThirstyLangValidator(KernelRoutedAgent):
 
     def _do_run_full_validation(self) -> dict[str, Any]:
         """Internal implementation of full validation."""
-        logger.info("Starting T-A-R-L (Thirsty's Active Resistance Language) validation")
+        logger.info(
+            "Starting T-A-R-L (Thirsty's Active Resistance Language) validation"
+        )
 
         report = {
             "timestamp": datetime.now(UTC).isoformat(),
@@ -84,7 +86,11 @@ class ThirstyLangValidator(KernelRoutedAgent):
             "passed": total_passed,
             "failed": total_tests - total_passed,
             "success_rate": f"{(total_passed/total_tests)*100:.1f}%",
-            "tarl_status": ("operational" if total_passed >= total_tests * 0.8 else "needs_attention"),
+            "tarl_status": (
+                "operational"
+                if total_passed >= total_tests * 0.8
+                else "needs_attention"
+            ),
         }
 
         self.validation_results.append(report)
@@ -170,7 +176,9 @@ class ThirstyLangValidator(KernelRoutedAgent):
             }
 
         # Validate security test script exists and is within expected directory
-        script_path = os.path.normpath(os.path.join(self.thirsty_lang_path, "src/test/security-tests.js"))
+        script_path = os.path.normpath(
+            os.path.join(self.thirsty_lang_path, "src/test/security-tests.js")
+        )
         abs_script_path = os.path.abspath(script_path)
         abs_base_path = os.path.abspath(self.thirsty_lang_path)
 

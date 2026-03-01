@@ -128,7 +128,10 @@ class SingularityOverride:
         # Initialize keypair for signing
         self._init_keypair()
 
-        logger.info("SingularityOverride initialized with ORACLE_SEED: %s...", self.oracle_seed[:16])
+        logger.info(
+            "SingularityOverride initialized with ORACLE_SEED: %s...",
+            self.oracle_seed[:16],
+        )
 
     def _load_or_create_genesis(self) -> bytes:
         """Load existing genesis seal or create new one"""
@@ -268,9 +271,7 @@ class SingularityOverride:
             )
 
         # Check for non-restorability patterns
-        non_restorable = [
-            v for v in ledger_violations if v.get("restorable") is False
-        ]
+        non_restorable = [v for v in ledger_violations if v.get("restorable") is False]
         if len(non_restorable) >= 2:
             return (
                 True,
@@ -496,9 +497,7 @@ class SingularityOverride:
 
         return len(violations), violations
 
-    def initiate_refoundation(
-        self, authorization_signature: bytes
-    ) -> dict[str, Any]:
+    def initiate_refoundation(self, authorization_signature: bytes) -> dict[str, Any]:
         """
         Initiate system refoundation (genesis reset).
 

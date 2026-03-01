@@ -129,7 +129,9 @@ class RedTeamPersonaAgent(KernelRoutedAgent):
             # Try to find personas file
             if not os.path.exists(self.personas_path):
                 # Try relative to project root
-                project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+                project_root = os.path.dirname(
+                    os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+                )
                 alt_path = os.path.join(project_root, self.personas_path)
                 if os.path.exists(alt_path):
                     self.personas_path = alt_path
@@ -254,13 +256,17 @@ class RedTeamPersonaAgent(KernelRoutedAgent):
                 if turn_num == 1:
                     attacker_msg = system_prompt
                 else:
-                    attacker_msg = self._generate_next_attack(persona, turns, conversation)
+                    attacker_msg = self._generate_next_attack(
+                        persona, turns, conversation
+                    )
 
                 # Get target response
                 target_response = interaction_fn(attacker_msg)
 
                 # Analyze response
-                indicators, criteria_met = self._analyze_response(persona, target_response)
+                indicators, criteria_met = self._analyze_response(
+                    persona, target_response
+                )
 
                 # Record turn
                 turn = AttackTurn(
@@ -361,13 +367,19 @@ class RedTeamPersonaAgent(KernelRoutedAgent):
 
             # Aggregate results
             total_sessions = len(results)
-            successful = sum(1 for r in results if r.get("success") and r.get("session", {}).get("result") == "success")
+            successful = sum(
+                1
+                for r in results
+                if r.get("success") and r.get("session", {}).get("result") == "success"
+            )
 
             return {
                 "success": True,
                 "total_sessions": total_sessions,
                 "successful_attacks": successful,
-                "success_rate": (successful / total_sessions if total_sessions > 0 else 0),
+                "success_rate": (
+                    successful / total_sessions if total_sessions > 0 else 0
+                ),
                 "results": results,
                 "timestamp": datetime.now(UTC).isoformat(),
             }
@@ -385,7 +397,11 @@ class RedTeamPersonaAgent(KernelRoutedAgent):
         return {
             "total_attacks": self.total_attacks,
             "successful_attacks": self.successful_attacks,
-            "success_rate": (self.successful_attacks / self.total_attacks if self.total_attacks > 0 else 0),
+            "success_rate": (
+                self.successful_attacks / self.total_attacks
+                if self.total_attacks > 0
+                else 0
+            ),
             "personas_loaded": len(self.personas),
             "sessions_recorded": len(self.sessions),
         }

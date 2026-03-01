@@ -92,8 +92,12 @@ class InvariantDefinition(BaseModel):
     scope: InvariantScope = Field(..., description="Scope classification")
     severity: InvariantSeverity = Field(..., description="Violation severity")
     enforcement: InvariantEnforcement = Field(..., description="Enforcement action")
-    expression: InvariantExpression = Field(..., description="Formal invariant expression")
-    tests: list[InvariantTestCase] = Field(..., min_length=1, description="Embedded test cases")
+    expression: InvariantExpression = Field(
+        ..., description="Formal invariant expression"
+    )
+    tests: list[InvariantTestCase] = Field(
+        ..., min_length=1, description="Embedded test cases"
+    )
     signature: Signature = Field(..., description="Governance signer signature")
 
     model_config = {"frozen": True}

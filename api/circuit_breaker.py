@@ -16,13 +16,15 @@ logger = logging.getLogger(__name__)
 
 class CircuitState(Enum):
     """Circuit breaker states"""
-    CLOSED = "closed"       # Normal operation
-    OPEN = "open"           # Failing, reject requests
-    HALF_OPEN = "half_open" # Testing recovery
+
+    CLOSED = "closed"  # Normal operation
+    OPEN = "open"  # Failing, reject requests
+    HALF_OPEN = "half_open"  # Testing recovery
 
 
 class CircuitBreakerError(Exception):
     """Exception raised when circuit breaker is open"""
+
     pass
 
 
@@ -41,7 +43,7 @@ class CircuitBreaker:
         failure_threshold: int = 5,
         recovery_timeout: int = 60,
         expected_exception: type = Exception,
-        name: str | None = None
+        name: str | None = None,
     ):
         """
         Initialize circuit breaker
@@ -92,7 +94,9 @@ class CircuitBreaker:
 
             if self._state == CircuitState.HALF_OPEN:
                 # Successful request in HALF_OPEN state, close circuit
-                logger.info(f"Circuit breaker {self.name}: Recovery successful, closing circuit")
+                logger.info(
+                    f"Circuit breaker {self.name}: Recovery successful, closing circuit"
+                )
                 self._state = CircuitState.CLOSED
                 self._success_count = 0
 
@@ -146,8 +150,7 @@ class CircuitBreaker:
         # Reject if circuit is open
         if self._state == CircuitState.OPEN:
             raise CircuitBreakerError(
-                f"Circuit breaker {self.name} is OPEN. "
-                f"Service is unavailable."
+                f"Circuit breaker {self.name} is OPEN. " f"Service is unavailable."
             )
 
         # Execute function
@@ -161,6 +164,7 @@ class CircuitBreaker:
 
     def __call__(self, func: Callable) -> Callable:
         """Decorator for protecting async functions"""
+
         @wraps(func)
         async def wrapper(*args, **kwargs):
             return await self.call(func, *args, **kwargs)
@@ -176,7 +180,7 @@ def get_circuit_breaker(
     name: str,
     failure_threshold: int = 5,
     recovery_timeout: int = 60,
-    expected_exception: type = Exception
+    expected_exception: type = Exception,
 ) -> CircuitBreaker:
     """
     Get or create a circuit breaker
@@ -195,7 +199,7 @@ def get_circuit_breaker(
             failure_threshold=failure_threshold,
             recovery_timeout=recovery_timeout,
             expected_exception=expected_exception,
-            name=name
+            name=name,
         )
 
     return _circuit_breakers[name]

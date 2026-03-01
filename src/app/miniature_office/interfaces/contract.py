@@ -10,7 +10,12 @@ from enum import Enum
 from typing import Dict, List, Optional
 
 from app.miniature_office.core.audit import EventType, get_audit_log
-from app.miniature_office.core.entity import Entity, EntityType, RelationType, get_registry
+from app.miniature_office.core.entity import (
+    Entity,
+    EntityType,
+    RelationType,
+    get_registry,
+)
 
 
 class FailureMode(Enum):
@@ -65,7 +70,12 @@ class VersionBoundary:
         return True
 
     def to_dict(self) -> Dict:
-        return {"major": self.major, "minor": self.minor, "patch": self.patch, "version_string": str(self)}
+        return {
+            "major": self.major,
+            "minor": self.minor,
+            "patch": self.patch,
+            "version_string": str(self),
+        }
 
 
 class Contract(Entity):
@@ -75,7 +85,13 @@ class Contract(Entity):
     No implicit coupling.
     """
 
-    def __init__(self, contract_id: str, name: str, provider_department_id: str, version: VersionBoundary):
+    def __init__(
+        self,
+        contract_id: str,
+        name: str,
+        provider_department_id: str,
+        version: VersionBoundary,
+    ):
         super().__init__(contract_id, EntityType.CONTRACT, name)
         self.provider_department_id = provider_department_id
         self.version = version
@@ -180,10 +196,15 @@ class ElevatorProtocol:
         get_audit_log().log_event(
             EventType.ENTITY_CREATED,
             target_id=contract.entity_id,
-            data={"action": "contract_registered_in_elevator", "contract_name": contract.name},
+            data={
+                "action": "contract_registered_in_elevator",
+                "contract_name": contract.name,
+            },
         )
 
-    def check_compatibility(self, consumer_department_id: str, contract_id: str) -> bool:
+    def check_compatibility(
+        self, consumer_department_id: str, contract_id: str
+    ) -> bool:
         """
         Perform automated compatibility check (Codex 6.2).
         Elevators perform automated compatibility checks.
@@ -203,7 +224,11 @@ class ElevatorProtocol:
         return True
 
     def invoke_contract(
-        self, consumer_department_id: str, contract_id: str, api_path: str, parameters: Optional[Dict] = None
+        self,
+        consumer_department_id: str,
+        contract_id: str,
+        api_path: str,
+        parameters: Optional[Dict] = None,
     ) -> InvocationRecord:
         """
         Invoke a contract API and record telemetry (Codex 6.2).
@@ -278,7 +303,9 @@ class ElevatorProtocol:
 
     def get_contract_metrics(self, contract_id: str) -> Dict:
         """Get metrics for a contract"""
-        relevant_invocations = [i for i in self.invocations if i.contract_id == contract_id]
+        relevant_invocations = [
+            i for i in self.invocations if i.contract_id == contract_id
+        ]
 
         if not relevant_invocations:
             return {"total_invocations": 0, "success_rate": 0.0, "avg_latency_ms": 0.0}
@@ -287,7 +314,11 @@ class ElevatorProtocol:
         successes = sum(1 for i in relevant_invocations if i.success)
         avg_latency = sum(i.latency_ms for i in relevant_invocations) / total
 
-        return {"total_invocations": total, "success_rate": successes / total, "avg_latency_ms": avg_latency}
+        return {
+            "total_invocations": total,
+            "success_rate": successes / total,
+            "avg_latency_ms": avg_latency,
+        }
 
 
 # Global elevator protocol

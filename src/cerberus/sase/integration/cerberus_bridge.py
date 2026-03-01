@@ -103,7 +103,9 @@ class SASECerberusBridge:
             return {"success": True, "action": "monitor_only"}
 
         # Map to Triumvirate threat level
-        threat_level = self.map_confidence_to_threat_level(confidence["confidence_percentage"])
+        threat_level = self.map_confidence_to_threat_level(
+            confidence["confidence_percentage"]
+        )
 
         # Build threat description
         threat_desc = self._build_threat_description(sase_result)
@@ -130,7 +132,9 @@ class SASECerberusBridge:
                 target=sase_result.get("event_id", "unknown"),
             )
 
-            approved, reason, session_token = self.triumvirate.request_authorization(auth_request)
+            approved, reason, session_token = self.triumvirate.request_authorization(
+                auth_request
+            )
 
             if approved:
                 logger.warning(f"Triumvirate APPROVED: {suggested_tool}")
@@ -170,7 +174,9 @@ class SASECerberusBridge:
         desc_parts.append(f"Classification: {confidence['threat_classification']}")
 
         if threat_class:
-            desc_parts.append(f"Actor type: {threat_class.get('actor_class', 'unknown')}")
+            desc_parts.append(
+                f"Actor type: {threat_class.get('actor_class', 'unknown')}"
+            )
             desc_parts.append(f"Risk level: {threat_class.get('risk_level', 0)}/10")
 
         if behavior_state:

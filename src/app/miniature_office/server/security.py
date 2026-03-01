@@ -14,7 +14,9 @@ def add_security_headers(response):
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-XSS-Protection"] = "1; mode=block"
-    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Strict-Transport-Security"] = (
+        "max-age=31536000; includeSubDomains"
+    )
     response.headers["Content-Security-Policy"] = (
         "default-src 'self' cdn.socket.io; "
         "script-src 'self' 'unsafe-inline' cdn.socket.io; "
@@ -25,7 +27,9 @@ def add_security_headers(response):
     return response
 
 
-def validate_request_size(max_size=16 * 1024 * 1024):  # 16MB default (matches Flask config)
+def validate_request_size(
+    max_size=16 * 1024 * 1024,
+):  # 16MB default (matches Flask config)
     """
     Decorator to validate request size.
     Default matches app.config['MAX_CONTENT_LENGTH'].
@@ -37,7 +41,10 @@ def validate_request_size(max_size=16 * 1024 * 1024):  # 16MB default (matches F
         def wrapper(*args, **kwargs):
             content_length = request.content_length
             if content_length and content_length > max_size:
-                return jsonify({"error": "Request too large", "max_size": max_size}), 413
+                return (
+                    jsonify({"error": "Request too large", "max_size": max_size}),
+                    413,
+                )
             return f(*args, **kwargs)
 
         return wrapper
@@ -83,7 +90,9 @@ def configure_cors(app, allowed_origins=None):
         elif request.origin in allowed_origins:
             response.headers["Access-Control-Allow-Origin"] = request.origin
 
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Methods"] = (
+            "GET, POST, PUT, DELETE, OPTIONS"
+        )
         response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
         response.headers["Access-Control-Max-Age"] = "3600"
         return response

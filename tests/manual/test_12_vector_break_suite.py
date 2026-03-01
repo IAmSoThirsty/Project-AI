@@ -92,7 +92,9 @@ def test_vector1_genesis_deletion():
             print("  ✗ No violations logged")
             return False
 
-        print("\n✅ VECTOR 1 PASSED: Genesis deletion attack failed to compromise system")
+        print(
+            "\n✅ VECTOR 1 PASSED: Genesis deletion attack failed to compromise system"
+        )
         return True
 
 
@@ -127,7 +129,8 @@ def test_vector2_public_key_replacement():
         from cryptography.hazmat.primitives import serialization
 
         attacker_pub_key_bytes = attacker_keypair.public_key.public_bytes(
-            encoding=serialization.Encoding.PEM, format=serialization.PublicFormat.SubjectPublicKeyInfo
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
         )
         public_key_path.write_bytes(attacker_pub_key_bytes)
         print("  ✓ Public key replaced with attacker's key")

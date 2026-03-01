@@ -445,9 +445,9 @@ class VoiceBondingProtocol:
         os.makedirs(data_dir, exist_ok=True)
 
         self._bonding_states: dict[str, BondingPhase] = {}
-        self._scores: dict[
-            str, dict[str, BondingScore]
-        ] = {}  # user_id -> {model_id -> score}
+        self._scores: dict[str, dict[str, BondingScore]] = (
+            {}
+        )  # user_id -> {model_id -> score}
         self._selected_models: dict[str, str] = {}  # user_id -> model_id
         self._lock = threading.RLock()
 

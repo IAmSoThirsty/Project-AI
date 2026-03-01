@@ -327,7 +327,9 @@ class TestLedgerDrivenState:
             for v in violations:
                 f.write(json.dumps(v) + "\n")
 
-        count, loaded_violations = override_system.get_ledger_violation_count(ledger_path)
+        count, loaded_violations = override_system.get_ledger_violation_count(
+            ledger_path
+        )
         assert count == 3
         assert len(loaded_violations) == 3
 
@@ -360,7 +362,9 @@ class TestRefoundation:
             old_genesis = f.read()
 
         # Trigger refoundation
-        result = override_system.initiate_refoundation(authorization_signature=b"authorized")
+        result = override_system.initiate_refoundation(
+            authorization_signature=b"authorized"
+        )
 
         assert "new_genesis_seal" in result
         assert "new_oracle_seed" in result
@@ -386,7 +390,9 @@ class TestRefoundation:
         assert override_system.override_ledger_path.exists()
 
         # Initiate refoundation
-        result = override_system.initiate_refoundation(authorization_signature=b"authorized")
+        result = override_system.initiate_refoundation(
+            authorization_signature=b"authorized"
+        )
 
         archive_dir = Path(result["archive_location"])
         assert archive_dir.exists()

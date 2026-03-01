@@ -133,7 +133,9 @@ def calculate_government_price(
     # Determine pricing model based on seat count
     if seat_count <= 100:
         # Progressive pricing for seats 1-100
-        multiplier, tier_number, increase_percentage = calculate_government_tier_multiplier(seat_count)
+        multiplier, tier_number, increase_percentage = (
+            calculate_government_tier_multiplier(seat_count)
+        )
         total_price = base_price * multiplier
         pricing_model = "tiered"
         price_per_seat = None
@@ -210,7 +212,12 @@ GOVERNMENT_PRICING_TABLE = {
     "tiered_pricing": {
         "range": "1-100 seats",
         "tiers": [
-            {"range": "1-25", "monthly": 2500, "yearly": 10000, "increase": "Base (100%)"},
+            {
+                "range": "1-25",
+                "monthly": 2500,
+                "yearly": 10000,
+                "increase": "Base (100%)",
+            },
             {
                 "range": "26-50",
                 "monthly": 2875,

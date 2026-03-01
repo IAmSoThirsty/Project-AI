@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 class RequestValidationError(Exception):
     """Custom exception for request validation errors"""
+
     pass
 
 
@@ -141,6 +142,7 @@ class RequestValidator:
         # Try to decode as JSON if content type suggests it
         try:
             import json
+
             data = json.loads(body)
 
             # Recursively check string values
@@ -212,6 +214,7 @@ class RequestValidationMiddleware(BaseHTTPMiddleware):
                 # Restore body for downstream handlers
                 async def receive():
                     return {"type": "http.request", "body": body}
+
                 request._receive = receive
 
             # Process request
@@ -235,8 +238,8 @@ class RequestValidationMiddleware(BaseHTTPMiddleware):
                 content={
                     "error": "validation_error",
                     "message": str(e),
-                    "timestamp": datetime.utcnow().isoformat()
-                }
+                    "timestamp": datetime.utcnow().isoformat(),
+                },
             )
         except Exception as e:
             logger.error(f"Unexpected error in validation middleware: {e}")
@@ -244,8 +247,8 @@ class RequestValidationMiddleware(BaseHTTPMiddleware):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content={
                     "error": "internal_error",
-                    "message": "An unexpected error occurred"
-                }
+                    "message": "An unexpected error occurred",
+                },
             )
 
 

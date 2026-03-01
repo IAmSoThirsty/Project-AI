@@ -43,7 +43,9 @@ class TestTimeoutConfig:
         """
         cfg = TimeoutConfig()
         stages = 7  # PSIA waterfall has 7 stages
-        t_progress = cfg.queue_timeout + (stages * cfg.stage_timeout) + cfg.retry_timeout
+        t_progress = (
+            cfg.queue_timeout + (stages * cfg.stage_timeout) + cfg.retry_timeout
+        )
         assert t_progress <= 115  # Paper's stated bound
 
 

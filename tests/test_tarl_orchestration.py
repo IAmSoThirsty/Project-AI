@@ -205,8 +205,12 @@ class TestStructuredCapabilities:
 
     def test_capability_hash_determinism(self):
         """Test capability hash is deterministic"""
-        cap1 = Capability(name="Test.Cap", resource="test", constraints={"key": "value"})
-        cap2 = Capability(name="Test.Cap", resource="test", constraints={"key": "value"})
+        cap1 = Capability(
+            name="Test.Cap", resource="test", constraints={"key": "value"}
+        )
+        cap2 = Capability(
+            name="Test.Cap", resource="test", constraints={"key": "value"}
+        )
 
         # Same content = same hash
         assert hash(cap1) == hash(cap2)
@@ -232,7 +236,9 @@ class TestStructuredCapabilities:
 
     def test_policy_rejection(self):
         """Test policy rejection"""
-        cap = Capability(name="File.Read", resource="filesystem", constraints={"path_prefix": "/tmp"})
+        cap = Capability(
+            name="File.Read", resource="filesystem", constraints={"path_prefix": "/tmp"}
+        )
 
         policy = Policy(
             name="RestrictFileAccess",
@@ -365,7 +371,9 @@ class TestAgentOrchestrator:
         orch.register_agent("agent1", lambda x: f"A1({x})")
         orch.register_agent("agent2", lambda x: f"A2({x})")
 
-        results = orch.concurrent("conc_test", ["agent1", "agent2"], ["input1", "input2"])
+        results = orch.concurrent(
+            "conc_test", ["agent1", "agent2"], ["input1", "input2"]
+        )
 
         assert results == ["A1(input1)", "A2(input2)"]
 
@@ -380,7 +388,9 @@ class TestAgentOrchestrator:
         orch.register_agent("agent1", lambda history: f"A1 response to: {history[-1]}")
         orch.register_agent("agent2", lambda history: f"A2 response to: {history[-1]}")
 
-        conversation = orch.chat("chat_test", ["agent1", "agent2"], "Hello", max_turns=4)
+        conversation = orch.chat(
+            "chat_test", ["agent1", "agent2"], "Hello", max_turns=4
+        )
 
         assert len(conversation) == 5  # Initial + 4 turns
         assert conversation[0] == "Hello"
@@ -437,11 +447,15 @@ class TestEventRecorder:
         vm = DeterministicVM(data_dir=tempfile.mkdtemp())
         recorder = EventRecorder(vm, data_dir=temp_dir)
 
-        workflow = Workflow(workflow_id="persist_rec_test", entrypoint=lambda vm, ctx: "result")
+        workflow = Workflow(
+            workflow_id="persist_rec_test", entrypoint=lambda vm, ctx: "result"
+        )
         vm.register_workflow(workflow)
         vm.execute_workflow("persist_rec_test")
 
-        recorder.record_external_call("persist_rec_test", "llm", {"prompt": "test"}, {"response": "output"})
+        recorder.record_external_call(
+            "persist_rec_test", "llm", {"prompt": "test"}, {"response": "output"}
+        )
 
         # Save recording
         recorder.save_recording("persist_rec_test", "test_recording")
@@ -510,7 +524,9 @@ class TestProvenanceManager:
         )
         prov.register_artifact(artifact)
 
-        prov.attest("tests_passed", "test_artifact", {"test_count": 10, "success": True})
+        prov.attest(
+            "tests_passed", "test_artifact", {"test_count": 10, "success": True}
+        )
 
         assert len(prov._attestations) == 1
         assert prov._attestations[0]["type"] == "tests_passed"
@@ -661,7 +677,9 @@ class TestTarlStackBox:
         result = stack.execute_with_provenance("prov_test")
 
         assert result["status"] == "executed"
-        assert len(stack.provenance._attestations) >= 2  # capability_check + execution_success
+        assert (
+            len(stack.provenance._attestations) >= 2
+        )  # capability_check + execution_success
 
     def test_full_status(self):
         """Test comprehensive status reporting"""
@@ -690,7 +708,9 @@ class TestIntegration:
         )
 
         # Setup capabilities
-        cap = Capability(name="Full.Test", resource="test", constraints={"level": "high"})
+        cap = Capability(
+            name="Full.Test", resource="test", constraints={"level": "high"}
+        )
         stack.capabilities.register_capability(cap)
 
         policy = Policy(
@@ -707,15 +727,21 @@ class TestIntegration:
         # Create workflow
         def full_workflow(vm, context):
             # Check capability
-            allowed, _ = stack.capabilities.check_capability("Full.Test", {"level": "high"})
+            allowed, _ = stack.capabilities.check_capability(
+                "Full.Test", {"level": "high"}
+            )
             if not allowed:
                 raise PermissionError("Capability check failed")
 
             # Use orchestrator
-            result = stack.orchestrator.sequential("full_test", ["agent1", "agent2"], "data")
+            result = stack.orchestrator.sequential(
+                "full_test", ["agent1", "agent2"], "data"
+            )
 
             # Record external call
-            stack.recorder.record_external_call("full_test", "tool", {"name": "test_tool"}, {"output": result})
+            stack.recorder.record_external_call(
+                "full_test", "tool", {"name": "test_tool"}, {"output": result}
+            )
 
             # Take snapshot
             snap_hash = vm.snapshot("full_test")

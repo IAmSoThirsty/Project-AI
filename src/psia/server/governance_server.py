@@ -36,6 +36,7 @@ logger = logging.getLogger(__name__)
 
 class IntentRequest(BaseModel):
     """Matches the Intent interface in governance.ts."""
+
     actor: str = Field(..., description="human | agent | system")
     action: str = Field(..., description="read | write | execute | mutate")
     target: str = Field(..., description="Target resource")
@@ -45,6 +46,7 @@ class IntentRequest(BaseModel):
 
 class PillarVote(BaseModel):
     """Single Triumvirate pillar vote."""
+
     pillar: str
     verdict: str  # allow | deny | degrade
     reason: str
@@ -52,6 +54,7 @@ class PillarVote(BaseModel):
 
 class GovernanceResult(BaseModel):
     """Full governance evaluation result."""
+
     intent_hash: str
     tarl_version: str
     votes: list[PillarVote]
@@ -61,12 +64,14 @@ class GovernanceResult(BaseModel):
 
 class IntentResponse(BaseModel):
     """Response wrapper for intent submission."""
+
     message: str
     governance: GovernanceResult
 
 
 class AuditRecord(BaseModel):
     """Single audit record from the ledger."""
+
     intent_hash: str
     tarl_version: str
     votes: list[dict[str, Any]]
@@ -76,6 +81,7 @@ class AuditRecord(BaseModel):
 
 class AuditResponse(BaseModel):
     """Full audit log response."""
+
     tarl_version: str
     tarl_signature: str
     records: list[AuditRecord]
@@ -83,6 +89,7 @@ class AuditResponse(BaseModel):
 
 class TarlRule(BaseModel):
     """Single TARL protection rule."""
+
     action: str
     allowed_actors: list[str]
     risk: str
@@ -91,12 +98,14 @@ class TarlRule(BaseModel):
 
 class TarlResponse(BaseModel):
     """TARL rules response."""
+
     version: str
     rules: list[TarlRule]
 
 
 class HealthResponse(BaseModel):
     """System health response."""
+
     status: str
     tarl: str
     node_id: str | None = None
@@ -147,12 +156,12 @@ def create_app() -> FastAPI:
     application.add_middleware(
         CORSMiddleware,
         allow_origins=[
-            "http://localhost:5173",   # Vite dev server
-            "http://localhost:8001",   # Self
+            "http://localhost:5173",  # Vite dev server
+            "http://localhost:8001",  # Self
             "http://127.0.0.1:5173",
             "http://127.0.0.1:8001",
-            "file://",                 # Electron file:// origin
-            "*",                       # Permissive for desktop use
+            "file://",  # Electron file:// origin
+            "*",  # Permissive for desktop use
         ],
         allow_credentials=True,
         allow_methods=["*"],

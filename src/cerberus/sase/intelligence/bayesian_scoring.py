@@ -76,7 +76,9 @@ class LikelihoodEstimator:
     P(E|¬M) = Likelihood of evidence given benign
     """
 
-    def estimate_malicious_likelihood(self, feature_vector: Any, behavior_state: Any = None) -> float:
+    def estimate_malicious_likelihood(
+        self, feature_vector: Any, behavior_state: Any = None
+    ) -> float:
         """
         Estimate P(E|M) - likelihood given malicious actor
 
@@ -130,7 +132,9 @@ class LikelihoodEstimator:
 
         return likelihood
 
-    def estimate_benign_likelihood(self, feature_vector: Any, behavior_state: Any = None) -> float:
+    def estimate_benign_likelihood(
+        self, feature_vector: Any, behavior_state: Any = None
+    ) -> float:
         """
         Estimate P(E|¬M) - likelihood given benign actor
 
@@ -210,15 +214,21 @@ class BayesianScorer:
         prior_malicious = self.prior_dist.get_prior(feature_vector)
 
         # Get likelihoods
-        p_e_given_m = self.likelihood_est.estimate_malicious_likelihood(feature_vector, behavior_state)
+        p_e_given_m = self.likelihood_est.estimate_malicious_likelihood(
+            feature_vector, behavior_state
+        )
 
-        p_e_given_not_m = self.likelihood_est.estimate_benign_likelihood(feature_vector, behavior_state)
+        p_e_given_not_m = self.likelihood_est.estimate_benign_likelihood(
+            feature_vector, behavior_state
+        )
 
         # Apply Bayes' theorem
         # P(M|E) = P(E|M) * P(M) / [P(E|M)*P(M) + P(E|¬M)*(1-P(M))]
 
         numerator = p_e_given_m * prior_malicious
-        denominator = (p_e_given_m * prior_malicious) + (p_e_given_not_m * (1 - prior_malicious))
+        denominator = (p_e_given_m * prior_malicious) + (
+            p_e_given_not_m * (1 - prior_malicious)
+        )
 
         if denominator < 1e-10:
             posterior = 0.5  # Undefined, default to neutral
@@ -253,7 +263,9 @@ class ConfidenceAggregator:
 
         logger.info("L6 Confidence Aggregator initialized")
 
-    def aggregate(self, event: Any, feature_vector: Any, behavior_state: Any = None) -> dict[str, Any]:
+    def aggregate(
+        self, event: Any, feature_vector: Any, behavior_state: Any = None
+    ) -> dict[str, Any]:
         """
         Aggregate confidence score for event
 

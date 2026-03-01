@@ -39,7 +39,9 @@ class TestFourLawsCoverage:
 
     def test_endangers_humanity(self):
         """Test humanity endangerment check."""
-        is_allowed, _ = FourLaws.validate_action("Destroy world", context={"endangers_humanity": True})
+        is_allowed, _ = FourLaws.validate_action(
+            "Destroy world", context={"endangers_humanity": True}
+        )
         assert not is_allowed
 
 
@@ -130,7 +132,9 @@ class TestLearningCoverage:
         manager = LearningRequestManager(data_dir=temp_dir)
 
         # Create request
-        req_id = manager.create_request("Learn Python", "programming basics", RequestPriority.HIGH)
+        req_id = manager.create_request(
+            "Learn Python", "programming basics", RequestPriority.HIGH
+        )
         assert req_id is not None
 
         # Check pending
@@ -155,7 +159,9 @@ class TestLearningCoverage:
         manager = LearningRequestManager(data_dir=temp_dir)
 
         # Deny content to Black Vault
-        req_id = manager.create_request("Harmful content", "test description", RequestPriority.HIGH)
+        req_id = manager.create_request(
+            "Harmful content", "test description", RequestPriority.HIGH
+        )
         manager.deny_request(req_id, "Inappropriate content", to_vault=True)
 
         # Verify it's in the vault by computing the hash ourselves
@@ -169,8 +175,12 @@ class TestLearningCoverage:
         manager = LearningRequestManager(data_dir=temp_dir)
 
         # Create multiple requests
-        req1 = manager.create_request("Content 1", "description 1", RequestPriority.HIGH)
-        req2 = manager.create_request("Content 2", "description 2", RequestPriority.MEDIUM)
+        req1 = manager.create_request(
+            "Content 1", "description 1", RequestPriority.HIGH
+        )
+        req2 = manager.create_request(
+            "Content 2", "description 2", RequestPriority.MEDIUM
+        )
         manager.create_request("Content 3", "description 3", RequestPriority.LOW)
 
         # Process them differently

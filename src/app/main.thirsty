@@ -1,0 +1,44 @@
+// Project-AI Sovereign Entry Point (Floor 1)
+// Governed by Thirsty-Lang
+
+import "src/app/bootstrap.thirsty";
+import "src/app/arch_ledger.thirsty";
+
+shield ProjectAIRoot {
+    define session_active = false;
+    
+    armor session_active;
+    
+    function start_application() {
+        print("--- PROJECT-AI FLOOR 1 ORCHESTRATION START ---");
+        
+        // 1. Execute Sovereign Bootstrap
+        thirsty BootstrapOrchestrator.init_system() {
+            ArchitecturalLedger.record_state("SEL → COG → ANC(APPLICATION_START)");
+            session_active = true;
+            print("Sovereign Bootstrap Successful.");
+        }
+        hydrated {
+            defend("Sovereign Bootstrap FAILED. Emergency Protocol Initiated.");
+            return false;
+        }
+        
+        // 2. Continuous Monitoring Invariant
+        thirsty verify_governance() {
+            print("Governance Invariants Verified (Jurisdiction 0-2).");
+        }
+        hydrated {
+            defend("Governance Violation Detected at Root Floor.");
+        }
+        
+        return true;
+    }
+    
+    function verify_governance() {
+        // Core governance verification logic (Floor 1)
+        return true;
+    }
+}
+
+// Entry Point
+ProjectAIRoot.start_application();

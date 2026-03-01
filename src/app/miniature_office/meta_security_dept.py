@@ -163,7 +163,9 @@ class MetaSecurityDepartment:
     # Violation Detection
     # ------------------------------------------------------------------
 
-    def scan_for_violations(self, context: dict[str, Any] | None = None) -> list[Violation]:
+    def scan_for_violations(
+        self, context: dict[str, Any] | None = None
+    ) -> list[Violation]:
         """Scan for policy violations in the current system state.
 
         Args:
@@ -259,7 +261,9 @@ class MetaSecurityDepartment:
         self._contained_components[component_id] = result
         self._update_alert_level()
         self._log_audit("contain", {"component": component_id, "reason": reason})
-        logger.warning("MetaSecurity CONTAINED component: %s — %s", component_id, reason)
+        logger.warning(
+            "MetaSecurity CONTAINED component: %s — %s", component_id, reason
+        )
         return result
 
     def release(self, component_id: str) -> bool:
@@ -272,7 +276,10 @@ class MetaSecurityDepartment:
 
         # Triumvirate approval is REQUIRED — no Triumvirate means deny (fail-safe)
         if not self._triumvirate:
-            logger.info("Release denied for %s — no Triumvirate connected (fail-safe)", component_id)
+            logger.info(
+                "Release denied for %s — no Triumvirate connected (fail-safe)",
+                component_id,
+            )
             return False
 
         try:
@@ -443,7 +450,9 @@ class MetaSecurityDepartment:
         else:
             # No Triumvirate connected — deny by default (fail-safe)
             approved = False
-            reason = "Triumvirate not connected — reinstatement requires manual approval"
+            reason = (
+                "Triumvirate not connected — reinstatement requires manual approval"
+            )
             members = []
 
         decision = TriumvirateDecision(
@@ -457,7 +466,9 @@ class MetaSecurityDepartment:
         if approved and user_id in self._restricted_users:
             del self._restricted_users[user_id]
             self._update_alert_level()
-            logger.info("MetaSecurity reinstated user %s per Triumvirate decision", user_id)
+            logger.info(
+                "MetaSecurity reinstated user %s per Triumvirate decision", user_id
+            )
         else:
             logger.info("MetaSecurity reinstatement DENIED for %s: %s", user_id, reason)
 
@@ -473,7 +484,9 @@ class MetaSecurityDepartment:
 
     def get_security_state(self) -> SecurityState:
         """Return a snapshot for VR overlay rendering."""
-        active = [v for v in self._violations if v.severity >= EnforcementLevel.INTERVENTION]
+        active = [
+            v for v in self._violations if v.severity >= EnforcementLevel.INTERVENTION
+        ]
 
         if self._system_alert_level >= EnforcementLevel.LOCKDOWN:
             integrity = "compromised"
@@ -487,10 +500,13 @@ class MetaSecurityDepartment:
             active_violations=len(active),
             contained_components=list(self._contained_components.keys()),
             restricted_users=list(self._restricted_users.keys()),
-            agents_deployed=len([
-                e for e in self._enforcement_log
-                if e.enforcement_level >= EnforcementLevel.INTERVENTION
-            ]),
+            agents_deployed=len(
+                [
+                    e
+                    for e in self._enforcement_log
+                    if e.enforcement_level >= EnforcementLevel.INTERVENTION
+                ]
+            ),
             last_scan=datetime.now(UTC).isoformat(),
             system_integrity=integrity,
         )
@@ -511,7 +527,10 @@ class MetaSecurityDepartment:
         """Check with the Triumvirate for a decision."""
         if hasattr(self._triumvirate, "request_consensus"):
             return self._triumvirate.request_consensus(request)
-        return {"approved": False, "reason": "Triumvirate does not support consensus API"}
+        return {
+            "approved": False,
+            "reason": "Triumvirate does not support consensus API",
+        }
 
     def _update_alert_level(self) -> None:
         """Update the system alert level based on current state."""

@@ -43,6 +43,7 @@ class ExecutionRecord:
 
     Contains the full audit trail for one request lifecycle.
     """
+
     record_id: str
     request_id: str
     actor: str
@@ -52,7 +53,9 @@ class ExecutionRecord:
     commit_id: str | None = None
     diff_hash: str | None = None
     stage_results: list[dict] = field(default_factory=list)
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+    )
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def compute_hash(self) -> str:
@@ -79,6 +82,7 @@ class LedgerBlock:
     Blocks are immutable once sealed—no records can be added,
     modified, or removed.
     """
+
     block_id: int
     records: list[ExecutionRecord]
     merkle_root: str
@@ -258,9 +262,7 @@ class DurableLedger:
             for i in range(0, len(hashes), 2):
                 left = hashes[i]
                 right = hashes[i + 1] if i + 1 < len(hashes) else left
-                combined = hashlib.sha256(
-                    (left + right).encode()
-                ).hexdigest()
+                combined = hashlib.sha256((left + right).encode()).hexdigest()
                 next_level.append(combined)
             hashes = next_level
 
@@ -299,7 +301,9 @@ class DurableLedger:
     def get_records_by_request(self, request_id: str) -> list[ExecutionRecord]:
         """Retrieve all records for a given request ID."""
         record_ids = self._request_index.get(request_id, [])
-        return [self._record_index[rid] for rid in record_ids if rid in self._record_index]
+        return [
+            self._record_index[rid] for rid in record_ids if rid in self._record_index
+        ]
 
     def get_block(self, block_id: int) -> LedgerBlock | None:
         """Retrieve a sealed block by ID."""

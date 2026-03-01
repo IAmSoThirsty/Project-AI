@@ -21,7 +21,6 @@ import sys
 from pathlib import Path
 from typing import List, Tuple
 
-
 DISCLAIMER_TEMPLATE = """---
 
 ## Validation Status Disclaimer
@@ -64,54 +63,59 @@ class SafeFramingTransformer:
         self.replacements = [
             # Status field replacements
             (
-                re.compile(r'\*\*Status:\*\*\s+Production\s+Implementation', re.IGNORECASE),
-                '**Status:** Technical Specification (Implementation Complete, Validation Ongoing)'
+                re.compile(
+                    r"\*\*Status:\*\*\s+Production\s+Implementation", re.IGNORECASE
+                ),
+                "**Status:** Technical Specification (Implementation Complete, Validation Ongoing)",
             ),
             (
-                re.compile(r'\*\*Status:\*\*\s+Production\s+Integration', re.IGNORECASE),
-                '**Status:** Technical Specification (Integration Complete, Validation Ongoing)'
+                re.compile(
+                    r"\*\*Status:\*\*\s+Production\s+Integration", re.IGNORECASE
+                ),
+                "**Status:** Technical Specification (Integration Complete, Validation Ongoing)",
             ),
-
             # Production-ready replacements
             (
-                re.compile(r'Production-[Rr]eady:\s+(\d+/100\s+readiness\s+score,\s+[\d.]+%\s+uptime,\s+P\d+\s+latency\s+\d+ms)'),
-                r'Implementation Status: Development complete with \1. Full operational validation ongoing.'
+                re.compile(
+                    r"Production-[Rr]eady:\s+(\d+/100\s+readiness\s+score,\s+[\d.]+%\s+uptime,\s+P\d+\s+latency\s+\d+ms)"
+                ),
+                r"Implementation Status: Development complete with \1. Full operational validation ongoing.",
             ),
             (
-                re.compile(r'### Desktop Application \(Production-Ready\)'),
-                '### Desktop Application (Feature Complete, Validation Ongoing)'
+                re.compile(r"### Desktop Application \(Production-Ready\)"),
+                "### Desktop Application (Feature Complete, Validation Ongoing)",
             ),
             (
-                re.compile(r'Production-ready,\s+(\d+/100\s+readiness\s+score)'),
-                r'Development complete, \1, full production hardening in progress'
+                re.compile(r"Production-ready,\s+(\d+/100\s+readiness\s+score)"),
+                r"Development complete, \1, full production hardening in progress",
             ),
             (
-                re.compile(r'Production-ready implementation'),
-                'Full implementation (runtime validation ongoing)'
+                re.compile(r"Production-ready implementation"),
+                "Full implementation (runtime validation ongoing)",
             ),
-
             # Runtime enforcement replacements
             (
-                re.compile(r'^(\s*)(2\.\s+Runtime\s+Enforcement:)', re.MULTILINE),
-                r'\1\2 (Implementation Complete)'
+                re.compile(r"^(\s*)(2\.\s+Runtime\s+Enforcement:)", re.MULTILINE),
+                r"\1\2 (Implementation Complete)",
             ),
             (
-                re.compile(r'We bring runtime enforcement of'),
-                'This system implements runtime enforcement of'
+                re.compile(r"We bring runtime enforcement of"),
+                "This system implements runtime enforcement of",
             ),
             (
-                re.compile(r'runtime enforcement of formally-specified invariants to general-purpose systems\.'),
-                'runtime enforcement of formally-specified invariants to general-purpose systems (implementation complete, adversarial validation ongoing).'
+                re.compile(
+                    r"runtime enforcement of formally-specified invariants to general-purpose systems\."
+                ),
+                "runtime enforcement of formally-specified invariants to general-purpose systems (implementation complete, adversarial validation ongoing).",
             ),
-
             # Specific metric replacements
             (
-                re.compile(r'(\d+\.\d+%\s+uptime)'),
-                r'High availability design (target: \1, operational validation ongoing)'
+                re.compile(r"(\d+\.\d+%\s+uptime)"),
+                r"High availability design (target: \1, operational validation ongoing)",
             ),
             (
-                re.compile(r'(\d+/100)\s+production\s+score'),
-                r'\1 configuration validation score'
+                re.compile(r"(\d+/100)\s+production\s+score"),
+                r"\1 configuration validation score",
             ),
         ]
 
@@ -130,7 +134,9 @@ class SafeFramingTransformer:
             matches = list(pattern.finditer(new_content))
             if matches:
                 new_content = pattern.sub(replacement, new_content)
-                changes.append(f"Replaced {len(matches)} instance(s) of: {pattern.pattern[:60]}...")
+                changes.append(
+                    f"Replaced {len(matches)} instance(s) of: {pattern.pattern[:60]}..."
+                )
 
         # Add disclaimer if not present
         if "## Validation Status Disclaimer" not in new_content:
@@ -138,12 +144,14 @@ class SafeFramingTransformer:
             if "## References" in new_content or "## 21. References" in new_content:
                 # Insert before references
                 new_content = re.sub(
-                    r'(##\s+(?:\d+\.\s+)?References)',
-                    DISCLAIMER_TEMPLATE + r'\n\1',
+                    r"(##\s+(?:\d+\.\s+)?References)",
+                    DISCLAIMER_TEMPLATE + r"\n\1",
                     new_content,
-                    count=1
+                    count=1,
                 )
-                changes.append("Added Validation Status Disclaimer before References section")
+                changes.append(
+                    "Added Validation Status Disclaimer before References section"
+                )
             else:
                 # Append at end
                 new_content = new_content.rstrip() + "\n\n" + DISCLAIMER_TEMPLATE
@@ -158,7 +166,7 @@ class SafeFramingTransformer:
         print(f"{'='*80}")
 
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, "r", encoding="utf-8") as f:
                 original_content = f.read()
         except Exception as e:
             print(f"ERROR: Cannot read file: {e}")
@@ -175,8 +183,8 @@ class SafeFramingTransformer:
             print(f"  {i}. {change}")
 
         # Show diff statistics
-        original_lines = original_content.count('\n')
-        new_lines = new_content.count('\n')
+        original_lines = original_content.count("\n")
+        new_lines = new_content.count("\n")
         diff_lines = new_lines - original_lines
 
         print(f"\nStatistics:")
@@ -187,7 +195,7 @@ class SafeFramingTransformer:
     def apply_changes(self, filepath: str, dry_run: bool = False) -> bool:
         """Apply safe framing changes to a file"""
         try:
-            with open(filepath, 'r', encoding='utf-8') as f:
+            with open(filepath, "r", encoding="utf-8") as f:
                 original_content = f.read()
         except Exception as e:
             print(f"ERROR: Cannot read {filepath}: {e}")
@@ -201,7 +209,7 @@ class SafeFramingTransformer:
 
         if not dry_run:
             try:
-                with open(filepath, 'w', encoding='utf-8') as f:
+                with open(filepath, "w", encoding="utf-8") as f:
                     f.write(new_content)
                 print(f"✅ {filepath}: {len(changes)} change(s) applied")
                 return True
@@ -218,23 +226,16 @@ def main():
         description="Apply safe framing to whitepapers for policy compliance"
     )
     parser.add_argument(
-        "--preview",
-        action="store_true",
-        help="Preview changes without applying them"
+        "--preview", action="store_true", help="Preview changes without applying them"
     )
+    parser.add_argument("--apply", action="store_true", help="Apply changes to files")
     parser.add_argument(
-        "--apply",
-        action="store_true",
-        help="Apply changes to files"
-    )
-    parser.add_argument(
-        "--file",
-        help="Specific file to process (default: all whitepapers)"
+        "--file", help="Specific file to process (default: all whitepapers)"
     )
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Simulate applying changes without writing files"
+        help="Simulate applying changes without writing files",
     )
 
     args = parser.parse_args()
@@ -256,10 +257,12 @@ def main():
 
     transformer = SafeFramingTransformer()
 
-    print("="*80)
+    print("=" * 80)
     print("SAFE FRAMING TRANSFORMER")
-    print("="*80)
-    print(f"\nMode: {'PREVIEW' if args.preview else 'APPLY' if args.apply else 'DRY-RUN'}")
+    print("=" * 80)
+    print(
+        f"\nMode: {'PREVIEW' if args.preview else 'APPLY' if args.apply else 'DRY-RUN'}"
+    )
     print(f"Files: {len(files)}")
     print()
 
@@ -267,9 +270,9 @@ def main():
     if args.preview:
         for filepath in sorted(files):
             transformer.preview_changes(filepath)
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("To apply these changes, run with --apply")
-        print("="*80)
+        print("=" * 80)
         return 0
 
     # Apply mode
@@ -278,9 +281,9 @@ def main():
         if transformer.apply_changes(filepath, dry_run=args.dry_run):
             success_count += 1
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print(f"SUMMARY: {success_count}/{len(files)} files processed successfully")
-    print("="*80)
+    print("=" * 80)
 
     if args.apply and not args.dry_run:
         print("\n✅ Safe framing applied. Run validation to confirm:")

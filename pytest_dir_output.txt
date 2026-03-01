@@ -1,0 +1,11 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-7.4.3, pluggy-1.6.0 -- C:\Users\Quencher\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: C:\Users\Quencher\.gemini\antigravity\scratch\sovereign-repos\Project-AI
+configfile: pyproject.toml
+plugins: anyio-4.12.1, hypothesis-6.151.9, asyncio-0.23.3, cov-4.1.0
+asyncio: mode=Mode.STRICT
+collecting ... collected 0 items / 1 skipped
+
+============================= 1 skipped in 0.44s ==============================

@@ -55,7 +55,9 @@ class TestWorkflowDataClasses:
 
     def test_workflow_input_creation(self):
         """Test WorkflowInput can be created."""
-        input_data = WorkflowInput(data="test data", user_id="user123", options={"key": "value"})
+        input_data = WorkflowInput(
+            data="test data", user_id="user123", options={"key": "value"}
+        )
         assert input_data.data == "test data"
         assert input_data.user_id == "user123"
         assert input_data.options == {"key": "value"}

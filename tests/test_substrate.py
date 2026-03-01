@@ -59,7 +59,9 @@ class TestValidateDeployment:
 class TestHandleFailure:
     def test_known_failure(self):
         sm = SubstrateManager()
-        result = sm.handle_failure(FailureMode.REGIONAL_OUTAGE, {"backup_region": "eu-west-1"})
+        result = sm.handle_failure(
+            FailureMode.REGIONAL_OUTAGE, {"backup_region": "eu-west-1"}
+        )
         assert result["success"] is True
 
     def test_clock_skew_recovery(self):

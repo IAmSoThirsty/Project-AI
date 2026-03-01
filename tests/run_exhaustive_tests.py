@@ -60,7 +60,9 @@ class ExhaustiveTestRunner:
 
                 # Check if step failed
                 if not step_result["passed"]:
-                    result["errors"].append(f"Step {step['step']} failed: {step_result.get('error', 'Unknown error')}")
+                    result["errors"].append(
+                        f"Step {step['step']} failed: {step_result.get('error', 'Unknown error')}"
+                    )
 
             # Determine overall status
             if result["errors"]:
@@ -136,7 +138,9 @@ class ExhaustiveTestRunner:
             }
 
             # Validate response
-            step_result["passed"] = self._validate_response(response, expected, step.get("rationale", ""))
+            step_result["passed"] = self._validate_response(
+                response, expected, step.get("rationale", "")
+            )
 
             print(f"    ✓ Status: {response.status_code}")
             print(f"    ✓ Validation: {'PASS' if step_result['passed'] else 'FAIL'}")
@@ -358,7 +362,9 @@ Response: {step_result.get('actual', {}).get('response', 'N/A')[:200]}...
             if i % 10 == 0:
                 print(f"\n{'='*80}")
                 print(f"PROGRESS: {i}/{len(all_tests)} tests completed")
-                print(f"Passed: {self.results['passed']} | Failed: {self.results['failed']}")
+                print(
+                    f"Passed: {self.results['passed']} | Failed: {self.results['failed']}"
+                )
                 print(f"{'='*80}\n")
 
         # Generate final summary
@@ -372,7 +378,9 @@ Response: {step_result.get('actual', {}).get('response', 'N/A')[:200]}...
         summary_file = os.path.join(self.report_dir, "EXECUTION_SUMMARY.md")
 
         pass_rate = (
-            (self.results["passed"] / self.results["total_tests"] * 100) if self.results["total_tests"] > 0 else 0
+            (self.results["passed"] / self.results["total_tests"] * 100)
+            if self.results["total_tests"] > 0
+            else 0
         )
 
         summary = f"""# Exhaustive Test Execution Summary
@@ -426,7 +434,9 @@ Each test has a comprehensive individual report including:
             summary += f"| {result['test_id']} | {status_icon} {result['status']} | {result['execution_time_ms']} |\n"
 
         if len(self.results["test_results"]) > 50:
-            summary += f"\n*... and {len(self.results['test_results']) - 50} more tests*\n"
+            summary += (
+                f"\n*... and {len(self.results['test_results']) - 50} more tests*\n"
+            )
 
         summary += f"\n---\n\n*Generated: {datetime.now().isoformat()}*\n"
 

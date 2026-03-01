@@ -1,0 +1,100 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-sovereign-invariants
+  annotations:
+    policies.kyverno.io/title: Enforce Sovereign Invariants
+    policies.kyverno.io/category: Project-AI Sovereignty
+    policies.kyverno.io/description: >-
+      Ensures all Project-AI workloads are cryptographically signed, 
+      have verified SBOMs, and adhere to Thirsty-Lang Family execution constraints.
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: verify-image-signature
+      match:
+        any:
+          - resources:
+              namespaces:
+                - project-ai-core
+                - project-ai-security
+              kinds:
+                - Pod
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/iamsothirsty/project-ai-*"
+          attestations:
+            - entries:
+                - keys:
+                    publicKeys: |-
+                      -----BEGIN PUBLIC KEY-----
+                      MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEn8... (Placeholder)
+                      -----END PUBLIC KEY-----
+    - name: require-sbom-annotation
+      match:
+        any:
+          - resources:
+              namespaces:
+                - project-ai-core
+              kinds:
+                - Deployment
+      validate:
+        message: "Every sovereign deployment must have an associated SBOM SHA-256 annotation."
+        pattern:
+          metadata:
+            annotations:
+              tk8s.io/sbom-sha256: "?*"
+    - name: restrict-root-and-capabilities
+      match:
+        any:
+          - resources:
+              namespaces:
+                - project-ai-*
+              kinds:
+                - Pod
+      validate:
+        message: "Sovereign pods must run as non-root, drop all capabilities, and have no privilege escalation."
+        pattern:
+          spec:
+            securityContext:
+              runAsNonRoot: true
+              runAsUser: ">0"
+            containers:
+              - securityContext:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop:
+                      - ALL
+    - name: mandatory-resource-limits
+      match:
+        any:
+          - resources:
+              namespaces:
+                - project-ai-*
+              kinds:
+                - Pod
+      validate:
+        message: "Sovereign pods must define CPU and Memory limits to prevent resource exhaustion attacks."
+        pattern:
+          spec:
+            containers:
+              - resources:
+                  limits:
+                    cpu: "?*"
+                    memory: "?*"
+    - name: restrictive-security-context
+      match:
+        any:
+          - resources:
+              namespaces:
+                - project-ai-eca
+              kinds:
+                - Pod
+      validate:
+        message: "ECA (External Cognition Amplifier) pods must have a read-only root filesystem."
+        pattern:
+          spec:
+            containers:
+              - securityContext:
+                  readOnlyRootFilesystem: true

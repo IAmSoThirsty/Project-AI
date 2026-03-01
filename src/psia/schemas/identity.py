@@ -24,7 +24,9 @@ class PublicKeyEntry(BaseModel):
     """A single public key within an identity document."""
 
     kid: str = Field(..., description="Key identifier (unique within document)")
-    kty: Literal["ed25519"] = Field("ed25519", description="Key type — only Ed25519 supported")
+    kty: Literal["ed25519"] = Field(
+        "ed25519", description="Key type — only Ed25519 supported"
+    )
     pub: str = Field(..., description="Base64-encoded public key material")
     created: str = Field(..., description="RFC 3339 creation timestamp")
     expires: str = Field(..., description="RFC 3339 expiry timestamp")
@@ -37,7 +39,9 @@ class IdentityAttributes(BaseModel):
 
     org: str = Field("", description="Organization or tenant")
     role: str = Field("", description="Primary role (e.g. admin, operator, service)")
-    risk_tier: Literal["low", "med", "high"] = Field("low", description="Risk classification")
+    risk_tier: Literal["low", "med", "high"] = Field(
+        "low", description="Risk classification"
+    )
 
     model_config = {"frozen": True}
 
@@ -81,11 +85,17 @@ class IdentityDocument(BaseModel):
     """
 
     id: str = Field(..., description="DID URI (did:project-ai:...)")
-    type: Literal["human", "service", "agent"] = Field(..., description="Principal type")
-    public_keys: list[PublicKeyEntry] = Field(..., min_length=1, description="At least one public key")
+    type: Literal["human", "service", "agent"] = Field(
+        ..., description="Principal type"
+    )
+    public_keys: list[PublicKeyEntry] = Field(
+        ..., min_length=1, description="At least one public key"
+    )
     attributes: IdentityAttributes = Field(default_factory=IdentityAttributes)
     revocation: RevocationStatus = Field(default_factory=RevocationStatus)
-    signature: Signature = Field(..., description="Ed25519 signature over document body")
+    signature: Signature = Field(
+        ..., description="Ed25519 signature over document body"
+    )
 
     model_config = {"frozen": True}
 

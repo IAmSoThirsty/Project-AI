@@ -245,7 +245,9 @@ class ContrariaNFirewallOrchestrator:
 
         # Start background tasks
         if self.config.real_time_adaptation:
-            self.background_tasks.append(asyncio.create_task(self._telemetry_collector()))
+            self.background_tasks.append(
+                asyncio.create_task(self._telemetry_collector())
+            )
             self.background_tasks.append(asyncio.create_task(self._auto_tuner()))
             self.background_tasks.append(asyncio.create_task(self._agent_coordinator()))
 
@@ -273,7 +275,9 @@ class ContrariaNFirewallOrchestrator:
     # Threat Detection and Violation Processing
     # ========================================================================
 
-    def process_violation(self, source_ip: str, violation_type: str, details: dict[str, Any]) -> dict[str, Any]:
+    def process_violation(
+        self, source_ip: str, violation_type: str, details: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Process security violation with full orchestration
 
@@ -297,7 +301,9 @@ class ContrariaNFirewallOrchestrator:
         # 2. Governance evaluation (if enabled)
         governance_verdict = None
         if self.config.governance_integration and self.governance:
-            governance_verdict = self._evaluate_with_governance(source_ip, violation_type, details, swarm_result)
+            governance_verdict = self._evaluate_with_governance(
+                source_ip, violation_type, details, swarm_result
+            )
 
         # 3. Track as intent
         intent = self._track_intent(
@@ -409,7 +415,9 @@ class ContrariaNFirewallOrchestrator:
             timestamp=datetime.now(),
             parameters=parameters,
             threat_score=threat_score,
-            governance_verdict=(governance_verdict.get("verdict") if governance_verdict else None),
+            governance_verdict=(
+                governance_verdict.get("verdict") if governance_verdict else None
+            ),
         )
 
         self.intent_tracker[intent_id] = intent
@@ -443,7 +451,8 @@ class ContrariaNFirewallOrchestrator:
             self.active_crises.add(crisis_id)
 
             self.logger.critical(
-                f"Crisis escalation: {source_ip} - Swarm active with " f"{swarm_result.get('active_decoys', 0)} decoys"
+                f"Crisis escalation: {source_ip} - Swarm active with "
+                f"{swarm_result.get('active_decoys', 0)} decoys"
             )
 
             # In production, would trigger actual LiaraLayer workflow
@@ -472,10 +481,14 @@ class ContrariaNFirewallOrchestrator:
         # Adjust tuning parameters based on feedback
         if cognitive_overload < self.tuning_parameters["cognitive_target"]:
             # Need more chaos
-            self.tuning_parameters["chaos_multiplier"] *= 1.0 + self.config.feedback_learning_rate
+            self.tuning_parameters["chaos_multiplier"] *= (
+                1.0 + self.config.feedback_learning_rate
+            )
         elif cognitive_overload > self.tuning_parameters["cognitive_target"] * 1.5:
             # Too much chaos
-            self.tuning_parameters["chaos_multiplier"] *= 1.0 - self.config.feedback_learning_rate
+            self.tuning_parameters["chaos_multiplier"] *= (
+                1.0 - self.config.feedback_learning_rate
+            )
 
     # ========================================================================
     # Background Tasks
@@ -531,7 +544,9 @@ class ContrariaNFirewallOrchestrator:
 
                 recent = self.telemetry_history[-10:]
                 avg_threat = sum(t.threat_score for t in recent) / len(recent)
-                avg_overload = sum(t.cognitive_overload_avg for t in recent) / len(recent)
+                avg_overload = sum(t.cognitive_overload_avg for t in recent) / len(
+                    recent
+                )
 
                 # Adjust stability target
                 if avg_threat > self.config.threat_escalation_threshold:
@@ -574,11 +589,16 @@ class ContrariaNFirewallOrchestrator:
         """Apply tuning parameters to subsystems"""
         # Update swarm defense multiplier
         multiplier = self.tuning_parameters["chaos_multiplier"]
-        self.swarm_defense.swarm_multiplier = multiplier * self.config.decoy_expansion_rate
+        self.swarm_defense.swarm_multiplier = (
+            multiplier * self.config.decoy_expansion_rate
+        )
 
     def _get_agent_activity(self) -> dict[str, int]:
         """Get agent activity counts"""
-        return {agent: 1 if data["active"] else 0 for agent, data in self.agent_registry.items()}
+        return {
+            agent: 1 if data["active"] else 0
+            for agent, data in self.agent_registry.items()
+        }
 
     # ========================================================================
     # Query and Status Methods
@@ -639,7 +659,8 @@ class ContrariaNFirewallOrchestrator:
             "time_window_minutes": minutes,
             "records": len(recent),
             "avg_threat_score": sum(t.threat_score for t in recent) / len(recent),
-            "avg_cognitive_overload": sum(t.cognitive_overload_avg for t in recent) / len(recent),
+            "avg_cognitive_overload": sum(t.cognitive_overload_avg for t in recent)
+            / len(recent),
             "avg_violations": sum(t.active_violations for t in recent) / len(recent),
             "avg_stability": sum(t.stability_level for t in recent) / len(recent),
         }

@@ -12,18 +12,18 @@ from __future__ import annotations
 
 import pytest
 
-from psia.observability.failure_detector import (
-    FailureDetector,
-    CircuitState,
-)
 from psia.observability.autoimmune_dampener import (
     AutoimmuneDampener,
 )
-
+from psia.observability.failure_detector import (
+    CircuitState,
+    FailureDetector,
+)
 
 # ═══════════════════════════════════════════════════════════════════
 #  FailureDetector Tests
 # ═══════════════════════════════════════════════════════════════════
+
 
 class TestFailureDetector:
 
@@ -138,6 +138,7 @@ class TestFailureDetector:
 # ═══════════════════════════════════════════════════════════════════
 #  AutoimmuneDampener Tests
 # ═══════════════════════════════════════════════════════════════════
+
 
 class TestAutoimmuneDampener:
 

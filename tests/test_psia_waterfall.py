@@ -88,6 +88,7 @@ def _full_engine(**kwargs) -> WaterfallEngine:
 
 # ── Full Pipeline Tests ──────────────────────────────────────────────
 
+
 class TestFullPipeline:
     def test_allow_pass(self):
         engine = _full_engine()
@@ -112,6 +113,7 @@ class TestFullPipeline:
 
 # ── Stage 0: Structural Tests ────────────────────────────────────────
 
+
 class TestStructuralStage:
     def test_valid_envelope_allows(self):
         stage = StructuralStage()
@@ -120,20 +122,26 @@ class TestStructuralStage:
 
     def test_expired_token_denies(self):
         stage = StructuralStage()
-        stage.register_token("cap_001", {
-            "expires_at": "2020-01-01T00:00:00Z",
-            "nonce": "n001",
-        })
+        stage.register_token(
+            "cap_001",
+            {
+                "expires_at": "2020-01-01T00:00:00Z",
+                "nonce": "n001",
+            },
+        )
         result = stage.evaluate(_envelope(), [])
         assert result.decision == StageDecision.DENY
         assert any("expired" in r for r in result.reasons)
 
     def test_nonce_replay_denies(self):
         stage = StructuralStage()
-        stage.register_token("cap_001", {
-            "expires_at": "2027-01-01T00:00:00Z",
-            "nonce": "nonce_abc",
-        })
+        stage.register_token(
+            "cap_001",
+            {
+                "expires_at": "2027-01-01T00:00:00Z",
+                "nonce": "nonce_abc",
+            },
+        )
         # First request: OK
         r1 = stage.evaluate(_envelope(), [])
         assert r1.decision == StageDecision.ALLOW
@@ -145,6 +153,7 @@ class TestStructuralStage:
 
 # ── Stage 1: Signature Tests ─────────────────────────────────────────
 
+
 class TestSignatureStage:
     def test_no_fingerprints_allows(self):
         stage = SignatureStage()
@@ -153,32 +162,37 @@ class TestSignatureStage:
 
     def test_critical_fingerprint_quarantines(self):
         store = ThreatFingerprintStore()
-        store.add(ThreatFingerprint(
-            fingerprint_id="fp_001",
-            pattern_type="actor",
-            pattern_value="did:project-ai:alice",
-            severity="critical",
-            reason="known attacker",
-        ))
+        store.add(
+            ThreatFingerprint(
+                fingerprint_id="fp_001",
+                pattern_type="actor",
+                pattern_value="did:project-ai:alice",
+                severity="critical",
+                reason="known attacker",
+            )
+        )
         stage = SignatureStage(store=store)
         result = stage.evaluate(_envelope(), [])
         assert result.decision == StageDecision.QUARANTINE
 
     def test_medium_fingerprint_escalates(self):
         store = ThreatFingerprintStore()
-        store.add(ThreatFingerprint(
-            fingerprint_id="fp_002",
-            pattern_type="actor",
-            pattern_value="did:project-ai:alice",
-            severity="med",
-            reason="suspicious pattern",
-        ))
+        store.add(
+            ThreatFingerprint(
+                fingerprint_id="fp_002",
+                pattern_type="actor",
+                pattern_value="did:project-ai:alice",
+                severity="med",
+                reason="suspicious pattern",
+            )
+        )
         stage = SignatureStage(store=store)
         result = stage.evaluate(_envelope(), [])
         assert result.decision == StageDecision.ESCALATE
 
 
 # ── Stage 2: Behavioral Tests ────────────────────────────────────────
+
 
 class TestBehavioralStage:
     def test_first_request_allows(self):
@@ -190,7 +204,9 @@ class TestBehavioralStage:
         store = BaselineProfileStore()
         # Build up baseline with 10 requests to one resource
         for i in range(10):
-            store.record_request("did:project-ai:alice", "read", "state://known/resource")
+            store.record_request(
+                "did:project-ai:alice", "read", "state://known/resource"
+            )
         stage = BehavioralStage(store=store, escalation_threshold=0.1)
         # Now request a novel resource with novel action
         result = stage.evaluate(
@@ -201,6 +217,7 @@ class TestBehavioralStage:
 
 
 # ── Stage 3: Shadow Tests ────────────────────────────────────────────
+
 
 class TestShadowStage:
     def test_passthrough_allows(self):
@@ -223,18 +240,23 @@ class TestShadowStage:
                     request_id=request_id,
                     shadow_job_id="shj_hd",
                     snapshot_id="snap_hd",
-                    determinism=DeterminismProof(seed="s", replay_hash="r", replay_verified=True),
+                    determinism=DeterminismProof(
+                        seed="s", replay_hash="r", replay_verified=True
+                    ),
                     results=ShadowResults(divergence_score=0.9),
                     timestamp="2026-01-01T00:00:00Z",
                     signature=_sig(),
                 )
 
-        stage = ShadowStage(simulator=HighDivergenceSimulator(), divergence_threshold=0.3)
+        stage = ShadowStage(
+            simulator=HighDivergenceSimulator(), divergence_threshold=0.3
+        )
         result = stage.evaluate(_envelope(), [])
         assert result.decision in (StageDecision.ESCALATE, StageDecision.QUARANTINE)
 
 
 # ── Stage 4: Gate Tests ──────────────────────────────────────────────
+
 
 class TestGateStage:
     def test_all_allow(self):
@@ -257,6 +279,7 @@ class TestGateStage:
 
 # ── Stage 5: Commit Tests ────────────────────────────────────────────
 
+
 class TestCommitStage:
     def _gate_result(self, allowed: bool = True):
         """Produce a mock gate stage result."""
@@ -266,6 +289,7 @@ class TestCommitStage:
             CommitPolicy,
             QuorumInfo,
         )
+
         return StageResult(
             stage=WaterfallStage.GATE,
             decision=StageDecision.ALLOW if allowed else StageDecision.DENY,
@@ -302,6 +326,7 @@ class TestCommitStage:
 
 # ── Stage 6: Memory Tests ────────────────────────────────────────────
 
+
 class TestMemoryStage:
     def _prior_results(self):
         from psia.schemas.cerberus_decision import (
@@ -309,6 +334,7 @@ class TestMemoryStage:
             CommitPolicy,
             QuorumInfo,
         )
+
         return [
             StageResult(
                 stage=WaterfallStage.SHADOW,
@@ -358,6 +384,7 @@ class TestMemoryStage:
             CommitPolicy,
             QuorumInfo,
         )
+
         deny_results = [
             StageResult(
                 stage=WaterfallStage.GATE,

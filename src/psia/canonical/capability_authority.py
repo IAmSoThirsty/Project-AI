@@ -23,7 +23,6 @@ Production notes:
 
 from __future__ import annotations
 
-
 import logging
 import uuid
 from dataclasses import dataclass, field
@@ -45,6 +44,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class RevocationEntry:
     """An entry in the capability revocation list."""
+
     token_id: str
     revoked_at: str
     reason: str
@@ -54,6 +54,7 @@ class RevocationEntry:
 @dataclass
 class TokenLifecycleEvent:
     """Audit trail entry for a token lifecycle event."""
+
     event_type: str  # "issued", "revoked", "rotated", "expired"
     token_id: str
     actor: str
@@ -156,8 +157,12 @@ class CapabilityAuthority:
             nonce=uuid.uuid4().hex,
             scope=scopes,
             delegation=DelegationPolicy(
-                is_delegable=delegable if delegable is not None else self.allow_delegation,
-                max_depth=max_depth if max_depth is not None else self.max_delegation_depth,
+                is_delegable=(
+                    delegable if delegable is not None else self.allow_delegation
+                ),
+                max_depth=(
+                    max_depth if max_depth is not None else self.max_delegation_depth
+                ),
             ),
             binding=binding or TokenBinding(),
             signature=Signature(
@@ -168,13 +173,19 @@ class CapabilityAuthority:
         )
 
         self._tokens[tid] = token
-        self._audit_log.append(TokenLifecycleEvent(
-            event_type="issued",
-            token_id=tid,
-            actor=self.authority_did,
-            timestamp=now.isoformat(),
-            details={"subject": subject, "ttl_hours": ttl, "scope_count": len(scopes)},
-        ))
+        self._audit_log.append(
+            TokenLifecycleEvent(
+                event_type="issued",
+                token_id=tid,
+                actor=self.authority_did,
+                timestamp=now.isoformat(),
+                details={
+                    "subject": subject,
+                    "ttl_hours": ttl,
+                    "scope_count": len(scopes),
+                },
+            )
+        )
 
         return token
 
@@ -209,13 +220,15 @@ class CapabilityAuthority:
             revoked_by=revoked_by or self.authority_did,
         )
 
-        self._audit_log.append(TokenLifecycleEvent(
-            event_type="revoked",
-            token_id=token_id,
-            actor=revoked_by or self.authority_did,
-            timestamp=now,
-            details={"reason": reason},
-        ))
+        self._audit_log.append(
+            TokenLifecycleEvent(
+                event_type="revoked",
+                token_id=token_id,
+                actor=revoked_by or self.authority_did,
+                timestamp=now,
+                details={"reason": reason},
+            )
+        )
 
         return True
 
@@ -253,13 +266,15 @@ class CapabilityAuthority:
         # Revoke old
         self.revoke(old_token_id, reason=f"rotated_to:{new_token.token_id}")
 
-        self._audit_log.append(TokenLifecycleEvent(
-            event_type="rotated",
-            token_id=old_token_id,
-            actor=self.authority_did,
-            timestamp=datetime.now(timezone.utc).isoformat(),
-            details={"new_token_id": new_token.token_id},
-        ))
+        self._audit_log.append(
+            TokenLifecycleEvent(
+                event_type="rotated",
+                token_id=old_token_id,
+                actor=self.authority_did,
+                timestamp=datetime.now(timezone.utc).isoformat(),
+                details={"new_token_id": new_token.token_id},
+            )
+        )
 
         return new_token
 

@@ -19,8 +19,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 
-from src.app.core.interface_abstractions import OperationalMode
 from src.app.defense_engine import DefenseEngine
+
+from src.app.core.interface_abstractions import OperationalMode
 
 # Configure logging for demo
 logging.basicConfig(

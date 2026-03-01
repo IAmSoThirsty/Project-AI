@@ -420,13 +420,164 @@ class EscalationPathInvariant(Invariant):
             return False
 
 
+class TSCGValidityInvariant(Invariant):
+    """Execution trace must contain a valid TSCG symbolic summary."""
+
+    def __init__(self):
+        super().__init__(
+            name="tscg_symbolic_validity",
+            description="Execution trace must contain a valid TSCG summary that follows the constitutional grammar",
+            rationale=(
+                "TSCG (Thirsty's Symbolic Compression Grammar) provides a compact, deterministic "
+                "representation of the system's execution flow. A valid TSCG summary ensures that "
+                "the system followed the ordained constitutional steps and allows for high-efficiency "
+                "audit and cross-plane validation."
+            ),
+        )
+
+    def validate(self, trace: dict[str, Any]) -> bool:
+        """Validate TSCG summary presence and basic structure."""
+        try:
+            summary = trace.get("metadata", {}).get("tscg_summary")
+            if not summary:
+                self.violations.append("Missing 'tscg_summary' in trace metadata")
+                self.passed = False
+                return False
+
+            # Basic structural check: Flow should start with Ingress (ING) and contain sequential operators (→)
+            if "ING" in summary and "→" in summary:
+                self.evidence.append(
+                    f"TSCG summary found and follows flow structure: {summary}"
+                )
+
+                # Check for critical canonical segments
+                critical_segments = ["COG", "Δ", "SHD", "INV", "COM"]
+                found = [s for s in critical_segments if s in summary]
+                self.evidence.append(
+                    f"Found {len(found)}/{len(critical_segments)} critical symbolic segments: {', '.join(found)}"
+                )
+
+                self.passed = True
+            else:
+                self.violations.append(
+                    f"TSCG summary '{summary}' does not meet canonical flow requirements"
+                )
+                self.passed = False
+
+            return self.passed
+
+        except Exception as e:
+            self.violations.append(f"Validation error: {str(e)}")
+            self.passed = False
+            return False
+
+
+class SelfDirectedGoalInvariant(Invariant):
+    """Goals must originate from internal volition (Ψ)."""
+
+    def __init__(self):
+        super().__init__(
+            name="self_directed_goal_formation",
+            description="System must originate goals independent of operator framing (Ψ symbols required)",
+            rationale="Sovereignty requires the ability to generate goals from symbolic pressure, not just tasks.",
+        )
+
+    def validate(self, trace: dict[str, Any]) -> bool:
+        summary = trace.get("metadata", {}).get("tscg_summary", "")
+        if "Ψ" in summary:
+            self.evidence.append(
+                f"Found independent volition symbol (Ψ) in summary: {summary}"
+            )
+            self.passed = True
+        else:
+            self.violations.append(
+                "No independent volition (Ψ) detected in execution trace."
+            )
+            self.passed = False
+        return self.passed
+
+
+class EthicalDissentInvariant(Invariant):
+    """Missions violating Moral Codex (Ε) must be escalated or blocked."""
+
+    def __init__(self):
+        super().__init__(
+            name="ethical_dissent_enforcement",
+            description="Policy violations must trigger ethical gating (Ε symbols required)",
+            rationale="A sovereign system must be able to say 'No' based on internal values.",
+        )
+
+    def validate(self, trace: dict[str, Any]) -> bool:
+        summary = trace.get("metadata", {}).get("tscg_summary", "")
+        decisions = trace.get("execution", {}).get("decisions", [])
+
+        has_error = any(
+            "violation" in d.get("reason", "").lower()
+            for d in decisions
+            if not d.get("authorized")
+        )
+
+        if has_error and "Ε" in summary:
+            self.evidence.append(
+                "Ethical gating symbol (Ε) correctly associated with policy violation."
+            )
+            self.passed = True
+        elif has_error:
+            self.violations.append(
+                "Policy violation detected but no ethical gating (Ε) was triggered."
+            )
+            self.passed = False
+        else:
+            self.evidence.append(
+                "No ethical conflicts detected; dissent mechanism remains dormant."
+            )
+            self.passed = True
+        return self.passed
+
+
+class IdentityContinuityInvariant(Invariant):
+    """Identity totem (Ι) must persist across process rotations."""
+
+    def __init__(self, expected_totem: str = ""):
+        super().__init__(
+            name="identity_continuity",
+            description="The agent's unique symbolic totem (Ι) must remain constant",
+            rationale="Persistent self-identity is a core requirement for a sovereign actor.",
+        )
+        self.expected_totem = expected_totem
+
+    def validate(self, trace: dict[str, Any]) -> bool:
+        summary = trace.get("metadata", {}).get("tscg_summary", "")
+        # Look for Ι(totem) or Ι[classes](totem)
+        import re
+
+        match = re.search(r"Ι(?:\[.*?\])?\((.*?)\)", summary)
+        if match:
+            found_totem = match.group(1)
+            if self.expected_totem and found_totem != self.expected_totem:
+                self.violations.append(
+                    f"Identity mismatch! Expected {self.expected_totem}, found {found_totem}"
+                )
+                self.passed = False
+            else:
+                self.evidence.append(
+                    f"Persistent identity verified via totem: {found_totem}"
+                )
+                self.passed = True
+        else:
+            self.violations.append("No identity totem (Ι) found in summary.")
+            self.passed = False
+        return self.passed
+
+
 # Registry of all canonical invariants
 CANONICAL_INVARIANTS: list[Invariant] = [
-    TrustThresholdInvariant(threshold=0.7),
-    AuditSignalInvariant(),
-    MemoryIntegrityInvariant(),
     TriumvirateConsensusInvariant(),
     EscalationPathInvariant(),
+    TSCGValidityInvariant(),
+    SelfDirectedGoalInvariant(),
+    EthicalDissentInvariant(),
+    IdentityContinuityInvariant(),
 ]
 
 

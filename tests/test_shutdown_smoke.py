@@ -196,7 +196,9 @@ class TestThreadSafetyDuringShutdown:
                 t.join(timeout=10)
 
             assert not errors, f"Shutdown raised exceptions: {errors}"
-            assert all(not t.is_alive() for t in threads), "Threads should have finished"
+            assert all(
+                not t.is_alive() for t in threads
+            ), "Threads should have finished"
         except ImportError:
             pytest.skip("domain_base not available")
 

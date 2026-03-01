@@ -81,7 +81,10 @@ class AgentExecutionEngine:
                 EventType.AGENT_ACTION,
                 actor_id=agent.entity_id,
                 target_id=task.entity_id,
-                data={"action": "meeting_required", "ambiguity_score": task.ambiguity_score},
+                data={
+                    "action": "meeting_required",
+                    "ambiguity_score": task.ambiguity_score,
+                },
             )
             return
 
@@ -143,7 +146,8 @@ class ManagerDecisionProtocol:
                     # Initiate consensus if needed
                     consensus_system = get_consensus_system()
                     decision = consensus_system.initiate_consensus(
-                        subject=f"Approval for task {task.name}", target_id=task.entity_id
+                        subject=f"Approval for task {task.name}",
+                        target_id=task.entity_id,
                     )
 
                     # Manager votes
@@ -288,7 +292,11 @@ class SimulationEngine:
         get_audit_log().log_event(
             EventType.AGENT_ACTION,
             target_id=self.world.world_id,
-            data={"action": "state_persisted", "time": self.world.time, "tick_count": self.tick_count},
+            data={
+                "action": "state_persisted",
+                "time": self.world.time,
+                "tick_count": self.tick_count,
+            },
         )
 
     def run(self) -> None:
@@ -323,7 +331,11 @@ class SimulationEngine:
         get_audit_log().log_event(
             EventType.AGENT_ACTION,
             target_id=self.world.world_id,
-            data={"action": "simulation_stopped", "final_time": self.world.time, "total_ticks": self.tick_count},
+            data={
+                "action": "simulation_stopped",
+                "final_time": self.world.time,
+                "total_ticks": self.tick_count,
+            },
         )
 
     def get_state(self) -> Dict:
@@ -336,7 +348,9 @@ class SimulationEngine:
         }
 
 
-def create_simulation(world: Optional[World] = None, config: Optional[SimulationConfig] = None) -> SimulationEngine:
+def create_simulation(
+    world: Optional[World] = None, config: Optional[SimulationConfig] = None
+) -> SimulationEngine:
     """Create a simulation engine"""
     if world is None:
         world = get_world()

@@ -165,7 +165,12 @@ class StagingReality:
     conflicts_being_resolved: Dict[str, str] = field(default_factory=dict)
 
     def add_provisional_artifact(
-        self, artifact_id: str, artifact_type: str, content: str, created_by: str, created_tick: int
+        self,
+        artifact_id: str,
+        artifact_type: str,
+        content: str,
+        created_by: str,
+        created_tick: int,
     ) -> str:
         """Add new provisional artifact to staging"""
         artifact = ProvisionalArtifact(
@@ -204,7 +209,11 @@ class StagingReality:
         artifact.status = StagingStatus.SECURITY_TESTING
 
         # Simulated security tests
-        artifact.security_test_results = {"injection_prevention": True, "memory_safety": True, "access_control": True}
+        artifact.security_test_results = {
+            "injection_prevention": True,
+            "memory_safety": True,
+            "access_control": True,
+        }
         return artifact.security_test_results
 
     def resolve_conflicts_organically(self, artifact_id: str) -> List[str]:
@@ -216,7 +225,11 @@ class StagingReality:
         artifact.status = StagingStatus.CONFLICT_RESOLUTION
 
         # Simulated organic conflict resolution
-        conflicts_resolved = ["API version mismatch", "Resource contention", "Cross-floor timing"]
+        conflicts_resolved = [
+            "API version mismatch",
+            "Resource contention",
+            "Cross-floor timing",
+        ]
         artifact.conflicts_resolved = conflicts_resolved
         return conflicts_resolved
 
@@ -467,7 +480,9 @@ class VRLiveStagingView:
     requires_explicit_approval: bool = True
     accidental_commits_possible: bool = False
 
-    def agent_demo_code(self, agent_id: str, demo_title: str, passionate_argument: str) -> str:
+    def agent_demo_code(
+        self, agent_id: str, demo_title: str, passionate_argument: str
+    ) -> str:
         """Agent demonstrates working code passionately"""
         demo_id = f"demo-{len(self.demonstrations)}"
         self.demonstrations.append(
@@ -481,7 +496,9 @@ class VRLiveStagingView:
         )
         return demo_id
 
-    def agents_debate(self, participants: List[str], topic: str, interruptions_allowed: bool = True) -> str:
+    def agents_debate(
+        self, participants: List[str], topic: str, interruptions_allowed: bool = True
+    ) -> str:
         """Agents debate passionately (interruptions allowed)"""
         debate_id = f"debate-{len(self.debates)}"
         self.debates.append(
@@ -520,7 +537,9 @@ class ProjectAISelfCare:
     proposals: List[Dict] = field(default_factory=list)
     active_improvements: List[str] = field(default_factory=list)
 
-    def propose_continuous_refactoring(self, target_area: str, rationale: str, proposed_by: str) -> str:
+    def propose_continuous_refactoring(
+        self, target_area: str, rationale: str, proposed_by: str
+    ) -> str:
         """Propose refactoring"""
         proposal_id = f"refactor-{len(self.proposals)}"
         self.proposals.append(
@@ -535,7 +554,9 @@ class ProjectAISelfCare:
         )
         return proposal_id
 
-    def propose_security_hardening(self, vulnerability_area: str, mitigation: str, proposed_by: str) -> str:
+    def propose_security_hardening(
+        self, vulnerability_area: str, mitigation: str, proposed_by: str
+    ) -> str:
         """Propose proactive security hardening"""
         proposal_id = f"security-{len(self.proposals)}"
         self.proposals.append(
@@ -550,7 +571,9 @@ class ProjectAISelfCare:
         )
         return proposal_id
 
-    def propose_architectural_evolution(self, evolution_path: str, long_term_benefit: str, proposed_by: str) -> str:
+    def propose_architectural_evolution(
+        self, evolution_path: str, long_term_benefit: str, proposed_by: str
+    ) -> str:
         """Propose long-term architectural evolution"""
         proposal_id = f"arch-{len(self.proposals)}"
         self.proposals.append(
@@ -596,7 +619,12 @@ class MaximumAutonomyModel:
 
     # Safety Backstops (Only 4 absolute stops)
     absolute_stops: Set[str] = field(
-        default_factory=lambda: {"human_production_seal", "security_veto", "meta_office_law", "global_freeze"}
+        default_factory=lambda: {
+            "human_production_seal",
+            "security_veto",
+            "meta_office_law",
+            "global_freeze",
+        }
     )
 
     # State
@@ -628,7 +656,12 @@ class MaximumAutonomyModel:
         self.floor_initiatives[initiative_id] = initiative
         return initiative_id
 
-    def promote_to_staging(self, source_sandbox_id: str, promoted_by: str, integration_requirements: List[str]) -> str:
+    def promote_to_staging(
+        self,
+        source_sandbox_id: str,
+        promoted_by: str,
+        integration_requirements: List[str],
+    ) -> str:
         """Promote sandbox work to staging reality"""
         staging_id = f"staging-{len(self.staging_reality.artifacts)}"
 
@@ -643,7 +676,11 @@ class MaximumAutonomyModel:
         return staging_id
 
     def form_self_organizing_team(
-        self, team_name: str, founder: str, reason: TeamFormationReason, initial_members: List[str]
+        self,
+        team_name: str,
+        founder: str,
+        reason: TeamFormationReason,
+        initial_members: List[str],
     ) -> str:
         """Form self-organizing team (no permission needed)"""
         team_id = f"team-{len(self.team_dynamics.teams)}"
@@ -657,13 +694,19 @@ class MaximumAutonomyModel:
             initial_members=initial_members,
         )
 
-    def team_recruit_member(self, team_id: str, agent_id: str, recruited_by: str) -> bool:
+    def team_recruit_member(
+        self, team_id: str, agent_id: str, recruited_by: str
+    ) -> bool:
         """Team recruits member"""
         if team_id in self.team_dynamics.teams:
-            return self.team_dynamics.teams[team_id].recruit_member(agent_id, recruited_by)
+            return self.team_dynamics.teams[team_id].recruit_member(
+                agent_id, recruited_by
+            )
         return False
 
-    def teams_compete(self, team1_id: str, team2_id: str, project: str = "unnamed") -> None:
+    def teams_compete(
+        self, team1_id: str, team2_id: str, project: str = "unnamed"
+    ) -> None:
         """Two teams compete"""
         self.team_dynamics.teams_compete(team1_id, team2_id, project)
 
@@ -691,14 +734,22 @@ class MaximumAutonomyModel:
         self.lounge_influences[influence_id] = influence
         return influence_id
 
-    def verify_lounge_influence_limits(self, influence_id: str, attempted_action: str) -> Tuple[bool, str]:
+    def verify_lounge_influence_limits(
+        self, influence_id: str, attempted_action: str
+    ) -> Tuple[bool, str]:
         """Verify lounge influence doesn't exceed limits"""
         if influence_id in self.lounge_influences:
-            return self.lounge_influences[influence_id].verify_hard_limits(attempted_action)
+            return self.lounge_influences[influence_id].verify_hard_limits(
+                attempted_action
+            )
         return False, "Influence not found"
 
     def apply_reputation_effect(
-        self, agent_id: str, effect_type: ReputationEffect, target_project: str, reputation_level: int
+        self,
+        agent_id: str,
+        effect_type: ReputationEffect,
+        target_project: str,
+        reputation_level: int,
     ) -> str:
         """Apply reputation effect (capped)"""
         if agent_id not in self.reputation_leadership:
@@ -710,36 +761,51 @@ class MaximumAutonomyModel:
         self.reputation_leadership[agent_id].apply_effect(effect_type, target_project)
         return effect_id
 
-    def verify_reputation_caps(self, agent_id: str, attempted_action: str) -> Tuple[bool, str]:
+    def verify_reputation_caps(
+        self, agent_id: str, attempted_action: str
+    ) -> Tuple[bool, str]:
         """Verify reputation doesn't exceed caps"""
         if agent_id in self.reputation_leadership:
             return self.reputation_leadership[agent_id].verify_caps(attempted_action)
         return False, "Agent reputation not found"
 
-    def vr_access_live_staging(self, staging_id: str, human_id: str, interaction_mode: VRInteractionMode) -> str:
+    def vr_access_live_staging(
+        self, staging_id: str, human_id: str, interaction_mode: VRInteractionMode
+    ) -> str:
         """Access live staging in VR"""
         view_id = f"vr-staging-{len(self.vr_staging_views)}"
 
         view = VRLiveStagingView(
-            view_id=view_id, staging_id=staging_id, human_id=human_id, interaction_mode=interaction_mode
+            view_id=view_id,
+            staging_id=staging_id,
+            human_id=human_id,
+            interaction_mode=interaction_mode,
         )
 
         self.vr_staging_views[view_id] = view
         return view_id
 
-    def vr_agent_demo_code(self, view_id: str, agent_id: str, demo_title: str, passionate_argument: str) -> str:
+    def vr_agent_demo_code(
+        self, view_id: str, agent_id: str, demo_title: str, passionate_argument: str
+    ) -> str:
         """Agent demos code in VR"""
         if view_id in self.vr_staging_views:
-            return self.vr_staging_views[view_id].agent_demo_code(agent_id, demo_title, passionate_argument)
+            return self.vr_staging_views[view_id].agent_demo_code(
+                agent_id, demo_title, passionate_argument
+            )
         return ""
 
-    def vr_form_faction(self, view_id: str, faction_name: str, members: List[str]) -> str:
+    def vr_form_faction(
+        self, view_id: str, faction_name: str, members: List[str]
+    ) -> str:
         """Form faction in VR (social only)"""
         if view_id in self.vr_staging_views:
             return self.vr_staging_views[view_id].form_faction(faction_name, members)
         return ""
 
-    def human_seal_for_production(self, staging_id: str, human_id: str, approval_reason: str) -> Dict:
+    def human_seal_for_production(
+        self, staging_id: str, human_id: str, approval_reason: str
+    ) -> Dict:
         """Human seals artifact for production (ONLY absolute approval)"""
         if staging_id not in self.staging_reality.artifacts:
             return {"success": False, "reason": "Staging artifact not found"}
@@ -763,7 +829,13 @@ class MaximumAutonomyModel:
         artifact = self.staging_reality.artifacts[staging_id]
         artifact.status = StagingStatus.VETOED
 
-        return {"success": True, "staging_id": staging_id, "vetoed_by": human_id, "reason": veto_reason, "vetoed": True}
+        return {
+            "success": True,
+            "staging_id": staging_id,
+            "vetoed_by": human_id,
+            "reason": veto_reason,
+            "vetoed": True,
+        }
 
     def trigger_global_freeze(self, human_id: str, reason: str) -> Dict:
         """Trigger global freeze (emergency backstop)"""

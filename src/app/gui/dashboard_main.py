@@ -70,7 +70,9 @@ class DashboardMainWindow(QMainWindow):
             )
             logger.info("DashboardMainWindow registered as Tier-3 User Interface")
         except Exception as e:
-            logger.warning("Failed to register DashboardMainWindow in tier registry: %s", e)
+            logger.warning(
+                "Failed to register DashboardMainWindow in tier registry: %s", e
+            )
 
     def _init_requests_tab(self) -> None:
         widget = QWidget()
@@ -252,13 +254,17 @@ class DashboardMainWindow(QMainWindow):
     def grant_integrator(self) -> None:
         ac = get_access_control()
         ac.grant_role("system", "integrator")
-        QMessageBox.information(self, "Access Control", "Granted 'integrator' role to 'system'")
+        QMessageBox.information(
+            self, "Access Control", "Granted 'integrator' role to 'system'"
+        )
 
     def export_audit(self) -> None:
         expert = ExpertAgent(name="admin_expert")
         res = expert.export_and_review(self.codex_adapter.codex)
         if res.get("success"):
-            QMessageBox.information(self, "Export", f"Audit exported to {res.get('out')}")
+            QMessageBox.information(
+                self, "Export", f"Audit exported to {res.get('out')}"
+            )
         else:
             QMessageBox.critical(self, "Export Failed", str(res))
 
@@ -304,7 +310,9 @@ class DashboardMainWindow(QMainWindow):
         # Attempt activation as 'system' (automatic integrator path)
         res = self.codex_adapter.codex.activate_staged(staged_path, requester="system")
         if res.get("success"):
-            QMessageBox.information(self, "Activated", "Staged artifact activated and integrated")
+            QMessageBox.information(
+                self, "Activated", "Staged artifact activated and integrated"
+            )
             self.refresh_waiting()
         else:
             QMessageBox.critical(self, "Activation Failed", str(res))
@@ -353,4 +361,6 @@ class DashboardMainWindow(QMainWindow):
         current = hub._agents_enabled.get("qa_generator", True)
         hub._agents_enabled["qa_generator"] = not current
         hub._agents_enabled["dependency_auditor"] = not current
-        QMessageBox.information(self, "Agents", f"QA/Dependency agents enabled: {not current}")
+        QMessageBox.information(
+            self, "Agents", f"QA/Dependency agents enabled: {not current}"
+        )

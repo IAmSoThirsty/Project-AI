@@ -34,11 +34,17 @@ def test_tier_multipliers():
 
     for seats, expected_mult, expected_tier, expected_increase in test_cases:
         mult, tier, increase = calculate_government_tier_multiplier(seats)
-        if mult == expected_mult and tier == expected_tier and increase == expected_increase:
+        if (
+            mult == expected_mult
+            and tier == expected_tier
+            and increase == expected_increase
+        ):
             print(f"  ✓ {seats} seats: {mult}x, tier {tier}, +{increase}%")
             passed += 1
         else:
-            print(f"  ✗ {seats} seats: Expected {expected_mult}x, got {mult}x (tier {tier}, +{increase}%)")
+            print(
+                f"  ✗ {seats} seats: Expected {expected_mult}x, got {mult}x (tier {tier}, +{increase}%)"
+            )
             failed += 1
 
     print(f"  Passed: {passed}/{len(test_cases)}")
@@ -75,7 +81,9 @@ def test_monthly_pricing():
             )
             passed += 1
         else:
-            print(f"  ✗ {seats} seats: Expected ${expected_price:,.2f}, got ${pricing.total_price:,.2f}")
+            print(
+                f"  ✗ {seats} seats: Expected ${expected_price:,.2f}, got ${pricing.total_price:,.2f}"
+            )
             failed += 1
 
     print(f"  Passed: {passed}/{len(test_cases)}")
@@ -106,7 +114,9 @@ def test_yearly_pricing():
             print(f"  ✓ {seats} seats: ${pricing.total_price:,.2f}")
             passed += 1
         else:
-            print(f"  ✗ {seats} seats: Expected ${expected_price:,.2f}, got ${pricing.total_price:,.2f}")
+            print(
+                f"  ✗ {seats} seats: Expected ${expected_price:,.2f}, got ${pricing.total_price:,.2f}"
+            )
             failed += 1
 
     print(f"  Passed: {passed}/{len(test_cases)}")
@@ -127,10 +137,14 @@ def test_pricing_consistency():
 
         expected_yearly = monthly.total_price * 4.0
         if abs(yearly.total_price - expected_yearly) < 0.01:  # Allow tiny float error
-            print(f"  ✓ {seats} seats: Monthly ${monthly.total_price:,.2f} × 4 = Yearly ${yearly.total_price:,.2f}")
+            print(
+                f"  ✓ {seats} seats: Monthly ${monthly.total_price:,.2f} × 4 = Yearly ${yearly.total_price:,.2f}"
+            )
             passed += 1
         else:
-            print(f"  ✗ {seats} seats: Expected ${expected_yearly:,.2f}, got ${yearly.total_price:,.2f}")
+            print(
+                f"  ✗ {seats} seats: Expected ${expected_yearly:,.2f}, got ${yearly.total_price:,.2f}"
+            )
             failed += 1
 
     print(f"  Passed: {passed}/{len(test_seats)}")

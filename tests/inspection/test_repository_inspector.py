@@ -24,10 +24,14 @@ def temp_repo():
 
         # Create some test files
         (repo_path / "src").mkdir()
-        (repo_path / "src" / "main.py").write_text('"""Main module."""\n\ndef main():\n    print("Hello")\n')
+        (repo_path / "src" / "main.py").write_text(
+            '"""Main module."""\n\ndef main():\n    print("Hello")\n'
+        )
         (repo_path / "src" / "utils.py").write_text("def helper():\n    pass\n")
         (repo_path / "tests").mkdir()
-        (repo_path / "tests" / "test_main.py").write_text("def test_main():\n    assert True\n")
+        (repo_path / "tests" / "test_main.py").write_text(
+            "def test_main():\n    assert True\n"
+        )
         (repo_path / "README.md").write_text("# Test Project\n")
         (repo_path / "config.yaml").write_text("key: value\n")
 
@@ -95,7 +99,11 @@ class TestRepositoryInspector:
         results = inspector.inspect()
 
         test_file = next(
-            (f for f in results["files"].values() if "test_main.py" in f["relative_path"]),
+            (
+                f
+                for f in results["files"].values()
+                if "test_main.py" in f["relative_path"]
+            ),
             None,
         )
 

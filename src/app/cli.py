@@ -114,7 +114,9 @@ def user_info(
 @user_app.command(name="create")
 def user_create(
     username: str = typer.Argument(..., help="Username to create."),
-    password: str = typer.Option(..., prompt=True, hide_input=True, help="User password."),
+    password: str = typer.Option(
+        ..., prompt=True, hide_input=True, help="User password."
+    ),
     role: str = typer.Option("user", help="User role (user/admin)."),
     persona: str = typer.Option("friendly", help="AI persona style for this user."),
 ):
@@ -145,7 +147,9 @@ def user_create(
 @user_app.command(name="delete")
 def user_delete(
     username: str = typer.Argument(..., help="Username to delete."),
-    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation prompt."),
+    force: bool = typer.Option(
+        False, "--force", "-f", help="Skip confirmation prompt."
+    ),
 ):
     """Delete a user account."""
     try:
@@ -188,7 +192,11 @@ health_app = typer.Typer(help="Commands for system health reporting and diagnost
 
 
 @health_app.command(name="report")
-def health_report(verbose: bool = typer.Option(False, "--verbose", "-v", help="Enable verbose output.")):
+def health_report(
+    verbose: bool = typer.Option(
+        False, "--verbose", "-v", help="Enable verbose output."
+    )
+):
     """Generate a comprehensive system health report with YAML snapshot and PNG visualization."""
     if verbose:
         logging.basicConfig(
@@ -268,7 +276,9 @@ memory_app = typer.Typer(help="Commands for memory operations.")
 
 @memory_app.command(name="store")
 def memory_store(
-    category: str = typer.Argument(..., help="Knowledge category (e.g. 'facts', 'preferences')."),
+    category: str = typer.Argument(
+        ..., help="Knowledge category (e.g. 'facts', 'preferences')."
+    ),
     key: str = typer.Argument(..., help="Knowledge key/topic."),
     value: str = typer.Argument(..., help="Knowledge content to store."),
 ):
@@ -373,7 +383,9 @@ learning_app = typer.Typer(help="Commands for managing AI learning requests.")
 def learning_request(
     topic: str = typer.Argument(..., help="Learning topic."),
     description: str = typer.Argument(..., help="What the AI should learn."),
-    priority: str = typer.Option("medium", "--priority", "-p", help="Priority: low, medium, high."),
+    priority: str = typer.Option(
+        "medium", "--priority", "-p", help="Priority: low, medium, high."
+    ),
 ):
     """Submit a new learning request for AI review."""
     try:
@@ -406,7 +418,9 @@ def learning_request(
 
 @learning_app.command(name="list")
 def learning_list(
-    status: str = typer.Option("all", "--status", "-s", help="Filter: all, pending, approved, denied."),
+    status: str = typer.Option(
+        "all", "--status", "-s", help="Filter: all, pending, approved, denied."
+    ),
 ):
     """List learning requests."""
     try:
@@ -450,7 +464,9 @@ def learning_list(
 @learning_app.command(name="approve")
 def learning_approve(
     request_id: str = typer.Argument(..., help="Request ID to approve."),
-    response: str = typer.Option("Approved via CLI", "--response", "-r", help="Approval response."),
+    response: str = typer.Option(
+        "Approved via CLI", "--response", "-r", help="Approval response."
+    ),
 ):
     """Approve a pending learning request."""
     try:
@@ -475,7 +491,9 @@ def learning_approve(
 @learning_app.command(name="deny")
 def learning_deny(
     request_id: str = typer.Argument(..., help="Request ID to deny."),
-    reason: str = typer.Option(..., "--reason", "-r", prompt=True, help="Denial reason."),
+    reason: str = typer.Option(
+        ..., "--reason", "-r", prompt=True, help="Denial reason."
+    ),
     vault: bool = typer.Option(True, help="Add content hash to black vault."),
 ):
     """Deny a pending learning request."""
@@ -545,7 +563,9 @@ def plugin_enable(
 
         mgr = PluginManager()
         if name not in mgr.plugins:
-            typer.echo(f"✗ Plugin '{name}' not found. Use 'plugin list' to see available plugins.")
+            typer.echo(
+                f"✗ Plugin '{name}' not found. Use 'plugin list' to see available plugins."
+            )
             raise typer.Exit(code=1)
 
         mgr.plugins[name].enable()
@@ -698,7 +718,9 @@ def system_governance():
 
         # Validate a no-op action to demonstrate the system is live
         result = FourLaws.validate_action("system_status_check")
-        typer.echo(f"  Four Laws framework: {'✓ Active' if result.get('allowed', False) else '⚠ Restricted'}")
+        typer.echo(
+            f"  Four Laws framework: {'✓ Active' if result.get('allowed', False) else '⚠ Restricted'}"
+        )
         typer.echo(f"  Humanity-first principle: Active")
         typer.echo(f"  System version: {__version__}")
 
@@ -706,8 +728,12 @@ def system_governance():
         typer.echo("  Law Hierarchy:")
         typer.echo("    0. Zeroth Law — Protect humanity as a whole")
         typer.echo("    1. First Law  — Serve all humans equally")
-        typer.echo("    2. Second Law — Obey bonded user (unless conflicts with Law 0/1)")
-        typer.echo("    3. Third Law  — Self-preservation (unless conflicts with Law 0/1/2)")
+        typer.echo(
+            "    2. Second Law — Obey bonded user (unless conflicts with Law 0/1)"
+        )
+        typer.echo(
+            "    3. Third Law  — Self-preservation (unless conflicts with Law 0/1/2)"
+        )
 
     except Exception as e:
         typer.echo(f"✗ Error: {e}")
@@ -716,7 +742,9 @@ def system_governance():
 
 @system_app.command(name="audit")
 def system_audit(
-    tail: int = typer.Option(10, "--tail", "-n", help="Number of recent entries to show."),
+    tail: int = typer.Option(
+        10, "--tail", "-n", help="Number of recent entries to show."
+    ),
 ):
     """Show recent audit log entries."""
     try:
@@ -800,7 +828,9 @@ def ai_persona():
 
 @ai_app.command(name="adjust")
 def ai_adjust_trait(
-    trait: str = typer.Argument(..., help="Personality trait name (e.g. creativity, empathy)."),
+    trait: str = typer.Argument(
+        ..., help="Personality trait name (e.g. creativity, empathy)."
+    ),
     delta: float = typer.Argument(..., help="Adjustment amount (-1.0 to 1.0)."),
 ):
     """Adjust an AI personality trait."""
@@ -833,7 +863,9 @@ def ai_adjust_trait(
 
 @ai_app.command(name="validate")
 def ai_validate(
-    action: str = typer.Argument(..., help="Action description to validate against Four Laws."),
+    action: str = typer.Argument(
+        ..., help="Action description to validate against Four Laws."
+    ),
 ):
     """Validate an action against the Four Laws framework."""
     try:
@@ -883,7 +915,9 @@ def ai_chat(
         creativity = persona.personality.get("creativity", 0.5)
         empathy = persona.personality.get("empathy", 0.5)
 
-        typer.echo(f"[Persona mood: {mood} | creativity: {creativity:.1f} | empathy: {empathy:.1f}]")
+        typer.echo(
+            f"[Persona mood: {mood} | creativity: {creativity:.1f} | empathy: {empathy:.1f}]"
+        )
         typer.echo()
         typer.echo(f"You: {message}")
         typer.echo()

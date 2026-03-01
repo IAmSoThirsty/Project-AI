@@ -26,7 +26,10 @@ class MetricsCalculator:
 
     def calculate_complexity(self, ast_root) -> ComplexityMetrics:
         return ComplexityMetrics(
-            cyclomatic_complexity=1, cognitive_complexity=0, halstead_volume=0.0, halstead_difficulty=0.0
+            cyclomatic_complexity=1,
+            cognitive_complexity=0,
+            halstead_volume=0.0,
+            halstead_difficulty=0.0,
         )
 
     def calculate_maintainability(self, ast_root) -> MaintainabilityIndex:

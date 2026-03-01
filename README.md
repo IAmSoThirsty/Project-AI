@@ -24,15 +24,14 @@
 
 ---
 
-<h1 align="center">🛡️ PROJECT-AI — THE SOVEREIGN MONOLITH</h1>
+<h1 align="center">🛡️ PROJECT-AI — THE SOVEREIGN SUBSTRATE</h1>
 
-<p align="center"><em>Constitutionally governed AI — cryptographically enforced, ethically aligned, sovereign by design.</em></p>
+<p align="center"><em>Reflexive, constitutionally governed AI substrate — cryptographically enforced via the Iron Path.</em></p>
 
 <p align="center">
   <strong>Creator:</strong> Jeremy Karrick &nbsp;|&nbsp;
   <strong>Organization:</strong> <a href="https://github.com/IAmSoThirsty">IAmSoThirsty</a> &nbsp;|&nbsp;
-  <strong>Version:</strong> 1.0.0
-
+  <strong>Status:</strong> REFLEXIVE-HARDENED
 </p>
 © 2026 Jeremy Karrick (IAmSoThirsty). All Rights Reserved.
 The AGI Charter, Legion Commission, and all associated governance documents are protected under copyright. The source code is open source under MIT License. The governance framework and constitutional documents are not.
@@ -69,32 +68,42 @@ The AGI Charter, Legion Commission, and all associated governance documents are 
 
 ---
 
-## 🎯 Mission
+## 🎯 The Sovereign Mission
 
-Project-AI is a **production-grade, sovereign AI platform** built on three immutable principles:
+Project-AI is an **unbreakable, sovereign-grade substrate** built on three immutable laws of state:
 
-1. **User Sovereignty** — Your data never leaves your control. No telemetry, no phone-home, no silent exfiltration.
-2. **Ethical Enforcement via Code** — Asimov's Four Laws are not guidelines — they are compiled into every execution path and enforced cryptographically.
-3. **Cryptographic Verifiability** — Every configuration mutation, every policy binding, every audit event is Ed25519-signed and SHA-256 hash-chained.
+1. **Absolute User Sovereignty** — Data is a private cryptographic invariant. No telemetry. No bypasses.
+2. **Reflexive Ethical Enforcement** — Asimov's Four Laws are compiled into the **Shadow Plane** and enforced via the **Iron Path**.
+3. **Deterministic Verifiability** — Every transition is Ed25519-signed and anchored into the **Tier 0 OctoReflex** bedrock.
 
-> **This is not a framework.** This is a monolithic, constitutionally governed AI system where sovereignty is not an aspiration — it is an invariant.
+> **This is not a framework.** This is a reflexive, constitutionally governed AI substrate where sovereignty is not a feature — it is the physics of the system.
 
 ---
 
-## 🏗️ Architecture Overview
+## 🏗️ Four-Tier Sovereign Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                        PROJECT-AI SOVEREIGN MONOLITH                        │
+│                        PROJECT-AI SOVEREIGN SUBSTRATE                       │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│  ┌──────────────────── GOVERNANCE LAYER ────────────────────┐              │
-│  │  Triumvirate (Galahad + Cerberus + Codex Deus)           │              │
-│  │  Sovereign Runtime ← Ed25519 + SHA-256 Hash Chain        │              │
-│  │  Iron Path Executor ← 7-Stage Cryptographic Pipeline     │              │
-│  │  Existential Proof System ← Constitutional Invariants    │              │
-│  │  Liara Guard ← Temporal Enforcement + TTL Failover       │              │
-│  └──────────────────────────────────────────────────────────┘              │
+│  ┌──────────────────── GOVERNANCE LAYER (T1) ────────────────┐              │
+│  │  Thirsty-Lang Orchestration & Shadow Thirst Verification  │              │
+│  │  Triumvirate (Galahad + Cerberus + Codex Deus)            │              │
+│  └────────────────────────────────────────────────────────────┘              │
+│                              │                                              │
+│  ┌──────────────────── INFRASTRUCTURE LAYER (T2) ────────────┐              │
+│  │  Sovereign Runtime ← Ed25519 + SHA-256 Hash Chain         │              │
+│  │  Iron Path Executor ← 7-Stage Cryptographic Pipeline      │              │
+│  └────────────────────────────────────────────────────────────┘              │
+│                              │                                              │
+│  ┌──────────────────── REFLEXIVE BEDROCK (T0) ───────────────┐              │
+│  │  OctoReflex ← Kernel-Level Containment (eBPF)             │              │
+│  │  Deterministic State Invariants                           │              │
+│  └────────────────────────────────────────────────────────────┘              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
 │                              │                                              │
 │  ┌──────── LANGUAGE LAYER ────────┐  ┌──── DEFENSE LAYER ────────┐        │
 │  │  Thirsty-Lang (4 Editions)     │  │  PSIA Waterfall (7-Stage) │        │
@@ -115,15 +124,28 @@ Project-AI is a **production-grade, sovereign AI platform** built on three immut
 │  └──────────────────────────────────────────────────────────┘              │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Three-Tier Sovereignty Model
 
 | Tier | Name | Enforcement |
 |------|------|-------------|
+| **Floor 1** | Sovereign Orchestration | Thirsty-Lang, TSCG Ledger, Git-based Audit Trail |
 | **Tier 1** | Constitutional Core | Four Laws, Existential Proofs, Immutable Audit Trail |
 | **Tier 2** | Governance Enforcement | Triumvirate Consensus, Sovereign Runtime, Iron Path |
 | **Tier 3** | Operational Security | OctoReflex, PSIA Waterfall, Cerberus, T-SECA/GHOST |
+
+---
+
+## 🚀 Emergent Microservices — Tier 2 Extensions
+
+Project-AI integrates a suite of production-ready microservices generated via the **Emergent** framework. These services extend the core governance layer with advanced trust, compliance, and negotiation capabilities.
+
+| Service | Integration Point | Purpose |
+|---------|-------------------|---------|
+| **Mutation Firewall** | Triumvirate / admission control | Gating agent self-modification |
+| **Incident Reflex** | OctoReflex / evidence bridge | Evidence preservation & policy actions |
+| **Trust Graph** | Identity / Security Core | Distributed reputation scoring |
+| **Data Vault** | Memory / PSIA data plane | Self-sovereign encrypted storage |
+| **Negotiation Agent** | TAAR / multi-agent runner | Secure agent-to-agent bargaining |
+| **Compliance Suite** | Codex Deus / Audit Trial | Provable compliance & reality verification |
 
 ---
 
@@ -135,7 +157,7 @@ The **Triumvirate** is the supreme governance body of Project-AI, composed of th
 |--------|------|----------------|
 | ⚔️ **Galahad** | Ethics & Safety | Enforces Asimov's Four Laws at every decision point |
 | 🐕‍🦺 **Cerberus** | Threat Defense | Guards against adversarial attacks, injection, manipulation |
-| ⚖️ **Codex Deus** | Arbitrator & Judge | Resolves conflicts, makes final rulings, maintains equilibrium |
+| ⚖️ **Codex Deus** | Arbitrator & Judge | Resolves conflicts, maintains equilibrium, ensures law |
 
 ### How It Works
 
@@ -229,6 +251,14 @@ Audit Block ──SHA-256──→ Block Hash  ──Chain──→ Previous Has
 ```
 
 > **Non-Bypassable:** Execution paths are cryptographically *dependent* on configuration. There is no code path that can execute without a valid config hash and policy binding.
+
+---
+
+# Project-AI: The Sovereign AI Substrate
+
+## [Floor 1: Thirsty-Lang Sovereignty ACTIVE]
+
+Project-AI is an open-source, production-grade, constitutionally-governed Artificial General Intelligence platform. It is built to be a resilient, sovereign, and ethically-bound substrate for AI agents, moving them from simple tools to sovereign actors within a cryptographically verifiable ecosystem.
 
 ---
 
@@ -414,8 +444,8 @@ for stage, verdict in result.stage_verdicts.items():
 `src/thirsty_lang/` — **A complete programming language** with water-themed syntax and enterprise-grade defensive programming capabilities.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Thirsty--Lang-v1.0.0-00CED1?style=for-the-badge&logo=dropbox&logoColor=white" />
-  <img src="https://img.shields.io/badge/Editions-4_Tiers-purple?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Thirsty--Lang-REFLEXIVE-00CED1?style=for-the-badge&logo=dropbox&logoColor=white" />
+  <img src="https://img.shields.io/badge/Editions-Hydrated-purple?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Transpile_To-6_Languages-orange?style=for-the-badge" />
 </p>
 
@@ -523,8 +553,8 @@ shield mySecureApp {
 `src/shadow_thirst/` — **4,800+ lines** of production code implementing dual-plane computing with formal verification.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Shadow_Thirst-v1.0.0-8B0000?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Static_Analyzers-6_Passes-gold?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Shadow_Thirst-REFLEXIVE-8B0000?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Static_Analyzers-Enabled-gold?style=for-the-badge" />
   <img src="https://img.shields.io/badge/Dual--Plane-Canonical+Shadow-crimson?style=for-the-badge" />
 </p>
 

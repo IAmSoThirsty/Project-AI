@@ -116,12 +116,17 @@ class TestDeterminismOracle:
         ctx = SealedContext.from_inputs("test_input")
         snapshot = {"x": 10, "y": 20}
 
-        def deterministic_program(ctx: SealedContext, snap: dict[str, Any]) -> ExecutionTrace:
+        def deterministic_program(
+            ctx: SealedContext, snap: dict[str, Any]
+        ) -> ExecutionTrace:
             trace = ExecutionTrace(trace_id="det_trace", context_seed=ctx.seed)
             trace.add_step("read", ("x",), result=snap.get("x"))
             trace.add_step("read", ("y",), result=snap.get("y"))
-            trace.add_step("compute", ("+", snap.get("x", 0), snap.get("y", 0)),
-                          result=snap.get("x", 0) + snap.get("y", 0))
+            trace.add_step(
+                "compute",
+                ("+", snap.get("x", 0), snap.get("y", 0)),
+                result=snap.get("x", 0) + snap.get("y", 0),
+            )
             trace.seal()
             return trace
 
@@ -138,10 +143,14 @@ class TestDeterminismOracle:
 
         call_count = 0
 
-        def nondeterministic_program(ctx: SealedContext, snap: dict[str, Any]) -> ExecutionTrace:
+        def nondeterministic_program(
+            ctx: SealedContext, snap: dict[str, Any]
+        ) -> ExecutionTrace:
             nonlocal call_count
             call_count += 1
-            trace = ExecutionTrace(trace_id=f"nd_trace_{call_count}", context_seed=ctx.seed)
+            trace = ExecutionTrace(
+                trace_id=f"nd_trace_{call_count}", context_seed=ctx.seed
+            )
             # Use real random (not sealed) — different each execution
             trace.add_step("compute", ("rand",), result=random.random() + call_count)
             trace.seal()

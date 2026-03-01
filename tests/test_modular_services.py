@@ -54,7 +54,9 @@ class TestGovernanceService:
     def mock_identity_system(self):
         """Create mock identity system."""
         identity = Mock()
-        identity.snapshot = Mock(return_value={"personality": "test", "identity_version": "1.0"})
+        identity.snapshot = Mock(
+            return_value={"personality": "test", "identity_version": "1.0"}
+        )
         return identity
 
     @pytest.fixture
@@ -135,7 +137,9 @@ class TestGovernanceService:
         # Verify statistics
         assert governance_service.block_count == 1
 
-    def test_use_governance_system_fallback(self, mock_governance_system, mock_identity_system):
+    def test_use_governance_system_fallback(
+        self, mock_governance_system, mock_identity_system
+    ):
         """Test fallback to legacy governance system."""
         service = GovernanceService(
             governance_system=mock_governance_system,

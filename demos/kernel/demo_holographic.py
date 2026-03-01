@@ -88,9 +88,7 @@ class HolographicDemo:
                 print(
                     f"{Colors.YELLOW}✓ Command executed (monitoring increased){Colors.RESET}"
                 )
-                print(
-                    f"{Colors.YELLOW}  ⚠️  Suspicious activity detected{Colors.RESET}"
-                )
+                print(f"{Colors.YELLOW}  ⚠️  Suspicious activity detected{Colors.RESET}")
             elif result.get("DECEPTION_ACTIVE"):
                 # They're in a trap but don't know it!
                 print(f"{Colors.GREEN}✓ Command executed successfully{Colors.RESET}")

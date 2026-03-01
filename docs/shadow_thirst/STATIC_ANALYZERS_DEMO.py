@@ -16,22 +16,22 @@ STATUS: PRODUCTION
 VERSION: 1.0.0
 """
 
-import sys
 import os
+import sys
 
 # Add src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../src'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../src"))
 
 from shadow_thirst.compiler import compile_source
 from shadow_thirst.static_analysis import (
-    PlaneIsolationAnalyzer,
+    AnalysisSeverity,
     DeterminismAnalyzer,
-    PrivilegeEscalationAnalyzer,
-    ResourceEstimator,
     DivergenceRiskEstimator,
     InvariantPurityChecker,
+    PlaneIsolationAnalyzer,
+    PrivilegeEscalationAnalyzer,
+    ResourceEstimator,
     StaticAnalyzer,
-    AnalysisSeverity
 )
 
 
@@ -53,7 +53,12 @@ def print_analysis_report(report):
     if report.findings:
         print(f"\n📋 Findings:")
         for finding in report.findings:
-            icon = "❌" if finding.severity in (AnalysisSeverity.ERROR, AnalysisSeverity.CRITICAL) else "⚠️"
+            icon = (
+                "❌"
+                if finding.severity
+                in (AnalysisSeverity.ERROR, AnalysisSeverity.CRITICAL)
+                else "⚠️"
+            )
             print(f"   {icon} {finding}")
 
 
@@ -87,7 +92,7 @@ def demo_1_plane_isolation():
 
         # Check for plane isolation violation
         errors = result.analysis_report.get_errors()
-        canonical_violation = any('canonical' in str(e).lower() for e in errors)
+        canonical_violation = any("canonical" in str(e).lower() for e in errors)
 
         if canonical_violation:
             print("\n✅ SUCCESS: Plane Isolation Analyzer detected canonical mutation!")
@@ -154,7 +159,7 @@ def demo_3_privilege_escalation():
 
         # Check for privilege escalation warning
         errors = result.analysis_report.get_errors()
-        validation_missing = any('VALIDATE_AND_COMMIT' in str(e) for e in errors)
+        validation_missing = any("VALIDATE_AND_COMMIT" in str(e) for e in errors)
 
         if validation_missing:
             print("\n✅ SUCCESS: Detected missing validation for canonical write!")
@@ -188,17 +193,24 @@ def demo_4_resource_estimation():
 
         # Look for resource estimation info
         resource_findings = [
-            f for f in result.analysis_report.findings
-            if 'ResourceEstimator' in f.analyzer
+            f
+            for f in result.analysis_report.findings
+            if "ResourceEstimator" in f.analyzer
         ]
 
         if resource_findings:
             print(f"\n📈 Resource Estimation Details:")
             for finding in resource_findings:
                 if finding.metadata:
-                    print(f"   Shadow Instructions: {finding.metadata.get('shadow_instructions', 'N/A')}")
-                    print(f"   Estimated CPU (ms): {finding.metadata.get('estimated_cpu_ms', 'N/A')}")
-                    print(f"   CPU Quota (ms): {finding.metadata.get('cpu_quota_ms', 'N/A')}")
+                    print(
+                        f"   Shadow Instructions: {finding.metadata.get('shadow_instructions', 'N/A')}"
+                    )
+                    print(
+                        f"   Estimated CPU (ms): {finding.metadata.get('estimated_cpu_ms', 'N/A')}"
+                    )
+                    print(
+                        f"   CPU Quota (ms): {finding.metadata.get('cpu_quota_ms', 'N/A')}"
+                    )
 
         print("\n✅ SUCCESS: Resource estimator provided analysis!")
 
@@ -240,17 +252,24 @@ def demo_5_divergence_risk():
 
         # Look for divergence risk findings
         divergence_findings = [
-            f for f in result.analysis_report.findings
-            if 'DivergenceRiskEstimator' in f.analyzer
+            f
+            for f in result.analysis_report.findings
+            if "DivergenceRiskEstimator" in f.analyzer
         ]
 
         if divergence_findings:
             print(f"\n📊 Divergence Analysis:")
             for finding in divergence_findings:
                 if finding.metadata:
-                    print(f"   Primary Instructions: {finding.metadata.get('primary_instructions', 'N/A')}")
-                    print(f"   Shadow Instructions: {finding.metadata.get('shadow_instructions', 'N/A')}")
-                    print(f"   Difference Ratio: {finding.metadata.get('difference_ratio', 'N/A')}")
+                    print(
+                        f"   Primary Instructions: {finding.metadata.get('primary_instructions', 'N/A')}"
+                    )
+                    print(
+                        f"   Shadow Instructions: {finding.metadata.get('shadow_instructions', 'N/A')}"
+                    )
+                    print(
+                        f"   Difference Ratio: {finding.metadata.get('difference_ratio', 'N/A')}"
+                    )
 
         print("\n✅ SUCCESS: Divergence risk estimator provided analysis!")
 
@@ -288,8 +307,9 @@ def demo_6_invariant_purity():
 
         # Pure invariants should pass
         purity_errors = [
-            f for f in result.analysis_report.get_errors()
-            if 'InvariantPurityChecker' in f.analyzer
+            f
+            for f in result.analysis_report.get_errors()
+            if "InvariantPurityChecker" in f.analyzer
         ]
 
         if not purity_errors:
@@ -372,6 +392,7 @@ def main():
     except Exception as e:
         print(f"\n❌ Error during demonstration: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

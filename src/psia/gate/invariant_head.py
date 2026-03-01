@@ -82,10 +82,19 @@ class InvariantEvaluator:
     """
 
     # Actions that constitute mutation and thus trigger immutable invariants
-    _MUTATION_ACTIONS = frozenset({
-        "mutate_state", "mutate_policy", "delete", "write",
-        "create", "update", "patch", "upsert", "append",
-    })
+    _MUTATION_ACTIONS = frozenset(
+        {
+            "mutate_state",
+            "mutate_policy",
+            "delete",
+            "write",
+            "create",
+            "update",
+            "patch",
+            "upsert",
+            "append",
+        }
+    )
 
     def evaluate(
         self,
@@ -201,10 +210,12 @@ class InvariantHead:
             )
             if not passed:
                 violations.append((inv, reason))
-                reasons.append(DenyReason(
-                    code=f"INVARIANT_{inv.invariant_id.upper()}",
-                    detail=reason,
-                ))
+                reasons.append(
+                    DenyReason(
+                        code=f"INVARIANT_{inv.invariant_id.upper()}",
+                        detail=reason,
+                    )
+                )
 
         # ── Severity aggregation ──
         if not violations:

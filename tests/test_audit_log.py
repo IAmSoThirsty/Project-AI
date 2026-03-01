@@ -295,7 +295,9 @@ class TestAuditLog:
                 actor="bob",
                 severity="warning",
             )
-            audit.log_event("system_crash", {"cause": "OOM"}, actor="system", severity="critical")
+            audit.log_event(
+                "system_crash", {"cause": "OOM"}, actor="system", severity="critical"
+            )
 
             # Filter by severity
             critical_events = audit.get_events_filtered(severity="critical")

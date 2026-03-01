@@ -41,7 +41,9 @@ class ShadowSimulator(Protocol):
     will be backed by the existing ShadowExecutionPlane.
     """
 
-    def simulate(self, request_id: str, action: str, resource: str, parameters: dict) -> ShadowReport: ...
+    def simulate(
+        self, request_id: str, action: str, resource: str, parameters: dict
+    ) -> ShadowReport: ...
 
 
 class PassthroughSimulator:
@@ -104,7 +106,9 @@ class PassthroughSimulator:
                 ),
             ),
             timestamp=datetime.now(timezone.utc).isoformat(),
-            signature=Signature(alg="ed25519", kid="shadow_k1", sig="shadow_passthrough_sig"),
+            signature=Signature(
+                alg="ed25519", kid="shadow_k1", sig="shadow_passthrough_sig"
+            ),
         )
 
 
@@ -159,7 +163,9 @@ class ShadowStage:
                 for v in report.results.invariant_violations
                 if v.severity in ("critical", "fatal")
             ]
-            reasons.append(f"critical invariant violations in simulation: {violation_ids}")
+            reasons.append(
+                f"critical invariant violations in simulation: {violation_ids}"
+            )
             decision = StageDecision.QUARANTINE
 
         # Check 3: Divergence score

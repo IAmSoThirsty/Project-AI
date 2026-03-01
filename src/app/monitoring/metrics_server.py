@@ -146,11 +146,17 @@ class MetricsServer:
             self.server = HTTPServer((self.host, self.port), MetricsHandler)
             self._running = True
 
-            self.thread = threading.Thread(target=self._run_server, daemon=daemon, name="PrometheusMetricsServer")
+            self.thread = threading.Thread(
+                target=self._run_server, daemon=daemon, name="PrometheusMetricsServer"
+            )
             self.thread.start()
 
-            logger.info("Prometheus metrics server started on %s:%s", self.host, self.port)
-            logger.info("Metrics available at http://%s:%s/metrics", self.host, self.port)
+            logger.info(
+                "Prometheus metrics server started on %s:%s", self.host, self.port
+            )
+            logger.info(
+                "Metrics available at http://%s:%s/metrics", self.host, self.port
+            )
 
         except Exception as e:
             logger.error("Failed to start metrics server: %s", e)

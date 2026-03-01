@@ -156,7 +156,9 @@ class ShadowThirstParser:
             else:
                 # Unknown construct in function body
                 token = self._peek()
-                raise ParseError(f"Unexpected token in function body: {token.type.name}", token)
+                raise ParseError(
+                    f"Unexpected token in function body: {token.type.name}", token
+                )
 
         self._consume(TokenType.RBRACE, "Expected '}' to end function body")
 
@@ -584,7 +586,9 @@ class ShadowThirstParser:
         while True:
             if self._match(TokenType.DOT):
                 # Member access
-                member_token = self._consume(TokenType.IDENTIFIER, "Expected member name")
+                member_token = self._consume(
+                    TokenType.IDENTIFIER, "Expected member name"
+                )
                 expr = MemberAccess(object=expr, member=member_token.value)
             elif self._match(TokenType.LPAREN):
                 # Function call

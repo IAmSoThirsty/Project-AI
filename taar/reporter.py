@@ -55,11 +55,17 @@ class Reporter:
             info = f"Watching {file_count} files across {runner_count} runners"
             self.console.print(Panel(banner, subtitle=info, border_style="blue"))
         else:
-            print(f"{MAGENTA}{BOLD}TAAR{RESET} v{version} — Thirstys Active Agent Runner")
-            print(f"{DIM}Watching {file_count} files across {runner_count} runners{RESET}")
+            print(
+                f"{MAGENTA}{BOLD}TAAR{RESET} v{version} — Thirstys Active Agent Runner"
+            )
+            print(
+                f"{DIM}Watching {file_count} files across {runner_count} runners{RESET}"
+            )
             print("═" * 60)
 
-    def print_change_detected(self, changed_files: list[Path], project_root: Path) -> None:
+    def print_change_detected(
+        self, changed_files: list[Path], project_root: Path
+    ) -> None:
         """Print notification that files have changed."""
         if self.console:
             for f in changed_files[:5]:
@@ -119,7 +125,9 @@ class Reporter:
                 for line in result.output.strip().split("\n")[:15]:
                     print(f"      {DIM}{line}{RESET}")
 
-    def print_summary(self, report: RunReport, cache_stats: CacheStats | None = None) -> None:
+    def print_summary(
+        self, report: RunReport, cache_stats: CacheStats | None = None
+    ) -> None:
         """Print the final run summary."""
         total = len(report.results)
         passed = sum(1 for r in report.results if r.passed)
@@ -136,8 +144,12 @@ class Reporter:
             status_style = "bold green" if report.all_passed else "bold red"
             status_text = "PASS" if report.all_passed else "FAIL"
             table.add_row("Status", f"[{status_style}]{status_text}[/]")
-            table.add_row("Tasks", f"{total} total, {executed} executed, {cached} cached")
-            table.add_row("Results", f"[green]{passed} passed[/], [red]{failed} failed[/]")
+            table.add_row(
+                "Tasks", f"{total} total, {executed} executed, {cached} cached"
+            )
+            table.add_row(
+                "Results", f"[green]{passed} passed[/], [red]{failed} failed[/]"
+            )
             table.add_row("Duration", f"{report.total_duration:.2f}s")
 
             if cache_stats:
@@ -162,7 +174,9 @@ class Reporter:
             status = f"{GREEN}PASS{RESET}" if report.all_passed else f"{RED}FAIL{RESET}"
             print(f"  Status:   {status}")
             print(f"  Tasks:    {total} total, {executed} executed, {cached} cached")
-            print(f"  Results:  {GREEN}{passed} passed{RESET}, {RED}{failed} failed{RESET}")
+            print(
+                f"  Results:  {GREEN}{passed} passed{RESET}, {RED}{failed} failed{RESET}"
+            )
             print(f"  Duration: {report.total_duration:.2f}s")
 
             if cache_stats:

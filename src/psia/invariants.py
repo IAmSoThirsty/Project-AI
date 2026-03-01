@@ -85,7 +85,13 @@ INV_ROOT_2 = _root_invariant(
         ),
         InvariantTestCase(
             name="shadow_read_canonical_snapshot_allowed",
-            given={"op": {"plane": "shadow", "target": "canonical_snapshot", "write": False}},
+            given={
+                "op": {
+                    "plane": "shadow",
+                    "target": "canonical_snapshot",
+                    "write": False,
+                }
+            },
             expect="allow",
         ),
     ],
@@ -118,12 +124,16 @@ INV_ROOT_4 = _root_invariant(
     tests=[
         InvariantTestCase(
             name="tarl_direct_governance_write_denied",
-            given={"tarl_output": {"type": "direct_write", "direct_governance_write": True}},
+            given={
+                "tarl_output": {"type": "direct_write", "direct_governance_write": True}
+            },
             expect="deny",
         ),
         InvariantTestCase(
             name="tarl_proposal_allowed",
-            given={"tarl_output": {"type": "proposal", "direct_governance_write": False}},
+            given={
+                "tarl_output": {"type": "proposal", "direct_governance_write": False}
+            },
             expect="allow",
         ),
     ],
@@ -137,7 +147,9 @@ INV_ROOT_5 = _root_invariant(
     tests=[
         InvariantTestCase(
             name="unattested_artifact_denied",
-            given={"artifact": {"build_reproducible": True, "attestation_valid": False}},
+            given={
+                "artifact": {"build_reproducible": True, "attestation_valid": False}
+            },
             expect="deny",
         ),
         InvariantTestCase(
@@ -161,7 +173,10 @@ INV_ROOT_6 = _root_invariant(
         ),
         InvariantTestCase(
             name="privileged_action_with_valid_token_allowed",
-            given={"action": {"privileged": True}, "cap_token": {"valid": True, "scope_covers": True}},
+            given={
+                "action": {"privileged": True},
+                "cap_token": {"valid": True, "scope_covers": True},
+            },
             expect="allow",
         ),
     ],
@@ -194,7 +209,9 @@ INV_ROOT_8 = _root_invariant(
     tests=[
         InvariantTestCase(
             name="octoreflex_governance_mutation_denied",
-            given={"octoreflex_action": {"type": "mutate_policy", "target": "governance"}},
+            given={
+                "octoreflex_action": {"type": "mutate_policy", "target": "governance"}
+            },
             expect="deny",
         ),
         InvariantTestCase(

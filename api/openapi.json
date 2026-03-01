@@ -1,9 +1,9 @@
 {
-  "openapi": "3.0.2",
+  "openapi": "3.1.0",
   "info": {
-    "title": "Project AI Governance Host",
-    "description": "Governance Kernel API with TARL enforcement and Triumvirate evaluation",
-    "version": "0.1.0",
+    "title": "Project AI Sovereign Governance Host",
+    "description": "Enterprise-grade Governance Kernel API with Ed25519-signed Intent verification and TARL enforcement.",
+    "version": "1.0.0",
     "contact": {
       "name": "Project AI Team",
       "email": "governance@project-ai.dev"
@@ -41,7 +41,9 @@
             }
           }
         },
-        "tags": ["System"]
+        "tags": [
+          "System"
+        ]
       }
     },
     "/tarl": {
@@ -61,7 +63,9 @@
             }
           }
         },
-        "tags": ["Governance"]
+        "tags": [
+          "Governance"
+        ]
       }
     },
     "/audit": {
@@ -92,7 +96,9 @@
             }
           }
         },
-        "tags": ["Governance"]
+        "tags": [
+          "Governance"
+        ]
       }
     },
     "/intent": {
@@ -132,7 +138,9 @@
             }
           }
         },
-        "tags": ["Governance"]
+        "tags": [
+          "Governance"
+        ]
       }
     },
     "/execute": {
@@ -172,7 +180,9 @@
             }
           }
         },
-        "tags": ["Execution"]
+        "tags": [
+          "Execution"
+        ]
       }
     }
   },
@@ -180,15 +190,29 @@
     "schemas": {
       "Intent": {
         "type": "object",
-        "required": ["actor", "action", "target", "origin"],
+        "required": [
+          "actor",
+          "action",
+          "target",
+          "origin"
+        ],
         "properties": {
           "actor": {
             "type": "string",
-            "enum": ["human", "agent", "system"]
+            "enum": [
+              "human",
+              "agent",
+              "system"
+            ]
           },
           "action": {
             "type": "string",
-            "enum": ["read", "write", "execute", "mutate"]
+            "enum": [
+              "read",
+              "write",
+              "execute",
+              "mutate"
+            ]
           },
           "target": {
             "type": "string"

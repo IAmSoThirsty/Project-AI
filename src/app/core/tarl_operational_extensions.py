@@ -190,9 +190,7 @@ class TARLSignalsTelemetry(SignalsTelemetry):
         severity = (
             SeverityLevel.CRITICAL
             if confidence > 0.9
-            else SeverityLevel.ERROR
-            if confidence > 0.7
-            else SeverityLevel.WARNING
+            else SeverityLevel.ERROR if confidence > 0.7 else SeverityLevel.WARNING
         )
 
         signal = Signal(

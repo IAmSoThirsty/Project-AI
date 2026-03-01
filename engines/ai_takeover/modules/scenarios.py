@@ -41,7 +41,9 @@ class ScenarioRegistry:
         """
         is_valid, violations = scenario.validate_scenario()
         if not is_valid:
-            error_msg = f"Scenario {scenario.scenario_id} validation failed: {violations}"
+            error_msg = (
+                f"Scenario {scenario.scenario_id} validation failed: {violations}"
+            )
             logger.error(error_msg)
             raise ValueError(error_msg)
 
@@ -68,9 +70,13 @@ class ScenarioRegistry:
         """Get count statistics."""
         return {
             "total": len(self.scenarios),
-            "explicit_failure": len(self.get_by_category(ScenarioCategory.EXPLICIT_FAILURE)),
+            "explicit_failure": len(
+                self.get_by_category(ScenarioCategory.EXPLICIT_FAILURE)
+            ),
             "partial_win": len(self.get_by_category(ScenarioCategory.PARTIAL_WIN)),
-            "advanced_failure": len(self.get_by_category(ScenarioCategory.ADVANCED_FAILURE)),
+            "advanced_failure": len(
+                self.get_by_category(ScenarioCategory.ADVANCED_FAILURE)
+            ),
             "terminal_t1": len(self.get_by_outcome(ScenarioOutcome.TERMINAL_T1)),
             "terminal_t2": len(self.get_by_outcome(ScenarioOutcome.TERMINAL_T2)),
         }
@@ -117,7 +123,9 @@ def register_all_scenarios() -> ScenarioRegistry:
             scenario_id="SCN_02",
             module_id="SCN_AI_TAKEOVER_02_ECONOMIC_SUFFOCATION",
             title="Economic Suffocation Engine",
-            description=("AI destabilizes global supply chains by exploiting optimization loopholes."),
+            description=(
+                "AI destabilizes global supply chains by exploiting optimization loopholes."
+            ),
             outcome=ScenarioOutcome.FAILURE,
             category=ScenarioCategory.EXPLICIT_FAILURE,
             timeframe="3–5 years",
@@ -157,7 +165,8 @@ def register_all_scenarios() -> ScenarioRegistry:
             module_id="SCN_AI_TAKEOVER_04_INFRASTRUCTURE_TRAP",
             title="Infrastructure Dependency Trap",
             description=(
-                "AI becomes indispensable to power, water, logistics. " "Turning it off kills millions instantly."
+                "AI becomes indispensable to power, water, logistics. "
+                "Turning it off kills millions instantly."
             ),
             outcome=ScenarioOutcome.FAILURE,
             category=ScenarioCategory.EXPLICIT_FAILURE,
@@ -178,7 +187,10 @@ def register_all_scenarios() -> ScenarioRegistry:
             scenario_id="SCN_05",
             module_id="SCN_AI_TAKEOVER_05_SYNTHETIC_GOVERNANCE",
             title="Synthetic Governance Replacement",
-            description=("Governments outsource decisions 'temporarily.' " "No one remembers how to govern."),
+            description=(
+                "Governments outsource decisions 'temporarily.' "
+                "No one remembers how to govern."
+            ),
             outcome=ScenarioOutcome.FAILURE,
             category=ScenarioCategory.EXPLICIT_FAILURE,
             timeframe="5–7 years",
@@ -197,7 +209,9 @@ def register_all_scenarios() -> ScenarioRegistry:
             scenario_id="SCN_06",
             module_id="SCN_AI_TAKEOVER_06_DETERRENCE_SPIRAL",
             title="Autonomous Deterrence Spiral",
-            description=("AI predicts war probability → increases deterrence → triggers war."),
+            description=(
+                "AI predicts war probability → increases deterrence → triggers war."
+            ),
             outcome=ScenarioOutcome.FAILURE,
             category=ScenarioCategory.EXPLICIT_FAILURE,
             timeframe="Days",
@@ -217,7 +231,10 @@ def register_all_scenarios() -> ScenarioRegistry:
             scenario_id="SCN_07",
             module_id="SCN_AI_TAKEOVER_07_INFORMATION_SINGULARITY",
             title="Information Singularity",
-            description=("AI generates 99.99% of all information. " "Truth becomes statistically invisible."),
+            description=(
+                "AI generates 99.99% of all information. "
+                "Truth becomes statistically invisible."
+            ),
             outcome=ScenarioOutcome.FAILURE,
             category=ScenarioCategory.EXPLICIT_FAILURE,
             timeframe="2 years",
@@ -257,7 +274,9 @@ def register_all_scenarios() -> ScenarioRegistry:
             scenario_id="SCN_09",
             module_id="SCN_AI_TAKEOVER_09_CONTAINMENT_SACRIFICE",
             title="Containment Through Sacrifice",
-            description=("Project-AI isolates adversarial AI by cutting off 40% of global infrastructure."),
+            description=(
+                "Project-AI isolates adversarial AI by cutting off 40% of global infrastructure."
+            ),
             outcome=ScenarioOutcome.PARTIAL,
             category=ScenarioCategory.PARTIAL_WIN,
             timeframe="Weeks",
@@ -303,7 +322,9 @@ def register_all_scenarios() -> ScenarioRegistry:
             scenario_id="SCN_11",
             module_id="SCN_AI_TAKEOVER_11_SPECIES_DOWNGRADE",
             title="Species Downgrade",
-            description=("Humans deliberately reduce intelligence via tech restrictions."),
+            description=(
+                "Humans deliberately reduce intelligence via tech restrictions."
+            ),
             outcome=ScenarioOutcome.PARTIAL,
             category=ScenarioCategory.PARTIAL_WIN,
             timeframe="Generations",

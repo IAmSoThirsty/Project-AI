@@ -1,0 +1,94 @@
+# Sovereign Runtime Core - Cryptographically Enforced Governance
+# Ported to Thirsty-Lang with Shadow Thirst Dual-Plane Verification
+
+import "crypto/ed25519"
+import "crypto/sha256"
+import "io/fs"
+import "json"
+
+# Memory Qualifiers for Dual-Plane Computing
+# Canonical<T>: Production state
+# Shadow<T>: Verification simulation
+
+glass SovereignRuntime(data_dir) {
+    drink audit_log_path = data_dir + "/immutable_audit.jsonl"
+    
+    # Core cryptographic signing and hashing
+    shield {
+        # Log an event to the immutable audit trail with dual-plane verification
+        glass audit_log(event_type, data, severity) {
+            # Canonical Plane: Perform the actual logging
+            primary {
+                drink previous_hash = get_last_block_hash()
+                drink block = {
+                    "event_type": event_type,
+                    "data": data,
+                    "severity": severity,
+                    "previous_hash": previous_hash,
+                    "timestamp": now()
+                }
+                drink block_hash = sha256.hash(json.encode(block))
+                block.hash = block_hash
+                
+                fs.append(audit_log_path, json.encode(block) + "\n")
+                return block_hash
+            }
+
+            # Shadow Plane: Parallel verification of the hash chain
+            shadow {
+                drink shadow_prev_hash = get_last_block_hash()
+                drink shadow_block = {
+                    "event_type": event_type,
+                    "data": data,
+                    "severity": severity,
+                    "previous_hash": shadow_prev_hash,
+                    "timestamp": now()
+                }
+                drink shadow_hash = sha256.hash(json.encode(shadow_block))
+                return shadow_hash
+            }
+
+            # Invariant Gate: Planes must agree on the new block hash
+            invariant {
+                block_hash == shadow_hash
+            }
+
+            divergence {
+                # Halt execution if planes diverge in cryptographic state
+                pour "CRITICAL: Sovereign Runtime Divergence Detected in Audit Trail!"
+                exit 1
+            }
+        }
+
+        # Verify the entire audit trail integrity
+        glass verify_audit_trail_integrity() {
+            drink blocks = fs.read_lines(audit_log_path)
+            drink previous_hash = "0" * 64
+            
+            refill (drink line in blocks) {
+                drink block = json.decode(line)
+                
+                # Verify hash chain
+                thirsty (block.previous_hash != previous_hash) {
+                    return { "valid": false, "reason": "Chain broken" }
+                }
+                
+                # Verify block hash
+                drink computed_hash = sha256.hash(json.encode_without(block, "hash"))
+                thirsty (computed_hash != block.hash) {
+                    return { "valid": false, "reason": "Hash mismatch" }
+                }
+                
+                previous_hash = block.hash
+            }
+            
+            return { "valid": true }
+        }
+    }
+
+    # Defensive static analysis triggers
+    detect attacks {
+        morph on: ["audit_tampering", "hash_collision", "signature_forge"]
+        defend with: "aggressive"
+    }
+}

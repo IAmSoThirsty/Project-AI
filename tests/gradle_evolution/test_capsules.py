@@ -231,7 +231,9 @@ class TestReplayEngine:
         with pytest.raises(ValueError, match="Capsule not found"):
             replay_engine.replay_build("nonexistent-id")
 
-    def test_verify_replay_consistency(self, capsule_storage, sample_build_capsule_data):
+    def test_verify_replay_consistency(
+        self, capsule_storage, sample_build_capsule_data
+    ):
         """Test verifying replay produces consistent results."""
         capsule_engine = CapsuleEngine(storage_path=capsule_storage)
         replay_engine = ReplayEngine(capsule_engine)
@@ -291,7 +293,9 @@ class TestReplayEngine:
         capsule_engine.capsules[capsule1.capsule_id] = capsule1
         capsule_engine.capsules[capsule2.capsule_id] = capsule2
 
-        comparison = replay_engine.compare_capsules(capsule1.capsule_id, capsule2.capsule_id)
+        comparison = replay_engine.compare_capsules(
+            capsule1.capsule_id, capsule2.capsule_id
+        )
 
         assert "differences" in comparison
         assert "similarities" in comparison

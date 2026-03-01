@@ -105,7 +105,9 @@ def test_sovereign_audit_log():
 
         # Verify signature
         events = audit.operational_log.get_events()
-        sovereign_events = [e for e in events if "test.constitutional" in e["event_type"]]
+        sovereign_events = [
+            e for e in events if "test.constitutional" in e["event_type"]
+        ]
 
         if sovereign_events:
             event_id = sovereign_events[0]["data"]["event_id"]
@@ -153,12 +155,16 @@ def test_deterministic_replay():
 
         for i in range(3):
             audit.log_event(
-                f"deterministic_event_{i}", {"sequence": i}, deterministic_timestamp=base_time + timedelta(seconds=i)
+                f"deterministic_event_{i}",
+                {"sequence": i},
+                deterministic_timestamp=base_time + timedelta(seconds=i),
             )
 
         # Verify deterministic timestamps
         events = audit.operational_log.get_events()
-        deterministic_events = [e for e in events if "deterministic_event" in e["event_type"]]
+        deterministic_events = [
+            e for e in events if "deterministic_event" in e["event_type"]
+        ]
 
         assert len(deterministic_events) >= 3
         print(f"  ✓ Logged {len(deterministic_events)} deterministic events")

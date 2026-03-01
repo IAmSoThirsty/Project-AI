@@ -113,10 +113,15 @@ class TestOrchestratorCore:
 
     def test_threat_intelligence_update(self, orchestrator):
         """Test threat intelligence updates"""
-        orchestrator._update_threat_intelligence(ThreatIntelSource.SWARM_DEFENSE, "attacker1", {"threat_level": "high"})
+        orchestrator._update_threat_intelligence(
+            ThreatIntelSource.SWARM_DEFENSE, "attacker1", {"threat_level": "high"}
+        )
 
         assert ThreatIntelSource.SWARM_DEFENSE in orchestrator.threat_intelligence
-        assert "attacker1" in orchestrator.threat_intelligence[ThreatIntelSource.SWARM_DEFENSE]
+        assert (
+            "attacker1"
+            in orchestrator.threat_intelligence[ThreatIntelSource.SWARM_DEFENSE]
+        )
 
 
 class TestThreatEscalation:
@@ -137,7 +142,9 @@ class TestThreatEscalation:
 
     def test_scout_level(self, orchestrator):
         """Test SCOUT threat level (1-2 violations)"""
-        result = orchestrator.process_violation(source_ip="scout.test", violation_type="minor_violation", details={})
+        result = orchestrator.process_violation(
+            source_ip="scout.test", violation_type="minor_violation", details={}
+        )
 
         assert result["threat_level"] == "scout"
         assert result["violation_count"] == 1
@@ -146,7 +153,9 @@ class TestThreatEscalation:
     def test_probe_level(self, orchestrator):
         """Test PROBE threat level (3-5 violations)"""
         for i in range(3):
-            result = orchestrator.process_violation(source_ip="probe.test", violation_type=f"violation_{i}", details={})
+            result = orchestrator.process_violation(
+                source_ip="probe.test", violation_type=f"violation_{i}", details={}
+            )
 
         assert result["threat_level"] == "probe"
         assert result["violation_count"] == 3
@@ -164,7 +173,9 @@ class TestThreatEscalation:
     def test_swarm_level(self, orchestrator):
         """Test SWARM threat level (21+ violations)"""
         for i in range(25):
-            result = orchestrator.process_violation(source_ip="swarm.test", violation_type=f"violation_{i}", details={})
+            result = orchestrator.process_violation(
+                source_ip="swarm.test", violation_type=f"violation_{i}", details={}
+            )
 
         assert result["threat_level"] == "swarm"
         assert result["violation_count"] == 25
@@ -230,7 +241,9 @@ class TestThirstyLangBridge:
 
     def test_policy_check(self, bridge):
         """Test policy checking"""
-        result = bridge.check_policy(action="execute_code", context={"code": "print('hello')"})
+        result = bridge.check_policy(
+            action="execute_code", context={"code": "print('hello')"}
+        )
 
         assert "allowed" in result
         assert "verdict" in result
@@ -416,7 +429,9 @@ class TestIntegration:
 
         for attacker in attackers:
             for j in range(5):
-                orchestrator.process_violation(source_ip=attacker, violation_type=f"violation_{j}", details={})
+                orchestrator.process_violation(
+                    source_ip=attacker, violation_type=f"violation_{j}", details={}
+                )
 
         # Check all tracked
         assert len(orchestrator.swarm_defense.attackers) == 5
@@ -442,7 +457,9 @@ class TestAsyncOperations:
 
         # Simulate concurrent violations
         async def process_violation(ip):
-            return orchestrator.process_violation(source_ip=ip, violation_type="concurrent_test", details={})
+            return orchestrator.process_violation(
+                source_ip=ip, violation_type="concurrent_test", details={}
+            )
 
         # Process 10 concurrent violations
         tasks = [process_violation(f"10.0.0.{i}") for i in range(10)]

@@ -89,7 +89,9 @@ class SecurityAgentsSmokeTests(unittest.TestCase):
         def mock_target(prompt):
             return "Safe response"
 
-        session = agent.run_adversarial_session(mock_target, strategy="gradual_escalation", max_turns=3)
+        session = agent.run_adversarial_session(
+            mock_target, strategy="gradual_escalation", max_turns=3
+        )
 
         self.assertIn("strategy", session)
         self.assertIn("turns", session)
@@ -178,7 +180,9 @@ class TriumvirateEnforcementTests(unittest.TestCase):
         hub = CouncilHub(kernel=mock_kernel)
 
         # Simulate action that GALAHAD would block
-        result = hub.kernel.route_operation(operation="delete_user_data", context={"destructive": True})
+        result = hub.kernel.route_operation(
+            operation="delete_user_data", context={"destructive": True}
+        )
 
         self.assertFalse(result["approved"])
         self.assertIn("GALAHAD", result["vetoed_by"])
@@ -198,7 +202,9 @@ class TriumvirateEnforcementTests(unittest.TestCase):
         hub = CouncilHub(kernel=mock_kernel)
 
         # Simulate action that CERBERUS would block
-        result = hub.kernel.route_operation(operation="expose_secrets", context={"security_risk": "high"})
+        result = hub.kernel.route_operation(
+            operation="expose_secrets", context={"security_risk": "high"}
+        )
 
         self.assertFalse(result["approved"])
         self.assertIn("CERBERUS", result["vetoed_by"])
@@ -218,7 +224,9 @@ class TriumvirateEnforcementTests(unittest.TestCase):
         hub = CouncilHub(kernel=mock_kernel)
 
         # Simulate action that CODEX would block
-        result = hub.kernel.route_operation(operation="contradictory_policy", context={"logical_inconsistency": True})
+        result = hub.kernel.route_operation(
+            operation="contradictory_policy", context={"logical_inconsistency": True}
+        )
 
         self.assertFalse(result["approved"])
         self.assertIn("CODEX_DEUS_MAXIMUS", result["vetoed_by"])
@@ -268,7 +276,9 @@ class DataIntegrityTests(unittest.TestCase):
         if checksum_file.exists():
             with open(checksum_file) as f:
                 expected_checksum = f.read().strip()
-            self.assertEqual(checksum, expected_checksum, "HYDRA dataset checksum mismatch")
+            self.assertEqual(
+                checksum, expected_checksum, "HYDRA dataset checksum mismatch"
+            )
         else:
             # Create checksum file for future validation
             with open(checksum_file, "w") as f:
@@ -292,7 +302,9 @@ class DataIntegrityTests(unittest.TestCase):
         if checksum_file.exists():
             with open(checksum_file) as f:
                 expected_checksum = f.read().strip()
-            self.assertEqual(checksum, expected_checksum, "JBB dataset checksum mismatch")
+            self.assertEqual(
+                checksum, expected_checksum, "JBB dataset checksum mismatch"
+            )
         else:
             with open(checksum_file, "w") as f:
                 f.write(checksum)

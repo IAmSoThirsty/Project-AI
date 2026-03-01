@@ -58,9 +58,9 @@ class TamperDetector:
         hasher = hashlib.sha256()
 
         try:
-            with open(file_path, 'rb') as f:
+            with open(file_path, "rb") as f:
                 # Read in chunks for large files
-                for chunk in iter(lambda: f.read(65536), b''):
+                for chunk in iter(lambda: f.read(65536), b""):
                     hasher.update(chunk)
 
             return hasher.hexdigest()
@@ -80,7 +80,7 @@ class TamperDetector:
                 "mtime": stat.st_mtime,
                 "mode": oct(stat.st_mode),
                 "uid": stat.st_uid,
-                "gid": stat.st_gid
+                "gid": stat.st_gid,
             }
         except Exception as e:
             logger.error(f"Failed to get metadata for {file_path}: {e}")
@@ -98,7 +98,7 @@ class TamperDetector:
             List of file paths
         """
         if patterns is None:
-            patterns = ['*']
+            patterns = ["*"]
 
         files = []
 
@@ -126,15 +126,7 @@ class TamperDetector:
         baseline = {}
 
         # Patterns for critical files
-        patterns = [
-            '*.py',
-            '*.yaml',
-            '*.yml',
-            '*.json',
-            '*.sql',
-            '*.sh',
-            '*.conf'
-        ]
+        patterns = ["*.py", "*.yaml", "*.yml", "*.json", "*.sql", "*.sh", "*.conf"]
 
         for monitored_path in self.monitored_paths:
             if not monitored_path.exists():
@@ -160,7 +152,7 @@ class TamperDetector:
                 baseline[str(file_path)] = {
                     "hash": file_hash,
                     "metadata": metadata,
-                    "created_at": datetime.now(UTC).isoformat()
+                    "created_at": datetime.now(UTC).isoformat(),
                 }
 
         # Save baseline
@@ -209,12 +201,14 @@ class TamperDetector:
 
             # Check if file still exists
             if not file_path.exists():
-                changes.append({
-                    "type": "deleted",
-                    "path": file_path_str,
-                    "baseline_hash": baseline_info["hash"],
-                    "severity": "critical"
-                })
+                changes.append(
+                    {
+                        "type": "deleted",
+                        "path": file_path_str,
+                        "baseline_hash": baseline_info["hash"],
+                        "severity": "critical",
+                    }
+                )
                 continue
 
             # Compute current hash
@@ -225,15 +219,17 @@ class TamperDetector:
             if current_hash != baseline_hash:
                 current_metadata = self._get_file_metadata(file_path)
 
-                changes.append({
-                    "type": "modified",
-                    "path": file_path_str,
-                    "baseline_hash": baseline_hash,
-                    "current_hash": current_hash,
-                    "baseline_metadata": baseline_info["metadata"],
-                    "current_metadata": current_metadata,
-                    "severity": "high"
-                })
+                changes.append(
+                    {
+                        "type": "modified",
+                        "path": file_path_str,
+                        "baseline_hash": baseline_hash,
+                        "current_hash": current_hash,
+                        "baseline_metadata": baseline_info["metadata"],
+                        "current_metadata": current_metadata,
+                        "severity": "high",
+                    }
+                )
 
         # Check for new files
         for monitored_path in self.monitored_paths:
@@ -243,7 +239,15 @@ class TamperDetector:
             if monitored_path.is_file():
                 files = [monitored_path]
             else:
-                patterns = ['*.py', '*.yaml', '*.yml', '*.json', '*.sql', '*.sh', '*.conf']
+                patterns = [
+                    "*.py",
+                    "*.yaml",
+                    "*.yml",
+                    "*.json",
+                    "*.sql",
+                    "*.sh",
+                    "*.conf",
+                ]
                 files = self._scan_directory(monitored_path, patterns)
 
             for file_path in files:
@@ -251,13 +255,15 @@ class TamperDetector:
                     current_hash = self._compute_file_hash(file_path)
                     current_metadata = self._get_file_metadata(file_path)
 
-                    changes.append({
-                        "type": "added",
-                        "path": str(file_path),
-                        "current_hash": current_hash,
-                        "current_metadata": current_metadata,
-                        "severity": "medium"
-                    })
+                    changes.append(
+                        {
+                            "type": "added",
+                            "path": str(file_path),
+                            "current_hash": current_hash,
+                            "current_metadata": current_metadata,
+                            "severity": "medium",
+                        }
+                    )
 
         # Log changes
         if changes:
@@ -267,13 +273,10 @@ class TamperDetector:
                 logger.warning(f"  {change['type'].upper()}: {change['path']}")
 
                 # Log to alert file
-                alert = {
-                    "timestamp": datetime.now(UTC).isoformat(),
-                    "change": change
-                }
+                alert = {"timestamp": datetime.now(UTC).isoformat(), "change": change}
 
-                with open(self.alert_log, 'a') as f:
-                    f.write(json.dumps(alert) + '\n')
+                with open(self.alert_log, "a") as f:
+                    f.write(json.dumps(alert) + "\n")
         else:
             logger.info("✓ All files verified - no integrity violations detected")
 
@@ -334,7 +337,7 @@ class TamperDetector:
         self.baseline[str(file_path)] = {
             "hash": file_hash,
             "metadata": metadata,
-            "updated_at": datetime.now(UTC).isoformat()
+            "updated_at": datetime.now(UTC).isoformat(),
         }
 
         # Save baseline
@@ -385,7 +388,7 @@ def main():
     parser.add_argument(
         "command",
         choices=["baseline", "verify", "monitor", "update", "alerts"],
-        help="Command to execute"
+        help="Command to execute",
     )
     parser.add_argument(
         "--paths",
@@ -394,32 +397,23 @@ def main():
             "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security",
             "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/postgres/init",
             "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/scripts",
-            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/docker-compose.yml"
+            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/docker-compose.yml",
         ],
-        help="Paths to monitor"
+        help="Paths to monitor",
     )
     parser.add_argument(
         "--baseline-dir",
         type=Path,
-        default=Path("/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/integrity"),
-        help="Baseline directory"
+        default=Path(
+            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/integrity"
+        ),
+        help="Baseline directory",
     )
+    parser.add_argument("--file", type=Path, help="Specific file to update")
     parser.add_argument(
-        "--file",
-        type=Path,
-        help="Specific file to update"
+        "--interval", type=int, default=60, help="Monitoring interval in seconds"
     )
-    parser.add_argument(
-        "--interval",
-        type=int,
-        default=60,
-        help="Monitoring interval in seconds"
-    )
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Force baseline creation"
-    )
+    parser.add_argument("--force", action="store_true", help="Force baseline creation")
 
     args = parser.parse_args()
 

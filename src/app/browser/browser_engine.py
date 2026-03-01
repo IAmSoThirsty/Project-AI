@@ -29,6 +29,9 @@ class IncognitoBrowser:
         self.config = config
         self.logger = logging.getLogger(__name__)
 
+        # Thirsty-Lang Governance
+        self._initialize_thirsty_governance()
+
         # Privacy settings
         self.incognito_mode = config.get("incognito_mode", True)
         self.no_history = config.get("no_history", True)

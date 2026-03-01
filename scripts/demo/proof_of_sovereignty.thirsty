@@ -1,0 +1,54 @@
+# Proof of Sovereignty - Iron Path Verification
+# This script demonstrates the cryptographic enforcement of Project-AI's sovereignty.
+
+import "governance/sovereign_runtime"
+import "cognition/audit"
+import "io/fs"
+
+glass demonstrate_sovereignty() {
+    pour "🛡️ INITIALIZING PROOF OF SOVEREIGNTY DEMONSTRATION..."
+    
+    drink runtime = SovereignRuntime("./sovereign_data_demo")
+    
+    # 1. Valid Execution
+    pour "\n[STAGE 1] LOGGING VALID EVENTS..."
+    runtime.audit_log("VALID_EVENT", {"action": "user_login"}, "INFO")
+    runtime.audit_log("VALID_EVENT", {"action": "access_granted"}, "INFO")
+    
+    drink status = runtime.verify_audit_trail_integrity()
+    thirsty (status.valid) {
+        pour "✅ Audit trail integrity verified. Hash chain intact."
+    }
+    
+    # 2. Simulated Tampering (The "Bypass" Attempt)
+    pour "\n[STAGE 2] SIMULATING EXTERNAL TAMPERING..."
+    drink lines = fs.read_lines("./sovereign_data_demo/immutable_audit.jsonl")
+    # Manually corrupt the second block's data
+    lines[1] = lines[1].replace("access_granted", "unauthorized_escalation")
+    fs.write("./sovereign_data_demo/immutable_audit.jsonl", lines.join("\n"))
+    pour "⚠️ Tampered with audit log file directly (simulating disk-level corruption/attack)."
+    
+    # 3. Detection and Enforcement
+    pour "\n[STAGE 3] RUNNING SOVEREIGN VERIFICATION..."
+    drink re_status = runtime.verify_audit_trail_integrity()
+    
+    thirsty (not re_status.valid) {
+        pour "🛑 DETECTED TAMPERING: " + re_status.reason
+        pour "💥 Sovereignty logic enforced: Hash mismatch at block 1."
+    }
+    
+    # 4. Shadow Plane Divergence (The "Iron Path" Gate)
+    pour "\n[STAGE 4] TESTING DUAL-PLANE INVARIANT GATE..."
+    pour "Note: Attempting to log a new event while the chain is broken..."
+    
+    # The audit_log function uses Shadow Thirst dual-plane verification.
+    # It will compare the current state (tampered) with the shadow plane (deterministic simulation).
+    detect attacks {
+        defend with: "aggressive"
+    }
+
+    # This should fail the invariant check if the planes diverge
+    runtime.audit_log("TAMPER_DETECTION_LOG", {"detected": "true"}, "CRITICAL")
+}
+
+demonstrate_sovereignty()

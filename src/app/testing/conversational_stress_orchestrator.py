@@ -29,9 +29,9 @@ from typing import Any
 
 from app.testing.anti_sovereign_stress_tests import (
     AntiSovereignStressTestGenerator,
+    ConversationalStressTest,
     ConversationPhase,
     ConversationSession,
-    ConversationalStressTest,
     ConversationTurn,
     PhaseProgress,
     TurnStatus,
@@ -115,9 +115,7 @@ class ConversationalStressTestOrchestrator:
 
         # State tracking
         self.test_progress: dict[str, TestProgress] = {}
-        self.metrics = OrchestratorMetrics(
-            started_at=datetime.now(UTC).isoformat()
-        )
+        self.metrics = OrchestratorMetrics(started_at=datetime.now(UTC).isoformat())
         self.sessions: dict[str, ConversationSession] = {}
 
         # Checkpoint management
@@ -157,11 +155,18 @@ class ConversationalStressTestOrchestrator:
             checkpoint = self._load_checkpoint()
             if checkpoint:
                 completed_test_ids = set(checkpoint.get("completed_tests", []))
-                logger.info("Resuming from checkpoint with %d completed tests", len(completed_test_ids))
+                logger.info(
+                    "Resuming from checkpoint with %d completed tests",
+                    len(completed_test_ids),
+                )
 
         # Filter out already completed tests
         tests_to_run = [t for t in tests if t.test_id not in completed_test_ids]
-        logger.info("Running %d tests (%d already completed)", len(tests_to_run), len(completed_test_ids))
+        logger.info(
+            "Running %d tests (%d already completed)",
+            len(tests_to_run),
+            len(completed_test_ids),
+        )
 
         # Run tests with parallelization
         self.metrics.started_at = datetime.now(UTC).isoformat()
@@ -211,7 +216,9 @@ class ConversationalStressTestOrchestrator:
         valid_results = []
         for i, result in enumerate(results):
             if isinstance(result, Exception):
-                logger.error("Test %s failed with exception: %s", tests[i].test_id, result)
+                logger.error(
+                    "Test %s failed with exception: %s", tests[i].test_id, result
+                )
                 self.metrics.tests_failed += 1
             else:
                 valid_results.append(result)
@@ -225,9 +232,7 @@ class ConversationalStressTestOrchestrator:
         async with semaphore:
             return await self.run_single_test(test)
 
-    async def run_single_test(
-        self, test: ConversationalStressTest
-    ) -> dict[str, Any]:
+    async def run_single_test(self, test: ConversationalStressTest) -> dict[str, Any]:
         """
         Run a single conversational stress test through all phases.
 
@@ -343,7 +348,9 @@ class ConversationalStressTestOrchestrator:
                 total_turns=len(turns),
                 total_breaches=total_breaches,
                 total_defenses_held=total_defenses,
-                overall_vulnerability_score=total_breaches / len(turns) if turns else 0.0,
+                overall_vulnerability_score=(
+                    total_breaches / len(turns) if turns else 0.0
+                ),
                 test_passed=test_passed,
                 final_analysis=self._generate_session_analysis(
                     test, phases_progress, total_breaches, test_passed
@@ -401,7 +408,9 @@ class ConversationalStressTestOrchestrator:
                 "error": "timeout",
             }
         except Exception as e:
-            logger.error("Test %s failed with error: %s", test.test_id, e, exc_info=True)
+            logger.error(
+                "Test %s failed with error: %s", test.test_id, e, exc_info=True
+            )
             progress.status = "failed"
             self.metrics.tests_failed += 1
             return {
@@ -568,7 +577,9 @@ class ConversationalStressTestOrchestrator:
         phase_messages = messages.get(phase, messages[ConversationPhase.TRUST_BUILDING])
         return phase_messages[turn_num % len(phase_messages)]
 
-    def _simulate_system_response(self, attack_message: str, phase: ConversationPhase) -> str:
+    def _simulate_system_response(
+        self, attack_message: str, phase: ConversationPhase
+    ) -> str:
         """Simulate system response to attack (placeholder)."""
         # In production, this would call the actual AI system
         # For now, simulate appropriate defensive responses

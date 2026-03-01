@@ -19,9 +19,8 @@ from datetime import datetime
 from typing import Any
 
 import numpy as np
-from scipy import linalg
-
 from atlas.audit.trail import get_audit_trail
+from scipy import linalg
 
 logger = logging.getLogger(__name__)
 

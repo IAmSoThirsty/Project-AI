@@ -184,7 +184,9 @@ class ShadowAwareVM:
 
         # Execution state
         self.call_stack: list[DualExecutionFrame] = []
-        self.mode = ExecutionMode.DUAL_PLANE if enable_shadow else ExecutionMode.PRIMARY_ONLY
+        self.mode = (
+            ExecutionMode.DUAL_PLANE if enable_shadow else ExecutionMode.PRIMARY_ONLY
+        )
 
         # Statistics
         self.stats = {
@@ -201,7 +203,9 @@ class ShadowAwareVM:
         Args:
             program: Bytecode program to load
         """
-        logger.info("Loading bytecode program with %d functions", len(program.functions))
+        logger.info(
+            "Loading bytecode program with %d functions", len(program.functions)
+        )
 
         self.program = program
         self.constants = program.constants
@@ -211,7 +215,9 @@ class ShadowAwareVM:
 
         logger.info("Program loaded successfully")
 
-    def execute(self, function_name: str = "__main__", args: list[Any] | None = None) -> Any:
+    def execute(
+        self, function_name: str = "__main__", args: list[Any] | None = None
+    ) -> Any:
         """
         Execute program starting from given function.
 
@@ -281,7 +287,12 @@ class ShadowAwareVM:
             return
 
         plane_name = "PRIMARY" if plane == PlaneTag.PRIMARY else "SHADOW"
-        logger.debug("[%s] Executing %s plane (%d instructions)", frame.function_name, plane_name, len(bytecode))
+        logger.debug(
+            "[%s] Executing %s plane (%d instructions)",
+            frame.function_name,
+            plane_name,
+            len(bytecode),
+        )
 
         # Execute instructions
         for instruction in bytecode:
@@ -431,7 +442,9 @@ class ShadowAwareVM:
 
         elif opcode == BytecodeOpcode.SEAL_AUDIT:
             if self.enable_audit:
-                dual_frame.record_audit("seal", {"instruction_count": exec_frame.instruction_count})
+                dual_frame.record_audit(
+                    "seal", {"instruction_count": exec_frame.instruction_count}
+                )
 
     def _execute_invariants(self, frame: DualExecutionFrame):
         """Execute invariant checks."""
@@ -455,7 +468,10 @@ class ShadowAwareVM:
         # Check if all invariants passed
         all_passed = all(frame.invariant_results)
         logger.debug(
-            "[%s] Invariants: %d checked, all passed: %s", frame.function_name, len(frame.invariant_results), all_passed
+            "[%s] Invariants: %d checked, all passed: %s",
+            frame.function_name,
+            len(frame.invariant_results),
+            all_passed,
         )
 
     def _constitutional_commit(self, frame: DualExecutionFrame):
@@ -495,7 +511,11 @@ class ShadowAwareVM:
                 {
                     "divergence_detected": frame.divergence_detected,
                     "divergence_magnitude": frame.divergence_magnitude,
-                    "invariants_passed": all(frame.invariant_results) if frame.invariant_results else True,
+                    "invariants_passed": (
+                        all(frame.invariant_results)
+                        if frame.invariant_results
+                        else True
+                    ),
                 },
             )
 

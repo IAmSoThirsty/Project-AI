@@ -130,7 +130,8 @@ class SecurityEnforcementGateway:
             self.operations_blocked += 1
 
             logger.critical(
-                f"OPERATION BLOCKED: {request.operation_id} - {result.reason} " f"(threat={result.threat_level})"
+                f"OPERATION BLOCKED: {request.operation_id} - {result.reason} "
+                f"(threat={result.threat_level})"
             )
 
             # Record incident for security operations center
@@ -148,11 +149,16 @@ class SecurityEnforcementGateway:
         if request.requires_audit:
             result.audit_trail_id = self._create_audit_trail(request, result)
 
-        logger.info(f"OPERATION ALLOWED: {request.operation_id} - " f"Passed {len(result.layers_checked)} layers")
+        logger.info(
+            f"OPERATION ALLOWED: {request.operation_id} - "
+            f"Passed {len(result.layers_checked)} layers"
+        )
 
         return result
 
-    def _record_security_incident(self, request: OperationRequest, result: OperationResult) -> None:
+    def _record_security_incident(
+        self, request: OperationRequest, result: OperationResult
+    ) -> None:
         """Record security incident for blocked operation."""
         incident = {
             "incident_type": "security_violation",
@@ -179,7 +185,9 @@ class SecurityEnforcementGateway:
         except Exception as e:
             logger.error(f"Failed to report to Hydra-50: {e}")
 
-    def _create_audit_trail(self, request: OperationRequest, result: OperationResult) -> str:
+    def _create_audit_trail(
+        self, request: OperationRequest, result: OperationResult
+    ) -> str:
         """Create audit trail for allowed operation."""
 
         # Wire into immutable audit log system
@@ -199,7 +207,9 @@ class SecurityEnforcementGateway:
                 },
             }
 
-            audit_id = audit_logger.log_event(event_type="OPERATION_ALLOWED", user_id=request.user_id, data=audit_data)
+            audit_id = audit_logger.log_event(
+                event_type="OPERATION_ALLOWED", user_id=request.user_id, data=audit_data
+            )
 
             return audit_id
 
@@ -207,7 +217,9 @@ class SecurityEnforcementGateway:
             # Fallback to simple hash if audit logger not available
             from hashlib import sha256
 
-            audit_id = sha256(f"{request.operation_id}{request.timestamp}".encode()).hexdigest()[:16]
+            audit_id = sha256(
+                f"{request.operation_id}{request.timestamp}".encode()
+            ).hexdigest()[:16]
             logger.info("AUDIT TRAIL (Fallback): %s - %s", audit_id, request.action)
             return audit_id
         except Exception as e:
@@ -244,7 +256,9 @@ class SecurityViolationException(Exception):
         self.threat_level = threat_level
         self.enforcement_actions = enforcement_actions
 
-        super().__init__(f"SECURITY VIOLATION: {operation_id} - {reason} " f"(threat={threat_level})")
+        super().__init__(
+            f"SECURITY VIOLATION: {operation_id} - {reason} " f"(threat={threat_level})"
+        )
 
 
 # ============================================================================
@@ -305,7 +319,10 @@ class SecureCommandDispatcher:
         handler = self.command_handlers[command_name]
         result = handler(user_id, context)
 
-        logger.info(f"Command executed: {command_name} " f"(audit_id={enforcement_result.audit_trail_id})")
+        logger.info(
+            f"Command executed: {command_name} "
+            f"(audit_id={enforcement_result.audit_trail_id})"
+        )
 
         return result
 

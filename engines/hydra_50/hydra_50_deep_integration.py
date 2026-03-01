@@ -541,7 +541,9 @@ class PlanetaryDefenseIntegration:
     def _try_connect_planetary_defense(self) -> None:
         """Attempt to connect to Planetary Defense"""
         try:
-            from app.governance.planetary_defense_monolith import PlanetaryDefenseMonolith
+            from app.governance.planetary_defense_monolith import (
+                PlanetaryDefenseMonolith,
+            )
 
             self.planetary_defense = PlanetaryDefenseMonolith()
             self.integration_status = IntegrationStatus.CONNECTED

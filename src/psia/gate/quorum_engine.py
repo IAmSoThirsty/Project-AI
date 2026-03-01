@@ -134,7 +134,11 @@ class ProductionQuorumEngine:
 
         # Log deployment profile for operational clarity
         n = len(self.node_ids)
-        f_tolerated = (n - 1) // 3 if self.deployment_profile == DeploymentProfile.BFT_DEPLOYED else 0
+        f_tolerated = (
+            (n - 1) // 3
+            if self.deployment_profile == DeploymentProfile.BFT_DEPLOYED
+            else 0
+        )
         logger.info(
             "QuorumEngine initialized: policy=%s, N=%d, profile=%s, f_tolerated=%d",
             self.policy,
@@ -235,7 +239,10 @@ class ProductionQuorumEngine:
             ca = vote.constraints_applied
             if ca:
                 if ca.rate_limit_per_min:
-                    if merged_rate_limit is None or ca.rate_limit_per_min < merged_rate_limit:
+                    if (
+                        merged_rate_limit is None
+                        or ca.rate_limit_per_min < merged_rate_limit
+                    ):
                         merged_rate_limit = ca.rate_limit_per_min
                 if ca.require_shadow:
                     merged_require_shadow = True
@@ -254,7 +261,11 @@ class ProductionQuorumEngine:
             final_decision=final_decision,
             votes=votes,
             quorum=QuorumInfo(
-                required=self.policy if self.policy in ("unanimous", "2of3", "simple", "bft") else "2of3",
+                required=(
+                    self.policy
+                    if self.policy in ("unanimous", "2of3", "simple", "bft")
+                    else "2of3"
+                ),
                 achieved=quorum_achieved,
                 voters=self.node_ids[:total],
             ),

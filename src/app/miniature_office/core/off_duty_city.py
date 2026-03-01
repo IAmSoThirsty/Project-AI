@@ -162,7 +162,11 @@ class AgentEmbodiment:
         """Update agent state and log activity"""
         self.current_state = new_state
         self.recent_activities.append(
-            {"timestamp": datetime.now().isoformat(), "state": new_state.value, "activity": activity}
+            {
+                "timestamp": datetime.now().isoformat(),
+                "state": new_state.value,
+                "activity": activity,
+            }
         )
 
         # Keep only recent 50 activities
@@ -210,10 +214,15 @@ class ResidentialDistrict:
             "district_id": self.district_id,
             "total_residents": len(self.residents),
             "average_morale": (
-                sum(r.morale for r in self.residents.values()) / len(self.residents) if self.residents else 0.0
+                sum(r.morale for r in self.residents.values()) / len(self.residents)
+                if self.residents
+                else 0.0
             ),
             "average_burnout": (
-                sum(r.burnout_level for r in self.residents.values()) / len(self.residents) if self.residents else 0.0
+                sum(r.burnout_level for r in self.residents.values())
+                / len(self.residents)
+                if self.residents
+                else 0.0
             ),
         }
 
@@ -320,7 +329,11 @@ class CityArchives:
     def visit(self, embodiment_id: str, purpose: str):
         """Agent visits archives"""
         self.visitors.append(
-            {"embodiment_id": embodiment_id, "purpose": purpose, "visited_at": datetime.now().isoformat()}
+            {
+                "embodiment_id": embodiment_id,
+                "purpose": purpose,
+                "visited_at": datetime.now().isoformat(),
+            }
         )
 
 
@@ -400,7 +413,12 @@ class VisualDecay:
     decay_records: List[Dict] = field(default_factory=list)
 
     def decay_reputation_visual(
-        self, agent_id: str, visual: ReputationVisual, awarded_tick: int, current_tick: int, half_life_ticks: int = 1000
+        self,
+        agent_id: str,
+        visual: ReputationVisual,
+        awarded_tick: int,
+        current_tick: int,
+        half_life_ticks: int = 1000,
     ) -> float:
         """
         Calculate decay factor for reputation visual
@@ -462,15 +480,28 @@ class CityFirewall:
         - user_directive (explicit)
         - board_meeting (formal)
         """
-        blocked_types = ["decision", "agreement", "consensus", "momentum", "social_pressure"]
+        blocked_types = [
+            "decision",
+            "agreement",
+            "consensus",
+            "momentum",
+            "social_pressure",
+        ]
 
         if crossing_type in blocked_types:
-            self.record_firewall_violation(source_agent, crossing_type, attempted_action)
-            return True, f"Blocked: {crossing_type} cannot cross from city to production"
+            self.record_firewall_violation(
+                source_agent, crossing_type, attempted_action
+            )
+            return (
+                True,
+                f"Blocked: {crossing_type} cannot cross from city to production",
+            )
 
         return False, "Allowed"
 
-    def record_firewall_violation(self, agent_id: str, crossing_type: str, description: str):
+    def record_firewall_violation(
+        self, agent_id: str, crossing_type: str, description: str
+    ):
         """Record firewall violation"""
         self.violations.append(
             {
@@ -521,8 +552,12 @@ class CityZoneManager:
         self.workshops.append(WorkshopStudio(workshop_id="workshop-001"))
 
         # Create transit gates
-        self.transit_gates.append(TransitGate(gate_id="gate-city-office", gate_type="city_to_office"))
-        self.transit_gates.append(TransitGate(gate_id="gate-city-sandbox", gate_type="city_to_sandbox"))
+        self.transit_gates.append(
+            TransitGate(gate_id="gate-city-office", gate_type="city_to_office")
+        )
+        self.transit_gates.append(
+            TransitGate(gate_id="gate-city-sandbox", gate_type="city_to_sandbox")
+        )
 
 
 # ============================================================================
@@ -547,7 +582,12 @@ class OffDutyCity:
     population: Dict[str, AgentEmbodiment] = field(default_factory=dict)
 
     def add_agent_to_city(
-        self, agent_id: str, agent_name: str, floor_origin: str, role: str, reputation_level: int = 0
+        self,
+        agent_id: str,
+        agent_name: str,
+        floor_origin: str,
+        role: str,
+        reputation_level: int = 0,
     ) -> str:
         """
         Add agent to off-duty city
@@ -566,7 +606,9 @@ class OffDutyCity:
             "sql": PixelColor.SQL_GREEN,
             "shell": PixelColor.SHELL_GRAY,
         }
-        color = color_map.get(floor_origin.lower().replace("floor-", ""), PixelColor.GENERIC_WHITE)
+        color = color_map.get(
+            floor_origin.lower().replace("floor-", ""), PixelColor.GENERIC_WHITE
+        )
 
         # Determine accessory from role
         accessory_map = {
@@ -581,7 +623,10 @@ class OffDutyCity:
 
         # Create pixel representation
         pixel = PixelRepresentation(
-            representation_id=f"pixel-{agent_id}", color=color, accessory=accessory, reputation_markers=[]
+            representation_id=f"pixel-{agent_id}",
+            color=color,
+            accessory=accessory,
+            reputation_markers=[],
         )
 
         # Add reputation markers based on level
@@ -615,36 +660,51 @@ class OffDutyCity:
         if embodiment_id in self.population:
             embodiment = self.population[embodiment_id]
             embodiment.update_state(
-                AgentOffDutyState.SOCIALIZING, f"Lounge conversation: {', '.join(conversation_topics)}"
+                AgentOffDutyState.SOCIALIZING,
+                f"Lounge conversation: {', '.join(conversation_topics)}",
             )
             embodiment.current_zone = CityZone.LOUNGE
             self.zone_manager.lounge.participants.append(embodiment_id)
 
-    def agent_visit_workshop(self, embodiment_id: str, project_type: str, project_description: str):
+    def agent_visit_workshop(
+        self, embodiment_id: str, project_type: str, project_description: str
+    ):
         """Agent visits workshop for tinkering"""
         if embodiment_id in self.population:
             embodiment = self.population[embodiment_id]
-            embodiment.update_state(AgentOffDutyState.TINKERING, f"Workshop: {project_description}")
+            embodiment.update_state(
+                AgentOffDutyState.TINKERING, f"Workshop: {project_description}"
+            )
             embodiment.current_zone = CityZone.WORKSHOP
-            self.zone_manager.workshops[0].start_project(embodiment_id, project_type, project_description)
+            self.zone_manager.workshops[0].start_project(
+                embodiment_id, project_type, project_description
+            )
 
     def agent_visit_archives(self, embodiment_id: str, purpose: str):
         """Agent visits archives"""
         if embodiment_id in self.population:
             embodiment = self.population[embodiment_id]
-            embodiment.update_state(AgentOffDutyState.REFLECTING, f"Archives: {purpose}")
+            embodiment.update_state(
+                AgentOffDutyState.REFLECTING, f"Archives: {purpose}"
+            )
             embodiment.current_zone = CityZone.ARCHIVES
             self.zone_manager.archives.visit(embodiment_id, purpose)
 
-    def agent_attend_plaza(self, embodiment_id: str, ceremony_type: str, ceremony_details: str):
+    def agent_attend_plaza(
+        self, embodiment_id: str, ceremony_type: str, ceremony_details: str
+    ):
         """Agent attends plaza ceremony"""
         if embodiment_id in self.population:
             embodiment = self.population[embodiment_id]
-            embodiment.update_state(AgentOffDutyState.ATTENDING_CEREMONY, f"Plaza: {ceremony_type}")
+            embodiment.update_state(
+                AgentOffDutyState.ATTENDING_CEREMONY, f"Plaza: {ceremony_type}"
+            )
             embodiment.current_zone = CityZone.PLAZA
             self.zone_manager.plaza.attendees.append(embodiment_id)
 
-    def cross_transit_gate(self, embodiment_id: str, destination: str, crossing_by: str, reason: str) -> Dict:
+    def cross_transit_gate(
+        self, embodiment_id: str, destination: str, crossing_by: str, reason: str
+    ) -> Dict:
         """Agent crosses transit gate to different zone"""
         if embodiment_id in self.population:
             embodiment = self.population[embodiment_id]
@@ -655,7 +715,9 @@ class OffDutyCity:
             gate.cross_gate(embodiment.agent_id, from_zone, destination, crossing_by)
 
             # Update agent state
-            embodiment.update_state(AgentOffDutyState.RESTING, f"Crossed gate to {destination}: {reason}")
+            embodiment.update_state(
+                AgentOffDutyState.RESTING, f"Crossed gate to {destination}: {reason}"
+            )
 
             return {
                 "success": True,
@@ -673,16 +735,36 @@ class OffDutyCity:
             "city_id": self.city_id,
             "total_population": len(self.population),
             "currently_resting": sum(
-                1 for e in self.population.values() if e.current_state == AgentOffDutyState.RESTING
+                1
+                for e in self.population.values()
+                if e.current_state == AgentOffDutyState.RESTING
             ),
             "currently_socializing": sum(
-                1 for e in self.population.values() if e.current_state == AgentOffDutyState.SOCIALIZING
+                1
+                for e in self.population.values()
+                if e.current_state == AgentOffDutyState.SOCIALIZING
             ),
-            "in_workshops": len(self.zone_manager.workshops[0].visitors) if self.zone_manager.workshops else 0,
-            "in_lounge": len(self.zone_manager.lounge.participants) if self.zone_manager.lounge else 0,
-            "in_archives": len(self.zone_manager.archives.visitors) if self.zone_manager.archives else 0,
-            "at_plaza": len(self.zone_manager.plaza.attendees) if self.zone_manager.plaza else 0,
-            "total_gate_crossings": sum(len(g.crossing_history) for g in self.zone_manager.transit_gates),
+            "in_workshops": (
+                len(self.zone_manager.workshops[0].visitors)
+                if self.zone_manager.workshops
+                else 0
+            ),
+            "in_lounge": (
+                len(self.zone_manager.lounge.participants)
+                if self.zone_manager.lounge
+                else 0
+            ),
+            "in_archives": (
+                len(self.zone_manager.archives.visitors)
+                if self.zone_manager.archives
+                else 0
+            ),
+            "at_plaza": (
+                len(self.zone_manager.plaza.attendees) if self.zone_manager.plaza else 0
+            ),
+            "total_gate_crossings": sum(
+                len(g.crossing_history) for g in self.zone_manager.transit_gates
+            ),
             "firewall_violations": len(self.city_firewall.violations),
         }
 
@@ -733,7 +815,10 @@ def get_off_duty_city() -> OffDutyCity:
         visual_decay = VisualDecay(decay_id="decay-001")
 
         _off_duty_city_instance = OffDutyCity(
-            city_id="city-001", zone_manager=zone_manager, city_firewall=city_firewall, visual_decay=visual_decay
+            city_id="city-001",
+            zone_manager=zone_manager,
+            city_firewall=city_firewall,
+            visual_decay=visual_decay,
         )
 
     return _off_duty_city_instance

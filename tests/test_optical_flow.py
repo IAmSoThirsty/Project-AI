@@ -128,7 +128,9 @@ class TestOpticalFlowDetector:
 
     def test_initialization_custom_params(self, temp_dir):
         """Test detector with custom parameters."""
-        detector = OpticalFlowDetector(data_dir=temp_dir, algorithm="lucas_kanade", sensitivity=0.8)
+        detector = OpticalFlowDetector(
+            data_dir=temp_dir, algorithm="lucas_kanade", sensitivity=0.8
+        )
 
         assert detector.algorithm == "lucas_kanade"
         assert detector.sensitivity == 0.8

@@ -31,7 +31,9 @@ class RecordTimestamps(BaseModel):
 
     received_at: str = Field(..., description="RFC 3339 — when request was received")
     decided_at: str = Field(..., description="RFC 3339 — when Cerberus decided")
-    committed_at: str = Field("", description="RFC 3339 — when canonical commit completed")
+    committed_at: str = Field(
+        "", description="RFC 3339 — when canonical commit completed"
+    )
 
     model_config = {"frozen": True}
 
@@ -59,7 +61,9 @@ class ExecutionRecord(BaseModel):
     inputs_hash: str = Field(..., description="SHA-256 of combined inputs")
     shadow_hash: str = Field("", description="SHA-256 of ShadowReport")
     decision_hash: str = Field(..., description="SHA-256 of CerberusDecision")
-    canonical_diff_hash: str = Field("", description="SHA-256 of applied canonical diff")
+    canonical_diff_hash: str = Field(
+        "", description="SHA-256 of applied canonical diff"
+    )
     result: str = Field(..., description="Final result: allow, deny, quarantine")
     timestamps: RecordTimestamps = Field(..., description="Lifecycle timestamps")
     signature: Signature = Field(..., description="Ledger validator signature")
@@ -76,7 +80,9 @@ class ExecutionRecord(BaseModel):
 class TimeProof(BaseModel):
     """Trusted timestamp proof for ledger block anchoring."""
 
-    method: str = Field("rfc3161", description="Timestamp method: rfc3161 or trusted_timestamp")
+    method: str = Field(
+        "rfc3161", description="Timestamp method: rfc3161 or trusted_timestamp"
+    )
     proof: str = Field("", description="Base64-encoded timestamp proof")
 
     model_config = {"frozen": True}

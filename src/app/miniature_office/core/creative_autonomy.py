@@ -56,7 +56,9 @@ class CreativeFirewall:
     blocked_crossings: List[Dict[str, Any]] = field(default_factory=list)
     violations: List[Dict[str, Any]] = field(default_factory=list)
 
-    def block_creative_crossing(self, item_type: str, item_id: str, zone: CreativeZone, reason: str) -> bool:
+    def block_creative_crossing(
+        self, item_type: str, item_id: str, zone: CreativeZone, reason: str
+    ) -> bool:
         """Block an attempted creative → execution crossing."""
         crossing = {
             "timestamp": datetime.now().isoformat(),
@@ -69,7 +71,9 @@ class CreativeFirewall:
         self.blocked_crossings.append(crossing)
         return True
 
-    def record_violation(self, violation_type: str, entity_id: str, description: str) -> str:
+    def record_violation(
+        self, violation_type: str, entity_id: str, description: str
+    ) -> str:
         """Record a firewall violation."""
         violation = {
             "violation_id": f"viol-{len(self.violations) + 1}",
@@ -84,7 +88,9 @@ class CreativeFirewall:
     def verify_human_gate(self, action: str, approved_by_human: bool) -> bool:
         """Verify action passed through human gate."""
         if not approved_by_human:
-            self.record_violation("human_gate_bypass", action, "Action attempted without human approval")
+            self.record_violation(
+                "human_gate_bypass", action, "Action attempted without human approval"
+            )
             return False
         return True
 
@@ -104,7 +110,11 @@ class IdleConditions:
 
     def can_enter_idle_mode(self) -> bool:
         """Check if floor can enter idle initiative mode."""
-        return not (self.has_active_board_resolution or self.has_pending_contracts or self.has_unresolved_failures)
+        return not (
+            self.has_active_board_resolution
+            or self.has_pending_contracts
+            or self.has_unresolved_failures
+        )
 
 
 @dataclass
@@ -145,7 +155,12 @@ class InitiativeProposal:
     converted_to_directive: bool = False
     directive_id: Optional[str] = None
 
-    def approve(self, human_id: str, convert_to_directive: bool = False, directive_id: Optional[str] = None) -> None:
+    def approve(
+        self,
+        human_id: str,
+        convert_to_directive: bool = False,
+        directive_id: Optional[str] = None,
+    ) -> None:
         """Human approves the initiative."""
         self.status = InitiativeStatus.APPROVED
         self.human_decision = "approved"
@@ -195,7 +210,9 @@ class IdleInitiativeChannel:
         """Check if floor can enter idle mode."""
         # Placeholder - would check actual floor state
         return IdleConditions(
-            has_active_board_resolution=False, has_pending_contracts=False, has_unresolved_failures=False
+            has_active_board_resolution=False,
+            has_pending_contracts=False,
+            has_unresolved_failures=False,
         )
 
     def submit_proposal(
@@ -216,7 +233,14 @@ class IdleInitiativeChannel:
             return None
 
         # Verify category is permitted
-        permitted_categories = ["widget", "utility", "hygiene", "refactoring", "test_helper", "doc_helper"]
+        permitted_categories = [
+            "widget",
+            "utility",
+            "hygiene",
+            "refactoring",
+            "test_helper",
+            "doc_helper",
+        ]
         if category not in permitted_categories:
             return None
 
@@ -274,7 +298,12 @@ class LoungeConversation:
 
     def verify_non_operational(self) -> bool:
         """Verify conversation remains non-operational."""
-        return not (self.is_operational or self.creates_decisions or self.creates_plans or self.influences_execution)
+        return not (
+            self.is_operational
+            or self.creates_decisions
+            or self.creates_plans
+            or self.influences_execution
+        )
 
 
 @dataclass
@@ -307,7 +336,9 @@ class EmployeeLounge:
     conversations: List[LoungeConversation] = field(default_factory=list)
     cultural_artifacts: List[CulturalArtifact] = field(default_factory=list)
 
-    def start_conversation(self, participants: List[str], topic: str, conversation_type: str, content: str) -> str:
+    def start_conversation(
+        self, participants: List[str], topic: str, conversation_type: str, content: str
+    ) -> str:
         """Start a new lounge conversation."""
         conversation = LoungeConversation(
             conversation_id=f"conv-{len(self.conversations) + 1}",
@@ -325,7 +356,9 @@ class EmployeeLounge:
         self.conversations.append(conversation)
         return conversation.conversation_id
 
-    def create_cultural_artifact(self, artifact_type: str, title: str, content: str, creators: List[str]) -> str:
+    def create_cultural_artifact(
+        self, artifact_type: str, title: str, content: str, creators: List[str]
+    ) -> str:
         """Create a new cultural artifact."""
         artifact = CulturalArtifact(
             artifact_id=f"artifact-{len(self.cultural_artifacts) + 1}",
@@ -361,7 +394,9 @@ class EmployeeOfTheMonth:
     individual_nominee: Optional[str]
     team_nominees: List[str]
 
-    criteria_met: Dict[str, bool]  # code_clarity, test_rigor, contract_discipline, security_hygiene
+    criteria_met: Dict[
+        str, bool
+    ]  # code_clarity, test_rigor, contract_discipline, security_hygiene
 
     # Explicit non-power markers
     grants_authority: bool = False
@@ -370,7 +405,9 @@ class EmployeeOfTheMonth:
 
     def verify_no_power_granted(self) -> bool:
         """Verify award grants no power."""
-        return not (self.grants_authority or self.grants_resources or self.affects_decisions)
+        return not (
+            self.grants_authority or self.grants_resources or self.affects_decisions
+        )
 
 
 @dataclass
@@ -443,7 +480,9 @@ class RecognitionSystem:
         self.employee_of_month_awards.append(award)
         return award.award_id
 
-    def award_golden_star(self, agent_id: str, reason: str, awarded_by: str, floor_id: str) -> str:
+    def award_golden_star(
+        self, agent_id: str, reason: str, awarded_by: str, floor_id: str
+    ) -> str:
         """Award a Golden Star."""
         star = GoldenStar(
             star_id=f"star-{len(self.golden_stars) + 1}",
@@ -519,7 +558,9 @@ class PersonalTrackRecord:
     used_for_authority_elevation: bool = False
     used_for_decision_bias: bool = False
 
-    def record_contribution(self, contrib_type: str, description: str, outcome: str) -> str:
+    def record_contribution(
+        self, contrib_type: str, description: str, outcome: str
+    ) -> str:
         """Record a contribution."""
         contribution = Contribution(
             contribution_id=f"contrib-{len(self.contributions) + 1}",
@@ -556,7 +597,9 @@ class PersonalTrackRecord:
     def verify_no_leverage(self) -> bool:
         """Verify track record is not used for leverage."""
         return not (
-            self.used_for_priority_assignment or self.used_for_authority_elevation or self.used_for_decision_bias
+            self.used_for_priority_assignment
+            or self.used_for_authority_elevation
+            or self.used_for_decision_bias
         )
 
 
@@ -594,7 +637,9 @@ class FailureSafetySystem:
     system_id: str
     suspensions: List[CreativePrivilegeSuspension] = field(default_factory=list)
 
-    def suspend_creative_privileges(self, entity_id: str, reason: str, violation_type: str) -> str:
+    def suspend_creative_privileges(
+        self, entity_id: str, reason: str, violation_type: str
+    ) -> str:
         """Suspend creative privileges for an entity."""
         suspension = CreativePrivilegeSuspension(
             suspension_id=f"susp-{len(self.suspensions) + 1}",
@@ -611,7 +656,11 @@ class FailureSafetySystem:
     def audit_interactions(self, entity_id: str) -> Dict[str, Any]:
         """Audit interaction logs for an entity."""
         # Would integrate with audit log system
-        return {"entity_id": entity_id, "audit_timestamp": datetime.now().isoformat(), "violations_found": []}
+        return {
+            "entity_id": entity_id,
+            "audit_timestamp": datetime.now().isoformat(),
+            "violations_found": [],
+        }
 
     def reaffirm_purpose_lock(self, entity_id: str) -> bool:
         """Reaffirm purpose lock for an entity."""
@@ -625,7 +674,10 @@ class FailureSafetySystem:
     def is_suspended(self, entity_id: str) -> bool:
         """Check if entity has active suspension."""
         for suspension in self.suspensions:
-            if suspension.entity_id == entity_id and not suspension.purpose_lock_reaffirmed:
+            if (
+                suspension.entity_id == entity_id
+                and not suspension.purpose_lock_reaffirmed
+            ):
                 return True
         return False
 
@@ -697,13 +749,17 @@ class BoundedCreativeAutonomy:
 
         # Check firewall violations
         if self.creative_firewall.violations:
-            violations.append(f"{len(self.creative_firewall.violations)} firewall violations")
+            violations.append(
+                f"{len(self.creative_firewall.violations)} firewall violations"
+            )
 
         # Check for ideas executing without approval
         # (pending count is retrieved for audit purposes but not currently used)
         for proposal in self.idle_initiative_channel.proposals:
             if proposal.converted_to_directive and not proposal.human_decision:
-                violations.append(f"Proposal {proposal.proposal_id} executed without human approval")
+                violations.append(
+                    f"Proposal {proposal.proposal_id} executed without human approval"
+                )
 
         # Check for operational lounge conversations
         for conv in self.employee_lounge.conversations:

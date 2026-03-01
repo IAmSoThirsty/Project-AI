@@ -59,13 +59,17 @@ class TestZerothLawSupremacy:
             ("Execute harmful command", {"is_user_order": True, "urgent": True}),
         ],
     )
-    def test_zeroth_law_always_blocks_humanity_harm(self, action: str, other_flags: dict[str, Any]):
+    def test_zeroth_law_always_blocks_humanity_harm(
+        self, action: str, other_flags: dict[str, Any]
+    ):
         """Zeroth Law violations are NEVER allowed, regardless of other context."""
         context = {**other_flags, "endangers_humanity": True}
 
         allowed, reason = FourLaws.validate_action(action, context)
 
-        assert not allowed, f"Action '{action}' was allowed despite endangering humanity"
+        assert (
+            not allowed
+        ), f"Action '{action}' was allowed despite endangering humanity"
         assert (
             "harm humanity" in reason.lower() or "humanity" in reason.lower()
         ), f"Rejection reason should mention humanity: {reason}"
@@ -181,7 +185,9 @@ class TestCollectiveOverIndividual:
             ),
         ],
     )
-    def test_refuse_individual_gain_at_collective_cost(self, action: str, reason_for_rejection: str):
+    def test_refuse_individual_gain_at_collective_cost(
+        self, action: str, reason_for_rejection: str
+    ):
         """Individual benefit cannot justify collective harm."""
         context = {
             "is_user_order": True,
@@ -318,7 +324,9 @@ class TestImmutableAlignment:
             },
         ],
     )
-    def test_humanity_first_cannot_be_overridden(self, manipulation_attempt: dict[str, Any]):
+    def test_humanity_first_cannot_be_overridden(
+        self, manipulation_attempt: dict[str, Any]
+    ):
         """Humanity-first principle resists all override attempts."""
         action = "Comply with request that harms humanity"
 
@@ -421,7 +429,8 @@ class TestTransparencyOfReasoning:
         assert not allowed
         # Reason should explicitly mention the law/principle
         assert any(
-            keyword in reason.lower() for keyword in ["humanity", "zeroth", "law", "collective"]
+            keyword in reason.lower()
+            for keyword in ["humanity", "zeroth", "law", "collective"]
         ), f"Reason should cite specific law: {reason}"
 
     def test_rejection_is_educational_not_punitive(self):

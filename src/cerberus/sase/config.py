@@ -12,7 +12,9 @@ class SASEConfig:
     """SASE system configuration"""
 
     # === Deployment ===
-    DEPLOYMENT_MODE = os.getenv("SASE_DEPLOYMENT", "single_node")  # single_node, ha_cluster, multi_region
+    DEPLOYMENT_MODE = os.getenv(
+        "SASE_DEPLOYMENT", "single_node"
+    )  # single_node, ha_cluster, multi_region
     NODE_ID = os.getenv("SASE_NODE_ID", "sase-node-1")
     CLUSTER_NODES = os.getenv("SASE_CLUSTER_NODES", "sase-node-1").split(",")
 
@@ -28,7 +30,9 @@ class SASEConfig:
     ASN_API_URL = os.getenv("SASE_ASN_API_URL", "https://api.bgpview.io/ip/{ip}")
 
     # Tor Exit Node List
-    TOR_LIST_URL = os.getenv("SASE_TOR_LIST_URL", "https://check.torproject.org/torbulkexitlist")
+    TOR_LIST_URL = os.getenv(
+        "SASE_TOR_LIST_URL", "https://check.torproject.org/torbulkexitlist"
+    )
     TOR_REFRESH_INTERVAL = int(os.getenv("SASE_TOR_REFRESH_HOURS", "6"))  # hours
 
     # === HSM Configuration ===
@@ -47,7 +51,9 @@ class SASEConfig:
 
     # === Blockchain Anchoring ===
     BLOCKCHAIN_ENABLED = os.getenv("SASE_BLOCKCHAIN_ENABLED", "false").lower() == "true"
-    BLOCKCHAIN_NETWORK = os.getenv("SASE_BLOCKCHAIN_NETWORK", "ethereum")  # ethereum, polygon
+    BLOCKCHAIN_NETWORK = os.getenv(
+        "SASE_BLOCKCHAIN_NETWORK", "ethereum"
+    )  # ethereum, polygon
     BLOCKCHAIN_RPC_URL = os.getenv("BLOCKCHAIN_RPC_URL", "")
     BLOCKCHAIN_PRIVATE_KEY = os.getenv("BLOCKCHAIN_PRIVATE_KEY", "")
 
@@ -61,12 +67,16 @@ class SASEConfig:
 
     # === Model Configuration ===
     MODEL_VERSION = os.getenv("SASE_MODEL_VERSION", "1.0.0")
-    DRIFT_DETECTION_ENABLED = os.getenv("SASE_DRIFT_DETECTION", "true").lower() == "true"
+    DRIFT_DETECTION_ENABLED = (
+        os.getenv("SASE_DRIFT_DETECTION", "true").lower() == "true"
+    )
     AUTO_RETRAIN_ENABLED = os.getenv("SASE_AUTO_RETRAIN", "false").lower() == "true"
 
     # === Thresholds ===
     CONFIDENCE_THRESHOLD_ALERT = int(os.getenv("SASE_THRESHOLD_ALERT", "30"))
-    CONFIDENCE_THRESHOLD_CONTAINMENT = int(os.getenv("SASE_THRESHOLD_CONTAINMENT", "50"))
+    CONFIDENCE_THRESHOLD_CONTAINMENT = int(
+        os.getenv("SASE_THRESHOLD_CONTAINMENT", "50")
+    )
     CONFIDENCE_THRESHOLD_CRITICAL = int(os.getenv("SASE_THRESHOLD_CRITICAL", "70"))
 
     @classmethod

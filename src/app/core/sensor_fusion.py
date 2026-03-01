@@ -975,9 +975,7 @@ class SensorFusionEngine(
             (
                 1.0
                 if s.health == SensorHealth.HEALTHY
-                else 0.5
-                if s.health == SensorHealth.DEGRADED
-                else 0.0
+                else 0.5 if s.health == SensorHealth.DEGRADED else 0.0
             )
             for s in self.sensors.values()
         ) / len(self.sensors)
@@ -988,9 +986,7 @@ class SensorFusionEngine(
             (
                 1.0
                 if current_time - s.last_seen < 5
-                else 0.5
-                if current_time - s.last_seen < 15
-                else 0.0
+                else 0.5 if current_time - s.last_seen < 15 else 0.0
             )
             for s in self.sensors.values()
         ) / len(self.sensors)

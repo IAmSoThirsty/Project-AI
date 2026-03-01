@@ -172,9 +172,9 @@ class TierPerformanceMonitor:
         self._slas = DEFAULT_SLAS.copy()
 
         # Performance tracking
-        self._active_requests: dict[
-            str, dict[str, float]
-        ] = {}  # request_id -> start_time
+        self._active_requests: dict[str, dict[str, float]] = (
+            {}
+        )  # request_id -> start_time
 
         logger.info("TierPerformanceMonitor initialized")
         logger.info("  Window size: %s samples", window_size)

@@ -53,12 +53,18 @@ class Permissions:
 
     # Action permissions
     TRIGGER_ANALYSIS = Permission("trigger_analysis", "Trigger manual analysis")
-    EXECUTE_CONTAINMENT = Permission("execute_containment", "Execute containment actions", reversible=True)
-    OVERRIDE_POLICY = Permission("override_policy", "Override policy decisions", reversible=False)
+    EXECUTE_CONTAINMENT = Permission(
+        "execute_containment", "Execute containment actions", reversible=True
+    )
+    OVERRIDE_POLICY = Permission(
+        "override_policy", "Override policy decisions", reversible=False
+    )
 
     # Admin permissions
     MODIFY_RULES = Permission("modify_rules", "Modify policy rules", reversible=False)
-    MANAGE_KEYS = Permission("manage_keys", "Manage cryptographic keys", reversible=False)
+    MANAGE_KEYS = Permission(
+        "manage_keys", "Manage cryptographic keys", reversible=False
+    )
     ACCESS_VAULT = Permission("access_vault", "Access evidence vault")
 
 
@@ -136,14 +142,21 @@ class MultiPartyApproval:
     def __init__(self):
         self.pending_requests: dict[str, ApprovalRequest] = {}
 
-    def request_approval(self, action: str, requestor: str, required_approvers: set[Role]) -> ApprovalRequest:
+    def request_approval(
+        self, action: str, requestor: str, required_approvers: set[Role]
+    ) -> ApprovalRequest:
         """Initiate approval request"""
         import hashlib
 
-        request_id = hashlib.sha256(f"{action}:{requestor}:{time.time()}".encode()).hexdigest()[:16]
+        request_id = hashlib.sha256(
+            f"{action}:{requestor}:{time.time()}".encode()
+        ).hexdigest()[:16]
 
         request = ApprovalRequest(
-            request_id=request_id, action=action, requestor=requestor, required_approvers=required_approvers
+            request_id=request_id,
+            action=action,
+            requestor=requestor,
+            required_approvers=required_approvers,
         )
 
         self.pending_requests[request_id] = request
@@ -218,7 +231,9 @@ class RBACEngine:
 
         return permission in user_perms
 
-    def require_approval(self, action: str, user_id: str, required_roles: set[Role]) -> ApprovalRequest:
+    def require_approval(
+        self, action: str, user_id: str, required_roles: set[Role]
+    ) -> ApprovalRequest:
         """Require multi-party approval"""
         return self.multi_party.request_approval(action, user_id, required_roles)
 

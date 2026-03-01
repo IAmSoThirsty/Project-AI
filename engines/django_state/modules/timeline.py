@@ -206,7 +206,9 @@ class TimelineModule:
 
         return True, None
 
-    def reconstruct_state_at_tick(self, target_tick: int, initial_state: StateVector) -> StateVector | None:
+    def reconstruct_state_at_tick(
+        self, target_tick: int, initial_state: StateVector
+    ) -> StateVector | None:
         """Reconstruct state at specific tick from timeline.
 
         Args:
@@ -253,7 +255,9 @@ class TimelineModule:
             return self.timeline[index]
         return None
 
-    def get_events_in_range(self, start_time: float, end_time: float) -> list[dict[str, Any]]:
+    def get_events_in_range(
+        self, start_time: float, end_time: float
+    ) -> list[dict[str, Any]]:
         """Get all events in time range.
 
         Args:
@@ -263,7 +267,11 @@ class TimelineModule:
         Returns:
             List of timeline entries
         """
-        return [entry for entry in self.timeline if start_time <= entry["timestamp"] <= end_time]
+        return [
+            entry
+            for entry in self.timeline
+            if start_time <= entry["timestamp"] <= end_time
+        ]
 
     def get_timeline_summary(self) -> dict[str, Any]:
         """Get timeline summary statistics.

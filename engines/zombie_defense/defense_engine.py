@@ -94,7 +94,9 @@ class DefenseEngine:
             Path(self.data_dir).mkdir(parents=True, exist_ok=True)
 
             # Bootstrap all subsystems
-            self.orchestrator = bootstrap_defense_engine(config_path=self.config_path, data_dir=self.data_dir)
+            self.orchestrator = bootstrap_defense_engine(
+                config_path=self.config_path, data_dir=self.data_dir
+            )
 
             self.registry = self.orchestrator.registry
 
@@ -267,7 +269,9 @@ class DefenseEngine:
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Project-AI God Tier Zombie Apocalypse Defense Engine")
+    parser = argparse.ArgumentParser(
+        description="Project-AI God Tier Zombie Apocalypse Defense Engine"
+    )
 
     parser.add_argument(
         "--config",
@@ -276,7 +280,9 @@ def main():
         help="Path to configuration file",
     )
 
-    parser.add_argument("--data-dir", type=str, default="data", help="Directory for persistent data")
+    parser.add_argument(
+        "--data-dir", type=str, default="data", help="Directory for persistent data"
+    )
 
     parser.add_argument(
         "--mode",

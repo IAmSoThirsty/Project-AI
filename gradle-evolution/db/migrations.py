@@ -263,13 +263,15 @@ class MigrationManager:
     def _update_version(self, conn: sqlite3.Connection, version: int) -> None:
         """Update schema version in database."""
         # Ensure schema_metadata table exists
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS schema_metadata (
                 key TEXT PRIMARY KEY,
                 value TEXT NOT NULL,
                 updated_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
-        """)
+        """
+        )
 
         conn.execute(
             "INSERT OR REPLACE INTO schema_metadata (key, value, updated_at) VALUES (?, ?, ?)",
@@ -277,14 +279,16 @@ class MigrationManager:
         )
 
         # Record migration in history
-        conn.execute("""
+        conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS migration_history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 version INTEGER NOT NULL,
                 description TEXT,
                 applied_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
-        """)
+        """
+        )
 
         migration = next((m for m in self.migrations if m.version == version), None)
         description = migration.description if migration else f"Version {version}"
@@ -298,11 +302,13 @@ class MigrationManager:
         """Get migration history."""
         try:
             with self._get_connection() as conn:
-                cursor = conn.execute("""
+                cursor = conn.execute(
+                    """
                     SELECT version, description, applied_at
                     FROM migration_history
                     ORDER BY version DESC
-                """)
+                """
+                )
                 return [
                     {
                         "version": row[0],
@@ -529,10 +535,12 @@ class MigrationManager:
                 safe_columns = sanitize_identifier_list(columns)
                 source_cols = dest_cols = ", ".join(safe_columns)
 
-            conn.execute(f"""
+            conn.execute(
+                f"""
                 INSERT INTO {safe_dest} ({dest_cols})
                 SELECT {source_cols} FROM {safe_source}
-            """)
+            """
+            )
 
             cursor = conn.execute("SELECT changes()")
             copied = cursor.fetchone()[0]

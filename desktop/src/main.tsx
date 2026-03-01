@@ -3,20 +3,21 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import './styles/sovereign_tokens.css';
 import App from './App';
 
 const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#7C7CFF',
+      main: '#6d28d9', // Cyber Purple
     },
     secondary: {
-      main: '#9D7CFF',
+      main: '#0d9488', // Cyber Teal
     },
     background: {
-      default: '#0B0E14',
-      paper: '#1E1E2E',
+      default: '#050505',
+      paper: 'rgba(20, 20, 25, 0.8)',
     },
     success: {
       main: '#4CAF50',
@@ -37,7 +38,7 @@ const theme = createTheme({
         root: {
           textTransform: 'none',
           borderRadius: 8,
-},
+        },
       },
     },
     MuiCard: {

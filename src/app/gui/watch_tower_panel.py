@@ -107,10 +107,14 @@ class SecurityStatsPanel(QFrame):
             output.append("SECURITY COMMAND CENTER")
             output.append("=" * 50)
             output.append("")
-            output.append(f"CHIEF OF SECURITY: {security_status.get('chief_of_security', 'Cerberus')}")
+            output.append(
+                f"CHIEF OF SECURITY: {security_status.get('chief_of_security', 'Cerberus')}"
+            )
             output.append("")
             output.append("OPERATIONAL STATISTICS:")
-            output.append(f"  Total Verifications: {stats.get('total_verifications', 0)}")
+            output.append(
+                f"  Total Verifications: {stats.get('total_verifications', 0)}"
+            )
             output.append(f"  Total Incidents: {stats.get('total_incidents', 0)}")
             output.append(f"  Active Quarantines: {stats.get('active_quarantines', 0)}")
             output.append(f"  Lockdown Events: {stats.get('lockdown_count', 0)}")
@@ -267,7 +271,8 @@ class EmergencyControlsPanel(QFrame):
 
         # Warning text
         warning = QLabel(
-            "⚠️ WARNING: These controls affect system-wide security.\n" "Use only in genuine emergency situations."
+            "⚠️ WARNING: These controls affect system-wide security.\n"
+            "Use only in genuine emergency situations."
         )
         warning.setStyleSheet(
             """

@@ -21,12 +21,13 @@ Project-AI has been upgraded to production-ready status with civilization-tier a
 └───────────────────────────────┬─────────────────────────────┘
                                 │
 ┌───────────────────────────────▼─────────────────────────────┐
-│                   Application Layer                          │
+│                   Application Layer (Floor 1)                │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐        │
-│  │  FastAPI    │  │   PyQt6     │  │  Temporal   │        │
-│  │  Backend    │  │  Desktop    │  │  Workflows  │        │
-│  └──────┬──────┘  └─────────────┘  └──────┬──────┘        │
-│         │                                   │                │
+│  │ Thirsty-Lang│  │  FastAPI    │  │   PyQt6     │        │
+│  │  Orchestrator│  │  Backend    │  │  Desktop    │        │
+│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘        │
+│         │                │                │                │
+│  - Floor 1 Governance (TSCG Ledger)        │                │
 │  - Health Checks (live/ready/startup)      │                │
 │  - Circuit Breakers                        │                │
 │  - OpenTelemetry Tracing                   │                │
@@ -324,7 +325,7 @@ Health Checks
 - **Replicas**: 1
 - **Resources**: 256Mi RAM, 100m CPU
 - **Features**: Debug mode, verbose logging
-- **URL**: http://localhost:5000
+- **URL**: <http://localhost:5000>
 
 ### Staging
 
@@ -332,7 +333,7 @@ Health Checks
 - **Replicas**: 2
 - **Resources**: 384Mi RAM, 200m CPU
 - **Features**: Production-like config, test data
-- **URL**: https://staging.project-ai.example.com
+- **URL**: <https://staging.project-ai.example.com>
 
 ### Production
 
@@ -340,7 +341,7 @@ Health Checks
 - **Replicas**: 5 (auto-scales to 10)
 - **Resources**: 2Gi RAM, 1 CPU
 - **Features**: Full monitoring, auto-rollback
-- **URL**: https://project-ai.example.com
+- **URL**: <https://project-ai.example.com>
 
 ## Operational Metrics
 

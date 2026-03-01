@@ -18,7 +18,12 @@ from datetime import datetime, timezone
 from typing import Any
 
 from psia.schemas.identity import Signature
-from psia.schemas.ledger import ExecutionRecord, LedgerBlock, RecordTimestamps, TimeProof
+from psia.schemas.ledger import (
+    ExecutionRecord,
+    LedgerBlock,
+    RecordTimestamps,
+    TimeProof,
+)
 from psia.waterfall.engine import StageDecision, StageResult, WaterfallStage
 
 logger = logging.getLogger(__name__)
@@ -77,7 +82,9 @@ class InMemoryLedger:
             ],
         )
         self._blocks.append(block)
-        logger.info("Sealed ledger block height=%d records=%d", height, len(hashes_to_seal))
+        logger.info(
+            "Sealed ledger block height=%d records=%d", height, len(hashes_to_seal)
+        )
         return block
 
     @property
@@ -156,7 +163,9 @@ class MemoryStage:
             if "cerberus_decision" in pr.metadata:
                 cd = pr.metadata["cerberus_decision"]
                 decision_hash = cd.compute_hash() if hasattr(cd, "compute_hash") else ""
-                final_result = cd.final_decision if hasattr(cd, "final_decision") else "allow"
+                final_result = (
+                    cd.final_decision if hasattr(cd, "final_decision") else "allow"
+                )
             if "canonical_diff_hash" in pr.metadata:
                 canonical_diff_hash = pr.metadata["canonical_diff_hash"]
 

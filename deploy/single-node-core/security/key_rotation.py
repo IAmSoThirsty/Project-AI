@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 class KeyRotationSchedule:
     """Key rotation schedule definitions."""
+
     DAILY = "daily"
     WEEKLY = "weekly"
     MONTHLY = "monthly"
@@ -53,7 +54,7 @@ class KeyRotationManager:
         schedule: str,
         key_type: str,
         generation_command: list[str],
-        notification_email: str | None = None
+        notification_email: str | None = None,
     ) -> dict:
         """
         Configure automatic rotation for a key.
@@ -77,7 +78,7 @@ class KeyRotationManager:
             "enabled": True,
             "last_rotation": None,
             "next_rotation": self._calculate_next_rotation(schedule),
-            "rotation_count": 0
+            "rotation_count": 0,
         }
 
         # Load existing config
@@ -99,9 +100,7 @@ class KeyRotationManager:
         return config
 
     def _calculate_next_rotation(
-        self,
-        schedule: str,
-        from_date: datetime | None = None
+        self, schedule: str, from_date: datetime | None = None
     ) -> str:
         """Calculate next rotation date."""
         if from_date is None:
@@ -161,10 +160,7 @@ class KeyRotationManager:
             import subprocess
 
             result = subprocess.run(
-                config["generation_command"],
-                capture_output=True,
-                text=True,
-                timeout=60
+                config["generation_command"], capture_output=True, text=True, timeout=60
             )
 
             if result.returncode != 0:
@@ -173,8 +169,7 @@ class KeyRotationManager:
             # Update config
             config["last_rotation"] = start_time.isoformat()
             config["next_rotation"] = self._calculate_next_rotation(
-                config["schedule"],
-                start_time
+                config["schedule"], start_time
             )
             config["rotation_count"] += 1
 
@@ -190,11 +185,13 @@ class KeyRotationManager:
                 "rotation_count": config["rotation_count"],
                 "forced": force,
                 "status": "success",
-                "execution_time_seconds": (datetime.now(UTC) - start_time).total_seconds()
+                "execution_time_seconds": (
+                    datetime.now(UTC) - start_time
+                ).total_seconds(),
             }
 
-            with open(self.history_file, 'a') as f:
-                f.write(json.dumps(history_entry) + '\n')
+            with open(self.history_file, "a") as f:
+                f.write(json.dumps(history_entry) + "\n")
 
             logger.info(f"✓ Key rotation successful for {key_name}")
             logger.info(f"  Rotation count: {config['rotation_count']}")
@@ -214,11 +211,11 @@ class KeyRotationManager:
                 "timestamp": start_time.isoformat(),
                 "key_name": key_name,
                 "status": "failed",
-                "error": str(e)
+                "error": str(e),
             }
 
-            with open(self.history_file, 'a') as f:
-                f.write(json.dumps(history_entry) + '\n')
+            with open(self.history_file, "a") as f:
+                f.write(json.dumps(history_entry) + "\n")
 
             raise
 
@@ -275,9 +272,7 @@ class KeyRotationManager:
         return results
 
     def get_rotation_history(
-        self,
-        key_name: str | None = None,
-        limit: int = 100
+        self, key_name: str | None = None, limit: int = 100
     ) -> list[dict]:
         """
         Get rotation history.
@@ -320,7 +315,9 @@ class KeyRotationManager:
         Args:
             check_interval_minutes: How often to check for rotations
         """
-        logger.info(f"Starting key rotation daemon (check interval: {check_interval_minutes}m)")
+        logger.info(
+            f"Starting key rotation daemon (check interval: {check_interval_minutes}m)"
+        )
         logger.info("Press Ctrl+C to stop")
 
         try:
@@ -330,10 +327,16 @@ class KeyRotationManager:
                 results = self.rotate_all_due()
 
                 if results:
-                    success = sum(1 for r in results.values() if r.get("status") == "success")
-                    failed = sum(1 for r in results.values() if r.get("status") == "failed")
+                    success = sum(
+                        1 for r in results.values() if r.get("status") == "success"
+                    )
+                    failed = sum(
+                        1 for r in results.values() if r.get("status") == "failed"
+                    )
 
-                    logger.info(f"Rotation complete: {success} succeeded, {failed} failed")
+                    logger.info(
+                        f"Rotation complete: {success} succeeded, {failed} failed"
+                    )
                 else:
                     logger.info("No rotations performed")
 
@@ -352,23 +355,29 @@ def main():
     parser.add_argument(
         "command",
         choices=["configure", "rotate", "check", "history", "daemon"],
-        help="Command to execute"
+        help="Command to execute",
     )
     parser.add_argument("--key-name", help="Key name")
     parser.add_argument(
         "--schedule",
         choices=["daily", "weekly", "monthly", "quarterly"],
-        help="Rotation schedule"
+        help="Rotation schedule",
     )
     parser.add_argument("--key-type", help="Key type")
-    parser.add_argument("--command", dest="gen_command", nargs="+", help="Generation command")
+    parser.add_argument(
+        "--command", dest="gen_command", nargs="+", help="Generation command"
+    )
     parser.add_argument("--force", action="store_true", help="Force rotation")
-    parser.add_argument("--interval", type=int, default=60, help="Daemon check interval (minutes)")
+    parser.add_argument(
+        "--interval", type=int, default=60, help="Daemon check interval (minutes)"
+    )
     parser.add_argument(
         "--rotation-dir",
         type=Path,
-        default=Path("/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/rotation"),
-        help="Rotation directory"
+        default=Path(
+            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/rotation"
+        ),
+        help="Rotation directory",
     )
 
     args = parser.parse_args()
@@ -380,10 +389,7 @@ def main():
             parser.error("--key-name, --schedule, --key-type, and --command required")
 
         manager.configure_rotation(
-            args.key_name,
-            args.schedule,
-            args.key_type,
-            args.gen_command
+            args.key_name, args.schedule, args.key_type, args.gen_command
         )
 
     elif args.command == "rotate":
@@ -405,7 +411,9 @@ def main():
         history = manager.get_rotation_history(args.key_name)
 
         for entry in history:
-            print(f"[{entry['timestamp']}] {entry.get('key_name', 'unknown')}: {entry.get('status', 'unknown')}")
+            print(
+                f"[{entry['timestamp']}] {entry.get('key_name', 'unknown')}: {entry.get('status', 'unknown')}"
+            )
 
     elif args.command == "daemon":
         manager.daemon_mode(args.interval)

@@ -190,7 +190,9 @@ class TestIrreversibilityLaws:
         laws = IrreversibilityLaws(config)
         state = StateVector.create_initial_state()
         initial_legitimacy = state.legitimacy.value
-        laws.apply_legitimacy_erosion(state, broken_promises=1, failures=1, visibility=0.5)
+        laws.apply_legitimacy_erosion(
+            state, broken_promises=1, failures=1, visibility=0.5
+        )
         assert state.legitimacy.value < initial_legitimacy
 
     def test_betrayal_probability(self):

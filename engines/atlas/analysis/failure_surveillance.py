@@ -19,7 +19,6 @@ from enum import Enum
 from typing import Any
 
 import numpy as np
-
 from atlas.audit.trail import get_audit_trail
 
 logger = logging.getLogger(__name__)

@@ -435,13 +435,17 @@ class DesignAnalysisResult:
     solid_violations: List[SOLIDViolation] = field(default_factory=list)
 
     # Design Smells (all detected)
-    design_smells: List[Tuple[DesignSmell, str, Tuple[int, int]]] = field(default_factory=list)
+    design_smells: List[Tuple[DesignSmell, str, Tuple[int, int]]] = field(
+        default_factory=list
+    )
 
     # Interface Analysis (complete)
     interfaces: List[InterfaceDesignAnalysis] = field(default_factory=list)
 
     # Cross-Cutting Concerns (all identified)
-    cross_cutting_concerns: Dict[CrossCuttingConcern, List[str]] = field(default_factory=dict)
+    cross_cutting_concerns: Dict[CrossCuttingConcern, List[str]] = field(
+        default_factory=dict
+    )
 
     # Invariants (all extracted)
     invariants: List[DesignInvariant] = field(default_factory=list)
@@ -620,11 +624,15 @@ class DesignAnalyzer:
 
         # Extract responsibilities from docstring
         if ast.get_docstring(class_node):
-            component.responsibilities = self._extract_responsibilities(ast.get_docstring(class_node))
+            component.responsibilities = self._extract_responsibilities(
+                ast.get_docstring(class_node)
+            )
 
         return component
 
-    def _analyze_function_component(self, func_node: ast.FunctionDef) -> ArchitecturalComponent:
+    def _analyze_function_component(
+        self, func_node: ast.FunctionDef
+    ) -> ArchitecturalComponent:
         """Analyze top-level function as component"""
         component = ArchitecturalComponent(
             name=func_node.name,
@@ -640,11 +648,15 @@ class DesignAnalyzer:
 
         if any(x in name_lower for x in ["view", "ui", "widget", "screen"]):
             return ComponentType.PRESENTATION
-        elif any(x in name_lower for x in ["service", "manager", "controller", "handler"]):
+        elif any(
+            x in name_lower for x in ["service", "manager", "controller", "handler"]
+        ):
             return ComponentType.BUSINESS_LOGIC
         elif any(x in name_lower for x in ["repository", "dao", "database", "store"]):
             return ComponentType.DATA_ACCESS
-        elif any(x in name_lower for x in ["adapter", "client", "gateway", "connector"]):
+        elif any(
+            x in name_lower for x in ["adapter", "client", "gateway", "connector"]
+        ):
             return ComponentType.INTEGRATION
         elif any(x in name_lower for x in ["util", "helper", "tool"]):
             return ComponentType.UTILITY
@@ -764,7 +776,10 @@ class DesignAnalyzer:
                 # Check for __new__ override or _instance class variable
                 has_instance_var = any(
                     isinstance(n, ast.Assign)
-                    and any(isinstance(t, ast.Name) and t.id.startswith("_instance") for t in n.targets)
+                    and any(
+                        isinstance(t, ast.Name) and t.id.startswith("_instance")
+                        for t in n.targets
+                    )
                     for n in node.body
                 )
 
@@ -773,9 +788,15 @@ class DesignAnalyzer:
                         pattern=DesignPattern.SINGLETON,
                         confidence=0.8,
                         participants={"singleton": node.name},
-                        location=(node.lineno, getattr(node, "end_lineno", node.lineno)),
+                        location=(
+                            node.lineno,
+                            getattr(node, "end_lineno", node.lineno),
+                        ),
                         quality_score=0.75,
-                        evidence=["Class variable _instance found", "Private constructor pattern"],
+                        evidence=[
+                            "Class variable _instance found",
+                            "Private constructor pattern",
+                        ],
                     )
                     self.result.detected_patterns.append(pattern)
 
@@ -789,7 +810,10 @@ class DesignAnalyzer:
                         pattern=DesignPattern.FACTORY_METHOD,
                         confidence=0.7,
                         participants={"factory": node.name},
-                        location=(node.lineno, getattr(node, "end_lineno", node.lineno)),
+                        location=(
+                            node.lineno,
+                            getattr(node, "end_lineno", node.lineno),
+                        ),
                         quality_score=0.7,
                         evidence=["Factory naming convention"],
                     )
@@ -816,9 +840,9 @@ class DesignAnalyzer:
 
         # Average cohesion across all components
         if self.result.components:
-            metrics.cohesion = sum(c.cohesion_score for c in self.result.components.values()) / len(
-                self.result.components
-            )
+            metrics.cohesion = sum(
+                c.cohesion_score for c in self.result.components.values()
+            ) / len(self.result.components)
 
         # Calculate coupling (total dependencies / possible dependencies)
         total_deps = sum(len(c.dependencies) for c in self.result.components.values())
@@ -827,11 +851,15 @@ class DesignAnalyzer:
 
         # Complexity (average lines of code per component)
         if self.result.components:
-            avg_loc = sum(c.lines_of_code for c in self.result.components.values()) / len(self.result.components)
+            avg_loc = sum(
+                c.lines_of_code for c in self.result.components.values()
+            ) / len(self.result.components)
             metrics.complexity = min(avg_loc / 100.0, 1.0)  # Normalize to 0-1
 
         # Maintainability index (simplified)
-        metrics.maintainability_index = (1.0 - metrics.coupling) * 100 * metrics.cohesion
+        metrics.maintainability_index = (
+            (1.0 - metrics.coupling) * 100 * metrics.cohesion
+        )
 
         # Testability (inverse of coupling)
         metrics.testability_score = 1.0 - metrics.coupling
@@ -925,7 +953,11 @@ class DesignAnalyzer:
         cycles = self._detect_circular_dependencies()
         for cycle in cycles:
             self.result.design_smells.append(
-                (DesignSmell.CIRCULAR_DEPENDENCY, f"Circular dependency detected: {' -> '.join(cycle)}", (0, 0))
+                (
+                    DesignSmell.CIRCULAR_DEPENDENCY,
+                    f"Circular dependency detected: {' -> '.join(cycle)}",
+                    (0, 0),
+                )
             )
 
     def _detect_circular_dependencies(self) -> List[List[str]]:
@@ -987,13 +1019,21 @@ class DesignAnalyzer:
                 if isinstance(node.func, ast.Attribute):
                     if node.func.attr in ["log", "info", "debug", "warning", "error"]:
                         logging_components.append("logging")
-                    elif node.func.attr in ["authenticate", "authorize", "check_permission"]:
+                    elif node.func.attr in [
+                        "authenticate",
+                        "authorize",
+                        "check_permission",
+                    ]:
                         security_components.append("security")
 
         if logging_components:
-            self.result.cross_cutting_concerns[CrossCuttingConcern.LOGGING] = list(set(logging_components))
+            self.result.cross_cutting_concerns[CrossCuttingConcern.LOGGING] = list(
+                set(logging_components)
+            )
         if security_components:
-            self.result.cross_cutting_concerns[CrossCuttingConcern.SECURITY] = list(set(security_components))
+            self.result.cross_cutting_concerns[CrossCuttingConcern.SECURITY] = list(
+                set(security_components)
+            )
 
     def _extract_invariants(self, ast_root: Any) -> None:
         """Extract ALL design invariants"""
@@ -1095,15 +1135,23 @@ class DesignAnalyzer:
                 for item in node.body:
                     if isinstance(item, ast.FunctionDef):
                         for decorator in item.decorator_list:
-                            if isinstance(decorator, ast.Name) and decorator.id == "abstractmethod":
+                            if (
+                                isinstance(decorator, ast.Name)
+                                and decorator.id == "abstractmethod"
+                            ):
                                 has_abstract_methods = True
                                 break
-                            elif isinstance(decorator, ast.Attribute) and decorator.attr == "abstractmethod":
+                            elif (
+                                isinstance(decorator, ast.Attribute)
+                                and decorator.attr == "abstractmethod"
+                            ):
                                 has_abstract_methods = True
                                 break
 
                 if is_abstract or has_abstract_methods:
-                    self.result.extension_points.append(f"{node.name} (abstract base class)")
+                    self.result.extension_points.append(
+                        f"{node.name} (abstract base class)"
+                    )
                     self.result.plugin_architecture = True
 
     def _calculate_summary_statistics(self) -> None:
@@ -1111,7 +1159,9 @@ class DesignAnalyzer:
         self.result.total_patterns = len(self.result.detected_patterns)
         self.result.total_components = len(self.result.components)
         self.result.total_interactions = len(self.result.interactions)
-        self.result.total_violations = len(self.result.solid_violations) + len(self.result.design_smells)
+        self.result.total_violations = len(self.result.solid_violations) + len(
+            self.result.design_smells
+        )
 
         # Overall design score (0.0 to 1.0)
         if self.result.quality_metrics:
@@ -1120,9 +1170,13 @@ class DesignAnalyzer:
                 1.0 - self.result.quality_metrics.coupling,
                 self.result.quality_metrics.maintainability_index / 100.0,
                 self.result.quality_metrics.testability_score,
-                1.0 - (self.result.total_violations / max(self.result.total_components, 1)) / 10.0,
+                1.0
+                - (self.result.total_violations / max(self.result.total_components, 1))
+                / 10.0,
             ]
-            self.result.overall_design_score = sum(score_components) / len(score_components)
+            self.result.overall_design_score = sum(score_components) / len(
+                score_components
+            )
 
     def generate_report(self) -> Dict[str, Any]:
         """
@@ -1184,18 +1238,40 @@ class DesignAnalyzer:
                 ],
             },
             "quality_metrics": {
-                "cohesion": self.result.quality_metrics.cohesion if self.result.quality_metrics else 0.0,
-                "coupling": self.result.quality_metrics.coupling if self.result.quality_metrics else 0.0,
-                "complexity": self.result.quality_metrics.complexity if self.result.quality_metrics else 0.0,
-                "maintainability_index": (
-                    self.result.quality_metrics.maintainability_index if self.result.quality_metrics else 0.0
+                "cohesion": (
+                    self.result.quality_metrics.cohesion
+                    if self.result.quality_metrics
+                    else 0.0
                 ),
-                "testability": self.result.quality_metrics.testability_score if self.result.quality_metrics else 0.0,
+                "coupling": (
+                    self.result.quality_metrics.coupling
+                    if self.result.quality_metrics
+                    else 0.0
+                ),
+                "complexity": (
+                    self.result.quality_metrics.complexity
+                    if self.result.quality_metrics
+                    else 0.0
+                ),
+                "maintainability_index": (
+                    self.result.quality_metrics.maintainability_index
+                    if self.result.quality_metrics
+                    else 0.0
+                ),
+                "testability": (
+                    self.result.quality_metrics.testability_score
+                    if self.result.quality_metrics
+                    else 0.0
+                ),
                 "extensibility": (
-                    self.result.quality_metrics.extensibility_score if self.result.quality_metrics else 0.0
+                    self.result.quality_metrics.extensibility_score
+                    if self.result.quality_metrics
+                    else 0.0
                 ),
                 "understandability": (
-                    self.result.quality_metrics.understandability_score if self.result.quality_metrics else 0.0
+                    self.result.quality_metrics.understandability_score
+                    if self.result.quality_metrics
+                    else 0.0
                 ),
             },
             "solid_violations": [
@@ -1214,7 +1290,8 @@ class DesignAnalyzer:
                 for smell, desc, loc in self.result.design_smells
             ],
             "cross_cutting_concerns": {
-                concern.value: components for concern, components in self.result.cross_cutting_concerns.items()
+                concern.value: components
+                for concern, components in self.result.cross_cutting_concerns.items()
             },
             "invariants": [
                 {

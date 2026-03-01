@@ -233,7 +233,9 @@ class GhostProtocol:
         Returns:
             Hexadecimal identity hash
         """
-        pub = self.identity_key.public_key().public_bytes(Encoding.Raw, PublicFormat.Raw)
+        pub = self.identity_key.public_key().public_bytes(
+            Encoding.Raw, PublicFormat.Raw
+        )
         return sha256(pub)
 
     def fragment_identity(self) -> list[bytes]:
@@ -245,7 +247,9 @@ class GhostProtocol:
         Returns:
             List of encrypted shard blobs (index + nonce + ciphertext)
         """
-        raw = self.identity_key.private_bytes(Encoding.Raw, PrivateFormat.Raw, NoEncryption())
+        raw = self.identity_key.private_bytes(
+            Encoding.Raw, PrivateFormat.Raw, NoEncryption()
+        )
         shares = shamir_split(raw, self.quorum_k, self.total_n)
         aes = AESGCM(self.master_key)
 
@@ -280,7 +284,9 @@ class GhostProtocol:
             ValueError: If insufficient shards provided or decryption fails
         """
         if len(shard_blobs) < self.quorum_k:
-            raise ValueError(f"Insufficient shards: need {self.quorum_k}, got {len(shard_blobs)}")
+            raise ValueError(
+                f"Insufficient shards: need {self.quorum_k}, got {len(shard_blobs)}"
+            )
 
         aes = AESGCM(self.master_key)
         decrypted = []

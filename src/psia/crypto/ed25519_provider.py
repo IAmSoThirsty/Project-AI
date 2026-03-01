@@ -30,7 +30,6 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
-
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import (
     Ed25519PrivateKey,
@@ -186,9 +185,7 @@ class Ed25519Provider:
         WARNING: This exports the raw private key bytes. Handle with care.
         In production, private keys should be managed by HSM/KMS.
         """
-        raw = private_key.private_bytes(
-            Encoding.Raw, PrivateFormat.Raw, NoEncryption()
-        )
+        raw = private_key.private_bytes(Encoding.Raw, PrivateFormat.Raw, NoEncryption())
         return raw.hex()
 
     @staticmethod
@@ -212,9 +209,7 @@ class Ed25519Provider:
         """
         raw = bytes.fromhex(public_key_hex)
         if len(raw) != 32:
-            raise ValueError(
-                f"Ed25519 public key must be 32 bytes, got {len(raw)}"
-            )
+            raise ValueError(f"Ed25519 public key must be 32 bytes, got {len(raw)}")
         return Ed25519PublicKey.from_public_bytes(raw)
 
     @staticmethod
@@ -232,9 +227,7 @@ class Ed25519Provider:
         """
         raw = bytes.fromhex(private_key_hex)
         if len(raw) != 32:
-            raise ValueError(
-                f"Ed25519 private key must be 32 bytes, got {len(raw)}"
-            )
+            raise ValueError(f"Ed25519 private key must be 32 bytes, got {len(raw)}")
         return Ed25519PrivateKey.from_private_bytes(raw)
 
     @staticmethod
@@ -315,9 +308,7 @@ class KeyStore:
             raise KeyError(f"No key registered for component: {component}")
         return Ed25519Provider.sign(pair.private_key, data)
 
-    def verify_from(
-        self, component: str, signature_hex: str, data: bytes
-    ) -> bool:
+    def verify_from(self, component: str, signature_hex: str, data: bytes) -> bool:
         """Verify a signature using a registered component's public key.
 
         Returns False if the component is not registered or signature is invalid.
@@ -343,9 +334,7 @@ class KeyStore:
         Returns:
             Dict mapping component name → public key hex.
         """
-        return {
-            name: pair.public_key_hex for name, pair in self._keys.items()
-        }
+        return {name: pair.public_key_hex for name, pair in self._keys.items()}
 
 
 __all__ = [

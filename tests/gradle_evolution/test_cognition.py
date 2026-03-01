@@ -85,7 +85,9 @@ class TestBuildCognitionEngine:
         # Should update patterns
         assert build_id in engine.build_patterns or len(engine.optimization_history) > 0
 
-    def test_get_optimization_stats(self, mock_deliberation_engine, sample_build_context):
+    def test_get_optimization_stats(
+        self, mock_deliberation_engine, sample_build_context
+    ):
         """Test retrieving optimization statistics."""
         engine = BuildCognitionEngine(mock_deliberation_engine)
 
@@ -114,7 +116,9 @@ class TestBuildCognitionEngine:
                 "gradle_evolution.cognition.build_cognition.check_boundary",
                 return_value=True,
             ),
-            patch.object(engine, "_validate_task_order", return_value=False) as mock_validate,
+            patch.object(
+                engine, "_validate_task_order", return_value=False
+            ) as mock_validate,
         ):
             optimized, reasoning = engine.deliberate_build_plan(tasks, context)
 
@@ -128,7 +132,9 @@ class TestBuildCognitionEngine:
         engine = BuildCognitionEngine(mock_deliberation_engine)
 
         # Make deliberation raise error
-        mock_deliberation_engine.deliberate.side_effect = Exception("Deliberation error")
+        mock_deliberation_engine.deliberate.side_effect = Exception(
+            "Deliberation error"
+        )
 
         tasks = ["clean", "compile"]
         context = {}

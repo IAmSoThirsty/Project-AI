@@ -22,7 +22,9 @@ class RunnerCommand:
     template: str
     priority: int = 3
 
-    def render(self, files: list[str] | None = None, test_files: list[str] | None = None) -> str:
+    def render(
+        self, files: list[str] | None = None, test_files: list[str] | None = None
+    ) -> str:
         """Render the command template with file lists."""
         cmd = self.template
         if files:
@@ -83,7 +85,9 @@ def _parse_runner(name: str, raw: dict[str, Any]) -> Runner:
     commands = []
     for cmd_name, cmd_template in raw_commands.items():
         priority = raw_priorities.get(cmd_name, 3)
-        commands.append(RunnerCommand(name=cmd_name, template=cmd_template, priority=priority))
+        commands.append(
+            RunnerCommand(name=cmd_name, template=cmd_template, priority=priority)
+        )
 
     return Runner(
         name=name,

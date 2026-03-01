@@ -90,18 +90,22 @@ class PlaneContract:
 
 CANONICAL_CONTRACT = PlaneContract(
     plane=Plane.CANONICAL,
-    allowed_capabilities=frozenset({
-        PlaneCapability.READ_CANONICAL,
-        PlaneCapability.WRITE_CANONICAL,
-        PlaneCapability.APPEND_LEDGER,
-        PlaneCapability.ISSUE_TOKEN,
-        PlaneCapability.REVOKE_IDENTITY,
-    }),
-    forbidden_capabilities=frozenset({
-        PlaneCapability.ACCEPT_REQUEST,
-        PlaneCapability.ENFORCE_CONTAINMENT,
-        PlaneCapability.EMIT_PROPOSAL,
-    }),
+    allowed_capabilities=frozenset(
+        {
+            PlaneCapability.READ_CANONICAL,
+            PlaneCapability.WRITE_CANONICAL,
+            PlaneCapability.APPEND_LEDGER,
+            PlaneCapability.ISSUE_TOKEN,
+            PlaneCapability.REVOKE_IDENTITY,
+        }
+    ),
+    forbidden_capabilities=frozenset(
+        {
+            PlaneCapability.ACCEPT_REQUEST,
+            PlaneCapability.ENFORCE_CONTAINMENT,
+            PlaneCapability.EMIT_PROPOSAL,
+        }
+    ),
     storage_mode=StorageMode.READ_WRITE,
     network_access=NetworkAccess.GATE_ONLY,
     description="Authoritative state store; only Gate Plane can invoke mutations",
@@ -109,20 +113,24 @@ CANONICAL_CONTRACT = PlaneContract(
 
 SHADOW_CONTRACT = PlaneContract(
     plane=Plane.SHADOW,
-    allowed_capabilities=frozenset({
-        PlaneCapability.FETCH_SNAPSHOT,
-        PlaneCapability.READ_SHADOW,
-        PlaneCapability.WRITE_SHADOW,
-        PlaneCapability.STREAM_TELEMETRY,
-    }),
-    forbidden_capabilities=frozenset({
-        PlaneCapability.WRITE_CANONICAL,
-        PlaneCapability.APPEND_LEDGER,
-        PlaneCapability.SIGN_DECISION,
-        PlaneCapability.ISSUE_TOKEN,
-        PlaneCapability.REVOKE_IDENTITY,
-        PlaneCapability.ENFORCE_CONTAINMENT,
-    }),
+    allowed_capabilities=frozenset(
+        {
+            PlaneCapability.FETCH_SNAPSHOT,
+            PlaneCapability.READ_SHADOW,
+            PlaneCapability.WRITE_SHADOW,
+            PlaneCapability.STREAM_TELEMETRY,
+        }
+    ),
+    forbidden_capabilities=frozenset(
+        {
+            PlaneCapability.WRITE_CANONICAL,
+            PlaneCapability.APPEND_LEDGER,
+            PlaneCapability.SIGN_DECISION,
+            PlaneCapability.ISSUE_TOKEN,
+            PlaneCapability.REVOKE_IDENTITY,
+            PlaneCapability.ENFORCE_CONTAINMENT,
+        }
+    ),
     storage_mode=StorageMode.READ_ONLY,
     network_access=NetworkAccess.INTERNAL_ONLY,
     description="Read-only canonical snapshot + local shadow diffs; never writes to canonical",
@@ -130,20 +138,24 @@ SHADOW_CONTRACT = PlaneContract(
 
 ADAPTIVE_CONTRACT = PlaneContract(
     plane=Plane.ADAPTIVE,
-    allowed_capabilities=frozenset({
-        PlaneCapability.READ_LEDGER,
-        PlaneCapability.READ_SHADOW,
-        PlaneCapability.EMIT_PROPOSAL,
-        PlaneCapability.STREAM_TELEMETRY,
-    }),
-    forbidden_capabilities=frozenset({
-        PlaneCapability.WRITE_CANONICAL,
-        PlaneCapability.APPEND_LEDGER,
-        PlaneCapability.SIGN_DECISION,
-        PlaneCapability.ENFORCE_CONTAINMENT,
-        PlaneCapability.ISSUE_TOKEN,
-        PlaneCapability.REVOKE_IDENTITY,
-    }),
+    allowed_capabilities=frozenset(
+        {
+            PlaneCapability.READ_LEDGER,
+            PlaneCapability.READ_SHADOW,
+            PlaneCapability.EMIT_PROPOSAL,
+            PlaneCapability.STREAM_TELEMETRY,
+        }
+    ),
+    forbidden_capabilities=frozenset(
+        {
+            PlaneCapability.WRITE_CANONICAL,
+            PlaneCapability.APPEND_LEDGER,
+            PlaneCapability.SIGN_DECISION,
+            PlaneCapability.ENFORCE_CONTAINMENT,
+            PlaneCapability.ISSUE_TOKEN,
+            PlaneCapability.REVOKE_IDENTITY,
+        }
+    ),
     storage_mode=StorageMode.APPEND_ONLY,
     network_access=NetworkAccess.INTERNAL_ONLY,
     description="Emits proposals only; cannot directly modify governance or canonical state",
@@ -151,18 +163,22 @@ ADAPTIVE_CONTRACT = PlaneContract(
 
 GATE_CONTRACT = PlaneContract(
     plane=Plane.GATE,
-    allowed_capabilities=frozenset({
-        PlaneCapability.READ_CANONICAL,
-        PlaneCapability.READ_LEDGER,
-        PlaneCapability.SIGN_DECISION,
-        PlaneCapability.READ_SHADOW,
-    }),
-    forbidden_capabilities=frozenset({
-        PlaneCapability.WRITE_SHADOW,
-        PlaneCapability.ENFORCE_CONTAINMENT,
-        PlaneCapability.EMIT_PROPOSAL,
-        PlaneCapability.ACCEPT_REQUEST,
-    }),
+    allowed_capabilities=frozenset(
+        {
+            PlaneCapability.READ_CANONICAL,
+            PlaneCapability.READ_LEDGER,
+            PlaneCapability.SIGN_DECISION,
+            PlaneCapability.READ_SHADOW,
+        }
+    ),
+    forbidden_capabilities=frozenset(
+        {
+            PlaneCapability.WRITE_SHADOW,
+            PlaneCapability.ENFORCE_CONTAINMENT,
+            PlaneCapability.EMIT_PROPOSAL,
+            PlaneCapability.ACCEPT_REQUEST,
+        }
+    ),
     storage_mode=StorageMode.READ_WRITE,
     network_access=NetworkAccess.INTERNAL_ONLY,
     description="Triple-head evaluation; only plane that can call CommitCoordinator",
@@ -170,19 +186,23 @@ GATE_CONTRACT = PlaneContract(
 
 REFLEX_CONTRACT = PlaneContract(
     plane=Plane.REFLEX,
-    allowed_capabilities=frozenset({
-        PlaneCapability.ENFORCE_CONTAINMENT,
-        PlaneCapability.STREAM_TELEMETRY,
-    }),
-    forbidden_capabilities=frozenset({
-        PlaneCapability.WRITE_CANONICAL,
-        PlaneCapability.APPEND_LEDGER,
-        PlaneCapability.SIGN_DECISION,
-        PlaneCapability.EMIT_PROPOSAL,
-        PlaneCapability.ISSUE_TOKEN,
-        PlaneCapability.REVOKE_IDENTITY,
-        PlaneCapability.COMPILE_POLICY,
-    }),
+    allowed_capabilities=frozenset(
+        {
+            PlaneCapability.ENFORCE_CONTAINMENT,
+            PlaneCapability.STREAM_TELEMETRY,
+        }
+    ),
+    forbidden_capabilities=frozenset(
+        {
+            PlaneCapability.WRITE_CANONICAL,
+            PlaneCapability.APPEND_LEDGER,
+            PlaneCapability.SIGN_DECISION,
+            PlaneCapability.EMIT_PROPOSAL,
+            PlaneCapability.ISSUE_TOKEN,
+            PlaneCapability.REVOKE_IDENTITY,
+            PlaneCapability.COMPILE_POLICY,
+        }
+    ),
     storage_mode=StorageMode.APPEND_ONLY,
     network_access=NetworkAccess.TELEMETRY_EXPORT,
     description="Kernel-level containment (eBPF/LSM); cannot legislate or mutate governance",
@@ -190,19 +210,23 @@ REFLEX_CONTRACT = PlaneContract(
 
 INGRESS_CONTRACT = PlaneContract(
     plane=Plane.INGRESS,
-    allowed_capabilities=frozenset({
-        PlaneCapability.ACCEPT_REQUEST,
-        PlaneCapability.READ_CANONICAL,
-        PlaneCapability.COMPILE_POLICY,
-    }),
-    forbidden_capabilities=frozenset({
-        PlaneCapability.WRITE_CANONICAL,
-        PlaneCapability.APPEND_LEDGER,
-        PlaneCapability.SIGN_DECISION,
-        PlaneCapability.ENFORCE_CONTAINMENT,
-        PlaneCapability.EMIT_PROPOSAL,
-        PlaneCapability.ISSUE_TOKEN,
-    }),
+    allowed_capabilities=frozenset(
+        {
+            PlaneCapability.ACCEPT_REQUEST,
+            PlaneCapability.READ_CANONICAL,
+            PlaneCapability.COMPILE_POLICY,
+        }
+    ),
+    forbidden_capabilities=frozenset(
+        {
+            PlaneCapability.WRITE_CANONICAL,
+            PlaneCapability.APPEND_LEDGER,
+            PlaneCapability.SIGN_DECISION,
+            PlaneCapability.ENFORCE_CONTAINMENT,
+            PlaneCapability.EMIT_PROPOSAL,
+            PlaneCapability.ISSUE_TOKEN,
+        }
+    ),
     storage_mode=StorageMode.NONE,
     network_access=NetworkAccess.EDGE_FACING,
     description="Stateless edge-facing ingress; mTLS, WAF-like prechecks",

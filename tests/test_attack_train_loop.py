@@ -50,7 +50,12 @@ class TestTrainingEpoch:
 class TestAttackDefenseCycle:
     def test_cycle_returns_expected_keys(self):
         loop = AttackTrainLoop()
-        attack = {"id": "test-1", "type": "evasion", "severity": 0.5, "vector": "api_endpoint"}
+        attack = {
+            "id": "test-1",
+            "type": "evasion",
+            "severity": 0.5,
+            "vector": "api_endpoint",
+        }
         result = loop.execute_attack_defense_cycle(attack, {})
         assert "attack_id" in result
         assert "attack_blocked" in result

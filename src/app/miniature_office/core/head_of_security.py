@@ -166,7 +166,9 @@ class SecurityAudit:
             "recommendations": self.recommendations,
             "threat_level": self.threat_level.value,
             "started_at": self.started_at.isoformat(),
-            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "completed_at": (
+                self.completed_at.isoformat() if self.completed_at else None
+            ),
             "is_complete": self.completed_at is not None,
         }
 
@@ -218,7 +220,9 @@ class BlockedDelivery:
             "reason": self.reason,
             "required_mitigations": self.required_mitigations,
             "blocked_at": self.blocked_at.isoformat(),
-            "unblocked_at": self.unblocked_at.isoformat() if self.unblocked_at else None,
+            "unblocked_at": (
+                self.unblocked_at.isoformat() if self.unblocked_at else None
+            ),
             "is_blocked": self.is_blocked(),
         }
 
@@ -252,7 +256,12 @@ class HeadOfSecurity:
             policy_id="memory_safety",
             name="Memory Safety Policy",
             description="Prevents memory corruption vulnerabilities",
-            rules=["No buffer overflows", "No use-after-free", "No double-free", "Bounds checking required"],
+            rules=[
+                "No buffer overflows",
+                "No use-after-free",
+                "No double-free",
+                "Bounds checking required",
+            ],
             enforcement_level="CRITICAL",
         )
 
@@ -289,7 +298,11 @@ class HeadOfSecurity:
     # =========================================================================
 
     def grant_tool_access(
-        self, entity_id: str, tool_name: str, justification: str, expires_in_hours: Optional[int] = None
+        self,
+        entity_id: str,
+        tool_name: str,
+        justification: str,
+        expires_in_hours: Optional[int] = None,
     ) -> Permission:
         """Grant tool access to an entity"""
         from app.miniature_office.core.audit import EventType, get_audit_log
@@ -342,7 +355,11 @@ class HeadOfSecurity:
         get_audit_log().log_event(
             EventType.SECURITY_EVENT,
             target_id=permission.entity_id,
-            data={"action": "revoke_access", "permission_id": permission_id, "reason": reason},
+            data={
+                "action": "revoke_access",
+                "permission_id": permission_id,
+                "reason": reason,
+            },
         )
 
         return True
@@ -392,7 +409,9 @@ class HeadOfSecurity:
         audit_id = f"audit_full_{datetime.now().timestamp()}"
 
         audit = SecurityAudit(
-            audit_id=audit_id, audit_type="full_system", scope=["all_floors", "all_offices", "all_artifacts"]
+            audit_id=audit_id,
+            audit_type="full_system",
+            scope=["all_floors", "all_offices", "all_artifacts"],
         )
 
         self.audits[audit_id] = audit
@@ -401,19 +420,28 @@ class HeadOfSecurity:
         get_audit_log().log_event(
             EventType.SECURITY_EVENT,
             target_id="system",
-            data={"action": "trigger_full_audit", "audit_id": audit_id, "reason": reason},
+            data={
+                "action": "trigger_full_audit",
+                "audit_id": audit_id,
+                "reason": reason,
+            },
         )
 
         return audit
 
-    def trigger_floor_lockdown(self, floor_id: str, reason: str, threat_level: ThreatLevel) -> Lockdown:
+    def trigger_floor_lockdown(
+        self, floor_id: str, reason: str, threat_level: ThreatLevel
+    ) -> Lockdown:
         """Lock down a specific floor"""
         from app.miniature_office.core.audit import EventType, get_audit_log
 
         lockdown_id = f"lockdown_floor_{floor_id}_{datetime.now().timestamp()}"
 
         lockdown = Lockdown(
-            lockdown_id=lockdown_id, scope=f"floor:{floor_id}", reason=reason, threat_level=threat_level
+            lockdown_id=lockdown_id,
+            scope=f"floor:{floor_id}",
+            reason=reason,
+            threat_level=threat_level,
         )
 
         self.lockdowns[lockdown_id] = lockdown
@@ -432,13 +460,17 @@ class HeadOfSecurity:
 
         return lockdown
 
-    def trigger_cross_floor_review(self, floor_ids: List[str], concern: str) -> SecurityAudit:
+    def trigger_cross_floor_review(
+        self, floor_ids: List[str], concern: str
+    ) -> SecurityAudit:
         """Trigger a cross-floor security review"""
         from app.miniature_office.core.audit import EventType, get_audit_log
 
         audit_id = f"audit_cross_{datetime.now().timestamp()}"
 
-        audit = SecurityAudit(audit_id=audit_id, audit_type="cross_floor", scope=floor_ids)
+        audit = SecurityAudit(
+            audit_id=audit_id, audit_type="cross_floor", scope=floor_ids
+        )
 
         self.audits[audit_id] = audit
 
@@ -446,7 +478,12 @@ class HeadOfSecurity:
         get_audit_log().log_event(
             EventType.SECURITY_EVENT,
             target_id="cross_floor",
-            data={"action": "cross_floor_review", "audit_id": audit_id, "floors": floor_ids, "concern": concern},
+            data={
+                "action": "cross_floor_review",
+                "audit_id": audit_id,
+                "floors": floor_ids,
+                "concern": concern,
+            },
         )
 
         return audit
@@ -455,14 +492,19 @@ class HeadOfSecurity:
     # ABSOLUTE POWERS
     # =========================================================================
 
-    def block_delivery(self, artifact_id: str, reason: str, required_mitigations: List[str]) -> BlockedDelivery:
+    def block_delivery(
+        self, artifact_id: str, reason: str, required_mitigations: List[str]
+    ) -> BlockedDelivery:
         """Block an artifact delivery indefinitely until mitigations are applied"""
         from app.miniature_office.core.audit import EventType, get_audit_log
 
         block_id = f"block_{artifact_id}_{datetime.now().timestamp()}"
 
         block = BlockedDelivery(
-            block_id=block_id, artifact_id=artifact_id, reason=reason, required_mitigations=required_mitigations
+            block_id=block_id,
+            artifact_id=artifact_id,
+            reason=reason,
+            required_mitigations=required_mitigations,
         )
 
         self.blocked_deliveries[block_id] = block
@@ -489,19 +531,28 @@ class HeadOfSecurity:
         get_audit_log().log_event(
             EventType.SECURITY_EVENT,
             target_id=artifact_id,
-            data={"action": "invalidate_artifact", "artifact_id": artifact_id, "reason": security_reason},
+            data={
+                "action": "invalidate_artifact",
+                "artifact_id": artifact_id,
+                "reason": security_reason,
+            },
         )
 
         return True
 
-    def freeze_building(self, emergency_reason: str, threat_level: ThreatLevel) -> Lockdown:
+    def freeze_building(
+        self, emergency_reason: str, threat_level: ThreatLevel
+    ) -> Lockdown:
         """Freeze the entire building (emergency halt)"""
         from app.miniature_office.core.audit import EventType, get_audit_log
 
         lockdown_id = f"lockdown_building_{datetime.now().timestamp()}"
 
         lockdown = Lockdown(
-            lockdown_id=lockdown_id, scope="building", reason=emergency_reason, threat_level=threat_level
+            lockdown_id=lockdown_id,
+            scope="building",
+            reason=emergency_reason,
+            threat_level=threat_level,
         )
 
         self.lockdowns[lockdown_id] = lockdown
@@ -520,7 +571,9 @@ class HeadOfSecurity:
 
         return lockdown
 
-    def force_rearchitecture(self, artifact_id: str, safety_issue: str, required_changes: List[str]) -> bool:
+    def force_rearchitecture(
+        self, artifact_id: str, safety_issue: str, required_changes: List[str]
+    ) -> bool:
         """Force re-architecture of unsafe design"""
         from app.miniature_office.core.audit import EventType, get_audit_log
 
@@ -563,7 +616,10 @@ class HeadOfSecurity:
         # Look for security events related to entity
         events = get_audit_log().get_events(limit=100)
         security_events = [
-            e for e in events if e.get("event_type") == "security_event" and entity_id in str(e.get("target_id", ""))
+            e
+            for e in events
+            if e.get("event_type") == "security_event"
+            and entity_id in str(e.get("target_id", ""))
         ]
 
         if security_events:
@@ -607,11 +663,19 @@ class HeadOfSecurity:
         Validate that an action respects Head of Security absolute limits.
         Returns: (is_allowed, reason_if_not)
         """
-        forbidden_actions = ["change intent", "modify code", "suppress audit", "override constitution"]
+        forbidden_actions = [
+            "change intent",
+            "modify code",
+            "suppress audit",
+            "override constitution",
+        ]
 
         for forbidden in forbidden_actions:
             if forbidden in action.lower():
-                return False, f"Head of Security cannot '{forbidden}' - this exceeds security authority"
+                return (
+                    False,
+                    f"Head of Security cannot '{forbidden}' - this exceeds security authority",
+                )
 
         return True, None
 
@@ -621,11 +685,19 @@ class HeadOfSecurity:
 
     def get_active_lockdowns(self) -> List[Dict]:
         """Get all active lockdowns"""
-        return [lockdown.to_dict() for lockdown in self.lockdowns.values() if lockdown.is_active()]
+        return [
+            lockdown.to_dict()
+            for lockdown in self.lockdowns.values()
+            if lockdown.is_active()
+        ]
 
     def get_blocked_deliveries(self) -> List[Dict]:
         """Get all currently blocked deliveries"""
-        return [block.to_dict() for block in self.blocked_deliveries.values() if block.is_blocked()]
+        return [
+            block.to_dict()
+            for block in self.blocked_deliveries.values()
+            if block.is_blocked()
+        ]
 
     def get_active_permissions(self, entity_id: Optional[str] = None) -> List[Dict]:
         """Get active permissions, optionally filtered by entity"""
@@ -651,9 +723,15 @@ class HeadOfSecurity:
             "can_modify_code_directly": self.can_modify_code_directly(),
             "can_suppress_audit_logs": self.can_suppress_audit_logs(),
             "can_override_constitutional_laws": self.can_override_constitutional_laws(),
-            "active_lockdowns": len([item for item in self.lockdowns.values() if item.is_active()]),
-            "blocked_deliveries": len([b for b in self.blocked_deliveries.values() if b.is_blocked()]),
-            "active_permissions": len([p for p in self.permissions.values() if p.is_active()]),
+            "active_lockdowns": len(
+                [item for item in self.lockdowns.values() if item.is_active()]
+            ),
+            "blocked_deliveries": len(
+                [b for b in self.blocked_deliveries.values() if b.is_blocked()]
+            ),
+            "active_permissions": len(
+                [p for p in self.permissions.values() if p.is_active()]
+            ),
             "policies": len(self.security_policies),
             "audits": len(self.audits),
         }

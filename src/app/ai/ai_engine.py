@@ -92,7 +92,9 @@ class GodTierAI:
         self.logger.info("Processing query on-device (no external API calls)")
 
         # Add to encrypted context
-        self._add_to_context({"query_hash": encrypted_query[:32].hex(), "timestamp": time.time()})
+        self._add_to_context(
+            {"query_hash": encrypted_query[:32].hex(), "timestamp": time.time()}
+        )
 
         # Process with local inference
         response = self._process_with_local_ai(query, context)
@@ -109,7 +111,9 @@ class GodTierAI:
 
         return response
 
-    def _process_with_local_ai(self, query: str, context: dict[str, Any] | None) -> dict[str, Any]:
+    def _process_with_local_ai(
+        self, query: str, context: dict[str, Any] | None
+    ) -> dict[str, Any]:
         """
         Process query with local AI (on-device).
         No external API calls, no data sent off-device.

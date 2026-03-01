@@ -29,7 +29,9 @@ try:
         Ed25519PublicKey,
     )
 except ImportError:
-    print("ERROR: cryptography package required. Install with: pip install cryptography")
+    print(
+        "ERROR: cryptography package required. Install with: pip install cryptography"
+    )
     sys.exit(1)
 
 
@@ -74,13 +76,13 @@ class PersonaSigner:
         private_pem = private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.PKCS8,
-            encryption_algorithm=serialization.NoEncryption()
+            encryption_algorithm=serialization.NoEncryption(),
         )
 
         # Save public key (PEM format)
         public_pem = public_key.public_bytes(
             encoding=serialization.Encoding.PEM,
-            format=serialization.PublicFormat.SubjectPublicKeyInfo
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
         )
 
         # Write keys with restricted permissions
@@ -129,15 +131,15 @@ class PersonaSigner:
             Canonical bytes representation
         """
         # Use JSON with sorted keys for deterministic output
-        json_str = json.dumps(state, sort_keys=True, separators=(',', ':'))
-        return json_str.encode('utf-8')
+        json_str = json.dumps(state, sort_keys=True, separators=(",", ":"))
+        return json_str.encode("utf-8")
 
     def create_snapshot(
         self,
         persona_state: dict,
         persona_id: str,
         parent_snapshot: str | None = None,
-        metadata: dict | None = None
+        metadata: dict | None = None,
     ) -> dict:
         """
         Create signed snapshot of persona state.
@@ -173,11 +175,13 @@ class PersonaSigner:
             "signature": signature.hex(),
             "created_at": datetime.now(UTC).isoformat(),
             "creator": os.getenv("USER", "system"),
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
 
         # Save snapshot
-        snapshot_file = self.snapshots_dir / f"{persona_id}_{content_hash[:12]}.snapshot.json"
+        snapshot_file = (
+            self.snapshots_dir / f"{persona_id}_{content_hash[:12]}.snapshot.json"
+        )
         snapshot_file.write_text(json.dumps(snapshot, indent=2))
         snapshot_file.chmod(0o600)  # Sensitive data
 
@@ -192,7 +196,7 @@ class PersonaSigner:
             "signature": signature.hex(),
             "created_at": snapshot["created_at"],
             "parent_snapshot": parent_snapshot,
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
 
         sig_file = self.signatures_dir / f"{persona_id}_{content_hash[:12]}.sig.json"
@@ -234,7 +238,11 @@ class PersonaSigner:
 
         # Verify content hash
         if content_hash != snapshot.get("snapshot_hash"):
-            return (False, "Content hash mismatch. Snapshot has been tampered with!", None)
+            return (
+                False,
+                "Content hash mismatch. Snapshot has been tampered with!",
+                None,
+            )
 
         # Verify signature
         try:
@@ -337,40 +345,29 @@ def main():
     parser.add_argument(
         "command",
         choices=["keygen", "snapshot", "verify", "list", "restore", "lineage"],
-        help="Command to execute"
+        help="Command to execute",
     )
     parser.add_argument(
         "--key-dir",
         type=Path,
-        default=Path("/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/crypto/keys"),
-        help="Directory for signing keys"
+        default=Path(
+            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/crypto/keys"
+        ),
+        help="Directory for signing keys",
     )
     parser.add_argument(
-        "--snapshot",
-        type=Path,
-        help="Path to snapshot file (for verify/restore)"
+        "--snapshot", type=Path, help="Path to snapshot file (for verify/restore)"
     )
     parser.add_argument(
         "--state-file",
         type=Path,
-        help="Path to persona state JSON (for snapshot creation)"
+        help="Path to persona state JSON (for snapshot creation)",
     )
+    parser.add_argument("--persona-id", help="Persona ID (for snapshot/list)")
+    parser.add_argument("--parent", help="Parent snapshot hash (for lineage tracking)")
+    parser.add_argument("--hash", help="Snapshot hash (for lineage command)")
     parser.add_argument(
-        "--persona-id",
-        help="Persona ID (for snapshot/list)"
-    )
-    parser.add_argument(
-        "--parent",
-        help="Parent snapshot hash (for lineage tracking)"
-    )
-    parser.add_argument(
-        "--hash",
-        help="Snapshot hash (for lineage command)"
-    )
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Force regeneration of keys"
+        "--force", action="store_true", help="Force regeneration of keys"
     )
 
     args = parser.parse_args()
@@ -398,7 +395,9 @@ def main():
         snapshots = signer.list_snapshots(args.persona_id)
         print(f"Found {len(snapshots)} snapshots:")
         for snap in snapshots:
-            print(f"  {snap['snapshot_hash'][:12]} - {snap['persona_id']} - {snap['created_at']}")
+            print(
+                f"  {snap['snapshot_hash'][:12]} - {snap['persona_id']} - {snap['created_at']}"
+            )
 
     elif args.command == "restore":
         if not args.snapshot:

@@ -29,7 +29,9 @@ try:
         Ed25519PublicKey,
     )
 except ImportError:
-    print("ERROR: cryptography package required. Install with: pip install cryptography")
+    print(
+        "ERROR: cryptography package required. Install with: pip install cryptography"
+    )
     sys.exit(1)
 
 
@@ -73,13 +75,13 @@ class MigrationSigner:
         private_pem = private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.PKCS8,
-            encryption_algorithm=serialization.NoEncryption()
+            encryption_algorithm=serialization.NoEncryption(),
         )
 
         # Save public key (PEM format)
         public_pem = public_key.public_bytes(
             encoding=serialization.Encoding.PEM,
-            format=serialization.PublicFormat.SubjectPublicKeyInfo
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
         )
 
         # Write keys with restricted permissions
@@ -117,7 +119,9 @@ class MigrationSigner:
         pem_data = self.public_key_path.read_bytes()
         return serialization.load_pem_public_key(pem_data)
 
-    def sign_migration(self, migration_path: Path, metadata: dict | None = None) -> dict:
+    def sign_migration(
+        self, migration_path: Path, metadata: dict | None = None
+    ) -> dict:
         """
         Sign a migration file and create signature manifest.
 
@@ -154,7 +158,7 @@ class MigrationSigner:
             "signature": signature.hex(),
             "signed_at": datetime.now(UTC).isoformat(),
             "signer": os.getenv("USER", "unknown"),
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
 
         # Save signature manifest
@@ -243,7 +247,9 @@ class MigrationSigner:
         print(f"\n✓ Signed {count}/{len(migration_files)} migrations")
         return count
 
-    def batch_verify(self, migrations_dir: Path, pattern: str = "*.sql") -> tuple[int, int]:
+    def batch_verify(
+        self, migrations_dir: Path, pattern: str = "*.sql"
+    ) -> tuple[int, int]:
         """
         Verify all migrations in a directory.
 
@@ -285,28 +291,26 @@ def main():
     parser.add_argument(
         "command",
         choices=["keygen", "sign", "verify", "batch-sign", "batch-verify"],
-        help="Command to execute"
+        help="Command to execute",
     )
     parser.add_argument(
         "--key-dir",
         type=Path,
-        default=Path("/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/crypto/keys"),
-        help="Directory for signing keys"
+        default=Path(
+            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/crypto/keys"
+        ),
+        help="Directory for signing keys",
     )
     parser.add_argument(
-        "--migration",
-        type=Path,
-        help="Path to migration file (for sign/verify)"
+        "--migration", type=Path, help="Path to migration file (for sign/verify)"
     )
     parser.add_argument(
         "--migrations-dir",
         type=Path,
-        help="Directory containing migrations (for batch operations)"
+        help="Directory containing migrations (for batch operations)",
     )
     parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Force regeneration of keys"
+        "--force", action="store_true", help="Force regeneration of keys"
     )
 
     args = parser.parse_args()

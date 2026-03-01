@@ -41,8 +41,8 @@ logger = logging.getLogger(__name__)
 # Minimum: did:project-ai:<something>  (one colon-separated segment after prefix)
 _DID_PATTERN = re.compile(
     r"^did:project-ai:"  # method prefix
-    r"[a-z0-9_-]+"       # at least one namespace segment
-    r"(:[a-z0-9_-]+)*$", # optional further segments
+    r"[a-z0-9_-]+"  # at least one namespace segment
+    r"(:[a-z0-9_-]+)*$",  # optional further segments
     re.IGNORECASE,
 )
 
@@ -85,13 +85,15 @@ class IdentityDocumentStore:
         if doc is None:
             return False
         # Pydantic models are frozen — rebuild with revocation
-        updated = doc.model_copy(update={
-            "revocation": {
-                "status": "revoked",
-                "revoked_at": datetime.now(timezone.utc).isoformat(),
-                "reason": reason,
+        updated = doc.model_copy(
+            update={
+                "revocation": {
+                    "status": "revoked",
+                    "revoked_at": datetime.now(timezone.utc).isoformat(),
+                    "reason": reason,
+                }
             }
-        })
+        )
         self._documents[did] = updated
         return True
 
@@ -171,29 +173,35 @@ class IdentityHead:
 
         # ── Check 1: DID format ──
         if not _DID_PATTERN.match(envelope.actor):
-            reasons.append(DenyReason(
-                code="IDENTITY_INVALID_DID_FORMAT",
-                detail=f"Actor DID '{envelope.actor}' does not match "
-                       f"'did:project-ai:<namespace>[:<id>]' format",
-            ))
+            reasons.append(
+                DenyReason(
+                    code="IDENTITY_INVALID_DID_FORMAT",
+                    detail=f"Actor DID '{envelope.actor}' does not match "
+                    f"'did:project-ai:<namespace>[:<id>]' format",
+                )
+            )
 
         # ── Check 2: Document resolution ──
         doc = self.doc_store.resolve(envelope.actor)
         if doc is None and not reasons and self.doc_store.count > 0:
             # Only report resolution failure if DID format was valid
-            reasons.append(DenyReason(
-                code="IDENTITY_NOT_FOUND",
-                detail=f"No IdentityDocument found for DID '{envelope.actor}' — "
-                       f"INV-ROOT-2 requires resolvable identity",
-            ))
+            reasons.append(
+                DenyReason(
+                    code="IDENTITY_NOT_FOUND",
+                    detail=f"No IdentityDocument found for DID '{envelope.actor}' — "
+                    f"INV-ROOT-2 requires resolvable identity",
+                )
+            )
 
         # ── Check 3: Revocation status ──
         if doc is not None and doc.revocation.is_revoked:
-            reasons.append(DenyReason(
-                code="IDENTITY_REVOKED",
-                detail=f"Identity '{envelope.actor}' is revoked: "
-                       f"{doc.revocation.reason} (at {doc.revocation.revoked_at})",
-            ))
+            reasons.append(
+                DenyReason(
+                    code="IDENTITY_REVOKED",
+                    detail=f"Identity '{envelope.actor}' is revoked: "
+                    f"{doc.revocation.reason} (at {doc.revocation.revoked_at})",
+                )
+            )
 
         # ── Check 4: Public key validity window ──
         if doc is not None and not doc.revocation.is_revoked:
@@ -206,19 +214,23 @@ class IdentityHead:
                     has_valid_key = True
                     break
             if not has_valid_key:
-                reasons.append(DenyReason(
-                    code="IDENTITY_NO_VALID_KEY",
-                    detail=f"No public key for '{envelope.actor}' is currently valid",
-                ))
+                reasons.append(
+                    DenyReason(
+                        code="IDENTITY_NO_VALID_KEY",
+                        detail=f"No public key for '{envelope.actor}' is currently valid",
+                    )
+                )
 
         # ── Check 5: Device attestation ──
         device_hash = getattr(envelope.context, "device_attestation", None)
         if not self.device_registry.is_trusted(envelope.actor, device_hash):
             if self.require_device_attestation:
-                reasons.append(DenyReason(
-                    code="IDENTITY_DEVICE_UNTRUSTED",
-                    detail=f"Device attestation not recognized for '{envelope.actor}'",
-                ))
+                reasons.append(
+                    DenyReason(
+                        code="IDENTITY_DEVICE_UNTRUSTED",
+                        detail=f"Device attestation not recognized for '{envelope.actor}'",
+                    )
+                )
             else:
                 # Non-blocking constraint: add to constraints instead
                 constraints = ConstraintsApplied(
@@ -232,11 +244,13 @@ class IdentityHead:
             if self.doc_store.count > 0 and doc is not None:
                 subject_doc = self.doc_store.resolve(envelope.subject)
                 if subject_doc is None:
-                    reasons.append(DenyReason(
-                        code="IDENTITY_SUBJECT_NOT_FOUND",
-                        detail=f"Subject DID '{envelope.subject}' not resolvable — "
-                               f"cross-identity request denied",
-                    ))
+                    reasons.append(
+                        DenyReason(
+                            code="IDENTITY_SUBJECT_NOT_FOUND",
+                            detail=f"Subject DID '{envelope.subject}' not resolvable — "
+                            f"cross-identity request denied",
+                        )
+                    )
 
         # ── Check 7: Risk tier ──
         if doc is not None and hasattr(doc, "attributes") and doc.attributes:
@@ -244,11 +258,13 @@ class IdentityHead:
             max_rank = self._RISK_RANK.get(self.max_risk_tier, 2)
             actor_rank = self._RISK_RANK.get(actor_tier, 0)
             if actor_rank > max_rank:
-                reasons.append(DenyReason(
-                    code="IDENTITY_RISK_TIER_EXCEEDED",
-                    detail=f"Actor risk tier '{actor_tier}' exceeds "
-                           f"max allowed '{self.max_risk_tier}'",
-                ))
+                reasons.append(
+                    DenyReason(
+                        code="IDENTITY_RISK_TIER_EXCEEDED",
+                        detail=f"Actor risk tier '{actor_tier}' exceeds "
+                        f"max allowed '{self.max_risk_tier}'",
+                    )
+                )
 
         # ── Final vote ──
         if reasons:

@@ -165,9 +165,13 @@ class JurisdictionLoader:
                         for kw in ("principles", "obligations", "requirements")
                     ):
                         current_section = "obligations"
-                    elif any(kw in header for kw in ("retention", "storage", "deletion")):
+                    elif any(
+                        kw in header for kw in ("retention", "storage", "deletion")
+                    ):
                         current_section = "retention"
-                    elif any(kw in header for kw in ("security", "safeguard", "protection")):
+                    elif any(
+                        kw in header for kw in ("security", "safeguard", "protection")
+                    ):
                         current_section = "security"
                     else:
                         current_section = None
@@ -193,7 +197,10 @@ class JurisdictionLoader:
             for obligation in parsed["compliance_obligations"]:
                 ob_lower = obligation.lower()
                 for kw in _SECURITY_KEYWORDS:
-                    if kw in ob_lower and obligation not in parsed["security_requirements"]:
+                    if (
+                        kw in ob_lower
+                        and obligation not in parsed["security_requirements"]
+                    ):
                         parsed["security_requirements"].append(obligation)
                         break
 
@@ -232,9 +239,15 @@ class JurisdictionLoader:
                     document_hash=document_hash,
                     requirements=parsed_content.get("requirements", {}),
                     data_subject_rights=parsed_content.get("data_subject_rights", []),
-                    compliance_obligations=parsed_content.get("compliance_obligations", []),
-                    retention_requirements=parsed_content.get("retention_requirements", []),
-                    security_requirements=parsed_content.get("security_requirements", []),
+                    compliance_obligations=parsed_content.get(
+                        "compliance_obligations", []
+                    ),
+                    retention_requirements=parsed_content.get(
+                        "retention_requirements", []
+                    ),
+                    security_requirements=parsed_content.get(
+                        "security_requirements", []
+                    ),
                 )
 
                 self.loaded_jurisdictions[jurisdiction_code] = annex
@@ -350,10 +363,7 @@ class JurisdictionLoader:
                 combined["security_requirements"].update(annex.security_requirements)
 
         # Convert sets to sorted lists for deterministic output
-        return {
-            key: sorted(values)
-            for key, values in combined.items()
-        }
+        return {key: sorted(values) for key, values in combined.items()}
 
 
 # Singleton instance

@@ -46,8 +46,7 @@ class RateLimiter:
             # Add tokens based on time elapsed
             time_passed = now - self.last_update[key]
             self.tokens[key] = min(
-                self.rate,
-                self.tokens[key] + time_passed * (self.rate / self.per)
+                self.rate, self.tokens[key] + time_passed * (self.rate / self.per)
             )
             self.last_update[key] = now
 
@@ -70,13 +69,7 @@ class RateLimiter:
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """FastAPI middleware for rate limiting"""
 
-    def __init__(
-        self,
-        app,
-        rate: int = 60,
-        per: int = 60,
-        exempt_paths: list = None
-    ):
+    def __init__(self, app, rate: int = 60, per: int = 60, exempt_paths: list = None):
         """
         Initialize rate limit middleware
 
@@ -123,14 +116,14 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
                 content={
                     "error": "rate_limit_exceeded",
                     "message": "Too many requests. Please try again later.",
-                    "retry_after": retry_after
+                    "retry_after": retry_after,
                 },
                 headers={
                     "Retry-After": str(retry_after),
                     "X-RateLimit-Limit": str(self.limiter.rate),
                     "X-RateLimit-Remaining": "0",
-                    "X-RateLimit-Reset": str(int(time.time()) + retry_after)
-                }
+                    "X-RateLimit-Reset": str(int(time.time()) + retry_after),
+                },
             )
 
         # Process request
@@ -140,9 +133,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         remaining = int(self.limiter.tokens.get(client_id, 0))
         response.headers["X-RateLimit-Limit"] = str(self.limiter.rate)
         response.headers["X-RateLimit-Remaining"] = str(max(0, remaining))
-        response.headers["X-RateLimit-Reset"] = str(
-            int(time.time() + self.limiter.per)
-        )
+        response.headers["X-RateLimit-Reset"] = str(int(time.time() + self.limiter.per))
 
         return response
 

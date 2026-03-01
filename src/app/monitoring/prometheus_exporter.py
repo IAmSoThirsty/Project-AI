@@ -285,7 +285,9 @@ class PrometheusMetrics:
             ["method", "endpoint"],
             registry=self.registry,
         )
-        self.active_users = Gauge("project_ai_active_users", "Number of active users", registry=self.registry)
+        self.active_users = Gauge(
+            "project_ai_active_users", "Number of active users", registry=self.registry
+        )
         self.ui_render_duration_seconds = Histogram(
             "project_ai_ui_render_duration_seconds",
             "UI render duration",

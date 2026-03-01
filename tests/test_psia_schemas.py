@@ -14,42 +14,12 @@ import json
 
 import pytest
 
-from psia.schemas.identity import (
-    IdentityAttributes,
-    IdentityDocument,
-    PublicKeyEntry,
-    RevocationStatus,
-    Signature,
-)
 from psia.schemas.capability import (
     CapabilityScope,
     CapabilityToken,
     DelegationPolicy,
     ScopeConstraints,
     TokenBinding,
-)
-from psia.schemas.request import (
-    Intent,
-    RequestContext,
-    RequestEnvelope,
-    RequestTimestamps,
-)
-from psia.schemas.policy import PolicyEdge, PolicyGraph, PolicyNode
-from psia.schemas.invariant import (
-    InvariantDefinition,
-    InvariantEnforcement,
-    InvariantExpression,
-    InvariantScope,
-    InvariantSeverity,
-    InvariantTestCase,
-)
-from psia.schemas.shadow_report import (
-    DeterminismProof,
-    InvariantViolation,
-    ResourceEnvelope,
-    ShadowReport,
-    ShadowResults,
-    SideEffectSummary,
 )
 from psia.schemas.cerberus_decision import (
     CerberusDecision,
@@ -59,15 +29,45 @@ from psia.schemas.cerberus_decision import (
     DenyReason,
     QuorumInfo,
 )
+from psia.schemas.identity import (
+    IdentityAttributes,
+    IdentityDocument,
+    PublicKeyEntry,
+    RevocationStatus,
+    Signature,
+)
+from psia.schemas.invariant import (
+    InvariantDefinition,
+    InvariantEnforcement,
+    InvariantExpression,
+    InvariantScope,
+    InvariantSeverity,
+    InvariantTestCase,
+)
 from psia.schemas.ledger import (
     ExecutionRecord,
     LedgerBlock,
     RecordTimestamps,
     TimeProof,
 )
-
+from psia.schemas.policy import PolicyEdge, PolicyGraph, PolicyNode
+from psia.schemas.request import (
+    Intent,
+    RequestContext,
+    RequestEnvelope,
+    RequestTimestamps,
+)
+from psia.schemas.shadow_report import (
+    DeterminismProof,
+    InvariantViolation,
+    ResourceEnvelope,
+    ShadowReport,
+    ShadowResults,
+    SideEffectSummary,
+)
 
 # ── Fixtures ──────────────────────────────────────────────────────────
+
 
 def _sig(kid: str = "k1") -> Signature:
     return Signature(alg="ed25519", kid=kid, sig="test_sig_base64")
@@ -77,7 +77,15 @@ def _identity_doc() -> IdentityDocument:
     return IdentityDocument(
         id="did:project-ai:alice",
         type="human",
-        public_keys=[PublicKeyEntry(kid="k1", kty="ed25519", pub="AAAA", created="2026-01-01T00:00:00Z", expires="2027-01-01T00:00:00Z")],
+        public_keys=[
+            PublicKeyEntry(
+                kid="k1",
+                kty="ed25519",
+                pub="AAAA",
+                created="2026-01-01T00:00:00Z",
+                expires="2027-01-01T00:00:00Z",
+            )
+        ],
         attributes=IdentityAttributes(org="test_org", role="admin", risk_tier="low"),
         revocation=RevocationStatus(status="active"),
         signature=_sig(),
@@ -105,7 +113,11 @@ def _request_envelope() -> RequestEnvelope:
         actor="did:project-ai:alice",
         subject="did:project-ai:alice",
         capability_token_id="cap_001",
-        intent=Intent(action="mutate_state", resource="state://data/key1", parameters={"value": 42}),
+        intent=Intent(
+            action="mutate_state",
+            resource="state://data/key1",
+            parameters={"value": 42},
+        ),
         context=RequestContext(trace_id="trace_001"),
         timestamps=RequestTimestamps(created_at="2026-01-01T00:00:00Z"),
         signature=_sig(),
@@ -113,6 +125,7 @@ def _request_envelope() -> RequestEnvelope:
 
 
 # ── Identity Schema Tests ────────────────────────────────────────────
+
 
 class TestIdentityDocument:
     def test_round_trip(self):
@@ -139,7 +152,9 @@ class TestIdentityDocument:
     def test_revocation_status(self):
         active = RevocationStatus(status="active")
         assert not active.is_revoked
-        revoked = RevocationStatus(status="revoked", revoked_at="2026-06-01T00:00:00Z", reason="compromised")
+        revoked = RevocationStatus(
+            status="revoked", revoked_at="2026-06-01T00:00:00Z", reason="compromised"
+        )
         assert revoked.is_revoked
 
     def test_min_one_public_key(self):
@@ -153,6 +168,7 @@ class TestIdentityDocument:
 
 
 # ── Capability Token Tests ───────────────────────────────────────────
+
 
 class TestCapabilityToken:
     def test_round_trip(self):
@@ -197,6 +213,7 @@ class TestCapabilityToken:
 
 # ── Request Envelope Tests ───────────────────────────────────────────
 
+
 class TestRequestEnvelope:
     def test_round_trip(self):
         env = _request_envelope()
@@ -217,6 +234,7 @@ class TestRequestEnvelope:
 
 
 # ── Policy Graph Tests ───────────────────────────────────────────────
+
 
 class TestPolicyGraph:
     def test_round_trip(self):
@@ -250,11 +268,14 @@ class TestPolicyGraph:
         edges = []
         # First compute the real hash
         import hashlib
+
         body = {
             "nodes": [n.model_dump() for n in nodes],
             "edges": [],
         }
-        real_hash = hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        real_hash = hashlib.sha256(
+            json.dumps(body, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
 
         graph = PolicyGraph(
             policy_id="pol_002",
@@ -269,6 +290,7 @@ class TestPolicyGraph:
 
 # ── Invariant Definition Tests ───────────────────────────────────────
 
+
 class TestInvariantDefinition:
     def test_round_trip(self):
         inv = InvariantDefinition(
@@ -277,7 +299,9 @@ class TestInvariantDefinition:
             scope=InvariantScope.CONSTITUTIONAL,
             severity=InvariantSeverity.HIGH,
             enforcement=InvariantEnforcement.HARD_DENY,
-            expression=InvariantExpression(language="first_order_logic", expr="forall x: true"),
+            expression=InvariantExpression(
+                language="first_order_logic", expr="forall x: true"
+            ),
             tests=[InvariantTestCase(name="trivial", given={"x": 1}, expect="allow")],
             signature=_sig(),
         )
@@ -301,13 +325,16 @@ class TestInvariantDefinition:
 
 # ── Shadow Report Tests ──────────────────────────────────────────────
 
+
 class TestShadowReport:
     def test_round_trip(self):
         report = ShadowReport(
             request_id="req_001",
             shadow_job_id="shj_001",
             snapshot_id="snap_001",
-            determinism=DeterminismProof(seed="aabb", replay_hash="ccdd", replay_verified=True),
+            determinism=DeterminismProof(
+                seed="aabb", replay_hash="ccdd", replay_verified=True
+            ),
             results=ShadowResults(divergence_score=0.05),
             timestamp="2026-01-01T00:00:00Z",
             signature=_sig(),
@@ -335,7 +362,9 @@ class TestShadowReport:
             snapshot_id="snap_001",
             determinism=DeterminismProof(seed="aa", replay_hash="cc"),
             results=ShadowResults(
-                invariant_violations=[InvariantViolation(invariant_id="inv_001", severity="critical")]
+                invariant_violations=[
+                    InvariantViolation(invariant_id="inv_001", severity="critical")
+                ]
             ),
             timestamp="2026-01-01T00:00:00Z",
             signature=_sig(),
@@ -344,6 +373,7 @@ class TestShadowReport:
 
 
 # ── Cerberus Decision Tests ──────────────────────────────────────────
+
 
 class TestCerberusDecision:
     def _make_vote(self, head, decision):
@@ -366,7 +396,9 @@ class TestCerberusDecision:
                 self._make_vote("capability", "allow"),
                 self._make_vote("invariant", "allow"),
             ],
-            quorum=QuorumInfo(required="2of3", achieved=True, voters=["n0", "n1", "n2"]),
+            quorum=QuorumInfo(
+                required="2of3", achieved=True, voters=["n0", "n1", "n2"]
+            ),
             timestamp="2026-01-01T00:00:00Z",
         )
         assert decision.is_allowed
@@ -399,6 +431,7 @@ class TestCerberusDecision:
 
 
 # ── Ledger Tests ─────────────────────────────────────────────────────
+
 
 class TestLedgerBlock:
     def test_merkle_root_single(self):
@@ -441,7 +474,9 @@ class TestLedgerBlock:
             inputs_hash="aa" * 32,
             decision_hash="bb" * 32,
             result="allow",
-            timestamps=RecordTimestamps(received_at="2026-01-01T00:00:00Z", decided_at="2026-01-01T00:00:01Z"),
+            timestamps=RecordTimestamps(
+                received_at="2026-01-01T00:00:00Z", decided_at="2026-01-01T00:00:01Z"
+            ),
             signature=_sig(),
         )
         data = record.model_dump()
@@ -451,60 +486,73 @@ class TestLedgerBlock:
 
 # ── Root Invariants Tests ────────────────────────────────────────────
 
+
 class TestRootInvariants:
     def test_all_nine_exist(self):
         from psia.invariants import ROOT_INVARIANTS
+
         assert len(ROOT_INVARIANTS) == 9
 
     def test_all_immutable_fatal(self):
         from psia.invariants import ROOT_INVARIANTS
+
         for inv_id, inv in ROOT_INVARIANTS.items():
             assert inv.scope == InvariantScope.IMMUTABLE, f"{inv_id} not immutable"
             assert inv.severity == InvariantSeverity.FATAL, f"{inv_id} not fatal"
 
     def test_all_have_at_least_two_tests(self):
         from psia.invariants import ROOT_INVARIANTS
+
         for inv_id, inv in ROOT_INVARIANTS.items():
             assert len(inv.tests) >= 2, f"{inv_id} has fewer than 2 test cases"
 
     def test_ids_are_sequential(self):
         from psia.invariants import ROOT_INVARIANTS
+
         for i in range(1, 10):
             assert f"inv_root_{i:03d}" in ROOT_INVARIANTS
 
 
 # ── Plane Contracts Tests ────────────────────────────────────────────
 
+
 class TestPlaneContracts:
     def test_all_six_planes(self):
         from psia.planes import PLANE_CONTRACTS, Plane
+
         assert len(PLANE_CONTRACTS) == 6
         for p in Plane:
             assert p in PLANE_CONTRACTS
 
     def test_shadow_cannot_write_canonical(self):
         from psia.planes import Plane, PlaneCapability, validate_plane_action
+
         assert not validate_plane_action(Plane.SHADOW, PlaneCapability.WRITE_CANONICAL)
 
     def test_reflex_cannot_legislate(self):
         from psia.planes import Plane, PlaneCapability, validate_plane_action
+
         assert not validate_plane_action(Plane.REFLEX, PlaneCapability.EMIT_PROPOSAL)
         assert not validate_plane_action(Plane.REFLEX, PlaneCapability.COMPILE_POLICY)
 
     def test_canonical_can_write(self):
         from psia.planes import Plane, PlaneCapability, validate_plane_action
+
         assert validate_plane_action(Plane.CANONICAL, PlaneCapability.WRITE_CANONICAL)
 
     def test_ingress_can_accept_requests(self):
         from psia.planes import Plane, PlaneCapability, validate_plane_action
+
         assert validate_plane_action(Plane.INGRESS, PlaneCapability.ACCEPT_REQUEST)
 
 
 # ── Event Bus Tests ──────────────────────────────────────────────────
 
+
 class TestEventBus:
     def test_emit_and_subscribe(self):
         from psia.events import EventBus, EventType, create_event
+
         bus = EventBus()
         received = []
         bus.subscribe(EventType.WATERFALL_START, lambda e: received.append(e))
@@ -515,6 +563,7 @@ class TestEventBus:
 
     def test_wildcard_subscriber(self):
         from psia.events import EventBus, EventType, create_event
+
         bus = EventBus()
         received = []
         bus.subscribe(None, lambda e: received.append(e))
@@ -524,6 +573,7 @@ class TestEventBus:
 
     def test_drain(self):
         from psia.events import EventBus, EventType, create_event
+
         bus = EventBus()
         bus.emit(create_event(EventType.WATERFALL_START))
         bus.emit(create_event(EventType.STAGE_ENTER))
@@ -532,7 +582,8 @@ class TestEventBus:
         assert bus.event_count == 0
 
     def test_event_compute_hash(self):
-        from psia.events import create_event, EventType
+        from psia.events import EventType, create_event
+
         evt = create_event(EventType.COMMIT_SUCCEEDED, trace_id="t1", request_id="r1")
         h1 = evt.compute_hash()
         h2 = evt.compute_hash()

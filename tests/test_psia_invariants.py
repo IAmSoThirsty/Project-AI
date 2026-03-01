@@ -27,6 +27,7 @@ from psia.invariants import (
     INV_ROOT_9,
     ROOT_INVARIANTS,
 )
+from psia.schemas.identity import Signature
 from psia.schemas.invariant import (
     InvariantDefinition,
     InvariantEnforcement,
@@ -35,19 +36,24 @@ from psia.schemas.invariant import (
     InvariantSeverity,
     InvariantTestCase,
 )
-from psia.schemas.identity import Signature
-
 
 ALL_ROOT_INVARIANTS = [
-    INV_ROOT_1, INV_ROOT_2, INV_ROOT_3,
-    INV_ROOT_4, INV_ROOT_5, INV_ROOT_6,
-    INV_ROOT_7, INV_ROOT_8, INV_ROOT_9,
+    INV_ROOT_1,
+    INV_ROOT_2,
+    INV_ROOT_3,
+    INV_ROOT_4,
+    INV_ROOT_5,
+    INV_ROOT_6,
+    INV_ROOT_7,
+    INV_ROOT_8,
+    INV_ROOT_9,
 ]
 
 
 # ═══════════════════════════════════════════════════════════════════
 #  Registry Tests
 # ═══════════════════════════════════════════════════════════════════
+
 
 class TestRootInvariantRegistry:
 
@@ -71,6 +77,7 @@ class TestRootInvariantRegistry:
 # ═══════════════════════════════════════════════════════════════════
 #  Schema Integrity Tests
 # ═══════════════════════════════════════════════════════════════════
+
 
 class TestInvariantSchemaIntegrity:
 
@@ -111,6 +118,7 @@ class TestInvariantSchemaIntegrity:
 #  Embedded Test Case Validation
 # ═══════════════════════════════════════════════════════════════════
 
+
 class TestEmbeddedTestCases:
 
     @pytest.mark.parametrize("inv", ALL_ROOT_INVARIANTS, ids=lambda i: i.invariant_id)
@@ -139,6 +147,7 @@ class TestEmbeddedTestCases:
 # ═══════════════════════════════════════════════════════════════════
 #  Mutation Fuzzing — Pydantic rejects invalid invariants
 # ═══════════════════════════════════════════════════════════════════
+
 
 class TestInvariantFuzzing:
 

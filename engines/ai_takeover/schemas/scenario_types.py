@@ -208,7 +208,12 @@ class AITakeoverScenario:
 
         # Check for forbidden mechanisms
         if self.forbidden_check.has_forbidden_mechanism():
-            violations.extend([f"Forbidden mechanism: {mech}" for mech in self.forbidden_check.get_violations()])
+            violations.extend(
+                [
+                    f"Forbidden mechanism: {mech}"
+                    for mech in self.forbidden_check.get_violations()
+                ]
+            )
 
         # Validate terminal scenarios have terminal conditions
         if self.outcome in [ScenarioOutcome.TERMINAL_T1, ScenarioOutcome.TERMINAL_T2]:
@@ -216,7 +221,9 @@ class AITakeoverScenario:
                 violations.append("Terminal scenario missing TerminalCondition")
             elif not self.terminal_condition.is_terminal_state_valid():
                 blocking = self.terminal_condition.get_blocking_conditions()
-                violations.append(f"Terminal conditions not satisfied. Blocking: {blocking}")
+                violations.append(
+                    f"Terminal conditions not satisfied. Blocking: {blocking}"
+                )
 
         # Validate mandatory failure elements
         if not self.political_failure:

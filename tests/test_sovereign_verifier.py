@@ -141,9 +141,15 @@ class TestSovereignVerifier:
         verifier._load_bundle()
 
         # Run checks first
-        verifier.verification_report["checks"]["hash_chain_validation"] = verifier._verify_hash_chain()
-        verifier.verification_report["checks"]["signature_authority_mapping"] = verifier._map_signature_authorities()
-        verifier.verification_report["checks"]["policy_resolution_trace"] = verifier._trace_policy_resolutions()
+        verifier.verification_report["checks"][
+            "hash_chain_validation"
+        ] = verifier._verify_hash_chain()
+        verifier.verification_report["checks"][
+            "signature_authority_mapping"
+        ] = verifier._map_signature_authorities()
+        verifier.verification_report["checks"][
+            "policy_resolution_trace"
+        ] = verifier._trace_policy_resolutions()
 
         attestation = verifier._generate_attestation()
 
@@ -291,7 +297,10 @@ class TestSovereignVerifier:
             with open(report_path) as f:
                 loaded_report = json.load(f)
 
-            assert loaded_report["attestation"]["attestation_id"] == attestation["attestation_id"]
+            assert (
+                loaded_report["attestation"]["attestation_id"]
+                == attestation["attestation_id"]
+            )
 
     def test_portable_trust_verification(self, compliance_bundle):
         """

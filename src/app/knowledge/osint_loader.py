@@ -73,7 +73,9 @@ class OSINTLoader:
             self.tools = data.get("categories", {})
 
             tool_count = sum(len(tools) for tools in self.tools.values())
-            logger.info("Loaded %s tools from %s categories", tool_count, len(self.tools))
+            logger.info(
+                "Loaded %s tools from %s categories", tool_count, len(self.tools)
+            )
             return True
 
         except json.JSONDecodeError as e:
@@ -153,7 +155,9 @@ class OSINTLoader:
             try:
                 from src.plugins.osint.sample_osint_plugin import SampleOSINTPlugin
             except ImportError:
-                logger.error("Cannot import SampleOSINTPlugin — plugin registration unavailable")
+                logger.error(
+                    "Cannot import SampleOSINTPlugin — plugin registration unavailable"
+                )
                 self._log_registration(tool_name, False, "import error")
                 return False
 
@@ -175,7 +179,11 @@ class OSINTLoader:
 
         self._registered_plugins[plugin_key] = plugin
         self._log_registration(tool_name, True, "OK")
-        logger.info("Registered plugin: %s (total=%d)", plugin_key, len(self._registered_plugins))
+        logger.info(
+            "Registered plugin: %s (total=%d)",
+            plugin_key,
+            len(self._registered_plugins),
+        )
         return True
 
     def unregister_plugin(self, tool_name: str) -> bool:

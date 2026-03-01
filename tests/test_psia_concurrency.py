@@ -42,7 +42,9 @@ class TestSnapshotIsolation:
         assert snap2.read("key1") == "initial"
 
         # Mutate live state AFTER snapshot
-        mutation2 = store.prepare_mutation("req_update", snap2, set(), {"key1": "updated"})
+        mutation2 = store.prepare_mutation(
+            "req_update", snap2, set(), {"key1": "updated"}
+        )
         store.commit(mutation2)
 
         # Snapshot still sees old value
@@ -166,10 +168,16 @@ class TestRetryAndAbort:
             _ = snap.read("x")
             # Concurrently modify "x" so our read-set is stale at commit
             fresh = store.create_snapshot()
-            store.commit(store.prepare_mutation("interfere", fresh, set(), {"x": snap.read("x") + 100}))
+            store.commit(
+                store.prepare_mutation(
+                    "interfere", fresh, set(), {"x": snap.read("x") + 100}
+                )
+            )
             return {"x"}, {"result": 42}
 
-        result = store.commit_with_retry("req_fail", evaluate_and_cause_conflict, max_retries=0)
+        result = store.commit_with_retry(
+            "req_fail", evaluate_and_cause_conflict, max_retries=0
+        )
         assert result.outcome in (CommitOutcome.CONFLICT, CommitOutcome.ABORTED)
 
 

@@ -38,7 +38,9 @@ class TestCybersecurityKnowledge(unittest.TestCase):
 
     def test_get_subsection(self):
         """Test getting a subsection."""
-        love_letter = self.cyber_knowledge.get_subsection("malware", "case_study_love_letter")
+        love_letter = self.cyber_knowledge.get_subsection(
+            "malware", "case_study_love_letter"
+        )
         self.assertIsNotNone(love_letter)
         self.assertEqual(love_letter["name"], "ILOVEYOU (Love Letter) Worm")
         self.assertEqual(love_letter["year"], 2000)
@@ -48,7 +50,9 @@ class TestCybersecurityKnowledge(unittest.TestCase):
         # Search for 'buffer overflow'
         results = self.cyber_knowledge.search_content("buffer overflow")
         self.assertGreater(len(results), 0)
-        self.assertTrue(any("buffer" in result["content"].lower() for result in results))
+        self.assertTrue(
+            any("buffer" in result["content"].lower() for result in results)
+        )
 
         # Search for 'Love Letter'
         results = self.cyber_knowledge.search_content("Love Letter")
@@ -76,7 +80,9 @@ class TestCybersecurityKnowledge(unittest.TestCase):
         self.assertIsNotNone(malware)
         self.assertIn("strategic_importance", malware)
 
-        web_attacks = memory_system.get_knowledge("cybersecurity_education", "web_attacks")
+        web_attacks = memory_system.get_knowledge(
+            "cybersecurity_education", "web_attacks"
+        )
         self.assertIsNotNone(web_attacks)
         self.assertIn("strategic_importance", web_attacks)
 

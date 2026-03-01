@@ -36,7 +36,9 @@ class TestKeyManagementSystem:
     def test_generate_key_local(self, kms):
         """Test local key generation"""
         metadata = kms.generate_key(
-            key_id="test-signing-key", key_type=KeyType.SIGNING, rotation_policy={"enabled": True, "rotation_days": 90}
+            key_id="test-signing-key",
+            key_type=KeyType.SIGNING,
+            rotation_policy={"enabled": True, "rotation_days": 90},
         )
 
         assert metadata.key_id == "test-signing-key"
@@ -47,7 +49,9 @@ class TestKeyManagementSystem:
 
     def test_generate_symmetric_key(self, kms):
         """Test symmetric key generation"""
-        metadata = kms.generate_key(key_id="test-encryption-key", key_type=KeyType.SYMMETRIC)
+        metadata = kms.generate_key(
+            key_id="test-encryption-key", key_type=KeyType.SYMMETRIC
+        )
 
         assert metadata.key_type == KeyType.SYMMETRIC
         assert metadata.status == KeyStatus.ACTIVE
@@ -68,7 +72,9 @@ class TestKeyManagementSystem:
         """Test key rotation"""
         # Generate initial key
         kms.generate_key(
-            key_id="rotate-test-key", key_type=KeyType.SIGNING, rotation_policy={"enabled": True, "rotation_days": 1}
+            key_id="rotate-test-key",
+            key_type=KeyType.SIGNING,
+            rotation_policy={"enabled": True, "rotation_days": 1},
         )
 
         # Force rotation
@@ -83,9 +89,17 @@ class TestKeyManagementSystem:
 
     def test_access_control(self, kms):
         """Test RBAC access control"""
-        access_control = {"use": ["user1", "user2"], "rotate": ["admin1"], "revoke": ["admin1", "admin2"]}
+        access_control = {
+            "use": ["user1", "user2"],
+            "rotate": ["admin1"],
+            "revoke": ["admin1", "admin2"],
+        }
 
-        kms.generate_key(key_id="access-controlled-key", key_type=KeyType.SIGNING, access_control=access_control)
+        kms.generate_key(
+            key_id="access-controlled-key",
+            key_type=KeyType.SIGNING,
+            access_control=access_control,
+        )
 
         # Test access checks
         assert kms.check_access("access-controlled-key", "user1", "use") is True
@@ -167,7 +181,9 @@ class TestKeyManagementSystem:
     def test_rotation_not_due(self, kms):
         """Test that rotation is skipped when not due"""
         kms.generate_key(
-            key_id="not-due-key", key_type=KeyType.SIGNING, rotation_policy={"enabled": True, "rotation_days": 365}
+            key_id="not-due-key",
+            key_type=KeyType.SIGNING,
+            rotation_policy={"enabled": True, "rotation_days": 365},
         )
 
         # Try to rotate without force

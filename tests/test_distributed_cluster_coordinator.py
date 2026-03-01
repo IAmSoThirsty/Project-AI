@@ -80,7 +80,9 @@ class TestClusterTask:
 
     def test_cluster_task_creation(self):
         """Test creating ClusterTask"""
-        task = ClusterTask(task_id="task-1", task_type="process_data", payload={"data": "test"})
+        task = ClusterTask(
+            task_id="task-1", task_type="process_data", payload={"data": "test"}
+        )
 
         assert task.task_id == "task-1"
         assert task.task_type == "process_data"
@@ -89,7 +91,9 @@ class TestClusterTask:
 
     def test_cluster_task_to_dict(self):
         """Test ClusterTask serialization"""
-        task = ClusterTask(task_id="task-1", task_type="process_data", payload={"data": "test"})
+        task = ClusterTask(
+            task_id="task-1", task_type="process_data", payload={"data": "test"}
+        )
 
         data = task.to_dict()
         assert data["task_id"] == "task-1"
@@ -282,7 +286,9 @@ class TestClusterCoordinator:
         """Test task submission"""
         coordinator.start()
 
-        task_id = coordinator.submit_task(task_type="process_data", payload={"data": "test"})
+        task_id = coordinator.submit_task(
+            task_type="process_data", payload={"data": "test"}
+        )
 
         assert task_id is not None
 

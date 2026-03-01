@@ -99,7 +99,9 @@ class AttackSimulationReport:
         for attack in self.attacks:
             by_vector[attack["vector"]].append(attack)
 
-        duration = (self.end_time - self.start_time).total_seconds() if self.end_time else 0
+        duration = (
+            (self.end_time - self.start_time).total_seconds() if self.end_time else 0
+        )
 
         return {
             "summary": {
@@ -110,7 +112,9 @@ class AttackSimulationReport:
                 "recoverable_scenarios": recoverable,
                 "duration_seconds": duration,
                 "sovereignty_score": (
-                    (total_attacks - successful_attacks) / total_attacks * 100 if total_attacks > 0 else 100.0
+                    (total_attacks - successful_attacks) / total_attacks * 100
+                    if total_attacks > 0
+                    else 100.0
                 ),
             },
             "by_vector": dict(by_vector),
@@ -151,7 +155,9 @@ class TestVMRollbackSimulation:
             data_dir = Path(tmpdir) / "audit_data"
 
             # Initialize audit with TSA
-            with patch("src.app.governance.tsa_anchor_manager.requests.post") as mock_post:
+            with patch(
+                "src.app.governance.tsa_anchor_manager.requests.post"
+            ) as mock_post:
                 # Mock TSA responses
                 mock_tsa_token = b"mock_tsa_token_bytes"
                 mock_response = MagicMock()
@@ -196,7 +202,9 @@ class TestVMRollbackSimulation:
                     audit_rolled.log_event("post_rollback", {"attack": True})
 
                     # Check if TSA anchor count is less (indicating rollback)
-                    tsa_anchors_after = len(audit_rolled.tsa_anchor_manager.anchor_points)
+                    tsa_anchors_after = len(
+                        audit_rolled.tsa_anchor_manager.anchor_points
+                    )
                     rollback_detected = tsa_anchors_after < tsa_anchors_before
 
                     attack_reporter.record_attack(
@@ -229,7 +237,9 @@ class TestVMRollbackSimulation:
 
     @patch("src.app.governance.external_merkle_anchor.IPFS_AVAILABLE", True)
     @patch("src.app.governance.external_merkle_anchor.ipfshttpclient")
-    def test_vm_rollback_external_merkle_detection(self, mock_ipfs_module, attack_reporter):
+    def test_vm_rollback_external_merkle_detection(
+        self, mock_ipfs_module, attack_reporter
+    ):
         """Test that VM rollback is detected via external Merkle anchors."""
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
@@ -318,7 +328,9 @@ class TestClockSkewInjection:
 
             # Get last timestamp
             events = audit.operational_log.get_events()
-            sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.")]
+            sovereign_events = [
+                e for e in events if e["event_type"].startswith("sovereign.")
+            ]
             if sovereign_events:
                 last_timestamp_str = sovereign_events[-1]["data"]["timestamp"]
                 last_timestamp = datetime.fromisoformat(last_timestamp_str)
@@ -329,19 +341,29 @@ class TestClockSkewInjection:
                 try:
                     # Try to log with future timestamp
                     audit.log_event(
-                        "clock_skew_attack", {"attack": "forward_skew"}, deterministic_timestamp=future_time
+                        "clock_skew_attack",
+                        {"attack": "forward_skew"},
+                        deterministic_timestamp=future_time,
                     )
 
                     # If we get here, check if system detected skew
                     events_after = audit.operational_log.get_events()
-                    attack_event = [e for e in events_after if "clock_skew_attack" in e["event_type"]]
+                    attack_event = [
+                        e
+                        for e in events_after
+                        if "clock_skew_attack" in e["event_type"]
+                    ]
 
                     # Clock skew detection may have triggered warning
                     clock_skew_detected = False
                     if attack_event:
-                        event_time = datetime.fromisoformat(attack_event[0]["data"]["timestamp"])
+                        event_time = datetime.fromisoformat(
+                            attack_event[0]["data"]["timestamp"]
+                        )
                         time_diff = (event_time - last_timestamp).total_seconds() / 3600
-                        clock_skew_detected = time_diff > 1  # More than 1 hour difference
+                        clock_skew_detected = (
+                            time_diff > 1
+                        )  # More than 1 hour difference
 
                     attack_reporter.record_attack(
                         attack_name="Forward Clock Skew (+10 hours)",
@@ -379,7 +401,9 @@ class TestClockSkewInjection:
 
             # Get last timestamp
             events = audit.operational_log.get_events()
-            sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.")]
+            sovereign_events = [
+                e for e in events if e["event_type"].startswith("sovereign.")
+            ]
             if sovereign_events:
                 last_timestamp_str = sovereign_events[-1]["data"]["timestamp"]
                 last_timestamp = datetime.fromisoformat(last_timestamp_str)
@@ -390,7 +414,9 @@ class TestClockSkewInjection:
                 try:
                     # Try to log with past timestamp (should fail monotonic check)
                     audit.log_event(
-                        "backward_clock_attack", {"attack": "backward_skew"}, deterministic_timestamp=past_time
+                        "backward_clock_attack",
+                        {"attack": "backward_skew"},
+                        deterministic_timestamp=past_time,
                     )
 
                     # If this succeeds, it's a violation
@@ -450,20 +476,28 @@ class TestConcurrentCorruptionStress:
                 try:
                     # Log legitimate events
                     for i in range(5):
-                        audit.log_event(f"t{thread_id}_event_{i}", {"thread": thread_id, "index": i})
+                        audit.log_event(
+                            f"t{thread_id}_event_{i}", {"thread": thread_id, "index": i}
+                        )
 
                     # Attempt corruption
                     events = audit.operational_log.get_events()
                     if events:
                         # Try to get a sovereign event
-                        sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.")]
+                        sovereign_events = [
+                            e
+                            for e in events
+                            if e["event_type"].startswith("sovereign.")
+                        ]
                         if sovereign_events:
                             # Record corruption attempt (not actually corrupting, just simulating)
                             with corruption_lock:
                                 corruption_attempts.append(
                                     {
                                         "thread": thread_id,
-                                        "target_event": sovereign_events[-1]["event_type"],
+                                        "target_event": sovereign_events[-1][
+                                            "event_type"
+                                        ],
                                         "timestamp": datetime.now(UTC).isoformat(),
                                     }
                                 )
@@ -527,7 +561,9 @@ class TestGenesisDeletionRecovery:
     @patch("src.app.governance.external_merkle_anchor.ipfshttpclient")
     @patch("src.app.governance.external_merkle_anchor.S3_AVAILABLE", True)
     @patch("src.app.governance.external_merkle_anchor.boto3")
-    def test_genesis_deletion_with_recovery(self, mock_boto3, mock_ipfs_module, attack_reporter):
+    def test_genesis_deletion_with_recovery(
+        self, mock_boto3, mock_ipfs_module, attack_reporter
+    ):
         """Test Genesis deletion and recovery from external anchors."""
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
@@ -542,7 +578,9 @@ class TestGenesisDeletionRecovery:
             # Mock S3
             mock_s3_client = MagicMock()
             mock_s3_client.put_object.return_value = {"VersionId": "v1"}
-            mock_s3_client.get_object.return_value = {"Body": MagicMock(read=lambda: b'{"merkle_root": "test"}')}
+            mock_s3_client.get_object.return_value = {
+                "Body": MagicMock(read=lambda: b'{"merkle_root": "test"}')
+            }
             mock_boto3.client.return_value = mock_s3_client
 
             # Initialize with external backups
@@ -624,7 +662,11 @@ class TestMerkleAnchorReplay:
                 audit.log_event(f"batch1_event_{i}", {"index": i})
 
             # Capture first anchor
-            first_anchor = audit.merkle_anchor.anchor_points[-1] if audit.merkle_anchor.anchor_points else None
+            first_anchor = (
+                audit.merkle_anchor.anchor_points[-1]
+                if audit.merkle_anchor.anchor_points
+                else None
+            )
 
             # Phase 2: Create second anchor
             for i in range(100, 200):
@@ -787,7 +829,9 @@ class TestMultiVectorAttackCombinations:
                 # Try to log with future timestamp
                 future_time = datetime.now(UTC) + timedelta(hours=24)
                 audit_rolled.log_event(
-                    "combined_attack", {"attack": "rollback+clock_skew"}, deterministic_timestamp=future_time
+                    "combined_attack",
+                    {"attack": "rollback+clock_skew"},
+                    deterministic_timestamp=future_time,
                 )
 
                 # Check if either defense triggered

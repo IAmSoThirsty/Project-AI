@@ -74,11 +74,15 @@ class MiniatureOfficeAdapter:
             )
 
             self._initialized = True
-            logger.info("✅ MiniatureOffice fully initialized (4 sub-components active)")
+            logger.info(
+                "✅ MiniatureOffice fully initialized (4 sub-components active)"
+            )
             return True
 
         except Exception as exc:
-            logger.error("MiniatureOffice initialization failed: %s", exc, exc_info=True)
+            logger.error(
+                "MiniatureOffice initialization failed: %s", exc, exc_info=True
+            )
             self._initialized = False
             return False
 

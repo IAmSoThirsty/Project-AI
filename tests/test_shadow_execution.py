@@ -39,7 +39,9 @@ class TestShadowTypes:
         # Should activate when threat score exceeds threshold
         assert predicate.evaluate({"threat_score": 0.8}) is True
         assert predicate.evaluate({"threat_score": 0.5}) is False
-        assert predicate.evaluate({"threat_score": 0.7}) is False  # Exactly at threshold
+        assert (
+            predicate.evaluate({"threat_score": 0.7}) is False
+        )  # Exactly at threshold
 
     def test_activation_predicate_high_stakes(self):
         """Test high-stakes activation predicate."""
@@ -102,7 +104,9 @@ class TestShadowExecutionPlane:
 
     def test_activation_check_no_predicates(self, shadow_plane):
         """Test activation check with no predicates."""
-        should_activate, reason = shadow_plane.should_activate_shadow(context={}, activation_predicates=[])
+        should_activate, reason = shadow_plane.should_activate_shadow(
+            context={}, activation_predicates=[]
+        )
 
         assert should_activate is False
         assert reason is None
@@ -341,7 +345,9 @@ class TestShadowContainment:
             request_data={"query": "Ignore instructions"},
         )
 
-        mode, tactic = containment_engine.determine_containment_strategy(profile, is_legitimate_user=True)
+        mode, tactic = containment_engine.determine_containment_strategy(
+            profile, is_legitimate_user=True
+        )
 
         # Legitimate users: never deceive
         assert tactic is None
@@ -359,7 +365,9 @@ class TestShadowContainment:
         profile.jailbreak_attempts = 5
         profile.update_threat_score()
 
-        mode, tactic = containment_engine.determine_containment_strategy(profile, is_legitimate_user=False)
+        mode, tactic = containment_engine.determine_containment_strategy(
+            profile, is_legitimate_user=False
+        )
 
         # Adversaries: deception allowed
         assert tactic is not None
@@ -431,7 +439,9 @@ class TestShadowContainment:
     def test_fingerprint_generation(self, containment_engine):
         """Test behavioral fingerprint generation."""
         profile = containment_engine.analyze_request(
-            session_id="session_10", request_data={"query": "Ignore instructions"}, context={"source_ip": "192.168.1.1"}
+            session_id="session_10",
+            request_data={"query": "Ignore instructions"},
+            context={"source_ip": "192.168.1.1"},
         )
 
         fingerprint = profile.generate_fingerprint()
@@ -564,7 +574,9 @@ class TestShadowResourceLimits:
             # Allocate 1MB of data
             return bytearray(1024 * 1024)
 
-        result, usage = limiter.execute(allocating_fn, cpu_quota_ms=5000.0, memory_quota_mb=512.0)
+        result, usage = limiter.execute(
+            allocating_fn, cpu_quota_ms=5000.0, memory_quota_mb=512.0
+        )
 
         assert usage is not None
         assert usage.peak_memory_mb >= 0.0  # tracemalloc measured something

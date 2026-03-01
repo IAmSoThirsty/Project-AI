@@ -265,11 +265,15 @@ class TestSovereignAuditLog:
             audit = SovereignAuditLog(data_dir=tmpdir)
 
             # Log event
-            audit.log_event(event_type="verifiable_event", data={"test": "data"}, actor="verifier")
+            audit.log_event(
+                event_type="verifiable_event", data={"test": "data"}, actor="verifier"
+            )
 
             # Get event ID from logged events
             events = audit.operational_log.get_events()
-            sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.")]
+            sovereign_events = [
+                e for e in events if e["event_type"].startswith("sovereign.")
+            ]
 
             if sovereign_events:
                 event_id = sovereign_events[0]["data"]["event_id"]
@@ -288,12 +292,16 @@ class TestSovereignAuditLog:
             fixed_time = datetime(2025, 1, 1, 12, 0, 0, tzinfo=UTC)
 
             audit.log_event(
-                event_type="deterministic_event", data={"replay": "test"}, deterministic_timestamp=fixed_time
+                event_type="deterministic_event",
+                data={"replay": "test"},
+                deterministic_timestamp=fixed_time,
             )
 
             # Verify event has deterministic timestamp
             events = audit.operational_log.get_events()
-            sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.")]
+            sovereign_events = [
+                e for e in events if e["event_type"].startswith("sovereign.")
+            ]
 
             if sovereign_events:
                 event_data = sovereign_events[0]["data"]
@@ -309,7 +317,9 @@ class TestSovereignAuditLog:
 
             # Get event ID
             events = audit.operational_log.get_events()
-            sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.")]
+            sovereign_events = [
+                e for e in events if e["event_type"].startswith("sovereign.")
+            ]
 
             if sovereign_events:
                 event_id = sovereign_events[0]["data"]["event_id"]
@@ -330,11 +340,15 @@ class TestSovereignAuditLog:
             audit = SovereignAuditLog(data_dir=tmpdir)
 
             # Log event
-            audit.log_event(event_type="verifiable_proof_event", data={"verify": "proof"})
+            audit.log_event(
+                event_type="verifiable_proof_event", data={"verify": "proof"}
+            )
 
             # Get event ID and generate proof
             events = audit.operational_log.get_events()
-            sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.")]
+            sovereign_events = [
+                e for e in events if e["event_type"].startswith("sovereign.")
+            ]
 
             if sovereign_events:
                 event_id = sovereign_events[0]["data"]["event_id"]
@@ -397,7 +411,9 @@ class TestSovereignAuditLog:
 
             # Second instance should be able to verify events from first
             events = audit2.operational_log.get_events()
-            sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.")]
+            sovereign_events = [
+                e for e in events if e["event_type"].startswith("sovereign.")
+            ]
 
             if sovereign_events:
                 event_id = sovereign_events[0]["data"]["event_id"]
@@ -482,7 +498,11 @@ class TestConstitutionalGradeFeatures:
 
             # Verify all events have expected timestamps
             events = audit.operational_log.get_events()
-            sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.deterministic_event")]
+            sovereign_events = [
+                e
+                for e in events
+                if e["event_type"].startswith("sovereign.deterministic_event")
+            ]
 
             assert len(sovereign_events) == 3
 
@@ -516,7 +536,9 @@ class TestConstitutionalGradeFeatures:
 
             # Verify event has HMAC
             events = audit.operational_log.get_events()
-            sovereign_events = [e for e in events if e["event_type"].startswith("sovereign.hmac_test")]
+            sovereign_events = [
+                e for e in events if e["event_type"].startswith("sovereign.hmac_test")
+            ]
 
             if sovereign_events:
                 event_data = sovereign_events[0]["data"]

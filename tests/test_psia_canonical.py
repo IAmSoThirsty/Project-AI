@@ -14,6 +14,9 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
+from psia.canonical.capability_authority import (
+    CapabilityAuthority,
+)
 from psia.canonical.commit_coordinator import (
     CanonicalStore,
     CommitCoordinator,
@@ -23,15 +26,12 @@ from psia.canonical.ledger import (
     DurableLedger,
     ExecutionRecord,
 )
-from psia.canonical.capability_authority import (
-    CapabilityAuthority,
-)
 from psia.schemas.capability import CapabilityScope, ScopeConstraints
-
 
 # ═══════════════════════════════════════════════════════════════════
 #  CanonicalStore Tests
 # ═══════════════════════════════════════════════════════════════════
+
 
 class TestCanonicalStore:
 
@@ -112,6 +112,7 @@ class TestCanonicalStore:
 # ═══════════════════════════════════════════════════════════════════
 #  CommitCoordinator Tests
 # ═══════════════════════════════════════════════════════════════════
+
 
 class TestCommitCoordinator:
 
@@ -238,6 +239,7 @@ class TestCommitCoordinator:
 #  DurableLedger Tests
 # ═══════════════════════════════════════════════════════════════════
 
+
 def _record(rid: str = "rec_1", req_id: str = "req_1") -> ExecutionRecord:
     return ExecutionRecord(
         record_id=rid,
@@ -343,6 +345,7 @@ class TestDurableLedger:
 # ═══════════════════════════════════════════════════════════════════
 #  CapabilityAuthority Tests
 # ═══════════════════════════════════════════════════════════════════
+
 
 def _scope(action: str = "execute", resource: str = "/api/v1/*") -> CapabilityScope:
     return CapabilityScope(

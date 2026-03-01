@@ -87,7 +87,9 @@ class FeatureExtractor:
 
     def __init__(self):
         # Historical baselines for anomaly detection
-        self.geo_baselines: dict[str, dict[str, int]] = {}  # artifact_id -> {country: count}
+        self.geo_baselines: dict[str, dict[str, int]] = (
+            {}
+        )  # artifact_id -> {country: count}
         self.time_baselines: dict[str, list] = {}  # artifact_id -> [timestamps]
 
         logger.info("Feature extractor initialized")
@@ -118,17 +120,25 @@ class FeatureExtractor:
         serializer = DeterministicSerializer()
 
         asn_risk = serializer.normalize_confidence(enrichment.asn_risk_index or 0.5)
-        geo_anomaly = serializer.normalize_confidence(self._calculate_geo_anomaly(event.artifact_id, event.geo.country))
-        token_sensitivity = serializer.normalize_confidence(enrichment.token_sensitivity or 0.5)
+        geo_anomaly = serializer.normalize_confidence(
+            self._calculate_geo_anomaly(event.artifact_id, event.geo.country)
+        )
+        token_sensitivity = serializer.normalize_confidence(
+            enrichment.token_sensitivity or 0.5
+        )
         time_deviation = serializer.normalize_confidence(
             self._calculate_time_deviation(event.artifact_id, event.ingest_timestamp)
         )
         reuse_count = enrichment.historical_reuse_count
-        infrastructure_entropy = serializer.normalize_confidence(self._calculate_infrastructure_entropy(enrichment))
+        infrastructure_entropy = serializer.normalize_confidence(
+            self._calculate_infrastructure_entropy(enrichment)
+        )
         toolchain_fp = self._fingerprint_toolchain(event.user_agent or "")
         tor_flag = enrichment.is_tor
         vps_flag = enrichment.infrastructure_type in ["vps", "cloud", "datacenter"]
-        nat_density = serializer.normalize_confidence(self._estimate_nat_density(event.source_ip))
+        nat_density = serializer.normalize_confidence(
+            self._estimate_nat_density(event.source_ip)
+        )
 
         vector = FeatureVector(
             ASN_risk=asn_risk,

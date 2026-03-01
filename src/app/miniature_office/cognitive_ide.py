@@ -108,7 +108,9 @@ class CognitiveIDE:
             intent=user_intent,
         )
         self._directives.append(directive)
-        self._log_audit("create_directive", {"id": directive.directive_id, "intent": user_intent})
+        self._log_audit(
+            "create_directive", {"id": directive.directive_id, "intent": user_intent}
+        )
         logger.info("Directive created: %s", user_intent)
         return directive
 

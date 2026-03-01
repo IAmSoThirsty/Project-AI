@@ -29,7 +29,11 @@ class OfficeSchema:
 
     @staticmethod
     def from_dict(data: Dict) -> "OfficeSchema":
-        return OfficeSchema(officeId=data["officeId"], roles=data.get("roles", []), manager=data.get("manager", ""))
+        return OfficeSchema(
+            officeId=data["officeId"],
+            roles=data.get("roles", []),
+            manager=data.get("manager", ""),
+        )
 
 
 class Office:
@@ -66,7 +70,9 @@ class Office:
     def to_schema(self) -> OfficeSchema:
         """Convert to schema format"""
         return OfficeSchema(
-            officeId=self.office_id, roles=self.agents, manager=self.manager.entity_id if self.manager else ""
+            officeId=self.office_id,
+            roles=self.agents,
+            manager=self.manager.entity_id if self.manager else "",
         )
 
     def to_dict(self) -> Dict:
@@ -84,11 +90,19 @@ class FloorSchema:
     offices: List[Dict]
 
     def to_dict(self) -> Dict:
-        return {"floorId": self.floorId, "language": self.language, "offices": self.offices}
+        return {
+            "floorId": self.floorId,
+            "language": self.language,
+            "offices": self.offices,
+        }
 
     @staticmethod
     def from_dict(data: Dict) -> "FloorSchema":
-        return FloorSchema(floorId=data["floorId"], language=data["language"], offices=data.get("offices", []))
+        return FloorSchema(
+            floorId=data["floorId"],
+            language=data["language"],
+            offices=data.get("offices", []),
+        )
 
 
 class Floor:
@@ -180,7 +194,9 @@ class World:
 
         # Log world creation
         get_audit_log().log_event(
-            EventType.ENTITY_CREATED, target_id=self.world_id, data={"entity_type": "world", "name": name}
+            EventType.ENTITY_CREATED,
+            target_id=self.world_id,
+            data={"entity_type": "world", "name": name},
         )
 
     def add_floor(self, floor: Floor):
@@ -190,7 +206,11 @@ class World:
         get_audit_log().log_event(
             EventType.ENTITY_CREATED,
             target_id=floor.floor_id,
-            data={"entity_type": "floor", "language": floor.language, "world_id": self.world_id},
+            data={
+                "entity_type": "floor",
+                "language": floor.language,
+                "world_id": self.world_id,
+            },
         )
 
     def get_floor(self, floor_id: str) -> Optional[Floor]:
@@ -212,7 +232,9 @@ class World:
         self.time += 1
 
         get_audit_log().log_event(
-            EventType.AGENT_ACTION, target_id=self.world_id, data={"action": "world_tick", "time": self.time}
+            EventType.AGENT_ACTION,
+            target_id=self.world_id,
+            data={"action": "world_tick", "time": self.time},
         )
 
     def to_schema(self) -> WorldSchema:
@@ -221,7 +243,9 @@ class World:
             worldId=self.world_id,
             name=self.name,
             floors=[floor.to_dict() for floor in self.floors.values()],
-            supplyStore={"items": [t.to_dict() for t in self.supply_store.tools.values()]},
+            supplyStore={
+                "items": [t.to_dict() for t in self.supply_store.tools.values()]
+            },
             time=self.time,
         )
 

@@ -81,11 +81,15 @@ class TestFullBuildWorkflow:
         }
 
         # Step 1: Constitutional validation
-        is_allowed, reason = integrated_system["constitution"].validate_build_action("build", context)
+        is_allowed, reason = integrated_system["constitution"].validate_build_action(
+            "build", context
+        )
         assert is_allowed, f"Build blocked: {reason}"
 
         # Step 2: Security validation
-        security_context = integrated_system["security"].get_security_context("build_agent")
+        security_context = integrated_system["security"].get_security_context(
+            "build_agent"
+        )
         assert security_context is not None
 
         # Step 3: Audit build start
@@ -97,7 +101,9 @@ class TestFullBuildWorkflow:
             "gradle_evolution.cognition.build_cognition.check_boundary",
             return_value=True,
         ):
-            optimized_tasks, reasoning = integrated_system["cognition"].deliberate_build_plan(tasks, context)
+            optimized_tasks, reasoning = integrated_system[
+                "cognition"
+            ].deliberate_build_plan(tasks, context)
         assert len(optimized_tasks) > 0
 
         # Step 5: Record build state
@@ -113,7 +119,9 @@ class TestFullBuildWorkflow:
         outputs = {"build/Main.class": "def456"}
         metadata = {"timestamp": "2024-01-01T00:00:00Z", "duration": 45.2}
 
-        capsule = integrated_system["capsules"].create_capsule(optimized_tasks, inputs, outputs, metadata)
+        capsule = integrated_system["capsules"].create_capsule(
+            optimized_tasks, inputs, outputs, metadata
+        )
         assert capsule is not None
 
         # Step 7: Audit completion
@@ -134,7 +142,9 @@ class TestFullBuildWorkflow:
         context = {"violations": ["security_violation"]}
 
         # Constitutional check should block
-        is_allowed, reason = integrated_system["constitution"].validate_build_action("deploy", context)
+        is_allowed, reason = integrated_system["constitution"].validate_build_action(
+            "deploy", context
+        )
 
         assert not is_allowed
         assert "security_violation" in reason
@@ -142,7 +152,9 @@ class TestFullBuildWorkflow:
         # Violation should be logged
         assert len(integrated_system["constitution"].violation_log) > 0
 
-    def test_capsule_replay_workflow(self, integrated_system, sample_build_capsule_data):
+    def test_capsule_replay_workflow(
+        self, integrated_system, sample_build_capsule_data
+    ):
         """Test capsule creation and replay workflow."""
         # Create original capsule
         capsule = BuildCapsule(**sample_build_capsule_data)
@@ -171,7 +183,9 @@ class TestFullBuildWorkflow:
                 "gradle_evolution.cognition.build_cognition.check_boundary",
                 return_value=True,
             ):
-                optimized, reasoning = integrated_system["cognition"].deliberate_build_plan(tasks, context)
+                optimized, reasoning = integrated_system[
+                    "cognition"
+                ].deliberate_build_plan(tasks, context)
 
             # Record learning
             integrated_system["cognition"].learn_from_build(
@@ -243,7 +257,9 @@ class TestErrorRecovery:
         is_allowed, _ = engine.validate_build_action("compile", context={})
         assert isinstance(is_allowed, bool)
 
-    def test_capsule_integrity_failure(self, capsule_storage, sample_build_capsule_data):
+    def test_capsule_integrity_failure(
+        self, capsule_storage, sample_build_capsule_data
+    ):
         """Test handling of capsule integrity failure."""
         engine = CapsuleEngine(storage_path=capsule_storage)
 

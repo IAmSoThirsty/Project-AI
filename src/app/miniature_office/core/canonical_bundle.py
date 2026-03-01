@@ -113,7 +113,14 @@ class AuthorityRoleLedger:
     roles: Dict[str, Dict[str, Any]]  # role_name -> {powers, prohibitions}
     grants: List[AuthorityGrant]
 
-    def grant_authority(self, role: str, authority: str, to_entity: str, by_entity: str, justification: str) -> str:
+    def grant_authority(
+        self,
+        role: str,
+        authority: str,
+        to_entity: str,
+        by_entity: str,
+        justification: str,
+    ) -> str:
         """Grant authority and record it."""
         grant = AuthorityGrant(
             grant_id=f"grant-{len(self.grants) + 1}",
@@ -127,7 +134,9 @@ class AuthorityRoleLedger:
         self.grants.append(grant)
         return grant.grant_id
 
-    def revoke_authority(self, grant_id: str, by_entity: str, justification: str) -> bool:
+    def revoke_authority(
+        self, grant_id: str, by_entity: str, justification: str
+    ) -> bool:
         """Revoke a previously granted authority."""
         for grant in self.grants:
             if grant.grant_id == grant_id and not grant.revoked:
@@ -140,7 +149,11 @@ class AuthorityRoleLedger:
 
     def get_active_authorities(self, entity_id: str) -> List[str]:
         """Get all active authorities for an entity."""
-        return [grant.authority for grant in self.grants if grant.granted_to == entity_id and not grant.revoked]
+        return [
+            grant.authority
+            for grant in self.grants
+            if grant.granted_to == entity_id and not grant.revoked
+        ]
 
     def has_authority(self, entity_id: str, authority: str) -> bool:
         """Check if entity has specific authority."""
@@ -211,7 +224,9 @@ Timestamp: {self.timestamp.isoformat()}
             if check.violations:
                 report += f"  Violations: {', '.join(check.violations)}\n"
 
-        report += f"\n\nOverall Status: {'LOCKED' if self.overall_locked else 'UNLOCKED'}\n"
+        report += (
+            f"\n\nOverall Status: {'LOCKED' if self.overall_locked else 'UNLOCKED'}\n"
+        )
         report += f"Signature: {self.attestation_signature}\n"
 
         return report
@@ -251,7 +266,12 @@ class BoardResolutionArchive:
     resolutions: List[BoardResolution]
 
     def record_resolution(
-        self, directive_id: str, decision: str, language: Optional[str], rationale: str, votes: Dict[str, str]
+        self,
+        directive_id: str,
+        decision: str,
+        language: Optional[str],
+        rationale: str,
+        votes: Dict[str, str],
     ) -> str:
         """Record a new board resolution."""
         resolution = BoardResolution(
@@ -301,7 +321,13 @@ class DirectivePrecedentCorpus:
     index: Dict[str, List[str]]  # tag -> precedent_ids
 
     def add_precedent(
-        self, directive_id: str, resolution_id: str, scenario: str, outcome: str, rationale: str, tags: List[str]
+        self,
+        directive_id: str,
+        resolution_id: str,
+        scenario: str,
+        outcome: str,
+        rationale: str,
+        tags: List[str],
     ) -> str:
         """Add a new precedent to the corpus."""
         precedent = DirectivePrecedent(
@@ -417,7 +443,9 @@ class LawFailureResponseMatrix:
         """Get the legal response for a law-failure combination."""
         return self.responses.get((law, failure))
 
-    def verify_completeness(self, all_laws: List[str], all_failures: List[str]) -> Tuple[bool, List[str]]:
+    def verify_completeness(
+        self, all_laws: List[str], all_failures: List[str]
+    ) -> Tuple[bool, List[str]]:
         """Verify matrix is complete - no undefined states."""
         missing = []
         for law in all_laws:
@@ -453,7 +481,14 @@ class FormalLawVerificationModels:
     version: str
     invariants: List[FormalInvariant]
 
-    def add_invariant(self, name: str, statement: str, proof_type: str, proof_artifact: str, verified: bool) -> str:
+    def add_invariant(
+        self,
+        name: str,
+        statement: str,
+        proof_type: str,
+        proof_artifact: str,
+        verified: bool,
+    ) -> str:
         """Add a verified invariant."""
         invariant = FormalInvariant(
             invariant_id=f"inv-{len(self.invariants) + 1}",
@@ -568,12 +603,22 @@ class SimulationTraceCorpus:
     traces: List[SimulationTrace]
 
     def add_trace(
-        self, scenario: str, start_state: Dict[str, Any], ticks: List[Dict[str, Any]], end_state: Dict[str, Any]
+        self,
+        scenario: str,
+        start_state: Dict[str, Any],
+        ticks: List[Dict[str, Any]],
+        end_state: Dict[str, Any],
     ) -> str:
         """Add a new simulation trace."""
         # Compute deterministic hash
         trace_data = json.dumps(
-            {"scenario": scenario, "start": start_state, "ticks": ticks, "end": end_state}, sort_keys=True
+            {
+                "scenario": scenario,
+                "start": start_state,
+                "ticks": ticks,
+                "end": end_state,
+            },
+            sort_keys=True,
         )
         trace_hash = hashlib.sha256(trace_data.encode()).hexdigest()
 
@@ -760,7 +805,11 @@ class CrossFloorContractRegistry:
 
     def get_active_contracts(self, floor: str) -> List[CrossFloorContract]:
         """Get all active contracts for a floor."""
-        return [c for c in self.contracts if (c.from_floor == floor or c.to_floor == floor) and c.is_active]
+        return [
+            c
+            for c in self.contracts
+            if (c.from_floor == floor or c.to_floor == floor) and c.is_active
+        ]
 
 
 @dataclass
@@ -833,7 +882,9 @@ class ToolProvenanceTrustLedger:
     ledger_id: str
     tools: Dict[str, ToolProvenanceRecord]  # tool_id -> record
 
-    def register_tool(self, tool_name: str, version: str, checksum: str, trust_score: float) -> str:
+    def register_tool(
+        self, tool_name: str, version: str, checksum: str, trust_score: float
+    ) -> str:
         """Register a new tool."""
         tool_id = f"tool-{len(self.tools) + 1}"
         tool = ToolProvenanceRecord(
@@ -885,7 +936,12 @@ class UnsafeCapabilityExceptionRecords:
     exceptions: List[UnsafeCapabilityException]
 
     def grant_exception(
-        self, capability: str, authorized_by: str, authorized_for: str, justification: str, duration: int
+        self,
+        capability: str,
+        authorized_by: str,
+        authorized_for: str,
+        justification: str,
+        duration: int,
     ) -> str:
         """Grant an unsafe capability exception."""
         exception = UnsafeCapabilityException(
@@ -904,7 +960,11 @@ class UnsafeCapabilityExceptionRecords:
     def get_active_exceptions(self, entity_id: str) -> List[UnsafeCapabilityException]:
         """Get active exceptions for an entity."""
         now = datetime.now()
-        return [e for e in self.exceptions if e.authorized_for == entity_id and not e.revoked and e.expires_at > now]
+        return [
+            e
+            for e in self.exceptions
+            if e.authorized_for == entity_id and not e.revoked and e.expires_at > now
+        ]
 
 
 # ============================================================================
@@ -937,7 +997,11 @@ class ConsigliereInteractionLogs:
     interactions: List[ConsigliereInteraction]
 
     def log_interaction(
-        self, interaction_type: str, content: str, human_id: str, response: Optional[str] = None
+        self,
+        interaction_type: str,
+        content: str,
+        human_id: str,
+        response: Optional[str] = None,
     ) -> str:
         """Log a Consigliere interaction."""
         interaction = ConsigliereInteraction(
@@ -978,7 +1042,12 @@ class SecurityDecisionDossiers:
     decisions: List[SecurityDecision]
 
     def record_decision(
-        self, threat_model: str, risk_analysis: str, decision: str, conditions: List[str], decided_by: str
+        self,
+        threat_model: str,
+        risk_analysis: str,
+        decision: str,
+        conditions: List[str],
+        decided_by: str,
     ) -> str:
         """Record a security decision."""
         decision_record = SecurityDecision(
@@ -1020,7 +1089,12 @@ class OverrideCostLedger:
     overrides: List[Override]
 
     def record_override(
-        self, what_bypassed: str, cost: Dict[str, int], risk: str, justification: str, human_id: str
+        self,
+        what_bypassed: str,
+        cost: Dict[str, int],
+        risk: str,
+        justification: str,
+        human_id: str,
     ) -> str:
         """Record a human override."""
         override = Override(
@@ -1111,7 +1185,13 @@ class DormantRejectedProposalArchive:
     archive_id: str
     proposals: List[RejectedProposal]
 
-    def archive_proposal(self, proposal_id: str, proposed_change: str, rejection_reason: str, lessons: str) -> str:
+    def archive_proposal(
+        self,
+        proposal_id: str,
+        proposed_change: str,
+        rejection_reason: str,
+        lessons: str,
+    ) -> str:
         """Archive a rejected/dormant proposal."""
         proposal = RejectedProposal(
             proposal_id=proposal_id,
@@ -1184,7 +1264,9 @@ class ComplianceCertificationReports:
     reports_id: str
     reports: List[ComplianceReport]
 
-    def generate_report(self, standard: str, evidence: List[str], status: str, gaps: List[str]) -> str:
+    def generate_report(
+        self, standard: str, evidence: List[str], status: str, gaps: List[str]
+    ) -> str:
         """Generate a compliance report."""
         report = ComplianceReport(
             report_id=f"comp-{len(self.reports) + 1}",
@@ -1220,7 +1302,9 @@ class CivilizationFreezeProtocol:
     sealed_state_hash: Optional[str]
     access_locked: bool
 
-    def freeze(self, frozen_by: str, reason: str, state_snapshot: Dict[str, Any]) -> str:
+    def freeze(
+        self, frozen_by: str, reason: str, state_snapshot: Dict[str, Any]
+    ) -> str:
         """Execute emergency freeze."""
         state_json = json.dumps(state_snapshot, sort_keys=True)
         state_hash = hashlib.sha256(state_json.encode()).hexdigest()
@@ -1260,7 +1344,9 @@ class CivilizationShutdownSuccession:
     successor_steward: Optional[str]
     cryptographic_seal: Optional[str]
 
-    def shutdown(self, initiated_by: str, archive_data: Dict[str, Any], successor: str) -> str:
+    def shutdown(
+        self, initiated_by: str, archive_data: Dict[str, Any], successor: str
+    ) -> str:
         """Execute clean shutdown."""
         archive_json = json.dumps(archive_data, sort_keys=True)
         archive_hash = hashlib.sha256(archive_json.encode()).hexdigest()
@@ -1525,7 +1611,9 @@ def create_canonical_bundle() -> NonDesignCanonicalBundle:
         digital_signature=hashlib.sha256(b"charter-001").hexdigest(),
     )
 
-    authority_ledger = AuthorityRoleLedger(ledger_id="auth-ledger-001", created_at=now, roles={}, grants=[])
+    authority_ledger = AuthorityRoleLedger(
+        ledger_id="auth-ledger-001", created_at=now, roles={}, grants=[]
+    )
 
     purpose_lock = PurposeLockAttestation(
         attestation_id="purpose-001",
@@ -1538,56 +1626,88 @@ def create_canonical_bundle() -> NonDesignCanonicalBundle:
     )
 
     # II. Directive & Governance Records
-    board_resolutions = BoardResolutionArchive(archive_id="resolutions-001", created_at=now, resolutions=[])
+    board_resolutions = BoardResolutionArchive(
+        archive_id="resolutions-001", created_at=now, resolutions=[]
+    )
 
-    precedent_corpus = DirectivePrecedentCorpus(corpus_id="precedents-001", precedents=[], index={})
+    precedent_corpus = DirectivePrecedentCorpus(
+        corpus_id="precedents-001", precedents=[], index={}
+    )
 
     meta_office_rulings = MetaOfficeRulingsLedger(ledger_id="rulings-001", rulings=[])
 
     # III. Verification & Proof Pack
-    law_failure_matrix = LawFailureResponseMatrix(matrix_id="matrix-001", version="1.0.0", responses={})
+    law_failure_matrix = LawFailureResponseMatrix(
+        matrix_id="matrix-001", version="1.0.0", responses={}
+    )
 
-    formal_verification = FormalLawVerificationModels(model_id="formal-001", version="1.0.0", invariants=[])
+    formal_verification = FormalLawVerificationModels(
+        model_id="formal-001", version="1.0.0", invariants=[]
+    )
 
-    violation_playbooks = InvariantViolationPlaybooks(playbooks_id="playbooks-001", playbooks={})
+    violation_playbooks = InvariantViolationPlaybooks(
+        playbooks_id="playbooks-001", playbooks={}
+    )
 
     # IV. Execution Evidence
     execution_kernel = CanonicalExecutionKernel(
-        kernel_id="kernel-001", version="1.0.0", kernel_code="", test_suite="", conformance_criteria=[]
+        kernel_id="kernel-001",
+        version="1.0.0",
+        kernel_code="",
+        test_suite="",
+        conformance_criteria=[],
     )
 
     simulation_traces = SimulationTraceCorpus(corpus_id="traces-001", traces=[])
 
-    reproducibility_packets = ReproducibilityPackets(packets_id="packets-001", packets=[])
+    reproducibility_packets = ReproducibilityPackets(
+        packets_id="packets-001", packets=[]
+    )
 
     # V. Floor & Contract Artifacts
     floor_profiles = FloorRuntimeProfiles(profiles_id="profiles-001", profiles={})
 
-    contract_registry = CrossFloorContractRegistry(registry_id="contracts-001", contracts=[])
+    contract_registry = CrossFloorContractRegistry(
+        registry_id="contracts-001", contracts=[]
+    )
 
     contract_drift = ContractDriftReports(reports_id="drift-001", reports=[])
 
     # VI. Toolchain & Supply-Chain Trust
     tool_provenance = ToolProvenanceTrustLedger(ledger_id="tools-001", tools={})
 
-    unsafe_exceptions = UnsafeCapabilityExceptionRecords(records_id="unsafe-001", exceptions=[])
+    unsafe_exceptions = UnsafeCapabilityExceptionRecords(
+        records_id="unsafe-001", exceptions=[]
+    )
 
     # VII. Human-in-the-Loop Records
-    consigliere_logs = ConsigliereInteractionLogs(logs_id="cons-logs-001", interactions=[])
+    consigliere_logs = ConsigliereInteractionLogs(
+        logs_id="cons-logs-001", interactions=[]
+    )
 
-    security_dossiers = SecurityDecisionDossiers(dossiers_id="sec-dossiers-001", decisions=[])
+    security_dossiers = SecurityDecisionDossiers(
+        dossiers_id="sec-dossiers-001", decisions=[]
+    )
 
     override_ledger = OverrideCostLedger(ledger_id="overrides-001", overrides=[])
 
     # VIII. Evolution & Change Control
-    amendment_registry = ConstitutionalAmendmentRegistry(registry_id="amendments-001", amendments=[])
+    amendment_registry = ConstitutionalAmendmentRegistry(
+        registry_id="amendments-001", amendments=[]
+    )
 
-    rejected_proposals = DormantRejectedProposalArchive(archive_id="rejected-001", proposals=[])
+    rejected_proposals = DormantRejectedProposalArchive(
+        archive_id="rejected-001", proposals=[]
+    )
 
     # IX. Audit & External Trust
-    audit_interface = IndependentAuditInterface(interface_id="audit-001", accessible_artifacts=[], access_log=[])
+    audit_interface = IndependentAuditInterface(
+        interface_id="audit-001", accessible_artifacts=[], access_log=[]
+    )
 
-    compliance_reports = ComplianceCertificationReports(reports_id="compliance-001", reports=[])
+    compliance_reports = ComplianceCertificationReports(
+        reports_id="compliance-001", reports=[]
+    )
 
     # X. Termination & Continuity
     freeze_protocol = CivilizationFreezeProtocol(

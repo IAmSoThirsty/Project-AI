@@ -128,10 +128,14 @@ class LedgerEntry:
         # Convert string enums back to enum types
         if isinstance(data.get("event_type"), str):
             data["event_type"] = EventType(data["event_type"])
-        if isinstance(data.get("severity"), str) or isinstance(data.get("severity"), int):
+        if isinstance(data.get("severity"), str) or isinstance(
+            data.get("severity"), int
+        ):
             severity_val = data["severity"]
             data["severity"] = (
-                SeverityLevel(severity_val) if isinstance(severity_val, int) else SeverityLevel[severity_val]
+                SeverityLevel(severity_val)
+                if isinstance(severity_val, int)
+                else SeverityLevel[severity_val]
             )
 
         return cls(**data)
@@ -346,7 +350,9 @@ class PrivacyLedger:
         # Load existing ledger
         self._load_ledger()
 
-        self.logger.info("Privacy Ledger initialized: %s entries loaded", len(self.entries))
+        self.logger.info(
+            "Privacy Ledger initialized: %s entries loaded", len(self.entries)
+        )
 
     def _setup_encryption(self, encryption_key: bytes | None):
         """Setup zero-knowledge encryption"""
@@ -441,7 +447,8 @@ class PrivacyLedger:
             self.stats["encrypted_entries"] += 1
 
             self.logger.debug(
-                f"Appended entry: {entry.entry_id} | " f"Type: {event_type.value} | User: {user_id[:8]}..."
+                f"Appended entry: {entry.entry_id} | "
+                f"Type: {event_type.value} | User: {user_id[:8]}..."
             )
 
             # Check retention policy
@@ -599,10 +606,18 @@ class PrivacyLedger:
             # Start with user index if specified
             if user_id:
                 candidate_ids = self.user_index.get(user_id, [])
-                candidates = [self.entry_index[eid] for eid in candidate_ids if eid in self.entry_index]
+                candidates = [
+                    self.entry_index[eid]
+                    for eid in candidate_ids
+                    if eid in self.entry_index
+                ]
             elif event_type:
                 candidate_ids = self.type_index.get(event_type, [])
-                candidates = [self.entry_index[eid] for eid in candidate_ids if eid in self.entry_index]
+                candidates = [
+                    self.entry_index[eid]
+                    for eid in candidate_ids
+                    if eid in self.entry_index
+                ]
             else:
                 candidates = self.entries
 
@@ -672,8 +687,12 @@ class PrivacyLedger:
 
                     # Generate fresh proof for verification
                     fresh_proof = self.merkle_tree.get_proof(merkle_index)
-                    if not self.merkle_tree.verify_proof(entry.hash, fresh_proof, expected_root, merkle_index):
-                        errors.append(f"Entry {i} ({entry.entry_id}): Merkle proof invalid")
+                    if not self.merkle_tree.verify_proof(
+                        entry.hash, fresh_proof, expected_root, merkle_index
+                    ):
+                        errors.append(
+                            f"Entry {i} ({entry.entry_id}): Merkle proof invalid"
+                        )
 
             is_valid = len(errors) == 0
             self.chain_verified = is_valid
@@ -681,7 +700,9 @@ class PrivacyLedger:
             if is_valid:
                 self.logger.info("Chain integrity verified successfully")
             else:
-                self.logger.error("Chain integrity check failed: %s errors", len(errors))
+                self.logger.error(
+                    "Chain integrity check failed: %s errors", len(errors)
+                )
                 for error in errors[:10]:  # Log first 10 errors
                     self.logger.error("  - %s", error)
 
@@ -827,7 +848,9 @@ class PrivacyLedger:
             # Verify integrity on load
             is_valid, errors = self.verify_chain_integrity()
             if not is_valid:
-                self.logger.error("Ledger integrity compromised: %s errors", len(errors))
+                self.logger.error(
+                    "Ledger integrity compromised: %s errors", len(errors)
+                )
 
         except Exception as e:
             self.logger.error("Failed to load ledger: %s", e)
@@ -840,12 +863,20 @@ class PrivacyLedger:
                 "current_entries": len(self.entries),
                 "chain_verified": self.chain_verified,
                 "merkle_root": self.merkle_tree.get_root(),
-                "storage_size_bytes": (self.storage_path.stat().st_size if self.storage_path.exists() else 0),
+                "storage_size_bytes": (
+                    self.storage_path.stat().st_size
+                    if self.storage_path.exists()
+                    else 0
+                ),
                 "oldest_entry": (
-                    datetime.fromtimestamp(self.entries[0].timestamp).isoformat() if self.entries else None
+                    datetime.fromtimestamp(self.entries[0].timestamp).isoformat()
+                    if self.entries
+                    else None
                 ),
                 "newest_entry": (
-                    datetime.fromtimestamp(self.entries[-1].timestamp).isoformat() if self.entries else None
+                    datetime.fromtimestamp(self.entries[-1].timestamp).isoformat()
+                    if self.entries
+                    else None
                 ),
             }
 
@@ -931,6 +962,8 @@ class PrivacyLedger:
             # Final integrity check
             is_valid, errors = self.verify_chain_integrity()
             if not is_valid:
-                self.logger.warning("Ledger closed with integrity issues: %s errors", len(errors))
+                self.logger.warning(
+                    "Ledger closed with integrity issues: %s errors", len(errors)
+                )
 
             self.logger.info("Privacy ledger closed: %s entries", len(self.entries))

@@ -18,7 +18,12 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 
-from .global_registry import FloorStatus, GlobalRegistry, ServiceType, get_global_registry
+from .global_registry import (
+    FloorStatus,
+    GlobalRegistry,
+    ServiceType,
+    get_global_registry,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +109,9 @@ class UniversalDispatcher:
         self._request_history: List[DispatchResponse] = []
         self._max_history = 1000
 
-    def register_floor_handler(self, floor_id: str, handler: Callable[[str, Dict[str, Any]], Dict[str, Any]]) -> None:
+    def register_floor_handler(
+        self, floor_id: str, handler: Callable[[str, Dict[str, Any]], Dict[str, Any]]
+    ) -> None:
         """
         Register a handler function for a specific floor
 
@@ -140,7 +147,9 @@ class UniversalDispatcher:
                 )
 
             # Select floor based on routing strategy
-            selected_floor = self._select_floor(candidate_floors, request.routing_strategy)
+            selected_floor = self._select_floor(
+                candidate_floors, request.routing_strategy
+            )
 
             if not selected_floor:
                 return DispatchResponse(
@@ -151,7 +160,9 @@ class UniversalDispatcher:
                 )
 
             # Execute request on selected floor
-            result = self._execute_on_floor(selected_floor.floor_id, request.method, request.params, request.timeout)
+            result = self._execute_on_floor(
+                selected_floor.floor_id, request.method, request.params, request.timeout
+            )
 
             execution_time = time.time() - start_time
 
@@ -182,7 +193,10 @@ class UniversalDispatcher:
             execution_time = time.time() - start_time
             logger.exception(f"Dispatch failed for request {request.request_id}")
             response = DispatchResponse(
-                request_id=request.request_id, status=DispatchStatus.FAILED, error=str(e), execution_time=execution_time
+                request_id=request.request_id,
+                status=DispatchStatus.FAILED,
+                error=str(e),
+                execution_time=execution_time,
             )
             self._add_to_history(response)
             return response
@@ -190,17 +204,23 @@ class UniversalDispatcher:
     def _find_candidate_floors(self, request: DispatchRequest) -> List[Any]:
         """Find floors that can handle the request"""
         # Start with floors that provide the required service
-        candidate_floors = self.registry.find_ready_floors_by_service(request.service_type)
+        candidate_floors = self.registry.find_ready_floors_by_service(
+            request.service_type
+        )
 
         # Filter by preferred language if specified
         if request.preferred_language:
             candidate_floors = [
-                floor for floor in candidate_floors if floor.language.lower() == request.preferred_language.lower()
+                floor
+                for floor in candidate_floors
+                if floor.language.lower() == request.preferred_language.lower()
             ]
 
         return candidate_floors
 
-    def _select_floor(self, candidates: List[Any], strategy: RoutingStrategy) -> Optional[Any]:
+    def _select_floor(
+        self, candidates: List[Any], strategy: RoutingStrategy
+    ) -> Optional[Any]:
         """Select a floor from candidates based on routing strategy"""
         if not candidates:
             return None
@@ -230,7 +250,9 @@ class UniversalDispatcher:
         else:
             return candidates[0]
 
-    def _execute_on_floor(self, floor_id: str, method: str, params: Dict[str, Any], timeout: float) -> Dict[str, Any]:
+    def _execute_on_floor(
+        self, floor_id: str, method: str, params: Dict[str, Any], timeout: float
+    ) -> Dict[str, Any]:
         """Execute a request on a specific floor"""
         handler = self._floor_handlers.get(floor_id)
 
@@ -260,7 +282,9 @@ class UniversalDispatcher:
 
         # Trim history if too long
         if len(self._request_history) > self._max_history:
-            self._request_history = self._request_history[-self._max_history :]  # noqa: E203
+            self._request_history = self._request_history[
+                -self._max_history :
+            ]  # noqa: E203
 
     def dispatch_sync(
         self,
@@ -311,8 +335,12 @@ class UniversalDispatcher:
             }
 
         total = len(self._request_history)
-        successful = sum(1 for r in self._request_history if r.status == DispatchStatus.COMPLETED)
-        failed = sum(1 for r in self._request_history if r.status == DispatchStatus.FAILED)
+        successful = sum(
+            1 for r in self._request_history if r.status == DispatchStatus.COMPLETED
+        )
+        failed = sum(
+            1 for r in self._request_history if r.status == DispatchStatus.FAILED
+        )
 
         avg_time = sum(r.execution_time for r in self._request_history) / total
 
@@ -324,7 +352,9 @@ class UniversalDispatcher:
         floors_used = {}
         for response in self._request_history:
             if response.floor_id:
-                floors_used[response.floor_id] = floors_used.get(response.floor_id, 0) + 1
+                floors_used[response.floor_id] = (
+                    floors_used.get(response.floor_id, 0) + 1
+                )
 
         return {
             "total_requests": total,

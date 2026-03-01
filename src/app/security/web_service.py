@@ -27,7 +27,9 @@ logger = logging.getLogger(__name__)
 class SOAPClient:
     """Secure SOAP over HTTP client."""
 
-    def __init__(self, endpoint: str, username: str | None = None, password: str | None = None):
+    def __init__(
+        self, endpoint: str, username: str | None = None, password: str | None = None
+    ):
         """Initialize SOAP client.
 
         Args:
@@ -266,7 +268,10 @@ class SecureWebHandler:
             True if headers are valid
         """
         # Check for required security headers (in responses)
-        if "X-Content-Type-Options" in headers and headers["X-Content-Type-Options"] != "nosniff":
+        if (
+            "X-Content-Type-Options" in headers
+            and headers["X-Content-Type-Options"] != "nosniff"
+        ):
             logger.warning("Invalid X-Content-Type-Options header")
             return False
 
@@ -299,7 +304,9 @@ class SecureWebHandler:
         Returns:
             HMAC signature
         """
-        signature = hmac.new(secret_key.encode(), data.encode(), hashlib.sha256).hexdigest()
+        signature = hmac.new(
+            secret_key.encode(), data.encode(), hashlib.sha256
+        ).hexdigest()
 
         return signature
 
@@ -348,7 +355,9 @@ class RateLimiter:
 
         # Clean old requests
         if identifier in self.requests:
-            self.requests[identifier] = [ts for ts in self.requests[identifier] if ts > cutoff]
+            self.requests[identifier] = [
+                ts for ts in self.requests[identifier] if ts > cutoff
+            ]
         else:
             self.requests[identifier] = []
 

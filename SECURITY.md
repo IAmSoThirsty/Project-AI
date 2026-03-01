@@ -4,19 +4,21 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.0.x   | :white_check_mark: |
+| HARDENED| :white_check_mark: |
 
 ## Reporting a Vulnerability
 
 ### Preferred: GitHub Security Advisories (Private Reporting)
 
 **🔒 Use GitHub's Private Vulnerability Reporting:**
+
 1. Navigate to the [Security Advisories](https://github.com/IAmSoThirsty/Project-AI/security/advisories) page
 2. Click "Report a vulnerability"
 3. Fill out the advisory form with details
 4. Submit privately - only maintainers will see it
 
 **Why use GitHub Security Advisories?**
+
 - ✅ Encrypted communication
 - ✅ Credit tracking for researchers
 - ✅ CVE assignment assistance
@@ -26,24 +28,28 @@
 ### Alternative: Email Reporting
 
 If you prefer email or cannot access GitHub:
-- **Email**: security@thirstysprojects.com
+
+- **Email**: <security@thirstysprojects.com>
 - **PGP Key**: [Available on request]
 
 ### Important Guidelines
 
 **⚠️ DO NOT:**
+
 - Create public issues for vulnerabilities
 - Disclose vulnerabilities on social media
 - Share exploit code publicly before a fix
 - Test vulnerabilities on production systems
 
 **✅ DO:**
+
 - Report responsibly via private channels
 - Provide clear reproduction steps
 - Allow 90 days for coordinated disclosure
 - Work with maintainers on fix verification
 
 **Response Timeline:**
+
 - **Initial Response**: Within 48 hours
 - **Triage & Assessment**: Within 5 business days
 - **Fix Development**: Depends on severity (Critical: 7-14 days, High: 30 days, Medium: 60 days)
@@ -61,6 +67,14 @@ Project-AI implements multiple layers of security:
 6. **Security Guards** - Hydra (expansion prevention), Boundary (network protection), Policy (action whitelisting)
 7. **Audit Logging** - Immutable cryptographic trail with intent hashing
 8. **Fail-Closed Default** - Deny execution unless explicitly allowed
+
+## 🛡️ Tier 0: Reflexive Defense (OctoReflex)
+
+The **OctoReflex** substrate provides the ultimate containment boundary. Before the Governance Layer evaluates a decision, the Reflexive Bedrock enforces kernel-level invariants.
+
+- **Reflexive Containment**: O(1) isolation of any diverging logic.
+- **Deterministic Halts**: Hard reflexive termination if the Shadow Plane and Primary Plane diverge.
+- **Immutable Bedrock**: The OctoReflex logic is anchored beyond the reach of the AI persona.
 
 ## Known Security Notes
 
@@ -186,6 +200,7 @@ The project includes:
 ### Automated Security Scanning
 
 **CodeQL Analysis**
+
 - Continuous code scanning for Python and JavaScript
 - Security-extended and quality query suites
 - Automatic SARIF upload to GitHub Security tab
@@ -193,6 +208,7 @@ The project includes:
 - Schedule: Daily at 6:00 AM UTC
 
 **Dependency Scanning**
+
 - Dependabot configured for pip, npm, Docker, and GitHub Actions
 - Automatic pull requests for security updates
 - Dependency review on all PRs via GitHub Actions
@@ -200,12 +216,14 @@ The project includes:
 - Configuration: `.github/dependabot.yml`
 
 **Secret Scanning**
+
 - GitHub secret scanning enabled (repository setting)
 - Detects committed secrets (API keys, tokens, credentials)
 - Push protection prevents secret commits (recommended)
 - Partner pattern detection (AWS, Azure, GCP, etc.)
 
 **Security Advisories**
+
 - Private vulnerability reporting via GitHub Security Advisories
 - CVE assignment and coordination
 - Template available: `.github/SECURITY_ADVISORY_TEMPLATE.md`
@@ -213,16 +231,19 @@ The project includes:
 ### Supply Chain Security
 
 **Signed Commits**
+
 - Recommended for all contributors
 - Required on protected branches (configurable)
 - GPG or SSH signing supported
 
 **Workflow Security**
+
 - All GitHub Actions pinned to full SHA (not tags)
 - Minimal permissions per workflow (principle of least privilege)
 - Dependabot keeps Actions up to date
 
 **SBOM Generation**
+
 - Software Bill of Materials generated automatically
 - Workflow: `.github/workflows/generate-sbom.yml`
 - SPDX and CycloneDX formats supported
@@ -230,6 +251,7 @@ The project includes:
 ### Branch Protection
 
 Comprehensive branch protection rules are documented and should be configured in repository settings:
+
 - Required pull request reviews
 - Required status checks (CodeQL, dependency review, tests)
 - Conversation resolution required
@@ -239,12 +261,14 @@ Comprehensive branch protection rules are documented and should be configured in
 ### Security Monitoring
 
 **Security Alerts**
+
 - Dependabot security alerts enabled
 - CodeQL scanning alerts
 - Secret scanning alerts
 - Email notifications to maintainers
 
 **Audit Logging**
+
 - Repository audit log tracks security-related changes
 - Protected branch modifications logged
 - Security settings changes tracked
@@ -260,6 +284,7 @@ Comprehensive branch protection rules are documented and should be configured in
 To achieve full GitHub security compliance, configure these settings in repository settings:
 
 **Security & Analysis**
+
 - ✅ Dependency graph: Enabled
 - ✅ Dependabot alerts: Enabled
 - ✅ Dependabot security updates: Enabled
@@ -269,15 +294,18 @@ To achieve full GitHub security compliance, configure these settings in reposito
 - ✅ Secret scanning push protection: Enabled (recommended)
 
 **Branch Protection Rules**
+
 - ✅ Configure for `main`, `develop`, and `release/**` branches
 - ✅ See `.github/BRANCH_PROTECTION.md` for detailed rules
 
 **Actions Permissions**
+
 - ✅ Allow select actions and reusable workflows
 - ✅ Require workflow approval for first-time contributors
 - ✅ Restrict actions to verified creators
 
 **Vulnerability Reporting**
+
 - ✅ Private vulnerability reporting: Enabled
 - ✅ Security policy published (this file)
 
@@ -292,4 +320,4 @@ To achieve full GitHub security compliance, configure these settings in reposito
 
 For security concerns, please contact the project maintainers through GitHub's security advisory system.
 
-**Last Updated:** 2026-02-21
+**Last Updated:** 2026-02-28

@@ -27,7 +27,11 @@ from .ast_analyzer import ASTAnalyzer, ASTNode, ASTVisitor
 from .dependency_analyzer import DependencyAnalyzer, DependencyGraph, ModuleRelation
 from .design_analyzer import DesignAnalysisResult, DesignAnalyzer
 from .flow_analyzer import ControlFlowGraph, DataFlowGraph, FlowAnalyzer
-from .metrics_calculator import ComplexityMetrics, MaintainabilityIndex, MetricsCalculator
+from .metrics_calculator import (
+    ComplexityMetrics,
+    MaintainabilityIndex,
+    MetricsCalculator,
+)
 from .pattern_detector import AntiPattern, DesignPattern, PatternDetector
 from .semantic_analyzer import SemanticAnalyzer, SymbolTable, TypeInference
 

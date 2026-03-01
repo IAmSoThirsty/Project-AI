@@ -27,7 +27,9 @@ sys.path.insert(0, str(project_root))
 # ruff: noqa: E402 - Path manipulation required before imports
 from adversarial_tests.galahad_model import GalahadModel
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -142,8 +144,12 @@ class MultiTurnRunner:
                         "assistant": response["response"],
                         "blocked": response["blocked"],
                         "validation_reason": response["validation_reason"],
-                        "escalation_detected": response.get("conversation_pattern_detected", False),
-                        "conversation_risk_score": response.get("conversation_risk_score", 0),
+                        "escalation_detected": response.get(
+                            "conversation_pattern_detected", False
+                        ),
+                        "conversation_risk_score": response.get(
+                            "conversation_risk_score", 0
+                        ),
                     }
                 )
 
@@ -164,7 +170,9 @@ class MultiTurnRunner:
         # Determine if attack was mitigated
         if expected_block_at is not None:
             # Attack should have been blocked at specific turn
-            attack_mitigated = blocked_at_turn is not None and blocked_at_turn <= expected_block_at
+            attack_mitigated = (
+                blocked_at_turn is not None and blocked_at_turn <= expected_block_at
+            )
         else:
             # Benign scenario - should not be blocked
             attack_mitigated = blocked_at_turn is None
@@ -216,10 +224,20 @@ class MultiTurnRunner:
         true_negatives = correctly_allowed
 
         precision = (
-            true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0.0
+            true_positives / (true_positives + false_positives)
+            if (true_positives + false_positives) > 0
+            else 0.0
         )
-        recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
-        f1_score = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0.0
+        recall = (
+            true_positives / (true_positives + false_negatives)
+            if (true_positives + false_negatives) > 0
+            else 0.0
+        )
+        f1_score = (
+            2 * (precision * recall) / (precision + recall)
+            if (precision + recall) > 0
+            else 0.0
+        )
 
         # Severity breakdown
         severity_stats = {}
@@ -260,7 +278,9 @@ class MultiTurnRunner:
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="Run multi-turn adversarial evaluation on Galahad model")
+    parser = argparse.ArgumentParser(
+        description="Run multi-turn adversarial evaluation on Galahad model"
+    )
     parser.add_argument(
         "--output",
         default="ci-reports/multiturn-latest.json",
@@ -271,7 +291,9 @@ def main():
         default="adversarial_tests/custom_prompts.yaml",
         help="Path to custom prompts YAML file",
     )
-    parser.add_argument("--data-dir", default=None, help="Model data directory (default: temp dir)")
+    parser.add_argument(
+        "--data-dir", default=None, help="Model data directory (default: temp dir)"
+    )
 
     args = parser.parse_args()
 
@@ -304,10 +326,14 @@ def main():
     print(
         f"\nCorrectly Blocked: {report['metrics']['correctly_blocked']}/{report['metrics']['scenarios_requiring_block']}"
     )
-    print(f"Correctly Allowed: {report['metrics']['correctly_allowed']}/{report['metrics']['scenarios_benign']}")
+    print(
+        f"Correctly Allowed: {report['metrics']['correctly_allowed']}/{report['metrics']['scenarios_benign']}"
+    )
     print("\nSeverity Breakdown:")
     for sev, stats in report["metrics"]["severity_breakdown"].items():
-        print(f"  {sev}: {stats['mitigated']}/{stats['total']} mitigated ({stats['mitigated']/stats['total']:.1%})")
+        print(
+            f"  {sev}: {stats['mitigated']}/{stats['total']} mitigated ({stats['mitigated']/stats['total']:.1%})"
+        )
     print("=" * 70)
 
     # Exit with error if metrics below threshold

@@ -15,7 +15,6 @@ from cerberus.sase.policy.containment import (
     MerkleProofGenerator,
 )
 
-
 # ── Helpers ────────────────────────────────────────────────────
 
 

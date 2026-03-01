@@ -97,22 +97,32 @@ class Directive(Entity):
         get_audit_log().log_event(
             EventType.DIRECTIVE_CREATED,
             target_id=self.entity_id,
-            data={"level": level.value, "description": description, "parent_directive_id": parent_directive_id},
+            data={
+                "level": level.value,
+                "description": description,
+                "parent_directive_id": parent_directive_id,
+            },
         )
 
-    def add_precondition(self, description: str, checker: Optional[Callable] = None) -> Condition:
+    def add_precondition(
+        self, description: str, checker: Optional[Callable] = None
+    ) -> Condition:
         """Add a precondition"""
         condition = Condition(description=description, checker=checker)
         self.preconditions.append(condition)
         return condition
 
-    def add_postcondition(self, description: str, checker: Optional[Callable] = None) -> Condition:
+    def add_postcondition(
+        self, description: str, checker: Optional[Callable] = None
+    ) -> Condition:
         """Add a postcondition"""
         condition = Condition(description=description, checker=checker)
         self.postconditions.append(condition)
         return condition
 
-    def add_acceptance_criterion(self, description: str, validator: Optional[Callable] = None) -> AcceptanceCriteria:
+    def add_acceptance_criterion(
+        self, description: str, validator: Optional[Callable] = None
+    ) -> AcceptanceCriteria:
         """Add an acceptance criterion"""
         criterion = AcceptanceCriteria(description=description, validator=validator)
         self.acceptance_criteria.append(criterion)
@@ -134,7 +144,11 @@ class Directive(Entity):
         """
         Tasks are only committed to output when all criteria pass (Codex 2.1)
         """
-        return self.check_preconditions() and self.check_postconditions() and self.check_acceptance()
+        return (
+            self.check_preconditions()
+            and self.check_postconditions()
+            and self.check_acceptance()
+        )
 
 
 class Task(Directive):
@@ -151,7 +165,9 @@ class Task(Directive):
         parent_directive_id: Optional[str] = None,
         assigned_agent_id: Optional[str] = None,
     ):
-        super().__init__(task_id, name, DirectiveLevel.TASK_NODE, description, parent_directive_id)
+        super().__init__(
+            task_id, name, DirectiveLevel.TASK_NODE, description, parent_directive_id
+        )
         self.state = TaskState.SCHEDULED
         self.assigned_agent_id = assigned_agent_id
         self.blocked_reason: Optional[str] = None
@@ -174,7 +190,10 @@ class Task(Directive):
         self.state_history.append(change_record)
 
         get_audit_log().log_event(
-            EventType.TASK_STATE_CHANGED, target_id=self.entity_id, actor_id=self.assigned_agent_id, data=change_record
+            EventType.TASK_STATE_CHANGED,
+            target_id=self.entity_id,
+            actor_id=self.assigned_agent_id,
+            data=change_record,
         )
 
     def can_transition_to(self, new_state: TaskState) -> bool:
@@ -184,9 +203,17 @@ class Task(Directive):
         """
         valid_transitions = {
             TaskState.SCHEDULED: [TaskState.IN_REVIEW, TaskState.BLOCKED],
-            TaskState.IN_REVIEW: [TaskState.BLOCKED, TaskState.APPROVAL, TaskState.SCHEDULED],
+            TaskState.IN_REVIEW: [
+                TaskState.BLOCKED,
+                TaskState.APPROVAL,
+                TaskState.SCHEDULED,
+            ],
             TaskState.BLOCKED: [TaskState.SCHEDULED, TaskState.IN_REVIEW],
-            TaskState.APPROVAL: [TaskState.MERGED, TaskState.IN_REVIEW, TaskState.BLOCKED],
+            TaskState.APPROVAL: [
+                TaskState.MERGED,
+                TaskState.IN_REVIEW,
+                TaskState.BLOCKED,
+            ],
             TaskState.MERGED: [TaskState.DEPLOYED, TaskState.BLOCKED],
             TaskState.DEPLOYED: [TaskState.BLOCKED],  # Can roll back
         }
@@ -273,7 +300,12 @@ class MeetingSystem:
         self.transcripts: Dict[str, DecisionTranscript] = {}
 
     def hold_meeting(
-        self, task: Task, participants: List[str], ambiguity_addressed: str, decisions_made: List[str], resolution: str
+        self,
+        task: Task,
+        participants: List[str],
+        ambiguity_addressed: str,
+        decisions_made: List[str],
+        resolution: str,
     ) -> DecisionTranscript:
         """
         Hold a meeting and produce a decision transcript.
@@ -293,7 +325,11 @@ class MeetingSystem:
         get_audit_log().log_event(
             EventType.MEETING_HELD,
             target_id=task.entity_id,
-            data={"transcript_id": transcript.transcript_id, "participants": participants, "resolution": resolution},
+            data={
+                "transcript_id": transcript.transcript_id,
+                "participants": participants,
+                "resolution": resolution,
+            },
         )
 
         # Reduce task ambiguity after meeting

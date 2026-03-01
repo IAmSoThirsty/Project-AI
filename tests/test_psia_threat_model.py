@@ -16,10 +16,10 @@ import time
 import pytest
 
 from psia.threat_model import (
-    CollusionDetector,
     RESILIENCE_PROFILES,
-    RiskLevel,
+    CollusionDetector,
     ResilienceProfile,
+    RiskLevel,
     ThreatClass,
     VoteRecord,
 )
@@ -82,7 +82,9 @@ class TestResilienceProfiles:
 class TestCollusionDetector:
     """Paper §10: Statistical anomaly detection for voting patterns."""
 
-    def _vote(self, req_id: str, head: str, decision: str, ts: float = 0.0) -> VoteRecord:
+    def _vote(
+        self, req_id: str, head: str, decision: str, ts: float = 0.0
+    ) -> VoteRecord:
         return VoteRecord(
             request_id=req_id,
             head_name=head,
@@ -96,6 +98,7 @@ class TestCollusionDetector:
 
         # Simulate 20 requests with varied voting
         import random
+
         random.seed(42)
         for i in range(20):
             decisions = {

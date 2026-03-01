@@ -583,9 +583,9 @@ class CameraManager:
 
                 # Update device info
                 if self._active_device:
-                    self._devices[
-                        self._active_device
-                    ].last_frame_time = datetime.utcnow().isoformat()
+                    self._devices[self._active_device].last_frame_time = (
+                        datetime.utcnow().isoformat()
+                    )
 
                 time.sleep(1.0 / 30.0)  # 30 FPS
 

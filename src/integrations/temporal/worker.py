@@ -68,7 +68,9 @@ async def run_worker():
 
         logger.info("Worker registered with workflows and activities")
         logger.info("Available workflows: ExampleWorkflow")
-        logger.info("Available activities: validate_input, simulate_ai_call, process_ai_task")
+        logger.info(
+            "Available activities: validate_input, simulate_ai_call, process_ai_task"
+        )
         logger.info("Worker is ready to process tasks...")
 
         # Run the worker (blocks until interrupted)

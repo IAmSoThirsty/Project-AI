@@ -23,7 +23,6 @@ from src.cognition.reasoning_matrix.core import (
     ReasoningVerdict,
 )
 
-
 # ======================================================================
 # ReasoningFactor
 # ======================================================================

@@ -85,7 +85,9 @@ class AGISafeguardsSubsystem(DomainSubsystemBase, ISecureSubsystem):
         with self._lock:
             return {"monitored_systems": len(self._monitored_systems)}
 
-    def _execute_domain_command(self, command: SubsystemCommand) -> SubsystemResponse | None:
+    def _execute_domain_command(
+        self, command: SubsystemCommand
+    ) -> SubsystemResponse | None:
         """Handle AGI Safeguards specific commands."""
         start_time = time.time()
 
@@ -149,7 +151,11 @@ class AGISafeguardsSubsystem(DomainSubsystemBase, ISecureSubsystem):
         """
         try:
             behavior_score = params.get("behavior_score", 0.8)
-            status = AlignmentStatus.ALIGNED if behavior_score >= 0.7 else AlignmentStatus.MISALIGNED
+            status = (
+                AlignmentStatus.ALIGNED
+                if behavior_score >= 0.7
+                else AlignmentStatus.MISALIGNED
+            )
             monitor = AISystemMonitor(params["system_id"], status, behavior_score)
 
             with self._lock:

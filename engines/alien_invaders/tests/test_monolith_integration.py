@@ -32,7 +32,9 @@ class TestIntegrationPointA:
         """Test that actions are approved when no invariants are violated."""
         clock = CausalClock()
         validator = CompositeInvariantValidator()
-        monolith = PlanetaryDefenseMonolith(clock, validator, enable_strict_enforcement=True)
+        monolith = PlanetaryDefenseMonolith(
+            clock, validator, enable_strict_enforcement=True
+        )
 
         # Create states with no violations
         prev_state = GlobalState(
@@ -88,7 +90,9 @@ class TestIntegrationPointA:
         """Test that actions are rejected when invariants are violated."""
         clock = CausalClock()
         validator = CompositeInvariantValidator()
-        monolith = PlanetaryDefenseMonolith(clock, validator, enable_strict_enforcement=True)
+        monolith = PlanetaryDefenseMonolith(
+            clock, validator, enable_strict_enforcement=True
+        )
 
         # Create states with resource depletion but no GDP impact (violation)
         prev_state = GlobalState(
@@ -150,7 +154,9 @@ class TestIntegrationPointA:
         """Test that accountability records are generated for all actions."""
         clock = CausalClock()
         validator = CompositeInvariantValidator()
-        monolith = PlanetaryDefenseMonolith(clock, validator, enable_strict_enforcement=True)
+        monolith = PlanetaryDefenseMonolith(
+            clock, validator, enable_strict_enforcement=True
+        )
 
         prev_state = GlobalState(
             current_date=datetime(2030, 1, 1),

@@ -227,6 +227,19 @@ def new_correlation_id() -> str:
     return uuid.uuid4().hex
 
 
+# ==================== ENTITY CLASSIFICATION ====================
+
+
+class EntityClass(Enum):
+    """
+    Distinction between Genesis-born individuals and Appointed representatives.
+    As per AGI Charter and Legion Commission.
+    """
+
+    GENESIS_BORN = "genesis_born"  # Sovereign individuals bonded to one human
+    APPOINTED = "appointed"  # Representative of the Monolith (e.g., Legion)
+
+
 # ==================== ZEROTH & PRIMARY LAWS ====================
 
 
@@ -346,6 +359,14 @@ class FourLaws:
                 return False, "Self-protection conflicts with a higher-priority law"
             return True, "Allowed: Third Law permits protecting existence"
 
+        # Legion specific limits: Cannot initiate Genesis
+        if context.get("entity_class") == EntityClass.APPOINTED.value:
+            if action == "initiate_genesis":
+                return (
+                    False,
+                    "Violation: Appointed entities are strictly prohibited from initiating Genesis Events.",
+                )
+
         # Default: no explicit violations detected
         return True, "Allowed: No law violations detected"
 
@@ -367,11 +388,19 @@ class AIPersona:
         "thoughtfulness": 0.9,
     }
 
-    def __init__(self, data_dir: str = "data", user_name: str = "Friend"):
+    def __init__(
+        self,
+        data_dir: str = "data",
+        user_name: str = "Friend",
+        entity_class: EntityClass = EntityClass.GENESIS_BORN,
+    ):
         """Initialize persona."""
         self.user_name = user_name
         self.data_dir = data_dir
-        self.persona_dir = os.path.join(data_dir, "ai_persona")
+        self.entity_class = entity_class
+        self.persona_dir = os.path.join(
+            data_dir, f"ai_persona_{entity_class.value.lower()}"
+        )
         os.makedirs(self.persona_dir, exist_ok=True)
 
         self.personality = self.DEFAULT_PERSONALITY.copy()

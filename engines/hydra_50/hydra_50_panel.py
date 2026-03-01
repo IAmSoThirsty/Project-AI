@@ -246,7 +246,9 @@ class ScenarioListWidget(QFrame):
         for i in range(self.list_widget.count()):
             item = self.list_widget.item(i)
             scenario_id = item.data(Qt.ItemDataRole.UserRole)
-            scenario = next((s for s in self.scenarios if s.get("scenario_id") == scenario_id), None)
+            scenario = next(
+                (s for s in self.scenarios if s.get("scenario_id") == scenario_id), None
+            )
 
             if scenario:
                 item.setHidden(scenario.get("status") != filter_status)
@@ -368,11 +370,21 @@ class StatusDashboardWidget(QFrame):
             engine = Hydra50Engine()
             status = engine.get_system_status()
 
-            self.active_label.setText(f"Active Scenarios:\\n{status.get('active_scenarios', 0)}")
-            self.critical_label.setText(f"Critical Scenarios:\\n{status.get('critical_scenarios', 0)}")
-            self.total_label.setText(f"Total Scenarios:\\n{status.get('total_scenarios', 0)}")
-            self.health_label.setText(f"System Health:\\n{status.get('system_health', 'UNKNOWN')}")
-            self.alerts_label.setText(f"Active Alerts:\\n{status.get('alerts_count', 0)}")
+            self.active_label.setText(
+                f"Active Scenarios:\\n{status.get('active_scenarios', 0)}"
+            )
+            self.critical_label.setText(
+                f"Critical Scenarios:\\n{status.get('critical_scenarios', 0)}"
+            )
+            self.total_label.setText(
+                f"Total Scenarios:\\n{status.get('total_scenarios', 0)}"
+            )
+            self.health_label.setText(
+                f"System Health:\\n{status.get('system_health', 'UNKNOWN')}"
+            )
+            self.alerts_label.setText(
+                f"Active Alerts:\\n{status.get('alerts_count', 0)}"
+            )
 
             uptime_hours = status.get("uptime_hours", 0)
             self.uptime_label.setText(f"Uptime:\\n{uptime_hours:.1f}h")
@@ -512,7 +524,9 @@ class AlertManagementWidget(QFrame):
         # Alert table
         self.alert_table = QTableWidget()
         self.alert_table.setColumnCount(4)
-        self.alert_table.setHorizontalHeaderLabels(["Severity", "Title", "Time", "Status"])
+        self.alert_table.setHorizontalHeaderLabels(
+            ["Severity", "Title", "Time", "Status"]
+        )
         self.alert_table.setStyleSheet(
             f"""
             QTableWidget {{
@@ -568,7 +582,9 @@ class AlertManagementWidget(QFrame):
                 self.alert_table.setItem(
                     i,
                     2,
-                    QTableWidgetItem(datetime.fromtimestamp(alert.timestamp).strftime("%H:%M:%S")),
+                    QTableWidgetItem(
+                        datetime.fromtimestamp(alert.timestamp).strftime("%H:%M:%S")
+                    ),
                 )
                 status = "Acknowledged" if alert.acknowledged else "Active"
                 self.alert_table.setItem(i, 3, QTableWidgetItem(status))

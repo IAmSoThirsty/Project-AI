@@ -100,7 +100,10 @@ class ShadowThirstCompiler:
         Returns:
             Compilation result
         """
-        logger.info("Compiling Shadow Thirst program%s", f" from {source_file}" if source_file else "")
+        logger.info(
+            "Compiling Shadow Thirst program%s",
+            f" from {source_file}" if source_file else "",
+        )
 
         import time
 
@@ -151,12 +154,17 @@ class ShadowThirstCompiler:
                 # Check if analysis passed
                 if not analysis_report.passed:
                     result.success = False
-                    logger.error("Static analysis failed with %d errors", len(result.errors))
+                    logger.error(
+                        "Static analysis failed with %d errors", len(result.errors)
+                    )
                     return result
 
                 if self.strict_mode and result.warnings:
                     result.success = False
-                    logger.error("Strict mode: Treating %d warnings as errors", len(result.warnings))
+                    logger.error(
+                        "Strict mode: Treating %d warnings as errors",
+                        len(result.warnings),
+                    )
                     return result
 
             # Stage 11: (IR already generated above)

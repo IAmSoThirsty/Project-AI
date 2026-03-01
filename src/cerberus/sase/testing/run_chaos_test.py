@@ -11,7 +11,9 @@ from typing import Any
 from ..sase_orchestrator import SASEOrchestrator
 from ..testing.chaos_suite import ChaosValidator, EventGenerator, SyntheticEvent
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s: %(message)s"
+)
 
 logger = logging.getLogger("SASE.ChaosTest")
 
@@ -87,7 +89,9 @@ def run_chaos_test() -> dict[str, Any]:
     logger.critical(f"  Precision:            {metrics['precision'] * 100:.2f}%")
     logger.critical(f"  Recall:               {metrics['recall'] * 100:.2f}%")
     logger.critical(f"  F1 Score:             {metrics['f1_score']:.4f}")
-    logger.critical(f"  False Positive Rate:  {metrics['false_positive_rate'] * 100:.3f}%")
+    logger.critical(
+        f"  False Positive Rate:  {metrics['false_positive_rate'] * 100:.3f}%"
+    )
     logger.critical("")
     logger.critical("CONFUSION MATRIX:")
     logger.critical(f"  True Positives:       {metrics['true_positives']}")
@@ -106,7 +110,9 @@ def run_chaos_test() -> dict[str, Any]:
         if metrics["accuracy"] < 0.995:
             logger.critical(f"   - Accuracy {metrics['accuracy']*100:.2f}% < 99.5%")
         if metrics["false_positive_rate"] > 0.005:
-            logger.critical(f"   - FPR {metrics['false_positive_rate']*100:.3f}% > 0.5%")
+            logger.critical(
+                f"   - FPR {metrics['false_positive_rate']*100:.3f}% > 0.5%"
+            )
         if metrics["recall"] < 0.95:
             logger.critical(f"   - Recall {metrics['recall']*100:.2f}% < 95%")
 

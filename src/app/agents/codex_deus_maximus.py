@@ -31,7 +31,9 @@ REQUIRED_DIRS = [
 class CodexDeusMaximus(KernelRoutedAgent):
     """Schematic Guardian AI that enforces repository structure and code standards."""
 
-    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+    ) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
@@ -89,7 +91,8 @@ class CodexDeusMaximus(KernelRoutedAgent):
         for dirpath, _, filenames in os.walk(root):
             # Ignore hidden/system folders
             if any(
-                part.startswith(".") or part in ("venv", "env", "__pycache__", "build", "dist")
+                part.startswith(".")
+                or part in ("venv", "env", "__pycache__", "build", "dist")
                 for part in dirpath.split(os.sep)
             ):
                 continue
@@ -101,9 +104,13 @@ class CodexDeusMaximus(KernelRoutedAgent):
                 if fn.endswith((".py", ".md", ".json", ".yml", ".yaml")):
                     res = self.auto_fix_file(path)
                     if res.get("success") and res.get("action") == "fixed":
-                        report["fixes"].append({"path": path, "backup": res.get("backup")})
+                        report["fixes"].append(
+                            {"path": path, "backup": res.get("backup")}
+                        )
                     elif not res.get("success"):
-                        report["errors"].append({"path": path, "error": res.get("error")})
+                        report["errors"].append(
+                            {"path": path, "error": res.get("error")}
+                        )
 
         self._audit("enforcement_run", report)
         return report
@@ -141,7 +148,9 @@ class CodexDeusMaximus(KernelRoutedAgent):
             # --- RULE 1: Python Specifics ---
             if path.endswith(".py"):
                 fixed = fixed.replace("\t", "    ")  # No tabs
-                fixed = "\n".join(line.rstrip() for line in fixed.splitlines())  # No trailing whitespace
+                fixed = "\n".join(
+                    line.rstrip() for line in fixed.splitlines()
+                )  # No trailing whitespace
 
                 # Safety: Check syntax before accepting
                 try:
@@ -189,7 +198,9 @@ class CodexDeusMaximus(KernelRoutedAgent):
 
                 logger.info("Loading GPT‑OSS 1208 model…")
                 model_name = "gpt-oss-120b"
-                self._gpt_tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+                self._gpt_tokenizer = AutoTokenizer.from_pretrained(
+                    model_name, trust_remote_code=True
+                )
                 self._gpt_model = AutoModelForCausalLM.from_pretrained(
                     model_name,
                     device_map="auto",

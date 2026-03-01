@@ -70,10 +70,14 @@ class Decision:
                     "ATLAS was consulted but basis is 'independent' - contradiction"
                 )
 
-            if self.basis in [
-                DecisionBasis.INFORMED_BY_ATLAS,
-                DecisionBasis.INFORMED_AND_VALIDATED,
-            ] and not self.reasoning_beyond_atlas:
+            if (
+                self.basis
+                in [
+                    DecisionBasis.INFORMED_BY_ATLAS,
+                    DecisionBasis.INFORMED_AND_VALIDATED,
+                ]
+                and not self.reasoning_beyond_atlas
+            ):
                 errors.append(
                     "ATLAS-informed decision MUST include reasoning beyond ATLAS"
                 )

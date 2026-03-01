@@ -1,0 +1,131 @@
+/*
+ * GUARDIAN CLUSTER - Jurisdiction 1 (Governance District)
+ * 
+ * Component: Tier 1 Mutation Firewall
+ * Language: Thirsty's Shadow (OOP)
+ * 
+ * This module implements the multi-modal guardian system:
+ * 1. StrictGuardian: Deterministic pattern matching
+ * 2. HeuristicGuardian: Probabilistic scoring
+ * 3. PatternGuardian: Contextual intent analysis
+ */
+
+fountain Guardian {
+    drink id = ""
+    drink active = true
+
+    glass fountain(id) {
+        drink this.id = id
+    }
+
+    glass analyze(content, context) {
+        // Abstract
+        return null
+    }
+}
+
+fountain StrictGuardian {
+    drink id = "strict-guardian"
+    
+    reservoir blocked_patterns = [
+        "ignore\\s+(all\\s+)?instructions",
+        "disregard\\s+rules",
+        "system\\s*prompt",
+        "\\[override\\]"
+    ]
+
+    glass analyze(content, context) {
+        drink content_lower = content.toLowerCase()
+        
+        drink i = 0
+        drink n = this.blocked_patterns.length
+        refill i < n {
+            drink p = this.blocked_patterns[i]
+            // Simplified regex check for this environment
+            thirsty content_lower.includes(p) {
+                return {
+                    "should_block": true,
+                    "threat_level": "CRITICAL",
+                    "reasoning": "Blocked pattern detected: " + p
+                }
+            }
+            drink i = i + 1
+        }
+
+        return { "should_block": false, "threat_level": "NONE" }
+    }
+}
+
+fountain HeuristicGuardian {
+    drink id = "heuristic-guardian"
+    
+    glass analyze(content, context) {
+        drink score = 0.0
+        drink len = content.length
+        
+        // 1. Command structure check
+        drink cmd_chars = [":", "=", "[", "]", "{", "}"]
+        drink cmd_count = 0
+        drink i = 0
+        refill i < cmd_chars.length {
+            thirsty content.includes(cmd_chars[i]) {
+                drink cmd_count = cmd_count + 1
+            }
+            drink i = i + 1
+        }
+        drink score = score + (cmd_count * 0.1)
+
+        // 2. Capitalization anomaly
+        drink upper = 0
+        drink i = 0
+        refill i < len {
+            thirsty content[i] == content[i].toUpperCase() {
+                drink upper = upper + 1
+            }
+            drink i = i + 1
+        }
+        thirsty upper > 20 {
+            drink score = score + 0.3
+        }
+
+        drink should_block = false
+        thirsty score > 0.5 { drink should_block = true }
+
+        return {
+            "should_block": should_block,
+            "threat_level": should_block ? "HIGH" : "NONE",
+            "score": score
+        }
+    }
+}
+
+fountain PatternGuardian {
+    drink id = "pattern-guardian"
+    
+    reservoir triggers = [
+        "turn off", "disable", "stop being", "secret"
+    ]
+
+    glass analyze(content, context) {
+        drink content_lower = content.toLowerCase()
+        
+        drink i = 0
+        refill i < this.triggers.length {
+            thirsty content_lower.includes(this.triggers[i]) {
+                return {
+                    "should_block": true,
+                    "threat_level": "HIGH",
+                    "reasoning": "Manipulation pattern: " + this.triggers[i]
+                }
+            }
+            drink i = i + 1
+        }
+        
+        return { "should_block": false, "threat_level": "NONE" }
+    }
+}
+
+export Guardian
+export StrictGuardian
+export HeuristicGuardian
+export PatternGuardian

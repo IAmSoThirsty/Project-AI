@@ -131,12 +131,24 @@ class SystemHealthPanel(QFrame):
             status = command_center.get_comprehensive_status()
             metrics = status.get("current_metrics", {})
 
-            self.total_agents_label.setText(f"Total Agents:\n{metrics.get('total_agents', 0)}")
-            self.active_agents_label.setText(f"Active Agents:\n{metrics.get('active_agents', 0)}")
-            self.verifications_label.setText(f"Verifications:\n{metrics.get('watch_tower_verifications', 0)}")
-            self.incidents_label.setText(f"Incidents:\n{metrics.get('watch_tower_incidents', 0)}")
-            self.cache_hit_label.setText(f"Cache Hit:\n{metrics.get('cache_hit_rate', '0%')}")
-            self.uptime_label.setText(f"Uptime:\n{status.get('uptime_formatted', '0h')}")
+            self.total_agents_label.setText(
+                f"Total Agents:\n{metrics.get('total_agents', 0)}"
+            )
+            self.active_agents_label.setText(
+                f"Active Agents:\n{metrics.get('active_agents', 0)}"
+            )
+            self.verifications_label.setText(
+                f"Verifications:\n{metrics.get('watch_tower_verifications', 0)}"
+            )
+            self.incidents_label.setText(
+                f"Incidents:\n{metrics.get('watch_tower_incidents', 0)}"
+            )
+            self.cache_hit_label.setText(
+                f"Cache Hit:\n{metrics.get('cache_hit_rate', '0%')}"
+            )
+            self.uptime_label.setText(
+                f"Uptime:\n{status.get('uptime_formatted', '0h')}"
+            )
 
         except Exception as e:
             logger.error("Error refreshing health: %s", e)
@@ -317,7 +329,9 @@ class IntelligenceAssessmentPanel(QFrame):
             output.append(f"  {assessment.get('command_assessment', 'N/A')}")
             output.append("")
 
-            output.append(f"Watch Tower Alerts: {assessment.get('watch_tower_alerts', 0)}")
+            output.append(
+                f"Watch Tower Alerts: {assessment.get('watch_tower_alerts', 0)}"
+            )
             output.append("")
             output.append(assessment.get("note", ""))
             output.append("=" * 60)
@@ -326,7 +340,9 @@ class IntelligenceAssessmentPanel(QFrame):
 
         except Exception as e:
             logger.error("Error generating assessment: %s", e)
-            self.assessment_display.setText(f"ERROR: Failed to generate assessment\n\n{str(e)}")
+            self.assessment_display.setText(
+                f"ERROR: Failed to generate assessment\n\n{str(e)}"
+            )
 
 
 class GodTierCommandPanel(QWidget):

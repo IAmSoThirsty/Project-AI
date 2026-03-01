@@ -202,7 +202,9 @@ class PlanetaryDefenseMonolith:
         """
         return self.causal_clock.current
 
-    def authorize_registry_access(self, access_request: RegistryAccessRequest) -> tuple[bool, str]:
+    def authorize_registry_access(
+        self, access_request: RegistryAccessRequest
+    ) -> tuple[bool, str]:
         """
         Authorize registry access through projection enforcement.
 

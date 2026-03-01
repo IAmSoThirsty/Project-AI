@@ -17,7 +17,7 @@ from pydantic import BaseModel, Field
 app = FastAPI(
     title="Project AI Governance Host",
     version=os.getenv("APP_VERSION", "1.0.0"),
-    description="Production-ready AI governance platform with enterprise security"
+    description="Production-ready AI governance platform with enterprise security",
 )
 
 # CORS for web frontend
@@ -41,7 +41,7 @@ if enable_rate_limiting:
             RateLimitMiddleware,
             rate=rate_limit,
             per=60,
-            exempt_paths=["/health", "/metrics", "/docs"]
+            exempt_paths=["/health", "/metrics", "/docs"],
         )
         print(f"[OK] Rate limiting enabled: {rate_limit} requests/minute")
     except ImportError as e:
@@ -55,7 +55,7 @@ if enable_validation:
 
         app.add_middleware(
             RequestValidationMiddleware,
-            exempt_paths=["/docs", "/openapi.json", "/metrics"]
+            exempt_paths=["/docs", "/openapi.json", "/metrics"],
         )
         print("[OK] Request validation enabled")
     except ImportError as e:
@@ -161,6 +161,7 @@ except ImportError as e:
 # Include VR Router
 try:
     from api.vr_routes import router as vr_router
+
     app.include_router(vr_router)
     print("[OK] VR Bridge endpoints registered")
 except ImportError as e:
@@ -526,10 +527,10 @@ def explain_decision(action_id: str):
     """Explain why a governance decision was made."""
     try:
         from app.core.explainability_agent import get_explainability_agent
-        
+
         agent = get_explainability_agent()
         explanation = agent.explain_decision(action_id)
-        
+
         return {
             "action_id": explanation.action_id,
             "timestamp": explanation.timestamp,
@@ -538,14 +539,13 @@ def explain_decision(action_id: str):
             "laws_evaluated": explanation.laws_evaluated,
             "moral_claims": explanation.moral_claims_detected,
             "outcome": explanation.outcome,
-            "recommendation": explanation.recommendation
+            "recommendation": explanation.recommendation,
         }
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except ImportError:
         raise HTTPException(
-            status_code=500, 
-            detail="Explainability Agent not available"
+            status_code=500, detail="Explainability Agent not available"
         )
 
 
@@ -554,10 +554,10 @@ def explain_recent_decisions(limit: int = 10):
     """Explain recent governance decisions."""
     try:
         from app.core.explainability_agent import get_explainability_agent
-        
+
         agent = get_explainability_agent()
         explanations = agent.explain_latest_decisions(limit=limit)
-        
+
         return {
             "count": len(explanations),
             "explanations": [
@@ -565,15 +565,14 @@ def explain_recent_decisions(limit: int = 10):
                     "action_id": ex.action_id,
                     "timestamp": ex.timestamp,
                     "summary": ex.summary,
-                    "outcome": ex.outcome
+                    "outcome": ex.outcome,
                 }
                 for ex in explanations
-            ]
+            ],
         }
     except ImportError:
         raise HTTPException(
-            status_code=500,
-            detail="Explainability Agent not available"
+            status_code=500, detail="Explainability Agent not available"
         )
 
 

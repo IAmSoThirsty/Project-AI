@@ -355,7 +355,9 @@ class TestSovereignAuditLogTSAIntegration:
                     assert anchor_count >= 1, "TSA anchor should have been created"
 
                     # Verify anchor chain
-                    is_valid, msg = audit.tsa_anchor_manager.verify_chain(audit.genesis_keypair.public_key)
+                    is_valid, msg = audit.tsa_anchor_manager.verify_chain(
+                        audit.genesis_keypair.public_key
+                    )
                     assert is_valid, f"TSA anchor chain verification failed: {msg}"
 
             except Exception as e:
@@ -419,7 +421,10 @@ class TestConcurrentLoggingWithTSA:
                 """Worker thread that logs events."""
                 try:
                     for i in range(count):
-                        audit.log_event(f"concurrent_test_worker{worker_id}_event{i}", {"worker": worker_id, "seq": i})
+                        audit.log_event(
+                            f"concurrent_test_worker{worker_id}_event{i}",
+                            {"worker": worker_id, "seq": i},
+                        )
                 except Exception as e:
                     errors.append(f"Worker {worker_id} error: {e}")
 
@@ -444,12 +449,16 @@ class TestConcurrentLoggingWithTSA:
             total_events = num_workers * events_per_worker
             stats = audit.get_statistics()
             # Account for initialization events
-            assert stats["event_count"] >= total_events, f"Expected at least {total_events} events"
+            assert (
+                stats["event_count"] >= total_events
+            ), f"Expected at least {total_events} events"
 
             # Verify integrity after concurrent stress
             try:
                 is_valid, verify_errors = audit.verify_integrity()
-                assert is_valid, f"Integrity check failed after concurrent stress: {verify_errors}"
+                assert (
+                    is_valid
+                ), f"Integrity check failed after concurrent stress: {verify_errors}"
             except Exception as e:
                 # TSA verification may fail if endpoint is overloaded
                 pytest.skip(f"TSA verification skipped due to endpoint issue: {e}")
@@ -486,23 +495,33 @@ class TestVMRollbackDetection:
                         audit.log_event(f"post_snapshot_{i}", {"seq": i + 5})
 
                     anchor_count_after = audit.tsa_anchor_manager.get_anchor_count()
-                    assert anchor_count_after > anchor_count_before, "New anchor should be created"
+                    assert (
+                        anchor_count_after > anchor_count_before
+                    ), "New anchor should be created"
 
                     # Get new latest anchor
                     latest_anchor_after = audit.tsa_anchor_manager.get_latest_anchor()
 
                     # Verify monotonic timestamp
                     if latest_anchor_before and latest_anchor_after:
-                        time_before = datetime.fromisoformat(latest_anchor_before.tsa_time)
-                        time_after = datetime.fromisoformat(latest_anchor_after.tsa_time)
+                        time_before = datetime.fromisoformat(
+                            latest_anchor_before.tsa_time
+                        )
+                        time_after = datetime.fromisoformat(
+                            latest_anchor_after.tsa_time
+                        )
 
-                        assert time_after > time_before, "Timestamps must be monotonically increasing"
+                        assert (
+                            time_after > time_before
+                        ), "Timestamps must be monotonically increasing"
 
                     # Simulate rollback: restore anchors to pre-snapshot state
                     # (In real attack, attacker restores VM to earlier state)
                     # We simulate by truncating anchor chain
                     anchors = audit.tsa_anchor_manager._load()
-                    anchors = anchors[:anchor_count_before]  # Remove post-snapshot anchors
+                    anchors = anchors[
+                        :anchor_count_before
+                    ]  # Remove post-snapshot anchors
                     audit.tsa_anchor_manager._save(anchors)
 
                     # Now try to log new events with rolled-back chain

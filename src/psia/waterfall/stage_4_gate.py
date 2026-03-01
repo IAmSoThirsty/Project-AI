@@ -46,7 +46,12 @@ class StubIdentityHead:
 
         if not envelope.actor.startswith("did:project-ai:"):
             decision = "deny"
-            reasons.append(DenyReason(code="IDENTITY_INVALID_DID", detail=f"actor DID '{envelope.actor}' is not did:project-ai:"))
+            reasons.append(
+                DenyReason(
+                    code="IDENTITY_INVALID_DID",
+                    detail=f"actor DID '{envelope.actor}' is not did:project-ai:",
+                )
+            )
 
         return CerberusVote(
             request_id=envelope.request_id,
@@ -55,7 +60,9 @@ class StubIdentityHead:
             reasons=reasons,
             constraints_applied=ConstraintsApplied(),
             timestamp=datetime.now(timezone.utc).isoformat(),
-            signature=Signature(alg="ed25519", kid="cerberus_id_k1", sig="stub_identity_sig"),
+            signature=Signature(
+                alg="ed25519", kid="cerberus_id_k1", sig="stub_identity_sig"
+            ),
         )
 
 
@@ -70,7 +77,9 @@ class StubCapabilityHead:
             reasons=[],
             constraints_applied=ConstraintsApplied(),
             timestamp=datetime.now(timezone.utc).isoformat(),
-            signature=Signature(alg="ed25519", kid="cerberus_cap_k1", sig="stub_capability_sig"),
+            signature=Signature(
+                alg="ed25519", kid="cerberus_cap_k1", sig="stub_capability_sig"
+            ),
         )
 
 
@@ -85,7 +94,9 @@ class StubInvariantHead:
             reasons=[],
             constraints_applied=ConstraintsApplied(),
             timestamp=datetime.now(timezone.utc).isoformat(),
-            signature=Signature(alg="ed25519", kid="cerberus_inv_k1", sig="stub_invariant_sig"),
+            signature=Signature(
+                alg="ed25519", kid="cerberus_inv_k1", sig="stub_invariant_sig"
+            ),
         )
 
 
@@ -148,7 +159,11 @@ class QuorumEngine:
             final_decision=final_decision,
             votes=votes,
             quorum=QuorumInfo(
-                required=self.quorum_policy if self.quorum_policy in ("unanimous", "2of3", "simple") else "2of3",
+                required=(
+                    self.quorum_policy
+                    if self.quorum_policy in ("unanimous", "2of3", "simple")
+                    else "2of3"
+                ),
                 achieved=quorum_achieved,
                 voters=[f"node_{i}" for i in range(total)],
             ),
@@ -208,15 +223,21 @@ class GateStage:
                 votes.append(vote)
             except Exception as exc:
                 logger.exception("Cerberus %s head failed", head_name)
-                votes.append(CerberusVote(
-                    request_id=envelope.request_id,
-                    head=head_name,
-                    decision="deny",
-                    reasons=[DenyReason(code="HEAD_EXCEPTION", detail=str(exc))],
-                    constraints_applied=ConstraintsApplied(),
-                    timestamp=datetime.now(timezone.utc).isoformat(),
-                    signature=Signature(alg="ed25519", kid=f"cerberus_{head_name}_k1", sig="error_sig"),
-                ))
+                votes.append(
+                    CerberusVote(
+                        request_id=envelope.request_id,
+                        head=head_name,
+                        decision="deny",
+                        reasons=[DenyReason(code="HEAD_EXCEPTION", detail=str(exc))],
+                        constraints_applied=ConstraintsApplied(),
+                        timestamp=datetime.now(timezone.utc).isoformat(),
+                        signature=Signature(
+                            alg="ed25519",
+                            kid=f"cerberus_{head_name}_k1",
+                            sig="error_sig",
+                        ),
+                    )
+                )
 
         # Produce decision
         decision = self.quorum_engine.decide(votes, envelope.request_id)
@@ -227,14 +248,18 @@ class GateStage:
             "deny": StageDecision.DENY,
             "quarantine": StageDecision.QUARANTINE,
         }
-        stage_decision = stage_decision_map.get(decision.final_decision, StageDecision.DENY)
+        stage_decision = stage_decision_map.get(
+            decision.final_decision, StageDecision.DENY
+        )
 
         reasons = [
             f"{v.head}={v.decision}"
             + (f" ({', '.join(r.code for r in v.reasons)})" if v.reasons else "")
             for v in votes
         ]
-        reasons.append(f"quorum={decision.quorum.required} achieved={decision.quorum.achieved}")
+        reasons.append(
+            f"quorum={decision.quorum.required} achieved={decision.quorum.achieved}"
+        )
 
         return StageResult(
             stage=WaterfallStage.GATE,

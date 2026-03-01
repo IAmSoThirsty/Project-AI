@@ -150,7 +150,9 @@ class AuditHardeningSystem:
                 self.s3_client.get_object_lock_configuration(Bucket=self.s3_bucket)
                 logger.info(f"S3 Object Lock verified for bucket {self.s3_bucket}")
             except Exception as e:
-                logger.error(f"S3 Object Lock not enabled for bucket {self.s3_bucket}: {e}")
+                logger.error(
+                    f"S3 Object Lock not enabled for bucket {self.s3_bucket}: {e}"
+                )
                 raise
         except ImportError:
             logger.error("boto3 not installed. Install with: pip install boto3")
@@ -164,16 +166,24 @@ class AuditHardeningSystem:
 
             connection_string = self.config.get("azure_connection_string")
             if connection_string:
-                self.blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+                self.blob_service_client = BlobServiceClient.from_connection_string(
+                    connection_string
+                )
             else:
                 account_url = self.config.get("azure_account_url")
                 if not account_url:
-                    raise ValueError("azure_connection_string or azure_account_url is required")
+                    raise ValueError(
+                        "azure_connection_string or azure_account_url is required"
+                    )
                 credential = DefaultAzureCredential()
-                self.blob_service_client = BlobServiceClient(account_url=account_url, credential=credential)
+                self.blob_service_client = BlobServiceClient(
+                    account_url=account_url, credential=credential
+                )
 
             self.azure_container = self.config.get("azure_container", "audit-logs")
-            logger.info(f"Azure Blob Storage initialized for container {self.azure_container}")
+            logger.info(
+                f"Azure Blob Storage initialized for container {self.azure_container}"
+            )
         except ImportError:
             logger.error(
                 "azure-storage-blob not installed. Install with: pip install azure-storage-blob azure-identity"
@@ -195,11 +205,17 @@ class AuditHardeningSystem:
             # Verify retention policy
             self.gcs_bucket.reload()
             if not self.gcs_bucket.retention_period:
-                logger.warning(f"No retention policy set for bucket {self.gcs_bucket_name}")
+                logger.warning(
+                    f"No retention policy set for bucket {self.gcs_bucket_name}"
+                )
             else:
-                logger.info(f"GCP retention policy: {self.gcs_bucket.retention_period} seconds")
+                logger.info(
+                    f"GCP retention policy: {self.gcs_bucket.retention_period} seconds"
+                )
         except ImportError:
-            logger.error("google-cloud-storage not installed. Install with: pip install google-cloud-storage")
+            logger.error(
+                "google-cloud-storage not installed. Install with: pip install google-cloud-storage"
+            )
             raise
 
     def _load_or_generate_signing_key(self) -> ed25519.Ed25519PrivateKey:
@@ -208,7 +224,9 @@ class AuditHardeningSystem:
 
         if os.path.exists(key_path):
             with open(key_path, "rb") as f:
-                private_key = serialization.load_pem_private_key(f.read(), password=None, backend=default_backend())
+                private_key = serialization.load_pem_private_key(
+                    f.read(), password=None, backend=default_backend()
+                )
             logger.info("Loaded existing signing key")
             return private_key
 
@@ -345,7 +363,9 @@ class AuditHardeningSystem:
         # Save state
         self._save_state()
 
-        logger.info(f"Flushed batch {batch_metadata['batch_id']} with {batch_metadata['entry_count']} entries")
+        logger.info(
+            f"Flushed batch {batch_metadata['batch_id']} with {batch_metadata['entry_count']} entries"
+        )
 
     def _sign_batch(self, batch_data: str) -> str:
         """Sign a batch of log entries"""
@@ -409,7 +429,9 @@ class AuditHardeningSystem:
         """Store batch to S3 with Object Lock"""
         key = f"audit-logs/{batch_id}.json"
 
-        retention_until = datetime.utcnow().replace(year=datetime.utcnow().year + (self.retention_days // 365))
+        retention_until = datetime.utcnow().replace(
+            year=datetime.utcnow().year + (self.retention_days // 365)
+        )
 
         self.s3_client.put_object(
             Bucket=self.s3_bucket,
@@ -433,7 +455,9 @@ class AuditHardeningSystem:
         from azure.storage.blob import ImmutabilityPolicy
 
         blob_name = f"audit-logs/{batch_id}.json"
-        container_client = self.blob_service_client.get_container_client(self.azure_container)
+        container_client = self.blob_service_client.get_container_client(
+            self.azure_container
+        )
 
         # Create container if not exists
         try:
@@ -473,7 +497,9 @@ class AuditHardeningSystem:
             "merkle_root": document["metadata"]["merkle_root"],
         }
 
-        blob.upload_from_string(json.dumps(document, indent=2), content_type="application/json")
+        blob.upload_from_string(
+            json.dumps(document, indent=2), content_type="application/json"
+        )
 
         logger.info(f"Stored batch {batch_id} to GCP with Bucket Retention")
 
@@ -512,9 +538,15 @@ class AuditHardeningSystem:
         else:
             # Get all batches
             if self.backend == StorageBackend.LOCAL:
-                batches = [f.replace(".json", "") for f in os.listdir(self.worm_dir) if f.endswith(".json")]
+                batches = [
+                    f.replace(".json", "")
+                    for f in os.listdir(self.worm_dir)
+                    if f.endswith(".json")
+                ]
             else:
-                results["errors"].append("Full verification not implemented for cloud backends yet")
+                results["errors"].append(
+                    "Full verification not implemented for cloud backends yet"
+                )
                 return results
 
         for bid in batches:

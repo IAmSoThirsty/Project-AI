@@ -10,7 +10,12 @@ from enum import Enum
 from typing import Dict, List, Optional, Set
 
 from app.miniature_office.core.audit import EventType, get_audit_log
-from app.miniature_office.core.entity import Entity, EntityType, RelationType, get_registry
+from app.miniature_office.core.entity import (
+    Entity,
+    EntityType,
+    RelationType,
+    get_registry,
+)
 
 
 class ToolTag(Enum):
@@ -103,7 +108,9 @@ class CheckoutRecord:
             "agent_id": self.agent_id,
             "justification": self.justification,
             "checked_out_at": self.checked_out_at.isoformat(),
-            "checked_in_at": self.checked_in_at.isoformat() if self.checked_in_at else None,
+            "checked_in_at": (
+                self.checked_in_at.isoformat() if self.checked_in_at else None
+            ),
         }
 
 
@@ -127,7 +134,9 @@ class SupplyStore:
             data={"action": "tool_added_to_supply_store", "tool_name": tool.name},
         )
 
-    def check_out_tool(self, tool_id: str, agent_id: str, justification: str = "") -> Optional[CheckoutRecord]:
+    def check_out_tool(
+        self, tool_id: str, agent_id: str, justification: str = ""
+    ) -> Optional[CheckoutRecord]:
         """
         Check out a tool (Codex 5.2).
         Agents must explicitly check out tools from supply store.
@@ -150,7 +159,9 @@ class SupplyStore:
             return None
 
         # Create checkout record
-        checkout = CheckoutRecord(tool_id=tool_id, agent_id=agent_id, justification=justification)
+        checkout = CheckoutRecord(
+            tool_id=tool_id, agent_id=agent_id, justification=justification
+        )
 
         self.checkouts[checkout.checkout_id] = checkout
         tool.checked_out_by = agent_id
@@ -203,11 +214,17 @@ class SupplyStore:
 
     def get_tools_by_capability(self, capability: str) -> List[Tool]:
         """Get all tools that provide a specific capability"""
-        return [t for t in self.tools.values() if capability in t.metadata_info.capabilities]
+        return [
+            t for t in self.tools.values() if capability in t.metadata_info.capabilities
+        ]
 
     def get_agent_checkouts(self, agent_id: str) -> List[CheckoutRecord]:
         """Get all active checkouts for an agent"""
-        return [c for c in self.checkouts.values() if c.agent_id == agent_id and not c.checked_in_at]
+        return [
+            c
+            for c in self.checkouts.values()
+            if c.agent_id == agent_id and not c.checked_in_at
+        ]
 
 
 # Global supply store

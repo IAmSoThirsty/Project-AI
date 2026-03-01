@@ -61,13 +61,17 @@ class SecureDataParser:
         if self._detect_xxe_patterns(xml_data):
             issues.append("XXE attack pattern detected")
             logger.warning("XXE attack pattern detected in XML data")
-            return ParsedData(data=None, data_type="xml", hash="", validated=False, issues=issues)
+            return ParsedData(
+                data=None, data_type="xml", hash="", validated=False, issues=issues
+            )
 
         # Check for DTD declarations (should be blocked)
         if "<!DOCTYPE" in xml_data or "<!ENTITY" in xml_data:
             issues.append("DTD/Entity declarations not allowed")
             logger.warning("DTD/Entity declarations found in XML")
-            return ParsedData(data=None, data_type="xml", hash="", validated=False, issues=issues)
+            return ParsedData(
+                data=None, data_type="xml", hash="", validated=False, issues=issues
+            )
 
         # Parse with defusedxml for secure XML parsing
         try:
@@ -94,9 +98,13 @@ class SecureDataParser:
         except ET.ParseError as e:
             issues.append(f"XML parse error: {e}")
             logger.error("XML parsing failed: %s", e)
-            return ParsedData(data=None, data_type="xml", hash="", validated=False, issues=issues)
+            return ParsedData(
+                data=None, data_type="xml", hash="", validated=False, issues=issues
+            )
 
-    def parse_csv(self, csv_data: str, schema: dict | None = None, delimiter: str = ",") -> ParsedData:
+    def parse_csv(
+        self, csv_data: str, schema: dict | None = None, delimiter: str = ","
+    ) -> ParsedData:
         """Parse CSV with validation and type checking.
 
         Args:
@@ -139,7 +147,9 @@ class SecureDataParser:
         except csv.Error as e:
             issues.append(f"CSV parse error: {e}")
             logger.error("CSV parsing failed: %s", e)
-            return ParsedData(data=None, data_type="csv", hash="", validated=False, issues=issues)
+            return ParsedData(
+                data=None, data_type="csv", hash="", validated=False, issues=issues
+            )
 
     def parse_json(self, json_data: str, schema: dict | None = None) -> ParsedData:
         """Parse JSON with validation.
@@ -156,7 +166,9 @@ class SecureDataParser:
         # Check size
         if len(json_data) > self.max_file_size:
             issues.append("JSON data exceeds maximum size")
-            return ParsedData(data=None, data_type="json", hash="", validated=False, issues=issues)
+            return ParsedData(
+                data=None, data_type="json", hash="", validated=False, issues=issues
+            )
 
         try:
             data = json.loads(json_data)
@@ -180,7 +192,9 @@ class SecureDataParser:
         except json.JSONDecodeError as e:
             issues.append(f"JSON parse error: {e}")
             logger.error("JSON parsing failed: %s", e)
-            return ParsedData(data=None, data_type="json", hash="", validated=False, issues=issues)
+            return ParsedData(
+                data=None, data_type="json", hash="", validated=False, issues=issues
+            )
 
     def _detect_xxe_patterns(self, xml_data: str) -> bool:
         """Detect XXE attack patterns in XML.
@@ -291,7 +305,9 @@ class SecureDataParser:
                     value = data[field]
 
                     if not self._check_type(value, expected_type):
-                        issues.append(f"Field '{field}' has wrong type: expected {expected_type}")
+                        issues.append(
+                            f"Field '{field}' has wrong type: expected {expected_type}"
+                        )
 
         return issues
 
@@ -317,13 +333,17 @@ class SecureDataParser:
                     try:
                         int(value)
                     except (ValueError, TypeError):
-                        issues.append(f"Row {row_idx}, column '{column}': expected int, got '{value}'")
+                        issues.append(
+                            f"Row {row_idx}, column '{column}': expected int, got '{value}'"
+                        )
 
                 elif expected_type == "float":
                     try:
                         float(value)
                     except (ValueError, TypeError):
-                        issues.append(f"Row {row_idx}, column '{column}': expected float, got '{value}'")
+                        issues.append(
+                            f"Row {row_idx}, column '{column}': expected float, got '{value}'"
+                        )
 
         return issues
 
@@ -427,10 +447,14 @@ class DataPoisoningDefense:
         sanitized = data
 
         # Remove script tags
-        sanitized = re.sub(r"<script.*?>.*?</script>", "", sanitized, flags=re.IGNORECASE | re.DOTALL)
+        sanitized = re.sub(
+            r"<script.*?>.*?</script>", "", sanitized, flags=re.IGNORECASE | re.DOTALL
+        )
 
         # Remove event handlers
-        sanitized = re.sub(r"on\w+\s*=\s*[\"'][^\"']*[\"']", "", sanitized, flags=re.IGNORECASE)
+        sanitized = re.sub(
+            r"on\w+\s*=\s*[\"'][^\"']*[\"']", "", sanitized, flags=re.IGNORECASE
+        )
 
         # Remove javascript: URLs
         sanitized = re.sub(r"javascript:", "", sanitized, flags=re.IGNORECASE)

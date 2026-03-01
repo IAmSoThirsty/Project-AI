@@ -171,9 +171,7 @@ async def main():
     # Verify we have the right number of tests
     actual_count = len(tests)
     if actual_count != args.test_count:
-        logger.warning(
-            "Generated %d tests, expected %d", actual_count, args.test_count
-        )
+        logger.warning("Generated %d tests, expected %d", actual_count, args.test_count)
 
     print(f"✓ Generated {actual_count} tests in {generation_time:.1f} seconds")
 
@@ -254,7 +252,9 @@ async def main():
         print(f"  Avg Turns/Test: {summary['average_turns_per_test']:.1f}")
         print(f"  Total Breaches: {summary['total_breaches_detected']}")
         print(f"  Total Defenses: {summary['total_defenses_held']}")
-        print(f"  Execution Time: {execution_time:.1f} seconds ({execution_time/3600:.2f} hours)")
+        print(
+            f"  Execution Time: {execution_time:.1f} seconds ({execution_time/3600:.2f} hours)"
+        )
 
         print("\nCategory Breakdown:")
         for category, stats in results.get("category_breakdown", {}).items():

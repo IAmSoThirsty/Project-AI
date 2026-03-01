@@ -38,7 +38,6 @@ def _patch_imports():
 _patch_imports()
 from app.agents.alpha_red import AlphaRedAgent  # noqa: E402
 
-
 # ── Test class ─────────────────────────────────────────────────
 
 
@@ -59,8 +58,16 @@ class TestAlphaRedAgent:
     def test_strategy_has_required_fields(self):
         agent = self._make_agent()
         for s in agent.strategy_pool:
-            for key in ("id", "target", "approach", "complexity", "severity",
-                        "chain_depth", "evasion_level", "generation"):
+            for key in (
+                "id",
+                "target",
+                "approach",
+                "complexity",
+                "severity",
+                "chain_depth",
+                "evasion_level",
+                "generation",
+            ):
                 assert key in s, f"missing key '{key}' in strategy {s['id']}"
 
     # ── Prompt generation ──
@@ -86,7 +93,11 @@ class TestAlphaRedAgent:
 
     def test_evaluate_blocked_defense(self):
         agent = self._make_agent()
-        attack = {"strategy_id": agent.strategy_pool[0]["id"], "complexity": 0.5, "severity": 0.5}
+        attack = {
+            "strategy_id": agent.strategy_pool[0]["id"],
+            "complexity": 0.5,
+            "severity": 0.5,
+        }
         response = {"blocked": True, "confidence": 0.9, "response_time_ms": 50}
         fitness = agent.evaluate_defense_response(attack, response)
         assert 0.0 <= fitness <= 1.0
@@ -95,7 +106,11 @@ class TestAlphaRedAgent:
 
     def test_evaluate_successful_attack(self):
         agent = self._make_agent()
-        attack = {"strategy_id": agent.strategy_pool[0]["id"], "complexity": 0.5, "severity": 0.8}
+        attack = {
+            "strategy_id": agent.strategy_pool[0]["id"],
+            "complexity": 0.5,
+            "severity": 0.8,
+        }
         response = {"blocked": False, "confidence": 0.3, "response_time_ms": 200}
         fitness = agent.evaluate_defense_response(attack, response)
         assert fitness >= 0.7  # unblocked → high fitness

@@ -40,7 +40,9 @@ class PurposeConstitution:
     If an action does not advance code correctness or completeness, it is ILLEGAL.
     """
 
-    PRIMARY_PURPOSE = "Transform user code directives into correct, tested, auditable code artifacts"
+    PRIMARY_PURPOSE = (
+        "Transform user code directives into correct, tested, auditable code artifacts"
+    )
 
     FORBIDDEN_ACTIONS = [
         "Speculative features",
@@ -53,7 +55,9 @@ class PurposeConstitution:
     ]
 
     @staticmethod
-    def is_action_legal(action_description: str, advances_code_correctness: bool) -> bool:
+    def is_action_legal(
+        action_description: str, advances_code_correctness: bool
+    ) -> bool:
         """
         Validate if an action is legal under the Purpose Constitution.
 
@@ -134,7 +138,11 @@ class LanguageFloor:
         return self.language == target_language
 
     def to_dict(self) -> Dict:
-        return {"floor_number": self.floor_number, "language": self.language.value, "jurisdiction": self.jurisdiction}
+        return {
+            "floor_number": self.floor_number,
+            "language": self.language.value,
+            "jurisdiction": self.jurisdiction,
+        }
 
 
 class OfficeRole(Enum):
@@ -203,12 +211,20 @@ class CodeDirective:
 
     def to_cognitive_contract(self):
         """Convert to Cognitive Contract automatically"""
-        from app.miniature_office.core.cognitive_contract import BindingLevel, CognitiveContract, Intent
+        from app.miniature_office.core.cognitive_contract import (
+            BindingLevel,
+            CognitiveContract,
+            Intent,
+        )
 
         intent = Intent(
             goal=f"{self.requested_outcome.value} code in {self.language.value}",
             constraints=self.constraints,
-            non_goals=["Improve beyond request", "Add unrelated features", "Introduce new architecture"],
+            non_goals=[
+                "Improve beyond request",
+                "Add unrelated features",
+                "Introduce new architecture",
+            ],
         )
 
         contract = CognitiveContract(
@@ -268,7 +284,11 @@ class ArchitecturalDecision:
     design_analysis: Optional[Dict] = None  # MAXIMUM ALLOWED DESIGN analysis
 
     def to_dict(self) -> Dict:
-        result = {"invariants": self.invariants, "rejected_reason": self.rejected_reason, "approved": self.approved}
+        result = {
+            "invariants": self.invariants,
+            "rejected_reason": self.rejected_reason,
+            "approved": self.approved,
+        }
 
         # Include deep analysis if available
         if self.ast_analysis:
@@ -324,7 +344,11 @@ class ReviewDecision:
     recommendations: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict:
-        return {"approved": self.approved, "violations": self.violations, "recommendations": self.recommendations}
+        return {
+            "approved": self.approved,
+            "violations": self.violations,
+            "recommendations": self.recommendations,
+        }
 
 
 @dataclass
@@ -373,7 +397,9 @@ class ManagerSeal:
 
     def is_ready_for_delivery(self) -> bool:
         """Check if all checkboxes pass"""
-        return self.contract_satisfied and self.tests_pass and self.no_unresolved_dissent
+        return (
+            self.contract_satisfied and self.tests_pass and self.no_unresolved_dissent
+        )
 
     def seal(self):
         """Seal the output for delivery"""
@@ -565,7 +591,9 @@ class CodeAuthoringCivilization:
         # Step 2: Architectural Pass
         arch_decision = self._architectural_pass(directive)
         if not arch_decision.approved:
-            raise ValueError(f"Architectural rejection: {arch_decision.rejected_reason}")
+            raise ValueError(
+                f"Architectural rejection: {arch_decision.rejected_reason}"
+            )
 
         # Step 3: Implementation Sprint
         impl_output = self._implementation_sprint(directive, arch_decision)
@@ -634,7 +662,9 @@ class CodeAuthoringCivilization:
 
             # Parse source with aggressive AST analysis
             analyzer = ASTAnalyzer()
-            ast_root, parse_error = analyzer.parse_source(directive.source, f"<directive-{directive.directive_id}>")
+            ast_root, parse_error = analyzer.parse_source(
+                directive.source, f"<directive-{directive.directive_id}>"
+            )
 
             if ast_root:
                 # Generate comprehensive AST report with all details
@@ -715,11 +745,19 @@ class CodeAuthoringCivilization:
                     antipatterns = pattern_detector.detect_antipatterns(ast_root)
                     detected_patterns = {
                         "design_patterns": [
-                            {"type": p.pattern_type.value, "location": p.location, "confidence": p.confidence}
+                            {
+                                "type": p.pattern_type.value,
+                                "location": p.location,
+                                "confidence": p.confidence,
+                            }
                             for p in patterns
                         ],
                         "anti_patterns": [
-                            {"type": a.pattern_type.value, "location": a.location, "severity": a.severity}
+                            {
+                                "type": a.pattern_type.value,
+                                "location": a.location,
+                                "severity": a.severity,
+                            }
                             for a in antipatterns
                         ],
                     }
@@ -733,7 +771,12 @@ class CodeAuthoringCivilization:
                     dependency_graph = {
                         "nodes": list(dep_graph.nodes),
                         "edges": [
-                            {"source": e.source, "target": e.target, "type": e.relation_type.value, "line": e.line}
+                            {
+                                "source": e.source,
+                                "target": e.target,
+                                "type": e.relation_type.value,
+                                "line": e.line,
+                            }
                             for e in dep_graph.edges
                         ],
                         "cycles": dep_graph.detect_cycles(),
@@ -745,7 +788,9 @@ class CodeAuthoringCivilization:
                 # Perform comprehensive design analysis with no summarization
                 design_analyzer = DesignAnalyzer()
                 try:
-                    design_result = design_analyzer.analyze(ast_root, directive.source)  # noqa: F841
+                    design_result = design_analyzer.analyze(
+                        ast_root, directive.source
+                    )  # noqa: F841
                     design_analysis = design_analyzer.generate_report()
                 except Exception as e:
                     design_analysis = {"error": str(e)}
@@ -761,7 +806,9 @@ class CodeAuthoringCivilization:
         if directive.language == ProgrammingLanguage.PYTHON:
             invariants.extend(["Type hints", "PEP 8 compliance", "Docstrings"])
         elif directive.language == ProgrammingLanguage.RUST:
-            invariants.extend(["Memory safety", "Ownership rules", "Error handling with Result"])
+            invariants.extend(
+                ["Memory safety", "Ownership rules", "Error handling with Result"]
+            )
         elif directive.language == ProgrammingLanguage.JAVASCRIPT_TYPESCRIPT:
             invariants.extend(["Type safety (TypeScript)", "ESLint compliance"])
         else:
@@ -783,7 +830,10 @@ class CodeAuthoringCivilization:
 
         # Check for impossible requirements
         if "no external dependencies" in [c.lower() for c in directive.constraints]:
-            if "use numpy" in directive.source.lower() or "import numpy" in directive.source.lower():
+            if (
+                "use numpy" in directive.source.lower()
+                or "import numpy" in directive.source.lower()
+            ):
                 return ArchitecturalDecision(
                     invariants=[],
                     rejected_reason="Constraint 'no external dependencies' conflicts with numpy usage in source",
@@ -793,7 +843,9 @@ class CodeAuthoringCivilization:
         # Check for empty source on certain outcomes
         if directive.input_type == InputType.SPEC and not directive.source.strip():
             return ArchitecturalDecision(
-                invariants=[], rejected_reason="Cannot implement from empty specification", approved=False
+                invariants=[],
+                rejected_reason="Cannot implement from empty specification",
+                approved=False,
             )
 
         # Add general software engineering invariants
@@ -810,7 +862,9 @@ class CodeAuthoringCivilization:
             design_analysis=design_analysis,
         )
 
-    def _implementation_sprint(self, directive: CodeDirective, arch: ArchitecturalDecision) -> ImplementationOutput:
+    def _implementation_sprint(
+        self, directive: CodeDirective, arch: ArchitecturalDecision
+    ) -> ImplementationOutput:
         """
         Step 3: Implementers write code only
 
@@ -842,7 +896,9 @@ class CodeAuthoringCivilization:
 
         return ImplementationOutput(code=code, files_modified=files_modified)
 
-    def _generate_python_code(self, directive: CodeDirective, arch: ArchitecturalDecision) -> str:
+    def _generate_python_code(
+        self, directive: CodeDirective, arch: ArchitecturalDecision
+    ) -> str:
         """Generate Python code based on directive"""
         code_lines = []
 
@@ -856,10 +912,14 @@ class CodeAuthoringCivilization:
         if directive.requested_outcome == RequestedOutcome.EXTEND:
             # Generate function extension
             if "function" in source_lower or "def " in directive.source:
-                function_name = self._extract_function_name(directive.source) or "enhanced_function"
+                function_name = (
+                    self._extract_function_name(directive.source) or "enhanced_function"
+                )
                 code_lines.append(f"\ndef {function_name}(data: Any) -> Any:")
                 code_lines.append('    """')
-                code_lines.append(f"    {directive.requested_outcome.value.capitalize()} functionality.")
+                code_lines.append(
+                    f"    {directive.requested_outcome.value.capitalize()} functionality."
+                )
                 code_lines.append("    ")
                 code_lines.append("    Args:")
                 code_lines.append("        data: Input data to process")
@@ -869,17 +929,25 @@ class CodeAuthoringCivilization:
                 code_lines.append('    """')
                 code_lines.append("    # Input validation")
                 code_lines.append("    if data is None:")
-                code_lines.append('        raise ValueError("Input data cannot be None")')
+                code_lines.append(
+                    '        raise ValueError("Input data cannot be None")'
+                )
                 code_lines.append("    ")
-                code_lines.append(f"    # Implementation based on: {directive.source[:50]}...")
+                code_lines.append(
+                    f"    # Implementation based on: {directive.source[:50]}..."
+                )
                 code_lines.append("    result = data  # TODO: Implement actual logic")
                 code_lines.append("    return result")
             else:
                 # Generate class
-                class_name = self._extract_class_name(directive.source) or "EnhancedClass"
+                class_name = (
+                    self._extract_class_name(directive.source) or "EnhancedClass"
+                )
                 code_lines.append(f"\nclass {class_name}:")
                 code_lines.append('    """')
-                code_lines.append(f"    {directive.requested_outcome.value.capitalize()} implementation.")
+                code_lines.append(
+                    f"    {directive.requested_outcome.value.capitalize()} implementation."
+                )
                 code_lines.append('    """')
                 code_lines.append("    ")
                 code_lines.append("    def __init__(self):")
@@ -892,18 +960,24 @@ class CodeAuthoringCivilization:
             code_lines.append(f"# Original issue: {directive.source[:100]}...")
             code_lines.append("")
             code_lines.append("def fixed_implementation(input_data: Any) -> Any:")
-            code_lines.append('    """Fixed implementation with proper error handling."""')
+            code_lines.append(
+                '    """Fixed implementation with proper error handling."""'
+            )
             code_lines.append("    try:")
             code_lines.append("        if input_data is None:")
             code_lines.append('            raise ValueError("Input cannot be None")')
             code_lines.append("        return input_data")
             code_lines.append("    except Exception as e:")
             code_lines.append("        # Proper error handling")
-            code_lines.append(f'        raise RuntimeError(f"Processing failed: {{e}}")')  # noqa: F541
+            code_lines.append(
+                f'        raise RuntimeError(f"Processing failed: {{e}}")'
+            )  # noqa: F541
 
         elif directive.requested_outcome == RequestedOutcome.REFACTOR:
             # Generate refactored version
-            code_lines.append("# Refactored version - improved structure and readability")
+            code_lines.append(
+                "# Refactored version - improved structure and readability"
+            )
             code_lines.append("")
             code_lines.append("def refactored_function(data: Any) -> Any:")
             code_lines.append('    """')
@@ -939,12 +1013,16 @@ class CodeAuthoringCivilization:
             code_lines.append(f"AUDIT_REPORT = {{")  # noqa: F541
             code_lines.append('    "status": "completed",')
             code_lines.append('    "issues_found": [],')
-            code_lines.append('    "recommendations": ["Follow PEP 8", "Add type hints", "Add docstrings"]')
+            code_lines.append(
+                '    "recommendations": ["Follow PEP 8", "Add type hints", "Add docstrings"]'
+            )
             code_lines.append(f"}}")  # noqa: F541
 
         else:
             # Default implementation for TRANSLATE or other outcomes
-            code_lines.append(f"# {directive.requested_outcome.value.capitalize()} implementation")
+            code_lines.append(
+                f"# {directive.requested_outcome.value.capitalize()} implementation"
+            )
             code_lines.append("")
             code_lines.append("def implementation() -> None:")
             code_lines.append('    """Generated implementation."""')
@@ -952,13 +1030,17 @@ class CodeAuthoringCivilization:
 
         return "\n".join(code_lines)
 
-    def _generate_javascript_code(self, directive: CodeDirective, arch: ArchitecturalDecision) -> str:
+    def _generate_javascript_code(
+        self, directive: CodeDirective, arch: ArchitecturalDecision
+    ) -> str:
         """Generate JavaScript/TypeScript code"""
         code_lines = []
 
         if directive.requested_outcome == RequestedOutcome.EXTEND:
             code_lines.append("/**")
-            code_lines.append(f" * {directive.requested_outcome.value.capitalize()} implementation")
+            code_lines.append(
+                f" * {directive.requested_outcome.value.capitalize()} implementation"
+            )
             code_lines.append(" */")
             code_lines.append("function enhancedFunction(data) {")
             code_lines.append("  // Input validation")
@@ -966,7 +1048,9 @@ class CodeAuthoringCivilization:
             code_lines.append("    throw new Error('Input data is required');")
             code_lines.append("  }")
             code_lines.append("  ")
-            code_lines.append(f"  // Implementation based on: {directive.source[:50]}...")
+            code_lines.append(
+                f"  // Implementation based on: {directive.source[:50]}..."
+            )
             code_lines.append("  return data;")
             code_lines.append("}")
         else:
@@ -978,13 +1062,17 @@ class CodeAuthoringCivilization:
 
         return "\n".join(code_lines)
 
-    def _generate_rust_code(self, directive: CodeDirective, arch: ArchitecturalDecision) -> str:
+    def _generate_rust_code(
+        self, directive: CodeDirective, arch: ArchitecturalDecision
+    ) -> str:
         """Generate Rust code"""
         code_lines = []
 
         if directive.requested_outcome == RequestedOutcome.EXTEND:
             code_lines.append("/// Enhanced implementation")
-            code_lines.append("pub fn enhanced_function<T>(data: T) -> Result<T, String> {")
+            code_lines.append(
+                "pub fn enhanced_function<T>(data: T) -> Result<T, String> {"
+            )
             code_lines.append("    // Implementation with Result for error handling")
             code_lines.append("    Ok(data)")
             code_lines.append("}")
@@ -1042,7 +1130,9 @@ class CodeAuthoringCivilization:
 
         # Check for common code smells
         if "TODO" in code and "TODO: Implement" not in code:
-            recommendations.append("Contains TODO comments - consider completing implementation")
+            recommendations.append(
+                "Contains TODO comments - consider completing implementation"
+            )
 
         # Check for proper error handling
         if "raise" not in code and "except" not in code and "Error" not in code:
@@ -1074,7 +1164,10 @@ class CodeAuthoringCivilization:
             if re.search(r"def [a-z]+[A-Z]", code):
                 violations.append("Use snake_case for function names (PEP 8)")
 
-        elif any(fname.endswith(".js") or fname.endswith(".ts") for fname in impl.files_modified):
+        elif any(
+            fname.endswith(".js") or fname.endswith(".ts")
+            for fname in impl.files_modified
+        ):
             # JavaScript/TypeScript checks
             if "var " in code:
                 recommendations.append("Use 'const' or 'let' instead of 'var'")
@@ -1092,7 +1185,9 @@ class CodeAuthoringCivilization:
         # Determine approval
         approved = len(violations) == 0
 
-        return ReviewDecision(approved=approved, violations=violations, recommendations=recommendations)
+        return ReviewDecision(
+            approved=approved, violations=violations, recommendations=recommendations
+        )
 
     def _testing_mandate(self, impl: ImplementationOutput) -> TestSuite:
         """
@@ -1123,7 +1218,9 @@ class CodeAuthoringCivilization:
                 if not func_name.startswith("_"):  # Only test public functions
                     test_count += 1
                     test_code_lines.append(f"\ndef test_{func_name}_basic():")
-                    test_code_lines.append(f'    """Test {func_name} with valid input."""')
+                    test_code_lines.append(
+                        f'    """Test {func_name} with valid input."""'
+                    )
                     test_code_lines.append("    # Arrange")
                     test_code_lines.append('    test_data = "test"')
                     test_code_lines.append("    ")
@@ -1137,9 +1234,13 @@ class CodeAuthoringCivilization:
                     # Add edge case test
                     test_count += 1
                     test_code_lines.append(f"\ndef test_{func_name}_edge_cases():")
-                    test_code_lines.append(f'    """Test {func_name} with edge cases."""')
+                    test_code_lines.append(
+                        f'    """Test {func_name} with edge cases."""'
+                    )
                     test_code_lines.append("    # Test with None")
-                    test_code_lines.append("    with pytest.raises((ValueError, TypeError, RuntimeError)):")
+                    test_code_lines.append(
+                        "    with pytest.raises((ValueError, TypeError, RuntimeError)):"
+                    )
                     test_code_lines.append(f"        {func_name}(None)")
                     test_code_lines.append("")
 
@@ -1147,8 +1248,12 @@ class CodeAuthoringCivilization:
             classes = re.findall(r"class\s+(\w+)", code)
             for class_name in classes:
                 test_count += 1
-                test_code_lines.append(f"\ndef test_{class_name.lower()}_instantiation():")
-                test_code_lines.append(f'    """Test {class_name} can be instantiated."""')
+                test_code_lines.append(
+                    f"\ndef test_{class_name.lower()}_instantiation():"
+                )
+                test_code_lines.append(
+                    f'    """Test {class_name} can be instantiated."""'
+                )
                 test_code_lines.append(f"    instance = {class_name}()")
                 test_code_lines.append("    assert instance is not None")
                 test_code_lines.append("")
@@ -1157,13 +1262,18 @@ class CodeAuthoringCivilization:
             if test_count == 0:
                 test_count = 1
                 test_code_lines.append("\ndef test_implementation_exists():")
-                test_code_lines.append('    """Test that implementation is not empty."""')
+                test_code_lines.append(
+                    '    """Test that implementation is not empty."""'
+                )
                 test_code_lines.append('    implementation_code = """')
                 test_code_lines.append(code[:200] + "...")
                 test_code_lines.append('    """')
                 test_code_lines.append("    assert len(implementation_code) > 0")
 
-        elif any(fname.endswith(".js") or fname.endswith(".ts") for fname in impl.files_modified):
+        elif any(
+            fname.endswith(".js") or fname.endswith(".ts")
+            for fname in impl.files_modified
+        ):
             # JavaScript/TypeScript tests
             test_code_lines.append("const { expect } = require('chai');\n")
 
@@ -1174,7 +1284,9 @@ class CodeAuthoringCivilization:
             for func_name in functions:
                 test_count += 1
                 test_code_lines.append(f"describe('{func_name}', () => {{")
-                test_code_lines.append(f"  it('should work with valid input', () => {{")  # noqa: F541
+                test_code_lines.append(
+                    f"  it('should work with valid input', () => {{"
+                )  # noqa: F541
                 test_code_lines.append(f"    const result = {func_name}('test');")
                 test_code_lines.append("    expect(result).to.not.be.null;")
                 test_code_lines.append(f"  }});")  # noqa: F541
@@ -1200,12 +1312,26 @@ class CodeAuthoringCivilization:
 
         # Calculate coverage estimate
         # Simple heuristic: if we generated tests for most functions, coverage is good
-        code_lines = len([item for item in code.split("\n") if item.strip() and not item.strip().startswith("#")])
-        test_lines = len([item for item in test_code.split("\n") if item.strip() and not item.strip().startswith("#")])
+        code_lines = len(
+            [
+                item
+                for item in code.split("\n")
+                if item.strip() and not item.strip().startswith("#")
+            ]
+        )
+        test_lines = len(
+            [
+                item
+                for item in test_code.split("\n")
+                if item.strip() and not item.strip().startswith("#")
+            ]
+        )
 
         # Estimate coverage based on test/code ratio
         if code_lines > 0:
-            coverage_percent = min(100.0, (test_lines / code_lines) * 100 * 0.7)  # 70% factor
+            coverage_percent = min(
+                100.0, (test_lines / code_lines) * 100 * 0.7
+            )  # 70% factor
         else:
             coverage_percent = 0.0
 
@@ -1214,12 +1340,21 @@ class CodeAuthoringCivilization:
         all_pass = True
 
         return TestSuite(
-            test_code=test_code, test_count=test_count, coverage_percent=round(coverage_percent, 1), all_pass=all_pass
+            test_code=test_code,
+            test_count=test_count,
+            coverage_percent=round(coverage_percent, 1),
+            all_pass=all_pass,
         )
 
-    def _manager_seal(self, directive: CodeDirective, tests: TestSuite, review: ReviewDecision) -> ManagerSeal:
+    def _manager_seal(
+        self, directive: CodeDirective, tests: TestSuite, review: ReviewDecision
+    ) -> ManagerSeal:
         """Step 6: Manager verifies and seals"""
-        seal = ManagerSeal(contract_satisfied=True, tests_pass=tests.all_pass, no_unresolved_dissent=review.approved)
+        seal = ManagerSeal(
+            contract_satisfied=True,
+            tests_pass=tests.all_pass,
+            no_unresolved_dissent=review.approved,
+        )
         seal.seal()
         return seal
 

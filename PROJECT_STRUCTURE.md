@@ -37,6 +37,9 @@ This document describes the canonical directory layout of Project-AI.
 ```
 src/
 ├── app/
+│   ├── main.thirsty    # Floor 1 Entry Point
+│   ├── bootstrap.thirsty # Floor 1 Orchestrator
+│   ├── arch_ledger.thirsty # TSCG Architectural Ledger
 │   ├── core/           # Core AI runtime (ai_systems, shadow_execution_plane,
 │   │                   # shadow_resource_limiter, council_hub, …)
 │   ├── agents/         # Agent subsystems (red_team, safety_guard,
@@ -132,13 +135,22 @@ data/
 
 ### `scripts/` — Operational Scripts
 
+...
+
+### `emergent-microservices/` — Production-Ready Extensions
+
+Emergent-generated microservice extensions following the three-tier sovereignty model.
+
 ```
-scripts/
-├── demos/        # Demonstration scripts
-├── launch/       # Batch/Shell launch helpers
-├── maintenance/  # Verification and health-check tools
-├── tools/        # CLI utilities (project_ai_cli.py)
-└── verify/       # Post-deploy verification scripts
+emergent-microservices/
+├── _common/                         # Shared FastAPI middleware, auth, & metrics
+├── ai-mutation-governance-firewall/  # Admission control & mutation gating
+├── autonomous-compliance/            # Compliance-as-Code engine
+├── autonomous-incident-reflex-system/ # Evidence preservation & policy reflex
+├── autonomous-negotiation-agent/      # Agent-to-agent bargaining logic
+├── trust-graph-engine/                # Distributed reputation & trust graph
+├── sovereign-data-vault/              # Encrypted self-sovereign storage
+└── verifiable-reality/                # Cryptographic proof & existence layer
 ```
 
 ### `desktop/` — Desktop UI (Electron/PyQt6)

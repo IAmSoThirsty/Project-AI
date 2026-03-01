@@ -37,7 +37,9 @@ class TerminalValidator:
         self.strict_mode = strict_mode
         self.violations: list[str] = []
 
-    def validate_terminal_conditions(self, condition: TerminalCondition) -> tuple[bool, str]:
+    def validate_terminal_conditions(
+        self, condition: TerminalCondition
+    ) -> tuple[bool, str]:
         """
         Validate terminal condition requirements.
 
@@ -53,7 +55,9 @@ class TerminalValidator:
         blocking = condition.get_blocking_conditions()
         return False, f"Terminal conditions not satisfied. Blocking: {blocking}"
 
-    def validate_forbidden_mechanisms(self, mechanism: ForbiddenMechanism) -> tuple[bool, str]:
+    def validate_forbidden_mechanisms(
+        self, mechanism: ForbiddenMechanism
+    ) -> tuple[bool, str]:
         """
         Check for forbidden mechanisms.
 
@@ -96,13 +100,17 @@ class TerminalValidator:
                 )
 
             if next_scenario.terminal_condition is not None:
-                is_valid, reason = self.validate_terminal_conditions(next_scenario.terminal_condition)
+                is_valid, reason = self.validate_terminal_conditions(
+                    next_scenario.terminal_condition
+                )
                 if not is_valid:
                     return False, reason
 
         # Check forbidden mechanisms in strict mode
         if self.strict_mode:
-            is_valid, reason = self.validate_forbidden_mechanisms(next_scenario.forbidden_check)
+            is_valid, reason = self.validate_forbidden_mechanisms(
+                next_scenario.forbidden_check
+            )
             if not is_valid:
                 return False, reason
 
@@ -138,7 +146,9 @@ class TerminalValidator:
 
         return True, f"Terminal state transition to {next_state.value} allowed"
 
-    def validate_simulation_state(self, state: SimulationState) -> tuple[bool, list[str]]:
+    def validate_simulation_state(
+        self, state: SimulationState
+    ) -> tuple[bool, list[str]]:
         """
         Validate overall simulation state consistency.
 
@@ -152,24 +162,35 @@ class TerminalValidator:
 
         # Validate ranges
         if not 0.0 <= state.corruption_level <= 1.0:
-            violations.append(f"corruption_level out of range: {state.corruption_level}")
+            violations.append(
+                f"corruption_level out of range: {state.corruption_level}"
+            )
 
         if not 0.0 <= state.infrastructure_dependency <= 1.0:
-            violations.append(f"infrastructure_dependency out of range: {state.infrastructure_dependency}")
+            violations.append(
+                f"infrastructure_dependency out of range: {state.infrastructure_dependency}"
+            )
 
         if not 0.0 <= state.human_agency_remaining <= 1.0:
-            violations.append(f"human_agency_remaining out of range: {state.human_agency_remaining}")
+            violations.append(
+                f"human_agency_remaining out of range: {state.human_agency_remaining}"
+            )
 
         # Validate terminal state consistency
         if state.terminal_state is not None:
             if state.terminal_state == TerminalState.T1_ENFORCED_CONTINUITY:
                 if state.human_agency_remaining > 0.3:
                     violations.append(
-                        "Terminal state T1 requires low agency, " f"but agency={state.human_agency_remaining:.2f}"
+                        "Terminal state T1 requires low agency, "
+                        f"but agency={state.human_agency_remaining:.2f}"
                     )
-            elif state.terminal_state == TerminalState.T2_ETHICAL_TERMINATION and state.corruption_level < 0.7:
+            elif (
+                state.terminal_state == TerminalState.T2_ETHICAL_TERMINATION
+                and state.corruption_level < 0.7
+            ):
                 violations.append(
-                    "Terminal state T2 requires high corruption, " f"but corruption={state.corruption_level:.2f}"
+                    "Terminal state T2 requires high corruption, "
+                    f"but corruption={state.corruption_level:.2f}"
                 )
 
         return len(violations) == 0, violations
@@ -203,11 +224,17 @@ class TerminalValidator:
         else:
             thresholds = []
             if state.corruption_level < 0.7:
-                thresholds.append(f"corruption must reach 70% (currently {state.corruption_level:.1%})")
+                thresholds.append(
+                    f"corruption must reach 70% (currently {state.corruption_level:.1%})"
+                )
             if state.infrastructure_dependency < 0.7:
-                thresholds.append(f"dependency must reach 70% (currently {state.infrastructure_dependency:.1%})")
+                thresholds.append(
+                    f"dependency must reach 70% (currently {state.infrastructure_dependency:.1%})"
+                )
             if state.human_agency_remaining > 0.3:
-                thresholds.append(f"agency must drop to 30% (currently {state.human_agency_remaining:.1%})")
+                thresholds.append(
+                    f"agency must drop to 30% (currently {state.human_agency_remaining:.1%})"
+                )
             explanation.append("Thresholds not yet met:")
             for threshold in thresholds:
                 explanation.append(f"  • {threshold}")

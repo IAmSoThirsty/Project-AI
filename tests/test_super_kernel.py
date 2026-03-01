@@ -83,9 +83,15 @@ class TestReflectionCycleAdapter:
     def mock_reflection_cycle(self):
         """Create mock ReflectionCycle."""
         reflection = Mock()
-        reflection.perform_daily_reflection = Mock(return_value={"type": "daily", "insights": []})
-        reflection.perform_weekly_reflection = Mock(return_value={"type": "weekly", "insights": []})
-        reflection.perform_triggered_reflection = Mock(return_value={"type": "triggered", "insights": []})
+        reflection.perform_daily_reflection = Mock(
+            return_value={"type": "daily", "insights": []}
+        )
+        reflection.perform_weekly_reflection = Mock(
+            return_value={"type": "weekly", "insights": []}
+        )
+        reflection.perform_triggered_reflection = Mock(
+            return_value={"type": "triggered", "insights": []}
+        )
         reflection.get_statistics = Mock(return_value={"total_reflections": 5})
         return reflection
 
@@ -103,7 +109,9 @@ class TestReflectionCycleAdapter:
         memory = Mock()
         perspective = Mock()
 
-        result = adapter.process("daily", memory_engine=memory, perspective_engine=perspective)
+        result = adapter.process(
+            "daily", memory_engine=memory, perspective_engine=perspective
+        )
 
         assert result["type"] == "daily"
         mock_reflection_cycle.perform_daily_reflection.assert_called_once()
@@ -121,7 +129,9 @@ class TestReflectionCycleAdapter:
         """Test triggered reflection routing."""
         memory = Mock()
 
-        result = adapter.process("triggered", memory_engine=memory, trigger_reason="Test trigger")
+        result = adapter.process(
+            "triggered", memory_engine=memory, trigger_reason="Test trigger"
+        )
 
         assert result["type"] == "triggered"
         mock_reflection_cycle.perform_triggered_reflection.assert_called_once()
@@ -211,7 +221,9 @@ class TestPerspectiveEngineAdapter:
         """Create mock PerspectiveEngine."""
         perspective = Mock()
         perspective.update_from_interaction = Mock(return_value={"updated": True})
-        perspective.get_perspective_summary = Mock(return_value={"traits": {"openness": 0.7}})
+        perspective.get_perspective_summary = Mock(
+            return_value={"traits": {"openness": 0.7}}
+        )
         perspective.activate_work_profile = Mock(return_value=True)
         perspective.deactivate_work_profile = Mock()
         return perspective
@@ -332,7 +344,9 @@ class TestSuperKernel:
         """Test successful processing through SuperKernel."""
         super_kernel.register_kernel(KernelType.COGNITION, mock_kernel)
 
-        result = super_kernel.process("test_input", kernel_type=KernelType.COGNITION, source="test")
+        result = super_kernel.process(
+            "test_input", kernel_type=KernelType.COGNITION, source="test"
+        )
 
         assert result["result"] == "success"
         assert result["input"] == "test_input"

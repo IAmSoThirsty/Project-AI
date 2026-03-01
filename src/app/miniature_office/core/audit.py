@@ -214,17 +214,23 @@ class AuditLog:
     def get_events_by_type(self, event_type: EventType) -> List[AuditEvent]:
         """Get all events of a specific type"""
         event_ids = self._type_index.get(event_type, [])
-        return [self.graph.get_event(eid) for eid in event_ids if self.graph.get_event(eid)]
+        return [
+            self.graph.get_event(eid) for eid in event_ids if self.graph.get_event(eid)
+        ]
 
     def get_events_by_actor(self, actor_id: str) -> List[AuditEvent]:
         """Get all events performed by a specific actor"""
         event_ids = self._actor_index.get(actor_id, [])
-        return [self.graph.get_event(eid) for eid in event_ids if self.graph.get_event(eid)]
+        return [
+            self.graph.get_event(eid) for eid in event_ids if self.graph.get_event(eid)
+        ]
 
     def get_events_by_target(self, target_id: str) -> List[AuditEvent]:
         """Get all events affecting a specific target"""
         event_ids = self._target_index.get(target_id, [])
-        return [self.graph.get_event(eid) for eid in event_ids if self.graph.get_event(eid)]
+        return [
+            self.graph.get_event(eid) for eid in event_ids if self.graph.get_event(eid)
+        ]
 
     def get_change_lineage(self, target_id: str) -> List[AuditEvent]:
         """

@@ -376,7 +376,10 @@ class BytecodeGenerator:
         # Set constants
         bytecode_program.constants = self.constants
 
-        logger.info("Bytecode generation complete: %d functions", len(bytecode_program.functions))
+        logger.info(
+            "Bytecode generation complete: %d functions",
+            len(bytecode_program.functions),
+        )
         return bytecode_program
 
     def _generate_function(self, ir_function: IRFunction) -> BytecodeFunction:
@@ -416,12 +419,16 @@ class BytecodeGenerator:
 
         return bytecode
 
-    def _generate_instruction(self, ir_instruction: IRInstruction) -> BytecodeInstruction | None:
+    def _generate_instruction(
+        self, ir_instruction: IRInstruction
+    ) -> BytecodeInstruction | None:
         """Generate bytecode for an IR instruction."""
         # Map IR opcode to bytecode opcode
         bytecode_opcode = self.OPCODE_MAP.get(ir_instruction.opcode)
         if not bytecode_opcode:
-            logger.warning("No bytecode mapping for IR opcode: %s", ir_instruction.opcode)
+            logger.warning(
+                "No bytecode mapping for IR opcode: %s", ir_instruction.opcode
+            )
             return None
 
         # Map plane

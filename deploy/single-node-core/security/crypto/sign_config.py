@@ -32,7 +32,9 @@ try:
         Ed25519PublicKey,
     )
 except ImportError:
-    print("ERROR: cryptography package required. Install with: pip install cryptography")
+    print(
+        "ERROR: cryptography package required. Install with: pip install cryptography"
+    )
     sys.exit(1)
 
 
@@ -79,13 +81,13 @@ class ConfigSigner:
         private_pem = private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.PKCS8,
-            encryption_algorithm=serialization.NoEncryption()
+            encryption_algorithm=serialization.NoEncryption(),
         )
 
         # Save public key (PEM format)
         public_pem = public_key.public_bytes(
             encoding=serialization.Encoding.PEM,
-            format=serialization.PublicFormat.SubjectPublicKeyInfo
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
         )
 
         # Write keys with restricted permissions
@@ -134,16 +136,16 @@ class ConfigSigner:
             Canonical bytes representation
         """
         # Use JSON with sorted keys for deterministic output
-        json_str = json.dumps(data, sort_keys=True, separators=(',', ':'))
-        return json_str.encode('utf-8')
+        json_str = json.dumps(data, sort_keys=True, separators=(",", ":"))
+        return json_str.encode("utf-8")
 
     def _load_config(self, config_path: Path) -> Any:
         """Load configuration from file (YAML or JSON)."""
         content = config_path.read_text()
 
-        if config_path.suffix in ['.yaml', '.yml']:
+        if config_path.suffix in [".yaml", ".yml"]:
             return yaml.safe_load(content)
-        elif config_path.suffix == '.json':
+        elif config_path.suffix == ".json":
             return json.loads(content)
         else:
             # Treat as text
@@ -189,11 +191,13 @@ class ConfigSigner:
             "environment": self.environment,
             "signed_at": datetime.now(UTC).isoformat(),
             "signer": os.getenv("USER", "unknown"),
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
 
         # Save signature manifest
-        sig_file = self.signatures_dir / f"{config_path.stem}_{self.environment}.sig.json"
+        sig_file = (
+            self.signatures_dir / f"{config_path.stem}_{self.environment}.sig.json"
+        )
         sig_file.write_text(json.dumps(manifest, indent=2))
         sig_file.chmod(0o644)
 
@@ -219,7 +223,9 @@ class ConfigSigner:
             return (False, f"Config file not found: {config_path}")
 
         # Find signature file
-        sig_file = self.signatures_dir / f"{config_path.stem}_{self.environment}.sig.json"
+        sig_file = (
+            self.signatures_dir / f"{config_path.stem}_{self.environment}.sig.json"
+        )
         if not sig_file.exists():
             return (False, f"Signature file not found: {sig_file}")
 
@@ -243,7 +249,10 @@ class ConfigSigner:
 
         # Verify environment matches
         if manifest.get("environment") != self.environment:
-            return (False, f"Environment mismatch: expected {self.environment}, got {manifest.get('environment')}")
+            return (
+                False,
+                f"Environment mismatch: expected {self.environment}, got {manifest.get('environment')}",
+            )
 
         # Verify signature
         try:
@@ -267,7 +276,7 @@ class ConfigSigner:
             Number of configs signed
         """
         if patterns is None:
-            patterns = ['*.yaml', '*.yml', '*.json']
+            patterns = ["*.yaml", "*.yml", "*.json"]
 
         config_dir = Path(config_dir)
         config_files = []
@@ -302,34 +311,32 @@ def main():
     parser.add_argument(
         "command",
         choices=["keygen", "sign", "verify", "batch-sign"],
-        help="Command to execute"
+        help="Command to execute",
     )
     parser.add_argument(
         "--key-dir",
         type=Path,
-        default=Path("/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/crypto/keys"),
-        help="Directory for signing keys"
+        default=Path(
+            "/home/runner/work/Project-AI/Project-AI/deploy/single-node-core/security/crypto/keys"
+        ),
+        help="Directory for signing keys",
     )
     parser.add_argument(
-        "--config",
-        type=Path,
-        help="Path to config file (for sign/verify)"
+        "--config", type=Path, help="Path to config file (for sign/verify)"
     )
     parser.add_argument(
         "--config-dir",
         type=Path,
-        help="Directory containing configs (for batch operations)"
+        help="Directory containing configs (for batch operations)",
     )
     parser.add_argument(
         "--environment",
         default="production",
         choices=["production", "staging", "development"],
-        help="Environment for key selection"
+        help="Environment for key selection",
     )
     parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Force regeneration of keys"
+        "--force", action="store_true", help="Force regeneration of keys"
     )
 
     args = parser.parse_args()

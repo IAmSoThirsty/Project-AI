@@ -55,7 +55,9 @@ def test_sovereign_mode():
 
         # Log events
         manager.log_system_event("test_started", {"test": "sovereign"})
-        manager.log_security_event("critical_alert", {"ip": "1.2.3.4"}, severity="critical")
+        manager.log_security_event(
+            "critical_alert", {"ip": "1.2.3.4"}, severity="critical"
+        )
         manager.log_governance_event("policy_enforced", {"policy": "constitutional"})
 
         # Get statistics
@@ -98,12 +100,16 @@ def test_deterministic_mode():
     from datetime import UTC, datetime
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        manager = AuditManager(data_dir=tmpdir, sovereign_mode=True, deterministic_mode=True)
+        manager = AuditManager(
+            data_dir=tmpdir, sovereign_mode=True, deterministic_mode=True
+        )
 
         # Log events with fixed timestamps
         base_time = datetime(2025, 1, 15, 10, 0, 0, tzinfo=UTC)
 
-        manager.audit_log.log_event("deterministic_test", {"sequence": 1}, deterministic_timestamp=base_time)
+        manager.audit_log.log_event(
+            "deterministic_test", {"sequence": 1}, deterministic_timestamp=base_time
+        )
 
         print("  ✓ Deterministic mode enabled")
         print("  ✓ Events logged with fixed timestamps for canonical replay")

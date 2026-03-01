@@ -28,14 +28,17 @@ if "app.core.ai_systems" in _stubs:
     ai_mod.Plugin = type(
         "Plugin",
         (),
-        {"__init__": lambda self, name="", version="": setattr(self, "name", name) or setattr(self, "version", version) or setattr(self, "enabled", False)},
+        {
+            "__init__": lambda self, name="", version="": setattr(self, "name", name)
+            or setattr(self, "version", version)
+            or setattr(self, "enabled", False)
+        },
     )
 
 sys.modules.update(_stubs)
 
-from plugins.osint.sample_osint_plugin import SampleOSINTPlugin  # noqa: E402
 from app.knowledge.osint_loader import OSINTLoader  # noqa: E402
-
+from plugins.osint.sample_osint_plugin import SampleOSINTPlugin  # noqa: E402
 
 # ═══════════════════════════════════════════════════════════════
 # SampleOSINTPlugin Tests
@@ -143,8 +146,16 @@ class TestOSINTLoader:
             "metadata": {"source": "test", "updated": "2025-01-01"},
             "categories": {
                 "recon": [
-                    {"name": "nmap", "description": "Network scanner", "url": "https://nmap.org"},
-                    {"name": "shodan", "description": "IoT search engine", "url": "https://shodan.io"},
+                    {
+                        "name": "nmap",
+                        "description": "Network scanner",
+                        "url": "https://nmap.org",
+                    },
+                    {
+                        "name": "shodan",
+                        "description": "IoT search engine",
+                        "url": "https://shodan.io",
+                    },
                 ],
                 "social": [
                     {"name": "sherlock", "description": "Username finder"},

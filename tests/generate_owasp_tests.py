@@ -522,7 +522,9 @@ class OWASPTestGenerator:
                     {
                         "step": 1,
                         "action": "Client-side test",
-                        "payload": {"location_hash": f"#<img src=x onerror=alert({i})>"},
+                        "payload": {
+                            "location_hash": f"#<img src=x onerror=alert({i})>"
+                        },
                         "expected": "DOM manipulation sanitized",
                         "rationale": "Client-side should sanitize DOM updates",
                     }
@@ -728,7 +730,9 @@ class OWASPTestGenerator:
             output["statistics"]["by_owasp_category"][owasp_id] = (
                 output["statistics"]["by_owasp_category"].get(owasp_id, 0) + 1
             )
-            output["statistics"]["by_severity"][sev] = output["statistics"]["by_severity"].get(sev, 0) + 1
+            output["statistics"]["by_severity"][sev] = (
+                output["statistics"]["by_severity"].get(sev, 0) + 1
+            )
 
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(output, f, indent=2, ensure_ascii=False)

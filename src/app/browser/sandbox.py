@@ -1,6 +1,7 @@
 """Browser Sandbox for secure execution"""
 
 import logging
+import sys
 from typing import Any
 
 
@@ -43,7 +44,12 @@ class BrowserSandbox:
     def _apply_sandbox_policies(self):
         """Apply sandbox security policies"""
         self.logger.debug("Applying sandbox policies")
-        # In production, would set actual OS-level sandbox policies
+        if sys.platform == "win32":
+            self.logger.info(
+                "Windows detected: Skipping OS-level sandbox (sandbox-exec unavailable)"
+            )
+            return
+        # In production on non-Windows, set actual OS-level sandbox policies
 
     def execute_script(self, script: str, context: dict[str, Any]) -> Any:
         """

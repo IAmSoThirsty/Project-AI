@@ -53,7 +53,9 @@ class TARLCodeProtector(KernelRoutedAgent):
         os.makedirs(self.data_dir, exist_ok=True)
 
         self.protection_log = os.path.join(self.data_dir, "protection_log.jsonl")
-        self.protection_registry = os.path.join(self.data_dir, "protection_registry.json")
+        self.protection_registry = os.path.join(
+            self.data_dir, "protection_registry.json"
+        )
         self.transformation_map = os.path.join(self.data_dir, "transformation_map.json")
 
         # Load Thirsty-lang security modules
@@ -73,7 +75,9 @@ class TARLCodeProtector(KernelRoutedAgent):
             "execution_monitoring": 0,
         }
 
-    def apply_protection(self, file_path: str, protection_level: str = "standard") -> dict[str, Any]:
+    def apply_protection(
+        self, file_path: str, protection_level: str = "standard"
+    ) -> dict[str, Any]:
         """Apply defensive protections to code file.
 
         Implements multiple security strategies:
@@ -99,9 +103,13 @@ class TARLCodeProtector(KernelRoutedAgent):
             metadata={"file_path": file_path, "protection_level": protection_level},
         )
 
-    def _do_apply_protection(self, file_path: str, protection_level: str = "standard") -> dict[str, Any]:
+    def _do_apply_protection(
+        self, file_path: str, protection_level: str = "standard"
+    ) -> dict[str, Any]:
         """Internal implementation of protection application."""
-        logger.info("T-A-R-L: Applying %s protection to %s", protection_level, file_path)
+        logger.info(
+            "T-A-R-L: Applying %s protection to %s", protection_level, file_path
+        )
 
         if not os.path.exists(file_path):
             return {"success": False, "error": "File not found"}
@@ -112,13 +120,19 @@ class TARLCodeProtector(KernelRoutedAgent):
 
             # Apply protection strategy based on file type
             if file_path.endswith(".py"):
-                protected_code = self._apply_python_protection(original_code, protection_level)
+                protected_code = self._apply_python_protection(
+                    original_code, protection_level
+                )
                 strategy = "python_runtime_access_control"
             elif file_path.endswith(".js"):
-                protected_code = self._apply_javascript_protection(original_code, protection_level)
+                protected_code = self._apply_javascript_protection(
+                    original_code, protection_level
+                )
                 strategy = "javascript_stack_analysis"
             else:
-                protected_code = self._apply_generic_protection(original_code, protection_level)
+                protected_code = self._apply_generic_protection(
+                    original_code, protection_level
+                )
                 strategy = "generic_protection"
 
             # Create backup before modification
@@ -131,7 +145,9 @@ class TARLCodeProtector(KernelRoutedAgent):
                 f.write(protected_code)
 
             # Register protection
-            self._register_protection(file_path, strategy, protection_level, backup_path)
+            self._register_protection(
+                file_path, strategy, protection_level, backup_path
+            )
 
             self.protections_applied += 1
             self.code_sections_hardened += 1
@@ -225,7 +241,9 @@ class TARLCodeProtector(KernelRoutedAgent):
             transformations = []
 
             # Strategy 1: Identifier morphing
-            transformed_code, var_map = self._morph_identifiers(transformed_code, language)
+            transformed_code, var_map = self._morph_identifiers(
+                transformed_code, language
+            )
             transformations.append("identifier_morphing")
 
             # Strategy 2: Control flow obfuscation
@@ -338,7 +356,11 @@ Strategic defensive protection active
         identifier_map = {}
         morphed_code = code
 
-        pattern = r"\b([a-z_][a-z0-9_]*)\b" if language == "python" else r"\b([a-zA-Z_][a-zA-Z0-9_]*)\b"
+        pattern = (
+            r"\b([a-z_][a-z0-9_]*)\b"
+            if language == "python"
+            else r"\b([a-zA-Z_][a-zA-Z0-9_]*)\b"
+        )
         identifiers = set(re.findall(pattern, code))
 
         skip_words = {
@@ -362,7 +384,9 @@ Strategic defensive protection active
                 # nosec B324 - MD5 used for non-security identifier obfuscation, not cryptographic security
                 obfuscated = f"_{hashlib.md5(identifier.encode(), usedforsecurity=False).hexdigest()[:8]}"
                 identifier_map[identifier] = obfuscated
-                morphed_code = re.sub(r"\b" + identifier + r"\b", obfuscated, morphed_code)
+                morphed_code = re.sub(
+                    r"\b" + identifier + r"\b", obfuscated, morphed_code
+                )
 
         return morphed_code, identifier_map
 
@@ -381,7 +405,9 @@ Strategic defensive protection active
         # Placeholder for string encoding
         return code
 
-    def _register_protection(self, file_path: str, strategy: str, level: str, backup: str) -> None:
+    def _register_protection(
+        self, file_path: str, strategy: str, level: str, backup: str
+    ) -> None:
         """Register applied protection in registry."""
         try:
             registry = {}

@@ -211,9 +211,9 @@ class ContainmentAction:
             "profile_id": self.profile_id,
             "timestamp": self.timestamp.isoformat(),
             "mode": self.mode.value,
-            "deception_tactic": self.deception_tactic.value
-            if self.deception_tactic
-            else None,
+            "deception_tactic": (
+                self.deception_tactic.value if self.deception_tactic else None
+            ),
             "reason": self.reason,
             "internal_truth": self.internal_truth,
         }

@@ -27,6 +27,7 @@ System S = (P, Sh, C)
 ```
 
 Where:
+
 - **P (Primary Plane)**: Canonical execution path (deterministic function graph)
 - **Sh (Shadow Plane)**: Validation/simulation/containment path (side-effect-bounded parallel graph)
 - **C (Constitutional Core)**: Invariant enforcement & commit authority
@@ -43,10 +44,9 @@ Invariant:
   ∀ action ∈ Sh: mutation_target ∩ Canonical = ∅
 ```
 
-### 1.3 Three Ontological Layers
-
 | Layer | Purpose | Authority | Mutability |
 |-------|---------|-----------|------------|
+| **Floor 1** | Sovereign Orchestration | Thirsty-Lang & TSCG | Orchestration |
 | **Primary Plane (P)** | Canonical execution | Execute & propose | Conditional (C-gated) |
 | **Shadow Plane (Sh)** | Validation/containment | Validate & observe | Ephemeral only |
 | **Constitutional Core (C)** | Invariant enforcement | Commit authority | Sovereign |
@@ -145,6 +145,7 @@ policy_shadow {
 **Purpose**: Ensure shadow cannot mutate canonical state
 
 **Algorithm**:
+
 ```
 1. Build complete side-effect graph for shadow block
 2. For each instruction in Sh:
@@ -154,6 +155,7 @@ policy_shadow {
 ```
 
 **Example Rejection**:
+
 ```thirsty
 shadow {
     canonical_state = 100  // COMPILE ERROR
@@ -165,12 +167,14 @@ shadow {
 **Purpose**: Reject non-deterministic operations in invariants/activations
 
 **Rejects**:
+
 - `random()` calls
 - System clock access (`time.now()`)
 - External I/O in invariant blocks
 - Network calls in activation predicates
 
 **Example Rejection**:
+
 ```thirsty
 invariant {
     random() > 0.5  // COMPILE ERROR: non-deterministic
@@ -182,6 +186,7 @@ invariant {
 **Purpose**: Prevent shadow from escalating privileges
 
 **Forbidden Operations in Shadow**:
+
 - Scheduler modification
 - Role/permission mutation
 - Trust score alteration
@@ -195,12 +200,14 @@ invariant {
 **Purpose**: Static cost estimation to prevent resource exhaustion
 
 **Metrics**:
+
 - CPU cycles (symbolic execution)
 - Memory allocation
 - I/O operations
 - Network calls
 
 **Enforcement**:
+
 ```thirsty
 @resource_limit(cpu_ms=1000, memory_mb=256)
 fn expensive_shadow() -> Dual<T> {
@@ -215,6 +222,7 @@ fn expensive_shadow() -> Dual<T> {
 **Purpose**: Symbolic analysis of potential P vs Sh divergence
 
 **Algorithm**:
+
 ```
 1. Symbolic execute both P and Sh
 2. Build constraint set for outputs
@@ -227,6 +235,7 @@ fn expensive_shadow() -> Dual<T> {
 **Purpose**: Ensure invariants are pure, terminating, and bounded
 
 **Checks**:
+
 - ✅ No side effects
 - ✅ Deterministic (no randomness, I/O)
 - ✅ Terminating (loop bound analysis)
@@ -833,6 +842,7 @@ Layer 3: Project-AI Integration (INTERNAL)
 ### 12.2 What Gets Published (External)
 
 ✅ **Open Standard**:
+
 1. Formal grammar (BNF)
 2. Type system specification
 3. Plane isolation model
@@ -843,6 +853,7 @@ Layer 3: Project-AI Integration (INTERNAL)
 8. Generic policy plug-in API
 
 ❌ **Sovereign (Internal Only)**:
+
 1. Constitutional invariant sets
 2. Trust algorithm internals
 3. Threat scoring logic
@@ -881,6 +892,7 @@ Dual Backend:
 ### Phase 1: Foundation (Months 1-6)
 
 **Deliverables**:
+
 - ✅ Language grammar (COMPLETE)
 - ✅ Shadow Execution Plane runtime (COMPLETE)
 - [ ] Static analyzer prototype
@@ -892,6 +904,7 @@ Dual Backend:
 ### Phase 2: Constitutional Integration (Months 7-12)
 
 **Deliverables**:
+
 - [ ] Constitutional Core module
 - [ ] T.A.R.L. dual-plane binding
 - [ ] Divergence analyzer
@@ -903,6 +916,7 @@ Dual Backend:
 ### Phase 3: Verification & Tooling (Months 13-18)
 
 **Deliverables**:
+
 - [ ] Symbolic executor
 - [ ] Theorem prover integration
 - [ ] Model checker
@@ -914,6 +928,7 @@ Dual Backend:
 ### Phase 4: Production Hardening (Months 19-24)
 
 **Deliverables**:
+
 - [ ] Distributed dual-plane sync
 - [ ] Byzantine-resistant commit
 - [ ] Performance optimization (<20% overhead)
@@ -925,6 +940,7 @@ Dual Backend:
 ### Phase 5: Public Release (Months 24+)
 
 **Deliverables**:
+
 - [ ] Public specification v1.0
 - [ ] Reference compiler (open source)
 - [ ] Reference VM (open source)
@@ -953,12 +969,14 @@ Dual Backend:
 ### 14.2 Attack Surface Analysis
 
 **Without Shadow Thirst**:
+
 - Single execution plane
 - No parallel validation
 - Difficult to contain adversaries
 - Policy changes risky
 
 **With Shadow Thirst**:
+
 - Dual-plane isolation
 - Parallel validation catches bugs
 - Adversaries contained in shadow
@@ -1034,6 +1052,7 @@ Shadow Thirst introduces:
 ### 16.2 Academic Fields
 
 **Cross-Disciplinary Impact**:
+
 - Programming Languages
 - Formal Verification
 - AI Governance
@@ -1045,6 +1064,7 @@ Shadow Thirst introduces:
 ### 16.3 Publishable Results
 
 **Conference Targets**:
+
 - PLDI (Programming Languages)
 - POPL (Principles of Programming)
 - CAV (Computer-Aided Verification)
@@ -1063,6 +1083,7 @@ Shadow Thirst introduces:
 **Timeline**: 12-24 months
 **Team Size**: 4-6 engineers
 **Expertise Required**:
+
 - Compiler engineering
 - Formal methods (Z3/SMT solvers)
 - VM design
@@ -1073,11 +1094,13 @@ Shadow Thirst introduces:
 ### 17.2 Risk Assessment
 
 **Half-Built = Complexity Bomb**:
+
 - Incomplete static analysis → false sense of security
 - Partial VM implementation → exploitable gaps
 - Inconsistent type system → undefined behavior
 
 **Fully Built = Architectural Moat**:
+
 - Category-defining technology
 - Unprecedented safety guarantees
 - Foundation for constitutional AI
@@ -1086,6 +1109,7 @@ Shadow Thirst introduces:
 ### 17.3 Critical Success Factors
 
 ✅ **Required for Success**:
+
 1. Dedicated team (not side project)
 2. Formal methods expertise
 3. Incremental deployment (phased migration)
@@ -1093,6 +1117,7 @@ Shadow Thirst introduces:
 5. Academic collaboration (verification)
 
 ❌ **Failure Modes**:
+
 1. Attempting big-bang rewrite
 2. Insufficient formal verification
 3. Underestimating compiler complexity
@@ -1106,6 +1131,7 @@ Shadow Thirst introduces:
 ### 18.1 Current State (February 2026)
 
 ✅ **Complete**:
+
 - Shadow Thirst grammar specification
 - Shadow Execution Plane runtime
 - Shadow types and data structures
@@ -1114,11 +1140,13 @@ Shadow Thirst introduces:
 - Comprehensive testing (30 tests)
 
 📋 **In Progress**:
+
 - Architectural specification (this document)
 
 ### 18.2 Next Steps (Immediate)
 
 **Month 1-2**:
+
 1. Create static analyzer prototype
 2. Design dual-plane IR
 3. Prototype lexer/parser
@@ -1169,12 +1197,14 @@ Shadow Thirst represents a **category-defining innovation** in programming langu
 ### 19.1 Strategic Value
 
 **Internal (Project-AI)**:
+
 - Sovereign constitutional AI substrate
 - Unprecedented safety guarantees
 - Adversarial containment at language level
 - Foundation for AGI governance
 
 **External (Open Standard)**:
+
 - First dual-plane programming model
 - Academic leadership
 - Industry standard potential
@@ -1183,6 +1213,7 @@ Shadow Thirst represents a **category-defining innovation** in programming langu
 ### 19.2 Execution Philosophy
 
 **Incremental, Not Revolutionary**:
+
 - Phase 1: Critical ops only
 - Phase 2: Policy simulation
 - Phase 3: Containment mode

@@ -36,7 +36,9 @@ def test_gitattributes():
                 print(f"  ✓ {file_path}: {expected_language}")
                 passed += 1
             else:
-                print(f"  ✗ {file_path}: Expected {expected_language}, got {result.stdout}")
+                print(
+                    f"  ✗ {file_path}: Expected {expected_language}, got {result.stdout}"
+                )
                 failed += 1
 
         except subprocess.CalledProcessError as e:

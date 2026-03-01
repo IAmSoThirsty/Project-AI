@@ -20,6 +20,7 @@ router = APIRouter(prefix="/health", tags=["health"])
 
 class HealthStatus(BaseModel):
     """Health check response model"""
+
     status: str
     timestamp: str
     uptime_seconds: float
@@ -30,6 +31,7 @@ class HealthStatus(BaseModel):
 
 class ComponentHealth(BaseModel):
     """Individual component health"""
+
     healthy: bool
     latency_ms: float | None = None
     message: str | None = None
@@ -62,14 +64,14 @@ async def check_database() -> ComponentHealth:
             healthy=True,
             latency_ms=round(latency, 2),
             message="Database connection OK",
-            last_check=datetime.utcnow().isoformat()
+            last_check=datetime.utcnow().isoformat(),
         )
     except Exception as e:
         logger.error(f"Database health check failed: {e}")
         return ComponentHealth(
             healthy=False,
             message=f"Database connection failed: {str(e)}",
-            last_check=datetime.utcnow().isoformat()
+            last_check=datetime.utcnow().isoformat(),
         )
 
 
@@ -89,14 +91,14 @@ async def check_redis() -> ComponentHealth:
             healthy=True,
             latency_ms=round(latency, 2),
             message="Redis connection OK",
-            last_check=datetime.utcnow().isoformat()
+            last_check=datetime.utcnow().isoformat(),
         )
     except Exception as e:
         logger.error(f"Redis health check failed: {e}")
         return ComponentHealth(
             healthy=False,
             message=f"Redis connection failed: {str(e)}",
-            last_check=datetime.utcnow().isoformat()
+            last_check=datetime.utcnow().isoformat(),
         )
 
 
@@ -116,14 +118,14 @@ async def check_temporal() -> ComponentHealth:
             healthy=True,
             latency_ms=round(latency, 2),
             message="Temporal service OK",
-            last_check=datetime.utcnow().isoformat()
+            last_check=datetime.utcnow().isoformat(),
         )
     except Exception as e:
         logger.error(f"Temporal health check failed: {e}")
         return ComponentHealth(
             healthy=False,
             message=f"Temporal service unavailable: {str(e)}",
-            last_check=datetime.utcnow().isoformat()
+            last_check=datetime.utcnow().isoformat(),
         )
 
 
@@ -131,6 +133,7 @@ async def check_disk_space() -> ComponentHealth:
     """Check available disk space"""
     try:
         import shutil
+
         stats = shutil.disk_usage("/app/data")
 
         # Consider unhealthy if less than 10% free space
@@ -140,14 +143,14 @@ async def check_disk_space() -> ComponentHealth:
         return ComponentHealth(
             healthy=healthy,
             message=f"{percent_free:.1f}% free disk space",
-            last_check=datetime.utcnow().isoformat()
+            last_check=datetime.utcnow().isoformat(),
         )
     except Exception as e:
         logger.error(f"Disk space check failed: {e}")
         return ComponentHealth(
             healthy=False,
             message=f"Disk space check failed: {str(e)}",
-            last_check=datetime.utcnow().isoformat()
+            last_check=datetime.utcnow().isoformat(),
         )
 
 
@@ -155,6 +158,7 @@ async def check_memory() -> ComponentHealth:
     """Check memory usage"""
     try:
         import psutil
+
         memory = psutil.virtual_memory()
 
         # Consider unhealthy if less than 10% free memory
@@ -164,14 +168,14 @@ async def check_memory() -> ComponentHealth:
         return ComponentHealth(
             healthy=healthy,
             message=f"{percent_available:.1f}% available memory",
-            last_check=datetime.utcnow().isoformat()
+            last_check=datetime.utcnow().isoformat(),
         )
     except Exception as e:
         logger.warning(f"Memory check failed (psutil not available): {e}")
         return ComponentHealth(
             healthy=True,
             message="Memory check skipped (psutil not installed)",
-            last_check=datetime.utcnow().isoformat()
+            last_check=datetime.utcnow().isoformat(),
         )
 
 
@@ -191,11 +195,8 @@ async def liveness_probe(response: Response):
             version=os.getenv("APP_VERSION", "1.0.0"),
             environment=os.getenv("APP_ENV", "production"),
             checks={
-                "application": {
-                    "healthy": True,
-                    "message": "Application is running"
-                }
-            }
+                "application": {"healthy": True, "message": "Application is running"}
+            },
         )
         return health_status
     except Exception as e:
@@ -207,12 +208,7 @@ async def liveness_probe(response: Response):
             uptime_seconds=round(get_uptime(), 2),
             version=os.getenv("APP_VERSION", "1.0.0"),
             environment=os.getenv("APP_ENV", "production"),
-            checks={
-                "application": {
-                    "healthy": False,
-                    "message": str(e)
-                }
-            }
+            checks={"application": {"healthy": False, "message": str(e)}},
         )
 
 
@@ -254,7 +250,7 @@ async def readiness_probe(response: Response):
         uptime_seconds=round(get_uptime(), 2),
         version=os.getenv("APP_VERSION", "1.0.0"),
         environment=os.getenv("APP_ENV", "production"),
-        checks=checks
+        checks=checks,
     )
 
     if not all_healthy:
@@ -281,7 +277,7 @@ async def startup_probe(response: Response):
     if uptime < min_uptime:
         checks["initialization"] = {
             "healthy": False,
-            "message": f"Application still initializing ({uptime:.1f}s / {min_uptime}s)"
+            "message": f"Application still initializing ({uptime:.1f}s / {min_uptime}s)",
         }
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
 
@@ -291,7 +287,7 @@ async def startup_probe(response: Response):
             uptime_seconds=round(uptime, 2),
             version=os.getenv("APP_VERSION", "1.0.0"),
             environment=os.getenv("APP_ENV", "production"),
-            checks=checks
+            checks=checks,
         )
 
     # Check critical dependencies are available
@@ -306,12 +302,12 @@ async def startup_probe(response: Response):
             uptime_seconds=round(uptime, 2),
             version=os.getenv("APP_VERSION", "1.0.0"),
             environment=os.getenv("APP_ENV", "production"),
-            checks=checks
+            checks=checks,
         )
 
     checks["initialization"] = {
         "healthy": True,
-        "message": "Application fully initialized"
+        "message": "Application fully initialized",
     }
 
     return HealthStatus(
@@ -320,7 +316,7 @@ async def startup_probe(response: Response):
         uptime_seconds=round(uptime, 2),
         version=os.getenv("APP_VERSION", "1.0.0"),
         environment=os.getenv("APP_ENV", "production"),
-        checks=checks
+        checks=checks,
     )
 
 

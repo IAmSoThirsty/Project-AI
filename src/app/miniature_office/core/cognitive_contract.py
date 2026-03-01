@@ -56,7 +56,11 @@ class Intent:
     non_goals: List[str] = field(default_factory=list)
 
     def to_dict(self) -> Dict:
-        return {"goal": self.goal, "constraints": self.constraints, "non_goals": self.non_goals}
+        return {
+            "goal": self.goal,
+            "constraints": self.constraints,
+            "non_goals": self.non_goals,
+        }
 
 
 @dataclass
@@ -90,7 +94,11 @@ class Stakeholders:
     agents: List[str] = field(default_factory=list)  # Agent IDs
 
     def to_dict(self) -> Dict:
-        return {"departments": self.departments, "managers": self.managers, "agents": self.agents}
+        return {
+            "departments": self.departments,
+            "managers": self.managers,
+            "agents": self.agents,
+        }
 
 
 @dataclass
@@ -166,7 +174,9 @@ class CognitiveContract(Entity):
         intent: Intent,
         binding_level: BindingLevel = BindingLevel.MANDATORY,
     ):
-        super().__init__(contract_id, EntityType.CONTRACT, f"Contract-{contract_id[:8]}")
+        super().__init__(
+            contract_id, EntityType.CONTRACT, f"Contract-{contract_id[:8]}"
+        )
 
         self.issued_at_tick = issued_at_tick
         self.issuer = issuer
@@ -217,7 +227,11 @@ class CognitiveContract(Entity):
             ContractStatus.DRAFT: [ContractStatus.REVIEW],
             ContractStatus.REVIEW: [ContractStatus.RATIFIED, ContractStatus.DRAFT],
             ContractStatus.RATIFIED: [ContractStatus.ACTIVE],
-            ContractStatus.ACTIVE: [ContractStatus.FULFILLED, ContractStatus.REVOKED, ContractStatus.SUPERSEDED],
+            ContractStatus.ACTIVE: [
+                ContractStatus.FULFILLED,
+                ContractStatus.REVOKED,
+                ContractStatus.SUPERSEDED,
+            ],
             ContractStatus.FULFILLED: [],
             ContractStatus.REVOKED: [],
             ContractStatus.SUPERSEDED: [],
@@ -287,7 +301,9 @@ class CognitiveContract(Entity):
                 data={"action": "task_bound_to_contract", "task_id": task_id},
             )
 
-    def challenge(self, challenger_id: str, reason: str, evidence: List[str]) -> ContractChallenge:
+    def challenge(
+        self, challenger_id: str, reason: str, evidence: List[str]
+    ) -> ContractChallenge:
         """
         Allow any agent to challenge a contract.
         Enforcement Law I.2.3: Any agent may challenge a contract
@@ -311,12 +327,18 @@ class CognitiveContract(Entity):
             EventType.AGENT_ACTION,
             actor_id=challenger_id,
             target_id=self.entity_id,
-            data={"action": "contract_challenged", "challenge_id": challenge.challenge_id, "reason": reason},
+            data={
+                "action": "contract_challenged",
+                "challenge_id": challenge.challenge_id,
+                "reason": reason,
+            },
         )
 
         return challenge
 
-    def revoke(self, justification: RevocationJustification, meta_office_id: str) -> bool:
+    def revoke(
+        self, justification: RevocationJustification, meta_office_id: str
+    ) -> bool:
         """
         Revoke a contract with proper justification.
         Enforcement Law I.2.4: Only Meta-Office may invalidate a binding contract
@@ -337,7 +359,10 @@ class CognitiveContract(Entity):
                 EventType.AGENT_ACTION,
                 actor_id=meta_office_id,
                 target_id=self.entity_id,
-                data={"action": "contract_revoked", "justification": justification.to_dict()},
+                data={
+                    "action": "contract_revoked",
+                    "justification": justification.to_dict(),
+                },
             )
 
         return success
@@ -345,7 +370,9 @@ class CognitiveContract(Entity):
     def supersede(self, new_contract_id: str):
         """Mark this contract as superseded by a newer version"""
         self.superseded_by = new_contract_id
-        self.transition_to(ContractStatus.SUPERSEDED, f"Superseded by {new_contract_id}")
+        self.transition_to(
+            ContractStatus.SUPERSEDED, f"Superseded by {new_contract_id}"
+        )
 
     def validate_task_scope(self, task_description: str) -> bool:
         """
@@ -421,7 +448,9 @@ class ContractRegistry:
         """Get a contract by ID"""
         return self.contracts.get(contract_id)
 
-    def get_contracts_by_status(self, status: ContractStatus) -> List[CognitiveContract]:
+    def get_contracts_by_status(
+        self, status: ContractStatus
+    ) -> List[CognitiveContract]:
         """Get all contracts with a specific status"""
         return [c for c in self.contracts.values() if c.status == status]
 

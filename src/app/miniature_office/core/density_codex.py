@@ -403,7 +403,9 @@ class DensityCodex:
 
         return False
 
-    def validate_layer_access(self, from_layer: OntologicalLayer, to_layer: OntologicalLayer, access_type: str) -> bool:
+    def validate_layer_access(
+        self, from_layer: OntologicalLayer, to_layer: OntologicalLayer, access_type: str
+    ) -> bool:
         """
         Validate layer access follows non-collapsible rules.
 
@@ -475,7 +477,9 @@ class DensityCodex:
         """Export complete codex state"""
         return {
             "axioms": [a.value for a in self.axioms],
-            "layers": [{"level": item.value, "name": item.name} for item in self.layers],
+            "layers": [
+                {"level": item.value, "name": item.name} for item in self.layers
+            ],
             "inviolable_laws": [law.to_dict() for law in self.inviolable_laws],
             "failures_recorded": len(self.failures),
             "human_actions_recorded": len(self.human_actions),

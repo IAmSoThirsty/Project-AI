@@ -21,7 +21,9 @@ class PrivacyChecker:
             "ip_address": r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b",
         }
 
-    def audit_query(self, query: str, context: dict[str, Any] | None = None) -> dict[str, Any]:
+    def audit_query(
+        self, query: str, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Audit a query for privacy concerns"""
         concerns = []
         suggestions = []

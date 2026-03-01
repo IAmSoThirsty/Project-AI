@@ -21,7 +21,9 @@ class APIVersion:
     """API version manager"""
 
     @staticmethod
-    def extract_version(request: Request, api_version: str | None = Header(None)) -> str:
+    def extract_version(
+        request: Request, api_version: str | None = Header(None)
+    ) -> str:
         """
         Extract API version from request
 
@@ -36,13 +38,13 @@ class APIVersion:
             return api_version
 
         # Check URL path
-        path_parts = request.url.path.split('/')
+        path_parts = request.url.path.split("/")
         for part in path_parts:
-            if part.startswith('v') and part[1:].isdigit():
+            if part.startswith("v") and part[1:].isdigit():
                 return part
 
         # Check query parameter
-        version = request.query_params.get('version')
+        version = request.query_params.get("version")
         if version:
             return version
 
@@ -74,8 +76,8 @@ def version_middleware(request: Request, call_next):
                 "error": "unsupported_api_version",
                 "message": f"API version '{version}' is not supported",
                 "supported_versions": SUPPORTED_VERSIONS,
-                "current_version": CURRENT_VERSION
-            }
+                "current_version": CURRENT_VERSION,
+            },
         )
 
     # Check if deprecated
@@ -90,13 +92,13 @@ def version_middleware(request: Request, call_next):
     response = call_next(request)
 
     # Add version headers to response
-    if hasattr(response, 'headers'):
-        response.headers['X-API-Version'] = version
-        response.headers['X-API-Current-Version'] = CURRENT_VERSION
+    if hasattr(response, "headers"):
+        response.headers["X-API-Version"] = version
+        response.headers["X-API-Current-Version"] = CURRENT_VERSION
 
         if APIVersion.is_deprecated(version):
-            response.headers['X-API-Deprecation'] = 'true'
-            response.headers['X-API-Sunset'] = '2025-12-31'  # Example sunset date
+            response.headers["X-API-Deprecation"] = "true"
+            response.headers["X-API-Sunset"] = "2025-12-31"  # Example sunset date
 
     return response
 
@@ -112,7 +114,7 @@ async def api_info_v1():
         "version": "v1",
         "status": "stable",
         "released": "2024-01-01",
-        "documentation": "https://docs.projectai.dev/api/v1"
+        "documentation": "https://docs.projectai.dev/api/v1",
     }
 
 
@@ -126,8 +128,8 @@ async def api_features_v1():
             "governance_api",
             "user_management",
             "rate_limiting",
-            "circuit_breakers"
-        ]
+            "circuit_breakers",
+        ],
     }
 
 
@@ -138,7 +140,7 @@ async def submit_action_v1(request: Request):
     return {
         "version": "v1",
         "message": "Action submitted for review",
-        "api_version": request.state.api_version
+        "api_version": request.state.api_version,
     }
 
 
@@ -157,8 +159,8 @@ async def api_info_v2():
         "breaking_changes": [
             "New authentication mechanism",
             "Response format changes",
-            "Rate limit adjustments"
-        ]
+            "Rate limit adjustments",
+        ],
     }
 
 
@@ -175,8 +177,8 @@ class VersionCompatibility:
             "data": data,
             "metadata": {
                 "converted_from": "v1",
-                "timestamp": datetime.utcnow().isoformat()
-            }
+                "timestamp": datetime.utcnow().isoformat(),
+            },
         }
 
     @staticmethod

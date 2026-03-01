@@ -1,0 +1,87 @@
+openapi: 3.1.0
+info:
+  title: Project-AI Sovereign API
+  description: Cryptographically enforced, dual-plane verified API for sovereign-grade AI governance.
+  version: 1.0.0
+  contact:
+    name: IAmSoThirsty
+    url: https://github.com/IAmSoThirsty/Project-AI
+
+servers:
+  - url: https://api.project-ai.sovereign
+    description: Production Sovereign Gateway
+
+paths:
+  /v1/governance/audit:
+    get:
+      summary: Retrieve verified audit trail
+      description: Returns the cryptographically signed and dual-plane verified audit log.
+      responses:
+        '200':
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLog'
+        '403':
+          description: Access Denied - Sovereign Invariant Violation
+
+  /v1/cognition/triumvirate/status:
+    get:
+      summary: Get Triumvirate pillar status
+      description: Returns the current health and failover status of the three cognition pillars.
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriumvirateStatus'
+
+components:
+  schemas:
+    AuditLog:
+      type: object
+      properties:
+        chain_id:
+          type: string
+          format: uuid
+        blocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditBlock'
+        signature:
+          type: string
+          description: Ed25519 signature of the chain head.
+
+    AuditBlock:
+      type: object
+      properties:
+        index:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+        data:
+          type: object
+        previous_hash:
+          type: string
+        hash:
+          type: string
+
+    TriumvirateStatus:
+      type: object
+      properties:
+        pillars:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              status:
+                type: string
+                enum: [ACTIVE, STANDBY, FAILOVER, ERROR]
+              verification:
+                type: string
+                description: Dual-plane verification hash.

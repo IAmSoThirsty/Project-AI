@@ -92,7 +92,10 @@ class PSIARuntime:
             dict with boot status, genesis anchor hash, readiness report
         """
         if self._booted:
-            return {"status": "already_booted", "node_status": self.readiness_gate.status.value}
+            return {
+                "status": "already_booted",
+                "node_status": self.readiness_gate.status.value,
+            }
 
         logger.info("PSIA Desktop Runtime boot sequence starting...")
         start = time.monotonic()
@@ -101,7 +104,11 @@ class PSIARuntime:
         genesis_result = self.genesis.execute(
             invariant_definitions=list(ROOT_INVARIANTS.values()),
         )
-        logger.info("Genesis: %s (keys=%d)", genesis_result.status.value, len(genesis_result.keys_generated))
+        logger.info(
+            "Genesis: %s (keys=%d)",
+            genesis_result.status.value,
+            len(genesis_result.keys_generated),
+        )
 
         # Phase 2: Register readiness checks
         self.readiness_gate.register_genesis_check(self.genesis)
@@ -110,11 +117,16 @@ class PSIARuntime:
 
         # Phase 3: Evaluate readiness
         report = self.readiness_gate.evaluate()
-        logger.info("Readiness: %s (critical_failures=%d)", report.status.value, report.critical_failures)
+        logger.info(
+            "Readiness: %s (critical_failures=%d)",
+            report.status.value,
+            report.critical_failures,
+        )
 
         # Phase 4: Initialize Triumvirate
         try:
             from app.core.governance import Triumvirate
+
             self._triumvirate = Triumvirate()
             logger.info("Triumvirate governance council initialized")
         except ImportError:
@@ -130,7 +142,9 @@ class PSIARuntime:
         return {
             "status": "booted",
             "node_status": report.status.value,
-            "genesis_anchor": genesis_result.anchor.anchor_id if genesis_result.anchor else None,
+            "genesis_anchor": (
+                genesis_result.anchor.anchor_id if genesis_result.anchor else None
+            ),
             "readiness_checks": len(report.checks),
             "critical_failures": report.critical_failures,
             "boot_duration_ms": round(boot_duration_ms, 1),
@@ -165,6 +179,7 @@ class PSIARuntime:
 
         if self._triumvirate:
             from app.core.governance import GovernanceContext
+
             gov_context = GovernanceContext(
                 action_type=action,
                 description=f"{actor} requests to {action} on {target}",
@@ -190,7 +205,11 @@ class PSIARuntime:
 
             # Reconstruct individual pillar votes
             for member_name in ["galahad", "cerberus", "codex_deus_maximus"]:
-                vote_fn = getattr(self._triumvirate, f"_{member_name.replace('_maximus', '')}_vote", None)
+                vote_fn = getattr(
+                    self._triumvirate,
+                    f"_{member_name.replace('_maximus', '')}_vote",
+                    None,
+                )
                 pillar_name = {
                     "galahad": "Galahad",
                     "cerberus": "Cerberus",
@@ -203,31 +222,47 @@ class PSIARuntime:
                             f"{actor}:{action}:{target}",
                             gov_context,
                         )
-                        votes.append({
-                            "pillar": pillar_name,
-                            "verdict": "allow" if pillar_decision.allowed else ("deny" if pillar_decision.overrides else "degrade"),
-                            "reason": pillar_decision.reason,
-                        })
+                        votes.append(
+                            {
+                                "pillar": pillar_name,
+                                "verdict": (
+                                    "allow"
+                                    if pillar_decision.allowed
+                                    else (
+                                        "deny"
+                                        if pillar_decision.overrides
+                                        else "degrade"
+                                    )
+                                ),
+                                "reason": pillar_decision.reason,
+                            }
+                        )
                     except Exception as e:
-                        votes.append({
+                        votes.append(
+                            {
+                                "pillar": pillar_name,
+                                "verdict": "allow",
+                                "reason": f"Vote evaluation error: {e}",
+                            }
+                        )
+                else:
+                    votes.append(
+                        {
                             "pillar": pillar_name,
                             "verdict": "allow",
-                            "reason": f"Vote evaluation error: {e}",
-                        })
-                else:
-                    votes.append({
-                        "pillar": pillar_name,
-                        "verdict": "allow",
-                        "reason": f"{pillar_name}: No concerns",
-                    })
+                            "reason": f"{pillar_name}: No concerns",
+                        }
+                    )
         else:
             # Fallback when Triumvirate is not available
             for pillar in ["Galahad", "Cerberus", "Codex Deus"]:
-                votes.append({
-                    "pillar": pillar,
-                    "verdict": "allow",
-                    "reason": f"{pillar}: Fallback mode — Triumvirate not loaded",
-                })
+                votes.append(
+                    {
+                        "pillar": pillar,
+                        "verdict": "allow",
+                        "reason": f"{pillar}: Fallback mode — Triumvirate not loaded",
+                    }
+                )
 
         # Phase 2: Record to PSIA DurableLedger
         record = ExecutionRecord(
@@ -328,13 +363,15 @@ class PSIARuntime:
         recent = all_records[-limit:] if len(all_records) > limit else all_records
 
         for rec in recent:
-            records.append({
-                "intent_hash": rec.metadata.get("intent_hash", rec.record_id),
-                "tarl_version": "TARL-v1.0",
-                "votes": rec.metadata.get("votes", []),
-                "final_verdict": rec.decision,
-                "timestamp": self._parse_timestamp(rec.timestamp),
-            })
+            records.append(
+                {
+                    "intent_hash": rec.metadata.get("intent_hash", rec.record_id),
+                    "tarl_version": "TARL-v1.0",
+                    "votes": rec.metadata.get("votes", []),
+                    "final_verdict": rec.decision,
+                    "timestamp": self._parse_timestamp(rec.timestamp),
+                }
+            )
 
         # Compute TARL signature (hash of all record IDs)
         sig_data = ":".join(r.record_id for r in recent) if recent else "empty"

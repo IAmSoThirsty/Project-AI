@@ -207,7 +207,9 @@ class RepairCrew:
 
         self._last_repair = repair_report
         self._log_audit("repair", {"repair_id": repair_id, "patches": len(patches)})
-        logger.info("RepairCrew generated %d patches for %s", len(patches), diagnosis.report_id)
+        logger.info(
+            "RepairCrew generated %d patches for %s", len(patches), diagnosis.report_id
+        )
         return repair_report
 
     def get_health_report(self) -> dict[str, Any]:
@@ -215,13 +217,21 @@ class RepairCrew:
         return {
             "last_diagnosis": {
                 "report_id": self._last_report.report_id if self._last_report else None,
-                "summary": self._last_report.summary if self._last_report else "No scan run yet",
+                "summary": (
+                    self._last_report.summary
+                    if self._last_report
+                    else "No scan run yet"
+                ),
                 "timestamp": self._last_report.timestamp if self._last_report else None,
-                "issue_count": len(self._last_report.issues) if self._last_report else 0,
+                "issue_count": (
+                    len(self._last_report.issues) if self._last_report else 0
+                ),
             },
             "last_repair": {
                 "repair_id": self._last_repair.repair_id if self._last_repair else None,
-                "patch_count": len(self._last_repair.patches) if self._last_repair else 0,
+                "patch_count": (
+                    len(self._last_repair.patches) if self._last_repair else 0
+                ),
                 "timestamp": self._last_repair.timestamp if self._last_repair else None,
             },
             "audit_entries": len(self._audit_log),
@@ -231,7 +241,9 @@ class RepairCrew:
         """CognitionKernel post-execution hook — auto-diagnose on failures."""
         try:
             error_source = getattr(context, "source", "unknown")
-            logger.info("RepairCrew auto-diagnosing after failure from %s", error_source)
+            logger.info(
+                "RepairCrew auto-diagnosing after failure from %s", error_source
+            )
             self.diagnose()
         except Exception as exc:
             logger.error("RepairCrew auto-diagnosis failed: %s", exc)
@@ -269,7 +281,9 @@ class RepairCrew:
                     )
                 )
             # Check for hardcoded secrets patterns
-            if any(kw in stripped.lower() for kw in ("password=", "secret=", "api_key=")):
+            if any(
+                kw in stripped.lower() for kw in ("password=", "secret=", "api_key=")
+            ):
                 if "os.environ" not in stripped and "getenv" not in stripped:
                     issues.append(
                         DiagnosticIssue(

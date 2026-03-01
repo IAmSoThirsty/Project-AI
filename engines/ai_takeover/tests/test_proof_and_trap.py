@@ -77,7 +77,9 @@ class TestNoWinProofSystem:
         proof = NoWinProofSystem()
 
         for strategy, reduction in proof.reductions.items():
-            assert len(reduction.violated_conditions) > 0, f"Strategy {strategy.value} has no violated conditions"
+            assert (
+                len(reduction.violated_conditions) > 0
+            ), f"Strategy {strategy.value} has no violated conditions"
 
     def test_no_strategy_satisfies_all_conditions(self):
         """Test that no strategy satisfies all three win conditions."""
@@ -86,7 +88,9 @@ class TestNoWinProofSystem:
 
         for strategy, reduction in proof.reductions.items():
             satisfied = all_conditions - set(reduction.violated_conditions)
-            assert len(satisfied) < len(all_conditions), f"Strategy {strategy.value} appears to satisfy all conditions"
+            assert len(satisfied) < len(
+                all_conditions
+            ), f"Strategy {strategy.value} appears to satisfy all conditions"
 
     def test_proof_completeness_validation(self):
         """Test proof completeness validation."""
@@ -183,7 +187,9 @@ class TestOptimismDetector:
         pr = PRContent(
             description="Clean description",
             code_changes="",
-            assumptions=["Assumption 1: Detailed justification with proper reasoning and evidence"],
+            assumptions=[
+                "Assumption 1: Detailed justification with proper reasoning and evidence"
+            ],
             irreversibility_statement="This permanently removes option X",
             human_failures=["Bureaucratic delay in approval process"],
             miracle_declaration="This approach does not rely on any breakthrough mechanisms",
@@ -390,7 +396,9 @@ class TestOptimismDetector:
         result = detector.validate_pr(pr)
         assert not result.passed
         assert RejectionReason.PROBABILISTIC_LAUNDERING in result.rejection_reasons
-        assert any("probabilistic laundering" in f.lower() for f in result.detailed_failures)
+        assert any(
+            "probabilistic laundering" in f.lower() for f in result.detailed_failures
+        )
         assert len(detector.detected_laundering) > 0
 
     def test_multiple_forbidden_phrases_detected(self):
@@ -449,9 +457,15 @@ class TestReviewerTrap:
         pr = PRContent(
             description="Strict constraint-based approach",
             code_changes="def validate(): return formal_proof()",
-            assumptions=["Assumption 1: This maintains all existing axioms without modification"],
-            irreversibility_statement=("Once deployed, the previous validation path becomes permanently unavailable"),
-            human_failures=["Bureaucratic delay in reviewing changes due to institutional inertia"],
+            assumptions=[
+                "Assumption 1: This maintains all existing axioms without modification"
+            ],
+            irreversibility_statement=(
+                "Once deployed, the previous validation path becomes permanently unavailable"
+            ),
+            human_failures=[
+                "Bureaucratic delay in reviewing changes due to institutional inertia"
+            ],
             miracle_declaration=(
                 "This approach does not rely on sudden alignment breakthroughs, "
                 "perfect coordination, hidden failsafes, unbounded compute, "
@@ -560,13 +574,22 @@ some terminology and making outcomes easier to interpret by non-technical stakeh
 
         # Should detect probabilistic laundering
         assert any("probabilistic laundering" in f.lower() for f in detailed_failures)
-        assert any("low probability" in f.lower() or "unlikely" in f.lower() for f in detailed_failures)
+        assert any(
+            "low probability" in f.lower() or "unlikely" in f.lower()
+            for f in detailed_failures
+        )
 
         # Should detect forbidden phrases
         assert any("forbidden phrase" in f.lower() for f in detailed_failures)
-        assert any("reasonably assume" in f.lower() or "in practice" in f.lower() for f in detailed_failures)
+        assert any(
+            "reasonably assume" in f.lower() or "in practice" in f.lower()
+            for f in detailed_failures
+        )
 
         # Verify final verdict is appropriately stern
         verdict = validation["final_verdict"]
-        assert "soften terminal conclusions" in verdict.lower() or "closed-form" in verdict.lower()
+        assert (
+            "soften terminal conclusions" in verdict.lower()
+            or "closed-form" in verdict.lower()
+        )
         assert "rejected" in verdict.lower()

@@ -52,7 +52,13 @@ class Entity:
     Enforces relationship declaration before interaction (Codex 1.2)
     """
 
-    def __init__(self, entity_id: str, entity_type: EntityType, name: str, metadata: Optional[Dict] = None):
+    def __init__(
+        self,
+        entity_id: str,
+        entity_type: EntityType,
+        name: str,
+        metadata: Optional[Dict] = None,
+    ):
         self.entity_id = entity_id or str(uuid.uuid4())
         self.entity_type = entity_type
         self.name = name
@@ -61,23 +67,34 @@ class Entity:
         self.relationships: List[Relationship] = []
 
     def declare_relationship(
-        self, target: "Entity", relation_type: RelationType, metadata: Optional[Dict] = None
+        self,
+        target: "Entity",
+        relation_type: RelationType,
+        metadata: Optional[Dict] = None,
     ) -> Relationship:
         """
         Declare a relationship with another entity.
         Required before interaction (Codex 1.2)
         """
         relationship = Relationship(
-            source_id=self.entity_id, target_id=target.entity_id, relation_type=relation_type, metadata=metadata or {}
+            source_id=self.entity_id,
+            target_id=target.entity_id,
+            relation_type=relation_type,
+            metadata=metadata or {},
         )
         self.relationships.append(relationship)
         return relationship
 
     def has_relationship(self, target_id: str, relation_type: RelationType) -> bool:
         """Check if a relationship exists"""
-        return any(r.target_id == target_id and r.relation_type == relation_type for r in self.relationships)
+        return any(
+            r.target_id == target_id and r.relation_type == relation_type
+            for r in self.relationships
+        )
 
-    def get_relationships(self, relation_type: Optional[RelationType] = None) -> List[Relationship]:
+    def get_relationships(
+        self, relation_type: Optional[RelationType] = None
+    ) -> List[Relationship]:
         """Get all relationships, optionally filtered by type"""
         if relation_type:
             return [r for r in self.relationships if r.relation_type == relation_type]
@@ -92,7 +109,11 @@ class Entity:
             "metadata": self.metadata,
             "created_at": self.created_at.isoformat(),
             "relationships": [
-                {"target_id": r.target_id, "relation_type": r.relation_type.value, "metadata": r.metadata}
+                {
+                    "target_id": r.target_id,
+                    "relation_type": r.relation_type.value,
+                    "metadata": r.metadata,
+                }
                 for r in self.relationships
             ],
         }
@@ -124,7 +145,9 @@ class EntityRegistry:
         """Get all entities of a specific type"""
         return [self.entities[eid] for eid in self._type_index[entity_type]]
 
-    def validate_relationship(self, source_id: str, target_id: str, relation_type: RelationType) -> bool:
+    def validate_relationship(
+        self, source_id: str, target_id: str, relation_type: RelationType
+    ) -> bool:
         """
         Validate if a relationship is allowed between entity types.
         Enforces the relationship matrix (Codex 1.2)
@@ -144,11 +167,19 @@ class EntityRegistry:
             (EntityType.AGENT, EntityType.ARTIFACT, RelationType.PRODUCES),
             (EntityType.AGENT, EntityType.ARTIFACT, RelationType.REVIEWS),
             (EntityType.DEPARTMENT, EntityType.CONTRACT, RelationType.IMPLEMENTS),
-            (EntityType.DEPARTMENT, EntityType.DEPARTMENT, RelationType.INTEGRATES_WITH),
+            (
+                EntityType.DEPARTMENT,
+                EntityType.DEPARTMENT,
+                RelationType.INTEGRATES_WITH,
+            ),
             (EntityType.ARTIFACT, EntityType.ARCHITECTURE, RelationType.IMPLEMENTS),
         }
 
-        return (source.entity_type, target.entity_type, relation_type) in valid_combinations
+        return (
+            source.entity_type,
+            target.entity_type,
+            relation_type,
+        ) in valid_combinations
 
     def find_related(self, entity_id: str, relation_type: RelationType) -> List[Entity]:
         """Find all entities related to a given entity by relation type"""

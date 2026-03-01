@@ -18,6 +18,7 @@ Project-AI can be installed using multiple methods depending on your platform an
 ### Windows
 
 **Option 1: PowerShell (Recommended)**
+
 ```powershell
 
 # Run as Administrator
@@ -34,6 +35,7 @@ irm https://raw.githubusercontent.com/IAmSoThirsty/Project-AI/main/scripts/insta
 ### macOS
 
 **Option 1: Homebrew (Recommended)**
+
 ```bash
 brew tap iamsothirsty/project-ai
 brew install project-ai
@@ -46,6 +48,7 @@ brew install project-ai
 3. Drag Project-AI to Applications folder
 
 **Option 3: One-line Install**
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/IAmSoThirsty/Project-AI/main/scripts/install-macos.sh | bash
 ```
@@ -53,6 +56,7 @@ curl -fsSL https://raw.githubusercontent.com/IAmSoThirsty/Project-AI/main/script
 ### Linux
 
 **Option 1: Universal Script**
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/IAmSoThirsty/Project-AI/main/scripts/install-linux.sh | bash
 ```
@@ -60,17 +64,20 @@ curl -fsSL https://raw.githubusercontent.com/IAmSoThirsty/Project-AI/main/script
 **Option 2: Distribution Packages**
 
 **Ubuntu/Debian:**
+
 ```bash
 wget https://github.com/IAmSoThirsty/Project-AI/releases/latest/download/project-ai_1.0.0_amd64.deb
 sudo dpkg -i project-ai_1.0.0_amd64.deb
 ```
 
 **Fedora/RHEL/CentOS:**
+
 ```bash
 sudo dnf install https://github.com/IAmSoThirsty/Project-AI/releases/latest/download/project-ai-1.0.0.x86_64.rpm
 ```
 
 **Arch Linux:**
+
 ```bash
 yay -S project-ai
 
@@ -80,6 +87,7 @@ paru -S project-ai
 ```
 
 **Option 3: AppImage (Universal)**
+
 ```bash
 wget https://github.com/IAmSoThirsty/Project-AI/releases/latest/download/ProjectAI-x86_64.AppImage
 chmod +x ProjectAI-x86_64.AppImage
@@ -87,11 +95,13 @@ chmod +x ProjectAI-x86_64.AppImage
 ```
 
 **Option 4: Snap**
+
 ```bash
 sudo snap install project-ai
 ```
 
 **Option 5: Flatpak**
+
 ```bash
 flatpak install flathub com.projectai.ProjectAI
 ```
@@ -152,17 +162,20 @@ gpg --verify ProjectAI-1.0.0-linux-x86_64.tar.gz.asc
 ### Windows
 
 **Chocolatey:**
+
 ```powershell
 choco install project-ai
 ```
 
 **Scoop:**
+
 ```powershell
 scoop bucket add project-ai https://github.com/IAmSoThirsty/scoop-project-ai
 scoop install project-ai
 ```
 
 **WinGet:**
+
 ```powershell
 winget install IAmSoThirsty.ProjectAI
 ```
@@ -170,11 +183,13 @@ winget install IAmSoThirsty.ProjectAI
 ### macOS
 
 **Homebrew:**
+
 ```bash
 brew install project-ai
 ```
 
 **MacPorts:**
+
 ```bash
 sudo port install project-ai
 ```
@@ -182,6 +197,7 @@ sudo port install project-ai
 ### Linux
 
 **Ubuntu/Debian (APT):**
+
 ```bash
 
 # Add repository
@@ -196,6 +212,7 @@ sudo apt install project-ai
 ```
 
 **Fedora/RHEL (DNF):**
+
 ```bash
 
 # Add repository
@@ -208,6 +225,7 @@ sudo dnf install project-ai
 ```
 
 **Arch Linux (AUR):**
+
 ```bash
 yay -S project-ai
 
@@ -221,11 +239,13 @@ makepkg -si  # from AUR directory
 ```
 
 **Snap:**
+
 ```bash
 sudo snap install project-ai
 ```
 
 **Flatpak:**
+
 ```bash
 flatpak install flathub com.projectai.ProjectAI
 flatpak run com.projectai.ProjectAI
@@ -277,13 +297,15 @@ See [Docker Documentation](docker/README.md) for advanced configuration.
 
 ---
 
-## 🔧 From Source
+## 🔧 From Source (Sovereign Build)
 
 ### Prerequisites
 
-- Python 3.11 or later
-- Node.js 18+ (for web interface)
-- Git
+- **Python**: 3.11+ (Hardened toolchain)
+- **Node.js**: 18+ (LTS recommended)
+- **Git**: 2.40+ (Signed commits supported)
+- **Kernel**: 5.15+ with eBPF support (Required for Tier 0 OctoReflex)
+- **HSM/TPM**: Optional but recommended for Sovereign Master Key
 
 ### Installation Steps
 
@@ -360,6 +382,7 @@ app.run()
 ```
 
 Or via command line:
+
 ```bash
 project-ai
 ```
@@ -408,6 +431,7 @@ Edit `~/.project-ai/config.json`:
 ### Windows
 
 **Issue: "Python not found"**
+
 ```powershell
 
 # Install Python from Microsoft Store
@@ -416,6 +440,7 @@ winget install Python.Python.3.11
 ```
 
 **Issue: "Permission denied"**
+
 ```powershell
 
 # Run PowerShell as Administrator
@@ -426,6 +451,7 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 ### macOS
 
 **Issue: "Developer cannot be verified"**
+
 ```bash
 
 # Remove quarantine attribute
@@ -434,6 +460,7 @@ xattr -d com.apple.quarantine /Applications/ProjectAI.app
 ```
 
 **Issue: "Command not found"**
+
 ```bash
 
 # Add to PATH
@@ -445,6 +472,7 @@ source ~/.zshrc
 ### Linux
 
 **Issue: "Permission denied"**
+
 ```bash
 
 # Make executable
@@ -453,6 +481,7 @@ chmod +x ProjectAI-x86_64.AppImage
 ```
 
 **Issue: "Missing dependencies"**
+
 ```bash
 
 # Ubuntu/Debian
@@ -467,6 +496,7 @@ sudo dnf install python3-qt6 python3-pip
 ### Common Issues
 
 **Issue: "Module not found"**
+
 ```bash
 
 # Reinstall dependencies
@@ -475,6 +505,7 @@ pip install --force-reinstall -e .
 ```
 
 **Issue: "Database error"**
+
 ```bash
 
 # Reset database
@@ -483,6 +514,7 @@ rm -rf ~/.project-ai/data/*.db
 ```
 
 **Issue: "Port already in use"**
+
 ```bash
 
 # Change port in config
@@ -494,10 +526,10 @@ export API_PORT=5001
 
 ## 🆘 Getting Help
 
-- **Documentation**: https://docs.projectai.dev
-- **GitHub Issues**: https://github.com/IAmSoThirsty/Project-AI/issues
-- **Discord**: https://discord.gg/projectai
-- **Email**: support@projectai.dev
+- **Documentation**: <https://docs.projectai.dev>
+- **GitHub Issues**: <https://github.com/IAmSoThirsty/Project-AI/issues>
+- **Discord**: <https://discord.gg/projectai>
+- **Email**: <support@projectai.dev>
 
 ---
 

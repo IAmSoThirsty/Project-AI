@@ -63,9 +63,9 @@ logger = logging.getLogger(__name__)
 class ConflictResolution(str, Enum):
     """Strategy for resolving commit conflicts."""
 
-    ABORT = "abort"          # Reject the mutation; caller must retry
-    RETRY = "retry"          # Automatically re-evaluate from fresh snapshot
-    MERGE = "merge"          # Attempt semantic merge (requires merge function)
+    ABORT = "abort"  # Reject the mutation; caller must retry
+    RETRY = "retry"  # Automatically re-evaluate from fresh snapshot
+    MERGE = "merge"  # Attempt semantic merge (requires merge function)
 
 
 class CommitOutcome(str, Enum):
@@ -83,8 +83,8 @@ class VersionedValue:
 
     value: Any
     version: int
-    modified_by: str = ""       # request_id of the mutation that wrote this
-    modified_at: float = 0.0    # monotonic timestamp
+    modified_by: str = ""  # request_id of the mutation that wrote this
+    modified_at: float = 0.0  # monotonic timestamp
 
 
 @dataclass(frozen=True)
@@ -148,7 +148,11 @@ class StateSnapshot:
             for k, v in sorted(self.state.items())
         }
         canonical = json.dumps(
-            {"snapshot_id": self.snapshot_id, "global_version": self.global_version, "state": data},
+            {
+                "snapshot_id": self.snapshot_id,
+                "global_version": self.global_version,
+                "state": data,
+            },
             sort_keys=True,
             separators=(",", ":"),
         )
@@ -169,8 +173,8 @@ class MutationIntent:
     request_id: str
     snapshot_id: str
     snapshot_version: int
-    read_set: dict[str, int]     # key -> version at read time
-    write_set: dict[str, Any]    # key -> new value
+    read_set: dict[str, int]  # key -> version at read time
+    write_set: dict[str, Any]  # key -> new value
     created_at: float = field(default_factory=time.monotonic)
 
 

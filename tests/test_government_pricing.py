@@ -356,7 +356,9 @@ class TestGovernmentPricingTransition:
         seat_101 = calculate_government_price(101, GovernmentBillingCycle.MONTHLY)
 
         # Calculate percentage increase
-        increase = ((seat_101.total_price - seat_100.total_price) / seat_100.total_price) * 100
+        increase = (
+            (seat_101.total_price - seat_100.total_price) / seat_100.total_price
+        ) * 100
 
         # 5050 - 3625 = 1425; 1425 / 3625 = 39.3% increase
         assert increase == pytest.approx(39.31, rel=0.01)
@@ -367,7 +369,9 @@ class TestGovernmentPricingTransition:
         seat_101 = calculate_government_price(101, GovernmentBillingCycle.YEARLY)
 
         # Calculate percentage increase
-        increase = ((seat_101.total_price - seat_100.total_price) / seat_100.total_price) * 100
+        increase = (
+            (seat_101.total_price - seat_100.total_price) / seat_100.total_price
+        ) * 100
 
         # 40400 - 14500 = 25900; 25900 / 14500 = 178.6% increase
         assert increase == pytest.approx(178.62, rel=0.01)

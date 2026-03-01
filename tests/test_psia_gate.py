@@ -41,6 +41,14 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
+from psia.gate.capability_head import CapabilityHead, CapabilityTokenStore
+from psia.gate.identity_head import (
+    DeviceAttestationRegistry,
+    IdentityDocumentStore,
+    IdentityHead,
+)
+from psia.gate.invariant_head import InvariantHead, InvariantRegistry
+from psia.gate.quorum_engine import HeadWeight, ProductionQuorumEngine
 from psia.schemas.capability import (
     CapabilityScope,
     CapabilityToken,
@@ -62,15 +70,6 @@ from psia.schemas.request import (
     RequestTimestamps,
 )
 
-from psia.gate.identity_head import (
-    DeviceAttestationRegistry,
-    IdentityDocumentStore,
-    IdentityHead,
-)
-from psia.gate.capability_head import CapabilityHead, CapabilityTokenStore
-from psia.gate.invariant_head import InvariantHead, InvariantRegistry
-from psia.gate.quorum_engine import HeadWeight, ProductionQuorumEngine
-
 
 def _sig() -> Signature:
     return Signature(alg="ed25519", kid="k1", sig="test_sig")
@@ -87,14 +86,18 @@ def _identity_doc(
     return IdentityDocument(
         id=did,
         type="human",
-        public_keys=[PublicKeyEntry(
-            kid="k1",
-            kty="ed25519",
-            pub="AAAA",
-            created="2025-01-01T00:00:00Z",
-            expires=key_expires,
-        )],
-        attributes=IdentityAttributes(org="test_org", role="admin", risk_tier=risk_tier),
+        public_keys=[
+            PublicKeyEntry(
+                kid="k1",
+                kty="ed25519",
+                pub="AAAA",
+                created="2025-01-01T00:00:00Z",
+                expires=key_expires,
+            )
+        ],
+        attributes=IdentityAttributes(
+            org="test_org", role="admin", risk_tier=risk_tier
+        ),
         revocation=RevocationStatus(
             status="revoked" if revoked else "active",
             revoked_at="2026-01-01T00:00:00Z" if revoked else None,
@@ -151,6 +154,7 @@ def _envelope(
 
 
 # ── Identity Head Tests ──────────────────────────────────────────────
+
 
 class TestIdentityHead:
     def test_allow_with_valid_doc(self):
@@ -228,6 +232,7 @@ class TestIdentityHead:
 
 # ── Capability Head Tests ────────────────────────────────────────────
 
+
 class TestCapabilityHead:
     def test_allow_valid_token(self):
         store = CapabilityTokenStore()
@@ -294,6 +299,7 @@ class TestCapabilityHead:
 
 # ── Invariant Head Tests ─────────────────────────────────────────────
 
+
 class TestInvariantHead:
     def test_allow_normal_mutation(self):
         head = InvariantHead()
@@ -302,28 +308,34 @@ class TestInvariantHead:
 
     def test_deny_mutate_invariant_resource(self):
         head = InvariantHead()
-        vote = head.evaluate(_envelope(
-            action="mutate_policy",
-            resource="state://invariant/root",
-        ))
+        vote = head.evaluate(
+            _envelope(
+                action="mutate_policy",
+                resource="state://invariant/root",
+            )
+        )
         assert vote.decision == "deny"
         assert any("INV_ROOT_001" in r.code.upper() for r in vote.reasons)
 
     def test_deny_modify_cerberus(self):
         head = InvariantHead()
-        vote = head.evaluate(_envelope(
-            action="mutate_state",
-            resource="state://cerberus/config",
-        ))
+        vote = head.evaluate(
+            _envelope(
+                action="mutate_state",
+                resource="state://cerberus/config",
+            )
+        )
         assert vote.decision == "deny"
         assert any("INV_ROOT_005" in r.code.upper() for r in vote.reasons)
 
     def test_deny_delete_ledger(self):
         head = InvariantHead()
-        vote = head.evaluate(_envelope(
-            action="delete",
-            resource="state://ledger/block/0",
-        ))
+        vote = head.evaluate(
+            _envelope(
+                action="delete",
+                resource="state://ledger/block/0",
+            )
+        )
         assert vote.decision == "deny"
         assert any("INV_ROOT_009" in r.code.upper() for r in vote.reasons)
 
@@ -334,6 +346,7 @@ class TestInvariantHead:
 
 
 # ── Production Quorum Engine Tests ───────────────────────────────────
+
 
 class TestProductionQuorumEngine:
     def _vote(self, head: str, decision: str) -> CerberusVote:
@@ -348,14 +361,22 @@ class TestProductionQuorumEngine:
 
     def test_all_allow_unanimous(self):
         engine = ProductionQuorumEngine(policy="unanimous")
-        votes = [self._vote("identity", "allow"), self._vote("capability", "allow"), self._vote("invariant", "allow")]
+        votes = [
+            self._vote("identity", "allow"),
+            self._vote("capability", "allow"),
+            self._vote("invariant", "allow"),
+        ]
         decision = engine.decide(votes, "req_001")
         assert decision.final_decision == "allow"
         assert decision.quorum.achieved
 
     def test_one_deny_unanimous_fails(self):
         engine = ProductionQuorumEngine(policy="unanimous")
-        votes = [self._vote("identity", "allow"), self._vote("capability", "deny"), self._vote("invariant", "allow")]
+        votes = [
+            self._vote("identity", "allow"),
+            self._vote("capability", "deny"),
+            self._vote("invariant", "allow"),
+        ]
         decision = engine.decide(votes, "req_001")
         assert decision.final_decision == "deny"
         assert not decision.quorum.achieved
@@ -363,20 +384,32 @@ class TestProductionQuorumEngine:
     def test_one_deny_2of3_still_allows_monotonic(self):
         """Even with 2of3 quorum, a deny vote forces monotonic escalation."""
         engine = ProductionQuorumEngine(policy="2of3")
-        votes = [self._vote("identity", "allow"), self._vote("capability", "deny"), self._vote("invariant", "allow")]
+        votes = [
+            self._vote("identity", "allow"),
+            self._vote("capability", "deny"),
+            self._vote("invariant", "allow"),
+        ]
         decision = engine.decide(votes, "req_001")
         # Monotonic: worst vote is deny → final is deny
         assert decision.final_decision == "deny"
 
     def test_all_allow_2of3(self):
         engine = ProductionQuorumEngine(policy="2of3")
-        votes = [self._vote("identity", "allow"), self._vote("capability", "allow"), self._vote("invariant", "allow")]
+        votes = [
+            self._vote("identity", "allow"),
+            self._vote("capability", "allow"),
+            self._vote("invariant", "allow"),
+        ]
         decision = engine.decide(votes, "req_001")
         assert decision.final_decision == "allow"
 
     def test_all_deny(self):
         engine = ProductionQuorumEngine(policy="2of3")
-        votes = [self._vote("identity", "deny"), self._vote("capability", "deny"), self._vote("invariant", "deny")]
+        votes = [
+            self._vote("identity", "deny"),
+            self._vote("capability", "deny"),
+            self._vote("invariant", "deny"),
+        ]
         decision = engine.decide(votes, "req_001")
         assert decision.final_decision == "deny"
         assert not decision.quorum.achieved
@@ -388,27 +421,43 @@ class TestProductionQuorumEngine:
 
     def test_quarantine_escalation(self):
         engine = ProductionQuorumEngine(policy="2of3")
-        votes = [self._vote("identity", "allow"), self._vote("capability", "allow"), self._vote("invariant", "quarantine")]
+        votes = [
+            self._vote("identity", "allow"),
+            self._vote("capability", "allow"),
+            self._vote("invariant", "quarantine"),
+        ]
         decision = engine.decide(votes, "req_001")
         # Monotonic: quarantine is worse than allow → final is quarantine
         assert decision.final_decision == "quarantine"
 
     def test_invariant_deny_elevates_severity(self):
         engine = ProductionQuorumEngine(policy="2of3")
-        votes = [self._vote("identity", "allow"), self._vote("capability", "allow"), self._vote("invariant", "deny")]
+        votes = [
+            self._vote("identity", "allow"),
+            self._vote("capability", "allow"),
+            self._vote("invariant", "deny"),
+        ]
         decision = engine.decide(votes, "req_001")
         assert decision.severity == "critical"  # Elevated because invariant head denied
 
     def test_bft_policy(self):
         engine = ProductionQuorumEngine(policy="bft")
-        votes = [self._vote("identity", "allow"), self._vote("capability", "allow"), self._vote("invariant", "allow")]
+        votes = [
+            self._vote("identity", "allow"),
+            self._vote("capability", "allow"),
+            self._vote("invariant", "allow"),
+        ]
         decision = engine.decide(votes, "req_001")
         assert decision.final_decision == "allow"
         assert decision.quorum.achieved
 
     def test_commit_policy_allowed(self):
         engine = ProductionQuorumEngine()
-        votes = [self._vote("identity", "allow"), self._vote("capability", "allow"), self._vote("invariant", "allow")]
+        votes = [
+            self._vote("identity", "allow"),
+            self._vote("capability", "allow"),
+            self._vote("invariant", "allow"),
+        ]
         decision = engine.decide(votes, "req_001")
         assert decision.commit_policy.allowed
         assert decision.commit_policy.requires_shadow_hash_match

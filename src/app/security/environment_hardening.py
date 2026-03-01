@@ -115,7 +115,9 @@ class EnvironmentHardening:
                     path_stat = os.stat(path_entry)
                     # Check if world-writable (dangerous)
                     if path_stat.st_mode & stat.S_IWOTH:
-                        issues.append(f"World-writable directory in sys.path: {path_entry}")
+                        issues.append(
+                            f"World-writable directory in sys.path: {path_entry}"
+                        )
                         logger.warning("World-writable path: %s", path_entry)
                 except OSError as e:
                     logger.debug("Could not stat path %s: %s", path_entry, e)
@@ -201,7 +203,9 @@ class EnvironmentHardening:
                     full_path.mkdir(parents=True, exist_ok=True)
                     # Set restrictive permissions (owner only)
                     os.chmod(full_path, 0o700)
-                    logger.info("Created directory with secure permissions: %s", full_path)
+                    logger.info(
+                        "Created directory with secure permissions: %s", full_path
+                    )
                 except OSError as e:
                     issues.append(f"Cannot create directory {full_path}: {e}")
                     continue
@@ -213,7 +217,9 @@ class EnvironmentHardening:
 
                 # Check if group or others have any permissions
                 if mode & (stat.S_IRWXG | stat.S_IRWXO):
-                    issues.append(f"Insecure permissions on {full_path}: {oct(stat.S_IMODE(mode))}")
+                    issues.append(
+                        f"Insecure permissions on {full_path}: {oct(stat.S_IMODE(mode))}"
+                    )
                     logger.warning("Fixing permissions on %s", full_path)
                     os.chmod(full_path, 0o700)
 
@@ -248,7 +254,10 @@ class EnvironmentHardening:
                 # Create with default structure
                 try:
                     full_path.parent.mkdir(parents=True, exist_ok=True)
-                    default_data = {key: val() if callable(val) else val for key, val in expected_structure.items()}
+                    default_data = {
+                        key: val() if callable(val) else val
+                        for key, val in expected_structure.items()
+                    }
                     import json
 
                     with open(full_path, "w") as f:

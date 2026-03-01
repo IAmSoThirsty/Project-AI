@@ -120,7 +120,9 @@ class AILearningWorkflow:
         Returns:
             Learning result with success status and knowledge ID
         """
-        workflow.logger.info("Starting AI learning workflow for category: %s", request.category)
+        workflow.logger.info(
+            "Starting AI learning workflow for category: %s", request.category
+        )
 
         try:
             # Activity 1: Validate content
@@ -142,7 +144,9 @@ class AILearningWorkflow:
             )
 
             if not is_allowed:
-                return LearningResult(success=False, error="Content blocked by Black Vault")
+                return LearningResult(
+                    success=False, error="Content blocked by Black Vault"
+                )
 
             # Activity 3: Process learning request
             knowledge_id = await workflow.execute_activity(
@@ -205,7 +209,9 @@ class ImageGenerationWorkflow:
             )
 
             if not is_safe:
-                return ImageGenerationResult(success=False, error="Prompt failed content safety check")
+                return ImageGenerationResult(
+                    success=False, error="Prompt failed content safety check"
+                )
 
             # Activity 2: Generate image (long-running, needs retries)
             result = await workflow.execute_activity(
@@ -261,7 +267,9 @@ class DataAnalysisWorkflow:
         Returns:
             Analysis result with findings and output path
         """
-        workflow.logger.info("Starting data analysis workflow: %s", request.analysis_type)
+        workflow.logger.info(
+            "Starting data analysis workflow: %s", request.analysis_type
+        )
 
         try:
             # Activity 1: Validate file
@@ -335,7 +343,10 @@ class MemoryExpansionWorkflow:
         Returns:
             Result with count of memories created
         """
-        workflow.logger.info(f"Starting memory expansion workflow for conversation: " f"{request.conversation_id}")
+        workflow.logger.info(
+            f"Starting memory expansion workflow for conversation: "
+            f"{request.conversation_id}"
+        )
 
         try:
             # Activity 1: Extract key information
@@ -364,7 +375,9 @@ class MemoryExpansionWorkflow:
                 start_to_close_timeout=timedelta(seconds=30),
             )
 
-            workflow.logger.info("Memory expansion workflow completed: %s memories", memory_count)
+            workflow.logger.info(
+                "Memory expansion workflow completed: %s memories", memory_count
+            )
             return MemoryExpansionResult(
                 success=True,
                 memory_count=memory_count,
@@ -437,7 +450,9 @@ class CrisisResponseWorkflow:
         Returns:
             Crisis result with completion status and metrics
         """
-        workflow.logger.info("Starting crisis response workflow for target: %s", request.target_member)
+        workflow.logger.info(
+            "Starting crisis response workflow for target: %s", request.target_member
+        )
 
         crisis_id = request.crisis_id or f"crisis-{workflow.now().timestamp()}"
         completed_phases = 0
@@ -468,7 +483,10 @@ class CrisisResponseWorkflow:
 
             # Activity 3: Execute each mission phase sequentially
             for mission in sorted(request.missions, key=lambda m: m.priority):
-                workflow.logger.info(f"Executing mission phase: {mission.phase_id} " f"(Agent: {mission.agent_id})")
+                workflow.logger.info(
+                    f"Executing mission phase: {mission.phase_id} "
+                    f"(Agent: {mission.agent_id})"
+                )
 
                 try:
                     # Execute agent mission with retries
@@ -497,7 +515,9 @@ class CrisisResponseWorkflow:
                     completed_phases += 1
 
                 except Exception as e:
-                    workflow.logger.error("Mission phase %s failed: %s", mission.phase_id, e)
+                    workflow.logger.error(
+                        "Mission phase %s failed: %s", mission.phase_id, e
+                    )
                     failed_phases.append(mission.phase_id)
 
                     # Log failure but continue with remaining phases
@@ -524,7 +544,8 @@ class CrisisResponseWorkflow:
             )
 
             workflow.logger.info(
-                f"Crisis response completed: {completed_phases}/{len(request.missions)} " f"phases successful"
+                f"Crisis response completed: {completed_phases}/{len(request.missions)} "
+                f"phases successful"
             )
 
             return CrisisResult(

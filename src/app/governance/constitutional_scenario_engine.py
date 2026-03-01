@@ -9,13 +9,13 @@ the Constitutional Core for accountability and law enforcement.
 
 import logging
 
-from engines.global_scenario.global_scenario_engine import GlobalScenarioEngine
-from app.governance.planetary_defense_monolith import planetary_interposition
 from app.core.simulation_contingency_root import (
     CrisisAlert,
     RiskDomain,
     ScenarioProjection,
 )
+from app.governance.planetary_defense_monolith import planetary_interposition
+from engines.global_scenario.global_scenario_engine import GlobalScenarioEngine
 
 logger = logging.getLogger(__name__)
 

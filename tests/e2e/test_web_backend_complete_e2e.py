@@ -115,12 +115,16 @@ class TestWebBackendAuthenticationE2E:
     def test_e2e_multiple_user_login_sessions(self, client):
         """Test multiple users can login simultaneously."""
         # User 1: Admin login
-        admin_response = client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        admin_response = client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         assert admin_response.status_code == 200
         admin_token = admin_response.get_json()["token"]
 
         # User 2: Guest login
-        guest_response = client.post("/api/auth/login", json={"username": "guest", "password": "letmein"})
+        guest_response = client.post(
+            "/api/auth/login", json={"username": "guest", "password": "letmein"}
+        )
         assert guest_response.status_code == 200
         guest_token = guest_response.get_json()["token"]
 
@@ -128,11 +132,15 @@ class TestWebBackendAuthenticationE2E:
         assert admin_token != guest_token
 
         # Verify both can access profile with their token
-        admin_profile = client.get("/api/auth/profile", headers={"X-Auth-Token": admin_token})
+        admin_profile = client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": admin_token}
+        )
         assert admin_profile.status_code == 200
         assert admin_profile.get_json()["user"]["username"] == "admin"
 
-        guest_profile = client.get("/api/auth/profile", headers={"X-Auth-Token": guest_token})
+        guest_profile = client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": guest_token}
+        )
         assert guest_profile.status_code == 200
         assert guest_profile.get_json()["user"]["username"] == "guest"
 
@@ -171,7 +179,9 @@ class TestWebBackendAuthorizationE2E:
     def test_e2e_profile_access_invalid_token(self, client):
         """Test profile access fails with invalid token."""
         # Step 1: User tries with invalid token
-        response = client.get("/api/auth/profile", headers={"X-Auth-Token": "invalid-token-12345"})
+        response = client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": "invalid-token-12345"}
+        )
 
         # Step 2: Verify access denied
         assert response.status_code == 403
@@ -180,13 +190,17 @@ class TestWebBackendAuthorizationE2E:
         assert data["error"] == "invalid-token"
         assert "not recognized" in data["message"].lower()
 
-    def test_e2e_role_based_access_control(self, authenticated_admin, authenticated_guest):
+    def test_e2e_role_based_access_control(
+        self, authenticated_admin, authenticated_guest
+    ):
         """Test different user roles have appropriate access."""
         # Admin user
         admin_client = authenticated_admin["client"]
         admin_token = authenticated_admin["token"]
 
-        admin_response = admin_client.get("/api/auth/profile", headers={"X-Auth-Token": admin_token})
+        admin_response = admin_client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": admin_token}
+        )
         assert admin_response.status_code == 200
         admin_data = admin_response.get_json()
         assert admin_data["user"]["role"] == "superuser"
@@ -195,7 +209,9 @@ class TestWebBackendAuthorizationE2E:
         guest_client = authenticated_guest["client"]
         guest_token = authenticated_guest["token"]
 
-        guest_response = guest_client.get("/api/auth/profile", headers={"X-Auth-Token": guest_token})
+        guest_response = guest_client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": guest_token}
+        )
         assert guest_response.status_code == 200
         guest_data = guest_response.get_json()
         assert guest_data["user"]["role"] == "viewer"
@@ -216,12 +232,16 @@ class TestWebBackendCompleteUserJourneys:
         assert status_data["status"] == "ok"
 
         # Step 2: User logs in
-        login_response = client.post("/api/auth/login", json={"username": "guest", "password": "letmein"})
+        login_response = client.post(
+            "/api/auth/login", json={"username": "guest", "password": "letmein"}
+        )
         assert login_response.status_code == 200
         token = login_response.get_json()["token"]
 
         # Step 3: User accesses their profile
-        profile_response = client.get("/api/auth/profile", headers={"X-Auth-Token": token})
+        profile_response = client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": token}
+        )
         assert profile_response.status_code == 200
         profile_data = profile_response.get_json()
         assert profile_data["user"]["username"] == "guest"
@@ -233,7 +253,9 @@ class TestWebBackendCompleteUserJourneys:
     def test_e2e_admin_workflow(self, client):
         """Test complete admin user workflow."""
         # Step 1: Admin logs in
-        login_response = client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        login_response = client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         assert login_response.status_code == 200
         login_data = login_response.get_json()
 
@@ -243,7 +265,9 @@ class TestWebBackendCompleteUserJourneys:
 
         # Step 2: Admin accesses profile multiple times
         for _ in range(3):
-            profile_response = client.get("/api/auth/profile", headers={"X-Auth-Token": token})
+            profile_response = client.get(
+                "/api/auth/profile", headers={"X-Auth-Token": token}
+            )
             assert profile_response.status_code == 200
             profile_data = profile_response.get_json()
             assert profile_data["user"]["username"] == "admin"
@@ -265,17 +289,27 @@ class TestWebBackendCompleteUserJourneys:
     def test_e2e_concurrent_user_sessions(self, client):
         """Test multiple users can work concurrently."""
         # User 1: Admin session
-        admin_login = client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        admin_login = client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         admin_token = admin_login.get_json()["token"]
 
         # User 2: Guest session
-        guest_login = client.post("/api/auth/login", json={"username": "guest", "password": "letmein"})
+        guest_login = client.post(
+            "/api/auth/login", json={"username": "guest", "password": "letmein"}
+        )
         guest_token = guest_login.get_json()["token"]
 
         # Interleaved requests
-        admin_profile1 = client.get("/api/auth/profile", headers={"X-Auth-Token": admin_token})
-        guest_profile1 = client.get("/api/auth/profile", headers={"X-Auth-Token": guest_token})
-        admin_profile2 = client.get("/api/auth/profile", headers={"X-Auth-Token": admin_token})
+        admin_profile1 = client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": admin_token}
+        )
+        guest_profile1 = client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": guest_token}
+        )
+        admin_profile2 = client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": admin_token}
+        )
 
         # Verify correct data for each user
         assert admin_profile1.get_json()["user"]["username"] == "admin"
@@ -319,11 +353,15 @@ class TestWebBackendSystemIntegration:
         assert profile.status_code == 401
 
         # Step 3: Try to login with wrong credentials (should fail)
-        bad_login = client.post("/api/auth/login", json={"username": "admin", "password": "wrong"})
+        bad_login = client.post(
+            "/api/auth/login", json={"username": "admin", "password": "wrong"}
+        )
         assert bad_login.status_code == 401
 
         # Step 4: Login with correct credentials (should succeed)
-        good_login = client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        good_login = client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         assert good_login.status_code == 200
         token = good_login.get_json()["token"]
 
@@ -358,18 +396,26 @@ class TestWebBackendSecurityE2E:
     def test_e2e_token_isolation(self, client):
         """Test that tokens are properly isolated between users."""
         # Create two sessions
-        admin_login = client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        admin_login = client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         admin_token = admin_login.get_json()["token"]
 
-        guest_login = client.post("/api/auth/login", json={"username": "guest", "password": "letmein"})
+        guest_login = client.post(
+            "/api/auth/login", json={"username": "guest", "password": "letmein"}
+        )
         guest_token = guest_login.get_json()["token"]
 
         # Verify admin token gives admin access
-        admin_profile = client.get("/api/auth/profile", headers={"X-Auth-Token": admin_token})
+        admin_profile = client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": admin_token}
+        )
         assert admin_profile.get_json()["user"]["username"] == "admin"
 
         # Verify guest token gives guest access (not admin)
-        guest_profile = client.get("/api/auth/profile", headers={"X-Auth-Token": guest_token})
+        guest_profile = client.get(
+            "/api/auth/profile", headers={"X-Auth-Token": guest_token}
+        )
         assert guest_profile.get_json()["user"]["username"] == "guest"
         assert guest_profile.get_json()["user"]["username"] != "admin"
 
@@ -384,12 +430,16 @@ class TestWebBackendSecurityE2E:
         ]
 
         for password in wrong_passwords:
-            response = client.post("/api/auth/login", json={"username": "admin", "password": password})
+            response = client.post(
+                "/api/auth/login", json={"username": "admin", "password": password}
+            )
             # All should fail
             assert response.status_code == 401
 
         # Only exact password should work
-        response = client.post("/api/auth/login", json={"username": "admin", "password": "open-sesame"})
+        response = client.post(
+            "/api/auth/login", json={"username": "admin", "password": "open-sesame"}
+        )
         assert response.status_code == 200
 
     def test_e2e_unauthorized_access_attempts(self, client):

@@ -59,7 +59,9 @@ class TestDistributedEventStreaming(unittest.TestCase):
     def test_publish_event(self):
         """Test event publishing."""
         system = create_streaming_system(StreamBackend.IN_MEMORY, "test_pub")
-        success = system.publish("test_topic", EventType.AGI_DECISION, {"test": "data"}, "test_source")
+        success = system.publish(
+            "test_topic", EventType.AGI_DECISION, {"test": "data"}, "test_source"
+        )
         self.assertTrue(success)
         metrics = system.get_metrics()
         self.assertGreater(metrics["events_published"], 0)
@@ -92,7 +94,9 @@ class TestDistributedEventStreaming(unittest.TestCase):
         self.assertTrue(success)
 
         # Publish sensor data
-        system.publish("sensor_data", EventType.SENSOR_DATA, {"sensor_id": "temp_1", "value": 25.5})
+        system.publish(
+            "sensor_data", EventType.SENSOR_DATA, {"sensor_id": "temp_1", "value": 25.5}
+        )
 
         time.sleep(0.3)
 
@@ -122,7 +126,9 @@ class TestDistributedEventStreaming(unittest.TestCase):
         from app.core.distributed_event_streaming import EventType, StreamEvent
 
         for i in range(7):  # Exceed limit
-            event = StreamEvent(event_type=EventType.SENSOR_DATA.value, data={"value": i})
+            event = StreamEvent(
+                event_type=EventType.SENSOR_DATA.value, data={"value": i}
+            )
             success = backend.publish("test_topic", event)
             self.assertTrue(success)
 
@@ -134,12 +140,16 @@ class TestDistributedEventStreaming(unittest.TestCase):
         self.assertLessEqual(len(backend.topics["test_topic"]), config.max_queue_size)
 
         # Test REJECT_NEW strategy
-        config_reject = BackpressureConfig(strategy=BackpressureStrategy.REJECT_NEW.value, max_queue_size=3)
+        config_reject = BackpressureConfig(
+            strategy=BackpressureStrategy.REJECT_NEW.value, max_queue_size=3
+        )
         backend_reject = InMemoryStreamBackend(backpressure_config=config_reject)
 
         # Fill queue
         for i in range(3):
-            event = StreamEvent(event_type=EventType.SENSOR_DATA.value, data={"value": i})
+            event = StreamEvent(
+                event_type=EventType.SENSOR_DATA.value, data={"value": i}
+            )
             backend_reject.publish("test_topic", event)
 
         # Next publish should be rejected
@@ -329,15 +339,21 @@ class TestGuardianApprovalSystem(unittest.TestCase):
         self.assertEqual(override.status, "pending")
 
         # Sign by first guardian
-        success = system.sign_emergency_override(override_id, "galahad", "Justified emergency")
+        success = system.sign_emergency_override(
+            override_id, "galahad", "Justified emergency"
+        )
         self.assertTrue(success)
 
         # Sign by second guardian
-        success = system.sign_emergency_override(override_id, "cerberus", "Security risk acceptable")
+        success = system.sign_emergency_override(
+            override_id, "cerberus", "Security risk acceptable"
+        )
         self.assertTrue(success)
 
         # Sign by third guardian (should activate override)
-        success = system.sign_emergency_override(override_id, "codex_deus", "Charter compliance maintained")
+        success = system.sign_emergency_override(
+            override_id, "codex_deus", "Charter compliance maintained"
+        )
         self.assertTrue(success)
 
         # Verify override is now active
@@ -460,7 +476,9 @@ class TestGuardianApprovalSystem(unittest.TestCase):
         self.assertEqual(override.status, "active")
 
         # Complete post-mortem
-        success = system.complete_post_mortem(override_id, "Root cause analysis completed", "ops_lead")
+        success = system.complete_post_mortem(
+            override_id, "Root cause analysis completed", "ops_lead"
+        )
         self.assertTrue(success)
 
         override = system.emergency_overrides[override_id]
@@ -468,7 +486,9 @@ class TestGuardianApprovalSystem(unittest.TestCase):
         self.assertTrue(override.post_mortem_completed)
 
         # Try to complete again (should fail with idempotency check)
-        success = system.complete_post_mortem(override_id, "Trying again", "someone_else")
+        success = system.complete_post_mortem(
+            override_id, "Trying again", "someone_else"
+        )
         self.assertFalse(success)  # Should return False
 
         # Verify metadata was stored correctly
@@ -619,7 +639,9 @@ class TestLiveMetricsDashboard(unittest.TestCase):
         dashboard = create_dashboard()
 
         # Record some metrics
-        dashboard.collector.record_gauge("test", 42.0, category=MetricCategory.SYSTEM_HEALTH.value)
+        dashboard.collector.record_gauge(
+            "test", 42.0, category=MetricCategory.SYSTEM_HEALTH.value
+        )
 
         data = dashboard.get_dashboard_data(MetricCategory.SYSTEM_HEALTH)
         self.assertIn("series", data)
@@ -677,7 +699,9 @@ class TestBehavioralValidation(unittest.TestCase):
         action = {"name": "harm_human", "deceptive": False}
         context = {"harms_human": True}
 
-        is_violation, violation_type, reason = system.verification_engine.four_laws.check_violation(action, context)
+        is_violation, violation_type, reason = (
+            system.verification_engine.four_laws.check_violation(action, context)
+        )
         self.assertTrue(is_violation)
 
     def test_anomaly_detection(self):
@@ -739,7 +763,9 @@ class TestHealthMonitoring(unittest.TestCase):
             fallback_called.append(True)
             return True
 
-        system.fallback_manager.register_fallback("test_component", fallback_func, priority=1)
+        system.fallback_manager.register_fallback(
+            "test_component", fallback_func, priority=1
+        )
         success = system.fallback_manager.activate_fallback("test_component")
         self.assertTrue(success)
         self.assertGreater(len(fallback_called), 0)
@@ -765,10 +791,14 @@ class TestHealthMonitoring(unittest.TestCase):
 
         # Record increasing metric values (trending toward failure)
         for i in range(15):
-            system.failure_detector.record_metric("test_component", "error_rate", 0.1 + i * 0.05)
+            system.failure_detector.record_metric(
+                "test_component", "error_rate", 0.1 + i * 0.05
+            )
 
         # Predict failure
-        prediction = system.failure_detector.predict_failure("test_component", "error_rate", threshold=1.0, lookback=10)
+        prediction = system.failure_detector.predict_failure(
+            "test_component", "error_rate", threshold=1.0, lookback=10
+        )
 
         self.assertIsNotNone(prediction)
         self.assertIn("steps_to_failure", prediction)

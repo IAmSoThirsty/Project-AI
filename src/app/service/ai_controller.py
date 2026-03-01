@@ -117,7 +117,9 @@ class AIController:
             # Wait for workflow to complete and get result
             result = await handle.result()
 
-            logger.info("Workflow %s completed with success=%s", workflow_id, result.success)
+            logger.info(
+                "Workflow %s completed with success=%s", workflow_id, result.success
+            )
             return result
 
         except Exception as e:
@@ -149,8 +151,16 @@ class AIController:
             return {
                 "workflow_id": workflow_id,
                 "status": description.status.name,
-                "start_time": (description.start_time.isoformat() if description.start_time else None),
-                "execution_time": (description.execution_time.isoformat() if description.execution_time else None),
+                "start_time": (
+                    description.start_time.isoformat()
+                    if description.start_time
+                    else None
+                ),
+                "execution_time": (
+                    description.execution_time.isoformat()
+                    if description.execution_time
+                    else None
+                ),
             }
 
         except Exception as e:
@@ -170,7 +180,9 @@ class AIController:
 
 
 # Convenience function for one-off requests
-async def process_ai_request(data: str, user_id: str | None = None, options: dict | None = None) -> WorkflowOutput:
+async def process_ai_request(
+    data: str, user_id: str | None = None, options: dict | None = None
+) -> WorkflowOutput:
     """
     Convenience function to process a single AI request.
 

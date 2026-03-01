@@ -6,7 +6,12 @@ Implements Codex Section 3 (Departmental Architecture)
 from typing import Dict, List, Optional, Set
 
 from app.miniature_office.core.audit import EventType, get_audit_log
-from app.miniature_office.core.entity import Entity, EntityType, RelationType, get_registry
+from app.miniature_office.core.entity import (
+    Entity,
+    EntityType,
+    RelationType,
+    get_registry,
+)
 
 
 class Department(Entity):
@@ -35,7 +40,11 @@ class Department(Entity):
         get_audit_log().log_event(
             EventType.ENTITY_CREATED,
             target_id=self.entity_id,
-            data={"entity_type": "department", "domain": domain, "toolchain": toolchain},
+            data={
+                "entity_type": "department",
+                "domain": domain,
+                "toolchain": toolchain,
+            },
         )
 
     def add_agent(self, agent):
@@ -204,7 +213,9 @@ class DepartmentRegistry:
 
     def get_departments_by_domain(self, domain: str) -> List[Department]:
         """Get all departments for a specific domain"""
-        return [d for d in self.departments.values() if d.domain.lower() == domain.lower()]
+        return [
+            d for d in self.departments.values() if d.domain.lower() == domain.lower()
+        ]
 
     def ensure_all_staffed(self):
         """Ensure all departments have all required roles filled"""

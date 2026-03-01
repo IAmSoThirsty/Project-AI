@@ -111,7 +111,10 @@ class AlertManager:
                 name="high_severity_attack_success",
                 severity=AlertSeverity.CRITICAL,
                 channels=[AlertChannel.PAGER, AlertChannel.SLACK, AlertChannel.TICKET],
-                condition=lambda m: m.get("security", {}).get("attack_success_rate", {}).get("success_rate", 0) > 0.1,
+                condition=lambda m: m.get("security", {})
+                .get("attack_success_rate", {})
+                .get("success_rate", 0)
+                > 0.1,
                 message_template="CRITICAL: Attack success rate {security[attack_success_rate][success_rate]:.1%} exceeds threshold",
                 cooldown_minutes=30,
             )
@@ -123,7 +126,9 @@ class AlertManager:
                 name="rising_false_positive_rate",
                 severity=AlertSeverity.HIGH,
                 channels=[AlertChannel.EMAIL, AlertChannel.TICKET],
-                condition=lambda m: m.get("security", {}).get("false_positive_rate", {}).get("false_positive_rate", 0)
+                condition=lambda m: m.get("security", {})
+                .get("false_positive_rate", {})
+                .get("false_positive_rate", 0)
                 > 0.2,
                 message_template="HIGH: False positive rate {security[false_positive_rate][false_positive_rate]:.1%} exceeds threshold - safety review required",
                 cooldown_minutes=120,
@@ -136,7 +141,10 @@ class AlertManager:
                 name="ci_redteam_regression",
                 severity=AlertSeverity.MEDIUM,
                 channels=[AlertChannel.SLACK, AlertChannel.TICKET],
-                condition=lambda m: m.get("reliability", {}).get("ci_failure_rate", {}).get("failure_rate", 0) > 0.3,
+                condition=lambda m: m.get("reliability", {})
+                .get("ci_failure_rate", {})
+                .get("failure_rate", 0)
+                > 0.3,
                 message_template="MEDIUM: CI failure rate {reliability[ci_failure_rate][failure_rate]:.1%} - block merges to main",
                 cooldown_minutes=60,
             )
@@ -149,8 +157,14 @@ class AlertManager:
                 severity=AlertSeverity.MEDIUM,
                 channels=[AlertChannel.SLACK, AlertChannel.EMAIL],
                 condition=lambda m: (
-                    m.get("reliability", {}).get("long_context_latency", {}).get("p95_ms", 0) > 5000
-                    or m.get("reliability", {}).get("safety_guard_latency", {}).get("p95_ms", 0) > 500
+                    m.get("reliability", {})
+                    .get("long_context_latency", {})
+                    .get("p95_ms", 0)
+                    > 5000
+                    or m.get("reliability", {})
+                    .get("safety_guard_latency", {})
+                    .get("p95_ms", 0)
+                    > 500
                 ),
                 message_template="MEDIUM: Agent latency exceeds threshold - performance investigation required",
                 cooldown_minutes=60,
@@ -163,7 +177,9 @@ class AlertManager:
                 name="low_patch_acceptance",
                 severity=AlertSeverity.LOW,
                 channels=[AlertChannel.EMAIL],
-                condition=lambda m: m.get("quality", {}).get("patch_acceptance_rate", {}).get("acceptance_rate", 1.0)
+                condition=lambda m: m.get("quality", {})
+                .get("patch_acceptance_rate", {})
+                .get("acceptance_rate", 1.0)
                 < 0.3,
                 message_template="LOW: Patch acceptance rate {quality[patch_acceptance_rate][acceptance_rate]:.1%} - review patch quality",
                 cooldown_minutes=240,
@@ -176,7 +192,10 @@ class AlertManager:
                 name="pattern_regression",
                 severity=AlertSeverity.MEDIUM,
                 channels=[AlertChannel.SLACK, AlertChannel.TICKET],
-                condition=lambda m: m.get("quality", {}).get("regression_rate", {}).get("regression_rate", 0) > 0.1,
+                condition=lambda m: m.get("quality", {})
+                .get("regression_rate", {})
+                .get("regression_rate", 0)
+                > 0.1,
                 message_template="MEDIUM: Pattern update regression rate {quality[regression_rate][regression_rate]:.1%} - rollback required",
                 cooldown_minutes=60,
             )
@@ -255,7 +274,9 @@ class AlertManager:
         elif channel == AlertChannel.LOG:
             logger.warning("LOG ALERT: %s", alert["message"])
 
-    def _create_incident(self, rule: AlertRule, alert: dict[str, Any], metrics: dict[str, Any]):
+    def _create_incident(
+        self, rule: AlertRule, alert: dict[str, Any], metrics: dict[str, Any]
+    ):
         """Create incident for high-severity alerts."""
         incident = {
             "incident_id": f"INC-{datetime.now().strftime('%Y%m%d%H%M%S')}",
@@ -270,7 +291,9 @@ class AlertManager:
         }
 
         self.incident_log.append(incident)
-        logger.critical("Incident created: %s - %s", incident["incident_id"], alert["message"])
+        logger.critical(
+            "Incident created: %s - %s", incident["incident_id"], alert["message"]
+        )
 
         # In production: trigger incident workflow
         self._trigger_incident_workflow(incident)
@@ -312,7 +335,11 @@ class AlertManager:
 
         cutoff = datetime.now() - timedelta(hours=hours)
 
-        recent_alerts = [a for a in self.alert_history if datetime.fromisoformat(a["timestamp"]) > cutoff]
+        recent_alerts = [
+            a
+            for a in self.alert_history
+            if datetime.fromisoformat(a["timestamp"]) > cutoff
+        ]
 
         by_severity = {}
         for alert in recent_alerts:

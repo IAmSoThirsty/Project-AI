@@ -150,7 +150,9 @@ class ExecutionTrace:
     final_state_hash: str = ""
     replay_hash: str = ""
 
-    def add_step(self, operation: str, operands: tuple[Any, ...] = (), result: Any = None) -> None:
+    def add_step(
+        self, operation: str, operands: tuple[Any, ...] = (), result: Any = None
+    ) -> None:
         """Record a single execution step."""
         step_id = len(self.steps)
 
@@ -165,17 +167,17 @@ class ExecutionTrace:
         else:
             prev_hash = "0" * 64
 
-        state_hash = hashlib.sha256(
-            (prev_hash + step_data).encode()
-        ).hexdigest()
+        state_hash = hashlib.sha256((prev_hash + step_data).encode()).hexdigest()
 
-        self.steps.append(ExecutionStep(
-            step_id=step_id,
-            operation=operation,
-            operands=operands,
-            result=result,
-            state_hash=state_hash,
-        ))
+        self.steps.append(
+            ExecutionStep(
+                step_id=step_id,
+                operation=operation,
+                operands=operands,
+                result=result,
+                state_hash=state_hash,
+            )
+        )
 
     def seal(self) -> str:
         """Seal the trace and compute the replay hash.
@@ -248,15 +250,17 @@ class DeterminismOracle:
         else:
             classification = DeterminismClass.NON_DETERMINISTIC
 
-        self._verification_log.append({
-            "trace_id_1": trace_1.trace_id,
-            "trace_id_2": trace_2.trace_id,
-            "hash_1": hash_1,
-            "hash_2": hash_2,
-            "classification": classification.value,
-            "steps_1": len(trace_1.steps),
-            "steps_2": len(trace_2.steps),
-        })
+        self._verification_log.append(
+            {
+                "trace_id_1": trace_1.trace_id,
+                "trace_id_2": trace_2.trace_id,
+                "hash_1": hash_1,
+                "hash_2": hash_2,
+                "classification": classification.value,
+                "steps_1": len(trace_1.steps),
+                "steps_2": len(trace_2.steps),
+            }
+        )
 
         logger.info(
             "Determinism verification: %s (h1=%s, h2=%s, steps=%d/%d)",

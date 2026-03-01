@@ -103,7 +103,9 @@ class PrivacyRiskEngine:
         }
 
         # Escalation callbacks
-        self._escalation_callbacks: dict[RiskLevel, list[Callable]] = {level: [] for level in RiskLevel}
+        self._escalation_callbacks: dict[RiskLevel, list[Callable]] = {
+            level: [] for level in RiskLevel
+        }
 
         # AI model state (simplified - in production would use actual ML)
         self._model_weights = self._initialize_model()
@@ -122,7 +124,9 @@ class PrivacyRiskEngine:
         self._active = True
 
         # Start monitoring thread
-        self._monitor_thread = threading.Thread(target=self._monitoring_loop, daemon=True)
+        self._monitor_thread = threading.Thread(
+            target=self._monitoring_loop, daemon=True
+        )
         self._monitor_thread.start()
 
         self.logger.info("Privacy Risk Engine active - AI monitoring engaged")
@@ -190,7 +194,9 @@ class PrivacyRiskEngine:
             if threat:
                 self._handle_threat(threat)
 
-    def _classify_event(self, event_type: str, source: str, metadata: dict[str, Any]) -> ThreatEvent | None:
+    def _classify_event(
+        self, event_type: str, source: str, metadata: dict[str, Any]
+    ) -> ThreatEvent | None:
         """Classify event as potential threat using AI model"""
 
         # Check for known threat patterns
@@ -251,14 +257,20 @@ class PrivacyRiskEngine:
             current_time = time.time()
 
             # Calculate request rate (requests per minute)
-            recent_requests = [ts for ts in self._metrics["request_rate"] if current_time - ts < 60.0]
+            recent_requests = [
+                ts for ts in self._metrics["request_rate"] if current_time - ts < 60.0
+            ]
             request_rate = len(recent_requests)
 
             # Calculate data volume
             sum(size for size in list(self._metrics["data_volume"])[-60:])
 
             # Calculate active connections
-            recent_connections = [ts for ts in self._metrics["connection_count"] if current_time - ts < 60.0]
+            recent_connections = [
+                ts
+                for ts in self._metrics["connection_count"]
+                if current_time - ts < 60.0
+            ]
             connection_count = len(recent_connections)
 
             # Update behavior profile
@@ -273,9 +285,13 @@ class PrivacyRiskEngine:
 
             # Check request rate anomaly
             if len(self._behavior_profile.request_patterns) > 10:
-                avg_rate = sum(self._behavior_profile.request_patterns) / len(self._behavior_profile.request_patterns)
+                avg_rate = sum(self._behavior_profile.request_patterns) / len(
+                    self._behavior_profile.request_patterns
+                )
                 current_rate = (
-                    list(self._behavior_profile.request_patterns)[-1] if self._behavior_profile.request_patterns else 0
+                    list(self._behavior_profile.request_patterns)[-1]
+                    if self._behavior_profile.request_patterns
+                    else 0
                 )
 
                 if current_rate > avg_rate * 3:  # 3x normal rate
@@ -322,7 +338,9 @@ class PrivacyRiskEngine:
             current_time = time.time()
 
             # Calculate risk based on recent threats (last 5 minutes)
-            recent_threats = [t for t in self._threat_events if current_time - t.timestamp < 300.0]
+            recent_threats = [
+                t for t in self._threat_events if current_time - t.timestamp < 300.0
+            ]
 
             if not recent_threats:
                 new_level = RiskLevel.MINIMAL
@@ -331,7 +349,11 @@ class PrivacyRiskEngine:
                 max_risk = max(t.risk_level.value for t in recent_threats)
 
                 # Count critical threats
-                critical_count = sum(1 for t in recent_threats if t.risk_level.value >= RiskLevel.CRITICAL.value)
+                critical_count = sum(
+                    1
+                    for t in recent_threats
+                    if t.risk_level.value >= RiskLevel.CRITICAL.value
+                )
 
                 if critical_count >= 3:
                     new_level = RiskLevel.EXTREME
@@ -343,7 +365,9 @@ class PrivacyRiskEngine:
                 old_level = self._current_risk_level
                 self._current_risk_level = new_level
 
-                self.logger.warning("Risk level escalated: %s -> %s", old_level.name, new_level.name)
+                self.logger.warning(
+                    "Risk level escalated: %s -> %s", old_level.name, new_level.name
+                )
 
                 # Trigger escalation callbacks
                 self._trigger_escalation_callbacks(new_level)
@@ -355,7 +379,9 @@ class PrivacyRiskEngine:
 
     def _escalate_hardening(self, threat: ThreatEvent):
         """Escalate system hardening in response to threat"""
-        self.logger.warning("Auto-escalating hardening for %s", threat.threat_type.value)
+        self.logger.warning(
+            "Auto-escalating hardening for %s", threat.threat_type.value
+        )
 
         # Trigger hardening based on threat type
         if threat.threat_type == ThreatType.NETWORK_ATTACK:
@@ -411,7 +437,9 @@ class PrivacyRiskEngine:
         """Get summary of recent threats"""
         with self._lock:
             current_time = time.time()
-            recent_threats = [t for t in self._threat_events if current_time - t.timestamp < 300.0]
+            recent_threats = [
+                t for t in self._threat_events if current_time - t.timestamp < 300.0
+            ]
 
             threat_counts = {}
             for threat in recent_threats:
@@ -453,9 +481,13 @@ class PrivacyRiskEngine:
             self._metrics["failed_auth_attempts"] = 0
             self._metrics["suspicious_patterns"] = 0
 
-            self.logger.info("Risk level manually reset from %s to MINIMAL", old_level.name)
+            self.logger.info(
+                "Risk level manually reset from %s to MINIMAL", old_level.name
+            )
 
-    def learn_from_event(self, event_type: str, metadata: dict[str, Any], is_threat: bool):
+    def learn_from_event(
+        self, event_type: str, metadata: dict[str, Any], is_threat: bool
+    ):
         """
         Learn from classified events to improve detection (online learning).
         In production, this would update ML model weights.
@@ -466,6 +498,10 @@ class PrivacyRiskEngine:
                 # Increase weight for this event type
                 weight_key = f"{event_type}_weight"
                 if weight_key in self._model_weights:
-                    self._model_weights[weight_key] = min(1.0, self._model_weights[weight_key] * 1.1)
+                    self._model_weights[weight_key] = min(
+                        1.0, self._model_weights[weight_key] * 1.1
+                    )
 
-            self.logger.debug("Model updated from event: %s (threat: %s)", event_type, is_threat)
+            self.logger.debug(
+                "Model updated from event: %s (threat: %s)", event_type, is_threat
+            )

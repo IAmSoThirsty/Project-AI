@@ -65,7 +65,9 @@ class VerifierAgent(KernelRoutedAgent):
         worker = Path(__file__).parent.parent / "agents" / "sandbox_worker.py"
         # Use ProcessPoolExecutor to call run_module by import
         try:
-            future = self.executor.submit(self._call_worker_run, str(worker), str(Path(module_path).resolve()))
+            future = self.executor.submit(
+                self._call_worker_run, str(worker), str(Path(module_path).resolve())
+            )
             return future.result(timeout=self.timeout)
         except TimeoutError:
             logger.exception("Sandbox execution timed out for %s", module_path)
@@ -173,7 +175,9 @@ class GateGuardian:
         with self.lock:
             if file_path in self.quarantine:
                 del self.quarantine[file_path]
-                logger.info("Gate %s released %s from quarantine", self.gate_id, file_path)
+                logger.info(
+                    "Gate %s released %s from quarantine", self.gate_id, file_path
+                )
 
 
 class WatchTower:
@@ -184,7 +188,9 @@ class WatchTower:
         self.attack_counts: dict[str, int] = {}
 
     def receive_report(self, gate_id: str, box: QuarantineBox) -> None:
-        logger.info("WatchTower %s received report from gate %s", self.tower_id, gate_id)
+        logger.info(
+            "WatchTower %s received report from gate %s", self.tower_id, gate_id
+        )
         self.reports.append(box)
         # Evaluate report & escalate if necessary
         src = box.metadata.get("sandbox", {}).get("source") if box.metadata else None
@@ -206,7 +212,9 @@ class WatchTower:
             self.port_admin.notify_incident(self.tower_id, gate_id, box)
 
     def signal_emergency(self, gate_id: str) -> None:
-        logger.critical("WatchTower %s: emergency signaled by gate %s", self.tower_id, gate_id)
+        logger.critical(
+            "WatchTower %s: emergency signaled by gate %s", self.tower_id, gate_id
+        )
         self.port_admin.handle_emergency(self.tower_id, gate_id)
 
 
@@ -224,7 +232,9 @@ class PortAdmin:
             gate_id,
         )
         # create incident report and pass to Cerberus
-        self.command_center.record_incident({"tower": tower_id, "gate": gate_id, "box": box.to_dict()})
+        self.command_center.record_incident(
+            {"tower": tower_id, "gate": gate_id, "box": box.to_dict()}
+        )
 
     def handle_emergency(self, tower_id: str, gate_id: str) -> None:
         logger.critical(
@@ -298,7 +308,9 @@ class Cerberus:
                 self.security_agents[agent_type].append(agent_id)
                 logger.info("Cerberus registered %s agent: %s", agent_type, agent_id)
         else:
-            logger.warning("Unknown agent type '%s' for agent '%s'", agent_type, agent_id)
+            logger.warning(
+                "Unknown agent type '%s' for agent '%s'", agent_type, agent_id
+            )
 
     def get_security_status(self) -> dict[str, Any]:
         """Get comprehensive security status report.
@@ -309,7 +321,10 @@ class Cerberus:
         return {
             "chief_of_security": "Cerberus",
             "total_incidents": len(self.incidents),
-            "registered_agents": {agent_type: len(agents) for agent_type, agents in self.security_agents.items()},
+            "registered_agents": {
+                agent_type: len(agents)
+                for agent_type, agents in self.security_agents.items()
+            },
             "agent_details": self.security_agents,
         }
 

@@ -54,7 +54,9 @@ class Symbol:
     definition_line: int
     definition_col: int
     scope_id: str
-    references: List[tuple[int, int]] = field(default_factory=list)  # List of (line, col)
+    references: List[tuple[int, int]] = field(
+        default_factory=list
+    )  # List of (line, col)
     inferred_type: Optional[str] = None
     is_mutated: bool = False
     is_exported: bool = False

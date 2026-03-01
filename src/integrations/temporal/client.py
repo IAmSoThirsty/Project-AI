@@ -47,7 +47,9 @@ class TemporalClient:
         """
         self.host = host or os.getenv("TEMPORAL_HOST", "localhost:7233")
         self.namespace = namespace or os.getenv("TEMPORAL_NAMESPACE", "default")
-        self.task_queue = task_queue or os.getenv("TEMPORAL_TASK_QUEUE", "project-ai-tasks")
+        self.task_queue = task_queue or os.getenv(
+            "TEMPORAL_TASK_QUEUE", "project-ai-tasks"
+        )
         self._client: Client | None = None
 
     async def connect(self) -> Client:
@@ -64,7 +66,9 @@ class TemporalClient:
             return self._client
 
         try:
-            logger.info("Connecting to Temporal at %s, namespace=%s", self.host, self.namespace)
+            logger.info(
+                "Connecting to Temporal at %s, namespace=%s", self.host, self.namespace
+            )
             self._client = await Client.connect(
                 self.host,
                 namespace=self.namespace,

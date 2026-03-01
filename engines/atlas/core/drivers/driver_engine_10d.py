@@ -21,7 +21,6 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-
 from atlas.audit.trail import AuditCategory, AuditLevel, get_audit_trail
 from atlas.config.loader import get_config_loader
 

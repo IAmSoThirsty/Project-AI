@@ -30,11 +30,15 @@ class AuditRequest(BaseModel):
     """Request model for starting an audit."""
 
     repo_path: str = Field(..., description="Path to repository root")
-    output_dir: str | None = Field(None, description="Output directory for reports (optional)")
+    output_dir: str | None = Field(
+        None, description="Output directory for reports (optional)"
+    )
     enable_lint: bool = Field(True, description="Enable lint checking")
     enable_quality: bool = Field(True, description="Enable quality analysis")
     enable_integrity: bool = Field(True, description="Enable integrity checking")
-    generate_reports: bool = Field(True, description="Generate machine-readable reports")
+    generate_reports: bool = Field(
+        True, description="Generate machine-readable reports"
+    )
     generate_catalog: bool = Field(True, description="Generate markdown catalog")
 
 
@@ -136,17 +140,27 @@ async def get_audit_results(audit_id: str):
 
     # Extract summary info
     overall_assessment = results.overall_assessment or {}
-    inspection_stats = results.inspection.get("statistics", {}) if results.inspection else {}
-    integrity_stats = results.integrity.get("statistics", {}) if results.integrity else {}
+    inspection_stats = (
+        results.inspection.get("statistics", {}) if results.inspection else {}
+    )
+    integrity_stats = (
+        results.integrity.get("statistics", {}) if results.integrity else {}
+    )
     lint_summary = results.lint.get("summary", {}) if results.lint else {}
 
     statistics = {
         "files_analyzed": inspection_stats.get("total_files", 0),
         "lines_of_code": inspection_stats.get("total_lines", 0),
-        "components": (len(results.inspection.get("components", {})) if results.inspection else 0),
+        "components": (
+            len(results.inspection.get("components", {})) if results.inspection else 0
+        ),
         "dependencies": integrity_stats.get("total_dependencies", 0),
         "integrity_issues": integrity_stats.get("total_issues", 0),
-        "circular_dependencies": (len(results.integrity.get("circular_dependencies", [])) if results.integrity else 0),
+        "circular_dependencies": (
+            len(results.integrity.get("circular_dependencies", []))
+            if results.integrity
+            else 0
+        ),
         "lint_issues": lint_summary.get("total_issues", 0),
         "lint_errors": lint_summary.get("issues_by_severity", {}).get("error", 0),
     }
@@ -166,7 +180,9 @@ async def get_audit_results(audit_id: str):
 
 
 @router.get("/reports", response_model=ReportListResponse)
-async def list_reports(output_dir: str = Query("audit_reports", description="Reports output directory")):
+async def list_reports(
+    output_dir: str = Query("audit_reports", description="Reports output directory")
+):
     """
     List all available audit reports.
 
@@ -187,7 +203,9 @@ async def list_reports(output_dir: str = Query("audit_reports", description="Rep
                     "path": str(file_path),
                     "type": file_path.suffix[1:],
                     "size_bytes": file_path.stat().st_size,
-                    "modified": datetime.fromtimestamp(file_path.stat().st_mtime).isoformat(),
+                    "modified": datetime.fromtimestamp(
+                        file_path.stat().st_mtime
+                    ).isoformat(),
                 }
             )
 

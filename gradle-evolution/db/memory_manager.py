@@ -413,10 +413,12 @@ class MemoryManager:
         """Rebuild all database indexes."""
         with self.db.get_connection() as conn:
             try:
-                cursor = conn.execute("""
+                cursor = conn.execute(
+                    """
                     SELECT name FROM sqlite_master
                     WHERE type = 'index' AND sql IS NOT NULL
-                """)
+                """
+                )
                 indexes = [row[0] for row in cursor.fetchall()]
 
                 for index in indexes:

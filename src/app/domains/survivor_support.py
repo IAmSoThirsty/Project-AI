@@ -66,7 +66,9 @@ class SurvivorSupportSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
         try:
             self._load_state()
             self._processing_active = True
-            self._processing_thread = threading.Thread(target=self._processing_loop, daemon=True)
+            self._processing_thread = threading.Thread(
+                target=self._processing_loop, daemon=True
+            )
             self._processing_thread.start()
             self._initialized = True
             return True
@@ -139,7 +141,9 @@ class SurvivorSupportSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
         with self._subscription_lock:
             for event_type in self._subscriptions:
                 self._subscriptions[event_type] = [
-                    (sid, cb) for sid, cb in self._subscriptions[event_type] if sid != subscription_id
+                    (sid, cb)
+                    for sid, cb in self._subscriptions[event_type]
+                    if sid != subscription_id
                 ]
             return True
 

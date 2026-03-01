@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Autonomous Negotiation Agent Infrastructure
+  namespace: default
+  labels:
+    app: Autonomous Negotiation Agent Infrastructure
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Autonomous Negotiation Agent Infrastructure
+  sessionAffinity: None

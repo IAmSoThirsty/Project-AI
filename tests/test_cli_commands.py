@@ -101,7 +101,11 @@ class TestUserCommands:
         """user info for nonexistent user should fail gracefully."""
         result = runner.invoke(app, ["user", "info", "nonexistent_test_user_xyz"])
         # Should exit with code 1 or produce error message
-        assert result.exit_code == 1 or "not found" in result.output.lower() or "error" in result.output.lower()
+        assert (
+            result.exit_code == 1
+            or "not found" in result.output.lower()
+            or "error" in result.output.lower()
+        )
 
 
 # ── Memory commands ────────────────────────────────────────────

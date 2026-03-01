@@ -102,12 +102,16 @@ class TestWorldBankDataSource:
         mock_get.return_value = mock_response
 
         # First call - should hit API
-        result1 = data_source.fetch_with_retry("https://api.test.com", {"param": "value"})
+        result1 = data_source.fetch_with_retry(
+            "https://api.test.com", {"param": "value"}
+        )
         assert result1 == {"data": "test"}
         assert mock_get.call_count == 1
 
         # Second call - should use cache
-        result2 = data_source.fetch_with_retry("https://api.test.com", {"param": "value"})
+        result2 = data_source.fetch_with_retry(
+            "https://api.test.com", {"param": "value"}
+        )
         assert result2 == {"data": "test"}
         assert mock_get.call_count == 1  # Not called again
 
@@ -144,7 +148,9 @@ class TestACLEDDataSource:
 
     def test_fallback_data_generation(self, data_source):
         """Test synthetic fallback data generation."""
-        events = data_source._generate_fallback_conflict_data("2020-01-01", "2020-12-31", ["Syria", "Yemen"])
+        events = data_source._generate_fallback_conflict_data(
+            "2020-01-01", "2020-12-31", ["Syria", "Yemen"]
+        )
 
         assert len(events) > 0
         assert all(e["country"] in ["Syria", "Yemen"] for e in events)
@@ -154,7 +160,9 @@ class TestACLEDDataSource:
     @patch.dict("os.environ", {}, clear=True)
     def test_fetch_without_credentials(self, data_source):
         """Test graceful fallback when credentials missing."""
-        events = data_source.fetch_conflict_events("2020-01-01", "2020-12-31", ["Syria"])
+        events = data_source.fetch_conflict_events(
+            "2020-01-01", "2020-12-31", ["Syria"]
+        )
 
         # Should return fallback data
         assert len(events) > 0
@@ -270,7 +278,8 @@ class TestGlobalScenarioEngine:
         econ_to_unemp = [
             link
             for link in links
-            if link.source == RiskDomain.ECONOMIC.value and link.target == RiskDomain.UNEMPLOYMENT.value
+            if link.source == RiskDomain.ECONOMIC.value
+            and link.target == RiskDomain.UNEMPLOYMENT.value
         ]
         assert len(econ_to_unemp) > 0
         assert econ_to_unemp[0].strength > 0

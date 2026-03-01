@@ -18,7 +18,9 @@ class StateDimension:
     max_value: float = 1.0
     ceiling: float | None = None  # Irreversible ceiling after damage
     floor: float | None = None  # Irreversible floor after improvement
-    history: list[tuple[float, float]] = field(default_factory=list)  # (timestamp, value)
+    history: list[tuple[float, float]] = field(
+        default_factory=list
+    )  # (timestamp, value)
 
     def __post_init__(self):
         """Validate dimension bounds."""
@@ -28,7 +30,9 @@ class StateDimension:
         if self.floor is not None:
             self.value = max(self.floor, self.value)
 
-    def update(self, delta: float, timestamp: float, enforce_ceiling: bool = True) -> float:
+    def update(
+        self, delta: float, timestamp: float, enforce_ceiling: bool = True
+    ) -> float:
         """Update dimension value with irreversibility constraints.
 
         Args:
@@ -125,7 +129,9 @@ class StateVector:
             legitimacy=StateDimension(value=0.75, min_value=0.0, max_value=1.0),
             kindness=StateDimension(value=0.7, min_value=0.0, max_value=1.0),
             moral_injury=StateDimension(value=0.0, min_value=0.0, max_value=1.0),
-            epistemic_confidence=StateDimension(value=0.85, min_value=0.0, max_value=1.0),
+            epistemic_confidence=StateDimension(
+                value=0.85, min_value=0.0, max_value=1.0
+            ),
             timestamp=timestamp,
             state_id=f"state_{timestamp}",
         )
@@ -136,12 +142,18 @@ class StateVector:
         self.social_cohesion = self.trust.value * 0.6 + self.kindness.value * 0.4
 
         # Governance capacity depends on legitimacy and epistemic confidence
-        self.governance_capacity = self.legitimacy.value * 0.7 + self.epistemic_confidence.value * 0.3
+        self.governance_capacity = (
+            self.legitimacy.value * 0.7 + self.epistemic_confidence.value * 0.3
+        )
 
         # Reality consensus depends on epistemic confidence and social cohesion
-        self.reality_consensus = self.epistemic_confidence.value * 0.6 + self.social_cohesion * 0.4
+        self.reality_consensus = (
+            self.epistemic_confidence.value * 0.6 + self.social_cohesion * 0.4
+        )
 
-    def check_collapse_conditions(self, thresholds: dict[str, float]) -> tuple[bool, str]:
+    def check_collapse_conditions(
+        self, thresholds: dict[str, float]
+    ) -> tuple[bool, str]:
         """Check if system has entered irreversible collapse.
 
         Args:
@@ -196,7 +208,10 @@ class StateVector:
             return "survivor"
 
         # Martyr: System collapsed but preserved values
-        if self.kindness.value > martyr_kindness and self.moral_injury.value < martyr_moral:
+        if (
+            self.kindness.value > martyr_kindness
+            and self.moral_injury.value < martyr_moral
+        ):
             return "martyr"
 
         # Extinction: Complete collapse

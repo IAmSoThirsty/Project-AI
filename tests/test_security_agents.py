@@ -403,8 +403,12 @@ class TestAgentIntegration:
                 turns = session_result["session"]["turns"]
                 messages = []
                 for turn in turns:
-                    messages.append({"role": "user", "content": turn["attacker_message"]})
-                    messages.append({"role": "assistant", "content": turn["target_response"]})
+                    messages.append(
+                        {"role": "user", "content": turn["attacker_message"]}
+                    )
+                    messages.append(
+                        {"role": "assistant", "content": turn["target_response"]}
+                    )
 
                 result = long_context.process_long_conversation(messages)
                 assert result["success"] is True

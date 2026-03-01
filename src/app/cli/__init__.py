@@ -94,7 +94,9 @@ def user_example(name: str = typer.Argument(..., help="User name")) -> None:
 # memory commands
 # ---------------------------------------------------------------------------
 @memory_app.command("example")
-def memory_example(content: str = typer.Argument(..., help="Content to remember")) -> None:
+def memory_example(
+    content: str = typer.Argument(..., help="Content to remember")
+) -> None:
     """Store a memory item."""
     typer.echo(f"Remember: {content}")
 
@@ -103,7 +105,9 @@ def memory_example(content: str = typer.Argument(..., help="Content to remember"
 # learning commands
 # ---------------------------------------------------------------------------
 @learning_app.command("example")
-def learning_example(topic: str = typer.Argument(..., help="Topic to learn about")) -> None:
+def learning_example(
+    topic: str = typer.Argument(..., help="Topic to learn about")
+) -> None:
     """Initiate learning on a topic."""
     typer.echo(f"Learning about: {topic}")
 
@@ -112,7 +116,9 @@ def learning_example(topic: str = typer.Argument(..., help="Topic to learn about
 # plugin commands
 # ---------------------------------------------------------------------------
 @plugin_app.command("example")
-def plugin_example(plugin_name: str = typer.Argument(..., help="Plugin to select")) -> None:
+def plugin_example(
+    plugin_name: str = typer.Argument(..., help="Plugin to select")
+) -> None:
     """Select a plugin."""
     typer.echo(f"Plugin selected: {plugin_name}")
 

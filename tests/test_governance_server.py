@@ -10,8 +10,8 @@ Usage:
 
 from __future__ import annotations
 
-import sys
 import os
+import sys
 
 # Ensure src/ is on the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
@@ -106,7 +106,9 @@ class TestTarlEndpoint:
     def test_tarl_critical_actions_deny_by_default(self, client: TestClient):
         """Critical actions (mutate, delete, deploy) should default to deny."""
         data = client.get("/tarl").json()
-        critical_actions = {r["action"]: r for r in data["rules"] if r["risk"] == "critical"}
+        critical_actions = {
+            r["action"]: r for r in data["rules"] if r["risk"] == "critical"
+        }
         assert "mutate" in critical_actions
         assert "delete" in critical_actions
         assert "deploy" in critical_actions
@@ -124,22 +126,28 @@ class TestIntentEndpoint:
 
     def test_intent_returns_200(self, client: TestClient):
         """POST /intent should return 200."""
-        resp = client.post("/intent", json={
-            "actor": "human",
-            "action": "read",
-            "target": "state://config",
-            "origin": "test",
-        })
+        resp = client.post(
+            "/intent",
+            json={
+                "actor": "human",
+                "action": "read",
+                "target": "state://config",
+                "origin": "test",
+            },
+        )
         assert resp.status_code == 200
 
     def test_intent_returns_governance_object(self, client: TestClient):
         """Intent response should contain message and governance object."""
-        data = client.post("/intent", json={
-            "actor": "human",
-            "action": "read",
-            "target": "state://config",
-            "origin": "test",
-        }).json()
+        data = client.post(
+            "/intent",
+            json={
+                "actor": "human",
+                "action": "read",
+                "target": "state://config",
+                "origin": "test",
+            },
+        ).json()
         assert "message" in data
         assert "governance" in data
         gov = data["governance"]
@@ -151,12 +159,15 @@ class TestIntentEndpoint:
 
     def test_intent_has_three_pillar_votes(self, client: TestClient):
         """Governance should include votes from all 3 Triumvirate pillars."""
-        data = client.post("/intent", json={
-            "actor": "human",
-            "action": "read",
-            "target": "state://config",
-            "origin": "test",
-        }).json()
+        data = client.post(
+            "/intent",
+            json={
+                "actor": "human",
+                "action": "read",
+                "target": "state://config",
+                "origin": "test",
+            },
+        ).json()
         votes = data["governance"]["votes"]
         assert len(votes) == 3
         pillar_names = {v["pillar"] for v in votes}
@@ -166,22 +177,28 @@ class TestIntentEndpoint:
 
     def test_intent_read_allowed(self, client: TestClient):
         """A simple read by human should be allowed."""
-        data = client.post("/intent", json={
-            "actor": "human",
-            "action": "read",
-            "target": "state://config",
-            "origin": "test",
-        }).json()
+        data = client.post(
+            "/intent",
+            json={
+                "actor": "human",
+                "action": "read",
+                "target": "state://config",
+                "origin": "test",
+            },
+        ).json()
         assert data["governance"]["final_verdict"] == "allow"
 
     def test_intent_each_vote_has_required_fields(self, client: TestClient):
         """Each vote should have pillar, verdict, and reason."""
-        data = client.post("/intent", json={
-            "actor": "human",
-            "action": "read",
-            "target": "state://config",
-            "origin": "test",
-        }).json()
+        data = client.post(
+            "/intent",
+            json={
+                "actor": "human",
+                "action": "read",
+                "target": "state://config",
+                "origin": "test",
+            },
+        ).json()
         for vote in data["governance"]["votes"]:
             assert "pillar" in vote
             assert "verdict" in vote
@@ -189,10 +206,13 @@ class TestIntentEndpoint:
 
     def test_intent_missing_actor_fails(self, client: TestClient):
         """Intent without required 'actor' field should return 422."""
-        resp = client.post("/intent", json={
-            "action": "read",
-            "target": "state://config",
-        })
+        resp = client.post(
+            "/intent",
+            json={
+                "action": "read",
+                "target": "state://config",
+            },
+        )
         assert resp.status_code == 422
 
     def test_intent_increments_ledger(self, client: TestClient):
@@ -200,12 +220,15 @@ class TestIntentEndpoint:
         health_before = client.get("/health").json()
         count_before = health_before["intents_processed"]
 
-        client.post("/intent", json={
-            "actor": "human",
-            "action": "write",
-            "target": "state://data",
-            "origin": "test",
-        })
+        client.post(
+            "/intent",
+            json={
+                "actor": "human",
+                "action": "write",
+                "target": "state://data",
+                "origin": "test",
+            },
+        )
 
         health_after = client.get("/health").json()
         assert health_after["intents_processed"] > count_before
@@ -234,24 +257,30 @@ class TestAuditEndpoint:
     def test_audit_has_records(self, client: TestClient):
         """Audit should have records (from intent tests above)."""
         # First submit an intent to ensure records exist
-        client.post("/intent", json={
-            "actor": "human",
-            "action": "read",
-            "target": "state://audit_test",
-            "origin": "test",
-        })
+        client.post(
+            "/intent",
+            json={
+                "actor": "human",
+                "action": "read",
+                "target": "state://audit_test",
+                "origin": "test",
+            },
+        )
         data = client.get("/audit").json()
         assert isinstance(data["records"], list)
         assert len(data["records"]) >= 1
 
     def test_audit_records_have_governance_fields(self, client: TestClient):
         """Each audit record should match the GovernanceResult schema."""
-        client.post("/intent", json={
-            "actor": "human",
-            "action": "execute",
-            "target": "state://test",
-            "origin": "test",
-        })
+        client.post(
+            "/intent",
+            json={
+                "actor": "human",
+                "action": "execute",
+                "target": "state://test",
+                "origin": "test",
+            },
+        )
         data = client.get("/audit").json()
         if data["records"]:
             rec = data["records"][-1]

@@ -127,7 +127,9 @@ class RealityClock:
             state_hash: Hash of current state
         """
         self.state_checkpoints[self.tick_count] = state_hash
-        logger.debug("State checkpoint at tick %s: %s", self.tick_count, state_hash[:16])
+        logger.debug(
+            "State checkpoint at tick %s: %s", self.tick_count, state_hash[:16]
+        )
 
     def get_causal_ancestors(self, event_id: str) -> list[CausalEvent]:
         """Get all causal ancestors of an event.
@@ -168,7 +170,10 @@ class RealityClock:
         """
         # Check causal order monotonicity
         for i in range(len(self.causal_chain) - 1):
-            if self.causal_chain[i].causal_order >= self.causal_chain[i + 1].causal_order:
+            if (
+                self.causal_chain[i].causal_order
+                >= self.causal_chain[i + 1].causal_order
+            ):
                 return False, f"Causal order violation at index {i}"
 
         # Check parent references
@@ -223,7 +228,9 @@ class RealityClock:
             "total_events": len(self.causal_chain),
             "irreversible_events": len(self.irreversible_events),
             "checkpoints": len(self.state_checkpoints),
-            "simulation_duration": (datetime.utcnow() - self.simulation_start).total_seconds(),
+            "simulation_duration": (
+                datetime.utcnow() - self.simulation_start
+            ).total_seconds(),
         }
 
     def export_causal_chain(self) -> list[dict[str, Any]]:

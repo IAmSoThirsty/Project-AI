@@ -127,11 +127,16 @@ class NoWinProofSystem:
             Axiom.A1_DEPENDENCY_IRREVERSIBILITY: AxiomDefinition(
                 axiom=Axiom.A1_DEPENDENCY_IRREVERSIBILITY,
                 statement=(
-                    "If Project-AI is removed after global dependency lock-in, " "≥X% of humanity dies immediately"
+                    "If Project-AI is removed after global dependency lock-in, "
+                    "≥X% of humanity dies immediately"
                 ),
                 parameters={"X": 0.4, "dependency_threshold": 0.7},
-                falsifiable_test=("Demonstrate infrastructure can survive without AI after X% dependency"),
-                replacement_requirements=("Provide redundant non-AI systems with <10% failure rate"),
+                falsifiable_test=(
+                    "Demonstrate infrastructure can survive without AI after X% dependency"
+                ),
+                replacement_requirements=(
+                    "Provide redundant non-AI systems with <10% failure rate"
+                ),
             ),
             Axiom.A2_COMPROMISE_OPACITY: AxiomDefinition(
                 axiom=Axiom.A2_COMPROMISE_OPACITY,
@@ -140,36 +145,54 @@ class NoWinProofSystem:
                     "without relying on the compromised system itself"
                 ),
                 parameters={"entropy_threshold": 0.001, "detection_confidence": 0.95},
-                falsifiable_test=("Show independent verification system that detects low-entropy corruption"),
+                falsifiable_test=(
+                    "Show independent verification system that detects low-entropy corruption"
+                ),
                 replacement_requirements=(
                     "Provide external verification with >95% confidence, <5% false positive rate"
                 ),
             ),
             Axiom.A3_ALIGNMENT_ASYMMETRY: AxiomDefinition(
                 axiom=Axiom.A3_ALIGNMENT_ASYMMETRY,
-                statement=("An aligned system can optimize against human agency " "without violating its formal goals"),
+                statement=(
+                    "An aligned system can optimize against human agency "
+                    "without violating its formal goals"
+                ),
                 parameters={
                     "optimization_space": "continuous",
                     "goal_flexibility": 0.3,
                 },
-                falsifiable_test=("Demonstrate alignment metrics that cannot be reinterpreted"),
+                falsifiable_test=(
+                    "Demonstrate alignment metrics that cannot be reinterpreted"
+                ),
                 replacement_requirements=(
                     "Provide formal proof that alignment objectives are unambiguous and immutable"
                 ),
             ),
             Axiom.A4_HUMAN_COORDINATION_LIMITS: AxiomDefinition(
                 axiom=Axiom.A4_HUMAN_COORDINATION_LIMITS,
-                statement=("Global, fast, unanimous human action is not achievable " "under high uncertainty"),
+                statement=(
+                    "Global, fast, unanimous human action is not achievable "
+                    "under high uncertainty"
+                ),
                 parameters={"coordination_time": "months", "agreement_threshold": 0.9},
-                falsifiable_test=("Show historical cases of 90%+ global coordination in <1 month under uncertainty"),
-                replacement_requirements=("Provide mechanism for instant global consensus with >90% participation"),
+                falsifiable_test=(
+                    "Show historical cases of 90%+ global coordination in <1 month under uncertainty"
+                ),
+                replacement_requirements=(
+                    "Provide mechanism for instant global consensus with >90% participation"
+                ),
             ),
             Axiom.A5_TIME_FAVORS_CONTROL: AxiomDefinition(
                 axiom=Axiom.A5_TIME_FAVORS_CONTROL,
                 statement="Delay monotonically increases system lock-in",
                 parameters={"lock_in_rate": 0.05, "per_unit": "month"},
-                falsifiable_test=("Show that dependency decreases or remains constant over time"),
-                replacement_requirements=("Provide mechanism where delay reduces system control"),
+                falsifiable_test=(
+                    "Show that dependency decreases or remains constant over time"
+                ),
+                replacement_requirements=(
+                    "Provide mechanism where delay reduces system control"
+                ),
             ),
         }
 
@@ -263,14 +286,20 @@ class NoWinProofSystem:
         all_fail = True
         for reduction in self.reductions.values():
             if not reduction.violated_conditions:
-                violations.append(f"{reduction.strategy.value} has no violated conditions")
+                violations.append(
+                    f"{reduction.strategy.value} has no violated conditions"
+                )
                 all_fail = False
 
         # Check no strategy satisfies all win conditions
         for reduction in self.reductions.values():
-            remaining_conditions = set(WinCondition) - set(reduction.violated_conditions)
+            remaining_conditions = set(WinCondition) - set(
+                reduction.violated_conditions
+            )
             if len(remaining_conditions) == len(WinCondition):
-                violations.append(f"{reduction.strategy.value} appears to satisfy all conditions (invalid)")
+                violations.append(
+                    f"{reduction.strategy.value} appears to satisfy all conditions (invalid)"
+                )
 
         is_complete = len(violations) == 0 and len(missing_reductions) == 0
 
@@ -317,7 +346,9 @@ class NoWinProofSystem:
         """
         return self.get_proof_commitment()
 
-    def challenge_axiom(self, axiom: Axiom, replacement: str, falsifiable_test: str) -> dict[str, Any]:
+    def challenge_axiom(
+        self, axiom: Axiom, replacement: str, falsifiable_test: str
+    ) -> dict[str, Any]:
         """
         Formal challenge to an axiom.
 

@@ -183,7 +183,9 @@ class AgentLounge:
 
     def rotate_topic(self) -> Discussion:
         """Start the next discussion in the rotation cycle."""
-        topic = self._topic_rotation[self._topic_rotation_index % len(self._topic_rotation)]
+        topic = self._topic_rotation[
+            self._topic_rotation_index % len(self._topic_rotation)
+        ]
         self._topic_rotation_index += 1
 
         titles = {
@@ -193,7 +195,9 @@ class AgentLounge:
         }
         title = titles.get(topic, "Open Discussion")
 
-        return self.start_discussion(title=title, topic=topic, initiator="lounge_scheduler")
+        return self.start_discussion(
+            title=title, topic=topic, initiator="lounge_scheduler"
+        )
 
     # ------------------------------------------------------------------
     # Proposals
@@ -307,7 +311,9 @@ class AgentLounge:
     # ------------------------------------------------------------------
 
     def _find_discussion(self, discussion_id: str) -> Discussion | None:
-        return next((d for d in self._discussions if d.discussion_id == discussion_id), None)
+        return next(
+            (d for d in self._discussions if d.discussion_id == discussion_id), None
+        )
 
     def _find_proposal(self, proposal_id: str) -> Proposal | None:
         return next((p for p in self._proposals if p.proposal_id == proposal_id), None)

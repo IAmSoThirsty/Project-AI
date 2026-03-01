@@ -68,11 +68,15 @@ class TestRAGSystem:
 
         # Create sample documents
         doc1 = kb_dir / "company_info.txt"
-        doc1.write_text("Peter Gibbons is the CEO of Initech. " "The company specializes in software development.")
+        doc1.write_text(
+            "Peter Gibbons is the CEO of Initech. "
+            "The company specializes in software development."
+        )
 
         doc2 = kb_dir / "projects.md"
         doc2.write_text(
-            "The TPS report project has a deadline of Q4 2025. " "This is a critical project for the company."
+            "The TPS report project has a deadline of Q4 2025. "
+            "This is a critical project for the company."
         )
 
         doc3 = kb_dir / "team.txt"
@@ -102,7 +106,9 @@ class TestRAGSystem:
     def test_ingest_text(self, rag_system):
         """Test ingesting a single text document."""
         text = "This is a test document about artificial intelligence."
-        num_chunks = rag_system.ingest_text(text, "test_doc.txt", metadata={"category": "test"})
+        num_chunks = rag_system.ingest_text(
+            text, "test_doc.txt", metadata={"category": "test"}
+        )
 
         assert num_chunks >= 1
         assert len(rag_system.chunks) == num_chunks
@@ -216,7 +222,9 @@ class TestRAGSystem:
             "category": "documentation",
         }
 
-        rag_system.ingest_text("Test document", "meta_test.txt", metadata=custom_metadata)
+        rag_system.ingest_text(
+            "Test document", "meta_test.txt", metadata=custom_metadata
+        )
 
         chunk = rag_system.chunks[0]
         assert chunk.metadata["author"] == "Test Author"

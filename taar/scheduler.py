@@ -55,7 +55,8 @@ class Scheduler:
 
             # Determine test files for this runner
             test_files = [
-                f for f in impact.extra_test_files
+                f
+                for f in impact.extra_test_files
                 if any(
                     f.as_posix().endswith(ext)
                     for ext in (".py", ".js", ".ts", ".kt", ".cs")
@@ -63,9 +64,7 @@ class Scheduler:
             ]
 
             # Min priority of all commands in this runner
-            min_priority = min(
-                (cmd.priority for cmd in runner.commands), default=3
-            )
+            min_priority = min((cmd.priority for cmd in runner.commands), default=3)
 
             tasks.append(
                 ScheduledTask(
@@ -102,6 +101,7 @@ class Scheduler:
         report = RunReport()
 
         import time
+
         overall_start = time.perf_counter()
 
         # Group by priority

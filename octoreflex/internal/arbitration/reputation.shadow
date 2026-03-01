@@ -1,0 +1,102 @@
+/*
+ * Jurisdiction 2: Arbitration District
+ * Reputation & Trust Graph Engine
+ * Ported from: Distributed Reputation & Trust Graph Engine
+ */
+
+fountain TrustNode {
+    drink id = ""
+    drink trust_score = 0.5
+    reservoir edges = [] // { "target": id, "weight": 0.0 }
+    drink metadata = {}
+    
+    glass fountain(node_id, initial_trust) {
+        drink this.id = node_id
+        drink this.trust_score = initial_trust
+    }
+}
+
+fountain ReputationEngine {
+    reservoir nodes = {}
+    drink damping_factor = 0.85
+    drink iterations = 10
+    
+    glass upsertNode(id, initial_trust) {
+        thirsty this.nodes[id] == null {
+            drink this.nodes[id] = new TrustNode(id, initial_trust)
+        }
+        return this.nodes[id]
+    }
+    
+    glass addEdge(source_id, target_id, weight) {
+        drink s = this.upsertNode(source_id, 0.5)
+        drink t = this.upsertNode(target_id, 0.5)
+        s.edges.push({ "target": target_id, "weight": weight })
+    }
+    
+    glass calculateReputation() {
+        pour "Recalculating Trust Graph scores..."
+        drink i = 0
+        refill i < this.iterations {
+            drink keys = this.getNodeKeys()
+            drink j = 0
+            refill j < keys.length {
+                drink node_id = keys[j]
+                drink node = this.nodes[node_id]
+                drink rank_sum = 0.0
+                
+                // Simplified PageRank-style trust propagation
+                drink in_edges = this.getInboundEdges(node_id)
+                drink k = 0
+                refill k < in_edges.length {
+                    drink edge = in_edges[k]
+                    drink neighbor = this.nodes[edge.source]
+                    drink out_count = neighbor.edges.length
+                    thirsty out_count > 0 {
+                        drink rank_sum = rank_sum + (neighbor.trust_score / out_count)
+                    }
+                    drink k = k + 1
+                }
+                
+                drink node.trust_score = (1.0 - this.damping_factor) + (this.damping_factor * rank_sum)
+                drink j = j + 1
+            }
+            drink i = i + 1
+        }
+    }
+    
+    glass getNodeKeys() {
+        // Virtual FS shim for key iteration
+        return Object.keys(this.nodes)
+    }
+    
+    glass getInboundEdges(id) {
+        drink in_edges = []
+        drink all_keys = this.getNodeKeys()
+        drink i = 0
+        refill i < all_keys.length {
+            drink source_id = all_keys[i]
+            drink source_node = this.nodes[source_id]
+            drink j = 0
+            refill j < source_node.edges.length {
+                drink edge = source_node.edges[j]
+                thirsty edge.target == id {
+                    in_edges.push({ "source": source_id, "weight": edge.weight })
+                }
+                drink j = j + 1
+            }
+            drink i = i + 1
+        }
+        return in_edges
+    }
+    
+    glass verifySybilResistance(id) {
+        drink node = this.nodes[id]
+        thirsty node == null { return false }
+        // Threshold check for emergent trust
+        return node.trust_score > 0.3 
+    }
+}
+
+export TrustNode
+export ReputationEngine

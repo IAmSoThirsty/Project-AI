@@ -225,7 +225,9 @@ This is an automated security alert from Project-AI
             indicators: List of indicators (IPs, hashes, patterns)
         """
         self.threat_signatures[campaign_name] = indicators
-        logger.info("Added threat signature: %s (%d indicators)", campaign_name, len(indicators))
+        logger.info(
+            "Added threat signature: %s (%d indicators)", campaign_name, len(indicators)
+        )
 
     def check_threat_signatures(self, data: str) -> list[str]:
         """Check data against threat signatures.
@@ -275,17 +277,25 @@ This is an automated security alert from Project-AI
 
         for event in events:
             # Count by severity
-            stats["by_severity"][event.severity] = stats["by_severity"].get(event.severity, 0) + 1
+            stats["by_severity"][event.severity] = (
+                stats["by_severity"].get(event.severity, 0) + 1
+            )
 
             # Count by type
-            stats["by_type"][event.event_type] = stats["by_type"].get(event.event_type, 0) + 1
+            stats["by_type"][event.event_type] = (
+                stats["by_type"].get(event.event_type, 0) + 1
+            )
 
             # Count by source
-            stats["by_source"][event.source] = stats["by_source"].get(event.source, 0) + 1
+            stats["by_source"][event.source] = (
+                stats["by_source"].get(event.source, 0) + 1
+            )
 
         return stats
 
-    def detect_anomalies(self, time_window: float = 3600, threshold: int = 10) -> list[dict[str, Any]]:
+    def detect_anomalies(
+        self, time_window: float = 3600, threshold: int = 10
+    ) -> list[dict[str, Any]]:
         """Detect anomalous event patterns.
 
         Args:

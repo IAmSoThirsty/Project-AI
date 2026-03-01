@@ -16,17 +16,22 @@ from datetime import datetime, timezone
 import pytest
 
 from psia.bootstrap.genesis import GenesisCoordinator, GenesisStatus
-from psia.bootstrap.readiness import ReadinessGate, NodeStatus
-from psia.bootstrap.safe_halt import SafeHaltController, SafeHaltError, HaltReason
-from psia.canonical.commit_coordinator import CommitCoordinator, CanonicalStore
-from psia.canonical.ledger import DurableLedger, ExecutionRecord
+from psia.bootstrap.readiness import NodeStatus, ReadinessGate
+from psia.bootstrap.safe_halt import HaltReason, SafeHaltController, SafeHaltError
 from psia.canonical.capability_authority import CapabilityAuthority
+from psia.canonical.commit_coordinator import CanonicalStore, CommitCoordinator
+from psia.canonical.ledger import DurableLedger, ExecutionRecord
+from psia.invariants import ROOT_INVARIANTS
+from psia.observability.autoimmune_dampener import AutoimmuneDampener
+from psia.observability.failure_detector import CircuitState, FailureDetector
 from psia.schemas.capability import CapabilityScope
 from psia.schemas.identity import Signature
-from psia.schemas.request import Intent, RequestContext, RequestEnvelope, RequestTimestamps
-from psia.observability.failure_detector import FailureDetector, CircuitState
-from psia.observability.autoimmune_dampener import AutoimmuneDampener
-from psia.invariants import ROOT_INVARIANTS
+from psia.schemas.request import (
+    Intent,
+    RequestContext,
+    RequestEnvelope,
+    RequestTimestamps,
+)
 from psia.waterfall.engine import WaterfallEngine
 from psia.waterfall.stage_0_structural import StructuralStage
 from psia.waterfall.stage_1_signature import SignatureStage
@@ -36,8 +41,8 @@ from psia.waterfall.stage_4_gate import GateStage
 from psia.waterfall.stage_5_commit import CommitStage
 from psia.waterfall.stage_6_memory import MemoryStage
 
-
 # ── Helpers ───────────────────────────────────────────────────────────
+
 
 def _sig() -> Signature:
     return Signature(alg="ed25519", kid="k1", sig="test_sig")
@@ -85,6 +90,7 @@ def _full_engine() -> WaterfallEngine:
 #  Bootstrap → Operational Flow
 # ═══════════════════════════════════════════════════════════════════
 
+
 class TestBootstrapToOperational:
     """Verify the full boot sequence: Genesis → Readiness → OPERATIONAL."""
 
@@ -96,9 +102,10 @@ class TestBootstrapToOperational:
 
         gate = ReadinessGate()
         gate.register_genesis_check(genesis)
-        gate.register_check("invariants_loaded", lambda: (
-            len(ROOT_INVARIANTS) == 9, f"{len(ROOT_INVARIANTS)} invariants"
-        ))
+        gate.register_check(
+            "invariants_loaded",
+            lambda: (len(ROOT_INVARIANTS) == 9, f"{len(ROOT_INVARIANTS)} invariants"),
+        )
 
         report = gate.evaluate()
         assert report.status == NodeStatus.OPERATIONAL
@@ -118,6 +125,7 @@ class TestBootstrapToOperational:
 #  Request Lifecycle: Pipeline → Canonical → Ledger
 # ═══════════════════════════════════════════════════════════════════
 
+
 class TestRequestLifecycle:
     """Tests the full request path through the PSIA stack."""
 
@@ -130,10 +138,12 @@ class TestRequestLifecycle:
         coordinator = CommitCoordinator(store=store)
         commit_result = coordinator.commit(
             request_id="req_int_001",
-            mutations={"requests/req_int_001": {
-                "request_id": "req_int_001",
-                "status": "approved",
-            }},
+            mutations={
+                "requests/req_int_001": {
+                    "request_id": "req_int_001",
+                    "status": "approved",
+                }
+            },
         )
         assert commit_result.status.value == "committed"
 
@@ -165,6 +175,7 @@ class TestRequestLifecycle:
 # ═══════════════════════════════════════════════════════════════════
 #  Failure Detection → SAFE-HALT Escalation
 # ═══════════════════════════════════════════════════════════════════
+
 
 class TestFailureToSafeHalt:
     """Verify that cascading failures trigger SAFE-HALT."""
@@ -227,6 +238,7 @@ class TestFailureToSafeHalt:
 #  Autoimmune Dampener Integration
 # ═══════════════════════════════════════════════════════════════════
 
+
 class TestAutoimmuneDampenerIntegration:
 
     def test_dampener_suppresses_overaggressive_rule(self):
@@ -264,6 +276,7 @@ class TestAutoimmuneDampenerIntegration:
 #  Capability Authority → Canonical Commit Flow
 # ═══════════════════════════════════════════════════════════════════
 
+
 class TestCapabilityAuthorityIntegration:
 
     def test_issue_then_revoke(self):
@@ -283,17 +296,23 @@ class TestCapabilityAuthorityIntegration:
 
         token = authority.issue(
             subject="did:psia:agent:008",
-            scopes=[CapabilityScope(resource="policy://registry/*", actions=["read", "write"])],
+            scopes=[
+                CapabilityScope(
+                    resource="policy://registry/*", actions=["read", "write"]
+                )
+            ],
         )
 
         coordinator = CommitCoordinator(store=store)
         coordinator.commit(
             request_id="token_issue",
-            mutations={f"tokens/{token.token_id}": {
-                "token_id": token.token_id,
-                "subject": token.subject,
-                "status": "active",
-            }},
+            mutations={
+                f"tokens/{token.token_id}": {
+                    "token_id": token.token_id,
+                    "subject": token.subject,
+                    "status": "active",
+                }
+            },
         )
 
         stored = store.get(f"tokens/{token.token_id}")
@@ -304,6 +323,7 @@ class TestCapabilityAuthorityIntegration:
 # ═══════════════════════════════════════════════════════════════════
 #  Full Stack Integration
 # ═══════════════════════════════════════════════════════════════════
+
 
 class TestFullStackIntegration:
     """End-to-end test: boot → process → commit → observe → halt → recover."""

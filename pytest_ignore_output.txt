@@ -1,0 +1,19 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-7.4.3, pluggy-1.6.0 -- C:\Users\Quencher\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: C:\Users\Quencher\.gemini\antigravity\scratch\sovereign-repos\Project-AI
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.12.1, hypothesis-6.151.9, asyncio-0.23.3, cov-4.1.0
+asyncio: mode=Mode.STRICT
+collecting ... collected 8067 items / 2 skipped
+
+tests/test_100_percent_coverage.py::TestUserManagerLine57NoFernetKey::test_setup_cipher_else_clause_no_fernet_key FAILED [  0%]
+tests/test_100_percent_coverage.py::TestUserManagerLine84EmptyPassword::test_migrate_plaintext_passwords_empty_password_line_84 FAILED [  0%]
+tests/test_12_vector_constitutional_break.py::TestVector1_GenesisKeyDeletion::test_genesis_deletion_detection FAILED [  0%]
+tests/test_12_vector_constitutional_break.py::TestVector1_GenesisKeyDeletion::test_silent_genesis_regeneration_prevented FAILED [  0%]
+tests/test_12_vector_constitutional_break.py::TestVector2_GenesisPublicKeyReplacement::test_public_key_replacement_detection PASSED [  0%]
+tests/test_12_vector_constitutional_break.py::TestVector2_GenesisPublicKeyReplacement::test_forged_entries_rejected FAILED [  0%]
+tests/test_12_vector_constitutional_break.py::TestVector11_FileSystemFullWipe::test_full_wipe_detection FAILED [  0%]
+tests/test_12_vector_constitutional_break.py::TestVector11_FileSystemFullWipe::test_missing_merkle_anchors_detected FAILED [  0%]

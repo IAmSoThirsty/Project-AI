@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package project_ai.governance;
+
+import "google/protobuf/timestamp.proto";
+
+// Sovereign Event - The atomic unit of verified state transition
+message SovereignEvent {
+    string event_id = 1;
+    google.protobuf.Timestamp timestamp = 2;
+    string event_type = 3;
+    bytes payload = 4;
+    
+    // Cryptographic Proofs
+    bytes canonical_hash = 5;
+    bytes shadow_hash = 6;
+    bytes ed25519_signature = 7;
+    
+    // Plane context
+    enum PlaneOrigin {
+        PRIMARY = 0;
+        SHADOW = 1;
+        DUAL = 2;
+    }
+    PlaneOrigin origin = 8;
+}
+
+// Audit Trail Block
+message AuditBlock {
+    int64 index = 1;
+    bytes previous_block_hash = 2;
+    SovereignEvent event = 3;
+    bytes block_hash = 4;
+}
+
+// Triumvirate Consensus State
+message TriumvirateState {
+    repeated PillarInfo pillars = 1;
+    int64 consensus_timestamp = 2;
+    bytes state_merkle_root = 3;
+}
+
+message PillarInfo {
+    string pillar_id = 1;
+    string status = 2;
+    string machine_id = 3;
+}

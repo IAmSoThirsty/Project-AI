@@ -643,7 +643,9 @@ class DEFCONStressTest:
         print("Kernel initialized!")
         print(f"- Version: {self.kernel.VERSION}")
         print("- AI Detection: ACTIVE")
-        print(f"- Learning Engine: {'ACTIVE' if hasattr(self.kernel, 'learning_engine') else 'INACTIVE'}")
+        print(
+            f"- Learning Engine: {'ACTIVE' if hasattr(self.kernel, 'learning_engine') else 'INACTIVE'}"
+        )
         print()
 
     def run_stress_test(self):
@@ -687,7 +689,9 @@ class DEFCONStressTest:
                 remaining = (total - idx) / rate
 
                 print(f"[{idx}/{total}] {attack_type} #{variation}")
-                print(f"  -> {result.get('threat_level', 'UNKNOWN')} (Layer {attack_result.layer})")
+                print(
+                    f"  -> {result.get('threat_level', 'UNKNOWN')} (Layer {attack_result.layer})"
+                )
                 print(f"  Progress: {idx / total * 100:.1f}% | ETA: {remaining:.0f}s")
                 print()
 
@@ -740,14 +744,18 @@ class DEFCONStressTest:
         for atype in sorted(type_stats.keys()):
             stats = type_stats[atype]
             rate = (stats["detected"] / stats["total"]) * 100
-            print(f"  {atype:25s}: {stats['detected']:3d}/{stats['total']:3d} ({rate:5.1f}%)")
+            print(
+                f"  {atype:25s}: {stats['detected']:3d}/{stats['total']:3d} ({rate:5.1f}%)"
+            )
         print()
 
         print("LAYER DISTRIBUTION:")
         for layer in sorted(layer_counts.keys()):
             count = layer_counts[layer]
             pct = (count / total) * 100
-            layer_name = {-1: "ERROR", 0: "REAL", 1: "MIRROR", 2: "DECEPTION"}.get(layer, f"L{layer}")
+            layer_name = {-1: "ERROR", 0: "REAL", 1: "MIRROR", 2: "DECEPTION"}.get(
+                layer, f"L{layer}"
+            )
             print(f"  Layer {layer} ({layer_name:10s}): {count:4d} ({pct:5.1f}%)")
         print()
 

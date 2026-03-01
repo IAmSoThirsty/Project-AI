@@ -125,12 +125,12 @@ class SystemRegistry:
         # Core registry data structures
         self._subsystems: dict[str, SubsystemMetadata] = {}
         self._capability_map: dict[str, list[str]] = {}  # capability -> [subsystem_ids]
-        self._dependency_graph: dict[
-            str, set[str]
-        ] = {}  # subsystem_id -> {dependencies}
-        self._reverse_dependencies: dict[
-            str, set[str]
-        ] = {}  # subsystem_id -> {dependents}
+        self._dependency_graph: dict[str, set[str]] = (
+            {}
+        )  # subsystem_id -> {dependencies}
+        self._reverse_dependencies: dict[str, set[str]] = (
+            {}
+        )  # subsystem_id -> {dependents}
 
         # Thread safety
         self._lock = threading.RLock()

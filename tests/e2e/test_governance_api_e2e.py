@@ -150,7 +150,9 @@ class TestGovernanceAPIEndToEnd:
             "context": {"api_key": "test-key"},
         }
 
-        response = requests.post(f"{API_BASE_URL}/execute", json=intent, timeout=TIMEOUT)
+        response = requests.post(
+            f"{API_BASE_URL}/execute", json=intent, timeout=TIMEOUT
+        )
 
         # Step 2: Verify execution was allowed and completed
         assert response.status_code == 200
@@ -194,13 +196,17 @@ class TestGovernanceAPIEndToEnd:
         submitted_hashes = []
 
         for intent in intents:
-            response = requests.post(f"{API_BASE_URL}/intent", json=intent, timeout=TIMEOUT)
+            response = requests.post(
+                f"{API_BASE_URL}/intent", json=intent, timeout=TIMEOUT
+            )
             assert response.status_code == 200
             governance = response.json()["governance"]
             submitted_hashes.append(governance["intent_hash"])
 
         # Verify all intents in audit log
-        audit_response = requests.get(f"{API_BASE_URL}/audit?limit=100", timeout=TIMEOUT)
+        audit_response = requests.get(
+            f"{API_BASE_URL}/audit?limit=100", timeout=TIMEOUT
+        )
         assert audit_response.status_code == 200
         audit_data = audit_response.json()
 
@@ -224,7 +230,9 @@ class TestGovernanceAPIEndToEnd:
             "origin": "test",
         }
 
-        intent_response = requests.post(f"{API_BASE_URL}/intent", json=intent, timeout=TIMEOUT)
+        intent_response = requests.post(
+            f"{API_BASE_URL}/intent", json=intent, timeout=TIMEOUT
+        )
         assert intent_response.status_code == 200
         governance = intent_response.json()["governance"]
         assert governance["tarl_version"] == tarl_version
@@ -312,7 +320,9 @@ class TestGovernanceAPIEdgeCases:
             # Missing "target" and "origin"
         }
 
-        response = requests.post(f"{API_BASE_URL}/intent", json=incomplete_intent, timeout=TIMEOUT)
+        response = requests.post(
+            f"{API_BASE_URL}/intent", json=incomplete_intent, timeout=TIMEOUT
+        )
 
         # FastAPI should return 422 for validation errors
         assert response.status_code == 422
@@ -354,9 +364,13 @@ class TestGovernanceAPIEdgeCases:
             assert response.status_code == 200
 
         # Verify all were logged in audit
-        audit_response = requests.get(f"{API_BASE_URL}/audit?limit=100", timeout=TIMEOUT)
+        audit_response = requests.get(
+            f"{API_BASE_URL}/audit?limit=100", timeout=TIMEOUT
+        )
         audit_data = audit_response.json()
-        concurrent_records = [r for r in audit_data["records"] if "concurrent-test" in str(r)]
+        concurrent_records = [
+            r for r in audit_data["records"] if "concurrent-test" in str(r)
+        ]
         # Should have at least some of our concurrent requests
         assert len(concurrent_records) > 0
 
@@ -395,7 +409,9 @@ class TestGovernanceAPIPerformance:
 
         success_count = 0
         for intent in intents:
-            response = requests.post(f"{API_BASE_URL}/intent", json=intent, timeout=TIMEOUT)
+            response = requests.post(
+                f"{API_BASE_URL}/intent", json=intent, timeout=TIMEOUT
+            )
             if response.status_code == 200:
                 success_count += 1
 

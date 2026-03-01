@@ -21,7 +21,9 @@ class TestAISystemsRemaining:
         with tempfile.TemporaryDirectory() as tmpdir:
             persona = AIPersona(data_dir=tmpdir)
             # Test FourLaws validation through persona
-            is_allowed, reason = persona.validate_action("test", {"endangers_humanity": True})
+            is_allowed, reason = persona.validate_action(
+                "test", {"endangers_humanity": True}
+            )
             assert is_allowed is False
 
     def test_persona_last_user_message_time(self):
@@ -140,7 +142,9 @@ class TestUserManagerRemaining:
 
                 result = manager._hash_and_store_password("user", "password")
                 # Should fall back to pbkdf2
-                assert result is True or result is False  # Depends on exception handling
+                assert (
+                    result is True or result is False
+                )  # Depends on exception handling
 
     def test_authenticate_user_not_found(self, manager):
         """Test authentication returns False for non-existent user (line 84)."""
@@ -220,10 +224,15 @@ class TestIntegrationEdgeCases:
 
             # Build prompt with persona awareness
             base_prompt = "a beautiful landscape"
-            enhanced = generator.build_enhanced_prompt(base_prompt, ImageStyle.PHOTOREALISTIC)
+            enhanced = generator.build_enhanced_prompt(
+                base_prompt, ImageStyle.PHOTOREALISTIC
+            )
 
             assert len(enhanced) > len(base_prompt)
-            assert "photorealistic" in enhanced.lower() or "professional" in enhanced.lower()
+            assert (
+                "photorealistic" in enhanced.lower()
+                or "professional" in enhanced.lower()
+            )
 
             os.environ.pop("HUGGINGFACE_API_KEY", None)
 

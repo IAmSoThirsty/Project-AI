@@ -162,7 +162,9 @@ class TestSafetyValidator:
         commands = [{"position": 0.5} for _ in range(6)]
         context = {"is_user_order": True}
 
-        is_valid, reason = validator.validate_action("Test motion", commands, joint_states, context)
+        is_valid, reason = validator.validate_action(
+            "Test motion", commands, joint_states, context
+        )
 
         assert is_valid
 
@@ -171,7 +173,9 @@ class TestSafetyValidator:
         commands = [{"position": 0.5} for _ in range(6)]
         context = {"is_user_order": True, "endangers_human": True}
 
-        is_valid, reason = validator.validate_action("Dangerous motion", commands, joint_states, context)
+        is_valid, reason = validator.validate_action(
+            "Dangerous motion", commands, joint_states, context
+        )
 
         assert not is_valid
         assert "FOUR LAWS VIOLATION" in reason
@@ -185,7 +189,9 @@ class TestSafetyValidator:
             "safe_distance": False,
         }
 
-        is_valid, reason = validator.validate_action("Motion with human nearby", commands, joint_states, context)
+        is_valid, reason = validator.validate_action(
+            "Motion with human nearby", commands, joint_states, context
+        )
 
         assert not is_valid
 
@@ -195,7 +201,9 @@ class TestSafetyValidator:
         commands = [{"position": 5.0} for _ in range(6)]  # Outside limits
         context = {}
 
-        is_valid, reason = validator.validate_action("Limit exceeding motion", commands, joint_states, context)
+        is_valid, reason = validator.validate_action(
+            "Limit exceeding motion", commands, joint_states, context
+        )
 
         assert not is_valid
         assert "exceeds limits" in reason

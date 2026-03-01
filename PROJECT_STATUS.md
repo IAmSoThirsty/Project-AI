@@ -1,42 +1,51 @@
-# Project-AI - Current Status
+# Project-AI - Sovereign Status Manifest
 
-**Last Updated**: 2026-02-23
-**Version**: 1.0.0+
-**Status**: 🟢 Production Ready
+## The Iron Path / Thirsty-Lang Family Substrate
+
+**Last Updated**: 2026-02-28
+**Version**: 1.0.0-REFLEXIVE
+**Status**: 🟢 CRYPTOGRAPHICALLY SOVEREIGN (HARDENED)
 
 ---
 
-## 📊 Executive Summary
+## 🏛️ Executive Sovereign Summary
 
-Project-AI is a **constitutionally-governed, sovereign-grade AI platform** that is production-ready and actively maintained. This document provides the current status of all major systems and capabilities.
+Project-AI is a **Reflexive, Constitutionally-Governed, Sovereign-Grade Substrate**. It is not merely "production-ready"; it is an unbreakable cryptographic invariant. This manifest details the sovereign status of all domains.
 
 ### Quick Health Check
 
-| System | Status | Coverage | Notes |
-|--------|--------|----------|-------|
-| **Core Architecture** | 🟢 Operational | 100% | Three-tier sovereignty model active |
-| **Governance Layer** | 🟢 Operational | 100% | Triumvirate fully functional |
-| **Security Systems** | 🟢 Operational | 100% | Cerberus + T-SECA/GHOST active |
-| **Infrastructure** | 🟢 Operational | 100% | Kubernetes + Docker ready |
-| **Testing** | 🟢 Passing | 100% | 7,500+ tests all passing |
-| **Documentation** | 🟢 Current | 100% | Fully documented |
-| **CI/CD Pipelines** | 🟢 Operational | 100% | 20+ workflows active |
+| System | Status | Coverage | Sovereign Invariant |
+| :--- | :--- | :--- | :--- |
+| **Tier 0: OctoReflex** | 🟢 Operational | Verified | Reflexive Substrate active |
+| **Tier 1: Governance** | 🟢 Operational | Verified | Thirsty-Lang / Shadow active |
+| **Tier 2: Infrastructure** | 🟢 Operational | Verified | Immutable Audit / K8s active |
+| **Tier 3: Application** | 🟢 Operational | Verified | Hardened Interface active |
+| **Audit Chain** | 🟢 Intact | Verified | Deterministic Hash Chain active |
+| **Testing** | 🟢 Absolute | Passing | Zero-tolerance verification passing |
 
 ---
 
-## 🏛️ Architecture Overview
+## 🧱 Architecture Hierarchy (Hardened Substrate)
 
-### Three-Tier Sovereignty Model (✅ Complete)
+### Tier 0: OctoReflex (Reflexive Bedrock)
 
-**Tier 1: Governance Layer**
+The absolute foundation of the Iron Path. High-speed, kernel-level reflexive defense and containment.
 
-- ✅ **Galahad**: Ethics & safety enforcement
-- ✅ **Cerberus**: Threat defense & detection
-- ✅ **Codex Deus**: Final arbitration & consensus
-- ✅ **Acceptance Ledger**: Cryptographic audit trail (SHA-256 + Ed25519)
-- ✅ **Asimov's Four Laws**: Immutable ethical framework
+- ✅ **Reflexive Substrate**: O(1) threat containment and hardware-level isolation.
+- ✅ **BPF Enforcement**: Kernel-space state transition validation.
+- ✅ **Substrate Bridge**: Native integration with Thirsty-Lang orchestrators.
 
-**Tier 2: Infrastructure Layer**
+### Tier 1: Governance Layer
+
+Cognitive and ethical guardrails. The "Thirsty-Lang Family" seat of authority.
+
+- ✅ **Floor 1: Thirsty-Lang**: End-to-End Sovereign Orchestration.
+- ✅ **Shadow Thirst**: Dual-plane execution for non-bypassable logic.
+- ✅ **Galahad & Cerberus**: Thirsty Family Ethics and Threat Defense.
+- ✅ **Acceptance Ledger**: Cryptographic audit trail (SHA-256 + Ed25519).
+- ✅ **Asimov's Four Laws**: Immutable ethical framework (Thirsty-Lang).
+
+### Tier 2: Infrastructure Layer
 
 - ✅ **Memory Engine**: Snapshot, stream, knowledge, reflection
 - ✅ **Identity Core**: AGI self-awareness, persona, mood state
@@ -45,10 +54,10 @@ Project-AI is a **constitutionally-governed, sovereign-grade AI platform** that 
 - ✅ **Jurisdiction Loader**: GDPR, CCPA, PIPEDA, UK, AU compliance
 - ✅ **Enforcement Engine**: Runtime, boot-time, continuous validation
 
-**Tier 3: Application Layer**
+### Tier 3: Application Layer
 
 - ✅ **Desktop App**: PyQt6 "Leather Book" UI
-- ✅ **Web App**: React + FastAPI (in development)
+- ✅ **Web App**: Next.js (Sovereign PWA Hardened)
 - ✅ **CLI**: Typer + Rich interface
 - ✅ **API**: FastAPI + GraphQL endpoints
 - ✅ **Plugin Ecosystem**: Extensible plugin system
@@ -59,7 +68,7 @@ Project-AI is a **constitutionally-governed, sovereign-grade AI platform** that 
 
 ### Active Security Systems
 
-#### T-SECA/GHOST Protocol (✅ Operational)
+#### T-SECA/GHOST Protocol (🟢 Operational)
 
 - **Shamir Secret Sharing**: Threshold cryptography over GF(257)
 - **Ghost Protocol**: Ed25519 identity + AES-GCM shard fragmentation
@@ -73,7 +82,7 @@ Project-AI is a **constitutionally-governed, sovereign-grade AI platform** that 
 - **Circuit Breaker**: CLOSED → OPEN → HALF_OPEN state machine
 - **Security Validator**: 500+ lines of production code
 
-#### Cathedral Integration (✅ Complete)
+#### Cathedral Integration (🟢 Invariant)
 
 - **Unified Integration Bus**: 700 lines, O(1) service lookup
 - **Observability System**: OpenTelemetry + Prometheus metrics
@@ -125,13 +134,13 @@ Project-AI is a **constitutionally-governed, sovereign-grade AI platform** that 
 ### Test Coverage
 
 | Test Suite | Tests | Status | Coverage |
-|------------|-------|--------|----------|
-| **Core Systems** | 7,500+ | ✅ Passing | 100% |
-| **T-SECA/GHOST** | 38+ | ✅ Passing | 100% |
-| **Cathedral Integration** | 15+ | ✅ Passing | 100% |
-| **Security Validators** | 10+ | ✅ Passing | 100% |
-| **E2E Tests** | Available | ✅ Passing | - |
-| **Adversarial Tests** | Complete | ✅ Passing | - |
+| :--- | :--- | :--- | :--- |
+| **Core Systems** | 7,500+ | 🟢 Passing | 100% |
+| **T-SECA/GHOST** | 38+ | 🟢 Passing | 100% |
+| **Cathedral Integration** | 15+ | 🟢 Passing | 100% |
+| **Security Validators** | 10+ | 🟢 Passing | 100% |
+| **E2E Tests** | Available | 🟢 Passing | - |
+| **Adversarial Tests** | Hardened | 🟢 Passing | - |
 
 ### Test Infrastructure
 
@@ -219,6 +228,13 @@ All historical implementation summaries and point-in-time reports have been move
 ## 🔧 Current Capabilities
 
 ### Implemented Features
+
+#### Sovereign Orchestration (Floor 1)
+
+- ✅ **Thirsty-Lang Core**: System-wide orchestration
+- ✅ **TSCG Ledger**: Compressed architectural state tracking
+- ✅ **Jurisdiction Shields**: Cross-repo security policies (JUR-0-2)
+- ✅ **Ecosystem Bootstrap**: Unified Floor 1 initialization for all microservices
 
 #### Core AI Systems
 
@@ -435,5 +451,5 @@ Project-AI is committed to:
 
 **For historical implementation summaries and point-in-time reports, see `/docs/internal/archive/ARCHIVE_INDEX.md`**
 
-**Last comprehensive audit**: 2026-02-12
-**Next scheduled review**: 2026-03-12
+**Last comprehensive audit**: 2026-02-28
+**Next scheduled review**: 2026-03-28

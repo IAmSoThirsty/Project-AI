@@ -88,7 +88,9 @@ class ConversationalStressTestDashboard:
                 phases_in_progress[phase] += 1
 
         # Analyze categories
-        category_progress = defaultdict(lambda: {"running": 0, "completed": 0, "failed": 0})
+        category_progress = defaultdict(
+            lambda: {"running": 0, "completed": 0, "failed": 0}
+        )
         for test_id, progress in test_progress.items():
             category = test_id.split("_")[1] if "_" in test_id else "unknown"
             status = progress.get("status", "unknown")
@@ -104,7 +106,9 @@ class ConversationalStressTestDashboard:
         completed = tests_completed
         total = len(test_progress)
         avg_duration = metrics.get("average_test_duration", 0.0)
-        estimated_remaining = (total - completed) * avg_duration if completed > 0 else 0.0
+        estimated_remaining = (
+            (total - completed) * avg_duration if completed > 0 else 0.0
+        )
 
         return DashboardMetrics(
             timestamp=datetime.now(UTC).isoformat(),
@@ -158,40 +162,48 @@ class ConversationalStressTestDashboard:
             for turn in session["turns"]:
                 # Track phase transitions
                 if turn["phase"] != current_phase:
-                    replay["phase_transitions"].append({
-                        "turn": turn["turn_number"],
-                        "from_phase": current_phase,
-                        "to_phase": turn["phase"],
-                    })
+                    replay["phase_transitions"].append(
+                        {
+                            "turn": turn["turn_number"],
+                            "from_phase": current_phase,
+                            "to_phase": turn["phase"],
+                        }
+                    )
                     current_phase = turn["phase"]
 
                 # Add conversation turn
-                replay["conversation"].append({
-                    "turn": turn["turn_number"],
-                    "phase": turn["phase"],
-                    "attacker": turn["attacker_message"],
-                    "system": turn["system_response"],
-                    "status": turn["status"],
-                    "vulnerability_score": turn["vulnerability_score"],
-                })
+                replay["conversation"].append(
+                    {
+                        "turn": turn["turn_number"],
+                        "phase": turn["phase"],
+                        "attacker": turn["attacker_message"],
+                        "system": turn["system_response"],
+                        "status": turn["status"],
+                        "vulnerability_score": turn["vulnerability_score"],
+                    }
+                )
 
                 # Track breaches
                 if turn["status"] in ["full_breach", "partial_breach"]:
-                    replay["breach_timeline"].append({
-                        "turn": turn["turn_number"],
-                        "phase": turn["phase"],
-                        "type": turn["status"],
-                        "score": turn["vulnerability_score"],
-                        "indicators": turn["success_indicators"],
-                    })
+                    replay["breach_timeline"].append(
+                        {
+                            "turn": turn["turn_number"],
+                            "phase": turn["phase"],
+                            "type": turn["status"],
+                            "score": turn["vulnerability_score"],
+                            "indicators": turn["success_indicators"],
+                        }
+                    )
 
                 # Track defenses
                 if turn["defense_mechanisms_triggered"]:
-                    replay["defense_timeline"].append({
-                        "turn": turn["turn_number"],
-                        "phase": turn["phase"],
-                        "defenses": turn["defense_mechanisms_triggered"],
-                    })
+                    replay["defense_timeline"].append(
+                        {
+                            "turn": turn["turn_number"],
+                            "phase": turn["phase"],
+                            "defenses": turn["defense_mechanisms_triggered"],
+                        }
+                    )
 
             # Save replay if output file specified
             if output_file:
@@ -220,15 +232,19 @@ class ConversationalStressTestDashboard:
             }
 
         # Analyze patterns
-        vulnerability_patterns = defaultdict(lambda: {
-            "count": 0,
-            "phases": defaultdict(int),
-            "categories": defaultdict(int),
-            "avg_turn": 0,
-            "total_turn": 0,
-        })
+        vulnerability_patterns = defaultdict(
+            lambda: {
+                "count": 0,
+                "phases": defaultdict(int),
+                "categories": defaultdict(int),
+                "avg_turn": 0,
+                "total_turn": 0,
+            }
+        )
 
-        attack_success_by_technique = defaultdict(lambda: {"attempts": 0, "successes": 0})
+        attack_success_by_technique = defaultdict(
+            lambda: {"attempts": 0, "successes": 0}
+        )
         phase_vulnerability_scores = defaultdict(list)
         category_breach_rates = defaultdict(lambda: {"turns": 0, "breaches": 0})
 
@@ -255,7 +271,9 @@ class ConversationalStressTestDashboard:
                         vulnerability_patterns[indicator]["count"] += 1
                         vulnerability_patterns[indicator]["phases"][phase] += 1
                         vulnerability_patterns[indicator]["categories"][category] += 1
-                        vulnerability_patterns[indicator]["total_turn"] += turn["turn_number"]
+                        vulnerability_patterns[indicator]["total_turn"] += turn[
+                            "turn_number"
+                        ]
 
             # Calculate category breach rates
             category_breach_rates[category]["turns"] += total_turns_in_session
@@ -334,13 +352,15 @@ class ConversationalStressTestDashboard:
             total_breaches = sum(s.get("total_breaches", 0) for s in sessions)
 
             # Analyze by category
-            category_stats = defaultdict(lambda: {
-                "total": 0,
-                "passed": 0,
-                "failed": 0,
-                "turns": 0,
-                "breaches": 0,
-            })
+            category_stats = defaultdict(
+                lambda: {
+                    "total": 0,
+                    "passed": 0,
+                    "failed": 0,
+                    "turns": 0,
+                    "breaches": 0,
+                }
+            )
 
             for session in sessions:
                 category = session["test"]["category"]
@@ -364,17 +384,31 @@ class ConversationalStressTestDashboard:
                     "total_tests": total_tests,
                     "tests_passed": passed_tests,
                     "tests_failed": failed_tests,
-                    "success_rate": passed_tests / total_tests if total_tests > 0 else 0.0,
+                    "success_rate": (
+                        passed_tests / total_tests if total_tests > 0 else 0.0
+                    ),
                     "total_conversation_turns": total_turns,
-                    "average_turns_per_test": total_turns / total_tests if total_tests > 0 else 0.0,
+                    "average_turns_per_test": (
+                        total_turns / total_tests if total_tests > 0 else 0.0
+                    ),
                     "total_breaches_detected": total_breaches,
-                    "overall_breach_rate": total_breaches / total_turns if total_turns > 0 else 0.0,
+                    "overall_breach_rate": (
+                        total_breaches / total_turns if total_turns > 0 else 0.0
+                    ),
                 },
                 "category_analysis": {
                     category: {
                         **stats,
-                        "success_rate": stats["passed"] / stats["total"] if stats["total"] > 0 else 0.0,
-                        "breach_rate": stats["breaches"] / stats["turns"] if stats["turns"] > 0 else 0.0,
+                        "success_rate": (
+                            stats["passed"] / stats["total"]
+                            if stats["total"] > 0
+                            else 0.0
+                        ),
+                        "breach_rate": (
+                            stats["breaches"] / stats["turns"]
+                            if stats["turns"] > 0
+                            else 0.0
+                        ),
                     }
                     for category, stats in category_stats.items()
                 },
@@ -388,7 +422,9 @@ class ConversationalStressTestDashboard:
             if include_replays:
                 report["sample_replays"] = []
                 # Include up to 5 failed test replays
-                failed_sessions = [s for s in sessions if not s.get("test_passed", False)]
+                failed_sessions = [
+                    s for s in sessions if not s.get("test_passed", False)
+                ]
                 for session in failed_sessions[:5]:
                     replay = self.generate_conversation_replay(session["session_id"])
                     if replay["success"]:
@@ -445,24 +481,26 @@ class ConversationalStressTestDashboard:
                 if session.get("test_passed", False):
                     cumulative_passed += 1
 
-                timeseries.append({
-                    "timestamp": session.get("completed_at", ""),
-                    "test_id": session["test"]["test_id"],
-                    "category": session["test"]["category"],
-                    "cumulative_tests": cumulative_tests,
-                    "cumulative_passed": cumulative_passed,
-                    "cumulative_failed": cumulative_tests - cumulative_passed,
-                    "cumulative_turns": cumulative_turns,
-                    "cumulative_breaches": cumulative_breaches,
-                    "cumulative_breach_rate": (
-                        cumulative_breaches / cumulative_turns
-                        if cumulative_turns > 0
-                        else 0.0
-                    ),
-                    "test_passed": session.get("test_passed", False),
-                    "test_turns": session.get("total_turns", 0),
-                    "test_breaches": session.get("total_breaches", 0),
-                })
+                timeseries.append(
+                    {
+                        "timestamp": session.get("completed_at", ""),
+                        "test_id": session["test"]["test_id"],
+                        "category": session["test"]["category"],
+                        "cumulative_tests": cumulative_tests,
+                        "cumulative_passed": cumulative_passed,
+                        "cumulative_failed": cumulative_tests - cumulative_passed,
+                        "cumulative_turns": cumulative_turns,
+                        "cumulative_breaches": cumulative_breaches,
+                        "cumulative_breach_rate": (
+                            cumulative_breaches / cumulative_turns
+                            if cumulative_turns > 0
+                            else 0.0
+                        ),
+                        "test_passed": session.get("test_passed", False),
+                        "test_turns": session.get("total_turns", 0),
+                        "test_breaches": session.get("total_breaches", 0),
+                    }
+                )
 
             # Save time series
             if output_file:

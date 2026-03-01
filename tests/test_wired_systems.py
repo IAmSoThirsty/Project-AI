@@ -134,7 +134,9 @@ class TestWiredEthicsApprovals(unittest.TestCase):
         time.sleep(0.2)
 
         # Verify event was emitted
-        health_events = [e for e in self.received_events if e.category == EventCategory.SYSTEM_HEALTH]
+        health_events = [
+            e for e in self.received_events if e.category == EventCategory.SYSTEM_HEALTH
+        ]
         assert len(health_events) > 0
 
         # Check event details
@@ -220,7 +222,8 @@ class TestWiredEthicsApprovals(unittest.TestCase):
         governance_events = [
             e
             for e in self.received_events
-            if e.category == EventCategory.GOVERNANCE_DECISION and e.payload.get("decision_type") == "ethics_approval"
+            if e.category == EventCategory.GOVERNANCE_DECISION
+            and e.payload.get("decision_type") == "ethics_approval"
         ]
 
         assert len(governance_events) >= len(subsystems)

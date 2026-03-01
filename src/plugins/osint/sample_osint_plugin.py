@@ -116,7 +116,9 @@ class SampleOSINTPlugin(Plugin):
 
         if not allowed:
             logger.warning("OSINT plugin initialization blocked: %s", reason)
-            emit_event("plugin.osint.blocked", {"reason": reason, "tool": self.tool_name})
+            emit_event(
+                "plugin.osint.blocked", {"reason": reason, "tool": self.tool_name}
+            )
             return False
 
         # Check if explicit user order is required
@@ -175,7 +177,9 @@ class SampleOSINTPlugin(Plugin):
             }
 
         # 2. Re-validate Four Laws pre-execute
-        action_desc = f"Execute OSINT tool '{self.tool_name}' with params: {list(params.keys())}"
+        action_desc = (
+            f"Execute OSINT tool '{self.tool_name}' with params: {list(params.keys())}"
+        )
         allowed, reason = FourLaws.validate_action(action_desc)
         if not allowed:
             self._exec_failures += 1
@@ -193,7 +197,10 @@ class SampleOSINTPlugin(Plugin):
         self._exec_count += 1
         start = time.monotonic()
 
-        emit_event("plugin.osint.execute", {"tool": self.tool_name, "params_keys": list(params.keys())})
+        emit_event(
+            "plugin.osint.execute",
+            {"tool": self.tool_name, "params_keys": list(params.keys())},
+        )
 
         try:
             # Simulated tool execution — in production, this would call the
@@ -232,7 +239,9 @@ class SampleOSINTPlugin(Plugin):
         In production this would be replaced with real API calls.
         Returns structured results matching the tool type.
         """
-        query = params.get("query", params.get("domain", params.get("ip_address", "unknown")))
+        query = params.get(
+            "query", params.get("domain", params.get("ip_address", "unknown"))
+        )
 
         return {
             "query": query,
@@ -264,13 +273,9 @@ class SampleOSINTPlugin(Plugin):
             Statistics dictionary with counts, success rate, duration
         """
         success_rate = (
-            self._exec_success / self._exec_count
-            if self._exec_count > 0
-            else 0.0
+            self._exec_success / self._exec_count if self._exec_count > 0 else 0.0
         )
-        avg_duration = (
-            self._total_duration_ms / max(self._exec_count, 1)
-        )
+        avg_duration = self._total_duration_ms / max(self._exec_count, 1)
 
         return {
             "tool_name": self.tool_name,

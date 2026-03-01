@@ -22,7 +22,7 @@ def crew():
 @pytest.fixture
 def sample_py_file(tmp_path):
     """Create a sample Python file with known issues."""
-    code = '''\
+    code = """\
 import os
 
 password="hardcoded_secret"  # noqa: S105
@@ -34,7 +34,7 @@ def foo():
         pass
 
 # TODO: fix this later
-'''
+"""
     fpath = tmp_path / "sample.py"
     fpath.write_text(code)
     return str(fpath)

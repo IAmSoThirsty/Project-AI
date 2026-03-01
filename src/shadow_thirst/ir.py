@@ -187,7 +187,12 @@ class IRFunction:
 
     def get_all_blocks(self) -> list[IRBasicBlock]:
         """Get all basic blocks across all planes."""
-        return self.primary_blocks + self.shadow_blocks + self.invariant_blocks + self.activation_predicate_blocks
+        return (
+            self.primary_blocks
+            + self.shadow_blocks
+            + self.invariant_blocks
+            + self.activation_predicate_blocks
+        )
 
 
 @dataclass
@@ -252,7 +257,12 @@ class IRBuilder:
         return block
 
     def emit(
-        self, opcode: IROpcode, *operands: Any, plane: ExecutionPlane | None = None, line: int = 0, column: int = 0
+        self,
+        opcode: IROpcode,
+        *operands: Any,
+        plane: ExecutionPlane | None = None,
+        line: int = 0,
+        column: int = 0,
     ) -> IRInstruction:
         """
         Emit an instruction.
@@ -294,7 +304,11 @@ class IRBuilder:
         return temp_name
 
     def add_variable(
-        self, name: str, qualifier: PlaneQualifierIR, type_name: str | None = None, is_parameter: bool = False
+        self,
+        name: str,
+        qualifier: PlaneQualifierIR,
+        type_name: str | None = None,
+        is_parameter: bool = False,
     ) -> IRVariable:
         """Add variable to current function."""
         var = IRVariable(
@@ -338,7 +352,9 @@ class IROptimizer:
             live_instructions = []
             for instruction in block.instructions:
                 # Keep all instructions that have side effects
-                if IROptimizer._has_side_effects(instruction.opcode) or instruction.opcode in (
+                if IROptimizer._has_side_effects(
+                    instruction.opcode
+                ) or instruction.opcode in (
                     IROpcode.ACTIVATE_SHADOW,
                     IROpcode.CHECK_INVARIANT,
                     IROpcode.VALIDATE_AND_COMMIT,
@@ -410,7 +426,10 @@ class IRAnalyzer:
                     if var_name:
                         var = IRAnalyzer._find_variable(function, var_name)
                         if var and var.qualifier == PlaneQualifierIR.CANONICAL:
-                            return False, f"Shadow mutates canonical variable: {var_name}"
+                            return (
+                                False,
+                                f"Shadow mutates canonical variable: {var_name}",
+                            )
 
         return True, "Plane isolation verified"
 
@@ -434,8 +453,12 @@ class IRAnalyzer:
             Dict with estimated bounds
         """
         # Simple instruction counting heuristic
-        primary_instructions = sum(len(block.instructions) for block in function.primary_blocks)
-        shadow_instructions = sum(len(block.instructions) for block in function.shadow_blocks)
+        primary_instructions = sum(
+            len(block.instructions) for block in function.primary_blocks
+        )
+        shadow_instructions = sum(
+            len(block.instructions) for block in function.shadow_blocks
+        )
 
         # Estimate: ~1ms per 100 instructions
         estimated_primary_ms = primary_instructions / 100.0

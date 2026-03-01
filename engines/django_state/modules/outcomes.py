@@ -78,7 +78,9 @@ class OutcomesModule:
         )
 
         if martyr_conditions:
-            logger.info("Outcome: MARTYR - System collapsed but preserved values as warning")
+            logger.info(
+                "Outcome: MARTYR - System collapsed but preserved values as warning"
+            )
             return "martyr"
 
         # Default to extinction
@@ -155,7 +157,9 @@ class OutcomesModule:
         # Update state
         state.terminal_outcome = outcome
 
-        logger.critical("FINAL OUTCOME DETERMINED: %s at t=%s", outcome.upper(), state.timestamp)
+        logger.critical(
+            "FINAL OUTCOME DETERMINED: %s at t=%s", outcome.upper(), state.timestamp
+        )
 
         return outcome
 

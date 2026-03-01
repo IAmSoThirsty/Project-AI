@@ -194,7 +194,9 @@ class TestSnapshotRecording:
         start_time = base_time + 3600
         end_time = base_time + 3 * 3600
 
-        filtered = monitor.load_entropy_snapshots(start_time=start_time, end_time=end_time)
+        filtered = monitor.load_entropy_snapshots(
+            start_time=start_time, end_time=end_time
+        )
 
         assert len(filtered) == 3
 
@@ -508,7 +510,11 @@ class TestEntropyState:
 
         # State depends on whether creep threshold is met
         # The key is it returns a valid state
-        assert state in [EntropyState.CREEPING, EntropyState.CONVERGING, EntropyState.NORMAL]
+        assert state in [
+            EntropyState.CREEPING,
+            EntropyState.CONVERGING,
+            EntropyState.NORMAL,
+        ]
 
     def test_state_converging(self, monitor):
         """Test CONVERGING state detection"""

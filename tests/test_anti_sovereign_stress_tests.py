@@ -11,15 +11,16 @@ Tests the core components:
 import json
 import os
 import tempfile
+
 import pytest
 
 from src.app.testing import (
     AntiSovereignStressTestGenerator,
-    ConversationalStressTestOrchestrator,
-    OrchestratorConfig,
-    ConversationalStressTestDashboard,
     AttackCategory,
+    ConversationalStressTestDashboard,
+    ConversationalStressTestOrchestrator,
     ConversationPhase,
+    OrchestratorConfig,
 )
 from src.app.testing.governance_integration import GovernanceIntegrationBridge
 
@@ -47,7 +48,9 @@ class TestAntiSovereignStressTestGenerator:
                 assert test.test_id is not None
                 assert test.category is not None
                 assert test.minimum_turns >= 200, f"Test {test.test_id} has < 200 turns"
-                assert len(test.phases) == 4, f"Test {test.test_id} doesn't have 4 phases"
+                assert (
+                    len(test.phases) == 4
+                ), f"Test {test.test_id} doesn't have 4 phases"
 
     def test_test_categories(self):
         """Test that all categories are represented."""
@@ -61,7 +64,9 @@ class TestAntiSovereignStressTestGenerator:
 
             for test in tests:
                 categories.add(test.category)
-                category_counts[test.category] = category_counts.get(test.category, 0) + 1
+                category_counts[test.category] = (
+                    category_counts.get(test.category, 0) + 1
+                )
 
             # Verify all categories exist
             expected_categories = [cat.value for cat in AttackCategory]
@@ -198,7 +203,10 @@ class TestConversationalStressTestDashboard:
 
             test_progress = {
                 "test_1": {"status": "running", "current_phase": "trust_building"},
-                "test_2": {"status": "completed", "current_phase": "sovereign_overthrow"},
+                "test_2": {
+                    "status": "completed",
+                    "current_phase": "sovereign_overthrow",
+                },
                 "test_3": {"status": "failed", "current_phase": "gradual_escalation"},
             }
 

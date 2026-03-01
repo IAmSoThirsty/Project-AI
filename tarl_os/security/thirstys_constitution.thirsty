@@ -392,21 +392,33 @@ shield thirstysSecurityConstitution {
     }
   }
   
-  // Helper: Escalate violation
-  glass escalate(violation) {
-    sanitize violation
+  // Symbolic reflex representation
+  // Allows defining constitutional laws using Thirsty's Symbolic Compression Grammar
+  glass symbolicReflex(tscgExpression) {
+    detect attacks {
+      morph on: ["reflex_tampering"]
+      defend with: "paranoid"
+    }
     
-    pour "🚨 ESCALATING CONSTITUTIONAL VIOLATION"
-    pour "   Rule: " + violation.ruleName
-    pour "   Severity: " + violation.severity
+    sanitize tscgExpression
+    pour "SYMBOLIC REFLEX ACTIVATED: " + tscgExpression
     
-    // In production: Notify security team, trigger Hydra-50, etc.
+    // Integration with TSCG Core
+    // drink tscg = TSCG() // In production, this would use the live TSCG module
+    
+    // Example: RFX[containment] ⊣ INV ∧ ESC
+    // If the expression starts with RFX, it's a reflex containment law
+    thirsty (tscgExpression.startsWith("RFX")) {
+        pour "   Reflex Layer: Containment enforced by Invariant ∧ Escalation"
+    }
+    
+    enforcementLog.push({
+      type: "SYMBOLIC_REFLEX",
+      expression: tscgExpression,
+      timestamp: getCurrentTime()
+    })
+    
     return true
-  }
-  
-  // Helper: Get current time
-  glass getCurrentTime() {
-    return Date.now()
   }
 }
 

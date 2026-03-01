@@ -95,7 +95,9 @@ print("Agent {agent_id} active")
     @pytest.fixture
     def cerberus(self, temp_data_dir):
         """Create Cerberus instance for testing."""
-        return CerberusHydraDefense(data_dir=temp_data_dir, enable_polyglot_execution=False)
+        return CerberusHydraDefense(
+            data_dir=temp_data_dir, enable_polyglot_execution=False
+        )
 
     def test_initialization(self, cerberus):
         """Test Cerberus initialization."""
@@ -139,7 +141,9 @@ print("Agent {agent_id} active")
         assert len(gen1_agents) == 3
 
         # Second bypass - should spawn 3 more agents
-        cerberus.detect_bypass(agent_id=gen1_agents[0].agent_id, bypass_type="test_bypass")
+        cerberus.detect_bypass(
+            agent_id=gen1_agents[0].agent_id, bypass_type="test_bypass"
+        )
 
         assert cerberus.total_bypasses == 2
         assert len(cerberus.agents) == 7  # 1 + 3 + 3
@@ -175,7 +179,9 @@ print("Agent {agent_id} active")
 
         # Trigger multiple bypasses
         for i in range(5):
-            cerberus.detect_bypass(bypass_type=f"bypass_{i}", risk_score=0.5, bypass_depth=1)
+            cerberus.detect_bypass(
+                bypass_type=f"bypass_{i}", risk_score=0.5, bypass_depth=1
+            )
 
         # Lockdown stage should increase
         assert cerberus.lockdown_controller.current_stage > initial_stage
@@ -190,7 +196,10 @@ print("Agent {agent_id} active")
         locked_sections = [cerberus.agents[aid].locked_section for aid in spawned_ids]
 
         # Sections should exist
-        assert all(section in cerberus.lockdown_controller.LOCKABLE_SECTIONS for section in locked_sections)
+        assert all(
+            section in cerberus.lockdown_controller.LOCKABLE_SECTIONS
+            for section in locked_sections
+        )
 
         # Sections should be unique or nearly unique
         assert len(set(locked_sections)) >= 3  # At least some diversity
@@ -259,7 +268,9 @@ print("Agent {agent_id} active")
         cerberus._save_state()
 
         # Create new instance and load state
-        cerberus2 = CerberusHydraDefense(data_dir=temp_data_dir, enable_polyglot_execution=False)
+        cerberus2 = CerberusHydraDefense(
+            data_dir=temp_data_dir, enable_polyglot_execution=False
+        )
 
         # State should be restored
         assert len(cerberus2.agents) == initial_agent_count
@@ -267,7 +278,9 @@ print("Agent {agent_id} active")
 
     def test_agent_code_generation(self, temp_data_dir):
         """Test agent code generation from templates."""
-        cerberus = CerberusHydraDefense(data_dir=temp_data_dir, enable_polyglot_execution=True)
+        cerberus = CerberusHydraDefense(
+            data_dir=temp_data_dir, enable_polyglot_execution=True
+        )
 
         spawned_ids = cerberus.spawn_initial_agents(count=1)
         agent = cerberus.agents[spawned_ids[0]]
@@ -325,7 +338,9 @@ print("Agent {agent_id} active")
                 self.suspicious_activities = []
 
             def _handle_suspicious_activity(self, user, resource, reason):
-                self.suspicious_activities.append({"user": user, "resource": resource, "reason": reason})
+                self.suspicious_activities.append(
+                    {"user": user, "resource": resource, "reason": reason}
+                )
 
         mock_enforcer = MockSecurityEnforcer()
         cerberus.security_enforcer = mock_enforcer
@@ -340,7 +355,9 @@ print("Agent {agent_id} active")
         # Security enforcer should be notified
         assert len(mock_enforcer.suspicious_activities) == 1
         assert mock_enforcer.suspicious_activities[0]["user"] == "attacker-456"
-        assert mock_enforcer.suspicious_activities[0]["reason"] == "agent_bypass_injection"
+        assert (
+            mock_enforcer.suspicious_activities[0]["reason"] == "agent_bypass_injection"
+        )
 
     def test_agent_record_dataclass(self):
         """Test AgentRecord dataclass."""
@@ -518,7 +535,9 @@ class TestLanguageDatabase:
             assert "agent_spawned" in lang_data
 
         # Check programming language structure
-        for _lang_code, lang_data in cerberus.languages["programming_languages"].items():
+        for _lang_code, lang_data in cerberus.languages[
+            "programming_languages"
+        ].items():
             assert "name" in lang_data
             assert "executable" in lang_data
             assert "extension" in lang_data

@@ -34,7 +34,12 @@ class ChangeSet:
         return not (self.modified or self.added or self.deleted or self.untracked)
 
     def __len__(self) -> int:
-        return len(self.modified) + len(self.added) + len(self.deleted) + len(self.untracked)
+        return (
+            len(self.modified)
+            + len(self.added)
+            + len(self.deleted)
+            + len(self.untracked)
+        )
 
 
 def detect_uncommitted_changes(project_root: Path) -> ChangeSet:
@@ -74,7 +79,9 @@ def detect_uncommitted_changes(project_root: Path) -> ChangeSet:
             deleted.append(resolved)
 
     # Untracked files
-    untracked_output = _git(project_root, ["ls-files", "--others", "--exclude-standard"])
+    untracked_output = _git(
+        project_root, ["ls-files", "--others", "--exclude-standard"]
+    )
     for line in untracked_output:
         path = project_root / line.strip()
         if path not in added:

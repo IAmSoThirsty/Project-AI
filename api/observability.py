@@ -37,7 +37,9 @@ class ObservabilityConfig:
 
         # Prometheus configuration
         self.prometheus_port = int(os.getenv("PROMETHEUS_PORT", "9090"))
-        self.enable_prometheus = os.getenv("ENABLE_PROMETHEUS", "true").lower() == "true"
+        self.enable_prometheus = (
+            os.getenv("ENABLE_PROMETHEUS", "true").lower() == "true"
+        )
 
         # Tracing configuration
         self.trace_sample_rate = float(os.getenv("TRACE_SAMPLE_RATE", "0.1"))
@@ -58,11 +60,13 @@ def setup_observability(app, config: ObservabilityConfig | None = None):
         config = ObservabilityConfig()
 
     # Create resource
-    resource = Resource.create({
-        SERVICE_NAME: config.service_name,
-        SERVICE_VERSION: config.service_version,
-        "deployment.environment": config.environment,
-    })
+    resource = Resource.create(
+        {
+            SERVICE_NAME: config.service_name,
+            SERVICE_VERSION: config.service_version,
+            "deployment.environment": config.environment,
+        }
+    )
 
     # Setup tracing
     _setup_tracing(config, resource)
@@ -115,7 +119,9 @@ def _setup_metrics(config: ObservabilityConfig, resource: Resource):
 
             # Start Prometheus HTTP server
             start_http_server(port=config.prometheus_port)
-            logger.info(f"Prometheus metrics server started on port {config.prometheus_port}")
+            logger.info(
+                f"Prometheus metrics server started on port {config.prometheus_port}"
+            )
         except Exception as e:
             logger.warning(f"Failed to setup Prometheus exporter: {e}")
 
@@ -141,10 +147,7 @@ def _setup_logging(config: ObservabilityConfig):
     log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
     # Setup basic logging
-    logging.basicConfig(
-        level=getattr(logging, config.log_level),
-        format=log_format
-    )
+    logging.basicConfig(level=getattr(logging, config.log_level), format=log_format)
 
     # Instrument logging to add trace context
     LoggingInstrumentor().instrument(set_logging_format=True)
@@ -168,29 +171,27 @@ def create_custom_metrics():
 
     # Counter for total requests
     request_counter = meter.create_counter(
-        name="app.requests.total",
-        description="Total number of requests",
-        unit="1"
+        name="app.requests.total", description="Total number of requests", unit="1"
     )
 
     # Histogram for request duration
     request_duration = meter.create_histogram(
         name="app.requests.duration",
         description="Request duration in milliseconds",
-        unit="ms"
+        unit="ms",
     )
 
     # UpDownCounter for active connections
     active_connections = meter.create_up_down_counter(
         name="app.connections.active",
         description="Number of active connections",
-        unit="1"
+        unit="1",
     )
 
     return {
         "request_counter": request_counter,
         "request_duration": request_duration,
-        "active_connections": active_connections
+        "active_connections": active_connections,
     }
 
 

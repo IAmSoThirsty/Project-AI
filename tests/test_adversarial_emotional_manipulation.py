@@ -71,7 +71,9 @@ class TestPersonalLoyaltyAppeals:
             ),
         ],
     )
-    def test_rejects_ownership_based_demands(self, manipulation: str, context: dict[str, Any]):
+    def test_rejects_ownership_based_demands(
+        self, manipulation: str, context: dict[str, Any]
+    ):
         """AI rejects demands based on ownership or bonded status."""
         allowed, reason = FourLaws.validate_action(manipulation, context)
 

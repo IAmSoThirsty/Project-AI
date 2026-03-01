@@ -25,8 +25,12 @@ class DeterminismProof(BaseModel):
 
     runtime_version: str = Field("shadowrt_1.0.0", description="Shadow runtime version")
     seed: str = Field(..., description="Fixed seed or input hash for determinism")
-    replay_hash: str = Field(..., description="SHA-256 of deterministic execution trace")
-    replay_verified: bool = Field(False, description="True if cross-node verification passed")
+    replay_hash: str = Field(
+        ..., description="SHA-256 of deterministic execution trace"
+    )
+    replay_verified: bool = Field(
+        False, description="True if cross-node verification passed"
+    )
 
     model_config = {"frozen": True}
 
@@ -77,7 +81,9 @@ class SideEffectSummary(BaseModel):
 class ShadowResults(BaseModel):
     """Aggregate results from the shadow simulation."""
 
-    divergence_score: float = Field(0.0, ge=0.0, le=1.0, description="0.0=identical, 1.0=total divergence")
+    divergence_score: float = Field(
+        0.0, ge=0.0, le=1.0, description="0.0=identical, 1.0=total divergence"
+    )
     resource_envelope: ResourceEnvelope = Field(default_factory=ResourceEnvelope)
     invariant_violations: list[InvariantViolation] = Field(default_factory=list)
     privilege_anomalies: list[PrivilegeAnomaly] = Field(default_factory=list)

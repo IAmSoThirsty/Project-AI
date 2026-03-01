@@ -123,7 +123,7 @@ val discoveredModules = mutableSetOf<String>()
 if (file("android").exists()) {
     discoveredModules.add("android")
 }
-if (file("app").exists() && file("app/build.gradle").exists()) {
+if (file("android/app/build.gradle").exists()) {
     discoveredModules.add("app")
 }
 
@@ -508,8 +508,8 @@ configure<com.github.gradle.node.NodeExtension> {
     npmWorkDir.set(file("${projectRoot}/.gradle/npm"))
 }
 
-// Root npm install - configure existing task if it exists
-tasks.findByName("npmInstall") ?: tasks.register<com.github.gradle.node.npm.task.NpmTask>("npmInstall") {
+// Root npm install - ensure task is registered or configured safely
+tasks.maybeCreate<com.github.gradle.node.npm.task.NpmTask>("npmInstall").apply {
     group = "npm"
     description = "Install root npm dependencies"
     

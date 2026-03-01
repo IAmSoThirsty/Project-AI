@@ -1,6 +1,7 @@
 'use client';
 
 import '../styles/globals.css';
+import '../styles/sovereign_tokens.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -105,7 +106,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="ThirstysProjects — Project-AI" />
         <meta name="twitter:description" content="Sovereign Intelligence for Planetary Defense." />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+        <meta name="theme-color" content="#050505" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>

@@ -30,8 +30,7 @@ from src.app.security.tseca_ghost_protocol import (
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -118,6 +117,7 @@ def example_4_heartbeat_monitoring():
 
     # Start monitoring in background
     import threading
+
     thread = threading.Thread(target=monitor.monitor, args=(on_failure,))
     thread.daemon = True
     thread.start()

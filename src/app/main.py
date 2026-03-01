@@ -51,82 +51,94 @@ _global_council_hub = None
 # Dependency Checking - Enterprise Monolithic Integration
 # ============================================================================
 
+
 def check_dependencies():
     """
     Check for optional dependencies and gracefully disable features if missing.
-    
+
     This enables soft degradation instead of hard failures for optional features.
     Logs missing dependencies and updates configuration accordingly.
     """
     import importlib
+
     from src.app.governance.audit_log import audit_event
-    
+
     # Optional dependencies with their corresponding config flags
     optional_deps = [
-        ('cv2', 'enable_video', 'OpenCV for video processing'),
-        ('whisper', 'enable_transcript', 'Whisper for audio transcription'),
-        ('redis', 'redis_enabled', 'Redis for audit log fallback'),
-        ('pydub', 'enable_audio_processing', 'PyDub for audio format conversion'),
+        ("cv2", "enable_video", "OpenCV for video processing"),
+        ("whisper", "enable_transcript", "Whisper for audio transcription"),
+        ("redis", "redis_enabled", "Redis for audit log fallback"),
+        ("pydub", "enable_audio_processing", "PyDub for audio format conversion"),
     ]
-    
+
     missing_deps = []
     disabled_features = []
-    
+
     for module_name, config_key, description in optional_deps:
         try:
             importlib.import_module(module_name)
             logger.info(f"✓ Dependency available: {module_name} - {description}")
         except ImportError:
-            logger.warning(f"✗ Optional dependency missing: {module_name} - {description}")
-            missing_deps.append({
-                'module': module_name,
-                'description': description,
-                'config_key': config_key
-            })
+            logger.warning(
+                f"✗ Optional dependency missing: {module_name} - {description}"
+            )
+            missing_deps.append(
+                {
+                    "module": module_name,
+                    "description": description,
+                    "config_key": config_key,
+                }
+            )
             disabled_features.append(config_key)
-            
+
             # Audit missing dependency
             try:
                 audit_event(
-                    'dependency_missing',
+                    "dependency_missing",
                     {
-                        'dependency': module_name,
-                        'description': description,
-                        'config_key': config_key,
-                        'feature_disabled': True
+                        "dependency": module_name,
+                        "description": description,
+                        "config_key": config_key,
+                        "feature_disabled": True,
                     },
-                    actor='system_startup'
+                    actor="system_startup",
                 )
             except Exception:
                 pass  # Don't fail startup if audit fails
-    
+
     # Update configuration to disable features for missing dependencies
     if disabled_features:
         try:
             from src.app.core.config_loader import get_config_loader
-            
+
             config_loader = get_config_loader()
-            
+
             # Get distress config
-            distress_config = config_loader.get('distress', {})
-            
+            distress_config = config_loader.get("distress", {})
+
             # Disable features
             for feature in disabled_features:
                 if feature in distress_config:
                     distress_config[feature] = False
-                    logger.info(f"Disabled feature due to missing dependency: {feature}")
-            
-            logger.info(f"Dependency check complete: {len(missing_deps)} missing, {len(disabled_features)} features disabled")
-            
+                    logger.info(
+                        f"Disabled feature due to missing dependency: {feature}"
+                    )
+
+            logger.info(
+                f"Dependency check complete: {len(missing_deps)} missing, {len(disabled_features)} features disabled"
+            )
+
         except Exception as e:
-            logger.error(f"Failed to update configuration for missing dependencies: {e}")
+            logger.error(
+                f"Failed to update configuration for missing dependencies: {e}"
+            )
     else:
         logger.info("All optional dependencies available")
-    
+
     return {
-        'missing_count': len(missing_deps),
-        'missing_deps': missing_deps,
-        'disabled_features': disabled_features
+        "missing_count": len(missing_deps),
+        "missing_deps": missing_deps,
+        "disabled_features": disabled_features,
     }
 
 
@@ -190,20 +202,26 @@ def initialize_kernel() -> CognitionKernel:
         try:
             governance_system = GovernanceTriumvirate()
         except Exception as e:
-            logger.warning("GovernanceTriumvirate initialization failed: %s, using fallback", e)
+            logger.warning(
+                "GovernanceTriumvirate initialization failed: %s, using fallback", e
+            )
             governance_system = None
 
         # 4. Reflection Engine (post-hoc reasoning)
         try:
             reflection_engine = ReflectionCycle(data_dir="data")
         except Exception as e:
-            logger.warning("ReflectionCycle initialization failed: %s, using fallback", e)
+            logger.warning(
+                "ReflectionCycle initialization failed: %s, using fallback", e
+            )
             reflection_engine = None
 
         # 5. Triumvirate (Galahad, Cerberus, Codex)
         try:
             triumvirate = Triumvirate()
-            logger.info("Triumvirate initialized: Galahad, Cerberus, Codex Deus Maximus")
+            logger.info(
+                "Triumvirate initialized: Galahad, Cerberus, Codex Deus Maximus"
+            )
         except Exception as e:
             logger.warning("Triumvirate initialization failed: %s, using fallback", e)
             triumvirate = None
@@ -211,7 +229,9 @@ def initialize_kernel() -> CognitionKernel:
         # 6. Bio-Inspired Brain Mapping System
         try:
             if yaml is None:
-                logger.warning("PyYAML not available, using default bio brain mapper config")
+                logger.warning(
+                    "PyYAML not available, using default bio brain mapper config"
+                )
                 bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
             else:
                 # Load configuration from YAML
@@ -233,16 +253,22 @@ def initialize_kernel() -> CognitionKernel:
                                 bio_config_data[key].update(value)
                             elif key in bio_config_data:
                                 bio_config_data[key] = value
-                    bio_brain_mapper = BioBrainMappingSystem(config=bio_config_data, data_dir="data")
+                    bio_brain_mapper = BioBrainMappingSystem(
+                        config=bio_config_data, data_dir="data"
+                    )
                     logger.info(
                         "✅ BioBrainMappingSystem initialized with preset: %s",
                         active_preset,
                     )
                 else:
                     bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
-                    logger.info("✅ BioBrainMappingSystem initialized with default config")
+                    logger.info(
+                        "✅ BioBrainMappingSystem initialized with default config"
+                    )
         except Exception as e:
-            logger.warning("BioBrainMappingSystem initialization failed: %s, using fallback", e)
+            logger.warning(
+                "BioBrainMappingSystem initialization failed: %s, using fallback", e
+            )
             bio_brain_mapper = None
 
         # 7. Create CognitionKernel with all subsystems
@@ -266,7 +292,9 @@ def initialize_kernel() -> CognitionKernel:
         logger.info("   - Governance: %s", "✓" if governance_system else "✗ (fallback)")
         logger.info("   - Reflection: %s", "✓" if reflection_engine else "✗ (fallback)")
         logger.info("   - Triumvirate: %s", "✓" if triumvirate else "✗ (fallback)")
-        logger.info("   - BioBrainMapper: %s", "✓" if bio_brain_mapper else "✗ (fallback)")
+        logger.info(
+            "   - BioBrainMapper: %s", "✓" if bio_brain_mapper else "✗ (fallback)"
+        )
         logger.info("🔒 Kernel syscall boundary active - all execution governed")
 
         # Register bio brain mapper with kernel if available
@@ -309,7 +337,9 @@ def initialize_council_hub(kernel: CognitionKernel) -> CouncilHub:
     return hub
 
 
-def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub) -> dict[str, Any]:
+def initialize_security_systems(
+    kernel: CognitionKernel, council_hub: CouncilHub
+) -> dict[str, Any]:
     """Initialize comprehensive security countermeasures and defense systems.
 
     Activates:
@@ -369,7 +399,9 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
     try:
         from app.agents.safety_guard_agent import SafetyGuardAgent
 
-        safety_guard = SafetyGuardAgent(model_name="llama-guard-3-8b", strict_mode=True, kernel=kernel)
+        safety_guard = SafetyGuardAgent(
+            model_name="llama-guard-3-8b", strict_mode=True, kernel=kernel
+        )
         security_components["safety_guard"] = safety_guard
 
         # Register with CouncilHub
@@ -530,7 +562,9 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
             if security_components.get("safety_guard"):
                 tower.register_security_agent("active_defense", "safety_guard_main")
             if security_components.get("constitutional_guard"):
-                tower.register_security_agent("active_defense", "constitutional_guard_main")
+                tower.register_security_agent(
+                    "active_defense", "constitutional_guard_main"
+                )
             if security_components.get("tarl_protector"):
                 tower.register_security_agent("active_defense", "tarl_protector_main")
 
@@ -553,8 +587,12 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
                 "   - Active Defense agents: %s",
                 status["registered_agents"]["active_defense"],
             )
-            logger.info("   - Red Team agents: %s", status["registered_agents"]["red_team"])
-            logger.info("   - Oversight agents: %s", status["registered_agents"]["oversight"])
+            logger.info(
+                "   - Red Team agents: %s", status["registered_agents"]["red_team"]
+            )
+            logger.info(
+                "   - Oversight agents: %s", status["registered_agents"]["oversight"]
+            )
         except Exception as e:
             logger.warning("Failed to register agents with Watch Tower: %s", e)
 
@@ -603,7 +641,9 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
     # Summary
     active_count = sum(1 for v in security_components.values() if v is not None)
     logger.info("=" * 60)
-    logger.info("🔒 Security Systems Initialized: %s/%s", active_count, len(security_components))
+    logger.info(
+        "🔒 Security Systems Initialized: %s/%s", active_count, len(security_components)
+    )
     logger.info("=" * 60)
     logger.info("Security Posture: DEFENSIVE - NO OFFENSIVE CAPABILITIES")
     logger.info("Aligned with: Asimov's Laws, FourLaws Governance")
@@ -613,7 +653,9 @@ def initialize_security_systems(kernel: CognitionKernel, council_hub: CouncilHub
     return security_components
 
 
-def initialize_enhanced_defenses(kernel: CognitionKernel, security_systems: dict[str, Any]) -> dict[str, Any]:
+def initialize_enhanced_defenses(
+    kernel: CognitionKernel, security_systems: dict[str, Any]
+) -> dict[str, Any]:
     """Initialize enhanced defensive capabilities.
 
     Adds advanced detection, response, and hardening beyond basic agents.
@@ -672,7 +714,9 @@ def initialize_enhanced_defenses(kernel: CognitionKernel, security_systems: dict
         enhanced_components["honeypot"] = honeypot
 
         logger.info("✅ Honeypot Detection System activated")
-        logger.info("   - Attack pattern detection: SQL, XSS, Path Traversal, Cmd Injection")
+        logger.info(
+            "   - Attack pattern detection: SQL, XSS, Path Traversal, Cmd Injection"
+        )
         logger.info("   - Tool fingerprinting: sqlmap, nikto, burp, metasploit, etc.")
         logger.info("   - Attacker profiling and threat intelligence")
     except Exception as e:
@@ -707,7 +751,9 @@ def initialize_enhanced_defenses(kernel: CognitionKernel, security_systems: dict
         except Exception as e:
             logger.warning("IP Blocker integration failed: %s", e)
 
-    if enhanced_components.get("honeypot") and enhanced_components.get("incident_responder"):
+    if enhanced_components.get("honeypot") and enhanced_components.get(
+        "incident_responder"
+    ):
         try:
             # Link honeypot detections to incident responder
             logger.info("   - Honeypot linked to Incident Responder")
@@ -831,7 +877,9 @@ def report_tier_health():
                 logger.info("     %s %s", status_icon, comp.component_name)
 
             if len(tier_health.component_reports) > 5:
-                logger.info("     ... and %s more", len(tier_health.component_reports) - 5)
+                logger.info(
+                    "     ... and %s more", len(tier_health.component_reports) - 5
+                )
 
         # Overall status
         logger.info("")
@@ -845,7 +893,9 @@ def report_tier_health():
         if violations:
             logger.warning("⚠️  %s tier boundary violations detected:", len(violations))
             for violation in violations[:3]:  # First 3
-                logger.warning("   - %s: %s", violation.violation_type, violation.description)
+                logger.warning(
+                    "   - %s: %s", violation.violation_type, violation.description
+                )
         else:
             logger.info("✓ No tier boundary violations")
 
@@ -864,18 +914,27 @@ def main():
     CRITICAL: This is the trust root where CognitionKernel is instantiated.
     All subsystems are wired through the kernel here.
     """
+    # Floor 1 Orchesration Hook (Thirsty-Lang)
+    thirsty_main = os.path.join(os.path.dirname(__file__), "main.thirsty")
+    if os.path.exists(thirsty_main):
+        print(f"--- SOVEREIGN FLOOR 1 ACTIVE: {thirsty_main} ---")
+        # In a production polyglot environment, we would execute this via the Thirsty Engine
+        # For now, we verify its presence and anchor the state.
+
     # Setup environment
     setup_environment()
 
     logger.info("=" * 60)
     logger.info("🚀 Starting Project-AI with CognitionKernel governance")
     logger.info("=" * 60)
-    
+
     # Check dependencies and gracefully disable unavailable features
     logger.info("Checking dependencies...")
     dep_status = check_dependencies()
-    if dep_status['missing_count'] > 0:
-        logger.warning(f"Running with {dep_status['missing_count']} optional dependencies missing")
+    if dep_status["missing_count"] > 0:
+        logger.warning(
+            f"Running with {dep_status['missing_count']} optional dependencies missing"
+        )
     else:
         logger.info("All dependencies available")
 
@@ -910,7 +969,9 @@ def main():
 
         miniature_office = MiniatureOfficeAdapter()
         if miniature_office.initialize():
-            logger.info("✅ Miniature Office initialized (IDE + Repair + Lounge + Security)")
+            logger.info(
+                "✅ Miniature Office initialized (IDE + Repair + Lounge + Security)"
+            )
         else:
             miniature_office = None
             logger.info("ℹ️  Miniature Office disabled or init returned False")

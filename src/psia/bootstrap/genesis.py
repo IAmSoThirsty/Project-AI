@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 
 class GenesisStatus(str, Enum):
     """Status of the genesis ceremony."""
+
     NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -53,6 +54,7 @@ class KeyMaterial:
     In production, private keys would never be held in-memory
     but instead managed by HSM/KMS.
     """
+
     component: str
     key_id: str
     public_key_hex: str
@@ -67,6 +69,7 @@ class GenesisAnchor:
     This anchor is the first entry in the ledger and establishes
     the chain of trust for all subsequent operations.
     """
+
     anchor_id: str
     node_id: str
     build_hash: str
@@ -91,6 +94,7 @@ class GenesisAnchor:
 @dataclass
 class BuildAttestation:
     """Compile-time binding of the system binary hash."""
+
     binary_hash: str
     invariant_hash: str
     schema_hash: str
@@ -113,6 +117,7 @@ class BuildAttestation:
 @dataclass
 class GenesisResult:
     """Result of a genesis ceremony."""
+
     status: GenesisStatus
     anchor: GenesisAnchor | None = None
     attestation: BuildAttestation | None = None
@@ -287,9 +292,7 @@ class GenesisCoordinator:
         # Fallback: use first available key if genesis_root hasn't been generated yet
         if self._key_store.count > 0:
             first_component = self._key_store.components[0]
-            return self._key_store.sign_as(
-                first_component, data_hash.encode("utf-8")
-            )
+            return self._key_store.sign_as(first_component, data_hash.encode("utf-8"))
         # Last resort: hash-based (should never happen in normal flow)
         return hashlib.sha256(
             f"{self.node_id}:genesis:{data_hash}".encode()

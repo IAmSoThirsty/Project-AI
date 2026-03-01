@@ -335,7 +335,9 @@ class AdAnnihilator:
         # Passed all checks
         return {"block": False, "reason": "Clean URL", "action": "PERMITTED"}
 
-    def check_element(self, element_html: str, element_class: str, element_id: str) -> dict[str, Any]:
+    def check_element(
+        self, element_html: str, element_class: str, element_id: str
+    ) -> dict[str, Any]:
         """
         Check if HTML element is an ad (HOLY WAR analysis).
 

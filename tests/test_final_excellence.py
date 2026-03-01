@@ -283,6 +283,8 @@ def test_huggingface_generation_success(tmp_path):
             return b"PNGDATA"
 
     with patch("requests.post", return_value=FakePostResp()):
-        res = gen.generate_with_huggingface("a prompt", negative_prompt="", width=256, height=256)
+        res = gen.generate_with_huggingface(
+            "a prompt", negative_prompt="", width=256, height=256
+        )
         assert res.get("success") is True
         assert os.path.exists(res.get("filepath"))

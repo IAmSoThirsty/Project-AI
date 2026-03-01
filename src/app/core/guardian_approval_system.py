@@ -414,9 +414,9 @@ class GuardianApprovalSystem:
         self.requests: dict[str, ApprovalRequest] = {}
         self.guardians: dict[str, dict[str, Any]] = {}
         self.approval_policies: dict[str, dict[str, Any]] = {}
-        self.emergency_overrides: dict[
-            str, EmergencyOverride
-        ] = {}  # Track emergency overrides
+        self.emergency_overrides: dict[str, EmergencyOverride] = (
+            {}
+        )  # Track emergency overrides
 
         # Validators
         self.four_laws_validator = FourLawsValidator()

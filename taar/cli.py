@@ -37,10 +37,16 @@ def _load_config(project_root: Optional[Path] = None):
 
 @app.command()
 def run(
-    all_files: bool = typer.Option(False, "--all", "-a", help="Ignore cache, run everything"),
+    all_files: bool = typer.Option(
+        False, "--all", "-a", help="Ignore cache, run everything"
+    ),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output"),
-    revision: Optional[str] = typer.Option(None, "--since", help="Detect changes since revision"),
-    project_root: Optional[Path] = typer.Option(None, "--root", help="Project root directory"),
+    revision: Optional[str] = typer.Option(
+        None, "--since", help="Detect changes since revision"
+    ),
+    project_root: Optional[Path] = typer.Option(
+        None, "--root", help="Project root directory"
+    ),
 ) -> None:
     """
     Run affected tasks for uncommitted changes.
@@ -106,7 +112,9 @@ def run(
 @app.command()
 def watch(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output"),
-    project_root: Optional[Path] = typer.Option(None, "--root", help="Project root directory"),
+    project_root: Optional[Path] = typer.Option(
+        None, "--root", help="Project root directory"
+    ),
 ) -> None:
     """
     Start active watch mode.
@@ -196,7 +204,9 @@ def _windows_wait(watcher) -> None:
 
 @app.command()
 def status(
-    project_root: Optional[Path] = typer.Option(None, "--root", help="Project root directory"),
+    project_root: Optional[Path] = typer.Option(
+        None, "--root", help="Project root directory"
+    ),
 ) -> None:
     """Show TAAR cache statistics and last run info."""
     config = _load_config(project_root)
@@ -216,7 +226,9 @@ def status(
 
 @app.command()
 def clean(
-    project_root: Optional[Path] = typer.Option(None, "--root", help="Project root directory"),
+    project_root: Optional[Path] = typer.Option(
+        None, "--root", help="Project root directory"
+    ),
 ) -> None:
     """Clear the TAAR result cache."""
     config = _load_config(project_root)
@@ -231,7 +243,9 @@ def clean(
 
 @app.command()
 def graph(
-    project_root: Optional[Path] = typer.Option(None, "--root", help="Project root directory"),
+    project_root: Optional[Path] = typer.Option(
+        None, "--root", help="Project root directory"
+    ),
 ) -> None:
     """Show the dependency graph and runner configuration."""
     config = _load_config(project_root)
@@ -241,7 +255,9 @@ def graph(
     typer.secho("Runners:", bold=True)
     for name, runner in config.enabled_runners.items():
         typer.echo(f"  {name}:")
-        typer.echo(f"    Paths: {', '.join(runner.paths[:3])}{'...' if len(runner.paths) > 3 else ''}")
+        typer.echo(
+            f"    Paths: {', '.join(runner.paths[:3])}{'...' if len(runner.paths) > 3 else ''}"
+        )
         typer.echo(f"    Commands: {', '.join(c.name for c in runner.commands)}")
         typer.echo()
 
@@ -256,9 +272,13 @@ def graph(
 
 @app.command()
 def ci(
-    revision: str = typer.Option("HEAD~1", "--since", help="Base revision to diff against"),
+    revision: str = typer.Option(
+        "HEAD~1", "--since", help="Base revision to diff against"
+    ),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output"),
-    project_root: Optional[Path] = typer.Option(None, "--root", help="Project root directory"),
+    project_root: Optional[Path] = typer.Option(
+        None, "--root", help="Project root directory"
+    ),
 ) -> None:
     """
     CI-optimized mode.

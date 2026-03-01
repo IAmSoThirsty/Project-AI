@@ -16,7 +16,9 @@ logger = logging.getLogger(__name__)
 
 
 class RollbackAgent(KernelRoutedAgent):
-    def __init__(self, data_dir: str = "data", kernel: CognitionKernel | None = None) -> None:
+    def __init__(
+        self, data_dir: str = "data", kernel: CognitionKernel | None = None
+    ) -> None:
         # Initialize kernel routing (COGNITION KERNEL INTEGRATION)
         super().__init__(
             kernel=kernel,
@@ -25,17 +27,25 @@ class RollbackAgent(KernelRoutedAgent):
         )
         self.data_dir = data_dir
 
-    def monitor_and_rollback(self, integration_report: dict[str, Any]) -> dict[str, Any]:
+    def monitor_and_rollback(
+        self, integration_report: dict[str, Any]
+    ) -> dict[str, Any]:
         # Route through kernel (COGNITION KERNEL ROUTING)
         return self._execute_through_kernel(
             self._do_monitor_and_rollback,
             integration_report,
             operation_name="monitor_and_rollback",
             risk_level="high",
-            metadata={"has_errors": bool(integration_report.get("report", {}).get("errors", []))},
+            metadata={
+                "has_errors": bool(
+                    integration_report.get("report", {}).get("errors", [])
+                )
+            },
         )
 
-    def _do_monitor_and_rollback(self, integration_report: dict[str, Any]) -> dict[str, Any]:
+    def _do_monitor_and_rollback(
+        self, integration_report: dict[str, Any]
+    ) -> dict[str, Any]:
         """Internal implementation of monitoring and rollback."""
         # If integration_report contains errors, attempt rollback
         try:

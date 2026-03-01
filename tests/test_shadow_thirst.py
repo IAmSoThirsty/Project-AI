@@ -16,14 +16,14 @@ VERSION: 1.0.0
 
 import pytest
 
+from shadow_thirst.bytecode import generate_bytecode
 from shadow_thirst.compiler import compile_source
+from shadow_thirst.constitutional import CommitDecision, ConstitutionalIntegration
+from shadow_thirst.ir_generator import generate_ir
 from shadow_thirst.lexer import TokenType, tokenize
 from shadow_thirst.parser import parse
-from shadow_thirst.ir_generator import generate_ir
 from shadow_thirst.static_analysis import AnalysisSeverity, analyze
-from shadow_thirst.bytecode import generate_bytecode
 from shadow_thirst.vm import ShadowAwareVM
-from shadow_thirst.constitutional import ConstitutionalIntegration, CommitDecision
 
 
 class TestLexer:
@@ -393,7 +393,9 @@ class TestConstitutionalIntegration:
         frame.divergence_magnitude = 58.0
 
         # Validate with require_identical policy
-        result = integration.validate_and_commit(frame, divergence_policy="require_identical")
+        result = integration.validate_and_commit(
+            frame, divergence_policy="require_identical"
+        )
 
         assert result.decision == CommitDecision.QUARANTINE
 

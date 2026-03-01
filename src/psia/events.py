@@ -208,7 +208,7 @@ class EventBus:
         # Retain in history (ring buffer)
         self._history.append(event)
         if len(self._history) > self._max_history:
-            self._history = self._history[-self._max_history:]
+            self._history = self._history[-self._max_history :]
 
         # Deliver to specific subscribers
         for subscriber in self._subscribers.get(event.event_type, []):

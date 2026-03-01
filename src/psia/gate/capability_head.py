@@ -113,11 +113,13 @@ class CapabilityHead:
         # ── Check 1: Token resolution ──
         token = self.token_store.resolve(token_id)
         if token is None and self.token_store.count > 0:
-            reasons.append(DenyReason(
-                code="CAP_TOKEN_NOT_FOUND",
-                detail=f"CapabilityToken '{token_id}' not found in store — "
-                       f"INV-ROOT-3 requires valid token",
-            ))
+            reasons.append(
+                DenyReason(
+                    code="CAP_TOKEN_NOT_FOUND",
+                    detail=f"CapabilityToken '{token_id}' not found in store — "
+                    f"INV-ROOT-3 requires valid token",
+                )
+            )
             return self._vote(envelope, "deny", reasons, constraints)
 
         if token is None:
@@ -126,21 +128,25 @@ class CapabilityHead:
 
         # ── Check 2: Token revocation ──
         if self.token_store.is_revoked(token_id):
-            reasons.append(DenyReason(
-                code="CAP_TOKEN_REVOKED",
-                detail=f"CapabilityToken '{token_id}' has been revoked",
-            ))
+            reasons.append(
+                DenyReason(
+                    code="CAP_TOKEN_REVOKED",
+                    detail=f"CapabilityToken '{token_id}' has been revoked",
+                )
+            )
             return self._vote(envelope, "deny", reasons, constraints)
 
         # ── Check 3: Issuer-subject match ──
         if token.subject != envelope.actor:
             # Token was issued to a different subject
             if not token.delegation.is_delegable:
-                reasons.append(DenyReason(
-                    code="CAP_SUBJECT_MISMATCH",
-                    detail=f"Token subject '{token.subject}' != actor "
-                           f"'{envelope.actor}' and token is non-delegable",
-                ))
+                reasons.append(
+                    DenyReason(
+                        code="CAP_SUBJECT_MISMATCH",
+                        detail=f"Token subject '{token.subject}' != actor "
+                        f"'{envelope.actor}' and token is non-delegable",
+                    )
+                )
 
         # ── Check 4: Token expiry ──
         try:
@@ -149,50 +155,61 @@ class CapabilityHead:
                 expires_at = expires_at.replace(tzinfo=timezone.utc)
             now = datetime.now(timezone.utc)
             from datetime import timedelta
+
             if expires_at + timedelta(seconds=self.clock_skew_seconds) < now:
-                reasons.append(DenyReason(
-                    code="CAP_TOKEN_EXPIRED",
-                    detail=f"Token expired at {token.expires_at} "
-                           f"(current: {now.isoformat()}, skew: {self.clock_skew_seconds}s)",
-                ))
+                reasons.append(
+                    DenyReason(
+                        code="CAP_TOKEN_EXPIRED",
+                        detail=f"Token expired at {token.expires_at} "
+                        f"(current: {now.isoformat()}, skew: {self.clock_skew_seconds}s)",
+                    )
+                )
         except (ValueError, TypeError) as exc:
-            reasons.append(DenyReason(
-                code="CAP_EXPIRY_UNPARSEABLE",
-                detail=f"Cannot parse expires_at: {exc}",
-            ))
+            reasons.append(
+                DenyReason(
+                    code="CAP_EXPIRY_UNPARSEABLE",
+                    detail=f"Cannot parse expires_at: {exc}",
+                )
+            )
 
         # ── Check 5: Scope matching (action + resource) ──
         action = envelope.intent.action
         resource = envelope.intent.resource
 
         if not token.covers(action, resource):
-            reasons.append(DenyReason(
-                code="CAP_SCOPE_DENIED",
-                detail=f"Token does not cover action='{action}' on "
-                       f"resource='{resource}' — INV-ROOT-3 scope mismatch. "
-                       f"Scopes: {[s.model_dump() for s in token.scope]}",
-            ))
+            reasons.append(
+                DenyReason(
+                    code="CAP_SCOPE_DENIED",
+                    detail=f"Token does not cover action='{action}' on "
+                    f"resource='{resource}' — INV-ROOT-3 scope mismatch. "
+                    f"Scopes: {[s.model_dump() for s in token.scope]}",
+                )
+            )
 
         # ── Check 6: Delegation chain depth ──
         delegation_depth = getattr(envelope.context, "delegation_depth", 0) or 0
         if token.delegation.max_depth is not None:
             if delegation_depth > token.delegation.max_depth:
-                reasons.append(DenyReason(
-                    code="CAP_DELEGATION_DEPTH_EXCEEDED",
-                    detail=f"Delegation depth {delegation_depth} exceeds "
-                           f"max_depth {token.delegation.max_depth}",
-                ))
+                reasons.append(
+                    DenyReason(
+                        code="CAP_DELEGATION_DEPTH_EXCEEDED",
+                        detail=f"Delegation depth {delegation_depth} exceeds "
+                        f"max_depth {token.delegation.max_depth}",
+                    )
+                )
 
         # ── Check 7: Binding verification ──
         if self.enforce_binding and token.binding:
             request_cert_fp = getattr(envelope.context, "client_cert_fingerprint", None)
             expected_fp = token.binding.client_cert_fingerprint
             if expected_fp and request_cert_fp != expected_fp:
-                reasons.append(DenyReason(
-                    code="CAP_BINDING_MISMATCH",
-                    detail=f"Client cert fingerprint mismatch: "
-                           f"expected={expected_fp}, got={request_cert_fp}",
-                ))
+                reasons.append(
+                    DenyReason(
+                        code="CAP_BINDING_MISMATCH",
+                        detail=f"Client cert fingerprint mismatch: "
+                        f"expected={expected_fp}, got={request_cert_fp}",
+                    )
+                )
 
         # ── Check 8: Constraint propagation ──
         # Propagate any scope constraints as applied constraints

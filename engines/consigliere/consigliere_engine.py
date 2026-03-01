@@ -132,7 +132,9 @@ class ThirstyConsigliere:
 
         return granted
 
-    def assist(self, query: str, context: dict[str, Any] | None = None) -> dict[str, Any]:
+    def assist(
+        self, query: str, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """
         Process user query with privacy-first approach.
         All data encrypted with God tier encryption.
@@ -180,8 +182,12 @@ class ThirstyConsigliere:
             action="assist",
             details={
                 "query_length": len(query),
-                "context_used": (list(minimized_context.keys()) if minimized_context else []),
-                "capabilities_used": [k for k, v in self._active_capabilities.items() if v],
+                "context_used": (
+                    list(minimized_context.keys()) if minimized_context else []
+                ),
+                "capabilities_used": [
+                    k for k, v in self._active_capabilities.items() if v
+                ],
                 "timestamp": time.time(),
                 "encrypted": True,
             },
@@ -256,7 +262,9 @@ class ThirstyConsigliere:
         """Generate cautious, privacy-preserving response"""
         query_lower = query.lower()
 
-        if "download" in query_lower and ("video" in query_lower or "audio" in query_lower):
+        if "download" in query_lower and (
+            "video" in query_lower or "audio" in query_lower
+        ):
             return (
                 "I can help you download media with our God tier encrypted downloader. "
                 "All metadata is encrypted with 7 layers. Would you like to proceed? "
@@ -291,7 +299,9 @@ class ThirstyConsigliere:
             "encryption_layers": 7,
             "on_device_only": self.on_device_only,
             "data_minimization": self.data_minimization,
-            "active_capabilities": [k for k, v in self._active_capabilities.items() if v],
+            "active_capabilities": [
+                k for k, v in self._active_capabilities.items() if v
+            ],
             "ledger_entries": len(self.action_ledger.get_entries()),
             "context_window_size": len(self._context_window),
             "principles": {

@@ -183,8 +183,12 @@ class TestAsymmetricSecurityEngine:
         engine = AsymmetricSecurityEngine(str(tmp_path))
 
         # Perform some validations
-        engine.validate_action("action1", {"auth_token": "valid", "state_changed": True})
-        engine.validate_action("action2", {"auth_token": "valid", "state_changed": True})
+        engine.validate_action(
+            "action1", {"auth_token": "valid", "state_changed": True}
+        )
+        engine.validate_action(
+            "action2", {"auth_token": "valid", "state_changed": True}
+        )
 
         report = engine.generate_comprehensive_report()
 

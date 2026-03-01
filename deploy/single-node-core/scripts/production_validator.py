@@ -29,12 +29,13 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 
 class CheckStatus(Enum):
     """Status of a validation check."""
+
     PASS = "✓ PASS"
     FAIL = "✗ FAIL"
     WARN = "⚠ WARN"
@@ -44,6 +45,7 @@ class CheckStatus(Enum):
 
 class CheckCategory(Enum):
     """Categories of validation checks."""
+
     INFRASTRUCTURE = "Infrastructure"
     SECURITY = "Security"
     PERFORMANCE = "Performance"
@@ -61,6 +63,7 @@ class CheckCategory(Enum):
 @dataclass
 class ValidationCheck:
     """Single validation check."""
+
     id: str
     category: CheckCategory
     name: str
@@ -70,9 +73,11 @@ class ValidationCheck:
     details: dict[str, Any] = field(default_factory=dict)
     execution_time_ms: int = 0
 
+
 @dataclass
 class ValidationReport:
     """Complete validation report."""
+
     timestamp: str
     version: str
     checks: list[ValidationCheck]
@@ -95,10 +100,7 @@ class ProductionValidator:
         """Run shell command and capture output."""
         try:
             result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=timeout
+                cmd, capture_output=True, text=True, timeout=timeout
             )
             return (result.returncode, result.stdout, result.stderr)
         except subprocess.TimeoutExpired:
@@ -112,13 +114,13 @@ class ProductionValidator:
             id="infra-001",
             category=CheckCategory.INFRASTRUCTURE,
             name="Docker Installation",
-            description="Verify Docker is installed and daemon is running"
+            description="Verify Docker is installed and daemon is running",
         )
 
         start = time.time()
 
         # Check docker version
-        code, stdout, stderr = self._run_command(['docker', '--version'])
+        code, stdout, stderr = self._run_command(["docker", "--version"])
 
         if code != 0:
             check.status = CheckStatus.FAIL
@@ -128,7 +130,7 @@ class ProductionValidator:
         version = stdout.strip()
 
         # Check docker daemon
-        code, stdout, stderr = self._run_command(['docker', 'ps'])
+        code, stdout, stderr = self._run_command(["docker", "ps"])
 
         if code != 0:
             check.status = CheckStatus.FAIL
@@ -148,15 +150,12 @@ class ProductionValidator:
             id="infra-002",
             category=CheckCategory.INFRASTRUCTURE,
             name="Docker Compose Files",
-            description="Verify compose files exist and have valid syntax"
+            description="Verify compose files exist and have valid syntax",
         )
 
         start = time.time()
 
-        required_files = [
-            "docker-compose.yml",
-            "docker-compose.prod.yml"
-        ]
+        required_files = ["docker-compose.yml", "docker-compose.prod.yml"]
 
         missing = []
         for file in required_files:
@@ -171,8 +170,14 @@ class ProductionValidator:
 
         # Validate syntax
         code, stdout, stderr = self._run_command(
-            ['docker', 'compose', '-f', str(self.deployment_dir / 'docker-compose.yml'), 'config'],
-            timeout=10
+            [
+                "docker",
+                "compose",
+                "-f",
+                str(self.deployment_dir / "docker-compose.yml"),
+                "config",
+            ],
+            timeout=10,
         )
 
         if code != 0:
@@ -193,7 +198,7 @@ class ProductionValidator:
             id="infra-003",
             category=CheckCategory.INFRASTRUCTURE,
             name="Service Availability",
-            description="Verify all required services are running and healthy"
+            description="Verify all required services are running and healthy",
         )
 
         start = time.time()
@@ -202,11 +207,11 @@ class ProductionValidator:
             "project-ai-orchestrator",
             "mcp-gateway",
             "postgres",
-            "redis"
+            "redis",
         ]
 
         code, stdout, stderr = self._run_command(
-            ['docker', 'compose', 'ps', '--format', 'json']
+            ["docker", "compose", "ps", "--format", "json"]
         )
 
         if code != 0:
@@ -215,12 +220,12 @@ class ProductionValidator:
             return check
 
         running_services = []
-        for line in stdout.strip().split('\n'):
+        for line in stdout.strip().split("\n"):
             if line:
                 try:
                     service = json.loads(line)
-                    if service.get('State') == 'running':
-                        running_services.append(service.get('Service'))
+                    if service.get("State") == "running":
+                        running_services.append(service.get("Service"))
                 except json.JSONDecodeError:
                     pass
 
@@ -229,10 +234,7 @@ class ProductionValidator:
         if missing:
             check.status = CheckStatus.WARN
             check.message = f"Services not running: {', '.join(missing)}"
-            check.details = {
-                "running": running_services,
-                "missing": missing
-            }
+            check.details = {"running": running_services, "missing": missing}
         else:
             check.status = CheckStatus.PASS
             check.message = f"All {len(required_services)} required services running"
@@ -248,7 +250,7 @@ class ProductionValidator:
             id="sec-001",
             category=CheckCategory.SECURITY,
             name="Security Infrastructure",
-            description="Verify security files and signing systems are present"
+            description="Verify security files and signing systems are present",
         )
 
         start = time.time()
@@ -258,7 +260,7 @@ class ProductionValidator:
             "security/crypto/sign_config.py",
             "security/crypto/sign_persona.py",
             "security/vault/vault_client.py",
-            "security/sandbox/agent_sandbox.py"
+            "security/sandbox/agent_sandbox.py",
         ]
 
         present = []
@@ -290,7 +292,7 @@ class ProductionValidator:
             id="rel-001",
             category=CheckCategory.RELIABILITY,
             name="Chaos Engineering",
-            description="Verify chaos engineering framework is configured"
+            description="Verify chaos engineering framework is configured",
         )
 
         start = time.time()
@@ -299,7 +301,7 @@ class ProductionValidator:
             "chaos/chaos_runner.py",
             "chaos/experiments/network-latency.yaml",
             "chaos/experiments/cpu-stress.yaml",
-            "chaos/experiments/container-pause.yaml"
+            "chaos/experiments/container-pause.yaml",
         ]
 
         present = []
@@ -318,7 +320,9 @@ class ProductionValidator:
             check.details = {"present": present, "missing": missing}
         else:
             check.status = CheckStatus.PASS
-            check.message = f"Chaos engineering configured with {len(present)} experiments"
+            check.message = (
+                f"Chaos engineering configured with {len(present)} experiments"
+            )
             check.details = {"experiments": present}
 
         check.execution_time_ms = int((time.time() - start) * 1000)
@@ -331,7 +335,7 @@ class ProductionValidator:
             id="ops-001",
             category=CheckCategory.OPERATIONAL_EXCELLENCE,
             name="SLO Definitions",
-            description="Verify formal SLO definitions are present"
+            description="Verify formal SLO definitions are present",
         )
 
         start = time.time()
@@ -339,7 +343,7 @@ class ProductionValidator:
         required_files = [
             "slo/definitions/latency_slo.yaml",
             "slo/definitions/error_slo.yaml",
-            "slo/definitions/mttr_slo.yaml"
+            "slo/definitions/mttr_slo.yaml",
         ]
 
         present = []
@@ -371,7 +375,7 @@ class ProductionValidator:
             id="mon-001",
             category=CheckCategory.MONITORING,
             name="Monitoring Stack",
-            description="Verify monitoring services are configured"
+            description="Verify monitoring services are configured",
         )
 
         start = time.time()
@@ -384,7 +388,7 @@ class ProductionValidator:
             "node-exporter",
             "cadvisor",
             "postgres-exporter",
-            "redis-exporter"
+            "redis-exporter",
         ]
 
         # Check if docker-compose.prod.yml has monitoring services
@@ -417,7 +421,7 @@ class ProductionValidator:
             id="dr-001",
             category=CheckCategory.DISASTER_RECOVERY,
             name="Backup/Restore Scripts",
-            description="Verify backup and restore automation exists"
+            description="Verify backup and restore automation exists",
         )
 
         start = time.time()
@@ -425,7 +429,7 @@ class ProductionValidator:
         required_files = [
             "scripts/backup.sh",
             "scripts/restore.sh",
-            "scripts/deploy.sh"
+            "scripts/deploy.sh",
         ]
 
         present = []
@@ -451,7 +455,9 @@ class ProductionValidator:
             check.details = {"present": present, "executable": executable}
         else:
             check.status = CheckStatus.PASS
-            check.message = f"All {len(required_files)} operational scripts present and executable"
+            check.message = (
+                f"All {len(required_files)} operational scripts present and executable"
+            )
             check.details = {"scripts": present}
 
         check.execution_time_ms = int((time.time() - start) * 1000)
@@ -464,16 +470,12 @@ class ProductionValidator:
             id="doc-001",
             category=CheckCategory.DOCUMENTATION,
             name="Documentation Completeness",
-            description="Verify operational documentation exists"
+            description="Verify operational documentation exists",
         )
 
         start = time.time()
 
-        required_files = [
-            "README.md",
-            "OPERATIONS.md",
-            "VERIFICATION.md"
-        ]
+        required_files = ["README.md", "OPERATIONS.md", "VERIFICATION.md"]
 
         present = []
         missing = []
@@ -500,9 +502,9 @@ class ProductionValidator:
 
     def run_all_checks(self) -> ValidationReport:
         """Run all validation checks."""
-        logger.info("="*70)
+        logger.info("=" * 70)
         logger.info("Project-AI Production Readiness Validation")
-        logger.info("="*70)
+        logger.info("=" * 70)
         logger.info("")
 
         # Run all checks
@@ -545,34 +547,33 @@ class ProductionValidator:
 
         # Calculate score (0-100)
         score = (
-            (summary["pass"] * 100 + summary["warn"] * 50) /
-            (summary["total"] * 100)
+            (summary["pass"] * 100 + summary["warn"] * 50) / (summary["total"] * 100)
         ) * 100
 
         # Determine readiness
         production_ready = (
-            summary["fail"] == 0 and
-            summary["pass"] >= summary["total"] * 0.8
+            summary["fail"] == 0 and summary["pass"] >= summary["total"] * 0.8
         )
 
-        global_scale_ready = (
-            production_ready and
-            score >= 90
-        )
+        global_scale_ready = production_ready and score >= 90
 
         # Generate recommendations
         recommendations = []
         if summary["fail"] > 0:
-            recommendations.append("Fix all failing checks before production deployment")
+            recommendations.append(
+                "Fix all failing checks before production deployment"
+            )
         if summary["warn"] > 0:
             recommendations.append("Address warnings to improve production readiness")
         if not global_scale_ready:
-            recommendations.append("Achieve 90%+ score for global-scale readiness certification")
+            recommendations.append(
+                "Achieve 90%+ score for global-scale readiness certification"
+            )
 
         # Print summary
-        logger.info("\n" + "="*70)
+        logger.info("\n" + "=" * 70)
         logger.info("VALIDATION SUMMARY")
-        logger.info("="*70)
+        logger.info("=" * 70)
         logger.info(f"Total Checks:        {summary['total']}")
         logger.info(f"✓ Passed:            {summary['pass']}")
         logger.info(f"✗ Failed:            {summary['fail']}")
@@ -583,7 +584,7 @@ class ProductionValidator:
         logger.info("")
         logger.info(f"✓ Production Ready:  {'YES' if production_ready else 'NO'}")
         logger.info(f"✓ Global Scale Ready: {'YES' if global_scale_ready else 'NO'}")
-        logger.info("="*70)
+        logger.info("=" * 70)
 
         if recommendations:
             logger.info("\nRECOMMENDATIONS:")
@@ -599,7 +600,7 @@ class ProductionValidator:
             score=score,
             production_ready=production_ready,
             global_scale_ready=global_scale_ready,
-            recommendations=recommendations
+            recommendations=recommendations,
         )
 
         return report
@@ -616,13 +617,9 @@ def main():
         "--deployment-dir",
         type=Path,
         default=Path("/home/runner/work/Project-AI/Project-AI/deploy/single-node-core"),
-        help="Deployment directory"
+        help="Deployment directory",
     )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        help="Save report to JSON file"
-    )
+    parser.add_argument("--output", type=Path, help="Save report to JSON file")
 
     args = parser.parse_args()
 
@@ -639,7 +636,7 @@ def main():
             "score": report.score,
             "production_ready": report.production_ready,
             "global_scale_ready": report.global_scale_ready,
-            "recommendations": report.recommendations
+            "recommendations": report.recommendations,
         }
 
         args.output.write_text(json.dumps(report_dict, indent=2, default=str))

@@ -117,7 +117,11 @@ class AttackTrainLoop:
         if "base_strength" in d_cfg:
             self.defender_base_strength = float(d_cfg["base_strength"])
 
-        logger.info("Running training epoch %s (%d iterations)", self.current_epoch, num_iterations)
+        logger.info(
+            "Running training epoch %s (%d iterations)",
+            self.current_epoch,
+            num_iterations,
+        )
 
         cycle_results: list[dict[str, Any]] = []
         attacks_succeeded = 0

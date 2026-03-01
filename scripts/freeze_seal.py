@@ -56,9 +56,7 @@ class ConstitutionSealer:
         self.data_dir.mkdir(parents=True, exist_ok=True)
 
         self.completion_seal_path = self.data_dir / "CONSTITUTION_COMPLETE.seal"
-        self.completion_ledger_path = (
-            self.data_dir / "completion_validation.jsonl"
-        )
+        self.completion_ledger_path = self.data_dir / "completion_validation.jsonl"
 
         # Initialize components
         self.entropy_monitor = EntropySlopeMonitor(data_dir=data_dir)
@@ -201,9 +199,7 @@ class ConstitutionSealer:
         current_state = self.override_system.get_current_state()
 
         if current_state in [SystemState.SUSPENDED, SystemState.REFOUNDING]:
-            logger.error(
-                "Cannot seal constitution in state: %s", current_state
-            )
+            logger.error("Cannot seal constitution in state: %s", current_state)
             return False, {
                 "passes": False,
                 "current_state": current_state.value,

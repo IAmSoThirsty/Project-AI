@@ -26,7 +26,9 @@ def test_adapter_password_lifecycle(tmpdir):
 def test_adapter_request_override_and_status(tmpdir):
     adapter = CommandOverride(data_dir=tmpdir)
     adapter.set_password("pw")
-    ok, msg = adapter.request_override("pw", OverrideType.CONTENT_FILTER, reason="testing")
+    ok, msg = adapter.request_override(
+        "pw", OverrideType.CONTENT_FILTER, reason="testing"
+    )
     assert ok is True
     assert "Override" in msg
     assert adapter.is_override_active(OverrideType.CONTENT_FILTER) is True

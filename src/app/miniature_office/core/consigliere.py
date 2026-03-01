@@ -60,7 +60,9 @@ class Explanation:
     question: str
     answer: str
     context: Dict[str, Any] = field(default_factory=dict)
-    references: List[str] = field(default_factory=list)  # Links to contracts, decisions, etc.
+    references: List[str] = field(
+        default_factory=list
+    )  # Links to contracts, decisions, etc.
 
     def to_dict(self) -> Dict:
         return {
@@ -157,7 +159,11 @@ class Consigliere:
     # =========================================================================
 
     def issue_directive_to_manager(
-        self, manager_id: str, directive: str, priority: str = "normal", issued_by_human: bool = True
+        self,
+        manager_id: str,
+        directive: str,
+        priority: str = "normal",
+        issued_by_human: bool = True,
     ) -> Dict:
         """
         Issue directive to a manager.
@@ -168,7 +174,10 @@ class Consigliere:
                         "Consigliere, tell manager X to do Y"
         """
         if not issued_by_human:
-            return {"success": False, "error": "Consigliere only acts on explicit human instruction"}
+            return {
+                "success": False,
+                "error": "Consigliere only acts on explicit human instruction",
+            }
 
         from app.miniature_office.core.audit import EventType, get_audit_log
         from app.miniature_office.core.entity import get_registry
@@ -200,7 +209,11 @@ class Consigliere:
         }
 
     def update_agent_directive(
-        self, agent_id: str, new_directive: str, justification: str, issued_by_human: bool = True
+        self,
+        agent_id: str,
+        new_directive: str,
+        justification: str,
+        issued_by_human: bool = True,
     ) -> Dict:
         """
         Update an agent's directive.
@@ -209,7 +222,10 @@ class Consigliere:
         issued_by_human: Must be True - only acts on human instruction
         """
         if not issued_by_human:
-            return {"success": False, "error": "Consigliere only acts on explicit human instruction"}
+            return {
+                "success": False,
+                "error": "Consigliere only acts on explicit human instruction",
+            }
 
         from app.miniature_office.core.audit import EventType, get_audit_log
         from app.miniature_office.core.entity import get_registry
@@ -249,7 +265,10 @@ class Consigliere:
         issued_by_human: Must be True - only acts on human instruction
         """
         if not issued_by_human:
-            return {"success": False, "error": "Consigliere only acts on explicit human instruction"}
+            return {
+                "success": False,
+                "error": "Consigliere only acts on explicit human instruction",
+            }
 
         from app.miniature_office.core.audit import EventType, get_audit_log
 
@@ -272,7 +291,9 @@ class Consigliere:
             "message": "Cross-floor coordination initiated (on your instruction)",
         }
 
-    def tell_human_impossible(self, request: str, reason: str, alternatives: Optional[List[str]] = None) -> Dict:
+    def tell_human_impossible(
+        self, request: str, reason: str, alternatives: Optional[List[str]] = None
+    ) -> Dict:
         """
         Tell the human that something is impossible.
 
@@ -288,7 +309,9 @@ class Consigliere:
             "note": "You're the boss - you can override this if you want (it's a you problem now 😉)",
         }
 
-    def tell_human_feasible(self, request: str, approach: str, estimated_resources: Dict[str, int]) -> Dict:
+    def tell_human_feasible(
+        self, request: str, approach: str, estimated_resources: Dict[str, int]
+    ) -> Dict:
         """
         Tell the human that something is feasible and how to do it.
         """
@@ -305,7 +328,9 @@ class Consigliere:
     # EXPLAIN CAPABILITY
     # =========================================================================
 
-    def explain_why_blocked(self, entity_id: str, context: Optional[Dict] = None) -> Explanation:
+    def explain_why_blocked(
+        self, entity_id: str, context: Optional[Dict] = None
+    ) -> Explanation:
         """
         Explain why something is blocked.
 
@@ -332,10 +357,14 @@ class Consigliere:
             if task.state.value == "blocked":
                 answer = f"Task '{task.description}' is blocked because:\n"
                 if task.preconditions:
-                    unmet = [p for p in task.preconditions if not self._check_precondition(p)]
+                    unmet = [
+                        p for p in task.preconditions if not self._check_precondition(p)
+                    ]
                     if unmet:
                         answer += f"Unmet preconditions: {', '.join(unmet)}\n"
-                answer += "\nThe task cannot proceed until these conditions are satisfied."
+                answer += (
+                    "\nThe task cannot proceed until these conditions are satisfied."
+                )
 
                 explanation = Explanation(
                     explanation_type=ExplanationType.WHY_BLOCKED,
@@ -357,7 +386,9 @@ class Consigliere:
         self.explanation_history.append(explanation)
         return explanation
 
-    def explain_why_decision(self, decision_id: str, context: Optional[Dict] = None) -> Explanation:
+    def explain_why_decision(
+        self, decision_id: str, context: Optional[Dict] = None
+    ) -> Explanation:
         """
         Explain why a decision was made.
 
@@ -396,7 +427,9 @@ class Consigliere:
         self.explanation_history.append(explanation)
         return explanation
 
-    def explain_what_options(self, situation: str, context: Optional[Dict] = None) -> Explanation:
+    def explain_what_options(
+        self, situation: str, context: Optional[Dict] = None
+    ) -> Explanation:
         """
         Explain what options exist within scope.
 
@@ -478,7 +511,9 @@ class Consigliere:
     # PREVIEW CAPABILITY
     # =========================================================================
 
-    def preview_consequences(self, proposed_action: str, context: Optional[Dict] = None) -> Preview:
+    def preview_consequences(
+        self, proposed_action: str, context: Optional[Dict] = None
+    ) -> Preview:
         """
         Preview consequences of a proposed action.
 
@@ -500,7 +535,10 @@ class Consigliere:
                 "Override will be in audit trail permanently",
             ]
             resource_costs = {"manager_attention": 5, "audit_entries": 1}
-            risks = ["May undermine agent autonomy", "Could set precedent for future overrides"]
+            risks = [
+                "May undermine agent autonomy",
+                "Could set precedent for future overrides",
+            ]
             alternatives = [
                 "Request clarification instead",
                 "Allow appeal process to complete",
@@ -514,7 +552,10 @@ class Consigliere:
                 "Audit continues recording",
             ]
             resource_costs = {"system_availability": -100}  # Negative = cost to others
-            risks = ["Work in progress may be left in inconsistent state", "Deadlines may be missed"]
+            risks = [
+                "Work in progress may be left in inconsistent state",
+                "Deadlines may be missed",
+            ]
             alternatives = [
                 "Pause specific floor instead",
                 "Complete current tasks first",
@@ -642,11 +683,19 @@ This clarification will prevent blocking and ensure correct implementation.
         Returns: (is_allowed, reason_if_not)
         """
         # What the Consigliere CANNOT do
-        forbidden_actions = ["override human decision", "write code directly", "suppress audit", "delete history"]
+        forbidden_actions = [
+            "override human decision",
+            "write code directly",
+            "suppress audit",
+            "delete history",
+        ]
 
         for forbidden in forbidden_actions:
             if forbidden in action.lower():
-                return False, f"Consigliere cannot '{forbidden}' - that exceeds authority"
+                return (
+                    False,
+                    f"Consigliere cannot '{forbidden}' - that exceeds authority",
+                )
 
         # Everything else - directing the civilization - is allowed
         return True, None

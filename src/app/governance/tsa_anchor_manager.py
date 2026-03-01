@@ -306,7 +306,9 @@ class TSAAnchorManager:
 
                 # Verify index is sequential
                 if anchor.index != i:
-                    raise ChainIntegrityError(f"Index mismatch: expected {i}, got {anchor.index}")
+                    raise ChainIntegrityError(
+                        f"Index mismatch: expected {i}, got {anchor.index}"
+                    )
 
                 # Reconstruct payload
                 payload_bytes = bytes.fromhex(anchor.payload_hash)
@@ -318,14 +320,18 @@ class TSAAnchorManager:
                         payload_bytes,
                     )
                 except Exception as e:
-                    raise ChainIntegrityError(f"Genesis signature verification failed at index {i}: {e}")
+                    raise ChainIntegrityError(
+                        f"Genesis signature verification failed at index {i}: {e}"
+                    )
 
                 # CRITICAL: Verify TSA token
                 tsa_token_der = bytes.fromhex(anchor.tsa_token_hex)
                 try:
                     token = self.tsa.verify_timestamp(tsa_token_der, payload_bytes)
                 except Exception as e:
-                    raise ChainIntegrityError(f"TSA token verification failed at index {i}: {e}")
+                    raise ChainIntegrityError(
+                        f"TSA token verification failed at index {i}: {e}"
+                    )
 
                 # CRITICAL: Enforce monotonic timestamps
                 if previous_time is not None:

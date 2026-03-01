@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 
 class HaltReason(str, Enum):
     """Reason for entering SAFE-HALT mode."""
+
     INVARIANT_VIOLATION = "invariant_violation"
     UNRECOVERABLE_ERROR = "unrecoverable_error"
     ADMINISTRATIVE = "administrative"
@@ -51,6 +52,7 @@ class HaltReason(str, Enum):
 @dataclass
 class HaltEvent:
     """Record of a SAFE-HALT transition."""
+
     reason: HaltReason
     details: str
     triggered_by: str
@@ -122,7 +124,9 @@ class SafeHaltController:
             self._halted = True
             logger.critical(
                 "SAFE-HALT triggered on node %s: reason=%s details=%s",
-                self.node_id, reason.value, details,
+                self.node_id,
+                reason.value,
+                details,
             )
 
         self._halt_events.append(event)
@@ -184,7 +188,8 @@ class SafeHaltController:
 
         logger.warning(
             "SAFE-HALT reset on node %s by %s",
-            self.node_id, authorized_by,
+            self.node_id,
+            authorized_by,
         )
         self._halted = False
 
@@ -215,6 +220,7 @@ class SafeHaltController:
 
 class SafeHaltError(Exception):
     """Raised when a write operation is attempted in SAFE-HALT mode."""
+
     pass
 
 

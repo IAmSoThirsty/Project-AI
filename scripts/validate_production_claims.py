@@ -24,7 +24,6 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-
 # Prohibited claim patterns from SECURITY_VALIDATION_POLICY.md
 PROHIBITED_PATTERNS = {
     "production_ready": {
@@ -72,8 +71,8 @@ PROHIBITED_PATTERNS = {
 # Status field patterns
 STATUS_PATTERNS = {
     "production_status": {
-        "pattern": r'\*\*Status:\*\*.*Production(?:\s+Implementation|\s+Integration)?',
-        "description": 'Status field declares production status',
+        "pattern": r"\*\*Status:\*\*.*Production(?:\s+Implementation|\s+Integration)?",
+        "description": "Status field declares production status",
         "severity": "CRITICAL",
     }
 }
@@ -81,12 +80,12 @@ STATUS_PATTERNS = {
 # Specific metric patterns that imply production validation
 METRIC_PATTERNS = {
     "uptime_claims": {
-        "pattern": r'\d+\.\d+%\s+uptime',
+        "pattern": r"\d+\.\d+%\s+uptime",
         "description": "Specific uptime percentage claims",
         "severity": "MEDIUM",
     },
     "readiness_score": {
-        "pattern": r'\d+/100\s+(?:readiness|production)\s+score',
+        "pattern": r"\d+/100\s+(?:readiness|production)\s+score",
         "description": "Numerical readiness score claims",
         "severity": "MEDIUM",
     },
@@ -96,8 +95,15 @@ METRIC_PATTERNS = {
 class Violation:
     """Represents a single policy violation"""
 
-    def __init__(self, filepath: str, line_num: int, line_text: str,
-                 pattern_name: str, pattern_info: dict, match_text: str):
+    def __init__(
+        self,
+        filepath: str,
+        line_num: int,
+        line_text: str,
+        pattern_name: str,
+        pattern_info: dict,
+        match_text: str,
+    ):
         self.filepath = filepath
         self.line_num = line_num
         self.line_text = line_text
@@ -130,7 +136,7 @@ def scan_file(filepath: str) -> List[Violation]:
     violations = []
 
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             lines = f.readlines()
     except Exception as e:
         print(f"Error reading {filepath}: {e}", file=sys.stderr)
@@ -143,14 +149,16 @@ def scan_file(filepath: str) -> List[Violation]:
         for pattern_name, pattern_info in all_patterns.items():
             regex = re.compile(pattern_info["pattern"], re.IGNORECASE)
             for match in regex.finditer(line):
-                violations.append(Violation(
-                    filepath=filepath,
-                    line_num=line_num,
-                    line_text=line.strip(),
-                    pattern_name=pattern_name,
-                    pattern_info=pattern_info,
-                    match_text=match.group()
-                ))
+                violations.append(
+                    Violation(
+                        filepath=filepath,
+                        line_num=line_num,
+                        line_text=line.strip(),
+                        pattern_name=pattern_name,
+                        pattern_info=pattern_info,
+                        match_text=match.group(),
+                    )
+                )
 
     return violations
 
@@ -242,25 +250,21 @@ def main():
         description="Validate files against Security Validation Claims Policy"
     )
     parser.add_argument(
-        "files",
-        nargs="*",
-        help="Files to scan (supports glob patterns)"
+        "files", nargs="*", help="Files to scan (supports glob patterns)"
     )
     parser.add_argument(
-        "--all",
-        action="store_true",
-        help="Scan all whitepapers in docs/whitepapers/"
+        "--all", action="store_true", help="Scan all whitepapers in docs/whitepapers/"
     )
     parser.add_argument(
         "--format",
         choices=["text", "json"],
         default="text",
-        help="Output format (default: text)"
+        help="Output format (default: text)",
     )
     parser.add_argument(
         "--strict",
         action="store_true",
-        help="Exit with error code 1 even for MEDIUM severity violations"
+        help="Exit with error code 1 even for MEDIUM severity violations",
     )
 
     args = parser.parse_args()
@@ -298,8 +302,7 @@ def main():
 
     # Check severity threshold
     has_critical_or_high = any(
-        v.pattern_info.get("severity") in ["CRITICAL", "HIGH"]
-        for v in all_violations
+        v.pattern_info.get("severity") in ["CRITICAL", "HIGH"] for v in all_violations
     )
 
     if has_critical_or_high or args.strict:

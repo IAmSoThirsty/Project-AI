@@ -82,7 +82,9 @@ class TestGodTierIntegration:
         coordinator = create_cluster_coordinator(node_id="node_hardware_test")
 
         # Create hardware discovery system
-        hardware_system = HardwareAutoDiscoverySystem(system_id="hardware_test", scan_interval=1.0, data_dir=temp_dir)
+        hardware_system = HardwareAutoDiscoverySystem(
+            system_id="hardware_test", scan_interval=1.0, data_dir=temp_dir
+        )
 
         try:
             # Start both systems
@@ -124,7 +126,9 @@ class TestGodTierIntegration:
     def test_continual_learning_with_hardware(self, temp_dir):
         """Test continual learning system tracking hardware performance"""
         # Create continual learning system
-        cl_system = ContinualLearningSystem(system_id="hardware_learning", data_dir=temp_dir)
+        cl_system = ContinualLearningSystem(
+            system_id="hardware_learning", data_dir=temp_dir
+        )
 
         # Create hardware discovery
         hardware_system = HardwareAutoDiscoverySystem(
@@ -158,7 +162,9 @@ class TestGodTierIntegration:
                     cl_system.update_model_performance(model_id, perf)
 
                     # Consolidate knowledge
-                    knowledge = {f"device_{device_type.value}_pattern": f"learned_at_{perf}"}
+                    knowledge = {
+                        f"device_{device_type.value}_pattern": f"learned_at_{perf}"
+                    }
                     cl_system.consolidate_knowledge(model_id, knowledge)
 
             # Verify learning occurred
@@ -195,7 +201,9 @@ class TestGodTierIntegration:
 
             # Register RL agents as services
             for node, agent in zip(nodes, agents, strict=False):
-                node.registry.register_service(node.node_id, "rl_agent", metadata={"agent_id": agent.agent_id})
+                node.registry.register_service(
+                    node.node_id, "rl_agent", metadata={"agent_id": agent.agent_id}
+                )
 
             # Wait for cluster stabilization
             time.sleep(1.0)
@@ -212,7 +220,9 @@ class TestGodTierIntegration:
                 # Submit multiple training tasks
                 task_ids = []
                 for i in range(5):
-                    task_id = leader_node.submit_task(task_type="rl_training", payload={"episode": i})
+                    task_id = leader_node.submit_task(
+                        task_type="rl_training", payload={"episode": i}
+                    )
                     task_ids.append(task_id)
 
                 # Verify tasks were created
@@ -244,7 +254,9 @@ class TestGodTierIntegration:
             actions=["optimize", "explore", "exploit"],
             data_dir=f"{temp_dir}/rl",
         )
-        cl_system = ContinualLearningSystem(system_id="god_tier_learning", data_dir=f"{temp_dir}/cl")
+        cl_system = ContinualLearningSystem(
+            system_id="god_tier_learning", data_dir=f"{temp_dir}/cl"
+        )
 
         try:
             # Step 1: Start all systems
@@ -255,9 +267,13 @@ class TestGodTierIntegration:
             time.sleep(2.0)
 
             # Step 3: Register all services in cluster
-            coordinator.registry.register_service(coordinator.node_id, "hardware_discovery")
+            coordinator.registry.register_service(
+                coordinator.node_id, "hardware_discovery"
+            )
             coordinator.registry.register_service(coordinator.node_id, "rl_training")
-            coordinator.registry.register_service(coordinator.node_id, "continual_learning")
+            coordinator.registry.register_service(
+                coordinator.node_id, "continual_learning"
+            )
 
             # Step 4: Register models in continual learning
             cl_system.register_model(
@@ -393,7 +409,9 @@ class TestGodTierPerformance:
 
             def register_services():
                 for i in range(10):
-                    coordinator.registry.register_service(coordinator.node_id, f"service_{i}")
+                    coordinator.registry.register_service(
+                        coordinator.node_id, f"service_{i}"
+                    )
 
             def acquire_locks():
                 for i in range(10):

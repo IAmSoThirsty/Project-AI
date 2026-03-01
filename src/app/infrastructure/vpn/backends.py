@@ -63,7 +63,9 @@ class WireGuardBackend(VPNBackend):
 
             elif self.platform == "Windows":
                 # Check for wireguard.exe
-                result = subprocess.run(["where", "wireguard"], capture_output=True, timeout=5, shell=True)
+                result = subprocess.run(
+                    ["where", "wireguard"], capture_output=True, timeout=5, shell=True
+                )
                 return result.returncode == 0
 
             elif self.platform == "Darwin":
@@ -108,7 +110,9 @@ class WireGuardBackend(VPNBackend):
 
             if result.returncode == 0:
                 self.connected = True
-                self.logger.info("WireGuard connected on Linux: %s", self.interface_name)
+                self.logger.info(
+                    "WireGuard connected on Linux: %s", self.interface_name
+                )
                 return True
             else:
                 self.logger.error("wg-quick failed: %s", result.stderr)
@@ -150,7 +154,9 @@ class WireGuardBackend(VPNBackend):
 
             if result.returncode == 0:
                 self.connected = True
-                self.logger.info("WireGuard connected on macOS: %s", self.interface_name)
+                self.logger.info(
+                    "WireGuard connected on macOS: %s", self.interface_name
+                )
                 return True
             else:
                 self.logger.error("macOS wg-quick failed: %s", result.stderr)
@@ -177,7 +183,9 @@ class WireGuardBackend(VPNBackend):
 
             elif self.platform == "Windows":
                 cmd = ["wireguard", "/uninstalltunnelservice", self.interface_name]
-                result = subprocess.run(cmd, capture_output=True, timeout=30, shell=True)
+                result = subprocess.run(
+                    cmd, capture_output=True, timeout=30, shell=True
+                )
 
                 if result.returncode == 0:
                     self.connected = False
@@ -258,7 +266,9 @@ class OpenVPNBackend(VPNBackend):
                 cmd = ["sudo", "openvpn", "--config", self.config_file]
 
             # Start OpenVPN process in background
-            self.process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            self.process = subprocess.Popen(
+                cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            )
 
             # Wait briefly to check if connection succeeds
             time.sleep(5)

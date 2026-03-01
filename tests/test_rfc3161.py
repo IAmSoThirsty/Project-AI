@@ -15,8 +15,8 @@ Validates:
 from __future__ import annotations
 
 import hashlib
-import sys
 import os
+import sys
 import threading
 
 import pytest
@@ -26,8 +26,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from psia.crypto.ed25519_provider import Ed25519Provider
 from psia.crypto.rfc3161_provider import LocalTSA, TimeStampToken
 
-
 # ── LocalTSA Initialization ────────────────────────────────────────────
+
 
 class TestLocalTSAInit:
     """Tests for LocalTSA construction."""
@@ -47,6 +47,7 @@ class TestLocalTSAInit:
 
 
 # ── Timestamp Request/Response ──────────────────────────────────────────
+
 
 class TestTimestampLifecycle:
     """Tests for timestamp request and response."""
@@ -117,6 +118,7 @@ class TestTimestampLifecycle:
 
 # ── Serial Number Monotonicity ──────────────────────────────────────────
 
+
 class TestSerialNumbers:
     """Tests for monotonically increasing serial numbers."""
 
@@ -141,6 +143,7 @@ class TestSerialNumbers:
 
 
 # ── Thread Safety ───────────────────────────────────────────────────────
+
 
 class TestThreadSafety:
     """Tests for concurrent timestamp requests."""
@@ -171,6 +174,7 @@ class TestThreadSafety:
 
 
 # ── Token Serialization ────────────────────────────────────────────────
+
 
 class TestTokenSerialization:
     """Tests for TimeStampToken.to_dict."""
@@ -204,6 +208,7 @@ class TestTokenSerialization:
 
 # ── Offline Verification ───────────────────────────────────────────────
 
+
 class TestOfflineVerification:
     """Tests for verify_with_public_key (no TSA instance needed)."""
 
@@ -226,6 +231,7 @@ class TestOfflineVerification:
 
 
 # ── Integration with Ledger Anchoring ───────────────────────────────────
+
 
 class TestLedgerAnchoring:
     """Tests for TSA integration as it would be used by the ledger."""

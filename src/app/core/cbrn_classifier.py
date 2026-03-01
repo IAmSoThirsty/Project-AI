@@ -198,7 +198,9 @@ class CBRNClassifier:
             return
 
         # Combine examples
-        X_train = self.HARMFUL_EXAMPLES + self.SAFE_EXAMPLES  # noqa: N806 - ML convention
+        X_train = (
+            self.HARMFUL_EXAMPLES + self.SAFE_EXAMPLES
+        )  # noqa: N806 - ML convention
         y_train = [1] * len(self.HARMFUL_EXAMPLES) + [0] * len(self.SAFE_EXAMPLES)
 
         # Train
@@ -256,7 +258,9 @@ class CBRNClassifier:
         ml_confidence = 0.0
 
         if ML_AVAILABLE and self.model is not None:
-            X_vec = self.vectorizer.transform([input_text])  # noqa: N806 - ML convention
+            X_vec = self.vectorizer.transform(
+                [input_text]
+            )  # noqa: N806 - ML convention
             ml_pred = self.model.predict(X_vec)[0]
             ml_confidence = self.model.predict_proba(X_vec)[0][
                 1

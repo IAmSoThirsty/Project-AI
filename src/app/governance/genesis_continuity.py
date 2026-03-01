@@ -35,8 +35,18 @@ except ImportError:
 logger = logging.getLogger(__name__)
 
 # External Genesis pinning configuration
-EXTERNAL_GENESIS_PINS_FILE = Path(__file__).parent.parent.parent.parent / "data" / "genesis_pins" / "external_pins.json"
-GENESIS_CONTINUITY_LOG = Path(__file__).parent.parent.parent.parent / "data" / "genesis_pins" / "continuity_log.json"
+EXTERNAL_GENESIS_PINS_FILE = (
+    Path(__file__).parent.parent.parent.parent
+    / "data"
+    / "genesis_pins"
+    / "external_pins.json"
+)
+GENESIS_CONTINUITY_LOG = (
+    Path(__file__).parent.parent.parent.parent
+    / "data"
+    / "genesis_pins"
+    / "continuity_log.json"
+)
 
 
 class GenesisDiscontinuityError(Exception):
@@ -191,7 +201,8 @@ class GenesisContinuityGuard:
             existing = self.external_pins[genesis_id]
             if existing["public_key_hash"] != pub_key_hash:
                 logger.error(
-                    "Genesis ID %s already pinned with different public key! " "Expected: %s, Got: %s",
+                    "Genesis ID %s already pinned with different public key! "
+                    "Expected: %s, Got: %s",
                     genesis_id,
                     existing["public_key_hash"],
                     pub_key_hash,
@@ -213,7 +224,9 @@ class GenesisContinuityGuard:
         self.external_pins[genesis_id] = pin_record
         self._save_external_pins()
 
-        logger.info("Genesis %s pinned externally (hash: %s)", genesis_id, pub_key_hash[:16])
+        logger.info(
+            "Genesis %s pinned externally (hash: %s)", genesis_id, pub_key_hash[:16]
+        )
         return True
 
     def verify_genesis_continuity(

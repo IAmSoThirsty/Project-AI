@@ -134,7 +134,10 @@ class BehavioralStage:
         deviation_components.append(("rate", rate_deviation))
 
         # ── Component 2: Resource novelty ──
-        if baseline.total_requests > 0 and baseline.resource_counts.get(resource, 0) == 0:
+        if (
+            baseline.total_requests > 0
+            and baseline.resource_counts.get(resource, 0) == 0
+        ):
             resource_deviation = 0.4  # New resource = moderate deviation
         else:
             resource_deviation = 0.0
@@ -150,8 +153,7 @@ class BehavioralStage:
         # ── Composite score (weighted average) ──
         weights = {"rate": 0.5, "resource_novelty": 0.3, "action_novelty": 0.2}
         total_deviation = sum(
-            score * weights.get(name, 0.0)
-            for name, score in deviation_components
+            score * weights.get(name, 0.0) for name, score in deviation_components
         )
         total_deviation = min(1.0, total_deviation)
 
@@ -159,9 +161,7 @@ class BehavioralStage:
         self.store.record_request(subject, action, resource)
 
         # ── Decision ──
-        reasons = [
-            f"{name}={score:.3f}" for name, score in deviation_components
-        ]
+        reasons = [f"{name}={score:.3f}" for name, score in deviation_components]
         reasons.insert(0, f"composite_deviation={total_deviation:.3f}")
 
         if total_deviation >= self.quarantine_threshold:

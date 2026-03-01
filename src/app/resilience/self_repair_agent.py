@@ -219,20 +219,24 @@ class SelfRepairAgent(KernelRoutedAgent):
             cause = pattern.get("cause", "unknown")
             desc = pattern.get("description", "Unknown root cause")
 
-            root_causes.append({
-                "metric": metric,
-                "cause": cause,
-                "description": desc,
-                "z_score": anomaly.get("z_score", 0),
-                "value": anomaly.get("value", 0),
-            })
+            root_causes.append(
+                {
+                    "metric": metric,
+                    "cause": cause,
+                    "description": desc,
+                    "z_score": anomaly.get("z_score", 0),
+                    "value": anomaly.get("value", 0),
+                }
+            )
 
             strategy = _REPAIR_STRATEGIES.get(cause)
             if strategy and strategy not in suggested_fixes:
-                suggested_fixes.append({
-                    "cause": cause,
-                    **strategy,
-                })
+                suggested_fixes.append(
+                    {
+                        "cause": cause,
+                        **strategy,
+                    }
+                )
 
         primary = root_causes[0] if root_causes else {}
         return {
@@ -241,7 +245,9 @@ class SelfRepairAgent(KernelRoutedAgent):
             "root_cause": primary.get("cause", "unknown"),
             "root_cause_details": root_causes,
             "suggested_fixes": suggested_fixes,
-            "confidence": min(1.0, max(abs(rc.get("z_score", 0)) / 5.0 for rc in root_causes)),
+            "confidence": min(
+                1.0, max(abs(rc.get("z_score", 0)) / 5.0 for rc in root_causes)
+            ),
         }
 
     # ── Repair ────────────────────────────────────────────────
@@ -383,13 +389,34 @@ class SelfRepairAgent(KernelRoutedAgent):
 
             # Absolute threshold checks
             if name == "cpu_percent" and value > _CPU_CRITICAL:
-                anomalies.append({"metric": name, "value": value, "z_score": 99.0, "reason": "absolute_threshold"})
+                anomalies.append(
+                    {
+                        "metric": name,
+                        "value": value,
+                        "z_score": 99.0,
+                        "reason": "absolute_threshold",
+                    }
+                )
                 continue
             if name == "memory_percent" and value > _MEM_CRITICAL:
-                anomalies.append({"metric": name, "value": value, "z_score": 99.0, "reason": "absolute_threshold"})
+                anomalies.append(
+                    {
+                        "metric": name,
+                        "value": value,
+                        "z_score": 99.0,
+                        "reason": "absolute_threshold",
+                    }
+                )
                 continue
             if name == "disk_percent" and value > _DISK_CRITICAL:
-                anomalies.append({"metric": name, "value": value, "z_score": 99.0, "reason": "absolute_threshold"})
+                anomalies.append(
+                    {
+                        "metric": name,
+                        "value": value,
+                        "z_score": 99.0,
+                        "reason": "absolute_threshold",
+                    }
+                )
                 continue
 
             # Z-score check against rolling baseline
@@ -400,7 +427,14 @@ class SelfRepairAgent(KernelRoutedAgent):
                 if stdev > 0:
                     z = abs(value - mean) / stdev
                     if z > _Z_SCORE_THRESHOLD:
-                        anomalies.append({"metric": name, "value": value, "z_score": round(z, 2), "reason": "z_score"})
+                        anomalies.append(
+                            {
+                                "metric": name,
+                                "value": value,
+                                "z_score": round(z, 2),
+                                "reason": "z_score",
+                            }
+                        )
 
         return anomalies
 

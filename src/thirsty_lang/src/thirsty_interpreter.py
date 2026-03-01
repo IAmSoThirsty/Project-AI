@@ -85,7 +85,9 @@ class ThirstyInterpreter:
         expr = expr.strip()
 
         # String literal
-        if (expr.startswith('"') and expr.endswith('"')) or (expr.startswith("'") and expr.endswith("'")):
+        if (expr.startswith('"') and expr.endswith('"')) or (
+            expr.startswith("'") and expr.endswith("'")
+        ):
             return expr[1:-1]
 
         # Number literal

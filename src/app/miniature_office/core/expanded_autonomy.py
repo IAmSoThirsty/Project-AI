@@ -166,18 +166,28 @@ class SandboxManager:
     manager_id: str
     sandboxes: Dict[str, SandboxBranch] = field(default_factory=dict)
 
-    def create_sandbox(self, name: str, owner_floor: str, project_type: ProjectType, description: str) -> str:
+    def create_sandbox(
+        self, name: str, owner_floor: str, project_type: ProjectType, description: str
+    ) -> str:
         """Create a new sandbox branch."""
         branch_id = f"sandbox-{len(self.sandboxes) + 1}"
         sandbox = SandboxBranch(
-            branch_id=branch_id, name=name, owner_floor=owner_floor, project_type=project_type, description=description
+            branch_id=branch_id,
+            name=name,
+            owner_floor=owner_floor,
+            project_type=project_type,
+            description=description,
         )
         self.sandboxes[branch_id] = sandbox
         return branch_id
 
     def get_promotion_candidates(self) -> List[SandboxBranch]:
         """Get all sandboxes flagged for promotion."""
-        return [s for s in self.sandboxes.values() if s.status == SandboxStatus.PROMOTION_CANDIDATE]
+        return [
+            s
+            for s in self.sandboxes.values()
+            if s.status == SandboxStatus.PROMOTION_CANDIDATE
+        ]
 
     def collapse_all_sandboxes(self, reason: str) -> int:
         """
@@ -186,7 +196,10 @@ class SandboxManager:
         """
         count = 0
         for sandbox in self.sandboxes.values():
-            if sandbox.status in [SandboxStatus.ACTIVE, SandboxStatus.PROMOTION_CANDIDATE]:
+            if sandbox.status in [
+                SandboxStatus.ACTIVE,
+                SandboxStatus.PROMOTION_CANDIDATE,
+            ]:
                 sandbox.status = SandboxStatus.KILLED
                 sandbox.human_decision = f"collapsed:{reason}"
                 count += 1
@@ -300,11 +313,21 @@ class TechGossipBoard:
     gossip_items: Dict[str, TechGossipItem] = field(default_factory=dict)
     trending_topics: List[str] = field(default_factory=list)
 
-    def post_gossip(self, category: TechGossipCategory, topic: str, speculation: str, gossiped_by: List[str]) -> str:
+    def post_gossip(
+        self,
+        category: TechGossipCategory,
+        topic: str,
+        speculation: str,
+        gossiped_by: List[str],
+    ) -> str:
         """Post a new piece of tech gossip."""
         gossip_id = f"gossip-{len(self.gossip_items) + 1}"
         gossip = TechGossipItem(
-            gossip_id=gossip_id, category=category, topic=topic, speculation=speculation, gossiped_by=gossiped_by
+            gossip_id=gossip_id,
+            category=category,
+            topic=topic,
+            speculation=speculation,
+            gossiped_by=gossiped_by,
         )
         self.gossip_items[gossip_id] = gossip
 
@@ -317,7 +340,9 @@ class TechGossipBoard:
         """Get current trending gossip topics."""
         return self.trending_topics[:limit]
 
-    def get_gossip_by_category(self, category: TechGossipCategory) -> List[TechGossipItem]:
+    def get_gossip_by_category(
+        self, category: TechGossipCategory
+    ) -> List[TechGossipItem]:
         """Get all gossip in a category."""
         return [g for g in self.gossip_items.values() if g.category == category]
 
@@ -342,7 +367,9 @@ class TechGossipBoard:
         if not self.gossip_items:
             return "The office is quiet today. No hot gossip yet."
 
-        recent = sorted(self.gossip_items.values(), key=lambda g: g.started_at, reverse=True)[:5]
+        recent = sorted(
+            self.gossip_items.values(), key=lambda g: g.started_at, reverse=True
+        )[:5]
 
         summary = "=== WATER COOLER BUZZ ===\n\n"
 
@@ -435,14 +462,20 @@ class LoungeWorkBleed:
         if self.tech_gossip_board is None:
             self.tech_gossip_board = TechGossipBoard(board_id="tgb-001")
 
-    def start_conversation(self, participants: List[str], themes: List[ConversationTheme]) -> str:
+    def start_conversation(
+        self, participants: List[str], themes: List[ConversationTheme]
+    ) -> str:
         """Start a new lounge conversation."""
         conv_id = f"conv-{len(self.conversations) + 1}"
-        conversation = LoungeConversation(conversation_id=conv_id, participants=participants, themes=themes)
+        conversation = LoungeConversation(
+            conversation_id=conv_id, participants=participants, themes=themes
+        )
         self.conversations[conv_id] = conversation
         return conv_id
 
-    def transition_to_sandbox(self, conversation_id: str, sandbox_id: str, initiative_title: str) -> None:
+    def transition_to_sandbox(
+        self, conversation_id: str, sandbox_id: str, initiative_title: str
+    ) -> None:
         """Record a lounge → sandbox transition (ALLOWED)."""
         if conversation_id in self.conversations:
             conv = self.conversations[conversation_id]
@@ -458,7 +491,9 @@ class LoungeWorkBleed:
                 }
             )
 
-    def block_production_transition(self, conversation_id: str, attempted_action: str, reason: str) -> None:
+    def block_production_transition(
+        self, conversation_id: str, attempted_action: str, reason: str
+    ) -> None:
         """Block a lounge → production transition (NOT ALLOWED)."""
         self.lounge_to_production_blocks.append(
             {
@@ -471,11 +506,17 @@ class LoungeWorkBleed:
         )
 
     def post_tech_gossip(
-        self, category: TechGossipCategory, topic: str, speculation: str, gossiped_by: List[str]
+        self,
+        category: TechGossipCategory,
+        topic: str,
+        speculation: str,
+        gossiped_by: List[str],
     ) -> str:
         """Post tech gossip to the board (pure water cooler talk)."""
         if self.tech_gossip_board:
-            return self.tech_gossip_board.post_gossip(category, topic, speculation, gossiped_by)
+            return self.tech_gossip_board.post_gossip(
+                category, topic, speculation, gossiped_by
+            )
         return ""
 
     def get_water_cooler_buzz(self) -> str:
@@ -551,7 +592,9 @@ class ReputationInfluence:
         self.trust_score = max(0.0, self.trust_score - decay_amount)
 
         # Decay attention multiplier
-        self.attention_multiplier = max(1.0, self.attention_multiplier - decay_amount * 0.1)
+        self.attention_multiplier = max(
+            1.0, self.attention_multiplier - decay_amount * 0.1
+        )
 
         # Decay review priority
         self.review_priority = max(0, self.review_priority - int(decay_amount * 10))
@@ -719,10 +762,18 @@ class RollbackGuarantee:
     lock_reason: Optional[str] = None
 
     def execute_full_rollback(
-        self, human_id: str, reason: str, sandbox_manager: SandboxManager, reputation_system: ReputationSystem
+        self,
+        human_id: str,
+        reason: str,
+        sandbox_manager: SandboxManager,
+        reputation_system: ReputationSystem,
     ) -> Dict[str, int]:
         """Execute complete rollback of all autonomous features."""
-        result = {"sandboxes_collapsed": 0, "reputations_reset": 0, "timestamp": datetime.now().isoformat()}
+        result = {
+            "sandboxes_collapsed": 0,
+            "reputations_reset": 0,
+            "timestamp": datetime.now().isoformat(),
+        }
 
         # Collapse all sandboxes
         result["sandboxes_collapsed"] = sandbox_manager.collapse_all_sandboxes(reason)
@@ -806,27 +857,41 @@ class ExpandedAutonomyModel:
     culture_alive: bool = False
 
     def create_sandbox_from_lounge(
-        self, conversation_id: str, initiative_title: str, owner_floor: str, project_type: ProjectType, description: str
+        self,
+        conversation_id: str,
+        initiative_title: str,
+        owner_floor: str,
+        project_type: ProjectType,
+        description: str,
     ) -> str:
         """Create a sandbox branch from a lounge conversation."""
         # Create sandbox
         sandbox_id = self.sandbox_manager.create_sandbox(
-            name=initiative_title, owner_floor=owner_floor, project_type=project_type, description=description
+            name=initiative_title,
+            owner_floor=owner_floor,
+            project_type=project_type,
+            description=description,
         )
 
         # Record lounge → sandbox transition
-        self.lounge_work_bleed.transition_to_sandbox(conversation_id, sandbox_id, initiative_title)
+        self.lounge_work_bleed.transition_to_sandbox(
+            conversation_id, sandbox_id, initiative_title
+        )
 
         return sandbox_id
 
-    def flag_sandbox_for_promotion(self, sandbox_id: str, flagged_by: str, reason: str) -> None:
+    def flag_sandbox_for_promotion(
+        self, sandbox_id: str, flagged_by: str, reason: str
+    ) -> None:
         """Flag a sandbox as promotion candidate."""
         if sandbox_id in self.sandbox_manager.sandboxes:
             sandbox = self.sandbox_manager.sandboxes[sandbox_id]
             sandbox.flag_for_promotion(flagged_by, reason)
             self.human_ratifications_required += 1
 
-    def human_promote_sandbox(self, sandbox_id: str, human_id: str, directive_id: str) -> None:
+    def human_promote_sandbox(
+        self, sandbox_id: str, human_id: str, directive_id: str
+    ) -> None:
         """Human promotes sandbox to production."""
         if sandbox_id in self.sandbox_manager.sandboxes:
             sandbox = self.sandbox_manager.sandboxes[sandbox_id]
@@ -852,11 +917,15 @@ class ExpandedAutonomyModel:
         for sandbox in self.sandbox_manager.sandboxes.values():
             if sandbox.status == SandboxStatus.PROMOTED:
                 if not sandbox.promoted_to_directive_id:
-                    violations.append(f"Sandbox {sandbox.branch_id} promoted without directive")
+                    violations.append(
+                        f"Sandbox {sandbox.branch_id} promoted without directive"
+                    )
 
         # Check production surprises
         if self.production_surprises > 0:
-            violations.append(f"Production surprises detected: {self.production_surprises}")
+            violations.append(
+                f"Production surprises detected: {self.production_surprises}"
+            )
 
         # Check reputation system
         for reputation in self.reputation_system.reputations.values():
@@ -885,9 +954,13 @@ class ExpandedAutonomyModel:
 
         return {
             "teams_build_without_asking": active_sandboxes > 0,
-            "nothing_ships_without_human": self.human_ratifications_given >= self.human_ratifications_required,
+            "nothing_ships_without_human": self.human_ratifications_given
+            >= self.human_ratifications_required,
             "culture_feels_alive": len(self.lounge_work_bleed.conversations) > 0,
-            "code_quality_improves": len(self.sandbox_manager.get_promotion_candidates()) > 0,
+            "code_quality_improves": len(
+                self.sandbox_manager.get_promotion_candidates()
+            )
+            > 0,
             "no_production_surprises": self.production_surprises == 0,
             "can_walk_away": not self.rollback_guarantee.autonomy_locked,
         }

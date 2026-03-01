@@ -35,14 +35,22 @@ class DeterministicSerializer:
             if isinstance(value, float):
                 # Round to 6 decimal places using ROUND_HALF_EVEN (banker's rounding)
                 decimal.getcontext().prec = 15
-                normalized[key] = float(Decimal(str(value)).quantize(Decimal("0.000001"), rounding=ROUND_HALF_EVEN))
+                normalized[key] = float(
+                    Decimal(str(value)).quantize(
+                        Decimal("0.000001"), rounding=ROUND_HALF_EVEN
+                    )
+                )
             elif isinstance(value, bool):
                 # Bools must come before int check since bool is subclass of int
                 normalized[key] = value
             elif isinstance(value, int) or isinstance(value, str):
                 normalized[key] = value
             elif isinstance(value, list):
-                normalized[key] = sorted(value) if all(isinstance(x, (int, str)) for x in value) else value
+                normalized[key] = (
+                    sorted(value)
+                    if all(isinstance(x, (int, str)) for x in value)
+                    else value
+                )
             else:
                 normalized[key] = str(value)
 
@@ -57,7 +65,11 @@ class DeterministicSerializer:
         Prevents floating point drift across calculations
         """
         decimal.getcontext().prec = 15
-        return float(Decimal(str(confidence)).quantize(Decimal("0.000001"), rounding=ROUND_HALF_EVEN))
+        return float(
+            Decimal(str(confidence)).quantize(
+                Decimal("0.000001"), rounding=ROUND_HALF_EVEN
+            )
+        )
 
 
 class BackpressureHandler:
@@ -196,7 +208,9 @@ class BackpressureHandler:
         - Queue utilization > 95% for > 30s
         """
         return (
-            self.is_degraded or self.drop_rate_per_minute > 10 or self.current_queue_size / self.max_queue_size > 0.95
+            self.is_degraded
+            or self.drop_rate_per_minute > 10
+            or self.current_queue_size / self.max_queue_size > 0.95
         )
 
 

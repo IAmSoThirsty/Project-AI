@@ -123,7 +123,9 @@ class DistributionRoute:
     arrival_time: datetime | None = None
 
 
-class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable, IResourceManager):
+class SupplyLogisticsSubsystem(
+    BaseSubsystem, ICommandable, IMonitorable, IObservable, IResourceManager
+):
     """
     Supply Logistics Subsystem
 
@@ -161,7 +163,9 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
         self.data_path.mkdir(parents=True, exist_ok=True)
 
         # Configuration
-        self.critical_threshold = timedelta(days=config.get("critical_threshold_days", 3))
+        self.critical_threshold = timedelta(
+            days=config.get("critical_threshold_days", 3)
+        )
         self.rationing_enabled = config.get("rationing_enabled", False)
         self.auto_rotate = config.get("auto_rotate_expiring", True)
         self.max_routes = config.get("max_distribution_routes", 20)
@@ -270,7 +274,11 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
             return False
 
         # Check that processing thread is running
-        if not self._processing_active or not self._processing_thread or not self._processing_thread.is_alive():
+        if (
+            not self._processing_active
+            or not self._processing_thread
+            or not self._processing_thread.is_alive()
+        ):
             self.logger.warning("Supply processing thread not running")
             return False
 
@@ -293,15 +301,23 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
 
         with self._inventory_lock:
             status["total_items"] = len(self._inventory)
-            status["reserved_items"] = sum(1 for item in self._inventory.values() if item.reserved)
+            status["reserved_items"] = sum(
+                1 for item in self._inventory.values() if item.reserved
+            )
 
         with self._request_lock:
-            status["pending_requests"] = sum(1 for req in self._requests.values() if not req.fulfilled)
+            status["pending_requests"] = sum(
+                1 for req in self._requests.values() if not req.fulfilled
+            )
 
         with self._route_lock:
-            status["active_routes"] = sum(1 for route in self._routes.values() if route.status == "in_progress")
+            status["active_routes"] = sum(
+                1 for route in self._routes.values() if route.status == "in_progress"
+            )
 
-        status["supply_statuses"] = {rt.value: self._get_supply_status(rt).value for rt in ResourceType}
+        status["supply_statuses"] = {
+            rt.value: self._get_supply_status(rt).value for rt in ResourceType
+        }
 
         with self._metrics_lock:
             status["metrics"] = self._metrics.copy()
@@ -485,7 +501,9 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
         with self._subscription_lock:
             for event_type in self._subscriptions:
                 self._subscriptions[event_type] = [
-                    (sid, cb) for sid, cb in self._subscriptions[event_type] if sid != subscription_id
+                    (sid, cb)
+                    for sid, cb in self._subscriptions[event_type]
+                    if sid != subscription_id
                 ]
             return True
 
@@ -498,7 +516,9 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
                 try:
                     callback(data)
                 except Exception as e:
-                    self.logger.error("Error in event callback %s: %s", subscription_id, e)
+                    self.logger.error(
+                        "Error in event callback %s: %s", subscription_id, e
+                    )
 
             return len(subscribers)
 
@@ -523,7 +543,9 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
             for request in self._requests.values():
                 if request.approved and not request.fulfilled:
                     # Try to fulfill
-                    items = self._find_available_resources(request.resource_type, request.quantity_requested)
+                    items = self._find_available_resources(
+                        request.resource_type, request.quantity_requested
+                    )
 
                     if items:
                         request.fulfilled = True
@@ -534,12 +556,16 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
                             for item_id in items:
                                 if item_id in self._inventory:
                                     self._inventory[item_id].reserved = True
-                                    self._inventory[item_id].reserved_for = request.request_id
+                                    self._inventory[item_id].reserved_for = (
+                                        request.request_id
+                                    )
 
                         with self._metrics_lock:
                             self._metrics["requests_fulfilled"] += 1
 
-                        self.emit_event("request_fulfilled", {"request_id": request.request_id})
+                        self.emit_event(
+                            "request_fulfilled", {"request_id": request.request_id}
+                        )
 
     def _check_expiring_resources(self):
         """Check for expiring resources and rotate stock."""
@@ -591,7 +617,9 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
                         with self._metrics_lock:
                             self._metrics["distributions_completed"] += 1
 
-                        self.emit_event("distribution_completed", {"route_id": route.route_id})
+                        self.emit_event(
+                            "distribution_completed", {"route_id": route.route_id}
+                        )
 
     def _refresh_availability_cache(self):
         """Refresh resource availability cache."""
@@ -601,7 +629,9 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
             for item in self._inventory.values():
                 if not item.reserved and item.condition == "good":
                     rt = item.resource_type
-                    self._availability_cache[rt] = self._availability_cache.get(rt, 0.0) + item.quantity
+                    self._availability_cache[rt] = (
+                        self._availability_cache.get(rt, 0.0) + item.quantity
+                    )
 
     def _add_resource(self, params: dict[str, Any]) -> ResourceItem | None:
         """Add a resource to inventory."""
@@ -614,7 +644,9 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
                 location=params["location"],
                 acquired_date=datetime.now(),
                 expiration_date=(
-                    datetime.fromisoformat(params["expiration_date"]) if "expiration_date" in params else None
+                    datetime.fromisoformat(params["expiration_date"])
+                    if "expiration_date" in params
+                    else None
                 ),
                 metadata=params.get("metadata", {}),
             )
@@ -655,7 +687,10 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
             # Auto-approve based on priority and availability
             available = self.get_resource_availability(request.resource_type.value)
 
-            if request.priority.value <= ResourcePriority.HIGH.value or available >= request.quantity_requested * 2:
+            if (
+                request.priority.value <= ResourcePriority.HIGH.value
+                or available >= request.quantity_requested * 2
+            ):
                 request.approved = True
             elif self.rationing_enabled:
                 # Apply rationing rules
@@ -679,7 +714,9 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
             self.logger.error("Failed to create supply request: %s", e)
             return None
 
-    def _create_distribution_route(self, params: dict[str, Any]) -> DistributionRoute | None:
+    def _create_distribution_route(
+        self, params: dict[str, Any]
+    ) -> DistributionRoute | None:
         """Create a distribution route."""
         try:
             route = DistributionRoute(
@@ -781,14 +818,20 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
 
         return optimization
 
-    def _find_available_resources(self, resource_type: ResourceType, amount: float) -> list[str]:
+    def _find_available_resources(
+        self, resource_type: ResourceType, amount: float
+    ) -> list[str]:
         """Find available resources of given type and amount."""
         available_items = []
         total = 0.0
 
         with self._inventory_lock:
             for item_id, item in self._inventory.items():
-                if item.resource_type == resource_type and not item.reserved and item.condition == "good":
+                if (
+                    item.resource_type == resource_type
+                    and not item.reserved
+                    and item.condition == "good"
+                ):
 
                     available_items.append(item_id)
                     total += item.quantity
@@ -921,7 +964,9 @@ class SupplyLogisticsSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
                         quantity=item_data["quantity"],
                         unit=item_data["unit"],
                         location=item_data["location"],
-                        acquired_date=datetime.fromisoformat(item_data["acquired_date"]),
+                        acquired_date=datetime.fromisoformat(
+                            item_data["acquired_date"]
+                        ),
                         condition=item_data["condition"],
                     )
                     self._inventory[item.item_id] = item

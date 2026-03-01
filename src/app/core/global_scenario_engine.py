@@ -80,7 +80,9 @@ class DataSource:
                 with open(cache_file) as f:
                     data = json.load(f)
                     # Check if cache is less than 30 days old
-                    if datetime.fromisoformat(data["timestamp"]) > datetime.now(UTC) - timedelta(days=30):
+                    if datetime.fromisoformat(data["timestamp"]) > datetime.now(
+                        UTC
+                    ) - timedelta(days=30):
                         logger.debug("Using cached data: %s", cache_key)
                         return data["response"]
             except Exception as e:
@@ -129,7 +131,9 @@ class DataSource:
 
                 return data
             except requests.exceptions.RequestException as e:
-                logger.warning("Request failed (attempt %s/%s): %s", attempt + 1, max_retries, e)
+                logger.warning(
+                    "Request failed (attempt %s/%s): %s", attempt + 1, max_retries, e
+                )
                 if attempt < max_retries - 1:
                     time.sleep(2**attempt)  # Exponential backoff
 
@@ -193,7 +197,9 @@ class WorldBankDataSource(DataSource):
         result = defaultdict(dict)
         for entry in data[1] if len(data) > 1 else []:
             if entry.get("value") is not None:
-                country_code = entry.get("countryiso3code") or entry.get("country", {}).get("id")
+                country_code = entry.get("countryiso3code") or entry.get(
+                    "country", {}
+                ).get("id")
                 year = int(entry.get("date", 0))
                 value = float(entry.get("value"))
 
@@ -233,8 +239,12 @@ class ACLEDDataSource(DataSource):
         api_email = os.getenv("ACLED_API_EMAIL")
 
         if not api_key or not api_email:
-            logger.warning("ACLED API credentials not found. Using fallback synthetic data.")
-            return self._generate_fallback_conflict_data(start_date, end_date, countries)
+            logger.warning(
+                "ACLED API credentials not found. Using fallback synthetic data."
+            )
+            return self._generate_fallback_conflict_data(
+                start_date, end_date, countries
+            )
 
         params = {
             "key": api_key,
@@ -251,7 +261,9 @@ class ACLEDDataSource(DataSource):
         data = self.fetch_with_retry(self.BASE_URL, params)
         if not data or "data" not in data:
             logger.warning("ACLED request failed. Using fallback data.")
-            return self._generate_fallback_conflict_data(start_date, end_date, countries)
+            return self._generate_fallback_conflict_data(
+                start_date, end_date, countries
+            )
 
         logger.info("Loaded %s ACLED events", len(data["data"]))
         return data["data"]
@@ -430,7 +442,9 @@ class GlobalScenarioEngine(SimulationSystem):
 
             # Load ACLED conflict data -> CIVIL_UNREST domain
             logger.info("Loading ACLED conflict data")
-            conflict_events = self.acled.fetch_conflict_events(f"{start_year}-01-01", f"{end_year}-12-31", countries)
+            conflict_events = self.acled.fetch_conflict_events(
+                f"{start_year}-01-01", f"{end_year}-12-31", countries
+            )
 
             # Aggregate conflict events by country/year
             conflict_by_country_year = defaultdict(lambda: defaultdict(int))
@@ -451,7 +465,9 @@ class GlobalScenarioEngine(SimulationSystem):
             self.historical_data[RiskDomain.CIVIL_UNREST] = conflict_data
 
             # Log data loading summary
-            summary = {domain.value: len(data) for domain, data in self.historical_data.items()}
+            summary = {
+                domain.value: len(data) for domain, data in self.historical_data.items()
+            }
             logger.info("Historical data loaded: %s", summary)
 
             return True
@@ -460,7 +476,9 @@ class GlobalScenarioEngine(SimulationSystem):
             logger.error("Failed to load historical data: %s", e, exc_info=True)
             return False
 
-    def detect_threshold_events(self, year: int, domains: list[RiskDomain] | None = None) -> list[ThresholdEvent]:
+    def detect_threshold_events(
+        self, year: int, domains: list[RiskDomain] | None = None
+    ) -> list[ThresholdEvent]:
         """
         Detect threshold exceedance events using statistical methods.
 
@@ -491,7 +509,9 @@ class GlobalScenarioEngine(SimulationSystem):
                 value = year_values[year]
 
                 # Calculate Z-score using historical data
-                historical_values = [v for y, v in year_values.items() if y < year and not np.isnan(v)]
+                historical_values = [
+                    v for y, v in year_values.items() if y < year and not np.isnan(v)
+                ]
 
                 if len(historical_values) < 2:
                     continue  # Need at least 2 historical points
@@ -535,7 +555,10 @@ class GlobalScenarioEngine(SimulationSystem):
                     )
 
                 # Check domain-specific absolute thresholds
-                if "absolute" in threshold_config and value >= threshold_config["absolute"]:
+                if (
+                    "absolute" in threshold_config
+                    and value >= threshold_config["absolute"]
+                ):
                     event = ThresholdEvent(
                         event_id=f"{domain.value}_{country}_{year}_abs_{int(time.time())}",
                         timestamp=datetime(year, 1, 1, tzinfo=UTC),
@@ -553,7 +576,9 @@ class GlobalScenarioEngine(SimulationSystem):
         self.threshold_events.extend(events)
         return events
 
-    def build_causal_model(self, historical_events: list[ThresholdEvent]) -> list[CausalLink]:
+    def build_causal_model(
+        self, historical_events: list[ThresholdEvent]
+    ) -> list[CausalLink]:
         """
         Build causal relationships between domains using historical events.
 
@@ -604,20 +629,29 @@ class GlobalScenarioEngine(SimulationSystem):
                 continue
 
             # Find countries with both source and target events
-            common_countries = set(domain_events[source_domain].keys()) & set(domain_events[target_domain].keys())
+            common_countries = set(domain_events[source_domain].keys()) & set(
+                domain_events[target_domain].keys()
+            )
 
             if len(common_countries) >= 5:  # Need sufficient data
                 # Update confidence based on co-occurrence
                 for link in causal_links:
-                    if link.source == source_domain.value and link.target == target_domain.value:
-                        link.evidence.append(f"Validated in {len(common_countries)} countries")
+                    if (
+                        link.source == source_domain.value
+                        and link.target == target_domain.value
+                    ):
+                        link.evidence.append(
+                            f"Validated in {len(common_countries)} countries"
+                        )
                         link.confidence = min(0.95, link.confidence + 0.1)
 
         logger.info("Built %s causal links", len(causal_links))
         self.causal_links = causal_links
         return causal_links
 
-    def simulate_scenarios(self, projection_years: int = 10, num_simulations: int = 1000) -> list[ScenarioProjection]:
+    def simulate_scenarios(
+        self, projection_years: int = 10, num_simulations: int = 1000
+    ) -> list[ScenarioProjection]:
         """
         Run probabilistic Monte Carlo simulations for future scenarios.
 
@@ -710,9 +744,13 @@ class GlobalScenarioEngine(SimulationSystem):
                 # 1. Base probability from template
                 # 2. Historical trigger frequency
                 # 3. Causal chain activation
-                trigger_boost = len(scenario_triggers) / max(len(self.threshold_events), 1)
+                trigger_boost = len(scenario_triggers) / max(
+                    len(self.threshold_events), 1
+                )
                 causal_boost = sum(
-                    link.strength for link in self.causal_links if link.source in [d.value for d in template["domains"]]
+                    link.strength
+                    for link in self.causal_links
+                    if link.source in [d.value for d in template["domains"]]
                 ) / max(len(self.causal_links), 1)
 
                 # Monte Carlo probability estimation
@@ -755,7 +793,8 @@ class GlobalScenarioEngine(SimulationSystem):
                     impact_domains=set(template["domains"]),
                     severity=template["severity"],
                     mitigation_strategies=[
-                        f"Strengthen {domain.value} monitoring systems" for domain in template["domains"]
+                        f"Strengthen {domain.value} monitoring systems"
+                        for domain in template["domains"]
                     ],
                 )
                 scenarios.append(scenario)
@@ -763,11 +802,15 @@ class GlobalScenarioEngine(SimulationSystem):
         # Sort by likelihood
         scenarios.sort(key=lambda s: s.likelihood, reverse=True)
 
-        logger.info("Simulated %s scenarios over %s years", len(scenarios), projection_years)
+        logger.info(
+            "Simulated %s scenarios over %s years", len(scenarios), projection_years
+        )
         self.scenarios = scenarios
         return scenarios
 
-    def generate_alerts(self, scenarios: list[ScenarioProjection], threshold: float = 0.7) -> list[CrisisAlert]:
+    def generate_alerts(
+        self, scenarios: list[ScenarioProjection], threshold: float = 0.7
+    ) -> list[CrisisAlert]:
         """
         Generate crisis alerts for high-probability scenarios.
 
@@ -790,7 +833,9 @@ class GlobalScenarioEngine(SimulationSystem):
                     AlertLevel.CRITICAL: 80,
                     AlertLevel.CATASTROPHIC: 100,
                 }
-                risk_score = scenario.likelihood * severity_weights.get(scenario.severity, 50)
+                risk_score = scenario.likelihood * severity_weights.get(
+                    scenario.severity, 50
+                )
 
                 # Generate explainability
                 explanation = self.get_explainability(scenario)
@@ -813,7 +858,8 @@ class GlobalScenarioEngine(SimulationSystem):
                 alerts.append(alert)
 
                 logger.warning(
-                    f"ALERT: {scenario.title} - Likelihood: {scenario.likelihood:.1%}, " f"Risk Score: {risk_score:.1f}"
+                    f"ALERT: {scenario.title} - Likelihood: {scenario.likelihood:.1%}, "
+                    f"Risk Score: {risk_score:.1f}"
                 )
 
         logger.info("Generated %s crisis alerts", len(alerts))
@@ -852,7 +898,9 @@ class GlobalScenarioEngine(SimulationSystem):
             )
 
         if len(scenario.trigger_events) > 5:
-            explanation_parts.append(f"... and {len(scenario.trigger_events) - 5} more events")
+            explanation_parts.append(
+                f"... and {len(scenario.trigger_events) - 5} more events"
+            )
 
         explanation_parts.extend(
             [
@@ -913,14 +961,22 @@ class GlobalScenarioEngine(SimulationSystem):
                         **asdict(a),
                         "scenario": {
                             **asdict(a.scenario),
-                            "trigger_events": [asdict(e) for e in a.scenario.trigger_events],
-                            "causal_chain": [asdict(link) for link in a.scenario.causal_chain],
+                            "trigger_events": [
+                                asdict(e) for e in a.scenario.trigger_events
+                            ],
+                            "causal_chain": [
+                                asdict(link) for link in a.scenario.causal_chain
+                            ],
                             "affected_countries": list(a.scenario.affected_countries),
-                            "impact_domains": [d.value for d in a.scenario.impact_domains],
+                            "impact_domains": [
+                                d.value for d in a.scenario.impact_domains
+                            ],
                             "severity": a.scenario.severity.value,
                         },
                         "evidence": [asdict(e) for e in a.evidence],
-                        "causal_activation": [asdict(link) for link in a.causal_activation],
+                        "causal_activation": [
+                            asdict(link) for link in a.causal_activation
+                        ],
                     }
                     for a in self.alerts
                 ],
@@ -948,7 +1004,8 @@ class GlobalScenarioEngine(SimulationSystem):
             "domains_loaded": len(self.historical_data),
             "total_countries": sum(len(data) for data in self.historical_data.values()),
             "total_data_points": sum(
-                sum(len(years) for years in data.values()) for data in self.historical_data.values()
+                sum(len(years) for years in data.values())
+                for data in self.historical_data.values()
             ),
             "threshold_events": len(self.threshold_events),
             "causal_links": len(self.causal_links),
@@ -960,7 +1017,9 @@ class GlobalScenarioEngine(SimulationSystem):
         # Check data coverage
         for domain, data in self.historical_data.items():
             if len(data) < 10:
-                validation["issues"].append(f"Low country coverage for {domain.value}: {len(data)} countries")
+                validation["issues"].append(
+                    f"Low country coverage for {domain.value}: {len(data)} countries"
+                )
 
             # Check temporal coverage
             for country, years in data.items():
