@@ -1,4 +1,0 @@
-============================= test session starts =============================
-collected 7595 items / 2 skipped
-
-tests\test_100_percent_coverage.py FF                                    [  0%]
