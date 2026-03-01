@@ -10,7 +10,70 @@
 
 ## 🏛️ Executive Sovereign Summary
 
-Project-AI is a **Reflexive, Constitutionally-Governed, Sovereign-Grade Substrate**. It is not merely "production-ready"; it is an unbreakable cryptographic invariant. This manifest details the sovereign status of all domains.
+Project-AI is a **Reflexive, Constitutionally-Governed, Sovereign-Grade Substrate**. It is not merely "production-ready"; it is an unbreakable cryptographic invariant.
+
+### 🛡️ The Sovereign Standard: Verifiable Open Source (VOS)
+
+We reject the legacy definition of "Open Source" as mere code exposure. Project-AI enforces **VOS**, a three-dimensional integrity proof:
+
+1. **Source Integrity**: 100% public source code with SHA-256 deterministic fingerprints.
+2. **Build Integrity**: Reproducible build environments (Nix/Docker) ensuring `Build(Source) == Binary`.
+3. **Policy Integrity**: Attested execution policies (TARL) that are cryptographically bound to the binaries they govern.
+
+---
+
+## 🏛️ Invariant Bedrock: Formal Proofs
+
+The Project-AI substrate is governed by **PSIA (Protocol for Sovereign Integrity & Auditing)**. We claim an "Unbreakable Cryptographic Invariant" based on the following three-tier proof system:
+
+### 1. Mathematical Immutability (Proof of Audit)
+
+The Sovereign Ledger utilizes a Merkle-Tree linked-list architecture. For any block $B$ at height $H$:
+
+- $R_H = \text{Hash}( \text{MerkleRoot}(\text{records}_H) \parallel R_{H-1} )$
+- This chain is anchored to an external RFC 3161 TSA (Trust Anchor).
+- **Theorem**: To modify any historical record, an attacker must compromise the external trust anchor and recalculate all subsequent Merkle roots in real-time, which is computationally infeasible under Ed25519/SHA-256 primitives.
+
+### 2. Pipeline Integrity (Proof of Enforcement)
+
+The Waterfall Engine enforces **Monotonic Strictness**.
+
+- **Constraint**: $\forall stage(i, j) \in Waterfall : i < j \implies severity(i) \le severity(j)$.
+- This ensures that once a threat is detected or a risk-tier is assigned, it cannot be "downgraded" by subsequent logic layers.
+
+### 3. Plane Isolation (Proof of Containment)
+
+The system operates across 6 isolated planes (Canonical, Shadow, Adaptive, Gate, Reflex, Ingress).
+
+- **Proof**: Multi-process memory isolation and capability-based tokens (INV-ROOT-6).
+- **Enforcement**: The `Shadow Plane` is strictly read-only by kernel-level eBPF constraints. It can simulate a catastrophic failure without any bit-wise mutation of the `Canonical Plane`.
+
+---
+
+## 🚧 System Boundaries & Failure Modes
+
+Sovereign maturity requires acknowledging the limits of the substrate.
+
+### What IT Can Do
+
+- **Halt Illegal State Transitions**: Block any mutation that lacks a valid BFT quorum.
+- **Guarantee Auditability**: Provide a court-defensible trace of every intent.
+- **Survive Protocol Attacks**: Resist replay, man-in-the-middle, and privilege escalation via PSIA Stage 0-2.
+
+### What IT Cannot Do
+
+- **Fix Logic-Level Errors**: If a human-authored constitutional rule is logically flawed but cryptographically valid, the system will execute it (though Shadow Simulation may flag the outcome as an anomaly).
+- **Prevent Physical Compromise**: The system cannot prevent the physical destruction of the host hardware, though multi-region DR (Phase 5) mitigates data loss.
+
+### Operational Failure Modes (Safe-Halt)
+
+When an invariant is breached (e.g., $INV-ROOT-9$), the system enters **SAFE-HALT**:
+
+1. **Write-Block**: All mutations to the Canonical Plane are immediately dropped.
+2. **Read-Survivability**: State remains readable for diagnostic and safety purposes.
+3. **Manual Recovery**: Only an authenticated, multi-sig "Genesis Admin" can reset the substrate.
+
+---
 
 ### Quick Health Check
 
