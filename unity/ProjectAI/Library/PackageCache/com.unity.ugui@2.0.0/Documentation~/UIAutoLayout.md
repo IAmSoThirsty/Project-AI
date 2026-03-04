@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Auto Layout
 
 The Rect Transform layout system is flexible enough to handle a lot of different types of layouts and it also allows placing elements in a complete freeform fashion. However, sometimes something a bit more structured can be needed.

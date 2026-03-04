@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Lowercase, Uppercase, and Smallcaps
 
 The `<lowercase>`, `<uppercase>`, `<allcaps>` and `<smallcaps>` tags alter the capitalization of your text before rendering. The text in the **Text** field remains as you entered it.

@@ -1,6 +1,10 @@
+//                                           [2026-03-03 13:45]
+//                                          Productivity: Active
 /**
  * Thirsty-lang Documentation Generator
  * Generate beautiful docs from your code!
+ * 
+ * Date: 2026-03-03 15:15 UTC | Status: Active
  */
 
 const fs = require('fs');
@@ -59,7 +63,7 @@ class ThirstyDocGenerator {
         md += "**Initial Value:** `" + v.value + "`\n\n";
         md += `**Defined at:** Line ${v.line}\n\n`;
         md += '---\n\n';
-      });
+      }
     }
 
     return md;
@@ -161,7 +165,7 @@ class ThirstyDocGenerator {
       if (!isValidFile(validatedInputFile)) {
         throw new Error('Input file not found or is not a valid file');
       }
-      
+
       const code = fs.readFileSync(validatedInputFile, 'utf-8');
       this.parse(code);
 

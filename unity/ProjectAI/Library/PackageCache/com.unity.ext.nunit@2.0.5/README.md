@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Custom Nunit build to work with Unity
 
 This version of nunit works with all platforms, il2cpp and Mono AOT.

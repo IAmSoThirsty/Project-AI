@@ -1,3 +1,5 @@
+#                                           [2026-03-03 18:15]
+#                                          Productivity: Active
 from __future__ import annotations
 
 import logging
@@ -16,17 +18,21 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from app.agents.expert_agent import ExpertAgent
-from app.core.access_control import get_access_control
-from app.core.ai_systems import LearningRequestManager
-from app.core.council_hub import get_council_hub
-from app.core.platform_tiers import (
+# Internal Imports
+from src.app.agents.expert_agent import ExpertAgent
+from src.app.core.access_control import get_access_control
+from src.app.core.ai_systems import LearningRequestManager
+from src.app.core.council_hub import get_council_hub
+from src.app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
     get_tier_registry,
 )
-from app.plugins.codex_adapter import CodexAdapter
+from src.app.plugins.codex_adapter import CodexAdapter
+
+# ────────────────────────────────────────────────────────────────────────────
+
 
 logger = logging.getLogger(__name__)
 

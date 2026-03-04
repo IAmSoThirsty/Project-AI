@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Page Break
 
 You can use the `<page>` tag to insert page breaks in your text. This cuts the text into separate blocks.

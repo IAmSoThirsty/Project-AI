@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Contributing to Project-AI
 
 Thank you for interest in contributing to Project-AI! This guide will help you get started.

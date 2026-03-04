@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Styles
 
 Use styles to apply additional formatting to some or all of the text in a TextMesh Pro object. A style is a combination of opening and closing [rich text tags](RichText.md), and can also include leading and trailing characters.

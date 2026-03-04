@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Contributing to Project-AI: Code, Docs, and Civilization-Scale Impact
 
 **Document Version:** 2.0 **Effective Date:** 2026-02-05 **Status:** Contributor Governance Framework
@@ -75,8 +77,8 @@ ______________________________________________________________________
 
 ## Quick Start: How to Contribute
 
-- **Read the [Copilot Workspace Profile](.github/copilot_workspace_profile.md)** - All contributions must meet production-grade standards
-- **For documentation**: See [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md)
+- **Read the [Copilot Workspace Profile](../../.github/copilot_workspace_profile.md)** - All contributions must meet production-grade standards
+- **For documentation**: See [Documentation Contributing Guide](../../.github/CONTRIBUTING_DOCS.md)
 - Fork the repository
 - Create a branch with a descriptive name
 - Run tests locally: `pytest -q`
@@ -87,14 +89,14 @@ ______________________________________________________________________
 
 **Before adding or moving documentation**, read:
 
-- [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md) - Where to place documentation
+- [Documentation Contributing Guide](../../.github/CONTRIBUTING_DOCS.md) - Where to place documentation
 - [Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md) - Complete organization guide
 
 ## 🚨 Governance & Standards
 
 All contributions—whether from humans or AI assistants—MUST comply with:
 
-**[.github/copilot_workspace_profile.md](.github/copilot_workspace_profile.md)**
+**[../../.github/copilot_workspace_profile.md](../../.github/copilot_workspace_profile.md)**
 
 This governance profile enforces:
 
@@ -279,7 +281,7 @@ def test_four_laws_prevents_harm():
 - Run security scans before every PR (`bandit`, `pip-audit`)
 - Never commit secrets (API keys, passwords, etc.)
 - Use secure defaults (encryption, authentication, least privilege)
-- Report security issues privately (security@project-ai.local)
+- Report security issues privately (<security@project-ai.local>)
 
 **Vulnerability Disclosure:**
 
@@ -411,7 +413,7 @@ This repository uses automated workflows to handle PRs and security alerts:
 - **Security scans** run daily and create issues for vulnerabilities
 - **Code quality checks** run on every PR
 
-For details, see [.github/AUTOMATION.md](.github/AUTOMATION.md).
+For details, see [../../.github/AUTOMATION.md](../../.github/AUTOMATION.md).
 
 ### Working with Automation
 
@@ -578,7 +580,7 @@ ______________________________________________________________________
 - **GitHub Issues:** Bug reports, feature requests
 - **GitHub Discussions:** Questions, ideas, general discussion
 - **Pull Requests:** Code and documentation contributions
-- **Security:** security@project-ai.local (private disclosure)
+- **Security:** <security@project-ai.local> (private disclosure)
 
 ______________________________________________________________________
 

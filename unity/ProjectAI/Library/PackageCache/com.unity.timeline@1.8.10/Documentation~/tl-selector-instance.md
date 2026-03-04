@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Timeline Selector
 
 Use the Timeline Selector to select which Timeline instance to view, modify, or preview in the Timeline window. To select a Timeline instance, click the Timeline Selector and choose from the list of Timeline instances in the current Scene.

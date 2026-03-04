@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Profile Analyzer window
 
 The Profile Analyzer window visualizes frame, thread, and marker data from the [Unity Profiler](https://docs.unity3d.com/Manual/Profiler.html) window. You can use it to analyze the performance of specific markers, threads, and frames.

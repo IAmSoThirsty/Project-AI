@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Get started with an existing Unity Version Control repository
 
 Suppose you want to start working on a Unity project in an existing Unity Version Control repository and already have a Unity Version Control account linked to your Unity ID. In that case, you will be able to open the project straight from the **Unity Hub**. A workspace will automatically be created for your project on your machine.

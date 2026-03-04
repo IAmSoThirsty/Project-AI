@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Function Registry & Knowledge Base Querying
 
 This document describes the new modular, extensible knowledge base querying and function calling capabilities in Project-AI.

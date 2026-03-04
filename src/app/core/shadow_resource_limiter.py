@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """
 Shadow Resource Limiter — Python Bridge
 Compiles resource_limiter.thirsty and wires it into the Shadow Execution Plane.

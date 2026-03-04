@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Graphs
 
 A graph is a Visual Scripting asset that contains a visual representation of logic in an application.

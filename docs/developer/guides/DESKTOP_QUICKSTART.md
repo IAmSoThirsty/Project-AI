@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Desktop Quickstart - Project-AI (Leather Book)
 
 This quickstart helps you run the native desktop (PyQt6) Leather Book interface.

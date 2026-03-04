@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Bio-Inspired Brain Mapping AI Subsystem Architecture
 
 ## Table of Contents
@@ -124,7 +126,7 @@ Output Layer
 
 **Slow Learning (Hebbian)**:
 
-- Δw_ij = η_slow * (α * pre_i * post_j - β * w_ij)
+- Δw_ij = η_slow *(α* pre_i *post_j - β* w_ij)
 - Learning rate: ~0.0001
 - Updates: weights_slow
 - α (potentiation): 0.1
@@ -306,7 +308,7 @@ ______________________________________________________________________
 
 ## API Reference
 
-### BioBrainMappingSystem
+### Neural Mapper (Experimental | Sovereign 2.1)
 
 Main orchestrator class.
 
@@ -739,7 +741,7 @@ ______________________________________________________________________
 
 | Operation        | Complexity   | Notes                                  |
 | ---------------- | ------------ | -------------------------------------- |
-| RSGN Forward     | O(n * m * s) | n=layers, m=max_neurons, s=sparsity    |
+| RSGN Forward     | O(n *m* s) | n=layers, m=max_neurons, s=sparsity    |
 | RSGN Hebbian     | O(m² * s)    | Per layer                              |
 | Module Forward   | O(k)         | k=hierarchical_depth (5 modules)       |
 | Local Inhibition | O(m²)        | Can be optimized with spatial indexing |
@@ -863,8 +865,8 @@ ______________________________________________________________________
 
 For questions, issues, or contributions:
 
-- **Repository**: https://github.com/IAmSoThirsty/Project-AI
-- **Issues**: https://github.com/IAmSoThirsty/Project-AI/issues
+- **Repository**: <https://github.com/IAmSoThirsty/Project-AI>
+- **Issues**: <https://github.com/IAmSoThirsty/Project-AI/issues>
 - **Module**: `src/app/core/bio_brain_mapper.py`
 - **Tests**: `tests/test_bio_brain_mapper.py`
 - **Config**: `config/bio_brain_mapping.yaml`

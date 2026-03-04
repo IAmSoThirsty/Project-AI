@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Environments
 
 Unity Remote Config uses environments to group Game Overrides and Settings, and deliver specific environments to the client (Unity Runtime Instance) based on the `environmentId`. If no `environmentId` is provided in the request - the default environment, which is the environment named `production` is returned to that instance.

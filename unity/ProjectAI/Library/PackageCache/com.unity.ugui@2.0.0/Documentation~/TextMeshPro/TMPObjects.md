@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Creating text
 
 To create text, add TextMesh Pro GameObjects to a Scenes. There are two types of TextMesh Pro GameObject:

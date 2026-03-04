@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Fallback font assets
 
 A font atlas, and by extension a font Asset, can only contain a certain number of glyphs. The exact number depends on the font, the size of the atlas texture, and the settings you use when generating the atlas. The fallback font system allows you to specify other font assets to search when TextMesh Pro can't find a glyph in a text object's font Asset.

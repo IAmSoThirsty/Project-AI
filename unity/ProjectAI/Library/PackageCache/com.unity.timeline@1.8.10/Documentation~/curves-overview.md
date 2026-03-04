@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Curves view
 
 Use the Curves view to view and edit animation curves for audio tracks, infinite clips, and animation clips. The Curves view is similar to [Curves mode](https://docs.unity3d.com/Manual/animeditor-AnimationCurves.html) in the Animation window.

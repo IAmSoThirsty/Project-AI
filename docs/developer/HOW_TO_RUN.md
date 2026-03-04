@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # 🚀 How to Actually Run Project-AI
 
 **Stop trying the automated scripts - they're causing issues. Here's the simple way:**

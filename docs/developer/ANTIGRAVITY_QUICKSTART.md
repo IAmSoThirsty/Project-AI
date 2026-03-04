@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Google Antigravity IDE - Quick Start Guide
 
 **Get started with Antigravity IDE in Project-AI in under 10 minutes!**

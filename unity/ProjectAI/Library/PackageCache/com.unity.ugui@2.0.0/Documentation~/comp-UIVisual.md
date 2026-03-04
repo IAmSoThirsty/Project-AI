@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Visual Components
 
 The [visual components](UIVisualComponents.md) allow for ease of creation and GUI specific functionality.

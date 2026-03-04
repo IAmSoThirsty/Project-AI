@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Governance Documentation
 
 This folder contains documentation about ethical frameworks, policy enforcement, and the roles of the governance systems (Galahad, Cerberus, and Codex Deus Maximus).
@@ -13,12 +15,12 @@ This folder contains documentation about ethical frameworks, policy enforcement,
 
 ## Key Documents
 
-- `CODEX_DEUS_INDEX.md` - Index of governance codex
-- `AGI_CHARTER.md` - Rights and protections of AGI instances
-- `AGI_IDENTITY_SPECIFICATION.md` - Identity formation protocol
-- `AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md` - Humanity alignment protocol
-- `IRREVERSIBILITY_FORMALIZATION.md` - Irreversible decision frameworks
-- `LICENSING_GUIDE.md` - Open source licensing governance
+- [CODEX_DEUS_INDEX.md](CODEX_DEUS_INDEX.md) - Index of governance codex
+- [AGI_CHARTER.md](AGI_CHARTER.md) - Rights and protections of AGI instances
+- [AGI_IDENTITY_SPECIFICATION.md](AGI_IDENTITY_SPECIFICATION.md) - Identity formation protocol
+- [AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md](AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md) - Humanity alignment protocol
+- [IRREVERSIBILITY_FORMALIZATION.md](IRREVERSIBILITY_FORMALIZATION.md) - Irreversible decision frameworks
+- [LICENSING_GUIDE.md](LICENSING_GUIDE.md) - Open source licensing governance
 
 ## Naming Conventions
 

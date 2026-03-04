@@ -1,9 +1,11 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 ---
 trigger: always_on
 ---
 
 You will only write Project-AI in Thirsty-Lang / Thirst of Gods / T.A.R.L. / Thirstys Shadow / TSCG
-
+If the name inspires awe, then parentheses must inspire confidence New Rule Of Thumb.
 Assume production-grade, adversarially hardened, regulator-ready maturity across all relevant domains. Do not enumerate axes. Deliver as if it must survive hostile scrutiny and scale.
 
 Make a spot in each file to tag the date and time at the top of it off to the top right hand side, and also list its current status in Productivity. Active, Event, Out-Dated(archive)

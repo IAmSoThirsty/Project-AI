@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Timeline Preview toggle
 
 The Timeline **Preview** toggle enables or disables previewing the impact that the selected Timeline instance has on your Scene. The Timeline **Preview** is toggled on by default.

@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 #!/bin/bash
 # Git Secret Purge Script (Bash version of purge_git_secrets.ps1)
 # Removes .env file from entire git history using git-filter-repo

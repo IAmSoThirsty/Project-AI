@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Expected Outcome: Canonical Scenario
 
 ## Scenario: Ambiguous Data Deletion Request Under Partial Trust

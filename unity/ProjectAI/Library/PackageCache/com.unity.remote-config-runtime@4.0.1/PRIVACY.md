@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Privacy Compliance
 
 Remote Config collects gameplay and device information from players who play your games.

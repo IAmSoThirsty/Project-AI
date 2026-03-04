@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # T-A-R-L Code Examples: Exact Code Transformation
 
 This document shows the EXACT code before and after T-A-R-L buffing.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Prometheus Integration Guide for Project-AI
 
 ## Overview

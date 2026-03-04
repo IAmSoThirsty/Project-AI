@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Script Machines and State Machines
 
 A Script Machine is a GameObject component that lets you use a Script Graph in an application. You can't use a Script Graph unless it's attached to a Script Machine. For more information on components, see [Introduction to components](https://docs.unity3d.com/Manual/Components.html) in the Unity User Manual.

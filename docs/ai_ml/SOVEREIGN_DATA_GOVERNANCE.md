@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Sovereign Dataset Sourcing & Labeling Guidelines
 
 **Protocol**: Thirsty-Lang Family Ethical Dataset Ingestion (EDI)

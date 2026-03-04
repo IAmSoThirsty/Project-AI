@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Position clips
 
 To position a clip, select Mix mode as the Edit mode. Select a clip and hover over it. When the cursor is a standard arrow cursor, click and drag the clip to its new position.

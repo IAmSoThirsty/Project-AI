@@ -1,3 +1,5 @@
+#                                           [2026-03-03 17:25]
+#                                          Productivity: Active
 """
 AGI Relationship Model - User-AI Partnership and Mutual Evolution
 
@@ -361,8 +363,10 @@ class RelationshipModel:
 
                 logger.info("Loaded relationship for user: %s", self.state.user_id)
 
-            except Exception as e:
-                logger.error("Failed to load relationship: %s", e)
+            except (json.JSONDecodeError, KeyError, PermissionError) as e:
+                logger.error(
+                    "Failed to load relationship for user %s: %s", self.state.user_id, e
+                )
 
     def _save_relationship(self):
         """Save relationship data to disk."""
@@ -406,8 +410,9 @@ class RelationshipModel:
         Args:
             sentiment: Emotional tone (-1.0 negative to 1.0 positive)
             tone: Interaction tone
-            metadata: Additional interaction data
+            metadata: Additional interaction data (reserved for future audit logging)
         """
+        _ = metadata  # Reserved for future audit integration
         self.state.total_interactions += 1
         self.state.last_interaction = datetime.now(UTC).isoformat()
 

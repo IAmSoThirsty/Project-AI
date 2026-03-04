@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Font Assets
 
 To use different fonts with TextMesh Pro, you need to create font assets. TextMesh Pro has its own font Asset format that is distinct from, but related to, [Unity's regular font Asset format](https://docs.unity3d.com/2019.1/Documentation/Manual/class-Font.html). You create TextMesh Pro font assets _from_ Unity font assets.

@@ -1,3 +1,5 @@
+#                                           [2026-03-03 18:25]
+#                                          Productivity: Active
 """
 CognitionKernel - Central processing hub for all agent, tool, and system executions.
 
@@ -35,12 +37,16 @@ from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
-from app.core.platform_tiers import (
+# Internal Imports
+from src.app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
     get_tier_registry,
 )
+
+# ────────────────────────────────────────────────────────────────────────────
+
 
 logger = logging.getLogger(__name__)
 
@@ -285,17 +291,17 @@ def require_kernel_context(operation: str = "execution"):
 
 class CognitionKernel:
     """
-    Central cognition kernel that processes all agent, tool, and system executions.
+    Central Orchestration Core (Central cognition kernel that processes all agent, tool, and system executions).
 
     This is the authoritative cognitive loop - ALL meaningful actions must flow
     through kernel.process(). No bypasses allowed.
 
     Integration Points:
-    - Identity System: Tracks who is executing what (immutable snapshots only)
-    - Memory Engine: Records all significant actions (four-channel architecture)
-    - Governance: Enforces Triumvirate + Four Laws (observe, never execute)
-    - Reflection: Triggers reflection cycles based on patterns
-    - Telemetry: Comprehensive execution tracking
+    - Identity System (Sovereign Core - Immutable Personality Profile): Tracks who is executing what (immutable snapshots only)
+    - Memory Engine (Four-Channel Causal Observation Layer): Records all significant actions (four-channel architecture)
+    - Governance System (Triumvirate - Three-Agent Oversight System): Enforces Triumvirate + Four Laws (Observe, never execute)
+    - Reflection Engine (Post-Hoc Cognitive Optimization Loop): Triggers reflection cycles based on patterns
+    - Telemetry System (Comprehensive Execution Tracking): Comprehensive execution tracking
 
     NON-NEGOTIABLE INVARIANTS:
     - Governance never executes, Execution never governs

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Marker Summary
 
 The Marker Summary pane summarizes the marker data of the current selected item in the **Marker Details** list. You can use this pane to get an overview of the markers that contribute the most amount of time to the data set. For more information on the statistics in this pane, see the [Statistics](statistics.md) documentation.

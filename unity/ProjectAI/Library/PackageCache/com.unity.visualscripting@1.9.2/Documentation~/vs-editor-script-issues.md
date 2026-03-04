@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Known Issues: Unity Editor script functions
 
 If you use nodes that use Unity Editor script functions in any of the Visual Scripting graphs in your project, it causes errors when you try to build your project.

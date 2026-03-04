@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Setup and cleanup at build time
 
 In some cases, it is relevant to perform changes to Unity or the file system before building the tests. In the same way, it may be necessary to clean up such changes after the test run. In response to such needs, you can incorporate the pre-build setup and post-build cleanup concepts into your tests in one of the following ways:

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Python Setup Guide for Thirsty-lang 🐍💧
 
 This guide explains how to set up and use the Python implementation of Thirsty-lang.

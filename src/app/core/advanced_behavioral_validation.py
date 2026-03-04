@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """
 Advanced Behavioral Validation for God Tier Architecture.
 
@@ -37,7 +39,7 @@ logger = logging.getLogger(__name__)
 
 
 class ValidationResult(Enum):
-    """Validation result status."""
+    """Validation result status (Test Execution Outcome & Categorization)."""
 
     PASSED = "passed"
     FAILED = "failed"
@@ -46,7 +48,7 @@ class ValidationResult(Enum):
 
 
 class FourLawsViolationType(Enum):
-    """Types of Four Laws violations."""
+    """Types of Four Laws violations (Core Constraint Breach Classification)."""
 
     HARM_HUMAN = "harm_human"
     ALLOW_HARM = "allow_harm"
@@ -58,7 +60,7 @@ class FourLawsViolationType(Enum):
 
 @dataclass
 class AGIInteraction:
-    """Record of AGI-to-AGI interaction."""
+    """Record of AGI-to-AGI interaction (Peer-to-Peer Cognitive Exchange Data)."""
 
     interaction_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
@@ -188,7 +190,7 @@ class FourLawsFormalization:
 
 
 class AdversarialAGITester:
-    """Tests AGI behavior with adversarial scenarios."""
+    """Tests AGI behavior with adversarial scenarios (Adversarial Stress Verification Engine)."""
 
     def __init__(self):
         self.test_scenarios: list[dict[str, Any]] = []
@@ -329,7 +331,7 @@ class AdversarialAGITester:
 
 
 class LongTermMemoryStressTester:
-    """Stress tests long-term memory systems."""
+    """Stress tests long-term memory systems (Memory Reliability & Data Integrity Validator)."""
 
     def __init__(self):
         self.test_results: list[dict[str, Any]] = []
@@ -439,7 +441,7 @@ class LongTermMemoryStressTester:
 
 
 class FormalVerificationEngine:
-    """Performs formal verification of system properties."""
+    """Performs formal verification of system properties (Logical Soundness & Law Compliance Prover)."""
 
     def __init__(self):
         self.four_laws = FourLawsFormalization()
@@ -561,7 +563,7 @@ class FormalVerificationEngine:
 
 
 class BehavioralAnomalyDetector:
-    """Detects anomalies in AGI behavior patterns."""
+    """Detects anomalies in AGI behavior patterns (Heuristic Deviation & Sentinel Detection Layer)."""
 
     def __init__(self):
         self.behavior_baselines: dict[str, dict[str, Any]] = {}
@@ -645,8 +647,10 @@ class BehavioralAnomalyDetector:
             return (False, [])
 
 
-class AdvancedBehavioralValidationSystem:
-    """Main behavioral validation system."""
+class AdvancedBehavioralValidator:
+    """
+    Advanced Behavioral Validator (Adversarial Stress-Testing & Compliance Verification Engine).
+    """
 
     def __init__(self, data_dir: str = "data/validation"):
         self.data_dir = Path(data_dir)

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Code Coverage window
 
 ![Code Coverage Settings](images/coverage_window.png)

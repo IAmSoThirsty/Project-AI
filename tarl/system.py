@@ -1,3 +1,8 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+#                                                             DATE: 2026-03-03 09:33:22
+#                                                             STATUS: Active
+#                                                             OWNER: Jeremy Karrick / IAmSoThirsty
 """
 T.A.R.L. (Thirstys Active Resistance Language) Main System Controller
 
@@ -217,10 +222,12 @@ class TARLSystem:
         try:
             # Compile source to bytecode
             logger.debug("Compiling source code...")
+            assert self.compiler is not None
             bytecode = self.compiler.compile(source)
 
             # Execute bytecode
             logger.debug("Executing bytecode...")
+            assert self.runtime is not None
             result = self.runtime.execute(bytecode, context=context)
 
             return result
@@ -248,6 +255,7 @@ class TARLSystem:
         if not self._initialized:
             raise RuntimeError("System not initialized. Call initialize() first.")
 
+        assert self.compiler is not None
         return self.compiler.compile(source)
 
     def execute_bytecode(
@@ -269,6 +277,7 @@ class TARLSystem:
         if not self._initialized:
             raise RuntimeError("System not initialized. Call initialize() first.")
 
+        assert self.runtime is not None
         return self.runtime.execute(bytecode, context=context)
 
     def get_status(self) -> dict[str, Any]:

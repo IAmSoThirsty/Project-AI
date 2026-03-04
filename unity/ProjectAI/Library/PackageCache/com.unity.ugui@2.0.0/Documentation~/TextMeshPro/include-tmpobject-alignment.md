@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 ### Alignment
 
 The horizontal and vertical alignment options control how text is placed in the display area.

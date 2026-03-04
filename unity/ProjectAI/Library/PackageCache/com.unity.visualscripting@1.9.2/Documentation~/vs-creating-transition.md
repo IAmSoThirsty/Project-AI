@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Create a transition between states
 
 To switch between states in a State Graph, you must use a Script Graph called a transition.

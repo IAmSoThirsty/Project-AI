@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Leaderboards Deployment
 
 This sample shows a simple way to deploy a Leaderboard configuration, as well as add and get a player score from the runtime API.

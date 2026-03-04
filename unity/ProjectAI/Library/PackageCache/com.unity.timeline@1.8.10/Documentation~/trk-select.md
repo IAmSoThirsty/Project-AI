@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Select tracks
 
 To select a single track, click its Track header in the Track list. You can also click an empty area in the Content view. When you select a track, Timeline highlights its Track header and Content view. Selecting a track deselects all other tracks or clips.

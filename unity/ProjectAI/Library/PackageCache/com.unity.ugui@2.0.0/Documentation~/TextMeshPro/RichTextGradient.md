@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Gradient
 
 The `<gradient>` tag applies a pre-defined gradient preset to text.

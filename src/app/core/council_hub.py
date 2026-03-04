@@ -1,67 +1,70 @@
+#                                           [2026-03-03 15:45]
+#                                          Productivity: Active
+
 from __future__ import annotations
 
 import logging
 import os
 import threading
-from typing import Any
+from typing import Any, Optional
 
-from app.agents.ci_checker_agent import CICheckerAgent
-from app.agents.code_adversary_agent import CodeAdversaryAgent
-from app.agents.constitutional_guardrail_agent import ConstitutionalGuardrailAgent
-from app.agents.dependency_auditor import DependencyAuditor
-from app.agents.doc_generator import DocGenerator
-from app.agents.jailbreak_bench_agent import JailbreakBenchAgent
-from app.agents.knowledge_curator import KnowledgeCurator
-from app.agents.long_context_agent import LongContextAgent
-from app.agents.planner_agent import PlannerAgent
-from app.agents.red_team_agent import RedTeamAgent
-from app.agents.red_team_persona_agent import RedTeamPersonaAgent
-from app.agents.refactor_agent import RefactorAgent
-from app.agents.retrieval_agent import RetrievalAgent
-from app.agents.rollback_agent import RollbackAgent
-from app.agents.safety_guard_agent import SafetyGuardAgent
-from app.agents.sandbox_runner import SandboxRunner
-from app.agents.test_qa_generator import TestQAGenerator
-from app.agents.ux_telemetry import UxTelemetryAgent
-from app.core.ai_systems import AIPersona, MemoryExpansionSystem
-from app.core.cognition_kernel import CognitionKernel
-from app.core.continuous_learning import ContinuousLearningEngine
-from app.core.platform_tiers import (
+# Internal Imports - Agents
+from src.app.agents.ci_checker_agent import CICheckerAgent
+from src.app.agents.code_adversary_agent import CodeAdversaryAgent
+from src.app.agents.constitutional_guardrail_agent import ConstitutionalGuardrailAgent
+from src.app.agents.dependency_auditor import DependencyAuditor
+from src.app.agents.doc_generator import DocGenerator
+from src.app.agents.jailbreak_bench_agent import JailbreakBenchAgent
+from src.app.agents.knowledge_curator import KnowledgeCurator
+from src.app.agents.long_context_agent import LongContextAgent
+from src.app.agents.planner_agent import PlannerAgent
+from src.app.agents.red_team_agent import RedTeamAgent
+from src.app.agents.red_team_persona_agent import RedTeamPersonaAgent
+from src.app.agents.refactor_agent import RefactorAgent
+from src.app.agents.retrieval_agent import RetrievalAgent
+from src.app.agents.rollback_agent import RollbackAgent
+from src.app.agents.safety_guard_agent import SafetyGuardAgent
+from src.app.agents.sandbox_runner import SandboxRunner
+from src.app.agents.test_qa_generator import TestQAGenerator
+from src.app.agents.ux_telemetry import UxTelemetryAgent
+
+# Internal Imports - Core
+from src.app.core.ai_systems import AIPersona, MemoryExpansionSystem
+from src.app.core.cognition_kernel import CognitionKernel
+from src.app.core.continuous_learning import ContinuousLearningEngine
+from src.app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
     get_tier_registry,
 )
 
+# ────────────────────────────────────────────────────────────────────────────
+
+
 logger = logging.getLogger(__name__)
 
 
 class CouncilHub:
-    """Central Council Hub coordinating Project-AI (head) and smaller agents.
+    """
+    Council Hub (Multi-Agent Routing & Governance Hub).
+
+    Central Orchestrator for Project-AI that coordinates the 'head' (Project-AI)
+    and smaller specialized agents.
 
     Responsibilities:
-    - Register head (Project-AI) and smaller agents under shorthands
+    - Central Orchestrator (Multi-Agent Routing & Governance Hub)
+    - Manages agent lifecycles and message routing via T-A-R-L (Defensive Logic Specification)
+    - Enforces constitutional alignment via the Triumvirate (Three-Agent Oversight System)
     - Run an autonomous learning loop for the head while idle
-    - Route messages between agents and the head
     - Consult Cerberus for content safety and enforce shutdown/cut communication
-
-    CRITICAL: All agent operations are routed through CognitionKernel.
-    No agent may execute directly - kernel.route() is the only execution path.
-
-    THREE-TIER PLATFORM:
-    - Tier 3 (Application): This is a Tier-3 Runtime Service
-    - Sandboxed and subordinate to governance
-    - Agents have no enforcement authority
-    - Can be replaced without threatening Tier 1/2
-
-    This hub is intentionally conservative: enforcement actions are local and
-    non-destructive (deactivate agent and store audit record).
     """
 
     def __init__(
         self,
+        data_dir: str = "data",
         autolearn_interval: float = 60.0,
-        kernel: CognitionKernel | None = None,
+        kernel: Optional[CognitionKernel] = None,
     ) -> None:
         """Initialize CouncilHub with optional kernel injection.
 
@@ -420,6 +423,13 @@ class CouncilHub:
         try:
             if hasattr(recipient, "receive_message"):
                 recipient.receive_message(from_id, message)
+
+            # [Job Board Integration] - Award XP for successful interaction
+            if self._project and "persona" in self._project:
+                persona: AIPersona = self._project["persona"]
+                # Award 5 XP for standard routing
+                persona.gain_experience(5)
+
             return {"delivered": True}
         except Exception as e:
             logger.exception(

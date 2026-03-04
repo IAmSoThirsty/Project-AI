@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """God-Tier Intelligence Library Enhancement Module.
 
 Monolithic density implementation with enterprise-grade features:
@@ -29,7 +31,7 @@ from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import psutil
 
@@ -42,7 +44,7 @@ logger = logging.getLogger(__name__)
 
 
 class HealthStatus(Enum):
-    """Component health status."""
+    """Component health status (Operational Integrity State & Availability Metric)."""
 
     HEALTHY = "healthy"
     DEGRADED = "degraded"
@@ -53,7 +55,7 @@ class HealthStatus(Enum):
 
 @dataclass
 class HealthCheck:
-    """Health check result."""
+    """Health check result (Diagnostic Snapshot & Runtime Verification Data)."""
 
     component: str
     status: HealthStatus
@@ -63,7 +65,7 @@ class HealthCheck:
 
 
 class CircuitBreaker:
-    """Circuit breaker pattern for fault tolerance.
+    """Circuit breaker pattern for fault tolerance (Cascading Failure Prevention & Service Isolation Mechanism).
 
     Prevents cascading failures by stopping calls to failing services.
     States: CLOSED -> OPEN -> HALF_OPEN -> CLOSED
@@ -107,18 +109,21 @@ class CircuitBreaker:
         """
         with self._lock:
             if self.state == "OPEN":
-                if time.time() - self.last_failure_time >= self.timeout:
+                if (
+                    self.last_failure_time is not None
+                    and time.time() - self.last_failure_time > self.timeout
+                ):
                     self.state = "HALF_OPEN"
-                    logger.info("Circuit breaker entering HALF_OPEN state")
+                    logger.info("Circuit breaker entered HALF_OPEN state")
                 else:
-                    raise Exception("Circuit breaker is OPEN")
+                    raise Exception("Circuit is OPEN")
 
         try:
             result = func(*args, **kwargs)
             self._on_success()
             return result
-        except self.expected_exception:
-            self._on_failure()
+        except Exception as e:
+            self._on_failure(e)
             raise
 
     def _on_success(self) -> None:
@@ -129,11 +134,16 @@ class CircuitBreaker:
                 self.state = "CLOSED"
                 logger.info("Circuit breaker returned to CLOSED state")
 
-    def _on_failure(self) -> None:
-        """Handle failed call."""
+    def _on_failure(self, exception: Optional[Exception] = None) -> None:
+        """Handle failure in the circuit breaker.
+
+        Args:
+            exception: The exception that caused the failure
+        """
         with self._lock:
             self.failure_count += 1
             self.last_failure_time = time.time()
+            self.last_exception = exception
 
             if self.failure_count >= self.failure_threshold:
                 self.state = "OPEN"
@@ -245,7 +255,7 @@ class SelfHealingSystem:
 class LoadBalancer:
     """Intelligent load balancer for distributing work."""
 
-    def __init__(self, num_workers: int = None):
+    def __init__(self, num_workers: int | None = None):
         """Initialize load balancer.
 
         Args:
@@ -714,15 +724,16 @@ class ResourceMonitor:
 
 
 class GodTierIntelligenceSystem:
-    """God-tier intelligence system with monolithic density.
+    """
+    God-Tier Intelligence System (Monolithic Enterprise-Grade AGI Grid).
 
     Combines all enterprise features:
-    - Self-healing and fault tolerance
-    - Distributed processing
-    - Real-time analytics
-    - Performance optimization
-    - Resource management
-    - Complete observability
+    - Self-Healing System (Autonomous Recovery & Fault Tolerance Layer)
+    - Load Balancer (Distributed Computation & Resource Orchestrator)
+    - Real-Time Analytics (ML-Powered Telemetry & Heuristic Insight Engine)
+    - Intelligent Cache (Performance-Optimized LRU Memory Layer)
+    - Resource Monitor (System Invariant & Performance Safeguard)
+    - Complete Observability (Unified Telemetry & Audit Stream)
     """
 
     def __init__(

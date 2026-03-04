@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Use the Curves view
 
 This topic summarizes how to use the Curves view to navigate, display, and hide animation curves. The functionality described in this topic is similar to [Curves mode](https://docs.unity3d.com/Manual/animeditor-AnimationCurves.html) in the Animation window.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Add and configure a Player Input component
 
 To use the Input System package with Visual Scripting, add a Player Input component to the same GameObject as the Script Graph and create an Input Actions asset.

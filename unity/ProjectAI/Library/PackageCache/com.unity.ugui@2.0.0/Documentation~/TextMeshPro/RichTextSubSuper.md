@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Subscript and Superscript
 
 Use the `<sub>` and `<sup>` tags to render text as superscript or subscript. This is often used in scientific notation and ordinal numbering (1st, 2nd, etc.).

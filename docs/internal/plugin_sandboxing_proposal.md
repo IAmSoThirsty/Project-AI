@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Plugin Sandboxing Proposal
 
 Goal: design a practical, incremental approach to isolate third-party plugins so they cannot execute unintended code paths, access sensitive data, or escalate privileges. The intent is to provide concrete options, trade-offs, and an implementation roadmap that fits the Project-AI architecture (desktop PyQt6 app + optional web components).

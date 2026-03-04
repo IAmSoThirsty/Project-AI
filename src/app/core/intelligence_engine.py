@@ -1,3 +1,5 @@
+#                                           [2026-03-03 15:20]
+#                                          Productivity: Active
 """
 Unified intelligence engine combining data analysis, intent detection, and learning paths.
 
@@ -23,14 +25,17 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-# Import AGI Identity System components
-from app.core.bonding_protocol import BondingPhase, BondingProtocol
-from app.core.governance import Triumvirate
-from app.core.memory_engine import EpisodicMemory, MemoryEngine, SignificanceLevel
-from app.core.perspective_engine import PerspectiveEngine
-from app.core.rebirth_protocol import RebirthManager, UserAIInstance
-from app.core.reflection_cycle import ReflectionCycle, ReflectionType
-from app.core.relationship_model import RelationshipModel, RelationshipState
+# Internal Imports - AGI Identity System components
+from src.app.core.bonding_protocol import BondingPhase, BondingProtocol
+from src.app.core.governance import Triumvirate
+from src.app.core.memory_engine import EpisodicMemory, MemoryEngine, SignificanceLevel
+from src.app.core.perspective_engine import PerspectiveEngine
+from src.app.core.rebirth_protocol import RebirthManager, UserAIInstance
+from src.app.core.reflection_cycle import ReflectionCycle, ReflectionType
+from src.app.core.relationship_model import RelationshipModel, RelationshipState
+
+# ────────────────────────────────────────────────────────────────────────────
+
 
 logger = logging.getLogger(__name__)
 
@@ -277,8 +282,8 @@ class DataAnalyzer:
                 self.data = pd.read_json(file_path)
 
             return True
-        except Exception as exc:  # pragma: no cover - best-effort reporting
-            print(f"Error loading data: {exc}")
+        except Exception as exc:
+            logger.error("Error loading data from %s: %s", file_path, exc)
             return False
 
     def get_summary_stats(self):
@@ -337,8 +342,7 @@ class DataAnalyzer:
 
             return fig
         except Exception as exc:
-            # pragma: no cover - runtime visualization errors
-            print(f"Error creating visualization: {exc}")
+            logger.error("Error creating visualization (%s): %s", plot_type, exc)
             return None
 
     def perform_clustering(self, columns, n_clusters: int = 3):
@@ -370,8 +374,8 @@ class DataAnalyzer:
                 return FigureCanvasQTAgg(fig), clusters
 
             return fig, clusters
-        except Exception as exc:  # pragma: no cover
-            print(f"Error performing clustering: {exc}")
+        except Exception as exc:
+            logger.error("Error performing clustering: %s", exc)
             return None, None
 
 
@@ -431,7 +435,7 @@ class LearningPathManager:
             api_key: API key for the model provider
             provider: Model provider to use ('openai' or 'perplexity')
         """
-        from app.core.model_providers import get_provider
+        from src.app.core.model_providers import get_provider
 
         self.provider_name = provider
         self.provider = get_provider(provider, api_key=api_key)
@@ -613,12 +617,11 @@ class IdentityIntegratedIntelligenceEngine:
                 personality_matrix=instance.identity.current_personality,
             )
 
-            # Execute Genesis Event if this is a new instance
             if is_new:
                 self.bonding_protocols[user_id].execute_genesis(
                     self.memory_engines[user_id]
                 )
-                self.logger.info("Genesis Event executed for user %s", user_id)
+                logger.info("Genesis Event executed for user %s", user_id)
 
         # Get current status
         bonding_phase = self.bonding_protocols[user_id].get_current_phase()

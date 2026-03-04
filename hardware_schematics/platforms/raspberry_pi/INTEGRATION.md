@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Raspberry Pi Platform Integration Guide
 
 **Platform:** Raspberry Pi (Models 5, 4, Zero 2W)  

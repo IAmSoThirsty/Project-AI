@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Toggle Group
 
 A **Toggle Group** is not a visible UI control but rather a way to modify the behavior of a set of [Toggles](script-Toggle.md). Toggles that belong to the same group are constrained so that only one of them can switched on at a time - pressing one of them to switch it on automatically switches the others off.

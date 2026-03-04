@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Control clip properties
 
 Use the Inspector window to change the properties of a Control clip. A Control clip has two sets of properties:

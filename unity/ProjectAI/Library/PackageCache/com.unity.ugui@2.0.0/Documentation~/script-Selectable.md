@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Selectable Base Class
 
 The Selectable Class is the base class for all the interaction components and it handles the items that are in common.

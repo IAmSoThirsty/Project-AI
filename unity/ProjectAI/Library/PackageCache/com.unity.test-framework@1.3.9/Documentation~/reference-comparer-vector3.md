@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Vector3EqualityComparer
 
 Use this class to compare two [Vector3](https://docs.unity3d.com/ScriptReference/Vector3.html) objects for equality with `NUnit` constraints. Call `Vector3EqualityComparer.Instance` comparer to perform a comparison with the default calculation error value 0.0001f. To specify a different error value, use the [one argument constructor](#constructors) to instantiate a new comparer.

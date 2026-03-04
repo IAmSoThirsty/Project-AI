@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Custom Events
 
 Events trigger, or start, a chain of logic in a Script Graph based on a specific occurrence in your application. Some Event types, such as On Start or On Update, exist by default in Visual Scripting. These Event nodes tell Visual Scripting to run the nodes they're connected to after the Script Graph starts, or on every frame while the Script Graph is active.

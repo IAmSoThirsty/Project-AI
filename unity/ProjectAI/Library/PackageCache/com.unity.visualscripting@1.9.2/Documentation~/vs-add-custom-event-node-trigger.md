@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Add a Custom Event Trigger node
 
 You can use a Custom Event Trigger node to trigger a matching Custom Event node in your application. For more information on custom Events, see [Custom Events](vs-custom-events.md).

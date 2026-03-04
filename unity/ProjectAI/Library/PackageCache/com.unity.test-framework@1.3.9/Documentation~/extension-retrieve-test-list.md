@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # How to retrieve the list of tests
 
 It is possible to use the [TestRunnerApi](./reference-test-runner-api.md) to retrieve the test tree for a given test mode (**Edit Mode** or **Play Mode**). You can retrieve the test tree by invoking `RetrieveTestList` with the desired `TestMode` and a callback action, with an [ITestAdaptor](./reference-itest-adaptor.md) representing the test tree.

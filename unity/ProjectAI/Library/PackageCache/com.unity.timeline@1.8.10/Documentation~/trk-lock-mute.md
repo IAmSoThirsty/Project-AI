@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Lock and mute tracks
 
 Lock a track to prevent editing the track or its contents. Mute a track to hide the effect its signals and clips have on your scene. A track can be both locked and muted.

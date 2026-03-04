@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Group tracks
 
 Use Track groups to organize tracks into groups when you are working with many tracks. For example, a Timeline instance has two Animation tracks that animate pieces to set up a game board. You can group these two tracks into a Track group named `MovingPieces`.

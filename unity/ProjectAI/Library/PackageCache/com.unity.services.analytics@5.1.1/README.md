@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Analytics
 
 This package adds support for analytics to your project, allowing you to develop actionable insights about your game.

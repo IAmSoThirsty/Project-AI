@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Scrollbar
 
 The **Scrollbar** control allows the user to scroll an image or other view that is too large to see completely. Note that the similar [Slider](script-Slider.md) control is used for selecting numeric values rather than scrolling. Familiar examples include the vertical Scrollbar at the side of a text editor and the vertical and horizontal pair of bars for viewing a section of a large image or map.

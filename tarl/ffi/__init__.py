@@ -1,3 +1,8 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+#                                                             DATE: 2026-03-03 09:33:22
+#                                                             STATUS: Active
+#                                                             OWNER: Jeremy Karrick / IAmSoThirsty
 """
 T.A.R.L. (Thirstys Active Resistance Language) Foreign Function Interface (FFI) Bridge Subsystem
 
@@ -20,7 +25,7 @@ Architecture Contract:
 
 import logging
 from collections.abc import Callable
-from typing import Any, Dict, List
+from typing import Any
 
 logger = logging.getLogger(__name__)
 

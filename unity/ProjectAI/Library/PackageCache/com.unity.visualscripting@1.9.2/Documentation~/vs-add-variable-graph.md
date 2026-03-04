@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Create and add a variable to a Script Graph
 
 You can create and add a variable to a Script Graph in one of two ways: use the Graph window's Blackboard, or add a node to a graph.

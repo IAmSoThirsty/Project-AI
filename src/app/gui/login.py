@@ -1,3 +1,5 @@
+#                                           [2026-03-03 18:40]
+#                                          Productivity: Active
 """Login dialog with a Table of Contents (book-like appearance).
 
 Flow:
@@ -20,7 +22,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
 )
 
-from app.core.user_manager import UserManager
+from src.app.core.user_manager import UserManager
 
 
 class LoginDialog(QDialog):

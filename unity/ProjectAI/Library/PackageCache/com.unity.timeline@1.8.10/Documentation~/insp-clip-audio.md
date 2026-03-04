@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Audio clip properties
 
 Use the Inspector window to change the properties of an Audio clip. An Audio clip has two sets of properties:

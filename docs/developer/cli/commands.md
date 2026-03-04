@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # CLI Command Reference
 
 This documentation is auto-generated from CLI help output.

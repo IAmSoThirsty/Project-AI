@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Listen to a Custom Scripting Event from a C# script
 
 You can use a C# script to listen for or receive a Custom Scripting Event from a Script Graph. You can use an Event receiver script to execute additional logic in your application.

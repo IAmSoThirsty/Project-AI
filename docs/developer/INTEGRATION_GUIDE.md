@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Dashboard Integration Guide
 
 ## Quick Start: Adding AI Persona Panel to Dashboard

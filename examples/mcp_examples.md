@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # MCP Usage Examples
 
 This document provides comprehensive examples of using Project-AI's MCP server with various AI assistants and scenarios.

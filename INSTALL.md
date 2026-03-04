@@ -1,10 +1,10 @@
-﻿<p align="right">
-  [2026-03-01 10:00] <br>
+﻿<div align="right">
+  [2026-03-02 07:44] <br>
   Productivity: Active
-</p>
-# Installation Guide - Project-AI
+</div>
+# Deployment Lead (Verified | Sovereign 2.1)
 
-## ðŸ“¦ Installation Methods
+## 📦 Installation Methods
 
 Project-AI can be installed using multiple methods depending on your platform and preferences:
 
@@ -17,7 +17,7 @@ Project-AI can be installed using multiple methods depending on your platform an
 
 ---
 
-## ðŸš€ Quick Install
+## 🚀 Quick Install
 
 ### Windows
 
@@ -121,7 +121,7 @@ Or install from Google Play Store (coming soon).
 
 ---
 
-## ðŸ“¥ Pre-built Binaries
+## 📥 Pre-built Binaries
 
 Download pre-built binaries from the [GitHub Releases page](https://github.com/IAmSoThirsty/Project-AI/releases/latest):
 
@@ -161,7 +161,7 @@ gpg --verify ProjectAI-1.0.0-linux-x86_64.tar.gz.asc
 
 ---
 
-## ðŸ“¦ Package Managers
+## 📦 Package Managers
 
 ### Windows
 
@@ -257,7 +257,7 @@ flatpak run com.projectai.ProjectAI
 
 ---
 
-## ðŸ³ Docker
+## 🐋 Docker
 
 ### Quick Start
 
@@ -297,11 +297,11 @@ docker-compose up -d
 
 ```
 
-See [Docker Documentation](docker/README.md) for advanced configuration.
+See [Docker WSL Setup](docs/developer/DOCKER_WSL_SETUP.md) for advanced configuration.
 
 ---
 
-## ðŸ”§ From Source (Sovereign Build)
+## 🛠️ From Source (Sovereign Build)
 
 ### Prerequisites
 
@@ -359,7 +359,7 @@ The executable will be in the `dist/` directory.
 
 ---
 
-## ðŸ Python Package
+## 🐍 Python Package
 
 ### Install from PyPI
 
@@ -393,7 +393,7 @@ project-ai
 
 ---
 
-## âš™ï¸ Configuration
+## ⚙️ Configuration
 
 ### First Run Setup
 
@@ -430,7 +430,7 @@ Edit `~/.project-ai/config.json`:
 
 ---
 
-## ðŸ”§ Troubleshooting
+## 🔧 Troubleshooting
 
 ### Windows
 
@@ -528,7 +528,7 @@ export API_PORT=5001
 
 ---
 
-## ðŸ†˜ Getting Help
+## 🆘 Getting Help
 
 - **Documentation**: <https://docs.projectai.dev>
 - **GitHub Issues**: <https://github.com/IAmSoThirsty/Project-AI/issues>
@@ -537,13 +537,13 @@ export API_PORT=5001
 
 ---
 
-## ðŸ“„ License
+## 📄 License
 
-Project-AI is released under the MIT License. See [LICENSE](../LICENSE) for details.
+Project-AI is released under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-## ðŸ”„ Updating
+## 🔄 Updating
 
 ### Package Manager
 
@@ -584,7 +584,7 @@ docker-compose up -d
 
 ---
 
-## ðŸ—‘ï¸ Uninstallation
+## 🗑️ Uninstallation
 
 ### Windows
 
@@ -627,5 +627,4 @@ rm -rf ~/.project-ai
 
 ---
 
-**Next Steps**: See [Quick Start Guide](QUICKSTART.md) for usage instructions.
-
+**Next Steps**: See [Quick Start Guide](docs/developer/QUICK_START.md) for usage instructions.

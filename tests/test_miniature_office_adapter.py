@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """Tests for MiniatureOfficeAdapter — plugin that wires the Miniature Office into Project-AI."""
 
 from __future__ import annotations

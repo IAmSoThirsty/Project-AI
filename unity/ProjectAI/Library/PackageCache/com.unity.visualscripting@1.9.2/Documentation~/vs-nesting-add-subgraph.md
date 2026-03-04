@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Add a Subgraph to a Script Graph
 
 A Subgraph is a Script Graph nested inside of another Script Graph. A Subgraph appears as a single node inside a parent Script Graph. For more information on the Subgraph node, see [Subgraph node](vs-nesting-subgraph-node.md).

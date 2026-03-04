@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Temporal.io Workflow Examples
 
 This directory contains example scripts demonstrating how to use Temporal.io workflows in Project-AI.

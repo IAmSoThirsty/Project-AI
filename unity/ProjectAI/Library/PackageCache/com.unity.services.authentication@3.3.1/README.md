@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Unity Services Authentication SDK
 
 This package provides services for player authenticaton, unity player accounts and server authentication for Unity Gaming Services.

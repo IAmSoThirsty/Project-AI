@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Project-AI Pip-Boy - Linux x86_64 Platform Integration Guide
 
 **Platform:** Linux (x86_64)  

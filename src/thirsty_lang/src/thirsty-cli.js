@@ -1,12 +1,17 @@
+//                                           [2026-03-03 13:45]
+//                                          Productivity: Active
 #!/usr/bin/env node
 
 /**
  * Thirsty CLI - Unified command-line interface
  * One tool to rule them all!
+ * 
+ * Date: 2026-03-03 15:15 UTC | Status: Active
  */
 
 const fs = require('fs');
 const path = require('path');
+const { safeJoin } = require('./path-validator');
 
 const commands = {
   run: require('./cli'),
@@ -69,7 +74,7 @@ function initProject(name = 'my-thirsty-project') {
       console.error("❌ Invalid project name. Use only letters, numbers, hyphens, and underscores");
       process.exit(1);
     }
-    
+
     const projectDir = safeJoin(process.cwd(), name);
 
     if (fs.existsSync(projectDir)) {
@@ -83,72 +88,72 @@ function initProject(name = 'my-thirsty-project') {
     fs.mkdirSync(safeJoin(projectDir, 'tests'));
     fs.mkdirSync(safeJoin(projectDir, 'docs'));
 
-  // Create main file
-  const mainContent = '// Welcome to ' + name + '!\n' +
-'// Start coding your Thirsty-lang application here\n' +
-'\n' +
-'drink message = "Hello from ' + name + '!"\n' +
-'pour message\n' +
-'\n' +
-'// Stay hydrated! 💧\n';
-  fs.writeFileSync(safeJoin(projectDir, 'src', 'main.thirsty'), mainContent);
+    // Create main file
+    const mainContent = '// Welcome to ' + name + '!\n' +
+      '// Start coding your Thirsty-lang application here\n' +
+      '\n' +
+      'drink message = "Hello from ' + name + '!"\n' +
+      'pour message\n' +
+      '\n' +
+      '// Stay hydrated! 💧\n';
+    fs.writeFileSync(safeJoin(projectDir, 'src', 'main.thirsty'), mainContent);
 
-  // Create thirsty.json
-  const config = {
-    name: name,
-    version: '1.0.0',
-    description: 'A Thirsty-lang project',
-    main: 'src/main.thirsty',
-    scripts: {
-      start: 'thirsty run src/main.thirsty',
-      test: 'thirsty test',
-      format: 'thirsty format src/*.thirsty',
-      lint: 'thirsty lint src/*.thirsty'
-    },
-    dependencies: {},
-    devDependencies: {},
-    author: '',
-    license: 'MIT'
-  };
-  fs.writeFileSync(
-    safeJoin(projectDir, 'thirsty.json'),
-    JSON.stringify(config, null, 2)
-  );
+    // Create thirsty.json
+    const config = {
+      name: name,
+      version: '1.0.0',
+      description: 'A Thirsty-lang project',
+      main: 'src/main.thirsty',
+      scripts: {
+        start: 'thirsty run src/main.thirsty',
+        test: 'thirsty test',
+        format: 'thirsty format src/*.thirsty',
+        lint: 'thirsty lint src/*.thirsty'
+      },
+      dependencies: {},
+      devDependencies: {},
+      author: '',
+      license: 'MIT'
+    };
+    fs.writeFileSync(
+      safeJoin(projectDir, 'thirsty.json'),
+      JSON.stringify(config, null, 2)
+    );
 
-  // Create README
-  const readme = '# ' + name + '\n' +
-'\n' +
-'A Thirsty-lang project.\n' +
-'\n' +
-'## Getting Started\n' +
-'\n' +
-'```bash\n' +
-'# Run the program\n' +
-'thirsty run src/main.thirsty\n' +
-'\n' +
-'# Start REPL\n' +
-'thirsty repl\n' +
-'\n' +
-'# Run tests\n' +
-'thirsty test\n' +
-'```\n' +
-'\n' +
-'## Learn More\n' +
-'\n' +
-'- [Thirsty-lang Documentation](https://github.com/IAmSoThirsty/Thirsty-lang)\n' +
-'- [Language Specification](https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/SPECIFICATION.md)\n' +
-'- [Expansions Guide](https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/EXPANSIONS.md)\n' +
-'\n' +
-'Stay hydrated! 💧\n';
-  fs.writeFileSync(safeJoin(projectDir, 'README.md'), readme);
+    // Create README
+    const readme = '# ' + name + '\n' +
+      '\n' +
+      'A Thirsty-lang project.\n' +
+      '\n' +
+      '## Getting Started\n' +
+      '\n' +
+      '```bash\n' +
+      '# Run the program\n' +
+      'thirsty run src/main.thirsty\n' +
+      '\n' +
+      '# Start REPL\n' +
+      'thirsty repl\n' +
+      '\n' +
+      '# Run tests\n' +
+      'thirsty test\n' +
+      '```\n' +
+      '\n' +
+      '## Learn More\n' +
+      '\n' +
+      '- [Thirsty-lang Documentation](https://github.com/IAmSoThirsty/Thirsty-lang)\n' +
+      '- [Language Specification](https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/SPECIFICATION.md)\n' +
+      '- [Expansions Guide](https://github.com/IAmSoThirsty/Thirsty-lang/blob/main/docs/EXPANSIONS.md)\n' +
+      '\n' +
+      'Stay hydrated! 💧\n';
+    fs.writeFileSync(safeJoin(projectDir, 'README.md'), readme);
 
-  // Create .gitignore
-  const gitignore = `thirsty_packages/
+    // Create .gitignore
+    const gitignore = `thirsty_packages/
 node_modules/
 *.log
 .DS_Store
 `;
-  fs.writeFileSync(safeJoin(projectDir, '.gitignore'), gitignore);
+    fs.writeFileSync(safeJoin(projectDir, '.gitignore'), gitignore);
 
     console.log('✓ Project initialized successfully!');
     console.log('\nNext steps:');
@@ -194,55 +199,53 @@ async function main() {
         console.error('Usage: thirsty run <file>');
         process.exit(1);
       }
-      require('./cli');
+      await commands.run(commandArgs);
       break;
 
     case 'repl':
-      const ThirstyREPL = require('./repl');
-      const repl = new ThirstyREPL();
+      const repl = new commands.repl();
       await repl.start();
       break;
 
     case 'train':
-      const TrainingProgram = require('./training');
-      const trainer = new TrainingProgram();
+      const trainer = new commands.train();
       await trainer.start();
       break;
 
     case 'test':
-      require('./test/runner');
+      commands.test.run();
       break;
 
     case 'debug':
-      require('./debugger');
+      commands.debug(commandArgs);
       break;
 
     case 'format':
-      require('./formatter');
+      commands.format(commandArgs);
       break;
 
     case 'lint':
-      require('./linter');
+      commands.lint(commandArgs);
       break;
 
     case 'profile':
-      require('./profiler');
+      commands.profile(commandArgs);
       break;
 
     case 'doc':
-      require('./doc-generator');
+      commands.doc(commandArgs);
       break;
 
     case 'ast':
-      require('./ast');
+      commands.ast(commandArgs);
       break;
 
     case 'transpile':
-      require('./transpiler');
+      commands.transpile(commandArgs);
       break;
 
     case 'pkg':
-      require('./package-manager');
+      commands.pkg(commandArgs);
       break;
 
     default:

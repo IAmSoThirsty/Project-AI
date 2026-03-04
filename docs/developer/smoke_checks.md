@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Smoke Check Guide
 
 This checklist helps you verify the key stacks quickly before opening a full issue.

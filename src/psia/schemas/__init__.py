@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """
 PSIA Canonical Schemas — Pydantic v2 models for all PSIA data types.
 

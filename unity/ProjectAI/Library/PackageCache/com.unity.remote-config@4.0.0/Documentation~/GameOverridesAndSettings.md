@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Game Overrides and Settings
 
 Unity Remote Config uses __Game Overrides__ (formerly named __Campaigns__) to target specific user groups and deliver different settings for each group. Game Overrides are linked to __Settings__, which you’ll map to variables in your game code to override their default values when the audience criteria for a Game Override is met.

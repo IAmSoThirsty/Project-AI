@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Get started with a new version control repository
 
 **Note**: To start from an existing version control repository, see [Get started with an existing version control repository](GetStartedExistingRepository.md).

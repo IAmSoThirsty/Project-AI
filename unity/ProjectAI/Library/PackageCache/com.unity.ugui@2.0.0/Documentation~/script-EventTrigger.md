@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Event Trigger
 
 The Event Trigger receives events from the Event System and calls registered functions for each event.

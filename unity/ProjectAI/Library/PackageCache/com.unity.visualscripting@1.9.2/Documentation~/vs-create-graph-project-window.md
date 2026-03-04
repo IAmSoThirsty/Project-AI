@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Create a new blank graph with the Project window
 
 You can create a new blank graph through the Project window in the Unity Editor. Your graph contains no starter nodes, and isn't connected to any existing components in your project.

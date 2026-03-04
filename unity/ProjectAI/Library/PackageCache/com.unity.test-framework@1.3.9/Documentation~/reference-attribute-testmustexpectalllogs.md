@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # TestMustExpectAllLogs attribute
 
 The presence of this attribute causes the **Test Runner** to expect every single log. By default, the Test Runner only fails on error logs, but `TestMustExpectAllLogs` fails on warnings and info level messages as well. It is the same as calling the method [LogAssert.NoUnexpectedReceived](./reference-custom-assertion.md#static-methods) at the bottom of every affected test.

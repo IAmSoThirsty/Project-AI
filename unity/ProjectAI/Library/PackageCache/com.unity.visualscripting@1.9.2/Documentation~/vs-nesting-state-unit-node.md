@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # State Unit node
 
 Use a State Unit node like a Subgraph. The node references and triggers a State Graph inside a Script Graph.

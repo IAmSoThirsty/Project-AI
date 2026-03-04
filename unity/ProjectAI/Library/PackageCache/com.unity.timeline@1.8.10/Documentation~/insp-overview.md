@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Timeline properties in the Inspector window
 
 This section describes the properties that display in the Inspector window when you select Timeline assets, tracks, clips, markers, or other Timeline-related items. The displayed properties also depend on whether you select a single item or multiple items. Not all selected items have properties.

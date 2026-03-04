@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Button
 
 The **Button** control responds to a click from the user and is used to initiate or confirm an action. Familiar examples include the _Submit_ and _Cancel_ buttons used on web forms.

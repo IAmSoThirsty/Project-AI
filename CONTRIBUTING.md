@@ -1,7 +1,7 @@
-﻿<p align="right">
-  [2026-03-01 10:00] <br>
+﻿<div align="right">
+  [2026-03-01 13:20] <br>
   Productivity: Active
-</p>
+</div>
 # Contributing to Project-AI: Code, Docs, and Civilization-Scale Impact
 
 **Document Version:** 2.0 **Effective Date:** 2026-02-05 **Status:** Contributor Governance Framework
@@ -81,7 +81,7 @@ ______________________________________________________________________
 
 - **Read the [Copilot Workspace Profile](.github/copilot_workspace_profile.md)** - All contributions must meet production-grade standards
 - **Read the [Security Validation Claims Policy](.github/SECURITY_VALIDATION_POLICY.md)** - MANDATORY for all PRs making security or runtime enforcement claims
-- **For documentation**: See [Documentation Contributing Guide](../.github/CONTRIBUTING_DOCS.md)
+- **For documentation**: See [Documentation Contributing Guide](.github/CONTRIBUTING_DOCS.md)
 - Fork the repository
 - Create a branch with a descriptive name
 - Run tests locally: `pytest -q`
@@ -141,7 +141,7 @@ ______________________________________________________________________
 **Before adding or moving documentation**, read:
 
 - [Documentation Contributing Guide](.github/CONTRIBUTING_DOCS.md) - Where to place documentation
-- [Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md) - Complete organization guide
+- [Documentation Structure Guide](docs/DOCUMENTATION_STRUCTURE_GUIDE.md) - Complete organization guide
 
 ______________________________________________________________________
 
@@ -318,7 +318,7 @@ def test_four_laws_prevents_harm():
 
 - Use secure defaults (encryption, authentication, least privilege)
 
-- Report security issues privately (security@project-ai.local)
+- Report security issues privately (<security@project-ai.local>)
 
 **Vulnerability Disclosure:**
 
@@ -328,7 +328,7 @@ def test_four_laws_prevents_harm():
 
 ### 5. Respect the AGI Charter
 
-**Rule:** All contributions must align with the [AGI Charter](../governance/AGI_CHARTER.md) and Four Laws framework.
+**Rule:** All contributions must align with the [AGI Charter](docs/governance/AGI_CHARTER.md) and Four Laws framework.
 
 **What This Means:**
 
@@ -391,7 +391,7 @@ Invoke-WebRequest -Uri https://www.cygwin.com/setup-x86_64.exe -OutFile setup-x8
 
 When adding new CLI commands or modifying existing ones:
 
-1. **Follow the CLI-CODEX**: Review [CLI-CODEX.md](CLI-CODEX.md) for best practices
+1. **Follow the CLI-CODEX**: Review [CLI-CODEX.md](docs/developer/api/CLI-CODEX.md) for best practices
 1. **Use Command Groups**: Organize commands into logical groups (user, memory, learning, plugin, system, ai)
 1. **Add Tests**: Create tests in `tests/test_cli.py` using Typer's CliRunner
 1. **Update Documentation**: Run `python scripts/generate_cli_docs.py` to update auto-generated docs
@@ -583,7 +583,7 @@ ______________________________________________________________________
 
 ### For Documentation Contributions
 
-1. Read [Documentation Structure Guide](DOCUMENTATION_STRUCTURE_GUIDE.md)
+1. Read [Documentation Structure Guide](docs/DOCUMENTATION_STRUCTURE_GUIDE.md)
 1. Determine correct placement using decision tree
 1. Write clear, concise documentation
 1. Follow markdown best practices
@@ -610,14 +610,14 @@ ______________________________________________________________________
 - Assume good faith
 - Escalate concerns to maintainers
 
-**Full Code of Conduct:** [CODE_OF_CONDUCT.md](../governance/policy/CODE_OF_CONDUCT.md)
+**Full Code of Conduct:** [CODE_OF_CONDUCT.md](docs/governance/policy/CODE_OF_CONDUCT.md)
 
 ### Communication Channels
 
 - **GitHub Issues:** Bug reports, feature requests
 - **GitHub Discussions:** Questions, ideas, general discussion
 - **Pull Requests:** Code and documentation contributions
-- **Security:** security@project-ai.local (private disclosure)
+- **Security:** <security@project-ai.local> (private disclosure)
 
 ______________________________________________________________________
 
@@ -640,15 +640,14 @@ ______________________________________________________________________
 
 ## Additional Resources
 
-- [AGI Charter](../governance/AGI_CHARTER.md) - Foundational principles
-- [Architecture Overview](../architecture/ARCHITECTURE_OVERVIEW.md) - System design
-- [Security Framework](../security_compliance/AI_SECURITY_FRAMEWORK.md) - Security guidelines
-- [Operator Quickstart](OPERATOR_QUICKSTART.md) - Operations guide
-- [AI Safety Overview](AI_SAFETY_OVERVIEW.md) - Safety principles
+- [AGI Charter](docs/governance/AGI_CHARTER.md) - Foundational principles
+- [Architecture Overview](docs/architecture/ARCHITECTURE_OVERVIEW.md) - System design
+- [Security Framework](docs/security_compliance/AI_SECURITY_FRAMEWORK.md) - Security guidelines
+- [Operator Quickstart](docs/developer/OPERATOR_QUICKSTART.md) - Operations guide
+- [AI Safety Overview](docs/developer/AI_SAFETY_OVERVIEW.md) - Safety principles
 
 ______________________________________________________________________
 
 **Document Maintenance:** This document is reviewed quarterly and updated based on community feedback and evolving best practices.
 
 **Last Updated:** 2026-02-05 **Next Review:** 2026-05-05
-

@@ -1,3 +1,8 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+#                                                             DATE: 2026-03-03 09:33:22
+#                                                             STATUS: Active
+#                                                             OWNER: Jeremy Karrick / IAmSoThirsty
 """
 T.A.R.L. (Thirstys Active Resistance Language) Development Tooling Subsystem
 
@@ -20,7 +25,6 @@ Architecture Contract:
 """
 
 import logging
-from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -37,8 +41,9 @@ class LSPServer:
     def start(self) -> None:
         """Start LSP server (NOT YET IMPLEMENTED)"""
         logger.warning(
-            f"LSP server not yet implemented (would start on port {self.port}). "
-            "This is a placeholder for future implementation."
+            "LSP server not yet implemented (would start on port %s). "
+            "This is a placeholder for future implementation.",
+            self.port,
         )
         raise NotImplementedError("LSP server implementation pending")
 

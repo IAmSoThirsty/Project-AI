@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Version control systems
 
 To avoid any problems with automatically generated files, exclude some Visual Scripting files from your version control solution.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 ## Font Asset Creator
 
 The Font Asset Creator converts [Unity font assets](FontAssets.md) into TextMesh Pro font assets. You can use it to create both Signed [Distance Field (SDF)](FontAssetsSDF.md) fonts and bitmap fonts.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Create and assign a graph to an existing GameObject
 
 You can use the empty graph creation flow to create a new graph file and assign it to an existing GameObject in your project.

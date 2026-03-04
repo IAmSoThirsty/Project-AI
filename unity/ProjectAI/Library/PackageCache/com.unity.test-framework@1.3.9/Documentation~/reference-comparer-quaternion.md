@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # QuaternionEqualityComparer
 
 Use this utility to compare two [Quaternion](https://docs.unity3d.com/ScriptReference/Quaternion.html) objects for equality with [NUnit](http://www.nunit.org/) assertion constraints. Use the static instance `QuaternionEqualityComparer.Instance` to have the default calculation error value set to 0.00001f. For any other custom error value, use the [one argument constructor](#constructors).

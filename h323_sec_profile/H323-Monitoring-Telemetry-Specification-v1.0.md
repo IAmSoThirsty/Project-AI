@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Monitoring & Telemetry Specification for Secure H.323 Deployments
 
 ## Version 1.0 — Observability, Metrics, Alerts, and Data Flows

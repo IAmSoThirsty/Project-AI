@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Quick Start (Non-developer)
 
 This guide helps non-technical users get started with Project-AI (Desktop) quickly.

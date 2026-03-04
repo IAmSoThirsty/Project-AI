@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Project-AI Scholarly Citations
 
 This document serves as the authoritative repository of Digital Object Identifiers (DOIs) for the foundational scholarly works governing Project-AI. These works define the constitutional, philosophical, and technical constraints of the sovereign AI.

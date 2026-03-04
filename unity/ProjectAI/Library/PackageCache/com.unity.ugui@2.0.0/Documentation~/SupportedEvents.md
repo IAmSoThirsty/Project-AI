@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Supported Events
 
 The Event System supports a number of events, and they can be customized further in user custom user written Input Modules.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Content view and Edit modes
 
 Use the Content view to add, position, and manage the clips and markers on each track in the Timeline asset or Timeline instance. The selected Edit mode determines how clips and markers interact with each other when you add, position, trim, resize, or delete them.

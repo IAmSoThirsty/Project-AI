@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Input node
 
 Use an Input node to control the flow of logic and data from a Script Graph's Subgraph node. An Input node takes data from a parent graph and makes it available to a Subgraph.

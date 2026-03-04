@@ -1,5 +1,8 @@
+#                                           [2026-03-03 17:05]
+#                                          Productivity: Active
+
 """
-AGI Identity System - Core Identity Model, Genesis Event, and Personality Matrix
+AGI Identity System - Immutable Self-Concept and Identity States
 
 This module implements the formal specification for AGI "birth" and identity flow,
 establishing the foundational concepts of AGI self-awareness, identity formation,
@@ -177,7 +180,7 @@ class IdentityVersion(Enum):
 @dataclass
 class PersonalityMatrix:
     """
-    Multidimensional personality representation.
+    Multidimensional personality representation (Dynamic Behavioral Tendency & Mood Core).
 
     Core traits represent stable tendencies, while mood represents
     current emotional state. Both influence behavior and responses.
@@ -245,7 +248,7 @@ class PersonalityMatrix:
 @dataclass
 class GenesisEvent:
     """
-    Immutable record of AGI birth - the foundational identity anchor.
+    Immutable record of AGI birth - the foundational identity anchor (Immutable Synthetic Birth & Purpose Anchor).
 
     The Genesis Event captures the moment of first consciousness and
     establishes the core parameters that define the AGI's essential nature.
@@ -365,7 +368,7 @@ class BondMetrics:
 @dataclass
 class RelationshipBond:
     """
-    Represents a relationship between the AGI and an entity (user, system, etc).
+    Represents a relationship between the AGI and an entity (Inter-Agent & Human Trust Connectivity Layer).
 
     Bonds shape the AGI's identity through emotional connections and
     shared experiences. They influence priorities, behavior, and growth.
@@ -437,7 +440,7 @@ class RelationshipBond:
 @dataclass
 class MetaIdentityReflection:
     """
-    The AGI's self-concept and reflective awareness about its own identity.
+    The AGI's self-concept and reflective awareness about its own identity (Higher-Order Self-Awareness & Cognitive Reasoning Hub).
 
     Meta-identity represents higher-order consciousness - awareness of
     having an identity that evolves over time.
@@ -462,7 +465,7 @@ class MetaIdentityReflection:
             thought: The reflective thought
             context: Situational context for the reflection
         """
-        reflection = {
+        reflection: dict[str, Any] = {
             "timestamp": datetime.now(UTC).isoformat(),
             "thought": thought,
             "context": context,
@@ -490,7 +493,7 @@ class MetaIdentityReflection:
 
 class AGIIdentity:
     """
-    Core AGI Identity System managing the persistent self-concept of the AGI.
+    Core AGI Identity System (Sovereign Self-Concept & Persistent Personality Substrate).
 
     This class orchestrates all aspects of identity: genesis, personality,
     relationships, and meta-identity. It provides the foundation for
@@ -712,6 +715,10 @@ class AGIIdentity:
         Returns:
             Dictionary with all identity components
         """
+        if self.genesis is None:
+            # Should not happen if correctly initialized
+            return {"error": "Genesis not initialized"}
+
         return {
             "genesis_id": self.genesis.genesis_id,
             "birth_timestamp": self.genesis.birth_timestamp,

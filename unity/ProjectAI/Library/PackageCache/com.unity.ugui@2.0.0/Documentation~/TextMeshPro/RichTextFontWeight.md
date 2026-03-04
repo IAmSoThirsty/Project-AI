@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Font weight
 
 Use the `<font-weight>` tag to switch between the font weights available for the current [Font Asset](FontAssets.md).

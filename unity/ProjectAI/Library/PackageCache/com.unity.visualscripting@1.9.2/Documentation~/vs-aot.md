@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Use Visual Scripting with Unity Cloud Build
 
 At build time, Unity removes any code that isn't used by a project to reduce build size. This can cause problems with Visual Scripting because Unity can remove code that's necessary for Script Graphs to run in a project.

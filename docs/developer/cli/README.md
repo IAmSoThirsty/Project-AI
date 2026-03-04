@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Project-AI CLI Documentation
 
 Welcome to the Project-AI Command Line Interface (CLI) documentation. This guide covers everything you need to know about using the CLI effectively.

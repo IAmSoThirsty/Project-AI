@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Delete tracks
 
 Delete a track to remove its track header, clips, blends, and properties. This is a destructive action that modifies a Timeline asset and affects all Timeline instances based on the Timeline asset.

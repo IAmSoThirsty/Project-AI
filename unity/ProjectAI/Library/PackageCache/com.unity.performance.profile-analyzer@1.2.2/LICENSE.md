@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # License
 
 Profile Analyzer copyright © 2020 Unity Technologies ApS

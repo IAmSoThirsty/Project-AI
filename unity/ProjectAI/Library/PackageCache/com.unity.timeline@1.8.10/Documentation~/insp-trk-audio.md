@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Audio track properties
 
 Use the Inspector window to change the name of an Audio track, and set its Volume, Stereo Pan, and Spatial Blend. You can also [animation the Audio track properties](curves-overview.md#curvesviewaudiotrack) in the Curves view.

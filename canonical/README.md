@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Canonical Scenario: The Golden Path
 
 > **One command. One path. One irrefutable demonstration of Project-AI's unique capabilities.**

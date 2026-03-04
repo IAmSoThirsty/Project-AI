@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Timeline Samples
 
 The Timeline package includes sample projects that demonstrate how to use and customize tracks, clips, markers, and menu items.

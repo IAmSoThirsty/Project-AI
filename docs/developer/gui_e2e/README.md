@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # GUI E2E Automation Proposal
 
 This document outlines a pragmatic approach to adding E2E GUI automation for the PyQt6-based Leather Book application.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Mark
 
 The `<mark>` tag adds an overlay on top of the text. You can use it to highlight portions of your text.

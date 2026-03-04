@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Toggle
 
 The **Toggle** control is a checkbox that allows the user to switch an option on or off.

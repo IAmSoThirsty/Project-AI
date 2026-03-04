@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Custom equality comparers
 
 To enable easier verification of custom Unity type values in your tests we provide you with some custom equality comparers:

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Horizontal Space
 
 The `<space>` tag inserts a horizontal offset, as if you inserted multiple spaces.

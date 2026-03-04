@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Use a custom type
 
 Visual Scripting supports every class and struct type available in Unity. By default, the most common are available in [the fuzzy finder](vs-interface-overview.md#the-fuzzy-finder). Add additional Unity assemblies, such as custom types and classes, through your [project settings](vs-configuration.md).

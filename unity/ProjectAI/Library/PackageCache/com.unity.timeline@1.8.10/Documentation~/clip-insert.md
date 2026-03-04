@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Insert clips
 
 The Timeline window supports different methods of inserting clips depending on the type of track, where you click, and whether a clip or track is already selected. In the Timeline window, inserting clips refers to adding and making space for a clip without blending or replacing intersecting clips.

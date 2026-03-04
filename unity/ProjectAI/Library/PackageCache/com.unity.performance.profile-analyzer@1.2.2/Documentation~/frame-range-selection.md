@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Frame Control pane
 
 You can use the **Frame Control** pane in both the [Single](single-view.md) and [Compare](compare-view.md) views  to select a range of frames to reduce the working set. The Frame Control pane is laid out as follows:

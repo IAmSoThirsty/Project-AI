@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Custom constraints
 
 `NUnit` allows you to write test assertions in a more descriptive and human readable way using the [Assert.That](https://github.com/nunit/docs/wiki/Assertions) mechanism, where the first parameter is an object under test and the second parameter describes conditions that the object has to meet.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Sprites
 
 TextMesh Pro allows you to include sprites in your text via [rich text tags](RichTextSprite.md).

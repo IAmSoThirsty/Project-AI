@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Thread Summary
 
 The Thread Summary pane displays information about the threads in the data set. You can use the information in this pane to compare and understand the number of threads used in the data set.

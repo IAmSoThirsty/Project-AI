@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 ## About SDF fonts
 
 TextMesh Pro takes advantage of Signed Distance Field (SDF) rendering to generate font assets that look crisp when you transform and magnify them, and support effects such as outlines and drop shadows.

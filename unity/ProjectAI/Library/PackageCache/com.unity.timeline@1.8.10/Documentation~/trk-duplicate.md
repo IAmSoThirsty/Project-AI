@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Duplicate tracks
 
 Duplicating a track copies its binding, clips, blends, and Inspector properties.

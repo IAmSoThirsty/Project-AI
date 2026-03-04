@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Timeline assets and instances
 
 Use the **Timeline window** to create cut-scenes, cinematics, and gameplay sequences by visually arranging tracks and clips linked to GameObjects in your Scene.

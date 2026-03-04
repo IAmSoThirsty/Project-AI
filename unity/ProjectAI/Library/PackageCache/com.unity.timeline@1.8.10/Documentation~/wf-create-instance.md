@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Create a Timeline asset and Timeline instance
 
 To use a Timeline asset in your Scene, you must associate the Timeline asset with a GameObject using a [Playable Director](playable-director.md) component.

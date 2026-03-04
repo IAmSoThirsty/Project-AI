@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Trim clips
 
 Trimming a clip cuts off a portion of the clip at its start or end. To trim a clip, select the Mix Edit mode, hover over the start or end of the clip until the trim cursor appears, then drag the trim cursor to modify the start or end of the clip.

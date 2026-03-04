@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Development (canonical)
 
 This document is the canonical developer setup and workflow for Project-AI.

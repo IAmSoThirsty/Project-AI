@@ -1,3 +1,5 @@
+#                                           [2026-03-03 19:00]
+#                                          Productivity: Active
 """
 PSIARuntime — Singleton that boots and holds all PSIA subsystems.
 
@@ -23,17 +25,17 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from psia.bootstrap.genesis import GenesisCoordinator
-from psia.bootstrap.readiness import NodeStatus, ReadinessGate
-from psia.bootstrap.safe_halt import SafeHaltController
-from psia.canonical.capability_authority import CapabilityAuthority
-from psia.canonical.commit_coordinator import CommitCoordinator
-from psia.canonical.ledger import DurableLedger, ExecutionRecord
-from psia.events import EventBus
-from psia.invariants import ROOT_INVARIANTS
-from psia.observability.autoimmune_dampener import AutoimmuneDampener
-from psia.observability.failure_detector import FailureDetector
-from psia.waterfall.engine import WaterfallEngine
+from src.psia.bootstrap.genesis import GenesisCoordinator
+from src.psia.bootstrap.readiness import NodeStatus, ReadinessGate
+from src.psia.bootstrap.safe_halt import SafeHaltController
+from src.psia.canonical.capability_authority import CapabilityAuthority
+from src.psia.canonical.commit_coordinator import CommitCoordinator
+from src.psia.canonical.ledger import DurableLedger, ExecutionRecord
+from src.psia.events import EventBus
+from src.psia.invariants import ROOT_INVARIANTS
+from src.psia.observability.autoimmune_dampener import AutoimmuneDampener
+from src.psia.observability.failure_detector import FailureDetector
+from src.psia.waterfall.engine import WaterfallEngine
 
 logger = logging.getLogger(__name__)
 
@@ -125,7 +127,7 @@ class PSIARuntime:
 
         # Phase 4: Initialize Triumvirate
         try:
-            from app.core.governance import Triumvirate
+            from src.app.core.governance import Triumvirate
 
             self._triumvirate = Triumvirate()
             logger.info("Triumvirate governance council initialized")
@@ -178,7 +180,7 @@ class PSIARuntime:
         final_verdict = "allow"
 
         if self._triumvirate:
-            from app.core.governance import GovernanceContext
+            from src.app.core.governance import GovernanceContext
 
             gov_context = GovernanceContext(
                 action_type=action,

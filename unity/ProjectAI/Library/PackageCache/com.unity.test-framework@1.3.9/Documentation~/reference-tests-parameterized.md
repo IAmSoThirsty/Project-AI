@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Parameterized tests
 
 For data-driven testing, you may want to have your tests parameterized. You may use both the [NUnit](http://www.nunit.org/) attributes [TestCase](https://github.com/nunit/docs/wiki/TestCase-Attribute) and [ValueSource](https://github.com/nunit/docs/wiki/ValueSource-Attribute) with a unit test.

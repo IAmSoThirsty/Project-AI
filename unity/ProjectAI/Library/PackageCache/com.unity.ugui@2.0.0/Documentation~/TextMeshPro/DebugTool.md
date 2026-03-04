@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Debugging TextMesh Pro text
 
 Use the Text Info Debug Tool to display diagnostic information about a TextMesh Pro GameObject in the Scene view and the Inspector.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Secret Purge Runbook (Git history rewrite)
 
 This repository previously committed `.env` containing secrets. Removing the file going forward is not enough; you must **rewrite git history** to purge those blobs.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Convert an Infinite clip
 
 When you record animation to an Animation track in the Timeline window, it creates an Infinite clip. An Infinite clip cannot be positioned, trimmed, or split because it does not have a defined duration. An Infinite clip appears as a dope sheet.

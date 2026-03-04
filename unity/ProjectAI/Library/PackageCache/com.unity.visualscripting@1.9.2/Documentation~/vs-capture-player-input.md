@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Capture user input in an application
 
 You can capture input from a user's input device to make your application interactive. Visual Scripting can use either the [Input Manager](https://docs.unity3d.com/Manual/class-InputManager.html) or the [Input System package](https://docs.unity3d.com/Packages/com.unity.inputsystem@latest) to capture input data in a Script Graph.

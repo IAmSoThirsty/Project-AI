@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Install Timeline
 
 Timeline is a Package. It is automatically installed with the Unity Editor. You can update and reinstall the Timeline package with the Packages window in the Unity Editor. Consult the [Packages window documentation](https://docs.unity3d.com/Manual/upm-ui.html) for more information.

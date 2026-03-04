@@ -1,3 +1,6 @@
+#                                           [2026-03-03 16:05]
+#                                          Productivity: Active
+
 """
 Platform Tiers - Three-Tier Platform Strategy Implementation
 
@@ -107,7 +110,7 @@ logger = logging.getLogger(__name__)
 
 class PlatformTier(Enum):
     """
-    Platform tier classification.
+    Platform tier classification (Hierarchical Authority Classification).
 
     Authority flows downward: TIER_1 > TIER_2 > TIER_3
     Capability flows upward: TIER_3 → TIER_2 → TIER_1
@@ -153,7 +156,7 @@ class ComponentRole(Enum):
 @dataclass
 class TierComponent:
     """
-    Represents a component registered in the platform tier system.
+    Represents a component registered in the platform tier system (Atomic Infrastructure Unit with Tier Constraint).
 
     Immutable after registration to ensure tier integrity.
     """
@@ -172,7 +175,7 @@ class TierComponent:
 
 @dataclass
 class TierBoundaryViolation:
-    """Records a violation of tier boundary rules."""
+    """Records a violation of tier boundary rules (Sovereign Boundary Breach Record)."""
 
     violation_id: str
     violation_type: (
@@ -206,7 +209,7 @@ class TierHealthStatus:
 
 class TierRegistry:
     """
-    Central registry for platform tier components.
+    Central registry for platform tier components (Global Component & Authority Invariant Registry).
 
     Enforces tier boundaries and authority flow constraints:
     - Authority only flows downward (Tier 1 → Tier 2 → Tier 3)
@@ -330,11 +333,13 @@ class TierRegistry:
                 raise ValueError(
                     f"Tier 2 components must have CONSTRAINED authority, got {authority}"
                 )
-        elif tier == PlatformTier.TIER_3_APPLICATION:
-            if authority != AuthorityLevel.SANDBOXED:
-                raise ValueError(
-                    f"Tier 3 components must have SANDBOXED authority, got {authority}"
-                )
+        elif (
+            tier == PlatformTier.TIER_3_APPLICATION
+            and authority != AuthorityLevel.SANDBOXED
+        ):
+            raise ValueError(
+                f"Tier 3 components must have SANDBOXED authority, got {authority}"
+            )
 
     def _validate_dependencies(
         self, tier: PlatformTier, dependencies: list[str]
@@ -352,21 +357,23 @@ class TierRegistry:
             dep_component = self._components[dep_id]
 
             # Tier 1 cannot depend on Tier 2/3
-            if tier == PlatformTier.TIER_1_GOVERNANCE:
-                if dep_component.tier != PlatformTier.TIER_1_GOVERNANCE:
-                    violation = TierBoundaryViolation(
-                        violation_id=f"dep_{len(self._violations)}",
-                        violation_type="tier_1_dependency",
-                        source_component="<new_component>",
-                        target_component=dep_id,
-                        source_tier=tier,
-                        target_tier=dep_component.tier,
-                        description=f"Tier 1 component cannot depend on {dep_component.tier.name}",
-                    )
-                    self._violations.append(violation)
-                    raise ValueError(
-                        f"Tier 1 cannot depend on Tier 2/3: {dep_id} is {dep_component.tier.name}"
-                    )
+            if (
+                tier == PlatformTier.TIER_1_GOVERNANCE
+                and dep_component.tier != PlatformTier.TIER_1_GOVERNANCE
+            ):
+                violation = TierBoundaryViolation(
+                    violation_id=f"dep_{len(self._violations)}",
+                    violation_type="tier_1_dependency",
+                    source_component="<new_component>",
+                    target_component=dep_id,
+                    source_tier=tier,
+                    target_tier=dep_component.tier,
+                    description=f"Tier 1 component cannot depend on {dep_component.tier.name}",
+                )
+                self._violations.append(violation)
+                raise ValueError(
+                    f"Tier 1 cannot depend on Tier 2/3: {dep_id} is {dep_component.tier.name}"
+                )
 
     def validate_authority_flow(
         self,
@@ -382,7 +389,7 @@ class TierRegistry:
         Args:
             source_component_id: Component initiating action
             target_component_id: Component receiving action
-            action: Description of action
+            action: Description of action (Permissioned Operation)
 
         Returns:
             Tuple of (is_valid, reason)
@@ -415,6 +422,12 @@ class TierRegistry:
             )
 
         # Authority flows downward - valid
+        logger.debug(
+            "Authority flow valid for %s: %s -> %s",
+            action,
+            source_component_id,
+            target_component_id,
+        )
         return True, "Authority flow valid"
 
     def pause_component(self, component_id: str) -> bool:

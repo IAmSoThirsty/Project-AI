@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Trigger a Custom Scripting Event from a C# script
 
 You can send or trigger a Custom Scripting Event node in a Script Graph with a C# script instead of a Custom Scripting Event Sender node. For more information on how to create a Custom Scripting Event Sender node, see [Create a Custom Scripting Event Sender node](vs-create-own-custom-event-send-node.md).

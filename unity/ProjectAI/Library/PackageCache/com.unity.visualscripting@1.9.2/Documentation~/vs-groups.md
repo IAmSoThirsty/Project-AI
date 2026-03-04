@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Create node groups
 
 You can organize the nodes in your Script Graphs and State Graphs with node groups.

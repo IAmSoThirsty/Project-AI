@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Add the Inspectable attribute to a custom type
 
 If you have access to the source code for a custom type, add the `[Inspectable]` attribute to its fields and classes. The `[Inspectable]` attribute makes these fields and classes accessible to the [Inspector window](https://docs.unity3d.com/Manual/UsingTheInspector.html) in the Unity Editor. You don't need to create a [custom PropertyDrawer](vs-create-custom-drawer.md) as Unity generates a basic UI for the custom type.

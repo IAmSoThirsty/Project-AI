@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Manage keyframes
 
 This topic summarizes how to use the Curves view to add, select, step between, edit, and delete keyframes on an animation curve. The functionality described in this topic is similar to [manipulating keyframes in Curves mode](https://docs.unity3d.com/Manual/animeditor-KeyManipulationInCurvesMode.html) in the Animation window.

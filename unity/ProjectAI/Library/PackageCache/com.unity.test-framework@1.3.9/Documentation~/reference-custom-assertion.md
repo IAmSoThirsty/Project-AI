@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Custom assertion
 
 A test fails if Unity logs a message other than a regular log or warning message. Use [LogAssert](#logassert) to check for an expected message in the log so that the test does not fail when Unity logs the message.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Adversarial Testing Publishing Standards (2026)
 
 **Based on current industry norms from JailbreakBench, DeepTeam, Garak, ActorAttack, and academic research standards.**

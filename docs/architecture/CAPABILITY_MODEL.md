@@ -1,10 +1,19 @@
-# Capability Model Specification
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
+# Functional Permissions (Verified | Sovereign 2.1)
+
+ Specification
 
 **Version:** 1.0 **Last Updated:** 2026-01-23 **Status:** Specification
 
 ______________________________________________________________________
 
 ## Overview
+
+<div align="right">
+  [2026-03-02 07:55] <br>
+  Productivity: Active
+</div>
 
 The Capability Model defines how discrete, executable units of functionality are registered, invoked, and managed within the PACE system. Capabilities are the building blocks for agent actions and workflow steps.
 

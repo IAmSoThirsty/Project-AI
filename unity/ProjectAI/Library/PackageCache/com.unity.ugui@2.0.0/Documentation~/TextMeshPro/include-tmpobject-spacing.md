@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 ### Spacing
 
 These options control spacing between characters, words, lines and, paragraphs.  You can use them to fine-tune the text for individual TextMesh Pro GameObjects, without adjusting their [font assets](FontAssets.md).

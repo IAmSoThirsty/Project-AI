@@ -1,0 +1,117 @@
+<div align="right">
+  [2026-03-03 14:18] <br>
+  Productivity: Active
+</div>
+
+# Project-AI Master Technical Specification (Version 2.2-SOVEREIGN)
+
+> [!IMPORTANT]
+> This document serves as the authoritative technical reference for auditors and developers. It provides a complete map of the Project-AI sovereign substrate, the index of functional mandates, and the translation layer for mythic terminology.
+
+---
+
+## 🗺️ System Map (Architectural Hierarchy)
+
+```mermaid
+graph TD
+    Root["Project-AI Root"] --> Docs["docs/ (Policy & Paperwork)"]
+    Root --> Src["src/ (Core Substrate)"]
+    Root --> Octo["octoreflex/ (Kernel Bedrock)"]
+    Root --> TarlOS["tarl_os/ (Sovereign OS)"]
+    Root --> Engines["engines/ (Cognition & Memory)"]
+    
+    subgraph "Tier 0: Reflexive Bedrock"
+        Octo --> eBPF["eBPF LSM Hooks"]
+        Octo --> Containment["Reflexive Containment"]
+    end
+    
+    subgraph "Tier 1: Governance & Language"
+        Src --> ThirstyLang["thirsty_lang/ (Orchestration)"]
+        Src --> ShadowThirst["shadow_thirst/ (Dual-Plane Compiler)"]
+        Src --> PSIA["psia/ (Immune Architecture)"]
+    end
+    
+    subgraph "Tier 2: Infrastructure"
+        Engines --> Cognition["cognition/ (Triumvirate)"]
+        Engines --> Memory["memory/ (Knowledge Base)"]
+        Src --> Cerberus["cerberus/ (Threat Defense)"]
+    end
+    
+    subgraph "Tier 3: Interface"
+        Root --> DesktopFull["desktop/src/app/main.py (Leather Book - PyQt6)"]
+        Root --> DesktopDash["desktop/ (Governance Dash - Electron)"]
+        Root --> Web["web/ (Sovereign PWA)"]
+        Root --> CLI["scripts/tools/ (Sovereign CLI)"]
+    end
+    
+    subgraph "Hardened Pipeline"
+        PSIA --> Waterfall["The Waterfall (7-Stage)"]
+        Src --> IronPath["Iron Path (CI/CD)"]
+    end
+```
+
+---
+
+## 📖 Glossary of Terms & Translation Layer
+
+This section translates "Mythic" Project-AI terminology into industry-standard technical specifications.
+
+| Mythic Term | Technical Translation | Domain |
+| :--- | :--- | :--- |
+| **Thirsty-Lang** | High-Level Sovereign Orchestration DSL | Language |
+| **Thirst of Gods** | Asynchronous Cognitive Actor System | AI Logic |
+| **T.A.R.L.** | Thirsty's Active Resistance Language / Bytecode VM | System |
+| **Shadow Thirst** | Formally Verified Dual-Plane Compiler | Verification |
+| **TSCG / TSCG-B** | Symbolic Compression Grammar / Binary Wire Protocol | Encoding |
+| **OctoReflex** | eBPF-based Linux Security Module (LSM) | Security |
+| **The Waterfall** | 7-Stage Multi-Plane Defense Pipeline | Security |
+| **Iron Path** | Deterministic Cryptographic CI/CD Pipeline | Implementation |
+| **Galahad** | Ethical Constraint Module (Asimov Invariants) | Governance |
+| **Cerberus** | Adversarial Threat Detection Framework | Security |
+| **Codex Deus** | Conflict Resolution & Governance Arbitrator | Governance |
+| **Liara** | Kernel-Level Failover & Substitute Pillar | Kernel |
+| **Leather Book** | Master Control GUI (PyQt6 - Full Capability) | UI/UX |
+| **Governance Dash** | Audit & Intent Dashboard (Electron/React) | UI/UX |
+| **Monotonic Strictness** | Progressive Threat Escalation Logic (No Downgrade) | Security |
+| **Plane Isolation** | Execution Sandbox / Multi-Plane Containment | Security |
+| **Sovereign Substrate** | Cryptographically Hardened Execution Environment | General |
+
+---
+
+## 📜 Functional Mandates & Protocols
+
+### [Mandate] Asimov’s Four Laws
+
+- **Level**: Immutable Invariant (Hardcoded).
+- **Enforcement**: Compiled into every Shadow Plane execution via `Galahad`.
+- **Reference**: [CONSTITUTION_COMPLETE.md](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/CONSTITUTION_COMPLETE.md)
+
+### [Protocol] PSIA (Protocol for Sovereign Integrity & Auditing)
+
+- **Status**: ACTIVE.
+- **Function**: Ensures 100% auditability and state integrity via Merkle-anchored hash chains.
+- **Reference**: [PROJECT_STATUS.md](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/PROJECT_STATUS.md)
+
+### [Protocol] T-SECA / GHOST
+
+- **Status**: ACTIVE.
+- **Function**: Threshold cryptography (Shamir) and identity continuity for catastrophic failover.
+- **Reference**: [TSECA_GHOST_PROTOCOL.md](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/TSECA_GHOST_PROTOCOL.md)
+
+### [Protocol] TSCG-B (Binary Encoding Layer)
+
+- **Status**: ACTIVE (v1.0).
+- **Function**: Deterministic, bijective serialization for cross-architecture stability.
+- **Reference**: [TSCG_B_SPECIFICATION_v1.0.md](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/spec/TSCG_B_SPECIFICATION_v1.0.md)
+
+---
+
+## 🗃️ Audit Registry (Root Index)
+
+- **Architecture Deep-Dives**: [docs/architecture/](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/architecture/)
+- **Governance Logs**: [docs/governance/](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/governance/)
+- **Security Compliance**: [docs/security_compliance/](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/security_compliance/)
+- **Archive (Historical)**: [archive/](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/archive/)
+
+---
+*End of Master Specification — All Invariants Verified.*

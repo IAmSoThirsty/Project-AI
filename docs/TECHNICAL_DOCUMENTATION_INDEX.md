@@ -1,6 +1,8 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Project-AI Technical Documentation Index
 
-**Version:** 1.0 **Date:** February 2026 **Status:** Production-Grade **Purpose:** Single source of truth for all technical deliverables
+**Version:** 2.1 (Sovereign) **Date:** March 2026 **Status:** Production-Grade **Purpose:** Single source of truth for Project-AI Sovereign Pantheon
 
 ______________________________________________________________________
 
@@ -25,6 +27,8 @@ ______________________________________________________________________
 | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ | ---- | ----------- |
 | **[Core AI Systems Technical Deep-Dive](architecture/CORE_AI_SYSTEMS_TECHNICAL_DEEPDIVE.md)** ⭐ | Six core systems (FourLaws, Persona, Memory, Learning, Override, Plugin) | 51KB | ✅ Complete |
 | **[Agent Framework Technical Deep-Dive](architecture/AGENT_FRAMEWORK_TECHNICAL_DEEPDIVE.md)** ⭐ | Four agent subsystems (Oversight, Planner, Validator, Explainability)    | 5KB  | ✅ Complete |
+| **[God Tier Distributed Architecture](architecture/GOD_TIER_DISTRIBUTED_ARCHITECTURE.md)** ⭐ | Distributed cluster coordinator, RL systems, and hardware auto-discovery | 18KB | ✅ Sovereign |
+| **[Sovereign Runtime Implementation](architecture/SOVEREIGN_RUNTIME.md)** | Hardened runtime spec for 14-agent Pantheon | 14KB | ✅ Sovereign |
 | **[Platform Architecture Blueprint](architecture/PLATFORM_ARCHITECTURE_BLUEPRINT.md)** ⭐        | Layered diagrams, data flows, module boundaries, deployment topology     | 7KB  | ✅ Complete |
 
 ### Quick Start Guides
@@ -44,6 +48,9 @@ ______________________________________________________________________
 | Document                                                                                       | Purpose                                                                     | Status      |
 | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------- |
 | [Architecture Overview](architecture/ARCHITECTURE_OVERVIEW.md)                                 | High-level system architecture, triumvirate governance, five-channel memory | ✅ Complete |
+| [Miniature Office Specification](MINIATURE_OFFICE_SPEC.md) | High-fidelity operational simulation and agent coordination hub. | ✅ Complete |
+| [Shadow Thirst Doctrine](SHADOW_THIRST_DOCTRINE.md) | Dual-execution security paradigm and real-time adversarial simulation. | ✅ Complete |
+| [Bio-Brain Mapping Protocol](BIO_BRAIN_MAPPING_PROTOCOL.md) | Neural activate mapping and sub-symbolic cognitive auditability. | ✅ Complete |
 | [Architecture Security Ethics Overview](architecture/ARCHITECTURE_SECURITY_ETHICS_OVERVIEW.md) | Security and ethics integration                                             | ✅ Complete |
 | [Agent Model](architecture/AGENT_MODEL.md)                                                     | Agent architecture patterns                                                 | ✅ Complete |
 | [Capability Model](architecture/CAPABILITY_MODEL.md)                                           | System capabilities framework                                               | ✅ Complete |
@@ -68,13 +75,13 @@ ______________________________________________________________________
 
 | Document                                                             | Purpose                                              | Status      |
 | -------------------------------------------------------------------- | ---------------------------------------------------- | ----------- |
-| [Security Implementation Guide](../SECURITY_IMPLEMENTATION_GUIDE.md) | Authentication, encryption, audit logging            | ✅ Complete |
-| [Supply Chain Security](../SUPPLY_CHAIN_SECURITY.md)                 | SLSA Level 3, SBOM, threat mitigations               | ✅ Complete |
-| [Repository Hardening](../REPOSITORY_HARDENING.md)                   | Branch protection, signed commits, security features | ✅ Complete |
-| [Asymmetric Security Framework](../ASYMMETRIC_SECURITY_FRAMEWORK.md) | Asymmetric security patterns                         | ✅ Complete |
-| [Attack Simulation Suite](../ATTACK_SIMULATION_SUITE.md)             | Security testing framework                           | ✅ Complete |
-| [Audit Logging](../AUDIT_LOGGING.md)                                 | Audit trail implementation                           | ✅ Complete |
-| [Constitutional Audit](../CONSTITUTIONAL_AUDIT.md)                   | Governance audit framework                           | ✅ Complete |
+| [Security Implementation Guide](SECURITY_IMPLEMENTATION_GUIDE.md) | Authentication, encryption, audit logging            | ✅ Complete |
+| [Supply Chain Security](SUPPLY_CHAIN_SECURITY.md)                 | SLSA Level 3, SBOM, threat mitigations               | ✅ Complete |
+| [Repository Hardening](REPOSITORY_HARDENING.md)                   | Branch protection, signed commits, security features | ✅ Complete |
+| [Asymmetric Security Framework](ASYMMETRIC_SECURITY_FRAMEWORK.md) | Asymmetric security patterns                         | ✅ Complete |
+| [Attack Simulation Suite](ATTACK_SIMULATION_SUITE.md)             | Security testing framework                           | ✅ Complete |
+| [Audit Logging](AUDIT_LOGGING.md)                                 | Audit trail implementation                           | ✅ Complete |
+| [Constitutional Audit](CONSTITUTIONAL_AUDIT.md)                   | Governance audit framework                           | ✅ Complete |
 | [Security Policy](security_compliance/SECURITY.md)                   | Security policy and procedures                       | ✅ Complete |
 | [Threat Model](security_compliance/THREAT_MODEL.md)                  | Threat modeling framework                            | ✅ Complete |
 | [Incident Playbook](security_compliance/INCIDENT_PLAYBOOK.md)        | Incident response procedures                         | ✅ Complete |
@@ -83,7 +90,13 @@ ______________________________________________________________________
 
 | Document                                                                        | Purpose                                          | Status      |
 | ------------------------------------------------------------------------------- | ------------------------------------------------ | ----------- |
-| [AI Persona Implementation](developer/AI_PERSONA_IMPLEMENTATION.md)             | Personality, mood, self-awareness implementation | ✅ Complete |
+| [GUI]          | [Dashboard Handlers](../src/app/gui/dashboard_handlers.py)                | Consolidated business logic for proactive actions           | ✅ Active   |
+| [GUI]          | [Persona Config](../src/app/gui/persona_panel.py)                         | AI Persona & Four Laws management interface                  | ✅ Active   |
+| [GUI]          | [Main Dashboard](../src/app/gui/leather_book_dashboard.py)                | Premium 6-zone dashboard with 3D Neural Head                | ✅ Active   |
+| [GUI]          | [Book Interface](../src/app/gui/leather_book_interface.py)                | "Leather Book" orchestrator for all GUI panels               | ✅ Active   |
+| [GUI]          | [Visualization](../src/app/gui/visualization_3d.py)                       | 3D Grid and Neural Interface visualizer                      | ✅ Active   |
+| [Status]       | [Sovereign Status Dashboard](SOVEREIGN_STATUS_DASHBOARD.md)       | Real-time Mermaid visualizations of system metrics           | ✅ Active   |
+| [Developer]    | [AI Persona Implementation](developer/AI_PERSONA_IMPLEMENTATION.md)             | Personality, mood, self-awareness implementation | ✅ Complete |
 | [Learning Request Implementation](developer/LEARNING_REQUEST_IMPLEMENTATION.md) | Human-in-the-loop, Black Vault implementation    | ✅ Complete |
 | [Developer Quick Reference](../DEVELOPER_QUICK_REFERENCE.md)                    | GUI component API reference                      | ✅ Complete |
 | [Contributing Guide](../CONTRIBUTING.md)                                        | Code and documentation contribution guidelines   | ✅ Complete |
@@ -92,20 +105,22 @@ ______________________________________________________________________
 
 | Document                                                         | Purpose                             | Status      |
 | ---------------------------------------------------------------- | ----------------------------------- | ----------- |
-| [Production Architecture](../PRODUCTION_ARCHITECTURE.md)         | Production deployment patterns      | ✅ Complete |
+| [Production Architecture](PRODUCTION_ARCHITECTURE.md)         | Production deployment patterns      | ✅ Complete |
 | [Production Deployment](../PRODUCTION_DEPLOYMENT.md)             | Enterprise deployment guide         | ✅ Complete |
-| [Deployable System Standard](../DEPLOYABLE_SYSTEM_STANDARD.md)   | Deployment standards and checklist  | ✅ Complete |
-| [Desktop App Quickstart](../DESKTOP_APP_QUICKSTART.md)           | Installation and launch guide       | ✅ Complete |
-| [Production Readiness Status](../PRODUCTION_READINESS_STATUS.md) | Component classification and status | ✅ Complete |
+| [Deployable System Standard](DEPLOYABLE_SYSTEM_STANDARD.md)   | Deployment standards and checklist  | ✅ Complete |
+| [Desktop App Quickstart](developer/DESKTOP_APP_QUICKSTART.md)           | Installation and launch guide       | ✅ Complete |
+| [Production Readiness Status](reports/PRODUCTION_READINESS_STATUS.md) | Component classification and status | ✅ Complete |
+| [Sovereign Training Pipeline](../scripts/train_sovereign.py) | Unsloth/LoRA fine-tuning orchestration | ✅ Active |
+| [Sovereign Dataset Builder](../scripts/build_training_data.py) | Constitutional data curation & stress tests | ✅ Active |
 
 ### Governance & Legal
 
 | Document                                                                       | Purpose                                 | Status      |
 | ------------------------------------------------------------------------------ | --------------------------------------- | ----------- |
-| [AGI Charter](governance/AGI_CHARTER.md)                                       | AI rights, dignity, Four Laws framework | ✅ Complete |
-| [AI Persona Four Laws](governance/AI_PERSONA_FOUR_LAWS.md)                     | Ethical framework documentation         | ✅ Complete |
-| [AGI Identity Specification](governance/AGI_IDENTITY_SPECIFICATION.md)         | Identity system specification           | ✅ Complete |
-| [Identity System Full Spec](governance/IDENTITY_SYSTEM_FULL_SPEC.md)           | Complete identity system documentation  | ✅ Complete |
+| [AGI Charter](../governance/AGI_CHARTER.md)                                       | AI rights, dignity, Four Laws framework | ✅ Complete |
+| [AI Persona Four Laws](../governance/AI_PERSONA_FOUR_LAWS.md)                     | Ethical framework documentation         | ✅ Complete |
+| [AGI Identity Specification](../governance/AGI_IDENTITY_SPECIFICATION.md)         | Identity system specification           | ✅ Complete |
+| [Identity System Full Spec](../governance/IDENTITY_SYSTEM_FULL_SPEC.md)           | Complete identity system documentation  | ✅ Complete |
 | [Project-AI Governance License (PAGL)](legal/PROJECT_AI_GOVERNANCE_LICENSE.md) | Governance license terms                | ✅ Complete |
 
 ### Project Status & Planning
@@ -113,10 +128,10 @@ ______________________________________________________________________
 | Document                                                                     | Purpose                           | Status      |
 | ---------------------------------------------------------------------------- | --------------------------------- | ----------- |
 | [Project Status](../PROJECT_STATUS.md)                                       | Overall project status            | ✅ Complete |
-| [Constitutional Sovereignty Status](../CONSTITUTIONAL_SOVEREIGNTY_STATUS.md) | Sovereignty implementation status | ✅ Complete |
-| [Sovereignty Status Report](../SOVEREIGNTY_STATUS_REPORT.md)                 | Sovereignty audit report          | ✅ Complete |
-| [Comprehensive Audit Report](../COMPREHENSIVE_AUDIT_REPORT.md)               | Complete system audit             | ✅ Complete |
-| [Infrastructure Roadmap](../INFRASTRUCTURE_ROADMAP.md)                       | Infrastructure evolution plan     | ✅ Complete |
+| [Constitutional Sovereignty Status](reports/CONSTITUTIONAL_SOVEREIGNTY_STATUS.md) | Sovereignty implementation status | ✅ Complete |
+| [Sovereignty Status Report](reports/SOVEREIGNTY_STATUS_REPORT.md)                 | Sovereignty audit report          | ✅ Complete |
+| [Comprehensive Audit Report](reports/COMPREHENSIVE_AUDIT_REPORT.md)               | Complete system audit             | ✅ Complete |
+| [Infrastructure Roadmap](reports/INFRASTRUCTURE_ROADMAP.md)                       | Infrastructure evolution plan     | ✅ Complete |
 
 ______________________________________________________________________
 
@@ -169,13 +184,13 @@ ______________________________________________________________________
 1. [Platform Architecture Blueprint](architecture/PLATFORM_ARCHITECTURE_BLUEPRINT.md) (45 min)
 1. [Core AI Systems Deep-Dive](architecture/CORE_AI_SYSTEMS_TECHNICAL_DEEPDIVE.md) (90 min)
 1. [Agent Framework Deep-Dive](architecture/AGENT_FRAMEWORK_TECHNICAL_DEEPDIVE.md) (30 min)
-1. [Desktop App Quickstart](../DESKTOP_APP_QUICKSTART.md) (15 min)
+1. [Desktop App Quickstart](developer/DESKTOP_APP_QUICKSTART.md) (15 min)
 
 ### 🔒 For Security Auditors (2 hours)
 
 1. [Executive Whitepaper § Security](executive/EXECUTIVE_WHITEPAPER.md#security-model) (15 min)
-1. [Security Implementation Guide](../SECURITY_IMPLEMENTATION_GUIDE.md) (45 min)
-1. [Supply Chain Security](../SUPPLY_CHAIN_SECURITY.md) (30 min)
+1. [Security Implementation Guide](SECURITY_IMPLEMENTATION_GUIDE.md) (45 min)
+1. [Supply Chain Security](SUPPLY_CHAIN_SECURITY.md) (30 min)
 1. [Core AI Systems § Security](architecture/CORE_AI_SYSTEMS_TECHNICAL_DEEPDIVE.md#security-model) (20 min)
 1. Review audit logs: `data/command_override_config.json`
 
@@ -210,7 +225,7 @@ ______________________________________________________________________
 
 - **Version:** 1.0
 - **Status:** Production-Grade
-- **Last Updated:** February 14, 2026
+- **Last Updated:** March 01, 2026
 - **Next Review:** May 14, 2026
 - **Owner:** Project-AI Core Team
 - **Classification:** Public

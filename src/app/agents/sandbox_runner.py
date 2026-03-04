@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """Sandboxed Experiment Runner
 
 Runs generated code in a lightweight subprocess sandbox (best-effort).

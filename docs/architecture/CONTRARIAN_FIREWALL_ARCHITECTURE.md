@@ -1,4 +1,8 @@
-# Contrarian Firewall - Architectural Documentation
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
+# Adversarial Guard (Hardened | Sovereign 2.1)
+
+al Documentation
 
 ## God-Tier Monolithic Integration
 

@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """Validators for state consistency, irreversibility, and path-dependence.
 
 Production-grade validation for engine correctness.

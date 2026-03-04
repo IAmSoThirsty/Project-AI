@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Timeline workflows
 
 Use the Timeline window to create Timeline assets and Timeline instances that you can then use to record animation, schedule animation, nest Timeline instances to create cinematic content, place markers that emit signals, and customize Timeline with custom tracks, clips, and markers.

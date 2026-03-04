@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Create a Custom Scripting Event node
 
 You can create a Custom Scripting Event node with a C# script. With C#, you can customize all aspects of your Custom Scripting Event, unlike a Visual Scripting custom Event. For more information on the different types of custom Events, see [Custom Events](vs-custom-events.md).

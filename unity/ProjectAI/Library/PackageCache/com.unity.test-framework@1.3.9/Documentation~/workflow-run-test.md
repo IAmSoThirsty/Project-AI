@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Workflow: How to run a test
 
 To run a test, you need to double-click on the test or test fixture name in the **Test Runner** window.

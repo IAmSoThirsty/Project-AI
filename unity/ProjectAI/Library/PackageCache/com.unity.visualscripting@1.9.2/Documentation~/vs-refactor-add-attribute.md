@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Add the RenamedFrom attribute to a C# script
 
 To use nodes generated from a custom C# script in a project after you rename a member, class, struct, type, or enum, add the `[RenamedFrom]` attribute to the relevant API element in the script file. For more information on the `[RenamedFrom]` attribute, see [Refactor a C# script with Visual Scripting](vs-refactoring.md).

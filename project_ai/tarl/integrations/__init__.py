@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """
 T.A.R.L. Integrations - Deterministic AI Orchestration
 
@@ -29,6 +31,55 @@ are imported directly (e.g., ``from .orchestration import X``).
 """
 
 import importlib as _importlib
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .config_presets import (
+        ComplianceProfile,
+        ConfigBuilder,
+        ConfigPresets,
+        DeploymentProfile,
+        TarlConfig,
+        quick_start,
+    )
+    from .golden_paths import GoldenPathRecipes
+    from .orchestration import (
+        AgentOrchestrator,
+        Artifact,
+        ArtifactRelationship,
+        Capability,
+        CapabilityEngine,
+        DeterministicVM,
+        EventRecorder,
+        Policy,
+        ProvenanceManager,
+        TarlStackBox,
+        Workflow,
+        WorkflowEventKind,
+    )
+    from .orchestration_extended import (
+        Activity,
+        ActivityExecutor,
+        ExtendedTarlStackBox,
+        HumanInTheLoopManager,
+        LongRunningWorkflowManager,
+        MetaOrchestrator,
+        MultiTenantManager,
+        ResourceQuota,
+        TaskQueue,
+        TaskQueuePriority,
+        WorkerPool,
+        WorkflowHierarchyManager,
+    )
+    from .orchestration_governance import (
+        AIProvenanceManager,
+        CICDEnforcementManager,
+        ComplianceFramework,
+        ComplianceManager,
+        FullGovernanceStack,
+        GovernanceEngine,
+        RuntimeSafetyManager,
+    )
 
 __all__ = [
     # Core orchestration

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Variables
 
 Variables act as a container for a piece of information that might change as an application runs. To define a variable, you need to provide:

@@ -1,3 +1,5 @@
+//                                           [2026-03-03 13:45]
+//                                          Productivity: Active
 #!/usr/bin/env node
 
 /**
@@ -10,9 +12,9 @@ const path = require('path');
 const ThirstyInterpreter = require('./index');
 const { validatePath, validateExtension, isValidFile } = require('./path-validator');
 
-function main() {
-  const args = process.argv.slice(2);
-  
+async function main(passedArgs) {
+  const args = passedArgs || process.argv.slice(2);
+
   if (args.length === 0) {
     console.log('Thirsty-lang Interpreter v1.0.0');
     console.log('Usage: node src/cli.js <filename.thirsty>');
@@ -22,25 +24,26 @@ function main() {
   }
 
   const filename = args[0];
-  
+
   // Validate the filename to prevent path traversal
   try {
     const validatedPath = validatePath(filename);
-    
+
     // Check if file exists
     if (!isValidFile(validatedPath)) {
       console.error(`Error: File '${filename}' not found or is not a valid file`);
       process.exit(1);
     }
-    
+
     // Validate file extension (optional but recommended)
     if (!validateExtension(validatedPath, ['.thirsty', '.js'])) {
       console.warn(`Warning: File '${filename}' does not have a .thirsty extension`);
     }
-    
+
     const code = fs.readFileSync(validatedPath, 'utf-8');
     const interpreter = new ThirstyInterpreter();
-    interpreter.execute(code);
+    await interpreter.execute(code);
+    process.exit(0);
   } catch (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);
@@ -48,7 +51,10 @@ function main() {
 }
 
 if (require.main === module) {
-  main();
+  main().catch(err => {
+    console.error('Error:', err.message);
+    process.exit(1);
+  });
 }
 
 module.exports = main;

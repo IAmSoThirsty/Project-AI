@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # 2\. Running a test in a LostCrypt
 
 ## Learning Objectives

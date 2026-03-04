@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Clip properties
 
 Use the Inspector window to change the name of a clip and other properties, such as its timing and blend properties. The available properties depend on the type of clip selected. For example, select an Activation clip to change its name and set its **Clip Timing**.

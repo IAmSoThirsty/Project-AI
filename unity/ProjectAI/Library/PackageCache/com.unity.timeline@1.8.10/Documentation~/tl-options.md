@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Timeline Options
 
 Use the Timeline Options to choose Timeline asset settings such as the unit of measurement, the duration mode, whether to display markers, and the Timeline frame rate. You can also access the Timeline Preferences.

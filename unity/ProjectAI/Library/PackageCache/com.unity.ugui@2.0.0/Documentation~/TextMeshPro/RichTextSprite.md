@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Sprite
 
 The `<sprite>` tag inserts images from a [Sprite Asset](Sprites.md) into your text. Sprite assets must be located in the folder specified in the [TextMesh Pro settings](Settings.md).

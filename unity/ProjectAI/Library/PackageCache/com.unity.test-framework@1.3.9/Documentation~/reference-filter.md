@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Filter
 
 The filter class provides the [TestRunnerApi](./reference-test-runner-api.md) with a specification of what tests to run when [running tests programmatically](./extension-run-tests.md).

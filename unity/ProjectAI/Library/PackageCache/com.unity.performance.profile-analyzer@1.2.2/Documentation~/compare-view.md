@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Compare view
 
 In the **Compare** view you can load two data sets, which the Profiler Analyzer displays in two different colors. It displays the information from both data sets in a similar way to the [Single view](single-view.md) and has the same panes and panels.

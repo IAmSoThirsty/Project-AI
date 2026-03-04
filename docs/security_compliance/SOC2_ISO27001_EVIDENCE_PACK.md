@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Sovereign Compliance Evidence Pack: SOC2 / ISO 27001
 
 This manifest provides a direct mapping of Project-AI's sovereign features to rigorous international security controls. This is **Regulator-Ready** evidence.

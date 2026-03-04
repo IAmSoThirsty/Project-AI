@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Timeline Preferences
 
 Use the Timeline Preferences to choose the Timeline window settings such as the unit of measurement, whether to display audio waveforms, and edge snap settings.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Add clips
 
 The Timeline window supports different methods of adding clips to tracks, depending on the type of track, where you click, where you drag, and whether a clip or track is already selected.

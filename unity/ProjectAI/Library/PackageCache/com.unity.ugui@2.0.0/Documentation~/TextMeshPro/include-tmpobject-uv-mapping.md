@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 ### UV Mapping
 
 Some [TextMesh Pro shaders](Shders.md) allow you to apply one or more image textures to text. These options control how those textures stretch to fit the text.

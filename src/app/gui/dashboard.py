@@ -1,3 +1,6 @@
+# [2026-03-02 05:14]
+# Productivity: Active
+
 """
 Main dashboard window implementation.
 """
@@ -124,7 +127,7 @@ class DashboardWindow(QMainWindow):
         """Update the footer with current page/chapter number."""
         total = max(1, self.tabs.count())
         try:
-            self.statusBar().showMessage(f"Page {index+1} of {total}")  # type: ignore
+            self.statusBar().showMessage(f"Page {index + 1} of {total}")  # type: ignore
         except Exception:
             self.statusBar().showMessage("")  # type: ignore
 
@@ -441,7 +444,6 @@ class DashboardWindow(QMainWindow):
         try:
             if os.path.exists(qss_path):
                 with open(qss_path, encoding="utf-8") as f:
-
                     qss = f.read()
                 self._apply_stylesheet_from_settings(qss)
         except Exception:

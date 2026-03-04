@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # ConditionalIgnore attribute
 
 This attribute is an alternative to the standard `Ignore` attribute in [NUnit](http://www.nunit.org/). It allows for ignoring tests only under a specified condition. The condition evaluates during `OnLoad`, referenced by ID.

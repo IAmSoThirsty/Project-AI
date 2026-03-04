@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Timeline asset properties
 
 Use the Inspector window to set the frame rate, the duration mode, and a fixed length for the selected Timeline asset. Select a Timeline asset from the Project window to view its properties.

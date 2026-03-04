@@ -1,4 +1,19 @@
-# TARL System Architecture
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
+                                                                        DATE: 2026-03-03 09:53:12
+                                                                        STATUS: Active (Production)
+
+# T.A.R.L. System Architecture (Sovereign Core)
+
+**Version:** 2.0.1 (Post-Audit Sovereign Edition)
+**Status:** Active | Production Implementation
+**Date:** March 3, 2026
+
+---
+
+## Architecture Overview
+
+T.A.R.L. (Thirsty's Active Resistance Language) implementation in Project-AI follows a monolithic, eight-layer sovereign stack. This global architectural view defines the interaction between the language core and the Project-AI security kernel (Cerberus).
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -26,10 +41,7 @@
 │  Runtime     │ │    Core      │ │  Escalation  │
 └──────┬───────┘ └──────┬───────┘ └──────┬───────┘
        │                │                │
-       │                │                │
-       └────────────────┼────────────────┘
-                        │
-                        ▼
+       ▼                ▼                ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                       EXECUTION KERNEL                           │
 │  ┌──────────────────────────────────────────────────────────┐   │
@@ -71,166 +83,33 @@
 │   │ └──────────────┘ │   │
 │   └──────────────────┘   │
 └──────────────────────────┘
-
-POLICY EVALUATION FLOW:
-═══════════════════════════
-
-Context → Runtime.evaluate()
-            │
-            ▼
-        For each policy:
-            │
-            ├─→ Policy.evaluate(context)
-            │        │
-            │        ▼
-            │   TarlDecision
-            │        │
-            ├────────┼─→ if ALLOW: continue
-            │        │
-            ├────────┼─→ if DENY: return DENY
-            │        │
-            └────────┼─→ if ESCALATE: return ESCALATE
-                     │
-                     ▼
-            All policies passed
-                     │
-                     ▼
-            Return TarlDecision(ALLOW)
-
-
-COMPONENT INTERACTIONS:
-═══════════════════════
-
-1. APPLICATION → Bootstrap
-
-   └─→ Initializes entire system
-
-2. Bootstrap → Components
-
-   ├─→ Creates TarlRuntime with DEFAULT_POLICIES
-   ├─→ Creates CodexDeus escalation handler
-   ├─→ Creates GovernanceCore
-   └─→ Wires into ExecutionKernel
-
-3. ExecutionKernel.execute(action, context)
-
-   │
-   ├─→ TarlGate.enforce(context)
-   │   │
-   │   ├─→ TarlRuntime.evaluate(context)
-   │   │   └─→ Returns TarlDecision
-   │   │
-   │   ├─→ if DENY:
-   │   │   └─→ raise TarlEnforcementError
-   │   │
-   │   └─→ if ESCALATE:
-   │       ├─→ TarlCodexBridge.handle()
-   │       │   └─→ CodexDeus.escalate()
-   │       │       └─→ SystemExit (if HIGH)
-   │       └─→ raise TarlEnforcementError
-   │
-   └─→ Execute action (if ALLOW)
-
-
-DEFAULT POLICIES:
-═════════════════
-
-1. deny_unauthorized_mutation
-
-   ┌────────────────────────────────┐
-   │ Input: context                 │
-   │ Check: mutation==True AND      │
-   │        mutation_allowed==False │
-   │ Result: DENY                   │
-   └────────────────────────────────┘
-
-2. escalate_on_unknown_agent
-
-   ┌────────────────────────────────┐
-   │ Input: context                 │
-   │ Check: agent is None           │
-   │ Result: ESCALATE               │
-   └────────────────────────────────┘
-
-
-DATA FLOW EXAMPLE:
-══════════════════
-
-User Request with Context:
-{
-  "agent": "authenticated_user",
-  "mutation": True,
-  "mutation_allowed": False
-}
-         │
-         ▼
-ExecutionKernel.execute()
-         │
-         ▼
-TarlGate.enforce()
-         │
-         ▼
-TarlRuntime.evaluate()
-         │
-         ├─→ Policy 1: deny_unauthorized_mutation
-         │   ├─→ Check: mutation==True AND mutation_allowed==False
-         │   └─→ Result: DENY ✗
-         │
-         └─→ Return TarlDecision(DENY, "Mutation not permitted...")
-                 │
-                 ▼
-         TarlGate raises TarlEnforcementError
-                 │
-                 ▼
-         ExecutionKernel propagates error
-                 │
-                 ▼
-         Application handles error
-
-
-DIRECTORY STRUCTURE:
-════════════════════
-
-Project-AI/
-├── tarl/                    # TARL Security Layer
-│   ├── spec.py              # TarlDecision, TarlVerdict
-│   ├── policy.py            # TarlPolicy wrapper
-│   ├── runtime.py           # TarlRuntime evaluator
-│   ├── policies/
-│   │   └── default.py       # DEFAULT_POLICIES
-│   └── fuzz/
-│       └── fuzz_tarl.py     # Fuzzing tool
-│
-├── kernel/                  # Execution Kernel
-│   ├── execution.py         # ExecutionKernel
-│   ├── tarl_gate.py         # TarlGate enforcer
-│   └── tarl_codex_bridge.py # TARL→Codex bridge
-│
-├── src/cognition/codex/     # Codex System
-│   ├── engine.py            # ML inference
-│   └── escalation.py        # CodexDeus escalation
-│
-├── governance/              # Governance Layer
-│   └── core.py              # GovernanceCore
-│
-└── bootstrap.py             # System initialization
-
-
-SECURITY LAYERS:
-════════════════
-
-Layer 1: Floor 1 Sovereign Orchestration
-  └─→ Thirsty-Lang & TSCG Governance
-
-Layer 2: TARL Runtime
-  └─→ Policy-based runtime authorization
-
-Layer 3: Execution Kernel
-  └─→ Orchestrates secure execution
-
-Layer 4: CodexDeus Escalation
-  └─→ Handles critical security events
-
-Layer 5: Governance Core
-  └─→ System-wide policies and audit
 ```
+
+---
+
+## Eight-Layer Internal Stack
+
+For localized subsystem details, refer to the [Internal Architecture](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/tarl/docs/ARCHITECTURE.md).
+
+1. **Layer 0: Config** - Hierarchical registry.
+2. **Layer 1: Diagnostics** - Structured error context.
+3. **Layer 2: Stdlib** - Core built-ins and types.
+4. **Layer 3: FFI** - Secure interoperability bridge.
+5. **Layer 4: Compiler** - Source to bytecode transformation.
+6. **Layer 5: Runtime VM** - Execution engine with JIT/GC.
+7. **Layer 6: Modules** - Import resolution and caching.
+8. **Layer 7: Tooling** - LSP Server, REPL, Debugger.
+
+---
+
+## Security Invariants
+
+- **Determinism**: Identical inputs yield identical bytecode/verdicts.
+- **Sovereignty**: No external dependencies for core execution.
+- **Adversarial Hardening**: Passive and active resistance modes integrated with Cerberus.
+
+---
+
+**Owner:** Jeremy Karrick / IAmSoThirsty  
+**Last Updated:** 2026-03-03
+**Approval Status:** Approved | Verified

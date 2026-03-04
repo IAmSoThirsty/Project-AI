@@ -1,3 +1,5 @@
+#                                                                              [2026-03-01 13:50]
+#                                                                           Productivity: Active
 """
 Leather Book Main Dashboard - Post-login interface with 6-zone layout.
 
@@ -25,6 +27,9 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from app.gui.visualization_3d import AISystemVisualization3D
+from app.gui.dashboard_handlers import DashboardHandlers
 
 # ============================================================================
 # STYLE CONSTANTS
@@ -269,6 +274,7 @@ class ProactiveActionsPanel(QFrame):
     watch_tower_requested = pyqtSignal()  # Signal for watch tower
     command_center_requested = pyqtSignal()  # Signal for command center
     news_intelligence_requested = pyqtSignal()  # Signal for news intelligence
+    persona_requested = pyqtSignal()  # Signal for persona configuration
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -280,12 +286,26 @@ class ProactiveActionsPanel(QFrame):
 
         layout.addWidget(self._create_title())
         layout.addWidget(self._create_action_scroll(), 1)
-        layout.addWidget(self._create_action_button("▶ ANALYZE"))
-        layout.addWidget(self._create_action_button("⚙ OPTIMIZE"))
+
+        analyze_btn = self._create_action_button("🔍 ANALYZE SYSTEM")
+        analyze_btn.clicked.connect(DashboardHandlers.handle_analyze_system)
+        layout.addWidget(analyze_btn)
+
+        optimize_btn = self._create_action_button("⚡ OPTIMIZE PERFORMANCE")
+        optimize_btn.clicked.connect(DashboardHandlers.handle_optimize_performance)
+        layout.addWidget(optimize_btn)
+
+        security_btn = self._create_action_button("🛡️ DEPLOY COUNTERMEASURES")
+        security_btn.clicked.connect(DashboardHandlers.handle_deploy_countermeasures)
+        layout.addWidget(security_btn)
 
         image_gen_btn = self._create_action_button("🎨 GENERATE IMAGES")
         image_gen_btn.clicked.connect(self.image_gen_requested.emit)
         layout.addWidget(image_gen_btn)
+
+        persona_btn = self._create_action_button("🎭 PERSONA CONFIG")
+        persona_btn.clicked.connect(self.persona_requested.emit)
+        layout.addWidget(persona_btn)
 
         # Separator
         separator = QLabel("─" * 15)
@@ -457,8 +477,8 @@ class AINeuralHead(QFrame):
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(title)
 
-        # Face canvas
-        self.canvas = AIFaceCanvas()
+        # 3D Neural Face canvas
+        self.canvas = AISystemVisualization3D()
         layout.addWidget(self.canvas, 1)
 
         # Status indicator

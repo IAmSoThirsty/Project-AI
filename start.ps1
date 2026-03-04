@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 <#
 .SYNOPSIS
     Project-AI Desktop Application Launcher
@@ -13,6 +15,7 @@
 param(
     [switch]$DevMode,
     [switch]$ServerOnly,
+    [switch]$Full,
     [int]$Port = 8001,
     [int]$TimeoutSeconds = 30
 )
@@ -51,13 +54,20 @@ function Test-ServerReady {
 # --- Banner ---
 
 Write-Host ""
-Write-Host "  ╔══════════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "  ║    Project-AI Desktop Application            ║" -ForegroundColor Cyan
-Write-Host "  ║    Governance Kernel + PSIA + Triumvirate     ║" -ForegroundColor Cyan
-Write-Host "  ╚══════════════════════════════════════════════╝" -ForegroundColor Cyan
+if ($Full) {
+    Write-Host "  ╔══════════════════════════════════════════════╗" -ForegroundColor Cyan
+    Write-Host "  ║    Project-AI Master UI (Leather Book)       ║" -ForegroundColor Cyan
+    Write-Host "  ║    Full Capability / Sovereign Kernel        ║" -ForegroundColor Cyan
+    Write-Host "  ╚══════════════════════════════════════════════╝" -ForegroundColor Cyan
+} else {
+    Write-Host "  ╔══════════════════════════════════════════════╗" -ForegroundColor Cyan
+    Write-Host "  ║    Project-AI Desktop Application            ║" -ForegroundColor Cyan
+    Write-Host "  ║    Governance Kernel + PSIA + Triumvirate     ║" -ForegroundColor Cyan
+    Write-Host "  ╚══════════════════════════════════════════════╝" -ForegroundColor Cyan
+}
 Write-Host ""
 
-# --- Step 1: Start Governance API Server ---
+# --- Step 1: Start Governance API Server (Always needed for core services) ---
 
 Write-Status "Starting governance API server on port $Port..."
 
@@ -98,31 +108,45 @@ if (-not $ready) {
 
 Write-OK "Governance API server online — http://127.0.0.1:$Port/health"
 
-# --- Step 3: Start Desktop (unless -ServerOnly) ---
+# --- Step 3: Start UI Interface ---
 
-$electronProcess = $null
+$uiProcess = $null
 
 if (-not $ServerOnly) {
-    Write-Status "Starting Electron desktop application..."
-
-    if (-not (Test-Path (Join-Path $DesktopDir "node_modules"))) {
-        Write-Status "Running npm install in desktop/ ..."
-        Push-Location $DesktopDir
-        npm install 2>&1 | Out-Null
-        Pop-Location
-        Write-OK "npm install complete"
-    }
-
-    $npmCmd = if ($DevMode) { "dev" } else { "dev" }
-    $electronProcess = Start-Process -FilePath "npm" `
-        -ArgumentList "run", $npmCmd `
-        -WorkingDirectory $DesktopDir `
-        -PassThru -NoNewWindow
-
-    if ($electronProcess) {
-        Write-OK "Desktop app started (PID: $($electronProcess.Id))"
+    if ($Full) {
+        Write-Status "Starting Master UI (PyQt6)..."
+        $uiProcess = Start-Process -FilePath "python" `
+            -ArgumentList "src/app/main.py" `
+            -WorkingDirectory $ProjectRoot `
+            -PassThru -NoNewWindow
+        
+        if ($uiProcess) {
+            Write-OK "Master UI started (PID: $($uiProcess.Id))"
+        } else {
+            Write-Fail "Failed to start Master UI"
+        }
     } else {
-        Write-Fail "Failed to start desktop app"
+        Write-Status "Starting Electron desktop application..."
+
+        if (-not (Test-Path (Join-Path $DesktopDir "node_modules"))) {
+            Write-Status "Running npm install in desktop/ ..."
+            Push-Location $DesktopDir
+            npm install 2>&1 | Out-Null
+            Pop-Location
+            Write-OK "npm install complete"
+        }
+
+        $npmCmd = if ($DevMode) { "dev" } else { "start" }
+        $uiProcess = Start-Process -FilePath "npm" `
+            -ArgumentList "run", $npmCmd `
+            -WorkingDirectory $DesktopDir `
+            -PassThru -NoNewWindow
+
+        if ($uiProcess) {
+            Write-OK "Desktop app started (PID: $($uiProcess.Id))"
+        } else {
+            Write-Fail "Failed to start desktop app"
+        }
     }
 }
 
@@ -133,9 +157,9 @@ Write-Host "  Press Ctrl+C to stop all services" -ForegroundColor Yellow
 Write-Host ""
 
 try {
-    if ($electronProcess) {
-        $electronProcess.WaitForExit()
-        Write-Status "Desktop app exited"
+    if ($uiProcess) {
+        $uiProcess.WaitForExit()
+        Write-Status "UI process exited"
     } else {
         # Server-only mode: wait for server
         $serverProcess.WaitForExit()
@@ -143,9 +167,9 @@ try {
 } finally {
     Write-Status "Shutting down..."
 
-    if ($electronProcess -and -not $electronProcess.HasExited) {
-        Stop-Process -Id $electronProcess.Id -Force -ErrorAction SilentlyContinue
-        Write-Status "Desktop app stopped"
+    if ($uiProcess -and -not $uiProcess.HasExited) {
+        Stop-Process -Id $uiProcess.Id -Force -ErrorAction SilentlyContinue
+        Write-Status "UI process stopped"
     }
 
     if (-not $serverProcess.HasExited) {

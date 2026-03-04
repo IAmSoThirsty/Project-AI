@@ -1,3 +1,5 @@
+#                                           [2026-03-03 18:50]
+#                                          Productivity: Active
 """
 PSIA Event Taxonomy — structured, signed observability events.
 

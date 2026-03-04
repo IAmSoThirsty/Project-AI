@@ -1,3 +1,6 @@
+# [2026-03-02 04:47]
+# Productivity: Active
+
 """
 Self-Repair Agent - Automated System Recovery
 
@@ -62,6 +65,14 @@ _ROOT_CAUSE_MAP: dict[str, dict[str, str]] = {
         "cause": "sustained_high_load",
         "description": "1-minute load average significantly exceeds CPU core count",
     },
+    "wsl_distro_stopped": {
+        "cause": "wsl_service_failure",
+        "description": "Critical WSL distribution (e.g., Ubuntu) is in 'Stopped' state",
+    },
+    "docker_service_failure": {
+        "cause": "docker_daemon_unreachable",
+        "description": "Docker service is not responding to proxy/api requests",
+    },
 }
 
 # ── Repair strategies ────────────────────────────────────────
@@ -81,6 +92,14 @@ _REPAIR_STRATEGIES: dict[str, dict[str, Any]] = {
     "sustained_high_load": {
         "actions": ["reduce_load"],
         "description": "Shed non-critical load to bring system within capacity",
+    },
+    "wsl_service_failure": {
+        "actions": ["restart_wsl_distro"],
+        "description": "Attempt to restart stopped WSL distributions",
+    },
+    "docker_daemon_unreachable": {
+        "actions": ["restart_docker_desktop"],
+        "description": "Restart Docker Desktop service to restore proxy connectivity",
     },
 }
 
@@ -132,6 +151,11 @@ class SelfRepairAgent(KernelRoutedAgent):
         logger.debug("Monitoring health of component: %s", component)
 
         metrics = self._collect_metrics()
+
+        # WSL/Docker Health Pass (Windows only)
+        if os.name == "nt":
+            wsl_metrics = self._check_wsl_health()
+            metrics.update(wsl_metrics)
 
         # Update rolling baselines
         if component not in self._baselines:
@@ -359,12 +383,18 @@ class SelfRepairAgent(KernelRoutedAgent):
             metrics["disk_percent"] = disk.percent
             metrics["disk_free_gb"] = round(disk.free / (1024**3), 2)
             try:
-                load = os.getloadavg()
-                metrics["load_1m"] = load[0]
-                metrics["load_5m"] = load[1]
-                metrics["load_15m"] = load[2]
+                # os.getloadavg() is not available on Windows. Use psutil if available.
+                load1, load5, load15 = psutil.getloadavg()
+                metrics["load_1m"] = load1
+                metrics["load_5m"] = load5
+                metrics["load_15m"] = load15
             except (AttributeError, OSError):
-                pass  # Windows doesn't have getloadavg
+                # psutil.getloadavg() might not be available on all systems/versions
+                # or os.getloadavg() fallback if psutil fails.
+                # If both fail, default to 0.0
+                metrics["load_1m"] = 0.0
+                metrics["load_5m"] = 0.0
+                metrics["load_15m"] = 0.0
         else:
             # Basic fallback: disk only
             try:
@@ -374,6 +404,30 @@ class SelfRepairAgent(KernelRoutedAgent):
             except Exception:
                 pass
 
+        return metrics
+
+    @staticmethod
+    def _check_wsl_health() -> dict[str, Any]:
+        """Check status of WSL distributions and Docker Desktop."""
+        metrics: dict[str, Any] = {}
+        try:
+            import subprocess
+
+            result = subprocess.run(
+                ["wsl", "-l", "-v"], capture_output=True, text=True, check=False
+            )
+            if result.returncode == 0:
+                # Basic check for 'Ubuntu' and 'docker-desktop'
+                metrics["wsl_ubuntu_running"] = (
+                    "Ubuntu" in result.stdout and "Running" in result.stdout
+                )
+                metrics["docker_desktop_running"] = (
+                    "docker-desktop" in result.stdout and "Running" in result.stdout
+                )
+            else:
+                metrics["wsl_available"] = False
+        except Exception:
+            metrics["wsl_available"] = False
         return metrics
 
     def _find_anomalous_metrics(
@@ -467,6 +521,24 @@ class SelfRepairAgent(KernelRoutedAgent):
                 "BACK-PRESSURE advisory for %s: shed non-critical work", component
             )
             return True, "Back-pressure advisory logged"
+
+        elif action == "restart_wsl_distro":
+            try:
+                # Attempt to start the primary Ubuntu distro
+                import subprocess
+
+                subprocess.run(
+                    ["wsl", "-d", "Ubuntu", "-u", "root", "true"], check=True
+                )
+                return True, "Successfully sent start signal to Ubuntu WSL distro"
+            except Exception as e:
+                return False, f"WSL restart failed: {e}"
+
+        elif action == "restart_docker_desktop":
+            logger.warning(
+                "Docker Desktop restart requested — manual intervention may be required if service is hung"
+            )
+            return True, "Docker restart advisory logged"
 
         else:
             return False, f"Unknown repair action: {action}"

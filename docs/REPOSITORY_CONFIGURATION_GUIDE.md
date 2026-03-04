@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # 🔧 Repository Configuration Guide
 
 This guide walks through configuring repository settings for the sovereign CI/CD pipeline as specified in `docs/REPOSITORY_HARDENING.md`.
@@ -36,7 +38,7 @@ This will report:
 
 Navigate to: **Settings → Branches → Branch protection rules**
 
-#### For `main` and `release` branches:
+#### For `main` and `release` branches
 
 **Pull Request Requirements:**
 
@@ -47,7 +49,7 @@ Navigate to: **Settings → Branches → Branch protection rules**
 
 **Status Check Requirements:**
 
-2. ✅ Require status checks to pass before merging
+1. ✅ Require status checks to pass before merging
    - Require branches to be up to date: **Yes**
    - Required checks:
      - `🛡️ Sovereign Pipeline - Full Trust Chain`
@@ -58,7 +60,7 @@ Navigate to: **Settings → Branches → Branch protection rules**
 
 **Additional Restrictions:**
 
-3. ✅ Require signed commits: **Yes**
+1. ✅ Require signed commits: **Yes**
 1. ✅ Require linear history: **Yes**
 1. ✅ Require conversation resolution: **Yes**
 1. ✅ Do not allow bypassing settings: **Yes**
@@ -233,7 +235,7 @@ After proper configuration:
 ### Signed commits failing
 
 - Developers need to configure GPG keys
-- See: https://docs.github.com/en/authentication/managing-commit-signature-verification
+- See: <https://docs.github.com/en/authentication/managing-commit-signature-verification>
 
 ## 📖 Reference Documents
 
@@ -253,4 +255,4 @@ All checks should pass with ✅ green checkmarks.
 
 ______________________________________________________________________
 
-**Last Updated**: 2026-02-13 **Version**: 1.0.0 **Status**: ✅ Ready for Configuration
+**Last Updated**: 2026-03-03 **Version**: 2.1.0 **Status**: ✅ Verified & Locked

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # TestRunCallback attribute
 
 It is possible for the test framework to invoke callbacks as the current test run progresses. To do this, there is a `TestRunCallback` attribute which takes the type of `ITestRunCallback` implementation. You can invoke the callbacks with [NUnit](http://www.nunit.org/) `ITest` and `ITestResult` classes.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Timeline window
 
 Use the **Timeline window** to visually arrange tracks, clips, and markers to create cut-scenes, cinematics, and gameplay sequences.

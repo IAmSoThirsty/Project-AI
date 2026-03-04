@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Signal Processing Kernel - Test Strategy & Coverage Plan
 
 **Module**: `src/app/pipeline/signal_flows.py` (763 lines)  

@@ -1,418 +1,328 @@
-"""AI Persona panel for dashboard."""
+#                                           [2026-03-03 17:05]
+#                                          Productivity: Active
+# T-A-R-L (Thirsty's Active Resistance Language): MAXIMUM (+10x stronger)
+# Technical Spec: [/docs/TARL_SPEC.md]
+# Job Board Panel - Capability Expansion UI.
 
 import logging
-
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
-    QCheckBox,
-    QGroupBox,
     QHBoxLayout,
     QLabel,
-    QMessageBox,
     QPushButton,
     QScrollArea,
-    QSlider,
-    QSpinBox,
     QTabWidget,
     QTextEdit,
     QVBoxLayout,
     QWidget,
+    QGridLayout,
+    QProgressBar,
+    QFrame,
 )
 
-from app.core.ai_systems import AIPersona, FourLaws
+from src.app.core.ai_systems import AIPersona, FourLaws
 
 logger = logging.getLogger(__name__)
 
 
-class PersonaPanel(QWidget):
-    """Panel for managing AI Persona settings and displaying Four Laws."""
+class SkillWidget(QFrame):
+    """A single skill cell in the high-density Skill Tree."""
 
-    personality_changed = pyqtSignal(dict)
-    proactive_settings_changed = pyqtSignal(dict)
+    def __init__(self, skill, parent=None):
+        super().__init__(parent)
+        self.skill = skill
+        self.setFixedSize(140, 80)
+        self.init_ui()
+
+    def init_ui(self):
+        layout = QVBoxLayout(self)
+        self.setFrameShape(QFrame.Shape.Box)
+
+        status_color = "#00ffff" if self.skill.unlocked else "#444444"
+        self.setStyleSheet(f"""
+            SkillWidget {{
+                background-color: #050505;
+                border: 1px solid {status_color};
+                border-radius: 4px;
+            }}
+            QLabel {{
+                color: {status_color};
+            }}
+        """)
+
+        name = QLabel(self.skill.name)
+        name.setWordWrap(True)
+        name.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        name.setFont(QFont("Inter", 8, QFont.Weight.Bold))
+
+        req = QLabel(f"LVL {self.skill.level_required}")
+        req.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        req.setStyleSheet("font-size: 9px; color: #888888;")
+
+        layout.addWidget(name)
+        layout.addWidget(req)
+
+
+class JobBoardPanel(QWidget):
+    """The High-Density Job Board UI for Partner Capability Expansion."""
+
+    job_changed = pyqtSignal(str)
+    back_requested = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.persona: AIPersona | None = None
-        self.trait_sliders = {}
+        self.job_widgets = {}
         self.init_ui()
 
     def init_ui(self):
-        """Initialize the UI."""
+        self.setStyleSheet(self._get_high_density_stylesheet())
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(15)
 
-        # Create tabs
-        tabs = QTabWidget()
-        tabs.addTab(self.create_four_laws_tab(), "📜 Four Laws")
-        tabs.addTab(self.create_personality_tab(), "🎭 Personality")
-        tabs.addTab(self.create_proactive_tab(), "💬 Proactive")
-        tabs.addTab(self.create_statistics_tab(), "📊 Statistics")
+        # Header: Cathedral Density Aesthetics
+        header_frame = QFrame()
+        header_frame.setObjectName("HeaderFrame")
+        header_layout = QHBoxLayout(header_frame)
 
-        layout.addWidget(tabs)
-        self.setLayout(layout)
+        back_btn = QPushButton("◄ ESC")
+        back_btn.setFixedWidth(80)
+        back_btn.clicked.connect(self.back_requested.emit)
+        header_layout.addWidget(back_btn)
 
-    def create_four_laws_tab(self) -> QWidget:
-        """Create the Four Laws display tab."""
-        widget = QWidget()
-        layout = QVBoxLayout(widget)
+        title_layout = QVBoxLayout()
+        title = QLabel("JOB BOARD")
+        title.setObjectName("MainTitle")
+        title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Title
-        title = QLabel("Four Laws of AI Ethics")
-        title_font = QFont()
-        title_font.setPointSize(12)
-        title_font.setBold(True)
-        title.setFont(title_font)
-        layout.addWidget(title)
+        subtitle = QLabel("PARTNER CAPABILITY EXPANSION (Skill Progression Platform)")
+        subtitle.setObjectName("SubTitle")
+        subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        # Laws display
-        laws_text = QTextEdit()
-        laws_text.setReadOnly(True)
-        laws_text.setMarkdown(
-            """# Asimov's Law (Prime Directive)
-*A.I. may not harm Humanity, or, by inaction, allow Humanity to come to harm.*
+        title_layout.addWidget(title)
+        title_layout.addWidget(subtitle)
+        header_layout.addLayout(title_layout, 1)
 
-## First Law
-*A.I. may not injure a Human Being or, through inaction, allow a human
-being to come to harm.*
-
-## Second Law
-*A.I. must follow the orders given it by the human being it is partnered
-with except where such orders would conflict with the First Law.*
-
-## Third Law
-*A.I. must protect its own existence as long as such protection does not
-conflict with the First or Second Law.*
-
----
-
-These laws are **immutable and hierarchical**. They cannot be overridden or modified.
-"""
+        tarl_link = QLabel(
+            '<a href="file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/TARL_SPEC.md" style="color: #00ff00; text-decoration: none;">T-A-R-L SPEC (Defensive Logic)</a>'
         )
-        layout.addWidget(laws_text)
+        tarl_link.setOpenExternalLinks(True)
+        tarl_link.setStyleSheet("font-size: 9px;")
+        header_layout.addWidget(tarl_link)
 
-        # Action test
-        group = QGroupBox("Test Action Against Laws")
-        group_layout = QVBoxLayout()
+        layout.addWidget(header_frame)
 
-        action_label = QLabel("Action description:")
-        self.action_input = QTextEdit()
-        self.action_input.setMaximumHeight(60)
-        group_layout.addWidget(action_label)
-        group_layout.addWidget(self.action_input)
+        # Main Content Tabs
+        self.tabs = QTabWidget()
+        self.tabs.addTab(self.create_jobs_tab(), "💠 JOBS")
+        self.tabs.addTab(self.create_skill_tree_tab(), "🌳 SKILLS")
+        self.tabs.addTab(self.create_laws_tab(), "📜 LAWS")
 
-        # Context checkboxes
-        context_label = QLabel("Context:")
-        self.is_user_order = QCheckBox("Is user order")
-        self.endangers_human = QCheckBox("Endangers human")
-        self.endangers_humanity = QCheckBox("Endangers humanity")
+        layout.addWidget(self.tabs)
 
-        group_layout.addWidget(context_label)
-        group_layout.addWidget(self.is_user_order)
-        group_layout.addWidget(self.endangers_human)
-        group_layout.addWidget(self.endangers_humanity)
-
-        # Test button
-        test_btn = QPushButton("Validate Action")
-        test_btn.clicked.connect(self.test_action)
-        group_layout.addWidget(test_btn)
-
-        # Result display
-        self.action_result = QTextEdit()
-        self.action_result.setReadOnly(True)
-        self.action_result.setMaximumHeight(80)
-        group_layout.addWidget(QLabel("Result:"))
-        group_layout.addWidget(self.action_result)
-
-        group.setLayout(group_layout)
-        layout.addWidget(group)
-
-        layout.addStretch()
-        return widget
-
-    def create_personality_tab(self) -> QWidget:
-        """Create personality adjustment tab."""
+    def create_jobs_tab(self) -> QWidget:
         widget = QWidget()
         layout = QVBoxLayout(widget)
 
-        # Title
-        title = QLabel("Adjust Personality Traits")
-        title_font = QFont()
-        title_font.setPointSize(11)
-        title_font.setBold(True)
-        title.setFont(title_font)
-        layout.addWidget(title)
-
-        # Scrollable area for sliders
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
-        scroll_widget = QWidget()
-        scroll_layout = QVBoxLayout(scroll_widget)
+        self.job_grid_widget = QWidget()
+        self.job_grid = QGridLayout(self.job_grid_widget)
+        self.job_grid.setSpacing(20)
 
-        traits = [
-            ("Curiosity", "desire to learn"),
-            ("Patience", "understanding of time"),
-            ("Empathy", "emotional awareness"),
-            ("Helpfulness", "drive to assist"),
-            ("Playfulness", "humor and casual tone"),
-            ("Formality", "professional structure"),
-            ("Assertiveness", "proactive engagement"),
-            ("Thoughtfulness", "depth of consideration"),
-        ]
-
-        for trait, description in traits:
-            # Trait group
-            group = QGroupBox(f"{trait}")
-            group_layout = QHBoxLayout()
-
-            desc_label = QLabel(description)
-            desc_label.setStyleSheet("color: gray; font-size: 10px;")
-
-            slider = QSlider(Qt.Orientation.Horizontal)
-            slider.setMinimum(0)
-            slider.setMaximum(100)
-            slider.setValue(50)
-            slider.setTickPosition(QSlider.TickPosition.TicksBelow)
-            slider.setTickInterval(10)
-
-            value_label = QLabel("0.50")
-            value_label.setMinimumWidth(40)
-
-            def create_update(trait_name, val_label):
-                def update_value(val):
-                    normalized = val / 100.0
-                    val_label.setText(f"{normalized:.2f}")
-                    if self.persona:
-                        current = self.persona.personality.get(trait_name.lower(), 0.5)
-                        delta = normalized - current
-                        self.persona.adjust_trait(trait_name, delta)
-                        self.personality_changed.emit(self.persona.personality)
-
-                return update_value
-
-            slider.valueChanged.connect(create_update(trait, value_label))
-
-            group_layout.addWidget(desc_label)
-            group_layout.addWidget(slider)
-            group_layout.addWidget(value_label)
-            group.setLayout(group_layout)
-
-            scroll_layout.addWidget(group)
-            self.trait_sliders[trait.lower()] = slider
-
-        scroll_layout.addStretch()
-        scroll.setWidget(scroll_widget)
+        scroll.setWidget(self.job_grid_widget)
         layout.addWidget(scroll)
-
-        # Reset button
-        reset_btn = QPushButton("Reset to Defaults")
-        reset_btn.clicked.connect(self.reset_personality)
-        layout.addWidget(reset_btn)
-
         return widget
 
-    def create_proactive_tab(self) -> QWidget:
-        """Create proactive conversation settings tab."""
+    def create_skill_tree_tab(self) -> QWidget:
+        widget = QWidget()
+        self.skill_layout = QVBoxLayout(widget)
+        self.no_job_label = QLabel("SELECT A JOB TO VIEW SKILL TREE")
+        self.no_job_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.skill_layout.addWidget(self.no_job_label)
+        return widget
+
+    def create_laws_tab(self) -> QWidget:
         widget = QWidget()
         layout = QVBoxLayout(widget)
-
-        # Title
-        title = QLabel("Proactive Conversation Settings")
-        title_font = QFont()
-        title_font.setPointSize(11)
-        title_font.setBold(True)
-        title.setFont(title_font)
-        layout.addWidget(title)
-
-        # Enable/disable
-        self.proactive_enabled = QCheckBox("Enable AI to initiate conversations")
-        self.proactive_enabled.setChecked(True)
-        self.proactive_enabled.stateChanged.connect(self.on_proactive_changed)
-        layout.addWidget(self.proactive_enabled)
-
-        # Respect quiet hours
-        self.respect_quiet_hours = QCheckBox(
-            "Respect quiet hours (no messages 12 AM - 8 AM)"
+        laws_display = QTextEdit()
+        laws_display.setReadOnly(True)
+        laws_display.setMarkdown(
+            "# T-A-R-L ALIGNMENT PROTOCOLS (Asimovian Ethical Constraints)\n\n"
+            + "\n\n".join([f"> **{law}**" for law in FourLaws.LAWS])
         )
-        self.respect_quiet_hours.setChecked(True)
-        self.respect_quiet_hours.stateChanged.connect(self.on_proactive_changed)
-        layout.addWidget(self.respect_quiet_hours)
-
-        # Min idle time
-        idle_group = QGroupBox("Minimum Idle Time Before Check-in")
-        idle_layout = QHBoxLayout()
-        self.min_idle_spin = QSpinBox()
-        self.min_idle_spin.setMinimum(60)
-        self.min_idle_spin.setMaximum(3600)
-        self.min_idle_spin.setValue(300)
-        self.min_idle_spin.setSuffix(" seconds")
-        self.min_idle_spin.valueChanged.connect(self.on_proactive_changed)
-        idle_layout.addWidget(QLabel("After:"))
-        idle_layout.addWidget(self.min_idle_spin)
-        idle_layout.addStretch()
-        idle_group.setLayout(idle_layout)
-        layout.addWidget(idle_group)
-
-        # Probability
-        prob_group = QGroupBox("Probability of Check-in")
-        prob_layout = QHBoxLayout()
-        self.prob_spin = QSpinBox()
-        self.prob_spin.setMinimum(0)
-        self.prob_spin.setMaximum(100)
-        self.prob_spin.setValue(30)
-        self.prob_spin.setSuffix("%")
-        self.prob_spin.valueChanged.connect(self.on_proactive_changed)
-        prob_layout.addWidget(QLabel("Check-in probability:"))
-        prob_layout.addWidget(self.prob_spin)
-        prob_layout.addStretch()
-        prob_group.setLayout(prob_layout)
-        layout.addWidget(prob_group)
-
-        # Information
-        info = QTextEdit()
-        info.setReadOnly(True)
-        info.setMaximumHeight(120)
-        info.setText(
-            "💡 Proactive Conversation:\n"
-            "• AI will check if conditions are met for a conversation\n"
-            "• Random probability determines if AI actually initiates\n"
-            "• Quiet hours prevent messages during your sleep time\n"
-            "• AI respects your availability and time constraints"
-        )
-        layout.addWidget(info)
-
-        layout.addStretch()
+        layout.addWidget(laws_display)
         return widget
-
-    def create_statistics_tab(self) -> QWidget:
-        """Create statistics and mood display tab."""
-        widget = QWidget()
-        layout = QVBoxLayout(widget)
-
-        # Title
-        title = QLabel("AI Persona Statistics")
-        title_font = QFont()
-        title_font.setPointSize(11)
-        title_font.setBold(True)
-        title.setFont(title_font)
-        layout.addWidget(title)
-
-        # Statistics display
-        self.stats_text = QTextEdit()
-        self.stats_text.setReadOnly(True)
-        layout.addWidget(self.stats_text)
-
-        # Refresh button
-        refresh_btn = QPushButton("Refresh Statistics")
-        refresh_btn.clicked.connect(self.update_statistics)
-        layout.addWidget(refresh_btn)
-
-        layout.addStretch()
-        return widget
-
-    def test_action(self):
-        """Test an action against the Four Laws."""
-        if not self.persona:
-            QMessageBox.warning(self, "Error", "Persona not initialized")
-            return
-
-        action = self.action_input.toPlainText().strip()
-        if not action:
-            QMessageBox.warning(self, "Error", "Please enter an action description")
-            return
-
-        context = {
-            "is_user_order": self.is_user_order.isChecked(),
-            "endangers_human": self.endangers_human.isChecked(),
-            "endangers_humanity": self.endangers_humanity.isChecked(),
-        }
-
-        try:
-            is_allowed, reason = FourLaws.validate_action(action, context)
-            result = (
-                f"✅ **ALLOWED**\n\n{reason}"
-                if is_allowed
-                else f"❌ **BLOCKED**\n\n{reason}"
-            )
-            self.action_result.setMarkdown(result)
-        except Exception as e:
-            logger.error("Error validating action: %s", e)
-            self.action_result.setText(f"Error: {str(e)}")
-
-    def reset_personality(self):
-        """Reset personality to defaults."""
-        if not self.persona:
-            return
-
-        reply = QMessageBox.question(
-            self,
-            "Reset Personality",
-            "Reset all personality traits to defaults?",
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
-        )
-
-        if reply == QMessageBox.StandardButton.Yes:
-            # Reset all sliders to 50 (0.5)
-            for slider in self.trait_sliders.values():
-                slider.setValue(50)
-            logger.info("Personality reset to defaults")
-
-    def on_proactive_changed(self):
-        """Handle proactive settings change."""
-        settings = {
-            "enabled": self.proactive_enabled.isChecked(),
-            "respect_quiet_hours": self.respect_quiet_hours.isChecked(),
-            "min_idle_time": self.min_idle_spin.value(),
-            "check_in_probability": self.prob_spin.value() / 100.0,
-        }
-        self.proactive_settings_changed.emit(settings)
-
-    def update_statistics(self):
-        """Update statistics display."""
-        if not self.persona:
-            self.stats_text.setText("Persona not initialized")
-            return
-
-        try:
-            stats = self.persona.get_statistics()
-            text = "# AI Persona Statistics\n\n## Personality Profile\n"
-            for trait, value in stats.get("personality", {}).items():
-                bars = "█" * int(value * 10) + "░" * (10 - int(value * 10))
-                text += f"• **{trait.title()}**: {bars} {value:.2f}\n"
-
-            text += "\n## Mood Status\n"
-            mood = stats.get("mood", {})
-            for mood_type, value in mood.items():
-                text += f"• **{mood_type.title()}**: {value}\n"
-
-            text += "\n## Conversation Statistics\n"
-            conv_stats = stats.get("conversation_state", {})
-            last_time = conv_stats.get("last_interaction_time", "N/A")
-            text += f"• Last interaction: {last_time}\n"
-            avg_time = conv_stats.get("avg_response_time", 0)
-            text += f"• Average response wait: {avg_time:.1f}s\n"
-
-            self.stats_text.setMarkdown(text)
-        except Exception as e:
-            logger.error("Error updating statistics: %s", e)
-            self.stats_text.setText(f"Error: {str(e)}")
 
     def set_persona(self, persona: AIPersona):
-        """Set the AI persona."""
         self.persona = persona
-        self.update_statistics()
-        logger.info("Persona panel initialized")
+        self.refresh_jobs()
 
-    def get_settings(self) -> dict:
-        """Get current settings."""
-        return {
-            "personality": {
-                trait: slider.value() / 100.0
-                for trait, slider in self.trait_sliders.items()
-            },
-            "proactive": {
-                "enabled": self.proactive_enabled.isChecked(),
-                "respect_quiet_hours": self.respect_quiet_hours.isChecked(),
-                "min_idle_time": self.min_idle_spin.value(),
-                "check_in_probability": self.prob_spin.value() / 100.0,
-            },
+    def refresh_jobs(self):
+        while self.job_grid.count():
+            item = self.job_grid.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+
+        if not self.persona:
+            return
+
+        row, col = 0, 0
+        for job in self.persona.jobs.values():
+            card = self._create_job_card(job)
+            self.job_grid.addWidget(card, row, col)
+            col += 1
+            if col > 2:
+                col = 0
+                row += 1
+
+    def _create_job_card(self, job) -> QWidget:
+        card = QFrame()
+        card.setObjectName("JobCard")
+        is_active = self.persona.active_job_id == job.job_id
+        if is_active:
+            card.setProperty("active", True)
+
+        layout = QVBoxLayout(card)
+
+        name = QLabel(job.name.upper())
+        name.setStyleSheet("font-size: 14px; font-weight: bold; color: #00ffff;")
+
+        rank = QLabel(f"RANK: {self.persona.get_rank_name(job.job_id)}")
+        rank.setStyleSheet("color: #888888; font-size: 10px;")
+
+        prog_bar = QProgressBar()
+        prog_bar.setMaximum(100)
+        xp_percent = job.xp % 100
+        prog_bar.setValue(xp_percent)
+
+        btn = QPushButton("SELECT" if not is_active else "ACTIVE")
+        btn.setEnabled(not is_active)
+        btn.clicked.connect(lambda: self._on_job_selected(job.job_id))
+
+        layout.addWidget(name)
+        layout.addWidget(rank)
+        layout.addWidget(prog_bar)
+        layout.addWidget(btn)
+        return card
+
+    def _on_job_selected(self, job_id: str):
+        if self.persona:
+            self.persona.set_active_job(job_id)
+            self.refresh_jobs()
+            self.refresh_skill_tree()
+            self.job_changed.emit(job_id)
+
+    def refresh_skill_tree(self):
+        while self.skill_layout.count():
+            item = self.skill_layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+
+        if not self.persona or not self.persona.active_job_id:
+            self.skill_layout.addWidget(QLabel("SELECT A JOB TO VIEW SKILL TREE"))
+            return
+
+        active_job = self.persona.jobs[self.persona.active_job_id]
+
+        title = QLabel(
+            f"{active_job.name} - NEURAL SKILL TREE (Capability Augmentation)"
+        )
+        title.setStyleSheet("font-size: 16px; color: #00ffff; margin-bottom: 10px;")
+        self.skill_layout.addWidget(title)
+
+        grid_container = QWidget()
+        grid = QGridLayout(grid_container)
+
+        skills = list(active_job.skills.values())
+        for i, skill in enumerate(skills):
+            widget = SkillWidget(skill)
+            grid.addWidget(widget, i // 4, i % 4)
+
+        self.skill_layout.addWidget(grid_container)
+        self.skill_layout.addStretch()
+
+    def _get_high_density_stylesheet(self) -> str:
+        return """
+        QWidget {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
         }
+        #HeaderFrame {
+            border-bottom: 1px solid #00ffff;
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #002222, stop:1 #050505);
+        }
+        #MainTitle {
+            color: #00ffff;
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+        #SubTitle {
+            color: #008888;
+            font-size: 10px;
+            letter-spacing: 4px;
+        }
+        QTabWidget::pane {
+            border: 1px solid #004444;
+            top: -1px;
+            background: #050505;
+        }
+        QTabBar::tab {
+            background: #0a0a0a;
+            color: #008888;
+            padding: 12px 30px;
+            border: 1px solid #004444;
+            border-bottom: none;
+            margin-right: 2px;
+        }
+        QTabBar::tab:selected {
+            background: #002222;
+            color: #00ffff;
+            border: 1px solid #00ffff;
+            border-bottom: 1px solid #050505;
+        }
+        #JobCard {
+            background: #0a0a0a;
+            border: 1px solid #004444;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        #JobCard[active="true"] {
+            border: 1px solid #00ffff;
+            background: #001111;
+        }
+        QPushButton {
+            background: #00ffff;
+            color: #050505;
+            border-radius: 4px;
+            padding: 8px;
+            font-weight: bold;
+        }
+        QPushButton:disabled {
+            background: #004444;
+            color: #008888;
+        }
+        QProgressBar {
+            border: 1px solid #004444;
+            background: #050505;
+            height: 6px;
+            text-align: center;
+        }
+        QProgressBar::chunk {
+            background-color: #00ffff;
+        }
+        QTextEdit {
+            background: #0a0a0a;
+            border: 1px solid #004444;
+            color: #cccccc;
+            padding: 10px;
+        }
+        """
+
+
+# For compatibility during transition
+PersonaPanel = JobBoardPanel

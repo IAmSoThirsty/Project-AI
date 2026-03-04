@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # About Visual Scripting
 
 Use Visual Scripting to create logic for games or applications without hand-coded C# scripts. Visual Scripting uses visual, node-based graphs, which both programmers and non-programmers use to design final logic or create prototypes. Visual Scripting also has an API that programmers can use for more advanced tasks, or to create custom nodes for other team members.

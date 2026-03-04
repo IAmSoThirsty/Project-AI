@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Input Event nodes
 
 Input nodes are an Event node type that can read input from Unity's [Input Manager](https://docs.unity3d.com/Manual/class-InputManager.html) or [Input System package](https://docs.unity3d.com/Packages/com.unity.inputsystem@latest) for use in a Script Graph.

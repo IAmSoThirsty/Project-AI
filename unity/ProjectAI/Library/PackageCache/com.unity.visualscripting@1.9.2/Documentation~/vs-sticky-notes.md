@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Add comments to a graph
 
 Use Sticky Notes to add comments to a graph. Sticky Notes can:

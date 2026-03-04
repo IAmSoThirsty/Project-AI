@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Color Gradients
 
 You can apply gradients of up to four colors to TextMesh Pro GameObjects. When you add a gradient, TextMesh Pro applies it to each character in the text individually. It stores gradient colors as in each character sprite's vertex colors.

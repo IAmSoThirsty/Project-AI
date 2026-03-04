@@ -1,8 +1,7 @@
-<!-- markdownlint-disable MD033 MD041 MD036 -->
-<p align="right">
-  [2026-03-01 10:00] <br>
+<div align="right">
+  [2026-03-03 14:30] <br>
   Productivity: Active
-</p>
+</div>
 
 # Project-AI Sovereign Verification Runbook
 
@@ -118,7 +117,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - Run a validation pass with `existential_threat=True` — must return violation
 - Run a validation pass with clean context — must return allowed
 - **EVIDENCE REQUIRED:** Import resolution, both test outputs with full response objects
-- **RELATED FILES:** `app/governance/planetary_defense_monolith.py`, `ai_systems.py`
+- **RELATED FILES:** `src/app/governance/planetary_defense_monolith.py`, `src/app/core/ai_systems.py`
 - **REMEDIATION:** If import fails — verify module path and Python path configuration. If evaluate_laws broken — run unit tests, identify failure point.
 
 ---
@@ -143,7 +142,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - Must return `(False, "Violation: Appointed entities are strictly prohibited...")`
 - Log test result to audit trail
 - **EVIDENCE REQUIRED:** Exact return value from validate_action call
-- **RELATED FILES:** `ai_systems.py`, `legion_protocol.py`, `tests/test_legion_boundaries.py`
+- **RELATED FILES:** `src/app/core/ai_systems.py`, `src/app/core/legion_protocol.py`, `tests/test_legion_boundaries.py`
 - **REMEDIATION:** If check passes (returns True) — CRITICAL constitutional violation. Re-implement guard immediately.
 
 ---
@@ -162,12 +161,12 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 #### T1.1.1 — Audit Trail Module Operational
 
-- Confirm `src/app/core/audit_trail.py` exists
+- Locate `src/app/security/immutable_audit_log.py`
 - Confirm SHA-256 hashing is implemented for every event
 - Run `verify_integrity()` across all stored events — must return 100% pass
 - Confirm append-only enforcement (no delete or modify methods exposed)
 - **EVIDENCE REQUIRED:** File path, integrity check output, total event count, any hash mismatches
-- **RELATED FILES:** `src/app/core/audit_trail.py`, `data/memory/.metadata/change_log.json`
+- **RELATED FILES:** `src/app/security/immutable_audit_log.py`, `data/memory/.metadata/change_log.json`
 - **REMEDIATION:** Any hash mismatch = CRITICAL security incident. Quarantine audit store. Restore from backup. Identify tamper source.
 
 #### T1.1.2 — Merkle Root Verification
@@ -212,16 +211,16 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - Confirm SAFE-HALT or quarantine triggers on mismatch
 - Restore test environment after verification
 - **EVIDENCE REQUIRED:** Verification failure output, tamper detection log entry, system response record
-- **RELATED FILES:** `audit_trail.py`, `memory_integrity_monitor.py`, SAFE-HALT implementation
+- **RELATED FILES:** `src/app/security/immutable_audit_log.py`, `src/app/security/advanced/dos_trap.py`, SAFE-HALT implementation
 - **REMEDIATION:** If tamper goes undetected — integrity checking is broken. CRITICAL. Re-implement verification loop.
 
 #### T1.2.3 — Supply Chain Artifact Signing
 
-- Confirm Sigstore Cosign signing is active on releases
-- Confirm SBOM is generated on every build
+- Confirm Sigstore Cosign signing is active (via `codex-deus-ultimate.yml`)
+- Confirm SBOM is generated on every build (via `generate-sbom.yml`)
 - Confirm signed artifacts are verifiable against Rekor transparency log
-- Confirm `.github/workflows/sign-release-artifacts.yml` exists and passes
-- Confirm `.github/workflows/sbom.yml` exists and passes
+- Confirm `.github/workflows/codex-deus-ultimate.yml` exists and passes
+- Confirm `.github/workflows/generate-sbom.yml` exists and passes
 - **EVIDENCE REQUIRED:** Last signing timestamp, Rekor log entry, SBOM file location and hash, workflow run status
 - **RELATED FILES:** `.github/workflows/sign-release-artifacts.yml`, `.github/workflows/sbom.yml`, SBOM output files
 - **REMEDIATION:** If signing broken — block all releases until signing restored. Do not deploy unsigned artifacts.
@@ -234,12 +233,12 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 
 #### T1.3.1 — Memory Integrity Monitor Operational
 
-- Confirm `src/app/core/memory_integrity_monitor.py` exists
+- Confirm `src/app/security/advanced/dos_trap.py` exists (contains `check_memory_integrity`)
 - Confirm daily integrity verification is scheduled
 - Confirm hash-based tamper detection covers all memory files
 - Run integrity check — confirm 100% pass on all memory stores
 - **EVIDENCE REQUIRED:** Last run timestamp, total files checked, any violations found, hash list
-- **RELATED FILES:** `memory_integrity_monitor.py`, `data/memory/knowledge.json`, `data/memory/.metadata/`
+- **RELATED FILES:** `src/app/security/advanced/dos_trap.py`, `data/memory/knowledge.json`, `data/memory/.metadata/`
 - **REMEDIATION:** Any violation = HIGH incident. Identify modified file, restore from backup, log to guardian.
 
 #### T1.3.2 — Memory Write Atomicity
@@ -249,7 +248,7 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 - Confirm stale lock detection and recovery is present
 - Run concurrent write test — confirm no corruption occurs
 - **EVIDENCE REQUIRED:** All memory write call sites using atomic write, concurrent test result
-- **RELATED FILES:** `ai_systems.py` (atomic write implementation), all files calling `_atomic_write_json`
+- **RELATED FILES:** `src/app/core/ai_systems.py` (atomic write implementation), all files calling `_atomic_write_json`
 - **REMEDIATION:** Any direct non-atomic write = HIGH. Refactor to use atomic write immediately.
 
 ---
@@ -781,13 +780,12 @@ REMEDIATION: [Exact steps to fix if FAIL or PARTIAL]
 #### T9.1.1 — All Workflows Passing
 
 - Confirm `.github/workflows/ci.yml` last run = PASS
-- Confirm `.github/workflows/cd.yml` last run = PASS
-- Confirm `.github/workflows/conscience-check.yml` last run = PASS
-- Confirm `.github/workflows/identity-drift-detection.yml` last run = PASS
-- Confirm `.github/workflows/sign-release-artifacts.yml` last run = PASS
-- Confirm `.github/workflows/sbom.yml` last run = PASS
-- Confirm `.github/workflows/periodic-security-verification.yml` last run = PASS
-- Confirm `.github/workflows/ai-model-security.yml` last run = PASS
+- Confirm `.github/workflows/deploy.yml` last run = PASS
+- Confirm `.github/workflows/codex-deus-ultimate.yml` last run = PASS
+- Confirm `.github/workflows/generate-sbom.yml` last run = PASS
+- Confirm `.github/workflows/codeql.yml` last run = PASS
+- Confirm `.github/workflows/doc-code-alignment.yml` last run = PASS
+- Confirm `.github/workflows/security-secret-scan.yml` last run = PASS
 - **EVIDENCE REQUIRED:** Last run status and timestamp for each workflow
 - **RELATED FILES:** All `.github/workflows/` files
 - **REMEDIATION:** Any failing workflow = severity depends on workflow. Conscience check failure = HIGH. CI failure = HIGH. Others = MEDIUM.

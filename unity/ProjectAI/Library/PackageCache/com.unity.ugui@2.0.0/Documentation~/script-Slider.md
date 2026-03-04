@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Slider
 
 The **Slider** control allows the user to select a numeric value from a predetermined range by dragging the mouse. Note that the similar [ScrollBar](script-Scrollbar.md) control is used for scrolling rather than selecting numeric values. Familiar examples include difficulty settings in games and brightness settings in image editors.

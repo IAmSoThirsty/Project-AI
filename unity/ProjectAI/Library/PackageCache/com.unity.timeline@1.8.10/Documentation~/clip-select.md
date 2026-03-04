@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Select clips
 
 The Timeline window supports many different methods of selecting clips depending on where you click, where you drag, and whether a clip or track is already selected.

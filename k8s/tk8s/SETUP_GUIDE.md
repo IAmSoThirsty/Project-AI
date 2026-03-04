@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # TK8S Quick Setup Guide
 
 This guide will help you deploy TK8S (Thirsty's Kubernetes) to your cluster.

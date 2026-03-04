@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # TK8S Deployment Automation Scripts
 
 This directory contains automated scripts to deploy TK8S (Thirsty's Kubernetes) infrastructure.

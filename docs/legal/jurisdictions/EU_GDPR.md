@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Jurisdictional Annex: European Union (GDPR)
 
 **Version:** 1.0.0 **Jurisdiction:** European Union (EU/EEA) **Regulation:** General Data Protection Regulation (GDPR) - Regulation (EU) 2016/679 **Effective Date:** February 8, 2026

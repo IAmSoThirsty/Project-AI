@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # License
 
 com.unity.core.editorcoroutines copyright © 2018 Unity Technologies ApS

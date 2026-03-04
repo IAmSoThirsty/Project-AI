@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # XR Management
 
 This package provides for management of **XR** subsystem lifecycles without the need for boilerplate code as well as support for provider specific build settings.

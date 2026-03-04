@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Newtonsoft Json Unity Package
 
 This is a Unity package for Newtonsoft Json and corresponds to Newtonsoft.Json version 13.0.2.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Create a graph on a Script Machine or State Machine
 
 You can create a new graph file directly from a Script Machine or State Machine component on a GameObject. For more information on how to create a Script Machine or State Machine, see [Attach a graph file to a Script Machine or State Machine](vs-attach-graph-machine.md).

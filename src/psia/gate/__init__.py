@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """PSIA Gate Plane — Cerberus triple-head evaluation."""
 
 from psia.gate.capability_head import CapabilityHead

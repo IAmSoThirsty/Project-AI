@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Comparing frames from different data sets
 
 This workflow explains how to compare two frames from different data sets. In this example, it shows how to compare the median frames from each data set. Comparing the median frames helps you understand what might be happening in a frame that is central to the distribution for each data set.

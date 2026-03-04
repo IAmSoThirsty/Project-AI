@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Horizontal Position
 
 The `<pos>` tag gives you direct control over the horizontal caret position. This works best with horizontal alignment.

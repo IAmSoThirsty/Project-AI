@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Transitions
 
 A transition is a connection between State nodes in a State Graph. A transition has a Script Graph that tells Visual Scripting when to switch states in a State Graph. A special transition type, called a self transition, can make a state transition to itself.

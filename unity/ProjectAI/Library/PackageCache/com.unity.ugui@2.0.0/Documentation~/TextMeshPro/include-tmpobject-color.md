@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 ### Color
 
 TextMesh Pro uses vertex colors to tint the text. You can apply a uniform color as well a [gradient](ColorGradients.md) of up to four colors.

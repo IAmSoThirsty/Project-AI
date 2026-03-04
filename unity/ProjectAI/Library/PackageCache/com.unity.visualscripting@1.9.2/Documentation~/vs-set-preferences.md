@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Configure your preferences
 
 You can configure specific preferences in Visual Scripting to control the behavior of the [Graph window](vs-interface-overview.md) and your nodes.

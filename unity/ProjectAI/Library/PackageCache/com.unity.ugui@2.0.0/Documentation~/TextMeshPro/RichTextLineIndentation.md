@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Line Indentation
 
 The `<line-indent>` tag inserts horizontal space directly after it, and before the start of each new line. It only affects manual line breaks (including line breaks created with the [`<br>` tag](RichTextLineBreak.md), not word-wrapped lines.

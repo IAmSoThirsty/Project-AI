@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # OCTOREFLEX Invariants
 
 This document specifies the invariants that OCTOREFLEX guarantees at each layer.

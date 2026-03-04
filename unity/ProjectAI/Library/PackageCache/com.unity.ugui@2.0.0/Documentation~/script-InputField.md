@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Input Field
 
 An **Input Field** is a way to make the text of a [Text Control](script-Text.md) editable. Like the other interaction controls, it's not a visible UI element in itself and must be combined with one or more visual UI elements in order to be visible.

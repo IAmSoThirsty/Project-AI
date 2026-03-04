@@ -1,3 +1,7 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+#                                                             DATE: 2026-03-03 09:32:01
+#                                                             STATUS: Active
 """
 Shadow Thirst Shadow-Aware Virtual Machine
 
@@ -73,6 +77,8 @@ class ExecutionFrame:
 
     def push(self, value: Any):
         """Push value onto stack."""
+        if len(self.stack) >= 100:  # Default limit, should be passed from VM
+            raise RuntimeError("Stack overflow")
         self.stack.append(value)
 
     def pop(self) -> Any:
@@ -164,6 +170,8 @@ class ShadowAwareVM:
         constitutional_core: Any | None = None,
         enable_shadow: bool = True,
         enable_audit: bool = True,
+        max_instructions: int = 10000,
+        max_stack_size: int = 100,
     ):
         """
         Initialize VM.
@@ -172,10 +180,14 @@ class ShadowAwareVM:
             constitutional_core: Constitutional Core for validation
             enable_shadow: Enable shadow execution
             enable_audit: Enable audit trail
+            max_instructions: Maximum instructions per plane
+            max_stack_size: Maximum stack depth
         """
         self.constitutional_core = constitutional_core
         self.enable_shadow = enable_shadow
         self.enable_audit = enable_audit
+        self.max_instructions = max_instructions
+        self.max_stack_size = max_stack_size
 
         # Program state
         self.program: BytecodeProgram | None = None
@@ -236,12 +248,13 @@ class ShadowAwareVM:
         # Create initial frame
         frame = DualExecutionFrame(function_name)
 
+        # Get function object
+        func = self.functions.get(function_name)
+
         # Set parameters
-        if args:
-            func = self.functions.get(function_name)
-            if func:
-                for i, arg in enumerate(args[: func.parameter_count]):
-                    frame.primary.parameters[f"arg{i}"] = arg
+        if args and func:
+            for i, arg in enumerate(args[: func.parameter_count]):
+                frame.primary.parameters[f"arg{i}"] = arg
 
         self.call_stack.append(frame)
 
@@ -279,10 +292,10 @@ class ShadowAwareVM:
             bytecode = func.primary_bytecode
             exec_frame = frame.primary
         elif plane == PlaneTag.SHADOW:
+            if not frame.shadow:
+                return
             bytecode = func.shadow_bytecode
             exec_frame = frame.shadow
-            if not exec_frame:
-                return
         else:
             return
 
@@ -302,7 +315,22 @@ class ShadowAwareVM:
                 break
 
             exec_frame.instruction_count += 1
+            if exec_frame.instruction_count > self.max_instructions:
+                raise RuntimeError(
+                    f"Instruction limit exceeded: {self.max_instructions}"
+                )
             self.stats["total_instructions"] += 1
+
+        # Hardening: Implicit return is forbidden in sovereign execution
+        if not exec_frame.has_returned:
+            logger.error(
+                "[%s] %s plane execution reached EOB without RETURN",
+                frame.function_name,
+                plane_name,
+            )
+            raise RuntimeError(
+                f"ShadowVM Protocol Violation: Missing RETURN in {plane_name} plane"
+            )
 
     def _execute_instruction(
         self,
@@ -345,21 +373,48 @@ class ShadowAwareVM:
         elif opcode == BytecodeOpcode.ADD:
             right = exec_frame.pop()
             left = exec_frame.pop()
-            exec_frame.push(left + right)
+            if not isinstance(left, (int, float)) or not isinstance(
+                right, (int, float)
+            ):
+                raise TypeError(
+                    f"Addition requires numeric types, got {type(left)} and {type(right)}"
+                )
+            result = left + right
+            if abs(result) > 1e15:  # Arbitrary large value safety
+                raise ValueError("Arithmetic result exceeds safety limits")
+            exec_frame.push(result)
 
         elif opcode == BytecodeOpcode.SUB:
             right = exec_frame.pop()
             left = exec_frame.pop()
-            exec_frame.push(left - right)
+            if not isinstance(left, (int, float)) or not isinstance(
+                right, (int, float)
+            ):
+                raise TypeError("Subtraction requires numeric types")
+            result = left - right
+            if abs(result) > 1e15:
+                raise ValueError("Arithmetic result exceeds safety limits")
+            exec_frame.push(result)
 
         elif opcode == BytecodeOpcode.MUL:
             right = exec_frame.pop()
             left = exec_frame.pop()
-            exec_frame.push(left * right)
+            if not isinstance(left, (int, float)) or not isinstance(
+                right, (int, float)
+            ):
+                raise TypeError("Multiplication requires numeric types")
+            result = left * right
+            if abs(result) > 1e15:
+                raise ValueError("Arithmetic result exceeds safety limits")
+            exec_frame.push(result)
 
         elif opcode == BytecodeOpcode.DIV:
             right = exec_frame.pop()
             left = exec_frame.pop()
+            if not isinstance(left, (int, float)) or not isinstance(
+                right, (int, float)
+            ):
+                raise TypeError("Division requires numeric types")
             if right == 0:
                 raise RuntimeError("Division by zero")
             exec_frame.push(left / right)

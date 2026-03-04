@@ -1,3 +1,7 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+#                                                             DATE: 2026-03-03 09:33:22
+#                                                             STATUS: Active
 """
 T.A.R.L. (Thirstys Active Resistance Language) Configuration Management Subsystem
 
@@ -24,21 +28,27 @@ Architecture Contract:
 import logging
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from collections.abc import Callable
+from typing import Any
 
 # Try to import tomllib (Python 3.11+) or fallback to toml
+TOML_READER: Callable[[Any], Any] | None
 try:
     import tomllib
 
-    def TOML_READER(path):
+    def _tomllib_reader(path):
         return tomllib.load(open(path, "rb"))
+
+    TOML_READER = _tomllib_reader
 
 except ImportError:
     try:
         import toml
 
-        def TOML_READER(path):
+        def _toml_reader(path):
             return toml.load(open(path))
+
+        TOML_READER = _toml_reader
 
     except ImportError:
         TOML_READER = None
@@ -250,7 +260,10 @@ class ConfigRegistry:
             return {}
 
         try:
-            return TOML_READER(path)
+            data = TOML_READER(path)
+            if isinstance(data, dict):
+                return data
+            return {}
         except Exception as e:
             logger.error("Failed to load configuration file: %s", e)
             return {}
@@ -265,7 +278,7 @@ class ConfigRegistry:
         Returns:
             Configuration dictionary from environment
         """
-        config = {}
+        config: dict[str, Any] = {}
         prefix = "TARL_"
 
         for key, value in os.environ.items():

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Plugin Marketplace Guide
 
 Project-AI ships with a plugin system that accepts third-party extensions as long as they respect the Four Laws and do not tamper with core safety controls. This document explains the metadata contract, QA checks, and publication workflow for every plugin before it can be listed in the marketplace.

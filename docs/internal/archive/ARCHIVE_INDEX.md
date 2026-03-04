@@ -37,10 +37,15 @@ ______________________________________________________________________
 
 ### Latest Root-Summaries Collection
 
-**Reason**: Repository cleanup - moved outdated implementation summaries from root **Subsystem**: Multiple **Status**: Completed/superseded
+**Reason**: Repository cleanup - moved outdated implementation summaries and configuration files from root **Subsystem**: Multiple **Status**: Completed/superseded
 
 | File                                | Date       | Subsystem    | Reason                                                         |
 | ----------------------------------- | ---------- | ------------ | -------------------------------------------------------------- |
+| ai_systems.py.tarl_prebuff          | 2026-03-01 | Core         | Legacy backup of core AI systems before TARL enhancement.      |
+| Legion_Commission.docx              | 2026-03-01 | Governance   | Archived Legion commissioning document                         |
+| REPOSITORY_SETUP_QUICKSTART.md      | 2026-03-01 | Setup        | Superseded by INSTALL.md and README.md                         |
+| demo_shadow_analyzers.py            | 2026-02-28 | Verification | Historical demo of shadow analyzers                            |
+| legion.modelfile                    | 2026-02-28 | AI           | Outdated model configuration for Legion                        |
 | CATHEDRAL_IMPLEMENTATION_SUMMARY.md | 2026-02-12 | Architecture | Point-in-time snapshot - cathedral architecture now integrated |
 | IMPLEMENTATION_SUMMARY.md           | Historical | Multiple     | Superseded - T-SECA/GHOST protocol implementation complete     |
 | TRANSFORMATION_SUMMARY.md           | Historical | Project      | Point-in-time summary - transformation complete                |

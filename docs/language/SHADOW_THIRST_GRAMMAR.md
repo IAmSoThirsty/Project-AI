@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Shadow Thirst - Formal Grammar Specification
 
 **VERSION**: 1.0.0

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Automation Quick Reference
 
 ⚡ **Fast reference for Project-AI automated workflows**

@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """Tests for Project-AI CLI.
 
 This module tests all CLI commands using Typer's CliRunner.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Create Custom UI Effects With Shader Graph
 
 Shader Graph can help you create customized UI effects, including animated backgrounds and unique UI elements. With Shader Graph, you can transform Image elements from static to dynamic and easily define your own button state appearances. Shader Graph can also provide you with more control over the appearance of your UI and help you optimize performance and texture memory.

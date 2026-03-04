@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Reset clips
 
 You can reset the duration and speed of a clip. Resetting a clip does not reset the following properties:

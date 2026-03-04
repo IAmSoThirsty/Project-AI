@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Animation clip properties
 
 Use the Inspector window to change the properties of an Animation clip. An Animation clip has two sets of properties:

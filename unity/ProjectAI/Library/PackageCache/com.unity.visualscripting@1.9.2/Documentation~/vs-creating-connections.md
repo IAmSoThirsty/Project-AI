@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Connect nodes in a Script Graph
 
 Connections control the flow of logic and data in a Script Graph's nodes.

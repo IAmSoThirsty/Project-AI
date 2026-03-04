@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Line Height
 
 Use the `<line-height>` tag to manually control line height. The line-height controls how far down from the current line the next line starts. It does not change the current line.

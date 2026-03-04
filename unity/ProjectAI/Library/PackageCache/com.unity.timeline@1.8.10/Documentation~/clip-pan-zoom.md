@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Pan and zoom the Content view
 
 Use either the keyboard or the zoombar to pan and zoom the Content view. There are many ways to pan, zoom, or frame clips and markers in the Content view:

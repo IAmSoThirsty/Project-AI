@@ -1,3 +1,6 @@
+#                                           [2026-03-03 18:35]
+#                                          Productivity: Active
+
 """
 Watch Tower Control Panel - GUI for Global Watch Tower Command Center.
 
@@ -8,7 +11,6 @@ Follows Leather Book Interface style with dark theme and cyan/green glows.
 """
 
 import logging
-
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -22,7 +24,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from app.core.global_watch_tower import GlobalWatchTower
+from src.app.core.global_watch_tower import GlobalWatchTower
 
 logger = logging.getLogger(__name__)
 

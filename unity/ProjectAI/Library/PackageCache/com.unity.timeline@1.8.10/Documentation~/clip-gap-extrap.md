@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Set gap extrapolation
 
 Gap extrapolation refers to how an Animation track approximates animation data in the gaps before and after an Animation clip.

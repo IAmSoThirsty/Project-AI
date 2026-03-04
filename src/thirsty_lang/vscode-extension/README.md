@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Thirsty-lang for VS Code 💧
 
 **Syntax highlighting, code snippets, and language support for [Thirsty-lang](https://github.com/IAmSoThirsty/Thirsty-lang)** — the fun, water-themed programming language with built-in defensive security features.

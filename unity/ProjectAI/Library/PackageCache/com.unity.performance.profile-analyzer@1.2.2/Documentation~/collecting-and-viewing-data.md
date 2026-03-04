@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Collecting and viewing data
 
 This workflow explains how to populate the [Unity Profiler](https://docs.unity3d.com/Manual/Profiler.html) and Profile Analyzer with data. Note that the Profile Analyzer only analyzes CPU data from the Profiler.

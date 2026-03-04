@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Split clips
 
 You can split a clip into two identical clips that have different start points, end points, and durations.

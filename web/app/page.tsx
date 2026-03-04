@@ -1,3 +1,8 @@
+/*
+ * Project-AI Sovereign Web Interface
+ * Status: ACTIVE [Sovereign 2.1 Hardened]
+ * Last Updated: 2026-03-02 10:34
+ */
 'use client';
 
 import Link from 'next/link';

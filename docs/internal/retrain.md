@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Retraining the AI Persona Detectors
 
 This document describes the CLI retrain helper and the retraining behavior used by the AI Persona.

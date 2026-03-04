@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Comparing frames from the same data set
 
 This workflow explains how to compare two frames from the same data set. In this example, it explains how to compare the median and longest frames in a data set. Comparing the median and longest frames is useful to help understand what is happening in the longest frame that is not happening in an average frame, or what is taking longer than average to complete.

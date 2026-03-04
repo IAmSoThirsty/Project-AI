@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Ordering frames by length
 
 This workflow explains how to order the frame data in the Profile Analyzer by frame length, shortest to longest, which results in an s-curve style graph. The Profile Analyzer groups frames with similar performance together, which enables you to create sub-ranges over a set of similar performing frames without including any outliers. This is particularly useful to normalize the data and to focus on only the shortest, longest, or average frames in the data set.

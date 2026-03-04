@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Text Width
 
 Use the `<width>` tag adjust the horizontal size of text area. The change takes effect on the current line, after the tag. Typically, you place the tag at the start of a paragraph.

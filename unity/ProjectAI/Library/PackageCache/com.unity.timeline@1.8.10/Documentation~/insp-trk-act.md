@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Activation track properties
 
 Use the Inspector window to change the name of an Activation track and set the state of its bound GameObject when the Timeline asset finishes playing.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Automated Workflows Guide
 
 This document describes the automated workflows configured for the Project-AI repository to handle pull requests and security alerts.

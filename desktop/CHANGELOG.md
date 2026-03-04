@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Changelog
 
 All notable changes to the Project AI Desktop application will be documented in this file.

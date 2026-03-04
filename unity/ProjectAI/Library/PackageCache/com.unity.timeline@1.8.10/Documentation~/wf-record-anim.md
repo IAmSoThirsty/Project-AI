@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Record basic animation
 
 This workflow demonstrates how to record animation directly to a Timeline instance.

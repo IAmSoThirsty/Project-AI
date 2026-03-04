@@ -1,3 +1,6 @@
+# [2026-03-02 04:47]
+# Productivity: Active
+
 """
 Deadman Switch - Heartbeat Monitoring and Failsafe
 
@@ -16,7 +19,6 @@ STATUS: PRODUCTION
 
 import logging
 import threading
-import time
 from collections.abc import Callable
 from datetime import datetime, timedelta
 from typing import Any

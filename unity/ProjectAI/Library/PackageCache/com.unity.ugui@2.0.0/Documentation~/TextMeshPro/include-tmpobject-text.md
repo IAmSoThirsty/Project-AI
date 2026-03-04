@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 ## Text Input
 
 The text section is where you enter the text to display, and optionally customize it using [rich text markup](RichText.md).

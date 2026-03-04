@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Test settings file
 
 You can define options for a test run in a `TestSettings.json` file. You can specify the location of this file using the [testSettingsFile](./reference-command-line.md#testsettingsfile) command line argument.

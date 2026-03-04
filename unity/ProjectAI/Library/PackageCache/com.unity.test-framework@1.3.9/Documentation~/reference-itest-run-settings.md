@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # ITestRunSettings
 
 `ITestRunSettings` lets you set any of the global settings right before building a Player for a test run and then reverts the settings afterward.

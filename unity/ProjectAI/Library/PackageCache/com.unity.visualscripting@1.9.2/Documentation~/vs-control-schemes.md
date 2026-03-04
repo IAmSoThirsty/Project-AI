@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Choose a control scheme
 
 You can choose from two different control schemes in Visual Scripting. Each control scheme changes how you can interact with your graphs in the Graph Editor:

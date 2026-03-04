@@ -1,3 +1,6 @@
+#                                           [2026-03-03 16:25]
+#                                          Productivity: Active
+
 """
 AGI Memory Engine - Advanced Memory System with Episodic, Semantic, and Procedural Memory
 
@@ -92,12 +95,16 @@ from datetime import UTC, datetime, timedelta
 from enum import Enum
 from typing import Any
 
-from app.core.platform_tiers import (
+# Internal Imports
+from src.app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
     get_tier_registry,
 )
+
+# ────────────────────────────────────────────────────────────────────────────
+
 
 logger = logging.getLogger(__name__)
 
@@ -143,7 +150,7 @@ class RelationType(Enum):
 @dataclass
 class EpisodicMemory:
     """
-    A specific autobiographical experience remembered by the AGI.
+    A specific autobiographical experience remembered by the AGI (Detailed Autobiographical Experience Anchor).
 
     Episodic memories capture the "what happened" of AGI experience,
     including rich contextual details and emotional coloring.
@@ -249,7 +256,7 @@ class EpisodicMemory:
 @dataclass
 class SemanticConcept:
     """
-    A concept in the semantic knowledge graph.
+    A concept in the semantic knowledge graph (Abstract Knowledge Node & Global Fact Repository).
 
     Represents factual knowledge independent of specific experiences.
     """
@@ -307,7 +314,7 @@ class SemanticConcept:
 @dataclass
 class ProceduralSkill:
     """
-    A learned skill or procedure that can be executed.
+    A learned skill or procedure that can be executed (Executable Capability & Task Optimization Pattern).
 
     Represents "how to" knowledge - executable procedures.
     """
@@ -390,7 +397,7 @@ class ProceduralSkill:
 
 class MemoryEngine:
     """
-    Advanced AGI Memory System managing episodic, semantic, and procedural memory.
+    Advanced AGI Memory System (High-Performance Neural Memory Graph & Knowledge Synthesis Engine).
 
     This engine provides sophisticated memory storage, retrieval, and
     consolidation capabilities that enable the AGI to learn from experience,

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # AGI Charter for Project-AI
 
 **DOI:** `10.5281/zenodo.18763076`

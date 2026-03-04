@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # PSIA Research Paper
 
 Formal specification of the **Project-AI Sovereign Immune Architecture (PSIA)**.

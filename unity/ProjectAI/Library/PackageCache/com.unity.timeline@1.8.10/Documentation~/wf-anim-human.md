@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Animate a humanoid
 
 This workflow demonstrates how to use a Timeline instance to animate a humanoid model so that it turns left and begins to walk.

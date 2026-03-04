@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Currency Conversion Script
 
 This script is used for converting the ISO currency code data from XML into JSON, to make it easier to work with in our SDK. It also removes some of the unneeded data, so that we keep the size of our SDK to a minimum.

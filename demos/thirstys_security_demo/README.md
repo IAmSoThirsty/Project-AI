@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Thirsty's Asymmetric Security Framework - Public Demo
 
 **Try the framework with 5 live attack scenarios**

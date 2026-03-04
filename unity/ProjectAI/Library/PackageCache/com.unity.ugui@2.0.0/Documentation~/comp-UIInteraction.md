@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Interaction Components
 
 The [interaction components](UIInteractionComponents.md) in the UI system handle interaction, such as mouse or touch events and interaction using a keyboard or controller.

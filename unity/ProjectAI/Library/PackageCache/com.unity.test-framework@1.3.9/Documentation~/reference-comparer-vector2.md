@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Vector2EqualityComparer
 
 Use this class to compare two [Vector2](https://docs.unity3d.com/ScriptReference/Vector2.html) objects for equality with [NUnit](http://www.nunit.org/) constraints. Use the static `Vector2EqualityComparer.Instance` to have the calculation error value set to default 0.0001f. For any other error value, instantiate a new comparer object with the [one argument constructor](#constructors).

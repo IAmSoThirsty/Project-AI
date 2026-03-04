@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 """Integration test that flows through user onboarding, learning requests, and persona stats."""
 
 from pathlib import Path

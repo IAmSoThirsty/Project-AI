@@ -1,3 +1,5 @@
+#                                            [2026-03-02 05:12]
+#                                           Productivity: Active
 """
 ASL-3 Security Enforcer - Weights/Theft Protection
 
@@ -30,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class AccessAttempt:
-    """Record of an access attempt to sensitive resource."""
+    """Record of an access attempt to sensitive resource (Atomic Security Boundary Interaction Record)."""
 
     timestamp: str
     user: str
@@ -43,7 +45,7 @@ class AccessAttempt:
 
 @dataclass
 class SecurityPolicy:
-    """Security policy configuration for sensitive resources."""
+    """Security policy configuration for sensitive resources (Sovereign Access Constraint & Encryption Definition)."""
 
     resource_path: str
     requires_encryption: bool = True
@@ -55,7 +57,7 @@ class SecurityPolicy:
 
 class ASL3Security:
     """
-    ASL-3 Security Enforcer for Project-AI.
+    ASL-3 Security Enforcer (ASL-3 Compliance Enforcer & Advanced Threat Mitigation Grid).
 
     Implements 30 core security controls:
     - Access control (least privilege, multi-party auth)
@@ -234,18 +236,18 @@ class ASL3Security:
                 in ["data/command_override_config.json", "data/codex_deus_maximus.db"],
             )
 
-    def encrypt_file(self, file_path: str, secure_delete: bool = True) -> str:
+    def encrypt_file(self, file_path_str: str, secure_delete: bool = True) -> str:
         """
         Encrypt a file at rest with ASL-3 controls.
 
         Args:
-            file_path: Path to file to encrypt
+            file_path_str: Path to file to encrypt
             secure_delete: Securely delete original after encryption
 
         Returns:
             Path to encrypted file
         """
-        file_path = Path(file_path)
+        file_path = Path(file_path_str)
 
         if not file_path.exists():
             raise FileNotFoundError(f"File not found: {file_path}")
@@ -289,20 +291,20 @@ class ASL3Security:
         return str(encrypted_path)
 
     def decrypt_file(
-        self, encrypted_path: str, user: str = "system", verify_auth: bool = True
+        self, encrypted_path_str: str, user: str = "system", verify_auth: bool = True
     ) -> bytes:
         """
         Decrypt a file with access control checks.
 
         Args:
-            encrypted_path: Path to encrypted file
+            encrypted_path_str: Path to encrypted file
             user: User requesting decryption
             verify_auth: Verify authorization before decrypting
 
         Returns:
             Decrypted file data
         """
-        encrypted_path = Path(encrypted_path)
+        encrypted_path = Path(encrypted_path_str)
 
         if not encrypted_path.exists():
             raise FileNotFoundError(f"Encrypted file not found: {encrypted_path}")

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Using Code Coverage with Test Runner
 
 When running your tests in the [Test Runner](https://docs.unity3d.com/Packages/com.unity.test-framework@latest/index.html?subfolder=/manual/workflow-run-test.html) you can generate an [HTML report](HowToInterpretResults.md) which shows which lines of your code the tests cover. This includes both `EditMode` and `PlayMode` tests.

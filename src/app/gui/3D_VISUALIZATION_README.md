@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # 3D Visualization Integration
 
 This document describes the 3D visualization prototype for Project-AI's GUI.

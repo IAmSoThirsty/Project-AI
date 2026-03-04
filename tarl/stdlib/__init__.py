@@ -1,3 +1,8 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+#                                                             DATE: 2026-03-03 09:33:22
+#                                                             STATUS: Active
+#                                                             OWNER: Jeremy Karrick / IAmSoThirsty
 """
 T.A.R.L. (Thirstys Active Resistance Language) Standard Library Subsystem
 
@@ -29,15 +34,35 @@ Architecture Contract:
 import functools
 import logging
 from collections.abc import Callable
-from typing import Any, Dict
+from typing import Any
 
 logger = logging.getLogger(__name__)
+
+
+def _safe_read(path: str) -> str | None:
+    """Safe read with context manager"""
+    try:
+        with open(path, encoding="utf-8") as f:
+            return f.read()
+    except Exception as e:
+        logger.error("Failed to read %s: %s", path, e)
+        return None
+
+
+def _safe_write(path: str, data: str) -> int:
+    """Safe write with context manager"""
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            return f.write(data)
+    except Exception as e:
+        logger.error("Failed to write to %s: %s", path, e)
+        return 0
 
 
 class BuiltInFunction:
     """Wrapper for built-in functions"""
 
-    def __init__(self, name: str, func: Callable, doc: str = ""):
+    def __init__(self, name: str, func: Callable[..., Any], doc: str = ""):
         self.name = name
         self.func = func
         self.doc = doc
@@ -83,12 +108,8 @@ class StandardLibrary:
         ),
         # I/O (with proper resource management)
         "open": open,
-        "read": lambda path: (lambda f: f.read() if not f.close() else None)(
-            open(path)
-        ),
-        "write": lambda path, data: (
-            lambda f: f.write(data) if not f.close() else len(data)
-        )(open(path, "w")),
+        "read": _safe_read,
+        "write": _safe_write,
         # Utility
         "range": lambda *args: list(range(*args)),
         "enumerate": lambda it: list(enumerate(it)),

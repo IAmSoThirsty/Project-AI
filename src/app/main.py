@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#                                           [2026-03-03 17:55]
+#                                          Productivity: Active
 """
 Main entry point for the AI Desktop Application with AGI Identity System.
 
@@ -20,23 +21,27 @@ from dotenv import load_dotenv
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QApplication
 
-from app.core.bio_brain_mapper import BioBrainMappingSystem
-from app.core.cognition_kernel import CognitionKernel
-from app.core.council_hub import CouncilHub
-from app.core.governance import Triumvirate as GovernanceTriumvirate
-from app.core.intelligence_engine import IdentityIntegratedIntelligenceEngine
-from app.core.kernel_integration import set_global_kernel
-from app.core.memory_engine import MemoryEngine
-from app.core.platform_tiers import get_tier_registry
-from app.core.reflection_cycle import ReflectionCycle
-from app.core.tier_health_dashboard import get_health_monitor
-from app.gui.dashboard_main import DashboardMainWindow
-from src.cognition.triumvirate import Triumvirate
-
 try:
     import yaml
 except ImportError:
-    yaml = None  # graceful degradation if yaml not available
+    yaml = None
+
+# Internal Imports - Sorted and Consolidated
+from src.app.core.bio_brain_mapper import BioBrainMappingSystem
+from src.app.core.cognition_kernel import CognitionKernel
+from src.app.core.council_hub import CouncilHub
+from src.app.core.governance import Triumvirate as GovernanceTriumvirate
+from src.app.core.intelligence_engine import IdentityIntegratedIntelligenceEngine
+from src.app.core.kernel_integration import set_global_kernel
+from src.app.core.memory_engine import MemoryEngine
+from src.app.core.platform_tiers import get_tier_registry
+from src.app.core.reflection_cycle import ReflectionCycle
+from src.app.core.tier_health_dashboard import get_health_monitor
+from src.app.gui.dashboard_main import DashboardMainWindow
+from src.cognition.triumvirate import Triumvirate
+
+# ────────────────────────────────────────────────────────────────────────────
+
 
 # Initialize logger early
 logger = logging.getLogger(__name__)
@@ -45,6 +50,8 @@ logger = logging.getLogger(__name__)
 _global_identity_engine = None
 _global_cognition_kernel = None
 _global_council_hub = None
+
+# ────────────────────────────────────────────────────────────────────────────
 
 
 # ============================================================================
@@ -77,11 +84,12 @@ def check_dependencies():
     for module_name, config_key, description in optional_deps:
         try:
             importlib.import_module(module_name)
-            logger.info(f"✓ Dependency available: {module_name} - {description}")
+            logger.info("✓ Dependency available: %s - %s", module_name, description)
         except ImportError:
             logger.warning(
-                f"✗ Optional dependency missing: {module_name} - {description}"
+                "✗ Optional dependency missing: %s - %s", module_name, description
             )
+
             missing_deps.append(
                 {
                     "module": module_name,
@@ -121,17 +129,20 @@ def check_dependencies():
                 if feature in distress_config:
                     distress_config[feature] = False
                     logger.info(
-                        f"Disabled feature due to missing dependency: {feature}"
+                        "Disabled feature due to missing dependency: %s", feature
                     )
 
             logger.info(
-                f"Dependency check complete: {len(missing_deps)} missing, {len(disabled_features)} features disabled"
+                "Dependency check complete: %d missing, %d features disabled",
+                len(missing_deps),
+                len(disabled_features),
             )
 
         except Exception as e:
             logger.error(
-                f"Failed to update configuration for missing dependencies: {e}"
+                "Failed to update configuration for missing dependencies: %s", e
             )
+
     else:
         logger.info("All optional dependencies available")
 
@@ -366,7 +377,7 @@ def initialize_security_systems(
 
     # Phase 1: Initialize Global Watch Tower Security Command Center
     try:
-        from app.core.global_watch_tower import GlobalWatchTower
+        from src.app.core.global_watch_tower import GlobalWatchTower
 
         tower = GlobalWatchTower.initialize(
             num_port_admins=2,
@@ -397,7 +408,7 @@ def initialize_security_systems(
 
     # Phase 2: Initialize Active Defense Agents
     try:
-        from app.agents.safety_guard_agent import SafetyGuardAgent
+        from src.app.agents.safety_guard_agent import SafetyGuardAgent
 
         safety_guard = SafetyGuardAgent(
             model_name="llama-guard-3-8b", strict_mode=True, kernel=kernel
@@ -419,7 +430,7 @@ def initialize_security_systems(
         security_components["safety_guard"] = None
 
     try:
-        from app.agents.constitutional_guardrail_agent import (
+        from src.app.agents.constitutional_guardrail_agent import (
             ConstitutionalGuardrailAgent,
         )
 
@@ -439,7 +450,7 @@ def initialize_security_systems(
         security_components["constitutional_guard"] = None
 
     try:
-        from app.agents.tarl_protector import TARLCodeProtector
+        from src.app.agents.tarl_protector import TARLCodeProtector
 
         tarl_protector = TARLCodeProtector(kernel=kernel)
         security_components["tarl_protector"] = tarl_protector
@@ -458,7 +469,7 @@ def initialize_security_systems(
 
     # Phase 2b: Initialize Red Team Agents (Adversarial Testing)
     try:
-        from app.agents.red_team_agent import RedTeamAgent
+        from src.app.agents.red_team_agent import RedTeamAgent
 
         red_team = RedTeamAgent(kernel=kernel)
         security_components["red_team"] = red_team
@@ -477,7 +488,7 @@ def initialize_security_systems(
         security_components["red_team"] = None
 
     try:
-        from app.agents.code_adversary_agent import CodeAdversaryAgent
+        from src.app.agents.code_adversary_agent import CodeAdversaryAgent
 
         code_adversary = CodeAdversaryAgent(kernel=kernel)
         security_components["code_adversary"] = code_adversary
@@ -497,7 +508,7 @@ def initialize_security_systems(
 
     # Phase 2c: Initialize Oversight & Analysis Agents
     try:
-        from app.agents.oversight import OversightAgent
+        from src.app.agents.oversight import OversightAgent
 
         oversight = OversightAgent(kernel=kernel)
         security_components["oversight"] = oversight
@@ -516,7 +527,7 @@ def initialize_security_systems(
         security_components["oversight"] = None
 
     try:
-        from app.agents.validator import ValidatorAgent
+        from src.app.agents.validator import ValidatorAgent
 
         validator = ValidatorAgent(kernel=kernel)
         security_components["validator"] = validator
@@ -535,7 +546,7 @@ def initialize_security_systems(
         security_components["validator"] = None
 
     try:
-        from app.agents.explainability import ExplainabilityAgent
+        from src.app.agents.explainability import ExplainabilityAgent
 
         explainability = ExplainabilityAgent(kernel=kernel)
         security_components["explainability"] = explainability
@@ -598,7 +609,7 @@ def initialize_security_systems(
 
     # Phase 3: Initialize Payload Validation & Attack Detection
     try:
-        from app.security.data_validation import SecureDataParser
+        from src.app.security.data_validation import SecureDataParser
 
         data_parser = SecureDataParser()
         security_components["data_parser"] = data_parser
@@ -614,7 +625,7 @@ def initialize_security_systems(
 
     # Phase 4: Initialize ASL-3 Security Enforcement
     try:
-        from app.core.security_enforcer import ASL3Security
+        from src.app.core.security_enforcer import ASL3Security
 
         asl3_security = ASL3Security(
             data_dir="data",
@@ -687,7 +698,7 @@ def initialize_enhanced_defenses(
 
     # Phase 1: IP Blocking and Rate Limiting
     try:
-        from app.core.ip_blocking_system import IPBlockingSystem
+        from src.app.core.ip_blocking_system import IPBlockingSystem
 
         ip_blocker = IPBlockingSystem(
             data_dir="data/security",
@@ -708,7 +719,7 @@ def initialize_enhanced_defenses(
 
     # Phase 2: Honeypot Detection
     try:
-        from app.core.honeypot_detector import HoneypotDetector
+        from src.app.core.honeypot_detector import HoneypotDetector
 
         honeypot = HoneypotDetector(data_dir="data/security/honeypot")
         enhanced_components["honeypot"] = honeypot
@@ -725,7 +736,7 @@ def initialize_enhanced_defenses(
 
     # Phase 3: Automated Incident Response
     try:
-        from app.core.incident_responder import IncidentResponder
+        from src.app.core.incident_responder import IncidentResponder
 
         incident_responder = IncidentResponder(
             data_dir="data/security/incidents",

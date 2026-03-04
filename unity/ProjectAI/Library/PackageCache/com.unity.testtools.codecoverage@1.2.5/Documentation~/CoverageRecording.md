@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # On-demand coverage recording
 
 With Coverage Recording you can capture coverage data on demand and generate an [HTML report](HowToInterpretResults.md) which shows which lines of your code run while recording. It supports capturing in EditMode as well as in PlayMode, and you can switch between the two.

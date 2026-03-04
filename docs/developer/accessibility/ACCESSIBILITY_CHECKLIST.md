@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Accessibility Checklist for PyQt GUI
 
 This checklist provides a minimum accessibility baseline for the Leather Book PyQt GUI.

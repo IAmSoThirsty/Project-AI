@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Project-AI Pip-Boy - Cloud Platform Integration Guide
 
 **Platform:** Cloud (AWS/Azure/GCP)  

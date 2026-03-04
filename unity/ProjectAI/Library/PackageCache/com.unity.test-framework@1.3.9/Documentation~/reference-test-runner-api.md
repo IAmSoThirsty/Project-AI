@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # TestRunnerApi
 
 The `TestRunnerApi` retrieves and runs tests programmatically from code inside the project, or inside other packages. `TestRunnerApi` is a [ScriptableObject](https://docs.unity3d.com/ScriptReference/ScriptableObject.html).

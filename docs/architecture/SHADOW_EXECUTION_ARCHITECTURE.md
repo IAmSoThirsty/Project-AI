@@ -1,4 +1,6 @@
-# Shadow Execution Plane - Technical Architecture
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
+# Stealth Executor (Verified | Sovereign 2.1)
 
 **STATUS**: PRODUCTION
 **VERSION**: 1.0.0
@@ -59,10 +61,12 @@ CONSTITUTIONAL CORE (Invariants + Audit + Commit Authority)
 **Purpose**: Dual function declarations with divergence policies
 
 **Components**:
+
 - `shadow_types.py`: Core type system
 - `shadow_execution_plane.py`: Execution engine
 
 **Pattern**:
+
 ```python
 shadow_result = shadow_plane.execute_dual_plane(
     trace_id=trace_id,
@@ -76,6 +80,7 @@ shadow_result = shadow_plane.execute_dual_plane(
 ```
 
 **Key Features**:
+
 - Activation predicates (threat score, high stakes, behavioral anomaly)
 - Invariant validation (epsilon, identity, custom)
 - Divergence detection and policies
@@ -87,9 +92,11 @@ shadow_result = shadow_plane.execute_dual_plane(
 **Purpose**: Parallel auth, shadow API surface, jailbreak containment
 
 **Components**:
+
 - `shadow_containment.py`: Containment engine
 
 **Pattern**:
+
 ```python
 # Analyze request for adversarial indicators
 profile = containment_engine.analyze_request(
@@ -115,6 +122,7 @@ action = containment_engine.execute_containment(
 ```
 
 **Deception Doctrine**:
+
 - ✅ **Allowed**: Synthetic success to attackers, mirrored environments
 - ❌ **Forbidden**: Lying to legitimate users, masking real compromise
 - ✅ **Required**: Deterministic deception, internal truth preservation
@@ -126,6 +134,7 @@ action = containment_engine.execute_containment(
 **Integration**: Shadow-aware governance service
 
 **Pattern**:
+
 ```python
 # Simulate policy change in shadow
 shadow_result = shadow_plane.execute_simulation(
@@ -141,6 +150,7 @@ if shadow_result.invariants_passed:
 ```
 
 **Benefits**:
+
 - Validate governance changes before deployment
 - Detect invariant violations
 - Measure trust drift
@@ -153,6 +163,7 @@ if shadow_result.invariants_passed:
 **Status**: Planned for Phase 4
 
 **Capabilities** (Planned):
+
 - Event reordering
 - Artificial delay injection
 - State rollback simulation
@@ -160,6 +171,7 @@ if shadow_result.invariants_passed:
 - Memory corruption simulation (synthetic only)
 
 **Validation**:
+
 - Invariant persistence under chaos
 - Failover stability
 - Escalation legitimacy
@@ -170,6 +182,7 @@ if shadow_result.invariants_passed:
 **Purpose**: Invisible telemetry for defense core
 
 **Pattern**:
+
 ```python
 # Get shadow telemetry (invisible to normal UI)
 telemetry = shadow_plane.get_telemetry()
@@ -510,6 +523,7 @@ telemetry = shadow_plane.get_telemetry()
 ```
 
 **Metrics**:
+
 - `total_activations`: Total shadow activations
 - `activations_by_reason`: Breakdown by activation reason
 - `divergence_rate`: % of activations with divergence
@@ -526,6 +540,7 @@ telemetry = containment_engine.get_telemetry()
 ```
 
 **Metrics**:
+
 - `total_threats_detected`: Total threats detected
 - `threats_by_class`: Breakdown by threat class
 - `containment_actions_taken`: Total containment actions
@@ -563,6 +578,7 @@ history = containment_engine.containment_history
 ```
 
 **Forensic Capabilities**:
+
 - Deterministic replay
 - Causal tracing
 - Divergence analysis
@@ -756,6 +772,7 @@ class ShadowContainmentEngine:
 ### Threat Model
 
 **Shadow Protects Against**:
+
 - Adversarial prompt injection
 - Jailbreak attempts
 - API abuse
@@ -764,6 +781,7 @@ class ShadowContainmentEngine:
 - State corruption
 
 **Shadow Does NOT Protect Against**:
+
 - Supply chain attacks
 - Hardware vulnerabilities
 - Cryptographic weaknesses
@@ -772,6 +790,7 @@ class ShadowContainmentEngine:
 ### Attack Surface
 
 Shadow **does not** increase attack surface:
+
 - Isolated execution environment
 - Bounded activation predicates
 - Resource quotas enforced

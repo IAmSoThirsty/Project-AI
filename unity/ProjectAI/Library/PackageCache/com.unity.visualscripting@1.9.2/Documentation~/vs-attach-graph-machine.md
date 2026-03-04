@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Attach a graph file to a Script Machine or State Machine
 
 To use a Script Graph or State Graph file in your project, you must attach it to a Script Machine or State Machine.

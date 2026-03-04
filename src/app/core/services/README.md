@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Core Services
 
 This directory contains the modular services extracted from the CognitionKernel to improve maintainability.

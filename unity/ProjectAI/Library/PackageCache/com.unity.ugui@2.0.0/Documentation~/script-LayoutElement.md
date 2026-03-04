@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Layout Element
 
 If you want to override the minimum, preferred, or flexible size of a layout element, you can do that by adding a Layout Element component to the GameObject.

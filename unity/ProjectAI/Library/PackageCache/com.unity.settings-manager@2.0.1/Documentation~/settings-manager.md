@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Settings Manager
 
 The Settings Manager is a framework that lets you convert any serializable field into a setting, including a pre-built settings interface.

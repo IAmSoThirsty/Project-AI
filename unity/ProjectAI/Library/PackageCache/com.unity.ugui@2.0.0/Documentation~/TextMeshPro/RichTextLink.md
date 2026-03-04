@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Text Link
 
 You can use `<link="ID">my link</link>` to add link metadata to a text segment. The link ID should be unique to allow you to retrieve its ID and link text content when the user interacts with your text.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Getting Started Tutorial
 
 Welcome to Thirsty-lang! This tutorial will guide you through your first steps.

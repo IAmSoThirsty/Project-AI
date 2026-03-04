@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 # PowerShell script to create/activate a venv and launch Qt Designer (Windows)
 # Usage: Open PowerShell, allow script execution for the session:
 #   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass

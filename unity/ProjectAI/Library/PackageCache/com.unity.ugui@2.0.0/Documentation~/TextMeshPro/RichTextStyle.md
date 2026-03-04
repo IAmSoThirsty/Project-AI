@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Style
 
 Apply custom styles using the `<style>` tag. For more information about creating custom styles, see the documentation on [Style Sheets](StyleSheets.md).

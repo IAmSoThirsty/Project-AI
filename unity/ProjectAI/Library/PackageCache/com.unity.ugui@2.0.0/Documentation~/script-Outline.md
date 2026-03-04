@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Outline
 
 The Outline component adds a simple outline effect to graphic components such as Text or Image. It must be on the same GameObject as the graphic component.

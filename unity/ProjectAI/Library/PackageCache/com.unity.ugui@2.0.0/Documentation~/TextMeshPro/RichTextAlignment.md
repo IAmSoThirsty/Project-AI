@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Text Alignment
 
 Each text object has an overall alignment, but you can override this with `<align>` tags. All [horizontal alignment options](TMPObjectUIText.md#alignment) are available except for **Geometry Center**.

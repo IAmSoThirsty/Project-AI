@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Security & Compliance Documentation
 
 ## 📁 Folder Purpose
@@ -118,7 +120,7 @@ user_id = db.insert_user("alice", "hashed_password")
 
 ### Complete Integration Example
 
-See [examples/security_integration.py](../examples/security_integration.py) for a fully working example that demonstrates:
+See [examples/security_integration.py](../../examples/security_integration.py) for a fully working example that demonstrates:
 
 - Environment hardening and validation
 - Security monitoring with CloudWatch/SNS
@@ -522,7 +524,7 @@ pytest tests/test_security*.py -n auto
 
 ### Examples
 
-- **[security_integration.py](../examples/security_integration.py)** - Complete working integration
+- **[security_integration.py](../../examples/security_integration.py)** - Complete working integration
 
 ### Additional Resources
 

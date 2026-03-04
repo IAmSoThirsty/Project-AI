@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Create and assign a graph to a new GameObject
 
 You can use the empty graph creation flow to create a new graph file and assign it to a new GameObject. Visual Scripting automatically creates a new GameObject with the required components for the new graph file.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Incident Playbook — Security Breach Response
 
 **Purpose**: Rapid, repeatable response to confirmed high-severity adversarial breach or jailbreak.

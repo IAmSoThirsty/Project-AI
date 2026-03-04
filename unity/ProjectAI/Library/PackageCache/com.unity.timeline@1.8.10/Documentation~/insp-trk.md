@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Track properties
 
 Use the Inspector window to change the name of a track and its properties. The available properties depend on the type of track selected.

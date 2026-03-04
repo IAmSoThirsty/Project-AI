@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # How to get test results
 
 You can receive callbacks when the active test run, or individual tests, starts and finishes. You can register callbacks by invoking `RegisterCallbacks` on the [TestRunnerApi](./reference-test-runner-api.md) with an instance of a class that implements [ICallbacks](./reference-icallbacks.md). There are four `ICallbacks` methods for the start and finish of both the whole run and each level of the test tree.

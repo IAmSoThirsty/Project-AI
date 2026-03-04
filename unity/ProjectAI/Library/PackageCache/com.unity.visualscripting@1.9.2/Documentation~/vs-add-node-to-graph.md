@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Add a node to a Script Graph
 
 All logic in a Script Graph starts with a node.

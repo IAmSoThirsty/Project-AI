@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Bold and Italic
 
 You can apply bold and italic styling to your text with the `<b>` and `<i>` tags respectively. The [font Asset](FontAssetsProperties.md) defines how bold and italicized text looks when rendered.

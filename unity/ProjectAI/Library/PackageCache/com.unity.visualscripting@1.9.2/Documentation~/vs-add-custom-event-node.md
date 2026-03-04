@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Add a Custom Event node
 
 You can add a Custom Event node to a Script Graph to trigger specific logic after an Event occurs. For more information about custom Events, see [Custom Events](vs-custom-events.md).

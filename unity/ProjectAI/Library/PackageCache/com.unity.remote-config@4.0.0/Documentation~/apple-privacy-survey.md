@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Apple privacy survey
 
 Starting December 8, 2020, iOS publishers must define what data their apps collect, including the data collected by integrated third-party SDKs such as Remote Config. For your convenience, Remote Config provides information on its data collection practices below.

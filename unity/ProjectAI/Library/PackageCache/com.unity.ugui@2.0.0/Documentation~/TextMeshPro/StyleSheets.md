@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Style Sheets
 
 Use style sheets to create custom text styles that you can apply to text using the [`<style>` rich text tag](RichTextStyle.md).

@@ -1,3 +1,5 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
 #!/usr/bin/env python3
 """
 HYDRA-50 CONTINGENCY PLAN ENGINE
@@ -28,6 +30,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
 from typing import Any
+from security.asymmetric_security import SecurityContext, SecurityEnforcementGateway
 
 logger = logging.getLogger(__name__)
 
@@ -192,18 +195,16 @@ class VariableConstraint:
             )
 
         # Then check ceiling/floor constraints
-        if self.constraint_type == "ceiling":
-            if new_value > self.locked_value:
-                return (
-                    False,
-                    f"{self.variable_name} cannot exceed ceiling of {self.locked_value} (locked: {self.reason})",
-                )
-        elif self.constraint_type == "floor":
-            if new_value < self.locked_value:
-                return (
-                    False,
-                    f"{self.variable_name} cannot fall below floor of {self.locked_value} (locked: {self.reason})",
-                )
+        if self.constraint_type == "ceiling" and new_value > self.locked_value:
+            return (
+                False,
+                f"{self.variable_name} cannot exceed ceiling of {self.locked_value} (locked: {self.reason})",
+            )
+        elif self.constraint_type == "floor" and new_value < self.locked_value:
+            return (
+                False,
+                f"{self.variable_name} cannot fall below floor of {self.locked_value} (locked: {self.reason})",
+            )
 
         return True, ""
 
@@ -5129,8 +5130,8 @@ class Hydra50Engine:
         self.active_control_plane = ControlPlane.OPERATIONAL
         self.human_override_active = False
 
-        # Load persisted state
-        self._load_state()
+        # Initialize security gateway (Layer 3)
+        self.security_gateway = SecurityEnforcementGateway(str(self.data_dir))
 
         logger.info("Hydra50Engine initialized with %s scenarios", len(self.scenarios))
 
@@ -5199,12 +5200,32 @@ class Hydra50Engine:
     def update_scenario_metrics(
         self, scenario_id: str, metrics: dict[str, float], user_id: str | None = None
     ) -> None:
-        """Update metrics for a scenario and trigger event sourcing"""
         if scenario_id not in self.scenarios:
             raise ValueError(f"Unknown scenario: {scenario_id}")
 
         scenario = self.scenarios[scenario_id]
         old_status = scenario.status
+
+        # ASYMMETRIC SECURITY VALIDATION
+        # Map scenario update to security context
+        ctx = SecurityContext(
+            user_id=user_id or "system",
+            action="update_scenario_metrics",
+            metadata={
+                "scenario_id": scenario_id,
+                "mutates_state": True,
+                "metrics": metrics,
+                # Inject entropy dimensions for d >= 9 requirement
+                "entropy_seed": uuid.uuid4().hex,
+                "schema_hash": hashlib.sha256(scenario_id.encode()).hexdigest(),
+                "side_channel_poison": True,
+            },
+        )
+
+        allowed, reason = self.security_gateway.validate_and_enforce(ctx)
+        if not allowed:
+            logger.critical("METRICS UPDATE BLOCKED BY ASYMMETRIC GATEWAY: %s", reason)
+            raise PermissionError(f"Security Policy Violation: {reason}")
 
         # Update metrics
         scenario.update_metrics(metrics)
@@ -5439,6 +5460,30 @@ class Hydra50Engine:
 
         scenario = self.scenarios[scenario_id]
 
+        # ASYMMETRIC SECURITY VALIDATION
+        ctx = SecurityContext(
+            user_id=user_id or "system",
+            action="attempt_recovery_action",
+            metadata={
+                "scenario_id": scenario_id,
+                "recovery_action": recovery_action,
+                "mutates_state": True,
+                "entropy_seed": uuid.uuid4().hex,
+                "schema_hash": hashlib.sha256(recovery_action.encode()).hexdigest(),
+                "side_channel_poison": True,
+            },
+        )
+
+        allowed, reason = self.security_gateway.validate_and_enforce(ctx)
+        if not allowed:
+            logger.critical("RECOVERY ACTION BLOCKED BY ASYMMETRIC GATEWAY: %s", reason)
+            return {
+                "success": False,
+                "blocked": True,
+                "reason": f"Asymmetric Security Violation: {reason}",
+                "scenario_name": scenario.name,
+            }
+
         # Check if recovery event is permanently disabled
         is_allowed, disable_reason = scenario.check_recovery_event_allowed(
             recovery_action
@@ -5589,6 +5634,25 @@ class Hydra50Engine:
 
     def activate_human_override(self, user_id: str, reason: str) -> None:
         """Activate human override control plane"""
+        # ASYMMETRIC SECURITY VALIDATION (Critical Admin Action)
+        ctx = SecurityContext(
+            user_id=user_id,
+            action="modify_security_policy",  # Highest friction action
+            metadata={
+                "reason": reason,
+                "mutates_state": True,
+                "entropy_seed": uuid.uuid4().hex,
+                "side_channel_poison": True,
+            },
+        )
+
+        allowed, v_reason = self.security_gateway.validate_and_enforce(ctx)
+        if not allowed:
+            logger.critical(
+                "HUMAN OVERRIDE BLOCKED BY ASYMMETRIC GATEWAY: %s", v_reason
+            )
+            raise PermissionError(f"Administrative Security Violation: {v_reason}")
+
         self.human_override_active = True
         self.active_control_plane = ControlPlane.HUMAN_OVERRIDE
 

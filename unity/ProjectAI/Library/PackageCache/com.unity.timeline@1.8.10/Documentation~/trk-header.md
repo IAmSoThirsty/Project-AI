@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Track header
 
 When a Timeline asset is selected, use the Track Header to rename a track, display the Curves view for an Audio track, or lock and mute a track.

@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 ### Font
 
 The fonts settings panel is where you choose a font for your text, and customize the font style.

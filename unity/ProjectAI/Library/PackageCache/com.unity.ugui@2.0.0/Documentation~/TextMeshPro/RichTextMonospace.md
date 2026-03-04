@@ -1,3 +1,5 @@
+<!--                                         [2026-03-03 13:45] -->
+<!--                                        Productivity: Active -->
 # Monospacing
 
 You can override a font's character spacing and turn it into a monospace font with the `<mspace>` tag. This gives all characters the same amount of horizontal space.

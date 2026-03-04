@@ -1,5 +1,7 @@
+#                                           [2026-03-03 18:05]
+#                                          Productivity: Active
 """
-Leather Book Interface - Main container with left/right page layout.
+LeatherBookInterface - Main Orchestrator for the Project-AI Desktop Application.ut.
 
 Creates an old leather book aesthetic with:
 - Left page: Futuristic Tron-themed digital face
@@ -19,13 +21,14 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from app.core.platform_tiers import (
+from src.app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
     get_tier_registry,
 )
-from app.gui.leather_book_panels import IntroInfoPage, TronFacePage
+from src.app.gui.leather_book_panels import IntroInfoPage, TronFacePage
+from src.app.gui.persona_panel import PersonaPanel
 
 logger = logging.getLogger(__name__)
 
@@ -155,7 +158,7 @@ class LeatherBookInterface(QMainWindow):
         self.username = username
         self.user_logged_in.emit(username)
 
-        from app.gui.leather_book_dashboard import LeatherBookDashboard
+        from src.app.gui.leather_book_dashboard import LeatherBookDashboard
 
         dashboard = LeatherBookDashboard(username)
 
@@ -168,6 +171,7 @@ class LeatherBookInterface(QMainWindow):
         dashboard.actions_panel.news_intelligence_requested.connect(
             self.switch_to_news_intelligence
         )
+        dashboard.actions_panel.persona_requested.connect(self.switch_to_persona_config)
         dashboard.actions_panel.intelligence_library_requested.connect(
             self.switch_to_intelligence_library
         )
@@ -177,6 +181,9 @@ class LeatherBookInterface(QMainWindow):
         dashboard.actions_panel.command_center_requested.connect(
             self.switch_to_command_center
         )
+        # Assuming we add a persona_btn to the actions panel or connect it elsewhere
+        # For now, let's wire it to a potential new signal or replace one
+        # dashboard.actions_panel.persona_requested.connect(self.switch_to_persona_config)
 
         self._set_stack_page(dashboard, 1)
 
@@ -186,7 +193,7 @@ class LeatherBookInterface(QMainWindow):
 
     def switch_to_image_generation(self):
         """Switch to image generation interface."""
-        from app.gui.image_generation import ImageGenerationInterface
+        from src.app.gui.image_generation import ImageGenerationInterface
 
         image_gen = ImageGenerationInterface()
 
@@ -200,7 +207,7 @@ class LeatherBookInterface(QMainWindow):
 
     def switch_to_news_intelligence(self):
         """Switch to news intelligence panel."""
-        from app.gui.news_intelligence_panel import NewsIntelligencePanel
+        from src.app.gui.news_intelligence_panel import NewsIntelligencePanel
 
         news_panel = NewsIntelligencePanel()
         news_panel.back_requested.connect(self.switch_to_dashboard)
@@ -209,7 +216,7 @@ class LeatherBookInterface(QMainWindow):
 
     def switch_to_intelligence_library(self):
         """Switch to intelligence library panel."""
-        from app.gui.intelligence_library_panel import IntelligenceLibraryPanel
+        from src.app.gui.intelligence_library_panel import IntelligenceLibraryPanel
 
         library_panel = IntelligenceLibraryPanel()
         library_panel.back_requested.connect(self.switch_to_dashboard)
@@ -218,7 +225,7 @@ class LeatherBookInterface(QMainWindow):
 
     def switch_to_watch_tower(self):
         """Switch to watch tower panel."""
-        from app.gui.watch_tower_panel import WatchTowerPanel
+        from src.app.gui.watch_tower_panel import WatchTowerPanel
 
         tower_panel = WatchTowerPanel()
         tower_panel.back_requested.connect(self.switch_to_dashboard)
@@ -227,9 +234,16 @@ class LeatherBookInterface(QMainWindow):
 
     def switch_to_command_center(self):
         """Switch to god-tier command center panel."""
-        from app.gui.god_tier_panel import GodTierCommandPanel
+        from src.app.gui.god_tier_panel import GodTierCommandPanel
 
         command_panel = GodTierCommandPanel()
         command_panel.back_requested.connect(self.switch_to_dashboard)
 
         self._set_stack_page(command_panel, 2)
+
+    def switch_to_persona_config(self):
+        """Switch to persona configuration panel."""
+        persona_panel = PersonaPanel()
+        persona_panel.back_requested.connect(self.switch_to_dashboard)
+
+        self._set_stack_page(persona_panel, 2)
