@@ -40,11 +40,11 @@ class CerberusSecurityBridge:
     def _initialize(self):
         """Initialize Cerberus integration"""
         try:
-            from src.app.core.cerberus_hydra import HydraController
-            from src.app.core.cerberus_runtime_manager import CerberusRuntimeManager
+            from src.app.core.cerberus_hydra import CerberusHydraDefense
+            from src.app.core.cerberus_runtime_manager import RuntimeManager
 
-            self.cerberus_runtime = CerberusRuntimeManager()
-            self.hydra_controller = HydraController()
+            self.cerberus_runtime = RuntimeManager()
+            self.hydra_controller = CerberusHydraDefense()
 
             logger.info("✅ Cerberus Security Bridge initialized")
             logger.info("   - Runtime Manager: ACTIVE")

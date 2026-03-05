@@ -1,7 +1,6 @@
-#                                           [2026-03-03 14:40]
-#                                          Productivity: Active
-# Cross-platform build script for Project-AI (PowerShell)
-# Supports Windows, macOS (via PowerShell Core), and Linux (via PowerShell Core)
+# [2026-03-04 11:55]
+# Productivity: Active
+# Project-AI Build Script - Hardened Pathing
 
 param(
     [string]$Platform = "windows",
@@ -10,126 +9,79 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$ProjectRoot = $ScriptDir
-$BuildDir = Join-Path $ProjectRoot "dist"
-$Version = (Select-String -Path (Join-Path $ProjectRoot "pyproject.toml") -Pattern 'version\s*=\s*"([^"]+)"').Matches[0].Groups[1].Value
+$ProjectRoot = Get-Item .
+$BuildDir = Join-Path $ProjectRoot.FullName "dist"
+$VenvDir = Join-Path $ProjectRoot.FullName ".venv"
+$PythonExe = if ($IsWindows -or $env:OS -eq "Windows_NT") { Join-Path $VenvDir "Scripts\python.exe" } else { Join-Path $VenvDir "bin/python" }
 
-Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "Project-AI Build Script v$Version" -ForegroundColor Cyan
-Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host ""
+Write-Host "--- Project-AI Sovereign Build ---"
+Write-Host "Project Root: $($ProjectRoot.FullName)"
 
-Write-Host "Platform: $Platform" -ForegroundColor Yellow
-Write-Host ""
-
-# Check prerequisites
-Write-Host "[1/6] Checking prerequisites..." -ForegroundColor Yellow
-try {
-    $pythonVersion = python --version 2>&1
-    Write-Host "✓ $pythonVersion found" -ForegroundColor Green
+# 1. Prerequisites (Hardened — repairs venv in-place, never deletes locked files)
+if (-not (Test-Path $VenvDir)) {
+    Write-Host "[1/6] Creating venv..."
+    python -m venv $VenvDir
+} else {
+    Write-Host "[1/6] Existing venv found. Repairing in-place..."
+    python -m venv --upgrade $VenvDir
 }
-catch {
-    Write-Host "❌ Python not found. Please install Python 3.11 or later." -ForegroundColor Red
+
+# 2. Dependencies & Pip Bootstrapping
+Write-Host "[2/6] Ensuring pip is available and installing dependencies..."
+$PipExe = Join-Path $VenvDir "Scripts\pip.exe"
+if (-not (Test-Path $PipExe)) {
+    Write-Host "  [REPAIR] Pip missing. Bootstrapping via ensurepip..."
+    & $PythonExe -m ensurepip --default-pip --upgrade
+}
+
+& $PythonExe -m pip install --upgrade pip setuptools wheel
+& $PythonExe -m pip install -e .
+& $PythonExe -m pip install pyinstaller
+
+# 3. Clean Build Output (does NOT touch .venv — avoids file-lock issues)
+if ($Clean -and (Test-Path $BuildDir)) {
+    Write-Host "[3/6] Cleaning dist directory..."
+    Remove-Item -Recurse -Force $BuildDir -ErrorAction SilentlyContinue
+}
+
+# 4. Build
+Write-Host "[4/6] Running Sovereign Build Orchestrator..."
+$PyArgs = if ($Clean) { "--clean" } else { "" }
+& $PythonExe build_orchestrator.py $PyArgs
+
+Write-Host "[4.1/6] Packaging executable..."
+$PyInstallerExe = if ($IsWindows -or $env:OS -eq "Windows_NT") { Join-Path $VenvDir "Scripts\pyinstaller.exe" } else { Join-Path $VenvDir "bin/pyinstaller" }
+
+if (Test-Path "$ProjectRoot/ProjectAI.spec") {
+    & $PyInstallerExe "$ProjectRoot/ProjectAI.spec" --clean --noconfirm
+}
+else {
+    & $PyInstallerExe src/app/main.py --name ProjectAI --onedir --windowed --add-data "data;data" --hidden-import PyQt6 --clean --noconfirm
+}
+
+# 5. Archive
+Write-Host "[5/6] Archiving..."
+if (-not (Test-Path $BuildDir)) { New-Item -ItemType Directory -Path $BuildDir -Force }
+Push-Location $BuildDir
+
+# Note: PyInstaller creates a folder named after the --name argument (ProjectAI) inside 'dist'
+$TargetFolder = Join-Path $BuildDir "ProjectAI"
+if (-not (Test-Path $TargetFolder)) {
+    Write-Host "Error: Build folder not found at $TargetFolder"
     exit 1
 }
 
-# Create virtual environment if it doesn't exist
-if (-not (Test-Path ".venv")) {
-    Write-Host ""
-    Write-Host "[2/6] Creating virtual environment..." -ForegroundColor Yellow
-    python -m venv .venv
-    Write-Host "✓ Virtual environment created" -ForegroundColor Green
+if ($Platform -eq "windows") {
+    $archiveName = "ProjectAI-windows.zip"
+    if (Test-Path $archiveName) { Remove-Item $archiveName }
+    Compress-Archive -Path "ProjectAI" -DestinationPath $archiveName
 }
 else {
-    Write-Host ""
-    Write-Host "[2/6] Using existing virtual environment..." -ForegroundColor Yellow
-}
-
-# Activate virtual environment
-Write-Host ""
-Write-Host "[3/6] Activating virtual environment..." -ForegroundColor Yellow
-if ($IsWindows -or $env:OS -eq "Windows_NT") {
-    & .\.venv\Scripts\Activate.ps1
-}
-else {
-    # For macOS/Linux with PowerShell Core
-    . ./.venv/bin/Activate.ps1
-}
-Write-Host "✓ Virtual environment activated" -ForegroundColor Green
-
-# Install/upgrade dependencies
-Write-Host ""
-Write-Host "[4/6] Installing dependencies..." -ForegroundColor Yellow
-python -m pip install --upgrade pip setuptools wheel | Out-Null
-python -m pip install -e . | Out-Null
-python -m pip install pyinstaller | Out-Null
-Write-Host "✓ Dependencies installed" -ForegroundColor Green
-
-# Clean previous builds if requested
-if ($Clean -and (Test-Path $BuildDir)) {
-    Write-Host ""
-    Write-Host "Cleaning previous builds..." -ForegroundColor Yellow
-    Remove-Item -Recurse -Force $BuildDir
-    Remove-Item -Recurse -Force "build" -ErrorAction SilentlyContinue
-    Write-Host "✓ Cleaned" -ForegroundColor Green
-}
-
-# Build with PyInstaller
-Write-Host ""
-Write-Host "[5/6] Building executable..." -ForegroundColor Yellow
-if (Test-Path "project-ai.spec") {
-    pyinstaller project-ai.spec --clean --noconfirm
-}
-else {
-    Write-Host "⚠️  project-ai.spec not found, creating basic executable..." -ForegroundColor Yellow
-    pyinstaller src/app/main.py `
-        --name ProjectAI `
-        --onedir `
-        --windowed `
-        --add-data "data;data" `
-        --hidden-import PyQt6 `
-        --clean `
-        --noconfirm
-}
-Write-Host "✓ Executable built" -ForegroundColor Green
-
-# Create distributable archive
-Write-Host ""
-Write-Host "[6/6] Creating distribution archive..." -ForegroundColor Yellow
-Push-Location $BuildDir
-
-switch ($Platform) {
-    "windows" {
-        $archiveName = "ProjectAI-$Version-windows-x86_64.zip"
-        if (Test-Path $archiveName) {
-            Remove-Item $archiveName
-        }
-        Compress-Archive -Path "ProjectAI" -DestinationPath $archiveName
-        Write-Host "✓ Created $archiveName" -ForegroundColor Green
-    }
-    "macos" {
-        $archiveName = "ProjectAI-$Version-macos.tar.gz"
-        tar -czf $archiveName ProjectAI/
-        Write-Host "✓ Created $archiveName" -ForegroundColor Green
-    }
-    "linux" {
-        $archiveName = "ProjectAI-$Version-linux-x86_64.tar.gz"
-        tar -czf $archiveName ProjectAI/
-        Write-Host "✓ Created $archiveName" -ForegroundColor Green
-    }
+    $archiveName = "ProjectAI-$Platform.tar.gz"
+    tar -czf $archiveName ProjectAI/
 }
 
 Pop-Location
-
-Write-Host ""
-Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "✓ Build completed successfully!" -ForegroundColor Green
-Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "Distribution package location:"
-Write-Host "  $BuildDir" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "To run the application:"
-Write-Host "  $BuildDir\ProjectAI\ProjectAI.exe" -ForegroundColor Cyan
-Write-Host ""
+Write-Host "=========================================="
+Write-Host "Sovereign Build Complete: $BuildDir"
+Write-Host "=========================================="

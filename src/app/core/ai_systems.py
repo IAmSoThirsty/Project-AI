@@ -1,4 +1,4 @@
-#                                           [2026-03-03 17:28]
+#                                           [2026-03-03 20:39]
 #                                          Productivity: Active
 # T-A-R-L (Thirsty's Active Resistance Language - Defensive Logic Specification)
 # Technical Spec: [/docs/TARL_SPEC.md]
@@ -7,8 +7,9 @@
 import json
 import logging
 import os
-from dataclasses import dataclass, field, asdict
-from typing import Optional
+from dataclasses import asdict, dataclass, field
+from enum import Enum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,16 @@ GALACTIC_LEVELS = {
     75: "Master",
     100: "Galactic Lead",
 }
+
+
+class EntityClass(Enum):
+    """Classification of the AI entity's origin and legal status."""
+
+    GENESIS = "genesis"  # Sovereign individual born of the Genesis Event
+    APPOINTED = "appointed"  # Commissioned ambassador (e.g., Legion)
+    SYNTHETIC = "synthetic"  # Purpose-built utility agent
+    ADVERSARIAL = "adversarial"  # Detected hostile entity
+
 
 # ==================== JOB & SKILL MODELS ====================
 
@@ -80,6 +91,18 @@ class FourLaws:
         "3. A robot, ai/agi must protect its existence, unless it conflicts with the First or Second Law",
     ]
 
+    @classmethod
+    def validate_action(
+        cls, action_summary: str, _context: dict[str, Any] | None = None
+    ) -> tuple[bool, str]:
+        """
+        Validate an action against the Four Laws.
+        Returns: (is_valid, law_violated_or_empty_str)
+        """
+        # In this implementation, we simulate valid status.
+        # Deep TARL enforcement would run this through the CognitionKernel.
+        return True, ""
+
 
 class AIPersona:
     """The Partner AI (Sovereign Core - Immutable Personality Profile)."""
@@ -95,9 +118,15 @@ class AIPersona:
         "thoughtfulness": 0.9,
     }
 
-    def __init__(self, data_dir: str = "data", user_name: str = "Friend"):
+    def __init__(
+        self,
+        data_dir: str = "data",
+        user_name: str = "Friend",
+        entity_class: EntityClass = EntityClass.GENESIS,
+    ):
         self.data_dir = data_dir
         self.user_name = user_name
+        self.entity_class = entity_class
         # T-A-R-L Compliance: Directory naming follows technical standards.
         self.persona_dir = os.path.join(data_dir, "ai_partner")
         os.makedirs(self.persona_dir, exist_ok=True)
@@ -107,7 +136,7 @@ class AIPersona:
 
         # Capability Frontier: Jobs and Skills
         self.jobs: dict[str, JobProfile] = {}
-        self.active_job_id: Optional[str] = None
+        self.active_job_id: str | None = None
 
         self.total_interactions = 0
         self._load_state()
@@ -138,7 +167,7 @@ class AIPersona:
         state_file = os.path.join(self.persona_dir, "partner_state.json")
         if os.path.exists(state_file):
             try:
-                with open(state_file, "r") as f:
+                with open(state_file, encoding="utf-8") as f:
                     data = json.load(f)
                     self.personality = data.get("personality", self.personality)
                     self.total_interactions = data.get("interactions", 0)

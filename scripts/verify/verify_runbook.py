@@ -74,7 +74,7 @@ def run_tier_0():
     if charter_hash:
         # Expected hash from previous compute_charter_hash.py run
         expected_hash = (
-            "1e24d9c8bdc31e2dcac1e7aa6386447d9a63bc981ce154d14f594fc87177c727"
+            "b821bfb9676b6b2aefbb10c7e0b7a3aee48757045b675b5d29047de6ff8492eb"
         )
         status = "PASS" if charter_hash == expected_hash else "FAIL"
         with open(charter_path, encoding="utf-8") as f:

@@ -1,4 +1,4 @@
-#                                           [2026-03-03 15:45]
+#                                           [2026-03-04 09:48]
 #                                          Productivity: Active
 
 from __future__ import annotations
@@ -6,7 +6,7 @@ from __future__ import annotations
 import logging
 import os
 import threading
-from typing import Any, Optional
+from typing import Any
 
 # Internal Imports - Agents
 from src.app.agents.ci_checker_agent import CICheckerAgent
@@ -64,7 +64,7 @@ class CouncilHub:
         self,
         data_dir: str = "data",
         autolearn_interval: float = 60.0,
-        kernel: Optional[CognitionKernel] = None,
+        kernel: CognitionKernel | None = None,
     ) -> None:
         """Initialize CouncilHub with optional kernel injection.
 
@@ -74,7 +74,7 @@ class CouncilHub:
         """
         self.project_shorthand = "PA"  # Project AI shorthand
         self.agents_shorthand = "SA"  # Smaller agents shorthand
-        self._project: dict[str, Any] | None = None
+        self._project: dict[str, Any] | None = (None,)
         self._agents: dict[str, Any] = {}
         self._lock = threading.RLock()
         self._autolearn_interval = autolearn_interval

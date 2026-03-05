@@ -16,15 +16,10 @@ from __future__ import annotations
 import importlib.util
 
 # ── Hard gate: skip all tests in this directory when the source
-#    package is absent.  pytest.importorskip raises Skipped which
-#    propagates to every item collected under this conftest.
+#    package is absent. Using collect_ignore_glob to avoid skipping
+#    the entire pytest session.
 if importlib.util.find_spec("gradle_evolution") is None:
-    import pytest
-
-    pytest.skip(
-        "gradle_evolution source package not installed – skipping entire directory",
-        allow_module_level=True,
-    )
+    collect_ignore_glob = ["*.py", "**/*.py"]
 
 import tempfile
 from collections.abc import Generator

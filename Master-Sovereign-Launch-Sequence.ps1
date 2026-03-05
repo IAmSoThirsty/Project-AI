@@ -17,8 +17,17 @@ param(
 $ErrorActionPreference = "Stop"
 $ProjectRoot = $PSScriptRoot
 $ShortcutName = "Project-AI Master Control.lnk"
-$TargetPath = Join-Path $ProjectRoot "start.ps1"
-$IconPath = Join-Path $ProjectRoot "desktop/build/icon.ico" # Fallback to icon.ico
+
+# Prioritize Physical App (.exe) over script entry point
+$ExePath = Join-Path $ProjectRoot "dist\ProjectAI\ProjectAI.exe"
+if (Test-Path $ExePath) {
+    $TargetPath = $ExePath
+    $UseExe = $true
+} else {
+    $TargetPath = Join-Path $ProjectRoot "start.ps1"
+    $UseExe = $false
+}
+$IconPath = Join-Path $ProjectRoot "desktop/build/icon.ico"
 
 # --- Audit & Security ---
 Write-Host "  [AUDIT] Validating Iron Path invariants..." -ForegroundColor Cyan
@@ -35,11 +44,18 @@ function Create-HardenedShortcut {
     $WshShell = New-Object -ComObject WScript.Shell
     $Shortcut = $WshShell.CreateShortcut($destinationPath)
     
-    # Execute powershell with start.ps1
-    $Shortcut.TargetPath = "powershell.exe"
-    $Shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$TargetPath`" -Full"
-    $Shortcut.WorkingDirectory = $ProjectRoot
-    $Shortcut.Description = "Project-AI Sovereign Master UI (Leather Book)"
+    # Execute Physical App or fallback to powershell with start.ps1
+    if ($UseExe) {
+        $Shortcut.TargetPath = $TargetPath
+        $Shortcut.Arguments = ""
+        $Shortcut.WorkingDirectory = Split-Path $TargetPath
+        $Shortcut.Description = "Project-AI Sovereign Master UI (Physical App)"
+    } else {
+        $Shortcut.TargetPath = "powershell.exe"
+        $Shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$TargetPath`" -Full"
+        $Shortcut.WorkingDirectory = $ProjectRoot
+        $Shortcut.Description = "Project-AI Sovereign Master UI (Leather Book)"
+    }
     
     if (Test-Path $IconPath) {
         $Shortcut.IconLocation = $IconPath

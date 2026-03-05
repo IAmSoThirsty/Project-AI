@@ -164,8 +164,8 @@ export default function LanguagesPage() {
                                 {'  }'}{'\n'}
                                 {'  '}<span className="kw">shadow</span> {'{'}{'\n'}
                                 {'    '}<span className="cm">{'// Independent verification'}</span>{'\n'}
-                                {'    '}<span className="kw">assert</span> from.balance <span className="op">>=</span> <span className="num">0</span> : <span className="str">"overdraft"</span>;{'\n'}
-                                {'    '}<span className="kw">assert</span> (from.balance + to.balance) <span className="op">==</span> <span className="kw">invariant</span>.total_supply : <span className="str">"conservation"</span>;{'\n'}
+                                {'    '}<span className="kw">assert</span> from.balance <span className="op">{'>='}</span> <span className="num">0</span> : <span className="str">"overdraft"</span>;{'\n'}
+                                {'    '}<span className="kw">assert</span> (from.balance + to.balance) <span className="op">{'=='}</span> <span className="kw">invariant</span>.total_supply : <span className="str">"conservation"</span>;{'\n'}
                                 {'  }'}{'\n'}
                                 {'}'}{'\n'}
                                 {'\n'}

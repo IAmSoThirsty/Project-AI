@@ -1,4 +1,4 @@
-#                                           [2026-03-03 18:05]
+#                                           [2026-03-04 09:48]
 #                                          Productivity: Active
 """
 LeatherBookInterface - Main Orchestrator for the Project-AI Desktop Application.ut.
@@ -92,43 +92,45 @@ class LeatherBookInterface(QMainWindow):
         """Return QSS stylesheet for leather book theme."""
         return """
         QMainWindow {
-            background-color: #1a1a1a;
+            background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 #1a1a1a, stop:1 #050505);
+        }
+        QWidget#main_widget {
+            background-color: transparent;
         }
         QLabel {
-            color: #e0e0e0;
+            color: #d4af37; /* Sovereign Gold */
+            font-family: 'Courier New';
+            font-weight: bold;
         }
         QPushButton {
-            background-color: #2a2a2a;
+            background-color: #121212;
             border: 2px solid #00ff00;
             color: #00ff00;
-            padding: 8px;
-            border-radius: 4px;
+            padding: 10px;
+            border-radius: 6px;
             font-weight: bold;
-            text-shadow: 0px 0px 10px #00ff00;
+            font-family: 'Courier New';
+            text-transform: uppercase;
         }
         QPushButton:hover {
-            background-color: #3a3a3a;
+            background-color: #1a1a1a;
             border: 2px solid #00ffff;
             color: #00ffff;
-            text-shadow: 0px 0px 15px #00ffff;
-        }
-        QPushButton:pressed {
-            background-color: #1a1a1a;
+            box-shadow: 0 0 15px #00ffff;
         }
         QLineEdit {
-            background-color: #1a1a1a;
-            border: 2px solid #00ff00;
+            background-color: #0f0f0f;
+            border: 1px solid #00ff00;
             color: #00ff00;
-            padding: 5px;
-            font-weight: bold;
-        }
-        QLineEdit:focus {
-            border: 2px solid #00ffff;
+            padding: 8px;
+            font-family: 'Courier New';
+            selection-background-color: #00ffff;
         }
         QTextEdit {
-            background-color: #1a1a1a;
-            border: 2px solid #00ff00;
+            background-color: #0f0f0f;
+            border: 1px solid #004400;
             color: #00ff00;
+            font-family: 'Courier New';
         }
         """
 

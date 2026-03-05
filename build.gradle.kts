@@ -1511,20 +1511,21 @@ tasks.register<Exec>("evolutionOverride") {
     
     dependsOn("pythonInstall")
     
-    val reason = project.findProperty("overrideReason")?.toString() 
-        ?: throw GradleException("Must provide -PoverrideReason='...'")
-    val authorizer = project.findProperty("authorizer")?.toString() 
-        ?: throw GradleException("Must provide -Pauthorizer='...'")
-    
-    commandLine(
-        evolutionPython,
-        "-m", "gradle_evolution.audit.accountability",
-        "--request-override",
-        "--reason", reason,
-        "--authorizer", authorizer
-    )
-    
+    // Defer property reads to execution time so Gradle can configure without these flags
     doFirst {
+        val reason = project.findProperty("overrideReason")?.toString() 
+            ?: throw GradleException("Must provide -PoverrideReason='...'")
+        val authorizer = project.findProperty("authorizer")?.toString() 
+            ?: throw GradleException("Must provide -Pauthorizer='...'")
+        
+        executable = evolutionPython
+        args(
+            "-m", "gradle_evolution.audit.accountability",
+            "--request-override",
+            "--reason", reason,
+            "--authorizer", authorizer
+        )
+        
         logger.lifecycle("🧬 Requesting accountability override...")
         logger.lifecycle("  Reason: $reason")
         logger.lifecycle("  Authorizer: $authorizer")

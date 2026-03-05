@@ -1,4 +1,4 @@
-#                                           [2026-03-03 16:25]
+#                                           [2026-03-04 09:48]
 #                                          Productivity: Active
 
 """
@@ -454,7 +454,11 @@ class MemoryEngine:
             )
             logger.info("MemoryEngine registered as Tier-2 Resource Orchestrator")
         except Exception as e:
-            logger.warning("Failed to register MemoryEngine in tier registry: %s", e)
+            logger.error(
+                "CRITICAL: Failed to register MemoryEngine in tier registry: %s",
+                e,
+                exc_info=True,
+            )
 
     def _load_memories(self):
         """Load all memory types from disk."""
@@ -469,8 +473,14 @@ class MemoryEngine:
                         self.episodic_memories[memory.memory_id] = memory
                         self._index_episodic_memory(memory)
                 logger.info("Loaded %s episodic memories", len(self.episodic_memories))
+            except (IOError, json.JSONDecodeError) as e:
+                logger.error(
+                    "Episodic Memory Corruption/IO Error: %s", e, exc_info=True
+                )
             except Exception as e:
-                logger.error("Failed to load episodic memories: %s", e)
+                logger.error(
+                    "Unexpected Episodic Memory Load Failure: %s", e, exc_info=True
+                )
 
         # Load semantic concepts
         semantic_file = os.path.join(self.data_dir, "semantic_concepts.json")
@@ -482,8 +492,12 @@ class MemoryEngine:
                         concept = SemanticConcept.from_dict(concept_data)
                         self.semantic_concepts[concept.concept_id] = concept
                 logger.info("Loaded %s semantic concepts", len(self.semantic_concepts))
+            except (IOError, json.JSONDecodeError) as e:
+                logger.error(
+                    "Semantic Concept Corruption/IO Error: %s", e, exc_info=True
+                )
             except Exception as e:
-                logger.error("Failed to load semantic concepts: %s", e)
+                logger.error("Unexpected Semantic Load Failure: %s", e, exc_info=True)
 
         # Load procedural skills
         procedural_file = os.path.join(self.data_dir, "procedural_skills.json")
@@ -495,8 +509,12 @@ class MemoryEngine:
                         skill = ProceduralSkill.from_dict(skill_data)
                         self.procedural_skills[skill.skill_id] = skill
                 logger.info("Loaded %s procedural skills", len(self.procedural_skills))
+            except (IOError, json.JSONDecodeError) as e:
+                logger.error(
+                    "Procedural Skill Corruption/IO Error: %s", e, exc_info=True
+                )
             except Exception as e:
-                logger.error("Failed to load procedural skills: %s", e)
+                logger.error("Unexpected Procedural Load Failure: %s", e, exc_info=True)
 
     def _save_memories(self):
         """Save all memory types to disk."""

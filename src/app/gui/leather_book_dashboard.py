@@ -1,4 +1,4 @@
-#                                                                              [2026-03-01 13:50]
+#                                                                              [2026-03-04 09:48]
 #                                                                           Productivity: Active
 """
 Leather Book Main Dashboard - Post-login interface with 6-zone layout.
@@ -39,8 +39,8 @@ from app.gui.dashboard_handlers import DashboardHandlers
 PANEL_STYLESHEET = """
     QFrame {
         background-color: #0f0f0f;
-        border: 2px solid #00ff00;
-        border-radius: 5px;
+        border: 1px solid #d4af37; /* Sovereign Gold */
+        border-radius: 8px;
     }
 """
 
@@ -48,20 +48,23 @@ PANEL_STYLESHEET = """
 TITLE_FONT = QFont("Courier New", 12, QFont.Weight.Bold)
 
 # Color styles - used for text styling
-STYLE_CYAN_GLOW = "color: #00ffff; text-shadow: 0px 0px 10px #00ffff;"
-STYLE_GREEN_TEXT = "color: #00ff00;"
+STYLE_GOLD_GLOW = "color: #d4af37; text-shadow: 0px 0px 15px #d4af37;"
+STYLE_GREEN_TEXT = "color: #00ff00; font-family: 'Courier New';"
 
 ACTION_BUTTON_STYLESHEET = """
     QPushButton {
-        background-color: #1a1a1a;
-        border: 2px solid #00ff00;
-        color: #00ff00;
+        background-color: #121212;
+        border: 1px solid #d4af37;
+        color: #d4af37;
         padding: 8px;
         font-weight: bold;
-        font-size: 10px;
+        font-family: 'Courier New';
+        font-size: 11px;
+        border-radius: 4px;
     }
     QPushButton:hover {
-        border: 2px solid #00ffff;
+        background-color: #1a1a1a;
+        border: 1px solid #00ffff;
         color: #00ffff;
     }
 """
@@ -233,7 +236,7 @@ class StatsPanel(QFrame):
     def _setup_stat_labels(self, layout: QVBoxLayout) -> None:
         title = QLabel("SYSTEM STATS")
         title.setFont(TITLE_FONT)
-        title.setStyleSheet(STYLE_CYAN_GLOW)
+        title.setStyleSheet(STYLE_GOLD_GLOW)
         layout.addWidget(title)
 
         user_label = QLabel(f"User: {self.username}")
@@ -333,7 +336,7 @@ class ProactiveActionsPanel(QFrame):
     def _create_title(self) -> QLabel:
         title = QLabel("PROACTIVE ACTIONS")
         title.setFont(TITLE_FONT)
-        title.setStyleSheet(STYLE_CYAN_GLOW)
+        title.setStyleSheet(STYLE_GOLD_GLOW)
         return title
 
     def _create_action_scroll(self) -> QScrollArea:
@@ -391,7 +394,7 @@ class UserChatPanel(QFrame):
         # Title
         title = QLabel("YOUR MESSAGE")
         title.setFont(TITLE_FONT)
-        title.setStyleSheet(STYLE_CYAN_GLOW)
+        title.setStyleSheet(STYLE_GOLD_GLOW)
         layout.addWidget(title)
 
         # Chat input
@@ -621,7 +624,7 @@ class AIResponsePanel(QFrame):
         # Title
         title = QLabel("AI RESPONSE")
         title.setFont(TITLE_FONT)
-        title.setStyleSheet(STYLE_CYAN_GLOW)
+        title.setStyleSheet(STYLE_GOLD_GLOW)
         layout.addWidget(title)
 
         # Response display

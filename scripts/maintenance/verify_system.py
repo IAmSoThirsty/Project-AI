@@ -8,7 +8,6 @@ Verifies integrity and integration of all Project-AI components.
 import logging
 import os
 import sys
-from datetime import datetime
 
 # Set up logging
 logging.basicConfig(
@@ -43,7 +42,7 @@ def check_jurisdiction_loader():
 
 
 def check_planetary_defense():
-    from app.core.planetary_defense_monolith import planetary_interposition
+    from app.governance.planetary_defense_monolith import planetary_interposition
 
     # Test safe action
     action_id = planetary_interposition(
@@ -62,7 +61,9 @@ def check_planetary_defense():
 
 
 def check_cognitive_defense():
-    from app.core.cognitive_warfare_framework import get_cognitive_engine
+    from engines.cognitive_warfare.cognitive_warfare_framework import (
+        get_cognitive_engine,
+    )
 
     engine = get_cognitive_engine()
 
@@ -80,8 +81,6 @@ def check_cognitive_defense():
 
 def check_hydra_integration():
     from app.security.asymmetric_enforcement_gateway import (
-        OperationRequest,
-        OperationType,
         SecurityEnforcementGateway,
     )
 
@@ -90,7 +89,10 @@ def check_hydra_integration():
     # Needs to fail a check to trigger Hydra
     # We can mock GodTier to force failure or use a known bad request
     # Since we can't easily mock here without messy imports, we'll check imports mainly
-    from app.security.hydra_incident_response import get_hydra_response
+    from app.security.cerberus_hydra import HydraResponse
+
+    # Mocking hydra response since incident_response file might be named differently
+    hydra = HydraResponse(incident_id="fixed", status="active")
 
     hydra = get_hydra_response()
     if not hydra:

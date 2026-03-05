@@ -1,4 +1,4 @@
-#                                           [2026-03-03 18:25]
+#                                           [2026-03-04 09:48]
 #                                          Productivity: Active
 """
 CognitionKernel - Central processing hub for all agent, tool, and system executions.
@@ -373,7 +373,13 @@ class CognitionKernel:
             )
             logger.info("CognitionKernel registered as Tier-1 Governance Core")
         except Exception as e:
-            logger.warning("Failed to register kernel in tier registry: %s", e)
+            logger.error(
+                "CRITICAL: Failed to register kernel in tier registry: %s",
+                e,
+                exc_info=True,
+            )
+            # In a resilient system, we might want to halt if the registry is mandatory,
+            # but for now we ensure it's logged as a critical failure.
 
         logger.info("CognitionKernel initialized with integrated subsystems")
         logger.info("Identity: %s", identity_system is not None)
@@ -575,7 +581,9 @@ class CognitionKernel:
                 "partial_execution": context.result is not None,
             }
 
-            logger.error("[%s] Execution failed: %s", context.trace_id, e)
+            logger.error(
+                "[%s] Execution failed: %s", context.trace_id, e, exc_info=True
+            )
             raise
 
     def act_with_shadow(
@@ -677,6 +685,7 @@ class CognitionKernel:
                 "[%s] Shadow execution failed, falling back to primary: %s",
                 context.trace_id,
                 e,
+                exc_info=True,
             )
             return self.act(action, context)
 
@@ -719,7 +728,9 @@ class CognitionKernel:
                 logger.info("[%s] Reflection recorded", context.trace_id)
 
             except Exception as e:
-                logger.error("[%s] Reflection failed: %s", context.trace_id, e)
+                logger.error(
+                    "[%s] Reflection failed: %s", context.trace_id, e, exc_info=True
+                )
 
     def commit(self, context: ExecutionContext) -> None:
         """
@@ -779,7 +790,9 @@ class CognitionKernel:
                 logger.debug("[%s] Memory committed (four-channel)", context.trace_id)
 
             except Exception as e:
-                logger.error("[%s] Memory commit failed: %s", context.trace_id, e)
+                logger.error(
+                    "[%s] Memory commit failed: %s", context.trace_id, e, exc_info=True
+                )
 
     # ========================================================================
     # Private Helper Methods
@@ -913,7 +926,7 @@ class CognitionKernel:
 
                 return copy.deepcopy(snapshot)
         except Exception as e:
-            logger.error("Failed to freeze identity snapshot: %s", e)
+            logger.error("Failed to freeze identity snapshot: %s", e, exc_info=True)
 
         return {}
 

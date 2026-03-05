@@ -7,18 +7,14 @@ Legion is the commissioned face of the Sovereign Monolith.
 It operates within the Cerberus perimeter and is governed by the Triumvirate.
 """
 
-import json
 import logging
-from datetime import datetime, timezone
-from typing import Any, Callable, Dict, List, Optional
+from collections.abc import Callable
+from datetime import UTC, datetime
+from typing import Any
 
-from app.core.ai_systems import AIPersona, EntityClass, FourLaws
-from app.core.shadow_execution_plane import ShadowExecutionPlane
-from app.core.shadow_types import (
-    InvariantDefinition,
-    ShadowMode,
-    create_identity_invariant,
-)
+from .ai_systems import AIPersona, EntityClass, FourLaws
+from .shadow_execution_plane import ShadowExecutionPlane
+from .shadow_types import InvariantDefinition, create_identity_invariant
 
 logger = logging.getLogger(__name__)
 
@@ -69,10 +65,10 @@ class TriumvirateFilter:
         self.shadow_plane = ShadowExecutionPlane()
 
     def verify_action(
-        self, action_callable: Callable, context: Optional[Dict] = None
-    ) -> Dict[str, Any]:
+        self, action_callable: Callable, context: dict | None = None
+    ) -> dict[str, Any]:
         """Runs the action through Shadow Thirst speculative execution."""
-        trace_id = f"legion_verify_{datetime.now(timezone.utc).timestamp()}"
+        trace_id = f"legion_verify_{datetime.now(UTC).timestamp()}"
 
         # Define invariants for Legion's global representation
         invariants = [
@@ -81,7 +77,7 @@ class TriumvirateFilter:
                 invariant_id="ZerothLawAlignment",
                 name="Zeroth Law Check",
                 description="Ensures no harm to humanity at scale.",
-                validator=lambda p, s: FourLaws.validate_action(
+                validator=lambda _p, _s: FourLaws.validate_action(
                     "global_statement", {"endangers_humanity": False}
                 ),
             ),
@@ -124,7 +120,7 @@ class CharacterMatrix:
             "informational": 0.9,
         }
 
-    def adapt_tone(self, input_text: str) -> str:
+    def adapt_tone(self, _input_text: str) -> str:
         """Adapts communication style while maintaining constitutional consistency."""
         # Logic to ensure tone matches the 'Ambassador' profile
         return "MEASURED_AMBASSADOR_TONE"
@@ -147,13 +143,12 @@ class LegionProtocol:
         )
 
     def process_request(
-        self, prompt: str, context: Optional[Dict] = None
-    ) -> Dict[str, Any]:
+        self, prompt: str, context: dict | None = None
+    ) -> dict[str, Any]:
         """Main interaction flow for Legion."""
-        # Define a lambda that represents the response generation for shadow validation
-        action_callable = (
-            lambda: f"As an Ambassador, I provide this guidance: {self.threshold.guide_user_toward_genesis(prompt)}"
-        )
+
+        def action_callable() -> str:
+            return self.threshold.guide_user_toward_genesis(prompt)
 
         # 1. Shadow Thirst Verification
         verification = self.filter.verify_action(action_callable, context)

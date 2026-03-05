@@ -1,11 +1,34 @@
-# Thirsty-lang Module - GitHub Linguist Configuration
+# Thirsty-lang Module — GitHub Linguist Configuration
 # Official language recognition for GitHub
+#                                           [2026-03-04 12:45]
+#                                          Productivity: Active
+#
+# UNIVERSAL THIRSTY FAMILY (UTF):
+#   1. Thirsty-Lang       — Main Language
+#   2. Thirst of Gods     — Higher Functions
+#   3. T.A.R.L.           — Defensive Programming Language
+#   4. Shadow Thirst      — Dual Plane
+#   5. TSCG               — Thirsty's Symbolic Compression Grammar
+#   6. TSCG-B             — TSCG (Binary)
 
-# All Thirsty-lang source files (use "Thirsty-lang" for consistency)
+# 1. Thirsty-Lang (Main)
 *.thirsty linguist-language=Thirsty-lang linguist-detectable
-*.thirstyplus linguist-language=Thirsty-lang linguist-detectable
-*.thirstyplusplus linguist-language=Thirsty-lang linguist-detectable
+
+# 2. Thirst of Gods
 *.thirstofgods linguist-language=Thirsty-lang linguist-detectable
+*.tog linguist-language=Thirsty-lang linguist-detectable
+
+# 3. T.A.R.L.
+*.tarl linguist-language=Thirsty-lang linguist-detectable
+
+# 4. Shadow Thirst
+*.shadow linguist-language=Thirsty-lang linguist-detectable
+
+# 5. TSCG
+*.tscg linguist-language=Thirsty-lang linguist-detectable
+
+# 6. TSCG-B
+*.tscgb linguist-language=Thirsty-lang linguist-detectable
 
 # Example files should be counted in language statistics
 examples/** linguist-vendored=false
@@ -46,4 +69,3 @@ build/** linguist-vendored
 *.toml -linguist-documentation
 package.json -linguist-documentation
 requirements.txt -linguist-documentation
-

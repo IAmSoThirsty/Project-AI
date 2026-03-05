@@ -1,4 +1,4 @@
-#                                           [2026-03-03 17:05]
+#                                           [2026-03-04 09:48]
 #                                          Productivity: Active
 
 """
@@ -610,8 +610,10 @@ class AGIIdentity:
             logger.info("Identity restored: version %s", self.identity_version)
 
         except Exception as e:
-            logger.error("Failed to load identity: %s", e)
-            # Fallback to genesis if load fails
+            logger.error(
+                "CRITICAL: Failed to load identity state: %s", e, exc_info=True
+            )
+            # Fallback to genesis if load fails (Sovereign Recovery)
             self._perform_genesis()
 
     def _save_identity(self):
@@ -636,8 +638,10 @@ class AGIIdentity:
 
             logger.debug("Identity state saved successfully")
 
+        except (IOError, OSError) as e:
+            logger.error("Identity IO Failure (Save): %s", e, exc_info=True)
         except Exception as e:
-            logger.error("Failed to save identity: %s", e)
+            logger.error("Unexpected Identity Save Failure: %s", e, exc_info=True)
 
     def _create_snapshot(self, description: str):
         """
@@ -666,8 +670,10 @@ class AGIIdentity:
         try:
             with open(snapshot_file, "w", encoding="utf-8") as f:
                 json.dump(self.state_snapshots, f, indent=2)
+        except (IOError, OSError) as e:
+            logger.error("Snapshot IO Failure: %s", e, exc_info=True)
         except Exception as e:
-            logger.error("Failed to save snapshot: %s", e)
+            logger.error("Unexpected Snapshot Failure: %s", e, exc_info=True)
 
     def _log_identity_event(
         self,
@@ -701,8 +707,10 @@ class AGIIdentity:
         try:
             with open(events_file, "w", encoding="utf-8") as f:
                 json.dump(self.identity_events, f, indent=2)
+        except (IOError, OSError) as e:
+            logger.error("Identity Event IO Failure: %s", e, exc_info=True)
         except Exception as e:
-            logger.error("Failed to save identity event: %s", e)
+            logger.error("Unexpected identity event save failure: %s", e, exc_info=True)
 
     # ========================================================================
     # Public API - Identity Management

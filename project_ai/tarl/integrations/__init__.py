@@ -184,7 +184,6 @@ for _name in [
     "TarlConfig",
     "DeploymentProfile",
     "ComplianceProfile",
-    "ComplianceProfile",
     "quick_start",
 ]:
     _LAZY_MAP[_name] = ("config_presets", _name)

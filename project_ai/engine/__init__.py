@@ -1,7 +1,5 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-03-04 13:36]
 #                                          Productivity: Active
-#                                                             DATE: 2026-03-03 09:32:01
-#                                                             STATUS: Active
 """
 Project-AI Core Engine (PACE)
 ==============================
@@ -15,6 +13,7 @@ from .cognition.deliberation_engine import DeliberationEngine
 from .identity.identity_manager import IdentityManager
 from .io.io_router import IORouter
 from .policy.policy_engine import PolicyEngine
+from .skills import SkillManager
 from .state.state_manager import StateManager
 from .workflow.workflow_engine import WorkflowEngine
 
@@ -32,6 +31,12 @@ class PACEEngine:
         self.identity_manager = IdentityManager(self.config.get("identity", {}))
         self.policy_engine = PolicyEngine(self.identity_manager)
         self.state_manager = StateManager(self.config.get("state", {}))
+
+        # Skills subsystem — identity stays immutable, skills are additive
+        self.skill_manager = SkillManager(
+            self.state_manager,
+            self.config.get("skills", {}),
+        )
 
         self.capability_invoker = CapabilityInvoker(
             self.policy_engine,
@@ -59,6 +64,31 @@ class PACEEngine:
         )
 
         self.io_router = IORouter(self)
+
+    # -------- Skills --------
+
+    def acquire_skill(
+        self,
+        name: str,
+        category: str = "general",
+        description: str = "",
+        knowledge: float = 0.1,
+    ) -> dict:
+        """Acquire a new skill or deepen existing knowledge."""
+        skill = self.skill_manager.acquire(name, category, description, knowledge)
+        return skill.to_dict()
+
+    def practice_skill(self, name: str, success_rate: float = 0.5) -> dict:
+        """Practice a skill to improve proficiency."""
+        return self.skill_manager.practice(name, success_rate)
+
+    def reflect_on_skills(self) -> list[dict]:
+        """Run the offline reflection loop — practice weakest skills."""
+        return self.skill_manager.reflect()
+
+    def get_skill_inventory(self) -> dict:
+        """Get a summary of all skills."""
+        return self.skill_manager.get_inventory_summary()
 
     # -------- Identity / Bonding --------
 
@@ -131,6 +161,7 @@ __all__ = [
     "IdentityManager",
     "PolicyEngine",
     "StateManager",
+    "SkillManager",
     "CapabilityInvoker",
     "DeliberationEngine",
     "WorkflowEngine",

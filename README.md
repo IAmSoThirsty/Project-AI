@@ -161,7 +161,7 @@ Project-AI is an **unbreakable, sovereign-grade substrate** built on three immut
 
 ---
 
-## 🚀 Emergent Microservices — Tier 2 Extensions
+## 🚀 Emergent Microservices — Tier 2 Extensions (Autonomic Feature Injection)
 
 Project-AI integrates a suite of production-ready microservices generated via the **Emergent** framework. These services extend the core governance layer with advanced trust, compliance, and negotiation capabilities.
 
@@ -414,7 +414,7 @@ check_liara_state()  # Auto-revokes if TTL expired
 
 ---
 
-## 🌊 Thirsty's Waterfall — PSIA
+## 🌊 Thirsty's Waterfall — PSIA (Sovereign Immune Architecture - 7-Stage Pipeline)
 
 `src/psia/` — **Project-AI Sovereign Immune Architecture**
 

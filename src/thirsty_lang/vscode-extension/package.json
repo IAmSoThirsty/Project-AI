@@ -1,21 +1,46 @@
 {
   "name": "thirsty-lang",
-  "displayName": "Thirsty-lang",
-  "description": "Language support for Thirsty-lang - Stay hydrated while coding!",
+  "displayName": "Thirsty-lang — Universal Thirsty Family",
+  "description": "Language support for the Thirsty-Lang family: Thirsty-Lang, Thirst of Gods, T.A.R.L., Shadow Thirst, TSCG, and TSCG-B",
   "version": "1.0.0",
   "publisher": "thirsty-lang",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.60.0"
   },
   "categories": [
     "Programming Languages"
   ],
+  "keywords": [
+    "thirsty-lang",
+    "thirst-of-gods",
+    "tarl",
+    "shadow-thirst",
+    "tscg",
+    "tscg-b",
+    "programming-language"
+  ],
   "contributes": {
     "languages": [
       {
         "id": "thirsty",
-        "aliases": ["Thirsty", "thirsty-lang"],
-        "extensions": [".thirsty", ".thirstyplus", ".thirstyplusplus", ".thirstofgods"],
+        "aliases": [
+          "Thirsty-lang",
+          "Thirst of Gods",
+          "T.A.R.L.",
+          "Shadow Thirst",
+          "TSCG",
+          "TSCG-B"
+        ],
+        "extensions": [
+          ".thirsty",
+          ".thirstofgods",
+          ".tog",
+          ".tarl",
+          ".shadow",
+          ".tscg",
+          ".tscgb"
+        ],
         "configuration": "./language-configuration.json"
       }
     ],

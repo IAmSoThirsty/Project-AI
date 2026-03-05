@@ -16,13 +16,12 @@
   --bg-nav: rgba(5, 5, 5, 0.9);
 
   /* Accent Palette — Dark Red + Gold */
-  --violet-400: #ef4444;
-  --violet-500: #dc2626;
-  --violet-600: #8b1a1a;
-  --cyan-400: #fbbf24;
-  --cyan-500: #f59e0b;
-  --emerald-400: #d4a017;
-  --emerald-500: #b8860b;
+  --red-400: #ef4444;
+  --red-500: #dc2626;
+  --red-600: #8b1a1a;
+  --gold-400: #fbbf24;
+  --gold-500: #f59e0b;
+  --gold-600: #d4a017;
   --amber-400: #fbbf24;
   --rose-400: #ef4444;
   --rose-500: #dc2626;
