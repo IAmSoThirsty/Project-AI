@@ -1,5 +1,5 @@
 <div align="right">
-  [2026-03-03 14:30] <br>
+  [2026-03-04 17:35] <br>
   Productivity: Active
 </div>
 # God-Tier Platform (Stable | Sovereign 2.1)
@@ -1336,8 +1336,12 @@ python -c "from cognition.triumvirate import evaluate_triumvirate; print('✅ Tr
 ### Running Key Systems
 
 ```bash
+# Start the Sovereign Governance API (FastAPI)
+uvicorn api.main:app --reload
+
 # Run Iron Path sovereign demonstration
 python -m governance.iron_path
+
 
 # Run Shadow Thirst static analyzer demo
 python demo_shadow_analyzers.py
@@ -1515,6 +1519,12 @@ Project-AI/
 │   ├── hydra_50/               # Multi-headed threat simulation (196K engine)
 │   ├── emp_defense/            # EMP infrastructure protection
 │   ├── django_state/           # Governance state machine
+│   └── ...
+│
+├── api/                        # Sovereign Governance Web Backend
+│   ├── main.py                 # FastAPI ingress with Triumvirate gates
+│   ├── circuit_breaker.py      # Resiliency patterns
+│   ├── rate_limiter.py         # Token bucket routing
 │   └── ...
 │
 ├── src/
