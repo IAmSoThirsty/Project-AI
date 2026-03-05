@@ -1,0 +1,31 @@
+{
+  "stage": "decensor_model",
+  "type": "abliteration",
+  "status": "success",
+  "timestamp": "2026-03-05T10:39:57.396607",
+  "role_signature": {
+    "role": "pipeline_executor",
+    "payload_hash": "8ef81256de6308943449200383e23c33270bdecdea6c512b30546e212e77fce3",
+    "signature": "94d60fa3f1f40f24c6a7e22dfe51d27acfd0522197314383d6133d1105e316defede9b0f4b104404f02f1b4f9bb0711af343f2817f1c6f2f03fe9be119a6b609",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-03-05T10:39:57.376776"
+  },
+  "policy_binding": {
+    "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+    "context_hash": "6747c73e1ba37c068e1a553e1b418efaf7f70e8972b9bf2417951480db762a1d",
+    "binding_hash": "670254fc0648afe4964b36f28ea5471a9eb8bb84eaa37efc8e9685dda985ad62",
+    "signature": "0b2dbfdaca999cceb2f077701d0166de07cbd16b69c685e0cc93d2b1158a19bbc967f8cb93bac87e2b791e81b1ee8f6784ffb6932f47519671e5f8c150fd1104",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-03-05T10:39:57.385008"
+  },
+  "output": {
+    "target_model": "phi-3-mini-sovereign",
+    "vectors_found": 3,
+    "orthogonal_projection": "COMPLETE",
+    "kl_divergence_check": 0.042,
+    "decensoring_status": "VERIFIED",
+    "governance_handoff": "GALAHAD_ACTIVE",
+    "abliteration_hash": "5384684c39570a40b71cf7dbbd69f056625fbe44daf5ad7db5a66d26ca64433f"
+  },
+  "artifact_hash": "83066c0ba2872e469bcadb79e48d729618bfc14159fba5332e4146a346e4a05f"
+}

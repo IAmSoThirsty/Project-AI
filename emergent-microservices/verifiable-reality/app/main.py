@@ -13,6 +13,7 @@ Production-grade microservice with:
 - Database migrations
 - API documentation
 """
+
 import asyncio
 import signal
 import sys
@@ -43,6 +44,20 @@ setup_logging()
 # Graceful shutdown handler
 shutdown_event = asyncio.Event()
 
+# Thirsty-Lang (ToG) Integration
+from project_ai.cognition.tarl_bridge import TarlBridge
+
+tarl = TarlBridge()
+
+
+def run_reality_logic():
+    """Execute mature Thirsty-Lang Sovereign Logic"""
+    logger.info("Executing Verifiable Reality Logic (ToG Level)")
+    try:
+        tarl.execute_file("app/reality_logic.thirsty")
+    except Exception as e:
+        logger.error(f"Sovereign Logic Exception: {e}")
+
 
 def signal_handler(signum, frame):
     """Handle shutdown signals"""
@@ -59,48 +74,47 @@ async def lifespan(app: FastAPI):
     """Manage application lifecycle"""
     # Startup
     logger.info("Starting Verifiable Reality Infrastructure (Post-AI Proof Layer) service v1.0.0")
-    
+
     # Initialize database
     await database.connect()
     logger.info("Database connection established")
-    
+
     # Run migrations if needed
-from .repository import run_migrations
+    from .repository import run_migrations
+
     await run_migrations()
     logger.info("Database migrations completed")
-logger.info("Service startup complete")
-    
+
+    # Finalize Sovereign Maturity
+    run_reality_logic()
+    logger.info("Service startup complete")
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down Verifiable Reality Infrastructure (Post-AI Proof Layer) service")
-    
+
     # Close database connections
     await database.disconnect()
     logger.info("Database connections closed")
-    
+
     logger.info("Service shutdown complete")
 
 
 # Create FastAPI application
 app = FastAPI(
     title="Verifiable Reality Infrastructure (Post-AI Proof Layer)",
-    description="a cryptographic content authenticity network.
-Microservices:
+    description="""Microservices:
 Identity attestation service (hardware-bound keys, WebAuthn)
 Media signing service (hash + Merkle anchoring)
 Public verification API
 Browser extension verifier
 Immutable transparency log
 Dispute resolution / counterclaim service
-Use case:
-Politicians sign speeches.
-Corporations sign press releases.
-Journalists sign raw footage.
-Public verifies via hash proof.",
+Use cases: “A cryptographic content authenticity network for politicians, corporations, and journalists.”""",
     version="1.0.0",
     lifespan=lifespan,
-docs_url="/api/v1/docs",
+    docs_url="/api/v1/docs",
     redoc_url="/api/v1/redoc",
     openapi_url="/api/v1/openapi.json",
 )
@@ -108,7 +122,7 @@ docs_url="/api/v1/docs",
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -150,4 +164,4 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8000,
         log_config=None,  # Use our custom logging
-)
+    )

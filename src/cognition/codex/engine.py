@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-03-04 21:15]
 #                                          Productivity: Active
 """
 Codex Engine - ML Model Inference with Production Features
@@ -118,8 +118,8 @@ class CodexEngine:
                 if torch.cuda.is_available():
                     logger.info("GPU detected and enabled")
                     return "cuda"
-            except ImportError:
-                pass
+            except Exception as e:
+                logger.warning(f"Failed to initialize torch for GPU detection: {e}")
             logger.info("GPU not available, using CPU")
             return "cpu"
 

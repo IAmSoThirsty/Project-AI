@@ -1,12 +1,13 @@
-#                                                                              [2026-03-01 13:50]
+#                                                                              [2026-03-04 21:15]
 #                                                                           Productivity: Active
 """Shared leather book panels used by the interface."""
 
 import math
 
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
 from PyQt6.QtWidgets import (
+    QApplication,
     QFrame,
     QHBoxLayout,
     QLabel,
@@ -20,8 +21,8 @@ from PyQt6.QtWidgets import (
 from app.core.backend_client import BackendAPIClient
 
 
-class TronFacePage(QFrame):  # pylint: disable=too-few-public-methods
-    """Left page with a Tron-styled animated face."""
+class SovereignPersonaPage(QFrame):  # pylint: disable=too-few-public-methods
+    """Left page with a Sovereign-styled animated avatar."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -41,11 +42,11 @@ class TronFacePage(QFrame):  # pylint: disable=too-few-public-methods
         self.setMinimumWidth(400)
 
     def _setup_layout(self):
-        """Prepare the layout and components for the Tron face panel."""
+        """Prepare the layout and components for the Sovereign persona panel."""
         layout = QVBoxLayout(self)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.addWidget(self._create_title())
-        self.face_canvas = TronFaceCanvas()
+        self.face_canvas = SovereignPersonaCanvas()
         layout.addWidget(self.face_canvas, 1)
         layout.addLayout(self._create_status_layout())
 
@@ -84,8 +85,8 @@ class TronFacePage(QFrame):  # pylint: disable=too-few-public-methods
         self.animation_timer.start(50)
 
 
-class TronFaceCanvas(QFrame):  # pylint: disable=too-few-public-methods
-    """Canvas that paints the Tron-style face and data streams."""
+class SovereignPersonaCanvas(QFrame):  # pylint: disable=too-few-public-methods
+    """Canvas that paints the Sovereign-style avatar and data streams."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -94,7 +95,7 @@ class TronFaceCanvas(QFrame):  # pylint: disable=too-few-public-methods
         self.animation_frame = 0
 
     def paintEvent(self, a0):
-        """Render the Tron assets whenever Qt requests a paint."""
+        """Render the Sovereign assets whenever Qt requests a paint."""
         super().paintEvent(a0)
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -258,6 +259,7 @@ class IntroInfoPage(QFrame):
         self.content_stack.addWidget(self._create_glossary_page())
         self.content_stack.addWidget(self._create_contents_page())
         layout.addWidget(self.content_stack, 1)
+        layout.addWidget(self._create_exit_button())
         layout.addWidget(self._create_footer())
 
     def _create_title(self) -> QLabel:
@@ -306,9 +308,32 @@ class IntroInfoPage(QFrame):
         return tab_layout
 
     def _create_footer(self) -> QLabel:
-        footer = QLabel("© 2025 Project-AI | Advanced Neural Intelligence System")
-        footer.setStyleSheet("color: #8b7355; font-size: 10px; padding-top: 20px;")
+        footer = QLabel("© 2026 Project-AI | Sovereign 1st Edition Release")
+        footer.setStyleSheet(
+            "color: #8b7355; font-size: 10px; padding-top: 10px; text-align: center;"
+        )
         return footer
+
+    def _create_exit_button(self) -> QPushButton:
+        btn = QPushButton("EXIT SYSTEM")
+        btn.setStyleSheet("""
+            QPushButton {
+                background-color: #4a1c1c;
+                border: 2px solid #8b3b3b;
+                color: #ffcccc;
+                padding: 12px;
+                border-radius: 4px;
+                font-weight: bold;
+                font-family: 'Courier New';
+            }
+            QPushButton:hover {
+                background-color: #6a2c2c;
+                border: 2px solid #ff0000;
+                color: #ffffff;
+            }
+        """)
+        btn.clicked.connect(lambda: QApplication.quit())
+        return btn
 
     def _create_login_page(self) -> QWidget:
         """Build the LOGIN tab content."""
@@ -586,3 +611,8 @@ class IntroInfoPage(QFrame):
             self.username_input.clear()
         if self.password_input:
             self.password_input.clear()
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Escape:
+            QApplication.quit()
+        super().keyPressEvent(event)

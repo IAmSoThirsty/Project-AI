@@ -1,4 +1,4 @@
-#                                           [2026-03-03 14:22]
+#                                           [2026-03-04 21:15]
 #                                          Productivity: Active
 <#
 .SYNOPSIS
@@ -24,7 +24,7 @@ if (Test-Path $ExePath) {
     $TargetPath = $ExePath
     $UseExe = $true
 } else {
-    $TargetPath = Join-Path $ProjectRoot "start.ps1"
+    $TargetPath = Join-Path $ProjectRoot "Project-AI.ps1"
     $UseExe = $false
 }
 $IconPath = Join-Path $ProjectRoot "desktop/build/icon.ico"
@@ -54,7 +54,7 @@ function Create-HardenedShortcut {
         $Shortcut.TargetPath = "powershell.exe"
         $Shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$TargetPath`" -Full"
         $Shortcut.WorkingDirectory = $ProjectRoot
-        $Shortcut.Description = "Project-AI Sovereign Master UI (Leather Book)"
+        $Shortcut.Description = "Project-AI Sovereign Master UI (1st Edition)"
     }
     
     if (Test-Path $IconPath) {

@@ -1,4 +1,4 @@
-#                                           [2026-03-04 09:48]
+#                                           [2026-03-04 21:15]
 #                                          Productivity: Active
 """
 LeatherBookInterface - Main Orchestrator for the Project-AI Desktop Application.ut.
@@ -11,7 +11,7 @@ Creates an old leather book aesthetic with:
 
 import logging
 
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import (
     QGraphicsDropShadowEffect,
@@ -27,7 +27,7 @@ from src.app.core.platform_tiers import (
     PlatformTier,
     get_tier_registry,
 )
-from src.app.gui.leather_book_panels import IntroInfoPage, TronFacePage
+from src.app.gui.leather_book_panels import IntroInfoPage, SovereignPersonaPage
 from src.app.gui.persona_panel import PersonaPanel
 
 logger = logging.getLogger(__name__)
@@ -45,8 +45,8 @@ class LeatherBookInterface(QMainWindow):
         self.backend_token: str | None = None
         self.current_page = 0  # 0 = login/intro, 1 = main dashboard
 
-        self.setWindowTitle("Project-AI: Leather Book Interface")
-        self.setGeometry(100, 100, 1920, 1080)
+        self.setWindowTitle("Project-AI: Sovereign 1st Edition")
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setStyleSheet(self._get_stylesheet())
 
         self.main_widget = QWidget()
@@ -55,7 +55,7 @@ class LeatherBookInterface(QMainWindow):
         self.main_layout.setContentsMargins(0, 0, 0, 0)
         self.main_layout.setSpacing(0)
 
-        self.left_page = TronFacePage(self)
+        self.left_page = SovereignPersonaPage(self)
         self.right_page = IntroInfoPage(self)
 
         self.page_container = QStackedWidget()
@@ -86,7 +86,10 @@ class LeatherBookInterface(QMainWindow):
                 "Failed to register LeatherBookInterface in tier registry: %s", e
             )
 
-        self.show()
+        # Engulf the screen for 1st Edition immersion
+        self.showFullScreen()
+        self.raise_()
+        self.activateWindow()
 
     def _get_stylesheet(self) -> str:
         """Return QSS stylesheet for leather book theme."""

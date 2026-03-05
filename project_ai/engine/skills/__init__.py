@@ -24,5 +24,7 @@ Submodules:
 
 from .skill import Skill
 from .skill_manager import SkillManager
+from .sigma_rules import SigmaRulesSkill
+from .forensics import ForensicsSkill
 
-__all__ = ["Skill", "SkillManager"]
+__all__ = ["Skill", "SkillManager", "SigmaRulesSkill", "ForensicsSkill"]

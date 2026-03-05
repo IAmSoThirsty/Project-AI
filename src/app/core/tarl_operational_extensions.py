@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-03-05 10:03]
 #                                          Productivity: Active
 """
 TARL (Thirsty's Active Resistance Language) Operational Extensions
@@ -192,7 +192,9 @@ class TARLSignalsTelemetry(SignalsTelemetry):
         severity = (
             SeverityLevel.CRITICAL
             if confidence > 0.9
-            else SeverityLevel.ERROR if confidence > 0.7 else SeverityLevel.WARNING
+            else SeverityLevel.ERROR
+            if confidence > 0.7
+            else SeverityLevel.WARNING
         )
 
         signal = Signal(

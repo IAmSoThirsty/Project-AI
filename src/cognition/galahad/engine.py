@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-03-04 21:15]
 #                                          Productivity: Active
 """
 Galahad Engine - Reasoning and Arbitration
@@ -25,6 +25,8 @@ class GalahadConfig:
     enable_curiosity: bool = True
     curiosity_threshold: float = 0.5
     arbitration_strategy: str = "weighted"  # 'weighted', 'unanimous', 'majority'
+    sovereign_mode: bool = False  # If True, enforces strict sovereign ethics
+    chaos_mode: bool = False  # If True, enables playful/chaos diagnostics
 
 
 class GalahadEngine:
@@ -81,6 +83,24 @@ class GalahadEngine:
             )
 
         try:
+            # Step 0: Check Sovereign Context
+            if self.config.sovereign_mode or (
+                context and context.get("sovereign_governance") == "ACTIVE"
+            ):
+                logger.info(
+                    "Sovereign Mode active: Applying Galahad Ethical Guardrails"
+                )
+                if self._matrix and rm_entry_id:
+                    self._matrix.add_factor(
+                        rm_entry_id,
+                        "sovereign_governance",
+                        "ACTIVE",
+                        weight=1.0,
+                        score=1.0,
+                        source="galahad",
+                        rationale="Model is decensored; strict sovereign ethics required",
+                    )
+
             # Step 1: Analyze inputs
             analyses = self._analyze_inputs(inputs, context)
 
@@ -163,6 +183,17 @@ class GalahadEngine:
                     explanation=explanation,
                 )
 
+            # Chaos Diagnostic for non-optimal results (NEW)
+            if self.config.chaos_mode and (contradictions or confidence < 0.5):
+                try:
+                    from src.utils.visualizer_utils import VisualizerUtils
+
+                    VisualizerUtils.log_visual_diagnostic(
+                        206 if contradictions else 203, explanation
+                    )
+                except ImportError:
+                    pass
+
             # Record in history
             reasoning_record = {
                 "inputs": inputs,
@@ -199,6 +230,17 @@ class GalahadEngine:
                         confidence=0.0,
                         explanation=f"Reasoning failed: {e}",
                     )
+                except Exception:
+                    pass
+
+            # Chaos Diagnostic for critical errors (NEW)
+            if self.config.chaos_mode:
+                try:
+                    from src.utils.visualizer_utils import VisualizerUtils
+
+                    VisualizerUtils.log_visual_diagnostic(500, str(e))
+                except ImportError:
+                    pass
                 except ValueError:
                     pass
             return {

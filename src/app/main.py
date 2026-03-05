@@ -1,4 +1,4 @@
-#                                           [2026-03-04 09:48]
+#                                           [2026-03-05 08:49]
 #                                          Productivity: Active
 """
 Main entry point for the AI Desktop Application with AGI Identity System.
@@ -37,7 +37,8 @@ from src.app.core.memory_engine import MemoryEngine
 from src.app.core.platform_tiers import get_tier_registry
 from src.app.core.reflection_cycle import ReflectionCycle
 from src.app.core.tier_health_dashboard import get_health_monitor
-from src.app.gui.dashboard_main import DashboardMainWindow
+
+# from src.app.gui.dashboard_main import DashboardMainWindow
 from src.cognition.triumvirate import Triumvirate
 
 # ────────────────────────────────────────────────────────────────────────────
@@ -1022,6 +1023,89 @@ def main():
     # Create and run application
     app = QApplication(sys.argv)
 
+    # Apply "Leather Book UI" Sovereign Aesthetic
+    leather_book_qss = """
+    QMainWindow {
+        background-color: #0d0c10;
+        background-image: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #1a1520, stop:1 #050407);
+    }
+    QWidget {
+        color: #e8cca1;
+        font-family: "Segoe UI", "Consolas", sans-serif;
+    }
+    QTabWidget::pane {
+        border: 1px solid #4a3b2c;
+        background-color: rgba(20, 16, 22, 0.85);
+        border-radius: 4px;
+        margin-top: -1px;
+    }
+    QTabBar::tab {
+        background-color: #1c1620;
+        color: #8b7155;
+        border: 1px solid #2d241d;
+        border-bottom-color: #4a3b2c;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        padding: 8px 16px;
+        font-weight: bold;
+    }
+    QTabBar::tab:selected {
+        background-color: #2b1f2e;
+        color: #ffcc00; /* Glowing Gold */
+        border: 1px solid #8c6b20;
+        border-bottom-color: #2b1f2e;
+    }
+    QTabBar::tab:hover:!selected {
+        background-color: #261c28;
+        color: #d1b16c;
+    }
+    QPushButton {
+        background-color: #18121a;
+        color: #d8b884;
+        border: 1px solid #5a4632;
+        border-radius: 4px;
+        padding: 6px 14px;
+        font-weight: bold;
+    }
+    QPushButton:hover {
+        background-color: #2b1b26;
+        color: #ffcc00;
+        border: 1px solid #991a1a; /* Cybernetic Crimson */
+    }
+    QPushButton:pressed {
+        background-color: #0b080c;
+        border: 1px solid #ffcc00;
+    }
+    QListWidget, QTextEdit {
+        background-color: #0a080d;
+        color: #e0d0b0;
+        border: 1px solid #3d2f23;
+        border-radius: 4px;
+        padding: 4px;
+        selection-background-color: #4a1c1c;
+        selection-color: #ffcc00;
+    }
+    QLabel {
+        font-weight: bold;
+        color: #c9a779;
+    }
+    QScrollBar:vertical {
+        border: none;
+        background: #110e13;
+        width: 10px;
+        margin: 0px 0px 0px 0px;
+    }
+    QScrollBar::handle:vertical {
+        background: #4a3b2c;
+        min-height: 20px;
+        border-radius: 5px;
+    }
+    QScrollBar::handle:vertical:hover {
+        background: #8c6b20;
+    }
+    """
+    app.setStyleSheet(leather_book_qss)
+
     # Use a modern, legible default font and slightly larger base size
     try:
         default_font = QFont("Segoe UI", 10)
@@ -1030,9 +1114,10 @@ def main():
         fallback_font = QFont("Arial", 10)
         app.setFont(fallback_font)
 
-    # Show the consolidated dashboard
-    # Note: Dashboard will self-register as Tier-3 during initialization
-    app_window = DashboardMainWindow()
+    # Show the High-Fidelity 1st Edition Interface
+    from src.app.gui.leather_book_interface import LeatherBookInterface
+
+    app_window = LeatherBookInterface()
 
     # Make subsystems accessible to the dashboard
     if hasattr(app_window, "set_identity_engine"):
@@ -1046,7 +1131,7 @@ def main():
     if hasattr(app_window, "set_security_systems"):
         app_window.set_security_systems(all_security_systems)
 
-    app_window.show()
+    # app_window.show() - Handled internally by LeatherBookInterface
 
     logger.info("🎨 GUI launched - kernel governance active")
     logger.info("🔒 Security systems active and protecting")

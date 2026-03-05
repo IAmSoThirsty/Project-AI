@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD033 MD025 MD041 -->
 <div align="right">
-[2026-03-01 10:00] <br>
-Productivity: Active
+  <img src="https://img.shields.io/badge/DATE-2026--03--05-blueviolet?style=for-the-badge" alt="Date" />
+  <img src="https://img.shields.io/badge/PRODUCTIVITY-ACTIVE-success?style=for-the-badge" alt="Productivity" />
 </div>
 
 # Project-AI Documentation Portal

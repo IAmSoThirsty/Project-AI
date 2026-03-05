@@ -13,6 +13,7 @@ Production-grade microservice with:
 - Database migrations
 - API documentation
 """
+
 import asyncio
 import signal
 import sys
@@ -40,6 +41,21 @@ from .repository import database
 # Setup logging
 setup_logging()
 
+# Thirsty-Lang (ToG) Integration
+from project_ai.cognition.tarl_bridge import TarlBridge
+
+tarl = TarlBridge()
+
+
+def run_vault_logic():
+    """Execute mature Thirsty-Lang Sovereign Logic"""
+    logger.info("Executing Sovereign Data Vault Logic (ToG Level)")
+    try:
+        tarl.execute_file("app/vault_logic.thirsty")
+    except Exception as e:
+        logger.error(f"Sovereign Logic Exception: {e}")
+
+
 # Graceful shutdown handler
 shutdown_event = asyncio.Event()
 
@@ -59,42 +75,46 @@ async def lifespan(app: FastAPI):
     """Manage application lifecycle"""
     # Startup
     logger.info("Starting Sovereign Data Vault Layer service v1.0.0")
-    
+
     # Initialize database
     await database.connect()
     logger.info("Database connection established")
-    
+
     # Run migrations if needed
-from .repository import run_migrations
+    from .repository import run_migrations
+
     await run_migrations()
     logger.info("Database migrations completed")
-logger.info("Service startup complete")
-    
+
+    # Finalize Sovereign Maturity
+    run_vault_logic()
+    logger.info("Service startup complete")
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down Sovereign Data Vault Layer service")
-    
+
     # Close database connections
     await database.disconnect()
     logger.info("Database connections closed")
-    
+
     logger.info("Service shutdown complete")
 
 
 # Create FastAPI application
 app = FastAPI(
     title="Sovereign Data Vault Layer",
-    description="Microservices:
+    description="""Microservices:
 Zero-knowledge encryption layer
 Capability-based access control
 Time-bound decryption tokens
 Audit trail hashing
 Revocation propagation service
-Use case: “Your data, provably inaccessible without your cryptographic consent.”",
+Use case: “Your data, provably inaccessible without your cryptographic consent.”""",
     version="1.0.0",
     lifespan=lifespan,
-docs_url="/api/v1/docs",
+    docs_url="/api/v1/docs",
     redoc_url="/api/v1/redoc",
     openapi_url="/api/v1/openapi.json",
 )
@@ -102,7 +122,7 @@ docs_url="/api/v1/docs",
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -144,4 +164,4 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8000,
         log_config=None,  # Use our custom logging
-)
+    )

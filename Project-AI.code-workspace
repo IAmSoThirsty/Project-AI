@@ -41,6 +41,108 @@
 		},
 		{
 			"path": "../../../../../Desktop/Github/Integrationg Microservices/Verifiable Reality Infrastructure (Post-AI Proof Layer)"
+		},
+		{
+			"path": "../thirsty-lang-analytics-dashboard"
+		},
+		{
+			"path": "../thirsty-lang-api-gateway"
+		},
+		{
+			"path": "../thirsty-lang-api-starter"
+		},
+		{
+			"path": "../thirsty-lang-auth-provider"
+		},
+		{
+			"path": "../thirsty-lang-best-practices"
+		},
+		{
+			"path": "../thirsty-lang-blockchain"
+		},
+		{
+			"path": "../thirsty-lang-caching-layer"
+		},
+		{
+			"path": "../thirsty-lang-chatbot"
+		},
+		{
+			"path": "../thirsty-lang-cli-tool-template"
+		},
+		{
+			"path": "../thirsty-lang-compiler-tools"
+		},
+		{
+			"path": "../thirsty-lang-cookbook"
+		},
+		{
+			"path": "../thirsty-lang-database-orm"
+		},
+		{
+			"path": "../thirsty-lang-data-pipeline"
+		},
+		{
+			"path": "../thirsty-lang-desktop-app"
+		},
+		{
+			"path": "../thirsty-lang-devops-automation"
+		},
+		{
+			"path": "../thirsty-lang-event-sourcing"
+		},
+		{
+			"path": "../thirsty-lang-exercises"
+		},
+		{
+			"path": "../thirsty-lang-fullstack-app"
+		},
+		{
+			"path": "../thirsty-lang-game-engine-demo"
+		},
+		{
+			"path": "../thirsty-lang-graphql-api"
+		},
+		{
+			"path": "../thirsty-lang-iot-devices"
+		},
+		{
+			"path": "../thirsty-lang-microservices"
+		},
+		{
+			"path": "../thirsty-lang-ml-starter"
+		},
+		{
+			"path": "../thirsty-lang-mobile-app"
+		},
+		{
+			"path": "../thirsty-lang-observability"
+		},
+		{
+			"path": "../thirsty-lang-penetration-testing"
+		},
+		{
+			"path": "../thirsty-lang-plugin-system"
+		},
+		{
+			"path": "../thirsty-lang-queue-worker"
+		},
+		{
+			"path": "../thirsty-lang-security-toolkit"
+		},
+		{
+			"path": "../thirsty-lang-service-mesh"
+		},
+		{
+			"path": "../thirsty-lang-testing-framework"
+		},
+		{
+			"path": "../thirsty-lang-text-adventure"
+		},
+		{
+			"path": "../thirsty-lang-web-framework"
+		},
+		{
+			"path": "../thirsty-lang-websocket-server"
 		}
 	],
 	"settings": {

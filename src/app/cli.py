@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-03-05 08:59]
 #                                          Productivity: Active
 """
 Project-AI CLI — Production-grade command-line interface.
@@ -43,7 +43,7 @@ def main(
         help="Show version and exit.",
         callback=version_callback,
         is_eager=True,
-    )
+    ),
 ):
     """
     Project-AI CLI - A comprehensive AI assistant platform.
@@ -197,7 +197,7 @@ health_app = typer.Typer(help="Commands for system health reporting and diagnost
 def health_report(
     verbose: bool = typer.Option(
         False, "--verbose", "-v", help="Enable verbose output."
-    )
+    ),
 ):
     """Generate a comprehensive system health report with YAML snapshot and PNG visualization."""
     if verbose:
@@ -721,9 +721,11 @@ def system_governance():
         # Validate a no-op action to demonstrate the system is live
         result = FourLaws.validate_action("system_status_check")
         typer.echo(
-            f"  Four Laws framework: {'✓ Active' if result.get('allowed', False) else '⚠ Restricted'}"
+            "  Four Laws framework: ✓ Active"
+            if result.get("allowed", False)
+            else "  Four Laws framework: ⚠ Restricted"
         )
-        typer.echo(f"  Humanity-first principle: Active")
+        typer.echo("  Humanity-first principle: Active")
         typer.echo(f"  System version: {__version__}")
 
         typer.echo()

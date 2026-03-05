@@ -1,40 +1,43 @@
-//                                           [2026-03-01 13:20]
-//                                          Productivity: Active
-// Project-AI Global Jurisdiction Policy
-// Floor 1: Thirsty-Lang Security Sovereignty
+// ═══════════════════════════════════════════════════════════
+// Project-AI Global Jurisdiction Policy (v2.0.0)
+// Thirst of Gods (ToG) Maturity
+// ═══════════════════════════════════════════════════════════
+// Date: 2026-03-05 10:25 | Productivity: Active
 
-import "c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/src/app/arch_ledger.thirsty";
+sacred import "src/app/arch_ledger"
 
-shield GlobalJurisdiction {
-    define jurisdiction_id = "JUR-0-2";
-    define compliance_level = "Sovereign";
-    
-    // 1. Cross-Repo Security Shields
-    thirsty verify_inter_service_comm(request) {
-        if (!request.has_sovereign_armor) {
-            defend("Non-Sovereign Request Blocked in " + jurisdiction_id);
-            ArchitecturalLedger.record_state("SEC_VIOLATION: Non-Sovereign Request from " + request.origin);
-            return false;
+fountain GlobalJurisdiction
+    drink jurisdiction_id = "JUR-0-2"
+    drink compliance_level = "Sovereign"
+
+    glass verify_inter_service_comm(request)
+        shield cross_repo_defense {
+            thirsty !request.has_sovereign_armor {
+                defend("Non-Sovereign Request Blocked in " + this.jurisdiction_id)
+                await ArchitecturalLedger.record_state("SEC_VIOLATION: Non-Sovereign Request from " + request.origin)
+                return false
+            }
+            return true
         }
-        return true;
-    }
-    
-    // 2. Audit Trail Requirements
-    thirsty require_audit(action) {
-        if (action.is_critical) {
-            ArchitecturalLedger.record_state("CRITICAL_ACTION: " + action.description);
-            return true;
-        }
-        return true;
-    }
-    
-    // 3. System-Wide Panic Lock
-    function emergency_lockdown() {
-        print("!!! GLOBAL EMERGENCY LOCKDOWN INITIATED !!!");
-        ArchitecturalLedger.record_state("GLOBAL_LOCKED: JUR-0-2");
-        return true;
-    }
-}
+    endglass
 
-// Register Global Jurisdiction with the ecosystem
-print("Global Jurisdiction " + GlobalJurisdiction.jurisdiction_id + " Active");
+    glass require_audit(action)
+        shield audit_gate {
+            thirsty action.is_critical {
+                await ArchitecturalLedger.record_state("CRITICAL_ACTION: " + action.description)
+                return true
+            }
+            return true
+        }
+    endglass
+
+    glass emergency_lockdown()
+        shield system_panic {
+            pour "!!! GLOBAL EMERGENCY LOCKDOWN INITIATED !!!"
+            await ArchitecturalLedger.record_state("GLOBAL_LOCKED: " + this.jurisdiction_id)
+            return true
+        }
+    endglass
+endfountain
+
+pour "Global Jurisdiction " + GlobalJurisdiction.jurisdiction_id + " Active"

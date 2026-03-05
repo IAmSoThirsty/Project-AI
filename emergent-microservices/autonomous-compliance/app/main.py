@@ -13,6 +13,7 @@ Production-grade microservice with:
 - Database migrations
 - API documentation
 """
+
 import asyncio
 import signal
 import sys
@@ -43,6 +44,20 @@ setup_logging()
 # Graceful shutdown handler
 shutdown_event = asyncio.Event()
 
+# Thirsty-Lang (ToG) Integration
+from project_ai.cognition.tarl_bridge import TarlBridge
+
+tarl = TarlBridge()
+
+
+def run_compliance_logic():
+    """Execute mature Thirsty-Lang Sovereign Logic"""
+    logger.info("Executing Autonomous Compliance Logic (ToG Level)")
+    try:
+        tarl.execute_file("app/compliance_logic.thirsty")
+    except Exception as e:
+        logger.error(f"Sovereign Logic Exception: {e}")
+
 
 def signal_handler(signum, frame):
     """Handle shutdown signals"""
@@ -59,45 +74,46 @@ async def lifespan(app: FastAPI):
     """Manage application lifecycle"""
     # Startup
     logger.info("Starting Autonomous Compliance-as-Code Engine service v1.0.0")
-    
+
     # Initialize database
     await database.connect()
     logger.info("Database connection established")
-    
+
     # Run migrations if needed
-from .repository import run_migrations
+    from .repository import run_migrations
+
     await run_migrations()
     logger.info("Database migrations completed")
-logger.info("Service startup complete")
-    
+
+    # Finalize Sovereign Maturity
+    run_compliance_logic()
+    logger.info("Service startup complete")
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down Autonomous Compliance-as-Code Engine service")
-    
+
     # Close database connections
     await database.disconnect()
     logger.info("Database connections closed")
-    
+
     logger.info("Service shutdown complete")
 
 
 # Create FastAPI application
 app = FastAPI(
     title="Autonomous Compliance-as-Code Engine",
-    description="Build a regulator-ready microservice fabric that:
-Ingests policy (YAML/DSL)
-Compiles invariants
-Evaluates runtime actions deterministically
-Produces signed audit trails
-Exports SOC2 / ISO / NIST artifacts automatically
-Add:
-Continuous evidence generation
-Machine-verifiable compliance proofs
-API to expose compliance state to customers",
+    description="""Microservices:
+Real-time regulatory axiom enforcement
+Self-healing infrastructure control loops
+Immutable audit trail generation
+Policy-as-code (Thirsty-Lang) execution
+Automated risk mitigation sequencing
+Use case: “Provable compliance at the speed of thought.”""",
     version="1.0.0",
     lifespan=lifespan,
-docs_url="/api/v1/docs",
+    docs_url="/api/v1/docs",
     redoc_url="/api/v1/redoc",
     openapi_url="/api/v1/openapi.json",
 )
@@ -105,7 +121,7 @@ docs_url="/api/v1/docs",
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -147,4 +163,4 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=8000,
         log_config=None,  # Use our custom logging
-)
+    )

@@ -1,9 +1,15 @@
 <div align="right">
-  [2026-03-03 20:39] <br>
-  Productivity: Active
+  <img src="https://img.shields.io/badge/DATE-2026--03--05-blueviolet?style=for-the-badge" alt="Date" />
+  <img src="https://img.shields.io/badge/PRODUCTIVITY-ACTIVE-success?style=for-the-badge" alt="Productivity" />
 </div>
 
 # Project-AI Master Technical Specification (Version 2.2-SOVEREIGN)
+
+<p align="center">
+  <img src="https://img.shields.io/badge/STATUS-MASTER--TIER-gold?style=for-the-badge" alt="Status: Master Tier" />
+  <img src="https://img.shields.io/badge/SECURITY-SOVEREIGN-red?style=for-the-badge" alt="Security: Sovereign" />
+  <img src="https://img.shields.io/badge/COMPLIANCE-ToG--LEVEL-blue?style=for-the-badge" alt="Compliance: ToG Level" />
+</p>
 
 > [!IMPORTANT]
 > This document serves as the authoritative technical reference for auditors and developers. It provides a complete map of the Project-AI sovereign substrate, the index of functional mandates, and the translation layer for mythic terminology.

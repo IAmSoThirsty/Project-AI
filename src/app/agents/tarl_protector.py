@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-03-04 21:30]
 #                                          Productivity: Active
 """T-A-R-L (Thirsty's Active Resistance Language) - Strategic Code Protection Agent.
 
@@ -21,7 +21,7 @@ import logging
 import os
 import re
 from datetime import UTC, datetime
-from typing import Any
+from typing import Any, cast
 
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
 from app.core.kernel_integration import KernelRoutedAgent
@@ -67,7 +67,7 @@ class TARLCodeProtector(KernelRoutedAgent):
         # Protection metrics
         self.protections_applied = 0
         self.code_sections_hardened = 0
-        self.active_protections = {}
+        self.active_protections: dict[str, Any] = {}
 
         # Strategy tracking
         self.strategies_deployed = {
@@ -96,7 +96,7 @@ class TARLCodeProtector(KernelRoutedAgent):
             Protection application result with metrics
         """
         # Route through kernel (COGNITION KERNEL ROUTING)
-        return self._execute_through_kernel(
+        result = self._execute_through_kernel(
             self._do_apply_protection,
             file_path,
             protection_level,
@@ -104,6 +104,7 @@ class TARLCodeProtector(KernelRoutedAgent):
             risk_level="high",
             metadata={"file_path": file_path, "protection_level": protection_level},
         )
+        return cast(dict[str, Any], result)
 
     def _do_apply_protection(
         self, file_path: str, protection_level: str = "standard"
@@ -181,13 +182,14 @@ class TARLCodeProtector(KernelRoutedAgent):
             Defense response metrics
         """
         # Route through kernel (COGNITION KERNEL ROUTING)
-        return self._execute_through_kernel(
+        result = self._execute_through_kernel(
             self._do_respond_to_threat,
             cerberus_threat,
             operation_name="respond_to_threat",
             risk_level="high",
             metadata={"severity": cerberus_threat.get("severity", "medium")},
         )
+        return cast(dict[str, Any], result)
 
     def _do_respond_to_threat(self, cerberus_threat: dict[str, Any]) -> dict[str, Any]:
         """Internal implementation of threat response."""
