@@ -37,7 +37,7 @@ try:
         MonotonicViolationError,
         TSAAnchorManager,
     )
-    from app.governance.tsa_provider import TSAProvider, TSAToken, TSAVerificationError
+    from app.governance.tsa_provider import TSAProvider, TSAVerificationError
 except ImportError:
     from src.app.governance.sovereign_audit_log import SovereignAuditLog
     from src.app.governance.tsa_anchor_manager import (

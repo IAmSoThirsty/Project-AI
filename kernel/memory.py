@@ -21,7 +21,6 @@ import threading
 import time
 from dataclasses import dataclass, field
 from enum import Enum, IntEnum
-from typing import Dict, List, Optional, Set, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +50,8 @@ class Page:
     page_number: int
     size: PageSize
     state: PageState
-    virtual_address: Optional[int] = None
-    owner_pid: Optional[int] = None
+    virtual_address: int | None = None
+    owner_pid: int | None = None
     reference_count: int = 0
     access_count: int = 0  # For LRU
     last_access_time: float = 0.0  # For aging
@@ -68,7 +67,7 @@ class MemoryAllocation:
     pid: int
     virtual_address: int
     size_bytes: int
-    page_numbers: List[int] = field(default_factory=list)
+    page_numbers: list[int] = field(default_factory=list)
     allocated_at: float = 0.0
     is_shared: bool = False
 
@@ -92,7 +91,7 @@ class PageTable:
     """Page table for virtual-to-physical address translation"""
 
     def __init__(self):
-        self.entries: Dict[int, Page] = {}  # virtual_addr -> Page
+        self.entries: dict[int, Page] = {}  # virtual_addr -> Page
         self.lock = threading.RLock()
 
     def map(self, virtual_addr: int, page: Page):
@@ -101,17 +100,17 @@ class PageTable:
             self.entries[virtual_addr] = page
             page.virtual_address = virtual_addr
 
-    def unmap(self, virtual_addr: int) -> Optional[Page]:
+    def unmap(self, virtual_addr: int) -> Page | None:
         """Unmap virtual address"""
         with self.lock:
             return self.entries.pop(virtual_addr, None)
 
-    def lookup(self, virtual_addr: int) -> Optional[Page]:
+    def lookup(self, virtual_addr: int) -> Page | None:
         """Lookup physical page for virtual address"""
         with self.lock:
             return self.entries.get(virtual_addr)
 
-    def get_all_mappings(self) -> List[Tuple[int, Page]]:
+    def get_all_mappings(self) -> list[tuple[int, Page]]:
         """Get all virtual-to-physical mappings"""
         with self.lock:
             return list(self.entries.items())
@@ -131,7 +130,7 @@ class MemoryManager:
     - Leak detection
     """
 
-    def __init__(self, config: Optional[MemoryManagerConfig] = None):
+    def __init__(self, config: MemoryManagerConfig | None = None):
         self.config = config or MemoryManagerConfig()
 
         # Calculate number of pages
@@ -143,8 +142,8 @@ class MemoryManager:
         )
 
         # Physical page pool
-        self.pages: Dict[int, Page] = {}
-        self.free_pages: Set[int] = set()
+        self.pages: dict[int, Page] = {}
+        self.free_pages: set[int] = set()
 
         # Initialize page pool
         for i in range(self.total_pages):
@@ -153,22 +152,22 @@ class MemoryManager:
             self.free_pages.add(i)
 
         # Per-process page tables
-        self.page_tables: Dict[int, PageTable] = {}
+        self.page_tables: dict[int, PageTable] = {}
 
         # Allocation tracking
-        self.allocations: Dict[int, MemoryAllocation] = {}
+        self.allocations: dict[int, MemoryAllocation] = {}
         self.next_allocation_id = 1
         self.next_virtual_address = 0x1000  # Start at 4KB to avoid null
 
         # Per-process memory usage
-        self.process_memory: Dict[int, int] = {}  # pid -> bytes allocated
+        self.process_memory: dict[int, int] = {}  # pid -> bytes allocated
 
         # Swap space management
-        self.swap_map: Dict[int, int] = {}  # swapped page -> swap slot
-        self.free_swap_slots: Set[int] = set(range(self.swap_pages))
+        self.swap_map: dict[int, int] = {}  # swapped page -> swap slot
+        self.free_swap_slots: set[int] = set(range(self.swap_pages))
 
         # Page replacement queue (for LRU/Clock)
-        self.replacement_queue: List[int] = []
+        self.replacement_queue: list[int] = []
         self.clock_hand: int = 0  # For Clock algorithm
 
         # Thread safety
@@ -194,7 +193,7 @@ class MemoryManager:
         pid: int,
         size_bytes: int,
         prefer_huge_pages: bool = False,
-        numa_node: Optional[int] = None,
+        numa_node: int | None = None,
     ) -> MemoryAllocation:
         """
         Allocate memory for process
@@ -285,7 +284,7 @@ class MemoryManager:
             )
             return allocation
 
-    def _allocate_pages(self, count: int, numa_node: Optional[int] = None) -> List[int]:
+    def _allocate_pages(self, count: int, numa_node: int | None = None) -> list[int]:
         """Allocate physical pages from free pool"""
         allocated = []
 
@@ -309,7 +308,7 @@ class MemoryManager:
 
         return allocated
 
-    def _free_pages(self, page_numbers: List[int]):
+    def _free_pages(self, page_numbers: list[int]):
         """Return pages to free pool"""
         for page_num in page_numbers:
             page = self.pages[page_num]
@@ -438,7 +437,7 @@ class MemoryManager:
         logger.debug(f"Swapped in page {page_num}")
         return True
 
-    def _select_victim_pages(self, count: int) -> List[int]:
+    def _select_victim_pages(self, count: int) -> list[int]:
         """Select victim pages for eviction using configured algorithm"""
         algorithm = self.config.page_replacement_algorithm.lower()
 
@@ -452,7 +451,7 @@ class MemoryManager:
             logger.warning(f"Unknown algorithm {algorithm}, using LRU")
             return self._lru_select(count)
 
-    def _lru_select(self, count: int) -> List[int]:
+    def _lru_select(self, count: int) -> list[int]:
         """Least Recently Used page replacement"""
         # Sort pages by last access time
         allocated_pages = [
@@ -464,7 +463,7 @@ class MemoryManager:
         allocated_pages.sort(key=lambda x: x[1].last_access_time)
         return [num for num, _ in allocated_pages[:count]]
 
-    def _clock_select(self, count: int) -> List[int]:
+    def _clock_select(self, count: int) -> list[int]:
         """Clock (Second Chance) page replacement"""
         victims = []
         allocated = [
@@ -488,7 +487,7 @@ class MemoryManager:
 
         return victims
 
-    def _fifo_select(self, count: int) -> List[int]:
+    def _fifo_select(self, count: int) -> list[int]:
         """First In First Out page replacement"""
         # Use allocation time as FIFO criterion
         allocated_pages = [
@@ -583,7 +582,7 @@ class MemoryManager:
 
         return (actual_runs - ideal_runs) / (max_runs - ideal_runs)
 
-    def get_memory_stats(self) -> Dict:
+    def get_memory_stats(self) -> dict:
         """Get comprehensive memory statistics"""
         with self.lock:
             free_pages = len(self.free_pages)

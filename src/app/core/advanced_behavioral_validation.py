@@ -728,23 +728,23 @@ class AdvancedBehavioralValidator:
 
 def create_validation_system(
     data_dir: str = "data/validation",
-) -> AdvancedBehavioralValidationSystem:
+) -> AdvancedBehavioralValidator:
     """Factory function to create validation system."""
-    return AdvancedBehavioralValidationSystem(data_dir)
+    return AdvancedBehavioralValidator(data_dir)
 
 
 # Global instance
-_validation_system: AdvancedBehavioralValidationSystem | None = None
+_validation_system: AdvancedBehavioralValidator | None = None
 
 
-def get_validation_system() -> AdvancedBehavioralValidationSystem | None:
+def get_validation_system() -> AdvancedBehavioralValidator | None:
     """Get global validation system instance."""
     return _validation_system
 
 
 def initialize_validation_system(
     data_dir: str = "data/validation",
-) -> AdvancedBehavioralValidationSystem:
+) -> AdvancedBehavioralValidator:
     """Initialize global validation system."""
     global _validation_system
     if _validation_system is None:

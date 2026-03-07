@@ -31,7 +31,7 @@ import platform
 import statistics
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
@@ -59,7 +59,7 @@ def get_hardware_info() -> dict:
         "machine": platform.machine(),
         "python_version": platform.python_version(),
         "cpu_count": os.cpu_count(),
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
     }
 
 

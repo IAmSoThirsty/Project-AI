@@ -3,9 +3,8 @@
 # Project-AI Standalone Build Orchestrator (Python API)
 
 import os
-import sys
 import subprocess
-import shutil
+import sys
 
 
 def run_cmd(cmd, cwd=None):
@@ -22,7 +21,7 @@ def main():
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(root)
 
-    print(f"--- Project-AI Sovereign Build (Python) ---")
+    print("--- Project-AI Sovereign Build (Python) ---")
     print(f"Working Directory: {root}")
 
     # 1. Ensure internal dependencies are installed

@@ -226,7 +226,9 @@ def run_tier_4():
     # T4.1.1 — Shadow Thirst Compiler Operational
     compiler_path = os.path.join(ROOT, "src", "shadow_thirst", "compiler.py")
     if os.path.exists(compiler_path):
-        from shadow_thirst.compiler import ShadowThirstCompiler  # pylint: disable=import-error
+        from shadow_thirst.compiler import (
+            ShadowThirstCompiler,  # pylint: disable=import-error
+        )
 
         results = ShadowThirstCompiler().compile_file(
             os.path.join(ROOT, "src", "shadow_thirst", "resource_limiter.thirsty")

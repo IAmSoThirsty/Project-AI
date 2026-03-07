@@ -4,16 +4,12 @@
 Repository layer - Database abstraction specialized for Mutation Proposals
 """
 
-import asyncio
-import time
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 from uuid import UUID
 
-from .config import settings
-from .errors import DatabaseError
 from .logging_config import logger
-from .metrics import DB_CONNECTIONS_ACTIVE, DB_ERRORS, DB_QUERY_DURATION
+from .metrics import DB_CONNECTIONS_ACTIVE
 from .models import MutationProposal
 
 
@@ -21,7 +17,7 @@ class Database:
     """Database connection manager (In-memory for scaffold)"""
 
     def __init__(self):
-        self.data: Dict[str, Any] = {"proposals": {}}
+        self.data: dict[str, Any] = {"proposals": {}}
         self.connected = False
 
     async def connect(self):
@@ -47,13 +43,13 @@ class ProposalRepository:
 
     async def list(
         self, offset: int = 0, limit: int = 20
-    ) -> Tuple[List[MutationProposal], int]:
+    ) -> tuple[list[MutationProposal], int]:
         proposals_list = list(self.db.data["proposals"].values())
         proposals_list.sort(key=lambda x: x.created_at, reverse=True)
         total = len(proposals_list)
         return proposals_list[offset : offset + limit], total
 
-    async def get(self, proposal_id: UUID) -> Optional[MutationProposal]:
+    async def get(self, proposal_id: UUID) -> MutationProposal | None:
         return self.db.data["proposals"].get(str(proposal_id))
 
     async def create(self, proposal: MutationProposal) -> MutationProposal:
@@ -61,7 +57,7 @@ class ProposalRepository:
         return proposal
 
     async def update(
-        self, proposal_id: UUID, updates: Dict[str, Any]
+        self, proposal_id: UUID, updates: dict[str, Any]
     ) -> MutationProposal:
         proposal = await self.get(proposal_id)
         if proposal:

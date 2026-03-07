@@ -6,7 +6,6 @@ Database integrity check script for Sovereign Data Vault Layer
 """
 import asyncio
 import sys
-from typing import List, Tuple
 
 
 async def main():

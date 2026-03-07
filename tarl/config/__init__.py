@@ -27,8 +27,8 @@ Architecture Contract:
 
 import logging
 import os
-from pathlib import Path
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 # Try to import tomllib (Python 3.11+) or fallback to toml

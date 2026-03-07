@@ -8,7 +8,7 @@ Provides multi-agent security shield with 3+ guardians
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 # Add Cerberus to path
 cerberus_path = (
@@ -36,7 +36,7 @@ except ImportError as e:
 class CerberusIntegration:
     """Integrates Cerberus multi-agent security framework"""
 
-    def __init__(self, config: Dict[str, Any] = None):
+    def __init__(self, config: dict[str, Any] = None):
         self.logger = logging.getLogger(__name__)
         self.config = config or {}
         self.active = False
@@ -91,7 +91,7 @@ class CerberusIntegration:
         self.active = False
         self.logger.info("Cerberus stopped")
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get comprehensive Cerberus status"""
         if not CERBERUS_AVAILABLE or not self.hub:
             return {"active": False, "available": False}
@@ -112,7 +112,7 @@ class CerberusIntegration:
             ),
         }
 
-    def analyze_input(self, user_input: str) -> Dict[str, Any]:
+    def analyze_input(self, user_input: str) -> dict[str, Any]:
         """Analyze input for threats (main API)"""
         if not CERBERUS_AVAILABLE or not self.hub:
             return {

@@ -13,7 +13,6 @@ Chains all sub-scripts into a single command for any of the 14 agents.
 
 import subprocess
 import sys
-import os
 
 
 def run_step(command):

@@ -5,7 +5,10 @@ Department Management System
 Implements Codex Section 3 (Departmental Architecture)
 """
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
 from app.miniature_office.core.audit import EventType, get_audit_log
 from app.miniature_office.core.entity import (
     Entity,

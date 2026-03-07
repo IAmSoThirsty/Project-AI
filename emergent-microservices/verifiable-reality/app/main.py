@@ -16,27 +16,24 @@ Production-grade microservice with:
 
 import asyncio
 import signal
-import sys
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request, status
-from fastapi.responses import JSONResponse
+
+import uvicorn
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import make_asgi_app
-import uvicorn
 
-from .config import settings
-from .logging_config import setup_logging, logger
-from .routes import router
+from .errors import setup_exception_handlers
+from .health import health_router
+from .logging_config import logger, setup_logging
 from .middleware import (
-    RequestIDMiddleware,
-    RateLimitMiddleware,
     AuthenticationMiddleware,
     MetricsMiddleware,
+    RateLimitMiddleware,
+    RequestIDMiddleware,
 )
-from .metrics import REQUEST_COUNT, REQUEST_DURATION, INFLIGHT_REQUESTS
-from .health import health_router
-from .errors import ServiceError, setup_exception_handlers
 from .repository import database
+from .routes import router
 
 # Setup logging
 setup_logging()

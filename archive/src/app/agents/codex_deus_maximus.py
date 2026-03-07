@@ -15,6 +15,8 @@ import types
 from datetime import UTC, datetime
 from typing import Any
 
+import torch
+
 # Lazy imports for GPT‑OSS 1208 are performed inside _load_gpt_oss_model()
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
 from app.core.kernel_integration import KernelRoutedAgent

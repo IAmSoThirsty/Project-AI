@@ -92,7 +92,7 @@ class SovereignIgnition:
         """Integrated Substrate - Thirsty Super Kernel"""
         logger.info("[Layer 1] Loading Thirsty Super Kernel (Holographic Defense)...")
         try:
-            from kernel.thirsty_super_kernel import ThirstySuperKernel, SystemConfig
+            from kernel.thirsty_super_kernel import SystemConfig, ThirstySuperKernel
 
             config = SystemConfig(enable_ai_detection=True, enable_deception=True)
             self.layers["kernel"] = ThirstySuperKernel(config)
@@ -106,10 +106,8 @@ class SovereignIgnition:
         """Cognition Layer - Triumvirate"""
         logger.info("[Layer 2] Initializing Triumvirate (Council, Identity, Memory)...")
         # Load Identity
-        from app.core.identity import AGIIdentity
 
         # Load Memory
-        from app.core.memory_engine import MemoryEngine
 
         # Placeholder for Triumvirate orchestration
         time.sleep(1)

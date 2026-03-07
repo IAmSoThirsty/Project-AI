@@ -5,9 +5,7 @@ Smoke test for Emergent Microservices integration
 Checks health and basic connectivity for all 7 services.
 """
 
-import time
 
-import requests
 
 SERVICES = {
     "mutation-firewall": "http://localhost:8011/api/v1/health/liveness",

@@ -1540,7 +1540,7 @@ def get_metrics_canon():
         return jsonify({"error": str(e)}), 500
 
 
-def run_server(host="0.0.0.0", port=5000, debug=False):
+def run_server(host="127.0.0.1", port=5000, debug=False):
     """Run the API server"""
     # Initialize simulation on startup
     init_simulation()

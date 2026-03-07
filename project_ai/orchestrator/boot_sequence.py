@@ -6,7 +6,7 @@ Orchestrates startup of all subsystems in correct order
 """
 
 import logging
-from typing import Any, Dict
+from typing import Any
 
 from .subsystems import (
     CerberusIntegration,
@@ -20,7 +20,7 @@ from .subsystems import (
 class BootSequence:
     """Manages startup of all Sovereign Stack subsystems"""
 
-    def __init__(self, config: Dict[str, Any] = None):
+    def __init__(self, config: dict[str, Any] = None):
         self.logger = logging.getLogger(__name__)
         self.config = config or {}
         self.subsystems = {}
@@ -123,7 +123,7 @@ class BootSequence:
                 f"  {symbol} {name.upper()}: {'ACTIVE' if active else 'INACTIVE'}"
             )
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get comprehensive status of all subsystems"""
         return {
             name: subsystem.get_status() for name, subsystem in self.subsystems.items()

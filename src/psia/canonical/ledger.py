@@ -55,9 +55,13 @@ class ExecutionRecord:
     commit_id: str | None = None
     diff_hash: str | None = None
     stage_results: list[dict] = field(default_factory=list)
+<<<<<<< HEAD
     timestamp: str = field(
         default_factory=lambda: datetime.now(UTC).isoformat()
     )
+=======
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def compute_hash(self) -> str:

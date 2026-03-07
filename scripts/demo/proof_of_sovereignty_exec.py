@@ -1,7 +1,7 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
-import sys
 import os
+import sys
 
 # Ensure we can find the shadow_thirst package in src/
 sys.path.append(os.path.abspath("src"))

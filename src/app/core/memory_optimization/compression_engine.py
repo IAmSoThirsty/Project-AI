@@ -486,6 +486,13 @@ class CompressionEngine:
             data = sparse.toarray()
 
         else:
+            # WARNING: Unsafe pickle deserialization - should only be used for trusted data
+            # Consider replacing with a safer serialization format like JSON or msgpack
+            import warnings
+            warnings.warn(
+                "Using unsafe pickle deserialization. Ensure data is from trusted sources only.",
+                SecurityWarning
+            )
             data = pickle.loads(decompressed)
 
         return data

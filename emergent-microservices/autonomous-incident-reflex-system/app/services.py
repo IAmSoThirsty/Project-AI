@@ -5,13 +5,11 @@ Autonomous Incident Reflex System - Service Layer
 """
 
 import asyncio
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
 from uuid import UUID
 
 from .errors import NotFoundError
 from .logging_config import logger
-from .models import IncidentCreate, IncidentUpdate, SecurityIncident
+from .models import IncidentCreate, SecurityIncident
 from .repository import IncidentRepository
 
 
@@ -62,7 +60,7 @@ class IncidentReflexService:
 
     async def list_incidents(
         self, offset: int = 0, limit: int = 20
-    ) -> Tuple[List[SecurityIncident], int]:
+    ) -> tuple[list[SecurityIncident], int]:
         return await self.repository.list(offset, limit)
 
     async def get_incident(self, incident_id: UUID) -> SecurityIncident:

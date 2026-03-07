@@ -8,13 +8,13 @@ Provides code compilation and execution capabilities
 import logging
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 class ThirstyLangIntegration:
     """Integrates Thirsty-Lang programming language"""
 
-    def __init__(self, config: Dict[str, Any] = None):
+    def __init__(self, config: dict[str, Any] = None):
         self.logger = logging.getLogger(__name__)
         self.config = config or {}
 
@@ -107,7 +107,7 @@ class ThirstyLangIntegration:
             if temp_file.exists():
                 temp_file.unlink()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get Thirsty-Lang status"""
         return {
             "active": self.active,

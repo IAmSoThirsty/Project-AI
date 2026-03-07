@@ -113,6 +113,7 @@ class TestProcessSignalStatusCodes:
 
     def test_status_processed_success(self, vault_key, mock_dependencies):
         """Test 'processed' status - successful processing."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -125,6 +126,25 @@ class TestProcessSignalStatusCodes:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -146,6 +166,7 @@ class TestProcessSignalStatusCodes:
 
     def test_status_denied_validation_failure(self, vault_key, mock_dependencies):
         """Test 'denied' status - validation failure with forbidden phrase."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -158,6 +179,25 @@ class TestProcessSignalStatusCodes:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -180,6 +220,7 @@ class TestProcessSignalStatusCodes:
 
     def test_status_failed_max_retries(self, vault_key, mock_dependencies):
         """Test 'failed' status - max retries exceeded."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -192,6 +233,25 @@ class TestProcessSignalStatusCodes:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -226,6 +286,7 @@ class TestProcessSignalStatusCodes:
         with retry_lock:
             retry_tracker["global"]["minute"] = MAX_GLOBAL_RETRIES_PER_MIN
 
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -238,6 +299,25 @@ class TestProcessSignalStatusCodes:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -267,6 +347,7 @@ class TestProcessSignalStatusCodes:
         with retry_lock:
             retry_tracker["test_service"]["minute"] = MAX_GLOBAL_RETRIES_PER_MIN
 
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -279,6 +360,25 @@ class TestProcessSignalStatusCodes:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -298,6 +398,7 @@ class TestProcessSignalStatusCodes:
 
     def test_status_ignored_score_below_threshold(self, vault_key, mock_dependencies):
         """Test 'ignored' status - score below threshold (normal mode)."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -310,6 +411,25 @@ class TestProcessSignalStatusCodes:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -332,6 +452,7 @@ class TestProcessSignalStatusCodes:
         self, vault_key, mock_dependencies
     ):
         """Test 'ignored' status - anomaly_score below threshold (incident mode)."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -344,6 +465,25 @@ class TestProcessSignalStatusCodes:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -373,6 +513,7 @@ class TestProcessingPhases:
 
     def test_phase1_validation_success(self, vault_key, mock_dependencies):
         """Test Phase 1: Schema validation succeeds."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -385,6 +526,25 @@ class TestProcessingPhases:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -403,8 +563,12 @@ class TestProcessingPhases:
                 event_type="signal_validated",
                 data={
                     "incident_id": result["incident_id"],
+<<<<<<< HEAD
                     "validation_result": pytest.approx({}, abs=1e-9)
                     or dict,
+=======
+                    "validation_result": pytest.approx({}, abs=1e-9) or dict,
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
                 },
                 actor="signal_kernel",
                 description="Signal validation completed",
@@ -423,6 +587,7 @@ class TestProcessingPhases:
 
         mock_transcript = Mock(return_value="This is a test transcript")
 
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -435,6 +600,25 @@ class TestProcessingPhases:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_config,
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_config,
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             # Mock the transcribe_audio import and function
             with patch(
@@ -460,6 +644,7 @@ class TestProcessingPhases:
 
     def test_phase3_threshold_check_pass(self, vault_key, mock_dependencies):
         """Test Phase 3: Score threshold check passes."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -472,6 +657,25 @@ class TestProcessingPhases:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -490,6 +694,7 @@ class TestProcessingPhases:
 
     def test_phase4_retry_success_on_first_attempt(self, vault_key, mock_dependencies):
         """Test Phase 4: Processing succeeds on first attempt."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -502,6 +707,25 @@ class TestProcessingPhases:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -520,6 +744,7 @@ class TestProcessingPhases:
 
     def test_phase4_retry_success_on_second_attempt(self, vault_key, mock_dependencies):
         """Test Phase 4: Processing succeeds on second attempt after retry."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -532,6 +757,25 @@ class TestProcessingPhases:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -572,6 +816,7 @@ class TestPerServiceRetryTracking:
         with retry_lock:
             retry_tracker["service_a"]["minute"] = MAX_GLOBAL_RETRIES_PER_MIN
 
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -584,6 +829,25 @@ class TestPerServiceRetryTracking:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -796,6 +1060,7 @@ class TestCircuitBreakerIntegration:
         # Initial state
         assert circuit_breakers["validation"].state == "CLOSED"
 
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -808,6 +1073,25 @@ class TestCircuitBreakerIntegration:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -895,6 +1179,7 @@ class TestErrorHandlingEdgeCases:
 
     def test_signal_with_none_text(self, vault_key, mock_dependencies):
         """Test signal processing with None text."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -907,6 +1192,25 @@ class TestErrorHandlingEdgeCases:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_signal
 
@@ -923,6 +1227,7 @@ class TestErrorHandlingEdgeCases:
 
     def test_exponential_backoff_delays(self, vault_key, mock_dependencies):
         """Test exponential backoff delay calculation."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -935,6 +1240,25 @@ class TestErrorHandlingEdgeCases:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import (
                 process_signal,
@@ -970,6 +1294,7 @@ class TestProcessBatch:
 
     def test_batch_all_successful(self, vault_key, mock_dependencies):
         """Test batch processing with all signals successful."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -982,6 +1307,25 @@ class TestProcessBatch:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_batch
 
@@ -1003,6 +1347,7 @@ class TestProcessBatch:
 
     def test_batch_mixed_statuses(self, vault_key, mock_dependencies):
         """Test batch with mixed status results."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -1015,6 +1360,25 @@ class TestProcessBatch:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_batch
 
@@ -1050,6 +1414,7 @@ class TestProcessBatch:
 
     def test_batch_empty(self, vault_key, mock_dependencies):
         """Test batch processing with empty list."""
+<<<<<<< HEAD
         with patch(
             "src.app.pipeline.signal_flows.get_error_aggregator",
             return_value=mock_dependencies["aggregator"],
@@ -1062,6 +1427,25 @@ class TestProcessBatch:
         ), patch(
             "src.app.pipeline.signal_flows.get_config_loader",
             return_value=mock_dependencies["config_loader"],
+=======
+        with (
+            patch(
+                "src.app.pipeline.signal_flows.get_error_aggregator",
+                return_value=mock_dependencies["aggregator"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.BlackVault",
+                return_value=mock_dependencies["vault"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.AuditLog",
+                return_value=mock_dependencies["audit"],
+            ),
+            patch(
+                "src.app.pipeline.signal_flows.get_config_loader",
+                return_value=mock_dependencies["config_loader"],
+            ),
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         ):
             from src.app.pipeline.signal_flows import process_batch
 

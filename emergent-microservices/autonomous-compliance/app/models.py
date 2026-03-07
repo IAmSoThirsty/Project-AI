@@ -1,7 +1,7 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -27,7 +27,7 @@ class ComplianceAudit(BaseModel):
     rule_id: str
     target_id: str
     evaluation_result: bool
-    details: Dict[str, Any]
+    details: dict[str, Any]
     timestamp: datetime = Field(default_factory=datetime.now)
 
 
@@ -49,4 +49,4 @@ class RuleCreate(BaseModel):
 
 class AuditTrigger(BaseModel):
     target_id: str
-    data_context: Dict[str, Any]
+    data_context: dict[str, Any]

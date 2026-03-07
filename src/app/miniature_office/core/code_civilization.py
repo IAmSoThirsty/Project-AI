@@ -967,9 +967,13 @@ class CodeAuthoringCivilization:
             code_lines.append("        return input_data")
             code_lines.append("    except Exception as e:")
             code_lines.append("        # Proper error handling")
+<<<<<<< HEAD
             code_lines.append(
                 '        raise RuntimeError(f"Processing failed: {e}")'
             )  # noqa: F541
+=======
+            code_lines.append('        raise RuntimeError(f"Processing failed: {e}")')  # noqa: F541
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
 
         elif directive.requested_outcome == RequestedOutcome.REFACTOR:
             # Generate refactored version
@@ -1282,7 +1286,11 @@ class CodeAuthoringCivilization:
             for func_name in functions:
                 test_count += 1
                 test_code_lines.append(f"describe('{func_name}', () => {{")
+<<<<<<< HEAD
                 test_code_lines.append(f"  it('should work with valid input', () => {{")  # noqa: F541
+=======
+                test_code_lines.append("  it('should work with valid input', () => {")  # noqa: F541
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
                 test_code_lines.append(f"    const result = {func_name}('test');")
                 test_code_lines.append("    expect(result).to.not.be.null;")
                 test_code_lines.append(f"  }});")  # noqa: F541

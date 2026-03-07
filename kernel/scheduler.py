@@ -21,7 +21,7 @@ import threading
 import time
 from dataclasses import dataclass, field
 from enum import IntEnum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -67,19 +67,19 @@ class ProcessControlBlock:
     last_scheduled: float = 0.0  # Last time scheduled (timestamp)
 
     # CPU affinity
-    cpu_affinity: Set[int] = field(default_factory=set)  # Allowed CPUs
-    numa_node: Optional[int] = None  # NUMA node preference
+    cpu_affinity: set[int] = field(default_factory=set)  # Allowed CPUs
+    numa_node: int | None = None  # NUMA node preference
 
     # Memory requirements
     memory_required: int = 0  # Memory required (bytes)
     memory_allocated: int = 0  # Memory currently allocated
 
     # Context (saved state when not running)
-    context: Dict[str, Any] = field(default_factory=dict)
+    context: dict[str, Any] = field(default_factory=dict)
 
     # Parent/child relationships
-    parent_pid: Optional[int] = None
-    child_pids: List[int] = field(default_factory=list)
+    parent_pid: int | None = None
+    child_pids: list[int] = field(default_factory=list)
 
     # Statistics
     times_scheduled: int = 0
@@ -117,31 +117,29 @@ class MultiLevelFeedbackQueueScheduler:
     - Deadline scheduling for RT tasks
     """
 
-    def __init__(self, config: Optional[SchedulerConfig] = None):
+    def __init__(self, config: SchedulerConfig | None = None):
         self.config = config or SchedulerConfig()
 
         # Process tables
-        self.processes: Dict[int, ProcessControlBlock] = {}
+        self.processes: dict[int, ProcessControlBlock] = {}
         self.next_pid = 1
         self.lock = threading.RLock()
 
         # Multi-level feedback queues (one per priority level)
-        self.ready_queues: Dict[Priority, List[ProcessControlBlock]] = {
+        self.ready_queues: dict[Priority, list[ProcessControlBlock]] = {
             p: [] for p in Priority
         }
 
         # Per-CPU run queues for load balancing
-        self.cpu_run_queues: Dict[int, List[ProcessControlBlock]] = {
+        self.cpu_run_queues: dict[int, list[ProcessControlBlock]] = {
             cpu: [] for cpu in range(self.config.num_cpus)
         }
 
         # Currently running processes (one per CPU)
-        self.running: Dict[int, Optional[ProcessControlBlock]] = {
-            cpu: None for cpu in range(self.config.num_cpus)
-        }
+        self.running: dict[int, ProcessControlBlock | None] = dict.fromkeys(range(self.config.num_cpus))
 
         # Blocked processes (waiting for I/O)
-        self.blocked_processes: Set[int] = set()
+        self.blocked_processes: set[int] = set()
 
         # Statistics
         self.stats = {
@@ -163,8 +161,8 @@ class MultiLevelFeedbackQueueScheduler:
         name: str,
         priority: Priority = Priority.NORMAL,
         memory_required: int = 0,
-        cpu_affinity: Optional[Set[int]] = None,
-        parent_pid: Optional[int] = None,
+        cpu_affinity: set[int] | None = None,
+        parent_pid: int | None = None,
     ) -> int:
         """Create a new process and add to ready queue"""
         with self.lock:
@@ -199,7 +197,7 @@ class MultiLevelFeedbackQueueScheduler:
             logger.info(f"Created process {pid} ({name}) with priority {priority.name}")
             return pid
 
-    def schedule(self, cpu_id: int = 0) -> Optional[ProcessControlBlock]:
+    def schedule(self, cpu_id: int = 0) -> ProcessControlBlock | None:
         """
         Select next process to run on given CPU
 
@@ -232,7 +230,7 @@ class MultiLevelFeedbackQueueScheduler:
 
             return next_process
 
-    def _select_next_process(self, cpu_id: int) -> Optional[ProcessControlBlock]:
+    def _select_next_process(self, cpu_id: int) -> ProcessControlBlock | None:
         """Select next process respecting priority and affinity"""
         # Iterate through priorities (high to low)
         for priority in Priority:
@@ -407,7 +405,7 @@ class MultiLevelFeedbackQueueScheduler:
             self.stats["total_processes_terminated"] += 1
             logger.info(f"Terminated process {pid}")
 
-    def get_scheduler_stats(self) -> Dict[str, Any]:
+    def get_scheduler_stats(self) -> dict[str, Any]:
         """Get comprehensive scheduler statistics"""
         with self.lock:
             total_wait_time = sum(p.wait_time for p in self.processes.values())
@@ -441,7 +439,7 @@ class MultiLevelFeedbackQueueScheduler:
                 **self.stats,
             }
 
-    def set_cpu_affinity(self, pid: int, cpu_affinity: Set[int]):
+    def set_cpu_affinity(self, pid: int, cpu_affinity: set[int]):
         """Set CPU affinity for process"""
         with self.lock:
             if pid not in self.processes:

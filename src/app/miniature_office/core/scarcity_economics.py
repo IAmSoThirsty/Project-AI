@@ -319,9 +319,13 @@ class ResourceLedger:
         # 2. Notification to managers
         # 3. Emergency reprioritization
 
+<<<<<<< HEAD
     def get_ledger_entry(
         self, entity_id: str, tick: int
     ) -> ResourceLedgerEntry | None:
+=======
+    def get_ledger_entry(self, entity_id: str, tick: int) -> ResourceLedgerEntry | None:
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         """Get ledger entry for entity at tick"""
         if entity_id in self.ledger and tick in self.ledger[entity_id]:
             return self.ledger[entity_id][tick]

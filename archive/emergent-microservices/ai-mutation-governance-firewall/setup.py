@@ -1,20 +1,11 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Out-Dated(archive)
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="AI Mutation Governance Firewall",
     version="1.0.0",
-    description="build a runtime AI mutation gate.
-Microservices:
-Model change proposal intake
-Deterministic shadow simulation
-Quorum validation engine
-Rollback + snapshot manager
-Cryptographic replay verification
-This becomes: “A Kubernetes admission controller for AI evolution.”
-This is niche but elite.
-DARPA, defense, sovereign AI labs would care.",
+    description="A Kubernetes admission controller for AI evolution - build a runtime AI mutation gate with microservices for model change proposal intake, deterministic shadow simulation, quorum validation engine, rollback + snapshot manager, and cryptographic replay verification. This is niche but elite - DARPA, defense, sovereign AI labs would care.",
     author="IAmSoThirsty",
     packages=find_packages(exclude=["tests", "tests.*"]),
     python_requires=">=3.11",

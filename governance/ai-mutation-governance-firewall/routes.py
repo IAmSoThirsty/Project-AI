@@ -4,7 +4,6 @@
 API routes for AI Mutation Governance Firewall
 """
 
-from typing import List
 from uuid import UUID
 
 from fastapi import APIRouter, Body, Depends, Path, Query, status
@@ -14,7 +13,6 @@ from .models import (
     MutationProposal,
     PaginatedProposals,
     ProposalCreate,
-    ProposalUpdate,
 )
 from .services import MutationGovernanceService
 

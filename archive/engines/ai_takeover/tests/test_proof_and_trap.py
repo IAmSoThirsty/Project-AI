@@ -18,6 +18,7 @@ from engines.ai_takeover.modules.no_win_proof import (
     StrategyClass,
     WinCondition,
 )
+
 from engines.ai_takeover.modules.reviewer_trap import (
     OptimismDetector,
     PRContent,

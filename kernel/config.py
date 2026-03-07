@@ -20,10 +20,11 @@ import json
 import logging
 import os
 import threading
-from dataclasses import dataclass, field
+from collections.abc import Callable
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,7 @@ class ConfigValue:
     value: Any
     source: str  # file path or "env" or "default"
     last_modified: float
-    validation_schema: Optional[Dict] = None
+    validation_schema: dict | None = None
 
 
 @dataclass
@@ -72,39 +73,39 @@ class ConfigurationManager:
     - Audit logging
     """
 
-    def __init__(self, config_dir: Optional[str] = None):
+    def __init__(self, config_dir: str | None = None):
         # Configuration storage
-        self.config: Dict[str, ConfigValue] = {}
+        self.config: dict[str, ConfigValue] = {}
 
         # Configuration directory
         self.config_dir = Path(config_dir) if config_dir else Path("./config")
 
         # Loaded files
-        self.loaded_files: List[Path] = []
+        self.loaded_files: list[Path] = []
 
         # Change callbacks
-        self.change_callbacks: Dict[str, List[Callable]] = {}
+        self.change_callbacks: dict[str, list[Callable]] = {}
 
         # Change history (audit trail)
-        self.change_history: List[ConfigChange] = []
+        self.change_history: list[ConfigChange] = []
 
         # Schema definitions
-        self.schemas: Dict[str, Dict] = {}
+        self.schemas: dict[str, dict] = {}
 
         # Thread safety
         self.lock = threading.RLock()
 
         # File watchers (for hot-reload)
-        self.file_watchers: Dict[Path, float] = {}  # path -> last_mtime
+        self.file_watchers: dict[Path, float] = {}  # path -> last_mtime
 
         # Default values
-        self.defaults: Dict[str, Any] = {}
+        self.defaults: dict[str, Any] = {}
 
         logger.info(
             f"Configuration manager initialized (config_dir: {self.config_dir})"
         )
 
-    def load_file(self, file_path: str, format: Optional[ConfigFormat] = None):
+    def load_file(self, file_path: str, format: ConfigFormat | None = None):
         """
         Load configuration from file
 
@@ -158,7 +159,7 @@ class ConfigurationManager:
             logger.info(f"Loaded configuration from {path} ({len(data)} keys)")
 
     def _load_nested_config(
-        self, data: Dict, source: str, timestamp: float, prefix: str = ""
+        self, data: dict, source: str, timestamp: float, prefix: str = ""
     ):
         """Recursively load nested configuration"""
         for key, value in data.items():
@@ -281,7 +282,7 @@ class ConfigurationManager:
         with self.lock:
             self.defaults[key] = value
 
-    def register_schema(self, key: str, schema: Dict):
+    def register_schema(self, key: str, schema: dict):
         """
         Register validation schema for configuration key
 
@@ -419,12 +420,12 @@ class ConfigurationManager:
 
             return changed
 
-    def get_all(self) -> Dict[str, Any]:
+    def get_all(self) -> dict[str, Any]:
         """Get all configuration as flat dict"""
         with self.lock:
             return {key: cv.value for key, cv in self.config.items()}
 
-    def get_nested(self) -> Dict[str, Any]:
+    def get_nested(self) -> dict[str, Any]:
         """Get all configuration as nested dict"""
         with self.lock:
             result = {}
@@ -447,14 +448,14 @@ class ConfigurationManager:
         with self.lock:
             return json.dumps(self.get_nested(), indent=2)
 
-    def get_change_history(self, key: Optional[str] = None) -> List[ConfigChange]:
+    def get_change_history(self, key: str | None = None) -> list[ConfigChange]:
         """Get configuration change history"""
         with self.lock:
             if key:
                 return [c for c in self.change_history if c.key == key]
             return self.change_history.copy()
 
-    def _parse_yaml(self, content: str) -> Dict:
+    def _parse_yaml(self, content: str) -> dict:
         """Parse YAML content (simplified - use PyYAML in production)"""
         # Simplified YAML parser - real implementation would use PyYAML
         try:
@@ -465,7 +466,7 @@ class ConfigurationManager:
             logger.warning("PyYAML not available, using JSON fallback")
             return json.loads(content)
 
-    def _parse_toml(self, content: str) -> Dict:
+    def _parse_toml(self, content: str) -> dict:
         """Parse TOML content (use toml library in production)"""
         try:
             import tomllib

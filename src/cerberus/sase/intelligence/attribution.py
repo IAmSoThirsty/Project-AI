@@ -247,7 +247,7 @@ class FeatureExtractor:
         """
         # Normalize and hash
         normalized = user_agent.lower().strip()
-        fp_hash = hashlib.md5(normalized.encode()).hexdigest()
+        fp_hash = hashlib.sha256(normalized.encode()).hexdigest()
         return fp_hash[:16]
 
     def _estimate_nat_density(self, ip: str) -> float:

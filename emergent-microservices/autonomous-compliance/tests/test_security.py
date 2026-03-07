@@ -2,7 +2,6 @@
 #                                          Productivity: Active
 """Test security functions"""
 
-import pytest
 
 from app.security import (
     create_jwt_token,

@@ -14,10 +14,8 @@ Categories:
 - Social Engineering: SE tools and frameworks
 """
 
-import os
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional
 
 
 class SecurityToolsService:
@@ -31,7 +29,7 @@ class SecurityToolsService:
         self.tools_path = Path(tools_path)
         self.categories = self._discover_categories()
 
-    def _discover_categories(self) -> Dict[str, Path]:
+    def _discover_categories(self) -> dict[str, Path]:
         """Discover available tool categories"""
         categories = {}
 
@@ -44,11 +42,11 @@ class SecurityToolsService:
 
         return categories
 
-    def list_categories(self) -> List[str]:
+    def list_categories(self) -> list[str]:
         """List all available tool categories"""
         return list(self.categories.keys())
 
-    def list_tools(self, category: str) -> List[Dict[str, str]]:
+    def list_tools(self, category: str) -> list[dict[str, str]]:
         """List tools in a specific category"""
         if category not in self.categories:
             return []
@@ -69,7 +67,7 @@ class SecurityToolsService:
 
         return tools
 
-    def get_tool_info(self, category: str, tool_name: str) -> Optional[Dict]:
+    def get_tool_info(self, category: str, tool_name: str) -> dict | None:
         """Get detailed information about a specific tool"""
         tools = self.list_tools(category)
 
@@ -86,7 +84,7 @@ class SecurityToolsService:
     def _extract_description(self, tool_path: Path) -> str:
         """Extract description from tool file"""
         try:
-            with open(tool_path, "r", encoding="utf-8", errors="ignore") as f:
+            with open(tool_path, encoding="utf-8", errors="ignore") as f:
                 lines = f.readlines()[:20]  # Read first 20 lines
 
                 for line in lines:
@@ -111,9 +109,9 @@ class SecurityToolsService:
         self,
         category: str,
         tool_name: str,
-        args: List[str] = None,
+        args: list[str] = None,
         session_token: str = None,
-    ) -> Dict:
+    ) -> dict:
         """
         Execute a security tool (use with caution!)
 
@@ -204,7 +202,7 @@ class SecurityToolsAPI:
     def __init__(self):
         self.service = SecurityToolsService()
 
-    def get_categories(self) -> Dict[str, List[str]]:
+    def get_categories(self) -> dict[str, list[str]]:
         """Get all categories and their tools"""
         result = {}
 
@@ -214,7 +212,7 @@ class SecurityToolsAPI:
 
         return result
 
-    def search_tools(self, query: str) -> List[Dict]:
+    def search_tools(self, query: str) -> list[dict]:
         """Search for tools by name or category"""
         results = []
         query_lower = query.lower()

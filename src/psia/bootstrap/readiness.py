@@ -67,9 +67,13 @@ class ReadinessReport:
 
     status: NodeStatus
     checks: list[CheckResult] = field(default_factory=list)
+<<<<<<< HEAD
     timestamp: str = field(
         default_factory=lambda: datetime.now(UTC).isoformat()
     )
+=======
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
     all_passed: bool = False
     critical_failures: int = 0
     warnings: int = 0

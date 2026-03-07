@@ -8,7 +8,7 @@ Provides VPN, 8 firewalls, and secure browser
 import logging
 import sys
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 # Add Waterfall to path
 waterfall_path = (
@@ -28,7 +28,7 @@ except ImportError as e:
 class WaterfallIntegration:
     """Integrates Thirstys-Waterfall VPN, firewalls, and secure browser"""
 
-    def __init__(self, config: Dict[str, Any] = None):
+    def __init__(self, config: dict[str, Any] = None):
         self.logger = logging.getLogger(__name__)
         self.config = config or {}
         self.active = False
@@ -92,7 +92,7 @@ class WaterfallIntegration:
             self.waterfall.stop()
         self.active = False
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get comprehensive Waterfall status"""
         if not WATERFALL_AVAILABLE or not self.waterfall:
             return {"available": False, "active": False}

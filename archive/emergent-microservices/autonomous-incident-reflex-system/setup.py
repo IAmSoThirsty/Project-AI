@@ -1,18 +1,11 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Out-Dated(archive)
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="Autonomous Incident Reflex System",
     version="1.0.0",
-    description="Build:
-Threat detection microservice
-Policy evaluation gate
-Reflexive action executor
-Evidence preservation pipeline
-Cryptographic chain-of-custody service
-Think: CrowdStrike + immutable evidence + deterministic replay.
-Defense sector eats this up.",
+    description="Build threat detection microservice, policy evaluation gate, reflexive action executor, evidence preservation pipeline, and cryptographic chain-of-custody service. Think CrowdStrike plus immutable evidence plus deterministic replay - defense sector eats this up.",
     author="IAmSoThirsty",
     packages=find_packages(exclude=["tests", "tests.*"]),
     python_requires=">=3.11",

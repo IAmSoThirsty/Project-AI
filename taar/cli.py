@@ -12,7 +12,6 @@ from __future__ import annotations
 import asyncio
 import signal
 from pathlib import Path
-from typing import Optional
 
 import typer
 
@@ -25,7 +24,7 @@ app = typer.Typer(
 )
 
 
-def _load_config(project_root: Optional[Path] = None):
+def _load_config(project_root: Path | None = None):
     """Load TAAR config with error handling."""
     from taar.config import load_config
 
@@ -43,10 +42,10 @@ def run(
         False, "--all", "-a", help="Ignore cache, run everything"
     ),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output"),
-    revision: Optional[str] = typer.Option(
+    revision: str | None = typer.Option(
         None, "--since", help="Detect changes since revision"
     ),
-    project_root: Optional[Path] = typer.Option(
+    project_root: Path | None = typer.Option(
         None, "--root", help="Project root directory"
     ),
 ) -> None:
@@ -114,7 +113,7 @@ def run(
 @app.command()
 def watch(
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output"),
-    project_root: Optional[Path] = typer.Option(
+    project_root: Path | None = typer.Option(
         None, "--root", help="Project root directory"
     ),
 ) -> None:
@@ -206,7 +205,7 @@ def _windows_wait(watcher) -> None:
 
 @app.command()
 def status(
-    project_root: Optional[Path] = typer.Option(
+    project_root: Path | None = typer.Option(
         None, "--root", help="Project root directory"
     ),
 ) -> None:
@@ -228,7 +227,7 @@ def status(
 
 @app.command()
 def clean(
-    project_root: Optional[Path] = typer.Option(
+    project_root: Path | None = typer.Option(
         None, "--root", help="Project root directory"
     ),
 ) -> None:
@@ -245,7 +244,7 @@ def clean(
 
 @app.command()
 def graph(
-    project_root: Optional[Path] = typer.Option(
+    project_root: Path | None = typer.Option(
         None, "--root", help="Project root directory"
     ),
 ) -> None:
@@ -278,7 +277,7 @@ def ci(
         "HEAD~1", "--since", help="Base revision to diff against"
     ),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed output"),
-    project_root: Optional[Path] = typer.Option(
+    project_root: Path | None = typer.Option(
         None, "--root", help="Project root directory"
     ),
 ) -> None:

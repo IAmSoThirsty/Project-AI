@@ -451,9 +451,13 @@ class ASTAnalyzer:
         except Exception:
             return "<unknown>"
 
+<<<<<<< HEAD
     def _extract_arguments(
         self, args: ast.arguments
     ) -> list[tuple[str, str | None]]:
+=======
+    def _extract_arguments(self, args: ast.arguments) -> list[tuple[str, str | None]]:
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         """
         Extract function arguments with type hints
 

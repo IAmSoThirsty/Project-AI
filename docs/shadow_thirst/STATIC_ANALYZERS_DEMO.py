@@ -27,13 +27,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../../src"))
 from shadow_thirst.compiler import compile_source
 from shadow_thirst.static_analysis import (
     AnalysisSeverity,
-    DeterminismAnalyzer,
-    DivergenceRiskEstimator,
-    InvariantPurityChecker,
-    PlaneIsolationAnalyzer,
-    PrivilegeEscalationAnalyzer,
-    ResourceEstimator,
-    StaticAnalyzer,
 )
 
 
@@ -46,14 +39,14 @@ def print_section(title):
 
 def print_analysis_report(report):
     """Print analysis report findings."""
-    print(f"\n📊 Analysis Summary:")
+    print("\n📊 Analysis Summary:")
     print(f"   Total Findings: {report.summary['total_findings']}")
     print(f"   Errors: {report.summary['errors']}")
     print(f"   Warnings: {report.summary['warnings']}")
     print(f"   Passed: {'✅ YES' if report.passed else '❌ NO'}")
 
     if report.findings:
-        print(f"\n📋 Findings:")
+        print("\n📋 Findings:")
         for finding in report.findings:
             icon = (
                 "❌"
@@ -201,7 +194,7 @@ def demo_4_resource_estimation():
         ]
 
         if resource_findings:
-            print(f"\n📈 Resource Estimation Details:")
+            print("\n📈 Resource Estimation Details:")
             for finding in resource_findings:
                 if finding.metadata:
                     print(
@@ -260,7 +253,7 @@ def demo_5_divergence_risk():
         ]
 
         if divergence_findings:
-            print(f"\n📊 Divergence Analysis:")
+            print("\n📊 Divergence Analysis:")
             for finding in divergence_findings:
                 if finding.metadata:
                     print(

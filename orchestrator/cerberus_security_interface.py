@@ -8,7 +8,6 @@ CRITICAL: All tool requests must go through Triumvirate authorization
 """
 
 import logging
-from typing import Dict, List, Optional
 
 from orchestrator.security_tools_service import SecurityToolsService
 from security.triumvirate_authorization import (
@@ -38,7 +37,7 @@ class CerberusSecurityInterface:
         threat_level: ThreatLevel,
         justification: str,
         target: str = "",
-    ) -> Dict:
+    ) -> dict:
         """
         Request access to a security tool
 
@@ -52,7 +51,7 @@ class CerberusSecurityInterface:
         Returns:
             Authorization result with session token if approved
         """
-        logger.warning(f"CERBERUS: Requesting tool access")
+        logger.warning("CERBERUS: Requesting tool access")
         logger.warning(f"  Tool: {tool_category}/{tool_name}")
         logger.warning(f"  Threat: {threat_level.name}")
 
@@ -77,7 +76,7 @@ class CerberusSecurityInterface:
                 "granted_at": request.timestamp,
             }
 
-            logger.warning(f"CERBERUS: Tool access GRANTED by Triumvirate")
+            logger.warning("CERBERUS: Tool access GRANTED by Triumvirate")
 
             return {
                 "success": True,
@@ -86,7 +85,7 @@ class CerberusSecurityInterface:
                 "message": "Triumvirate authorization granted",
             }
         else:
-            logger.warning(f"CERBERUS: Tool access DENIED by Triumvirate")
+            logger.warning("CERBERUS: Tool access DENIED by Triumvirate")
 
             return {
                 "success": False,
@@ -95,8 +94,8 @@ class CerberusSecurityInterface:
             }
 
     def execute_authorized_tool(
-        self, session_token: str, args: List[str] = None
-    ) -> Dict:
+        self, session_token: str, args: list[str] = None
+    ) -> dict:
         """
         Execute tool with approved session token
 
@@ -126,7 +125,7 @@ class CerberusSecurityInterface:
 
     def assess_and_deploy(
         self, threat_description: str, suggested_tool: str, target: str = ""
-    ) -> Dict:
+    ) -> dict:
         """
         High-level interface: Assess threat and deploy appropriate tool
 

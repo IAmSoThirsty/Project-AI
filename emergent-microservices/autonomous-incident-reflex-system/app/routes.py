@@ -4,15 +4,12 @@
 API routes for Autonomous Incident Reflex System
 """
 
-from typing import List
 from uuid import UUID
 
 from fastapi import APIRouter, Body, Depends, Path, Query, status
 
-from .logging_config import logger
 from .models import (
     IncidentCreate,
-    IncidentUpdate,
     PaginatedIncidents,
     SecurityIncident,
 )

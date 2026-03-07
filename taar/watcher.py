@@ -11,9 +11,8 @@ multi-file saves.
 from __future__ import annotations
 
 import threading
-import time
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 # Try to use watchdog, fall back to polling
 try:

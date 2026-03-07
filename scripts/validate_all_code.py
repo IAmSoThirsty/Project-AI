@@ -27,7 +27,6 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 
 @dataclass
@@ -282,7 +281,7 @@ class CodeValidator:
 
     def run_all(self) -> int:
         """Run all validation checks and return exit code."""
-        print(f"\n🚀 Starting Comprehensive Code Validation")
+        print("\n🚀 Starting Comprehensive Code Validation")
         print(f"Mode: {'Fix' if self.fix else 'Check'}")
         print(f"Speed: {'Fast' if self.fast else 'Full'}")
         print(f"Report: {'Yes' if self.report else 'No'}\n")

@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = Field(default="development", pattern="^(development|staging|production)$")
     
     # Server Configuration
-    HOST: str = "0.0.0.0"
+    HOST: str = "127.0.0.1"
     PORT: int = 8000
     API_PREFIX: str = "/api/v1"
     

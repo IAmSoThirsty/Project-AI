@@ -22,7 +22,7 @@ import logging
 import re
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Union
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -90,13 +90,13 @@ class ValidationResult(BaseModel):
     """Result of signal validation."""
 
     is_valid: bool
-    errors: List[str] = Field(default_factory=list)
-    warnings: List[str] = Field(default_factory=list)
-    blocked_phrases: List[str] = Field(default_factory=list)
-    pii_detected: List[str] = Field(default_factory=list)
+    errors: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+    blocked_phrases: list[str] = Field(default_factory=list)
+    pii_detected: list[str] = Field(default_factory=list)
 
 
-def fuzzy_match_forbidden(text: str, threshold: float = 0.8) -> List[str]:
+def fuzzy_match_forbidden(text: str, threshold: float = 0.8) -> list[str]:
     """
     Check for forbidden phrases using fuzzy matching.
 
@@ -131,7 +131,7 @@ def fuzzy_match_forbidden(text: str, threshold: float = 0.8) -> List[str]:
     return matches
 
 
-def detect_pii(text: str) -> List[str]:
+def detect_pii(text: str) -> list[str]:
     """
     Detect PII patterns in text.
 
@@ -162,15 +162,15 @@ class BaseSignal(BaseModel):
         default_factory=datetime.utcnow, description="Signal timestamp"
     )
     source: str = Field(description="Signal source identifier")
-    text: Optional[str] = Field(default=None, description="Text content of signal")
-    summary: Optional[str] = Field(default=None, description="Brief summary")
-    metadata: Dict[str, Any] = Field(
+    text: str | None = Field(default=None, description="Text content of signal")
+    summary: str | None = Field(default=None, description="Brief summary")
+    metadata: dict[str, Any] = Field(
         default_factory=dict, description="Additional metadata"
     )
 
     @field_validator("text", "summary")
     @classmethod
-    def validate_no_forbidden_phrases(cls, v: Optional[str]) -> Optional[str]:
+    def validate_no_forbidden_phrases(cls, v: str | None) -> str | None:
         """Validate that text does not contain forbidden phrases."""
         if v is None:
             return v
@@ -187,7 +187,7 @@ class BaseSignal(BaseModel):
 
     @field_validator("text", "summary")
     @classmethod
-    def validate_no_pii(cls, v: Optional[str]) -> Optional[str]:
+    def validate_no_pii(cls, v: str | None) -> str | None:
         """Validate that text does not contain obvious PII."""
         if v is None:
             return v
@@ -215,10 +215,10 @@ class DistressSignal(BaseSignal):
     signal_type: SignalType = Field(default=SignalType.DISTRESS, frozen=True)
     priority: SignalPriority = Field(default=SignalPriority.CRITICAL)
 
-    location: Optional[str] = Field(default=None, description="Location of distress")
+    location: str | None = Field(default=None, description="Location of distress")
     severity: int = Field(ge=1, le=10, default=5, description="Severity level 1-10")
     requires_immediate_response: bool = Field(default=True)
-    escalation_path: List[str] = Field(
+    escalation_path: list[str] = Field(
         default_factory=list, description="Escalation chain"
     )
 
@@ -238,12 +238,12 @@ class IncidentSignal(BaseSignal):
     priority: SignalPriority = Field(default=SignalPriority.HIGH)
 
     incident_type: str = Field(description="Type of incident")
-    affected_systems: List[str] = Field(default_factory=list)
+    affected_systems: list[str] = Field(default_factory=list)
     anomaly_score: float = Field(
         ge=0.0, le=1.0, default=0.5, description="Anomaly detection score"
     )
     is_confirmed: bool = Field(default=False)
-    remediation_actions: List[str] = Field(default_factory=list)
+    remediation_actions: list[str] = Field(default_factory=list)
 
     @field_validator("anomaly_score")
     @classmethod
@@ -262,9 +262,9 @@ class SecurityAlertSignal(BaseSignal):
 
     threat_type: str = Field(description="Type of threat detected")
     threat_level: int = Field(ge=1, le=5, default=3, description="Threat level 1-5")
-    indicators_of_compromise: List[str] = Field(default_factory=list)
-    attack_vector: Optional[str] = Field(default=None)
-    mitre_tactics: List[str] = Field(
+    indicators_of_compromise: list[str] = Field(default_factory=list)
+    attack_vector: str | None = Field(default=None)
+    mitre_tactics: list[str] = Field(
         default_factory=list, description="MITRE ATT&CK tactics"
     )
 
@@ -282,18 +282,18 @@ class MediaSignal(BaseSignal):
 
     media_type: MediaType = Field(description="Type of media")
     asset_path: str = Field(description="Path to media asset")
-    duration_seconds: Optional[float] = Field(
+    duration_seconds: float | None = Field(
         default=None, description="Duration for audio/video"
     )
-    file_size_bytes: Optional[int] = Field(default=None)
-    checksum: Optional[str] = Field(default=None, description="File checksum (SHA-256)")
-    transcript: Optional[str] = Field(
+    file_size_bytes: int | None = Field(default=None)
+    checksum: str | None = Field(default=None, description="File checksum (SHA-256)")
+    transcript: str | None = Field(
         default=None, description="Transcription of audio/video"
     )
 
     @field_validator("transcript")
     @classmethod
-    def validate_transcript_no_forbidden(cls, v: Optional[str]) -> Optional[str]:
+    def validate_transcript_no_forbidden(cls, v: str | None) -> str | None:
         """Validate transcript does not contain forbidden phrases."""
         if v is None:
             return v
@@ -325,7 +325,7 @@ class SystemEventSignal(BaseSignal):
     event_name: str = Field(description="Name of system event")
     component: str = Field(description="System component that generated event")
     status: str = Field(default="info", description="Event status")
-    metrics: Dict[str, Any] = Field(default_factory=dict)
+    metrics: dict[str, Any] = Field(default_factory=dict)
 
 
 class AuditEventSignal(BaseSignal):
@@ -336,9 +336,9 @@ class AuditEventSignal(BaseSignal):
 
     action: str = Field(description="Action being audited")
     actor: str = Field(description="Entity performing action")
-    target: Optional[str] = Field(default=None, description="Target of action")
+    target: str | None = Field(default=None, description="Target of action")
     outcome: str = Field(default="success", description="Outcome of action")
-    compliance_tags: List[str] = Field(default_factory=list)
+    compliance_tags: list[str] = Field(default_factory=list)
 
 
 class ConfigurationSignal(BaseSignal):
@@ -348,9 +348,9 @@ class ConfigurationSignal(BaseSignal):
     priority: SignalPriority = Field(default=SignalPriority.NORMAL)
 
     config_key: str = Field(description="Configuration key changed")
-    old_value: Optional[Any] = Field(default=None)
+    old_value: Any | None = Field(default=None)
     new_value: Any = Field(description="New configuration value")
-    change_reason: Optional[str] = Field(default=None)
+    change_reason: str | None = Field(default=None)
     requires_restart: bool = Field(default=False)
 
 
@@ -367,7 +367,7 @@ Signal = Union[
 ]
 
 
-def validate_signal(signal_data: Dict[str, Any]) -> ValidationResult:
+def validate_signal(signal_data: dict[str, Any]) -> ValidationResult:
     """
     Validate signal data against schema.
 
@@ -430,7 +430,6 @@ def validate_signal(signal_data: Dict[str, Any]) -> ValidationResult:
 
 if __name__ == "__main__":
     # Testing
-    import json
 
     # Test valid signal
     valid_signal = {

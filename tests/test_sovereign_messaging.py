@@ -49,19 +49,17 @@ class TestCommunicationCode:
 
     def test_code_uniqueness(self):
         """Test that different instances get unique codes."""
-        with tempfile.TemporaryDirectory() as tmpdir1:
-            with tempfile.TemporaryDirectory() as tmpdir2:
-                messaging1 = SovereignMessaging(
-                    data_dir=tmpdir1, participant_name="user1"
-                )
-                messaging2 = SovereignMessaging(
-                    data_dir=tmpdir2, participant_name="user2"
-                )
+        with (
+            tempfile.TemporaryDirectory() as tmpdir1,
+            tempfile.TemporaryDirectory() as tmpdir2,
+        ):
+            messaging1 = SovereignMessaging(data_dir=tmpdir1, participant_name="user1")
+            messaging2 = SovereignMessaging(data_dir=tmpdir2, participant_name="user2")
 
-                code1 = messaging1.get_communication_code()
-                code2 = messaging2.get_communication_code()
+            code1 = messaging1.get_communication_code()
+            code2 = messaging2.get_communication_code()
 
-                assert code1 != code2
+            assert code1 != code2
 
     def test_code_validation_valid(self):
         """Test validation of valid communication codes."""
@@ -156,43 +154,45 @@ class TestEncryption:
 
     def test_hybrid_encryption_workflow(self):
         """Test complete hybrid encryption workflow."""
-        with tempfile.TemporaryDirectory() as tmpdir1:
-            with tempfile.TemporaryDirectory() as tmpdir2:
-                # Create two participants
-                sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Alice")
-                receiver = SovereignMessaging(data_dir=tmpdir2, participant_name="Bob")
+        with (
+            tempfile.TemporaryDirectory() as tmpdir1,
+            tempfile.TemporaryDirectory() as tmpdir2,
+        ):
+            # Create two participants
+            sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Alice")
+            receiver = SovereignMessaging(data_dir=tmpdir2, participant_name="Bob")
 
-                # Pair them
-                sender.pair_with_contact(
-                    "Bob", receiver.get_communication_code(), receiver.get_public_key()
-                )
-                receiver.pair_with_contact(
-                    "Alice", sender.get_communication_code(), sender.get_public_key()
-                )
+            # Pair them
+            sender.pair_with_contact(
+                "Bob", receiver.get_communication_code(), receiver.get_public_key()
+            )
+            receiver.pair_with_contact(
+                "Alice", sender.get_communication_code(), sender.get_public_key()
+            )
 
-                # Send message
-                message_text = "Secret message from Alice to Bob!"
-                message_id = sender.send_message(
-                    receiver.get_communication_code(), message_text
-                )
+            # Send message
+            message_text = "Secret message from Alice to Bob!"
+            message_id = sender.send_message(
+                receiver.get_communication_code(), message_text
+            )
 
-                assert message_id is not None
+            assert message_id is not None
 
-                # Get sent message details
-                sent_messages = sender.get_messages()
-                assert len(sent_messages) == 1
-                sent_msg = sent_messages[0]
+            # Get sent message details
+            sent_messages = sender.get_messages()
+            assert len(sent_messages) == 1
+            sent_msg = sent_messages[0]
 
-                # Receive message
-                received_msg = receiver.receive_message(
-                    sender.get_communication_code(),
-                    sent_msg["encrypted_aes_key"],
-                    sent_msg["iv"],
-                    sent_msg["ciphertext"],
-                )
+            # Receive message
+            received_msg = receiver.receive_message(
+                sender.get_communication_code(),
+                sent_msg["encrypted_aes_key"],
+                sent_msg["iv"],
+                sent_msg["ciphertext"],
+            )
 
-                assert received_msg is not None
-                assert received_msg["content"] == message_text
+            assert received_msg is not None
+            assert received_msg["content"] == message_text
 
 
 class TestContactPairing:
@@ -200,19 +200,21 @@ class TestContactPairing:
 
     def test_pair_with_valid_contact(self):
         """Test pairing with valid contact."""
-        with tempfile.TemporaryDirectory() as tmpdir1:
-            with tempfile.TemporaryDirectory() as tmpdir2:
-                user1 = SovereignMessaging(data_dir=tmpdir1, participant_name="User1")
-                user2 = SovereignMessaging(data_dir=tmpdir2, participant_name="User2")
+        with (
+            tempfile.TemporaryDirectory() as tmpdir1,
+            tempfile.TemporaryDirectory() as tmpdir2,
+        ):
+            user1 = SovereignMessaging(data_dir=tmpdir1, participant_name="User1")
+            user2 = SovereignMessaging(data_dir=tmpdir2, participant_name="User2")
 
-                # Pair user1 with user2
-                result = user1.pair_with_contact(
-                    "User2", user2.get_communication_code(), user2.get_public_key()
-                )
+            # Pair user1 with user2
+            result = user1.pair_with_contact(
+                "User2", user2.get_communication_code(), user2.get_public_key()
+            )
 
-                assert result is True
-                contacts = user1.get_contacts()
-                assert user2.get_communication_code() in contacts
+            assert result is True
+            contacts = user1.get_contacts()
+            assert user2.get_communication_code() in contacts
 
     def test_pair_with_invalid_code(self):
         """Test pairing fails with invalid code."""
@@ -225,26 +227,26 @@ class TestContactPairing:
 
     def test_pair_user_and_ai(self):
         """Test pairing between user and AI."""
-        with tempfile.TemporaryDirectory() as tmpdir1:
-            with tempfile.TemporaryDirectory() as tmpdir2:
-                user = SovereignMessaging(data_dir=tmpdir1, participant_name="User")
-                ai = SovereignMessaging(
-                    data_dir=tmpdir2, participant_name="AI_Assistant"
-                )
-                ai.set_participant_type(ParticipantType.AI)
+        with (
+            tempfile.TemporaryDirectory() as tmpdir1,
+            tempfile.TemporaryDirectory() as tmpdir2,
+        ):
+            user = SovereignMessaging(data_dir=tmpdir1, participant_name="User")
+            ai = SovereignMessaging(data_dir=tmpdir2, participant_name="AI_Assistant")
+            ai.set_participant_type(ParticipantType.AI)
 
-                # Pair user with AI
-                result = user.pair_with_contact(
-                    "AI_Assistant",
-                    ai.get_communication_code(),
-                    ai.get_public_key(),
-                    participant_type=ParticipantType.AI,
-                )
+            # Pair user with AI
+            result = user.pair_with_contact(
+                "AI_Assistant",
+                ai.get_communication_code(),
+                ai.get_public_key(),
+                participant_type=ParticipantType.AI,
+            )
 
-                assert result is True
-                contacts = user.get_contacts()
-                assert ai.get_communication_code() in contacts
-                assert contacts[ai.get_communication_code()]["participant_type"] == "ai"
+            assert result is True
+            contacts = user.get_contacts()
+            assert ai.get_communication_code() in contacts
+            assert contacts[ai.get_communication_code()]["participant_type"] == "ai"
 
     def test_contacts_persistence(self):
         """Test contacts are persisted to disk."""
@@ -266,27 +268,27 @@ class TestMessaging:
 
     def test_send_message_success(self):
         """Test successful message sending."""
-        with tempfile.TemporaryDirectory() as tmpdir1:
-            with tempfile.TemporaryDirectory() as tmpdir2:
-                sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
-                receiver = SovereignMessaging(
-                    data_dir=tmpdir2, participant_name="Receiver"
-                )
+        with (
+            tempfile.TemporaryDirectory() as tmpdir1,
+            tempfile.TemporaryDirectory() as tmpdir2,
+        ):
+            sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
+            receiver = SovereignMessaging(data_dir=tmpdir2, participant_name="Receiver")
 
-                # Pair
-                sender.pair_with_contact(
-                    "Receiver",
-                    receiver.get_communication_code(),
-                    receiver.get_public_key(),
-                )
+            # Pair
+            sender.pair_with_contact(
+                "Receiver",
+                receiver.get_communication_code(),
+                receiver.get_public_key(),
+            )
 
-                # Send
-                message_id = sender.send_message(
-                    receiver.get_communication_code(), "Test message"
-                )
+            # Send
+            message_id = sender.send_message(
+                receiver.get_communication_code(), "Test message"
+            )
 
-                assert message_id is not None
-                assert len(message_id) > 0
+            assert message_id is not None
+            assert len(message_id) > 0
 
     def test_send_message_to_unknown_contact(self):
         """Test sending to unknown contact fails."""
@@ -299,41 +301,41 @@ class TestMessaging:
 
     def test_receive_message_success(self):
         """Test successful message receiving and decryption."""
-        with tempfile.TemporaryDirectory() as tmpdir1:
-            with tempfile.TemporaryDirectory() as tmpdir2:
-                sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
-                receiver = SovereignMessaging(
-                    data_dir=tmpdir2, participant_name="Receiver"
-                )
+        with (
+            tempfile.TemporaryDirectory() as tmpdir1,
+            tempfile.TemporaryDirectory() as tmpdir2,
+        ):
+            sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
+            receiver = SovereignMessaging(data_dir=tmpdir2, participant_name="Receiver")
 
-                # Mutual pairing
-                sender.pair_with_contact(
-                    "Receiver",
-                    receiver.get_communication_code(),
-                    receiver.get_public_key(),
-                )
-                receiver.pair_with_contact(
-                    "Sender", sender.get_communication_code(), sender.get_public_key()
-                )
+            # Mutual pairing
+            sender.pair_with_contact(
+                "Receiver",
+                receiver.get_communication_code(),
+                receiver.get_public_key(),
+            )
+            receiver.pair_with_contact(
+                "Sender", sender.get_communication_code(), sender.get_public_key()
+            )
 
-                # Send
-                message_text = "Hello from sender!"
-                sender.send_message(receiver.get_communication_code(), message_text)
+            # Send
+            message_text = "Hello from sender!"
+            sender.send_message(receiver.get_communication_code(), message_text)
 
-                # Get encrypted message
-                sent_msg = sender.get_messages()[0]
+            # Get encrypted message
+            sent_msg = sender.get_messages()[0]
 
-                # Receive
-                received = receiver.receive_message(
-                    sender.get_communication_code(),
-                    sent_msg["encrypted_aes_key"],
-                    sent_msg["iv"],
-                    sent_msg["ciphertext"],
-                )
+            # Receive
+            received = receiver.receive_message(
+                sender.get_communication_code(),
+                sent_msg["encrypted_aes_key"],
+                sent_msg["iv"],
+                sent_msg["ciphertext"],
+            )
 
-                assert received is not None
-                assert received["content"] == message_text
-                assert received["status"] == MessageStatus.DELIVERED.value
+            assert received is not None
+            assert received["content"] == message_text
+            assert received["status"] == MessageStatus.DELIVERED.value
 
     def test_receive_from_unknown_sender(self):
         """Test receiving from unknown sender fails."""
@@ -352,47 +354,47 @@ class TestMessageLifecycle:
 
     def test_message_status_progression(self):
         """Test message status: SENT → DELIVERED → SEEN."""
-        with tempfile.TemporaryDirectory() as tmpdir1:
-            with tempfile.TemporaryDirectory() as tmpdir2:
-                sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
-                receiver = SovereignMessaging(
-                    data_dir=tmpdir2, participant_name="Receiver"
-                )
+        with (
+            tempfile.TemporaryDirectory() as tmpdir1,
+            tempfile.TemporaryDirectory() as tmpdir2,
+        ):
+            sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
+            receiver = SovereignMessaging(data_dir=tmpdir2, participant_name="Receiver")
 
-                # Pair
-                sender.pair_with_contact(
-                    "Receiver",
-                    receiver.get_communication_code(),
-                    receiver.get_public_key(),
-                )
-                receiver.pair_with_contact(
-                    "Sender", sender.get_communication_code(), sender.get_public_key()
-                )
+            # Pair
+            sender.pair_with_contact(
+                "Receiver",
+                receiver.get_communication_code(),
+                receiver.get_public_key(),
+            )
+            receiver.pair_with_contact(
+                "Sender", sender.get_communication_code(), sender.get_public_key()
+            )
 
-                # Send - status is SENT
-                sender.send_message(receiver.get_communication_code(), "Test")
-                sent_msg = sender.get_messages()[0]
-                assert sent_msg["status"] == MessageStatus.SENT.value
+            # Send - status is SENT
+            sender.send_message(receiver.get_communication_code(), "Test")
+            sent_msg = sender.get_messages()[0]
+            assert sent_msg["status"] == MessageStatus.SENT.value
 
-                # Receive - status is DELIVERED
-                sent_msg_data = sender.get_messages()[0]
-                received = receiver.receive_message(
-                    sender.get_communication_code(),
-                    sent_msg_data["encrypted_aes_key"],
-                    sent_msg_data["iv"],
-                    sent_msg_data["ciphertext"],
-                )
-                assert received["status"] == MessageStatus.DELIVERED.value
+            # Receive - status is DELIVERED
+            sent_msg_data = sender.get_messages()[0]
+            received = receiver.receive_message(
+                sender.get_communication_code(),
+                sent_msg_data["encrypted_aes_key"],
+                sent_msg_data["iv"],
+                sent_msg_data["ciphertext"],
+            )
+            assert received["status"] == MessageStatus.DELIVERED.value
 
-                # Mark as SEEN
-                result = receiver.mark_message_seen(received["message_id"])
-                assert result is True
+            # Mark as SEEN
+            result = receiver.mark_message_seen(received["message_id"])
+            assert result is True
 
-                messages = receiver.get_messages()
-                seen_msg = messages[0]
-                assert seen_msg["status"] == MessageStatus.SEEN.value
-                assert seen_msg["seen_at"] is not None
-                assert seen_msg["delete_at"] is not None
+            messages = receiver.get_messages()
+            seen_msg = messages[0]
+            assert seen_msg["status"] == MessageStatus.SEEN.value
+            assert seen_msg["seen_at"] is not None
+            assert seen_msg["delete_at"] is not None
 
     def test_self_destruct_timer_set(self):
         """Test that self-destruct timer is set correctly (1 hour after seen)."""
@@ -516,30 +518,30 @@ class TestDataPersistence:
 
     def test_messages_persistence(self):
         """Test messages are saved and loaded correctly."""
-        with tempfile.TemporaryDirectory() as tmpdir1:
-            with tempfile.TemporaryDirectory() as tmpdir2:
-                sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
-                receiver = SovereignMessaging(
-                    data_dir=tmpdir2, participant_name="Receiver"
-                )
+        with (
+            tempfile.TemporaryDirectory() as tmpdir1,
+            tempfile.TemporaryDirectory() as tmpdir2,
+        ):
+            sender = SovereignMessaging(data_dir=tmpdir1, participant_name="Sender")
+            receiver = SovereignMessaging(data_dir=tmpdir2, participant_name="Receiver")
 
-                # Pair and send
-                sender.pair_with_contact(
-                    "Receiver",
-                    receiver.get_communication_code(),
-                    receiver.get_public_key(),
-                )
-                message_id = sender.send_message(
-                    receiver.get_communication_code(), "Persistent message"
-                )
+            # Pair and send
+            sender.pair_with_contact(
+                "Receiver",
+                receiver.get_communication_code(),
+                receiver.get_public_key(),
+            )
+            message_id = sender.send_message(
+                receiver.get_communication_code(), "Persistent message"
+            )
 
-                # Reload sender and verify
-                sender_reloaded = SovereignMessaging(
-                    data_dir=tmpdir1, participant_name="Sender"
-                )
-                messages = sender_reloaded.get_messages()
-                assert len(messages) == 1
-                assert messages[0]["message_id"] == message_id
+            # Reload sender and verify
+            sender_reloaded = SovereignMessaging(
+                data_dir=tmpdir1, participant_name="Sender"
+            )
+            messages = sender_reloaded.get_messages()
+            assert len(messages) == 1
+            assert messages[0]["message_id"] == message_id
 
     def test_storage_directory_structure(self):
         """Test that correct directory structure is created."""
@@ -600,51 +602,53 @@ class TestParticipantTypes:
 
     def test_user_ai_conversation(self):
         """Test conversation between user and AI."""
-        with tempfile.TemporaryDirectory() as tmpdir1:
-            with tempfile.TemporaryDirectory() as tmpdir2:
-                user = SovereignMessaging(data_dir=tmpdir1, participant_name="Human")
-                ai = SovereignMessaging(data_dir=tmpdir2, participant_name="AI_Agent")
-                ai.set_participant_type(ParticipantType.AI)
+        with (
+            tempfile.TemporaryDirectory() as tmpdir1,
+            tempfile.TemporaryDirectory() as tmpdir2,
+        ):
+            user = SovereignMessaging(data_dir=tmpdir1, participant_name="Human")
+            ai = SovereignMessaging(data_dir=tmpdir2, participant_name="AI_Agent")
+            ai.set_participant_type(ParticipantType.AI)
 
-                # Mutual pairing
-                user.pair_with_contact(
-                    "AI_Agent",
-                    ai.get_communication_code(),
-                    ai.get_public_key(),
-                    participant_type=ParticipantType.AI,
-                )
-                ai.pair_with_contact(
-                    "Human",
-                    user.get_communication_code(),
-                    user.get_public_key(),
-                    participant_type=ParticipantType.USER,
-                )
+            # Mutual pairing
+            user.pair_with_contact(
+                "AI_Agent",
+                ai.get_communication_code(),
+                ai.get_public_key(),
+                participant_type=ParticipantType.AI,
+            )
+            ai.pair_with_contact(
+                "Human",
+                user.get_communication_code(),
+                user.get_public_key(),
+                participant_type=ParticipantType.USER,
+            )
 
-                # User sends to AI
-                user.send_message(ai.get_communication_code(), "Hello AI!")
-                user_msg = user.get_messages()[0]
+            # User sends to AI
+            user.send_message(ai.get_communication_code(), "Hello AI!")
+            user_msg = user.get_messages()[0]
 
-                # AI receives
-                ai_received = ai.receive_message(
-                    user.get_communication_code(),
-                    user_msg["encrypted_aes_key"],
-                    user_msg["iv"],
-                    user_msg["ciphertext"],
-                )
-                assert ai_received["content"] == "Hello AI!"
+            # AI receives
+            ai_received = ai.receive_message(
+                user.get_communication_code(),
+                user_msg["encrypted_aes_key"],
+                user_msg["iv"],
+                user_msg["ciphertext"],
+            )
+            assert ai_received["content"] == "Hello AI!"
 
-                # AI responds
-                ai.send_message(user.get_communication_code(), "Hello Human!")
-                ai_msg = ai.get_messages()[-1]
+            # AI responds
+            ai.send_message(user.get_communication_code(), "Hello Human!")
+            ai_msg = ai.get_messages()[-1]
 
-                # User receives
-                user_received = user.receive_message(
-                    ai.get_communication_code(),
-                    ai_msg["encrypted_aes_key"],
-                    ai_msg["iv"],
-                    ai_msg["ciphertext"],
-                )
-                assert user_received["content"] == "Hello Human!"
+            # User receives
+            user_received = user.receive_message(
+                ai.get_communication_code(),
+                ai_msg["encrypted_aes_key"],
+                ai_msg["iv"],
+                ai_msg["ciphertext"],
+            )
+            assert user_received["content"] == "Hello Human!"
 
 
 if __name__ == "__main__":
