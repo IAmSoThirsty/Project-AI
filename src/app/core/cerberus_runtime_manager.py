@@ -124,10 +124,11 @@ class RuntimeManager:
 
         for lang_key, runtime in self.runtimes.items():
             try:
-                # Execute health check command
+                # Execute health check command (safely without shell=True)
+                import shlex
+                cmd_args = shlex.split(runtime.health_check_cmd)
                 result = subprocess.run(
-                    runtime.health_check_cmd,
-                    shell=True,
+                    cmd_args,
                     capture_output=True,
                     timeout=timeout,
                     text=True,

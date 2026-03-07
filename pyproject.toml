@@ -134,6 +134,8 @@ markers = [
     "load: Load tests",
     "chaos: Chaos tests",
     "soak: Soak tests",
+    "asyncio: Async tests",
+    "slow: Slow running tests",
 ]
 filterwarnings = [
     "ignore::DeprecationWarning:passlib",

@@ -226,7 +226,6 @@ class WiFiController:
                 capture_output=True,
                 text=True,
                 timeout=10,
-                shell=True,
             )
 
             if result.returncode == 0:
