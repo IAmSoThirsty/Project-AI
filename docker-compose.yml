@@ -1,8 +1,6 @@
 # [2026-03-01 13:20]
 # Productivity: Active
 
-version: "3.8"
-
 services:
   project-ai:
     build:
@@ -21,10 +19,8 @@ services:
       - ENABLE_METRICS=true
       - METRICS_PORT=8000
     volumes:
-      - ./src:/app/src
-      - ./data:/app/data
-      - ./logs:/app/logs
-      - ./config:/app/config
+      - app-data:/app/data
+      - app-logs:/app/logs
     ports:
       - "5000:5000"
       - "8000:8000"
@@ -44,7 +40,7 @@ services:
       start_period: 40s
 
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v2.51.0
     container_name: project-ai-prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
@@ -65,7 +61,7 @@ services:
       - project-ai
 
   alertmanager:
-    image: prom/alertmanager:latest
+    image: prom/alertmanager:v0.27.0
     container_name: project-ai-alertmanager
     command:
       - "--config.file=/etc/alertmanager/alertmanager.yml"
@@ -80,7 +76,7 @@ services:
     restart: unless-stopped
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:10.4.1
     container_name: project-ai-grafana
     volumes:
       - ./config/grafana:/etc/grafana/provisioning
@@ -91,13 +87,14 @@ services:
       - project-ai-network
     restart: unless-stopped
     environment:
-      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
     depends_on:
       - prometheus
 
   temporal:
-    image: temporalio/auto-setup:latest
+    image: temporalio/auto-setup:1.24.2
     container_name: project-ai-temporal
     ports:
       - "7233:7233"
@@ -112,9 +109,9 @@ services:
     image: postgres:13
     container_name: project-ai-temporal-db
     environment:
-      - POSTGRES_USER=temporal
-      - POSTGRES_PASSWORD=temporal
-      - POSTGRES_DB=temporal
+      - POSTGRES_USER=${TEMPORAL_DB_USER:-temporal}
+      - POSTGRES_PASSWORD=${TEMPORAL_DB_PASSWORD}
+      - POSTGRES_DB=${TEMPORAL_DB_NAME:-temporal}
     volumes:
       - temporal-postgresql-data:/var/lib/postgresql/data
     networks:
@@ -131,8 +128,6 @@ services:
       - PYTHONUNBUFFERED=1
       - PYTHONPATH=/app/src
       - TEMPORAL_HOST=temporal:7233
-    volumes:
-      - ./src:/app/src
     networks:
       - project-ai-network
     depends_on:
@@ -224,6 +219,8 @@ services:
       - prometheus
 
 volumes:
+  app-data:
+  app-logs:
   prometheus-data:
   alertmanager-data:
   grafana-data:

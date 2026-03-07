@@ -1,19 +1,61 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
     monitor: 'project-ai'
 
+rule_files:
+  - 'alerts.yml'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
 scrape_configs:
-  # Project AI API
+  # Project AI API (Core Governance)
   - job_name: 'project-ai-api'
     static_configs:
-      - targets: ['api:8001']
+      - targets: ['project-ai:8001']
     metrics_path: '/metrics'
-    
+
   # Prometheus itself
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
+
+  # Emergent Microservices
+  - job_name: 'mutation-firewall'
+    static_configs:
+      - targets: ['mutation-firewall:8000']
+    metrics_path: '/metrics'
+
+  - job_name: 'incident-reflex'
+    static_configs:
+      - targets: ['incident-reflex:8000']
+    metrics_path: '/metrics'
+
+  - job_name: 'trust-graph'
+    static_configs:
+      - targets: ['trust-graph:8000']
+    metrics_path: '/metrics'
+
+  - job_name: 'data-vault'
+    static_configs:
+      - targets: ['data-vault:8000']
+    metrics_path: '/metrics'
+
+  - job_name: 'negotiation-agent'
+    static_configs:
+      - targets: ['negotiation-agent:8000']
+    metrics_path: '/metrics'
+
+  - job_name: 'compliance-engine'
+    static_configs:
+      - targets: ['compliance-engine:8000']
+    metrics_path: '/metrics'
+
+  - job_name: 'verifiable-reality'
+    static_configs:
+      - targets: ['verifiable-reality:8000']
+    metrics_path: '/metrics'

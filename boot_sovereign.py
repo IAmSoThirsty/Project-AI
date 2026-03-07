@@ -15,12 +15,11 @@ Ignition Order:
 6.  Interface: Leather Book Master UI
 """
 
+import argparse
+import logging
 import os
 import sys
 import time
-import argparse
-import logging
-import argparse
 from pathlib import Path
 
 # Add src to sys.path

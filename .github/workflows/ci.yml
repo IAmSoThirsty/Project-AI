@@ -1,4 +1,4 @@
-#                                           [2026-03-05 09:28]
+#                                           [2026-03-07 12:00]
 #                                          Productivity: Active
 name: CI Pipeline
 
@@ -27,17 +27,17 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff black mypy
-          pip install -r requirements.txt || true
+          pip install ruff mypy
+          pip install -r requirements.txt
 
       - name: Ruff lint
         run: ruff check src/ tests/ --output-format=github
 
-      - name: Black format check
-        run: black --check --diff src/ tests/
+      - name: Ruff format check
+        run: ruff format --check src/ tests/
 
-      - name: MyPy type check (non-blocking)
-        run: mypy src/ --ignore-missing-imports || true
+      - name: MyPy type check
+        run: mypy src/ --ignore-missing-imports
         continue-on-error: true
 
   test:
@@ -59,7 +59,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt || true
+          pip install -r requirements.txt
           pip install pytest pytest-cov pytest-timeout
 
       - name: Run tests with coverage
@@ -80,8 +80,8 @@ jobs:
           name: coverage-report
           path: coverage.xml
 
-  security-basic:
-    name: Basic Security Checks
+  security:
+    name: Security Checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -91,14 +91,34 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install security tools
+        run: |
+          pip install detect-secrets bandit[toml]
+
+      - name: Bandit security scan
+        run: |
+          bandit -r src/ \
+            --severity-level medium \
+            --confidence-level medium \
+            -x "src/app/testing/*,src/app/generated/*"
+
       - name: Check for hardcoded secrets
         run: |
-          pip install detect-secrets
-          detect-secrets scan --all-files --exclude-files '\.lock$|node_modules' || true
+          detect-secrets scan --all-files \
+            --exclude-files '\.lock$|node_modules|\.git/'
 
       - name: Check for .env files
         run: |
-          if find . -name '.env' -not -path './node_modules/*' | grep -q .; then
+          if find . -name '.env' -not -path './node_modules/*' -not -path './.git/*' | grep -q .; then
             echo "::error::Found .env file(s) in repository!"
+            exit 1
+          fi
+
+      - name: Check for private keys
+        run: |
+          KEYS=$(grep -rl 'PRIVATE KEY' --include='*.pem' --include='*.key' --include='*.p12' . 2>/dev/null || true)
+          if [ -n "$KEYS" ]; then
+            echo "::error::Found private key file(s):"
+            echo "$KEYS"
             exit 1
           fi

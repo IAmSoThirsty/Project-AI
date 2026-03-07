@@ -33,8 +33,7 @@ jobs:
                     -o bandit-report.json \
                     --severity-level medium \
                     --confidence-level medium \
-                    -x "src/app/testing/*,src/app/generated/*" \
-                    || true
+                    -x "src/app/testing/*,src/app/generated/*"
 
             - name: Parse Bandit results
               run: |
