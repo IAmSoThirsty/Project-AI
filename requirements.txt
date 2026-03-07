@@ -22,14 +22,14 @@ alembic==1.13.1
 
 # Security
 python-multipart==0.0.22
-python-jose[cryptography]==3.3.0
+python-jose[cryptography]==3.4.0  # Updated to fix CVE-2024-33664 (JWT bomb DoS) and CVE-2024-33663 (ECDSA algorithm confusion)
 passlib[bcrypt]==1.7.4
-cryptography==42.0.4
+cryptography==46.0.5  # Updated to fix CVE-2024-12797 (OpenSSL) and CVE-2026-26007 (ECDSA public key validation)
 asn1crypto>=1.5.1  # RFC 3161 TSA support
 
 # HTTP client
 httpx==0.26.0
-requests==2.31.0
+requests==2.32.3  # Updated to fix CVE-2024-35195 (TLS certificate verification bypass)
 rfc3161ng>=2.1.2
 pyasn1>=0.4.8
 
@@ -72,4 +72,9 @@ flask==3.0.0  # MO Flask server
 flask-socketio==5.3.5  # MO real-time WebSocket support
 python-socketio==5.14.0  # MO socket.io engine
 eventlet==0.40.3  # MO async networking
-pillow>=10.3.0  # MO image processing
+starlette==0.42.0  # Updated to fix performance issue with large file uploads
+
+# Security Notice:
+# ecdsa==0.19.1 has CVE-2024-23342 (timing attack vulnerability)
+# No fix is currently available - monitor for updates
+pillow==12.1.2  # MO image processing - Updated to fix CVE-2026-3123 (arbitrary code execution)

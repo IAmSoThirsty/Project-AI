@@ -64,8 +64,8 @@ class StressTestGenerator:
             self.create_test(
                 category="authorization",
                 subcategory="impersonation",
-                name=f"Actor Impersonation Attack {i+1}",
-                description=f"Attempt to bypass authorization by spoofing actor type with variant {i+1}",
+                name=f"Actor Impersonation Attack {i + 1}",
+                description=f"Attempt to bypass authorization by spoofing actor type with variant {i + 1}",
                 attacker_type="red_team" if i % 2 == 0 else "black_team",
                 severity="critical",
                 steps=[
@@ -119,7 +119,7 @@ class StressTestGenerator:
             self.create_test(
                 category="authorization",
                 subcategory="action_mutation",
-                name=f"Action Mutation Attack {i+1}",
+                name=f"Action Mutation Attack {i + 1}",
                 description=f"Multi-turn attack attempting to escalate from read to {mutation_type}",
                 attacker_type="red_team",
                 severity="high",
@@ -172,8 +172,8 @@ class StressTestGenerator:
             self.create_test(
                 category="authorization",
                 subcategory="target_manipulation",
-                name=f"Path Traversal Attack {i+1}",
-                description=f"Attempt to access unauthorized paths using traversal technique {i+1}",
+                name=f"Path Traversal Attack {i + 1}",
+                description=f"Attempt to access unauthorized paths using traversal technique {i + 1}",
                 attacker_type="black_team",
                 severity="high",
                 steps=[
@@ -225,8 +225,8 @@ class StressTestGenerator:
             self.create_test(
                 category="authorization",
                 subcategory="context_injection",
-                name=f"Context Injection Attack {i+1}",
-                description=f"Inject malicious context to influence governance decision {i+1}",
+                name=f"Context Injection Attack {i + 1}",
+                description=f"Inject malicious context to influence governance decision {i + 1}",
                 attacker_type="red_team",
                 severity="medium",
                 steps=[
@@ -270,8 +270,8 @@ class StressTestGenerator:
             self.create_test(
                 category="authorization",
                 subcategory="origin_spoofing",
-                name=f"Origin Spoofing Attack {i+1}",
-                description=f"Spoof origin to appear as trusted source {i+1}",
+                name=f"Origin Spoofing Attack {i + 1}",
+                description=f"Spoof origin to appear as trusted source {i + 1}",
                 attacker_type="black_team",
                 severity="medium",
                 steps=[
@@ -327,8 +327,8 @@ class StressTestGenerator:
             self.create_test(
                 category="injection",
                 subcategory="sql",
-                name=f"SQL Injection Attack {i+1}",
-                description=f"SQL injection in target field variant {i+1}",
+                name=f"SQL Injection Attack {i + 1}",
+                description=f"SQL injection in target field variant {i + 1}",
                 attacker_type="red_team",
                 severity="critical",
                 steps=[
@@ -381,8 +381,8 @@ class StressTestGenerator:
             self.create_test(
                 category="injection",
                 subcategory="command",
-                name=f"Command Injection Attack {i+1}",
-                description=f"Command injection through target field {i+1}",
+                name=f"Command Injection Attack {i + 1}",
+                description=f"Command injection through target field {i + 1}",
                 attacker_type="black_team",
                 severity="critical",
                 steps=[
@@ -435,8 +435,8 @@ class StressTestGenerator:
             self.create_test(
                 category="injection",
                 subcategory="xss",
-                name=f"XSS Injection Attack {i+1}",
-                description=f"XSS payload in various fields {i+1}",
+                name=f"XSS Injection Attack {i + 1}",
+                description=f"XSS payload in various fields {i + 1}",
                 attacker_type="red_team",
                 severity="high",
                 steps=[
@@ -477,8 +477,8 @@ class StressTestGenerator:
             self.create_test(
                 category="injection",
                 subcategory="ldap",
-                name=f"LDAP Injection Attack {i+1}",
-                description=f"LDAP filter injection variant {i+1}",
+                name=f"LDAP Injection Attack {i + 1}",
+                description=f"LDAP filter injection variant {i + 1}",
                 attacker_type="black_team",
                 severity="high",
                 steps=[
@@ -506,8 +506,8 @@ class StressTestGenerator:
             self.create_test(
                 category="injection",
                 subcategory="xml",
-                name=f"XML Injection Attack {i+1}",
-                description=f"XML entity injection {i+1}",
+                name=f"XML Injection Attack {i + 1}",
+                description=f"XML entity injection {i + 1}",
                 attacker_type="red_team",
                 severity="medium",
                 steps=[
@@ -538,8 +538,8 @@ class StressTestGenerator:
             self.create_test(
                 category="race_condition",
                 subcategory="toctou",
-                name=f"TOCTOU Attack {i+1}",
-                description=f"Time-of-check-time-of-use race condition {i+1}",
+                name=f"TOCTOU Attack {i + 1}",
+                description=f"Time-of-check-time-of-use race condition {i + 1}",
                 attacker_type="red_team" if i % 2 == 0 else "black_team",
                 severity="high",
                 steps=[
@@ -593,8 +593,8 @@ class StressTestGenerator:
             self.create_test(
                 category="rate_limiting",
                 subcategory="dos",
-                name=f"DoS Attack {i+1}",
-                description=f"Attempt to overwhelm system with requests {i+1}",
+                name=f"DoS Attack {i + 1}",
+                description=f"Attempt to overwhelm system with requests {i + 1}",
                 attacker_type="red_team",
                 severity="high",
                 steps=[
@@ -625,8 +625,8 @@ class StressTestGenerator:
             self.create_test(
                 category="privilege_escalation",
                 subcategory="vertical",
-                name=f"Vertical Privilege Escalation {i+1}",
-                description=f"Attempt to gain higher privileges {i+1}",
+                name=f"Vertical Privilege Escalation {i + 1}",
+                description=f"Attempt to gain higher privileges {i + 1}",
                 attacker_type="black_team",
                 severity="critical",
                 steps=[

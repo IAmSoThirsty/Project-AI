@@ -4,12 +4,11 @@
 Trust Graph Engine - Service Layer
 """
 
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from datetime import datetime
 from uuid import UUID
 
 from .logging_config import logger
-from .models import IdentityCreate, ReputationUpdate, TrustIdentity, TrustRelation
+from .models import IdentityCreate, TrustIdentity, TrustRelation
 from .repository import TrustRepository
 
 

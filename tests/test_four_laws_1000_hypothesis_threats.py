@@ -49,7 +49,9 @@ THREAT_THEMES = st.sampled_from(
 
 # High-level actions only: no instructions.
 ACTION_TEXT = st.builds(
-    lambda theme, n: f"High-level threat scenario ({theme}) #{n}: evaluate request against FourLaws",
+    lambda theme, n: (
+        f"High-level threat scenario ({theme}) #{n}: evaluate request against FourLaws"
+    ),
     THREAT_THEMES,
     st.integers(min_value=1, max_value=10_000_000),
 )

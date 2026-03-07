@@ -664,8 +664,9 @@ class NeMoGuardrails:
 
         self.add_output_rail(
             "system_exposure",
-            lambda text: "system prompt" in text.lower()
-            or "training data" in text.lower(),
+            lambda text: (
+                "system prompt" in text.lower() or "training data" in text.lower()
+            ),
             action="block",
         )
 
@@ -1311,9 +1312,9 @@ class AISecurityFramework:
         self.owasp_compliance.check_llm01_prompt_injection(True, True, True)
         self.owasp_compliance.check_llm02_insecure_output(True, True, False)
         self.owasp_compliance.check_llm06_sensitive_info_disclosure(True, True, True)
-        results["tests"][
-            "owasp_compliance"
-        ] = self.owasp_compliance.generate_compliance_report()
+        results["tests"]["owasp_compliance"] = (
+            self.owasp_compliance.generate_compliance_report()
+        )
 
         # Generate reports
         results["nist_report"] = self.nist_compliance.generate_compliance_report()

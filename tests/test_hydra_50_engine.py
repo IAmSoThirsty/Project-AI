@@ -348,7 +348,8 @@ class TestHumanFailureEmulator:
     def test_decision_failure_simulation(self, engine):
         """Test human decision failure modeling"""
         result = engine.human_failure_emulator.simulate_decision_failure(
-            stress_level=0.8, decision_type="tactical"  # High stress
+            stress_level=0.8,
+            decision_type="tactical",  # High stress
         )
 
         assert "failed" in result
@@ -407,7 +408,8 @@ class TestFalseRecoveryEngine:
         scenario = engine.scenarios["S01"]
 
         evaluation = engine.false_recovery_engine.evaluate_recovery_attempt(
-            scenario, "blockchain_verification_theater"  # Known poison
+            scenario,
+            "blockchain_verification_theater",  # Known poison
         )
 
         assert evaluation["is_poison"] is True

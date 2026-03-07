@@ -21,7 +21,6 @@ import threading
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional, Set
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +49,7 @@ class SpanEvent:
 
     name: str
     timestamp: float
-    attributes: Dict[str, any] = field(default_factory=dict)
+    attributes: dict[str, any] = field(default_factory=dict)
 
 
 @dataclass
@@ -59,7 +58,7 @@ class SpanLink:
 
     trace_id: str
     span_id: str
-    attributes: Dict[str, any] = field(default_factory=dict)
+    attributes: dict[str, any] = field(default_factory=dict)
 
 
 @dataclass
@@ -68,25 +67,25 @@ class Span:
 
     trace_id: str
     span_id: str
-    parent_span_id: Optional[str]
+    parent_span_id: str | None
     name: str
     kind: SpanKind
     start_time: float
-    end_time: Optional[float] = None
+    end_time: float | None = None
     status: SpanStatus = SpanStatus.UNSET
     status_message: str = ""
 
     # Attributes (tags)
-    attributes: Dict[str, any] = field(default_factory=dict)
+    attributes: dict[str, any] = field(default_factory=dict)
 
     # Events within span
-    events: List[SpanEvent] = field(default_factory=list)
+    events: list[SpanEvent] = field(default_factory=list)
 
     # Links to other spans
-    links: List[SpanLink] = field(default_factory=list)
+    links: list[SpanLink] = field(default_factory=list)
 
     # Baggage (cross-service context)
-    baggage: Dict[str, str] = field(default_factory=dict)
+    baggage: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -113,10 +112,10 @@ class TracingSystem:
 
     def __init__(self):
         # Active spans (in-progress)
-        self.active_spans: Dict[str, Span] = {}
+        self.active_spans: dict[str, Span] = {}
 
         # Completed spans (for analysis)
-        self.completed_spans: Dict[str, List[Span]] = {}  # trace_id -> spans
+        self.completed_spans: dict[str, list[Span]] = {}  # trace_id -> spans
 
         # Thread-local storage for current span context
         self.current_context = threading.local()
@@ -128,7 +127,7 @@ class TracingSystem:
         self.sampling_rate = 1.0  # 100% by default
 
         # Exporters
-        self.exporters: List[callable] = []
+        self.exporters: list[callable] = []
 
         # Statistics
         self.stats = {
@@ -143,7 +142,7 @@ class TracingSystem:
         )
 
     def start_trace(
-        self, operation_name: str, attributes: Optional[Dict[str, any]] = None
+        self, operation_name: str, attributes: dict[str, any] | None = None
     ) -> str:
         """
         Start a new trace
@@ -170,9 +169,9 @@ class TracingSystem:
         self,
         name: str,
         kind: SpanKind = SpanKind.INTERNAL,
-        attributes: Optional[Dict[str, any]] = None,
-        parent_span_id: Optional[str] = None,
-        trace_id: Optional[str] = None,
+        attributes: dict[str, any] | None = None,
+        parent_span_id: str | None = None,
+        trace_id: str | None = None,
     ) -> Span:
         """
         Start a new span
@@ -257,7 +256,7 @@ class TracingSystem:
             )
 
     def add_span_event(
-        self, span_id: str, event_name: str, attributes: Optional[Dict[str, any]] = None
+        self, span_id: str, event_name: str, attributes: dict[str, any] | None = None
     ):
         """Add an event to a span"""
         with self.lock:
@@ -275,7 +274,7 @@ class TracingSystem:
         span_id: str,
         linked_trace_id: str,
         linked_span_id: str,
-        attributes: Optional[Dict[str, any]] = None,
+        attributes: dict[str, any] | None = None,
     ):
         """Add a link to another span"""
         with self.lock:
@@ -296,7 +295,7 @@ class TracingSystem:
             if span_id in self.active_spans:
                 self.active_spans[span_id].attributes[key] = value
 
-    def inject_context(self, carrier: Dict[str, str], span_id: str) -> Dict[str, str]:
+    def inject_context(self, carrier: dict[str, str], span_id: str) -> dict[str, str]:
         """
         Inject trace context into carrier (for propagation)
 
@@ -321,7 +320,7 @@ class TracingSystem:
 
             return carrier
 
-    def extract_context(self, carrier: Dict[str, str]) -> Optional[TraceContext]:
+    def extract_context(self, carrier: dict[str, str]) -> TraceContext | None:
         """
         Extract trace context from carrier
 
@@ -374,7 +373,7 @@ class TracingSystem:
             return "\n".join(lines)
 
     def _visualize_span(
-        self, span: Span, all_spans: List[Span], lines: List[str], indent: int
+        self, span: Span, all_spans: list[Span], lines: list[str], indent: int
     ):
         """Recursively visualize span tree"""
         duration_ms = 0
@@ -391,7 +390,7 @@ class TracingSystem:
         for child in children:
             self._visualize_span(child, all_spans, lines, indent + 1)
 
-    def analyze_critical_path(self, trace_id: str) -> List[Span]:
+    def analyze_critical_path(self, trace_id: str) -> list[Span]:
         """
         Analyze critical path in trace
 
@@ -421,7 +420,7 @@ class TracingSystem:
                 key=lambda p: sum((s.end_time or 0) - s.start_time for s in p),
             )
 
-    def _find_critical_path(self, span: Span, all_spans: List[Span]) -> List[Span]:
+    def _find_critical_path(self, span: Span, all_spans: list[Span]) -> list[Span]:
         """Recursively find critical path from span"""
         children = [s for s in all_spans if s.parent_span_id == span.span_id]
 
@@ -484,7 +483,7 @@ class TracingSystem:
         """Generate random 64-bit span ID"""
         return secrets.token_hex(8)
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Get tracing statistics"""
         with self.lock:
             return {

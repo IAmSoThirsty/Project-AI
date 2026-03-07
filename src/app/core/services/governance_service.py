@@ -14,13 +14,13 @@ and policy enforcement across all platform tiers.
 import logging
 from typing import Any
 
+from src.app.core.governance_graph import GovernanceGraph
 from src.app.core.tier_interfaces import (
     GovernanceDecisionRequest,
     GovernanceDecisionResponse,
     ITier1Governance,
 )
 from src.app.governance.planetary_defense_monolith import PLANETARY_CORE
-from src.app.core.governance_graph import GovernanceGraph
 from src.cognition.triumvirate import Triumvirate
 
 logger = logging.getLogger(__name__)

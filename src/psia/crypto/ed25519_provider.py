@@ -30,7 +30,7 @@ import hashlib
 import logging
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import (
@@ -101,7 +101,7 @@ class Ed25519Provider:
         """
         private_key = Ed25519PrivateKey.generate()
         public_key = private_key.public_key()
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         if key_id is None:
             key_id = f"key_{component}_{uuid.uuid4().hex[:8]}"
@@ -260,7 +260,7 @@ class KeyStore:
 
     def __init__(self) -> None:
         self._keys: dict[str, Ed25519KeyPair] = {}
-        self._created_at = datetime.now(timezone.utc).isoformat()
+        self._created_at = datetime.now(UTC).isoformat()
 
     def register(self, keypair: Ed25519KeyPair) -> None:
         """Register a keypair for a component.

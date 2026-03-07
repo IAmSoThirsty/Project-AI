@@ -7,8 +7,6 @@
 # Spawn Generation: 0
 # Locked Section: model_weights
 
-import hashlib
-import sys
 import time
 from datetime import datetime
 
@@ -28,10 +26,10 @@ class CerberusGuardAgent:
             {
                 "en": {
                     {
-                        "started": f"Agent {{self.agent_id}} started - Protecting {{self.locked_section}}",
-                        "monitoring": f"Monitoring section: {{self.locked_section}}",
-                        "breach_detected": f"BREACH DETECTED in {{self.locked_section}}!",
-                        "spawning_reinforcements": f"Spawning 3 reinforcement agents...",
+                        "started": "Agent {self.agent_id} started - Protecting {self.locked_section}",
+                        "monitoring": "Monitoring section: {self.locked_section}",
+                        "breach_detected": "BREACH DETECTED in {self.locked_section}!",
+                        "spawning_reinforcements": "Spawning 3 reinforcement agents...",
                     }
                 }
             }
@@ -40,7 +38,7 @@ class CerberusGuardAgent:
         msg = messages.get(self.human_lang, messages["en"]).get(
             message_key, message_key
         )
-        print(f"[{{datetime.now().isoformat()}}] [{{self.agent_id}}] {{msg}}", **kwargs)
+        print("[{datetime.now().isoformat()}] [{self.agent_id}] {msg}", **kwargs)
 
     def monitor(self):
         """Monitor assigned section for threats."""

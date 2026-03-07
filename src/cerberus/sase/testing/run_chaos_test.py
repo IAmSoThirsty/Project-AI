@@ -110,13 +110,13 @@ def run_chaos_test() -> dict[str, Any]:
     else:
         logger.critical("❌ GOD-TIER CRITERIA NOT MET")
         if metrics["accuracy"] < 0.995:
-            logger.critical(f"   - Accuracy {metrics['accuracy']*100:.2f}% < 99.5%")
+            logger.critical(f"   - Accuracy {metrics['accuracy'] * 100:.2f}% < 99.5%")
         if metrics["false_positive_rate"] > 0.005:
             logger.critical(
-                f"   - FPR {metrics['false_positive_rate']*100:.3f}% > 0.5%"
+                f"   - FPR {metrics['false_positive_rate'] * 100:.3f}% > 0.5%"
             )
         if metrics["recall"] < 0.95:
-            logger.critical(f"   - Recall {metrics['recall']*100:.2f}% < 95%")
+            logger.critical(f"   - Recall {metrics['recall'] * 100:.2f}% < 95%")
 
     logger.critical("=" * 60)
 

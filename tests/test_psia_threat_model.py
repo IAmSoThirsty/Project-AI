@@ -15,12 +15,9 @@ from __future__ import annotations
 
 import time
 
-import pytest
-
 from psia.threat_model import (
     RESILIENCE_PROFILES,
     CollusionDetector,
-    ResilienceProfile,
     RiskLevel,
     ThreatClass,
     VoteRecord,

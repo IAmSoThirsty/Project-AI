@@ -5,11 +5,10 @@
 import json
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-import pytest
 
 # ── Stub heavy dependencies ───────────────────────────────────
 
@@ -31,9 +30,11 @@ if "app.core.ai_systems" in _stubs:
         "Plugin",
         (),
         {
-            "__init__": lambda self, name="", version="": setattr(self, "name", name)
-            or setattr(self, "version", version)
-            or setattr(self, "enabled", False)
+            "__init__": lambda self, name="", version="": (
+                setattr(self, "name", name)
+                or setattr(self, "version", version)
+                or setattr(self, "enabled", False)
+            )
         },
     )
 

@@ -28,7 +28,6 @@ from psia.observability.failure_detector import (
 
 
 class TestFailureDetector:
-
     def test_initial_state(self):
         fd = FailureDetector()
         fd.register_component("svc-a")
@@ -143,7 +142,6 @@ class TestFailureDetector:
 
 
 class TestAutoimmuneDampener:
-
     def test_initial_sensitivity(self):
         ad = AutoimmuneDampener()
         assert ad.get_sensitivity("rule_1") == 1.0  # max_sensitivity default

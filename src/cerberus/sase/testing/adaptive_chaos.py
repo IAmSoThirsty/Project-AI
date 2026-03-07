@@ -7,7 +7,7 @@ Models real-world adversarial adaptation, not just static distributions.
 
 BLIND SPOTS IN STATIC CHAOS:
 - Low-and-slow attacks
-- Mixed benign-malicious sequences  
+- Mixed benign-malicious sequences
 - Gradual escalation patterns
 - Infrastructure pivots (Tor → VPS)
 - Delayed credential probes

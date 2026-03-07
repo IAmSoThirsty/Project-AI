@@ -4,7 +4,7 @@
 Custom error definitions
 """
 
-from typing import Any, Dict, Optional
+from typing import Any
 
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
@@ -20,7 +20,7 @@ class ServiceError(Exception):
         message: str,
         code: str,
         status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR,
-        details: Optional[Dict[str, Any]] = None,
+        details: dict[str, Any] | None = None,
     ):
         self.message = message
         self.code = code
@@ -32,7 +32,7 @@ class ServiceError(Exception):
 class ValidationError(ServiceError):
     """Validation error"""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, details: dict[str, Any] | None = None):
         super().__init__(
             message=message,
             code="VALIDATION_ERROR",
@@ -78,7 +78,7 @@ class NotFoundError(ServiceError):
 class ConflictError(ServiceError):
     """Conflict error (e.g., duplicate resource)"""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, details: dict[str, Any] | None = None):
         super().__init__(
             message=message,
             code="CONFLICT",

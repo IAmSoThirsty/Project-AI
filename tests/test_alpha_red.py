@@ -9,8 +9,10 @@ from unittest.mock import MagicMock
 # Ensure src is on the path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-import pytest
+<<<<<<< HEAD
 
+=======
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
 
 # ── Stub out heavy dependencies before import ──────────────────
 def _patch_imports():

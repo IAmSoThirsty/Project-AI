@@ -1,17 +1,68 @@
-# Health report snapshots and archives (keep canonical report only)
+# ============================================================
+# Project-AI .gitignore — Production Edition 1
+# ============================================================
+
+# ============================================================
+# SECRETS & CREDENTIALS (CRITICAL — never commit these)
+# ============================================================
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+secrets.json
+credentials.json
+secret_scan_report.json
+*secret*scan*.json
+*secret*scan*.txt
+config/.asl3_key
+src/app/users.json
+.secrets.baseline
+
+# ============================================================
+# RUNTIME DATA & LOGS (generated, never committed)
+# ============================================================
+*.log
+audit.log
+out.txt
+boot_log_v2.txt
+logs/
+audit_reports/
+test_audit_sample/
+test_audit_output/
+
+# Health report snapshots and archives
 data/health_snapshots/
 docs/assets/health_report_*.png
 governance/audit_log.yaml
 
-# Byte-compiled / optimized / DLL files
+# ============================================================
+# ENVIRONMENTS & VIRTUAL ENVIRONMENTS
+# ============================================================
+.env
+.env.local
+.env.*.local
+.env.temporal
+.venv
+.venv_prod/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ============================================================
+# BYTE-COMPILED / OPTIMIZED / DLL FILES
+# ============================================================
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
 
-# Distribution / packaging
+# ============================================================
+# DISTRIBUTION / PACKAGING
+# ============================================================
 .Python
 build/
 develop-eggs/
@@ -30,21 +81,23 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-
-# Release artifacts
 releases/
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+# ============================================================
+# PYINSTALLER
+# ============================================================
 *.manifest
 *.spec
 
-# Installer logs
+# ============================================================
+# INSTALLER LOGS
+# ============================================================
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# ============================================================
+# UNIT TEST / COVERAGE REPORTS
+# ============================================================
 htmlcov/
 .tox/
 .nox/
@@ -57,74 +110,62 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# mypy
+# ============================================================
+# TYPE CHECKERS & LINTERS
+# ============================================================
 .mypy_cache/
 .dmypy.json
-
-# Pyre
 .pyre/
-
-# Ruff
 .ruff_cache/
 
+# ============================================================
 # TAAR (Thirstys Active Agent Runner)
+# ============================================================
 .taar-cache/
 
-# Environments
-.env
-.env.local
-.env.*.local
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Security and secrets
-*.key
-*.pem
-*.p12
-secrets.json
-credentials.json
-secret_scan_report.json
-*secret*scan*.json
-*secret*scan*.txt
-
-# IDEs
+# ============================================================
+# IDEs & EDITORS
+# ============================================================
 .vscode/
 .idea/
 .vs/
+*.swp
+*.swo
+*~
 
-# Secrets and credentials (additional security)
-*.key
-*.pem
-*.p12
-secrets.json
-credentials.json
-secret_scan_report.json
+# ============================================================
+# AGENT CONFIGURATION (generated per-environment)
+# ============================================================
+.agent/
+.agents/
 
-# OS
+# ============================================================
+# OS FILES
+# ============================================================
 .DS_Store
 Thumbs.db
+*.lnk
 
-# Generated test data
+# ============================================================
+# NODE.JS
+# ============================================================
+node_modules/
+
+# ============================================================
+# GENERATED TEST DATA
+# ============================================================
 data/generated_tests/
-
-# Global scenario engine cache
 data/global_scenarios*/cache/
-
-# Sovereign messaging data (contains private keys)
 data/sovereign_messages*/
+data/temporal/
 
-# Gradle
+# ============================================================
+# GRADLE & ANDROID
+# ============================================================
 .gradle/
-build/
 !gradle/wrapper/gradle-wrapper.jar
 *.iml
 local.properties
-
-# Android
 *.apk
 *.ap_
 *.aab
@@ -137,13 +178,15 @@ captures/
 .externalNativeBuild
 .cxx
 
-# Temporal.io
-.env.temporal
+# ============================================================
+# TEMPORAL.IO
+# ============================================================
 config/temporal/*.local
-data/temporal/
 actionlint*
 
-# Unity — generated/cache directories (any depth under unity/)
+# ============================================================
+# UNITY
+# ============================================================
 unity/**/Library/
 unity/**/Temp/
 unity/**/Obj/
@@ -153,8 +196,6 @@ unity/**/Logs/
 unity/**/MemoryCaptures/
 unity/**/UserSettings/
 unity/**/ProjectSettings/
-
-# Unity — IDE/build artifacts
 unity/**/*.csproj
 unity/**/*.unityproj
 unity/**/*.sln
@@ -169,41 +210,33 @@ unity/**/*.pdb
 unity/**/*.mdb
 unity/**/*.opendb
 unity/**/*.VC.db
-
-# Unity3D generated meta files for binaries
 unity/**/*.pidb.meta
 unity/**/*.pdb.meta
 unity/**/*.mdb.meta
-
-# Unity3D crash reports
 unity/**/sysinfo.txt
-
-# Keep StreamingAssets files
 !unity/**/StreamingAssets/
 !unity/**/StreamingAssets/**
+unity/UnityHubSetup.exe
 
-# Antigravity IDE artifacts
+# ============================================================
+# ANTIGRAVITY IDE
+# ============================================================
 .antigravity/artifacts/
 .antigravity/.cache/
 .antigravity/logs/
-node_modules/
 
-
-# Inspection & Audit System outputs
-audit_reports/
-test_audit_sample/
-test_audit_output/
-
-# TK8S Cosign Keys (NEVER commit private keys)
+# ============================================================
+# TK8S COSIGN KEYS
+# ============================================================
 .cosign-keys/
 .kms-keys/
 cosign.key
 cosign.pub
-*.key
 k8s/tk8s/.cosign-keys/
 k8s/tk8s/.kms-keys/
 k8s/tk8s/security/*.backup
 
-# Unity installers
-unity/UnityHubSetup.exe
+# ============================================================
+# EXECUTABLES & SHORTCUTS
+# ============================================================
 *.exe

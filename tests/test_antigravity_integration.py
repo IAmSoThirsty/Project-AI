@@ -56,9 +56,9 @@ class TestAntigravityConfiguration:
         with open(config_path) as f:
             config = json.load(f)
 
-        assert (
-            config["project"]["name"] == "Project-AI"
-        ), "Project name should be 'Project-AI'"
+        assert config["project"]["name"] == "Project-AI", (
+            "Project name should be 'Project-AI'"
+        )
 
     def test_config_ai_systems(self):
         """Test that AI systems are configured."""

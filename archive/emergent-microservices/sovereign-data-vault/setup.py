@@ -1,17 +1,11 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Out-Dated(archive)
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="Sovereign Data Vault Layer",
     version="1.0.0",
-    description="Microservices:
-Zero-knowledge encryption layer
-Capability-based access control
-Time-bound decryption tokens
-Audit trail hashing
-Revocation propagation service
-Use case: “Your data, provably inaccessible without your cryptographic consent.”",
+    description="Microservices for zero-knowledge encryption layer, capability-based access control, time-bound decryption tokens, audit trail hashing, and revocation propagation service. Use case: your data, provably inaccessible without your cryptographic consent.",
     author="IAmSoThirsty",
     packages=find_packages(exclude=["tests", "tests.*"]),
     python_requires=">=3.11",

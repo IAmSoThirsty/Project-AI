@@ -1,20 +1,11 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Out-Dated(archive)
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="Autonomous Compliance-as-Code Engine",
     version="1.0.0",
-    description="Build a regulator-ready microservice fabric that:
-Ingests policy (YAML/DSL)
-Compiles invariants
-Evaluates runtime actions deterministically
-Produces signed audit trails
-Exports SOC2 / ISO / NIST artifacts automatically
-Add:
-Continuous evidence generation
-Machine-verifiable compliance proofs
-API to expose compliance state to customers",
+    description="Build a regulator-ready microservice fabric that ingests policy (YAML/DSL), compiles invariants, evaluates runtime actions deterministically, produces signed audit trails, and exports SOC2/ISO/NIST artifacts automatically. Includes continuous evidence generation, machine-verifiable compliance proofs, and API to expose compliance state to customers.",
     author="IAmSoThirsty",
     packages=find_packages(exclude=["tests", "tests.*"]),
     python_requires=">=3.11",

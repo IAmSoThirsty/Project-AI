@@ -32,10 +32,10 @@ Production notes:
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
 
@@ -112,7 +112,7 @@ class SafeHaltController:
         Returns:
             HaltEvent record
         """
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         event = HaltEvent(
             reason=reason,

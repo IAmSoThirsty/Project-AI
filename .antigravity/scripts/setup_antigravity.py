@@ -48,19 +48,10 @@ class AntigravitySetup:
         checks["config_exists"] = self.config_path.exists()
 
         # Check for required Python packages
-        try:
-            import temporalio
+        import importlib.util
 
-            checks["temporal_installed"] = True
-        except ImportError:
-            checks["temporal_installed"] = False
-
-        try:
-            import openai
-
-            checks["openai_installed"] = True
-        except ImportError:
-            checks["openai_installed"] = False
+        checks["temporal_installed"] = importlib.util.find_spec("temporalio") is not None
+        checks["openai_installed"] = importlib.util.find_spec("openai") is not None
 
         return checks
 
@@ -87,9 +78,8 @@ class AntigravitySetup:
                     issues.append(f"Missing required section: {section}")
 
             # Validate project section
-            if "project" in config:
-                if config["project"].get("name") != "Project-AI":
-                    issues.append("Project name mismatch - should be 'Project-AI'")
+            if "project" in config and config["project"].get("name") != "Project-AI":
+                issues.append("Project name mismatch - should be 'Project-AI'")
 
             # Validate AI systems configuration
             if "ai_systems" in config:

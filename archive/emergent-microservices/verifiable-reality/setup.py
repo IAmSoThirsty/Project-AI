@@ -1,23 +1,11 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Out-Dated(archive)
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="Verifiable Reality Infrastructure (Post-AI Proof Layer)",
     version="1.0.0",
-    description="a cryptographic content authenticity network.
-Microservices:
-Identity attestation service (hardware-bound keys, WebAuthn)
-Media signing service (hash + Merkle anchoring)
-Public verification API
-Browser extension verifier
-Immutable transparency log
-Dispute resolution / counterclaim service
-Use case:
-Politicians sign speeches.
-Corporations sign press releases.
-Journalists sign raw footage.
-Public verifies via hash proof.",
+    description="A cryptographic content authenticity network with microservices for identity attestation service (hardware-bound keys, WebAuthn), media signing service (hash + Merkle anchoring), public verification API, browser extension verifier, immutable transparency log, and dispute resolution/counterclaim service. Use case: politicians sign speeches, corporations sign press releases, journalists sign raw footage, and public verifies via hash proof.",
     author="IAmSoThirsty",
     packages=find_packages(exclude=["tests", "tests.*"]),
     python_requires=">=3.11",

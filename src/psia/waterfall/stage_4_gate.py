@@ -15,8 +15,7 @@ configured quorum policy (unanimous, 2of3, simple).
 from __future__ import annotations
 
 import logging
-import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any, Literal, Protocol
 
 from psia.schemas.cerberus_decision import (
@@ -61,7 +60,7 @@ class StubIdentityHead:
             decision=decision,
             reasons=reasons,
             constraints_applied=ConstraintsApplied(),
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature=Signature(
                 alg="ed25519", kid="cerberus_id_k1", sig="stub_identity_sig"
             ),
@@ -78,7 +77,7 @@ class StubCapabilityHead:
             decision="allow",
             reasons=[],
             constraints_applied=ConstraintsApplied(),
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature=Signature(
                 alg="ed25519", kid="cerberus_cap_k1", sig="stub_capability_sig"
             ),
@@ -95,7 +94,7 @@ class StubInvariantHead:
             decision="allow",
             reasons=[],
             constraints_applied=ConstraintsApplied(),
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature=Signature(
                 alg="ed25519", kid="cerberus_inv_k1", sig="stub_invariant_sig"
             ),
@@ -174,7 +173,7 @@ class QuorumEngine:
                 requires_shadow_hash_match=True,
                 requires_anchor_append=True,
             ),
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature_set=[
                 Signature(alg="ed25519", kid=f"quorum_k{i}", sig=f"quorum_sig_{i}")
                 for i in range(total)
@@ -232,7 +231,7 @@ class GateStage:
                         decision="deny",
                         reasons=[DenyReason(code="HEAD_EXCEPTION", detail=str(exc))],
                         constraints_applied=ConstraintsApplied(),
-                        timestamp=datetime.now(timezone.utc).isoformat(),
+                        timestamp=datetime.now(UTC).isoformat(),
                         signature=Signature(
                             alg="ed25519",
                             kid=f"cerberus_{head_name}_k1",

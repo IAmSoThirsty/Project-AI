@@ -295,18 +295,18 @@ class HealthReporter:
             info_text = f"""
 System Information:
 ─────────────────────────
-OS: {platform_data.get('system', 'Unknown')} {platform_data.get('release', '')}
-Machine: {platform_data.get('machine', 'Unknown')}
-Python: {platform_data.get('python_implementation', 'Unknown')}
+OS: {platform_data.get("system", "Unknown")} {platform_data.get("release", "")}
+Machine: {platform_data.get("machine", "Unknown")}
+Python: {platform_data.get("python_implementation", "Unknown")}
         {sys.version.split()[0]}
 
-Generated: {snapshot_data.get('generated_at', 'Unknown')[:19]}
+Generated: {snapshot_data.get("generated_at", "Unknown")[:19]}
 
-Status: {"✓ Healthy" if all([
-    cpu_usage < 80,
-    memory_usage < 85,
-    disk_usage < 90
-]) else "⚠ Attention Needed"}
+Status: {
+                "✓ Healthy"
+                if all([cpu_usage < 80, memory_usage < 85, disk_usage < 90])
+                else "⚠ Attention Needed"
+            }
             """
 
             ax4.text(

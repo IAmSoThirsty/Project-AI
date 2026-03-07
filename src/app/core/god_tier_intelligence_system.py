@@ -31,7 +31,7 @@ from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import psutil
 
@@ -134,7 +134,7 @@ class CircuitBreaker:
                 self.state = "CLOSED"
                 logger.info("Circuit breaker returned to CLOSED state")
 
-    def _on_failure(self, exception: Optional[Exception] = None) -> None:
+    def _on_failure(self, exception: Exception | None = None) -> None:
         """Handle failure in the circuit breaker.
 
         Args:

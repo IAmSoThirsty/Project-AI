@@ -142,7 +142,7 @@ async def root():
 if __name__ == "__main__":
     uvicorn.run(
         "app.main:app",
-        host="0.0.0.0",
+        host="127.0.0.1",
         port=8000,
         log_config=None,  # Use our custom logging
 )

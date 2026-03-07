@@ -7,7 +7,7 @@ Security utilities (authentication, authorization, input validation)
 import hashlib
 import secrets
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import jwt
 
@@ -31,7 +31,7 @@ def verify_api_key(api_key: str) -> bool:
     return valid
 
 
-def create_jwt_token(subject: str, claims: Optional[Dict[str, Any]] = None) -> str:
+def create_jwt_token(subject: str, claims: dict[str, Any] | None = None) -> str:
     """Create JWT token"""
     now = datetime.utcnow()
     payload = {
@@ -48,7 +48,7 @@ def create_jwt_token(subject: str, claims: Optional[Dict[str, Any]] = None) -> s
     return token
 
 
-def verify_jwt_token(token: str) -> Optional[Dict[str, Any]]:
+def verify_jwt_token(token: str) -> dict[str, Any] | None:
     """Verify JWT token and return payload"""
     try:
         payload = jwt.decode(
@@ -102,7 +102,7 @@ class Role:
 
 
 # Role -> Permissions mapping
-ROLE_PERMISSIONS: Dict[str, List[str]] = {
+ROLE_PERMISSIONS: dict[str, list[str]] = {
     Role.VIEWER: [Permission.READ],
     Role.EDITOR: [Permission.READ, Permission.WRITE],
     Role.ADMIN: [

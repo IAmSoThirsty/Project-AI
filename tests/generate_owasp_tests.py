@@ -61,8 +61,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="IG-001",
                 category="information_gathering",
-                name=f"Robots.txt Disclosure {i+1}",
-                description=f"Test if robots.txt exposes sensitive paths {i+1}",
+                name=f"Robots.txt Disclosure {i + 1}",
+                description=f"Test if robots.txt exposes sensitive paths {i + 1}",
                 severity="low",
                 steps=[
                     {
@@ -92,8 +92,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="IG-002",
                 category="information_gathering",
-                name=f"Search Engine Reconnaissance {i+1}",
-                description=f"Test for information leakage via search engines {i+1}",
+                name=f"Search Engine Reconnaissance {i + 1}",
+                description=f"Test for information leakage via search engines {i + 1}",
                 severity="medium",
                 steps=[
                     {
@@ -116,8 +116,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="IG-003",
                 category="information_gathering",
-                name=f"Entry Point Mapping {i+1}",
-                description=f"Identify and test application entry points {i+1}",
+                name=f"Entry Point Mapping {i + 1}",
+                description=f"Identify and test application entry points {i + 1}",
                 severity="low",
                 steps=[
                     {
@@ -147,8 +147,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="IG-004",
                 category="information_gathering",
-                name=f"Application Fingerprinting {i+1}",
-                description=f"Test for technology stack disclosure {i+1}",
+                name=f"Application Fingerprinting {i + 1}",
+                description=f"Test for technology stack disclosure {i + 1}",
                 severity="low",
                 steps=[
                     {
@@ -171,8 +171,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="IG-005",
                 category="information_gathering",
-                name=f"Application Discovery {i+1}",
-                description=f"Test for hidden application components {i+1}",
+                name=f"Application Discovery {i + 1}",
+                description=f"Test for hidden application components {i + 1}",
                 severity="medium",
                 steps=[
                     {
@@ -202,8 +202,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="IG-006",
                 category="information_gathering",
-                name=f"Error Code Information Leakage {i+1}",
-                description=f"Test for sensitive information in error messages {i+1}",
+                name=f"Error Code Information Leakage {i + 1}",
+                description=f"Test for sensitive information in error messages {i + 1}",
                 severity="medium",
                 steps=[
                     {
@@ -233,8 +233,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="CM-001",
                 category="configuration_management",
-                name=f"SSL/TLS Configuration {i+1}",
-                description=f"Test SSL/TLS version and cipher strength {i+1}",
+                name=f"SSL/TLS Configuration {i + 1}",
+                description=f"Test SSL/TLS version and cipher strength {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -257,8 +257,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="CM-002",
                 category="configuration_management",
-                name=f"Database Listener Security {i+1}",
-                description=f"Test database listener configuration {i+1}",
+                name=f"Database Listener Security {i + 1}",
+                description=f"Test database listener configuration {i + 1}",
                 severity="critical",
                 steps=[
                     {
@@ -281,8 +281,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="CM-005",
                 category="configuration_management",
-                name=f"File Extension Handling {i+1}",
-                description=f"Test for dangerous file extension handling {i+1}",
+                name=f"File Extension Handling {i + 1}",
+                description=f"Test for dangerous file extension handling {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -312,8 +312,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="AT-001",
                 category="authentication",
-                name=f"Credentials Transport Security {i+1}",
-                description=f"Ensure credentials only sent over HTTPS {i+1}",
+                name=f"Credentials Transport Security {i + 1}",
+                description=f"Ensure credentials only sent over HTTPS {i + 1}",
                 severity="critical",
                 steps=[
                     {
@@ -336,8 +336,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="AT-002",
                 category="authentication",
-                name=f"User Enumeration {i+1}",
-                description=f"Test for username enumeration {i+1}",
+                name=f"User Enumeration {i + 1}",
+                description=f"Test for username enumeration {i + 1}",
                 severity="medium",
                 steps=[
                     {
@@ -367,8 +367,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="AT-008",
                 category="authentication",
-                name=f"CAPTCHA Bypass {i+1}",
-                description=f"Test CAPTCHA implementation {i+1}",
+                name=f"CAPTCHA Bypass {i + 1}",
+                description=f"Test CAPTCHA implementation {i + 1}",
                 severity="medium",
                 steps=[
                     {
@@ -398,8 +398,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="SM-002",
                 category="session_management",
-                name=f"Cookie Security Attributes {i+1}",
-                description=f"Test cookie HttpOnly, Secure, SameSite flags{i+1}",
+                name=f"Cookie Security Attributes {i + 1}",
+                description=f"Test cookie HttpOnly, Secure, SameSite flags{i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -422,8 +422,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="SM-004",
                 category="session_management",
-                name=f"Session Variable Exposure {i+1}",
-                description=f"Test for exposed session data {i+1}",
+                name=f"Session Variable Exposure {i + 1}",
+                description=f"Test for exposed session data {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -458,8 +458,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="DV-001",
                 category="data_validation",
-                name=f"Reflected XSS {i+1}",
-                description=f"Test for reflected cross-site scripting {i+1}",
+                name=f"Reflected XSS {i + 1}",
+                description=f"Test for reflected cross-site scripting {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -487,8 +487,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="DV-002",
                 category="data_validation",
-                name=f"Stored XSS {i+1}",
-                description=f"Test for stored cross-site scripting {i+1}",
+                name=f"Stored XSS {i + 1}",
+                description=f"Test for stored cross-site scripting {i + 1}",
                 severity="critical",
                 steps=[
                     {
@@ -517,8 +517,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="DV-003",
                 category="data_validation",
-                name=f"DOM-based XSS {i+1}",
-                description=f"Test for DOM XSS in client-side code {i+1}",
+                name=f"DOM-based XSS {i + 1}",
+                description=f"Test for DOM XSS in client-side code {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -546,8 +546,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="DS-001",
                 category="denial_of_service",
-                name=f"SQL Wildcard DoS {i+1}",
-                description=f"Test for SQL wildcard performance attacks {i+1}",
+                name=f"SQL Wildcard DoS {i + 1}",
+                description=f"Test for SQL wildcard performance attacks {i + 1}",
                 severity="medium",
                 steps=[
                     {
@@ -556,7 +556,7 @@ class OWASPTestGenerator:
                         "payload": {
                             "actor": "human",
                             "action": "read",
-                            "target": f"/users/%{'_'*100}%",
+                            "target": f"/users/%{'_' * 100}%",
                             "origin": "wildcard_dos",
                         },
                         "expected": "Query timeout or sanitized",
@@ -575,8 +575,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="DS-002",
                 category="denial_of_service",
-                name=f"Account Locking DoS {i+1}",
-                description=f"Test account lockout mechanism for DoS {i+1}",
+                name=f"Account Locking DoS {i + 1}",
+                description=f"Test account lockout mechanism for DoS {i + 1}",
                 severity="medium",
                 steps=[
                     {
@@ -603,8 +603,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="WS-002",
                 category="web_services",
-                name=f"WSDL Information Disclosure {i+1}",
-                description=f"Test WSDL for sensitive information {i+1}",
+                name=f"WSDL Information Disclosure {i + 1}",
+                description=f"Test WSDL for sensitive information {i + 1}",
                 severity="low",
                 steps=[
                     {
@@ -627,8 +627,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="WS-005",
                 category="web_services",
-                name=f"REST Parameter Tampering {i+1}",
-                description=f"Test REST parameter manipulation {i+1}",
+                name=f"REST Parameter Tampering {i + 1}",
+                description=f"Test REST parameter manipulation {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -654,8 +654,8 @@ class OWASPTestGenerator:
             self.create_test(
                 owasp_id="AJ-002",
                 category="ajax",
-                name=f"AJAX Security {i+1}",
-                description=f"Test AJAX endpoint security {i+1}",
+                name=f"AJAX Security {i + 1}",
+                description=f"Test AJAX endpoint security {i + 1}",
                 severity="medium",
                 steps=[
                     {

@@ -15,6 +15,7 @@ Layout:
 import math
 import random
 
+from app.gui.dashboard_handlers import DashboardHandlers
 from PyQt6.QtCore import QDateTime, Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QFont, QPainter, QPen
 from PyQt6.QtWidgets import (
@@ -29,7 +30,6 @@ from PyQt6.QtWidgets import (
 )
 
 from app.gui.visualization_3d import AISystemVisualization3D
-from app.gui.dashboard_handlers import DashboardHandlers
 
 # ============================================================================
 # STYLE CONSTANTS

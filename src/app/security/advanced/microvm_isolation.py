@@ -97,7 +97,12 @@ class CommunicationChannel:
     def __init__(self, vm_id: str, socket_path: str | None = None):
         self.logger = logging.getLogger(__name__)
         self.vm_id = vm_id
-        self.socket_path = socket_path or f"/tmp/thirstys_vm_{vm_id}.sock"
+        if socket_path:
+            self.socket_path = socket_path
+        else:
+            # Use secure temp directory
+            temp_dir = tempfile.gettempdir()
+            self.socket_path = os.path.join(temp_dir, f"thirstys_vm_{vm_id}.sock")
         self._socket: socket.socket | None = None
         self._connected = False
         self._lock = threading.Lock()
@@ -235,7 +240,9 @@ class MicroVMInstance:
 
         # Firecracker/QEMU specific
         self._config_file: str | None = None
-        self._socket_path = f"/tmp/thirstys_vm_{vm_id}.socket"
+        # Use secure temp directory
+        temp_dir = tempfile.gettempdir()
+        self._socket_path = os.path.join(temp_dir, f"thirstys_vm_{vm_id}.socket")
 
     def _get_default_kernel_path(self) -> str:
         """Get default kernel path for MicroVM"""

@@ -4,9 +4,7 @@
 Autonomous Compliance - Service Layer
 """
 
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
-from uuid import UUID
+from typing import Any
 
 from .logging_config import logger
 from .models import AuditTrigger, ComplianceAudit, ComplianceRule, PolicyViolation
@@ -19,7 +17,7 @@ class ComplianceService:
     def __init__(self):
         self.repository = ComplianceRepository()
 
-    async def evaluate_compliance(self, trigger: AuditTrigger) -> List[ComplianceAudit]:
+    async def evaluate_compliance(self, trigger: AuditTrigger) -> list[ComplianceAudit]:
         """Run all active compliance rules against a data context"""
         logger.info(f"Compliance: Evaluating target {trigger.target_id}")
 
@@ -53,7 +51,7 @@ class ComplianceService:
         return audits
 
     def _simulate_rule_eval(
-        self, rule: ComplianceRule, context: Dict[str, Any]
+        self, rule: ComplianceRule, context: dict[str, Any]
     ) -> bool:
         """Stub for actual rule evaluation engine"""
         # Example logic: if the expression is "true", it passes

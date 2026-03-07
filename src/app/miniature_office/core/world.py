@@ -7,7 +7,6 @@ Implements Formal Codex Schema (World, Floor, Office entities)
 
 import json
 from dataclasses import dataclass
-from typing import Dict, List, Optional
 
 from app.miniature_office.agents.agent import Agent, Manager
 from app.miniature_office.core.audit import EventType, get_audit_log
@@ -23,14 +22,14 @@ class OfficeSchema:
     """
 
     officeId: str
-    roles: List[str]  # Agent IDs
+    roles: list[str]  # Agent IDs
     manager: str  # Manager ID
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {"officeId": self.officeId, "roles": self.roles, "manager": self.manager}
 
     @staticmethod
-    def from_dict(data: Dict) -> "OfficeSchema":
+    def from_dict(data: dict) -> "OfficeSchema":
         return OfficeSchema(
             officeId=data["officeId"],
             roles=data.get("roles", []),
@@ -48,8 +47,8 @@ class Office:
     def __init__(self, office_id: str, department: Department):
         self.office_id = office_id
         self.department = department
-        self.agents: List[str] = []  # Agent IDs
-        self.manager: Optional[Manager] = None
+        self.agents: list[str] = []  # Agent IDs
+        self.manager: Manager | None = None
 
     def add_agent(self, agent: Agent):
         """Add an agent to this office"""
@@ -60,7 +59,7 @@ class Office:
         """Set the manager for this office"""
         self.manager = manager
 
-    def get_agents(self) -> List[Agent]:
+    def get_agents(self) -> list[Agent]:
         """Get all agents in this office"""
         result = []
         for agent_id in self.agents:
@@ -77,7 +76,7 @@ class Office:
             manager=self.manager.entity_id if self.manager else "",
         )
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return self.to_schema().to_dict()
 
 
@@ -89,9 +88,9 @@ class FloorSchema:
 
     floorId: str
     language: str
-    offices: List[Dict]
+    offices: list[dict]
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "floorId": self.floorId,
             "language": self.language,
@@ -99,7 +98,7 @@ class FloorSchema:
         }
 
     @staticmethod
-    def from_dict(data: Dict) -> "FloorSchema":
+    def from_dict(data: dict) -> "FloorSchema":
         return FloorSchema(
             floorId=data["floorId"],
             language=data["language"],
@@ -117,18 +116,18 @@ class Floor:
     def __init__(self, floor_id: str, language: str):
         self.floor_id = floor_id
         self.language = language
-        self.offices: Dict[str, Office] = {}
-        self.department: Optional[Department] = None
+        self.offices: dict[str, Office] = {}
+        self.department: Department | None = None
 
     def add_office(self, office: Office):
         """Add an office to this floor"""
         self.offices[office.office_id] = office
 
-    def get_office(self, office_id: str) -> Optional[Office]:
+    def get_office(self, office_id: str) -> Office | None:
         """Get an office by ID"""
         return self.offices.get(office_id)
 
-    def get_all_agents(self) -> List[Agent]:
+    def get_all_agents(self) -> list[Agent]:
         """Get all agents across all offices on this floor"""
         agents = []
         for office in self.offices.values():
@@ -143,7 +142,7 @@ class Floor:
             offices=[office.to_dict() for office in self.offices.values()],
         )
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return self.to_schema().to_dict()
 
 
@@ -155,11 +154,11 @@ class WorldSchema:
 
     worldId: str
     name: str
-    floors: List[Dict]
-    supplyStore: Dict
+    floors: list[dict]
+    supplyStore: dict
     time: int
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "worldId": self.worldId,
             "name": self.name,
@@ -169,7 +168,7 @@ class WorldSchema:
         }
 
     @staticmethod
-    def from_dict(data: Dict) -> "WorldSchema":
+    def from_dict(data: dict) -> "WorldSchema":
         return WorldSchema(
             worldId=data["worldId"],
             name=data["name"],
@@ -189,7 +188,7 @@ class World:
     def __init__(self, world_id: str, name: str):
         self.world_id = world_id
         self.name = name
-        self.floors: Dict[str, Floor] = {}
+        self.floors: dict[str, Floor] = {}
         self.supply_store = get_supply_store()
         self.time = 0  # Simulation time (ticks)
         self.is_active = True
@@ -215,11 +214,11 @@ class World:
             },
         )
 
-    def get_floor(self, floor_id: str) -> Optional[Floor]:
+    def get_floor(self, floor_id: str) -> Floor | None:
         """Get a floor by ID"""
         return self.floors.get(floor_id)
 
-    def get_floor_by_language(self, language: str) -> Optional[Floor]:
+    def get_floor_by_language(self, language: str) -> Floor | None:
         """Get a floor by language"""
         for floor in self.floors.values():
             if floor.language.lower() == language.lower():
@@ -251,7 +250,7 @@ class World:
             time=self.time,
         )
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Serialize world to dictionary"""
         return self.to_schema().to_dict()
 
@@ -282,7 +281,7 @@ class World:
 
 
 # Global world instance
-_world: Optional[World] = None
+_world: World | None = None
 
 
 def create_world(world_id: str, name: str) -> World:
@@ -292,6 +291,6 @@ def create_world(world_id: str, name: str) -> World:
     return _world
 
 
-def get_world() -> Optional[World]:
+def get_world() -> World | None:
     """Get the global world instance"""
     return _world

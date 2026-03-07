@@ -7,6 +7,7 @@ SRC_PATH = PROJECT_ROOT / "src"
 sys.path.append(str(SRC_PATH))
 
 from PyQt6.QtWidgets import QApplication
+
 from src.app.gui.leather_book_interface import LeatherBookInterface
 
 

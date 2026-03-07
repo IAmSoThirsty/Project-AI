@@ -26,7 +26,6 @@ The city feels alive but has no teeth.
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Tuple
 
 # ============================================================================
 # ENUMERATIONS
@@ -113,7 +112,7 @@ class PixelRepresentation:
     representation_id: str
     color: PixelColor  # Floor origin
     accessory: PixelAccessory  # Role
-    reputation_markers: List[ReputationVisual] = field(default_factory=list)
+    reputation_markers: list[ReputationVisual] = field(default_factory=list)
 
     def to_visual_description(self) -> str:
         """Generate human-readable visual description"""
@@ -157,8 +156,8 @@ class AgentEmbodiment:
     pixel_representation: PixelRepresentation
     morale: float = 1.0  # 0.0 to 1.0
     burnout_level: float = 0.0  # 0.0 to 1.0
-    recent_activities: List[Dict] = field(default_factory=list)
-    social_connections: List[str] = field(default_factory=list)
+    recent_activities: list[dict] = field(default_factory=list)
+    social_connections: list[str] = field(default_factory=list)
 
     def update_state(self, new_state: AgentOffDutyState, activity: str):
         """Update agent state and log activity"""
@@ -199,7 +198,7 @@ class ResidentialDistrict:
     """
 
     district_id: str
-    residents: Dict[str, AgentEmbodiment] = field(default_factory=dict)
+    residents: dict[str, AgentEmbodiment] = field(default_factory=dict)
 
     def add_resident(self, embodiment: AgentEmbodiment):
         """Add agent to residential district"""
@@ -210,7 +209,7 @@ class ResidentialDistrict:
         if embodiment_id in self.residents:
             del self.residents[embodiment_id]
 
-    def get_district_status(self) -> Dict:
+    def get_district_status(self) -> dict:
         """Get district status summary"""
         return {
             "district_id": self.district_id,
@@ -239,8 +238,8 @@ class WorkshopStudio:
     """
 
     workshop_id: str
-    active_projects: List[Dict] = field(default_factory=list)
-    visitors: List[str] = field(default_factory=list)  # embodiment_ids
+    active_projects: list[dict] = field(default_factory=list)
+    visitors: list[str] = field(default_factory=list)  # embodiment_ids
 
     def start_project(self, embodiment_id: str, project_type: str, description: str):
         """Start a sandbox project"""
@@ -272,11 +271,11 @@ class CityLounge:
     """
 
     lounge_id: str
-    active_conversations: List[Dict] = field(default_factory=list)
-    cultural_artifacts: List[Dict] = field(default_factory=list)
-    participants: List[str] = field(default_factory=list)  # embodiment_ids
+    active_conversations: list[dict] = field(default_factory=list)
+    cultural_artifacts: list[dict] = field(default_factory=list)
+    participants: list[str] = field(default_factory=list)  # embodiment_ids
 
-    def start_conversation(self, participants: List[str], topics: List[str]):
+    def start_conversation(self, participants: list[str], topics: list[str]):
         """Start a lounge conversation"""
         conversation_id = f"conv-{len(self.active_conversations)}"
         self.active_conversations.append(
@@ -313,10 +312,10 @@ class CityArchives:
     """
 
     archives_id: str
-    records: List[Dict] = field(default_factory=list)
-    visitors: List[str] = field(default_factory=list)
+    records: list[dict] = field(default_factory=list)
+    visitors: list[str] = field(default_factory=list)
 
-    def add_record(self, record_type: str, title: str, content: str, metadata: Dict):
+    def add_record(self, record_type: str, title: str, content: str, metadata: dict):
         """Add historical record"""
         self.records.append(
             {
@@ -350,10 +349,10 @@ class CityPlaza:
     """
 
     plaza_id: str
-    ceremonies: List[Dict] = field(default_factory=list)
-    attendees: List[str] = field(default_factory=list)
+    ceremonies: list[dict] = field(default_factory=list)
+    attendees: list[str] = field(default_factory=list)
 
-    def host_ceremony(self, ceremony_type: str, details: str, honorees: List[str]):
+    def host_ceremony(self, ceremony_type: str, details: str, honorees: list[str]):
         """Host a ceremony"""
         self.ceremonies.append(
             {
@@ -379,7 +378,7 @@ class TransitGate:
 
     gate_id: str
     gate_type: str  # "city_to_office", "city_to_sandbox", etc.
-    crossing_history: List[Dict] = field(default_factory=list)
+    crossing_history: list[dict] = field(default_factory=list)
 
     def cross_gate(self, agent_id: str, from_zone: str, to_zone: str, crossing_by: str):
         """Agent crosses gate (state change)"""
@@ -412,7 +411,7 @@ class VisualDecay:
     """
 
     decay_id: str
-    decay_records: List[Dict] = field(default_factory=list)
+    decay_records: list[dict] = field(default_factory=list)
 
     def decay_reputation_visual(
         self,
@@ -462,11 +461,11 @@ class CityFirewall:
     """
 
     firewall_id: str
-    violations: List[Dict] = field(default_factory=list)
+    violations: list[dict] = field(default_factory=list)
 
     def block_city_to_production_crossing(
         self, crossing_type: str, source_agent: str, attempted_action: str
-    ) -> Tuple[bool, str]:
+    ) -> tuple[bool, str]:
         """
         Block unauthorized city → production crossings
 
@@ -515,7 +514,7 @@ class CityFirewall:
             }
         )
 
-    def get_recent_violations(self, limit: int = 10) -> List[Dict]:
+    def get_recent_violations(self, limit: int = 10) -> list[dict]:
         """Get recent firewall violations"""
         return self.violations[-limit:]
 
@@ -537,12 +536,12 @@ class CityZoneManager:
     """
 
     manager_id: str
-    residential_districts: Dict[str, AgentEmbodiment] = field(default_factory=dict)
-    workshops: List[WorkshopStudio] = field(default_factory=list)
-    lounge: Optional[CityLounge] = None
-    archives: Optional[CityArchives] = None
-    plaza: Optional[CityPlaza] = None
-    transit_gates: List[TransitGate] = field(default_factory=list)
+    residential_districts: dict[str, AgentEmbodiment] = field(default_factory=dict)
+    workshops: list[WorkshopStudio] = field(default_factory=list)
+    lounge: CityLounge | None = None
+    archives: CityArchives | None = None
+    plaza: CityPlaza | None = None
+    transit_gates: list[TransitGate] = field(default_factory=list)
 
     def initialize_zones(self):
         """Initialize all city zones"""
@@ -581,7 +580,7 @@ class OffDutyCity:
     zone_manager: CityZoneManager
     city_firewall: CityFirewall
     visual_decay: VisualDecay
-    population: Dict[str, AgentEmbodiment] = field(default_factory=dict)
+    population: dict[str, AgentEmbodiment] = field(default_factory=dict)
 
     def add_agent_to_city(
         self,
@@ -657,7 +656,7 @@ class OffDutyCity:
 
         return embodiment_id
 
-    def agent_visit_lounge(self, embodiment_id: str, conversation_topics: List[str]):
+    def agent_visit_lounge(self, embodiment_id: str, conversation_topics: list[str]):
         """Agent visits city lounge for conversation"""
         if embodiment_id in self.population:
             embodiment = self.population[embodiment_id]
@@ -706,7 +705,7 @@ class OffDutyCity:
 
     def cross_transit_gate(
         self, embodiment_id: str, destination: str, crossing_by: str, reason: str
-    ) -> Dict:
+    ) -> dict:
         """Agent crosses transit gate to different zone"""
         if embodiment_id in self.population:
             embodiment = self.population[embodiment_id]
@@ -731,7 +730,7 @@ class OffDutyCity:
 
         return {"success": False}
 
-    def get_city_stats(self) -> Dict:
+    def get_city_stats(self) -> dict:
         """Get city statistics"""
         return {
             "city_id": self.city_id,

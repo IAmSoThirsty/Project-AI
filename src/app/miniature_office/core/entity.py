@@ -7,9 +7,9 @@ Implements the formal entity types and relationship matrix from the Codex
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 
 class EntityType(Enum):
@@ -44,7 +44,7 @@ class Relationship:
     source_id: str
     target_id: str
     relation_type: RelationType
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: datetime = field(default_factory=datetime.utcnow)
 
 
@@ -59,20 +59,20 @@ class Entity:
         entity_id: str,
         entity_type: EntityType,
         name: str,
-        metadata: Optional[Dict] = None,
+        metadata: dict | None = None,
     ):
         self.entity_id = entity_id or str(uuid.uuid4())
         self.entity_type = entity_type
         self.name = name
         self.metadata = metadata or {}
-        self.created_at = datetime.now(timezone.utc)
-        self.relationships: List[Relationship] = []
+        self.created_at = datetime.now(UTC)
+        self.relationships: list[Relationship] = []
 
     def declare_relationship(
         self,
         target: "Entity",
         relation_type: RelationType,
-        metadata: Optional[Dict] = None,
+        metadata: dict | None = None,
     ) -> Relationship:
         """
         Declare a relationship with another entity.
@@ -95,14 +95,14 @@ class Entity:
         )
 
     def get_relationships(
-        self, relation_type: Optional[RelationType] = None
-    ) -> List[Relationship]:
+        self, relation_type: RelationType | None = None
+    ) -> list[Relationship]:
         """Get all relationships, optionally filtered by type"""
         if relation_type:
             return [r for r in self.relationships if r.relation_type == relation_type]
         return self.relationships
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Serialize entity to dictionary"""
         return {
             "entity_id": self.entity_id,
@@ -128,8 +128,8 @@ class EntityRegistry:
     """
 
     def __init__(self):
-        self.entities: Dict[str, Entity] = {}
-        self._type_index: Dict[EntityType, Set[str]] = {t: set() for t in EntityType}
+        self.entities: dict[str, Entity] = {}
+        self._type_index: dict[EntityType, set[str]] = {t: set() for t in EntityType}
 
     def register(self, entity: Entity) -> None:
         """Register an entity in the system"""
@@ -139,11 +139,11 @@ class EntityRegistry:
         self.entities[entity.entity_id] = entity
         self._type_index[entity.entity_type].add(entity.entity_id)
 
-    def get(self, entity_id: str) -> Optional[Entity]:
+    def get(self, entity_id: str) -> Entity | None:
         """Get an entity by ID"""
         return self.entities.get(entity_id)
 
-    def get_by_type(self, entity_type: EntityType) -> List[Entity]:
+    def get_by_type(self, entity_type: EntityType) -> list[Entity]:
         """Get all entities of a specific type"""
         return [self.entities[eid] for eid in self._type_index[entity_type]]
 
@@ -183,7 +183,7 @@ class EntityRegistry:
             relation_type,
         ) in valid_combinations
 
-    def find_related(self, entity_id: str, relation_type: RelationType) -> List[Entity]:
+    def find_related(self, entity_id: str, relation_type: RelationType) -> list[Entity]:
         """Find all entities related to a given entity by relation type"""
         entity = self.get(entity_id)
         if not entity:

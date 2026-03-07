@@ -5,16 +5,17 @@ Loneliness Infrastructure - Detailed Knowledge Graph & Community Formation
 Enforcing sovereignty through social connection.
 """
 
+from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID, uuid4
-from datetime import datetime, UTC
 
-from pydantic import BaseModel, Field
-from .models import Item, ItemCreate
-from .repository import LonelinessRepository
 from app.core.errors import NotFoundError
 from app.core.logging_config import logger
 from app.core.metrics import DOMAIN_EVENTS
+from pydantic import BaseModel, Field
+
+from .models import Item, ItemCreate
+from .repository import LonelinessRepository
 
 
 class InterestNode(BaseModel):

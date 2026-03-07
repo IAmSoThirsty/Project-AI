@@ -19,9 +19,10 @@ Thirst of Gods Level Architecture
 import logging
 import threading
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -58,9 +59,9 @@ class HealthCheck:
     # State
     consecutive_failures: int = 0
     consecutive_successes: int = 0
-    last_check_time: Optional[float] = None
+    last_check_time: float | None = None
     last_status: HealthStatus = HealthStatus.UNKNOWN
-    last_error: Optional[str] = None
+    last_error: str | None = None
 
 
 @dataclass
@@ -70,8 +71,8 @@ class DependencyHealth:
     name: str
     status: HealthStatus
     last_checked: float
-    error_message: Optional[str] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    error_message: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -85,7 +86,7 @@ class CircuitBreaker:
     # State
     failures: int = 0
     state: str = "closed"  # closed, open, half-open
-    opened_at: Optional[float] = None
+    opened_at: float | None = None
 
 
 class HealthMonitor:
@@ -103,26 +104,26 @@ class HealthMonitor:
 
     def __init__(self):
         # Health checks
-        self.health_checks: Dict[str, HealthCheck] = {}
+        self.health_checks: dict[str, HealthCheck] = {}
 
         # Dependency health
-        self.dependencies: Dict[str, DependencyHealth] = {}
+        self.dependencies: dict[str, DependencyHealth] = {}
 
         # Circuit breakers
-        self.circuit_breakers: Dict[str, CircuitBreaker] = {}
+        self.circuit_breakers: dict[str, CircuitBreaker] = {}
 
         # Component status overrides (for graceful degradation)
-        self.status_overrides: Dict[str, HealthStatus] = {}
+        self.status_overrides: dict[str, HealthStatus] = {}
 
         # Self-healing callbacks
-        self.healing_callbacks: Dict[str, List[Callable]] = {}
+        self.healing_callbacks: dict[str, list[Callable]] = {}
 
         # Thread safety
         self.lock = threading.RLock()
 
         # Monitoring thread
         self.monitoring_active = False
-        self.monitoring_thread: Optional[threading.Thread] = None
+        self.monitoring_thread: threading.Thread | None = None
 
         # Statistics
         self.stats = {
@@ -291,7 +292,7 @@ class HealthMonitor:
             self.stats["total_checks"] += 1
             return check.last_status
 
-    def get_health_status(self, probe_type: Optional[ProbeType] = None) -> HealthStatus:
+    def get_health_status(self, probe_type: ProbeType | None = None) -> HealthStatus:
         """
         Get aggregated health status
 
@@ -326,7 +327,7 @@ class HealthMonitor:
 
             return HealthStatus.HEALTHY
 
-    def get_dependency_health(self, name: str) -> Optional[DependencyHealth]:
+    def get_dependency_health(self, name: str) -> DependencyHealth | None:
         """Get health of specific dependency"""
         with self.lock:
             return self.dependencies.get(name)
@@ -413,7 +414,7 @@ class HealthMonitor:
             except Exception as e:
                 logger.error(f"Health monitoring error: {e}")
 
-    def get_health_report(self) -> Dict[str, Any]:
+    def get_health_report(self) -> dict[str, Any]:
         """Get comprehensive health report"""
         with self.lock:
             checks_by_type = {}

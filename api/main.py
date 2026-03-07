@@ -7,14 +7,18 @@
 import contextlib
 import hashlib
 import json
+import logging
 import os
 import time
 from enum import StrEnum
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, Security
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
+
+logger = logging.getLogger(__name__)
 
 # ==========================================================
 # Application Instance
@@ -26,15 +30,66 @@ app = FastAPI(
     description="Production-ready AI governance platform with enterprise security",
 )
 
-# CORS for web frontend
-cors_origins = os.getenv("CORS_ORIGINS", "*").split(",")
+# CORS for web frontend — MUST be explicitly configured via environment
+_default_origins = "http://localhost:3000,http://localhost:5000,http://localhost:8000"
+cors_origins = [
+    o.strip()
+    for o in os.getenv("CORS_ORIGINS", _default_origins).split(",")
+    if o.strip()
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
 )
+
+# ==========================================================
+# Authentication — Bearer Token (JWT-compatible)
+# ==========================================================
+
+_bearer_scheme = HTTPBearer(auto_error=False)
+
+# API keys loaded from environment (comma-separated)
+# In production, replace with JWT validation or OAuth2 provider
+_api_keys: set[str] = set()
+_raw_keys = os.getenv("API_KEYS", "").strip()
+if _raw_keys:
+    _api_keys = {k.strip() for k in _raw_keys.split(",") if k.strip()}
+else:
+    logger.warning(
+        "API_KEYS not set — API authentication is DISABLED. "
+        "Set API_KEYS environment variable for production."
+    )
+
+
+async def verify_bearer_token(
+    credentials: HTTPAuthorizationCredentials | None = Security(_bearer_scheme),
+) -> str | None:
+    """Verify the bearer token against configured API keys.
+
+    When API_KEYS is not configured (dev mode), authentication is bypassed
+    with a warning. In production, all governed endpoints require a valid key.
+    """
+    # If no API keys are configured, allow unauthenticated access (dev mode)
+    if not _api_keys:
+        return None
+
+    if credentials is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Authorization header required",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    if credentials.credentials not in _api_keys:
+        raise HTTPException(
+            status_code=403,
+            detail="Invalid or expired API key",
+        )
+
+    return credentials.credentials
 
 # ==========================================================
 # Production Middleware (graceful fallback if not installed)
@@ -53,7 +108,7 @@ if os.getenv("ENABLE_RATE_LIMITING", "true").lower() == "true":
             exempt_paths=["/health", "/metrics", "/docs"],
         )
     except ImportError:
-        pass
+        logger.info("Rate limiter not available — skipping")
 
 # Request validation
 if os.getenv("ENABLE_REQUEST_VALIDATION", "true").lower() == "true":
@@ -65,7 +120,7 @@ if os.getenv("ENABLE_REQUEST_VALIDATION", "true").lower() == "true":
             exempt_paths=["/docs", "/openapi.json", "/metrics"],
         )
     except ImportError:
-        pass
+        logger.info("Request validator not available — skipping")
 
 # Observability (OpenTelemetry)
 if os.getenv("ENABLE_OBSERVABILITY", "false").lower() == "true":
@@ -74,7 +129,7 @@ if os.getenv("ENABLE_OBSERVABILITY", "false").lower() == "true":
 
         setup_observability(app)
     except ImportError:
-        pass
+        logger.info("Observability module not available — skipping")
 
 # ==========================================================
 # Router Registration
@@ -86,7 +141,7 @@ try:
 
     app.include_router(health_router)
 except ImportError:
-    pass
+    logger.info("Health endpoints not available — skipping")
 
 # Save Points API
 try:
@@ -94,7 +149,7 @@ try:
 
     app.include_router(save_points_router)
 except ImportError:
-    pass
+    logger.info("Save points routes not available — skipping")
 
 # VR Bridge
 try:
@@ -102,7 +157,7 @@ try:
 
     app.include_router(vr_router)
 except ImportError:
-    pass
+    logger.info("VR routes not available — skipping")
 
 # Legion / OpenClaw
 try:
@@ -110,7 +165,7 @@ try:
 
     app.include_router(openclaw_router)
 except ImportError:
-    pass
+    logger.info("OpenClaw integration not available — skipping")
 
 
 # ==========================================================
@@ -126,8 +181,10 @@ async def lifespan(application: FastAPI):
         from api.save_points_routes import start_auto_save
 
         await start_auto_save()
-    except (ImportError, Exception):
-        pass
+    except ImportError:
+        logger.info("Save points auto-save not available")
+    except Exception:
+        logger.exception("Failed to start auto-save")
 
     yield  # application is running
 
@@ -136,8 +193,10 @@ async def lifespan(application: FastAPI):
         from api.save_points_routes import stop_auto_save
 
         await stop_auto_save()
-    except (ImportError, Exception):
+    except ImportError:
         pass
+    except Exception:
+        logger.exception("Failed to stop auto-save")
 
 
 app.router.lifespan_context = lifespan
@@ -319,7 +378,7 @@ def evaluate_tarl(intent: Intent) -> GovernanceResult:
 # Persistent Audit Log (Append-Only)
 # ==========================================================
 
-AUDIT_LOG_PATH = "audit.log"
+AUDIT_LOG_PATH = os.getenv("AUDIT_LOG_PATH", "audit.log")
 
 
 def write_audit(record: GovernanceResult):
@@ -404,7 +463,11 @@ def get_tarl():
 
 
 @app.post("/intent")
-async def submit_intent(intent: Intent, request: Request):
+async def submit_intent(
+    intent: Intent,
+    request: Request,
+    _token: str | None = Depends(verify_bearer_token),
+):
     result = evaluate_tarl(intent)
     write_audit(result)
 
@@ -424,7 +487,10 @@ async def submit_intent(intent: Intent, request: Request):
 
 
 @app.get("/audit")
-def read_audit(limit: int = 50):
+def read_audit(
+    limit: int = 50,
+    _token: str | None = Depends(verify_bearer_token),
+):
     records = []
     try:
         with open(AUDIT_LOG_PATH, encoding="utf-8") as f:
@@ -440,7 +506,10 @@ def read_audit(limit: int = 50):
 
 
 @app.post("/execute")
-async def governed_execute(intent: Intent):
+async def governed_execute(
+    intent: Intent,
+    _token: str | None = Depends(verify_bearer_token),
+):
     result = evaluate_tarl(intent)
     write_audit(result)
 
@@ -468,7 +537,10 @@ async def governed_execute(intent: Intent):
 
 
 @app.get("/explain/{action_id}")
-def explain_decision(action_id: str):
+def explain_decision(
+    action_id: str,
+    _token: str | None = Depends(verify_bearer_token),
+):
     """Explain why a governance decision was made."""
     try:
         from src.app.core.explainability_agent import get_explainability_agent
@@ -495,7 +567,10 @@ def explain_decision(action_id: str):
 
 
 @app.get("/explain")
-def explain_recent_decisions(limit: int = 10):
+def explain_recent_decisions(
+    limit: int = 10,
+    _token: str | None = Depends(verify_bearer_token),
+):
     """Explain recent governance decisions."""
     try:
         from src.app.core.explainability_agent import get_explainability_agent

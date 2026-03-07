@@ -15,15 +15,12 @@ Verifies:
 STATUS: PRODUCTION - Critical for PSIA SafeHaltController validation
 """
 
-import gc
 import json
 import logging
-import os
 import tempfile
 import threading
 import time
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -198,9 +195,9 @@ class TestThreadSafetyDuringShutdown:
                 t.join(timeout=10)
 
             assert not errors, f"Shutdown raised exceptions: {errors}"
-            assert all(
-                not t.is_alive() for t in threads
-            ), "Threads should have finished"
+            assert all(not t.is_alive() for t in threads), (
+                "Threads should have finished"
+            )
         except ImportError:
             pytest.skip("domain_base not available")
 
@@ -257,9 +254,9 @@ class TestNoZombieThreads:
                 t for t in remaining if t.is_alive() and "Thread" in t.name
             ]
             # Allow for some system threads, but our processing threads should be gone
-            assert (
-                len(project_threads) == 0
-            ), f"Orphan threads remain: {[t.name for t in project_threads]}"
+            assert len(project_threads) == 0, (
+                f"Orphan threads remain: {[t.name for t in project_threads]}"
+            )
         except ImportError:
             pytest.skip("domain_base not available")
 

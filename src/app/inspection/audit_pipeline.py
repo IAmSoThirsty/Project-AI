@@ -448,7 +448,7 @@ class AuditPipeline(KernelRoutedAgent if KERNEL_AVAILABLE else object):
             recommendations.append(f"Address {integrity_issues} integrity issues")
         if avg_doc < 0.5:
             recommendations.append(
-                f"Increase documentation from {avg_doc*100:.1f}% to 70%+"
+                f"Increase documentation from {avg_doc * 100:.1f}% to 70%+"
             )
 
         return {

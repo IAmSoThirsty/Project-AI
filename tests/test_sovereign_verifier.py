@@ -143,15 +143,15 @@ class TestSovereignVerifier:
         verifier._load_bundle()
 
         # Run checks first
-        verifier.verification_report["checks"][
-            "hash_chain_validation"
-        ] = verifier._verify_hash_chain()
-        verifier.verification_report["checks"][
-            "signature_authority_mapping"
-        ] = verifier._map_signature_authorities()
-        verifier.verification_report["checks"][
-            "policy_resolution_trace"
-        ] = verifier._trace_policy_resolutions()
+        verifier.verification_report["checks"]["hash_chain_validation"] = (
+            verifier._verify_hash_chain()
+        )
+        verifier.verification_report["checks"]["signature_authority_mapping"] = (
+            verifier._map_signature_authorities()
+        )
+        verifier.verification_report["checks"]["policy_resolution_trace"] = (
+            verifier._trace_policy_resolutions()
+        )
 
         attestation = verifier._generate_attestation()
 

@@ -108,7 +108,8 @@ class TestSecurityEngine:
         engine = SecurityEngine(config_path=security_config_file)
 
         is_allowed, reason = engine.validate_operation(
-            agent="test_agent", operation="write"  # test_agent can only read/execute
+            agent="test_agent",
+            operation="write",  # test_agent can only read/execute
         )
 
         assert not is_allowed

@@ -32,7 +32,15 @@ class PresentationDemo:
 
     def clear_screen(self):
         """Clear terminal (cross-platform)"""
-        os.system("cls" if os.name == "nt" else "clear")
+        import subprocess
+        try:
+            if os.name == "nt":
+                subprocess.run(["cls"], shell=True, check=False, timeout=5)
+            else:
+                subprocess.run(["clear"], check=False, timeout=5)
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            # Fallback to printing newlines if clear command fails
+            print("\n" * 50)
 
     def pause(self, message="Press Enter to continue...", duration=0):
         """Pause with optional auto-continue"""

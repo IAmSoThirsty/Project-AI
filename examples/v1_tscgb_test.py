@@ -1,12 +1,12 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
-import sys
 import os
+import sys
 
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from project_ai.utils.tscg_b import TSCGBEncoder, TSCGBDecoder
+from project_ai.utils.tscg_b import TSCGBDecoder, TSCGBEncoder
 
 
 def prove_tscgb_v1():

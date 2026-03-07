@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-03-07 12:00]
 #                                          Productivity: Active
 name: Deploy
 
@@ -21,6 +21,10 @@ permissions:
     contents: read
     packages: write
 
+env:
+    REGISTRY: ghcr.io
+    IMAGE_NAME: ${{ github.repository }}
+
 jobs:
     validate:
         name: Pre-Deploy Validation
@@ -37,7 +41,7 @@ jobs:
             - name: Install dependencies
               run: |
                   python -m pip install --upgrade pip
-                  pip install -r requirements.txt || true
+                  pip install -r requirements.txt
                   pip install pytest ruff bandit
 
             - name: Lint check
@@ -51,26 +55,56 @@ jobs:
 
             - name: Security scan
               run: |
-                  bandit -r src/ --severity-level high --confidence-level high -q || true
+                  bandit -r src/ --severity-level high --confidence-level high -q
 
     build:
-        name: Build Release Artifacts
+        name: Build & Push Docker Image
         needs: validate
         runs-on: ubuntu-latest
+        outputs:
+            image-tag: ${{ steps.meta.outputs.tags }}
+            image-digest: ${{ steps.build.outputs.digest }}
         steps:
             - uses: actions/checkout@v4
 
-            - name: Set up Python 3.12
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.12"
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
 
-            - name: Build package
+            - name: Log in to Container Registry
+              uses: docker/login-action@v3
+              with:
+                  registry: ${{ env.REGISTRY }}
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Extract metadata
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+                  tags: |
+                      type=semver,pattern={{version}}
+                      type=semver,pattern={{major}}.{{minor}}
+                      type=sha,prefix={{branch}}-
+
+            - name: Build and push Docker image
+              id: build
+              uses: docker/build-push-action@v5
+              with:
+                  context: .
+                  push: true
+                  tags: ${{ steps.meta.outputs.tags }}
+                  labels: ${{ steps.meta.outputs.labels }}
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
+                  platforms: linux/amd64,linux/arm64
+
+            - name: Build Python package
               run: |
                   pip install build
                   python -m build
 
-            - name: Upload artifacts
+            - name: Upload Python artifacts
               uses: actions/upload-artifact@v4
               with:
                   name: dist
@@ -81,41 +115,112 @@ jobs:
         needs: build
         runs-on: ubuntu-latest
         if: github.event.inputs.environment == 'staging' || startsWith(github.ref, 'refs/tags/v')
-        environment: staging
+        environment:
+            name: staging
+            url: ${{ vars.STAGING_URL }}
         steps:
             - uses: actions/checkout@v4
 
-            - name: Download artifacts
-              uses: actions/download-artifact@v4
-              with:
-                  name: dist
+            - name: Set up kubectl
+              uses: azure/setup-kubectl@v3
 
-            - name: Deploy to staging
+            - name: Configure kubectl
               run: |
-                  echo "🚀 Deploying to staging environment..."
-                  echo "Tag: ${{ github.ref_name }}"
-                  echo "SHA: ${{ github.sha }}"
-                  # TODO: Add actual deployment commands
-                  # (Docker push, Helm upgrade, kubectl apply, etc.)
+                  mkdir -p "$HOME/.kube"
+                  echo "${{ secrets.KUBECONFIG_STAGING }}" | base64 -d > "$HOME/.kube/config"
+                  chmod 600 "$HOME/.kube/config"
+
+            - name: Deploy to staging via Helm
+              run: |
+                  helm upgrade --install project-ai ./helm/project-ai \
+                    --namespace project-ai-staging \
+                    --create-namespace \
+                    --set image.tag="${{ github.ref_name }}" \
+                    --set environment=staging \
+                    --wait \
+                    --timeout 5m
+
+            - name: Verify deployment
+              run: |
+                  kubectl rollout status deployment/project-ai-app \
+                    -n project-ai-staging --timeout=5m
+
+            - name: Run smoke tests
+              run: |
+                  STAGING_URL="${{ vars.STAGING_URL }}"
+                  echo "Running smoke tests against ${STAGING_URL}"
+                  # Health check
+                  curl -sf "${STAGING_URL}/health" || exit 1
+                  # Governance endpoint check
+                  curl -sf "${STAGING_URL}/tarl" || exit 1
+                  echo "Smoke tests passed"
 
     deploy-production:
         name: Deploy to Production
         needs: [build, deploy-staging]
         runs-on: ubuntu-latest
         if: github.event.inputs.environment == 'production'
-        environment: production
+        environment:
+            name: production
+            url: ${{ vars.PRODUCTION_URL }}
         steps:
             - uses: actions/checkout@v4
 
-            - name: Download artifacts
-              uses: actions/download-artifact@v4
-              with:
-                  name: dist
+            - name: Set up kubectl
+              uses: azure/setup-kubectl@v3
 
-            - name: Deploy to production
+            - name: Configure kubectl
               run: |
-                  echo "🚀 Deploying to production environment..."
-                  echo "Tag: ${{ github.ref_name }}"
-                  echo "SHA: ${{ github.sha }}"
-                  # TODO: Add actual deployment commands
-                  # Requires GitHub Environment protection rules
+                  mkdir -p "$HOME/.kube"
+                  echo "${{ secrets.KUBECONFIG_PRODUCTION }}" | base64 -d > "$HOME/.kube/config"
+                  chmod 600 "$HOME/.kube/config"
+
+            - name: Deploy to production via Helm
+              run: |
+                  helm upgrade --install project-ai ./helm/project-ai \
+                    --namespace project-ai \
+                    --set image.tag="${{ github.ref_name }}" \
+                    --set environment=production \
+                    --wait \
+                    --timeout 10m
+
+            - name: Verify deployment
+              run: |
+                  kubectl rollout status deployment/project-ai-app \
+                    -n project-ai --timeout=10m
+
+            - name: Run production smoke tests
+              run: |
+                  PROD_URL="${{ vars.PRODUCTION_URL }}"
+                  curl -sf "${PROD_URL}/health" || exit 1
+                  curl -sf "${PROD_URL}/tarl" || exit 1
+                  echo "Production smoke tests passed"
+
+    rollback:
+        name: Rollback on Failure
+        needs: [deploy-production]
+        runs-on: ubuntu-latest
+        if: failure()
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up kubectl
+              uses: azure/setup-kubectl@v3
+
+            - name: Configure kubectl
+              run: |
+                  mkdir -p "$HOME/.kube"
+                  echo "${{ secrets.KUBECONFIG_PRODUCTION }}" | base64 -d > "$HOME/.kube/config"
+                  chmod 600 "$HOME/.kube/config"
+
+            - name: Rollback deployment
+              run: |
+                  helm rollback project-ai 0 --namespace project-ai --wait
+
+            - name: Notify team
+              if: always()
+              uses: 8398a7/action-slack@v3
+              with:
+                  status: failure
+                  text: "Production deployment failed and was rolled back for ${{ github.ref_name }}"
+                  webhook_url: ${{ secrets.SLACK_WEBHOOK }}

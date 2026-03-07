@@ -32,7 +32,7 @@ No permitted detail is intentionally omitted.
 import ast
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any
 
 # ============================================================================
 # ENUMERATIONS
@@ -198,12 +198,12 @@ class PatternInstance:
 
     pattern: DesignPattern
     confidence: float  # 0.0 to 1.0
-    participants: Dict[str, str]  # role -> class/function name
-    location: Tuple[int, int]  # (line_start, line_end)
+    participants: dict[str, str]  # role -> class/function name
+    location: tuple[int, int]  # (line_start, line_end)
     quality_score: float  # How well implemented (0.0-1.0)
-    violations: List[str] = field(default_factory=list)
+    violations: list[str] = field(default_factory=list)
     context: str = ""
-    evidence: List[str] = field(default_factory=list)
+    evidence: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -222,17 +222,17 @@ class ArchitecturalComponent:
 
     name: str
     component_type: ComponentType
-    responsibilities: List[str] = field(default_factory=list)
-    dependencies: Set[str] = field(default_factory=set)
-    dependents: Set[str] = field(default_factory=set)
-    provided_interfaces: List[str] = field(default_factory=list)
-    required_interfaces: List[str] = field(default_factory=list)
+    responsibilities: list[str] = field(default_factory=list)
+    dependencies: set[str] = field(default_factory=set)
+    dependents: set[str] = field(default_factory=set)
+    provided_interfaces: list[str] = field(default_factory=list)
+    required_interfaces: list[str] = field(default_factory=list)
     cohesion_score: float = 0.0  # 0.0 to 1.0
     coupling_count: int = 0
     complexity: int = 0
     lines_of_code: int = 0
-    public_methods: List[str] = field(default_factory=list)
-    violations: List[str] = field(default_factory=list)
+    public_methods: list[str] = field(default_factory=list)
+    violations: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -252,12 +252,12 @@ class ComponentInteraction:
     target: str
     interaction_type: InteractionType
     protocol: str = ""
-    data_transferred: List[str] = field(default_factory=list)
+    data_transferred: list[str] = field(default_factory=list)
     frequency: str = "unknown"  # "high", "medium", "low", "unknown"
     is_synchronous: bool = True
     can_fail: bool = True
-    failure_modes: List[str] = field(default_factory=list)
-    recovery_strategy: Optional[str] = None
+    failure_modes: list[str] = field(default_factory=list)
+    recovery_strategy: str | None = None
 
 
 @dataclass
@@ -276,7 +276,7 @@ class SOLIDViolation:
 
     principle: SOLIDPrinciple
     severity: str  # "critical", "major", "minor"
-    location: Tuple[int, int]
+    location: tuple[int, int]
     component: str
     description: str
     suggestion: str
@@ -331,9 +331,9 @@ class InterfaceDesignAnalysis:
     method_count: int
     optional_methods: int
     required_methods: int
-    abstraction_violations: List[str] = field(default_factory=list)
-    missing_contracts: List[str] = field(default_factory=list)
-    boundary_leaks: List[str] = field(default_factory=list)
+    abstraction_violations: list[str] = field(default_factory=list)
+    missing_contracts: list[str] = field(default_factory=list)
+    boundary_leaks: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -351,10 +351,10 @@ class ArchitecturalLayer:
 
     name: str
     level: int  # 0 = lowest (data), increasing upward
-    components: Set[str] = field(default_factory=set)
-    responsibilities: List[str] = field(default_factory=list)
-    depends_on_layers: Set[str] = field(default_factory=set)
-    violated_dependencies: List[str] = field(default_factory=list)
+    components: set[str] = field(default_factory=set)
+    responsibilities: list[str] = field(default_factory=list)
+    depends_on_layers: set[str] = field(default_factory=set)
+    violated_dependencies: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -372,8 +372,8 @@ class DesignInvariant:
     invariant_type: str  # "precondition", "postcondition", "class_invariant", etc.
     description: str
     scope: str  # Component or system
-    enforcement_mechanism: Optional[str] = None
-    violation_consequence: Optional[str] = None
+    enforcement_mechanism: str | None = None
+    violation_consequence: str | None = None
 
 
 @dataclass
@@ -395,9 +395,9 @@ class FailureMode:
     description: str
     probability: str  # "high", "medium", "low"
     impact: str  # "critical", "major", "minor"
-    detection: Optional[str] = None
-    recovery_path: Optional[str] = None
-    mitigation: Optional[str] = None
+    detection: str | None = None
+    recovery_path: str | None = None
+    mitigation: str | None = None
 
 
 @dataclass
@@ -422,51 +422,51 @@ class DesignAnalysisResult:
     """
 
     # Pattern Detection (complete)
-    detected_patterns: List[PatternInstance] = field(default_factory=list)
+    detected_patterns: list[PatternInstance] = field(default_factory=list)
 
     # Architectural Structure (complete)
     architectural_style: ArchitecturalStyle = ArchitecturalStyle.UNKNOWN
-    components: Dict[str, ArchitecturalComponent] = field(default_factory=dict)
-    interactions: List[ComponentInteraction] = field(default_factory=list)
-    layers: Dict[str, ArchitecturalLayer] = field(default_factory=dict)
+    components: dict[str, ArchitecturalComponent] = field(default_factory=dict)
+    interactions: list[ComponentInteraction] = field(default_factory=list)
+    layers: dict[str, ArchitecturalLayer] = field(default_factory=dict)
 
     # Quality Assessment (complete)
-    quality_metrics: Optional[DesignQualityMetrics] = None
+    quality_metrics: DesignQualityMetrics | None = None
 
     # SOLID Principles (all violations)
-    solid_violations: List[SOLIDViolation] = field(default_factory=list)
+    solid_violations: list[SOLIDViolation] = field(default_factory=list)
 
     # Design Smells (all detected)
-    design_smells: List[Tuple[DesignSmell, str, Tuple[int, int]]] = field(
+    design_smells: list[tuple[DesignSmell, str, tuple[int, int]]] = field(
         default_factory=list
     )
 
     # Interface Analysis (complete)
-    interfaces: List[InterfaceDesignAnalysis] = field(default_factory=list)
+    interfaces: list[InterfaceDesignAnalysis] = field(default_factory=list)
 
     # Cross-Cutting Concerns (all identified)
-    cross_cutting_concerns: Dict[CrossCuttingConcern, List[str]] = field(
+    cross_cutting_concerns: dict[CrossCuttingConcern, list[str]] = field(
         default_factory=dict
     )
 
     # Invariants (all extracted)
-    invariants: List[DesignInvariant] = field(default_factory=list)
+    invariants: list[DesignInvariant] = field(default_factory=list)
 
     # Edge Cases (all identified)
-    edge_cases: List[str] = field(default_factory=list)
+    edge_cases: list[str] = field(default_factory=list)
 
     # Failure Modes (complete analysis)
-    failure_modes: List[FailureMode] = field(default_factory=list)
+    failure_modes: list[FailureMode] = field(default_factory=list)
 
     # Governance (complete structure)
-    governance_structure: Dict[str, Any] = field(default_factory=dict)
+    governance_structure: dict[str, Any] = field(default_factory=dict)
 
     # Extensibility Assessment
-    extension_points: List[str] = field(default_factory=list)
+    extension_points: list[str] = field(default_factory=list)
     plugin_architecture: bool = False
 
     # Dependency Analysis
-    circular_dependencies: List[List[str]] = field(default_factory=list)
+    circular_dependencies: list[list[str]] = field(default_factory=list)
     dependency_depth: int = 0
 
     # Summary Statistics (derived, not filtered)
@@ -667,7 +667,7 @@ class DesignAnalyzer:
         else:
             return ComponentType.APPLICATION
 
-    def _extract_dependencies(self, class_node: ast.ClassDef) -> Set[str]:
+    def _extract_dependencies(self, class_node: ast.ClassDef) -> set[str]:
         """Extract all dependencies of a class"""
         dependencies = set()
 
@@ -695,7 +695,7 @@ class DesignAnalyzer:
         # Placeholder: assume reasonable cohesion
         return 0.7
 
-    def _extract_responsibilities(self, docstring: str) -> List[str]:
+    def _extract_responsibilities(self, docstring: str) -> list[str]:
         """Extract responsibilities from docstring"""
         # Parse docstring for responsibility statements
         responsibilities = []
@@ -962,7 +962,7 @@ class DesignAnalyzer:
                 )
             )
 
-    def _detect_circular_dependencies(self) -> List[List[str]]:
+    def _detect_circular_dependencies(self) -> list[list[str]]:
         """Detect circular dependencies using DFS"""
         cycles = []
         visited = set()
@@ -1140,10 +1140,7 @@ class DesignAnalyzer:
                             if (
                                 isinstance(decorator, ast.Name)
                                 and decorator.id == "abstractmethod"
-                            ):
-                                has_abstract_methods = True
-                                break
-                            elif (
+                            ) or (
                                 isinstance(decorator, ast.Attribute)
                                 and decorator.attr == "abstractmethod"
                             ):
@@ -1180,7 +1177,7 @@ class DesignAnalyzer:
                 score_components
             )
 
-    def generate_report(self) -> Dict[str, Any]:
+    def generate_report(self) -> dict[str, Any]:
         """
         Generate MAXIMUM DETAIL design report
 

@@ -7,7 +7,7 @@ L6: Bayesian Confidence Aggregation
 Probabilistic threat scoring using Bayesian inference.
 
 FORMULA:
-P(M|E) = (P(E|M) * P(M)) / 
+P(M|E) = (P(E|M) * P(M)) /
          [(P(E|M) * P(M)) + (P(E|¬M) * (1 - P(M)))]
 
 Where:

@@ -17,7 +17,7 @@ Checks performed:
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from psia.waterfall.engine import StageDecision, StageResult, WaterfallStage
 
@@ -87,8 +87,8 @@ class StructuralStage:
             try:
                 expires_at = datetime.fromisoformat(token_data["expires_at"])
                 if expires_at.tzinfo is None:
-                    expires_at = expires_at.replace(tzinfo=timezone.utc)
-                if expires_at < datetime.now(timezone.utc):
+                    expires_at = expires_at.replace(tzinfo=UTC)
+                if expires_at < datetime.now(UTC):
                     reasons.append("capability_token expired")
             except (ValueError, TypeError):
                 reasons.append("capability_token expires_at unparseable")
@@ -112,9 +112,9 @@ class StructuralStage:
             try:
                 created = datetime.fromisoformat(envelope.timestamps.created_at)
                 if created.tzinfo is None:
-                    created = created.replace(tzinfo=timezone.utc)
+                    created = created.replace(tzinfo=UTC)
                 # Reject requests from the far future (> 5 minutes clock skew)
-                now = datetime.now(timezone.utc)
+                now = datetime.now(UTC)
                 skew_seconds = (created - now).total_seconds()
                 if skew_seconds > 300:
                     reasons.append(

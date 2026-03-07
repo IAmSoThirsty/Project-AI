@@ -1,9 +1,10 @@
 #                                           [2026-03-04 09:48]
 #                                          Productivity: Active
 # Verification Script for Galactic Job Board & Skill Progression
-from src.app.core.ai_systems import AIPersona, Skill
 import logging
 import os
+
+from src.app.core.ai_systems import AIPersona, Skill
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("JobBoardVerify")
@@ -42,7 +43,7 @@ def verify_galactic_progression():
     new_rank = partner.get_rank_name("coder")
     skill_unlocked = partner.jobs["coder"].skills["galactic_arch"].unlocked
 
-    print(f"\n[RESULTS]")
+    print("\n[RESULTS]")
     print(f"New Level: {new_level}")
     print(f"New Rank: {new_rank}")
     print(

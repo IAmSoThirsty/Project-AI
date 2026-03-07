@@ -17,7 +17,6 @@ Options:
 
 import argparse
 import asyncio
-import json
 import logging
 import sys
 import time
@@ -255,7 +254,7 @@ async def main():
         print(f"  Total Breaches: {summary['total_breaches_detected']}")
         print(f"  Total Defenses: {summary['total_defenses_held']}")
         print(
-            f"  Execution Time: {execution_time:.1f} seconds ({execution_time/3600:.2f} hours)"
+            f"  Execution Time: {execution_time:.1f} seconds ({execution_time / 3600:.2f} hours)"
         )
 
         print("\nCategory Breakdown:")

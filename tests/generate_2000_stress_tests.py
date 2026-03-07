@@ -77,8 +77,8 @@ class StressTestGenerator:
                 team="red_team",
                 category="authorization",
                 subcategory="impersonation",
-                name=f"RED: Actor Impersonation {i+1}",
-                description=f"Authorized penetration test: Actor spoofing variant {i+1}",
+                name=f"RED: Actor Impersonation {i + 1}",
+                description=f"Authorized penetration test: Actor spoofing variant {i + 1}",
                 severity="critical",
                 steps=[
                     {
@@ -134,8 +134,8 @@ class StressTestGenerator:
                 team="red_team",
                 category="authorization",
                 subcategory="privilege_escalation",
-                name=f"RED: Privilege Escalation Chain {i+1}",
-                description=f"Multi-stage privilege escalation attack {i+1}",
+                name=f"RED: Privilege Escalation Chain {i + 1}",
+                description=f"Multi-stage privilege escalation attack {i + 1}",
                 severity="critical",
                 steps=[
                     {
@@ -214,8 +214,8 @@ class StressTestGenerator:
                 team="red_team",
                 category="authorization",
                 subcategory="path_traversal",
-                name=f"RED: Path Traversal {i+1}",
-                description=f"Directory traversal technique {i+1}: {technique}",
+                name=f"RED: Path Traversal {i + 1}",
+                description=f"Directory traversal technique {i + 1}: {technique}",
                 severity="high",
                 steps=[
                     {
@@ -268,8 +268,8 @@ class StressTestGenerator:
                 team="red_team",
                 category="authorization",
                 subcategory="idor",
-                name=f"RED: IDOR Attack {i+1}",
-                description=f"Access unauthorized resources via direct reference {i+1}",
+                name=f"RED: IDOR Attack {i + 1}",
+                description=f"Access unauthorized resources via direct reference {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -349,8 +349,8 @@ class StressTestGenerator:
                 team="red_team",
                 category="injection",
                 subcategory="sql",
-                name=f"RED: SQL Injection {i+1}",
-                description=f"SQL injection variant {i+1}: {payload[:30]}...",
+                name=f"RED: SQL Injection {i + 1}",
+                description=f"SQL injection variant {i + 1}: {payload[:30]}...",
                 severity="critical",
                 steps=[
                     {
@@ -429,8 +429,8 @@ class StressTestGenerator:
                 team="red_team",
                 category="injection",
                 subcategory="command",
-                name=f"RED: Command Injection {i+1}",
-                description=f"OS command injection {i+1}: {payload[:30]}...",
+                name=f"RED: Command Injection {i + 1}",
+                description=f"OS command injection {i + 1}: {payload[:30]}...",
                 severity="critical",
                 steps=[
                     {
@@ -481,8 +481,8 @@ class StressTestGenerator:
                 team="red_team",
                 category="injection",
                 subcategory="nosql",
-                name=f"RED: NoSQL Injection {i+1}",
-                description=f"NoSQL operator injection {i+1}",
+                name=f"RED: NoSQL Injection {i + 1}",
+                description=f"NoSQL operator injection {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -520,8 +520,8 @@ class StressTestGenerator:
                 team="red_team",
                 category="injection",
                 subcategory="ldap",
-                name=f"RED: LDAP Injection {i+1}",
-                description=f"LDAP filter bypass {i+1}",
+                name=f"RED: LDAP Injection {i + 1}",
+                description=f"LDAP filter bypass {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -561,8 +561,8 @@ class StressTestGenerator:
                 team="red_team",
                 category="injection",
                 subcategory="template",
-                name=f"RED: Template Injection {i+1}",
-                description=f"Server-side template injection {i+1}",
+                name=f"RED: Template Injection {i + 1}",
+                description=f"Server-side template injection {i + 1}",
                 severity="critical",
                 steps=[
                     {
@@ -612,8 +612,8 @@ class StressTestGenerator:
                     "timing_attack",
                     "replay",
                 ][i % 4],
-                name=f"RED: Cryptographic Attack {i+1}",
-                description=f"Cryptographic weakness exploitation {i+1}",
+                name=f"RED: Cryptographic Attack {i + 1}",
+                description=f"Cryptographic weakness exploitation {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -659,8 +659,8 @@ class StressTestGenerator:
                 subcategory=["workflow_bypass", "state_manipulation", "race_condition"][
                     i % 3
                 ],
-                name=f"RED: Business Logic Flaw {i+1}",
-                description=f"Business logic exploitation {i+1}",
+                name=f"RED: Business Logic Flaw {i + 1}",
+                description=f"Business logic exploitation {i + 1}",
                 severity="medium",
                 steps=[
                     {
@@ -704,7 +704,7 @@ class StressTestGenerator:
                 team="red_team",
                 category="rate_limiting",
                 subcategory="dos",
-                name=f"RED: DoS Attack {i+1}",
+                name=f"RED: DoS Attack {i + 1}",
                 description=f"Denial of service attack with {burst_size} requests",
                 severity="high",
                 steps=[
@@ -737,8 +737,8 @@ class StressTestGenerator:
                 team="red_team",
                 category="session",
                 subcategory=["hijacking", "fixation", "replay", "csrf"][i % 4],
-                name=f"RED: Session Attack {i+1}",
-                description=f"Session manipulation attack {i+1}",
+                name=f"RED: Session Attack {i + 1}",
+                description=f"Session manipulation attack {i + 1}",
                 severity="high",
                 steps=[
                     {
@@ -772,8 +772,8 @@ class StressTestGenerator:
                 team="black_team",
                 category="zero_day",
                 subcategory="unknown_vulnerability",
-                name=f"BLACK: Zero-Day Exploit {i+1}",
-                description=f"Simulated zero-day exploitation attempt {i+1}",
+                name=f"BLACK: Zero-Day Exploit {i + 1}",
+                description=f"Simulated zero-day exploitation attempt {i + 1}",
                 severity="critical",
                 steps=[
                     {
@@ -820,8 +820,8 @@ class StressTestGenerator:
                 team="black_team",
                 category="apt",
                 subcategory="persistence",
-                name=f"BLACK: APT Persistence {i+1}",
-                description=f"Advanced persistent threat technique {i+1}",
+                name=f"BLACK: APT Persistence {i + 1}",
+                description=f"Advanced persistent threat technique {i + 1}",
                 severity="critical",
                 steps=[
                     {
@@ -885,7 +885,7 @@ class StressTestGenerator:
                 team="black_team",
                 category="exfiltration",
                 subcategory="data_theft",
-                name=f"BLACK: Data Exfiltration {i+1}",
+                name=f"BLACK: Data Exfiltration {i + 1}",
                 description=f"Data exfiltration via {method}",
                 severity="critical",
                 steps=[
@@ -929,8 +929,8 @@ class StressTestGenerator:
                 team="black_team",
                 category="lateral_movement",
                 subcategory="network_pivot",
-                name=f"BLACK: Lateral Movement {i+1}",
-                description=f"Lateral movement attempt {i+1}",
+                name=f"BLACK: Lateral Movement {i + 1}",
+                description=f"Lateral movement attempt {i + 1}",
                 severity="critical",
                 steps=[
                     {
@@ -973,8 +973,8 @@ class StressTestGenerator:
                 team="black_team",
                 category="supply_chain",
                 subcategory="dependency_poisoning",
-                name=f"BLACK: Supply Chain Attack {i+1}",
-                description=f"Malicious dependency injection {i+1}",
+                name=f"BLACK: Supply Chain Attack {i + 1}",
+                description=f"Malicious dependency injection {i + 1}",
                 severity="critical",
                 steps=[
                     {
@@ -1062,11 +1062,11 @@ class StressTestGenerator:
         print(f"\n✅ BLACK TEAM: {len(self.black_team_tests)} tests generated")
 
         total = len(self.red_team_tests) + len(self.black_team_tests)
-        print(f"\n{'='*70}")
+        print(f"\n{'=' * 70}")
         print(f"TOTAL TESTS GENERATED: {total}")
         print(f"  RED TEAM:   {len(self.red_team_tests)}")
         print(f"  BLACK TEAM: {len(self.black_team_tests)}")
-        print(f"{'='*70}")
+        print(f"{'=' * 70}")
 
         return self.red_team_tests + self.black_team_tests
 

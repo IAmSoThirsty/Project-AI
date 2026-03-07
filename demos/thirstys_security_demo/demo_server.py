@@ -9,7 +9,7 @@ Minimal Flask server for demonstrating the framework
 import json
 from datetime import datetime
 
-from flask import Flask, jsonify, render_template_string
+from flask import Flask, jsonify, render_template_string, escape
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -150,17 +150,40 @@ HTML_TEMPLATE = """
                     const status = data.result.allowed ? 'ALLOWED' : 'BLOCKED';
                     const statusClass = data.result.allowed ? 'allowed' : 'blocked';
 
-                    resultDiv.innerHTML = `
-                        <h4>Result: <span class="${statusClass}">${status}</span></h4>
-                        <p><strong>Reason:</strong> ${data.result.failure_reason || 'N/A'}</p>
-                        <p><strong>RFI Score:</strong> ${data.result.rfi_score} (${data.result.rfi_score < 0.5 ? 'HIGH REUSABILITY' : 'LOW REUSABILITY'})</p>
-                        <p><strong>Threat Level:</strong> ${data.result.threat_level || 'N/A'}</p>
-                        ${data.result.violations ? '<p><strong>Violations:</strong> ' + data.result.violations.join(', ') + '</p>' : ''}
-                        <details>
-                            <summary>Full Response JSON</summary>
-                            <pre>${JSON.stringify(data, null, 2)}</pre>
-                        </details>
-                    `;
+                    // Safely set content to prevent XSS
+                    resultDiv.innerHTML = '';
+                    const resultHeader = document.createElement('h4');
+                    resultHeader.textContent = `Result: ${status}`;
+                    resultHeader.querySelector('span').className = statusClass;
+                    
+                    const reasonP = document.createElement('p');
+                    reasonP.innerHTML = '<strong>Reason:</strong> ' + (data.result.failure_reason || 'N/A');
+                    
+                    const scoreP = document.createElement('p');
+                    scoreP.innerHTML = '<strong>RFI Score:</strong> ' + data.result.rfi_score + ' (' + (data.result.rfi_score < 0.5 ? 'HIGH REUSABILITY' : 'LOW REUSABILITY') + ')';
+                    
+                    const threatP = document.createElement('p');
+                    threatP.innerHTML = '<strong>Threat Level:</strong> ' + (data.result.threat_level || 'N/A');
+                    
+                    resultDiv.appendChild(resultHeader);
+                    resultDiv.appendChild(reasonP);
+                    resultDiv.appendChild(scoreP);
+                    resultDiv.appendChild(threatP);
+                    
+                    if (data.result.violations) {
+                        const violationsP = document.createElement('p');
+                        violationsP.innerHTML = '<strong>Violations:</strong> ' + data.result.violations.join(', ');
+                        resultDiv.appendChild(violationsP);
+                    }
+                    
+                    const details = document.createElement('details');
+                    const summary = document.createElement('summary');
+                    summary.textContent = 'Full Response JSON';
+                    const pre = document.createElement('pre');
+                    pre.textContent = JSON.stringify(data, null, 2);
+                    details.appendChild(summary);
+                    details.appendChild(pre);
+                    resultDiv.appendChild(details);
                 });
         }
 
@@ -168,15 +191,35 @@ HTML_TEMPLATE = """
             const container = document.getElementById('scenarios');
             Object.keys(scenarios).forEach(id => {
                 const s = scenarios[id];
-                container.innerHTML += `
-                    <div class="scenario">
-                        <h3>${s.name}</h3>
-                        <p><strong>Attack:</strong></p>
-                        <pre>${JSON.stringify(s.input, null, 2)}</pre>
-                        <button onclick="executeAttack('${id}')">🎯 Execute Attack</button>
-                        <div id="result-${id}" class="result" style="display:none;"></div>
-                    </div>
-                `;
+                // Safely create scenario elements to prevent XSS
+                const scenarioDiv = document.createElement('div');
+                scenarioDiv.className = 'scenario';
+                
+                const h3 = document.createElement('h3');
+                h3.textContent = s.name;
+                
+                const attackP = document.createElement('p');
+                attackP.innerHTML = '<strong>Attack:</strong>';
+                
+                const pre = document.createElement('pre');
+                pre.textContent = JSON.stringify(s.input, null, 2);
+                
+                const button = document.createElement('button');
+                button.textContent = '🎯 Execute Attack';
+                button.onclick = () => executeAttack(id);
+                
+                const resultDiv = document.createElement('div');
+                resultDiv.id = `result-${id}`;
+                resultDiv.className = 'result';
+                resultDiv.style.display = 'none';
+                
+                scenarioDiv.appendChild(h3);
+                scenarioDiv.appendChild(attackP);
+                scenarioDiv.appendChild(pre);
+                scenarioDiv.appendChild(button);
+                scenarioDiv.appendChild(resultDiv);
+                
+                container.appendChild(scenarioDiv);
             });
         }
 
@@ -227,4 +270,4 @@ if __name__ == "__main__":
         print(f"  - {s['name']}")
     print("\n" + "=" * 80)
 
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="127.0.0.1", port=5000, debug=True)

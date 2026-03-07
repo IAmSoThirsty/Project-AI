@@ -3,7 +3,11 @@
 
 from __future__ import annotations
 
+import hashlib
+import hmac
 import logging
+import os
+import secrets
 
 try:  # pragma: no cover - import guard for environments without Flask
     from flask import Flask, jsonify, request
@@ -17,11 +21,46 @@ app = Flask(__name__)
 
 logger = logging.getLogger(__name__)
 
-# In-memory demo credential store used purely for backend tests.
-_USERS: dict[str, dict[str, str]] = {
-    "admin": {"password": "open-sesame", "role": "superuser"},
-    "guest": {"password": "letmein", "role": "viewer"},
-}
+
+def _hash_password(password: str, salt: str | None = None) -> tuple[str, str]:
+    """Hash a password with PBKDF2-SHA256. Returns (hash, salt)."""
+    if salt is None:
+        salt = secrets.token_hex(16)
+    pw_hash = hashlib.pbkdf2_hmac(
+        "sha256", password.encode(), salt.encode(), 100_000
+    ).hex()
+    return pw_hash, salt
+
+
+def _verify_password(password: str, stored_hash: str, salt: str) -> bool:
+    """Verify a password against a stored hash."""
+    pw_hash, _ = _hash_password(password, salt)
+    return hmac.compare_digest(pw_hash, stored_hash)
+
+
+def _load_users() -> dict[str, dict[str, str]]:
+    """Load users from environment or return empty dict.
+
+    In production, connect this to a real user database.
+    For development, set BACKEND_DEMO_USERS=1 to enable demo accounts.
+    """
+    if os.getenv("BACKEND_DEMO_USERS", "").strip() == "1":
+        # Demo accounts — only enabled when explicitly opted in
+        demo_salt = "devsalt0000000000000000000000000"
+        admin_hash, _ = _hash_password("change-me-immediately", demo_salt)
+        guest_hash, _ = _hash_password("change-me-immediately", demo_salt)
+        logger.warning(
+            "BACKEND_DEMO_USERS=1 — demo accounts active. "
+            "DO NOT use in production."
+        )
+        return {
+            "admin": {"hash": admin_hash, "salt": demo_salt, "role": "superuser"},
+            "guest": {"hash": guest_hash, "salt": demo_salt, "role": "viewer"},
+        }
+    return {}
+
+
+_USERS: dict[str, dict[str, str]] = _load_users()
 _TOKENS: dict[str, str] = {}  # token -> username
 
 
@@ -52,7 +91,9 @@ def login():
         )
 
     user = _USERS.get(username)
-    if not user or user.get("password") != password:
+    if not user or not _verify_password(
+        password, user.get("hash", ""), user.get("salt", "")
+    ):
         return (
             jsonify(
                 error="invalid-credentials", message="Username or password incorrect"
@@ -60,7 +101,7 @@ def login():
             401,
         )
 
-    token = f"token-{username}"
+    token = f"tok-{secrets.token_urlsafe(32)}"
     _TOKENS[token] = username
     return (
         jsonify(
@@ -95,7 +136,12 @@ def profile():
 
 @app.route("/api/debug/force-error")
 def force_error():
-    """Endpoint intentionally raising an exception to test error handler."""
+    """Endpoint intentionally raising an exception to test error handler.
+
+    Only available when FLASK_ENV=development.
+    """
+    if os.getenv("FLASK_ENV") != "development":
+        return jsonify(error="not-found", message="Not found"), 404
     raise RuntimeError("forced debug failure")
 
 

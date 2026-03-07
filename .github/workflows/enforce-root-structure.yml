@@ -49,10 +49,13 @@ jobs:
             "Dockerfile"
             "docker-compose.yml"
             "docker-compose.override.yml"
+            "docker-compose.monitoring.yml"
             "Makefile"
             "build.gradle"
+            "build.gradle.kts"
             "build.tarl"
             "settings.gradle"
+            "settings.gradle.kts"
             "gradle.properties"
             "gradlew"
             "gradlew.bat"
@@ -67,6 +70,7 @@ jobs:
             "requirements.lock"
             "pytest.ini"
             "MANIFEST.in"
+            "RELEASE_MANIFEST.json"
             
             # Environment & Config
             ".gitignore"
@@ -75,6 +79,11 @@ jobs:
             ".dockerignore"
             ".python-version"
             ".pre-commit-config.yaml"
+            ".env.example"
+            ".eslintrc.json"
+            ".markdownlint.yaml"
+            ".prettierrc"
+            ".bandit.yml"
             "mcp.json"
             "app-config.json"
             
@@ -83,6 +92,7 @@ jobs:
             "quickstart.py"
             "start_api.py"
             "project_ai_cli.py"
+            "boot_sovereign.py"
             
             # Other allowed files
             "LAUNCH_MISSION_CONTROL.bat"

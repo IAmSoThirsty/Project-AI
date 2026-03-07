@@ -9,7 +9,6 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Set
 
 from app.miniature_office.core.audit import EventType, get_audit_log
 from app.miniature_office.core.entity import (
@@ -44,10 +43,10 @@ class ToolMetadata:
     version: str
     trust_score: float = 0.5  # 0.0 - 1.0
     security_rating: int = 3  # 1-5, where 5 is most secure
-    capabilities: Set[str] = field(default_factory=set)
+    capabilities: set[str] = field(default_factory=set)
     requires_justification: bool = False
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "tag": self.tag.value,
             "version": self.version,
@@ -66,8 +65,8 @@ class Tool(Entity):
     def __init__(self, tool_id: str, name: str, metadata: ToolMetadata):
         super().__init__(tool_id, EntityType.TOOL, name)
         self.metadata_info = metadata
-        self.checked_out_by: Optional[str] = None  # Agent ID
-        self.checkout_history: List[Dict] = []
+        self.checked_out_by: str | None = None  # Agent ID
+        self.checkout_history: list[dict] = []
         self.is_available = True
 
         # Register tool
@@ -80,7 +79,7 @@ class Tool(Entity):
             data={"entity_type": "tool", "tool_metadata": metadata.to_dict()},
         )
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         base = super().to_dict()
         base.update(
             {
@@ -101,9 +100,9 @@ class CheckoutRecord:
     agent_id: str = ""
     justification: str = ""
     checked_out_at: datetime = field(default_factory=datetime.utcnow)
-    checked_in_at: Optional[datetime] = None
+    checked_in_at: datetime | None = None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "checkout_id": self.checkout_id,
             "tool_id": self.tool_id,
@@ -123,8 +122,8 @@ class SupplyStore:
     """
 
     def __init__(self):
-        self.tools: Dict[str, Tool] = {}
-        self.checkouts: Dict[str, CheckoutRecord] = {}
+        self.tools: dict[str, Tool] = {}
+        self.checkouts: dict[str, CheckoutRecord] = {}
 
     def add_tool(self, tool: Tool):
         """Add a tool to the supply store inventory"""
@@ -138,7 +137,7 @@ class SupplyStore:
 
     def check_out_tool(
         self, tool_id: str, agent_id: str, justification: str = ""
-    ) -> Optional[CheckoutRecord]:
+    ) -> CheckoutRecord | None:
         """
         Check out a tool (Codex 5.2).
         Agents must explicitly check out tools from supply store.
@@ -206,21 +205,21 @@ class SupplyStore:
 
         return True
 
-    def get_available_tools(self) -> List[Tool]:
+    def get_available_tools(self) -> list[Tool]:
         """Get all available tools"""
         return [t for t in self.tools.values() if t.is_available]
 
-    def get_tools_by_tag(self, tag: ToolTag) -> List[Tool]:
+    def get_tools_by_tag(self, tag: ToolTag) -> list[Tool]:
         """Get all tools with a specific tag"""
         return [t for t in self.tools.values() if t.metadata_info.tag == tag]
 
-    def get_tools_by_capability(self, capability: str) -> List[Tool]:
+    def get_tools_by_capability(self, capability: str) -> list[Tool]:
         """Get all tools that provide a specific capability"""
         return [
             t for t in self.tools.values() if capability in t.metadata_info.capabilities
         ]
 
-    def get_agent_checkouts(self, agent_id: str) -> List[CheckoutRecord]:
+    def get_agent_checkouts(self, agent_id: str) -> list[CheckoutRecord]:
         """Get all active checkouts for an agent"""
         return [
             c

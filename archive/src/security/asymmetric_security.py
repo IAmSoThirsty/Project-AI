@@ -15,7 +15,7 @@ import logging
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 # Import legacy engines for integration
 try:
@@ -49,9 +49,9 @@ class SecurityContext:
     user_id: str
     action: str
     tenant_id: str = "default"
-    auth_proof: Optional[str] = None
-    audit_span_id: Optional[str] = None
-    replay_token: Optional[str] = None
+    auth_proof: str | None = None
+    audit_span_id: str | None = None
+    replay_token: str | None = None
     timestamp: float = field(default_factory=time.time)
     metadata: dict[str, Any] = field(default_factory=dict)
 

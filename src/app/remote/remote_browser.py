@@ -32,7 +32,7 @@ class RemoteBrowser:
         self._cipher = Fernet(Fernet.generate_key())
 
         # Remote connection settings
-        self.host = config.get("remote_host", "0.0.0.0")
+        self.host = config.get("remote_host", "127.0.0.1")
         self.port = config.get("remote_port", 9000)
 
         # Active sessions (encrypted)

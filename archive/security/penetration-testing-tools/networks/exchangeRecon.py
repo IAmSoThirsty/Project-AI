@@ -693,7 +693,7 @@ class ExchangeRecon:
                 self.reconnect = 0
                 return True
 
-        except (socket.gaierror as socket.timeout,  
+        except (socket.gaierror, socket.timeout,  
                 ConnectionResetError) as e:
             Logger.dbg(f"Failed.: {e}")
         return False

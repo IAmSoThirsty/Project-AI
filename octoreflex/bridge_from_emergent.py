@@ -6,9 +6,7 @@ Provides a Pythonic interface for specialized reflex microservices to trigger
 kernel-level and network-level enforcement actions managed by OctoReflex.
 """
 
-import json
 import logging
-import subprocess
 
 logger = logging.getLogger("octoreflex_bridge")
 

@@ -4,8 +4,10 @@
 Tests for SubstrateManager.get_health_status() implementation.
 """
 
-import pytest
+<<<<<<< HEAD
 
+=======
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
 from cerberus.sase.core.substrate import (
     DeploymentTopology,
     FailureMode,

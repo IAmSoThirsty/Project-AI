@@ -407,7 +407,7 @@ class TestHeartbeatMonitor:
         assert not callback_called
 
 
-class TestTSECA_Ghost_System:
+class TestTsecaGhostSystem:
     """Test unified TSECA/GHOST system."""
 
     def test_initialization(self):

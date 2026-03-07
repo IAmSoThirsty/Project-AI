@@ -195,7 +195,7 @@ class ImageGenerationLeftPanel(QFrame):
 
         # Info label
         info_label = QLabel(
-            "⚠️ Content filtering enabled\n" "All images comply with safety guidelines"
+            "⚠️ Content filtering enabled\nAll images comply with safety guidelines"
         )
         info_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         info_label.setStyleSheet(f"color: {TRON_CYAN}; font-size: 9pt;")
@@ -356,7 +356,7 @@ class ImageGenerationRightPanel(QFrame):
             prompt = metadata.get("prompt", "Unknown")
             timestamp = metadata.get("timestamp", "")
             self.metadata_label.setText(
-                f"Prompt: {prompt[:100]}...\n" f"Generated: {timestamp}"
+                f"Prompt: {prompt[:100]}...\nGenerated: {timestamp}"
             )
 
             # Enable buttons

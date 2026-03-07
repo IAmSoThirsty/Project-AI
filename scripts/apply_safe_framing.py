@@ -20,8 +20,6 @@ import argparse
 import glob
 import re
 import sys
-from pathlib import Path
-from typing import List, Tuple
 
 DISCLAIMER_TEMPLATE = """---
 
@@ -121,7 +119,7 @@ class SafeFramingTransformer:
             ),
         ]
 
-    def transform_content(self, content: str, filename: str) -> Tuple[str, List[str]]:
+    def transform_content(self, content: str, filename: str) -> tuple[str, list[str]]:
         """
         Transform content to use safe framing language
 
@@ -168,7 +166,7 @@ class SafeFramingTransformer:
         print(f"{'='*80}")
 
         try:
-            with open(filepath, "r", encoding="utf-8") as f:
+            with open(filepath, encoding="utf-8") as f:
                 original_content = f.read()
         except Exception as e:
             print(f"ERROR: Cannot read file: {e}")
@@ -189,7 +187,7 @@ class SafeFramingTransformer:
         new_lines = new_content.count("\n")
         diff_lines = new_lines - original_lines
 
-        print(f"\nStatistics:")
+        print("\nStatistics:")
         print(f"  Original lines: {original_lines}")
         print(f"  New lines: {new_lines}")
         print(f"  Difference: {diff_lines:+d} lines")
@@ -197,7 +195,7 @@ class SafeFramingTransformer:
     def apply_changes(self, filepath: str, dry_run: bool = False) -> bool:
         """Apply safe framing changes to a file"""
         try:
-            with open(filepath, "r", encoding="utf-8") as f:
+            with open(filepath, encoding="utf-8") as f:
                 original_content = f.read()
         except Exception as e:
             print(f"ERROR: Cannot read {filepath}: {e}")

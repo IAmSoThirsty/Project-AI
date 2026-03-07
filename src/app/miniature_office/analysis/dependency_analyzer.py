@@ -4,7 +4,6 @@
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import List, Set
 
 
 class DependencyType(Enum):
@@ -28,14 +27,14 @@ class ModuleRelation:
 class DependencyGraph:
     """Complete dependency graph"""
 
-    nodes: Set[str] = field(default_factory=set)
-    edges: List[ModuleRelation] = field(default_factory=list)
+    nodes: set[str] = field(default_factory=set)
+    edges: list[ModuleRelation] = field(default_factory=list)
 
-    def detect_cycles(self) -> List[List[str]]:
+    def detect_cycles(self) -> list[list[str]]:
         """Detect circular dependencies"""
         return []
 
-    def get_transitive_dependencies(self, module: str) -> Set[str]:
+    def get_transitive_dependencies(self, module: str) -> set[str]:
         """Get all transitive dependencies of a module"""
         return set()
 

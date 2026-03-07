@@ -7,12 +7,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-import pytest
 
 from cerberus.sase.policy.containment import (
     ALLOWED_ACTION_TYPES,
     ActionValidator,
-    ContainmentOrchestrator,
     ContainmentRequest,
     MerkleProofGenerator,
 )

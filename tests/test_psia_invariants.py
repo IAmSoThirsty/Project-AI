@@ -58,7 +58,6 @@ ALL_ROOT_INVARIANTS = [
 
 
 class TestRootInvariantRegistry:
-
     def test_exactly_nine_invariants(self):
         assert len(ROOT_INVARIANTS) == 9
 
@@ -82,7 +81,6 @@ class TestRootInvariantRegistry:
 
 
 class TestInvariantSchemaIntegrity:
-
     @pytest.mark.parametrize("inv", ALL_ROOT_INVARIANTS, ids=lambda i: i.invariant_id)
     def test_all_immutable_scope(self, inv):
         assert inv.scope == InvariantScope.IMMUTABLE
@@ -122,7 +120,6 @@ class TestInvariantSchemaIntegrity:
 
 
 class TestEmbeddedTestCases:
-
     @pytest.mark.parametrize("inv", ALL_ROOT_INVARIANTS, ids=lambda i: i.invariant_id)
     def test_at_least_two_test_cases(self, inv):
         assert len(inv.tests) >= 2
@@ -152,7 +149,6 @@ class TestEmbeddedTestCases:
 
 
 class TestInvariantFuzzing:
-
     def test_empty_tests_rejected(self):
         with pytest.raises(ValidationError):
             InvariantDefinition(

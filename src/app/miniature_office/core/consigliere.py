@@ -31,7 +31,7 @@ You don't say anything, he doesn't do anything (except advise when asked).
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class ExplanationType(Enum):
@@ -61,12 +61,12 @@ class Explanation:
     explanation_type: ExplanationType
     question: str
     answer: str
-    context: Dict[str, Any] = field(default_factory=dict)
-    references: List[str] = field(
+    context: dict[str, Any] = field(default_factory=dict)
+    references: list[str] = field(
         default_factory=list
     )  # Links to contracts, decisions, etc.
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "type": self.explanation_type.value,
             "question": self.question,
@@ -83,9 +83,9 @@ class Translation:
     translation_type: TranslationType
     original: str
     translated: str
-    glossary: Dict[str, str] = field(default_factory=dict)
+    glossary: dict[str, str] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "type": self.translation_type.value,
             "original": self.original,
@@ -99,12 +99,12 @@ class Preview:
     """Preview of consequences or costs"""
 
     action: str
-    consequences: List[str] = field(default_factory=list)
-    resource_costs: Dict[str, int] = field(default_factory=dict)
-    risks: List[str] = field(default_factory=list)
-    alternatives: List[str] = field(default_factory=list)
+    consequences: list[str] = field(default_factory=list)
+    resource_costs: dict[str, int] = field(default_factory=dict)
+    risks: list[str] = field(default_factory=list)
+    alternatives: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "action": self.action,
             "consequences": self.consequences,
@@ -121,10 +121,10 @@ class DraftDirective:
     draft_text: str
     rationale: str
     expected_outcome: str
-    estimated_cost: Dict[str, int] = field(default_factory=dict)
-    warnings: List[str] = field(default_factory=list)
+    estimated_cost: dict[str, int] = field(default_factory=dict)
+    warnings: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "draft_text": self.draft_text,
             "rationale": self.rationale,
@@ -151,10 +151,10 @@ class Consigliere:
     """
 
     def __init__(self):
-        self.explanation_history: List[Explanation] = []
-        self.translation_history: List[Translation] = []
-        self.preview_history: List[Preview] = []
-        self.draft_history: List[DraftDirective] = []
+        self.explanation_history: list[Explanation] = []
+        self.translation_history: list[Translation] = []
+        self.preview_history: list[Preview] = []
+        self.draft_history: list[DraftDirective] = []
 
     # =========================================================================
     # EXECUTIVE AUTHORITY - Issue Commands
@@ -166,7 +166,7 @@ class Consigliere:
         directive: str,
         priority: str = "normal",
         issued_by_human: bool = True,
-    ) -> Dict:
+    ) -> dict:
         """
         Issue directive to a manager.
         The Consigliere has authority to command managers,
@@ -216,7 +216,7 @@ class Consigliere:
         new_directive: str,
         justification: str,
         issued_by_human: bool = True,
-    ) -> Dict:
+    ) -> dict:
         """
         Update an agent's directive.
         The Consigliere coordinates work, but ONLY when human explicitly asks.
@@ -258,8 +258,8 @@ class Consigliere:
         }
 
     def coordinate_cross_floor_work(
-        self, floor_ids: List[str], coordination_plan: str, issued_by_human: bool = True
-    ) -> Dict:
+        self, floor_ids: list[str], coordination_plan: str, issued_by_human: bool = True
+    ) -> dict:
         """
         Coordinate work across multiple floors.
         The Consigliere orchestrates, but ONLY when human says to.
@@ -294,8 +294,8 @@ class Consigliere:
         }
 
     def tell_human_impossible(
-        self, request: str, reason: str, alternatives: Optional[List[str]] = None
-    ) -> Dict:
+        self, request: str, reason: str, alternatives: list[str] | None = None
+    ) -> dict:
         """
         Tell the human that something is impossible.
 
@@ -312,8 +312,8 @@ class Consigliere:
         }
 
     def tell_human_feasible(
-        self, request: str, approach: str, estimated_resources: Dict[str, int]
-    ) -> Dict:
+        self, request: str, approach: str, estimated_resources: dict[str, int]
+    ) -> dict:
         """
         Tell the human that something is feasible and how to do it.
         """
@@ -331,7 +331,7 @@ class Consigliere:
     # =========================================================================
 
     def explain_why_blocked(
-        self, entity_id: str, context: Optional[Dict] = None
+        self, entity_id: str, context: dict | None = None
     ) -> Explanation:
         """
         Explain why something is blocked.
@@ -389,7 +389,7 @@ class Consigliere:
         return explanation
 
     def explain_why_decision(
-        self, decision_id: str, context: Optional[Dict] = None
+        self, decision_id: str, context: dict | None = None
     ) -> Explanation:
         """
         Explain why a decision was made.
@@ -430,7 +430,7 @@ class Consigliere:
         return explanation
 
     def explain_what_options(
-        self, situation: str, context: Optional[Dict] = None
+        self, situation: str, context: dict | None = None
     ) -> Explanation:
         """
         Explain what options exist within scope.
@@ -514,7 +514,7 @@ class Consigliere:
     # =========================================================================
 
     def preview_consequences(
-        self, proposed_action: str, context: Optional[Dict] = None
+        self, proposed_action: str, context: dict | None = None
     ) -> Preview:
         """
         Preview consequences of a proposed action.
@@ -582,7 +582,7 @@ class Consigliere:
     # =========================================================================
 
     def prepare_draft_directive(
-        self, goal: str, language: str, constraints: Optional[List[str]] = None
+        self, goal: str, language: str, constraints: list[str] | None = None
     ) -> DraftDirective:
         """
         Prepare a draft directive for the user.
@@ -679,7 +679,7 @@ This clarification will prevent blocking and ensure correct implementation.
         """The Consigliere cannot suppress audit logs"""
         return False
 
-    def validate_authority(self, action: str) -> tuple[bool, Optional[str]]:
+    def validate_authority(self, action: str) -> tuple[bool, str | None]:
         """
         Validate that an action is within Consigliere authority.
         Returns: (is_allowed, reason_if_not)
@@ -711,23 +711,23 @@ This clarification will prevent blocking and ensure correct implementation.
         # In real system, would check actual precondition state
         return False
 
-    def get_explanation_history(self, limit: int = 10) -> List[Dict]:
+    def get_explanation_history(self, limit: int = 10) -> list[dict]:
         """Get recent explanations"""
         return [e.to_dict() for e in self.explanation_history[-limit:]]
 
-    def get_translation_history(self, limit: int = 10) -> List[Dict]:
+    def get_translation_history(self, limit: int = 10) -> list[dict]:
         """Get recent translations"""
         return [t.to_dict() for t in self.translation_history[-limit:]]
 
-    def get_preview_history(self, limit: int = 10) -> List[Dict]:
+    def get_preview_history(self, limit: int = 10) -> list[dict]:
         """Get recent previews"""
         return [p.to_dict() for p in self.preview_history[-limit:]]
 
-    def get_draft_history(self, limit: int = 10) -> List[Dict]:
+    def get_draft_history(self, limit: int = 10) -> list[dict]:
         """Get recent drafts"""
         return [d.to_dict() for d in self.draft_history[-limit:]]
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Export Consigliere state"""
         return {
             "role": "Chief Operating Executive",

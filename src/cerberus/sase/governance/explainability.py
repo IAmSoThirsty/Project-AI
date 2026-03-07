@@ -195,9 +195,9 @@ class ExplainabilityEngine:
                 True: "⚠️  Cloud/VPS infrastructure",
                 False: "✓ Residential/corporate IP",
             },
-            "Token_sensitivity": lambda v: f"🔑 Token reuse: {v*100:.0f}% suspicious",
-            "ASN_risk": lambda v: f"🌐 ASN risk: {v*100:.0f}%",
-            "Geo_anomaly_score": lambda v: f"🌍 Geographic anomaly: {v*100:.0f}%",
+            "Token_sensitivity": lambda v: f"🔑 Token reuse: {v * 100:.0f}% suspicious",
+            "ASN_risk": lambda v: f"🌐 ASN risk: {v * 100:.0f}%",
+            "Geo_anomaly_score": lambda v: f"🌍 Geographic anomaly: {v * 100:.0f}%",
             "Historical_reuse_count": lambda v: f"📊 Seen {v} times before",
         }
 

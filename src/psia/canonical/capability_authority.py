@@ -28,7 +28,7 @@ from __future__ import annotations
 import logging
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from psia.crypto.ed25519_provider import Ed25519KeyPair, Ed25519Provider, KeyStore
@@ -147,7 +147,7 @@ class CapabilityAuthority:
                 )
 
         ttl = ttl_hours or self.default_ttl_hours
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         tid = token_id or f"cap_{uuid.uuid4().hex[:12]}"
 
         token = CapabilityToken(
@@ -214,7 +214,7 @@ class CapabilityAuthority:
         if token_id in self._revocation_list:
             return True  # Already revoked
 
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         self._revocation_list[token_id] = RevocationEntry(
             token_id=token_id,
             revoked_at=now,
@@ -273,7 +273,7 @@ class CapabilityAuthority:
                 event_type="rotated",
                 token_id=old_token_id,
                 actor=self.authority_did,
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
                 details={"new_token_id": new_token.token_id},
             )
         )
@@ -294,8 +294,8 @@ class CapabilityAuthority:
         try:
             expires = datetime.fromisoformat(token.expires_at)
             if expires.tzinfo is None:
-                expires = expires.replace(tzinfo=timezone.utc)
-            return expires > datetime.now(timezone.utc)
+                expires = expires.replace(tzinfo=UTC)
+            return expires > datetime.now(UTC)
         except (ValueError, TypeError):
             return False
 

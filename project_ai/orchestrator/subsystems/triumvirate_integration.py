@@ -7,13 +7,13 @@ A documentation/manifesto website for the Sovereign Stack
 
 import logging
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 
 class TriumvirateIntegration:
     """Integrates The_Triumvirate documentation website"""
 
-    def __init__(self, config: Dict[str, Any] = None):
+    def __init__(self, config: dict[str, Any] = None):
         self.logger = logging.getLogger(__name__)
         self.config = config or {}
         self.active = False
@@ -53,7 +53,7 @@ class TriumvirateIntegration:
         self.logger.info("Triumvirate documentation closed")
         self.active = False
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get Triumvirate status"""
         return {
             "active": self.active,

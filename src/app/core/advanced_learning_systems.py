@@ -16,7 +16,7 @@ from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, cast
+from typing import Any
 
 import numpy as np
 
@@ -204,6 +204,13 @@ class ExperienceReplayBuffer:
                     return False
 
                 with open(filepath, "rb") as f:
+                    # WARNING: Unsafe pickle deserialization - should only be used for trusted data
+                    # Consider replacing with a safer serialization format like JSON or msgpack
+                    import warnings
+                    warnings.warn(
+                        "Using unsafe pickle deserialization for replay buffer. Ensure data is from trusted sources only.",
+                        SecurityWarning
+                    )
                     experiences = pickle.load(f)
 
                 self._buffer = deque(experiences, maxlen=self.max_size)

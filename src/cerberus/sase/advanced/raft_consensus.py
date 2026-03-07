@@ -1,14 +1,14 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
 """
-SASE - Sovereign Adversarial Signal Engine  
+SASE - Sovereign Adversarial Signal Engine
 L14: Multi-Region Quorum & Raft Consensus
 
 3-node Raft consensus for distributed SASE deployment.
 
 FEATURES:
 - Leader election
-- Append-only log replication  
+- Append-only log replication
 - Conflict resolution via term index
 """
 

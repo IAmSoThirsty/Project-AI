@@ -31,7 +31,7 @@ import json
 import logging
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Any
 
@@ -196,7 +196,7 @@ class GenesisCoordinator:
             )
 
         self._status = GenesisStatus.IN_PROGRESS
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         try:
             # Step 1: Generate key pairs

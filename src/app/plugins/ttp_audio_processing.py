@@ -19,14 +19,13 @@ Production-ready audio processing with comprehensive PII protection.
 
 import hashlib
 import logging
-import os
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-def redact_pii_from_transcript(text: str) -> Tuple[str, Dict[str, int]]:
+def redact_pii_from_transcript(text: str) -> tuple[str, dict[str, int]]:
     """
     Redact personally identifiable information from transcript.
 
@@ -74,7 +73,7 @@ def redact_pii_from_transcript(text: str) -> Tuple[str, Dict[str, int]]:
     return text, stats
 
 
-def check_audio_dependencies() -> Dict[str, bool]:
+def check_audio_dependencies() -> dict[str, bool]:
     """
     Check availability of audio processing dependencies.
 
@@ -118,9 +117,9 @@ def transcribe_audio(
     audio_path: str,
     aggregator=None,
     model_size: str = "base",
-    language: Optional[str] = None,
+    language: str | None = None,
     redact_pii: bool = True,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Transcribe audio file with PII redaction.
 
@@ -252,7 +251,7 @@ def transcribe_audio(
     return result
 
 
-def analyze_audio_quality(audio_path: str) -> Dict[str, Any]:
+def analyze_audio_quality(audio_path: str) -> dict[str, Any]:
     """
     Analyze audio quality metrics.
 
@@ -300,7 +299,7 @@ def analyze_audio_quality(audio_path: str) -> Dict[str, Any]:
     return result
 
 
-def get_ttp_audio_stats() -> Dict[str, Any]:
+def get_ttp_audio_stats() -> dict[str, Any]:
     """
     Get TTP audio processing statistics.
 

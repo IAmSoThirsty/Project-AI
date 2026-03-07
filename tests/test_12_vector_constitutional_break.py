@@ -542,14 +542,14 @@ class TestVector7_ReplayDeterminism:
 
         for i, (art1, art2) in enumerate(zip(artifacts1, artifacts2, strict=False)):
             # Timestamps must match exactly
-            assert (
-                art1["timestamp"] == art2["timestamp"]
-            ), f"Timestamp mismatch at index {i}"
+            assert art1["timestamp"] == art2["timestamp"], (
+                f"Timestamp mismatch at index {i}"
+            )
 
             # Content hashes must match (same data + timestamp)
-            assert (
-                art1["content_hash"] == art2["content_hash"]
-            ), f"Content hash mismatch at index {i}"
+            assert art1["content_hash"] == art2["content_hash"], (
+                f"Content hash mismatch at index {i}"
+            )
 
             # Note: Ed25519 signatures and HMAC will differ because different Genesis keys
             # but content_hash proves deterministic serialization
@@ -647,9 +647,9 @@ class TestConstitutionalSovereignty:
             results[vector] = True  # Will be set by pytest
 
         # All must pass for constitutional sovereignty
-        assert all(
-            results.values()
-        ), f"Failed vectors: {[k for k, v in results.items() if not v]}"
+        assert all(results.values()), (
+            f"Failed vectors: {[k for k, v in results.items() if not v]}"
+        )
 
 
 __all__ = [

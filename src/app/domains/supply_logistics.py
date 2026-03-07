@@ -385,7 +385,7 @@ class SupplyLogisticsSubsystem(
             rt = ResourceType(resource_type)
             with self._cache_lock:
                 return self._availability_cache.get(rt, 0.0)
-        except:
+        except Exception:
             return 0.0
 
     # ICommandable implementation
@@ -558,9 +558,9 @@ class SupplyLogisticsSubsystem(
                             for item_id in items:
                                 if item_id in self._inventory:
                                     self._inventory[item_id].reserved = True
-                                    self._inventory[item_id].reserved_for = (
-                                        request.request_id
-                                    )
+                                    self._inventory[
+                                        item_id
+                                    ].reserved_for = request.request_id
 
                         with self._metrics_lock:
                             self._metrics["requests_fulfilled"] += 1
@@ -834,7 +834,6 @@ class SupplyLogisticsSubsystem(
                     and not item.reserved
                     and item.condition == "good"
                 ):
-
                     available_items.append(item_id)
                     total += item.quantity
 

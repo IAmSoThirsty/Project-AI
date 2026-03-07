@@ -30,7 +30,7 @@ import hashlib
 import json
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from psia.crypto.ed25519_provider import Ed25519Provider, KeyStore
@@ -55,9 +55,13 @@ class ExecutionRecord:
     commit_id: str | None = None
     diff_hash: str | None = None
     stage_results: list[dict] = field(default_factory=list)
+<<<<<<< HEAD
     timestamp: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
+=======
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
     metadata: dict[str, Any] = field(default_factory=dict)
 
     def compute_hash(self) -> str:
@@ -185,7 +189,7 @@ class DurableLedger:
         else:
             prev_hash = self.GENESIS_HASH
 
-        sealed_at = datetime.now(timezone.utc).isoformat()
+        sealed_at = datetime.now(UTC).isoformat()
 
         block = LedgerBlock(
             block_id=len(self._sealed_blocks),
@@ -292,7 +296,7 @@ class DurableLedger:
             sealed_at=block.sealed_at,
             record_count=block.record_count,
             anchor_hash=anchor_hash,
-            anchor_timestamp=datetime.now(timezone.utc).isoformat(),
+            anchor_timestamp=datetime.now(UTC).isoformat(),
         )
         return True
 

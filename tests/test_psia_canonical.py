@@ -11,9 +11,6 @@ Covers:
 
 from __future__ import annotations
 
-import time
-from datetime import datetime, timedelta, timezone
-
 import pytest
 
 from psia.canonical.capability_authority import (
@@ -36,7 +33,6 @@ from psia.schemas.capability import CapabilityScope, ScopeConstraints
 
 
 class TestCanonicalStore:
-
     def test_put_and_get(self):
         store = CanonicalStore()
         val = store.put("key1", "value1")
@@ -117,7 +113,6 @@ class TestCanonicalStore:
 
 
 class TestCommitCoordinator:
-
     def test_basic_commit(self):
         coord = CommitCoordinator(require_cerberus_allow=False)
         result = coord.commit(
@@ -255,7 +250,6 @@ def _record(rid: str = "rec_1", req_id: str = "req_1") -> ExecutionRecord:
 
 
 class TestDurableLedger:
-
     def test_append_record(self):
         ledger = DurableLedger()
         h = ledger.append(_record())
@@ -358,7 +352,6 @@ def _scope(action: str = "execute", resource: str = "/api/v1/*") -> CapabilitySc
 
 
 class TestCapabilityAuthority:
-
     def test_issue_token(self):
         ca = CapabilityAuthority()
         token = ca.issue(

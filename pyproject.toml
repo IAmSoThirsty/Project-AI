@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "project-ai"
-version = "1.0.1"
+version = "1.0.0"
 description = "A constitutionally governed, sovereign-grade AI platform with cryptographic audit trails and enforced ethical behavior"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -38,25 +38,36 @@ classifiers = [
 ]
 
 dependencies = [
+    # Web frameworks
     "Flask>=3.0.0",
+    "fastapi>=0.109.1",
+    "uvicorn[standard]>=0.27.0",
+    # AI / ML
     "scikit-learn>=1.0.0",
-    "geopy>=2.0.0",
-    "cryptography>=43.0.1",
-    "openai>=0.27.0",
-    "python-dotenv>=0.19.0",
-    "requests>=2.32.4",
+    "openai>=1.0.0",
     "numpy>=1.20.0",
     "pandas>=1.0.0",
     "matplotlib>=3.5.0",
-    "PyPDF2>=3.0.0",
+    # Security & Crypto
+    "cryptography>=42.0.4",
     "passlib>=1.7.0",
     "bcrypt>=5.0.0",
-    "httpx>=0.24.0",
     "defusedxml>=0.7.0",
+    # HTTP / Networking
+    "requests>=2.31.0",
+    "httpx>=0.24.0",
+    # Data & Config
+    "pydantic>=2.0.0",
+    "python-dotenv>=0.19.0",
+    "PyYAML>=6.0.0",
+    "PyPDF2>=3.0.0",
+    # Infrastructure
     "typer>=0.9.0",
     "temporalio>=1.5.0",
     "protobuf>=4.0.0",
-    "PyYAML>=6.0.0",
+    # Geo
+    "geopy>=2.0.0",
+    # Desktop GUI
     "PyQt6>=6.4.0",
 ]
 
@@ -65,11 +76,13 @@ taar = "taar.cli:cli_main"
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.1.0",
+    "ruff>=0.3.0",
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
-    "black>=22.0.0",
-    "flake8>=7.0.0",
+    "pytest-timeout>=2.2.0",
+    "mypy>=1.8.0",
+    "bandit[toml]>=1.7.0",
+    "pre-commit>=3.6.0",
 ]
 taar = [
     "rich>=13.0.0",
@@ -98,7 +111,7 @@ exclude = [
 line-length = 88
 
 # Target Python version
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
 # Select rules to check
@@ -127,7 +140,7 @@ ignore = [
 testpaths = ["tests"]
 pythonpath = ["src"]
 python_files = "test_*.py"
-addopts = "-v"
+addopts = "-v --tb=short --strict-markers"
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",
@@ -139,20 +152,4 @@ filterwarnings = [
     "ignore::DeprecationWarning:passlib",
 ]
 
-[tool.black]
-line-length = 88
-target-version = ['py311']
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
+# NOTE: Black is no longer used. Ruff handles formatting via 'ruff format'.

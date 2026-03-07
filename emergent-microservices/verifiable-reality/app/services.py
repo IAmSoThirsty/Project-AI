@@ -5,12 +5,11 @@ Verifiable Reality - Service Layer
 """
 
 import hashlib
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 from uuid import UUID
 
 from .logging_config import logger
-from .models import ExistenceCertificate, RealityProof
+from .models import RealityProof
 from .repository import RealityRepository
 
 
@@ -21,7 +20,7 @@ class VerifiableRealityService:
         self.repository = RealityRepository()
 
     async def notarize_event(
-        self, event_type: str, data: Dict[str, Any], provenance: Dict[str, Any]
+        self, event_type: str, data: dict[str, Any], provenance: dict[str, Any]
     ) -> RealityProof:
         """Create a new existence proof for an event"""
         logger.info(f"Reality: Notarizing {event_type} event")

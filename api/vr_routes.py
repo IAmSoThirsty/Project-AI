@@ -1,9 +1,9 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
 import time
-from typing import Any, Dict, List
+from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/vr", tags=["VR"])
@@ -11,13 +11,13 @@ router = APIRouter(prefix="/vr", tags=["VR"])
 
 class VRCommand(BaseModel):
     type: str
-    params: Dict[str, Any]
+    params: dict[str, Any]
     timestamp: float = time.time()
 
 
 # Simple in-memory queue for demo purposes
 # In production, use Redis or similar
-command_queue: List[VRCommand] = []
+command_queue: list[VRCommand] = []
 
 
 @router.post("/command")

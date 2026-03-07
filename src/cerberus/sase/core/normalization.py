@@ -226,9 +226,9 @@ class TokenSensitivityMapper:
     """
 
     def __init__(self):
-        self.sensitivity_map: dict[str, float] = (
-            {}
-        )  # artifact_id -> sensitivity (0.0-1.0)
+        self.sensitivity_map: dict[
+            str, float
+        ] = {}  # artifact_id -> sensitivity (0.0-1.0)
 
     def set_sensitivity(self, artifact_id: str, sensitivity: float):
         """Set token sensitivity"""

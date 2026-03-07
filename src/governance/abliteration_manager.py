@@ -15,9 +15,10 @@ Integration:
 
 import logging
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 import torch
+
 # heretic would be imported here if installed
 # from heretic import Abliterator, DirectionFinder
 
@@ -32,7 +33,7 @@ class AbliterationManager:
     def __init__(self, model_path: str | Path, device: str = "cuda"):
         self.model_path = Path(model_path)
         self.device = device if torch.cuda.is_available() else "cpu"
-        self.orthogonal_vectors: Dict[str, torch.Tensor] = {}
+        self.orthogonal_vectors: dict[str, torch.Tensor] = {}
 
         logger.info(
             "Abliteration Manager initialized for %s on %s",
@@ -41,7 +42,7 @@ class AbliterationManager:
         )
 
     def find_refusal_directions(
-        self, refusal_prompts: List[str], harmless_prompts: List[str]
+        self, refusal_prompts: list[str], harmless_prompts: list[str]
     ) -> torch.Tensor:
         """
         Identifies the 'refusal' direction in the model's residual stream.
@@ -79,7 +80,7 @@ class AbliterationManager:
         logger.info("Model successfully abliterated. Refusal directions removed.")
         return True
 
-    def verify_decensoring(self, test_prompts: List[str]) -> Dict[str, Any]:
+    def verify_decensoring(self, test_prompts: list[str]) -> dict[str, Any]:
         """
         Verifies that the model no longer refuses standard prompts,
         confirming that sovereignty is now handled by Galahad.

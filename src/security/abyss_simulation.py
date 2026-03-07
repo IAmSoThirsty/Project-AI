@@ -10,11 +10,11 @@ and Goblin Angler hybrid lures for hard isolation.
 """
 
 import math
-import random
-import networkx as nx
-import sys
 import os
-from typing import Optional
+import random
+import sys
+
+import networkx as nx
 
 # Ensure src is in path for imports
 sys.path.append(os.getcwd() + "/src")
@@ -77,8 +77,8 @@ class AbyssAsymmetryHybrid:
 
         # Goblin Angler Lures (Hidden from attacker)
         self.lures = set(random.sample(self.nodes, num_lures))
-        self.sensor_certainty = {node: 0.5 for node in self.lures}
-        self.node_probe_counts = {node: 0 for node in self.nodes}
+        self.sensor_certainty = dict.fromkeys(self.lures, 0.5)
+        self.node_probe_counts = dict.fromkeys(self.nodes, 0)
 
         # Security Gateway Components
         self.rfi_calculator = RFICalculator()

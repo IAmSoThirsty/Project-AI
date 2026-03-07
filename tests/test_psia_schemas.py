@@ -20,15 +20,11 @@ from psia.schemas.capability import (
     CapabilityScope,
     CapabilityToken,
     DelegationPolicy,
-    ScopeConstraints,
     TokenBinding,
 )
 from psia.schemas.cerberus_decision import (
     CerberusDecision,
     CerberusVote,
-    CommitPolicy,
-    ConstraintsApplied,
-    DenyReason,
     QuorumInfo,
 )
 from psia.schemas.identity import (
@@ -50,9 +46,8 @@ from psia.schemas.ledger import (
     ExecutionRecord,
     LedgerBlock,
     RecordTimestamps,
-    TimeProof,
 )
-from psia.schemas.policy import PolicyEdge, PolicyGraph, PolicyNode
+from psia.schemas.policy import PolicyGraph, PolicyNode
 from psia.schemas.request import (
     Intent,
     RequestContext,
@@ -62,10 +57,8 @@ from psia.schemas.request import (
 from psia.schemas.shadow_report import (
     DeterminismProof,
     InvariantViolation,
-    ResourceEnvelope,
     ShadowReport,
     ShadowResults,
-    SideEffectSummary,
 )
 
 # ── Fixtures ──────────────────────────────────────────────────────────

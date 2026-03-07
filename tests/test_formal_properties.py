@@ -19,8 +19,6 @@ Thesis coverage:
 
 from __future__ import annotations
 
-import hashlib
-import json
 import os
 import sys
 
@@ -37,7 +35,7 @@ except ImportError:
     HAS_HYPOTHESIS = False
 
 from psia.canonical.capability_authority import CapabilityAuthority
-from psia.canonical.ledger import DurableLedger, ExecutionRecord, LedgerBlock
+from psia.canonical.ledger import DurableLedger, ExecutionRecord
 from psia.crypto.ed25519_provider import Ed25519Provider, KeyStore
 from psia.crypto.rfc3161_provider import LocalTSA
 from psia.schemas.capability import CapabilityScope

@@ -33,7 +33,6 @@ from psia.bootstrap.safe_halt import (
 
 
 class TestGenesisCoordinator:
-
     def test_genesis_executes(self):
         gc = GenesisCoordinator(node_id="test-node")
         result = gc.execute()
@@ -100,7 +99,6 @@ class TestGenesisCoordinator:
 
 
 class TestReadinessGate:
-
     def test_no_checks_operational(self):
         gate = ReadinessGate()
         report = gate.evaluate()
@@ -200,7 +198,6 @@ class TestReadinessGate:
 
 
 class TestSafeHaltController:
-
     def test_initial_state(self):
         ctrl = SafeHaltController()
         assert ctrl.is_halted is False

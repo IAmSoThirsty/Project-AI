@@ -1,22 +1,11 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Out-Dated(archive)
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="Distributed Reputation & Trust Graph Engine",
     version="1.0.0",
-    description="Build:
-Verifiable identity nodes
-Weighted trust edges
-Sybil resistance scoring
-On-chain optional anchoring
-Real-time trust API
-Use cases:
-Anti-bot verification
-Secure marketplaces
-Intelligence vetting networks
-High-signal communication channels
-If done correctly, this becomes infrastructure.",
+    description="Build verifiable identity nodes, weighted trust edges, Sybil resistance scoring, on-chain optional anchoring, and real-time trust API. Use cases include anti-bot verification, secure marketplaces, intelligence vetting networks, and high-signal communication channels. If done correctly, this becomes infrastructure.",
     author="IAmSoThirsty",
     packages=find_packages(exclude=["tests", "tests.*"]),
     python_requires=">=3.11",

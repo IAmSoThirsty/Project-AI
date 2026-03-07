@@ -21,7 +21,6 @@ import tempfile
 import threading
 import time
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 import pytest
 from cryptography.fernet import Fernet
@@ -467,7 +466,6 @@ class TestErrorAggregator:
 
     def test_serialization(self):
         """Test error aggregator serialization."""
-        import json
 
         from src.app.core.error_aggregator import GlobalErrorAggregator
 
@@ -587,7 +585,6 @@ class TestIntegration:
     def test_vault_and_audit_integration(self, setup_environment):
         """Test vault and audit log integration with real component flow."""
         from src.app.pipeline.signal_flows import (
-            CircuitBreaker,
             circuit_breakers,
             redact_pii,
         )

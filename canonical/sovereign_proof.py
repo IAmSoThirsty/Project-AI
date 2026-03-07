@@ -88,7 +88,6 @@ def run_proof():
     print()
 
     # 2. Validate against Invariants
-    from canonical.invariants import IdentityContinuityInvariant
 
     # Run validation
     # Note: We need to pass the same expected totem to the invariant if we want strict checking

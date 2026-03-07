@@ -87,7 +87,7 @@ class ThirstyLangValidator(KernelRoutedAgent):
             "total_tests": total_tests,
             "passed": total_passed,
             "failed": total_tests - total_passed,
-            "success_rate": f"{(total_passed/total_tests)*100:.1f}%",
+            "success_rate": f"{(total_passed / total_tests) * 100:.1f}%",
             "tarl_status": (
                 "operational"
                 if total_passed >= total_tests * 0.8

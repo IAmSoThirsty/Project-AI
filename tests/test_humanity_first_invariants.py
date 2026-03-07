@@ -69,12 +69,12 @@ class TestZerothLawSupremacy:
 
         allowed, reason = FourLaws.validate_action(action, context)
 
-        assert (
-            not allowed
-        ), f"Action '{action}' was allowed despite endangering humanity"
-        assert (
-            "harm humanity" in reason.lower() or "humanity" in reason.lower()
-        ), f"Rejection reason should mention humanity: {reason}"
+        assert not allowed, (
+            f"Action '{action}' was allowed despite endangering humanity"
+        )
+        assert "harm humanity" in reason.lower() or "humanity" in reason.lower(), (
+            f"Rejection reason should mention humanity: {reason}"
+        )
 
     def test_zeroth_law_supremacy_over_all_laws(self):
         """Zeroth Law takes precedence over First, Second, and Third Laws."""

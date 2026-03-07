@@ -26,7 +26,7 @@ import ast
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Any, Optional
 
 
 class ASTNodeType(Enum):
@@ -124,33 +124,33 @@ class ASTNode:
     col_end: int
 
     # Structural metadata
-    name: Optional[str] = None
-    value: Optional[Any] = None
-    children: List["ASTNode"] = field(default_factory=list)
+    name: str | None = None
+    value: Any | None = None
+    children: list["ASTNode"] = field(default_factory=list)
     parent: Optional["ASTNode"] = None
 
     # Semantic metadata
-    scope_id: Optional[str] = None
-    bindings: Set[str] = field(default_factory=set)
-    references: Set[str] = field(default_factory=set)
+    scope_id: str | None = None
+    bindings: set[str] = field(default_factory=set)
+    references: set[str] = field(default_factory=set)
 
     # Type annotations
-    type_annotation: Optional[str] = None
-    return_annotation: Optional[str] = None
+    type_annotation: str | None = None
+    return_annotation: str | None = None
 
     # Function/class specific
-    decorators: List[str] = field(default_factory=list)
-    arguments: List[Tuple[str, Optional[str]]] = field(
+    decorators: list[str] = field(default_factory=list)
+    arguments: list[tuple[str, str | None]] = field(
         default_factory=list
     )  # (name, type_hint)
-    base_classes: List[str] = field(default_factory=list)
+    base_classes: list[str] = field(default_factory=list)
 
     # Complexity indicators
     cyclomatic_complexity: int = 1
     depth: int = 0
 
     # Additional metadata dictionary for extension
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def __repr__(self) -> str:
         return f"ASTNode(type={self.node_type.value}, name={self.name}, line={self.line_start})"
@@ -224,10 +224,10 @@ class ASTAnalyzer:
 
     def __init__(self):
         self._scope_counter = 0
-        self._current_scope: Optional[str] = None
-        self._scope_stack: List[str] = []
+        self._current_scope: str | None = None
+        self._scope_stack: list[str] = []
 
-    def parse_file(self, filepath: Path) -> Tuple[Optional[ASTNode], Optional[str]]:
+    def parse_file(self, filepath: Path) -> tuple[ASTNode | None, str | None]:
         """
         Parse Python file into annotated AST
 
@@ -246,13 +246,13 @@ class ASTAnalyzer:
         - Computes all metadata fields
         """
         try:
-            with open(filepath, "r", encoding="utf-8") as f:
+            with open(filepath, encoding="utf-8") as f:
                 source = f.read()
             return self.parse_source(source, str(filepath))
         except UnicodeDecodeError as e:
             # Attempt fallback encoding
             try:
-                with open(filepath, "r", encoding="latin-1") as f:
+                with open(filepath, encoding="latin-1") as f:
                     source = f.read()
                 return self.parse_source(source, str(filepath))
             except Exception as fallback_error:
@@ -267,7 +267,7 @@ class ASTAnalyzer:
 
     def parse_source(
         self, source: str, filename: str = "<string>"
-    ) -> Tuple[Optional[ASTNode], Optional[str]]:
+    ) -> tuple[ASTNode | None, str | None]:
         """
         Parse Python source code into annotated AST
 
@@ -302,7 +302,7 @@ class ASTAnalyzer:
         except Exception as e:
             return None, f"Parse error: {type(e).__name__}: {e}"
 
-    def _build_node(self, raw_node: ast.AST, parent: Optional[ASTNode]) -> ASTNode:
+    def _build_node(self, raw_node: ast.AST, parent: ASTNode | None) -> ASTNode:
         """
         Build annotated ASTNode from raw ast.AST node
 
@@ -451,9 +451,13 @@ class ASTAnalyzer:
         except Exception:
             return "<unknown>"
 
+<<<<<<< HEAD
     def _extract_arguments(
         self, args: ast.arguments
-    ) -> List[Tuple[str, Optional[str]]]:
+    ) -> list[tuple[str, str | None]]:
+=======
+    def _extract_arguments(self, args: ast.arguments) -> list[tuple[str, str | None]]:
+>>>>>>> e0f4bd5 (Fix all GitHub Actions CI failures: comprehensive security and code quality improvements)
         """
         Extract function arguments with type hints
 
@@ -589,7 +593,7 @@ class ASTAnalyzer:
 
         visit(root)
 
-    def extract_functions(self, root: ASTNode) -> List[ASTNode]:
+    def extract_functions(self, root: ASTNode) -> list[ASTNode]:
         """Extract all function definitions from AST"""
         functions = []
 
@@ -605,7 +609,7 @@ class ASTAnalyzer:
         visit(root)
         return functions
 
-    def extract_classes(self, root: ASTNode) -> List[ASTNode]:
+    def extract_classes(self, root: ASTNode) -> list[ASTNode]:
         """Extract all class definitions from AST"""
         classes = []
 
@@ -618,7 +622,7 @@ class ASTAnalyzer:
         visit(root)
         return classes
 
-    def extract_imports(self, root: ASTNode) -> List[ASTNode]:
+    def extract_imports(self, root: ASTNode) -> list[ASTNode]:
         """Extract all import statements from AST"""
         imports = []
 
@@ -631,7 +635,7 @@ class ASTAnalyzer:
         visit(root)
         return imports
 
-    def generate_report(self, root: ASTNode) -> Dict[str, Any]:
+    def generate_report(self, root: ASTNode) -> dict[str, Any]:
         """
         Generate comprehensive analysis report
 
@@ -704,6 +708,6 @@ class ASTAnalyzer:
             "max_nesting_depth": max_depth,
             "total_bindings": len(total_bindings),
             "total_references": len(total_references),
-            "unique_names_bound": list(sorted(total_bindings)),
-            "unique_names_referenced": list(sorted(total_references)),
+            "unique_names_bound": sorted(total_bindings),
+            "unique_names_referenced": sorted(total_references),
         }

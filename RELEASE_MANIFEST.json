@@ -1,12 +1,14 @@
 {
-  "version": "1.0.0-E1",
+  "version": "1.0.0",
   "edition": "First Edition",
-  "timestamp": "2026-03-04 10:38",
+  "codename": "E1",
+  "timestamp": "2026-03-07",
   "layers": [
     "Layer 0: OctoReflex",
     "Layer 1: ThirstySuperKernel",
     "Layer 2: Triumvirate"
   ],
   "status": "Active",
-  "cryptographic_anchor": "SHA256:Sovereign-Identity-Confirmed"
+  "python_version": "3.12",
+  "node_version": ">=18.0.0"
 }

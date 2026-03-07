@@ -12,8 +12,8 @@ import logging
 import os
 import shutil
 import types
-from datetime import datetime, timezone
-from typing import Any, Dict, List
+from datetime import UTC, datetime
+from typing import Any
 
 # --- CONFIGURATION ---
 logger = logging.getLogger("SchematicGuardian")
@@ -42,12 +42,12 @@ class CodexDeusMaximus:
         logger.info("Schematic Guardian initialized. Mode: STRICT ENFORCEMENT.")
         return True
 
-    def _audit(self, action: str, details: Dict[str, Any]) -> None:
+    def _audit(self, action: str, details: dict[str, Any]) -> None:
         """Log actions to the audit trail."""
         try:
             os.makedirs(os.path.dirname(self.audit_path), exist_ok=True)
             entry = {
-                "ts": datetime.now(timezone.utc).isoformat(),
+                "ts": datetime.now(UTC).isoformat(),
                 "action": action,
                 "details": details,
             }
@@ -56,7 +56,7 @@ class CodexDeusMaximus:
         except Exception:
             logger.error("Failed to write audit entry.")
 
-    def run_schematic_enforcement(self, root: str | None = None) -> Dict[str, Any]:
+    def run_schematic_enforcement(self, root: str | None = None) -> dict[str, Any]:
         """The Main Routine: Validates structure and fixes files."""
         root = root or os.getcwd()
         report = {
@@ -95,7 +95,7 @@ class CodexDeusMaximus:
         self._audit("enforcement_run", report)
         return report
 
-    def _validate_structure(self, root: str) -> Dict[str, Any]:
+    def _validate_structure(self, root: str) -> dict[str, Any]:
         """Ensure the repository adheres to the required folder schematic."""
         missing = []
         for d in REQUIRED_DIRS:
@@ -108,7 +108,7 @@ class CodexDeusMaximus:
 
         return {"status": status, "missing_directories": missing}
 
-    def auto_fix_file(self, path: str) -> Dict[str, Any]:
+    def auto_fix_file(self, path: str) -> dict[str, Any]:
         """Strictly enforces formatting standards (Tabs->Spaces, EOF Newline, Syntax Check)."""
         if not os.path.exists(path):
             return {"success": False, "error": "missing"}

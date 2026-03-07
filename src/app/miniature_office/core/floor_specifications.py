@@ -15,7 +15,6 @@ All floors share identical topology (uniformity doctrine).
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional, Set
 
 
 class ProgrammingLanguage(Enum):
@@ -76,10 +75,10 @@ class ProgrammingLanguage(Enum):
 class SecurityFocus:
     """Security concerns specific to a language"""
 
-    primary_risks: List[str] = field(default_factory=list)
-    required_checks: List[str] = field(default_factory=list)
+    primary_risks: list[str] = field(default_factory=list)
+    required_checks: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "primary_risks": self.primary_risks,
             "required_checks": self.required_checks,
@@ -90,11 +89,11 @@ class SecurityFocus:
 class TestingDoctrine:
     """Testing requirements for a language"""
 
-    mandatory_tests: List[str] = field(default_factory=list)
-    optional_tests: List[str] = field(default_factory=list)
-    special_emphasis: List[str] = field(default_factory=list)
+    mandatory_tests: list[str] = field(default_factory=list)
+    optional_tests: list[str] = field(default_factory=list)
+    special_emphasis: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "mandatory_tests": self.mandatory_tests,
             "optional_tests": self.optional_tests,
@@ -117,15 +116,15 @@ class FloorSpecification:
 
     language: ProgrammingLanguage
     floor_number: int
-    domain: List[str]  # What this floor handles
-    architectural_constraints: List[str]
+    domain: list[str]  # What this floor handles
+    architectural_constraints: list[str]
     security_focus: SecurityFocus
     testing_doctrine: TestingDoctrine
 
     # Jurisdiction laws
-    can_emit_languages: Set[ProgrammingLanguage] = field(default_factory=set)
-    can_reason_about: Set[ProgrammingLanguage] = field(default_factory=set)
-    requires_contracts_for: Set[ProgrammingLanguage] = field(default_factory=set)
+    can_emit_languages: set[ProgrammingLanguage] = field(default_factory=set)
+    can_reason_about: set[ProgrammingLanguage] = field(default_factory=set)
+    requires_contracts_for: set[ProgrammingLanguage] = field(default_factory=set)
 
     def __post_init__(self):
         """Enforce language sovereignty"""
@@ -151,7 +150,7 @@ class FloorSpecification:
 
     def validate_jurisdiction(
         self, action: str, target_language: ProgrammingLanguage
-    ) -> tuple[bool, Optional[str]]:
+    ) -> tuple[bool, str | None]:
         """
         Validate if an action is legal under jurisdiction laws.
         Returns: (is_legal, reason_if_illegal)
@@ -179,7 +178,7 @@ class FloorSpecification:
 
         return True, None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "language": self.language.value,
             "floor_number": self.floor_number,
@@ -871,7 +870,7 @@ FLOOR_28_RUST_ASYNC = FloorSpecification(
 
 
 # Registry of all floors
-ALL_FLOORS: Dict[ProgrammingLanguage, FloorSpecification] = {
+ALL_FLOORS: dict[ProgrammingLanguage, FloorSpecification] = {
     ProgrammingLanguage.PYTHON: FLOOR_1_PYTHON,
     ProgrammingLanguage.RUST: FLOOR_2_RUST,
     ProgrammingLanguage.C: FLOOR_3_C,
@@ -925,7 +924,7 @@ def validate_floor_uniformity() -> bool:
     return True
 
 
-def get_all_floors() -> List[FloorSpecification]:
+def get_all_floors() -> list[FloorSpecification]:
     """Get all floor specifications"""
     return list(ALL_FLOORS.values())
 

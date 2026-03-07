@@ -15,10 +15,11 @@ from a universal interface, providing:
 
 import logging
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 from .global_registry import (
     FloorStatus,
@@ -58,11 +59,11 @@ class DispatchRequest:
     request_id: str
     service_type: ServiceType
     method: str
-    params: Dict[str, Any]
+    params: dict[str, Any]
     routing_strategy: RoutingStrategy = RoutingStrategy.FIRST_AVAILABLE
-    preferred_language: Optional[str] = None
+    preferred_language: str | None = None
     timeout: float = 30.0
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
 
 
@@ -72,13 +73,13 @@ class DispatchResponse:
 
     request_id: str
     status: DispatchStatus
-    floor_id: Optional[str] = None
-    result: Optional[Dict[str, Any]] = None
-    error: Optional[str] = None
+    floor_id: str | None = None
+    result: dict[str, Any] | None = None
+    error: str | None = None
     execution_time: float = 0.0
     completed_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "request_id": self.request_id,
             "status": self.status.value,
@@ -104,15 +105,15 @@ class UniversalDispatcher:
     regardless of implementation language.
     """
 
-    def __init__(self, registry: Optional[GlobalRegistry] = None):
+    def __init__(self, registry: GlobalRegistry | None = None):
         self.registry = registry or get_global_registry()
-        self._floor_handlers: Dict[str, Callable] = {}
-        self._round_robin_counters: Dict[ServiceType, int] = {}
-        self._request_history: List[DispatchResponse] = []
+        self._floor_handlers: dict[str, Callable] = {}
+        self._round_robin_counters: dict[ServiceType, int] = {}
+        self._request_history: list[DispatchResponse] = []
         self._max_history = 1000
 
     def register_floor_handler(
-        self, floor_id: str, handler: Callable[[str, Dict[str, Any]], Dict[str, Any]]
+        self, floor_id: str, handler: Callable[[str, dict[str, Any]], dict[str, Any]]
     ) -> None:
         """
         Register a handler function for a specific floor
@@ -203,7 +204,7 @@ class UniversalDispatcher:
             self._add_to_history(response)
             return response
 
-    def _find_candidate_floors(self, request: DispatchRequest) -> List[Any]:
+    def _find_candidate_floors(self, request: DispatchRequest) -> list[Any]:
         """Find floors that can handle the request"""
         # Start with floors that provide the required service
         candidate_floors = self.registry.find_ready_floors_by_service(
@@ -221,8 +222,8 @@ class UniversalDispatcher:
         return candidate_floors
 
     def _select_floor(
-        self, candidates: List[Any], strategy: RoutingStrategy
-    ) -> Optional[Any]:
+        self, candidates: list[Any], strategy: RoutingStrategy
+    ) -> Any | None:
         """Select a floor from candidates based on routing strategy"""
         if not candidates:
             return None
@@ -253,8 +254,8 @@ class UniversalDispatcher:
             return candidates[0]
 
     def _execute_on_floor(
-        self, floor_id: str, method: str, params: Dict[str, Any], timeout: float
-    ) -> Dict[str, Any]:
+        self, floor_id: str, method: str, params: dict[str, Any], timeout: float
+    ) -> dict[str, Any]:
         """Execute a request on a specific floor"""
         handler = self._floor_handlers.get(floor_id)
 
@@ -284,16 +285,14 @@ class UniversalDispatcher:
 
         # Trim history if too long
         if len(self._request_history) > self._max_history:
-            self._request_history = self._request_history[
-                -self._max_history :
-            ]  # noqa: E203
+            self._request_history = self._request_history[-self._max_history :]  # noqa: E203
 
     def dispatch_sync(
         self,
         service_type: ServiceType,
         method: str,
-        params: Dict[str, Any],
-        preferred_language: Optional[str] = None,
+        params: dict[str, Any],
+        preferred_language: str | None = None,
         routing_strategy: RoutingStrategy = RoutingStrategy.FIRST_AVAILABLE,
         timeout: float = 30.0,
     ) -> DispatchResponse:
@@ -325,7 +324,7 @@ class UniversalDispatcher:
 
         return self.dispatch(request)
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get dispatcher statistics"""
         if not self._request_history:
             return {
@@ -368,14 +367,14 @@ class UniversalDispatcher:
             "requests_by_floor": floors_used,
         }
 
-    def get_recent_requests(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_recent_requests(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get recent dispatch requests"""
         recent = self._request_history[-limit:]
         return [r.to_dict() for r in reversed(recent)]
 
 
 # Global singleton instance
-_global_dispatcher: Optional[UniversalDispatcher] = None
+_global_dispatcher: UniversalDispatcher | None = None
 
 
 def get_universal_dispatcher() -> UniversalDispatcher:

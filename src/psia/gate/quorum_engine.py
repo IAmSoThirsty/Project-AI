@@ -33,8 +33,8 @@ Deployment Profile Distinction:
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from enum import Enum
 from typing import Literal
 
@@ -42,7 +42,6 @@ from psia.schemas.cerberus_decision import (
     CerberusDecision,
     CerberusVote,
     CommitPolicy,
-    ConstraintsApplied,
     QuorumInfo,
 )
 from psia.schemas.identity import Signature
@@ -272,7 +271,7 @@ class ProductionQuorumEngine:
                 voters=self.node_ids[:total],
             ),
             commit_policy=commit_policy,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature_set=[
                 Signature(alg="ed25519", kid=f"quorum_k{i}", sig=f"quorum_sig_{i}")
                 for i in range(total)
@@ -292,7 +291,7 @@ class ProductionQuorumEngine:
                 voters=[],
             ),
             commit_policy=CommitPolicy(allowed=False),
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
         )
 
 

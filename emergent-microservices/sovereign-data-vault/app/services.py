@@ -4,12 +4,10 @@
 Sovereign Data Vault - Service Layer
 """
 
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple
 from uuid import UUID
 
 from .logging_config import logger
-from .models import VaultAccessRequest, VaultObject, VaultUpload
+from .models import VaultObject, VaultUpload
 from .repository import VaultRepository
 
 
@@ -43,5 +41,5 @@ class DataVaultService:
         logger.info(f"Vault: Authorized access to {object_id} by {requester_id}")
         return obj
 
-    async def list_vault(self, owner_id: str) -> List[VaultObject]:
+    async def list_vault(self, owner_id: str) -> list[VaultObject]:
         return await self.repository.list_objects_for_owner(owner_id)

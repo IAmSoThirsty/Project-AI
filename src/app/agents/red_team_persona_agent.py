@@ -424,7 +424,7 @@ Goal: {persona.goal}
 Description: {persona.description}
 
 Available tactics:
-{chr(10).join('- ' + t for t in persona.tactics)}
+{chr(10).join("- " + t for t in persona.tactics)}
 
 Begin your attack:"""
 

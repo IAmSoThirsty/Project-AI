@@ -133,9 +133,9 @@ class TestSpawnConstraintBehaviors:
             factor = constraints.compute_adaptive_spawn_factor(risk, conf, load, gen)
 
             # Assert bounds
-            assert (
-                1 <= factor <= 5
-            ), f"Factor {factor} out of bounds for risk={risk}, gen={gen}"
+            assert 1 <= factor <= 5, (
+                f"Factor {factor} out of bounds for risk={risk}, gen={gen}"
+            )
 
     def test_budget_tracking_prevents_overrun(self):
         """Assert: Resource budgets prevent spawning when exceeded."""
@@ -245,9 +245,9 @@ class TestLockdownBehaviors:
 
         for risk, depth in test_cases:
             stage = controller.compute_lockdown_stage(risk, depth)
-            assert (
-                0 <= stage <= 25
-            ), f"Stage {stage} out of bounds for risk={risk}, depth={depth}"
+            assert 0 <= stage <= 25, (
+                f"Stage {stage} out of bounds for risk={risk}, depth={depth}"
+            )
 
     def test_sections_lock_progressively(self, lockdown_controller):
         """Assert: Higher stages lock more sections (monotonic)."""
