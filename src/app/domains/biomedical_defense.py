@@ -62,7 +62,6 @@ class PatientRecord:
 class BiomedicalDefenseSubsystem(
     BaseSubsystem, ICommandable, IMonitorable, IObservable
 ):
-
     SUBSYSTEM_METADATA = {
         "id": "biomedical_defense",
         "name": "Biomedical Defense",

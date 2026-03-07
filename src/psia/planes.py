@@ -19,7 +19,7 @@ Plane cannot legislate governance, etc.
 from __future__ import annotations
 
 import enum
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 class Plane(str, enum.Enum):

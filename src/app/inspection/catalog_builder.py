@@ -185,16 +185,16 @@ class CatalogBuilder:
 
         f.write("### Quality Metrics\n\n")
         f.write(
-            f"- **Documentation Coverage:** {quality_agg.get('average_documentation_coverage', 0)*100:.1f}%\n"
+            f"- **Documentation Coverage:** {quality_agg.get('average_documentation_coverage', 0) * 100:.1f}%\n"
         )
         f.write(
-            f"- **Code Coverage:** {quality_agg.get('average_code_coverage', 0)*100:.1f}%\n"
+            f"- **Code Coverage:** {quality_agg.get('average_code_coverage', 0) * 100:.1f}%\n"
         )
         f.write(
             f"- **Maintainability Index:** {quality_agg.get('average_maintainability_index', 0):.1f}/100\n"
         )
         f.write(
-            f"- **Average Cohesion:** {quality_agg.get('average_cohesion_score', 0)*100:.1f}%\n\n"
+            f"- **Average Cohesion:** {quality_agg.get('average_cohesion_score', 0) * 100:.1f}%\n\n"
         )
 
         f.write("### Integrity\n\n")

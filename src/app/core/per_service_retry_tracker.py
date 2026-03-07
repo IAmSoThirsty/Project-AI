@@ -14,7 +14,6 @@ import time
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -53,15 +52,15 @@ class PerServiceRetryTracker:
         self.global_limit = global_limit
 
         # Service-specific counters
-        self.service_counters: Dict[str, int] = defaultdict(int)
+        self.service_counters: dict[str, int] = defaultdict(int)
         self.global_counter = 0
 
         # Service configurations
-        self.service_configs: Dict[str, ServiceRetryConfig] = {}
+        self.service_configs: dict[str, ServiceRetryConfig] = {}
 
         # Circuit breaker states
-        self.circuit_breaker_failures: Dict[str, int] = defaultdict(int)
-        self.circuit_breaker_states: Dict[str, str] = defaultdict(lambda: "CLOSED")
+        self.circuit_breaker_failures: dict[str, int] = defaultdict(int)
+        self.circuit_breaker_states: dict[str, str] = defaultdict(lambda: "CLOSED")
 
         # Thread safety
         self.lock = threading.Lock()
@@ -193,7 +192,7 @@ class PerServiceRetryTracker:
                 self.circuit_breaker_states[service_name] = "CLOSED"
                 logger.info(f"Circuit breaker CLOSED for '{service_name}' (success)")
 
-    def get_service_stats(self, service_name: str) -> Dict:
+    def get_service_stats(self, service_name: str) -> dict:
         """
         Get statistics for a specific service.
 
@@ -220,7 +219,7 @@ class PerServiceRetryTracker:
                 "config": config.__dict__ if config else None,
             }
 
-    def get_global_stats(self) -> Dict:
+    def get_global_stats(self) -> dict:
         """
         Get global retry statistics.
 
@@ -280,7 +279,7 @@ class PerServiceRetryTracker:
 
 
 # Global instance
-_global_retry_tracker: Optional[PerServiceRetryTracker] = None
+_global_retry_tracker: PerServiceRetryTracker | None = None
 
 
 def get_retry_tracker() -> PerServiceRetryTracker:

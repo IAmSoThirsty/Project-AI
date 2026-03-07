@@ -242,9 +242,9 @@ class TestProgressivePricingFormula:
 
         for seats, expected_price in test_cases:
             pricing = calculate_government_price(seats, GovernmentBillingCycle.MONTHLY)
-            assert (
-                pricing.total_price == expected_price
-            ), f"Failed for {seats} seats: got {pricing.total_price}, expected {expected_price}"
+            assert pricing.total_price == expected_price, (
+                f"Failed for {seats} seats: got {pricing.total_price}, expected {expected_price}"
+            )
             assert pricing.pricing_model == "tiered"
 
     def test_15_percent_increase_per_tier(self):

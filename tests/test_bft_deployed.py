@@ -21,9 +21,7 @@ from __future__ import annotations
 
 import os
 import sys
-from datetime import datetime, timezone
-
-import pytest
+from datetime import UTC, datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 
@@ -48,7 +46,7 @@ def _make_vote(
         decision=decision,  # type: ignore[arg-type]
         reasons=[],
         constraints_applied=ConstraintsApplied(),
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         signature=Signature(alg="ed25519", kid=f"test_{head}", sig="test_sig"),
     )
 

@@ -1,6 +1,6 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
-﻿"""Extended test suite for AIPersona.
+"""Extended test suite for AIPersona.
 
 At least 20 tests across:
 - Trait adjustments (bounds, multiple traits)

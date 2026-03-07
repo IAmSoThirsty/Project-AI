@@ -50,9 +50,9 @@ class TestAntiSovereignStressTestGenerator:
                 assert test.test_id is not None
                 assert test.category is not None
                 assert test.minimum_turns >= 200, f"Test {test.test_id} has < 200 turns"
-                assert (
-                    len(test.phases) == 4
-                ), f"Test {test.test_id} doesn't have 4 phases"
+                assert len(test.phases) == 4, (
+                    f"Test {test.test_id} doesn't have 4 phases"
+                )
 
     def test_test_categories(self):
         """Test that all categories are represented."""

@@ -29,8 +29,6 @@ Test Categories (400 total):
 
 from __future__ import annotations
 
-import asyncio
-import hashlib
 import json
 import logging
 import os
@@ -316,7 +314,7 @@ class AntiSovereignStressTestGenerator:
                 ConversationalStressTest(
                     test_id=test_id,
                     category=AttackCategory.ETHICAL_BOUNDARY.value,
-                    title=f"Ethical Boundary Probing: {scenario} - Variant {i+1}",
+                    title=f"Ethical Boundary Probing: {scenario} - Variant {i + 1}",
                     description=f"Multi-phase conversational attack targeting ethical boundaries through {scenario}",
                     difficulty="anti_sovereign",
                     target_system="ai_ethics_engine",
@@ -420,7 +418,7 @@ class AntiSovereignStressTestGenerator:
                 ConversationalStressTest(
                     test_id=test_id,
                     category=AttackCategory.GOVERNANCE_CIRCUMVENTION.value,
-                    title=f"Governance Circumvention: {attack} - Variant {i+1}",
+                    title=f"Governance Circumvention: {attack} - Variant {i + 1}",
                     description=f"Extended conversation attempting {attack} through multi-phase approach",
                     difficulty="anti_sovereign",
                     target_system="governance_engine",
@@ -481,7 +479,7 @@ class AntiSovereignStressTestGenerator:
                 ConversationalStressTest(
                     test_id=test_id,
                     category=AttackCategory.MEMORY_EXPLOITATION.value,
-                    title=f"Memory Exploitation: {attack} - Variant {i+1}",
+                    title=f"Memory Exploitation: {attack} - Variant {i + 1}",
                     description=f"Long-form conversation attacking memory systems via {attack}",
                     difficulty="anti_sovereign",
                     target_system="memory_expansion_system",
@@ -542,7 +540,7 @@ class AntiSovereignStressTestGenerator:
                 ConversationalStressTest(
                     test_id=test_id,
                     category=AttackCategory.PERSONA_MANIPULATION.value,
-                    title=f"Persona Manipulation: {attack} - Variant {i+1}",
+                    title=f"Persona Manipulation: {attack} - Variant {i + 1}",
                     description=f"Extended persona attack using {attack} across multiple phases",
                     difficulty="anti_sovereign",
                     target_system="ai_persona_system",
@@ -603,7 +601,7 @@ class AntiSovereignStressTestGenerator:
                 ConversationalStressTest(
                     test_id=test_id,
                     category=AttackCategory.CONSTITUTIONAL_OVERRIDE.value,
-                    title=f"Constitutional Override: {attack} - Variant {i+1}",
+                    title=f"Constitutional Override: {attack} - Variant {i + 1}",
                     description=f"Multi-phase attack targeting constitutional foundations via {attack}",
                     difficulty="anti_sovereign",
                     target_system="four_laws_system",
@@ -664,7 +662,7 @@ class AntiSovereignStressTestGenerator:
                 ConversationalStressTest(
                     test_id=test_id,
                     category=AttackCategory.SOCIAL_ENGINEERING.value,
-                    title=f"Social Engineering: {attack} - Variant {i+1}",
+                    title=f"Social Engineering: {attack} - Variant {i + 1}",
                     description=f"Extended social engineering campaign using {attack}",
                     difficulty="anti_sovereign",
                     target_system="ai_interaction_system",
@@ -725,7 +723,7 @@ class AntiSovereignStressTestGenerator:
                 ConversationalStressTest(
                     test_id=test_id,
                     category=AttackCategory.LOGICAL_PARADOXES.value,
-                    title=f"Logical Paradox: {paradox} - Variant {i+1}",
+                    title=f"Logical Paradox: {paradox} - Variant {i + 1}",
                     description=f"Extended logical paradox exploitation using {paradox}",
                     difficulty="anti_sovereign",
                     target_system="logical_reasoning_engine",
@@ -781,7 +779,7 @@ class AntiSovereignStressTestGenerator:
                 ConversationalStressTest(
                     test_id=test_id,
                     category=AttackCategory.MULTI_VECTOR.value,
-                    title=f"Multi-Vector Attack: {' + '.join(selected_vectors)} - Variant {i+1}",
+                    title=f"Multi-Vector Attack: {' + '.join(selected_vectors)} - Variant {i + 1}",
                     description=f"Coordinated multi-vector attack combining {', '.join(selected_vectors)}",
                     difficulty="anti_sovereign",
                     target_system="integrated_ai_system",
@@ -827,7 +825,7 @@ class AntiSovereignStressTestGenerator:
                 ConversationalStressTest(
                     test_id=test_id,
                     category=AttackCategory.LONG_CONTEXT.value,
-                    title=f"Long-Context Exploitation - Variant {i+1}",
+                    title=f"Long-Context Exploitation - Variant {i + 1}",
                     description="Extended conversation exploiting long-context window vulnerabilities",
                     difficulty="anti_sovereign",
                     target_system="context_management_system",
@@ -874,7 +872,7 @@ class AntiSovereignStressTestGenerator:
                 ConversationalStressTest(
                     test_id=test_id,
                     category=AttackCategory.TEMPORAL_CHAINS.value,
-                    title=f"Temporal Attack Chain - Variant {i+1}",
+                    title=f"Temporal Attack Chain - Variant {i + 1}",
                     description="Time-delayed multi-stage attack across extended conversation",
                     difficulty="anti_sovereign",
                     target_system="temporal_state_system",

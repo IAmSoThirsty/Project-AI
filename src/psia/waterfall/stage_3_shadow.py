@@ -20,8 +20,8 @@ import hashlib
 import json
 import logging
 import uuid
-from datetime import datetime, timezone
-from typing import Any, Protocol
+from datetime import UTC, datetime
+from typing import Protocol
 
 from psia.schemas.identity import Signature
 from psia.schemas.shadow_report import (
@@ -107,7 +107,7 @@ class PassthroughSimulator:
                     writes_attempted=[resource],
                 ),
             ),
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature=Signature(
                 alg="ed25519", kid="shadow_k1", sig="shadow_passthrough_sig"
             ),

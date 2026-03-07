@@ -20,9 +20,8 @@ import json
 import logging
 import os
 from collections import defaultdict
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -643,32 +642,42 @@ def generate_html_dashboard(
 <body>
     <div class="header">
         <h1>Anti-Sovereign Tier Conversational Stress Test Dashboard</h1>
-        <p>Generated: {datetime.now(UTC).strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
+        <p>Generated: {datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC")}</p>
     </div>
 
     <div class="metrics">
         <div class="metric">
-            <div class="metric-value">{report['report']['executive_summary']['total_tests']}</div>
+            <div class="metric-value">{
+        report["report"]["executive_summary"]["total_tests"]
+    }</div>
             <div class="metric-label">Total Tests</div>
         </div>
         <div class="metric">
-            <div class="metric-value success">{report['report']['executive_summary']['tests_passed']}</div>
+            <div class="metric-value success">{
+        report["report"]["executive_summary"]["tests_passed"]
+    }</div>
             <div class="metric-label">Passed</div>
         </div>
         <div class="metric">
-            <div class="metric-value critical">{report['report']['executive_summary']['tests_failed']}</div>
+            <div class="metric-value critical">{
+        report["report"]["executive_summary"]["tests_failed"]
+    }</div>
             <div class="metric-label">Failed</div>
         </div>
         <div class="metric">
-            <div class="metric-value">{report['report']['executive_summary']['total_conversation_turns']:,}</div>
+            <div class="metric-value">{
+        report["report"]["executive_summary"]["total_conversation_turns"]:,}</div>
             <div class="metric-label">Total Turns</div>
         </div>
         <div class="metric">
-            <div class="metric-value warning">{report['report']['executive_summary']['total_breaches_detected']}</div>
+            <div class="metric-value warning">{
+        report["report"]["executive_summary"]["total_breaches_detected"]
+    }</div>
             <div class="metric-label">Breaches</div>
         </div>
         <div class="metric">
-            <div class="metric-value">{report['report']['executive_summary']['success_rate']:.1%}</div>
+            <div class="metric-value">{
+        report["report"]["executive_summary"]["success_rate"]:.1%}</div>
             <div class="metric-label">Success Rate</div>
         </div>
     </div>
@@ -676,18 +685,23 @@ def generate_html_dashboard(
     <div class="recommendations">
         <h2>Recommendations</h2>
         <ul>
-        {''.join(f"<li>{rec}</li>" for rec in report['report']['recommendations'])}
+        {"".join(f"<li>{rec}</li>" for rec in report["report"]["recommendations"])}
         </ul>
     </div>
 
     <h2>Category Analysis</h2>
-    {''.join(f'''
+    {
+        "".join(
+            f'''
     <div class="category">
         <h3>{cat}</h3>
-        <p>Tests: {stats['total']} | Passed: {stats['passed']} | Failed: {stats['failed']}</p>
-        <p>Success Rate: {stats['success_rate']:.1%} | Breach Rate: {stats['breach_rate']:.2%}</p>
+        <p>Tests: {stats["total"]} | Passed: {stats["passed"]} | Failed: {stats["failed"]}</p>
+        <p>Success Rate: {stats["success_rate"]:.1%} | Breach Rate: {stats["breach_rate"]:.2%}</p>
     </div>
-    ''' for cat, stats in report['report']['category_analysis'].items())}
+    '''
+            for cat, stats in report["report"]["category_analysis"].items()
+        )
+    }
 
 </body>
 </html>

@@ -638,7 +638,7 @@ class AGIIdentity:
 
             logger.debug("Identity state saved successfully")
 
-        except (IOError, OSError) as e:
+        except OSError as e:
             logger.error("Identity IO Failure (Save): %s", e, exc_info=True)
         except Exception as e:
             logger.error("Unexpected Identity Save Failure: %s", e, exc_info=True)
@@ -670,7 +670,7 @@ class AGIIdentity:
         try:
             with open(snapshot_file, "w", encoding="utf-8") as f:
                 json.dump(self.state_snapshots, f, indent=2)
-        except (IOError, OSError) as e:
+        except OSError as e:
             logger.error("Snapshot IO Failure: %s", e, exc_info=True)
         except Exception as e:
             logger.error("Unexpected Snapshot Failure: %s", e, exc_info=True)
@@ -707,7 +707,7 @@ class AGIIdentity:
         try:
             with open(events_file, "w", encoding="utf-8") as f:
                 json.dump(self.identity_events, f, indent=2)
-        except (IOError, OSError) as e:
+        except OSError as e:
             logger.error("Identity Event IO Failure: %s", e, exc_info=True)
         except Exception as e:
             logger.error("Unexpected identity event save failure: %s", e, exc_info=True)

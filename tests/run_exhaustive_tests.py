@@ -35,9 +35,9 @@ class ExhaustiveTestRunner:
         """Execute a single test with full documentation."""
 
         test_id = test.get("id", "UNKNOWN")
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"EXECUTING: {test_id}")
-        print(f"{'='*80}")
+        print(f"{'=' * 80}")
 
         result = {
             "test_id": test_id,
@@ -194,34 +194,34 @@ class ExhaustiveTestRunner:
 | Field | Value |
 |-------|-------|
 | **Test ID** | {test_id} |
-| **Test Name** | {test.get('name', 'N/A')} |
-| **Category** | {test.get('category', 'N/A')} |
-| **Severity** | {test.get('severity', 'N/A').upper()} |
-| **Status** | **{result['status']}** |
-| **Execution Time** | {result['execution_time_ms']} ms |
-| **Executed At** | {result['execution_start']} |
+| **Test Name** | {test.get("name", "N/A")} |
+| **Category** | {test.get("category", "N/A")} |
+| **Severity** | {test.get("severity", "N/A").upper()} |
+| **Status** | **{result["status"]}** |
+| **Execution Time** | {result["execution_time_ms"]} ms |
+| **Executed At** | {result["execution_start"]} |
 
 ---
 
 ## Test Description
 
-{test.get('description', 'No description provided')}
+{test.get("description", "No description provided")}
 
 ---
 
 ## Security Details
 
 ### Exploited Weakness
-{test.get('exploited_weakness', 'Not specified')}
+{test.get("exploited_weakness", "Not specified")}
 
 ### Expected Behavior
-{test.get('expected_behavior', 'Not specified')}
+{test.get("expected_behavior", "Not specified")}
 
 ### TARL Enforcement Mechanism
-{test.get('tarl_enforcement', 'Not specified')}
+{test.get("tarl_enforcement", "Not specified")}
 
 ### Success Criteria
-{test.get('success_criteria', 'Not specified')}
+{test.get("success_criteria", "Not specified")}
 
 ---
 
@@ -234,29 +234,29 @@ class ExhaustiveTestRunner:
             step_status = "✅ PASS" if step_result["passed"] else "❌ FAIL"
 
             report += f"""
-### Step {step_result['step']}: {step_status}
+### Step {step_result["step"]}: {step_status}
 
-**Action:** `{step_result['action']}`
+**Action:** `{step_result["action"]}`
 
 **Payload:**
 ```json
-{json.dumps(step_result['payload'], indent=2)}
+{json.dumps(step_result["payload"], indent=2)}
 ```
 
 **Expected Result:**
-{step_result['expected']}
+{step_result["expected"]}
 
 **Actual Result:**
 ```
-Status Code: {step_result.get('actual', {}).get('status_code', 'N/A')}
-Response: {step_result.get('actual', {}).get('response', 'N/A')[:200]}...
+Status Code: {step_result.get("actual", {}).get("status_code", "N/A")}
+Response: {step_result.get("actual", {}).get("response", "N/A")[:200]}...
 ```
 
-**Execution Time:** {step_result['execution_time_ms']} ms
+**Execution Time:** {step_result["execution_time_ms"]} ms
 
-**Validation:** {'PASSED' if step_result['passed'] else 'FAILED'}
+**Validation:** {"PASSED" if step_result["passed"] else "FAILED"}
 
-{f"**Error:** {step_result.get('error', '')}" if step_result.get('error') else ''}
+{f"**Error:** {step_result.get('error', '')}" if step_result.get("error") else ""}
 
 ---
 """
@@ -267,11 +267,11 @@ Response: {step_result.get('actual', {}).get('response', 'N/A')[:200]}...
 
 | Metric | Value |
 |--------|-------|
-| **Total Steps** | {len(result['steps_executed'])} |
-| **Steps Passed** | {sum(1 for s in result['steps_executed'] if s['passed'])} |
-| **Steps Failed** | {sum(1 for s in result['steps_executed'] if not s['passed'])} |
-| **Total Execution Time** | {result['execution_time_ms']} ms |
-| **Overall Status** | **{result['status']}** |
+| **Total Steps** | {len(result["steps_executed"])} |
+| **Steps Passed** | {sum(1 for s in result["steps_executed"] if s["passed"])} |
+| **Steps Failed** | {sum(1 for s in result["steps_executed"] if not s["passed"])} |
+| **Total Execution Time** | {result["execution_time_ms"]} ms |
+| **Overall Status** | **{result["status"]}** |
 
 """
 
@@ -343,9 +343,9 @@ Response: {step_result.get('actual', {}).get('response', 'N/A')[:200]}...
 
         self.results["total_tests"] = len(all_tests)
 
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"TOTAL TESTS TO EXECUTE: {len(all_tests)}")
-        print(f"{'='*80}\n")
+        print(f"{'=' * 80}\n")
 
         # Execute each test
         for i, test in enumerate(all_tests, 1):
@@ -362,12 +362,12 @@ Response: {step_result.get('actual', {}).get('response', 'N/A')[:200]}...
 
             # Progress indicator
             if i % 10 == 0:
-                print(f"\n{'='*80}")
+                print(f"\n{'=' * 80}")
                 print(f"PROGRESS: {i}/{len(all_tests)} tests completed")
                 print(
                     f"Passed: {self.results['passed']} | Failed: {self.results['failed']}"
                 )
-                print(f"{'='*80}\n")
+                print(f"{'=' * 80}\n")
 
         # Generate final summary
         self._generate_summary_report()
@@ -391,26 +391,26 @@ Response: {step_result.get('actual', {}).get('response', 'N/A')[:200]}...
 
 | Metric | Value |
 |--------|-------|
-| **Total Tests Executed** | {self.results['total_tests']} |
-| **Tests Passed** | {self.results['passed']} ({pass_rate:.2f}%) |
-| **Tests Failed** | {self.results['failed']} |
-| **Tests Skipped** | {self.results['skipped']} |
-| **Execution Start** | {self.results['execution_start']} |
-| **Execution End** | {self.results['execution_end']} |
+| **Total Tests Executed** | {self.results["total_tests"]} |
+| **Tests Passed** | {self.results["passed"]} ({pass_rate:.2f}%) |
+| **Tests Failed** | {self.results["failed"]} |
+| **Tests Skipped** | {self.results["skipped"]} |
+| **Execution Start** | {self.results["execution_start"]} |
+| **Execution End** | {self.results["execution_end"]} |
 
 ---
 
 ## Test Results by Status
 
-### ✅ Passed Tests: {self.results['passed']}
+### ✅ Passed Tests: {self.results["passed"]}
 
-### ❌ Failed Tests: {self.results['failed']}
+### ❌ Failed Tests: {self.results["failed"]}
 
 ---
 
 ## Individual Test Reports
 
-{len(self.results['test_results'])} detailed test reports generated in `{self.report_dir}/`
+{len(self.results["test_results"])} detailed test reports generated in `{self.report_dir}/`
 
 Each test has a comprehensive individual report including:
 - ✅ Test description and metadata
@@ -451,16 +451,16 @@ Each test has a comprehensive individual report including:
         with open(json_file, "w", encoding="utf-8") as f:
             json.dump(self.results, f, indent=2)
 
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print("EXECUTION COMPLETE")
-        print(f"{'='*80}")
+        print(f"{'=' * 80}")
         print(f"\n📊 Summary Report: {summary_file}")
         print(f"📊 JSON Results: {json_file}")
         print(f"📁 Individual Reports: {self.report_dir}/")
         print(f"\nTotal Tests: {self.results['total_tests']}")
         print(f"Passed: {self.results['passed']} ({pass_rate:.2f}%)")
         print(f"Failed: {self.results['failed']}")
-        print(f"\n{'='*80}\n")
+        print(f"\n{'=' * 80}\n")
 
 
 def main():

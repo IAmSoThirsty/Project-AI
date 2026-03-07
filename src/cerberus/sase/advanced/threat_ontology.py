@@ -8,7 +8,7 @@ Classifies threat actors into behavioral categories.
 
 CLASSES:
 - Opportunistic Scanner
-- Credential Harvester  
+- Credential Harvester
 - Cloud VPS Actor
 - Botnet Node
 - Research Sandbox

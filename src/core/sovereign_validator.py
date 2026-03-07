@@ -7,11 +7,10 @@ Machine-verifiable definition of Project-AI Sovereignty.
 Ref: T.A.M.S. Pillar 4
 """
 
+import logging
 import os
 import sys
-import logging
 from dataclasses import dataclass
-from typing import List
 
 logger = logging.getLogger("SovereignValidator")
 

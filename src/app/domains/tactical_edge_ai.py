@@ -69,7 +69,6 @@ class TacticalDecision:
 
 
 class TacticalEdgeAISubsystem(BaseSubsystem, ICommandable, IMonitorable, IObservable):
-
     SUBSYSTEM_METADATA = {
         "id": "tactical_edge_ai",
         "name": "Tactical Edge AI",

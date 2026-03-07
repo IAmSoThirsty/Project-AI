@@ -5,10 +5,7 @@ Tests for AttackTrainLoop implementation.
 """
 
 import json
-import tempfile
 from pathlib import Path
-
-import pytest
 
 from app.agents.attack_train_loop import AttackTrainLoop
 

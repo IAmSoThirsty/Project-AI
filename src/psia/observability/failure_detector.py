@@ -29,10 +29,10 @@ import logging
 import math
 import time
 from collections import deque
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Callable
 
 logger = logging.getLogger(__name__)
 
@@ -114,9 +114,9 @@ class FailureDetector:
         self._circuit_state: dict[str, CircuitState] = {}
         self._circuit_opened_at: dict[str, float] = {}
         self._historical_rates: dict[str, list[float]] = {}  # For z-score
-        self._state_transitions: list[tuple[str, CircuitState, CircuitState, float]] = (
-            []
-        )
+        self._state_transitions: list[
+            tuple[str, CircuitState, CircuitState, float]
+        ] = []
 
     def register_component(self, component: str) -> None:
         """Register a component for monitoring."""
@@ -278,7 +278,7 @@ class FailureDetector:
             alert = CascadeAlert(
                 affected_components=open_circuits,
                 correlation_score=len(open_circuits) / max(len(self._circuit_state), 1),
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
                 recommended_action=(
                     "SAFE-HALT"
                     if len(open_circuits) > self.cascade_threshold

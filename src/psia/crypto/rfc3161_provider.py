@@ -39,7 +39,7 @@ import logging
 import threading
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from psia.crypto.ed25519_provider import Ed25519KeyPair, Ed25519Provider
@@ -247,7 +247,7 @@ class LocalTSA:
             serial = self._serial_counter
             self._used_nonces.add(nonce)
 
-        gen_time = datetime.now(timezone.utc).isoformat()
+        gen_time = datetime.now(UTC).isoformat()
 
         # Build the token (unsigned first, to compute signed content)
         unsigned_token = TimeStampToken(

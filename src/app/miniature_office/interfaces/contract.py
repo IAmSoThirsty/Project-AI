@@ -9,7 +9,6 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional
 
 from app.miniature_office.core.audit import EventType, get_audit_log
 from app.miniature_office.core.entity import (
@@ -39,11 +38,11 @@ class APIEndpoint:
     """
 
     path: str
-    parameters: Dict[str, str]  # param_name -> type
+    parameters: dict[str, str]  # param_name -> type
     return_type: str
     description: str = ""
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "path": self.path,
             "parameters": self.parameters,
@@ -71,7 +70,7 @@ class VersionBoundary:
         # Minor and patch versions are backward compatible
         return True
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "major": self.major,
             "minor": self.minor,
@@ -97,9 +96,9 @@ class Contract(Entity):
         super().__init__(contract_id, EntityType.CONTRACT, name)
         self.provider_department_id = provider_department_id
         self.version = version
-        self.apis: Dict[str, APIEndpoint] = {}
-        self.failure_modes: List[FailureMode] = []
-        self.consumer_departments: List[str] = []
+        self.apis: dict[str, APIEndpoint] = {}
+        self.failure_modes: list[FailureMode] = []
+        self.consumer_departments: list[str] = []
 
         # Register contract
         get_registry().register(self)
@@ -137,7 +136,7 @@ class Contract(Entity):
         """Check if this contract version is compatible with another"""
         return self.version.is_compatible_with(other.version)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         base = super().to_dict()
         base.update(
             {
@@ -164,10 +163,10 @@ class InvocationRecord:
     api_path: str = ""
     timestamp: datetime = field(default_factory=datetime.utcnow)
     success: bool = True
-    error: Optional[str] = None
+    error: str | None = None
     latency_ms: float = 0.0
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "invocation_id": self.invocation_id,
             "contract_id": self.contract_id,
@@ -188,8 +187,8 @@ class ElevatorProtocol:
     """
 
     def __init__(self):
-        self.contracts: Dict[str, Contract] = {}
-        self.invocations: List[InvocationRecord] = []
+        self.contracts: dict[str, Contract] = {}
+        self.invocations: list[InvocationRecord] = []
 
     def register_contract(self, contract: Contract):
         """Register a contract in the elevator system"""
@@ -230,7 +229,7 @@ class ElevatorProtocol:
         consumer_department_id: str,
         contract_id: str,
         api_path: str,
-        parameters: Optional[Dict] = None,
+        parameters: dict | None = None,
     ) -> InvocationRecord:
         """
         Invoke a contract API and record telemetry (Codex 6.2).
@@ -303,7 +302,7 @@ class ElevatorProtocol:
 
         return record
 
-    def get_contract_metrics(self, contract_id: str) -> Dict:
+    def get_contract_metrics(self, contract_id: str) -> dict:
         """Get metrics for a contract"""
         relevant_invocations = [
             i for i in self.invocations if i.contract_id == contract_id

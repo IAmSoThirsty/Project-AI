@@ -11,7 +11,6 @@ Forces judgment through resource constraints
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict, Optional
 
 from app.miniature_office.core.audit import EventType, get_audit_log
 
@@ -39,7 +38,7 @@ class ResourceAllocation:
     tool_slots: int = 0  # Concurrent tools
     simulation_budget: int = 0  # What-if simulations
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "agent_time": self.agent_time,
             "manager_attention": self.manager_attention,
@@ -118,7 +117,7 @@ class ResourceLedgerEntry:
             or remaining.simulation_budget <= 0
         )
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "entity_id": self.entity_id,
             "tick": self.tick,
@@ -201,7 +200,7 @@ class PriorityBid:
     submitted_at_tick: int
     status: str = "pending"  # pending, accepted, rejected
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "bid_id": self.bid_id,
             "task_id": self.task_id,
@@ -221,10 +220,10 @@ class ResourceLedger:
     """
 
     def __init__(self):
-        self.ledger: Dict[str, Dict[int, ResourceLedgerEntry]] = (
-            {}
-        )  # entity_id -> tick -> entry
-        self.priority_market: Dict[str, PriorityBid] = {}
+        self.ledger: dict[
+            str, dict[int, ResourceLedgerEntry]
+        ] = {}  # entity_id -> tick -> entry
+        self.priority_market: dict[str, PriorityBid] = {}
 
     def allocate_resources(
         self, entity_id: str, tick: int, allocation: ResourceAllocation
@@ -322,7 +321,7 @@ class ResourceLedger:
 
     def get_ledger_entry(
         self, entity_id: str, tick: int
-    ) -> Optional[ResourceLedgerEntry]:
+    ) -> ResourceLedgerEntry | None:
         """Get ledger entry for entity at tick"""
         if entity_id in self.ledger and tick in self.ledger[entity_id]:
             return self.ledger[entity_id][tick]
@@ -343,7 +342,7 @@ class ResourceLedger:
 
         return bid.bid_id
 
-    def resolve_priority_bids(self, tick: int) -> Dict[str, str]:
+    def resolve_priority_bids(self, tick: int) -> dict[str, str]:
         """
         Resolve pending priority bids.
         Returns dict of bid_id -> status
@@ -373,7 +372,7 @@ class ResourceLedger:
 
     def get_entity_resources(
         self, entity_id: str, tick: int
-    ) -> Optional[ResourceAllocation]:
+    ) -> ResourceAllocation | None:
         """Get remaining resources for entity at tick"""
         entry = self.get_ledger_entry(entity_id, tick)
         if entry:

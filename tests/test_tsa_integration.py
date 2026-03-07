@@ -451,16 +451,16 @@ class TestConcurrentLoggingWithTSA:
             total_events = num_workers * events_per_worker
             stats = audit.get_statistics()
             # Account for initialization events
-            assert (
-                stats["event_count"] >= total_events
-            ), f"Expected at least {total_events} events"
+            assert stats["event_count"] >= total_events, (
+                f"Expected at least {total_events} events"
+            )
 
             # Verify integrity after concurrent stress
             try:
                 is_valid, verify_errors = audit.verify_integrity()
-                assert (
-                    is_valid
-                ), f"Integrity check failed after concurrent stress: {verify_errors}"
+                assert is_valid, (
+                    f"Integrity check failed after concurrent stress: {verify_errors}"
+                )
             except Exception as e:
                 # TSA verification may fail if endpoint is overloaded
                 pytest.skip(f"TSA verification skipped due to endpoint issue: {e}")
@@ -497,9 +497,9 @@ class TestVMRollbackDetection:
                         audit.log_event(f"post_snapshot_{i}", {"seq": i + 5})
 
                     anchor_count_after = audit.tsa_anchor_manager.get_anchor_count()
-                    assert (
-                        anchor_count_after > anchor_count_before
-                    ), "New anchor should be created"
+                    assert anchor_count_after > anchor_count_before, (
+                        "New anchor should be created"
+                    )
 
                     # Get new latest anchor
                     latest_anchor_after = audit.tsa_anchor_manager.get_latest_anchor()
@@ -513,9 +513,9 @@ class TestVMRollbackDetection:
                             latest_anchor_after.tsa_time
                         )
 
-                        assert (
-                            time_after > time_before
-                        ), "Timestamps must be monotonically increasing"
+                        assert time_after > time_before, (
+                            "Timestamps must be monotonically increasing"
+                        )
 
                     # Simulate rollback: restore anchors to pre-snapshot state
                     # (In real attack, attacker restores VM to earlier state)

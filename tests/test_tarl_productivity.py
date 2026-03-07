@@ -77,9 +77,9 @@ def test_productivity_improvement():
 
     # Verify we achieve at least 60% improvement with good cache hit rate
     if metrics["cache_hit_rate_percent"] >= 50:
-        assert (
-            metrics["productivity_improvement_percent"] >= 60.0
-        ), f"Expected >=60% improvement, got {metrics['productivity_improvement_percent']:.2f}%"
+        assert metrics["productivity_improvement_percent"] >= 60.0, (
+            f"Expected >=60% improvement, got {metrics['productivity_improvement_percent']:.2f}%"
+        )
 
 
 def test_performance_comparison():
@@ -114,8 +114,8 @@ def test_performance_comparison():
 
     print("\n✓ Performance comparison test passed")
     print(f"  Iterations: {iterations}")
-    print(f"  Non-cached time: {no_cache_time*1000:.2f}ms")
-    print(f"  Cached time: {cached_time*1000:.2f}ms")
+    print(f"  Non-cached time: {no_cache_time * 1000:.2f}ms")
+    print(f"  Cached time: {cached_time * 1000:.2f}ms")
     print(f"  Actual speedup: {speedup:.2f}x")
     print(f"  Improvement: {improvement:.2f}%")
 

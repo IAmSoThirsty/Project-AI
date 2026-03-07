@@ -10,14 +10,8 @@ Uses threading.Barrier for concurrent tests (zero flakiness).
 Uses mocked time for timeout tests (fast execution <10s).
 """
 
-import json
-import os
-import tempfile
 import threading
-import time
-from pathlib import Path
-from typing import Any, Dict, List
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -25,7 +19,6 @@ import pytest
 from src.app.pipeline.signal_flows import (
     MAX_GLOBAL_RETRIES_PER_MIN,
     CircuitBreaker,
-    GlobalThrottlingError,
     check_retry_limit,
     circuit_breakers,
     get_pipeline_stats,
@@ -39,7 +32,6 @@ from src.app.pipeline.signal_flows import (
     redact_phone,
     redact_pii,
     redact_ssn,
-    reset_retry_tracker,
     retry_lock,
     retry_tracker,
     validate_signal,

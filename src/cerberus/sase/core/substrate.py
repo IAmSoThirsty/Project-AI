@@ -8,7 +8,6 @@ Deployment topology management, resource validation, and failure recovery.
 """
 
 import logging
-import os
 import shutil
 import time
 from dataclasses import dataclass

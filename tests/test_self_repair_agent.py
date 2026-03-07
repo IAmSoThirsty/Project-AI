@@ -7,8 +7,6 @@ Tests for SelfRepairAgent implementation.
 import os
 import tempfile
 
-import pytest
-
 from app.resilience.self_repair_agent import SelfRepairAgent
 
 

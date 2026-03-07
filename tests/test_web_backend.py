@@ -5,7 +5,6 @@
 from __future__ import annotations
 
 import importlib
-import os
 
 import pytest
 
@@ -100,7 +99,9 @@ class TestAuthProfile:
         token = (login_resp.get_json() or {}).get("token")
         profile_resp = client.get("/api/auth/profile", headers={"X-Auth-Token": token})
         assert profile_resp.status_code == 200
-        assert (profile_resp.get_json() or {}).get("user", {}).get("username") == "admin"
+        assert (profile_resp.get_json() or {}).get("user", {}).get(
+            "username"
+        ) == "admin"
 
 
 class TestDebugEndpoint:

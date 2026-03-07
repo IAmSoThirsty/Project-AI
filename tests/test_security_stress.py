@@ -47,7 +47,7 @@ class TestMassiveDataParsing:
         parser = SecureDataParser()
 
         lines = ["id,name,value"]
-        lines.extend([f"{i},name_{i},{i*100}" for i in range(size)])
+        lines.extend([f"{i},name_{i},{i * 100}" for i in range(size)])
         csv_data = "\n".join(lines)
 
         result = parser.parse_csv(csv_data)

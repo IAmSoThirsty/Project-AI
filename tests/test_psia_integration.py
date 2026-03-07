@@ -13,7 +13,7 @@ Verifies cross-plane interactions:
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -71,7 +71,7 @@ def _envelope(request_id: str = "req_int_001") -> RequestEnvelope:
         capability_token_id="cap_001",
         intent=Intent(action="read", resource="data://test", parameters={}),
         context=RequestContext(trace_id="trace_int_001"),
-        timestamps=RequestTimestamps(created_at=datetime.now(timezone.utc).isoformat()),
+        timestamps=RequestTimestamps(created_at=datetime.now(UTC).isoformat()),
         signature=_sig(),
     )
 
@@ -242,7 +242,6 @@ class TestFailureToSafeHalt:
 
 
 class TestAutoimmuneDampenerIntegration:
-
     def test_dampener_suppresses_overaggressive_rule(self):
         dampener = AutoimmuneDampener(
             target_fp_rate=0.1,
@@ -280,7 +279,6 @@ class TestAutoimmuneDampenerIntegration:
 
 
 class TestCapabilityAuthorityIntegration:
-
     def test_issue_then_revoke(self):
         authority = CapabilityAuthority()
         token = authority.issue(

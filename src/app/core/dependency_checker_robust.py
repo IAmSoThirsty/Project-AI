@@ -13,7 +13,6 @@ import logging
 import re
 import sys
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -22,14 +21,14 @@ logger = logging.getLogger(__name__)
 class VersionConstraint:
     """Version constraint specification."""
 
-    min_version: Optional[str] = None
-    max_version: Optional[str] = None
-    exact_version: Optional[str] = None
-    feature_flag: Optional[str] = None
+    min_version: str | None = None
+    max_version: str | None = None
+    exact_version: str | None = None
+    feature_flag: str | None = None
     required: bool = False
 
 
-def parse_version(version_str: str) -> Tuple[int, ...]:
+def parse_version(version_str: str) -> tuple[int, ...]:
     """
     Parse version string into tuple of integers.
 
@@ -74,7 +73,7 @@ def compare_versions(version1: str, version2: str) -> int:
         return 0
 
 
-def get_module_version(module_name: str) -> Optional[str]:
+def get_module_version(module_name: str) -> str | None:
     """
     Get version of an installed module.
 
@@ -112,7 +111,7 @@ def get_module_version(module_name: str) -> Optional[str]:
 
 def check_dependency(
     module_name: str, constraint: VersionConstraint
-) -> Tuple[bool, str, Optional[str]]:
+) -> tuple[bool, str, str | None]:
     """
     Check if a dependency meets version constraints.
 
@@ -182,7 +181,7 @@ def check_dependency(
     )
 
 
-def check_python_version(constraint: VersionConstraint) -> Tuple[bool, str]:
+def check_python_version(constraint: VersionConstraint) -> tuple[bool, str]:
     """
     Check Python interpreter version.
 
@@ -226,9 +225,9 @@ def check_python_version(constraint: VersionConstraint) -> Tuple[bool, str]:
 
 
 def check_all_dependencies(
-    required_deps: Dict[str, VersionConstraint],
-    optional_deps: Dict[str, VersionConstraint],
-) -> Dict:
+    required_deps: dict[str, VersionConstraint],
+    optional_deps: dict[str, VersionConstraint],
+) -> dict:
     """
     Check all dependencies and return detailed report.
 
@@ -317,7 +316,7 @@ def check_all_dependencies(
     return results
 
 
-def load_dependencies_from_config(config_dict: Dict) -> Tuple[Dict, Dict]:
+def load_dependencies_from_config(config_dict: dict) -> tuple[dict, dict]:
     """
     Load dependency constraints from configuration.
 

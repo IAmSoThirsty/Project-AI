@@ -14,8 +14,6 @@ Covers:
 
 import hashlib
 import json
-import os
-import tempfile
 
 import pytest
 

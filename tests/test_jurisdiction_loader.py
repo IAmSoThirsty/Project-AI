@@ -3,12 +3,10 @@
 """Tests for JurisdictionLoader — compatibility checks and combined requirements."""
 
 import sys
-import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-import pytest
 
 from app.governance.jurisdiction_loader import JurisdictionLoader
 

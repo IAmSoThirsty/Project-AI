@@ -4,7 +4,6 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
 
 
 class PatternType(Enum):
@@ -43,8 +42,8 @@ class AntiPattern:
 class PatternDetector:
     """Pattern and anti-pattern detection - placeholder"""
 
-    def detect_patterns(self, ast_root) -> List[DesignPattern]:
+    def detect_patterns(self, ast_root) -> list[DesignPattern]:
         return []
 
-    def detect_antipatterns(self, ast_root) -> List[AntiPattern]:
+    def detect_antipatterns(self, ast_root) -> list[AntiPattern]:
         return []

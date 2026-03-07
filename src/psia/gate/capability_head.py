@@ -25,8 +25,7 @@ Security invariants:
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from psia.schemas.capability import CapabilityToken
@@ -154,8 +153,8 @@ class CapabilityHead:
         try:
             expires_at = datetime.fromisoformat(token.expires_at)
             if expires_at.tzinfo is None:
-                expires_at = expires_at.replace(tzinfo=timezone.utc)
-            now = datetime.now(timezone.utc)
+                expires_at = expires_at.replace(tzinfo=UTC)
+            now = datetime.now(UTC)
             from datetime import timedelta
 
             if expires_at + timedelta(seconds=self.clock_skew_seconds) < now:
@@ -244,7 +243,7 @@ class CapabilityHead:
             decision=decision,
             reasons=reasons,
             constraints_applied=constraints,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature=Signature(
                 alg="ed25519",
                 kid="cerberus_capability_k1",

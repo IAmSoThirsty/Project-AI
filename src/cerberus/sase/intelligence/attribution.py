@@ -89,9 +89,9 @@ class FeatureExtractor:
 
     def __init__(self):
         # Historical baselines for anomaly detection
-        self.geo_baselines: dict[str, dict[str, int]] = (
-            {}
-        )  # artifact_id -> {country: count}
+        self.geo_baselines: dict[
+            str, dict[str, int]
+        ] = {}  # artifact_id -> {country: count}
         self.time_baselines: dict[str, list] = {}  # artifact_id -> [timestamps]
 
         logger.info("Feature extractor initialized")

@@ -2,11 +2,8 @@
 #                                          Productivity: Active
 """Tests for the web frontend project structure and configuration."""
 
-from pathlib import Path
-
 import json
-import pytest
-
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -51,7 +48,9 @@ class TestWebFrontendStructure:
         assert env_example.exists(), "web/.env.example must exist for developer setup"
 
     def test_eslint_config_exists(self):
-        assert (ROOT / "web" / ".eslintrc.json").exists(), "web/.eslintrc.json must exist"
+        assert (ROOT / "web" / ".eslintrc.json").exists(), (
+            "web/.eslintrc.json must exist"
+        )
 
     def test_no_env_file_committed(self):
         env_file = ROOT / "web" / ".env"

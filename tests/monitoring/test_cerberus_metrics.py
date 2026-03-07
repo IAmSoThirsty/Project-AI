@@ -47,9 +47,9 @@ def test_global_file_not_affected(tmp_path: Path, monkeypatch):
     current_data = json.loads(INCIDENTS_FILE.read_text(encoding="utf-8"))
     current_incident_count = len(current_data.get("incidents", []))
 
-    assert (
-        current_incident_count == original_incident_count
-    ), "Global INCIDENTS_FILE should not be modified by test"
+    assert current_incident_count == original_incident_count, (
+        "Global INCIDENTS_FILE should not be modified by test"
+    )
 
     # Verify test data went to temp file
     temp_data = json.loads(incidents_file.read_text(encoding="utf-8"))

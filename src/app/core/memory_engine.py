@@ -473,7 +473,7 @@ class MemoryEngine:
                         self.episodic_memories[memory.memory_id] = memory
                         self._index_episodic_memory(memory)
                 logger.info("Loaded %s episodic memories", len(self.episodic_memories))
-            except (IOError, json.JSONDecodeError) as e:
+            except (OSError, json.JSONDecodeError) as e:
                 logger.error(
                     "Episodic Memory Corruption/IO Error: %s", e, exc_info=True
                 )
@@ -492,7 +492,7 @@ class MemoryEngine:
                         concept = SemanticConcept.from_dict(concept_data)
                         self.semantic_concepts[concept.concept_id] = concept
                 logger.info("Loaded %s semantic concepts", len(self.semantic_concepts))
-            except (IOError, json.JSONDecodeError) as e:
+            except (OSError, json.JSONDecodeError) as e:
                 logger.error(
                     "Semantic Concept Corruption/IO Error: %s", e, exc_info=True
                 )
@@ -509,7 +509,7 @@ class MemoryEngine:
                         skill = ProceduralSkill.from_dict(skill_data)
                         self.procedural_skills[skill.skill_id] = skill
                 logger.info("Loaded %s procedural skills", len(self.procedural_skills))
-            except (IOError, json.JSONDecodeError) as e:
+            except (OSError, json.JSONDecodeError) as e:
                 logger.error(
                     "Procedural Skill Corruption/IO Error: %s", e, exc_info=True
                 )

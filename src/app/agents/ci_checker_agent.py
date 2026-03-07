@@ -20,10 +20,10 @@ import os
 import shutil
 import subprocess  # nosec B404 - subprocess usage for trusted dev tools only
 import time
+import uuid
 from datetime import datetime
 from typing import Any
 
-import uuid
 from src.app.core.cognition_kernel import CognitionKernel, ExecutionType
 from src.app.core.kernel_integration import KernelRoutedAgent
 

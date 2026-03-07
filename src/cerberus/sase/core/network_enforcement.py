@@ -121,9 +121,9 @@ class RateLimiter:
 
     def __init__(self, policy: RateLimitPolicy = None):
         self.policy = policy or RateLimitPolicy()
-        self.buckets: dict[str, dict] = (
-            {}
-        )  # key -> {tokens, last_update, penalty_until}
+        self.buckets: dict[
+            str, dict
+        ] = {}  # key -> {tokens, last_update, penalty_until}
 
     def check_limit(self, key: str) -> tuple[bool, str | None]:
         """

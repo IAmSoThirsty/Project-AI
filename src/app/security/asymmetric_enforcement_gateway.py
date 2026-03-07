@@ -259,7 +259,7 @@ class SecurityViolationException(Exception):
         self.enforcement_actions = enforcement_actions
 
         super().__init__(
-            f"SECURITY VIOLATION: {operation_id} - {reason} " f"(threat={threat_level})"
+            f"SECURITY VIOLATION: {operation_id} - {reason} (threat={threat_level})"
         )
 
 

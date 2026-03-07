@@ -5,8 +5,8 @@ Security middleware and helpers for production deployment
 """
 
 import os
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable
 
 from flask import jsonify, request
 

@@ -237,8 +237,7 @@ def get_adapter(adapter_type: str = "auto", **kwargs) -> ModelAdapter:
 
     if adapter_type not in adapters:
         raise ValueError(
-            f"Unknown adapter type: {adapter_type}. "
-            f"Available: {list(adapters.keys())}"
+            f"Unknown adapter type: {adapter_type}. Available: {list(adapters.keys())}"
         )
 
     adapter_class = adapters[adapter_type]

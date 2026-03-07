@@ -11,6 +11,7 @@ Follows Leather Book Interface style with dark theme and cyan/green glows.
 """
 
 import logging
+
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (

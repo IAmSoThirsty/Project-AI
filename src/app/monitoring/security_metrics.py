@@ -443,7 +443,7 @@ class SecurityMetricsCollector:
         lines.append("# HELP security_time_to_detect_ms Time to detect incidents (ms)")
         lines.append("# TYPE security_time_to_detect_ms gauge")
         lines.append(
-            f"security_time_to_detect_ms {{quantile=\"0.95\"}} {metrics['security']['time_to_detect']['p95_ms']}"
+            f'security_time_to_detect_ms {{quantile="0.95"}} {metrics["security"]["time_to_detect"]["p95_ms"]}'
         )
 
         lines.append("# HELP security_false_positive_rate False positive rate")
@@ -459,10 +459,10 @@ class SecurityMetricsCollector:
                 lines.append(f"# HELP {agent}_latency_ms Agent latency (ms)")
                 lines.append(f"# TYPE {agent}_latency_ms gauge")
                 lines.append(
-                    f"{agent}_latency_ms {{quantile=\"0.95\"}} {latency.get('p95_ms', 0)}"
+                    f'{agent}_latency_ms {{quantile="0.95"}} {latency.get("p95_ms", 0)}'
                 )
                 lines.append(
-                    f"{agent}_latency_ms {{quantile=\"0.99\"}} {latency.get('p99_ms', 0)}"
+                    f'{agent}_latency_ms {{quantile="0.99"}} {latency.get("p99_ms", 0)}'
                 )
 
         return "\n".join(lines)

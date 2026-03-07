@@ -183,7 +183,7 @@ async def get_audit_results(audit_id: str):
 
 @router.get("/reports", response_model=ReportListResponse)
 async def list_reports(
-    output_dir: str = Query("audit_reports", description="Reports output directory")
+    output_dir: str = Query("audit_reports", description="Reports output directory"),
 ):
     """
     List all available audit reports.
