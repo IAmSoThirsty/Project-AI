@@ -1,147 +1,195 @@
 {
 	"folders": [
 		{
+			"name": "Project-AI",
 			"path": "."
 		},
 		{
+			"name": "Thirsty-Lang",
 			"path": "../Thirsty-Lang"
 		},
 		{
+			"name": "Cerberus",
 			"path": "../Cerberus"
 		},
 		{
+			"name": "The_Triumvirate",
 			"path": "../The_Triumvirate"
 		},
 		{
+			"name": "Thirstys-Projects-Miniature-Office",
 			"path": "../Thirstys-Projects-Miniature-Office"
 		},
 		{
+			"name": "Thirstys-waterfall",
 			"path": "../Thirstys-waterfall"
 		},
 		{
+			"name": "TTP",
 			"path": "../TTP"
 		},
 		{
+			"name": "AI Mutation Governance Firewall",
 			"path": "../../../../../Desktop/Github/Integrationg Microservices/AI Mutation Governance Firewall"
 		},
 		{
+			"name": "Autonomous Compliance-as-Code Engine",
 			"path": "../../../../../Desktop/Github/Integrationg Microservices/Autonomous Compliance-as-Code Engine"
 		},
 		{
+			"name": "Autonomous Incident Reflex System",
 			"path": "../../../../../Desktop/Github/Integrationg Microservices/Autonomous Incident Reflex System"
 		},
 		{
+			"name": "Autonomous Negotiation Agent Infrastructure",
 			"path": "../../../../../Desktop/Github/Integrationg Microservices/Autonomous Negotiation Agent Infrastructure"
 		},
 		{
+			"name": "Distributed Reputation & Trust Graph Engine",
 			"path": "../../../../../Desktop/Github/Integrationg Microservices/Distributed Reputation & Trust Graph Engine"
 		},
 		{
+			"name": "Sovereign Data Vault Layer",
 			"path": "../../../../../Desktop/Github/Integrationg Microservices/Sovereign Data Vault Layer"
 		},
 		{
+			"name": "Verifiable Reality Infrastructure (Post-AI Proof Layer)",
 			"path": "../../../../../Desktop/Github/Integrationg Microservices/Verifiable Reality Infrastructure (Post-AI Proof Layer)"
 		},
 		{
+			"name": "thirsty-lang-analytics-dashboard",
 			"path": "../thirsty-lang-analytics-dashboard"
 		},
 		{
+			"name": "thirsty-lang-api-gateway",
 			"path": "../thirsty-lang-api-gateway"
 		},
 		{
+			"name": "thirsty-lang-api-starter",
 			"path": "../thirsty-lang-api-starter"
 		},
 		{
+			"name": "thirsty-lang-auth-provider",
 			"path": "../thirsty-lang-auth-provider"
 		},
 		{
+			"name": "thirsty-lang-best-practices",
 			"path": "../thirsty-lang-best-practices"
 		},
 		{
+			"name": "thirsty-lang-blockchain",
 			"path": "../thirsty-lang-blockchain"
 		},
 		{
+			"name": "thirsty-lang-caching-layer",
 			"path": "../thirsty-lang-caching-layer"
 		},
 		{
+			"name": "thirsty-lang-chatbot",
 			"path": "../thirsty-lang-chatbot"
 		},
 		{
+			"name": "thirsty-lang-cli-tool-template",
 			"path": "../thirsty-lang-cli-tool-template"
 		},
 		{
+			"name": "thirsty-lang-compiler-tools",
 			"path": "../thirsty-lang-compiler-tools"
 		},
 		{
+			"name": "thirsty-lang-cookbook",
 			"path": "../thirsty-lang-cookbook"
 		},
 		{
+			"name": "thirsty-lang-database-orm",
 			"path": "../thirsty-lang-database-orm"
 		},
 		{
+			"name": "thirsty-lang-data-pipeline",
 			"path": "../thirsty-lang-data-pipeline"
 		},
 		{
+			"name": "thirsty-lang-desktop-app",
 			"path": "../thirsty-lang-desktop-app"
 		},
 		{
+			"name": "thirsty-lang-devops-automation",
 			"path": "../thirsty-lang-devops-automation"
 		},
 		{
+			"name": "thirsty-lang-event-sourcing",
 			"path": "../thirsty-lang-event-sourcing"
 		},
 		{
+			"name": "thirsty-lang-exercises",
 			"path": "../thirsty-lang-exercises"
 		},
 		{
+			"name": "thirsty-lang-fullstack-app",
 			"path": "../thirsty-lang-fullstack-app"
 		},
 		{
+			"name": "thirsty-lang-game-engine-demo",
 			"path": "../thirsty-lang-game-engine-demo"
 		},
 		{
+			"name": "thirsty-lang-graphql-api",
 			"path": "../thirsty-lang-graphql-api"
 		},
 		{
+			"name": "thirsty-lang-iot-devices",
 			"path": "../thirsty-lang-iot-devices"
 		},
 		{
+			"name": "thirsty-lang-microservices",
 			"path": "../thirsty-lang-microservices"
 		},
 		{
+			"name": "thirsty-lang-ml-starter",
 			"path": "../thirsty-lang-ml-starter"
 		},
 		{
+			"name": "thirsty-lang-mobile-app",
 			"path": "../thirsty-lang-mobile-app"
 		},
 		{
+			"name": "thirsty-lang-observability",
 			"path": "../thirsty-lang-observability"
 		},
 		{
+			"name": "thirsty-lang-penetration-testing",
 			"path": "../thirsty-lang-penetration-testing"
 		},
 		{
+			"name": "thirsty-lang-plugin-system",
 			"path": "../thirsty-lang-plugin-system"
 		},
 		{
+			"name": "thirsty-lang-queue-worker",
 			"path": "../thirsty-lang-queue-worker"
 		},
 		{
+			"name": "thirsty-lang-security-toolkit",
 			"path": "../thirsty-lang-security-toolkit"
 		},
 		{
+			"name": "thirsty-lang-service-mesh",
 			"path": "../thirsty-lang-service-mesh"
 		},
 		{
+			"name": "thirsty-lang-testing-framework",
 			"path": "../thirsty-lang-testing-framework"
 		},
 		{
+			"name": "thirsty-lang-text-adventure",
 			"path": "../thirsty-lang-text-adventure"
 		},
 		{
+			"name": "thirsty-lang-web-framework",
 			"path": "../thirsty-lang-web-framework"
 		},
 		{
+			"name": "thirsty-lang-websocket-server",
 			"path": "../thirsty-lang-websocket-server"
 		}
 	],

@@ -1,0 +1,44 @@
+{
+  "todos": [
+    {
+      "content": "Inventory: complete catalog of major subsystems (Sovereign Runtime, Shadow Thirst, TARL OS, Thirsty-Lang, TSCG/TSCG-B, OctoReflex, PSIA Waterfall, Iron Path) and their current status.",
+      "status": "pending",
+      "priority": "high"
+    },
+    {
+      "content": "Define Edition V1 scope and acceptance criteria (Definition of Done) for public ambassador surface plus monolith governance.",
+      "status": "pending",
+      "priority": "high"
+    },
+    {
+      "content": "Create EditionV1 release package spec: packaging for Node, Python, and Unity components; binary artifacts; docs; tests; SBOM.",
+      "status": "pending",
+      "priority": "high"
+    },
+    {
+      "content": "Draft comprehensive E2E test suite covering governance gating, audit trail integrity, and Iron Path end-to-end verification.",
+      "status": "pending",
+      "priority": "high"
+    },
+    {
+      "content": "Security and privacy: ensure data handling in the public ambassador surface complies with privacy policy; redact PII in public outputs.",
+      "status": "pending",
+      "priority": "high"
+    },
+    {
+      "content": "Public onboarding: finalize ambassador onboarding doc, terms-of-use, consent, and SLA expectations for Edition V1.",
+      "status": "pending",
+      "priority": "medium"
+    },
+    {
+      "content": "CI/CD integration: extend build-and-test workflow to publish EditionV1 artifacts on tag/release.",
+      "status": "pending",
+      "priority": "medium"
+    },
+    {
+      "content": "Execution: push an initial EditionV1 release branch and begin controlled roll-out plan in a staging environment.",
+      "status": "pending",
+      "priority": "high"
+    }
+  ]
+}
