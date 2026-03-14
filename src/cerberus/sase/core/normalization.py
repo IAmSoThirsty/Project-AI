@@ -126,12 +126,10 @@ class TorDetector:
     def _load_tor_list(self):
         """Load Tor exit node list"""
         url = "https://check.torproject.org/exit-addresses"
-        static_fallback = {"185.220.101.1", "185.220.101.2"}
-
+        fallback_list = {"185.220.101.1", "185.220.101.2"}
         try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'SASE-TorDetector/1.0'})
-            with urllib.request.urlopen(req, timeout=5.0) as response:
-                content = response.read().decode('utf-8')
+            with urllib.request.urlopen(url, timeout=5) as response:
+                content = response.read().decode("utf-8")
 
             nodes = set()
             for line in content.splitlines():
@@ -140,16 +138,16 @@ class TorDetector:
                     if len(parts) >= 2:
                         nodes.add(parts[1])
 
-            if nodes:
-                self.tor_exit_nodes = nodes
-                logger.info(f"Loaded {len(self.tor_exit_nodes)} Tor exit nodes from public directory")
-            else:
-                logger.warning("Fetched Tor exit list was empty, falling back to static list")
-                self.tor_exit_nodes = static_fallback
-
-        except (urllib.error.URLError, TimeoutError, Exception) as e:
-            logger.warning(f"Failed to fetch Tor exit list: {e}. Falling back to static list")
-            self.tor_exit_nodes = static_fallback
+            self.tor_exit_nodes = nodes
+            logger.info(f"Loaded {len(nodes)} Tor exit nodes from public directory.")
+        except (urllib.error.URLError, TimeoutError) as e:
+            logger.warning(
+                f"Failed to fetch Tor exit nodes ({e}). Using fallback list."
+            )
+            self.tor_exit_nodes = fallback_list
+        except Exception as e:
+            logger.error(f"Unexpected error fetching Tor nodes: {e}. Using fallback.")
+            self.tor_exit_nodes = fallback_list
 
     def is_tor_exit(self, ip: str) -> bool:
         """Check if IP is Tor exit node"""
