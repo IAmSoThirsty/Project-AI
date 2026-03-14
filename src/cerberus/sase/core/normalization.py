@@ -21,6 +21,8 @@ INVARIANTS:
 """
 
 import logging
+import urllib.error
+import urllib.request
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
@@ -118,15 +120,34 @@ class TorDetector:
     """
 
     def __init__(self):
-        # TODO: Load from public Tor directory
         self.tor_exit_nodes: set[str] = set()
         self._load_tor_list()
 
     def _load_tor_list(self):
         """Load Tor exit node list"""
-        # TODO: Fetch from https://check.torproject.org/exit-addresses
-        # For now, maintain static example
-        self.tor_exit_nodes = {"185.220.101.1", "185.220.101.2"}
+        url = "https://check.torproject.org/exit-addresses"
+        fallback_list = {"185.220.101.1", "185.220.101.2"}
+        try:
+            with urllib.request.urlopen(url, timeout=5) as response:
+                content = response.read().decode("utf-8")
+
+            nodes = set()
+            for line in content.splitlines():
+                if line.startswith("ExitAddress "):
+                    parts = line.split()
+                    if len(parts) >= 2:
+                        nodes.add(parts[1])
+
+            self.tor_exit_nodes = nodes
+            logger.info(f"Loaded {len(nodes)} Tor exit nodes from public directory.")
+        except (urllib.error.URLError, TimeoutError) as e:
+            logger.warning(
+                f"Failed to fetch Tor exit nodes ({e}). Using fallback list."
+            )
+            self.tor_exit_nodes = fallback_list
+        except Exception as e:
+            logger.error(f"Unexpected error fetching Tor nodes: {e}. Using fallback.")
+            self.tor_exit_nodes = fallback_list
 
     def is_tor_exit(self, ip: str) -> bool:
         """Check if IP is Tor exit node"""
