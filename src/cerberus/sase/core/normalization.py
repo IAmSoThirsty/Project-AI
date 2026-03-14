@@ -134,7 +134,7 @@ class TorDetector:
             nodes = set()
             for line in content.splitlines():
                 if line.startswith("ExitAddress "):
-                    parts = line.split(" ")
+                    parts = line.split()
                     if len(parts) >= 2:
                         nodes.add(parts[1])
 
