@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import importlib
+import logging
 
 import pytest
 
@@ -78,8 +79,12 @@ def test_profile_rejects_invalid_token(client):
     assert (response.get_json() or {}).get("error") == "invalid-token"
 
 
-def test_debug_force_error_returns_json(client):
-    response = client.get("/api/debug/force-error")
+def test_debug_force_error_returns_json(client, caplog):
+    with caplog.at_level(logging.ERROR):
+        response = client.get("/api/debug/force-error")
+
     assert response.status_code == 500
     payload = response.get_json() or {}
     assert payload.get("status") == "error"
+    assert payload.get("message") == "forced debug failure"
+    assert "Unhandled Flask backend error" in caplog.text
