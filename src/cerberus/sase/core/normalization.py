@@ -25,6 +25,9 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any
 
+import urllib.request
+from urllib.error import URLError
+
 logger = logging.getLogger("SASE.L3.Normalization")
 
 
@@ -118,15 +121,33 @@ class TorDetector:
     """
 
     def __init__(self):
-        # TODO: Load from public Tor directory
         self.tor_exit_nodes: set[str] = set()
         self._load_tor_list()
 
     def _load_tor_list(self):
         """Load Tor exit node list"""
-        # TODO: Fetch from https://check.torproject.org/exit-addresses
-        # For now, maintain static example
-        self.tor_exit_nodes = {"185.220.101.1", "185.220.101.2"}
+        url = "https://check.torproject.org/exit-addresses"
+        try:
+            with urllib.request.urlopen(url, timeout=10) as response:
+                content = response.read().decode("utf-8")
+
+            new_nodes = set()
+            for line in content.splitlines():
+                if line.startswith("ExitAddress "):
+                    parts = line.split()
+                    if len(parts) >= 2:
+                        new_nodes.add(parts[1])
+
+            if new_nodes:
+                self.tor_exit_nodes = new_nodes
+                logger.info(f"Loaded {len(new_nodes)} Tor exit nodes from {url}")
+            else:
+                logger.warning(f"No exit addresses found at {url}")
+                self.tor_exit_nodes = {"185.220.101.1", "185.220.101.2"}
+        except Exception as e:
+            logger.error(f"Failed to fetch Tor exit nodes from {url}: {e}")
+            # Fallback to static example
+            self.tor_exit_nodes = {"185.220.101.1", "185.220.101.2"}
 
     def is_tor_exit(self, ip: str) -> bool:
         """Check if IP is Tor exit node"""
