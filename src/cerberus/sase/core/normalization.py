@@ -21,6 +21,8 @@ INVARIANTS:
 """
 
 import logging
+import urllib.request
+import urllib.error
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
@@ -118,15 +120,36 @@ class TorDetector:
     """
 
     def __init__(self):
-        # TODO: Load from public Tor directory
         self.tor_exit_nodes: set[str] = set()
         self._load_tor_list()
 
     def _load_tor_list(self):
         """Load Tor exit node list"""
-        # TODO: Fetch from https://check.torproject.org/exit-addresses
-        # For now, maintain static example
-        self.tor_exit_nodes = {"185.220.101.1", "185.220.101.2"}
+        url = "https://check.torproject.org/exit-addresses"
+        static_fallback = {"185.220.101.1", "185.220.101.2"}
+
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'SASE-TorDetector/1.0'})
+            with urllib.request.urlopen(req, timeout=5.0) as response:
+                content = response.read().decode('utf-8')
+
+            nodes = set()
+            for line in content.splitlines():
+                if line.startswith("ExitAddress "):
+                    parts = line.split(" ")
+                    if len(parts) >= 2:
+                        nodes.add(parts[1])
+
+            if nodes:
+                self.tor_exit_nodes = nodes
+                logger.info(f"Loaded {len(self.tor_exit_nodes)} Tor exit nodes from public directory")
+            else:
+                logger.warning("Fetched Tor exit list was empty, falling back to static list")
+                self.tor_exit_nodes = static_fallback
+
+        except (urllib.error.URLError, TimeoutError, Exception) as e:
+            logger.warning(f"Failed to fetch Tor exit list: {e}. Falling back to static list")
+            self.tor_exit_nodes = static_fallback
 
     def is_tor_exit(self, ip: str) -> bool:
         """Check if IP is Tor exit node"""
