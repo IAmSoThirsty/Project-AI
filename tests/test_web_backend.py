@@ -87,4 +87,7 @@ def test_debug_force_error_returns_json(client, caplog):
     payload = response.get_json() or {}
     assert payload.get("status") == "error"
     assert payload.get("message") == "forced debug failure"
-    assert "Unhandled Flask backend error" in caplog.text
+    assert len(caplog.records) == 1
+    record = caplog.records[0]
+    assert record.levelname == "ERROR"
+    assert record.message == "Unhandled Flask backend error"
