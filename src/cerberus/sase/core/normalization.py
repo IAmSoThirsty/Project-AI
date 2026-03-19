@@ -138,8 +138,12 @@ class TorDetector:
                     if len(parts) >= 2:
                         nodes.add(parts[1])
 
-            self.tor_exit_nodes = nodes
-            logger.info(f"Loaded {len(nodes)} Tor exit nodes from public directory.")
+            if not nodes:
+                logger.warning("No Tor exit nodes found in response. Using fallback list.")
+                self.tor_exit_nodes = fallback_list
+            else:
+                self.tor_exit_nodes = nodes
+                logger.info(f"Loaded {len(nodes)} Tor exit nodes from public directory.")
         except (urllib.error.URLError, TimeoutError) as e:
             logger.warning(
                 f"Failed to fetch Tor exit nodes ({e}). Using fallback list."
