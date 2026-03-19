@@ -233,11 +233,11 @@ class TestExperienceReplayBuffer:
             buffer.add(exp)
 
         # Save
-        assert buffer.save("test_buffer.pkl")
+        assert buffer.save("test_buffer.json")
 
         # Create new buffer and load
         buffer2 = ExperienceReplayBuffer(max_size=100, data_dir=buffer.data_dir)
-        assert buffer2.load("test_buffer.pkl")
+        assert buffer2.load("test_buffer.json")
 
         assert buffer2.size() == 5
 
