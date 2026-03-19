@@ -66,7 +66,7 @@ class ResourceRequirements:
         if self.memory_gb < 32:
             issues.append(f"Memory insufficient: {self.memory_gb}GB < 32GB")
 
-        if self.storage_type not in ["immutable_object_store", "append_only_log"]:
+        if self.storage_type not in {"immutable_object_store", "append_only_log"}:
             issues.append("Storage type must be immutable or append-only")
 
         return len(issues) == 0, issues
