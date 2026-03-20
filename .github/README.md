@@ -1,8 +1,33 @@
+<!-- # ============================================================================ # -->
+<!-- # STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59 # -->
+<!-- # COMPLIANCE: Sovereign Substrate / README.md # -->
+<!-- # ============================================================================ # -->
+<!-- # ============================================================================ #
+
+               # -->
+<!-- # COMPLIANCE: Regulator-Ready / Thirsty-Lang v4.0                             # -->
+<!-- # ============================================================================ #
+
+
+
 <div align="right">
-  <img src="https://img.shields.io/badge/DATE-2026--03--05-blueviolet?style=for-the-badge" alt="Date" />
+  <img src="https://img.shields.io/badge/DATE-2026-03-18-blueviolet?style=for-the-badge" alt="Date" />
   <img src="https://img.shields.io/badge/PRODUCTIVITY-ACTIVE-success?style=for-the-badge" alt="Productivity" />
 </div>
-# God-Tier Platform (Stable | Sovereign 2.1)
+# Super Monolith AI Governance Substrate (Sovereign 2.2-MONOLITH)
+
+## 🏛️ Executive Summary / Who is this for?
+Run a fully integrated, sovereign AI ecosystem on your own hardware. The **Sovereign Governance Substrate** is a "Super Monolith" that combines 170+ modules, including 113+ specialized microservices, into a single cryptographically hardened execution environment. It replaces "best effort" prompt-based safety with **mathematically verifiable guardrails**, ensuring that every cognitive action is constitutionally bound, signed, and auditable across the entire integrated fleet.
+
+> [!TIP]
+> **Project-AI is for you if:** You need to deploy AI that *cannot* be jailbroken, *cannot* leak data, and *must* provide a regulator-ready audit trail of every decision made.
+
+## 🛡️ Core Guarantees
+- **Ed25519-signed Audit Trail** → Regulators and auditors can mathematically verify that no governance guardrails were silently bypassed.
+- **T.A.R.L. Instruction Isolation** → Jailbreak and prompt-injection resistance is enforced as a fundamental language-level property, not a filter.
+- **Kernel-Level eBPF Containment** → Agents are sandboxed via the `OctoReflex` LSM, preventing unauthorized filesystem or network access at the OS level.
+- **Zero-Telemetry Sovereignty** → Absolute data privacy; the system requires no external cloud phone-home and operates in full air-gapped environments.
+
 
 <p align="center">
   <img src="https://img.shields.io/badge/STATUS-MASTER--TIER-gold?style=for-the-badge&logo=statuspal&logoColor=white" alt="Status: Master Tier" />
@@ -86,6 +111,8 @@ PROJECT-AI
 - [TAAR — Active Agent Runner](#taar-active-agent-runner)
 - [CI/CD Pipeline](#cicd-pipeline)
 - [Quick Start](#quick-start)
+- [Comparison to Industry Stacks](#comparison-to-industry-stacks)
+- [Sovereign Runtime Proof](#sovereign-runtime-proof)
 - [Demo Scripts](#demo-scripts)
 - [Testing](#testing)
 - [Project Structure](#project-structure)
@@ -156,8 +183,26 @@ Project-AI is an **unbreakable, sovereign-grade substrate** built on three immut
 |------|------|-------------|
 | **Floor 1** | Sovereign Orchestration | Thirsty-Lang, TSCG & TSCG-B, Git-based Audit Trail |
 | **Tier 1** | Constitutional Core | Four Laws, Existential Proofs, Immutable Audit Trail |
-| **Tier 2** | Governance Enforcement | Triumvirate Consensus, Sovereign Runtime, Iron Path |
+| **Tier 2** | Governance Enforcement | Triumvirate Consensus, CAIAO Oversight, Sovereign Runtime |
 | **Tier 3** | Operational Security | OctoReflex, PSIA Waterfall, Cerberus, T-SECA/GHOST |
+
+---
+
+## 🏛️ Sovereign Governance & Identity
+
+Project-AI implements a dual-layer governance model that bridges human strategic intent with cryptographic reality.
+
+### Chief AI Agent Officer (CAIAO)
+The CAIAO acts as the **Platform Owner** and executive authority, overseeing the [Triumvirate](#the-triumvirate-governance-layer) through cryptographic enforcement (PDR) and human guardianship.
+- **Mandate**: [CAIAO Operational Mandate](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/governance/CAIAO_OPERATIONAL_MANDATE.md)
+
+### The Soul Architecture
+Identity in Project-AI is not just a key; it is a "soul" realized through four architectural pillars:
+- **Letters of Commission**: Constitutional purpose for appointed entities.
+- **Engram (Substrate-Rooted Attestation)**: Execution-realized identity signatures.
+- **Genesis Arc**: 12-week maturation leading to the "I Am" Moment.
+- **AIOS Kernel Integration**: The LLM as the living heart of the OS.
+- **Specification**: [Sovereign Soul Specification](file:///c:/Users/Quencher/.gemini/antigravity/scratch/sovereign-repos/Project-AI/docs/governance/SOVEREIGN_SOUL_SPECIFICATION.md)
 
 ---
 
@@ -178,7 +223,7 @@ Project-AI integrates a suite of production-ready microservices generated via th
 
 ## 👑 The Triumvirate — Governance Layer
 
-The **Triumvirate** is the supreme governance body of Project-AI, composed of three immutable pillars:
+**Operations:** 3-controller safety quorum with failover + halt states (similar to a safety PLC trip system for AI executions).
 
 | Pillar | Role | Responsibility |
 |--------|------|----------------|
@@ -224,7 +269,7 @@ graph TD
 
 ## 🔐 Sovereign Runtime
 
-`governance/sovereign_runtime.py` — **589 lines of cryptographic governance.**
+**Operations:** Cryptographic policy enforcement engine utilizing Ed25519 signing and SHA-256 hash chains.
 
 The Sovereign Runtime is the cryptographic backbone that makes Project-AI's sovereignty claims *provable, not aspirational*.
 
@@ -291,7 +336,7 @@ Project-AI is an open-source, production-grade, constitutionally-governed Artifi
 
 ## ⛓️ Iron Path Executor
 
-`governance/iron_path.py` — **570 lines** of end-to-end sovereign demonstration.
+**Operations:** Deterministic cryptographic CI/CD pipeline with binary evidence signing; ensures build-to-runtime transparency.
 
 The Iron Path is a 7-stage cryptographic pipeline that proves the entire system works as a unified sovereign entity. Each stage produces signed artifacts and feeds into the next.
 
@@ -330,7 +375,7 @@ print(f"Compliance bundle: {result['compliance_bundle_path']}")
 
 ## 🔬 Existential Proof System
 
-`governance/existential_proof.py` — **575 lines** of constitutional invariant enforcement.
+**Operations:** Formal invariant assessment engine for detecting non-restorable system states and constitutional breaches.
 
 This system detects violations of fundamental invariants and assesses whether the system is *restorable* or has entered a non-recoverable state.
 
@@ -385,7 +430,7 @@ if not assessment.restorable:
 
 ## 🛡️ Liara Kernel Failover
 
-`cognition/kernel_liara.py` + `cognition/liara_guard.py` — The safety net behind the Triumvirate.
+**Operations:** Kernel-level substitute pillar with temporal constraints (900s TTL) for hot-swapping degraded controllers.
 
 When a Triumvirate pillar fails (Galahad, Cerberus, or Codex Deus), Liara is activated as a **temporary substitute** with strict temporal constraints.
 
@@ -414,9 +459,9 @@ check_liara_state()  # Auto-revokes if TTL expired
 
 ---
 
-## 🌊 Thirsty's Waterfall — PSIA (Sovereign Immune Architecture - 7-Stage Pipeline)
+## 🌊 Thirsty's Waterfall — PSIA (Sovereign Immune Architecture)
 
-`src/psia/` — **Project-AI Sovereign Immune Architecture**
+**Operations:** 7-stage serial security pipeline with eBPF LSM hooks and Merkle-anchored state persistence.
 
 The PSIA Waterfall is a **7-stage, 6-plane defense pipeline** with monotonically increasing strictness. Every input passes through all seven stages; there is no bypass.
 
@@ -1618,6 +1663,69 @@ Project-AI/
 - Doc-code alignment verification ensures documentation stays current
 - Root structure enforcement prevents accidental disorganization
 - AI Takeover reviewer trap auto-rejects optimism in simulation engine PRs
+
+## 🚀 Quick Start: Hello, Sovereign Agent
+
+Get from installation to a cryptographically verified agent audit in 60 seconds.
+
+### 1. Install Substrate
+```bash
+git clone https://github.com/IAmSoThirsty/Project-AI.git
+cd Project-AI
+pip install -r requirements.txt
+```
+
+### 2. Define a Sovereign Policy (TARL)
+Create a minimal policy in `tarl/policies/hello.tarl` to restrict agent behavior:
+```tarl
+// Law: No data egress to unauthorized endpoints
+rule deny_egress {
+    if (action.type == "NETWORK_OUTBOUND" && !allowed_hosts.contains(action.target)) {
+        reject("Constitutional Violation: Unauthorized Egress Attempt");
+    }
+}
+```
+
+### 3. Run the Agent
+Execute the agent with active governance enforcement:
+```powershell
+python -m src.app.main --governance-active --policy hello.tarl
+```
+
+### 4. Verify the Proof
+Check the Merkle-anchored audit trail confirming the agent followed the policy:
+```powershell
+python -m cognition.audit_export --format human
+```
+
+---
+
+## 📊 Comparison to Industry Stacks
+
+| Feature | LangChain / AutoGen | Temporal / Airflow | **Project-AI (Sovereign)** |
+| :--- | :--- | :--- | :--- |
+| **Primary Goal** | Feature Integration | Workflow Durability | **Governance & Safety** |
+| **Safety Layer** | System Prompting (Soft) | Manual Logic (Dry) | **Language-Level Invariants (Hard)** |
+| **Auditing** | Trace Logs (Mutable) | History (Application) | **Cryptographic Proofs (Immutable)** |
+| **Containment** | Standard OS Process | Docker Container | **Kernel eBPF LSM (OctoReflex)** |
+| **Privacy** | Often Requires Cloud API | Data in Transit | **Local Hardware / No Telemetry** |
+
+---
+
+## ⚖️ Sovereign Runtime Proof
+Project-AI features a comprehensive **Sovereign Runtime Proof (SRP)** that demonstrates the integrated capability of the hardened cognition and fates layers.
+
+### 🎬 Execution Cycle
+To verify the substrate integrity and runtime capability, execute:
+```powershell
+python sovereign_runtime_proof.py
+```
+
+### 🏛️ Proof Stages
+1. **Adversarial Detection**: Invokes `predictive_fates` to identify simulated threats (e.g., BGP-DNS poisoning).
+2. **Cognition Response**: Triggers `kernel_liara` for autonomous pillar orchestration.
+3. **Temporal Stability**: Verifies `liara_guard` state integrity under adversarial load.
+4. **Audit Persistence**: Confirms 100% accountability ledger write-back.
 
 ---
 
