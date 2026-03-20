@@ -9,7 +9,7 @@ Production-grade, fully integrated, drop-in ready.
 import json
 import logging
 import os
-import pickle
+import random
 import threading
 import time
 from collections import deque
@@ -17,8 +17,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from typing import Any, cast
-
-import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -162,8 +160,7 @@ class ExperienceReplayBuffer:
                 return list(self._buffer)
 
             # Random sampling without replacement
-            indices = np.random.choice(len(self._buffer), batch_size, replace=False)
-            return [self._buffer[i] for i in indices]
+            return random.sample(list(self._buffer), batch_size)
 
     def get_recent(self, n: int) -> list[Experience]:
         """Get n most recent experiences"""
@@ -181,20 +178,20 @@ class ExperienceReplayBuffer:
             self._buffer.clear()
             logger.info("Experience buffer cleared")
 
-    def save(self, filename: str = "replay_buffer.pkl") -> bool:
+    def save(self, filename: str = "replay_buffer.json") -> bool:
         """Save buffer to disk"""
         try:
             with self._lock:
                 filepath = os.path.join(self.data_dir, filename)
-                with open(filepath, "wb") as f:
-                    pickle.dump(list(self._buffer), f)
+                with open(filepath, "w") as f:
+                    json.dump([exp.to_dict() for exp in self._buffer], f, indent=2)
                 logger.info("Saved %s experiences to %s", len(self._buffer), filepath)
                 return True
         except Exception as e:
             logger.error("Failed to save replay buffer: %s", e, exc_info=True)
             return False
 
-    def load(self, filename: str = "replay_buffer.pkl") -> bool:
+    def load(self, filename: str = "replay_buffer.json") -> bool:
         """Load buffer from disk"""
         try:
             with self._lock:
@@ -203,9 +200,10 @@ class ExperienceReplayBuffer:
                     logger.warning("Replay buffer file not found: %s", filepath)
                     return False
 
-                with open(filepath, "rb") as f:
-                    experiences = pickle.load(f)
+                with open(filepath, "r") as f:
+                    data = json.load(f)
 
+                experiences = [Experience.from_dict(d) for d in data]
                 self._buffer = deque(experiences, maxlen=self.max_size)
                 logger.info(
                     "Loaded %s experiences from %s", len(self._buffer), filepath
@@ -299,17 +297,17 @@ class ReinforcementLearningAgent:
 
             # Epsilon-greedy action selection
             if mode == LearningMode.EXPLORATION or (
-                mode == LearningMode.MIXED and np.random.random() < self.policy.epsilon
+                mode == LearningMode.MIXED and random.random() < self.policy.epsilon
             ):
                 # Explore: random action
-                action = np.random.choice(self.actions)
+                action = random.choice(self.actions)
             else:
                 # Exploit: best action
                 q_vals = self.policy.q_values[state_key]
                 max_q = max(q_vals.values())
                 # If multiple actions have same Q-value, choose randomly among them
                 best_actions = [a for a, q in q_vals.items() if q == max_q]
-                action = np.random.choice(best_actions)
+                action = random.choice(best_actions)
 
             return str(action)
 
@@ -466,7 +464,7 @@ class ReinforcementLearningAgent:
                     json.dump(data, f, indent=2)
 
                 # Save replay buffer separately
-                self.replay_buffer.save(f"{self.agent_id}_replay.pkl")
+                self.replay_buffer.save(f"{self.agent_id}_replay.json")
 
                 logger.info("Agent '%s' saved to %s", self.agent_id, filepath)
                 return True
@@ -498,7 +496,7 @@ class ReinforcementLearningAgent:
                 self.episode_lengths = data.get("episode_lengths", [])
 
                 # Load replay buffer
-                self.replay_buffer.load(f"{self.agent_id}_replay.pkl")
+                self.replay_buffer.load(f"{self.agent_id}_replay.json")
 
                 logger.info("Agent '%s' loaded from %s", self.agent_id, filepath)
                 return True
