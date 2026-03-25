@@ -17,7 +17,7 @@ from typing import Any
 
 try:
     from cryptography.hazmat.backends import default_backend
-    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives import hashes, serialization  # noqa: F401
     from cryptography.hazmat.primitives.asymmetric import ed25519
 except ImportError:
     pass  # Will be handled at runtime

@@ -45,7 +45,7 @@ class DeterministicSerializer:
             elif isinstance(value, bool):
                 # Bools must come before int check since bool is subclass of int
                 normalized[key] = value
-            elif isinstance(value, int) or isinstance(value, str):
+            elif isinstance(value, (int, str)):
                 normalized[key] = value
             elif isinstance(value, list):
                 normalized[key] = (

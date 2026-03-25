@@ -21,7 +21,6 @@ import tempfile
 import threading
 import time
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 import pytest
 from cryptography.fernet import Fernet
@@ -111,7 +110,7 @@ class TestBlackVault:
             vault.deny(f"content_{i}" * 10, f"reason_{i}")
 
         # Check that backup was created
-        backup_dir = Path(temp_vault_dir).parent / "vault_backups"
+        Path(temp_vault_dir).parent / "vault_backups"
         # Note: backup_dir might not exist in all test scenarios
 
     def test_vault_stats(self, vault_key, temp_vault_dir):
@@ -324,7 +323,7 @@ class TestSignalFlows:
         for _ in range(3):
             try:
                 cb.call(lambda: 1 / 0)  # Raises ZeroDivisionError
-            except:
+            except Exception:
                 pass
 
         # Circuit should be open
@@ -467,7 +466,6 @@ class TestErrorAggregator:
 
     def test_serialization(self):
         """Test error aggregator serialization."""
-        import json
 
         from src.app.core.error_aggregator import GlobalErrorAggregator
 
@@ -587,7 +585,6 @@ class TestIntegration:
     def test_vault_and_audit_integration(self, setup_environment):
         """Test vault and audit log integration with real component flow."""
         from src.app.pipeline.signal_flows import (
-            CircuitBreaker,
             circuit_breakers,
             redact_pii,
         )
@@ -612,7 +609,7 @@ class TestIntegration:
         assert cb.state == "CLOSED"
 
         # Simulate validation failures (e.g., forbidden phrases)
-        for i in range(cb.failure_threshold):
+        for _i in range(cb.failure_threshold):
             try:
                 cb.call(
                     lambda: (_ for _ in ()).throw(

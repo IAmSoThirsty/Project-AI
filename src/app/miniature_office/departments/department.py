@@ -5,8 +5,6 @@ Department Management System
 Implements Codex Section 3 (Departmental Architecture)
 """
 
-from typing import Dict, List, Optional, Set
-
 from app.miniature_office.core.audit import EventType, get_audit_log
 from app.miniature_office.core.entity import (
     Entity,
@@ -27,13 +25,13 @@ class Department(Entity):
         department_id: str,
         name: str,
         domain: str,  # e.g., "Python", "Rust", "JavaScript"
-        toolchain: Optional[List[str]] = None,
+        toolchain: list[str] | None = None,
     ):
         super().__init__(department_id, EntityType.DEPARTMENT, name)
         self.domain = domain
         self.toolchain = toolchain or []
-        self.agents: Dict = {}  # Role -> List of agent IDs
-        self.contracts: List[str] = []  # Contract IDs this department implements
+        self.agents: dict = {}  # Role -> List of agent IDs
+        self.contracts: list[str] = []  # Contract IDs this department implements
 
         # Register department
         get_registry().register(self)
@@ -72,7 +70,7 @@ class Department(Entity):
             data={"action": "joined_department"},
         )
 
-    def get_missing_roles(self) -> Set:
+    def get_missing_roles(self) -> set:
         """
         Check for missing required roles.
         No department may neglect a role (Codex 3.1)
@@ -89,7 +87,7 @@ class Department(Entity):
         present_roles = {role for role, agents in self.agents.items() if agents}
         return REQUIRED_ROLES - present_roles
 
-    def auto_spawn_assistants(self) -> List:
+    def auto_spawn_assistants(self) -> list:
         """
         Auto-spawn assistant agents for missing roles (Codex 3.1).
         Missing roles auto-spawn assistant agents until fulfilled.
@@ -172,7 +170,7 @@ class Department(Entity):
         """Check if all required roles are filled"""
         return len(self.get_missing_roles()) == 0
 
-    def get_agents_by_role(self, role) -> List:
+    def get_agents_by_role(self, role) -> list:
         """Get all agents with a specific role in this department"""
         from app.miniature_office.agents.agent import Agent
 
@@ -200,7 +198,7 @@ class DepartmentRegistry:
     """Registry for managing all departments"""
 
     def __init__(self):
-        self.departments: Dict[str, Department] = {}
+        self.departments: dict[str, Department] = {}
 
     def register_department(self, department: Department):
         """Register a department"""
@@ -209,11 +207,11 @@ class DepartmentRegistry:
         # Auto-spawn assistants for missing roles
         department.auto_spawn_assistants()
 
-    def get_department(self, department_id: str) -> Optional[Department]:
+    def get_department(self, department_id: str) -> Department | None:
         """Get a department by ID"""
         return self.departments.get(department_id)
 
-    def get_departments_by_domain(self, domain: str) -> List[Department]:
+    def get_departments_by_domain(self, domain: str) -> list[Department]:
         """Get all departments for a specific domain"""
         return [
             d for d in self.departments.values() if d.domain.lower() == domain.lower()

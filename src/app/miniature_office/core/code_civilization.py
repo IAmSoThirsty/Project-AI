@@ -9,7 +9,6 @@ This is law ABOVE all other laws.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional
 
 # Import aggressive analysis system
 try:
@@ -74,7 +73,7 @@ class PurposeConstitution:
         return advances_code_correctness
 
     @staticmethod
-    def validate_purpose_compliance(context: Dict) -> bool:
+    def validate_purpose_compliance(context: dict) -> bool:
         """
         Validate that the system is operating within its constitutional purpose.
         """
@@ -139,7 +138,7 @@ class LanguageFloor:
         """Check if this floor can interpret semantics of target language"""
         return self.language == target_language
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "floor_number": self.floor_number,
             "language": self.language.value,
@@ -199,9 +198,9 @@ class CodeDirective:
     input_type: InputType
     source: str  # User provided code
     requested_outcome: RequestedOutcome
-    constraints: List[str] = field(default_factory=list)
+    constraints: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "directive_id": self.directive_id,
             "language": self.language.value,
@@ -273,19 +272,19 @@ class ArchitecturalDecision:
     All analysis is performed with no summarization or compression.
     """
 
-    invariants: List[str] = field(default_factory=list)
-    rejected_reason: Optional[str] = None  # If request is impossible
+    invariants: list[str] = field(default_factory=list)
+    rejected_reason: str | None = None  # If request is impossible
     approved: bool = False
 
     # Deep analysis results (populated when analyzing existing code)
-    ast_analysis: Optional[Dict] = None  # Complete AST report with all details
-    semantic_issues: Optional[List[Dict]] = None  # All detected semantic problems
-    complexity_metrics: Optional[Dict] = None  # Full complexity analysis
-    detected_patterns: Optional[List[Dict]] = None  # All patterns found
-    dependency_graph: Optional[Dict] = None  # Complete dependency structure
-    design_analysis: Optional[Dict] = None  # MAXIMUM ALLOWED DESIGN analysis
+    ast_analysis: dict | None = None  # Complete AST report with all details
+    semantic_issues: list[dict] | None = None  # All detected semantic problems
+    complexity_metrics: dict | None = None  # Full complexity analysis
+    detected_patterns: list[dict] | None = None  # All patterns found
+    dependency_graph: dict | None = None  # Complete dependency structure
+    design_analysis: dict | None = None  # MAXIMUM ALLOWED DESIGN analysis
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         result = {
             "invariants": self.invariants,
             "rejected_reason": self.rejected_reason,
@@ -322,9 +321,9 @@ class ImplementationOutput:
     """
 
     code: str
-    files_modified: List[str] = field(default_factory=list)
+    files_modified: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {"code": self.code, "files_modified": self.files_modified}
 
 
@@ -342,10 +341,10 @@ class ReviewDecision:
     """
 
     approved: bool
-    violations: List[str] = field(default_factory=list)
-    recommendations: List[str] = field(default_factory=list)
+    violations: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "approved": self.approved,
             "violations": self.violations,
@@ -370,7 +369,7 @@ class TestSuite:
     coverage_percent: float
     all_pass: bool
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "test_code": self.test_code,
             "test_count": self.test_count,
@@ -408,7 +407,7 @@ class ManagerSeal:
         if self.is_ready_for_delivery():
             self.sealed = True
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "contract_satisfied": self.contract_satisfied,
             "tests_pass": self.tests_pass,
@@ -432,7 +431,7 @@ class CodeOutput:
     directive_id: str
     final_code: str
     test_suite: TestSuite
-    change_log: List[str]
+    change_log: list[str]
     manager_seal: ManagerSeal
 
     def format_delivery(self) -> str:
@@ -470,7 +469,7 @@ class CodeOutput:
         # Would implement actual scope checking
         return False
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "directive_id": self.directive_id,
             "final_code": self.final_code,
@@ -524,9 +523,9 @@ class CodeAuthoringCivilization:
 
     def __init__(self):
         self.purpose = PurposeConstitution()
-        self.floors: Dict[ProgrammingLanguage, LanguageFloor] = {}
-        self.active_directives: Dict[str, CodeDirective] = {}
-        self.outputs: Dict[str, CodeOutput] = {}
+        self.floors: dict[ProgrammingLanguage, LanguageFloor] = {}
+        self.active_directives: dict[str, CodeDirective] = {}
+        self.outputs: dict[str, CodeOutput] = {}
 
         # Initialize language floors
         self._initialize_floors()
@@ -790,9 +789,7 @@ class CodeAuthoringCivilization:
                 # Perform comprehensive design analysis with no summarization
                 design_analyzer = DesignAnalyzer()
                 try:
-                    design_result = design_analyzer.analyze(
-                        ast_root, directive.source
-                    )  # noqa: F841
+                    design_analyzer.analyze(ast_root, directive.source)  # noqa: F841
                     design_analysis = design_analyzer.generate_report()
                 except Exception as e:
                     design_analysis = {"error": str(e)}
@@ -972,7 +969,7 @@ class CodeAuthoringCivilization:
             code_lines.append("    except Exception as e:")
             code_lines.append("        # Proper error handling")
             code_lines.append(
-                f'        raise RuntimeError(f"Processing failed: {{e}}")'
+                '        raise RuntimeError(f"Processing failed: {e}")'
             )  # noqa: F541
 
         elif directive.requested_outcome == RequestedOutcome.REFACTOR:
@@ -1086,7 +1083,7 @@ class CodeAuthoringCivilization:
 
         return "\n".join(code_lines)
 
-    def _extract_function_name(self, source: str) -> Optional[str]:
+    def _extract_function_name(self, source: str) -> str | None:
         """Extract function name from source code"""
         import re
 
@@ -1096,12 +1093,11 @@ class CodeAuthoringCivilization:
         # Try to extract from natural language
         words = source.lower().split()
         for i, word in enumerate(words):
-            if word in ["function", "method", "def"]:
-                if i + 1 < len(words):
-                    return words[i + 1].strip(",:.")
+            if word in ["function", "method", "def"] and i + 1 < len(words):
+                return words[i + 1].strip(",:.")
         return None
 
-    def _extract_class_name(self, source: str) -> Optional[str]:
+    def _extract_class_name(self, source: str) -> str | None:
         """Extract class name from source code"""
         import re
 
@@ -1287,7 +1283,7 @@ class CodeAuthoringCivilization:
                 test_count += 1
                 test_code_lines.append(f"describe('{func_name}', () => {{")
                 test_code_lines.append(
-                    f"  it('should work with valid input', () => {{"
+                    "  it('should work with valid input', () => {"
                 )  # noqa: F541
                 test_code_lines.append(f"    const result = {func_name}('test');")
                 test_code_lines.append("    expect(result).to.not.be.null;")

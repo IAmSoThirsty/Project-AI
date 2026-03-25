@@ -91,14 +91,14 @@ Soundness Theorem:
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from enum import Enum
+from dataclasses import dataclass
+from enum import StrEnum
 from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-class PlaneAnnotation(str, Enum):
+class PlaneAnnotation(StrEnum):
     """Plane annotation for types."""
 
     PRIMARY = "primary"
@@ -107,7 +107,7 @@ class PlaneAnnotation(str, Enum):
     DUAL = "dual"
 
 
-class BaseType(str, Enum):
+class BaseType(StrEnum):
     """Base types in the Shadow Thirst type system."""
 
     INT = "Int"
@@ -164,13 +164,10 @@ class AnnotatedType:
         if self.plane == PlaneAnnotation.DUAL:
             return True  # Dual is subtype of everything
 
-        if (
+        return bool(
             self.plane == PlaneAnnotation.INVARIANT
             and other.plane == PlaneAnnotation.SHADOW
-        ):
-            return True
-
-        return False
+        )
 
 
 @dataclass(frozen=True)

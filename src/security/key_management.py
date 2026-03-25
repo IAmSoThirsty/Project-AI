@@ -16,7 +16,7 @@ from typing import Any
 try:
     from cryptography.fernet import Fernet
     from cryptography.hazmat.backends import default_backend
-    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives import hashes, serialization  # noqa: F401
     from cryptography.hazmat.primitives.asymmetric import rsa
 except ImportError:
     pass  # Will be handled at runtime
@@ -619,7 +619,7 @@ class KeyManagementSystem:
             (PyKCS11.CKA_LABEL, key_id),
         ]
 
-        (public_key, private_key) = session.generateKeyPair(
+        public_key, private_key = session.generateKeyPair(
             public_template, private_template
         )
 

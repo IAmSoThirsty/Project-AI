@@ -29,14 +29,14 @@ import json
 import logging
 import time
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-class CommitStatus(str, Enum):
+class CommitStatus(StrEnum):
     """Status of a commit operation."""
 
     PENDING = "pending"
@@ -164,7 +164,7 @@ class CanonicalStore:
         new_val = VersionedValue(
             value=value,
             version=new_version,
-            updated_at=datetime.now(timezone.utc).isoformat(),
+            updated_at=datetime.now(UTC).isoformat(),
             updated_by=actor,
             commit_id=commit_id,
         )
@@ -326,7 +326,7 @@ class CommitCoordinator:
                 old_version=old.version if old else 0,
                 new_value=new_value,
                 new_version=version_before[key] + 1,
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
             )
             wal_entries.append(entry)
         self._wal.extend(wal_entries)

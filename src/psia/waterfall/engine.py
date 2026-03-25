@@ -47,7 +47,7 @@ class WaterfallStage(int, enum.Enum):
     MEMORY = 6
 
 
-class StageDecision(str, enum.Enum):
+class StageDecision(enum.StrEnum):
     """Decision at each stage boundary."""
 
     ALLOW = "allow"

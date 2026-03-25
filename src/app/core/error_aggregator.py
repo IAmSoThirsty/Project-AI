@@ -20,8 +20,7 @@ import json
 import logging
 import threading
 import time
-from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -46,11 +45,11 @@ class GlobalErrorAggregator:
 
     def __init__(self):
         """Initialize error aggregator."""
-        self.entries: List[Dict[str, Any]] = []
+        self.entries: list[dict[str, Any]] = []
         self.lock = threading.Lock()
         self.overflow_count = 0
 
-    def log(self, exc: Exception, ctx: Dict[str, Any]):
+    def log(self, exc: Exception, ctx: dict[str, Any]):
         """
         Log an error with context.
 
@@ -163,7 +162,7 @@ class GlobalErrorAggregator:
 
             return vault_id
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """
         Get aggregator statistics.
 

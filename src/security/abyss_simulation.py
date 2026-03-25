@@ -10,11 +10,11 @@ and Goblin Angler hybrid lures for hard isolation.
 """
 
 import math
-import random
-import networkx as nx
-import sys
 import os
-from typing import Optional
+import random
+import sys
+
+import networkx as nx
 
 # Ensure src is in path for imports
 sys.path.append(os.getcwd() + "/src")
@@ -39,7 +39,7 @@ def cosine_similarity(a: list[float], b: list[float]) -> float:
     """Calculates cosine similarity between two context vectors."""
     if not a or not b:
         return 0.0
-    dot = sum(ai * bi for ai, bi in zip(a, b))
+    dot = sum(ai * bi for ai, bi in zip(a, b, strict=False))
     norm_a = math.sqrt(sum(ai**2 for ai in a))
     norm_b = math.sqrt(sum(bi**2 for bi in b))
     return dot / (norm_a * norm_b) if norm_a > 0 and norm_b > 0 else 0.0
@@ -77,8 +77,8 @@ class AbyssAsymmetryHybrid:
 
         # Goblin Angler Lures (Hidden from attacker)
         self.lures = set(random.sample(self.nodes, num_lures))
-        self.sensor_certainty = {node: 0.5 for node in self.lures}
-        self.node_probe_counts = {node: 0 for node in self.nodes}
+        self.sensor_certainty = dict.fromkeys(self.lures, 0.5)
+        self.node_probe_counts = dict.fromkeys(self.nodes, 0)
 
         # Security Gateway Components
         self.rfi_calculator = RFICalculator()

@@ -282,8 +282,7 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS cells (
                 cell_id TEXT PRIMARY KEY,
                 name TEXT,
@@ -296,11 +295,9 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 last_seen REAL,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS cell_health (
                 cell_id TEXT PRIMARY KEY,
                 cpu_usage REAL,
@@ -311,11 +308,9 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 consecutive_failures INTEGER,
                 healthy INTEGER
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS work_units (
                 work_id TEXT PRIMARY KEY,
                 workload_type TEXT,
@@ -327,19 +322,16 @@ class FederatedCellManager(BaseSubsystem, IConfigurable, IMonitorable, IObservab
                 status TEXT,
                 metadata TEXT
             )
-        """
-        )
+        """)
 
-        cursor.execute(
-            """
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS raft_log (
                 log_index INTEGER PRIMARY KEY,
                 term INTEGER,
                 command TEXT,
                 timestamp REAL
             )
-        """
-        )
+        """)
 
         conn.commit()
         conn.close()

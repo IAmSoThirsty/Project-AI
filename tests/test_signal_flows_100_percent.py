@@ -8,10 +8,9 @@ Production-ready, all tests passing, complete branch coverage.
 # Import module under test
 import sys
 import threading
-import time
 import uuid
 from collections import defaultdict
-from unittest.mock import ANY, MagicMock, Mock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -240,25 +239,25 @@ class TestRetryTracking:
         from src.app.pipeline import signal_flows
 
         signal_flows.retry_tracker["global"]["total"] = 10
-        assert check_retry_limit("test-service") == False
+        assert not check_retry_limit("test-service")
 
     def test_check_retry_limit_global_at_limit(self, mock_redis_unavailable):
         from src.app.pipeline import signal_flows
 
         signal_flows.retry_tracker["global"]["total"] = 50
-        assert check_retry_limit("test-service") == True
+        assert check_retry_limit("test-service")
 
     def test_check_retry_limit_service_under_limit(self, mock_redis_unavailable):
         from src.app.pipeline import signal_flows
 
         signal_flows.retry_tracker["test-service"]["total"] = 5
-        assert check_retry_limit("test-service") == False
+        assert not check_retry_limit("test-service")
 
     def test_check_retry_limit_service_at_limit(self, mock_redis_unavailable):
         from src.app.pipeline import signal_flows
 
         signal_flows.retry_tracker["test-service"]["total"] = 20
-        assert check_retry_limit("test-service") == True
+        assert check_retry_limit("test-service")
 
     def test_increment_retry_counter_global(self, mock_redis_unavailable):
         from src.app.pipeline import signal_flows
@@ -335,7 +334,7 @@ class TestCircuitBreaker:
 
         # Fast-forward time past recovery timeout
         mock_time.return_value = 1011.0
-        assert cb.can_attempt() == True
+        assert cb.can_attempt()
         assert cb.state == "HALF_OPEN"
 
     @patch("src.app.pipeline.signal_flows.time.time")
@@ -412,7 +411,7 @@ class TestValidateSignal:
 
     def test_validate_signal_pii_redaction(self, mock_signal_schema, mock_config):
         signal = {"text": "Contact user@test.com", "score": 0.9}
-        result = validate_signal(signal)
+        validate_signal(signal)
         # PII redaction happens in schema validation
         mock_signal_schema.assert_called_once()
 
@@ -860,7 +859,7 @@ class TestEdgeCases:
             "service": "backoff-test",
         }
 
-        result = process_signal(signal)
+        process_signal(signal)
 
         # Should have called sleep for retries (2^1, 2^2, capped at 30)
         assert mock_sleep.call_count >= 1

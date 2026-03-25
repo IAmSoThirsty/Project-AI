@@ -66,8 +66,7 @@ class ImageGenerationLeftPanel(QFrame):
     def __init__(self, parent=None):
         """Initialize left panel."""
         super().__init__(parent)
-        self.setStyleSheet(
-            f"""
+        self.setStyleSheet(f"""
             QFrame {{
                 background-color: {TRON_BLACK};
                 border-right: 2px solid {TRON_CYAN};
@@ -119,8 +118,7 @@ class ImageGenerationLeftPanel(QFrame):
                 border-right: 5px solid transparent;
                 border-top: 5px solid {TRON_CYAN};
             }}
-        """
-        )
+        """)
 
         self.setup_ui()
 
@@ -242,8 +240,7 @@ class ImageGenerationRightPanel(QFrame):
     def __init__(self, parent=None):
         """Initialize right panel."""
         super().__init__(parent)
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QFrame {
                 background-color: #1a1a1a;
                 border-left: 2px solid #00ffff;
@@ -251,8 +248,7 @@ class ImageGenerationRightPanel(QFrame):
             QLabel {
                 color: #00ffff;
             }
-        """
-        )
+        """)
 
         self.setup_ui()
 
@@ -305,8 +301,7 @@ class ImageGenerationRightPanel(QFrame):
 
         self.save_btn = QPushButton("💾 Save")
         self.save_btn.setEnabled(False)
-        self.save_btn.setStyleSheet(
-            f"""
+        self.save_btn.setStyleSheet(f"""
             QPushButton {{
                 background-color: {TRON_DARK};
                 color: {TRON_CYAN};
@@ -323,8 +318,7 @@ class ImageGenerationRightPanel(QFrame):
                 color: #555555;
                 border-color: #555555;
             }}
-        """
-        )
+        """)
         buttons_layout.addWidget(self.save_btn)
 
         self.copy_btn = QPushButton("📋 Copy")

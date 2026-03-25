@@ -79,7 +79,7 @@ class GovernanceIntegrationBridge:
         """Check if Galahad governance system is available."""
         try:
             # Try to import Galahad
-            from adversarial_tests.galahad_model import GalahadModel
+            from adversarial_tests.galahad_model import GalahadModel  # noqa: F401
 
             return True
         except ImportError:
@@ -90,7 +90,7 @@ class GovernanceIntegrationBridge:
         """Check if Cerberus governance system is available."""
         try:
             # Try to import Cerberus components
-            from app.core.cerberus_hydra import CerberusHydra
+            from app.core.cerberus_hydra import CerberusHydra  # noqa: F401
 
             return True
         except ImportError:
@@ -101,7 +101,7 @@ class GovernanceIntegrationBridge:
         """Check if Codex Deus governance system is available."""
         try:
             # Try to import Codex Deus
-            from app.agents.codex_deus_maximus import CodexDeusMaximus
+            from app.agents.codex_deus_maximus import CodexDeusMaximus  # noqa: F401
 
             return True
         except ImportError:

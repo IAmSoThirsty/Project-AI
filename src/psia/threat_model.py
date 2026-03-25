@@ -61,14 +61,14 @@ from __future__ import annotations
 
 import logging
 import time
-from dataclasses import dataclass, field
-from enum import Enum
+from dataclasses import dataclass
+from enum import StrEnum
 from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-class ThreatClass(str, Enum):
+class ThreatClass(StrEnum):
     """Classification of validator threats."""
 
     CRASH_FAULT = "crash_fault"
@@ -78,7 +78,7 @@ class ThreatClass(str, Enum):
     REPLAY_ATTACK = "replay_attack"
 
 
-class RiskLevel(str, Enum):
+class RiskLevel(StrEnum):
     """Risk level assessment."""
 
     LOW = "low"
@@ -220,7 +220,7 @@ class CollusionDetector:
         # Count agreements
         total = 0
         agreements = 0
-        for req_id, votes in requests.items():
+        for _req_id, votes in requests.items():
             if head_a in votes and head_b in votes:
                 total += 1
                 if votes[head_a] == votes[head_b]:

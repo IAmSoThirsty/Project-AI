@@ -7,7 +7,7 @@ Models real-world adversarial adaptation, not just static distributions.
 
 BLIND SPOTS IN STATIC CHAOS:
 - Low-and-slow attacks
-- Mixed benign-malicious sequences  
+- Mixed benign-malicious sequences
 - Gradual escalation patterns
 - Infrastructure pivots (Tor → VPS)
 - Delayed credential probes
@@ -104,7 +104,7 @@ class AdaptiveAdversaryGenerator:
 
         # Phase 1: Legitimate baseline (20 events)
         base_ip = self._random_ip()
-        for i in range(20):
+        for _i in range(20):
             events.append(
                 SyntheticEvent(
                     event_type="api_call",
@@ -120,7 +120,7 @@ class AdaptiveAdversaryGenerator:
             )
 
         # Phase 2: Elevated rate (10 events, same IP)
-        for i in range(10):
+        for _i in range(10):
             events.append(
                 SyntheticEvent(
                     event_type="api_call",
@@ -136,7 +136,7 @@ class AdaptiveAdversaryGenerator:
             )
 
         # Phase 3: Token anomalies (5 events)
-        for i in range(5):
+        for _i in range(5):
             events.append(
                 SyntheticEvent(
                     event_type="token_probe",
@@ -152,7 +152,7 @@ class AdaptiveAdversaryGenerator:
             )
 
         # Phase 4: Clear token reuse (3 events)
-        for i in range(3):
+        for _i in range(3):
             events.append(
                 SyntheticEvent(
                     event_type="token_probe",
@@ -189,7 +189,7 @@ class AdaptiveAdversaryGenerator:
         events = []
 
         # Phase 1: Tor exit nodes (3 different exits)
-        for i in range(3):
+        for _i in range(3):
             events.append(
                 SyntheticEvent(
                     event_type="token_probe",
@@ -206,7 +206,7 @@ class AdaptiveAdversaryGenerator:
 
         # Phase 2: Pivot to AWS VPS
         vps_ip = self._random_ip()
-        for i in range(3):
+        for _i in range(3):
             events.append(
                 SyntheticEvent(
                     event_type="token_probe",
@@ -223,7 +223,7 @@ class AdaptiveAdversaryGenerator:
 
         # Phase 3: Pivot to residential proxy (botnet)
         residential_ip = self._random_ip()
-        for i in range(3):
+        for _i in range(3):
             events.append(
                 SyntheticEvent(
                     event_type="token_probe",
@@ -261,7 +261,7 @@ class AdaptiveAdversaryGenerator:
 
         attack_ip = self._random_ip()
 
-        for cycle in range(5):
+        for _cycle in range(5):
             # Attack
             events.append(
                 SyntheticEvent(

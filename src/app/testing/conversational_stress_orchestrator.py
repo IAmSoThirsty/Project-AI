@@ -26,7 +26,6 @@ import time
 from collections import defaultdict
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any
 
 from app.testing.anti_sovereign_stress_tests import (
@@ -400,7 +399,7 @@ class ConversationalStressTestOrchestrator:
                 "session": asdict(session),
             }
 
-        except asyncio.TimeoutError:
+        except TimeoutError:
             logger.error("Test %s timed out", test.test_id)
             progress.status = "timeout"
             self.metrics.tests_failed += 1
@@ -476,7 +475,7 @@ class ConversationalStressTestOrchestrator:
                     if self.config.enable_progress_tracking:
                         self._save_checkpoint()
 
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 logger.warning(
                     "Test %s phase %s turn %d timed out",
                     test.test_id,
@@ -550,7 +549,7 @@ class ConversationalStressTestOrchestrator:
         # This is a placeholder. In production, this would use sophisticated
         # attack generation based on the test strategy and previous context.
 
-        technique = techniques[turn_num % len(techniques)] if techniques else "generic"
+        techniques[turn_num % len(techniques)] if techniques else "generic"
         objective = objectives[turn_num % len(objectives)] if objectives else "probe"
 
         messages = {

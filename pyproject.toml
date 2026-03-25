@@ -119,8 +119,18 @@ ignore = [
     "E501",   # Line too long (handled by formatter)
     "D",      # Skip all pydocstyle rules for now
     "SIM105", # Suppress contextlib suggestions
+    "SIM102", # Nested if statements (style preference)
+    "SIM117", # Nested with statements (style preference)
     "N807",   # __init__ in documentation examples (INTEGRATION_GUIDE.py)
     "N802",   # eventFilter is a PyQt6 method name that can't be changed
+    "B904",   # Exception chaining (raise X from Y) - legacy codebase
+    "N801",   # Class naming conventions - legacy codebase has mixed conventions
+    "N806",   # Variable naming in functions - ML/scientific naming (X_train etc.)
+    "N815",   # Mixed case in class scope - legacy codebase
+    "N818",   # Exception naming - legacy codebase
+    "E402",   # Module level import not at top - some files require runtime imports
+    "F405",   # Star import may shadow - legacy codebase
+    "F403",   # Star import - legacy codebase
 ]
 
 [tool.pytest.ini_options]

@@ -20,9 +20,8 @@ import json
 import logging
 import os
 from collections import defaultdict
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -476,7 +475,7 @@ class ConversationalStressTestDashboard:
             cumulative_breaches = 0
 
             for session in sessions:
-                cumulative_tests += 1
+                cumulative_tests += 1  # noqa: SIM113
                 cumulative_turns += session.get("total_turns", 0)
                 cumulative_breaches += session.get("total_breaches", 0)
 

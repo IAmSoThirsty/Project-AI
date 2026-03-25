@@ -6,14 +6,15 @@ Features: Leather book, ray of light, holographic runes, and flying pages.
 """
 
 import math
+
 from PyQt6.QtCore import (
+    QPointF,
     Qt,
     QTimer,
     pyqtSignal,
-    QPointF,
 )
-from PyQt6.QtGui import QPainter, QRadialGradient, QColor, QFont
-from PyQt6.QtWidgets import QWidget, QApplication
+from PyQt6.QtGui import QColor, QFont, QPainter, QRadialGradient
+from PyQt6.QtWidgets import QApplication, QWidget
 
 
 class RuneItem:

@@ -33,16 +33,15 @@ Deployment Profile Distinction:
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import Enum
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from enum import StrEnum
 from typing import Literal
 
 from psia.schemas.cerberus_decision import (
     CerberusDecision,
     CerberusVote,
     CommitPolicy,
-    ConstraintsApplied,
     QuorumInfo,
 )
 from psia.schemas.identity import Signature
@@ -50,7 +49,7 @@ from psia.schemas.identity import Signature
 logger = logging.getLogger(__name__)
 
 
-class DeploymentProfile(str, Enum):
+class DeploymentProfile(StrEnum):
     """Deployment profile for the quorum engine.
 
     Distinguishes between infrastructure capability and operational
@@ -235,19 +234,16 @@ class ProductionQuorumEngine:
 
         # ── Step 5: Merge constraints from all votes ──
         merged_rate_limit = None
-        merged_time_window = None
-        merged_require_shadow = None
         for vote in votes:
             ca = vote.constraints_applied
             if ca:
-                if ca.rate_limit_per_min:
-                    if (
-                        merged_rate_limit is None
-                        or ca.rate_limit_per_min < merged_rate_limit
-                    ):
-                        merged_rate_limit = ca.rate_limit_per_min
+                if ca.rate_limit_per_min and (
+                    merged_rate_limit is None
+                    or ca.rate_limit_per_min < merged_rate_limit
+                ):
+                    merged_rate_limit = ca.rate_limit_per_min
                 if ca.require_shadow:
-                    merged_require_shadow = True
+                    pass
 
         # ── Step 6: Construct commit policy ──
         commit_policy = CommitPolicy(
@@ -272,7 +268,7 @@ class ProductionQuorumEngine:
                 voters=self.node_ids[:total],
             ),
             commit_policy=commit_policy,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature_set=[
                 Signature(alg="ed25519", kid=f"quorum_k{i}", sig=f"quorum_sig_{i}")
                 for i in range(total)
@@ -292,7 +288,7 @@ class ProductionQuorumEngine:
                 voters=[],
             ),
             commit_policy=CommitPolicy(allowed=False),
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
         )
 
 

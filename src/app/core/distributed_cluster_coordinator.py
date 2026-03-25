@@ -277,7 +277,7 @@ class ClusterCoordinator:
         self.hostname = socket.gethostname()
         try:
             self.ip_address = socket.gethostbyname(self.hostname)
-        except:
+        except Exception:
             self.ip_address = "127.0.0.1"
 
         # Node state

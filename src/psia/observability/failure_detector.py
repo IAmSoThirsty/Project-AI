@@ -29,15 +29,15 @@ import logging
 import math
 import time
 from collections import deque
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import Enum
-from typing import Callable
+from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from enum import StrEnum
 
 logger = logging.getLogger(__name__)
 
 
-class CircuitState(str, Enum):
+class CircuitState(StrEnum):
     """Circuit breaker state."""
 
     CLOSED = "closed"  # Normal operation
@@ -278,7 +278,7 @@ class FailureDetector:
             alert = CascadeAlert(
                 affected_components=open_circuits,
                 correlation_score=len(open_circuits) / max(len(self._circuit_state), 1),
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
                 recommended_action=(
                     "SAFE-HALT"
                     if len(open_circuits) > self.cascade_threshold

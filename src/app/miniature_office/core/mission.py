@@ -6,10 +6,10 @@ Implements Codex Sections 2 (Mission Logic) and 4 (Operational Workflows)
 """
 
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Callable, Dict, List, Optional
 
 from app.miniature_office.core.audit import EventType, get_audit_log
 from app.miniature_office.core.entity import Entity, EntityType
@@ -40,15 +40,15 @@ class AcceptanceCriteria:
 
     criteria_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     description: str = ""
-    validator: Optional[Callable[[], bool]] = None
+    validator: Callable[[], bool] | None = None
     is_met: bool = False
-    checked_at: Optional[datetime] = None
+    checked_at: datetime | None = None
 
     def check(self) -> bool:
         """Check if criteria is met"""
         if self.validator:
             self.is_met = self.validator()
-        self.checked_at = datetime.now(timezone.utc)
+        self.checked_at = datetime.now(UTC)
         return self.is_met
 
 
@@ -58,7 +58,7 @@ class Condition:
 
     condition_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     description: str = ""
-    checker: Optional[Callable[[], bool]] = None
+    checker: Callable[[], bool] | None = None
     is_satisfied: bool = False
 
     def check(self) -> bool:
@@ -82,18 +82,18 @@ class Directive(Entity):
         name: str,
         level: DirectiveLevel,
         description: str = "",
-        parent_directive_id: Optional[str] = None,
+        parent_directive_id: str | None = None,
     ):
         super().__init__(directive_id, EntityType.ARTIFACT, name)
         self.level = level
         self.description = description
         self.parent_directive_id = parent_directive_id
-        self.child_directives: List[str] = []
+        self.child_directives: list[str] = []
 
         # Directive formalism (Codex 2.1)
-        self.preconditions: List[Condition] = []
-        self.postconditions: List[Condition] = []
-        self.acceptance_criteria: List[AcceptanceCriteria] = []
+        self.preconditions: list[Condition] = []
+        self.postconditions: list[Condition] = []
+        self.acceptance_criteria: list[AcceptanceCriteria] = []
 
         # Log creation
         get_audit_log().log_event(
@@ -107,7 +107,7 @@ class Directive(Entity):
         )
 
     def add_precondition(
-        self, description: str, checker: Optional[Callable] = None
+        self, description: str, checker: Callable | None = None
     ) -> Condition:
         """Add a precondition"""
         condition = Condition(description=description, checker=checker)
@@ -115,7 +115,7 @@ class Directive(Entity):
         return condition
 
     def add_postcondition(
-        self, description: str, checker: Optional[Callable] = None
+        self, description: str, checker: Callable | None = None
     ) -> Condition:
         """Add a postcondition"""
         condition = Condition(description=description, checker=checker)
@@ -123,7 +123,7 @@ class Directive(Entity):
         return condition
 
     def add_acceptance_criterion(
-        self, description: str, validator: Optional[Callable] = None
+        self, description: str, validator: Callable | None = None
     ) -> AcceptanceCriteria:
         """Add an acceptance criterion"""
         criterion = AcceptanceCriteria(description=description, validator=validator)
@@ -164,16 +164,16 @@ class Task(Directive):
         task_id: str,
         name: str,
         description: str = "",
-        parent_directive_id: Optional[str] = None,
-        assigned_agent_id: Optional[str] = None,
+        parent_directive_id: str | None = None,
+        assigned_agent_id: str | None = None,
     ):
         super().__init__(
             task_id, name, DirectiveLevel.TASK_NODE, description, parent_directive_id
         )
         self.state = TaskState.SCHEDULED
         self.assigned_agent_id = assigned_agent_id
-        self.blocked_reason: Optional[str] = None
-        self.state_history: List[Dict] = []
+        self.blocked_reason: str | None = None
+        self.state_history: list[dict] = []
         self.ambiguity_score: float = 0.0
 
         self._record_state_change(TaskState.SCHEDULED, "Task created")
@@ -187,7 +187,7 @@ class Task(Directive):
             "from_state": old_state.value if old_state else None,
             "to_state": new_state.value,
             "reason": reason,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
         self.state_history.append(change_record)
 
@@ -231,13 +231,11 @@ class Task(Directive):
             return False
 
         # Special checks for certain states
-        if new_state == TaskState.APPROVAL:
-            if not self.check_postconditions():
-                return False
+        if new_state == TaskState.APPROVAL and not self.check_postconditions():
+            return False
 
-        if new_state == TaskState.MERGED:
-            if not self.is_ready_for_commit():
-                return False
+        if new_state == TaskState.MERGED and not self.is_ready_for_commit():
+            return False
 
         self._record_state_change(new_state, reason)
         return True
@@ -274,13 +272,13 @@ class DecisionTranscript:
     transcript_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     task_id: str = ""
     meeting_date: datetime = field(default_factory=datetime.utcnow)
-    participants: List[str] = field(default_factory=list)  # Agent IDs
+    participants: list[str] = field(default_factory=list)  # Agent IDs
     ambiguity_addressed: str = ""
-    decisions_made: List[str] = field(default_factory=list)
-    action_items: List[str] = field(default_factory=list)
+    decisions_made: list[str] = field(default_factory=list)
+    action_items: list[str] = field(default_factory=list)
     resolution: str = ""
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "transcript_id": self.transcript_id,
             "task_id": self.task_id,
@@ -299,14 +297,14 @@ class MeetingSystem:
     """
 
     def __init__(self):
-        self.transcripts: Dict[str, DecisionTranscript] = {}
+        self.transcripts: dict[str, DecisionTranscript] = {}
 
     def hold_meeting(
         self,
         task: Task,
-        participants: List[str],
+        participants: list[str],
         ambiguity_addressed: str,
-        decisions_made: List[str],
+        decisions_made: list[str],
         resolution: str,
     ) -> DecisionTranscript:
         """
@@ -339,11 +337,11 @@ class MeetingSystem:
 
         return transcript
 
-    def get_transcript(self, transcript_id: str) -> Optional[DecisionTranscript]:
+    def get_transcript(self, transcript_id: str) -> DecisionTranscript | None:
         """Retrieve a meeting transcript"""
         return self.transcripts.get(transcript_id)
 
-    def get_task_transcripts(self, task_id: str) -> List[DecisionTranscript]:
+    def get_task_transcripts(self, task_id: str) -> list[DecisionTranscript]:
         """Get all transcripts for a task"""
         return [t for t in self.transcripts.values() if t.task_id == task_id]
 
@@ -357,7 +355,7 @@ def get_meeting_system() -> MeetingSystem:
     return _meeting_system
 
 
-def get_task_by_id(task_id: str) -> Optional[Task]:
+def get_task_by_id(task_id: str) -> Task | None:
     """Get a task by ID from the entity registry"""
     from app.miniature_office.core.entity import get_registry
 

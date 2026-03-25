@@ -19,10 +19,10 @@ Plane cannot legislate governance, etc.
 from __future__ import annotations
 
 import enum
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
-class Plane(str, enum.Enum):
+class Plane(enum.StrEnum):
     """The six architectural planes of the PSIA."""
 
     CANONICAL = "canonical"
@@ -33,7 +33,7 @@ class Plane(str, enum.Enum):
     INGRESS = "ingress"
 
 
-class PlaneCapability(str, enum.Enum):
+class PlaneCapability(enum.StrEnum):
     """Atomic capabilities that a plane may or may not exercise."""
 
     READ_CANONICAL = "read_canonical"
@@ -53,7 +53,7 @@ class PlaneCapability(str, enum.Enum):
     ISSUE_TOKEN = "issue_token"
 
 
-class StorageMode(str, enum.Enum):
+class StorageMode(enum.StrEnum):
     """Storage access pattern for a plane."""
 
     NONE = "none"
@@ -62,7 +62,7 @@ class StorageMode(str, enum.Enum):
     READ_WRITE = "read_write"
 
 
-class NetworkAccess(str, enum.Enum):
+class NetworkAccess(enum.StrEnum):
     """Network access pattern for a plane."""
 
     EDGE_FACING = "edge_facing"

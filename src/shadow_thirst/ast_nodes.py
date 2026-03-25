@@ -74,10 +74,7 @@ class TypeAnnotation(ASTNode):
     type_params: list["TypeAnnotation"] = field(default_factory=list)
 
     def __str__(self) -> str:
-        if self.qualifier:
-            base = f"{self.qualifier.value}<{self.name}>"
-        else:
-            base = self.name
+        base = f"{self.qualifier.value}<{self.name}>" if self.qualifier else self.name
 
         if self.type_params:
             params = ", ".join(str(t) for t in self.type_params)

@@ -234,7 +234,7 @@ class SpectrumAnalyzer:
 
     def _get_channel_data(self, band: str) -> dict[int, ChannelInfo]:
         """Get channel data for band"""
-        if band == "2.4ghz":
+        if band == "2.4ghz":  # noqa: SIM116
             return self.channel_data_2_4ghz
         elif band == "5ghz":
             return self.channel_data_5ghz

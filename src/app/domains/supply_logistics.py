@@ -385,7 +385,7 @@ class SupplyLogisticsSubsystem(
             rt = ResourceType(resource_type)
             with self._cache_lock:
                 return self._availability_cache.get(rt, 0.0)
-        except:
+        except Exception:
             return 0.0
 
     # ICommandable implementation

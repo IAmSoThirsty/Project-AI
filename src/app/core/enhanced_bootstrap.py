@@ -218,7 +218,7 @@ class EnhancedBootstrapOrchestrator:
         in_degree = {}
         graph = {}
 
-        for subsystem_id, info in self._subsystem_metadata.items():
+        for subsystem_id, _info in self._subsystem_metadata.items():
             in_degree[subsystem_id] = 0
             graph[subsystem_id] = []
 

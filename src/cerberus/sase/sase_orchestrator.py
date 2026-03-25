@@ -214,7 +214,7 @@ class SASEOrchestrator:
                         requestor="SASE_ORCHESTRATOR",
                     )
 
-                    containment_result = self.containment_orchestrator.orchestrate(
+                    self.containment_orchestrator.orchestrate(
                         containment_req,
                         feature_vector,
                         confidence_assessment,

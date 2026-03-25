@@ -155,7 +155,7 @@ class SurvivorSupportSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
             for _, callback in subscribers:
                 try:
                     callback(data)
-                except:
+                except Exception:
                     pass
             return len(subscribers)
 
@@ -175,14 +175,14 @@ class SurvivorSupportSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
             with self._metrics_lock:
                 self._metrics["survivors_registered"] += 1
             return survivor
-        except:
+        except Exception:
             return None
 
     def _save_state(self):
         try:
             with open(self.data_path / "state.json", "w") as f:
                 json.dump({"metrics": self._metrics}, f)
-        except:
+        except Exception:
             pass
 
     def _load_state(self):
@@ -192,5 +192,5 @@ class SurvivorSupportSubsystem(BaseSubsystem, ICommandable, IMonitorable, IObser
                 with open(state_file) as f:
                     state = json.load(f)
                 self._metrics = state.get("metrics", self._metrics)
-        except:
+        except Exception:
             pass

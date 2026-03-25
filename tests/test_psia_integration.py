@@ -13,7 +13,7 @@ Verifies cross-plane interactions:
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -71,7 +71,7 @@ def _envelope(request_id: str = "req_int_001") -> RequestEnvelope:
         capability_token_id="cap_001",
         intent=Intent(action="read", resource="data://test", parameters={}),
         context=RequestContext(trace_id="trace_int_001"),
-        timestamps=RequestTimestamps(created_at=datetime.now(timezone.utc).isoformat()),
+        timestamps=RequestTimestamps(created_at=datetime.now(UTC).isoformat()),
         signature=_sig(),
     )
 
@@ -358,7 +358,7 @@ class TestFullStackIntegration:
         ledger = DurableLedger()
 
         for i in range(5):
-            wf_result = engine.process(_envelope(request_id=f"req_{i:04d}"))
+            engine.process(_envelope(request_id=f"req_{i:04d}"))
             fd.record_success("waterfall")
 
             coordinator.commit(

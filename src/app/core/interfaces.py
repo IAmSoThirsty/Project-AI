@@ -74,14 +74,14 @@ class GovernanceEngineInterface(ABC):
             Dictionary with metrics like total_evaluations, approvals, blocks, etc.
         """
 
-    def initialize(self) -> None:
+    def initialize(self) -> None:  # noqa: B027
         """
         Initialize the governance engine (optional hook).
 
         Override this method if your engine needs initialization logic.
         """
 
-    def shutdown(self) -> None:
+    def shutdown(self) -> None:  # noqa: B027
         """
         Shutdown the governance engine (optional hook).
 
@@ -166,14 +166,14 @@ class MemoryEngineInterface(ABC):
             Dictionary with metrics like total_records, storage_size, etc.
         """
 
-    def initialize(self) -> None:
+    def initialize(self) -> None:  # noqa: B027
         """
         Initialize the memory engine (optional hook).
 
         Override this method if your engine needs initialization logic.
         """
 
-    def shutdown(self) -> None:
+    def shutdown(self) -> None:  # noqa: B027
         """
         Shutdown the memory engine (optional hook).
 

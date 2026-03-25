@@ -5,8 +5,8 @@ Security middleware and helpers for production deployment
 """
 
 import os
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable
 
 from flask import jsonify, request
 
@@ -59,9 +59,8 @@ def validate_json_request(f: Callable) -> Callable:
 
     @wraps(f)
     def wrapper(*args, **kwargs):
-        if request.method in ["POST", "PUT", "PATCH"]:
-            if not request.is_json:
-                return jsonify({"error": "Content-Type must be application/json"}), 415
+        if request.method in ["POST", "PUT", "PATCH"] and not request.is_json:
+            return jsonify({"error": "Content-Type must be application/json"}), 415
         return f(*args, **kwargs)
 
     return wrapper

@@ -20,14 +20,15 @@ import hashlib
 import json
 import logging
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any, Callable
+from datetime import UTC, datetime
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-class EventType(str, enum.Enum):
+class EventType(enum.StrEnum):
     """Complete event taxonomy for PSIA observability."""
 
     # ── Waterfall lifecycle ───────────────────────────────
@@ -95,7 +96,7 @@ class EventType(str, enum.Enum):
     NODE_JOINED = "bootstrap.node.joined"
 
 
-class EventSeverity(str, enum.Enum):
+class EventSeverity(enum.StrEnum):
     """Severity levels for PSIA events."""
 
     DEBUG = "debug"
@@ -244,10 +245,7 @@ class EventBus:
         Returns:
             List of PSIAEvent instances in chronological order
         """
-        if limit is not None:
-            events = self._history[-limit:]
-        else:
-            events = list(self._history)
+        events = self._history[-limit:] if limit is not None else list(self._history)
         self._history.clear()
         return events
 
@@ -293,7 +291,7 @@ def create_event(
         request_id=request_id,
         subject=subject,
         severity=severity,
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         payload=payload or {},
         artifact_hashes=artifact_hashes or {},
     )

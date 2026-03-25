@@ -37,19 +37,14 @@ This is a governed substrate, not an application.
 ============================================================================
 """
 
-import base64
-import hashlib
 import json
 import logging
-import os
 import threading
 import time
 import uuid
-from abc import ABC, abstractmethod
-from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Protocol, Tuple
+from typing import Any, Protocol
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +57,7 @@ class IVault(Protocol):
     """Vault interface for denied content storage."""
 
     def deny(
-        self, doc: str, reason: str, metadata: Optional[Dict[str, Any]] = None
+        self, doc: str, reason: str, metadata: dict[str, Any] | None = None
     ) -> str:
         """Store denied content and return vault ID."""
         ...
@@ -74,10 +69,10 @@ class IAuditLog(Protocol):
     def log_event(
         self,
         event_type: str,
-        data: Dict[str, Any],
+        data: dict[str, Any],
         actor: str,
         description: str,
-        trace_id: Optional[str] = None,
+        trace_id: str | None = None,
     ) -> bool:
         """Log audit event with trace context."""
         ...
@@ -86,11 +81,11 @@ class IAuditLog(Protocol):
 class IErrorAggregator(Protocol):
     """Error aggregator interface for centralized error handling."""
 
-    def log(self, exc: Exception, ctx: Dict[str, Any]):
+    def log(self, exc: Exception, ctx: dict[str, Any]):
         """Log an error with context."""
         ...
 
-    def flush_to_vault(self, vault: IVault, doc: str) -> Optional[str]:
+    def flush_to_vault(self, vault: IVault, doc: str) -> str | None:
         """Flush aggregated errors to vault."""
         ...
 
@@ -135,14 +130,14 @@ class GlobalErrorAggregator:
         if self._initialized:
             return
 
-        self.entries: List[Dict[str, Any]] = []
+        self.entries: list[dict[str, Any]] = []
         self.entry_lock = threading.Lock()
         self.overflow_count = 0
         self._initialized = True
 
         logger.info("GlobalErrorAggregator singleton initialized")
 
-    def log(self, exc: Exception, ctx: Dict[str, Any]):
+    def log(self, exc: Exception, ctx: dict[str, Any]):
         """
         Log an error with context.
 
@@ -217,7 +212,7 @@ class GlobalErrorAggregator:
         with self.entry_lock:
             return json.dumps(self.entries, indent=2)
 
-    def flush_to_vault(self, vault: IVault, doc: str) -> Optional[str]:
+    def flush_to_vault(self, vault: IVault, doc: str) -> str | None:
         """
         Flush aggregated errors to vault.
 
@@ -263,7 +258,7 @@ class GlobalErrorAggregator:
 
             return vault_id
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get aggregator statistics."""
         with self.entry_lock:
             return {
@@ -327,7 +322,7 @@ class RetryTracker:
             self.reset_count += 1
             logger.debug(f"Retry counter reset (count: {self.reset_count})")
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get retry statistics."""
         with self.lock:
             return {
@@ -366,7 +361,7 @@ _retry_tracker = RetryTracker()
 
 
 def forbidden_validator(
-    text: Optional[str], forbidden_phrases: List[str], context: SignalContext
+    text: str | None, forbidden_phrases: list[str], context: SignalContext
 ) -> None:
     """
     Validate text against forbidden phrases with fuzzy matching.
@@ -546,11 +541,11 @@ CONFIG = {
 
 
 def process_signal(
-    signal: Dict[str, Any],
+    signal: dict[str, Any],
     is_incident: bool = False,
-    vault: Optional[IVault] = None,
-    audit: Optional[IAuditLog] = None,
-) -> Dict[str, Any]:
+    vault: IVault | None = None,
+    audit: IAuditLog | None = None,
+) -> dict[str, Any]:
     """
     Process signal through distress/incident kernel.
 

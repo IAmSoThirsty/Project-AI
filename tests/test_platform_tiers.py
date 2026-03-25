@@ -528,7 +528,7 @@ class TestTier3Registration:
         # Note: This test may require PyQt6 environment
         # For now, just verify the import and registration logic exists
         try:
-            from app.gui.dashboard_main import DashboardMainWindow
+            from app.gui.dashboard_main import DashboardMainWindow  # noqa: F401
 
             # If we can import it, the registration code exists
             assert True
@@ -540,7 +540,9 @@ class TestTier3Registration:
         # Note: This test may require PyQt6 environment
         # For now, just verify the import and registration logic exists
         try:
-            from app.gui.leather_book_interface import LeatherBookInterface
+            from app.gui.leather_book_interface import (
+                LeatherBookInterface,  # noqa: F401
+            )
 
             # If we can import it, the registration code exists
             assert True

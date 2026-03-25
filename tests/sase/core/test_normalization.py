@@ -1,7 +1,8 @@
-import pytest
 import urllib.error
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 from src.cerberus.sase.core.normalization import TorDetector
+
 
 @patch("urllib.request.urlopen")
 def test_tor_detector_success(mock_urlopen):
@@ -28,6 +29,7 @@ ExitAddress 80.67.167.81 2026-03-14 02:38:26
     assert detector.is_tor_exit("171.25.193.25") is True
     assert detector.is_tor_exit("1.1.1.1") is False
 
+
 @patch("urllib.request.urlopen")
 def test_tor_detector_empty_response(mock_urlopen):
     # Setup mock response
@@ -42,6 +44,7 @@ def test_tor_detector_empty_response(mock_urlopen):
     assert "185.220.101.2" in detector.tor_exit_nodes
     assert len(detector.tor_exit_nodes) == 2
 
+
 @patch("urllib.request.urlopen")
 def test_tor_detector_http_error(mock_urlopen):
     # Setup mock to raise URLError
@@ -53,6 +56,7 @@ def test_tor_detector_http_error(mock_urlopen):
     assert "185.220.101.1" in detector.tor_exit_nodes
     assert "185.220.101.2" in detector.tor_exit_nodes
     assert len(detector.tor_exit_nodes) == 2
+
 
 @patch("urllib.request.urlopen")
 def test_tor_detector_timeout(mock_urlopen):

@@ -265,7 +265,7 @@ class TelemetryGateway:
         self.pending_queue.append(event)
 
         # 8. Store immutably
-        event_hash = self.store.store(event)
+        self.store.store(event)
 
         logger.info(f"Telemetry ingested: {event.event_id}")
 

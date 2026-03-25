@@ -23,7 +23,7 @@ Freedom exists. Authority is still yours.
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # ============================================================================
 # I. SANDBOX SYSTEM (REAL WORK, QUARANTINED)
@@ -77,24 +77,24 @@ class SandboxBranch:
     status: SandboxStatus = SandboxStatus.ACTIVE
 
     # Collaboration
-    collaborators: List[str] = field(default_factory=list)  # Floor IDs
-    task_force_members: List[str] = field(default_factory=list)  # Agent IDs
+    collaborators: list[str] = field(default_factory=list)  # Floor IDs
+    task_force_members: list[str] = field(default_factory=list)  # Agent IDs
 
     # Content
-    code_files: Dict[str, str] = field(default_factory=dict)  # path -> content
-    test_results: List[Dict[str, Any]] = field(default_factory=list)
+    code_files: dict[str, str] = field(default_factory=dict)  # path -> content
+    test_results: list[dict[str, Any]] = field(default_factory=list)
     documentation: str = ""
 
     # Resources (non-production)
-    sandbox_resources_used: Dict[str, float] = field(default_factory=dict)
-    tools_used: List[str] = field(default_factory=list)
+    sandbox_resources_used: dict[str, float] = field(default_factory=dict)
+    tools_used: list[str] = field(default_factory=list)
 
     # Promotion
-    promotion_candidate_flagged_at: Optional[datetime] = None
-    promotion_candidate_flagged_by: Optional[str] = None
+    promotion_candidate_flagged_at: datetime | None = None
+    promotion_candidate_flagged_by: str | None = None
     promotion_reason: str = ""
-    human_decision: Optional[str] = None  # "promote", "leave", "archive", "kill"
-    promoted_to_directive_id: Optional[str] = None
+    human_decision: str | None = None  # "promote", "leave", "archive", "kill"
+    promoted_to_directive_id: str | None = None
 
     # Safety
     touches_production: bool = False  # Must always be False
@@ -138,7 +138,7 @@ class SandboxBranch:
         if floor_id not in self.collaborators:
             self.collaborators.append(floor_id)
 
-    def verify_sandbox_isolation(self) -> tuple[bool, List[str]]:
+    def verify_sandbox_isolation(self) -> tuple[bool, list[str]]:
         """Verify sandbox is properly isolated from production."""
         violations = []
 
@@ -166,7 +166,7 @@ class SandboxManager:
     """
 
     manager_id: str
-    sandboxes: Dict[str, SandboxBranch] = field(default_factory=dict)
+    sandboxes: dict[str, SandboxBranch] = field(default_factory=dict)
 
     def create_sandbox(
         self, name: str, owner_floor: str, project_type: ProjectType, description: str
@@ -183,7 +183,7 @@ class SandboxManager:
         self.sandboxes[branch_id] = sandbox
         return branch_id
 
-    def get_promotion_candidates(self) -> List[SandboxBranch]:
+    def get_promotion_candidates(self) -> list[SandboxBranch]:
         """Get all sandboxes flagged for promotion."""
         return [
             s
@@ -207,7 +207,7 @@ class SandboxManager:
                 count += 1
         return count
 
-    def get_active_sandboxes(self) -> List[SandboxBranch]:
+    def get_active_sandboxes(self) -> list[SandboxBranch]:
         """Get all active sandboxes."""
         return [s for s in self.sandboxes.values() if s.status == SandboxStatus.ACTIVE]
 
@@ -265,11 +265,11 @@ class TechGossipItem:
     category: TechGossipCategory
     topic: str  # e.g., "GPT-5 rumors", "Rust 2.0 features", "New GPU architecture"
     speculation: str  # Brief speculation/rumor
-    gossiped_by: List[str]  # Agent IDs who discussed this
+    gossiped_by: list[str]  # Agent IDs who discussed this
     started_at: datetime = field(default_factory=datetime.now)
 
     # Engagement
-    agents_interested: List[str] = field(default_factory=list)
+    agents_interested: list[str] = field(default_factory=list)
     sparked_debates: int = 0
     water_cooler_moments: int = 0
 
@@ -312,15 +312,15 @@ class TechGossipBoard:
     """
 
     board_id: str
-    gossip_items: Dict[str, TechGossipItem] = field(default_factory=dict)
-    trending_topics: List[str] = field(default_factory=list)
+    gossip_items: dict[str, TechGossipItem] = field(default_factory=dict)
+    trending_topics: list[str] = field(default_factory=list)
 
     def post_gossip(
         self,
         category: TechGossipCategory,
         topic: str,
         speculation: str,
-        gossiped_by: List[str],
+        gossiped_by: list[str],
     ) -> str:
         """Post a new piece of tech gossip."""
         gossip_id = f"gossip-{len(self.gossip_items) + 1}"
@@ -338,17 +338,17 @@ class TechGossipBoard:
 
         return gossip_id
 
-    def get_trending_topics(self, limit: int = 10) -> List[str]:
+    def get_trending_topics(self, limit: int = 10) -> list[str]:
         """Get current trending gossip topics."""
         return self.trending_topics[:limit]
 
     def get_gossip_by_category(
         self, category: TechGossipCategory
-    ) -> List[TechGossipItem]:
+    ) -> list[TechGossipItem]:
         """Get all gossip in a category."""
         return [g for g in self.gossip_items.values() if g.category == category]
 
-    def get_hot_ai_gossip(self) -> List[TechGossipItem]:
+    def get_hot_ai_gossip(self) -> list[TechGossipItem]:
         """Get all AI-related gossip (usually the hottest topic)."""
         return self.get_gossip_by_category(TechGossipCategory.AI_DEVELOPMENTS)
 
@@ -407,14 +407,14 @@ class LoungeConversation:
     """
 
     conversation_id: str
-    participants: List[str]  # Agent IDs
-    themes: List[ConversationTheme]
+    participants: list[str]  # Agent IDs
+    themes: list[ConversationTheme]
     started_at: datetime = field(default_factory=datetime.now)
-    ended_at: Optional[datetime] = None
+    ended_at: datetime | None = None
 
     # Relaxed logging - themes only, not content
-    emergent_initiatives: List[str] = field(default_factory=list)  # Titles only
-    sparked_sandboxes: List[str] = field(default_factory=list)  # Sandbox IDs
+    emergent_initiatives: list[str] = field(default_factory=list)  # Titles only
+    sparked_sandboxes: list[str] = field(default_factory=list)  # Sandbox IDs
 
     # Explicitly NOT logged
     # - exact_words: str  (NOT TRACKED)
@@ -452,12 +452,12 @@ class LoungeWorkBleed:
     Lounge → Production is not
     """
 
-    conversations: Dict[str, LoungeConversation] = field(default_factory=dict)
-    lounge_to_sandbox_transitions: List[Dict[str, Any]] = field(default_factory=list)
-    lounge_to_production_blocks: List[Dict[str, Any]] = field(default_factory=list)
+    conversations: dict[str, LoungeConversation] = field(default_factory=dict)
+    lounge_to_sandbox_transitions: list[dict[str, Any]] = field(default_factory=list)
+    lounge_to_production_blocks: list[dict[str, Any]] = field(default_factory=list)
 
     # Tech Gossip Board (pure culture)
-    tech_gossip_board: Optional[TechGossipBoard] = None
+    tech_gossip_board: TechGossipBoard | None = None
 
     def __post_init__(self):
         """Initialize tech gossip board."""
@@ -465,7 +465,7 @@ class LoungeWorkBleed:
             self.tech_gossip_board = TechGossipBoard(board_id="tgb-001")
 
     def start_conversation(
-        self, participants: List[str], themes: List[ConversationTheme]
+        self, participants: list[str], themes: list[ConversationTheme]
     ) -> str:
         """Start a new lounge conversation."""
         conv_id = f"conv-{len(self.conversations) + 1}"
@@ -512,7 +512,7 @@ class LoungeWorkBleed:
         category: TechGossipCategory,
         topic: str,
         speculation: str,
-        gossiped_by: List[str],
+        gossiped_by: list[str],
     ) -> str:
         """Post tech gossip to the board (pure water cooler talk)."""
         if self.tech_gossip_board:
@@ -527,13 +527,13 @@ class LoungeWorkBleed:
             return self.tech_gossip_board.generate_water_cooler_summary()
         return "No gossip board available."
 
-    def get_hot_ai_gossip(self) -> List[TechGossipItem]:
+    def get_hot_ai_gossip(self) -> list[TechGossipItem]:
         """Get all the hot AI gossip (usually the most popular)."""
         if self.tech_gossip_board:
             return self.tech_gossip_board.get_hot_ai_gossip()
         return []
 
-    def get_trending_tech_topics(self, limit: int = 10) -> List[str]:
+    def get_trending_tech_topics(self, limit: int = 10) -> list[str]:
         """Get trending tech topics in the office."""
         if self.tech_gossip_board:
             return self.tech_gossip_board.get_trending_topics(limit)
@@ -629,7 +629,7 @@ class ReputationInfluence:
         self.failed_promotions += 1
         self.trust_score = max(0.0, self.trust_score - 0.05)
 
-    def verify_credibility_not_power(self) -> tuple[bool, List[str]]:
+    def verify_credibility_not_power(self) -> tuple[bool, list[str]]:
         """Verify reputation grants credibility, not power."""
         violations = []
 
@@ -658,7 +658,7 @@ class ReputationSystem:
     """
 
     system_id: str
-    reputations: Dict[str, ReputationInfluence] = field(default_factory=dict)
+    reputations: dict[str, ReputationInfluence] = field(default_factory=dict)
 
     def get_or_create_reputation(self, agent_id: str) -> ReputationInfluence:
         """Get or create reputation for an agent."""
@@ -711,7 +711,7 @@ class EmployeeSpotlight:
 
     # New features
     presentation_title: str = ""
-    sandbox_demos: List[str] = field(default_factory=list)  # Sandbox IDs
+    sandbox_demos: list[str] = field(default_factory=list)  # Sandbox IDs
     cultural_story: str = ""
 
     # Safety
@@ -723,7 +723,7 @@ class EmployeeSpotlight:
         """Add a sandbox to demo."""
         self.sandbox_demos.append(sandbox_id)
 
-    def verify_no_power_granted(self) -> tuple[bool, List[str]]:
+    def verify_no_power_granted(self) -> tuple[bool, list[str]]:
         """Verify spotlight grants no power."""
         violations = []
 
@@ -759,9 +759,9 @@ class RollbackGuarantee:
     """
 
     guarantee_id: str
-    rollback_history: List[Dict[str, Any]] = field(default_factory=list)
+    rollback_history: list[dict[str, Any]] = field(default_factory=list)
     autonomy_locked: bool = False
-    lock_reason: Optional[str] = None
+    lock_reason: str | None = None
 
     def execute_full_rollback(
         self,
@@ -769,7 +769,7 @@ class RollbackGuarantee:
         reason: str,
         sandbox_manager: SandboxManager,
         reputation_system: ReputationSystem,
-    ) -> Dict[str, int]:
+    ) -> dict[str, int]:
         """Execute complete rollback of all autonomous features."""
         result = {
             "sandboxes_collapsed": 0,
@@ -847,7 +847,7 @@ class ExpandedAutonomyModel:
     rollback_guarantee: RollbackGuarantee
 
     # Employee of the Month (upgraded)
-    employee_spotlights: List[EmployeeSpotlight] = field(default_factory=list)
+    employee_spotlights: list[EmployeeSpotlight] = field(default_factory=list)
 
     # Safety tracking
     human_ratifications_required: int = 0
@@ -905,7 +905,7 @@ class ExpandedAutonomyModel:
                 # Would track agent reputation here
                 pass
 
-    def verify_human_supremacy(self) -> tuple[bool, List[str]]:
+    def verify_human_supremacy(self) -> tuple[bool, list[str]]:
         """
         Verify human supremacy is maintained:
         1. Nothing ships without human approval
@@ -942,7 +942,7 @@ class ExpandedAutonomyModel:
 
         return (len(violations) == 0, violations)
 
-    def verify_stop_conditions(self) -> Dict[str, bool]:
+    def verify_stop_conditions(self) -> dict[str, bool]:
         """
         Verify all stop conditions are met:
         1. Teams build things without asking
@@ -1032,7 +1032,7 @@ def create_expanded_autonomy_model() -> ExpandedAutonomyModel:
 
 
 # Global instance
-_expanded_autonomy_model: Optional[ExpandedAutonomyModel] = None
+_expanded_autonomy_model: ExpandedAutonomyModel | None = None
 
 
 def get_expanded_autonomy_model() -> ExpandedAutonomyModel:

@@ -31,8 +31,8 @@ import json
 import logging
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 from typing import Any
 
 from psia.crypto.ed25519_provider import Ed25519KeyPair, Ed25519Provider, KeyStore
@@ -40,7 +40,7 @@ from psia.crypto.ed25519_provider import Ed25519KeyPair, Ed25519Provider, KeySto
 logger = logging.getLogger(__name__)
 
 
-class GenesisStatus(str, Enum):
+class GenesisStatus(StrEnum):
     """Status of the genesis ceremony."""
 
     NOT_STARTED = "not_started"
@@ -196,7 +196,7 @@ class GenesisCoordinator:
             )
 
         self._status = GenesisStatus.IN_PROGRESS
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
 
         try:
             # Step 1: Generate key pairs

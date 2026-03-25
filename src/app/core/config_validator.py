@@ -127,10 +127,10 @@ class ConfigValidator:
 
         # Required top-level fields
         required_fields = ["subsystems"]
-        for field in required_fields:
-            if field not in config:
+        for fname in required_fields:
+            if fname not in config:
                 result.is_valid = False
-                result.errors.append(f"Missing required field: {field}")
+                result.errors.append(f"Missing required field: {fname}")
 
         if "subsystems" in config:
             if not isinstance(config["subsystems"], dict):
@@ -168,11 +168,11 @@ class ConfigValidator:
         """Validate a single subsystem definition."""
         # Required fields for subsystem definition
         required_fields = ["name", "module_path", "class_name"]
-        for field in required_fields:
-            if field not in definition:
+        for fname in required_fields:
+            if fname not in definition:
                 result.is_valid = False
                 result.errors.append(
-                    f"Subsystem '{subsystem_id}': Missing required field '{field}'"
+                    f"Subsystem '{subsystem_id}': Missing required field '{fname}'"
                 )
 
         # Validate priority if present
@@ -292,16 +292,16 @@ class ConfigValidator:
             "timeout": (int, float),
         }
 
-        for field, expected_type in type_checks.items():
-            if field in config:
-                if not isinstance(config[field], expected_type):
+        for fname, expected_type in type_checks.items():
+            if fname in config:
+                if not isinstance(config[fname], expected_type):
                     result.is_valid = False
                     type_name = (
                         expected_type.__name__
                         if isinstance(expected_type, type)
                         else str(expected_type)
                     )
-                    result.errors.append(f"Field '{field}' must be of type {type_name}")
+                    result.errors.append(f"Field '{fname}' must be of type {type_name}")
 
     def validate_god_tier_config(self, config: dict[str, Any]) -> ValidationResult:
         """
@@ -396,10 +396,10 @@ class ConfigValidator:
         # Validate each subsystem
         for subsystem_id, subsystem_config in subsystems.items():
             required_fields = ["name", "version", "priority"]
-            for field in required_fields:
-                if field not in subsystem_config:
+            for fname in required_fields:
+                if fname not in subsystem_config:
                     result.warnings.append(
-                        f"Subsystem '{subsystem_id}': missing recommended field '{field}'"
+                        f"Subsystem '{subsystem_id}': missing recommended field '{fname}'"
                     )
 
             # Validate priority if present

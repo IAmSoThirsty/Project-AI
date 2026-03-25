@@ -94,7 +94,7 @@ class MerkleTree:
             return None
 
         # Find leaf index
-        leaf_idx = self.leaf_hashes.index(leaf_hash)
+        self.leaf_hashes.index(leaf_hash)
 
         # Generate proof path
         proof = []

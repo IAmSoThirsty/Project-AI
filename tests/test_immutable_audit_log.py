@@ -14,8 +14,6 @@ Covers:
 
 import hashlib
 import json
-import os
-import tempfile
 
 import pytest
 
@@ -141,7 +139,7 @@ class TestVerifyIntegrity:
     def test_empty_file(self, tmp_path):
         """Empty file returns False."""
         log_path = str(tmp_path / "empty.log")
-        with open(log_path, "w", encoding="utf-8") as f:
+        with open(log_path, "w", encoding="utf-8"):
             pass  # empty
 
         audit = ImmutableAuditLog.__new__(ImmutableAuditLog)
@@ -207,7 +205,7 @@ class TestLogEvent:
             tmp_log.log_event("EVENT", "user", {"i": i})
 
         with open(tmp_log.log_path, encoding="utf-8") as f:
-            lines = [l.strip() for l in f.readlines() if l.strip()]
+            lines = [ln.strip() for ln in f.readlines() if ln.strip()]
         assert len(lines) == 6  # genesis + 5
 
     def test_chain_valid_after_many_events(self, tmp_log):

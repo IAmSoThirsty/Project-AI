@@ -26,7 +26,9 @@ from integrations.temporal.activities.core_tasks import (  # noqa: E402
     simulate_ai_call,
     validate_input,
 )
-from integrations.temporal.workflows.example_workflow import ExampleWorkflow  # noqa: E402
+from integrations.temporal.workflows.example_workflow import (
+    ExampleWorkflow,  # noqa: E402
+)
 
 logging.basicConfig(
     level=logging.INFO,

@@ -20,15 +20,11 @@ from psia.schemas.capability import (
     CapabilityScope,
     CapabilityToken,
     DelegationPolicy,
-    ScopeConstraints,
     TokenBinding,
 )
 from psia.schemas.cerberus_decision import (
     CerberusDecision,
     CerberusVote,
-    CommitPolicy,
-    ConstraintsApplied,
-    DenyReason,
     QuorumInfo,
 )
 from psia.schemas.identity import (
@@ -50,9 +46,8 @@ from psia.schemas.ledger import (
     ExecutionRecord,
     LedgerBlock,
     RecordTimestamps,
-    TimeProof,
 )
-from psia.schemas.policy import PolicyEdge, PolicyGraph, PolicyNode
+from psia.schemas.policy import PolicyGraph, PolicyNode
 from psia.schemas.request import (
     Intent,
     RequestContext,
@@ -62,10 +57,8 @@ from psia.schemas.request import (
 from psia.schemas.shadow_report import (
     DeterminismProof,
     InvariantViolation,
-    ResourceEnvelope,
     ShadowReport,
     ShadowResults,
-    SideEffectSummary,
 )
 
 # ── Fixtures ──────────────────────────────────────────────────────────
@@ -160,7 +153,7 @@ class TestIdentityDocument:
         assert revoked.is_revoked
 
     def test_min_one_public_key(self):
-        with pytest.raises(Exception):  # Pydantic ValidationError
+        with pytest.raises(Exception):  # noqa: B017  # Pydantic ValidationError
             IdentityDocument(
                 id="did:project-ai:bob",
                 type="human",
@@ -311,8 +304,7 @@ class TestInvariantDefinition:
         restored = InvariantDefinition.model_validate(data)
         assert restored.invariant_id == "inv_test_001"
 
-    def test_min_one_test_case(self):
-        with pytest.raises(Exception):
+        with pytest.raises(Exception):  # noqa: B017
             InvariantDefinition(
                 invariant_id="inv_test_002",
                 version=1,

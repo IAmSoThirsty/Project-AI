@@ -1,6 +1,6 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
-﻿"""Extended test suite for MemoryExpansionSystem with 20+ tests.
+"""Extended test suite for MemoryExpansionSystem with 20+ tests.
 
 Covers:
 - Knowledge add/get for categories and keys

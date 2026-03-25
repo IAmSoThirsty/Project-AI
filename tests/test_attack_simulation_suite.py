@@ -37,12 +37,12 @@ import pytest
 try:
     from app.governance.external_merkle_anchor import ExternalMerkleAnchor
     from app.governance.genesis_continuity import (
-        GenesisContinuityGuard,
+        GenesisContinuityGuard,  # noqa: F401
         GenesisDiscontinuityError,
-        GenesisReplacementError,
+        GenesisReplacementError,  # noqa: F401
     )
     from app.governance.sovereign_audit_log import (
-        GenesisKeyPair,
+        GenesisKeyPair,  # noqa: F401
         SovereignAuditLog,
     )
 except ImportError:

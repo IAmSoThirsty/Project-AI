@@ -7,7 +7,7 @@ L6: Bayesian Confidence Aggregation
 Probabilistic threat scoring using Bayesian inference.
 
 FORMULA:
-P(M|E) = (P(E|M) * P(M)) / 
+P(M|E) = (P(E|M) * P(M)) /
          [(P(E|M) * P(M)) + (P(E|¬M) * (1 - P(M)))]
 
 Where:
@@ -232,7 +232,7 @@ class BayesianScorer:
             p_e_given_not_m * (1 - prior_malicious)
         )
 
-        if denominator < 1e-10:
+        if denominator < 1e-10:  # noqa: SIM108
             posterior = 0.5  # Undefined, default to neutral
         else:
             posterior = numerator / denominator

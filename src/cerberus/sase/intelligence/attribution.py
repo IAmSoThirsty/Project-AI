@@ -211,10 +211,7 @@ class FeatureExtractor:
         std = math.sqrt(variance)
 
         # Z-score
-        if std < 1e-6:
-            z_score = 0.0
-        else:
-            z_score = abs(hour - mean_hour) / std
+        z_score = 0.0 if std < 1e-06 else abs(hour - mean_hour) / std
 
         # Convert to 0-1 range (3 sigma rule)
         deviation = min(1.0, z_score / 3.0)

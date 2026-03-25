@@ -9,9 +9,8 @@ Intent, Design, and Responsibility as First-Class Objects
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Dict, List, Optional
 
 from app.miniature_office.core.audit import EventType, get_audit_log
 from app.miniature_office.core.entity import Entity, EntityType, get_registry
@@ -54,10 +53,10 @@ class Intent:
     """
 
     goal: str
-    constraints: List[str] = field(default_factory=list)
-    non_goals: List[str] = field(default_factory=list)
+    constraints: list[str] = field(default_factory=list)
+    non_goals: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "goal": self.goal,
             "constraints": self.constraints,
@@ -72,11 +71,11 @@ class DesignRationale:
     Answers: "What assumptions does this rest on?"
     """
 
-    assumptions: List[str] = field(default_factory=list)
-    tradeoffs: List[str] = field(default_factory=list)
-    alternatives_rejected: List[str] = field(default_factory=list)
+    assumptions: list[str] = field(default_factory=list)
+    tradeoffs: list[str] = field(default_factory=list)
+    alternatives_rejected: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "assumptions": self.assumptions,
             "tradeoffs": self.tradeoffs,
@@ -91,11 +90,11 @@ class Stakeholders:
     Answers: "Who agreed to this?" and "Who is accountable if it fails?"
     """
 
-    departments: List[str] = field(default_factory=list)  # Department IDs
-    managers: List[str] = field(default_factory=list)  # Manager IDs
-    agents: List[str] = field(default_factory=list)  # Agent IDs
+    departments: list[str] = field(default_factory=list)  # Department IDs
+    managers: list[str] = field(default_factory=list)  # Manager IDs
+    agents: list[str] = field(default_factory=list)  # Agent IDs
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "departments": self.departments,
             "managers": self.managers,
@@ -108,9 +107,9 @@ class RiskProfile:
     """Risk assessment for the contract"""
 
     severity: Severity
-    failure_modes: List[str] = field(default_factory=list)
+    failure_modes: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {"severity": self.severity.value, "failure_modes": self.failure_modes}
 
 
@@ -122,11 +121,11 @@ class ContractChallenge:
     challenger_id: str = ""  # Agent or Manager ID
     contract_id: str = ""
     reason: str = ""
-    evidence: List[str] = field(default_factory=list)
+    evidence: list[str] = field(default_factory=list)
     submitted_at_tick: int = 0
     status: str = "pending"  # pending, accepted, rejected
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "challenge_id": self.challenge_id,
             "challenger_id": self.challenger_id,
@@ -144,10 +143,10 @@ class RevocationJustification:
 
     reason: str
     impact_analysis: str
-    affected_tasks: List[str] = field(default_factory=list)
+    affected_tasks: list[str] = field(default_factory=list)
     meta_office_approval: bool = False
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "reason": self.reason,
             "impact_analysis": self.impact_analysis,
@@ -186,22 +185,22 @@ class CognitiveContract(Entity):
         self.design_rationale = DesignRationale()
         self.stakeholders = Stakeholders()
         self.risk_profile = RiskProfile(severity=Severity.LOW)
-        self.acceptance_criteria: List[str] = []
+        self.acceptance_criteria: list[str] = []
         self.binding_level = binding_level
 
         # Lifecycle
         self.status = ContractStatus.DRAFT
-        self.status_history: List[Dict] = []
-        self.ratified_at_tick: Optional[int] = None
-        self.fulfilled_at_tick: Optional[int] = None
-        self.superseded_by: Optional[str] = None  # Contract ID
+        self.status_history: list[dict] = []
+        self.ratified_at_tick: int | None = None
+        self.fulfilled_at_tick: int | None = None
+        self.superseded_by: str | None = None  # Contract ID
 
         # Challenges and revocation
-        self.challenges: List[ContractChallenge] = []
-        self.revocation_justification: Optional[RevocationJustification] = None
+        self.challenges: list[ContractChallenge] = []
+        self.revocation_justification: RevocationJustification | None = None
 
         # Child tasks bound to this contract
-        self.bound_tasks: List[str] = []
+        self.bound_tasks: list[str] = []
 
         # Register
         get_registry().register(self)
@@ -251,7 +250,7 @@ class CognitiveContract(Entity):
                 "from": old_status.value,
                 "to": new_status.value,
                 "reason": reason,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
             }
         )
 
@@ -304,7 +303,7 @@ class CognitiveContract(Entity):
             )
 
     def challenge(
-        self, challenger_id: str, reason: str, evidence: List[str]
+        self, challenger_id: str, reason: str, evidence: list[str]
     ) -> ContractChallenge:
         """
         Allow any agent to challenge a contract.
@@ -410,7 +409,7 @@ class CognitiveContract(Entity):
             ContractStatus.SUPERSEDED,
         ]
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Serialize to canonical format"""
         base = super().to_dict()
         base.update(
@@ -439,24 +438,24 @@ class ContractRegistry:
     """Registry for managing cognitive contracts"""
 
     def __init__(self):
-        self.contracts: Dict[str, CognitiveContract] = {}
-        self.challenges_pending: List[ContractChallenge] = []
+        self.contracts: dict[str, CognitiveContract] = {}
+        self.challenges_pending: list[ContractChallenge] = []
 
     def register_contract(self, contract: CognitiveContract):
         """Register a cognitive contract"""
         self.contracts[contract.entity_id] = contract
 
-    def get_contract(self, contract_id: str) -> Optional[CognitiveContract]:
+    def get_contract(self, contract_id: str) -> CognitiveContract | None:
         """Get a contract by ID"""
         return self.contracts.get(contract_id)
 
     def get_contracts_by_status(
         self, status: ContractStatus
-    ) -> List[CognitiveContract]:
+    ) -> list[CognitiveContract]:
         """Get all contracts with a specific status"""
         return [c for c in self.contracts.values() if c.status == status]
 
-    def get_active_contracts(self) -> List[CognitiveContract]:
+    def get_active_contracts(self) -> list[CognitiveContract]:
         """Get all active contracts"""
         return self.get_contracts_by_status(ContractStatus.ACTIVE)
 
@@ -474,7 +473,7 @@ class ContractRegistry:
         """Submit a challenge for review"""
         self.challenges_pending.append(challenge)
 
-    def get_pending_challenges(self) -> List[ContractChallenge]:
+    def get_pending_challenges(self) -> list[ContractChallenge]:
         """Get all pending challenges"""
         return [c for c in self.challenges_pending if c.status == "pending"]
 

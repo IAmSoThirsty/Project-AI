@@ -451,6 +451,7 @@ Answer:"""
             # Call model provider API with error handling
             try:
                 import openai
+
                 messages = [
                     {
                         "role": "system",

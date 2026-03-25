@@ -4,8 +4,6 @@
 Tests for SubstrateManager.get_health_status() implementation.
 """
 
-import pytest
-
 from cerberus.sase.core.substrate import (
     DeploymentTopology,
     FailureMode,

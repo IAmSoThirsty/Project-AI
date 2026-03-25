@@ -88,9 +88,9 @@ class TestThirstyLangIntegration:
         try:
             thirsty.start()
             status = thirsty.get_status()
-            assert status["active"] == True
+            assert status["active"]
             assert status["node_version"] is not None
-            assert status["cli_exists"] == True
+            assert status["cli_exists"]
             thirsty.stop()
         except RuntimeError as e:
             # Expected if Node.js not installed
@@ -110,7 +110,7 @@ class TestThirstyLangIntegration:
             # Test simple program
             code = "drink x = 42\npour x"
             result = thirsty.compile_and_run(code)
-            assert result == True, "Should successfully compile simple code"
+            assert result, "Should successfully compile simple code"
 
             thirsty.stop()
         except RuntimeError:
@@ -165,7 +165,7 @@ class TestWaterfallIntegration:
             status = waterfall.get_status()
 
             if waterfall.active:
-                assert status["active"] == True
+                assert status["active"]
                 assert "vpn" in status
                 assert "firewalls" in status
 
@@ -287,7 +287,7 @@ class TestIntegrationEndToEnd:
 
         # Verify shutdown
         for subsystem in boot.subsystems.values():
-            assert subsystem.active == False
+            assert not subsystem.active
 
     def test_subsystem_isolation(self):
         """Verify subsystems can run independently"""

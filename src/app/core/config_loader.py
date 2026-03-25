@@ -20,14 +20,14 @@ Production-ready configuration management with comprehensive error handling.
 import hashlib
 import json
 import logging
-import os
 import shutil
 import threading
 import time
+from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 import yaml
 
@@ -66,8 +66,8 @@ class ConfigLoader:
 
     def __init__(
         self,
-        config_dir: Optional[Path] = None,
-        backup_dir: Optional[Path] = None,
+        config_dir: Path | None = None,
+        backup_dir: Path | None = None,
         watch_poll_sec: int = DEFAULT_WATCH_POLL_SEC,
     ):
         """
@@ -83,8 +83,8 @@ class ConfigLoader:
         self.watch_poll_sec = watch_poll_sec
 
         # Configuration state
-        self.configs: Dict[str, Dict[str, Any]] = {}
-        self.file_hashes: Dict[str, str] = {}
+        self.configs: dict[str, dict[str, Any]] = {}
+        self.file_hashes: dict[str, str] = {}
         self.lock = threading.Lock()
 
         # Thread pool for watching
@@ -95,7 +95,7 @@ class ConfigLoader:
         self.watch_thread = None
 
         # Reload callbacks
-        self.reload_callbacks: List[Callable[[str, Dict[str, Any]], None]] = []
+        self.reload_callbacks: list[Callable[[str, dict[str, Any]], None]] = []
 
         # Error aggregation
         self.error_count = 0
@@ -138,7 +138,7 @@ class ConfigLoader:
 
         return backup_file
 
-    def _validate_config(self, config_data: Dict[str, Any], config_name: str) -> bool:
+    def _validate_config(self, config_data: dict[str, Any], config_name: str) -> bool:
         """
         Validate configuration data.
 
@@ -179,7 +179,7 @@ class ConfigLoader:
             logger.error(f"Config validation failed for '{config_name}': {e}")
             return False
 
-    def _load_config_file(self, config_name: str) -> Optional[Dict[str, Any]]:
+    def _load_config_file(self, config_name: str) -> dict[str, Any] | None:
         """
         Load a single configuration file.
 
@@ -196,7 +196,7 @@ class ConfigLoader:
             return None
 
         try:
-            with open(config_file, "r") as f:
+            with open(config_file) as f:
                 config_data = yaml.safe_load(f)
 
             if not self._validate_config(config_data, config_name):
@@ -251,7 +251,7 @@ class ConfigLoader:
 
             # Update configuration
             with self.lock:
-                old_config = self.configs.get(config_name)
+                self.configs.get(config_name)
                 self.configs[config_name] = new_config
 
             # Trigger reload callbacks
@@ -309,7 +309,7 @@ class ConfigLoader:
 
             return False
 
-    def _watcher_thread(self, reload_callback: Optional[Callable] = None):
+    def _watcher_thread(self, reload_callback: Callable | None = None):
         """
         Configuration file watcher thread.
 
@@ -354,7 +354,7 @@ class ConfigLoader:
                 except Exception:
                     pass
 
-    def watch(self, reload_callback: Optional[Callable] = None):
+    def watch(self, reload_callback: Callable | None = None):
         """
         Start watching configuration files for changes.
 
@@ -389,7 +389,7 @@ class ConfigLoader:
 
         logger.info("Config watcher stopped")
 
-    def get(self, config_name: str, default: Any = None) -> Dict[str, Any]:
+    def get(self, config_name: str, default: Any = None) -> dict[str, Any]:
         """
         Get configuration by name.
 
@@ -459,7 +459,7 @@ class ConfigLoader:
 
         return success_count
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """
         Get configuration loader statistics.
 
@@ -484,7 +484,7 @@ class ConfigLoader:
 
 
 # Global configuration loader instance
-_global_config_loader: Optional[ConfigLoader] = None
+_global_config_loader: ConfigLoader | None = None
 
 
 def get_config_loader() -> ConfigLoader:

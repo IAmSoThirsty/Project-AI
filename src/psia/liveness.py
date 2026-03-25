@@ -53,14 +53,15 @@ from __future__ import annotations
 import logging
 import threading
 import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Any, Callable
+from enum import StrEnum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-class HeadStatus(str, Enum):
+class HeadStatus(StrEnum):
     """Health status of a Cerberus evaluation head."""
 
     ALIVE = "alive"
@@ -69,7 +70,7 @@ class HeadStatus(str, Enum):
     FAILED = "failed"
 
 
-class LivenessViolation(str, Enum):
+class LivenessViolation(StrEnum):
     """Types of liveness violations."""
 
     HEAD_TIMEOUT = "head_timeout"

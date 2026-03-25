@@ -9,7 +9,6 @@ These axioms are pre-logical. They are not enforced by code; code is derived fro
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List
 
 
 class PrimitiveAxiom(Enum):
@@ -71,7 +70,7 @@ class InviolableLaw:
     principle: str
     rationale: str
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "law_id": self.law_id,
             "class": "A_INVIOLABLE",
@@ -116,7 +115,7 @@ class InviolableLaws:
     )
 
     @classmethod
-    def get_all(cls) -> List[InviolableLaw]:
+    def get_all(cls) -> list[InviolableLaw]:
         """Get all inviolable laws"""
         return [
             cls.CAUSALITY_PRESERVATION,
@@ -184,7 +183,7 @@ class AuthorityGraph:
     """
 
     def __init__(self):
-        self.relations: List[AuthorityRelation] = []
+        self.relations: list[AuthorityRelation] = []
 
     def add_relation(self, relation: AuthorityRelation) -> bool:
         """Add a relation if valid"""
@@ -252,13 +251,13 @@ class FirstClassFailure:
     failure_type: FailureType
     occurred_at_tick: int
     caused_by: str  # Entity ID
-    affected_entities: List[str]
+    affected_entities: list[str]
     escalated_to: AuthorityNode
     resource_cost: int  # Resources consumed by this failure
     consequence: str  # What happened as a result
     recorded: bool = True
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "failure_id": self.failure_id,
             "failure_type": self.failure_type.value,
@@ -342,7 +341,7 @@ class HumanAction:
     cost: int  # Overrides have cost
     logged_at_tick: int
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "action_id": self.action_id,
             "human_id": self.human_id,
@@ -369,10 +368,10 @@ class DensityCodex:
         self.layers = list(OntologicalLayer)
         self.inviolable_laws = InviolableLaws.get_all()
         self.authority_graph = AuthorityGraph()
-        self.failures: List[FirstClassFailure] = []
-        self.human_actions: List[HumanAction] = []
+        self.failures: list[FirstClassFailure] = []
+        self.human_actions: list[HumanAction] = []
 
-    def validate_axiom(self, axiom: PrimitiveAxiom, context: Dict) -> bool:
+    def validate_axiom(self, axiom: PrimitiveAxiom, context: dict) -> bool:
         """
         Validate that an axiom is being followed.
 
@@ -475,7 +474,7 @@ class DensityCodex:
             },
         )
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Export complete codex state"""
         return {
             "axioms": [a.value for a in self.axioms],
@@ -497,7 +496,7 @@ def get_density_codex() -> DensityCodex:
     return _density_codex
 
 
-def validate_civilization_tier(system_state: Dict) -> bool:
+def validate_civilization_tier(system_state: dict) -> bool:
     """
     Validate that the system is operating at civilization tier.
 
@@ -507,8 +506,4 @@ def validate_civilization_tier(system_state: Dict) -> bool:
     codex = get_density_codex()
 
     # Check all primitive axioms
-    for axiom in codex.axioms:
-        if not codex.validate_axiom(axiom, system_state):
-            return False
-
-    return True
+    return all(codex.validate_axiom(axiom, system_state) for axiom in codex.axioms)

@@ -57,8 +57,8 @@ console = Console()
 
 @app.command()
 def audit(
-    repo: Path = typer.Option(
-        Path.cwd(),
+    repo: Path = typer.Option(  # noqa: B008
+        Path.cwd(),  # noqa: B008
         "--repo",
         "-r",
         help="Repository root directory",
@@ -67,13 +67,13 @@ def audit(
         dir_okay=True,
         resolve_path=True,
     ),
-    output: Path = typer.Option(
+    output: Path = typer.Option(  # noqa: B008
         Path("audit_reports"),
         "--output",
         "-o",
         help="Output directory for reports",
     ),
-    config_file: Path | None = typer.Option(
+    config_file: Path | None = typer.Option(  # noqa: B008
         None,
         "--config",
         "-c",
@@ -203,7 +203,7 @@ def config(
         "--create",
         help="Create default configuration file",
     ),
-    output: Path = typer.Option(
+    output: Path = typer.Option(  # noqa: B008
         Path("inspection_config.yaml"),
         "--output",
         "-o",

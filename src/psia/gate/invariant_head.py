@@ -24,7 +24,7 @@ Security invariants:
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from psia.invariants import ROOT_INVARIANTS
@@ -256,7 +256,7 @@ class InvariantHead:
             decision=decision,
             reasons=reasons,
             constraints_applied=constraints,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature=Signature(
                 alg="ed25519",
                 kid="cerberus_invariant_k1",

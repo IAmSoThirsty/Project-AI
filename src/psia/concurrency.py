@@ -56,13 +56,13 @@ import threading
 import time
 import uuid
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-class ConflictResolution(str, Enum):
+class ConflictResolution(StrEnum):
     """Strategy for resolving commit conflicts."""
 
     ABORT = "abort"  # Reject the mutation; caller must retry
@@ -70,7 +70,7 @@ class ConflictResolution(str, Enum):
     MERGE = "merge"  # Attempt semantic merge (requires merge function)
 
 
-class CommitOutcome(str, Enum):
+class CommitOutcome(StrEnum):
     """Result of a commit attempt."""
 
     COMMITTED = "committed"

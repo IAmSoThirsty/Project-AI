@@ -21,7 +21,6 @@ Usage:
 from __future__ import annotations
 
 import importlib.metadata as _meta
-import sys
 
 import typer
 

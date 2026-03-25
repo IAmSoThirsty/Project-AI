@@ -7,8 +7,6 @@ Tests for SelfRepairAgent implementation.
 import os
 import tempfile
 
-import pytest
-
 from app.resilience.self_repair_agent import SelfRepairAgent
 
 
@@ -126,7 +124,9 @@ class TestRepair:
         agent = SelfRepairAgent(kernel=None)
         agent.enabled = True
         # Create a temp file matching the prefix
-        tmp = tempfile.NamedTemporaryFile(prefix="project_ai_", delete=False)
+        tmp = tempfile.NamedTemporaryFile(  # noqa: SIM115
+            prefix="project_ai_", delete=False
+        )
         tmp.close()
         try:
             result = agent.apply_repair("comp", {"actions": ["clear_cache"]})

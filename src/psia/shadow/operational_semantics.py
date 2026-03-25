@@ -50,15 +50,15 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Any, Callable
+from enum import StrEnum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-class DeterminismClass(str, Enum):
+class DeterminismClass(StrEnum):
     """Classification of programs by determinism guarantees.
 
     FULLY_DETERMINISTIC: All execution paths produce identical outputs
@@ -164,10 +164,7 @@ class ExecutionTrace:
             sort_keys=True,
             separators=(",", ":"),
         )
-        if self.steps:
-            prev_hash = self.steps[-1].state_hash
-        else:
-            prev_hash = "0" * 64
+        prev_hash = self.steps[-1].state_hash if self.steps else "0" * 64
 
         state_hash = hashlib.sha256((prev_hash + step_data).encode()).hexdigest()
 

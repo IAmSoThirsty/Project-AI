@@ -10,7 +10,6 @@ Production-ready PII detection and redaction system.
 
 import logging
 import re
-from typing import Dict, List, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -175,8 +174,8 @@ def luhn_check(card_number: str) -> bool:
 
 
 def redact_pii_comprehensive(
-    text: str, enabled_patterns: List[str] = None, preserve_hashes: bool = True
-) -> Tuple[str, Dict[str, any]]:
+    text: str, enabled_patterns: list[str] = None, preserve_hashes: bool = True
+) -> tuple[str, dict[str, any]]:
     """
     Comprehensive PII redaction with all pattern types.
 

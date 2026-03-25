@@ -9,9 +9,8 @@ System can adapt while preserving core safeguards
 """
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Dict, List, Optional
 
 from app.miniature_office.core.audit import EventType, get_audit_log
 
@@ -49,14 +48,14 @@ class MutationStatus(Enum):
 class AmendmentRules:
     """Rules for amending a constitutional law"""
 
-    requires: List[str] = field(
+    requires: list[str] = field(
         default_factory=list
     )  # e.g., ["MetaOffice", "2/3 Manager Consensus"]
     cooldown_ticks: int = 5000  # Minimum ticks between amendments
     requires_simulation: bool = True
     requires_rollback_path: bool = True
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "requires": self.requires,
             "cooldown_ticks": self.cooldown_ticks,
@@ -85,8 +84,8 @@ class ConstitutionalLaw:
         self.enforcement = enforcement
         self.introduced_at_tick = introduced_at_tick
         self.amendment_rules = AmendmentRules()
-        self.amendment_history: List[Dict] = []
-        self.last_amended_tick: Optional[int] = None
+        self.amendment_history: list[dict] = []
+        self.last_amended_tick: int | None = None
 
         # Log creation
         get_audit_log().log_event(
@@ -116,12 +115,12 @@ class ConstitutionalLaw:
             {
                 "description": amendment_description,
                 "tick": tick,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
             }
         )
         self.last_amended_tick = tick
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "lawId": self.law_id,
             "scope": self.scope.value,
@@ -141,10 +140,10 @@ class SimulationResult:
     simulation_id: str
     success: bool
     outcome_summary: str
-    metrics: Dict[str, float] = field(default_factory=dict)
-    risks_identified: List[str] = field(default_factory=list)
+    metrics: dict[str, float] = field(default_factory=dict)
+    risks_identified: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "simulation_id": self.simulation_id,
             "success": self.success,
@@ -159,10 +158,10 @@ class RiskAssessment:
     """Risk assessment for a mutation proposal"""
 
     level: str  # LOW, MEDIUM, HIGH, CRITICAL
-    concerns: List[str] = field(default_factory=list)
-    mitigation_strategies: List[str] = field(default_factory=list)
+    concerns: list[str] = field(default_factory=list)
+    mitigation_strategies: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "level": self.level,
             "concerns": self.concerns,
@@ -190,28 +189,28 @@ class MutationProposal:
         self.submitted_at_tick: int = 0
 
         # Simulations
-        self.simulations: List[SimulationResult] = []
-        self.impact_simulation_ids: List[str] = []
+        self.simulations: list[SimulationResult] = []
+        self.impact_simulation_ids: list[str] = []
 
         # Risk
         self.risk_assessment = RiskAssessment(level="MEDIUM")
 
         # Voting
-        self.votes: Dict[str, bool] = (
+        self.votes: dict[str, bool] = (
             {}
         )  # manager_id -> vote (True=approve, False=reject)
-        self.meta_office_ruling: Optional[bool] = None
+        self.meta_office_ruling: bool | None = None
 
         # Status
         self.status = MutationStatus.DRAFT
-        self.status_history: List[Dict] = []
+        self.status_history: list[dict] = []
 
         # Activation
-        self.delayed_activation_tick: Optional[int] = None
+        self.delayed_activation_tick: int | None = None
         self.activation_delay_ticks: int = 100  # Default delay
 
         # Rollback
-        self.rollback_path: Optional[str] = None  # JSON describing how to rollback
+        self.rollback_path: str | None = None  # JSON describing how to rollback
         self.is_rolled_back: bool = False
 
         # Log creation
@@ -236,7 +235,7 @@ class MutationProposal:
                 "from": old_status.value,
                 "to": new_status.value,
                 "reason": reason,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
             }
         )
 
@@ -302,7 +301,7 @@ class MutationProposal:
             },
         )
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "proposalId": self.proposal_id,
             "proposedChange": self.proposed_change,
@@ -329,9 +328,9 @@ class ConstitutionalMutationEngine:
     """
 
     def __init__(self):
-        self.laws: Dict[str, ConstitutionalLaw] = {}
-        self.proposals: Dict[str, MutationProposal] = {}
-        self.meta_office_id: Optional[str] = None
+        self.laws: dict[str, ConstitutionalLaw] = {}
+        self.proposals: dict[str, MutationProposal] = {}
+        self.meta_office_id: str | None = None
 
         # Initialize core laws
         self._initialize_core_laws()
@@ -406,7 +405,7 @@ class ConstitutionalMutationEngine:
         proposal.transition_to(MutationStatus.UNDER_REVIEW, "Proposal submitted")
         return proposal.proposal_id
 
-    def simulate_mutation(self, proposal_id: str) -> List[SimulationResult]:
+    def simulate_mutation(self, proposal_id: str) -> list[SimulationResult]:
         """
         Run simulations on a mutation proposal.
         Mutation Law: No mutation without simulation (III.4)
@@ -548,11 +547,11 @@ class ConstitutionalMutationEngine:
 
         return True
 
-    def get_active_laws(self) -> List[ConstitutionalLaw]:
+    def get_active_laws(self) -> list[ConstitutionalLaw]:
         """Get all active constitutional laws"""
         return list(self.laws.values())
 
-    def get_proposal(self, proposal_id: str) -> Optional[MutationProposal]:
+    def get_proposal(self, proposal_id: str) -> MutationProposal | None:
         """Get a proposal by ID"""
         return self.proposals.get(proposal_id)
 

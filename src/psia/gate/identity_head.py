@@ -27,7 +27,7 @@ from __future__ import annotations
 import logging
 import re
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from psia.schemas.cerberus_decision import (
@@ -91,7 +91,7 @@ class IdentityDocumentStore:
             update={
                 "revocation": {
                     "status": "revoked",
-                    "revoked_at": datetime.now(timezone.utc).isoformat(),
+                    "revoked_at": datetime.now(UTC).isoformat(),
                     "reason": reason,
                 }
             }
@@ -207,7 +207,7 @@ class IdentityHead:
 
         # ── Check 4: Public key validity window ──
         if doc is not None and not doc.revocation.is_revoked:
-            now_iso = datetime.now(timezone.utc).isoformat()
+            now_iso = datetime.now(UTC).isoformat()
             has_valid_key = False
             for key in doc.public_keys:
                 key_created = key.created or "1970-01-01T00:00:00Z"
@@ -270,13 +270,12 @@ class IdentityHead:
 
         # ── Final vote ──
         if reasons:
-            has_critical = any(
+            any(
                 r.code in ("IDENTITY_REVOKED", "IDENTITY_RISK_TIER_EXCEEDED")
                 for r in reasons
             )
             decision = "deny"
         else:
-            has_critical = False
             decision = "allow"
 
         return CerberusVote(
@@ -285,7 +284,7 @@ class IdentityHead:
             decision=decision,
             reasons=reasons,
             constraints_applied=constraints,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             signature=Signature(
                 alg="ed25519",
                 kid="cerberus_identity_k1",

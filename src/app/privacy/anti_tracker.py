@@ -110,7 +110,7 @@ class AntiTrackerEngine:
         Returns:
             True if blocked
         """
-        if not self._active:
+        if not self._active:  # noqa: SIM103
             return False
 
         # Block ETag tracking

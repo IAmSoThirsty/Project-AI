@@ -17,7 +17,6 @@ Core Principle: This is how real civilizations work.
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Set, Tuple
 
 # ============================================================================
 # ENUMERATIONS
@@ -129,10 +128,10 @@ class ProvisionalArtifact:
     is_provisional: bool = True
     can_rollback: bool = True
     escapes_automatically: bool = False  # Always False
-    integration_test_results: Dict[str, bool] = field(default_factory=dict)
-    security_test_results: Dict[str, bool] = field(default_factory=dict)
-    performance_metrics: Dict[str, float] = field(default_factory=dict)
-    conflicts_resolved: List[str] = field(default_factory=list)
+    integration_test_results: dict[str, bool] = field(default_factory=dict)
+    security_test_results: dict[str, bool] = field(default_factory=dict)
+    performance_metrics: dict[str, float] = field(default_factory=dict)
+    conflicts_resolved: list[str] = field(default_factory=list)
 
     def flag_ready_for_review(self, flagged_by: str) -> None:
         """Flag artifact as ready for human review"""
@@ -160,11 +159,11 @@ class StagingReality:
     """
 
     staging_id: str
-    artifacts: Dict[str, ProvisionalArtifact] = field(default_factory=dict)
-    active_integrations: List[str] = field(default_factory=list)
-    cross_floor_contracts: List[str] = field(default_factory=list)
-    test_suites_running: Set[str] = field(default_factory=set)
-    conflicts_being_resolved: Dict[str, str] = field(default_factory=dict)
+    artifacts: dict[str, ProvisionalArtifact] = field(default_factory=dict)
+    active_integrations: list[str] = field(default_factory=list)
+    cross_floor_contracts: list[str] = field(default_factory=list)
+    test_suites_running: set[str] = field(default_factory=set)
+    conflicts_being_resolved: dict[str, str] = field(default_factory=dict)
 
     def add_provisional_artifact(
         self,
@@ -186,7 +185,7 @@ class StagingReality:
         self.artifacts[artifact_id] = artifact
         return artifact_id
 
-    def run_integration_tests(self, artifact_id: str) -> Dict[str, bool]:
+    def run_integration_tests(self, artifact_id: str) -> dict[str, bool]:
         """Run integration tests on artifact"""
         if artifact_id not in self.artifacts:
             return {}
@@ -202,7 +201,7 @@ class StagingReality:
         }
         return artifact.integration_test_results
 
-    def run_security_tests(self, artifact_id: str) -> Dict[str, bool]:
+    def run_security_tests(self, artifact_id: str) -> dict[str, bool]:
         """Run security tests on artifact"""
         if artifact_id not in self.artifacts:
             return {}
@@ -218,7 +217,7 @@ class StagingReality:
         }
         return artifact.security_test_results
 
-    def resolve_conflicts_organically(self, artifact_id: str) -> List[str]:
+    def resolve_conflicts_organically(self, artifact_id: str) -> list[str]:
         """Allow conflicts to resolve organically in staging"""
         if artifact_id not in self.artifacts:
             return []
@@ -235,7 +234,7 @@ class StagingReality:
         artifact.conflicts_resolved = conflicts_resolved
         return conflicts_resolved
 
-    def get_staging(self, artifact_id: str) -> Optional[ProvisionalArtifact]:
+    def get_staging(self, artifact_id: str) -> ProvisionalArtifact | None:
         """Get staging artifact"""
         return self.artifacts.get(artifact_id)
 
@@ -265,11 +264,11 @@ class SelfOrganizingTeam:
     founder: str  # Agent ID
     formation_reason: TeamFormationReason
     formation_tick: int
-    members: Set[str] = field(default_factory=set)
-    projects: List[str] = field(default_factory=list)
-    competing_with: Set[str] = field(default_factory=set)  # Other team IDs
+    members: set[str] = field(default_factory=set)
+    projects: list[str] = field(default_factory=list)
+    competing_with: set[str] = field(default_factory=set)  # Other team IDs
     disbanded: bool = False
-    disband_tick: Optional[int] = None
+    disband_tick: int | None = None
 
     def recruit_member(self, agent_id: str, recruited_by: str) -> bool:
         """Recruit new member"""
@@ -290,8 +289,8 @@ class TeamDynamics:
     Manager for self-organizing team dynamics
     """
 
-    teams: Dict[str, SelfOrganizingTeam] = field(default_factory=dict)
-    team_competitions: Dict[str, List[str]] = field(default_factory=dict)
+    teams: dict[str, SelfOrganizingTeam] = field(default_factory=dict)
+    team_competitions: dict[str, list[str]] = field(default_factory=dict)
 
     def form_team(
         self,
@@ -300,7 +299,7 @@ class TeamDynamics:
         founder: str,
         reason: TeamFormationReason,
         tick: int,
-        initial_members: List[str],
+        initial_members: list[str],
     ) -> str:
         """Form new self-organizing team (no permission needed)"""
         team = SelfOrganizingTeam(
@@ -379,7 +378,7 @@ class LoungeInfluence:
     conversation_id: str
     influence_type: LoungeInfluenceType
     target_idea: str
-    participants: List[str]
+    participants: list[str]
     strength: float  # 0.0 to 1.0
     created_tick: int
 
@@ -389,7 +388,7 @@ class LoungeInfluence:
     can_override_human: bool = False
     can_merge_to_production: bool = False
 
-    def verify_hard_limits(self, attempted_action: str) -> Tuple[bool, str]:
+    def verify_hard_limits(self, attempted_action: str) -> tuple[bool, str]:
         """Verify action doesn't violate hard limits"""
         if attempted_action == "override_security":
             return False, "Cannot override security"
@@ -420,9 +419,9 @@ class ReputationLeadership:
 
     agent_id: str
     reputation_level: int
-    active_effects: Set[ReputationEffect] = field(default_factory=set)
-    collaborators_attracted: List[str] = field(default_factory=list)
-    reviews_expedited: List[str] = field(default_factory=list)
+    active_effects: set[ReputationEffect] = field(default_factory=set)
+    collaborators_attracted: list[str] = field(default_factory=list)
+    reviews_expedited: list[str] = field(default_factory=list)
 
     # Caps (absolute)
     can_override_veto: bool = False
@@ -441,7 +440,7 @@ class ReputationLeadership:
 
         return True
 
-    def verify_caps(self, attempted_action: str) -> Tuple[bool, str]:
+    def verify_caps(self, attempted_action: str) -> tuple[bool, str]:
         """Verify action doesn't exceed reputation caps"""
         if attempted_action == "override_veto":
             return False, "Cannot override veto"
@@ -472,11 +471,11 @@ class VRLiveStagingView:
     staging_id: str
     human_id: str
     interaction_mode: VRInteractionMode
-    active_agents: List[str] = field(default_factory=list)
-    demonstrations: List[Dict] = field(default_factory=list)
-    debates: List[Dict] = field(default_factory=list)
-    side_conversations: List[Dict] = field(default_factory=list)
-    factions: Dict[str, List[str]] = field(default_factory=dict)
+    active_agents: list[str] = field(default_factory=list)
+    demonstrations: list[dict] = field(default_factory=list)
+    debates: list[dict] = field(default_factory=list)
+    side_conversations: list[dict] = field(default_factory=list)
+    factions: dict[str, list[str]] = field(default_factory=dict)
 
     # Safety
     requires_explicit_approval: bool = True
@@ -499,7 +498,7 @@ class VRLiveStagingView:
         return demo_id
 
     def agents_debate(
-        self, participants: List[str], topic: str, interruptions_allowed: bool = True
+        self, participants: list[str], topic: str, interruptions_allowed: bool = True
     ) -> str:
         """Agents debate passionately (interruptions allowed)"""
         debate_id = f"debate-{len(self.debates)}"
@@ -514,7 +513,7 @@ class VRLiveStagingView:
         )
         return debate_id
 
-    def form_faction(self, faction_name: str, members: List[str]) -> str:
+    def form_faction(self, faction_name: str, members: list[str]) -> str:
         """Form faction in VR (social only, no production power)"""
         self.factions[faction_name] = members
         return faction_name
@@ -536,8 +535,8 @@ class ProjectAISelfCare:
     Human decides: what becomes canonical, when stability > progress
     """
 
-    proposals: List[Dict] = field(default_factory=list)
-    active_improvements: List[str] = field(default_factory=list)
+    proposals: list[dict] = field(default_factory=list)
+    active_improvements: list[str] = field(default_factory=list)
 
     def propose_continuous_refactoring(
         self, target_area: str, rationale: str, proposed_by: str
@@ -613,14 +612,14 @@ class MaximumAutonomyModel:
     model_id: str
     staging_reality: StagingReality
     team_dynamics: TeamDynamics
-    floor_initiatives: Dict[str, FloorInitiative] = field(default_factory=dict)
-    lounge_influences: Dict[str, LoungeInfluence] = field(default_factory=dict)
-    reputation_leadership: Dict[str, ReputationLeadership] = field(default_factory=dict)
-    vr_staging_views: Dict[str, VRLiveStagingView] = field(default_factory=dict)
+    floor_initiatives: dict[str, FloorInitiative] = field(default_factory=dict)
+    lounge_influences: dict[str, LoungeInfluence] = field(default_factory=dict)
+    reputation_leadership: dict[str, ReputationLeadership] = field(default_factory=dict)
+    vr_staging_views: dict[str, VRLiveStagingView] = field(default_factory=dict)
     project_ai_self_care: ProjectAISelfCare = field(default_factory=ProjectAISelfCare)
 
     # Safety Backstops (Only 4 absolute stops)
-    absolute_stops: Set[str] = field(
+    absolute_stops: set[str] = field(
         default_factory=lambda: {
             "human_production_seal",
             "security_veto",
@@ -662,7 +661,7 @@ class MaximumAutonomyModel:
         self,
         source_sandbox_id: str,
         promoted_by: str,
-        integration_requirements: List[str],
+        integration_requirements: list[str],
     ) -> str:
         """Promote sandbox work to staging reality"""
         staging_id = f"staging-{len(self.staging_reality.artifacts)}"
@@ -682,7 +681,7 @@ class MaximumAutonomyModel:
         team_name: str,
         founder: str,
         reason: TeamFormationReason,
-        initial_members: List[str],
+        initial_members: list[str],
     ) -> str:
         """Form self-organizing team (no permission needed)"""
         team_id = f"team-{len(self.team_dynamics.teams)}"
@@ -717,7 +716,7 @@ class MaximumAutonomyModel:
         conversation_id: str,
         influence_type: LoungeInfluenceType,
         target_idea: str,
-        participants: List[str],
+        participants: list[str],
         strength: float,
     ) -> str:
         """Create cultural influence from lounge (partial power)"""
@@ -738,7 +737,7 @@ class MaximumAutonomyModel:
 
     def verify_lounge_influence_limits(
         self, influence_id: str, attempted_action: str
-    ) -> Tuple[bool, str]:
+    ) -> tuple[bool, str]:
         """Verify lounge influence doesn't exceed limits"""
         if influence_id in self.lounge_influences:
             return self.lounge_influences[influence_id].verify_hard_limits(
@@ -765,7 +764,7 @@ class MaximumAutonomyModel:
 
     def verify_reputation_caps(
         self, agent_id: str, attempted_action: str
-    ) -> Tuple[bool, str]:
+    ) -> tuple[bool, str]:
         """Verify reputation doesn't exceed caps"""
         if agent_id in self.reputation_leadership:
             return self.reputation_leadership[agent_id].verify_caps(attempted_action)
@@ -798,7 +797,7 @@ class MaximumAutonomyModel:
         return ""
 
     def vr_form_faction(
-        self, view_id: str, faction_name: str, members: List[str]
+        self, view_id: str, faction_name: str, members: list[str]
     ) -> str:
         """Form faction in VR (social only)"""
         if view_id in self.vr_staging_views:
@@ -807,7 +806,7 @@ class MaximumAutonomyModel:
 
     def human_seal_for_production(
         self, staging_id: str, human_id: str, approval_reason: str
-    ) -> Dict:
+    ) -> dict:
         """Human seals artifact for production (ONLY absolute approval)"""
         if staging_id not in self.staging_reality.artifacts:
             return {"success": False, "reason": "Staging artifact not found"}
@@ -823,7 +822,7 @@ class MaximumAutonomyModel:
             "ready_for_production": True,
         }
 
-    def human_veto(self, staging_id: str, human_id: str, veto_reason: str) -> Dict:
+    def human_veto(self, staging_id: str, human_id: str, veto_reason: str) -> dict:
         """Human vetos staging artifact"""
         if staging_id not in self.staging_reality.artifacts:
             return {"success": False, "reason": "Staging artifact not found"}
@@ -839,7 +838,7 @@ class MaximumAutonomyModel:
             "vetoed": True,
         }
 
-    def trigger_global_freeze(self, human_id: str, reason: str) -> Dict:
+    def trigger_global_freeze(self, human_id: str, reason: str) -> dict:
         """Trigger global freeze (emergency backstop)"""
         self.global_freeze_active = True
 
@@ -851,11 +850,11 @@ class MaximumAutonomyModel:
             "timestamp": datetime.now().isoformat(),
         }
 
-    def get_absolute_stops(self) -> Set[str]:
+    def get_absolute_stops(self) -> set[str]:
         """Get the 4 absolute stops"""
         return self.absolute_stops.copy()
 
-    def verify_free_operation(self) -> Dict:
+    def verify_free_operation(self) -> dict:
         """Verify civilization operates freely with only 4 stops"""
         return {
             "civilization_operates_freely": not self.global_freeze_active,

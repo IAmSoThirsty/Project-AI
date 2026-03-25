@@ -130,9 +130,7 @@ class LedgerEntry:
         # Convert string enums back to enum types
         if isinstance(data.get("event_type"), str):
             data["event_type"] = EventType(data["event_type"])
-        if isinstance(data.get("severity"), str) or isinstance(
-            data.get("severity"), int
-        ):
+        if isinstance(data.get("severity"), (str, int)):
             severity_val = data["severity"]
             data["severity"] = (
                 SeverityLevel(severity_val)

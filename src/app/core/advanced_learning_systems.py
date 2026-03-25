@@ -16,7 +16,7 @@ from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, cast
+from typing import Any
 
 import numpy as np
 

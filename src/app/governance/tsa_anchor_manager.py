@@ -60,7 +60,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import (
 )
 
 try:
-    from app.governance.tsa_provider import TSAProvider, TSAToken
+    from app.governance.tsa_provider import TSAProvider, TSAToken  # noqa: F401
 except ImportError:
     from src.app.governance.tsa_provider import TSAProvider
 

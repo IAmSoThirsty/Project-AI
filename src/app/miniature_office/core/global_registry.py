@@ -15,7 +15,7 @@ import threading
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Set
+from typing import Any
 
 
 class FloorStatus(Enum):
@@ -50,11 +50,11 @@ class AgentRegistration:
     agent_id: str
     name: str
     role: str
-    capabilities: List[str]
+    capabilities: list[str]
     floor: str
     registered_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
@@ -67,15 +67,15 @@ class FloorRegistration:
     language: str
     domain: str
     status: FloorStatus
-    services: List[ServiceType]
-    agents: List[str] = field(default_factory=list)
-    endpoint: Optional[str] = None
-    process_id: Optional[int] = None
+    services: list[ServiceType]
+    agents: list[str] = field(default_factory=list)
+    endpoint: str | None = None
+    process_id: int | None = None
     registered_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
     last_heartbeat: str = field(default_factory=lambda: datetime.utcnow().isoformat())
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
         data["status"] = self.status.value
         data["services"] = [s.value for s in self.services]
@@ -95,9 +95,9 @@ class GlobalRegistry:
     """
 
     def __init__(self):
-        self.floors: Dict[str, FloorRegistration] = {}
-        self.agents: Dict[str, AgentRegistration] = {}
-        self.service_index: Dict[ServiceType, Set[str]] = {
+        self.floors: dict[str, FloorRegistration] = {}
+        self.agents: dict[str, AgentRegistration] = {}
+        self.service_index: dict[ServiceType, set[str]] = {
             service: set() for service in ServiceType
         }
         self._lock = threading.RLock()
@@ -116,10 +116,10 @@ class GlobalRegistry:
         floor_number: int,
         language: str,
         domain: str,
-        services: List[ServiceType],
-        endpoint: Optional[str] = None,
-        process_id: Optional[int] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        services: list[ServiceType],
+        endpoint: str | None = None,
+        process_id: int | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> FloorRegistration:
         """
         Register a new floor in the global registry
@@ -166,7 +166,7 @@ class GlobalRegistry:
         agent_id: str,
         name: str,
         role: str,
-        capabilities: List[str],
+        capabilities: list[str],
         floor_id: str,
     ) -> AgentRegistration:
         """
@@ -211,17 +211,17 @@ class GlobalRegistry:
             self.floors[floor_id].status = status
             self.floors[floor_id].last_heartbeat = datetime.utcnow().isoformat()
 
-    def get_floor(self, floor_id: str) -> Optional[FloorRegistration]:
+    def get_floor(self, floor_id: str) -> FloorRegistration | None:
         """Get floor registration by ID"""
         with self._lock:
             return self.floors.get(floor_id)
 
-    def get_agent(self, agent_id: str) -> Optional[AgentRegistration]:
+    def get_agent(self, agent_id: str) -> AgentRegistration | None:
         """Get agent registration by ID"""
         with self._lock:
             return self.agents.get(agent_id)
 
-    def find_floors_by_language(self, language: str) -> List[FloorRegistration]:
+    def find_floors_by_language(self, language: str) -> list[FloorRegistration]:
         """Find all floors for a specific language"""
         with self._lock:
             return [
@@ -230,7 +230,7 @@ class GlobalRegistry:
                 if floor.language.lower() == language.lower()
             ]
 
-    def find_floors_by_service(self, service: ServiceType) -> List[FloorRegistration]:
+    def find_floors_by_service(self, service: ServiceType) -> list[FloorRegistration]:
         """Find all floors that provide a specific service"""
         with self._lock:
             floor_ids = self.service_index.get(service, set())
@@ -238,22 +238,22 @@ class GlobalRegistry:
 
     def find_ready_floors_by_service(
         self, service: ServiceType
-    ) -> List[FloorRegistration]:
+    ) -> list[FloorRegistration]:
         """Find all ready floors that provide a specific service"""
         floors = self.find_floors_by_service(service)
         return [floor for floor in floors if floor.status == FloorStatus.READY]
 
-    def get_all_floors(self) -> List[FloorRegistration]:
+    def get_all_floors(self) -> list[FloorRegistration]:
         """Get all registered floors"""
         with self._lock:
             return list(self.floors.values())
 
-    def get_all_agents(self) -> List[AgentRegistration]:
+    def get_all_agents(self) -> list[AgentRegistration]:
         """Get all registered agents"""
         with self._lock:
             return list(self.agents.values())
 
-    def get_agents_by_floor(self, floor_id: str) -> List[AgentRegistration]:
+    def get_agents_by_floor(self, floor_id: str) -> list[AgentRegistration]:
         """Get all agents for a specific floor"""
         with self._lock:
             if floor_id not in self.floors:
@@ -319,7 +319,7 @@ class GlobalRegistry:
 
             return True
 
-    def get_registry_stats(self) -> Dict[str, Any]:
+    def get_registry_stats(self) -> dict[str, Any]:
         """Get statistics about the registry"""
         with self._lock:
             status_counts = {}
@@ -336,12 +336,10 @@ class GlobalRegistry:
                 "total_agents": len(self.agents),
                 "floors_by_status": status_counts,
                 "floors_by_service": service_counts,
-                "languages": list(
-                    set(floor.language for floor in self.floors.values())
-                ),
+                "languages": list({floor.language for floor in self.floors.values()}),
             }
 
-    def export_registry(self) -> Dict[str, Any]:
+    def export_registry(self) -> dict[str, Any]:
         """Export the entire registry as JSON-serializable dict"""
         with self._lock:
             return {
@@ -351,7 +349,7 @@ class GlobalRegistry:
                 "exported_at": datetime.utcnow().isoformat(),
             }
 
-    def import_registry(self, data: Dict[str, Any]) -> None:
+    def import_registry(self, data: dict[str, Any]) -> None:
         """Import registry from exported data (for persistence)"""
         with self._lock:
             # Clear existing data
@@ -380,7 +378,7 @@ class GlobalRegistry:
 
 
 # Global singleton instance
-_global_registry: Optional[GlobalRegistry] = None
+_global_registry: GlobalRegistry | None = None
 
 
 def get_global_registry() -> GlobalRegistry:

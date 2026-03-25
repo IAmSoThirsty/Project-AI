@@ -331,7 +331,7 @@ class TestSoakTesting:
                 task_ids.append(task_id)
 
             # Simulate processing
-            for task_id in task_ids:
+            for _task_id in task_ids:
                 try:
                     task = stack.task_queue.lease_task(
                         f"worker_{random.randint(0, 3)}", lease_duration=30
@@ -455,7 +455,7 @@ class TestPerformanceDegradation:
                 task_ids.append(task_id)
 
             # Complete tasks
-            for task_id in task_ids:
+            for _task_id in task_ids:
                 try:
                     task = stack.task_queue.lease_task(
                         f"worker_{random.randint(0, 1)}", lease_duration=30

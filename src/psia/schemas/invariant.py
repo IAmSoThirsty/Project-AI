@@ -24,7 +24,7 @@ from pydantic import BaseModel, Field
 from psia.schemas.identity import Signature
 
 
-class InvariantScope(str, enum.Enum):
+class InvariantScope(enum.StrEnum):
     """Scope classification for invariants."""
 
     IMMUTABLE = "immutable"
@@ -32,7 +32,7 @@ class InvariantScope(str, enum.Enum):
     OPERATIONAL = "operational"
 
 
-class InvariantSeverity(str, enum.Enum):
+class InvariantSeverity(enum.StrEnum):
     """Severity level of invariant violations."""
 
     FATAL = "fatal"
@@ -42,7 +42,7 @@ class InvariantSeverity(str, enum.Enum):
     LOW = "low"
 
 
-class InvariantEnforcement(str, enum.Enum):
+class InvariantEnforcement(enum.StrEnum):
     """Enforcement action when an invariant is violated."""
 
     HARD_DENY = "hard_deny"

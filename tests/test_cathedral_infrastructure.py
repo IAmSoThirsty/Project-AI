@@ -265,7 +265,7 @@ class TestUnifiedIntegrationBus:
 
         policy = RetryPolicy(max_attempts=3, initial_delay=0.01)
 
-        with pytest.raises(Exception):  # Should fail after retries
+        with pytest.raises(Exception):  # noqa: B017
             bus.request_service(
                 "test_service",
                 "test_data",

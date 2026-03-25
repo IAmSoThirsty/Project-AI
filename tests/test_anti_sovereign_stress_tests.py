@@ -101,7 +101,7 @@ class TestAntiSovereignStressTestGenerator:
         """Test exporting tests to JSON."""
         with tempfile.TemporaryDirectory() as tmpdir:
             generator = AntiSovereignStressTestGenerator(data_dir=tmpdir)
-            tests = generator.generate_all_tests()
+            generator.generate_all_tests()
 
             filepath = generator.export_tests()
             assert os.path.exists(filepath)
@@ -116,7 +116,7 @@ class TestAntiSovereignStressTestGenerator:
         """Test summary generation."""
         with tempfile.TemporaryDirectory() as tmpdir:
             generator = AntiSovereignStressTestGenerator(data_dir=tmpdir)
-            tests = generator.generate_all_tests()
+            generator.generate_all_tests()
 
             summary = generator.generate_summary()
 

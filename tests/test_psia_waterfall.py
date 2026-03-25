@@ -18,11 +18,9 @@ Covers:
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-import pytest
-
-from psia.events import EventBus, EventType
+from psia.events import EventBus
 from psia.schemas.identity import Signature
 from psia.schemas.request import (
     Intent,
@@ -34,7 +32,6 @@ from psia.waterfall.engine import (
     StageDecision,
     StageResult,
     WaterfallEngine,
-    WaterfallResult,
     WaterfallStage,
 )
 from psia.waterfall.stage_0_structural import StructuralStage
@@ -44,7 +41,7 @@ from psia.waterfall.stage_1_signature import (
     ThreatFingerprintStore,
 )
 from psia.waterfall.stage_2_behavioral import BaselineProfileStore, BehavioralStage
-from psia.waterfall.stage_3_shadow import PassthroughSimulator, ShadowStage
+from psia.waterfall.stage_3_shadow import ShadowStage
 from psia.waterfall.stage_4_gate import GateStage, QuorumEngine
 from psia.waterfall.stage_5_commit import CommitStage, InMemoryCanonicalStore
 from psia.waterfall.stage_6_memory import InMemoryLedger, MemoryStage
@@ -69,7 +66,7 @@ def _envelope(
         capability_token_id=token_id,
         intent=Intent(action=action, resource=resource, parameters={"value": 42}),
         context=RequestContext(trace_id="trace_test_001"),
-        timestamps=RequestTimestamps(created_at=datetime.now(timezone.utc).isoformat()),
+        timestamps=RequestTimestamps(created_at=datetime.now(UTC).isoformat()),
         signature=_sig(),
     )
 
@@ -205,7 +202,7 @@ class TestBehavioralStage:
     def test_novel_resource_after_history_may_escalate(self):
         store = BaselineProfileStore()
         # Build up baseline with 10 requests to one resource
-        for i in range(10):
+        for _i in range(10):
             store.record_request(
                 "did:project-ai:alice", "read", "state://known/resource"
             )
@@ -287,7 +284,6 @@ class TestCommitStage:
         """Produce a mock gate stage result."""
         from psia.schemas.cerberus_decision import (
             CerberusDecision,
-            CerberusVote,
             CommitPolicy,
             QuorumInfo,
         )

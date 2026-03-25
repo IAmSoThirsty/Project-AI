@@ -46,7 +46,11 @@ from app.deployment.federated_cells import (
 try:
     import numpy as np
 
-    from app.core.sensor_fusion import SensorFusionEngine, SensorMetadata, SensorType
+    from app.core.sensor_fusion import (  # noqa: F401
+        SensorFusionEngine,
+        SensorMetadata,
+        SensorType,
+    )
 
     NUMPY_AVAILABLE = True
 except ImportError:

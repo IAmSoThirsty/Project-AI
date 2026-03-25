@@ -4,10 +4,6 @@
 Tests for GovernanceManager implementation.
 """
 
-import json
-import tempfile
-from pathlib import Path
-
 import pytest
 
 from app.governance.governance_manager import GovernanceManager

@@ -10,14 +10,8 @@ Uses threading.Barrier for concurrent tests (zero flakiness).
 Uses mocked time for timeout tests (fast execution <10s).
 """
 
-import json
-import os
-import tempfile
 import threading
-import time
-from pathlib import Path
-from typing import Any, Dict, List
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -25,7 +19,6 @@ import pytest
 from src.app.pipeline.signal_flows import (
     MAX_GLOBAL_RETRIES_PER_MIN,
     CircuitBreaker,
-    GlobalThrottlingError,
     check_retry_limit,
     circuit_breakers,
     get_pipeline_stats,
@@ -39,7 +32,6 @@ from src.app.pipeline.signal_flows import (
     redact_phone,
     redact_pii,
     redact_ssn,
-    reset_retry_tracker,
     retry_lock,
     retry_tracker,
     validate_signal,
@@ -247,7 +239,7 @@ class TestCircuitBreaker:
         for _ in range(3):
             try:
                 cb.call(lambda: 1 / 0)
-            except:
+            except Exception:
                 pass
 
         assert cb.state == "OPEN"
@@ -260,7 +252,7 @@ class TestCircuitBreaker:
         for _ in range(3):
             try:
                 cb.call(lambda: 1 / 0)
-            except:
+            except Exception:
                 pass
 
         # Should now block
@@ -276,7 +268,7 @@ class TestCircuitBreaker:
         for _ in range(3):
             try:
                 cb.call(lambda: 1 / 0)
-            except:
+            except Exception:
                 pass
 
         # Fast-forward past recovery timeout
@@ -298,7 +290,7 @@ class TestCircuitBreaker:
         for _ in range(3):
             try:
                 cb.call(lambda: 1 / 0)
-            except:
+            except Exception:
                 pass
 
         # Enter HALF_OPEN
@@ -320,7 +312,7 @@ class TestCircuitBreaker:
         for _ in range(3):
             try:
                 cb.call(lambda: 1 / 0)
-            except:
+            except Exception:
                 pass
 
         # Enter HALF_OPEN
@@ -331,7 +323,7 @@ class TestCircuitBreaker:
         # Failure in HALF_OPEN reopens circuit
         try:
             cb.call(lambda: 1 / 0)
-        except:
+        except Exception:
             pass
 
         assert cb.state == "OPEN"
@@ -629,7 +621,7 @@ class TestIntegration:
         for _ in range(10):
             try:
                 cb.call(lambda: 1 / 0)
-            except:
+            except Exception:
                 pass
 
         assert cb.state == "OPEN"

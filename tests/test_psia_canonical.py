@@ -11,9 +11,6 @@ Covers:
 
 from __future__ import annotations
 
-import time
-from datetime import datetime, timedelta, timezone
-
 import pytest
 
 from psia.canonical.capability_authority import (
@@ -426,7 +423,7 @@ class TestCapabilityAuthority:
     def test_active_count(self):
         ca = CapabilityAuthority()
         t1 = ca.issue(subject="did:project-ai:test:alice", scopes=[_scope()])
-        t2 = ca.issue(subject="did:project-ai:test:bob", scopes=[_scope()])
+        ca.issue(subject="did:project-ai:test:bob", scopes=[_scope()])
         ca.revoke(t1.token_id)
         assert ca.active_count == 1
 

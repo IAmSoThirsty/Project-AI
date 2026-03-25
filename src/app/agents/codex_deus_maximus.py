@@ -237,6 +237,7 @@ class CodexDeusMaximus(KernelRoutedAgent):
         inputs = self._gpt_tokenizer(prompt, return_tensors="pt")
         inputs = {k: v.to(self._gpt_model.device) for k, v in inputs.items()}
         import torch
+
         with torch.no_grad():
             output = self._gpt_model.generate(
                 **inputs,

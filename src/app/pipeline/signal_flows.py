@@ -28,7 +28,6 @@ SUBSYSTEM INTEGRATION:
 - Audit log receives all state transitions
 """
 
-import hashlib
 import json
 import logging
 import os
@@ -38,7 +37,7 @@ import time
 import uuid
 from collections import defaultdict
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 # Try to import Redis, fallback to None if unavailable
 try:
@@ -171,7 +170,7 @@ class CircuitBreaker:
 
             return result
 
-        except Exception as e:
+        except Exception:
             with self.lock:
                 self.failure_count += 1
                 self.last_failure_time = time.time()
@@ -355,7 +354,7 @@ ENABLED_REDACTORS = os.environ.get(
 ).split(",")
 
 
-def redact_pii(text: Optional[str], redactors: Optional[List[str]] = None) -> str:
+def redact_pii(text: str | None, redactors: list[str] | None = None) -> str:
     """
     Comprehensive PII redaction pipeline.
 
@@ -395,7 +394,7 @@ def redact_pii(text: Optional[str], redactors: Optional[List[str]] = None) -> st
     return text
 
 
-def validate_signal(signal: Dict[str, Any]) -> Dict[str, Any]:
+def validate_signal(signal: dict[str, Any]) -> dict[str, Any]:
     """
     Validate signal using schema validation.
 
@@ -439,7 +438,7 @@ def validate_signal(signal: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def process_signal(signal: Dict[str, Any], is_incident: bool = False) -> Dict[str, Any]:
+def process_signal(signal: dict[str, Any], is_incident: bool = False) -> dict[str, Any]:
     """
     Process signal through complete pipeline.
 
@@ -635,13 +634,13 @@ def process_signal(signal: Dict[str, Any], is_incident: bool = False) -> Dict[st
                     raise GlobalThrottlingError("Global retry limit exceeded")
 
                 # Simulate processing (replace with actual logic)
-                def process_logic():
+                def process_logic():  # noqa: B023
                     # This is where actual signal processing happens
                     # (agent routing, knowledge ingestion, policy checks, etc.)
 
                     if (
                         signal.get("simulate") == "retry"
-                        and attempt < MAX_RETRIES_PER_SIGNAL
+                        and attempt < MAX_RETRIES_PER_SIGNAL  # noqa: B023
                     ):
                         raise RuntimeError("Simulated retry error")
                     elif signal.get("simulate") == "permanent":
@@ -752,8 +751,8 @@ def process_signal(signal: Dict[str, Any], is_incident: bool = False) -> Dict[st
 
 
 def process_batch(
-    signals: List[Dict[str, Any]], is_incident: bool = False
-) -> List[Dict[str, Any]]:
+    signals: list[dict[str, Any]], is_incident: bool = False
+) -> list[dict[str, Any]]:
     """
     Process a batch of signals.
 
@@ -773,7 +772,7 @@ def process_batch(
     return results
 
 
-def get_pipeline_stats() -> Dict[str, Any]:
+def get_pipeline_stats() -> dict[str, Any]:
     """
     Get pipeline statistics.
 

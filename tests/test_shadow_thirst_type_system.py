@@ -18,14 +18,11 @@ Fact-verifies claims from the paper (§8.4):
 
 from __future__ import annotations
 
-import pytest
-
 from shadow_thirst.type_system import (
     AnnotatedType,
     BaseType,
     PlaneAnnotation,
     PlaneSafetyChecker,
-    TypeViolation,
 )
 
 

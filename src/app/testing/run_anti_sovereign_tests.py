@@ -17,7 +17,6 @@ Options:
 
 import argparse
 import asyncio
-import json
 import logging
 import sys
 import time

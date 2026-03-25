@@ -29,7 +29,6 @@ Security is powerful, but still governed.
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional
 
 
 class ThreatLevel(Enum):
@@ -73,11 +72,11 @@ class ThreatModel:
     name: str
     description: str
     threat_level: ThreatLevel
-    affected_entities: List[str] = field(default_factory=list)
-    mitigations: List[str] = field(default_factory=list)
+    affected_entities: list[str] = field(default_factory=list)
+    mitigations: list[str] = field(default_factory=list)
     residual_risk: str = ""
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "threat_id": self.threat_id,
             "name": self.name,
@@ -96,11 +95,11 @@ class SecurityPolicy:
     policy_id: str
     name: str
     description: str
-    rules: List[str] = field(default_factory=list)
+    rules: list[str] = field(default_factory=list)
     enforcement_level: str = "MANDATORY"  # ADVISORY, MANDATORY, CRITICAL
-    exceptions: List[str] = field(default_factory=list)
+    exceptions: list[str] = field(default_factory=list)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "policy_id": self.policy_id,
             "name": self.name,
@@ -122,17 +121,15 @@ class Permission:
     granted: bool
     justification: str
     granted_at: datetime = field(default_factory=datetime.now)
-    expires_at: Optional[datetime] = None
+    expires_at: datetime | None = None
 
     def is_active(self) -> bool:
         """Check if permission is currently active"""
         if not self.granted:
             return False
-        if self.expires_at and datetime.now() > self.expires_at:
-            return False
-        return True
+        return not (self.expires_at and datetime.now() > self.expires_at)
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "permission_id": self.permission_id,
             "type": self.permission_type.value,
@@ -152,14 +149,14 @@ class SecurityAudit:
 
     audit_id: str
     audit_type: str  # "full_system", "floor", "cross_floor", "artifact"
-    scope: List[str] = field(default_factory=list)
-    findings: List[str] = field(default_factory=list)
-    recommendations: List[str] = field(default_factory=list)
+    scope: list[str] = field(default_factory=list)
+    findings: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
     threat_level: ThreatLevel = ThreatLevel.LOW
     started_at: datetime = field(default_factory=datetime.now)
-    completed_at: Optional[datetime] = None
+    completed_at: datetime | None = None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "audit_id": self.audit_id,
             "audit_type": self.audit_type,
@@ -184,12 +181,12 @@ class Lockdown:
     reason: str
     threat_level: ThreatLevel
     initiated_at: datetime = field(default_factory=datetime.now)
-    lifted_at: Optional[datetime] = None
+    lifted_at: datetime | None = None
 
     def is_active(self) -> bool:
         return self.lifted_at is None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "lockdown_id": self.lockdown_id,
             "scope": self.scope,
@@ -208,14 +205,14 @@ class BlockedDelivery:
     block_id: str
     artifact_id: str
     reason: str
-    required_mitigations: List[str] = field(default_factory=list)
+    required_mitigations: list[str] = field(default_factory=list)
     blocked_at: datetime = field(default_factory=datetime.now)
-    unblocked_at: Optional[datetime] = None
+    unblocked_at: datetime | None = None
 
     def is_blocked(self) -> bool:
         return self.unblocked_at is None
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "block_id": self.block_id,
             "artifact_id": self.artifact_id,
@@ -241,12 +238,12 @@ class HeadOfSecurity:
     """
 
     def __init__(self):
-        self.threat_models: Dict[str, ThreatModel] = {}
-        self.security_policies: Dict[str, SecurityPolicy] = {}
-        self.permissions: Dict[str, Permission] = {}
-        self.audits: Dict[str, SecurityAudit] = {}
-        self.lockdowns: Dict[str, Lockdown] = {}
-        self.blocked_deliveries: Dict[str, BlockedDelivery] = {}
+        self.threat_models: dict[str, ThreatModel] = {}
+        self.security_policies: dict[str, SecurityPolicy] = {}
+        self.permissions: dict[str, Permission] = {}
+        self.audits: dict[str, SecurityAudit] = {}
+        self.lockdowns: dict[str, Lockdown] = {}
+        self.blocked_deliveries: dict[str, BlockedDelivery] = {}
 
         # Initialize core security policies
         self._initialize_core_policies()
@@ -304,7 +301,7 @@ class HeadOfSecurity:
         entity_id: str,
         tool_name: str,
         justification: str,
-        expires_in_hours: Optional[int] = None,
+        expires_in_hours: int | None = None,
     ) -> Permission:
         """Grant tool access to an entity"""
         from app.miniature_office.core.audit import EventType, get_audit_log
@@ -367,7 +364,7 @@ class HeadOfSecurity:
         return True
 
     def approve_unsafe_operation(
-        self, entity_id: str, operation: str, justification: str, mitigations: List[str]
+        self, entity_id: str, operation: str, justification: str, mitigations: list[str]
     ) -> Permission:
         """Approve an unsafe operation with required mitigations"""
         from app.miniature_office.core.audit import EventType, get_audit_log
@@ -463,7 +460,7 @@ class HeadOfSecurity:
         return lockdown
 
     def trigger_cross_floor_review(
-        self, floor_ids: List[str], concern: str
+        self, floor_ids: list[str], concern: str
     ) -> SecurityAudit:
         """Trigger a cross-floor security review"""
         from app.miniature_office.core.audit import EventType, get_audit_log
@@ -495,7 +492,7 @@ class HeadOfSecurity:
     # =========================================================================
 
     def block_delivery(
-        self, artifact_id: str, reason: str, required_mitigations: List[str]
+        self, artifact_id: str, reason: str, required_mitigations: list[str]
     ) -> BlockedDelivery:
         """Block an artifact delivery indefinitely until mitigations are applied"""
         from app.miniature_office.core.audit import EventType, get_audit_log
@@ -574,7 +571,7 @@ class HeadOfSecurity:
         return lockdown
 
     def force_rearchitecture(
-        self, artifact_id: str, safety_issue: str, required_changes: List[str]
+        self, artifact_id: str, safety_issue: str, required_changes: list[str]
     ) -> bool:
         """Force re-architecture of unsafe design"""
         from app.miniature_office.core.audit import EventType, get_audit_log
@@ -633,7 +630,7 @@ class HeadOfSecurity:
 
         return f"No security rejection found for {entity_id}"
 
-    def list_required_mitigations(self, artifact_id: str) -> List[str]:
+    def list_required_mitigations(self, artifact_id: str) -> list[str]:
         """List required mitigations for an artifact"""
         for block in self.blocked_deliveries.values():
             if block.artifact_id == artifact_id and block.is_blocked():
@@ -660,7 +657,7 @@ class HeadOfSecurity:
         """Head of Security CANNOT override constitutional laws"""
         return False
 
-    def validate_absolute_limits(self, action: str) -> tuple[bool, Optional[str]]:
+    def validate_absolute_limits(self, action: str) -> tuple[bool, str | None]:
         """
         Validate that an action respects Head of Security absolute limits.
         Returns: (is_allowed, reason_if_not)
@@ -685,7 +682,7 @@ class HeadOfSecurity:
     # QUERIES
     # =========================================================================
 
-    def get_active_lockdowns(self) -> List[Dict]:
+    def get_active_lockdowns(self) -> list[dict]:
         """Get all active lockdowns"""
         return [
             lockdown.to_dict()
@@ -693,7 +690,7 @@ class HeadOfSecurity:
             if lockdown.is_active()
         ]
 
-    def get_blocked_deliveries(self) -> List[Dict]:
+    def get_blocked_deliveries(self) -> list[dict]:
         """Get all currently blocked deliveries"""
         return [
             block.to_dict()
@@ -701,7 +698,7 @@ class HeadOfSecurity:
             if block.is_blocked()
         ]
 
-    def get_active_permissions(self, entity_id: Optional[str] = None) -> List[Dict]:
+    def get_active_permissions(self, entity_id: str | None = None) -> list[dict]:
         """Get active permissions, optionally filtered by entity"""
         permissions = [p.to_dict() for p in self.permissions.values() if p.is_active()]
 
@@ -710,11 +707,11 @@ class HeadOfSecurity:
 
         return permissions
 
-    def get_security_policies(self) -> List[Dict]:
+    def get_security_policies(self) -> list[dict]:
         """Get all security policies"""
         return [policy.to_dict() for policy in self.security_policies.values()]
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         """Export Head of Security state"""
         return {
             "role": "Executive Authority - Security Sovereign",

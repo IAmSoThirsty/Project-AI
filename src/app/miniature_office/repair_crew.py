@@ -283,21 +283,25 @@ class RepairCrew:
                     )
                 )
             # Check for hardcoded secrets patterns
-            if any(
-                kw in stripped.lower() for kw in ("password=", "secret=", "api_key=")
+            if (
+                any(
+                    kw in stripped.lower()
+                    for kw in ("password=", "secret=", "api_key=")
+                )
+                and "os.environ" not in stripped
+                and "getenv" not in stripped
             ):
-                if "os.environ" not in stripped and "getenv" not in stripped:
-                    issues.append(
-                        DiagnosticIssue(
-                            issue_id=f"issue_{uuid.uuid4().hex[:6]}",
-                            file_path=fpath,
-                            line_number=i,
-                            severity=IssueSeverity.CRITICAL,
-                            category="security",
-                            message="Potential hardcoded secret detected",
-                            suggested_fix="Use os.environ.get() or SecureStorage",
-                        )
+                issues.append(
+                    DiagnosticIssue(
+                        issue_id=f"issue_{uuid.uuid4().hex[:6]}",
+                        file_path=fpath,
+                        line_number=i,
+                        severity=IssueSeverity.CRITICAL,
+                        category="security",
+                        message="Potential hardcoded secret detected",
+                        suggested_fix="Use os.environ.get() or SecureStorage",
                     )
+                )
             # Check for TODO/FIXME
             if "TODO" in stripped or "FIXME" in stripped:
                 issues.append(
