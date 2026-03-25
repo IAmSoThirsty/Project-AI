@@ -8,7 +8,7 @@ Classifies threat actors into behavioral categories.
 
 CLASSES:
 - Opportunistic Scanner
-- Credential Harvester  
+- Credential Harvester
 - Cloud VPS Actor
 - Botnet Node
 - Research Sandbox
@@ -22,6 +22,7 @@ Each defined by probability vector.
 import logging
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 import numpy as np
 

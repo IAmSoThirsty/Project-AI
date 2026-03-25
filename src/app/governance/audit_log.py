@@ -37,6 +37,7 @@ import gzip
 import hashlib
 import json
 import logging
+import os
 import shutil
 import threading
 from collections.abc import Callable
@@ -902,10 +903,7 @@ def audit_event(event_type: str, details: dict[str, Any], actor: str = "system")
     # Check if Redis is configured
     redis_enabled = os.environ.get("REDIS_HOST") is not None
 
-    if redis_enabled:
-        audit = AuditLogWithRedis()
-    else:
-        audit = AuditLog()
+    audit = AuditLogWithRedis() if redis_enabled else AuditLog()
 
     audit.log_event(
         event_type=event_type,

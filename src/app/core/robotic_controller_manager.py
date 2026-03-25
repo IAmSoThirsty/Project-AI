@@ -18,6 +18,7 @@ from enum import Enum
 from typing import Any
 
 from app.core.robotic_hardware_layer import (
+    CommunicationProtocol,
     HardwareAbstractionLayer,
     JointState,
     RobotConfiguration,
