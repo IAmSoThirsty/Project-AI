@@ -10,6 +10,7 @@ Supports 50+ programming language runtimes with deterministic selection and heal
 
 import json
 import logging
+import shlex
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -126,8 +127,8 @@ class RuntimeManager:
             try:
                 # Execute health check command
                 result = subprocess.run(
-                    runtime.health_check_cmd,
-                    shell=True,
+                    shlex.split(runtime.health_check_cmd),
+                    shell=False,
                     capture_output=True,
                     timeout=timeout,
                     text=True,

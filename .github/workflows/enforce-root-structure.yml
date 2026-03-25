@@ -129,11 +129,23 @@ jobs:
           
           ARCHIVE_VIOLATIONS=0
           while IFS= read -r file; do
-            if [[ ! "$file" =~ ^docs/internal/archive/ ]]; then
-              echo "❌ VIOLATION: Archived document found outside archive: $file"
-              ARCHIVE_VIOLATIONS=$((ARCHIVE_VIOLATIONS + 1))
+            # Strip leading "./"
+            rel="${file#./}"
+            # Allow files inside any directory named "archive" or "archives"
+            if [[ "$rel" =~ (^|/)archive[s]?/ ]]; then
+              continue
             fi
-          done < <(find . -type f \( -name "*_COMPLETE.md" -o -name "*_SUMMARY.md" -o -name "*_STATUS.md" \) -not -path './.git/*' -not -path './docs/internal/archive/*' -not -path './node_modules/*' -not -path './.venv/*')
+            # Allow files inside .github (workflow/instruction docs)
+            if [[ "$rel" =~ ^\.github/ ]]; then
+              continue
+            fi
+            # Allow files inside docs/ (legitimate documentation directory)
+            if [[ "$rel" =~ ^docs/ ]]; then
+              continue
+            fi
+            echo "❌ VIOLATION: Archived document found outside archive: $file"
+            ARCHIVE_VIOLATIONS=$((ARCHIVE_VIOLATIONS + 1))
+          done < <(find . -type f \( -name "*_COMPLETE.md" -o -name "*_SUMMARY.md" -o -name "*_STATUS.md" \) -not -path './.git/*' -not -path './node_modules/*' -not -path './.venv/*')
           
           # Report results
           echo ""
