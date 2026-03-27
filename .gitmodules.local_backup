@@ -1,0 +1,175 @@
+[submodule "archive/integrations/analytics-dashboard"]
+	path = archive/integrations/analytics-dashboard
+	url = https://github.com/IAmSoThirsty/thirsty-lang-analytics-dashboard.git
+
+[submodule "archive/integrations/api-gateway"]
+	path = archive/integrations/api-gateway
+	url = https://github.com/IAmSoThirsty/thirsty-lang-api-gateway.git
+
+[submodule "archive/integrations/api-starter"]
+	path = archive/integrations/api-starter
+	url = https://github.com/IAmSoThirsty/thirsty-lang-api-starter.git
+
+[submodule "archive/integrations/auth-provider"]
+	path = archive/integrations/auth-provider
+	url = https://github.com/IAmSoThirsty/thirsty-lang-auth-provider.git
+
+[submodule "archive/integrations/best-practices"]
+	path = archive/integrations/best-practices
+	url = https://github.com/IAmSoThirsty/thirsty-lang-best-practices.git
+
+[submodule "archive/integrations/blockchain"]
+	path = archive/integrations/blockchain
+	url = https://github.com/IAmSoThirsty/thirsty-lang-blockchain.git
+
+[submodule "archive/integrations/caching-layer"]
+	path = archive/integrations/caching-layer
+	url = https://github.com/IAmSoThirsty/thirsty-lang-caching-layer.git
+
+[submodule "archive/integrations/cerberus-guard"]
+	path = archive/integrations/cerberus-guard
+	url = https://github.com/IAmSoThirsty/Cerberus.git
+
+[submodule "archive/integrations/chatbot"]
+	path = archive/integrations/chatbot
+	url = https://github.com/IAmSoThirsty/thirsty-lang-chatbot.git
+
+[submodule "archive/integrations/cli-tool-template"]
+	path = archive/integrations/cli-tool-template
+	url = https://github.com/IAmSoThirsty/thirsty-lang-cli-tool-template.git
+
+[submodule "archive/integrations/compiler-tools"]
+	path = archive/integrations/compiler-tools
+	url = https://github.com/IAmSoThirsty/thirsty-lang-compiler-tools.git
+
+[submodule "archive/integrations/cookbook"]
+	path = archive/integrations/cookbook
+	url = https://github.com/IAmSoThirsty/thirsty-lang-cookbook.git
+
+[submodule "archive/integrations/data-pipeline"]
+	path = archive/integrations/data-pipeline
+	url = https://github.com/IAmSoThirsty/thirsty-lang-data-pipeline.git
+
+[submodule "archive/integrations/database-orm"]
+	path = archive/integrations/database-orm
+	url = https://github.com/IAmSoThirsty/thirsty-lang-database-orm.git
+
+[submodule "archive/integrations/desktop-app"]
+	path = archive/integrations/desktop-app
+	url = https://github.com/IAmSoThirsty/thirsty-lang-desktop-app.git
+
+[submodule "archive/integrations/devops-automation"]
+	path = archive/integrations/devops-automation
+	url = https://github.com/IAmSoThirsty/thirsty-lang-devops-automation.git
+
+[submodule "archive/integrations/event-sourcing"]
+	path = archive/integrations/event-sourcing
+	url = https://github.com/IAmSoThirsty/thirsty-lang-event-sourcing.git
+
+[submodule "archive/integrations/exercises"]
+	path = archive/integrations/exercises
+	url = https://github.com/IAmSoThirsty/thirsty-lang-exercises.git
+
+[submodule "archive/integrations/fullstack-app"]
+	path = archive/integrations/fullstack-app
+	url = https://github.com/IAmSoThirsty/thirsty-lang-fullstack-app.git
+
+[submodule "archive/integrations/game-engine-demo"]
+	path = archive/integrations/game-engine-demo
+	url = https://github.com/IAmSoThirsty/thirsty-lang-game-engine-demo.git
+
+[submodule "archive/integrations/graphql-api"]
+	path = archive/integrations/graphql-api
+	url = https://github.com/IAmSoThirsty/thirsty-lang-graphql-api.git
+
+[submodule "archive/integrations/iot-devices"]
+	path = archive/integrations/iot-devices
+	url = https://github.com/IAmSoThirsty/thirsty-lang-iot-devices.git
+
+[submodule "archive/integrations/linguist-fork"]
+	path = archive/integrations/linguist-fork
+	url = https://github.com/IAmSoThirsty/linguist.git
+
+[submodule "archive/integrations/linguist-test"]
+	path = archive/integrations/linguist-test
+	url = https://github.com/github/linguist.git
+
+[submodule "archive/integrations/microservices"]
+	path = archive/integrations/microservices
+	url = https://github.com/IAmSoThirsty/thirsty-lang-microservices.git
+
+[submodule "archive/integrations/ml-starter"]
+	path = archive/integrations/ml-starter
+	url = https://github.com/IAmSoThirsty/thirsty-lang-ml-starter.git
+
+[submodule "archive/integrations/mobile-app"]
+	path = archive/integrations/mobile-app
+	url = https://github.com/IAmSoThirsty/thirsty-lang-mobile-app.git
+
+[submodule "archive/integrations/observability"]
+	path = archive/integrations/observability
+	url = https://github.com/IAmSoThirsty/thirsty-lang-observability.git
+
+[submodule "archive/integrations/penetration-testing"]
+	path = archive/integrations/penetration-testing
+	url = https://github.com/IAmSoThirsty/thirsty-lang-penetration-testing.git
+
+[submodule "archive/integrations/plugin-system"]
+	path = archive/integrations/plugin-system
+	url = https://github.com/IAmSoThirsty/thirsty-lang-plugin-system.git
+
+[submodule "archive/integrations/queue-worker"]
+	path = archive/integrations/queue-worker
+	url = https://github.com/IAmSoThirsty/thirsty-lang-queue-worker.git
+
+[submodule "archive/integrations/security-toolkit"]
+	path = archive/integrations/security-toolkit
+	url = https://github.com/IAmSoThirsty/thirsty-lang-security-toolkit.git
+
+[submodule "archive/integrations/service-mesh"]
+	path = archive/integrations/service-mesh
+	url = https://github.com/IAmSoThirsty/thirsty-lang-service-mesh.git
+
+[submodule "archive/integrations/testing-framework"]
+	path = archive/integrations/testing-framework
+	url = https://github.com/IAmSoThirsty/thirsty-lang-testing-framework.git
+
+[submodule "archive/integrations/text-adventure"]
+	path = archive/integrations/text-adventure
+	url = https://github.com/IAmSoThirsty/thirsty-lang-text-adventure.git
+
+[submodule "archive/integrations/the-triumvirate"]
+	path = archive/integrations/the-triumvirate
+	url = https://github.com/IAmSoThirsty/The_Triumvirate.git
+
+[submodule "archive/integrations/thirsty-lang-engine"]
+	path = archive/integrations/thirsty-lang-engine
+	url = https://github.com/IAmSoThirsty/Thirsty-Lang.git
+
+[submodule "archive/integrations/ttp"]
+	path = archive/integrations/ttp
+	url = https://github.com/IAmSoThirsty/TTP.git
+
+[submodule "archive/integrations/waterfall"]
+	path = archive/integrations/waterfall
+	url = https://github.com/IAmSoThirsty/Thirstys-waterfall.git
+
+[submodule "archive/integrations/web-framework"]
+	path = archive/integrations/web-framework
+	url = https://github.com/IAmSoThirsty/thirsty-lang-web-framework.git
+
+[submodule "archive/integrations/websocket-server"]
+	path = archive/integrations/websocket-server
+	url = https://github.com/IAmSoThirsty/thirsty-lang-websocket-server.git
+
+[submodule "projects/miniature-office"]
+	path = projects/miniature-office
+	url = https://github.com/IAmSoThirsty/Thirstys-Projects-Miniature-Office.git
+
+[submodule "src/monolith_runtime"]
+	path = src/monolith_runtime
+	url = https://github.com/IAmSoThirsty/Thirstys-Monolith.git
+
+[submodule "trunk/super/penetration-testing-tools"]
+	path = trunk/super/penetration-testing-tools
+	url = https://github.com/mgeeky/Penetration-Testing-Tools.git

@@ -1,0 +1,9 @@
+name: heretic_handoff_demo
+stages:
+- model: phi-3-mini-sovereign
+  name: decensor_model
+  type: abliteration
+- chain: galahad_governance
+  name: ethical_audit
+  type: agent_chain
+version: 1.0.0
