@@ -1,7 +1,0 @@
-{
-    "actor": "human",
-    "action": "read",
-    "target": "user_database",
-    "context": {},
-    "origin": "demo_presentation"
-}

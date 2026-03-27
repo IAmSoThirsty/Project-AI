@@ -1,9 +1,0 @@
-{
-  "system": [
-    "expert",
-    "integrator"
-  ],
-  "tester": [
-    "expert"
-  ]
-}
