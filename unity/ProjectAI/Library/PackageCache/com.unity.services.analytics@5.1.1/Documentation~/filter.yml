@@ -1,9 +1,0 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
-apiRules:
-  - exclude:
-      uidRegex: Tests$
-      type: Namespace
-  - exclude:
-      uidRegex: ^Unity\..*\.Tests\..*$
-      type: Namespace
