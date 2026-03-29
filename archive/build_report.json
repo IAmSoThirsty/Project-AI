@@ -1,0 +1,223 @@
+{
+  "timestamp": "2026-03-08T16:55:25Z",
+  "modules_built": 8,
+  "details": [
+    {
+      "path": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\external\\Thirsty-Lang",
+      "status": "built",
+      "logs": [
+        {
+          "success": true,
+          "exit_code": 0,
+          "stdout": "\nup to date, audited 1 package in 2s\n\nfound 0 vulnerabilities\n",
+          "stderr": "",
+          "duration_s": 2.217944622039795,
+          "command": "npm ci"
+        },
+        {
+          "success": true,
+          "exit_code": 0,
+          "stdout": "\n> thirsty-lang@2.0.0 build\n> echo 'Build complete - All tools ready!'\n\n'Build complete - All tools ready!'\n",
+          "stderr": "",
+          "duration_s": 0.43160367012023926,
+          "command": "npm run build"
+        },
+        {
+          "success": false,
+          "exit_code": 1,
+          "stdout": "\n> thirsty-lang@2.0.0 test\n> node src/test/runner.js\n\n",
+          "stderr": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\external\\Thirsty-Lang\\src\\security\\index.js:3\n#!/usr/bin/env node\n^\n\nSyntaxError: Invalid or unexpected token\n    at wrapSafe (node:internal/modules/cjs/loader:1742:18)\n    at Module._compile (node:internal/modules/cjs/loader:1785:20)\n    at Object..js (node:internal/modules/cjs/loader:1942:10)\n    at Module.load (node:internal/modules/cjs/loader:1532:32)\n    at Module._load (node:internal/modules/cjs/loader:1334:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1555:12)\n    at require (node:internal/modules/helpers:152:16)\n    at Object.<anonymous> (C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\external\\Thirsty-Lang\\src\\index.js:10:29)\n    at Module._compile (node:internal/modules/cjs/loader:1811:14)\n\nNode.js v25.6.1\n",
+          "duration_s": 0.5474843978881836,
+          "command": "npm test"
+        }
+      ],
+      "scripts": [
+        "start",
+        "train",
+        "repl",
+        "test",
+        "test:base",
+        "test:security",
+        "test:bridge",
+        "test:all",
+        "test:plus",
+        "test:plusplus",
+        "test:gods",
+        "example:security",
+        "example:policy",
+        "thirstyplus",
+        "thirstyplusplus",
+        "thirstofgods",
+        "lint",
+        "format",
+        "profile",
+        "debug",
+        "doc",
+        "ast",
+        "transpile",
+        "build",
+        "playground",
+        "install-cli",
+        "prepublishOnly",
+        "version",
+        "postversion"
+      ]
+    },
+    {
+      "path": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\external\\Thirsty-Lang\\vscode-extension",
+      "status": "built",
+      "logs": [
+        {
+          "success": true,
+          "exit_code": 0,
+          "stdout": "\nup to date, audited 1 package in 2s\n\nfound 0 vulnerabilities\n",
+          "stderr": "",
+          "duration_s": 2.2217540740966797,
+          "command": "npm ci"
+        }
+      ],
+      "scripts": []
+    },
+    {
+      "path": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\src\\thirsty_lang",
+      "status": "built",
+      "logs": [
+        {
+          "success": true,
+          "exit_code": 0,
+          "stdout": "\nup to date, audited 1 package in 2s\n\nfound 0 vulnerabilities\n",
+          "stderr": "",
+          "duration_s": 2.219453811645508,
+          "command": "npm ci"
+        },
+        {
+          "success": true,
+          "exit_code": 0,
+          "stdout": "\n> thirsty-lang@1.0.0 build\n> echo 'Build complete - All tools ready!'\n\n'Build complete - All tools ready!'\n",
+          "stderr": "",
+          "duration_s": 0.4240293502807617,
+          "command": "npm run build"
+        },
+        {
+          "success": false,
+          "exit_code": 1,
+          "stdout": "\n> thirsty-lang@1.0.0 test\n> node src/test/runner.js\n\n",
+          "stderr": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\src\\thirsty_lang\\src\\index.js:3\n#!/usr/bin/env node\n^\n\nSyntaxError: Invalid or unexpected token\n    at wrapSafe (node:internal/modules/cjs/loader:1742:18)\n    at Module._compile (node:internal/modules/cjs/loader:1785:20)\n    at Object..js (node:internal/modules/cjs/loader:1942:10)\n    at Module.load (node:internal/modules/cjs/loader:1532:32)\n    at Module._load (node:internal/modules/cjs/loader:1334:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.require (node:internal/modules/cjs/loader:1555:12)\n    at require (node:internal/modules/helpers:152:16)\n    at Object.<anonymous> (C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\src\\thirsty_lang\\src\\test\\runner.js:7:28)\n    at Module._compile (node:internal/modules/cjs/loader:1811:14)\n\nNode.js v25.6.1\n",
+          "duration_s": 0.5550587177276611,
+          "command": "npm test"
+        }
+      ],
+      "scripts": [
+        "start",
+        "train",
+        "repl",
+        "test",
+        "test:base",
+        "test:plus",
+        "test:plusplus",
+        "test:gods",
+        "thirstyplus",
+        "thirstyplusplus",
+        "thirstofgods",
+        "lint",
+        "format",
+        "profile",
+        "debug",
+        "doc",
+        "ast",
+        "transpile",
+        "build",
+        "playground",
+        "install-cli"
+      ]
+    },
+    {
+      "path": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\src\\thirsty_lang\\vscode-extension",
+      "status": "built",
+      "logs": [
+        {
+          "success": true,
+          "exit_code": 0,
+          "stdout": "\nup to date, audited 1 package in 2s\n\nfound 0 vulnerabilities\n",
+          "stderr": "",
+          "duration_s": 2.2217540740966797,
+          "command": "npm ci"
+        }
+      ],
+      "scripts": []
+    },
+    {
+      "path": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\unity\\ProjectAI\\Library\\PackageCache\\com.unity.services.cloud-build@1.0.5",
+      "status": "built",
+      "logs": [
+        {
+          "success": false,
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "npm error code ETARGET\nnpm error notarget No matching version found for com.unity.nuget.newtonsoft-json@3.0.2.\nnpm error notarget In most cases you or one of your dependencies are requesting\nnpm error notarget a package version that doesn't exist.\nnpm error A complete log of this run can be found in: C:\\Users\\Quencher\\AppData\\Local\\npm-cache\\_logs\\2026-03-08T16_55_19_933Z-debug-0.log\n",
+          "duration_s": 2.640331983566284,
+          "command": "npm install"
+        }
+      ],
+      "scripts": []
+    },
+    {
+      "path": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\archive\\emergent-microservices\\ai-mutation-governance-firewall",
+      "status": "built",
+      "logs": [
+        {
+          "success": false,
+          "exit_code": 9009,
+          "stdout": "",
+          "stderr": "Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.\n",
+          "duration_s": 0.20219159126281738,
+          "command": "python3 -m pip install -e ."
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\emergent-microservices\\ai-mutation-governance-firewall",
+      "status": "built",
+      "logs": [
+        {
+          "success": false,
+          "exit_code": 9009,
+          "stdout": "",
+          "stderr": "Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.\n",
+          "duration_s": 0.20219159126281738,
+          "command": "python3 -m pip install -r C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\emergent-microservices\\ai-mutation-governance-firewall\\requirements.txt"
+        },
+        {
+          "success": false,
+          "exit_code": 9009,
+          "stdout": "",
+          "stderr": "Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.\n",
+          "duration_s": 0.20535826683044434,
+          "command": "python3 -m pip install -e ."
+        },
+        {
+          "success": false,
+          "exit_code": 4,
+          "stdout": "",
+          "stderr": "C:\\Users\\Quencher\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\site-packages\\_pytest\\config\\__init__.py:331: PluggyTeardownRaisedWarning: A plugin raised an exception during an old-style hookwrapper teardown.\nPlugin: helpconfig, Hook: pytest_cmdline_parse\nUsageError: C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\emergent-microservices\\ai-mutation-governance-firewall\\pyproject.toml: 'minversion' requires pytest-8.0, actual pytest-7.4.4'\nFor more information see https://pluggy.readthedocs.io/en/stable/api_reference.html#pluggy.PluggyTeardownRaisedWarning\n  config = pluginmanager.hook.pytest_cmdline_parse(\nERROR: C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\emergent-microservices\\ai-mutation-governance-firewall\\pyproject.toml: 'minversion' requires pytest-8.0, actual pytest-7.4.4'\n\n",
+          "duration_s": 1.247018575668335,
+          "command": "pytest -q"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI",
+      "status": "built",
+      "logs": [
+        {
+          "success": false,
+          "exit_code": 1,
+          "stdout": "#1 [internal] load local bake definitions\n#1 reading from stdin 6.52kB done\n#1 DONE 0.0s\n\n#2 [i-believe-in-you internal] load build definition from Dockerfile\n#2 transferring dockerfile: 2B done\n#2 DONE 0.1s\n\n#3 [mutation-firewall internal] load build definition from Dockerfile\n#3 transferring dockerfile: 1.67kB 0.0s done\n#3 DONE 0.1s\n\n#4 [temporal-worker internal] load build definition from Dockerfile\n#4 transferring dockerfile: 1.49kB 0.1s done\n#4 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 8)\n#4 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 8)\n#4 DONE 0.1s\n\n#5 [negotiation-agent internal] load build definition from Dockerfile\n#5 transferring dockerfile: 1.67kB 0.0s done\n#5 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 4)\n#5 DONE 0.1s\n\n#6 [compliance-engine internal] load build definition from Dockerfile\n#6 transferring dockerfile: 1.67kB 0.0s done\n#6 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 4)\n#6 DONE 0.1s\n\n#7 [trust-graph internal] load build definition from Dockerfile\n#7 transferring dockerfile: 1.67kB 0.0s done\n#7 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 4)\n#7 DONE 0.1s\n\n#8 [verifiable-reality internal] load build definition from Dockerfile\n#8 transferring dockerfile: 1.67kB 0.0s done\n#8 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 4)\n#8 DONE 0.1s\n\n#9 [data-vault internal] load build definition from Dockerfile\n#9 transferring dockerfile: 1.67kB 0.0s done\n#9 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 4)\n#9 DONE 0.1s\n\n#10 [incident-reflex internal] load build definition from Dockerfile\n#10 transferring dockerfile: 1.67kB 0.0s done\n#10 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 4)\n#10 DONE 0.2s\n\n#11 [verifiable-reality internal] load metadata for docker.io/library/python:3.11-slim\n#11 CANCELED\n\n#12 [temporal-worker internal] load metadata for docker.io/library/python:3.11-slim@sha256:0b23cfb7425d065008b778022a17b1551c82f8b4866ee5a7a200084b7e2eafbf\n#12 CANCELED\n",
+          "stderr": "time=\"2026-03-08T09:55:22-07:00\" level=warning msg=\"The \\\"SMTP_USERNAME\\\" variable is not set. Defaulting to a blank string.\"\ntime=\"2026-03-08T09:55:22-07:00\" level=warning msg=\"The \\\"SMTP_PASSWORD\\\" variable is not set. Defaulting to a blank string.\"\ntime=\"2026-03-08T09:55:22-07:00\" level=warning msg=\"The \\\"FERNET_KEY\\\" variable is not set. Defaulting to a blank string.\"\ntime=\"2026-03-08T09:55:22-07:00\" level=warning msg=\"C:\\\\Users\\\\Quencher\\\\.gemini\\\\antigravity\\\\scratch\\\\sovereign-repos\\\\Project-AI\\\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion\"\n Image project-ai-temporal-worker Building \n Image project-ai-data-vault Building \n Image project-ai-negotiation-agent Building \n Image project-ai-project-ai Building \n Image project-ai-mutation-firewall Building \n Image project-ai-incident-reflex Building \n Image project-ai-compliance-engine Building \n Image project-ai-verifiable-reality Building \n Image project-ai-trust-graph Building \n Image project-ai-i-believe-in-you Building \ntarget i-believe-in-you: failed to solve: failed to read dockerfile: open Dockerfile: no such file or directory\n\n\n\nView build details: docker-desktop://dashboard/build/default/default/0qi6ptw4syslp42p9tnmrv5fa\n\n",
+          "duration_s": 2.6360955238342285,
+          "command": "docker-compose -f C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\docker-compose.yml build"
+        }
+      ]
+    }
+  ]
+}

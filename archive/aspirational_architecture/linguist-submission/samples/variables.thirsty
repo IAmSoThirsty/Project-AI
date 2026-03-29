@@ -1,0 +1,18 @@
+# ============================================================================ #
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-10 | TIME: 21:02               #
+# COMPLIANCE: Regulator-Ready / UTF-8                                          #
+# ============================================================================ #
+
+# Date: 2026-03-10 | Time: 20:37 | Status: Active | Tier: Master
+//                                           [2026-03-10 18:58]
+//                                          Productivity: Active
+//                                           [2026-03-03 13:45]
+//                                          Productivity: Active
+// Variable examples in Thirsty-lang
+drink water = "H2O"
+drink temperature = 25
+drink liters = 2.5
+
+pour water
+pour temperature
+pour liters
