@@ -1,0 +1,38 @@
+name: ⚖️ Sovereign Architect Council Audit
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  sovereign-audit:
+    name: Execute Full-Spectrum Substrate Audit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Set up Python Environment (Master-Tier)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 🔍 Run Principal Architect Agent (Full-Spectrum)
+        run: |
+          python tools/architect_agent.py
+        # Ensure errors in audit are treated as blocking failures
+        continue-on-error: false
+
+      - name: 🏛️ Commit Manifests to Sovereign Ledger
+        run: |
+          git config --global user.name "Sovereign Architect Council"
+          git config --global user.email "council@project-ai.sovereign"
+          git add governance/ARCHITECT_MANIFEST.json governance/ARCHITECT_MANIFEST.md
+          git diff --quiet && git diff --staged --quiet || git commit -m "⚖️ Audit: Full-Spectrum Architect Manifest Update [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

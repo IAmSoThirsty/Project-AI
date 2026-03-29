@@ -1,0 +1,33 @@
+@startuml
+' Deployment diagram for Project-AI
+
+node "User Machine" as UserMachine {
+  component "Desktop App\n(PyQt6)" as Desktop
+  database "Local Data\n(data/)" as LocalData
+}
+
+node "Cloud / Server" as Cloud {
+  component "Web Backend\n(Flask)" as Backend
+  database "Cloud Sync DB\n(Postgres/Redis)" as CloudDB
+  node "Storage" as BlobStorage
+}
+
+node "External APIs" as External {
+  component "OpenAI API" as OpenAI
+  component "SMTP" as SMTP
+}
+
+Desktop --> LocalData : stores user data, memories, models
+Desktop --> Backend : HTTPS API (sync, auth, predictions)
+Backend --> CloudDB : persist user data, devices, sync state
+Backend --> BlobStorage : store uploaded assets (images)
+Backend --> OpenAI : generative requests (optional)
+Backend --> SMTP : send emergency alerts
+
+' Deployment notes
+note over UserMachine
+ - Desktop app optional offline
+ - Cloud sync via secure TLS and JWT
+end note
+
+@enduml

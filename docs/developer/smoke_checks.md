@@ -1,0 +1,75 @@
+<!-- # ============================================================================ # -->
+<!-- # STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59 # -->
+<!-- # COMPLIANCE: Sovereign Substrate / smoke_checks.md # -->
+<!-- # ============================================================================ # -->
+<div align="right">
+  <img src="https://img.shields.io/badge/DATE-2026-03-18-blueviolet?style=for-the-badge" alt="Date" />
+  <img src="https://img.shields.io/badge/PRODUCTIVITY-ACTIVE-success?style=for-the-badge" alt="Productivity" />
+</div>
+<!-- # ============================================================================ #
+
+
+<!-- # COMPLIANCE: Sovereign Substrate / smoke_checks.md # -->
+<!-- # ============================================================================ #
+
+<!--                                         [2026-03-04 09:48] -->
+<!--                                        Productivity: Active -->
+# Smoke Check Guide
+
+This checklist helps you verify the key stacks quickly before opening a full issue.
+
+## Desktop / Core app
+
+1. Ensure Python 3.11 and dependencies are setup:
+
+   ```powershell
+   python -m pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+1. Confirm `.env` keys are present:
+
+   - `PYTHONPATH=src` before running the app or tests
+   - Optional secrets: `OPENAI_API_KEY`, `HUGGINGFACE_API_KEY`, `FERNET_KEY`
+
+1. Run the smoke test suite:
+
+   ```powershell
+   $env:PYTHONPATH='src'
+   python -m pytest tests/test_data_analysis.py -q
+   ```
+
+1. Start the desktop UI (will surface missing config early):
+
+   ```powershell
+   $env:PYTHONPATH='src'; python -m src.app.main
+   ```
+
+## Web backend / frontend
+
+1. Start the Flask backend:
+
+   ```powershell
+   cd web/backend
+   flask run
+   ```
+
+1. Start the React frontend (requires Node):
+
+   ```powershell
+   cd ../frontend
+   npm install
+   npm run dev
+   ```
+
+1. Verify shared modules load by running the backend tests (when available).
+
+## Coverage artifacts
+
+- After running tests locally, capture coverage for upload (CI uses the same command):
+
+  ```powershell
+  $env:PYTHONPATH='src'; python -m pytest tests/ --cov=src/app/core --cov-report=xml:reports/coverage.xml --cov-report=html:htmlcov -q
+  ```
+
+- Inspect `htmlcov/index.html` to ensure the modules you care about are green.

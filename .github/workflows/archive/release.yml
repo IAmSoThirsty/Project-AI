@@ -1,0 +1,135 @@
+name: Release Build and Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      - name: Build Android APK
+        run: |
+          cd android
+          chmod +x ../gradlew
+          ../gradlew :legion_mini:assembleRelease
+      
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: legion-mini-apk
+          path: android/legion_mini/build/outputs/apk/release/*.apk
+
+  build-desktop:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Build Desktop App
+        run: |
+          cd desktop
+          npm install
+          npm run build:win
+      
+      - name: Upload Desktop Installer
+        uses: actions/upload-artifact@v3
+        with:
+          name: desktop-installer
+          path: desktop/release/*.exe
+
+  create-release:
+    needs: [build-android, build-desktop]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Download Android APK
+        uses: actions/download-artifact@v3
+        with:
+          name: legion-mini-apk
+          path: ./artifacts/android
+      
+      - name: Download Desktop Installer
+        uses: actions/download-artifact@v3
+        with:
+          name: desktop-installer
+          path: ./artifacts/desktop
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./artifacts/android/*.apk
+            ./artifacts/desktop/*.exe
+            DEPLOYMENT_GUIDE.md
+            QUICK_START.md
+            README.md
+          generate_release_notes: true
+          body: |
+            # Legion Mini v${{ github.ref_name }}
+            
+            ## 🚀 Complete Production Deployment System
+            
+            ### What's New
+            - ✅ Save Points System with 15-minute auto-rotation
+            - ✅ Legion Mini Android app (sideloadable APK)
+            - ✅ Universal USB installer with auto-run wizard
+            - ✅ Desktop application with auto-updates
+            - ✅ Cross-platform deployment (Windows/Mac/Linux/Android)
+            - ✅ Complete API integration
+            - ✅ Production-ready deployment scripts
+            
+            ### Downloads
+            
+            **Android (Legion Mini)**:
+            - `legion_mini-release.apk` - Install on any Android 8.0+ device
+            - Enable "Unknown Sources" to sideload
+            
+            **Desktop (Windows)**:
+            - `Project AI Setup.exe` - Full desktop installation
+            - Auto-updater included
+            
+            **Portable USB**:
+            - Run `scripts/create_universal_usb.ps1` to create bootable USB
+            - Works on any compatible device
+            
+            ### Quick Start
+            
+            1. Download the appropriate package for your platform
+            2. See `QUICK_START.md` for 60-second setup
+            3. Read `DEPLOYMENT_GUIDE.md` for complete documentation
+            
+            ### System Requirements
+            
+            - **Windows**: 10/11 (64-bit)
+            - **Android**: 8.0+
+            - **RAM**: 4GB minimum, 8GB recommended
+            - **Storage**: 5GB free space
+            
+            ### Features
+            
+            - 🤖 Triumvirate governance (Galahad, Cerberus, CodexDeus)
+            - 💾 Auto-save every 15 minutes
+            - 📱 Native Android app
+            - 🖥️ Desktop application
+            - 💿 Portable USB edition
+            - 🌐 Multi-platform support
+            - 🔒 Complete privacy control
+            
+            **Ready for global deployment!** 🌍
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

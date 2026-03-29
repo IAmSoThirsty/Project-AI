@@ -1,0 +1,17 @@
+@startuml
+' Onboarding flow for first-run
+start
+:Check data directories;
+if (No admin account?) then (yes)
+  :Prompt create admin account;
+  :Save admin credentials (hashed);
+endif
+:Load persona state;
+:Run model bootstrap (optional);
+:Show quick tour (dashboard, persona, learning requests);
+:Ask to configure cloud sync & API keys;
+if (Enable cloud sync?) then (yes)
+  :Test cloud connection;
+endif
+stop
+@enduml

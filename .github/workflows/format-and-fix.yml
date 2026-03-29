@@ -1,0 +1,81 @@
+# <!-- # ============================================================================ # -->
+# <!-- # STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 10:32 # -->
+# <!-- # COMPLIANCE: Sovereign Substrate / format-and-fix.yml # -->
+# <!-- # ============================================================================ # -->
+# <div align="right">
+#   <img src="https://img.shields.io/badge/DATE-2026-03-18-blueviolet?style=for-the-badge" alt="Date" />
+#   <img src="https://img.shields.io/badge/PRODUCTIVITY-ACTIVE-success?style=for-the-badge" alt="Productivity" />
+# </div>
+
+name: Sovereign Code Compliance & Auto-Format
+
+on:
+    push:
+        branches: [develop]
+    pull_request:
+        branches: [main, develop]
+
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    format:
+        name: Sovereign Formatting Pass
+        runs-on: ubuntu-latest
+        # Only auto-commit on push to develop, or on PRs from trusted internal branches
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.head_ref || github.ref }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install Compliance Tools
+              run: pip install black ruff isort
+
+            - name: Absolute Formatting (Black)
+              run: black . --quiet
+
+            - name: Deterministic Import Sorting (isort)
+              run: isort . --profile black --quiet
+
+            - name: Reflexive Compliance Pass (Ruff)
+              run: ruff check . --fix --quiet || true
+
+            - name: Authenticate & Commit Changes
+              uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                  commit_message: "style: sovereign auto-format & compliance remediation [skip ci]"
+                  commit_user_name: "Sovereign Architect [Bot]"
+                  commit_user_email: "architect@project-ai.sovereign"
+
+    format-check:
+        name: Compliance Validation (External)
+        runs-on: ubuntu-latest
+        # Only run check on external PRs (where we don't auto-commit)
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+
+            - name: Install Compliance Tools
+              run: pip install black ruff isort
+
+            - name: Validate Formatting (Black)
+              run: black --check --diff .
+
+            - name: Validate Imports (isort)
+              run: isort --check --diff . --profile black
+
+            - name: Validate Compliance (Ruff)
+              run: ruff check .

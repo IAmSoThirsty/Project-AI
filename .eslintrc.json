@@ -1,0 +1,42 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars": ["error", {
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_"
+    }],
+    "prefer-const": "error",
+    "no-var": "error"
+  },
+  "ignorePatterns": [
+    "node_modules/",
+    "dist/",
+    "build/",
+    ".next/",
+    "out/",
+    "*.config.js",
+    "coverage/"
+  ],
+  "overrides": [
+    {
+      "files": ["web/**/*.js", "web/**/*.jsx", "web/**/*.ts", "web/**/*.tsx"],
+      "extends": ["./web/.eslintrc.json"]
+    },
+    {
+      "files": ["desktop/**/*.js", "desktop/**/*.jsx", "desktop/**/*.ts", "desktop/**/*.tsx"],
+      "extends": ["./desktop/.eslintrc.json"]
+    }
+  ]
+}

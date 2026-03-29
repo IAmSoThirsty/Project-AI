@@ -1,0 +1,231 @@
+@startuml audit_trail_flow
+!theme plain
+skinparam backgroundColor #FFFFFF
+
+title Project-AI Audit Trail - Immutable Hash-Chained Logging
+
+participant "ExecutionService" as Exec
+participant "AuditTrailService" as Audit
+database "PostgreSQL" as DB
+participant "Redis Cache" as Redis
+
+== Append New Audit Entry ==
+
+Exec -> Audit: Append audit entry
+activate Audit
+
+note right of Audit
+  **IMMUTABLE AUDIT TRAIL**
+  • Hash-chained entries
+  • Append-only (no updates/deletes)
+  • Cryptographic integrity (SHA-256)
+  • Sequential ordering
+end note
+
+Audit -> Audit: Acquire write lock\n(ensure sequential writes)
+
+== Retrieve Previous Hash ==
+
+Audit -> Redis: Get latest hash
+activate Redis
+
+alt Hash in Cache
+    Redis --> Audit: Cached hash
+else Cache Miss
+    Redis --> Audit: null
+    Audit -> DB: Query latest entry
+    activate DB
+    DB --> Audit: Previous entry
+    deactivate DB
+    
+    Audit -> Redis: Update cache
+end
+
+deactivate Redis
+
+== Calculate Current Hash ==
+
+Audit -> Audit: Get next sequence number
+
+Audit -> Audit: Create audit entry
+note right
+  Entry = {
+    id,
+    sequence_number,
+    timestamp,
+    event_type,
+    operation_id,
+    user_id,
+    event_data,
+    metadata,
+    previous_hash
+  }
+end note
+
+Audit -> Audit: Calculate SHA-256 hash
+note right
+  **HASH CALCULATION**
+  1. Create canonical JSON
+     (sorted keys, no whitespace)
+  2. UTF-8 encode
+  3. SHA-256 hash
+  4. Hex representation
+  
+  current_hash = SHA256(
+    canonical_json(entry)
+  )
+end note
+
+== Write to Database ==
+
+Audit -> DB: INSERT INTO audit_trail
+activate DB
+
+note right of DB
+  **IMMUTABILITY ENFORCED**
+  • INSERT allowed
+  • UPDATE blocked (rule)
+  • DELETE blocked (rule)
+  • Partitioned by month
+end note
+
+DB --> Audit: Entry written
+deactivate DB
+
+== Update Cache ==
+
+Audit -> Redis: Update latest hash
+activate Redis
+Redis --> Audit: Cache updated
+deactivate Redis
+
+Audit -> Redis: Update latest sequence
+activate Redis
+Redis --> Audit: Cache updated
+deactivate Redis
+
+Audit --> Exec: Audit entry created\n(with current_hash)
+deactivate Audit
+
+== Chain Verification ==
+
+note over Exec, Redis
+  **PERIODIC CHAIN VERIFICATION**
+  Runs every hour to ensure integrity
+end note
+
+Exec -> Audit: Verify chain integrity
+activate Audit
+
+Audit -> DB: Query entry range
+activate DB
+DB --> Audit: Entries (ordered)
+deactivate DB
+
+loop For each entry
+    Audit -> Audit: 1. Check sequence continuity
+    Audit -> Audit: 2. Verify hash calculation
+    Audit -> Audit: 3. Verify chain link\n   (previous_hash matches)
+    
+    alt Verification Failed
+        Audit -> Audit: Record error
+        note right
+          **INTEGRITY VIOLATION**
+          • Alert security team
+          • Lock system
+          • Investigate tampering
+        end note
+    end
+end
+
+Audit -> DB: Mark entries as verified
+activate DB
+DB --> Audit: Updated
+deactivate DB
+
+Audit --> Exec: Verification result
+deactivate Audit
+
+== Merkle Tree Construction ==
+
+note over Exec, Redis
+  **BATCH VERIFICATION**
+  Using Merkle trees for efficiency
+end note
+
+Exec -> Audit: Build Merkle tree\n(monthly batch)
+activate Audit
+
+Audit -> DB: Query month's entries
+activate DB
+DB --> Audit: All entries
+deactivate DB
+
+Audit -> Audit: Build Merkle tree
+note right
+  **MERKLE TREE**
+  Leaves: individual entry hashes
+  Nodes: SHA256(left + right)
+  Root: overall integrity hash
+  
+  Enables O(log n) verification
+end note
+
+Audit -> DB: Store Merkle root
+activate DB
+note right
+  Store monthly Merkle root
+  for efficient verification
+end note
+DB --> Audit: Root stored
+deactivate DB
+
+Audit --> Exec: Merkle tree built
+deactivate Audit
+
+== Compliance Export ==
+
+Exec -> Audit: Export compliance report
+activate Audit
+
+Audit -> DB: Query date range
+activate DB
+DB --> Audit: Filtered entries
+deactivate DB
+
+Audit -> Audit: Verify chain integrity\nfor exported entries
+
+Audit -> Audit: Generate report
+note right
+  **COMPLIANCE REPORT**
+  • Total entries
+  • Event breakdown
+  • Users involved
+  • Security incidents
+  • Chain verification status
+  • Digital signature
+end note
+
+Audit -> Audit: Sign report\n(digital signature)
+
+Audit --> Exec: Compliance report\n(JSON/CSV/PDF)
+deactivate Audit
+
+note over Exec, Redis
+  **PERFORMANCE METRICS (P95)**
+  Append entry: < 20ms
+  Query entry: < 10ms
+  Verify chain (1000 entries): < 2s
+  Export report: < 30s
+  
+  **THROUGHPUT**
+  Append ops/sec: 10,000+
+  Query ops/sec: 50,000+
+  
+  **RETENTION**
+  Hot storage: Permanent
+  No deletion allowed
+  Partitioned for performance
+end note
+
+@enduml

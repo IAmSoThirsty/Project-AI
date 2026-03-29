@@ -1,0 +1,426 @@
+<!-- # ============================================================================ # -->
+<!-- # STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59 # -->
+<!-- # COMPLIANCE: Sovereign Substrate / LICENSE_MANIFEST.md # -->
+<!-- # ============================================================================ # -->
+<div align="right">
+  <img src="https://img.shields.io/badge/DATE-2026-03-18-blueviolet?style=for-the-badge" alt="Date" />
+  <img src="https://img.shields.io/badge/PRODUCTIVITY-ACTIVE-success?style=for-the-badge" alt="Productivity" />
+</div>
+<!-- # ============================================================================ #
+
+
+<!-- # COMPLIANCE: Sovereign Substrate / LICENSE_MANIFEST.md # -->
+<!-- # ============================================================================ #
+
+<!--                                         [2026-03-04 09:48] -->
+<!--                                        Productivity: Active -->
+# Project-AI License Manifest
+
+**Version:** 1.0.0 **Effective Date:** February 8, 2026 **Authority:** Canonical index of all Project-AI licenses
+
+______________________________________________________________________
+
+## PURPOSE
+
+This manifest is the **authoritative mapping** of licenses to components, supremacy order, and enforcement precedence. In case of ambiguity or conflict, courts and arbitrators should consult this manifest.
+
+______________________________________________________________________
+
+## I. SUPREMACY ORDER
+
+When conflicts arise between licenses, the following order applies:
+
+1. **PAGL (Project-AI Governance License)** - Behavioral constraints supersede all other permissions
+1. **Sovereign Use License** - Government-specific restrictions and requirements
+1. **Commercial Use License** - Commercial use terms and compensation
+1. **Acceptance Ledger License** - Cryptographic proof framework
+1. **Apache License 2.0** - Patent-protected novel components
+1. **MIT License** - General codebase copyright
+1. **Output License** - AI-generated content
+1. **Data Ingest License** - User data submission
+1. **CLA** - Contributor rights grant
+1. **Jurisdictional Annexes** - Region-specific legal requirements
+
+**Final Authority:** In all cases, the Acceptance Ledger is the system of record for what was agreed.
+
+______________________________________________________________________
+
+## II. COMPONENT → LICENSE MAPPING
+
+### Source Code
+
+| Component          | Path Pattern                                 | Primary License | Secondary License(s) |
+| ------------------ | -------------------------------------------- | --------------- | -------------------- |
+| Core framework     | `src/app/core/**`                            | MIT             | PAGL                 |
+| Governance systems | `src/app/governance/**`                      | Apache 2.0      | PAGL                 |
+| Acceptance ledger  | `src/app/governance/acceptance_ledger.py`    | Apache 2.0      | PAGL, Ledger License |
+| Triumvirate        | `api/main.py` (Galahad, Cerberus, CodexDeus) | Apache 2.0      | PAGL                 |
+| AI engines         | `src/app/core/intelligence_engine.py`        | MIT             | PAGL                 |
+| Memory systems     | `src/app/core/memory_engine.py`              | MIT             | PAGL                 |
+| GUI                | `src/app/gui/**`                             | MIT             | PAGL                 |
+| CLI                | `src/app/cli/**`                             | MIT             | PAGL                 |
+| API                | `api/**`                                     | MIT             | PAGL                 |
+| Utilities          | `utils/**`                                   | MIT             | -                    |
+| Tests              | `tests/**`                                   | MIT             | -                    |
+
+### Documentation
+
+| Component       | Path Pattern                | License                 |
+| --------------- | --------------------------- | ----------------------- |
+| Legal documents | `docs/legal/**`             | CC-BY-4.0               |
+| Technical docs  | `docs/**` (excluding legal) | CC-BY-4.0               |
+| Code comments   | `**/*.py` (docstrings)      | Same as containing file |
+| README          | `README.md`                 | CC-BY-4.0               |
+
+### Generated Content
+
+| Type               | License                         |
+| ------------------ | ------------------------------- |
+| AI outputs         | Output License                  |
+| User data          | Data Ingest License (user owns) |
+| Training data      | Data Ingest License             |
+| Logs and telemetry | Data Ingest License             |
+
+### Acceptance Records
+
+| Type                     | License                          |
+| ------------------------ | -------------------------------- |
+| Ledger entries           | Acceptance Ledger License        |
+| Cryptographic signatures | Acceptance Ledger License        |
+| Audit logs               | Acceptance Ledger License + PAGL |
+
+______________________________________________________________________
+
+## III. LICENSE FILE LOCATIONS
+
+All license documents are discoverable at these canonical paths:
+
+### Primary Licenses (Root Directory)
+
+- `/LICENSE` - MIT License (general code)
+- `/LICENSE-APACHE` - Apache License 2.0 (novel/patent components)
+
+### Governance and Behavioral Licenses
+
+- `/docs/legal/PROJECT_AI_GOVERNANCE_LICENSE.md` - PAGL (constitutional layer)
+- `/docs/legal/MASTER_SERVICES_AGREEMENT.md` - User agreement
+- `/docs/legal/ACCEPTANCE_LEDGER_LICENSE.md` - Cryptographic proof framework
+
+### Use-Specific Licenses
+
+- `/docs/legal/COMMERCIAL_USE_LICENSE.md` - Commercial use terms
+- `/docs/legal/SOVEREIGN_USE_LICENSE.md` - Government use terms
+- `/docs/legal/OUTPUT_LICENSE.md` - AI-generated content
+- `/docs/legal/DATA_INGEST_LICENSE.md` - User data submission
+
+### Contribution and Compliance
+
+- `/docs/legal/CONTRIBUTOR_LICENSE_AGREEMENT.md` - CLA for contributors
+- `/docs/legal/COMPLIANCE_CHECKLIST.md` - Operational compliance
+- `/docs/legal/PRICING_FRAMEWORK.md` - Tier structure and pricing
+
+### Jurisdictional Annexes
+
+- `/docs/legal/jurisdictions/EU_GDPR.md` - European Union (GDPR)
+- `/docs/legal/jurisdictions/US_CCPA.md` - California (CCPA) [TODO: Create]
+- `/docs/legal/jurisdictions/CA_PIPEDA.md` - Canada (PIPEDA) [TODO: Create]
+- `/docs/legal/jurisdictions/UK_DPA.md` - United Kingdom (DPA 2018) [TODO: Create]
+- `/docs/legal/jurisdictions/AU_PRIVACY.md` - Australia (Privacy Act) [TODO: Create]
+
+### Executive and Business
+
+- `/docs/legal/EXECUTIVE_OVERVIEW.md` - C-suite summary
+- `/docs/legal/BOARD_SUMMARY.md` - Board-level summary [TODO: Create]
+
+### This Manifest
+
+- `/docs/legal/LICENSE_MANIFEST.md` - This document
+
+______________________________________________________________________
+
+## IV. ENFORCEMENT PRECEDENCE
+
+### Runtime Enforcement Order
+
+When Project-AI evaluates an action at runtime:
+
+```python
+def enforce_licenses(context):
+
+    # 1. Check acceptance ledger (required for all use)
+
+    if not ledger.has_valid_entry(context.user_id):
+        return DENY("No valid acceptance in ledger")
+
+    # 2. Check for termination
+
+    if ledger.is_terminated(context.user_id):
+        return DENY("User terminated")
+
+    # 3. Check PAGL governance constraints
+
+    if pagl.is_prohibited(context.action):
+        return DENY("PAGL prohibition")
+
+    # 4. Check sovereign restrictions
+
+    if context.is_government and not sovereign_license.authorized(context):
+        return DENY("Unauthorized government use")
+
+    # 5. Check commercial requirements
+
+    if context.is_commercial and not commercial_license.valid(context):
+        return DENY("Commercial license required")
+
+    # 6. Check tier entitlements
+
+    if not tier_enforcer.has_access(context.user, context.feature):
+        return DENY("Feature not in tier")
+
+    # 7. Allow (with audit)
+
+    audit_log.record(context)
+    return ALLOW
+```
+
+### Conflict Resolution
+
+**If multiple licenses apply to same component:**
+
+1. Most restrictive license governs behavior
+1. Most permissive license governs copyright
+1. PAGL always applies (non-removable)
+
+**Example:**
+
+- Code under MIT (permissive) + PAGL (restrictive)
+- You can copy/modify (MIT) but cannot remove governance (PAGL)
+
+______________________________________________________________________
+
+## V. LICENSE COMPATIBILITY MATRIX
+
+### Outbound Compatibility
+
+What licenses can be applied to derivative works:
+
+| Base License | Compatible Downstream Licenses                      |
+| ------------ | --------------------------------------------------- |
+| MIT          | MIT, Apache 2.0, GPL, proprietary (any)             |
+| Apache 2.0   | Apache 2.0, GPLv3+, proprietary (with patent grant) |
+| PAGL         | PAGL (must be preserved)                            |
+| CC-BY-4.0    | CC-BY-4.0, CC-BY-SA-4.0                             |
+
+### Inbound Compatibility
+
+What licenses can be incorporated into Project-AI:
+
+| External License | Compatible? | Notes                           |
+| ---------------- | ----------- | ------------------------------- |
+| MIT              | ✅ Yes      | Fully compatible                |
+| Apache 2.0       | ✅ Yes      | Preferred for patent protection |
+| BSD (2/3-clause) | ✅ Yes      | Compatible                      |
+| GPLv2/v3         | ❌ No       | Incompatible (copyleft)         |
+| LGPL             | ⚠️ Maybe    | Dynamic linking only            |
+| Proprietary      | ❌ No       | Violates open source commitment |
+
+______________________________________________________________________
+
+## VI. SPECIAL CASES
+
+### Forking Project-AI
+
+**If you fork Project-AI, you MUST:**
+
+1. Retain all licenses in original positions
+1. Preserve PAGL in full (governance non-removable)
+1. Maintain acceptance ledger compatibility
+1. Clearly identify as fork (no misrepresentation)
+1. Cannot claim "ungoverned" or "unrestricted" version
+
+**You MAY:**
+
+- Relicense MIT-only components under compatible licenses
+- Add additional governance (stricter)
+- Enhance security and cryptography
+- Create derivatives under MIT/Apache terms
+
+**You MAY NOT:**
+
+- Remove or disable PAGL
+- Strip out governance systems
+- Claim fork is "Project-AI" without distinction
+
+### Commercial Sublicensing
+
+**SaaS providers offering Project-AI:**
+
+- Must have valid Commercial Use License
+- Must preserve governance systems
+- Must maintain acceptance ledger for their users
+- Cannot sublicense governance removal rights
+- Must disclose use of Project-AI in their terms
+
+### Government Modifications
+
+**Government-modified versions:**
+
+- Must retain Sovereign Use License requirements
+- Cannot classify governance violations
+- Audit logs must remain accessible to oversight
+- Modifications do not exempt from PAGL
+- Enhanced governance acceptable; reduced governance forbidden
+
+### Plugin Ecosystem
+
+**Third-party plugins:**
+
+- Not governed by Project-AI licenses (independent works)
+- BUT: Cannot disable or bypass governance when integrated
+- Plugin outputs subject to Output License when using Project-AI
+- Plugins using Project-AI API must comply with PAGL
+
+______________________________________________________________________
+
+## VII. INTERPRETATION GUIDELINES
+
+### For Courts
+
+**When interpreting this manifest:**
+
+1. Technical enforcement reflects legal intent
+1. Cryptographic ledger is authoritative evidence
+1. Governance constraints are contractual terms
+1. Open source licenses (MIT/Apache) govern copyright
+1. PAGL governs behavior and use
+
+### For Arbitrators
+
+**When resolving disputes:**
+
+1. Consult acceptance ledger for agreed terms
+1. Apply supremacy order for conflicts
+1. Interpret ambiguities in favor of safety
+1. Defer to technical enforcement as expression of intent
+
+### For Users
+
+**When uncertain about licensing:**
+
+1. If unsure which license applies, assume most restrictive
+1. If considering prohibited use, assume it's prohibited
+1. If governance unclear, consult acceptance ledger
+1. If still uncertain, contact: legal@project-ai.dev
+
+______________________________________________________________________
+
+## VIII. AUDIT AND VERIFICATION
+
+### License Compliance Verification
+
+**Automated checks:**
+
+```bash
+
+# Verify all license headers present
+
+./scripts/verify-license-headers.sh
+
+# Check PAGL compliance
+
+./scripts/check-governance-integrity.sh
+
+# Validate acceptance ledger
+
+python -m src.app.governance.verify_ledger
+```
+
+**Manual audits:**
+
+- Quarterly review by legal counsel
+- Annual third-party license compliance audit
+- Continuous monitoring via CI/CD
+
+### License Violation Response
+
+**If violation detected:**
+
+1. Immediate notification to violator
+1. Grace period (7 days for good-faith errors)
+1. Termination if not remediated
+1. Recording in acceptance ledger
+1. Public disclosure (for serious violations)
+
+______________________________________________________________________
+
+## IX. AMENDMENTS
+
+### How to Amend This Manifest
+
+**Minor changes (corrections, clarifications):**
+
+- 30-day notice
+- Published in changelog
+- Effective immediately
+
+**Major changes (new licenses, supremacy changes):**
+
+- 90-day notice
+- Public comment period (30 days)
+- User re-acceptance required for continued use
+- Existing agreements honored through term
+
+### Version History
+
+- **v1.0.0** (2026-02-08): Initial release
+
+______________________________________________________________________
+
+## X. CONTACT
+
+**License Questions:** licensing@project-ai.dev **Legal Matters:** legal@project-ai.dev **Compliance:** compliance@project-ai.dev **Commercial Licensing:** sales@project-ai.dev **Government Authorization:** government@project-ai.dev
+
+______________________________________________________________________
+
+## APPENDIX A: QUICK REFERENCE
+
+### What License Do I Need?
+
+```
+┌─ Using Project-AI?
+│
+├─ Personal use (no revenue) → Solo Tier (FREE)
+│   • Licenses: MIT + Apache + PAGL (automatic)
+│
+├─ Commercial use (<$50K/year) → Solo Commercial ($99 lifetime)
+│   • Add: Commercial Use License
+│
+├─ Company (any size) → Company Tier
+│   • Pricing: Weekly ($250), Monthly ($1,000), Yearly ($8,000), Lifetime ($25,000)
+│   • Add: Commercial Use License
+│   • Unlimited seats per entity
+│
+└─ Government/Military → Government Tier
+    • Pricing: Monthly ($2,500), Yearly ($10,000), Lifetime (Not Available)
+    • Add: Commercial + Sovereign Use License
+    • Unlimited seats per entity
+```
+
+### What Can I Do With Each License?
+
+| Action            | MIT | Apache | PAGL              | Commercial | Sovereign |
+| ----------------- | --- | ------ | ----------------- | ---------- | --------- |
+| Copy code         | ✅  | ✅     | N/A               | N/A        | N/A       |
+| Modify code       | ✅  | ✅     | ⚠️ Not governance | N/A        | N/A       |
+| Distribute        | ✅  | ✅     | ⚠️ With PAGL      | N/A        | N/A       |
+| Use commercially  | ✅  | ✅     | ⚠️ If licensed    | ✅         | N/A       |
+| Remove governance | ❌  | ❌     | ❌                | ❌         | ❌        |
+| Government use    | ✅  | ✅     | ⚠️ If authorized  | N/A        | ✅        |
+
+______________________________________________________________________
+
+**END OF LICENSE MANIFEST**
+
+*The authoritative index of Project-AI's legal framework.*
+
+**Last Updated:** 2026-02-08 **Next Review:** 2026-05-08

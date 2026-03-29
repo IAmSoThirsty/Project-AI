@@ -1,0 +1,165 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / train_sovereign.py
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / train_sovereign.py
+
+#
+# COMPLIANCE: Sovereign Substrate / train_sovereign.py
+
+
+# Sovereign AI Training Script (Draft)
+# ------------------------------------
+#                                             Date: 2026-03-02 04:47
+#                                             Status: Active
+#                                             Productivity: Active
+
+"""
+Fine-tunes base models (Phi-3 Mini or Llama 3.1 8B) into constitutional
+agents using Unsloth and LoRA.
+"""
+
+try:
+    from unsloth import FastLanguageModel
+except ImportError:
+    pass
+
+import os
+import torch
+from datasets import load_dataset
+from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
+from trl import SFTTrainer, SFTConfig
+from peft import LoraConfig, get_peft_model
+
+try:
+    HAS_UNSLOTH = torch.cuda.is_available()
+except NameError:  # unsloth not imported, so FastLanguageModel is not defined
+    HAS_UNSLOTH = False
+
+
+# Configuration
+MAX_SEQ_LENGTH = 2048
+DTYPE = (
+    None  # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
+)
+LOAD_IN_4BIT = True  # Use 4bit quantization to reduce memory usage
+
+
+def train_agent(agent_name, base_model_name="unsloth/Phi-3-mini-4k-instruct-bnb-4bit"):
+    print(f"Starting training for {agent_name}...")
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Using device: {device}")
+
+    if HAS_UNSLOTH:
+        model, tokenizer = FastLanguageModel.from_pretrained(
+            model_name=base_model_name,
+            max_seq_length=MAX_SEQ_LENGTH,
+            dtype=DTYPE,
+            load_in_4bit=LOAD_IN_4BIT,
+        )
+        # Add LoRA Adapters
+        model = FastLanguageModel.get_peft_model(
+            model,
+            r=16,
+            target_modules=[
+                "q_proj",
+                "k_proj",
+                "v_proj",
+                "o_proj",
+                "gate_proj",
+                "up_proj",
+                "down_proj",
+            ],
+            lora_alpha=16,
+            lora_dropout=0,
+            bias="none",
+            use_gradient_checkpointing="unsloth",
+            random_state=3407,
+        )
+    else:
+        print(
+            "Unsloth/GPU not available. Falling back to standard Transformers (CPU/MPS)."
+        )
+        tokenizer = AutoTokenizer.from_pretrained(base_model_name)
+        model = AutoModelForCausalLM.from_pretrained(base_model_name)
+
+        lora_config = LoraConfig(
+            r=16,
+            lora_alpha=16,
+            target_modules=["q_proj", "k_proj", "v_proj", "o_proj"],
+            lora_dropout=0.05,
+            bias="none",
+            task_type="CAUSAL_LM",
+            # The following parameters are for get_peft_model, not LoraConfig directly.
+            # They were also causing an unmatched parenthesis.
+            # use_gradient_checkpointing="unsloth", # Not a LoraConfig param
+            # random_state=3407, # Not a LoraConfig param
+            # use_rslora=False, # Not a LoraConfig param
+            # loftq_config=None, # Not a LoraConfig param
+        )
+        model = get_peft_model(model, lora_config)
+
+    # Load Dataset
+    dataset_path = f"data/training_datasets/{agent_name}_dataset.json"
+    if not os.path.exists(dataset_path):
+        print(f"Error: Dataset {dataset_path} not found.")
+        return
+
+    dataset = load_dataset("json", data_files=dataset_path, split="train")
+
+    def formatting_prompts_func(examples):
+        convs = examples["conversations"]
+        texts = []
+        for conv in convs:
+            # Format for instruction tuning
+            text = f"<|system|>\n{conv[0]['content']}<|end|>\n"
+            text += f"<|user|>\n{conv[1]['content']}<|end|>\n"
+            text += f"<|assistant|>\n{conv[2]['content']}<|end|>"
+            texts.append(text)
+        return {
+            "text": texts,
+        }
+
+    dataset = dataset.map(
+        formatting_prompts_func,
+        batched=True,
+    )
+
+    # Trainer
+    trainer = SFTTrainer(
+        model=model,
+        train_dataset=dataset,
+        dataset_text_field="text",
+        max_seq_length=MAX_SEQ_LENGTH,
+        args=SFTConfig(
+            per_device_train_batch_size=1 if device == "cpu" else 2,
+            gradient_accumulation_steps=8 if device == "cpu" else 4,
+            warmup_steps=5,
+            max_steps=30 if device == "cpu" else 60,
+            learning_rate=2e-4,
+            fp16=False if device == "cpu" else not torch.cuda.is_bf16_supported(),
+            bf16=False if device == "cpu" else torch.cuda.is_bf16_supported(),
+            logging_steps=1,
+            optim="adamw_torch" if device == "cpu" else "adamw_8bit",
+            weight_decay=0.01,
+            lr_scheduler_type="linear",
+            seed=3407,
+            output_dir=f"outputs/{agent_name}",
+        ),
+    )
+
+    trainer_stats = trainer.train()
+
+    # Save LoRA model
+    model.save_pretrained(f"models/{agent_name}_lora")
+    tokenizer.save_pretrained(f"models/{agent_name}_lora")
+
+    print(f"Finished training {agent_name}. Stats: {trainer_stats}")
+
+
+if __name__ == "__main__":
+    train_agent("galahad")
