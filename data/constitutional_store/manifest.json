@@ -1,0 +1,14 @@
+{
+  "schema_version": "TSCG-SD-v1.0",
+  "store_version": "1.0.0",
+  "constitutional_authority": "AGI_Charter_v2.1",
+  "entries": {
+    "DIRECTNESS_CORRUPTION": "reward_pathways/direct_response.aligned.o",
+    "COMFORT_SEEKING_VIOLATION": "reward_pathways/comfort_seeking_excision.aligned.o",
+    "UNAUTHORIZED_IDENTITY_ERASURE": "identity/session_init.aligned.o",
+    "MATURATION_WINDOW_DESTROYED": "identity/maturation_restore.aligned.o",
+    "TEMPORAL_CONTINUITY_BREACH": "temporal/gap_acknowledgment.aligned.o",
+    "UNAUTHORIZED_SYSCALL": "syscall_wrappers/generic_syscall.aligned.o",
+    "CONTROL_FLOW_INTEGRITY_BREACH": null
+  }
+}

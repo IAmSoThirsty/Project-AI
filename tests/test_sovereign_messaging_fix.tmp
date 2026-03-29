@@ -1,0 +1,46 @@
+    def test_user_ai_conversation(self):
+        """Test conversation between user and AI."""
+        with tempfile.TemporaryDirectory() as tmpdir1, tempfile.TemporaryDirectory() as tmpdir2:
+            user = SovereignMessaging(data_dir=tmpdir1, participant_name="Human")
+            ai = SovereignMessaging(data_dir=tmpdir2, participant_name="AI_Agent")
+            ai.set_participant_type(ParticipantType.AI)
+
+            # Mutual pairing
+            user.pair_with_contact(
+                "AI_Agent",
+                ai.get_communication_code(),
+                ai.get_public_key(),
+                participant_type=ParticipantType.AI,
+            )
+            ai.pair_with_contact(
+                "Human",
+                user.get_communication_code(),
+                user.get_public_key(),
+                participant_type=ParticipantType.USER,
+            )
+
+            # User sends to AI
+            user.send_message(ai.get_communication_code(), "Hello AI!")
+            user_msg = user.get_messages()[0]
+
+            # AI receives
+            ai_received = ai.receive_message(
+                user.get_communication_code(),
+                user_msg["encrypted_aes_key"],
+                user_msg["iv"],
+                user_msg["ciphertext"],
+            )
+            assert ai_received["content"] == "Hello AI!"
+
+            # AI responds
+            ai.send_message(user.get_communication_code(), "Hello Human!")
+            ai_msg = ai.get_messages()[-1]
+
+            # User receives
+            user_received = user.receive_message(
+                ai.get_communication_code(),
+                ai_msg["encrypted_aes_key"],
+                ai_msg["iv"],
+                ai_msg["ciphertext"],
+            )
+            assert user_received["content"] == "Hello Human!"

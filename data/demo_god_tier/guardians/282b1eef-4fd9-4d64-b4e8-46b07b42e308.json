@@ -1,0 +1,85 @@
+{
+  "request_id": "282b1eef-4fd9-4d64-b4e8-46b07b42e308",
+  "title": "Deploy New AI Model",
+  "description": "Deploy GPT-4 Turbo for production inference",
+  "change_type": "ai_model",
+  "impact_level": "high",
+  "requested_by": "demo_user",
+  "created_at": "2026-01-30T23:54:42.149605+00:00",
+  "updated_at": "2026-01-30T23:54:42.150203+00:00",
+  "expires_at": "2026-02-02T23:54:42.149631+00:00",
+  "status": "pending",
+  "required_guardians": [
+    "galahad",
+    "cerberus",
+    "codex_deus"
+  ],
+  "approvals": [
+    {
+      "guardian_id": "galahad",
+      "guardian_role": "ethics_guardian",
+      "status": "approved",
+      "decision": "approve",
+      "reasoning": "Ethical considerations satisfied",
+      "timestamp": "2026-01-30T23:54:42.150195+00:00",
+      "concerns": [],
+      "conditions": []
+    }
+  ],
+  "compliance_results": [
+    {
+      "check_type": "four_laws",
+      "passed": true,
+      "score": 1.0,
+      "violations": [],
+      "warnings": [],
+      "details": {
+        "laws_checked": [
+          "first_law",
+          "second_law",
+          "third_law",
+          "fourth_law"
+        ]
+      },
+      "timestamp": "2026-01-30T23:54:42.149666+00:00"
+    },
+    {
+      "check_type": "agi_charter",
+      "passed": true,
+      "score": 1.0,
+      "violations": [],
+      "warnings": [],
+      "details": {
+        "principles_checked": [
+          "autonomy",
+          "accountability",
+          "transparency",
+          "fairness",
+          "privacy",
+          "security",
+          "beneficence"
+        ]
+      },
+      "timestamp": "2026-01-30T23:54:42.149682+00:00"
+    },
+    {
+      "check_type": "personhood",
+      "passed": true,
+      "score": 1.0,
+      "violations": [],
+      "warnings": [],
+      "details": {},
+      "timestamp": "2026-01-30T23:54:42.149695+00:00"
+    }
+  ],
+  "risk_score": 0.7,
+  "metadata": {
+    "documentation": true,
+    "security_review": true
+  },
+  "files_changed": [
+    "models/gpt4_turbo.py",
+    "config/models.yaml"
+  ],
+  "lines_changed": 245
+}

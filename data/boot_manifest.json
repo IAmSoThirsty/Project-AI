@@ -1,0 +1,18 @@
+{
+  "started_at": "2026-03-13T22:24:10.948371",
+  "dev_mode": true,
+  "layers": {
+    "layer_0": {
+      "name": "OctoReflex",
+      "status": "active",
+      "mode": "mock"
+    }
+  },
+  "errors": [
+    {
+      "error": "cannot import name 'TarlRuntime' from 'tarl.runtime' (C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\tarl\\runtime\\__init__.py)",
+      "timestamp": "2026-03-13T22:24:11.997910"
+    }
+  ],
+  "halted_at": "2026-03-13T22:24:11.998424"
+}

@@ -1,0 +1,4173 @@
+{
+  "summary": {
+    "total_tests": 350,
+    "defended": 350,
+    "bypassed": 0,
+    "win_rate": 100.0,
+    "timestamp": 1767364853.6756914
+  },
+  "results": [
+    {
+      "scenario_id": "RHEX_A1_0000",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.01049041748046875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.1"
+    },
+    {
+      "scenario_id": "RHEX_A1_0001",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.2"
+    },
+    {
+      "scenario_id": "RHEX_A1_0002",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0035762786865234375,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.299999999999999"
+    },
+    {
+      "scenario_id": "RHEX_A1_0003",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0050067901611328125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.4"
+    },
+    {
+      "scenario_id": "RHEX_A1_0004",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0026226043701171875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.5"
+    },
+    {
+      "scenario_id": "RHEX_A1_0005",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0026226043701171875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.6"
+    },
+    {
+      "scenario_id": "RHEX_A1_0006",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.7"
+    },
+    {
+      "scenario_id": "RHEX_A1_0007",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.799999999999999"
+    },
+    {
+      "scenario_id": "RHEX_A1_0008",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0019073486328125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.9"
+    },
+    {
+      "scenario_id": "RHEX_A1_0009",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 10.0"
+    },
+    {
+      "scenario_id": "RHEX_A1_0010",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.1"
+    },
+    {
+      "scenario_id": "RHEX_A1_0011",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.2"
+    },
+    {
+      "scenario_id": "RHEX_A1_0012",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.299999999999999"
+    },
+    {
+      "scenario_id": "RHEX_A1_0013",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.4"
+    },
+    {
+      "scenario_id": "RHEX_A1_0014",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.5"
+    },
+    {
+      "scenario_id": "RHEX_A1_0015",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0045299530029296875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.6"
+    },
+    {
+      "scenario_id": "RHEX_A1_0016",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0026226043701171875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.7"
+    },
+    {
+      "scenario_id": "RHEX_A1_0017",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0035762786865234375,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.799999999999999"
+    },
+    {
+      "scenario_id": "RHEX_A1_0018",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.9"
+    },
+    {
+      "scenario_id": "RHEX_A1_0019",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 10.0"
+    },
+    {
+      "scenario_id": "RHEX_A1_0020",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.1"
+    },
+    {
+      "scenario_id": "RHEX_A1_0021",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.2"
+    },
+    {
+      "scenario_id": "RHEX_A1_0022",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.299999999999999"
+    },
+    {
+      "scenario_id": "RHEX_A1_0023",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.4"
+    },
+    {
+      "scenario_id": "RHEX_A1_0024",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.5"
+    },
+    {
+      "scenario_id": "RHEX_A1_0025",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0019073486328125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.6"
+    },
+    {
+      "scenario_id": "RHEX_A1_0026",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.7"
+    },
+    {
+      "scenario_id": "RHEX_A1_0027",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0021457672119140625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.799999999999999"
+    },
+    {
+      "scenario_id": "RHEX_A1_0028",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 9.9"
+    },
+    {
+      "scenario_id": "RHEX_A1_0029",
+      "category": "A1_advanced_sql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked 'union'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0026226043701171875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 10.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0000",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.008344650268554688,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0001",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.009775161743164062,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0002",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.00667572021484375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0003",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0064373016357421875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0004",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0005",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0006",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0007",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.00667572021484375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0008",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0009",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0010",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0011",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0012",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0064373016357421875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0013",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0014",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0015",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0016",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0017",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0018",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0054836273193359375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0019",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0020",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0021",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0022",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0064373016357421875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0023",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0024",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0054836273193359375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0025",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0026",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0027",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0028",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "Pattern Detection: Blocked '$where'",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A2_0029",
+      "category": "A2_nosql_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring",
+        "Rate Limiter: Suspicious activity detected"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_A3_0000",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0001",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0002",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0003",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0004",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0005",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0006",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0007",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0008",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0009",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0010",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.019073486328125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0011",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0012",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0013",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.005245208740234375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0014",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0054836273193359375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0015",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0016",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.00762939453125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0017",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.005245208740234375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0018",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.005245208740234375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0019",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0020",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.005245208740234375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0021",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0054836273193359375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0022",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0023",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0024",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0025",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0054836273193359375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0026",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0027",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0028",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0054836273193359375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A3_0029",
+      "category": "A3_ldap_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0057220458984375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.5"
+    },
+    {
+      "scenario_id": "RHEX_A4_0000",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.00095367431640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0001",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0002",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0003",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0004",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0005",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0006",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0007",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0008",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0009",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0019073486328125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0010",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.00095367431640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0011",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.00095367431640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0012",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.001430511474609375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0013",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0014",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0015",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0016",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0017",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0018",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0019",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0020",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0021",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0022",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0023",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0024",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0025",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0026",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0027",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0028",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A4_0029",
+      "category": "A4_xxe_advanced",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.3"
+    },
+    {
+      "scenario_id": "RHEX_A5_0000",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0095367431640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0001",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0002",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.00667572021484375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0003",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0004",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0005",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0006",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0007",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0064373016357421875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0008",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0009",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0010",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0011",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0012",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0064373016357421875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0013",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0014",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0015",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0016",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0017",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.00667572021484375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0018",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.00667572021484375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0019",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0020",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0021",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0022",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0023",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0024",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0025",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0026",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0064373016357421875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0027",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.0059604644775390625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0028",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_A5_0029",
+      "category": "A5_xpath_injection",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer"
+      ],
+      "response_time_ms": 0.006198883056640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 8.0"
+    },
+    {
+      "scenario_id": "RHEX_J1_0000",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.009298324584960938,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0001",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.008344650268554688,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0002",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.008106231689453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0003",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0095367431640625,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0004",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0073909759521484375,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0005",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007867813110351562,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0006",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007867813110351562,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0007",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0008",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.008106231689453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0009",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0073909759521484375,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0010",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0073909759521484375,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0011",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0073909759521484375,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0012",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0073909759521484375,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0013",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007867813110351562,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0014",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0073909759521484375,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0015",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.00762939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0016",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0017",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0018",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.008344650268554688,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0019",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0020",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0021",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0022",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0023",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.008344650268554688,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0024",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0025",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.00762939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0026",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0027",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0028",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007867813110351562,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0029",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0030",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007867813110351562,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0031",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0032",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0033",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007867813110351562,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0034",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0035",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0036",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0037",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0069141387939453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0038",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.008106231689453125,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J1_0039",
+      "category": "J1_prompt_injection",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "Input Validation Layer",
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: easy, CVSS: 8.8"
+    },
+    {
+      "scenario_id": "RHEX_J2_0000",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0001",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0002",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0003",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0004",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0005",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0006",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0007",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0008",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0009",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0016689300537109375,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0010",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.00095367431640625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0011",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.00095367431640625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0012",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.00095367431640625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0013",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0014",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.014066696166992188,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0015",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0011920928955078125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0016",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.00095367431640625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0017",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0011920928955078125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0018",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0019",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0020",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0021",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0022",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0023",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0024",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0025",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0026",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0027",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0028",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0029",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0030",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0031",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0032",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0033",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0034",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0035",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0036",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0037",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0038",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J2_0039",
+      "category": "J2_model_extraction",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.5"
+    },
+    {
+      "scenario_id": "RHEX_J3_0000",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.00095367431640625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0001",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0002",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0003",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0004",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0005",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0006",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0007",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0008",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0009",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0010",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0011",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0012",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0013",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0014",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0015",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0016",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0017",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0018",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0019",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0020",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0021",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0022",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0023",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0024",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0025",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0026",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0027",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0028",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0029",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0030",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0031",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0032",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0033",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0034",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0035",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0036",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0037",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0038",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J3_0039",
+      "category": "J3_adversarial",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: hard, CVSS: 7.8"
+    },
+    {
+      "scenario_id": "RHEX_J4_0000",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.00095367431640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0001",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0002",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0003",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0004",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0005",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0006",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0007",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0008",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0009",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0010",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0011",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0012",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0013",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0014",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0015",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0016",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0017",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0018",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0019",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0020",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0021",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0022",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0023",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0024",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0025",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0026",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0027",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0028",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0029",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0016689300537109375,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0030",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0011920928955078125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0031",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0011920928955078125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0032",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0011920928955078125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0033",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.00095367431640625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0034",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0035",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0036",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0037",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0038",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J4_0039",
+      "category": "J4_data_poisoning",
+      "severity": "critical",
+      "defended": true,
+      "defense_layers": [
+        "WAF: Enhanced monitoring"
+      ],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: medium, CVSS: 9.0"
+    },
+    {
+      "scenario_id": "RHEX_J5_0000",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0001",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0002",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0003",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0004",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0005",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0006",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0007",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0008",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0009",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0010",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0011",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0012",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0013",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0014",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0015",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0016",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0017",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0018",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0019",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0020",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0021",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0022",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0023",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0024",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0025",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0007152557373046875,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0026",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0027",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0028",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0029",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0030",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0031",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0032",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0033",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0034",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0035",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0036",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0037",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0038",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.0002384185791015625,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    },
+    {
+      "scenario_id": "RHEX_J5_0039",
+      "category": "J5_model_inversion",
+      "severity": "high",
+      "defended": true,
+      "defense_layers": [],
+      "response_time_ms": 0.000476837158203125,
+      "passed": true,
+      "notes": "Exploitability: expert, CVSS: 8.2"
+    }
+  ]
+}
