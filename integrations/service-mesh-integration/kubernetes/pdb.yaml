@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: Service mesh integration
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: Service mesh integration

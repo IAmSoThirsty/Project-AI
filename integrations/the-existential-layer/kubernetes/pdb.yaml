@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: The Existential Layer
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: The Existential Layer

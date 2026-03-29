@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Herbalogy & Ethnobotany Service
+  namespace: default
+  labels:
+    app: Herbalogy & Ethnobotany Service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Herbalogy & Ethnobotany Service
+  sessionAffinity: None

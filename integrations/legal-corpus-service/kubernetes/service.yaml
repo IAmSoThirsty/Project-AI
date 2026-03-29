@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Legal Corpus Service
+  namespace: default
+  labels:
+    app: Legal Corpus Service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Legal Corpus Service
+  sessionAffinity: None

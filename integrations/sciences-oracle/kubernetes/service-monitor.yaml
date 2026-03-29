@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: Sciences Oracle
+  namespace: default
+  labels:
+    app: Sciences Oracle
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: Sciences Oracle
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s

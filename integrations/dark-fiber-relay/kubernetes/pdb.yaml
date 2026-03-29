@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: Dark-Fiber Relay
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: Dark-Fiber Relay

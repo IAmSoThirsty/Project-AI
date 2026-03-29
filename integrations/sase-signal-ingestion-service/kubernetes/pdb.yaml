@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: SASE Signal Ingestion Service
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: SASE Signal Ingestion Service

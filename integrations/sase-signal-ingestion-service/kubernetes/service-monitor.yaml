@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: SASE Signal Ingestion Service
+  namespace: default
+  labels:
+    app: SASE Signal Ingestion Service
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: SASE Signal Ingestion Service
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s

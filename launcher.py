@@ -1,0 +1,46 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / launcher.py
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / launcher.py
+
+
+# STATUS: ACTIVE | TIER: SUBSTRATE | DATE: 2026-03-17 | TIME: 11:35
+# This file owns nothing. It starts the engine and steps aside.
+import sys
+import os
+
+# Add src to path for relative imports if needed
+sys.path.append(os.path.join(os.getcwd(), "src"))
+
+from src.thirsty_lang.src.thirsty_interpreter import ThirstyInterpreter
+from src.app.ui.render_engine import RenderEngine
+
+def main():
+    renderer = RenderEngine()
+    interpreter = ThirstyInterpreter(renderer=renderer)
+    
+    # Start the renderer loop in the main thread (DPG requirement)
+    renderer.start()
+    
+    # Load and execute the boot script
+    boot_script = "src/app/sovereign/sovereign_boot.thirsty"
+    if os.path.exists(boot_script):
+        with open(boot_script, "r", encoding="utf-8") as f:
+            interpreter.interpret(f.read())
+    else:
+        print(f"Error: {boot_script} not found.")
+        renderer.shutdown()
+        return
+
+    # Main loop for DPG
+    while renderer.is_running():
+        renderer.frame()
+    
+    renderer.shutdown()
+
+if __name__ == "__main__":
+    main()

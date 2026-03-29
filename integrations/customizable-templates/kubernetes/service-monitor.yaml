@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: Customizable templates
+  namespace: default
+  labels:
+    app: Customizable templates
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: Customizable templates
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s

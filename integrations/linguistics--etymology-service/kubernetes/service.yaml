@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Linguistics & Etymology Service
+  namespace: default
+  labels:
+    app: Linguistics & Etymology Service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Linguistics & Etymology Service
+  sessionAffinity: None

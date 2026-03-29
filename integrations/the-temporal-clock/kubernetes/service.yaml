@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: The Temporal Clock
+  namespace: default
+  labels:
+    app: The Temporal Clock
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: The Temporal Clock
+  sessionAffinity: None

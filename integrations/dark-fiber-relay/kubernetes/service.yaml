@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Dark-Fiber Relay
+  namespace: default
+  labels:
+    app: Dark-Fiber Relay
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Dark-Fiber Relay
+  sessionAffinity: None

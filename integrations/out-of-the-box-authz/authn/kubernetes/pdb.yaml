@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: Out-of-the-box authz/authn
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: Out-of-the-box authz/authn

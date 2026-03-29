@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: Out-of-the-box authz/authn
+  namespace: default
+  labels:
+    app: Out-of-the-box authz/authn
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: Out-of-the-box authz/authn
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s

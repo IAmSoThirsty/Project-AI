@@ -1,0 +1,25 @@
+apiVersion: ray.io/v1
+kind: RayCluster
+metadata:
+  name: yggdrasil-colossus
+spec:
+  headGroupSpec:
+    rayStartParams:
+      num-cpus: "128"
+  workerGroupSpecs:
+  - replicas: 500   # GPU shards for heavy synthesis
+    minReplicas: 100
+    maxReplicas: 1000
+    groupName: gpu-shards
+    rayStartParams:
+      num-gpus: "8"
+    template:
+      spec:
+        containers:
+        - name: worker
+          image: your-registry/yggdrasil-ray:latest
+          resources:
+            limits:
+              nvidia.com/gpu: 8
+              cpu: "32"
+              memory: "128Gi"

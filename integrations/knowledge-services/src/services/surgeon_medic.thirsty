@@ -1,0 +1,24 @@
+(Project-AI (Sovereign-Service "surgeon_medic"))
+
+# ============================================================================ #
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-11                             #
+# COMPLIANCE: Sovereign-Native / TSCG-B / Thirsty-Lang                         #
+# ============================================================================ #
+
+(Manifest
+    (Title "Surgeon — "The Medic"")
+    (Directive "Field medicine. Triage. Wound care. Improvised treatment. What to do when there is no hospital. DISCLAIMER: This service provides educational information only. Seek professional medical care whenever possible.")
+    (Status (Active))
+)
+
+(Knowledge-Core
+    (Domain (TRIAGE_START (Loaded)))
+    (Domain (INTERVENTIONS (Loaded)))
+)
+
+(TARL
+    (Integrity (Verified (Master-Tier)))
+    (Execution-Binding (Native-Bridge))
+)
+
+(End (Sovereign-Service))

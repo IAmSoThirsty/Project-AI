@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Reality Anchor
+  namespace: default
+  labels:
+    app: Reality Anchor
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Reality Anchor
+  sessionAffinity: None

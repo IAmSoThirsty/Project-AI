@@ -1,0 +1,60 @@
+name: Architect — Full Governance Sweep
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday 6am UTC
+
+jobs:
+  architect-sweep:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt || true
+
+      - name: Run Architect Agent
+        run: python tools/architect_agent.py
+
+      - name: Run Dependency Agent
+        run: python tools/dependency_agent.py
+
+      - name: Run Path Integrity Agent
+        run: python tools/path_integrity_agent.py
+
+      - name: Run Stub Hunter Agent
+        run: python tools/stub_hunter_agent.py
+
+      - name: Run Dead Code Agent
+        run: python tools/dead_code_agent.py
+
+      - name: Run Completion Tracker
+        run: python tools/completion_tracker_agent.py
+
+      - name: Run Boot Verification
+        run: python tools/boot_verification_agent.py
+        continue-on-error: true  # Report but don't block commit
+
+      - name: Commit manifests back to repo
+        run: |
+          git config user.name "Architect Agent"
+          git config user.email "architect@project-ai.local"
+          git add governance/
+          git diff --staged --quiet || git commit -m "ci: architect sweep $(date -u +%Y-%m-%d)"
+          git push

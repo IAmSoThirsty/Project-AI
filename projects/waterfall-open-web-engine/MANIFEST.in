@@ -1,0 +1,36 @@
+# Include documentation
+include README.md
+include LICENSE
+include CHANGELOG.md
+include SECURITY.md
+include THREAT_MODEL.md
+include SECURITY_IMPLEMENTATION_SUMMARY.md
+include SECRET_REMEDIATION_SUMMARY.md
+
+# Include requirements
+include requirements.txt
+include .env.example
+
+# Include documentation directory
+recursive-include docs *.md *.txt *.rst
+
+# Include examples
+recursive-include examples *.py *.json *.yml *.yaml *.txt
+
+# Include tests
+recursive-include tests *.py
+
+# Exclude compiled Python files
+global-exclude *.pyc
+global-exclude __pycache__
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude .DS_Store
+global-exclude .git*
+global-exclude *.so
+global-exclude *.dylib
+
+# Exclude build artifacts
+prune build
+prune dist
+prune *.egg-info

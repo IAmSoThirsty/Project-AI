@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: Multi-cloud support
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: Multi-cloud support

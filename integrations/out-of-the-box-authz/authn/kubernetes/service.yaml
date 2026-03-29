@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Out-of-the-box authz/authn
+  namespace: default
+  labels:
+    app: Out-of-the-box authz/authn
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Out-of-the-box authz/authn
+  sessionAffinity: None

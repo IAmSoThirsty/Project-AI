@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: The Sovereign Skin
+  namespace: default
+  labels:
+    app: The Sovereign Skin
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: The Sovereign Skin
+  sessionAffinity: None

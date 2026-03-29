@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Mnemonic Pruning
+  namespace: default
+  labels:
+    app: Mnemonic Pruning
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Mnemonic Pruning
+  sessionAffinity: None

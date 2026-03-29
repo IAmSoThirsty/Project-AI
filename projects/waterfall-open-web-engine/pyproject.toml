@@ -1,0 +1,106 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thirstys-waterfall"
+version = "1.0.0"
+description = "Integrated privacy-first system with 8 firewalls, built-in VPN, and incognito browser"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Thirsty Security Team", email = "security@thirstys.local"}
+]
+maintainers = [
+    {name = "Thirsty Security Team", email = "security@thirstys.local"}
+]
+keywords = [
+    "privacy",
+    "security",
+    "vpn",
+    "firewall",
+    "browser",
+    "encryption",
+    "anonymity"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: End Users/Desktop",
+    "Topic :: Security",
+    "Topic :: Internet :: WWW/HTTP :: Browsers",
+    "Topic :: System :: Networking :: Firewalls",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "cryptography>=41.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "pylint>=2.17.0",
+    "bandit>=1.7.0",
+    "safety>=2.3.0",
+]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/IAmSoThirsty/Thirstys-waterfall"
+Documentation = "https://github.com/IAmSoThirsty/Thirstys-waterfall/blob/main/README.md"
+Repository = "https://github.com/IAmSoThirsty/Thirstys-waterfall"
+Issues = "https://github.com/IAmSoThirsty/Thirstys-waterfall/issues"
+Changelog = "https://github.com/IAmSoThirsty/Thirstys-waterfall/blob/main/CHANGELOG.md"
+
+[project.scripts]
+thirstys-waterfall = "thirstys_waterfall.cli:main"
+
+[tool.setuptools]
+packages = ["thirstys_waterfall"]
+
+[tool.setuptools.package-data]
+thirstys_waterfall = ["**/*.json", "**/*.txt", "**/*.yml", "**/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short --cov=thirstys_waterfall --cov-report=term-missing --cov-report=html"
+
+[tool.coverage.run]
+source = ["thirstys_waterfall"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.black]
+line-length = 127
+target-version = ['py38', 'py39', 'py310', 'py311']
+
+[tool.pylint.messages_control]
+max-line-length = 127

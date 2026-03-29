@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: Service Ghosting Monitor
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: Service Ghosting Monitor

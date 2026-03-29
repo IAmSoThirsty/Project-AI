@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: The Epoch Synchronizer
+  namespace: default
+  labels:
+    app: The Epoch Synchronizer
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: The Epoch Synchronizer
+  sessionAffinity: None

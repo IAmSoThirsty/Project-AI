@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Sciences Oracle
+  namespace: default
+  labels:
+    app: Sciences Oracle
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Sciences Oracle
+  sessionAffinity: None

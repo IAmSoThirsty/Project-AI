@@ -1,0 +1,26 @@
+(Project-AI (Sovereign-Service "chronicler_world_history"))
+
+# ============================================================================ #
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-11                             #
+# COMPLIANCE: Sovereign-Native / TSCG-B / Thirsty-Lang                         #
+# ============================================================================ #
+
+(Manifest
+    (Title "Chronicler — World History by Pattern")
+    (Directive "Not dates. Patterns. Why empires fall. What conditions precede conflict. Which problems humanity has solved before and how.")
+    (Status (Active))
+)
+
+(Knowledge-Core
+    (Domain (COLLAPSE_PATTERNS (Loaded)))
+    (Domain (CONFLICT_CONDITIONS (Loaded)))
+    (Domain (SOLVED_PROBLEMS (Loaded)))
+    (Domain (CIVILIZATIONS (Loaded)))
+)
+
+(TARL
+    (Integrity (Verified (Master-Tier)))
+    (Execution-Binding (Native-Bridge))
+)
+
+(End (Sovereign-Service))

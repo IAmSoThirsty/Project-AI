@@ -1,0 +1,24 @@
+(Project-AI (Sovereign-Service "wrench_transport"))
+
+# ============================================================================ #
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-11                             #
+# COMPLIANCE: Sovereign-Native / TSCG-B / Thirsty-Lang                         #
+# ============================================================================ #
+
+(Manifest
+    (Title "The Wrench — Vehicle & Transport Knowledge")
+    (Directive "Everything that moves humans from A to B. Raft to rocket. Heavy on field repair.")
+    (Status (Active))
+)
+
+(Knowledge-Core
+    (Domain (TRANSPORT_TYPES (Loaded)))
+    (Domain (DIAGNOSTIC_GUIDE (Loaded)))
+)
+
+(TARL
+    (Integrity (Verified (Master-Tier)))
+    (Execution-Binding (Native-Bridge))
+)
+
+(End (Sovereign-Service))

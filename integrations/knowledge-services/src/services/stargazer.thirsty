@@ -1,0 +1,26 @@
+(Project-AI (Sovereign-Service "stargazer"))
+
+# ============================================================================ #
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-11                             #
+# COMPLIANCE: Sovereign-Native / TSCG-B / Thirsty-Lang                         #
+# ============================================================================ #
+
+(Manifest
+    (Title "Stargazer — Astrology & Astronomy")
+    (Directive "The symbolic and the scientific. Constellations, birth charts, celestial navigation, orbital mechanics, cosmology across every culture.")
+    (Status (Active))
+)
+
+(Knowledge-Core
+    (Domain (ZODIAC (Loaded)))
+    (Domain (CONSTELLATIONS (Loaded)))
+    (Domain (CELESTIAL_NAVIGATION (Loaded)))
+    (Domain (CULTURAL_COSMOLOGY (Loaded)))
+)
+
+(TARL
+    (Integrity (Verified (Master-Tier)))
+    (Execution-Binding (Native-Bridge))
+)
+
+(End (Sovereign-Service))

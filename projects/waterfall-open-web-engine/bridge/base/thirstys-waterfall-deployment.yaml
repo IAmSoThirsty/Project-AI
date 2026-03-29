@@ -1,0 +1,62 @@
+#! thirstys-waterfall-deployment.yaml
+# Generated code, do not edit
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: thirstys-waterfall
+    namespace: thirstys-waterfall
+    labels:
+        com.docker.compose.project: thirstys-waterfall
+        com.docker.compose.service: thirstys-waterfall
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            com.docker.compose.project: thirstys-waterfall
+            com.docker.compose.service: thirstys-waterfall
+    strategy:
+        type: Recreate
+    template:
+        metadata:
+            labels:
+                com.docker.compose.project: thirstys-waterfall
+                com.docker.compose.service: thirstys-waterfall
+                com.docker.compose.network.thirstys_network: "true"
+        spec:
+            restartPolicy: unless-stopped
+            containers:
+                - name: thirstys-waterfall
+                  image: thirstys-waterfall:latest
+                  imagePullPolicy: IfNotPresent
+                  env:
+                    - name: PYTHONUNBUFFERED
+                      value: "1"
+                    - name: THIRSTYS_ENV
+                      value: "production"
+                  securityContext:
+                    capabilities:
+                        add: [NET_ADMIN NET_RAW]
+                  livenessProbe:
+                    exec:
+                        command: [python -c from thirstys_waterfall import ThirstysWaterfall; print('healthy')]
+                    periodSeconds: 30
+                    initialDelaySeconds: 10
+                    timeoutSeconds: 10
+                    failureThreshold: 3
+                  ports:
+                    - name: thirstys-w-8080
+                      containerPort: 8080
+                  volumeMounts:
+                    - name: home-thirsty--thirstys-waterfall
+                      mountPath: /home/thirsty/.thirstys_waterfall
+                    - name: app-config
+                      mountPath: /app/config
+                      readOnly: true
+            volumes:
+                - name: home-thirsty--thirstys-waterfall
+                  persistentVolumeClaim:
+                    claimName: thirstys-waterfall-thirstys-data
+                - name: app-config
+                  hostPath:
+                    path: C:\Users\Quencher\.gemini\antigravity\scratch\sovereign-repos\Thirstys-waterfall\config
+                  readOnly: true

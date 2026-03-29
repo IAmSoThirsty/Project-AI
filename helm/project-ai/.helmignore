@@ -1,0 +1,8 @@
+# Patterns to ignore when packaging Helm chart
+.git/
+.gitignore
+values.example.yaml
+README.md
+NOTES.txt
+*.backup
+*.tmp

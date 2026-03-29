@@ -1,0 +1,9 @@
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+# Thirstys Waterfall - Production Requirements
+
+# Core dependencies
+cryptography>=41.0.0
+
+# No external VPN dependencies - VPN is built-in!
+# No browser engine dependencies - browser engine is built-in!
+# All components are native Python implementations

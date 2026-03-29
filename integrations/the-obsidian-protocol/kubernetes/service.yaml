@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: The Obsidian Protocol
+  namespace: default
+  labels:
+    app: The Obsidian Protocol
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: The Obsidian Protocol
+  sessionAffinity: None

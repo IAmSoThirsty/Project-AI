@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Confidence Calibration Service
+  namespace: default
+  labels:
+    app: Confidence Calibration Service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Confidence Calibration Service
+  sessionAffinity: None

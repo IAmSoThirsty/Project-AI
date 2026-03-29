@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yggdrasil-octoreflex
+  labels:
+    app: yggdrasil
+    tier: master
+spec:
+  replicas: 5784  # Scales to the audited node count
+  selector:
+    matchLabels:
+      app: yggdrasil
+  template:
+    metadata:
+      labels:
+        app: yggdrasil
+    spec:
+      containers:
+      - name: octoreflex
+        image: your-registry/yggdrasil:latest
+        command: ["python", "-m", "tools.kernel_bonder"]
+        securityContext:
+          privileged: true  # Required for eBPF attachment
+      - name: triumvirate
+        image: your-registry/triumvirate:latest
+        resources:
+          limits:
+            cpu: "2"
+            memory: "4Gi"

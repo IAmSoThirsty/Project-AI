@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Built-in observability
+  namespace: default
+  labels:
+    app: Built-in observability
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Built-in observability
+  sessionAffinity: None

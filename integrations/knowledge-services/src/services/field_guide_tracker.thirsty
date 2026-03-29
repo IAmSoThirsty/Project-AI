@@ -1,0 +1,25 @@
+(Project-AI (Sovereign-Service "field_guide_tracker"))
+
+# ============================================================================ #
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-11                             #
+# COMPLIANCE: Sovereign-Native / TSCG-B / Thirsty-Lang                         #
+# ============================================================================ #
+
+(Manifest
+    (Title "Field Guide — "The Tracker"")
+    (Directive "All wildlife. All biomes. All continents. Identification, behavior, danger assessment, edibility, tracking. What to do when something wants to eat you.")
+    (Status (Active))
+)
+
+(Knowledge-Core
+    (Domain (BIOMES (Loaded)))
+    (Domain (PREDATOR_ENCOUNTERS (Loaded)))
+    (Domain (EDIBILITY_RULES (Loaded)))
+)
+
+(TARL
+    (Integrity (Verified (Master-Tier)))
+    (Execution-Binding (Native-Bridge))
+)
+
+(End (Sovereign-Service))

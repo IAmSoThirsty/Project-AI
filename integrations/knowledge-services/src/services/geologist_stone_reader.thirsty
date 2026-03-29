@@ -1,0 +1,26 @@
+(Project-AI (Sovereign-Service "geologist_stone_reader"))
+
+# ============================================================================ #
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-11                             #
+# COMPLIANCE: Sovereign-Native / TSCG-B / Thirsty-Lang                         #
+# ============================================================================ #
+
+(Manifest
+    (Title "Geologist — "Stone Reader"")
+    (Directive "Soil, mineral identification, water detection, seismic awareness. Know what the ground is telling you.")
+    (Status (Active))
+)
+
+(Knowledge-Core
+    (Domain (MINERALS (Loaded)))
+    (Domain (WATER_DETECTION (Loaded)))
+    (Domain (SOIL_ASSESSMENT (Loaded)))
+    (Domain (SEISMIC_AWARENESS (Loaded)))
+)
+
+(TARL
+    (Integrity (Verified (Master-Tier)))
+    (Execution-Binding (Native-Bridge))
+)
+
+(End (Sovereign-Service))

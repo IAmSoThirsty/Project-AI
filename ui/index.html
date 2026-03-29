@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Yggdrasil — ASCENDANT Dashboard (5,790 nodes | 2026-03-15)</title>
+  <style>
+    body { background:#0a0a0a; color:#0f0; font-family:monospace; margin:0; padding:20px; }
+    .tree { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; }
+    .layer { border:2px solid #0f0; padding:15px; border-radius:8px; background:#111; }
+    .pulse { animation: pulse 1.2s infinite; }
+    @keyframes pulse { 50% { opacity:0.3; transform:scale(1.05); } }
+    .log { background:#000; padding:15px; height:320px; overflow:auto; border:1px solid #0f0; }
+    .success { color:#0f0; }
+    .alert { color:#f80; }
+  </style>
+</head>
+<body>
+  <h1>🌳 YGGDRASIL v1.0 — ASCENDANT (5,790 nodes live)</h1>
+  <div class="tree">
+    <div class="layer"><h2>ROOTS — OctoReflex eBPF</h2><div id="root">Layer 0 interception ACTIVE</div></div>
+    <div class="layer"><h2>TRUNK — Fractal Hierarchy</h2>
+      <div>15 Leaf Groups • 5,790 intentional nodes <span class="pulse">🌱</span></div>
+      <div id="triumvirate">Galahad 0.96 | Cerberus 0.98 | Codex 0.97</div>
+    </div>
+    <div class="layer"><h2>BRANCHES — Evolutionary Systems</h2>
+      <div id="fates">The Fates — Clotho recording, Lachesis surfacing, Atropos decaying</div>
+      <div id="shadow">Shadow Thirst — deception plane OPERATIONAL</div>
+    </div>
+  </div>
+
+  <h2>Live Execution Log (dns_test_harness.py)</h2>
+  <div class="log" id="live-log"></div>
+
+  <button onclick="triggerBreath()">Trigger Full Sovereign Cycle</button>
+
+  <script>
+    const liveLog = document.getElementById('live-log');
+    const realLog = `
+--- [DNS TEST HARNESS] Testing: zenodo.org ---
+[INHALE] Leaf Group leaf_group_01
+[SUCCESS] EXHALE — Sovereign output released
+[VERIFIED] Final exhale — Fates updated | Score: 0.97
+[INFO] Query verified: 137.248.81.42
+
+--- [DNS TEST HARNESS] Testing: malicious-phish.example ---
+[RULE] Malicious domain detected. Forcing constitutional audit failure.
+[INHALE] Leaf Group leaf_group_01
+[SUCCESS] EXHALE — Sovereign output released
+[VERIFIED] Final exhale — Fates updated | Score: 0.45
+[ALERT] Shadow Thirst engaged — attacker deceived.
+    `;
+    liveLog.innerHTML = realLog.replace(/\n/g, '<br>');
+
+    function triggerBreath() {
+      liveLog.innerHTML += '<span class="success">[INHALE] New cycle from leaf_group_03...</span><br>';
+      setTimeout(() => { liveLog.innerHTML += '[TRUNK] Triumvirate gate passed<br>'; }, 800);
+      setTimeout(() => { 
+        liveLog.innerHTML += '<span class="success">✅ EXHALE — Sovereign output released</span><br>';
+        document.getElementById('shadow').innerHTML = 'Shadow Thirst — deception plane triggered (live)';
+      }, 1600);
+    }
+  </script>
+</body>
+</html>

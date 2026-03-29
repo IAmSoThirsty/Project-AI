@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: The Trinity Harmonizer
+  namespace: default
+  labels:
+    app: The Trinity Harmonizer
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: The Trinity Harmonizer
+  sessionAffinity: None

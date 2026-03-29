@@ -1,0 +1,110 @@
+/**
+ * ============================================================================
+ * STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-11 | TIME: 21:35
+ * AESTHETICS: Master-Tier / Sovereign Design System v3.5
+ * ============================================================================
+ */
+
+:root {
+    /* Sovereign Palette - Vibrant HSL */
+    --sovereign-gold: hsl(45, 100%, 50%);
+    --sovereign-neon-blue: hsl(190, 100%, 50%);
+    --sovereign-crimson: hsl(350, 80%, 50%);
+    --sovereign-deep-black: hsl(240, 10%, 4%);
+    --sovereign-glass-bg: hsla(240, 10%, 8%, 0.7);
+    --sovereign-glass-border: hsla(0, 0%, 100%, 0.1);
+    
+    /* Typography */
+    --font-sovereign: 'Inter', 'Segoe UI', Roboto, sans-serif;
+    
+    /* Effects */
+    --shadow-master: 0 10px 40px rgba(0, 0, 0, 0.8);
+    --blur-intensity: 24px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-app-region: no-drag;
+}
+
+body {
+    background: var(--sovereign-deep-black);
+    color: white;
+    font-family: var(--font-sovereign);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Custom Sovereign Title Bar */
+.sovereign-header {
+    height: 40px;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    justify-content: space-between;
+    -webkit-app-region: drag;
+    border-bottom: 1px solid var(--sovereign-glass-border);
+}
+
+.header-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--sovereign-gold);
+    font-weight: 800;
+}
+
+/* Main Container */
+.main-stage {
+    flex: 1;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: radial-gradient(circle at top right, hsla(190, 100%, 50%, 0.05), transparent);
+}
+
+/* Glassmorphism Cards */
+.sovereign-card {
+    background: var(--sovereign-glass-bg);
+    backdrop-filter: blur(var(--blur-intensity));
+    border: 1px solid var(--sovereign-glass-border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-master);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.sovereign-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--sovereign-neon-blue);
+}
+
+/* Status Badges */
+.badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.badge-active { background: #00ff0033; color: #00ff00; border: 1px solid #00ff0044; }
+.badge-master { background: #ffd70033; color: #ffd700; border: 1px solid #ffd70044; }
+
+/* Animations */
+@keyframes glow {
+    0% { filter: drop-shadow(0 0 5px var(--sovereign-neon-blue)); }
+    50% { filter: drop-shadow(0 0 20px var(--sovereign-neon-blue)); }
+    100% { filter: drop-shadow(0 0 5px var(--sovereign-neon-blue)); }
+}
+
+.sovereign-glow {
+    animation: glow 3s infinite;
+}

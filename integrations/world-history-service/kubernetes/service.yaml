@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: World History Service
+  namespace: default
+  labels:
+    app: World History Service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: World History Service
+  sessionAffinity: None

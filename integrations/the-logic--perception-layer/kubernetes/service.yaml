@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: The Logic & Perception Layer
+  namespace: default
+  labels:
+    app: The Logic & Perception Layer
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: The Logic & Perception Layer
+  sessionAffinity: None

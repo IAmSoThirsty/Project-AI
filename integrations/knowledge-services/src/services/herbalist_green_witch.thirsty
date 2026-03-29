@@ -1,0 +1,24 @@
+(Project-AI (Sovereign-Service "herbalist_green_witch"))
+
+# ============================================================================ #
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-11                             #
+# COMPLIANCE: Sovereign-Native / TSCG-B / Thirsty-Lang                         #
+# ============================================================================ #
+
+(Manifest
+    (Title "Herbalist — "The Green Witch"")
+    (Directive "Medicinal plants, preparation, dosage, contraindications. Regional variants. What grows where. What heals what. DISCLAIMER: Educational only. Consult healthcare professionals.")
+    (Status (Active))
+)
+
+(Knowledge-Core
+    (Domain (MEDICINAL_PLANTS (Loaded)))
+    (Domain (PREPARATION_METHODS (Loaded)))
+)
+
+(TARL
+    (Integrity (Verified (Master-Tier)))
+    (Execution-Binding (Native-Bridge))
+)
+
+(End (Sovereign-Service))

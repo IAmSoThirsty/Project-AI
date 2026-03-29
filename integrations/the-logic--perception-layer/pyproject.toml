@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "The Logic & Perception Layer"
+version = "1.0.0"
+description = "Heuristic Drift Inhibitor: Works with your Semantic Drift Monitor. It doesn't just watch the drift; it actively forces the AI weights or logic gates back to a "Golden Baseline" if the system starts hallucinating or diverging from its original purpose.
+Consensus Hallucination Filter: In a multi-cloud setup, this service compares outputs from the same request across different regions. If they differ, it flags a "Reality Fracture" and forces a re-compute.
+Contextual Amnesia Service: A "Right to be Forgotten" engine. It ensures that when data is marked for Knowledge Decay, every trace, log, and cached fragment across the entire stack is purged simultaneously."
+authors = [
+    {name = "Jeremy Karrick / IAmSoThirsty "}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["."] 
+addopts = "-v --strict-markers"
+markers = [
+    "slow: marks tests as slow",
+    "integration: marks tests as integration tests",
+    "fuzz: marks tests as fuzz tests",
+]
+
+[tool.coverage.run]
+source = ["app"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501", # line too long (handled by black)
+    "B008", # do not perform function calls in argument defaults
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+line_length = 100

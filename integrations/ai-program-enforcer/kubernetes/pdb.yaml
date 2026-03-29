@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: AI Program Enforcer
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: AI Program Enforcer

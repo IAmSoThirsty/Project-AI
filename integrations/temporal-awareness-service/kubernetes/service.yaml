@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Temporal Awareness Service
+  namespace: default
+  labels:
+    app: Temporal Awareness Service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Temporal Awareness Service
+  sessionAffinity: None

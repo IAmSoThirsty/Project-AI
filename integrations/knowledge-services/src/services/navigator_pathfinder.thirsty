@@ -1,0 +1,26 @@
+(Project-AI (Sovereign-Service "navigator_pathfinder"))
+
+# ============================================================================ #
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-11                             #
+# COMPLIANCE: Sovereign-Native / TSCG-B / Thirsty-Lang                         #
+# ============================================================================ #
+
+(Manifest
+    (Title "Navigator — "The Pathfinder"")
+    (Directive "Dead reckoning, celestial navigation, terrain reading, weather pattern interpretation. Find where you are using only what is around you.")
+    (Status (Active))
+)
+
+(Knowledge-Core
+    (Domain (DIRECTION_FINDING (Loaded)))
+    (Domain (TERRAIN_READING (Loaded)))
+    (Domain (WEATHER_READING (Loaded)))
+    (Domain (DEAD_RECKONING (Loaded)))
+)
+
+(TARL
+    (Integrity (Verified (Master-Tier)))
+    (Execution-Binding (Native-Bridge))
+)
+
+(End (Sovereign-Service))

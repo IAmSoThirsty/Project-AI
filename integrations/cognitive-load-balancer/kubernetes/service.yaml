@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Cognitive Load Balancer
+  namespace: default
+  labels:
+    app: Cognitive Load Balancer
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Cognitive Load Balancer
+  sessionAffinity: None
