@@ -1,0 +1,123 @@
+{
+  "generated": "2026-03-13T22:24:12.032523+00:00",
+  "duration_seconds": 134.18,
+  "overall": "FAIL",
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "skipped": 1
+  },
+  "results": [
+    {
+      "unit_id": "architect",
+      "name": "Architect Agent",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_seconds": 12.38,
+      "output_files_verified": [
+        "governance/ARCHITECT_MANIFEST.json",
+        "governance/ARCHITECT_MANIFEST.md"
+      ],
+      "missing_outputs": [],
+      "stdout_tail": "opagating audit: 14000/37046 files...\nPropagating audit: 15000/37046 files...\nPropagating audit: 16000/37046 files...\nPropagating audit: 17000/37046 files...\nPropagating audit: 18000/37046 files...\nPropagating audit: 19000/37046 files...\nPropagating audit: 20000/37046 files...\nPropagating audit: 21000/37046 files...\nPropagating audit: 22000/37046 files...\nPropagating audit: 23000/37046 files...\nPropagating audit: 24000/37046 files...\nPropagating audit: 25000/37046 files...\nPropagating audit: 26000/37046 files...\nPropagating audit: 27000/37046 files...\nPropagating audit: 28000/37046 files...\nPropagating audit: 29000/37046 files...\nPropagating audit: 30000/37046 files...\nPropagating audit: 31000/37046 files...\nPropagating audit: 32000/37046 files...\nPropagating audit: 33000/37046 files...\nPropagating audit: 34000/37046 files...\nPropagating audit: 35000/37046 files...\nPropagating audit: 36000/37046 files...\nPropagating audit: 37000/37046 files...\nArchitect Manifest Complete. Overall: 97%\n",
+      "stderr_tail": "",
+      "timestamp": "2026-03-13T22:22:10.242168+00:00"
+    },
+    {
+      "unit_id": "dependency",
+      "name": "Dependency Agent",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_seconds": 77.06,
+      "output_files_verified": [
+        "governance/DEPENDENCY_MANIFEST.json"
+      ],
+      "missing_outputs": [],
+      "stdout_tail": "DEPENDENCY_MANIFEST written. 12399 unresolved imports found.\n",
+      "stderr_tail": "nvalid escape sequence '\\p'\n<unknown>:328: SyntaxWarning: invalid escape sequence '\\ '\n<unknown>:578: SyntaxWarning: invalid escape sequence '\\$'\n<unknown>:110: SyntaxWarning: invalid escape sequence '\\w'\n<unknown>:308: SyntaxWarning: invalid escape sequence '\\s'\n<unknown>:241: SyntaxWarning: invalid escape sequence '\\`'\n<unknown>:252: SyntaxWarning: invalid escape sequence '\\&'\n<unknown>:489: SyntaxWarning: invalid escape sequence '\\/'\n<unknown>:510: SyntaxWarning: invalid escape sequence '\\-'\n",
+      "timestamp": "2026-03-13T22:23:27.291174+00:00"
+    },
+    {
+      "unit_id": "path_integrity",
+      "name": "Path Integrity Agent",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_seconds": 19.42,
+      "output_files_verified": [
+        "governance/PATH_INTEGRITY_MANIFEST.json"
+      ],
+      "missing_outputs": [],
+      "stdout_tail": "PATH_INTEGRITY_MANIFEST written. 372 broken imports. 215 fixable.\n",
+      "stderr_tail": "",
+      "timestamp": "2026-03-13T22:23:46.716197+00:00"
+    },
+    {
+      "unit_id": "stub_hunter",
+      "name": "Stub Hunter Agent",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_seconds": 9.58,
+      "output_files_verified": [
+        "governance/STUB_MANIFEST.json"
+      ],
+      "missing_outputs": [],
+      "stdout_tail": "STUB_MANIFEST written. 8599 stubs found across 1136 files.\n",
+      "stderr_tail": "",
+      "timestamp": "2026-03-13T22:23:56.302784+00:00"
+    },
+    {
+      "unit_id": "dead_code",
+      "name": "Dead Code Agent",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_seconds": 13.99,
+      "output_files_verified": [
+        "governance/DEAD_CODE_MANIFEST.json"
+      ],
+      "missing_outputs": [],
+      "stdout_tail": "DEAD_CODE_MANIFEST written. 8247 potentially dead definitions found.\n",
+      "stderr_tail": "",
+      "timestamp": "2026-03-13T22:24:10.290161+00:00"
+    },
+    {
+      "unit_id": "completion_tracker",
+      "name": "Completion Tracker",
+      "status": "PASS",
+      "exit_code": 0,
+      "duration_seconds": 0.51,
+      "output_files_verified": [
+        "governance/COMPLETION_TRACKER.json"
+      ],
+      "missing_outputs": [],
+      "stdout_tail": "COMPLETION_TRACKER written. 97% -> 97%\n",
+      "stderr_tail": "",
+      "timestamp": "2026-03-13T22:24:10.798478+00:00"
+    },
+    {
+      "unit_id": "boot_verification",
+      "name": "Boot Verification Agent",
+      "status": "FAIL",
+      "exit_code": 1,
+      "duration_seconds": 1.24,
+      "output_files_verified": [
+        "governance/BOOT_VERIFICATION.json"
+      ],
+      "missing_outputs": [],
+      "stdout_tail": "Running boot sequence...\nBOOT_VERIFICATION written. Result: FAIL\nFAILED LAYERS:\n  UNKNOWN: FAILED\n",
+      "stderr_tail": "",
+      "timestamp": "2026-03-13T22:24:12.032523+00:00"
+    },
+    {
+      "unit_id": "the_fates",
+      "name": "The Fates Memory Agent",
+      "status": "SKIP",
+      "exit_code": -1,
+      "duration_seconds": 0.0,
+      "output_files_verified": [],
+      "missing_outputs": [],
+      "stdout_tail": "Skipped: dependency boot_verification did not pass.",
+      "stderr_tail": "",
+      "timestamp": "2026-03-13T22:24:12.032523+00:00"
+    }
+  ]
+}

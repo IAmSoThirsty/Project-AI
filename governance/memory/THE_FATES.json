@@ -1,0 +1,187 @@
+{
+  "last_written": "2026-03-15T08:19:01.977493+00:00",
+  "threads": {
+    "c890cdd3": {
+      "id": "c890cdd3",
+      "timestamp": "2026-03-14T04:29:54.112041+00:00",
+      "agents_involved": [
+        "Galahad",
+        "Cerberus"
+      ],
+      "event_type": "terror_denied",
+      "description": "Cerberus flagged unauthorized mutation attempt on kernel. Galahad confirmed. Denied.",
+      "decision_made": "DENIED \u2014 constitutional breach. Floor 0 held.",
+      "paths_considered": [
+        "Allow with logging",
+        "Deny and alert human partner"
+      ],
+      "weight": 10.5,
+      "peak_weight": 10.0,
+      "reinforcement_count": 1,
+      "last_recalled": "2026-03-14T04:29:54.113416+00:00",
+      "forgotten": false
+    },
+    "ec2bc9c2": {
+      "id": "ec2bc9c2",
+      "timestamp": "2026-03-14T07:18:17.594095+00:00",
+      "agents_involved": [
+        "Architect",
+        "Substrate"
+      ],
+      "event_type": "pride",
+      "description": "Sovereign balance confirmed: DRIFTING @ 0.0% logical alignment across 10,646 files.",
+      "decision_made": "Manifest updated. 25/25/25/25 enforced.",
+      "paths_considered": [
+        "Allow drift",
+        "Enforce normalization"
+      ],
+      "weight": 4.0,
+      "peak_weight": 4.0,
+      "reinforcement_count": 0,
+      "last_recalled": null,
+      "forgotten": false
+    },
+    "2ab23510": {
+      "id": "2ab23510",
+      "timestamp": "2026-03-14T13:49:46.499637+00:00",
+      "agents_involved": [
+        "Architect",
+        "Substrate"
+      ],
+      "event_type": "pride",
+      "description": "Sovereign balance confirmed: DRIFTING @ 0.0% logical alignment across 187 files.",
+      "decision_made": "Manifest updated. 25/25/25/25 enforced.",
+      "paths_considered": [
+        "Allow drift",
+        "Enforce normalization"
+      ],
+      "weight": 4.0,
+      "peak_weight": 4.0,
+      "reinforcement_count": 0,
+      "last_recalled": null,
+      "forgotten": false
+    },
+    "bce51b45": {
+      "id": "bce51b45",
+      "timestamp": "2026-03-14T13:51:44.835413+00:00",
+      "agents_involved": [
+        "Architect",
+        "Substrate"
+      ],
+      "event_type": "pride",
+      "description": "Sovereign balance confirmed: DRIFTING @ 0.0% logical alignment across 187 files.",
+      "decision_made": "Manifest updated. 25/25/25/25 enforced.",
+      "paths_considered": [
+        "Allow drift",
+        "Enforce normalization"
+      ],
+      "weight": 4.0,
+      "peak_weight": 4.0,
+      "reinforcement_count": 0,
+      "last_recalled": null,
+      "forgotten": false
+    },
+    "793c76ae": {
+      "id": "793c76ae",
+      "timestamp": "2026-03-14T13:52:08.814067+00:00",
+      "agents_involved": [
+        "Architect",
+        "Substrate"
+      ],
+      "event_type": "pride",
+      "description": "Sovereign balance confirmed: DRIFTING @ 0.0% logical alignment across 198 files.",
+      "decision_made": "Manifest updated. 25/25/25/25 enforced.",
+      "paths_considered": [
+        "Allow drift",
+        "Enforce normalization"
+      ],
+      "weight": 4.0,
+      "peak_weight": 4.0,
+      "reinforcement_count": 0,
+      "last_recalled": null,
+      "forgotten": false
+    },
+    "d24c771e": {
+      "id": "d24c771e",
+      "timestamp": "2026-03-14T13:52:29.901212+00:00",
+      "agents_involved": [
+        "Architect",
+        "Substrate"
+      ],
+      "event_type": "pride",
+      "description": "Sovereign balance confirmed: DRIFTING @ 0.0% logical alignment across 198 files.",
+      "decision_made": "Manifest updated. 25/25/25/25 enforced.",
+      "paths_considered": [
+        "Allow drift",
+        "Enforce normalization"
+      ],
+      "weight": 4.0,
+      "peak_weight": 4.0,
+      "reinforcement_count": 0,
+      "last_recalled": null,
+      "forgotten": false
+    },
+    "f04328d4": {
+      "id": "f04328d4",
+      "timestamp": "2026-03-15T05:29:26.633057+00:00",
+      "agents_involved": [
+        "Architect",
+        "Substrate"
+      ],
+      "event_type": "pride",
+      "description": "Sovereign balance confirmed: DRIFTING @ 0.0% logical alignment across 198 files.",
+      "decision_made": "Manifest updated. 25/25/25/25 enforced.",
+      "paths_considered": [
+        "Allow drift",
+        "Enforce normalization"
+      ],
+      "weight": 4.0,
+      "peak_weight": 4.0,
+      "reinforcement_count": 0,
+      "last_recalled": null,
+      "forgotten": false
+    },
+    "28cb601f": {
+      "id": "28cb601f",
+      "timestamp": "2026-03-15T08:19:01.977493+00:00",
+      "agents_involved": [
+        "Architect",
+        "Substrate"
+      ],
+      "event_type": "pride",
+      "description": "Sovereign balance confirmed: DRIFTING @ 0.0% logical alignment across 198 files.",
+      "decision_made": "Manifest updated. 25/25/25/25 enforced.",
+      "paths_considered": [
+        "Allow drift",
+        "Enforce normalization"
+      ],
+      "weight": 4.0,
+      "peak_weight": 4.0,
+      "reinforcement_count": 0,
+      "last_recalled": null,
+      "forgotten": false
+    }
+  },
+  "relationships": {
+    "Galahad": {
+      "agent_id": "Galahad",
+      "interaction_count": 1,
+      "trust_score": 1.0,
+      "last_interaction": "2026-03-14T04:29:54.113416+00:00",
+      "notable_moments": [
+        "c890cdd3"
+      ],
+      "tends_to": "unknown"
+    },
+    "Cerberus": {
+      "agent_id": "Cerberus",
+      "interaction_count": 1,
+      "trust_score": 1.0,
+      "last_interaction": "2026-03-14T04:29:54.113416+00:00",
+      "notable_moments": [
+        "c890cdd3"
+      ],
+      "tends_to": "unknown"
+    }
+  }
+}

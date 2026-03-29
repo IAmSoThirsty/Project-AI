@@ -1,0 +1,27 @@
+{
+  "generated": "2026-03-13T22:24:12.020755+00:00",
+  "overall": "FAIL",
+  "exit_code": 1,
+  "summary": {
+    "layers_checked": 2,
+    "passed": 1,
+    "failed": 1
+  },
+  "failed_layers": [
+    {
+      "layer": "UNKNOWN",
+      "status": "FAILED",
+      "raw": "16:24:11 [ERROR] [Sovereign-Ignition] [Layer 1] Failed to import ThirstySuperKernel: cannot import name 'TarlRuntime' from 'tarl.runtime' (C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\tarl\\runtime\\__init__.py)",
+      "failed": true
+    }
+  ],
+  "passed_layers": [
+    {
+      "layer": "UNKNOWN",
+      "status": "MOCK",
+      "raw": "16:24:10 [WARNING] [Sovereign-Ignition] [Layer 0] Running on Windows/DevMode. Mounting MOCK OctoReflex.",
+      "failed": false
+    }
+  ],
+  "raw_output": "C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\boot_sovereign.py:57: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  \"started_at\": datetime.utcnow().isoformat(),\n16:24:10 [INFO] [Sovereign-Ignition] ============================================================\n16:24:10 [INFO] [Sovereign-Ignition] PROJECT-AI FIRST EDITION (v1.0.0-E1) - IGNITION SEQUENCE\n16:24:10 [INFO] [Sovereign-Ignition] ============================================================\n16:24:10 [INFO] [Sovereign-Ignition] [Layer 0] Initializing OctoReflex Kernel Substrate...\n16:24:10 [WARNING] [Sovereign-Ignition] [Layer 0] Running on Windows/DevMode. Mounting MOCK OctoReflex.\n16:24:11 [INFO] [Sovereign-Ignition] \\u2705 Layer 0 (Mock) mounted successfully.\n16:24:11 [INFO] [Sovereign-Ignition] [Layer 1] Loading Thirsty Super Kernel (Holographic Defense)...\n16:24:11 [ERROR] [Sovereign-Ignition] [Layer 1] Failed to import ThirstySuperKernel: cannot import name 'TarlRuntime' from 'tarl.runtime' (C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\tarl\\runtime\\__init__.py)\n16:24:11 [CRITICAL] [Sovereign-Ignition] \\u274c IGNITION ABORTED: cannot import name 'TarlRuntime' from 'tarl.runtime' (C:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\tarl\\runtime\\__init__.py)\nC:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\boot_sovereign.py:92: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  \"timestamp\": datetime.utcnow().isoformat(),\n16:24:11 [CRITICAL] [Sovereign-Ignition] !!! EMERGENCY HALT !!!\nC:\\Users\\Quencher\\.gemini\\antigravity\\scratch\\sovereign-repos\\Project-AI\\boot_sovereign.py:477: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).\n  self._boot_manifest[\"halted_at\"] = datetime.utcnow().isoformat()\n"
+}

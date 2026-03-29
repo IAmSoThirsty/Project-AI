@@ -1,0 +1,33 @@
+{
+  "stage": "promotion",
+  "type": "promotion",
+  "status": "success",
+  "timestamp": "2026-02-03T21:55:48.291244",
+  "role_signature": {
+    "role": "pipeline_executor",
+    "payload_hash": "2314f713976eab8b56b91e730c8b5c99fe1b7f73d4e197b71ab84aede155b2ed",
+    "signature": "efa40379914feb7ed521423ef4fc5158208fa8ccd047c81bc95822d6795ddb86c2306edba9c69a6c68b3569945ebbe07327a39ff95a07d1b458eee74454e6a0f",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T21:55:48.290550"
+  },
+  "policy_binding": {
+    "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+    "context_hash": "de97c410d2c29a3bca9a4d5a375caf26c1f6599e9d1d6e1887646069f01679a7",
+    "binding_hash": "a7d9eb0a39996e8102a43db9e8b95bdfa61df9d9ed10f0b83c3d62ba03aa14ec",
+    "signature": "2354c21c9f61f71e2d26c7b8400d02534e6a92f522509d92b3ab762bd17dfa15c88aec54dec3951c4a80f391da8ef8419f8b3f9b38e665c05fb621e832365b06",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T21:55:48.290922"
+  },
+  "output": {
+    "promotion_type": "production",
+    "promoted_at": "2026-02-03T21:55:48.291247",
+    "approval_status": "approved",
+    "approvers": [
+      "operator",
+      "admin"
+    ],
+    "environment": "production",
+    "promotion_hash": "557d772c3cacc34ba024aa8c64f48bb3d8631a6c219d183deeaa4d98f885b394"
+  },
+  "artifact_hash": "7018378aeade747dcdc448efc71da13e1284d154f18d7e7517503a8054840580"
+}

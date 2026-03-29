@@ -1,0 +1,2614 @@
+{
+  "generated": "2026-03-13T22:23:46.657113+00:00",
+  "summary": {
+    "total_issues": 372,
+    "fixable": 215,
+    "not_found": 157
+  },
+  "issues": [
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\depend\\dylib.py",
+      "line": 284,
+      "broken_import": "macholib.util",
+      "suggested_fix": ".venv.Lib.site-packages.build.util",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\hook-gi.repository.Gst.py",
+      "line": 49,
+      "broken_import": "gi.repository",
+      "suggested_fix": "archive.history.timeline.emergent-microservices.ai-mutation-governance-firewall.app.repository",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_mplconfig.py",
+      "line": 45,
+      "broken_import": "_pyi_rth_utils.tempfile",
+      "suggested_fix": ".venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.tempfile",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pyqt5.py",
+      "line": 34,
+      "broken_import": "_pyi_rth_utils",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.qt, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.tempfile, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils._win32",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pyqt5.py",
+      "line": 35,
+      "broken_import": "_pyi_rth_utils",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.qt, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.tempfile, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils._win32",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pyqt6.py",
+      "line": 34,
+      "broken_import": "_pyi_rth_utils",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.qt, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.tempfile, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils._win32",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pyqt6.py",
+      "line": 35,
+      "broken_import": "_pyi_rth_utils",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.qt, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.tempfile, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils._win32",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pyside2.py",
+      "line": 34,
+      "broken_import": "_pyi_rth_utils",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.qt, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.tempfile, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils._win32",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pyside2.py",
+      "line": 35,
+      "broken_import": "_pyi_rth_utils",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.qt, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.tempfile, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils._win32",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pyside6.py",
+      "line": 34,
+      "broken_import": "_pyi_rth_utils",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.qt, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.tempfile, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils._win32",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_pyside6.py",
+      "line": 35,
+      "broken_import": "_pyi_rth_utils",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.qt, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils.tempfile, .venv.Lib.site-packages.PyInstaller.fake-modules._pyi_rth_utils._win32",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\hooks\\django.py",
+      "line": 68,
+      "broken_import": "django.conf",
+      "suggested_fix": "AMBIGUOUS: external.Thirstys-Waterfall.web.gunicorn.conf, gunicorn.conf, microservices.Thirstys-waterfall.web.gunicorn.conf",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\hooks\\gi.py",
+      "line": 299,
+      "broken_import": "gi.repository",
+      "suggested_fix": "archive.history.timeline.emergent-microservices.ai-mutation-governance-firewall.app.repository",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\hooks\\gi.py",
+      "line": 318,
+      "broken_import": "gi.repository",
+      "suggested_fix": "archive.history.timeline.emergent-microservices.ai-mutation-governance-firewall.app.repository",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\hooks\\gi.py",
+      "line": 80,
+      "broken_import": "gi.repository",
+      "suggested_fix": "archive.history.timeline.emergent-microservices.ai-mutation-governance-firewall.app.repository",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\osx.py",
+      "line": 52,
+      "broken_import": "macholib.util",
+      "suggested_fix": ".venv.Lib.site-packages.build.util",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyQt6\\lupdate\\designer_source.py",
+      "line": 33,
+      "broken_import": "uic",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.hooks.hook-PyQt5.uic, hook-PyQt5.uic, .venv.Lib.site-packages.PyInstaller.hooks.hook-PyQt6.uic",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyQt6\\uic\\compile_ui.py",
+      "line": 51,
+      "broken_import": "Compiler",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyQt6.uic.Compiler.as_string, .venv.Lib.site-packages.PyQt6.uic.Compiler.compiler, .venv.Lib.site-packages.PyQt6.uic.Compiler.indenter",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyQt6\\uic\\load_ui.py",
+      "line": 65,
+      "broken_import": "Compiler",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyQt6.uic.Compiler.as_string, .venv.Lib.site-packages.PyQt6.uic.Compiler.compiler, .venv.Lib.site-packages.PyQt6.uic.Compiler.indenter",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyQt6\\uic\\load_ui.py",
+      "line": 98,
+      "broken_import": "Loader.loader",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.loader",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-gribapi.py",
+      "line": 46,
+      "broken_import": "gribapi.bindings",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.contrib._securetransport.bindings",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-langchain.py",
+      "line": 45,
+      "broken_import": "langchain.chat_models.base",
+      "suggested_fix": ".venv.Lib.site-packages.blinker.base",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-langchain.py",
+      "line": 53,
+      "broken_import": "langchain.embeddings.base",
+      "suggested_fix": ".venv.Lib.site-packages.blinker.base",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-pylsl.py",
+      "line": 40,
+      "broken_import": "pylsl.lib",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.numpy.lib.array_utils, .venv.Lib.site-packages.numpy.lib.format, .venv.Lib.site-packages.numpy.lib.introspect",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-sentry_sdk.py",
+      "line": 43,
+      "broken_import": "sentry_sdk.integrations",
+      "suggested_fix": "integrations.__init__",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-usb.py",
+      "line": 48,
+      "broken_import": "usb.core",
+      "suggested_fix": "governance.core",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-usb.py",
+      "line": 49,
+      "broken_import": "usb.backend",
+      "suggested_fix": ".venv.Lib.site-packages.cryptography.hazmat.backends.openssl.backend",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-wx.lib.activex.py",
+      "line": 36,
+      "broken_import": "wx.lib.activex",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages._pyinstaller_hooks_contrib.stdhooks.hook-wx.lib.activex, hook-wx.lib.activex, .venv_prod.Lib.site-packages._pyinstaller_hooks_contrib.stdhooks.hook-wx.lib.activex",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\packaging\\metadata.py",
+      "line": 39,
+      "broken_import": "licenses",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.packaging.licenses._spdx, .venv.Lib.site-packages.packaging.licenses, .venv.Lib.site-packages.pip._vendor.packaging.licenses._spdx",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\packaging\\metadata.py",
+      "line": 39,
+      "broken_import": "licenses",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.packaging.licenses._spdx, .venv.Lib.site-packages.packaging.licenses, .venv.Lib.site-packages.pip._vendor.packaging.licenses._spdx",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\pygments\\sphinxext.py",
+      "line": 31,
+      "broken_import": "sphinx.util.nodes",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.nodes",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\resolvelib\\__init__.py",
+      "line": 33,
+      "broken_import": "resolvers",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.pip._vendor.resolvelib.resolvers.abstract, .venv.Lib.site-packages.pip._vendor.resolvelib.resolvers.criterion, .venv.Lib.site-packages.pip._vendor.resolvelib.resolvers.exceptions",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\resolvelib\\reporters.py",
+      "line": 22,
+      "broken_import": "resolvers",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.pip._vendor.resolvelib.resolvers.abstract, .venv.Lib.site-packages.pip._vendor.resolvelib.resolvers.criterion, .venv.Lib.site-packages.pip._vendor.resolvelib.resolvers.exceptions",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\resolvelib\\structs.py",
+      "line": 39,
+      "broken_import": "resolvers.criterion",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.resolvelib.resolvers.criterion",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\rich\\jupyter.py",
+      "line": 103,
+      "broken_import": "IPython.display",
+      "suggested_fix": ".venv.Lib.site-packages.pandas._config.display",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\rich\\live.py",
+      "line": 265,
+      "broken_import": "IPython.display",
+      "suggested_fix": ".venv.Lib.site-packages.pandas._config.display",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\rich\\pretty.py",
+      "line": 242,
+      "broken_import": "IPython.core.formatters",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.pip._vendor.pygments.formatters._mapping, .venv.Lib.site-packages.pip._vendor.pygments.formatters, .venv.Lib.site-packages.pygments.formatters.bbcode",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\__init__.py",
+      "line": 32,
+      "broken_import": "util.request",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.request",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\__init__.py",
+      "line": 33,
+      "broken_import": "util.retry",
+      "suggested_fix": ".venv.Lib.site-packages.pip._internal.utils.retry",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\__init__.py",
+      "line": 34,
+      "broken_import": "util.timeout",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.timeout",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\__init__.py",
+      "line": 35,
+      "broken_import": "util.url",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.url",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\_collections.py",
+      "line": 37,
+      "broken_import": "packages.six",
+      "suggested_fix": ".venv.Lib.site-packages.six",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connection.py",
+      "line": 29,
+      "broken_import": "util.proxy",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.proxy",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connection.py",
+      "line": 69,
+      "broken_import": "util.ssl_",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.ssl_",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connection.py",
+      "line": 77,
+      "broken_import": "util.ssl_match_hostname",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.ssl_match_hostname",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 53,
+      "broken_import": "packages.six.moves",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.hooks.pre_safe_import_module.hook-setuptools.extern.six.moves, hook-setuptools.extern.six.moves, .venv.Lib.site-packages.PyInstaller.hooks.pre_safe_import_module.hook-six.moves",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 56,
+      "broken_import": "util.connection",
+      "suggested_fix": ".venv.Lib.site-packages.urllib3.connection",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 57,
+      "broken_import": "util.proxy",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.proxy",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 58,
+      "broken_import": "util.queue",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.queue",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 59,
+      "broken_import": "util.request",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.request",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 60,
+      "broken_import": "util.response",
+      "suggested_fix": ".venv.Lib.site-packages.urllib3.response",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 61,
+      "broken_import": "util.retry",
+      "suggested_fix": ".venv.Lib.site-packages.pip._internal.utils.retry",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 62,
+      "broken_import": "util.ssl_match_hostname",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.ssl_match_hostname",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 63,
+      "broken_import": "util.timeout",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.timeout",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 64,
+      "broken_import": "util.url",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.url",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 65,
+      "broken_import": "util.url",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.url",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 66,
+      "broken_import": "util.url",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.url",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connectionpool.py",
+      "line": 73,
+      "broken_import": "packages.backports.weakref_finalize",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.packages.backports.weakref_finalize",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\_securetransport\\bindings.py",
+      "line": 66,
+      "broken_import": "packages.six",
+      "suggested_fix": ".venv.Lib.site-packages.six",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\appengine.py",
+      "line": 69,
+      "broken_import": "packages.six.moves.urllib.parse",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.parse",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\appengine.py",
+      "line": 72,
+      "broken_import": "util.retry",
+      "suggested_fix": ".venv.Lib.site-packages.pip._internal.utils.retry",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\appengine.py",
+      "line": 73,
+      "broken_import": "util.timeout",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.timeout",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\pyopenssl.py",
+      "line": 65,
+      "broken_import": "OpenSSL.crypto",
+      "suggested_fix": "engines.sovereign_war_room.swr.crypto",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\pyopenssl.py",
+      "line": 95,
+      "broken_import": "util.ssl_",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.ssl_",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\pyopenssl.py",
+      "line": 185,
+      "broken_import": "OpenSSL.crypto",
+      "suggested_fix": "engines.sovereign_war_room.swr.crypto",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\pyopenssl.py",
+      "line": 86,
+      "broken_import": "packages.backports.makefile",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.packages.backports.makefile",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\securetransport.py",
+      "line": 84,
+      "broken_import": "util.ssl_",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.ssl_",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\securetransport.py",
+      "line": 85,
+      "broken_import": "_securetransport.bindings",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.contrib._securetransport.bindings",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\securetransport.py",
+      "line": 86,
+      "broken_import": "_securetransport.low_level",
+      "suggested_fix": ".venv.Lib.site-packages.argon2.low_level",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\securetransport.py",
+      "line": 99,
+      "broken_import": "packages.backports.makefile",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.packages.backports.makefile",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\socks.py",
+      "line": 82,
+      "broken_import": "util.url",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.url",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\filepost.py",
+      "line": 24,
+      "broken_import": "packages.six",
+      "suggested_fix": ".venv.Lib.site-packages.six",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\poolmanager.py",
+      "line": 31,
+      "broken_import": "packages.six.moves.urllib.parse",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.parse",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\poolmanager.py",
+      "line": 33,
+      "broken_import": "util.proxy",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.proxy",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\poolmanager.py",
+      "line": 34,
+      "broken_import": "util.retry",
+      "suggested_fix": ".venv.Lib.site-packages.pip._internal.utils.retry",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\poolmanager.py",
+      "line": 35,
+      "broken_import": "util.url",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.util.url",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\request.py",
+      "line": 21,
+      "broken_import": "packages.six.moves.urllib.parse",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.parse",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\response.py",
+      "line": 44,
+      "broken_import": "util.response",
+      "suggested_fix": ".venv.Lib.site-packages.urllib3.response",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\connection.py",
+      "line": 19,
+      "broken_import": "contrib",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.pip._vendor.urllib3.contrib.appengine, .venv.Lib.site-packages.pip._vendor.urllib3.contrib.ntlmpool, .venv.Lib.site-packages.pip._vendor.urllib3.contrib.pyopenssl",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\queue.py",
+      "line": 18,
+      "broken_import": "packages.six.moves",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.hooks.pre_safe_import_module.hook-setuptools.extern.six.moves, hook-setuptools.extern.six.moves, .venv.Lib.site-packages.PyInstaller.hooks.pre_safe_import_module.hook-six.moves",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\request.py",
+      "line": 20,
+      "broken_import": "packages.six",
+      "suggested_fix": ".venv.Lib.site-packages.six",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\response.py",
+      "line": 20,
+      "broken_import": "packages.six.moves",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.hooks.pre_safe_import_module.hook-setuptools.extern.six.moves, hook-setuptools.extern.six.moves, .venv.Lib.site-packages.PyInstaller.hooks.pre_safe_import_module.hook-six.moves",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\_modified.py",
+      "line": 26,
+      "broken_import": "compat.py39",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools.compat.py39",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\_msvccompiler.py",
+      "line": 17,
+      "broken_import": "compilers.C",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.setuptools._distutils.compilers.C.base, .venv.Lib.site-packages.setuptools._distutils.compilers.C.cygwin, .venv.Lib.site-packages.setuptools._distutils.compilers.C.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\ccompiler.py",
+      "line": 15,
+      "broken_import": "compat.numpy",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools._distutils.compat.numpy",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\ccompiler.py",
+      "line": 19,
+      "broken_import": "compilers.C",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.setuptools._distutils.compilers.C.base, .venv.Lib.site-packages.setuptools._distutils.compilers.C.cygwin, .venv.Lib.site-packages.setuptools._distutils.compilers.C.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\ccompiler.py",
+      "line": 20,
+      "broken_import": "compilers.C.base",
+      "suggested_fix": ".venv.Lib.site-packages.blinker.base",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\ccompiler.py",
+      "line": 27,
+      "broken_import": "compilers.C.errors",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\command\\check.py",
+      "line": 28,
+      "broken_import": "docutils.nodes",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.nodes",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\command\\check.py",
+      "line": 30,
+      "broken_import": "docutils.utils",
+      "suggested_fix": "utils.__init__",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\compat\\numpy.py",
+      "line": 16,
+      "broken_import": "compilers.C.base",
+      "suggested_fix": ".venv.Lib.site-packages.blinker.base",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\cygwinccompiler.py",
+      "line": 15,
+      "broken_import": "compilers.C",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.setuptools._distutils.compilers.C.base, .venv.Lib.site-packages.setuptools._distutils.compilers.C.cygwin, .venv.Lib.site-packages.setuptools._distutils.compilers.C.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\cygwinccompiler.py",
+      "line": 16,
+      "broken_import": "compilers.C.cygwin",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools._distutils.compilers.C.cygwin",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\errors.py",
+      "line": 23,
+      "broken_import": "compilers.C.errors",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\errors.py",
+      "line": 24,
+      "broken_import": "compilers.C.errors",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\errors.py",
+      "line": 25,
+      "broken_import": "compilers.C.errors",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\errors.py",
+      "line": 26,
+      "broken_import": "compilers.C.errors",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\errors.py",
+      "line": 27,
+      "broken_import": "compilers.C.errors",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\errors.py",
+      "line": 28,
+      "broken_import": "compilers.C.errors",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\unixccompiler.py",
+      "line": 17,
+      "broken_import": "compilers.C",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.setuptools._distutils.compilers.C.base, .venv.Lib.site-packages.setuptools._distutils.compilers.C.cygwin, .venv.Lib.site-packages.setuptools._distutils.compilers.C.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\zosccompiler.py",
+      "line": 15,
+      "broken_import": "compilers.C",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.setuptools._distutils.compilers.C.base, .venv.Lib.site-packages.setuptools._distutils.compilers.C.cygwin, .venv.Lib.site-packages.setuptools._distutils.compilers.C.errors",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\backports\\tarfile\\__init__.py",
+      "line": 62,
+      "broken_import": "compat.py38",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools._vendor.backports.tarfile.compat.py38",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\packaging\\metadata.py",
+      "line": 39,
+      "broken_import": "licenses",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.packaging.licenses._spdx, .venv.Lib.site-packages.packaging.licenses, .venv.Lib.site-packages.pip._vendor.packaging.licenses._spdx",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\wheel\\__main__.py",
+      "line": 33,
+      "broken_import": "_commands",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.setuptools._vendor.wheel._commands.convert, .venv.Lib.site-packages.setuptools._vendor.wheel._commands.pack, .venv.Lib.site-packages.setuptools._vendor.wheel._commands.tags",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\zipp\\__init__.py",
+      "line": 35,
+      "broken_import": "compat.py310",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools.compat.py310",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\zipp\\glob.py",
+      "line": 18,
+      "broken_import": "compat.py313",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools._vendor.zipp.compat.py313",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\command\\build_ext.py",
+      "line": 42,
+      "broken_import": "Cython.Distutils.build_ext",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools.command.build_ext",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\command\\editable_wheel.py",
+      "line": 61,
+      "broken_import": "_vendor.wheel.wheelfile",
+      "suggested_fix": ".venv.Lib.site-packages.wheel.wheelfile",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\config\\pyprojecttoml.py",
+      "line": 51,
+      "broken_import": "compat.py310",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools.compat.py310",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\dist.py",
+      "line": 860,
+      "broken_import": "command.bdist_wheel",
+      "suggested_fix": ".venv.Lib.site-packages.wheel.bdist_wheel",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\modified.py",
+      "line": 25,
+      "broken_import": "_distutils._modified",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools._distutils._modified",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\tests\\config\\test_apply_pyprojecttoml.py",
+      "line": 31,
+      "broken_import": "ini2toml.api",
+      "suggested_fix": "api.__init__",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\tests\\config\\test_apply_pyprojecttoml.py",
+      "line": 43,
+      "broken_import": "downloads",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.setuptools.tests.config.downloads.preload, .venv.Lib.site-packages.setuptools.tests.config.downloads, .venv_prod.Lib.site-packages.setuptools.tests.config.downloads.preload",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\tests\\config\\test_pyprojecttoml.py",
+      "line": 21,
+      "broken_import": "tomli_w",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.pip._vendor.tomli_w._writer, .venv.Lib.site-packages.pip._vendor.tomli_w, .venv_prod.Lib.site-packages.pip._vendor.tomli_w._writer",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\tests\\test_config_discovery.py",
+      "line": 32,
+      "broken_import": "integration.helpers",
+      "suggested_fix": "utils.helpers",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\tests\\test_find_packages.py",
+      "line": 26,
+      "broken_import": "compat.py39",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools.compat.py39",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\tests\\test_find_py_modules.py",
+      "line": 23,
+      "broken_import": "compat.py39",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools.compat.py39",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\wheel\\__main__.py",
+      "line": 33,
+      "broken_import": "_commands",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.setuptools._vendor.wheel._commands.convert, .venv.Lib.site-packages.setuptools._vendor.wheel._commands.pack, .venv.Lib.site-packages.setuptools._vendor.wheel._commands.tags",
+      "severity": "HIGH"
+    },
+    {
+      "file": "archive\\external\\Cerberus\\src\\cerberus\\guardians\\__init__.py",
+      "line": 13,
+      "broken_import": "cerberus.guardians.base",
+      "suggested_fix": ".venv.Lib.site-packages.blinker.base",
+      "severity": "HIGH"
+    },
+    {
+      "file": "archive\\tests\\test_storage_and_interfaces.py",
+      "line": 29,
+      "broken_import": "app.core.interfaces",
+      "suggested_fix": ".venv.Lib.site-packages.httpcore._async.interfaces",
+      "severity": "HIGH"
+    },
+    {
+      "file": "cognition\\liara\\agency.py",
+      "line": 28,
+      "broken_import": "app.temporal.client",
+      "suggested_fix": ".venv.Lib.site-packages.temporalio.client",
+      "severity": "HIGH"
+    },
+    {
+      "file": "cognition\\liara\\worker.py",
+      "line": 29,
+      "broken_import": "app.temporal.client",
+      "suggested_fix": ".venv.Lib.site-packages.temporalio.client",
+      "severity": "HIGH"
+    },
+    {
+      "file": "docs\\internal\\archive\\demo_shadow_analyzers.py",
+      "line": 35,
+      "broken_import": "shadow_thirst.compiler",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.compiler",
+      "severity": "HIGH"
+    },
+    {
+      "file": "docs\\shadow_thirst\\STATIC_ANALYZERS_DEMO.py",
+      "line": 39,
+      "broken_import": "shadow_thirst.compiler",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.compiler",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\atlas\\cli\\atlas_cli.py",
+      "line": 56,
+      "broken_import": "atlas.config.loader",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.loader",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\atlas\\core\\bayesian_engine.py",
+      "line": 35,
+      "broken_import": "atlas.config.loader",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.loader",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\atlas\\core\\drivers\\calculator.py",
+      "line": 29,
+      "broken_import": "atlas.config.loader",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.loader",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\atlas\\core\\drivers\\driver_engine_10d.py",
+      "line": 36,
+      "broken_import": "atlas.config.loader",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.loader",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\atlas\\core\\graph\\builder.py",
+      "line": 27,
+      "broken_import": "atlas.config.loader",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.loader",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\atlas\\core\\normalization\\normalizer.py",
+      "line": 29,
+      "broken_import": "atlas.config.loader",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.loader",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\atlas\\core\\projections\\simulator.py",
+      "line": 28,
+      "broken_import": "atlas.config.loader",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.loader",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\atlas\\core\\scoring\\scorer.py",
+      "line": 26,
+      "broken_import": "atlas.config.loader",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.loader",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\django_state\\tests\\test_integration.py",
+      "line": 15,
+      "broken_import": "evaluation",
+      "suggested_fix": "AMBIGUOUS: engines.django_state.evaluation.darpa_rubric, engines.django_state.evaluation.validators, engines.django_state.evaluation",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\sovereign_war_room\\cli.py",
+      "line": 23,
+      "broken_import": "swr",
+      "suggested_fix": "AMBIGUOUS: engines.sovereign_war_room.swr.api, engines.sovereign_war_room.swr.bundle, engines.sovereign_war_room.swr.core",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\sovereign_war_room\\demo.py",
+      "line": 19,
+      "broken_import": "swr",
+      "suggested_fix": "AMBIGUOUS: engines.sovereign_war_room.swr.api, engines.sovereign_war_room.swr.bundle, engines.sovereign_war_room.swr.core",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\sovereign_war_room\\tests\\test_core.py",
+      "line": 17,
+      "broken_import": "swr",
+      "suggested_fix": "AMBIGUOUS: engines.sovereign_war_room.swr.api, engines.sovereign_war_room.swr.bundle, engines.sovereign_war_room.swr.core",
+      "severity": "HIGH"
+    },
+    {
+      "file": "engines\\sovereign_war_room\\web\\app.py",
+      "line": 26,
+      "broken_import": "swr",
+      "suggested_fix": "AMBIGUOUS: engines.sovereign_war_room.swr.api, engines.sovereign_war_room.swr.bundle, engines.sovereign_war_room.swr.core",
+      "severity": "HIGH"
+    },
+    {
+      "file": "examples\\temporal\\batch_workflows_example.py",
+      "line": 24,
+      "broken_import": "app.temporal.client",
+      "suggested_fix": ".venv.Lib.site-packages.temporalio.client",
+      "severity": "HIGH"
+    },
+    {
+      "file": "examples\\temporal\\image_generation_example.py",
+      "line": 24,
+      "broken_import": "app.temporal.client",
+      "suggested_fix": ".venv.Lib.site-packages.temporalio.client",
+      "severity": "HIGH"
+    },
+    {
+      "file": "examples\\temporal\\learning_workflow_example.py",
+      "line": 24,
+      "broken_import": "app.temporal.client",
+      "suggested_fix": ".venv.Lib.site-packages.temporalio.client",
+      "severity": "HIGH"
+    },
+    {
+      "file": "gradle-evolution\\db\\graph_db.py",
+      "line": 90,
+      "broken_import": "gradle_evolution.db.schema",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.schema",
+      "severity": "HIGH"
+    },
+    {
+      "file": "gradle-evolution\\db\\memory_manager.py",
+      "line": 89,
+      "broken_import": "gradle_evolution.db.schema",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.schema",
+      "severity": "HIGH"
+    },
+    {
+      "file": "gradle-evolution\\db\\queries.py",
+      "line": 45,
+      "broken_import": "gradle_evolution.db.schema",
+      "suggested_fix": ".venv.Lib.site-packages.pydantic.schema",
+      "severity": "HIGH"
+    },
+    {
+      "file": "project_ai\\orchestrator\\boot_sequence.py",
+      "line": 18,
+      "broken_import": "subsystems",
+      "suggested_fix": "AMBIGUOUS: project_ai.orchestrator.subsystems.cerberus_integration, project_ai.orchestrator.subsystems.monolith_integration, project_ai.orchestrator.subsystems.thirsty_lang_integration",
+      "severity": "HIGH"
+    },
+    {
+      "file": "project_ai\\orchestrator\\subsystems\\cerberus_integration.py",
+      "line": 35,
+      "broken_import": "cerberus",
+      "suggested_fix": "AMBIGUOUS: archive.external.Cerberus.src.cerberus.guardians.base, archive.external.Cerberus.src.cerberus.guardians, archive.src.cerberus.sase.policy.containment",
+      "severity": "HIGH"
+    },
+    {
+      "file": "project_ai\\orchestrator\\subsystems\\waterfall_integration.py",
+      "line": 27,
+      "broken_import": "thirstys_waterfall",
+      "suggested_fix": "AMBIGUOUS: archive.external.Thirstys-Waterfall.thirstys_waterfall.wifi_network.wifi_security, external.Thirstys-Waterfall.thirstys_waterfall.cli, external.Thirstys-Waterfall.thirstys_waterfall.kill_switch",
+      "severity": "HIGH"
+    },
+    {
+      "file": "project_ai\\showcase.py",
+      "line": 47,
+      "broken_import": "shadow_thirst.bytecode",
+      "suggested_fix": ".venv.Lib.site-packages.PyInstaller.depend.bytecode",
+      "severity": "HIGH"
+    },
+    {
+      "file": "scripts\\demo\\proof_of_sovereignty_exec.py",
+      "line": 19,
+      "broken_import": "shadow_thirst.compiler",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.compiler",
+      "severity": "HIGH"
+    },
+    {
+      "file": "scripts\\verify\\verify_runbook.py",
+      "line": 239,
+      "broken_import": "shadow_thirst.compiler",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.compiler",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\cli.py",
+      "line": 220,
+      "broken_import": "app.health.report",
+      "suggested_fix": ".venv.Lib.site-packages.PIL.report",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\memory_optimization\\compression_engine.py",
+      "line": 41,
+      "broken_import": "lz4.frame",
+      "suggested_fix": ".venv.Lib.site-packages.pandas.core.frame",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\observability.py",
+      "line": 38,
+      "broken_import": "opentelemetry",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.temporalio.contrib.opentelemetry.workflow, .venv.Lib.site-packages.temporalio.contrib.opentelemetry._id_generator, .venv.Lib.site-packages.temporalio.contrib.opentelemetry._interceptor",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\observability.py",
+      "line": 39,
+      "broken_import": "opentelemetry.sdk.resources",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.distlib.resources",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\observability.py",
+      "line": 41,
+      "broken_import": "opentelemetry.sdk.trace.export",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.temporalio.api.export, .venv.Lib.site-packages.temporalio.api.export.v1.message_pb2, .venv.Lib.site-packages.temporalio.api.export.v1",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\risingwave_integration.py",
+      "line": 35,
+      "broken_import": "psycopg2.extras",
+      "suggested_fix": ".venv.Lib.site-packages.numpy.ma.extras",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\shadow_resource_limiter.py",
+      "line": 114,
+      "broken_import": "shadow_thirst.compiler",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.compiler",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 53,
+      "broken_import": "bindsnet.encoding",
+      "suggested_fix": ".venv.Lib.site-packages.itsdangerous.encoding",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 55,
+      "broken_import": "bindsnet.network",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.pip._internal.network.auth, .venv.Lib.site-packages.pip._internal.network.cache, .venv.Lib.site-packages.pip._internal.network.download",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 56,
+      "broken_import": "bindsnet.network.nodes",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.nodes",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 66,
+      "broken_import": "sinabs.layers",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.PyInstaller.hooks.hook-scapy.layers.all, hook-scapy.layers.all, .venv_prod.Lib.site-packages.PyInstaller.hooks.hook-scapy.layers.all",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 76,
+      "broken_import": "snntorch.functional",
+      "suggested_fix": ".venv.Lib.site-packages.pygments.lexers.functional",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 94,
+      "broken_import": "norse.torch",
+      "suggested_fix": "AMBIGUOUS: .venv.Lib.site-packages.scipy._lib.array_api_compat.torch.fft, .venv.Lib.site-packages.scipy._lib.array_api_compat.torch.linalg, .venv.Lib.site-packages.scipy._lib.array_api_compat.torch._aliases",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 111,
+      "broken_import": "lava.magma.core.model.py.model",
+      "suggested_fix": ".venv.Lib.site-packages.cffi.model",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 112,
+      "broken_import": "lava.magma.core.process.process",
+      "suggested_fix": ".venv.Lib.site-packages.joblib.externals.loky.backend.process",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 121,
+      "broken_import": "rockpool.nn.modules",
+      "suggested_fix": ".venv.Lib.site-packages.numpy.typing.tests.data.pass.modules",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_mlops.py",
+      "line": 53,
+      "broken_import": "jax.numpy",
+      "suggested_fix": ".venv.Lib.site-packages.setuptools._distutils.compat.numpy",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\core\\snn_mlops.py",
+      "line": 71,
+      "broken_import": "paho.mqtt.client",
+      "suggested_fix": ".venv.Lib.site-packages.temporalio.client",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\agents\\agent.py",
+      "line": 25,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\core\\cognitive_contract.py",
+      "line": 27,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\core\\consigliere.py",
+      "line": 195,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\core\\consigliere.py",
+      "line": 243,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\core\\consigliere.py",
+      "line": 354,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\core\\mission.py",
+      "line": 25,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\core\\mission.py",
+      "line": 372,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\core\\simulation.py",
+      "line": 59,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\core\\simulation.py",
+      "line": 132,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\core\\simulation.py",
+      "line": 199,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\core\\world.py",
+      "line": 24,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\departments\\department.py",
+      "line": 21,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\interfaces\\contract.py",
+      "line": 25,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\server\\app.py",
+      "line": 29,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\server\\app.py",
+      "line": 245,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\server\\app.py",
+      "line": 423,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\server\\app.py",
+      "line": 488,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\miniature_office\\tools\\supply_store.py",
+      "line": 25,
+      "broken_import": "app.miniature_office.core.entity",
+      "suggested_fix": ".venv.Lib.site-packages.markdown_it.rules_inline.entity",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\app\\temporal\\worker.py",
+      "line": 35,
+      "broken_import": "app.temporal.client",
+      "suggested_fix": ".venv.Lib.site-packages.temporalio.client",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\psia\\schemas\\__init__.py",
+      "line": 56,
+      "broken_import": "psia.schemas.request",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.request",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\psia\\waterfall\\engine.py",
+      "line": 41,
+      "broken_import": "psia.events",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.events",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\psia\\waterfall\\engine.py",
+      "line": 43,
+      "broken_import": "psia.schemas.request",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.request",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\shadow_thirst\\__init__.py",
+      "line": 41,
+      "broken_import": "shadow_thirst.compiler",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.compiler",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\shadow_thirst\\__init__.py",
+      "line": 43,
+      "broken_import": "shadow_thirst.lexer",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.lexer",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\shadow_thirst\\compiler.py",
+      "line": 40,
+      "broken_import": "shadow_thirst.bytecode",
+      "suggested_fix": ".venv.Lib.site-packages.PyInstaller.depend.bytecode",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\shadow_thirst\\demo.py",
+      "line": 30,
+      "broken_import": "shadow_thirst.compiler",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.compiler",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\shadow_thirst\\parser.py",
+      "line": 57,
+      "broken_import": "shadow_thirst.lexer",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.lexer",
+      "severity": "HIGH"
+    },
+    {
+      "file": "src\\shadow_thirst\\vm.py",
+      "line": 40,
+      "broken_import": "shadow_thirst.bytecode",
+      "suggested_fix": ".venv.Lib.site-packages.PyInstaller.depend.bytecode",
+      "severity": "HIGH"
+    },
+    {
+      "file": "taar\\watcher.py",
+      "line": 27,
+      "broken_import": "watchdog.events",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.events",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\temporal\\test_client.py",
+      "line": 18,
+      "broken_import": "app.temporal.client",
+      "suggested_fix": ".venv.Lib.site-packages.temporalio.client",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_advanced_security_agents.py",
+      "line": 158,
+      "broken_import": "app.agents",
+      "suggested_fix": "AMBIGUOUS: .antigravity.agents.project_ai_agent, archive.external.Thirstys-Monolith.src.app.agents.codex_deus_maximus, archive.src.app.agents.codex_deus_maximus",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_health_report.py",
+      "line": 31,
+      "broken_import": "app.health.report",
+      "suggested_fix": ".venv.Lib.site-packages.PIL.report",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_health_report.py",
+      "line": 346,
+      "broken_import": "app.health.report",
+      "suggested_fix": ".venv.Lib.site-packages.PIL.report",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_memory_optimization.py",
+      "line": 27,
+      "broken_import": "app.core.memory_optimization",
+      "suggested_fix": "AMBIGUOUS: src.app.core.memory_optimization.adaptive_policy_engine, src.app.core.memory_optimization.compression_engine, src.app.core.memory_optimization.deduplication_engine",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_plugin_sample.py",
+      "line": 17,
+      "broken_import": "app.plugins",
+      "suggested_fix": "AMBIGUOUS: security.penetration-testing-tools.red-teaming.RedWarden.plugins.IProxyPlugin, security.penetration-testing-tools.red-teaming.RedWarden.plugins.malleable_redirector, security.penetration-testing-tools.red-teaming.RedWarden.plugins",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_psia_concurrency.py",
+      "line": 28,
+      "broken_import": "psia.concurrency",
+      "suggested_fix": ".venv.Lib.site-packages.fastapi.concurrency",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_psia_gate.py",
+      "line": 75,
+      "broken_import": "psia.schemas.request",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.request",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_psia_integration.py",
+      "line": 38,
+      "broken_import": "psia.schemas.request",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.request",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_psia_schemas.py",
+      "line": 63,
+      "broken_import": "psia.schemas.request",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.request",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_psia_schemas.py",
+      "line": 563,
+      "broken_import": "psia.events",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.events",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_psia_schemas.py",
+      "line": 574,
+      "broken_import": "psia.events",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.events",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_psia_schemas.py",
+      "line": 584,
+      "broken_import": "psia.events",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.events",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_psia_schemas.py",
+      "line": 594,
+      "broken_import": "psia.events",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.events",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_psia_waterfall.py",
+      "line": 32,
+      "broken_import": "psia.events",
+      "suggested_fix": ".venv.Lib.site-packages.yaml.events",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_psia_waterfall.py",
+      "line": 34,
+      "broken_import": "psia.schemas.request",
+      "suggested_fix": ".venv.Lib.site-packages.pip._vendor.urllib3.request",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_shadow_thirst.py",
+      "line": 28,
+      "broken_import": "shadow_thirst.bytecode",
+      "suggested_fix": ".venv.Lib.site-packages.PyInstaller.depend.bytecode",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_shadow_thirst.py",
+      "line": 29,
+      "broken_import": "shadow_thirst.compiler",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.compiler",
+      "severity": "HIGH"
+    },
+    {
+      "file": "tests\\test_shadow_thirst.py",
+      "line": 32,
+      "broken_import": "shadow_thirst.lexer",
+      "suggested_fix": ".venv.Lib.site-packages.jinja2.lexer",
+      "severity": "HIGH"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\__main__.py",
+      "line": 45,
+      "broken_import": "argcomplete",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\building\\osx.py",
+      "line": 787,
+      "broken_import": "xattr",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\depend\\bindepend.py",
+      "line": 556,
+      "broken_import": "macholib.dyld",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\depend\\bindepend.py",
+      "line": 557,
+      "broken_import": "macholib.mach_o",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\depend\\bindepend.py",
+      "line": 558,
+      "broken_import": "macholib.MachO",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\depend\\bindepend.py",
+      "line": 561,
+      "broken_import": "macholib.dyld",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\depend\\bindepend.py",
+      "line": 1213,
+      "broken_import": "macholib.MachO",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\hook-PySide2.Qwt5.py",
+      "line": 38,
+      "broken_import": "PySide2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\hook-kivy.py",
+      "line": 30,
+      "broken_import": "kivy.tools.packaging.pyinstaller_hooks",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\hook-kivy.py",
+      "line": 36,
+      "broken_import": "kivy.tools.packaging.pyinstaller_hooks",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks\\pyi_rth_django.py",
+      "line": 30,
+      "broken_import": "django.utils.autoreload",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\cliutils\\archive_viewer.py",
+      "line": 37,
+      "broken_import": "argcomplete",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\cliutils\\bindepend.py",
+      "line": 36,
+      "broken_import": "argcomplete",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\cliutils\\grab_version.py",
+      "line": 30,
+      "broken_import": "argcomplete",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\cliutils\\makespec.py",
+      "line": 36,
+      "broken_import": "argcomplete",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\cliutils\\set_version.py",
+      "line": 30,
+      "broken_import": "argcomplete",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\osx.py",
+      "line": 36,
+      "broken_import": "macholib.mach_o",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\osx.py",
+      "line": 51,
+      "broken_import": "macholib.MachO",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\PyInstaller\\utils\\osx.py",
+      "line": 266,
+      "broken_import": "macholib.mach_o",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks\\pyi_rth_findlibs.py",
+      "line": 43,
+      "broken_import": "findlibs",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks\\pyi_rth_nltk.py",
+      "line": 28,
+      "broken_import": "nltk",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks\\pyi_rth_pygraphviz.py",
+      "line": 26,
+      "broken_import": "pygraphviz",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks\\pyi_rth_traitlets.py",
+      "line": 32,
+      "broken_import": "traitlets.traitlets",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks\\pyi_rth_usb.py",
+      "line": 41,
+      "broken_import": "usb.backend.openusb",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks\\pyi_rth_usb.py",
+      "line": 34,
+      "broken_import": "usb.backend.libusb10",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks\\pyi_rth_usb.py",
+      "line": 38,
+      "broken_import": "usb.backend.libusb01",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks\\pyi_rth_usb.py",
+      "line": 36,
+      "broken_import": "usb.backend.libusb1",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks\\pyi_rth_usb.py",
+      "line": 40,
+      "broken_import": "usb.backend.libusb0",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-enchant.py",
+      "line": 60,
+      "broken_import": "enchant._enchant",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-enchant.py",
+      "line": 75,
+      "broken_import": "enchant",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-ffpyplayer.py",
+      "line": 37,
+      "broken_import": "ffpyplayer",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-gribapi.py",
+      "line": 45,
+      "broken_import": "eccodes",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-nltk.py",
+      "line": 28,
+      "broken_import": "nltk",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-notebook.py",
+      "line": 29,
+      "broken_import": "jupyter_core.paths",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-pylsl.py",
+      "line": 34,
+      "broken_import": "pylsl",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-pylsl.py",
+      "line": 42,
+      "broken_import": "pylsl.pylsl",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks\\hook-pypemicro.py",
+      "line": 40,
+      "broken_import": "pypemicro",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_internal\\network\\auth.py",
+      "line": 94,
+      "broken_import": "keyring",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_internal\\network\\xmlrpc.py",
+      "line": 29,
+      "broken_import": "_typeshed",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\cachecontrol\\caches\\redis_cache.py",
+      "line": 27,
+      "broken_import": "redis",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 34,
+      "broken_import": "StringIO",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 39,
+      "broken_import": "__builtin__",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 40,
+      "broken_import": "ConfigParser",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 41,
+      "broken_import": "urlparse",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 57,
+      "broken_import": "urllib2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 58,
+      "broken_import": "urllib2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 72,
+      "broken_import": "httplib",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 73,
+      "broken_import": "xmlrpclib",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 74,
+      "broken_import": "Queue",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 75,
+      "broken_import": "HTMLParser",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 76,
+      "broken_import": "htmlentitydefs",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 71,
+      "broken_import": "urllib2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 703,
+      "broken_import": "_abcoll",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\compat.py",
+      "line": 700,
+      "broken_import": "dummy_thread",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\scripts.py",
+      "line": 164,
+      "broken_import": "java",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\distlib\\util.py",
+      "line": 45,
+      "broken_import": "dummy_threading",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\msgpack\\__init__.py",
+      "line": 29,
+      "broken_import": "_cmsgpack",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\msgpack\\fallback.py",
+      "line": 22,
+      "broken_import": "__pypy__",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\msgpack\\fallback.py",
+      "line": 23,
+      "broken_import": "__pypy__.builders",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\pkg_resources\\__init__.py",
+      "line": 116,
+      "broken_import": "_typeshed",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\platformdirs\\android.py",
+      "line": 194,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\platformdirs\\android.py",
+      "line": 212,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\platformdirs\\android.py",
+      "line": 230,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\platformdirs\\android.py",
+      "line": 248,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\platformdirs\\android.py",
+      "line": 266,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\platformdirs\\android.py",
+      "line": 160,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\pygments\\sphinxext.py",
+      "line": 28,
+      "broken_import": "docutils",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\pygments\\sphinxext.py",
+      "line": 29,
+      "broken_import": "docutils.statemachine",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\pygments\\sphinxext.py",
+      "line": 30,
+      "broken_import": "docutils.parsers.rst",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\requests\\cookies.py",
+      "line": 34,
+      "broken_import": "dummy_threading",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\requests\\help.py",
+      "line": 38,
+      "broken_import": "OpenSSL",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\rich\\live.py",
+      "line": 266,
+      "broken_import": "ipywidgets",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\__init__.py",
+      "line": 42,
+      "broken_import": "urllib3_secure_extra",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connection.py",
+      "line": 27,
+      "broken_import": "packages.six.moves.http_client",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\connection.py",
+      "line": 28,
+      "broken_import": "packages.six.moves.http_client",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\ntlmpool.py",
+      "line": 26,
+      "broken_import": "ntlm",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\ntlmpool.py",
+      "line": 29,
+      "broken_import": "packages.six.moves.http_client",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\pyopenssl.py",
+      "line": 66,
+      "broken_import": "OpenSSL.SSL",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\exceptions.py",
+      "line": 17,
+      "broken_import": "packages.six.moves.http_client",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\packages\\six.py",
+      "line": 740,
+      "broken_import": "StringIO",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\pip\\_vendor\\urllib3\\util\\queue.py",
+      "line": 22,
+      "broken_import": "Queue",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\archive_util.py",
+      "line": 42,
+      "broken_import": "grp",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\command\\check.py",
+      "line": 27,
+      "broken_import": "docutils.frontend",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\command\\check.py",
+      "line": 29,
+      "broken_import": "docutils.parsers.rst",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\dist.py",
+      "line": 57,
+      "broken_import": "_typeshed",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\tests\\test_build_ext.py",
+      "line": 163,
+      "broken_import": "xx",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_distutils\\tests\\unix_compat.py",
+      "line": 18,
+      "broken_import": "grp",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\backports\\tarfile\\__init__.py",
+      "line": 69,
+      "broken_import": "grp",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\jaraco\\text\\__init__.py",
+      "line": 25,
+      "broken_import": "importlib_resources",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\jaraco\\text\\show-newlines.py",
+      "line": 16,
+      "broken_import": "inflect",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\platformdirs\\android.py",
+      "line": 194,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\platformdirs\\android.py",
+      "line": 212,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\platformdirs\\android.py",
+      "line": 230,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\platformdirs\\android.py",
+      "line": 248,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\platformdirs\\android.py",
+      "line": 266,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\platformdirs\\android.py",
+      "line": 160,
+      "broken_import": "jnius",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\_vendor\\wheel\\wheelfile.py",
+      "line": 32,
+      "broken_import": "_typeshed",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\command\\bdist_egg.py",
+      "line": 40,
+      "broken_import": "_typeshed",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\command\\build_ext.py",
+      "line": 86,
+      "broken_import": "dl",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\compat\\py311.py",
+      "line": 22,
+      "broken_import": "_typeshed",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\config\\_validate_pyproject\\formats.py",
+      "line": 226,
+      "broken_import": "trove_classifiers",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\setuptools\\glob.py",
+      "line": 32,
+      "broken_import": "_typeshed",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": ".venv_prod\\Lib\\site-packages\\wheel\\wheelfile.py",
+      "line": 32,
+      "broken_import": "_typeshed",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "archive\\history\\timeline\\h323_sec_profile\\H323_SEC_PROFILE_v1.py",
+      "line": 239,
+      "broken_import": "pysnmp.hlapi",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "archive\\history\\timeline\\unity\\ProjectAI\\Library\\PackageCache\\com.unity.services.analytics@5.1.1\\Scripts~\\iso4217\\convertCurrency.py",
+      "line": 18,
+      "broken_import": "xmltodict",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "archive\\src\\security\\key_management.py",
+      "line": 603,
+      "broken_import": "PyKCS11",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "archive\\src\\security\\key_management.py",
+      "line": 197,
+      "broken_import": "azure.keyvault.keys",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "archive\\src\\security\\key_management.py",
+      "line": 218,
+      "broken_import": "PyKCS11",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "demos\\thirstys_security_demo\\demo_server.py",
+      "line": 22,
+      "broken_import": "flask_cors",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "deploy\\single-node-core\\security\\vault\\vault_client.py",
+      "line": 38,
+      "broken_import": "hvac",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "examples\\INTEGRATION_GUIDE.py",
+      "line": 23,
+      "broken_import": "app.gui.dashboard_utils",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\clickhouse_integration.py",
+      "line": 34,
+      "broken_import": "clickhouse_driver",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\memory_optimization\\compression_engine.py",
+      "line": 49,
+      "broken_import": "blosc2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\observability.py",
+      "line": 40,
+      "broken_import": "opentelemetry.sdk.trace",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\optical_flow.py",
+      "line": 135,
+      "broken_import": "cv2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\rag_system.py",
+      "line": 124,
+      "broken_import": "sentence_transformers",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\rag_system.py",
+      "line": 340,
+      "broken_import": "sentence_transformers",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\risingwave_integration.py",
+      "line": 34,
+      "broken_import": "psycopg2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 52,
+      "broken_import": "bindsnet",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 54,
+      "broken_import": "bindsnet.learning",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 57,
+      "broken_import": "bindsnet.network.topology",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 65,
+      "broken_import": "sinabs",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 67,
+      "broken_import": "sinabs.from_torch",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 75,
+      "broken_import": "snntorch",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 84,
+      "broken_import": "spikingjelly",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 85,
+      "broken_import": "spikingjelly.activation_based",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 93,
+      "broken_import": "norse",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 102,
+      "broken_import": "brian2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 110,
+      "broken_import": "lava",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 120,
+      "broken_import": "rockpool",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 129,
+      "broken_import": "nengo",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_integration.py",
+      "line": 137,
+      "broken_import": "nir",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_mlops.py",
+      "line": 52,
+      "broken_import": "jax",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_mlops.py",
+      "line": 54,
+      "broken_import": "jax",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_mlops.py",
+      "line": 62,
+      "broken_import": "nir",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\core\\snn_mlops.py",
+      "line": 63,
+      "broken_import": "nir",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\governance\\audit_log.py",
+      "line": 721,
+      "broken_import": "redis",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\gui\\leather_book_dashboard.py",
+      "line": 42,
+      "broken_import": "app.gui.dashboard_handlers",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\pipeline\\signal_flows.py",
+      "line": 55,
+      "broken_import": "redis",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\plugins\\ttp_audio_processing.py",
+      "line": 97,
+      "broken_import": "whisper",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\plugins\\ttp_audio_processing.py",
+      "line": 104,
+      "broken_import": "pydub",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\plugins\\ttp_audio_processing.py",
+      "line": 118,
+      "broken_import": "librosa",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\plugins\\ttp_audio_processing.py",
+      "line": 289,
+      "broken_import": "pydub",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\app\\plugins\\ttp_audio_processing.py",
+      "line": 187,
+      "broken_import": "whisper",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\cognition\\adapters\\memory_adapter.py",
+      "line": 109,
+      "broken_import": "sentence_transformers",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\security\\audit_hardening.py",
+      "line": 467,
+      "broken_import": "azure.storage.blob",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\security\\audit_hardening.py",
+      "line": 177,
+      "broken_import": "azure.storage.blob",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\security\\key_management.py",
+      "line": 605,
+      "broken_import": "PyKCS11",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\security\\key_management.py",
+      "line": 198,
+      "broken_import": "azure.keyvault.keys",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "src\\security\\key_management.py",
+      "line": 219,
+      "broken_import": "PyKCS11",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "taar\\watcher.py",
+      "line": 32,
+      "broken_import": "watchdog.observers",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "tests\\test_extract_with_permissions.py",
+      "line": 18,
+      "broken_import": "extract_with_permissions",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "tests\\test_optical_flow.py",
+      "line": 86,
+      "broken_import": "cv2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "tests\\test_optical_flow.py",
+      "line": 112,
+      "broken_import": "cv2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "tests\\test_optical_flow.py",
+      "line": 397,
+      "broken_import": "cv2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "tests\\test_optical_flow.py",
+      "line": 430,
+      "broken_import": "cv2",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    },
+    {
+      "file": "tests\\test_platform_tiers.py",
+      "line": 538,
+      "broken_import": "app.gui.dashboard_main",
+      "suggested_fix": "NOT FOUND IN REPO",
+      "severity": "UNKNOWN"
+    }
+  ]
+}
