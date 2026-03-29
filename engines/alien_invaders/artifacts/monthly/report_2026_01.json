@@ -1,0 +1,13 @@
+{
+  "month": "2026_01",
+  "num_events": 1,
+  "events": [
+    {
+      "id": "evt_alien_escalation_30",
+      "type": "alien_escalation",
+      "severity": "high",
+      "description": "Alien forces increase presence in solar system",
+      "day": 30
+    }
+  ]
+}

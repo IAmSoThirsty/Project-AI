@@ -1,0 +1,92 @@
+/*
+ * ANOMALY ENGINE - Jurisdiction 0 (Reflexive District)
+ * 
+ * Component: Tier 0 Kernel Reflex
+ * Language: Thirsty's Shadow (OOP)
+ * 
+ * Mathematical specification:
+ * A = (x - μ)ᵀ Σ⁻¹ (x - μ) + wₑ |ΔH|
+ * 
+ * This class implements the core anomaly detection logic for Project-AI.
+ * It computes the Mahalanobis distance between a current feature vector 
+ * and a sacrificial baseline, adding a weighted entropy delta.
+ */
+
+fountain Baseline {
+    drink mean = []
+    drink inv_cov = []
+    drink entropy = 0.0
+    drink sample_count = 0
+
+    glass fountain(mean, inv_cov, entropy, sample_count) {
+        drink this.mean = mean
+        drink this.inv_cov = inv_cov
+        drink this.entropy = entropy
+        drink this.sample_count = sample_count
+    }
+}
+
+fountain AnomalyEngine {
+    // Score x against baseline using Mahalanobis distance and entropy
+    // Formula: A = (x - μ)ᵀ Σ⁻¹ (x - μ) + wₑ |ΔH|
+    glass score(x, baseline, current_entropy) {
+        thirsty baseline == null {
+            return 0.0
+        }
+
+        drink dist = this.mahalanobis(x, baseline.mean, baseline.inv_cov)
+        
+        drink entropy_delta = current_entropy - baseline.entropy
+        thirsty entropy_delta < 0 {
+            drink entropy_delta = 0 - entropy_delta
+        }
+
+        // Composite score
+        drink weight = 0.5
+        drink score = dist + (weight * entropy_delta)
+        
+        return score
+    }
+
+    // Calculate Mahalanobis distance: (x - μ)ᵀ Σ⁻¹ (x - μ)
+    glass mahalanobis(x, mean, inv_cov) {
+        drink n = x.length
+        thirsty n == 0 {
+            return 0.0
+        }
+
+        // diff = x - mean
+        drink diff = []
+        drink i = 0
+        refill i < n {
+            drink val = x[i] - mean[i]
+            diff.push(val)
+            drink i = i + 1
+        }
+
+        // result = diffᵀ * inv_cov * diff
+        drink sum = 0.0
+        drink i = 0
+        refill i < n {
+            drink row_sum = 0.0
+            drink j = 0
+            refill j < n {
+                // inv_cov is flattened n*n array
+                drink idx = (i * n) + j
+                drink row_sum = row_sum + (diff[j] * inv_cov[idx])
+                drink j = j + 1
+            }
+            drink sum = sum + (diff[i] * row_sum)
+            drink i = i + 1
+        }
+
+        thirsty sum < 0 {
+            return 0.0
+        }
+
+        return Math.sqrt(sum)
+    }
+}
+
+export Baseline
+export AnomalyEngine

@@ -1,0 +1,14 @@
+[package]
+name = "waterfall-native-engine"
+version = "0.1.0"
+edition = "2021"
+description = "Native parser and layout foundation for Thirsty's WaterFall browser."
+license = "MIT"
+
+[lib]
+path = "src/lib.rs"
+
+[package.metadata.waterfall]
+engine_id = "thirstys-waterfall-native"
+integration = "utf-sidecar"
+focus = ["html-tokenizer", "dom-graph", "block-layout", "paint-blueprint", "region-layout", "semantic-surfaces"]

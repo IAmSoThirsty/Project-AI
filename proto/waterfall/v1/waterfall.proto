@@ -1,0 +1,144 @@
+syntax = "proto3";
+
+package waterfall.v1;
+
+option go_package = "github.com/IAmSoThirsty/thirstys-waterfall/proto/waterfall/v1";
+option java_package = "com.thirsty.waterfall.v1";
+
+message Empty {}
+
+message BridgeHandshakeRequest {
+  string protocol_version = 1;
+  string client_name = 2;
+  repeated string requested_capabilities = 3;
+}
+
+message BridgeHandshakeResponse {
+  bool accepted = 1;
+  string protocol_version = 2;
+  string service_version = 3;
+  repeated string granted_capabilities = 4;
+  string message = 5;
+}
+
+message BridgeRequestEnvelope {
+  string request_id = 1;
+  string method = 2;
+  bytes payload = 3;
+  uint32 timeout_ms = 4;
+  repeated string capabilities = 5;
+}
+
+message BridgeResponseEnvelope {
+  string request_id = 1;
+  string method = 2;
+  bool ok = 3;
+  bytes payload = 4;
+  string error_code = 5;
+  string error_message = 6;
+  repeated string warnings = 7;
+}
+
+message PingRequest {}
+
+message PingResponse {
+  bool ok = 1;
+  string version = 2;
+  string protocol_version = 3;
+  repeated string capabilities = 4;
+}
+
+message SearchQuery {
+  string query = 1;
+  string region_bias = 2;
+  bool safe_search = 3;
+  uint32 recency_bias_hours = 4;
+  repeated string providers = 5;
+}
+
+message SearchResult {
+  string id = 1;
+  string title = 2;
+  string url = 3;
+  string snippet = 4;
+  string provider = 5;
+  string published = 6;
+  float relevance_score = 7;
+  repeated string categories = 8;
+}
+
+message SearchResponse {
+  repeated SearchResult results = 1;
+  uint64 total_hits = 2;
+  string query_id = 3;
+  repeated string warnings = 4;
+}
+
+message ConsigliereAuditRequest {
+  SearchQuery query = 1;
+  repeated SearchResult raw_results = 2;
+}
+
+message ConsigliereAuditResponse {
+  repeated string privacy_flags = 1;
+  repeated string source_clusters = 2;
+  repeated string explanation_cards = 3;
+  map<string, string> optional_summaries = 4;
+}
+
+message SecurityStatus {
+  bool vpn_enabled = 1;
+  repeated string firewall_profiles = 2;
+  string microvm_health = 3;
+  string ledger_head = 4;
+  bool download_gate_online = 5;
+  string orchestrator_mode = 6;
+  repeated string warnings = 7;
+}
+
+message VPNStateRequest {
+  bool enabled = 1;
+  string server = 2;
+}
+
+message DownloadScanRequest {
+  string path = 1;
+  string sha256 = 2;
+}
+
+message DownloadScanVerdict {
+  string verdict = 1;
+  uint32 risk_score = 2;
+  repeated string findings = 3;
+  string recommended_action = 4;
+}
+
+message PrivacyEvent {
+  string type = 1;
+  string summary = 2;
+  string target = 3;
+  uint64 timestamp = 4;
+  map<string, string> metadata = 5;
+}
+
+message UpdateManifest {
+  string version = 1;
+  string signature = 2;
+  string url = 3;
+  string channel = 4;
+  bool available = 5;
+  repeated string notes = 6;
+  string integrity_state = 7;
+}
+
+service Orchestrator {
+  rpc Ping(PingRequest) returns (PingResponse);
+  rpc Query(SearchQuery) returns (SearchResponse);
+  rpc AuditWithConsigliere(ConsigliereAuditRequest) returns (ConsigliereAuditResponse);
+  rpc GetSecurityStatus(Empty) returns (SecurityStatus);
+  rpc SetVPNState(VPNStateRequest) returns (Empty);
+  rpc TriggerDownloadGateScan(DownloadScanRequest) returns (DownloadScanVerdict);
+  rpc RecordPrivacyEvent(PrivacyEvent) returns (Empty);
+  rpc CheckForUpdates(Empty) returns (UpdateManifest);
+  rpc ApplyUpdate(UpdateManifest) returns (Empty);
+}
