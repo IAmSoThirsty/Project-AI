@@ -1,0 +1,33 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / async-demo.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / async-demo.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Async/await demonstration using cascade keyword
+
+// Define an async function using cascade keyword
+cascade fetchData(url) {
+  pour "Fetching data from " + url
+  drink result = await Http.get(url)
+  return result
+}
+
+// Another async function
+cascade processData(data) {
+  pour "Processing data..."
+  return "Processed: " + data
+}
+
+// Using async file I/O
+cascade readFileAsync(path) {
+  drink content = await File.readAsync(path)
+  return content
+}
+
+pour "Async demo complete!"

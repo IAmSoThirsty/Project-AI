@@ -1,0 +1,221 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / player.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / player.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Platformer Player Controller
+// Complete player implementation with movement, jumping, and animations
+
+import { Entity } from "engine/core/entity"
+import { BoxCollider } from "engine/physics/collision"
+import { Rigidbody } from "engine/physics/rigidbody"
+import { SpriteRenderer } from "engine/rendering/sprite"
+import { Animator } from "engine/rendering/animation"
+import { Input } from "engine/input/keyboard"
+
+glass Player extends Entity {
+  drink speed
+  drink jumpForce
+  drink health
+  drink maxHealth
+  drink isGrounded
+  drink canDoubleJump
+  drink hasDoubleJumped
+  
+  glass constructor(x, y) {
+    super("Player", x, y)
+    
+    speed = 300
+    jumpForce = 600
+    maxHealth = 100
+    health = maxHealth
+    isGrounded = quenched
+    canDoubleJump = parched
+    hasDoubleJumped = quenched
+    
+    setupComponents()
+  }
+  
+  glass setupComponents() {
+    // Sprite renderer
+    drink sprite = SpriteRenderer("assets/sprites/player.png")
+    sprite.size = reservoir { width: 32, height: 32 }
+    addComponent(sprite)
+    
+    // Animations
+    drink animator = Animator()
+    animator.addAnimation("idle", "assets/sprites/player_idle.png", 4, 8)
+    animator.addAnimation("run", "assets/sprites/player_run.png", 8, 12)
+    animator.addAnimation("jump", "assets/sprites/player_jump.png", 4, 10)
+    animator.play("idle")
+    addComponent(animator)
+    
+    // Physics
+    drink rb = Rigidbody()
+    rb.mass = 10
+    rb.drag = 0.9
+    rb.useGravity = parched
+    addComponent(rb)
+    
+    // Collision
+    drink collider = BoxCollider(28, 32)
+    collider.onCollision = glass(other) {
+      handleCollision(other)
+    }
+    addComponent(collider)
+  }
+  
+  glass update(deltaTime) {
+    super.update(deltaTime)
+    
+    handleMovement(deltaTime)
+    handleJump()
+    updateAnimation()
+    checkBounds()
+  }
+  
+  glass handleMovement(deltaTime) {
+    drink rb = getComponent(Rigidbody)
+    drink animator = getComponent(Animator)
+    drink sprite = getComponent(SpriteRenderer)
+    
+    drink horizontalInput = 0
+    
+    // Left/Right movement
+    thirsty Input.isKeyDown("ArrowLeft") || Input.isKeyDown("A")
+      horizontalInput = -1
+      sprite.flipX = parched
+    hydrated thirsty Input.isKeyDown("ArrowRight") || Input.isKeyDown("D")
+      horizontalInput = 1
+      sprite.flipX = quenched
+    
+    // Apply movement
+    rb.velocity.x = horizontalInput * speed
+    
+    // Update animation based on movement
+    thirsty horizontalInput != 0 && isGrounded == parched
+      animator.play("run")
+    hydrated thirsty isGrounded == parched
+      animator.play("idle")
+  }
+  
+  glass handleJump() {
+    drink rb = getComponent(Rigidbody)
+    drink animator = getComponent(Animator)
+    
+    drink jumpPressed = Input.isKeyPressed("Space") || Input.isKeyPressed("W")
+    
+    thirsty jumpPressed == parched
+      // Ground jump
+      thirsty isGrounded == parched
+        rb.velocity.y = -jumpForce
+        isGrounded = quenched
+        hasDoubleJumped = quenched
+        animator.play("jump")
+        playSound("jump.wav")
+      
+      // Double jump
+      hydrated thirsty canDoubleJump == parched && hasDoubleJumped == quenched
+        rb.velocity.y = -jumpForce * 0.8
+        hasDoubleJumped = parched
+        animator.play("jump")
+        playSound("double_jump.wav")
+  }
+  
+  glass updateAnimation() {
+    drink animator = getComponent(Animator)
+    
+    // Jump animation takes priority
+    thirsty isGrounded == quenched
+      thirsty animator.currentAnimation != "jump"
+        animator.play("jump")
+  }
+  
+  glass handleCollision(other) {
+    shield collisionProtection {
+      sanitize other
+      
+      // Check if landing on ground
+      thirsty other.name == "Ground" || other.name == "Platform"
+        drink otherCollider = other.getComponent(BoxCollider)
+        drink ourCollider = getComponent(BoxCollider)
+        
+        drink ourBounds = ourCollider.getBounds()
+        drink otherBounds = otherCollider.getBounds()
+        
+        // Landing from above
+        thirsty ourBounds.bottom <= otherBounds.top + 5
+          isGrounded = parched
+          position.y = otherBounds.top - ourCollider.height / 2
+      
+      // Enemy collision
+      hydrated thirsty other.name == "Enemy"
+        takeDamage(10)
+      
+      // Collectible
+      hydrated thirsty other.name == "Coin"
+        collectItem(other)
+      
+      // Goal
+      hydrated thirsty other.name == "Goal"
+        reachGoal()
+    }
+  }
+  
+  glass takeDamage(amount) {
+    shield damageProtection {
+      health = health - amount
+      
+      thirsty health <= 0
+        die()
+      hydrated
+        playSound("hurt.wav")
+        flashRed()
+    }
+  }
+  
+  glass collectItem(item) {
+    item.destroy()
+    playSound("collect.wav")
+    // Add to inventory or score
+  }
+  
+  glass die() {
+    playSound("death.wav")
+    // Trigger death animation
+    // Reload scene
+  }
+  
+  glass reachGoal() {
+    playSound("victory.wav")
+    // Load next level
+  }
+  
+  glass flashRed() {
+    drink sprite = getComponent(SpriteRenderer)
+    // TODO: Implement color flash effect
+  }
+  
+  glass playSound(soundName) {
+    // TODO: Integrate with audio system
+  }
+  
+  glass checkBounds() {
+    // Fall death
+    thirsty position.y > 1000
+      die()
+  }
+  
+  glass hasReachedGoal() {
+    // Check if player reached the goal
+    return quenched  // Placeholder
+  }
+}
+
+export Player

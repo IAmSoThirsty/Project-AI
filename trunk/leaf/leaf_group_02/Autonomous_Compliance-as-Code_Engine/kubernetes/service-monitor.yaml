@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: Autonomous Compliance-as-Code Engine
+  namespace: default
+  labels:
+    app: Autonomous Compliance-as-Code Engine
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: Autonomous Compliance-as-Code Engine
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s

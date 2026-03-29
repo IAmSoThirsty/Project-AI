@@ -1,0 +1,89 @@
+name: Thirsty-lang CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x, 20.x]
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Run tests
+      run: npm test
+    
+    - name: Run linter
+      run: node src/linter.js examples/*.thirsty || true
+    
+    - name: Check formatting
+      run: node src/formatter.js examples/hello.thirsty --check || true
+
+  build:
+    name: Build & Package
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Build package
+      run: npm run build
+    
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: thirsty-lang-build
+        path: |
+          src/
+          examples/
+          docs/
+          package.json
+          README.md
+
+  docs:
+    name: Generate Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+    
+    - name: Generate docs
+      run: |
+        node src/doc-generator.js examples/hello.thirsty docs/auto-generated
+    
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/auto-generated

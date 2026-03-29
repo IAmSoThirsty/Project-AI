@@ -1,0 +1,121 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / stdlib.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / stdlib.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Thirsty-lang Standard Library Example
+// Demonstrates built-in Math and String utilities
+
+pour "=== Standard Library Examples ==="
+pour ""
+
+// Math constants
+pour "Math Constants:"
+pour "  PI = " + Math.PI
+pour "  E = " + Math.E
+
+// Math operations
+pour ""
+pour "Math Operations:"
+drink absValue = Math.abs(-10)
+pour "  abs(-10) = " + absValue
+
+drink sqrtValue = Math.sqrt(25)
+pour "  sqrt(25) = " + sqrtValue
+
+drink powValue = Math.pow(2, 8)
+pour "  pow(2, 8) = " + powValue
+
+drink floorValue = Math.floor(4.7)
+pour "  floor(4.7) = " + floorValue
+
+drink ceilValue = Math.ceil(4.3)
+pour "  ceil(4.3) = " + ceilValue
+
+drink roundValue = Math.round(4.5)
+pour "  round(4.5) = " + roundValue
+
+drink minValue = Math.min(5, 3, 8, 1, 9)
+pour "  min(5,3,8,1,9) = " + minValue
+
+drink maxValue = Math.max(5, 3, 8, 1, 9)
+pour "  max(5,3,8,1,9) = " + maxValue
+
+// Calculate circle area
+pour ""
+pour "Circle Calculations:"
+drink radius = 5
+drink area = Math.PI * Math.pow(radius, 2)
+drink circumference = 2 * Math.PI * radius
+pour "  Radius: " + radius
+pour "  Area: " + area
+pour "  Circumference: " + circumference
+
+// String operations
+pour ""
+pour "String Operations:"
+drink text = "  Hello World  "
+drink upper = String.toUpperCase(text)
+drink lower = String.toLowerCase(text)
+drink trimmed = String.trim(text)
+
+pour "  Original: '" + text + "'"
+pour "  toUpperCase: '" + upper + "'"
+pour "  toLowerCase: '" + lower + "'"
+pour "  trim: '" + trimmed + "'"
+
+drink replaced = String.replace("Hello World", "World", "Thirsty")
+pour "  replace('Hello World', 'World', 'Thirsty'): '" + replaced + "'"
+
+drink char = String.charAt("Hello", 1)
+pour "  charAt('Hello', 1): '" + char + "'"
+
+drink sub = String.substring("Hello World", 0, 5)
+pour "  substring('Hello World', 0, 5): '" + sub + "'"
+
+// Using standard library in functions
+glass calculateHypotenuse(a, b) {
+  drink aSquared = Math.pow(a, 2)
+  drink bSquared = Math.pow(b, 2)
+  drink cSquared = aSquared + bSquared
+  drink c = Math.sqrt(cSquared)
+  return c
+}
+
+pour ""
+pour "Pythagorean Theorem (3, 4):"
+drink hypotenuse = calculateHypotenuse(3, 4)
+pour "  Hypotenuse: " + hypotenuse
+
+// Format text using standard library
+glass formatName(firstName, lastName) {
+  drink first = String.trim(firstName)
+  drink last = String.trim(lastName)
+  drink firstChar = String.charAt(first, 0)
+  drink firstUpper = String.toUpperCase(firstChar)
+  drink firstRest = String.substring(first, 1, 100)
+  drink lastUpper = String.toUpperCase(last)
+  drink formatted = firstUpper + firstRest + " " + lastUpper
+  return formatted
+}
+
+pour ""
+pour "Name Formatting:"
+drink formatted = formatName("  john  ", "doe")
+pour "  formatName('  john  ', 'doe'): " + formatted
+
+// Random number generation
+pour ""
+pour "Random Numbers:"
+drink rand1 = Math.random()
+drink rand2 = Math.random()
+drink rand3 = Math.random()
+pour "  Random 1: " + rand1
+pour "  Random 2: " + rand2
+pour "  Random 3: " + rand3

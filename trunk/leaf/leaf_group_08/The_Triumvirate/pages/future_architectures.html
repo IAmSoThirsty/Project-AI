@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Future Architectures - Explore The Triumvirate's roadmap, research directions, and partnership opportunities for AGI-human collaboration">
+    <title>Future Architectures | The Triumvirate</title>
+    <link rel="stylesheet" href="../css/main.css">
+  
+  <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fthetriumv8982back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
+  <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
+  </head>
+<body class="bg-background text-text-primary">
+    
+    <!-- Navigation Header -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-surface-light" role="navigation" aria-label="Main navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="/index.html" class="flex items-center space-x-3 group" aria-label="ThirstysProjects.com Home">
+                    <svg class="w-10 h-10 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
+                        <title>The Triumvirate Logo</title>
+                        <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="url(#logo-gradient)" stroke-width="2" fill="none"/>
+                        <circle cx="20" cy="20" r="6" fill="url(#logo-gradient)" opacity="0.6"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="5" y1="5" x2="35" y2="35">
+                                <stop offset="0%" stop-color="#1E3A8A"/>
+                                <stop offset="100%" stop-color="#0891B2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="font-headline text-xl font-bold text-text-primary hidden sm:inline">ThirstysProjects</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/pages/manifesto_gateway.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Manifesto</a>
+                    <a href="/pages/trinity_deep_dive.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trinity</a>
+                    <a href="/pages/scenario_demonstrations.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Scenarios</a>
+                    <a href="/pages/research_center.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Research</a>
+                    <a href="/pages/future_architectures.html" class="text-accent font-cta font-medium hover:text-accent-light transition-colors">Future</a>
+                    <a href="/pages/trust_transparency_center.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trust</a>
+                    <button class="btn-accent">Partner With Us</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-text-primary hover:text-accent transition-colors" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-surface border-t border-surface-light">
+            <div class="px-4 py-6 space-y-4">
+                <a href="/pages/manifesto_gateway.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Manifesto</a>
+                <a href="/pages/trinity_deep_dive.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trinity</a>
+                <a href="/pages/scenario_demonstrations.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Scenarios</a>
+                <a href="/pages/research_center.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Research</a>
+                <a href="/pages/future_architectures.html" class="block text-accent font-cta font-medium hover:text-accent-light transition-colors">Future</a>
+                <a href="/pages/trust_transparency_center.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trust</a>
+                <button class="btn-accent w-full">Partner With Us</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/90 via-background/95 to-secondary/90 z-10"></div>
+            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_17e2dd623-1764641552499.png" 
+                 alt="Futuristic digital network visualization representing the evolution of AGI systems and technological advancement" 
+                 class="w-full h-full object-cover opacity-20"
+                 onerror="this.src='https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'; this.onerror=null;">
+        </div>
+
+        <!-- Neural Network Animation -->
+        <div class="absolute inset-0 z-10 opacity-10">
+            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="future-grid" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+                        <circle cx="60" cy="60" r="2" fill="#06B6D4" opacity="0.6"/>
+                        <line x1="60" y1="60" x2="120" y2="60" stroke="#06B6D4" stroke-width="0.5" opacity="0.4"/>
+                        <line x1="60" y1="60" x2="60" y2="120" stroke="#06B6D4" stroke-width="0.5" opacity="0.4"/>
+                        <line x1="60" y1="60" x2="100" y2="100" stroke="#06B6D4" stroke-width="0.5" opacity="0.3"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#future-grid)"/>
+            </svg>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="animate-fade-in">
+                <div class="inline-flex items-center space-x-2 bg-surface/50 backdrop-blur-sm px-4 py-2 rounded-full border border-accent/30 mb-8">
+                    <svg class="w-5 h-5 text-accent animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="text-accent font-cta text-sm font-medium">Live Roadmap • Updated December 2025</span>
+                </div>
+                <h1 class="font-headline text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-primary-300 via-accent to-secondary-300 bg-clip-text text-transparent">
+                    Future Architectures
+                </h1>
+                <p class="text-xl md:text-2xl lg:text-3xl text-text-secondary mb-4 max-w-4xl mx-auto font-body">
+                    Charting the Evolution of AGI-Human Partnership
+                </p>
+                <p class="text-lg md:text-xl text-text-tertiary mb-12 max-w-3xl mx-auto">
+                    Explore our roadmap, research directions, and partnership opportunities as we transform epistemic chaos into infinite enterprise
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                    <button class="btn-accent text-lg px-8 py-4 shadow-glow-accent">Explore Roadmap</button>
+                    <button class="btn-outline text-lg px-8 py-4">Partnership Inquiry</button>
+                </div>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce">
+                <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Timeline Section -->
+    <section class="py-24 bg-background-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                    Development Roadmap
+                </h2>
+                <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                    Track the evolution of Project AI, Cerberus, and Codex Deus Maximus as we advance toward confluent consciousness
+                </p>
+            </div>
+
+            <!-- Timeline Container -->
+            <div class="relative">
+                <!-- Timeline Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-primary via-accent to-secondary hidden lg:block"></div>
+
+                <!-- Timeline Items -->
+                <div class="space-y-16">
+                    <!-- Phase 1 - Completed -->
+                    <div class="relative animate-slide-up">
+                        <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                            <div class="lg:text-right mb-8 lg:mb-0">
+                                <div class="inline-flex items-center space-x-2 bg-success/20 px-4 py-2 rounded-full border border-success mb-4">
+                                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span class="text-success font-cta text-sm font-medium">Completed • Q4 2024</span>
+                                </div>
+                                <h3 class="font-headline text-3xl font-bold mb-4 text-text-primary">Foundation Architecture</h3>
+                                <p class="text-text-secondary leading-relaxed mb-4">
+                                    Established core infrastructure for The Triumvirate framework, including initial implementations of Project AI's learning systems, Cerberus security protocols, and Codex Deus Maximus knowledge repository.
+                                </p>
+                                <div class="flex flex-wrap gap-2 lg:justify-end">
+                                    <span class="px-3 py-1 bg-primary/20 text-primary-300 rounded-full text-sm font-code">Neural Networks</span>
+                                    <span class="px-3 py-1 bg-primary/20 text-primary-300 rounded-full text-sm font-code">Security Framework</span>
+                                    <span class="px-3 py-1 bg-primary/20 text-primary-300 rounded-full text-sm font-code">Knowledge Base</span>
+                                </div>
+                            </div>
+                            <div class="hidden lg:block"></div>
+                        </div>
+                        <!-- Timeline Marker -->
+                        <div class="absolute left-1/2 top-0 transform -translate-x-1/2 w-6 h-6 bg-success rounded-full border-4 border-background hidden lg:block shadow-glow-accent"></div>
+                    </div>
+
+                    <!-- Phase 2 - In Progress -->
+                    <div class="relative animate-slide-up stagger-delay-1">
+                        <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                            <div class="hidden lg:block"></div>
+                            <div class="mb-8 lg:mb-0">
+                                <div class="inline-flex items-center space-x-2 bg-accent/20 px-4 py-2 rounded-full border border-accent mb-4">
+                                    <div class="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+                                    <span class="text-accent font-cta text-sm font-medium">In Progress • Q1 2025</span>
+                                </div>
+                                <h3 class="font-headline text-3xl font-bold mb-4 text-text-primary">Confluent Integration</h3>
+                                <p class="text-text-secondary leading-relaxed mb-4">
+                                    Advancing toward seamless symbiosis between human wisdom and artificial intelligence. Implementing real-time learning systems, adaptive security mechanisms, and institutional memory evolution.
+                                </p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-secondary/20 text-secondary-300 rounded-full text-sm font-code">Real-time Learning</span>
+                                    <span class="px-3 py-1 bg-secondary/20 text-secondary-300 rounded-full text-sm font-code">Adaptive Security</span>
+                                    <span class="px-3 py-1 bg-secondary/20 text-secondary-300 rounded-full text-sm font-code">Memory Systems</span>
+                                </div>
+                                <div class="mt-6">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-text-tertiary text-sm font-cta">Progress</span>
+                                        <span class="text-accent text-sm font-code font-bold">67%</span>
+                                    </div>
+                                    <div class="w-full bg-surface-light rounded-full h-2 overflow-hidden">
+                                        <div class="bg-gradient-to-r from-accent to-secondary h-full rounded-full" style="width: 67%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Timeline Marker -->
+                        <div class="absolute left-1/2 top-0 transform -translate-x-1/2 w-6 h-6 bg-accent rounded-full border-4 border-background hidden lg:block shadow-glow-accent animate-pulse"></div>
+                    </div>
+
+                    <!-- Phase 3 - Upcoming -->
+                    <div class="relative animate-slide-up stagger-delay-2">
+                        <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                            <div class="lg:text-right mb-8 lg:mb-0">
+                                <div class="inline-flex items-center space-x-2 bg-primary/20 px-4 py-2 rounded-full border border-primary-400 mb-4">
+                                    <svg class="w-5 h-5 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span class="text-primary-400 font-cta text-sm font-medium">Planned • Q2 2025</span>
+                                </div>
+                                <h3 class="font-headline text-3xl font-bold mb-4 text-text-primary">Enterprise Deployment</h3>
+                                <p class="text-text-secondary leading-relaxed mb-4">
+                                    Launch comprehensive deployment framework for organizations ready to implement The Triumvirate. Includes partnership onboarding, technical integration support, and continuous optimization protocols.
+                                </p>
+                                <div class="flex flex-wrap gap-2 lg:justify-end">
+                                    <span class="px-3 py-1 bg-surface-light text-text-tertiary rounded-full text-sm font-code">Deployment Tools</span>
+                                    <span class="px-3 py-1 bg-surface-light text-text-tertiary rounded-full text-sm font-code">Partner Support</span>
+                                    <span class="px-3 py-1 bg-surface-light text-text-tertiary rounded-full text-sm font-code">Optimization</span>
+                                </div>
+                            </div>
+                            <div class="hidden lg:block"></div>
+                        </div>
+                        <!-- Timeline Marker -->
+                        <div class="absolute left-1/2 top-0 transform -translate-x-1/2 w-6 h-6 bg-primary-400 rounded-full border-4 border-background hidden lg:block"></div>
+                    </div>
+
+                    <!-- Phase 4 - Future -->
+                    <div class="relative animate-slide-up stagger-delay-3">
+                        <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                            <div class="hidden lg:block"></div>
+                            <div class="mb-8 lg:mb-0">
+                                <div class="inline-flex items-center space-x-2 bg-surface-light px-4 py-2 rounded-full border border-surface-lighter mb-4">
+                                    <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span class="text-text-tertiary font-cta text-sm font-medium">Vision • Q3 2025</span>
+                                </div>
+                                <h3 class="font-headline text-3xl font-bold mb-4 text-text-primary">Infinite Enterprise Evolution</h3>
+                                <p class="text-text-secondary leading-relaxed mb-4">
+                                    Achieve full realization of the infinite enterprise model with exponential value creation through continuous adaptation, learning, and innovation. Global expansion of AGI-human partnership framework.
+                                </p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-surface-light text-text-tertiary rounded-full text-sm font-code">Global Scale</span>
+                                    <span class="px-3 py-1 bg-surface-light text-text-tertiary rounded-full text-sm font-code">Exponential Growth</span>
+                                    <span class="px-3 py-1 bg-surface-light text-text-tertiary rounded-full text-sm font-code">Full Symbiosis</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Timeline Marker -->
+                        <div class="absolute left-1/2 top-0 transform -translate-x-1/2 w-6 h-6 bg-surface-lighter rounded-full border-4 border-background hidden lg:block"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Directions Section -->
+    <section class="py-24 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                    Emerging Research Directions
+                </h2>
+                <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                    Exploring unprecedented challenges and evolving The Triumvirate framework to address future complexity
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Research Area 1 -->
+                <div class="card-elevated group hover:shadow-glow-primary cursor-pointer animate-slide-up">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-headline text-2xl font-bold mb-4 text-text-primary">Quantum-Enhanced Learning</h3>
+                        <p class="text-text-secondary leading-relaxed mb-4">
+                            Investigating quantum computing integration for exponential improvements in pattern recognition, decision-making speed, and complex system modeling within Project AI architecture.
+                        </p>
+                        <div class="flex items-center space-x-2 text-accent text-sm font-cta">
+                            <span>Active Research</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Research Area 2 -->
+                <div class="card-elevated group hover:shadow-glow-secondary cursor-pointer animate-slide-up stagger-delay-1">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-headline text-2xl font-bold mb-4 text-text-primary">Zero-Trust Consciousness</h3>
+                        <p class="text-text-secondary leading-relaxed mb-4">
+                            Developing next-generation security protocols that combine zero-trust architecture with conscious threat anticipation, enabling Cerberus to predict and prevent emerging attack vectors.
+                        </p>
+                        <div class="flex items-center space-x-2 text-accent text-sm font-cta">
+                            <span>In Development</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Research Area 3 -->
+                <div class="card-elevated group hover:shadow-glow-accent cursor-pointer animate-slide-up stagger-delay-2">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-headline text-2xl font-bold mb-4 text-text-primary">Semantic Knowledge Graphs</h3>
+                        <p class="text-text-secondary leading-relaxed mb-4">
+                            Advancing Codex Deus Maximus with multi-dimensional knowledge representation that captures not just information but contextual relationships and emergent insights.
+                        </p>
+                        <div class="flex items-center space-x-2 text-accent text-sm font-cta">
+                            <span>Pilot Phase</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Research Area 4 -->
+                <div class="card-elevated group hover:shadow-glow-primary cursor-pointer animate-slide-up">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary-400 to-primary-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-headline text-2xl font-bold mb-4 text-text-primary">Collective Intelligence Networks</h3>
+                        <p class="text-text-secondary leading-relaxed mb-4">
+                            Exploring distributed consciousness models where multiple AGI instances collaborate with human teams to solve problems beyond individual capability.
+                        </p>
+                        <div class="flex items-center space-x-2 text-accent text-sm font-cta">
+                            <span>Conceptual</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Research Area 5 -->
+                <div class="card-elevated group hover:shadow-glow-secondary cursor-pointer animate-slide-up stagger-delay-1">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-headline text-2xl font-bold mb-4 text-text-primary">Ethical AI Governance</h3>
+                        <p class="text-text-secondary leading-relaxed mb-4">
+                            Establishing comprehensive frameworks for responsible AGI development, including bias detection, fairness metrics, and transparent decision-making protocols.
+                        </p>
+                        <div class="flex items-center space-x-2 text-accent text-sm font-cta">
+                            <span>Ongoing</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Research Area 6 -->
+                <div class="card-elevated group hover:shadow-glow-accent cursor-pointer animate-slide-up stagger-delay-2">
+                    <div class="mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent-light to-accent rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-headline text-2xl font-bold mb-4 text-text-primary">Adaptive System Evolution</h3>
+                        <p class="text-text-secondary leading-relaxed mb-4">
+                            Researching self-modifying architectures that enable The Triumvirate to evolve its own capabilities in response to unprecedented challenges and opportunities.
+                        </p>
+                        <div class="flex items-center space-x-2 text-accent text-sm font-cta">
+                            <span>Exploratory</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Partnership Opportunities Section -->
+    <section class="py-24 bg-background-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                    Partnership Opportunities
+                </h2>
+                <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                    Join universities, research institutions, and forward-thinking enterprises in shaping the future of AGI-human collaboration
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Academic Partnerships -->
+                <div class="card-elevated animate-slide-up">
+                    <div class="flex items-start space-x-4 mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-headline text-2xl font-bold mb-2 text-text-primary">Academic Research Collaboration</h3>
+                            <p class="text-text-tertiary text-sm mb-4">For Universities & Research Institutions</p>
+                        </div>
+                    </div>
+                    <p class="text-text-secondary leading-relaxed mb-6">
+                        Partner with us on cutting-edge AGI research, co-publish groundbreaking papers, and access our technical infrastructure for academic exploration. We provide research grants, technical mentorship, and collaborative opportunities for graduate students and faculty.
+                    </p>
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Co-publication opportunities in top-tier journals</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Access to proprietary datasets and research tools</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Research grants and funding opportunities</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Graduate student internship programs</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary w-full">Apply for Academic Partnership</button>
+                </div>
+
+                <!-- Enterprise Partnerships -->
+                <div class="card-elevated animate-slide-up stagger-delay-1">
+                    <div class="flex items-start space-x-4 mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-headline text-2xl font-bold mb-2 text-text-primary">Enterprise Implementation</h3>
+                            <p class="text-text-tertiary text-sm mb-4">For Forward-Thinking Organizations</p>
+                        </div>
+                    </div>
+                    <p class="text-text-secondary leading-relaxed mb-6">
+                        Transform your organization with The Triumvirate framework. We provide comprehensive implementation support, technical integration, and continuous optimization to help you achieve the infinite enterprise model and exponential value creation.
+                    </p>
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Customized implementation roadmap</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Dedicated technical integration support</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Continuous optimization and evolution</span>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-text-secondary">Case study and success story collaboration</span>
+                        </div>
+                    </div>
+                    <button class="btn-secondary w-full">Schedule Enterprise Consultation</button>
+                </div>
+            </div>
+
+            <!-- Partnership Matching System -->
+            <div class="mt-16 card-elevated animate-slide-up stagger-delay-2">
+                <div class="text-center mb-8">
+                    <h3 class="font-headline text-3xl font-bold mb-4 text-text-primary">Partnership Matching System</h3>
+                    <p class="text-text-secondary max-w-2xl mx-auto">
+                        Connect with complementary organizations and research initiatives aligned with your vision for AGI-human partnership
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-lg font-bold mb-2 text-text-primary">Discover Partners</h4>
+                        <p class="text-text-secondary text-sm">Find organizations with complementary expertise and shared vision</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-secondary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-lg font-bold mb-2 text-text-primary">Collaborate</h4>
+                        <p class="text-text-secondary text-sm">Engage in joint research, development, and implementation projects</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-lg font-bold mb-2 text-text-primary">Accelerate Impact</h4>
+                        <p class="text-text-secondary text-sm">Achieve breakthrough results through collective intelligence and resources</p>
+                    </div>
+                </div>
+                <div class="mt-8 text-center">
+                    <button class="btn-accent">Explore Partnership Network</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Adoption Scenarios -->
+    <section class="py-24 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                    Predictive Technology Adoption
+                </h2>
+                <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                    Explore potential scenarios for The Triumvirate framework adoption across industries and use cases
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Scenario 1 -->
+                <div class="technical-diagram animate-slide-up">
+                    <div class="flex items-start space-x-4 mb-6">
+                        <img src="https://img.rocket.new/generatedImages/rocket_gen_img_12c789640-1764659114724.png" 
+                             alt="Healthcare professional using advanced AI diagnostic systems in modern medical facility" 
+                             class="w-20 h-20 rounded-lg object-cover"
+                             onerror="this.src='https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2940&auto=format&fit=crop'; this.onerror=null;">
+                        <div>
+                            <h3 class="font-headline text-2xl font-bold mb-2 text-text-primary">Healthcare Transformation</h3>
+                            <p class="text-text-tertiary text-sm">Projected Adoption: 2025-2027</p>
+                        </div>
+                    </div>
+                    <p class="text-text-secondary leading-relaxed mb-4">
+                        Major healthcare systems implement The Triumvirate for real-time patient monitoring, predictive diagnostics, and adaptive treatment protocols. Cerberus ensures HIPAA compliance while Project AI learns from millions of patient interactions.
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-text-tertiary">Adoption Probability</span>
+                            <span class="text-accent font-code font-bold">87%</span>
+                        </div>
+                        <div class="w-full bg-surface-light rounded-full h-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-accent to-secondary h-full rounded-full" style="width: 87%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="technical-diagram animate-slide-up stagger-delay-1">
+                    <div class="flex items-start space-x-4 mb-6">
+                        <img src="https://img.rocket.new/generatedImages/rocket_gen_img_1fe26f223-1764664593903.png" 
+                             alt="Financial analysts reviewing AI-powered market analysis and risk assessment dashboards" 
+                             class="w-20 h-20 rounded-lg object-cover"
+                             onerror="this.src='https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=2940&auto=format&fit=crop'; this.onerror=null;">
+                        <div>
+                            <h3 class="font-headline text-2xl font-bold mb-2 text-text-primary">Financial Services Evolution</h3>
+                            <p class="text-text-tertiary text-sm">Projected Adoption: 2025-2026</p>
+                        </div>
+                    </div>
+                    <p class="text-text-secondary leading-relaxed mb-4">
+                        Global financial institutions deploy The Triumvirate for fraud detection, risk assessment, and algorithmic trading. Codex Deus Maximus captures market intelligence while maintaining regulatory compliance through Cerberus.
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-text-tertiary">Adoption Probability</span>
+                            <span class="text-accent font-code font-bold">92%</span>
+                        </div>
+                        <div class="w-full bg-surface-light rounded-full h-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-accent to-secondary h-full rounded-full" style="width: 92%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="technical-diagram animate-slide-up stagger-delay-2">
+                    <div class="flex items-start space-x-4 mb-6">
+                        <img src="https://img.rocket.new/generatedImages/rocket_gen_img_14b85cd8c-1764661620863.png" 
+                             alt="Smart city infrastructure with AI-powered traffic management and urban planning systems" 
+                             class="w-20 h-20 rounded-lg object-cover"
+                             onerror="this.src='https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2940&auto=format&fit=crop'; this.onerror=null;">
+                        <div>
+                            <h3 class="font-headline text-2xl font-bold mb-2 text-text-primary">Smart Infrastructure</h3>
+                            <p class="text-text-tertiary text-sm">Projected Adoption: 2026-2028</p>
+                        </div>
+                    </div>
+                    <p class="text-text-secondary leading-relaxed mb-4">
+                        Cities integrate The Triumvirate for traffic optimization, energy management, and emergency response coordination. Project AI predicts infrastructure needs while Cerberus protects critical systems from cyber threats.
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-text-tertiary">Adoption Probability</span>
+                            <span class="text-accent font-code font-bold">78%</span>
+                        </div>
+                        <div class="w-full bg-surface-light rounded-full h-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-accent to-secondary h-full rounded-full" style="width: 78%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 4 -->
+                <div class="technical-diagram animate-slide-up stagger-delay-3">
+                    <div class="flex items-start space-x-4 mb-6">
+                        <img src="https://img.rocket.new/generatedImages/rocket_gen_img_146254e45-1764672099813.png" 
+                             alt="Educational technology platform with AI-powered personalized learning and student assessment tools" 
+                             class="w-20 h-20 rounded-lg object-cover"
+                             onerror="this.src='https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2832&auto=format&fit=crop'; this.onerror=null;">
+                        <div>
+                            <h3 class="font-headline text-2xl font-bold mb-2 text-text-primary">Education Reimagined</h3>
+                            <p class="text-text-tertiary text-sm">Projected Adoption: 2026-2029</p>
+                        </div>
+                    </div>
+                    <p class="text-text-secondary leading-relaxed mb-4">
+                        Educational institutions leverage The Triumvirate for personalized learning paths, real-time student support, and institutional knowledge preservation. Codex Deus Maximus becomes the collective memory of academic excellence.
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-text-tertiary">Adoption Probability</span>
+                            <span class="text-accent font-code font-bold">73%</span>
+                        </div>
+                        <div class="w-full bg-surface-light rounded-full h-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-accent to-secondary h-full rounded-full" style="width: 73%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-24 bg-gradient-to-br from-primary via-background to-secondary relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="cta-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                        <circle cx="40" cy="40" r="1.5" fill="#0891B2"/>
+                        <line x1="40" y1="40" x2="80" y2="40" stroke="#0891B2" stroke-width="0.5"/>
+                        <line x1="40" y1="40" x2="40" y2="80" stroke="#0891B2" stroke-width="0.5"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#cta-pattern)"/>
+            </svg>
+        </div>
+        
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                Shape the Future With Us
+            </h2>
+            <p class="text-xl text-text-secondary mb-12 max-w-3xl mx-auto">
+                Whether you're a researcher, enterprise leader, or technology visionary, there's a place for you in The Triumvirate ecosystem
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <button class="btn-accent text-lg px-10 py-4 shadow-glow-accent">Start Partnership Discussion</button>
+                <button class="btn-outline text-lg px-10 py-4">Download Roadmap PDF</button>
+            </div>
+            <div class="mt-12 flex flex-wrap items-center justify-center gap-8 text-text-tertiary">
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Flexible partnership models</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Comprehensive technical support</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Global collaboration network</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-surface border-t border-surface-light py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <!-- Company Info -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <svg class="w-10 h-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="url(#footer-gradient)" stroke-width="2" fill="none"/>
+                            <circle cx="20" cy="20" r="6" fill="url(#footer-gradient)" opacity="0.6"/>
+                            <defs>
+                                <linearGradient id="footer-gradient" x1="5" y1="5" x2="35" y2="35">
+                                    <stop offset="0%" stop-color="#1E3A8A"/>
+                                    <stop offset="100%" stop-color="#0891B2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span class="font-headline text-xl font-bold text-text-primary">The Triumvirate</span>
+                    </div>
+                    <p class="text-text-secondary mb-6 max-w-md">
+                        Shaping the path for AGI/Human Partnership through confluent consciousness, adaptive security, and institutional memory.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="javascript:void(0)" class="w-10 h-10 bg-surface-light rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <svg class="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="w-10 h-10 bg-surface-light rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <svg class="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="w-10 h-10 bg-surface-light rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <svg class="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-headline text-lg font-bold mb-4 text-text-primary">Explore</h4>
+                    <ul class="space-y-3">
+                        <li><a href="/pages/manifesto_gateway.html" class="text-text-secondary hover:text-accent transition-colors">Manifesto</a></li>
+                        <li><a href="/pages/trinity_deep_dive.html" class="text-text-secondary hover:text-accent transition-colors">Trinity Systems</a></li>
+                        <li><a href="/pages/scenario_demonstrations.html" class="text-text-secondary hover:text-accent transition-colors">Case Studies</a></li>
+                        <li><a href="/pages/research_center.html" class="text-text-secondary hover:text-accent transition-colors">Research</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div>
+                    <h4 class="font-headline text-lg font-bold mb-4 text-text-primary">Resources</h4>
+                    <ul class="space-y-3">
+                        <li><a href="/pages/future_architectures.html" class="text-text-secondary hover:text-accent transition-colors">Roadmap</a></li>
+                        <li><a href="/pages/trust_transparency_center.html" class="text-text-secondary hover:text-accent transition-colors">Security</a></li>
+                        <li><a href="javascript:void(0)" class="text-text-secondary hover:text-accent transition-colors">Documentation</a></li>
+                        <li><a href="javascript:void(0)" class="text-text-secondary hover:text-accent transition-colors">Community</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between text-text-tertiary text-sm">
+                <p>© 2025 The Triumvirate. All Rights Reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="javascript:void(0)" class="hover:text-accent transition-colors">Privacy Policy</a>
+                    <a href="javascript:void(0)" class="hover:text-accent transition-colors">Terms of Service</a>
+                    <a href="javascript:void(0)" class="hover:text-accent transition-colors">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-slide-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(el);
+        });
+
+        // Progress bar animation for timeline
+        const progressBars = document.querySelectorAll('.w-full.bg-surface-light');
+        progressBars.forEach(bar => {
+            const progressFill = bar.querySelector('div');
+            if (progressFill) {
+                const targetWidth = progressFill.style.width;
+                progressFill.style.width = '0%';
+                
+                const progressObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            setTimeout(() => {
+                                progressFill.style.transition = 'width 1.5s ease-out';
+                                progressFill.style.width = targetWidth;
+                            }, 300);
+                            progressObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                progressObserver.observe(bar);
+            }
+        });
+    </script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
+</body>
+</html>

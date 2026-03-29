@@ -1,0 +1,734 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ttp.example.com/schemas/pack-schema-v1.json",
+  "title": "Texture Pack Metadata Schema",
+  "description": "Complete JSON schema for TTP texture pack metadata validation with production-grade constraints",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "name",
+    "version",
+    "description",
+    "author",
+    "license",
+    "category",
+    "qualityTier",
+    "assets"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Schema version for backward compatibility"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 255,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\s\\-_'.()]+$",
+      "description": "Human-readable pack name"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "minLength": 3,
+      "maxLength": 100,
+      "description": "URL-friendly identifier, auto-generated from name if not provided"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "Semantic version (SemVer 2.0.0)"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 5000,
+      "description": "Detailed description of the texture pack contents and usage"
+    },
+    "author": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "maxLength": 255
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 1024
+        },
+        "organization": {
+          "type": "string",
+          "maxLength": 255
+        }
+      }
+    },
+    "license": {
+      "type": "string",
+      "enum": [
+        "CC0-1.0",
+        "CC-BY-4.0",
+        "CC-BY-SA-4.0",
+        "CC-BY-NC-4.0",
+        "CC-BY-NC-SA-4.0",
+        "MIT",
+        "Apache-2.0",
+        "GPL-3.0",
+        "LGPL-3.0",
+        "BSD-3-Clause",
+        "Unlicense",
+        "Proprietary",
+        "Custom"
+      ],
+      "description": "SPDX license identifier"
+    },
+    "licenseDetails": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to full license text"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 50000,
+          "description": "Full license text for custom licenses"
+        },
+        "attributionRequired": {
+          "type": "boolean",
+          "default": true
+        },
+        "commercialUseAllowed": {
+          "type": "boolean",
+          "default": false
+        },
+        "modificationAllowed": {
+          "type": "boolean",
+          "default": true
+        },
+        "redistributionAllowed": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "environment",
+        "characters",
+        "props",
+        "ui",
+        "effects",
+        "materials",
+        "terrain",
+        "architecture",
+        "nature",
+        "sci-fi",
+        "fantasy",
+        "urban",
+        "industrial",
+        "abstract",
+        "pixel-art",
+        "stylized",
+        "photorealistic",
+        "hand-painted"
+      ],
+      "description": "Primary category classification"
+    },
+    "subcategories": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 100
+      },
+      "maxItems": 10,
+      "uniqueItems": true,
+      "description": "Additional category tags"
+    },
+    "qualityTier": {
+      "type": "string",
+      "enum": ["pixel", "standard", "high", "cinematic", "ultra"],
+      "description": "Quality/fidelity tier classification"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 50,
+        "pattern": "^[a-z0-9-]+$"
+      },
+      "minItems": 1,
+      "maxItems": 30,
+      "uniqueItems": true,
+      "description": "Searchable tags (lowercase, hyphen-separated)"
+    },
+    "targetEngines": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "unity",
+          "unreal",
+          "godot",
+          "blender",
+          "maya",
+          "3dsmax",
+          "houdini",
+          "substance",
+          "web",
+          "mobile",
+          "generic"
+        ]
+      },
+      "uniqueItems": true,
+      "description": "Compatible rendering engines"
+    },
+    "targetPlatforms": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "windows",
+          "macos",
+          "linux",
+          "ios",
+          "android",
+          "webgl",
+          "console-ps5",
+          "console-xbox",
+          "console-switch",
+          "vr",
+          "ar"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "renderPipeline": {
+      "type": "string",
+      "enum": [
+        "hdrp",
+        "urp",
+        "built-in",
+        "forward",
+        "deferred",
+        "pbr",
+        "unlit",
+        "custom"
+      ],
+      "description": "Rendering pipeline compatibility (primarily for Unity/Unreal)"
+    },
+    "materialWorkflow": {
+      "type": "string",
+      "enum": [
+        "pbr-metallic-roughness",
+        "pbr-specular-glossiness",
+        "non-pbr",
+        "stylized",
+        "toon",
+        "custom"
+      ],
+      "description": "Material/shader workflow type"
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 10000,
+      "items": {
+        "$ref": "#/definitions/assetDefinition"
+      },
+      "description": "Complete list of texture assets in this pack"
+    },
+    "preview": {
+      "type": "object",
+      "properties": {
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri-reference",
+            "description": "Relative path to preview image"
+          },
+          "minItems": 1,
+          "maxItems": 20
+        },
+        "thumbnail": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "Primary thumbnail (256x256 recommended)"
+        },
+        "video": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "Optional video preview"
+        }
+      },
+      "required": ["images", "thumbnail"]
+    },
+    "technical": {
+      "type": "object",
+      "properties": {
+        "totalSizeBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 107374182400,
+          "description": "Total pack size in bytes (max 100 GB)"
+        },
+        "assetCount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "compressionFormat": {
+          "type": "string",
+          "enum": ["zip", "tar.gz", "tar.bz2", "7z", "none"]
+        },
+        "checksumSHA256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 checksum of entire pack"
+        },
+        "minimumResolution": {
+          "type": "string",
+          "pattern": "^[0-9]{1,5}x[0-9]{1,5}$",
+          "description": "Minimum texture resolution (e.g., '512x512')"
+        },
+        "maximumResolution": {
+          "type": "string",
+          "pattern": "^[0-9]{1,5}x[0-9]{1,5}$",
+          "description": "Maximum texture resolution (e.g., '4096x4096')"
+        },
+        "includesLODs": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether pack includes Level of Detail variants"
+        },
+        "includeMipmaps": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether textures include pre-generated mipmaps"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "version"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Dependency pack name or slug"
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)|^\\*$|^\\^|^~",
+            "description": "Version requirement (SemVer range)"
+          },
+          "optional": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "maxItems": 50
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["version", "date", "changes"],
+        "properties": {
+          "version": {
+            "type": "string",
+            "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 500
+            }
+          }
+        }
+      },
+      "maxItems": 100
+    },
+    "documentation": {
+      "type": "object",
+      "properties": {
+        "readme": {
+          "type": "string",
+          "format": "uri-reference",
+          "description": "Path to README file"
+        },
+        "installGuide": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "usageExamples": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "apiReference": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "issues": {
+          "type": "string",
+          "format": "uri",
+          "description": "Issue tracker URL"
+        },
+        "forum": {
+          "type": "string",
+          "format": "uri"
+        },
+        "chat": {
+          "type": "string",
+          "format": "uri",
+          "description": "Discord/Slack community URL"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Custom metadata fields (extensible)",
+      "additionalProperties": true
+    }
+  },
+  "definitions": {
+    "assetDefinition": {
+      "type": "object",
+      "required": ["filename", "type", "format", "colorSpace", "checksum"],
+      "properties": {
+        "filename": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\s\\-_.()]+\\.[a-zA-Z0-9]{2,10}$",
+          "description": "Original filename with extension"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^[a-zA-Z0-9/\\-_.]+$",
+          "description": "Relative path within pack (forward slashes only)"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "albedo",
+            "baseColor",
+            "diffuse",
+            "normal",
+            "normalDX",
+            "normalGL",
+            "roughness",
+            "metallic",
+            "metalness",
+            "specular",
+            "glossiness",
+            "ao",
+            "ambientOcclusion",
+            "height",
+            "displacement",
+            "bump",
+            "emission",
+            "emissive",
+            "opacity",
+            "alpha",
+            "transmission",
+            "subsurface",
+            "curvature",
+            "thickness",
+            "combined",
+            "packed",
+            "custom"
+          ],
+          "description": "Texture map type/channel"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "png",
+            "jpg",
+            "jpeg",
+            "exr",
+            "hdr",
+            "tga",
+            "tiff",
+            "tif",
+            "bmp",
+            "dds",
+            "svg",
+            "psd",
+            "webp"
+          ],
+          "description": "File format"
+        },
+        "colorSpace": {
+          "type": "string",
+          "enum": [
+            "srgb",
+            "sRGB",
+            "linear",
+            "acescg",
+            "rec709",
+            "rec2020",
+            "raw",
+            "data"
+          ],
+          "description": "Color space interpretation"
+        },
+        "resolution": {
+          "type": "object",
+          "required": ["width", "height"],
+          "properties": {
+            "width": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 16384
+            },
+            "height": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 16384
+            }
+          }
+        },
+        "bitDepth": {
+          "type": "integer",
+          "enum": [8, 16, 32],
+          "description": "Bits per channel"
+        },
+        "channels": {
+          "type": "integer",
+          "enum": [1, 2, 3, 4],
+          "description": "Number of color channels (1=grayscale, 3=RGB, 4=RGBA)"
+        },
+        "compression": {
+          "type": "string",
+          "enum": [
+            "none",
+            "lzw",
+            "zip",
+            "rle",
+            "piz",
+            "pxr24",
+            "b44",
+            "dwaa",
+            "dwab"
+          ],
+          "description": "Compression algorithm used"
+        },
+        "sizeBytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1073741824,
+          "description": "File size in bytes (max 1 GB per file)"
+        },
+        "checksum": {
+          "type": "object",
+          "required": ["algorithm", "value"],
+          "properties": {
+            "algorithm": {
+              "type": "string",
+              "enum": ["sha256", "sha512", "md5"],
+              "default": "sha256"
+            },
+            "value": {
+              "type": "string",
+              "pattern": "^[a-f0-9]+$",
+              "minLength": 32,
+              "maxLength": 128
+            }
+          },
+          "description": "File integrity checksum"
+        },
+        "lodLevel": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "Level of Detail tier (0 = highest quality)"
+        },
+        "tiling": {
+          "type": "object",
+          "properties": {
+            "seamless": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether texture tiles seamlessly"
+            },
+            "horizontalRepeat": {
+              "type": "number",
+              "minimum": 0.01,
+              "maximum": 100
+            },
+            "verticalRepeat": {
+              "type": "number",
+              "minimum": 0.01,
+              "maximum": 100
+            }
+          }
+        },
+        "channelPacking": {
+          "type": "object",
+          "description": "For packed textures (multiple maps in different channels)",
+          "properties": {
+            "r": {
+              "type": "string",
+              "description": "What data is stored in red channel"
+            },
+            "g": {
+              "type": "string",
+              "description": "What data is stored in green channel"
+            },
+            "b": {
+              "type": "string",
+              "description": "What data is stored in blue channel"
+            },
+            "a": {
+              "type": "string",
+              "description": "What data is stored in alpha channel"
+            }
+          },
+          "examples": [
+            {
+              "r": "metallic",
+              "g": "ao",
+              "b": "detail",
+              "a": "smoothness"
+            }
+          ]
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Asset-specific custom metadata",
+          "additionalProperties": true,
+          "properties": {
+            "artist": {
+              "type": "string"
+            },
+            "createdDate": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "software": {
+              "type": "string"
+            },
+            "sourceFile": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "schemaVersion": "1.0.0",
+      "name": "Cinematic Urban Concrete Pack",
+      "slug": "cinematic-urban-concrete",
+      "version": "2.1.0",
+      "description": "Ultra-high resolution 8K PBR concrete textures optimized for Unity HDRP cinematic rendering. Includes 15 variations of urban concrete surfaces with full PBR maps (albedo, normal, roughness, metallic, AO) and detail masks. Perfect for architectural visualization and AAA game environments.",
+      "author": {
+        "name": "IAmSoThirsty",
+        "email": "artist@example.com",
+        "url": "https://github.com/IAmSoThirsty"
+      },
+      "license": "CC-BY-4.0",
+      "category": "materials",
+      "subcategories": ["concrete", "urban", "architecture"],
+      "qualityTier": "cinematic",
+      "tags": [
+        "pbr",
+        "8k",
+        "concrete",
+        "urban",
+        "photorealistic",
+        "hdrp",
+        "seamless"
+      ],
+      "targetEngines": ["unity", "unreal"],
+      "renderPipeline": "hdrp",
+      "materialWorkflow": "pbr-metallic-roughness",
+      "assets": [
+        {
+          "filename": "concrete_rough_albedo_8k.exr",
+          "path": "textures/concrete-rough/albedo.exr",
+          "type": "albedo",
+          "format": "exr",
+          "colorSpace": "srgb",
+          "resolution": {
+            "width": 8192,
+            "height": 8192
+          },
+          "bitDepth": 16,
+          "channels": 3,
+          "compression": "piz",
+          "sizeBytes": 402653184,
+          "checksum": {
+            "algorithm": "sha256",
+            "value": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "tiling": {
+            "seamless": true,
+            "horizontalRepeat": 1.0,
+            "verticalRepeat": 1.0
+          },
+          "metadata": {
+            "artist": "Jane Doe",
+            "software": "Substance Designer 2023.1",
+            "createdDate": "2026-01-15T10:30:00Z"
+          }
+        }
+      ],
+      "preview": {
+        "thumbnail": "previews/thumbnail.png",
+        "images": [
+          "previews/render_01.png",
+          "previews/render_02.png",
+          "previews/material_breakdown.png"
+        ]
+      },
+      "technical": {
+        "totalSizeBytes": 6442450944,
+        "assetCount": 75,
+        "compressionFormat": "zip",
+        "checksumSHA256": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+        "minimumResolution": "2048x2048",
+        "maximumResolution": "8192x8192",
+        "includesLODs": true,
+        "includeMipmaps": false
+      }
+    }
+  ]
+}

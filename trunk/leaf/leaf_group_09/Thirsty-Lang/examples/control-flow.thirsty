@@ -1,0 +1,33 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / control-flow.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / control-flow.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Thirsty-lang Example: Control Flow (If/Else)
+
+drink temperature = 25
+
+pour "Checking temperature..."
+
+thirsty temperature > 30 {
+  pour "It's hot! Stay hydrated!"
+}
+
+thirsty temperature < 30 {
+  pour "It's nice! Still drink water!"
+}
+
+drink age = 21
+
+thirsty age >= 18 {
+  pour "You are an adult"
+}
+hydrated {
+  pour "You are a minor"
+}

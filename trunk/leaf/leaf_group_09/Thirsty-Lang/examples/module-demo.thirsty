@@ -1,0 +1,25 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / module-demo.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / module-demo.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Module import example
+
+// Import specific functions
+import { square, cube, PI } from "math-utils.thirsty"
+
+// Use imported functions
+drink num = 5
+drink squared = square(num)
+drink cubed = cube(num)
+
+pour "Number: " + num
+pour "Squared: " + squared
+pour "Cubed: " + cubed
+pour "PI value: " + PI

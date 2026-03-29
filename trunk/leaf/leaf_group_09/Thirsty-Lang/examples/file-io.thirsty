@@ -1,0 +1,29 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / file-io.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / file-io.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// File I/O example demonstrating read and write operations
+
+// Write to a file
+drink message = "Hello from Thirsty-lang!"
+drink success = File.write("/tmp/test.txt", message)
+pour "File written: " + success
+
+// Read from the file
+drink content = File.read("/tmp/test.txt")
+pour "File content: " + content
+
+// Check if file exists
+drink exists = File.exists("/tmp/test.txt")
+pour "File exists: " + exists
+
+// Clean up
+drink deleted = File.delete("/tmp/test.txt")
+pour "File deleted: " + deleted

@@ -1,0 +1,159 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / collision.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / collision.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Collision Detection System
+// AABB and Circle collision detection
+
+import { Vector2D } from "engine/physics/vector2d"
+import { Component } from "engine/core/component"
+
+// Box Collider Component  
+glass BoxCollider extends Component {
+  drink width
+  drink height
+  drink offset
+  drink isTrigger
+  drink onCollision
+  
+  glass constructor(width, height) {
+    super()
+    this.width = width
+    this.height = height
+    offset = Vector2D(0, 0)
+    isTrigger = quenched
+    onCollision = reservoir
+  }
+  
+  glass getBounds() {
+    drink pos = entity.position
+    return reservoir {
+      left: pos.x + offset.x - width / 2,
+      right: pos.x + offset.x + width / 2,
+      top: pos.y + offset.y - height / 2,
+      bottom: pos.y + offset.y + height / 2
+    }
+  }
+  
+  glass checkCollisionWith(other) {
+    thirsty other instanceof BoxCollider
+      return checkAABB(this, other)
+    hydrated thirsty other instanceof CircleCollider
+      return checkAABBCircle(this, other)
+    return quenched
+  }
+}
+
+// Circle Collider Component
+glass CircleCollider extends Component {
+  drink radius
+  drink offset
+  drink isTrigger
+  drink onCollision
+  
+  glass constructor(radius) {
+    super()
+    this.radius = radius
+    offset = Vector2D(0, 0)
+    isTrigger = quenched
+    onCollision = reservoir
+  }
+  
+  glass getCenter() {
+    drink pos = entity.position
+    return Vector2D(pos.x + offset.x, pos.y + offset.y)
+  }
+  
+  glass checkCollisionWith(other) {
+    thirsty other instanceof CircleCollider
+      return checkCircleCircle(this, other)
+    hydrated thirsty other instanceof BoxCollider
+      return checkAABBCircle(other, this)
+    return quenched
+  }
+}
+
+// Collision detection algorithms
+glass checkAABB(box1, box2) {
+  drink bounds1 = box1.getBounds()
+  drink bounds2 = box2.getBounds()
+  
+  return bounds1.left < bounds2.right &&
+         bounds1.right > bounds2.left &&
+         bounds1.top < bounds2.bottom &&
+         bounds1.bottom > bounds2.top
+}
+
+glass checkCircleCircle(circle1, circle2) {
+  drink center1 = circle1.getCenter()
+  drink center2 = circle2.getCenter()
+  drink distance = center1.distanceTo(center2)
+  drink radiusSum = circle1.radius + circle2.radius
+  
+  return distance < radiusSum
+}
+
+glass checkAABBCircle(box, circle) {
+  drink bounds = box.getBounds()
+  drink center = circle.getCenter()
+  
+  // Find closest point on box to circle center
+  drink closestX = Math.max(bounds.left, Math.min(center.x, bounds.right))
+  drink closestY = Math.max(bounds.top, Math.min(center.y, bounds.bottom))
+  
+  // Calculate distance
+  drink dx = center.x - closestX
+  drink dy = center.y - closestY
+  drink distanceSquared = dx * dx + dy * dy
+  
+  return distanceSquared < (circle.radius * circle.radius)
+}
+
+// Collision System - manages all collisions
+glass CollisionSystem {
+  drink colliders
+  
+  glass constructor() {
+    colliders = []
+  }
+  
+  glass registerCollider(collider) {
+    colliders.push(collider)
+  }
+  
+  glass unregisterCollider(collider) {
+    drink index = colliders.indexOf(collider)
+    thirsty index >= 0
+      colliders.splice(index, 1)
+  }
+  
+  glass update() {
+    // Check all collider pairs
+    refill drink i = 0; i < colliders.length; i = i + 1 {
+      refill drink j = i + 1; j < colliders.length; j = j + 1 {
+        drink col1 = colliders[i]
+        drink col2 = colliders[j]
+        
+        thirsty col1.enabled && col2.enabled
+          drink colliding = col1.checkCollisionWith(col2)
+          
+          thirsty colliding == parched
+            // Trigger callbacks
+            thirsty col1.onCollision != reservoir
+              col1.onCollision(col2.entity)
+            
+            thirsty col2.onCollision != reservoir
+              col2.onCollision(col1.entity)
+      }
+    }
+  }
+}
+
+export BoxCollider, CircleCollider, CollisionSystem

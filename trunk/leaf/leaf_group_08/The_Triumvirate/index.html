@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Triumvirate - Welcome</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0F172A, #1E293B, #1E3A8A);
+            color: #F8FAFC;
+            overflow: hidden;
+        }
+        
+        /* Skip to content link for keyboard navigation */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #0891B2;
+            color: #ffffff;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 0 0 4px 0;
+            z-index: 100;
+            font-weight: 600;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+            outline: 3px solid #ffffff;
+            outline-offset: 2px;
+        }
+        
+        /* Enhanced focus indicators for keyboard navigation */
+        *:focus {
+            outline: 3px solid #0891B2;
+            outline-offset: 2px;
+        }
+        
+        button:focus,
+        a:focus {
+            outline: 3px solid #0891B2;
+            outline-offset: 4px;
+        }
+        
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .logo {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #60A5FA, #06B6D4, #22D3EE);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+        
+        .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            letter-spacing: 0.05em;
+            color: #E2E8F0;
+            line-height: 1.4;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(148, 163, 184, 0.2);
+            border-left: 4px solid #06B6D4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+        
+        .loading-text {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            opacity: 0.9;
+            animation: pulse 1.5s ease-in-out infinite;
+            color: #E2E8F0;
+            letter-spacing: 0.025em;
+        }
+        
+        /* Keyboard shortcuts indicator */
+        .keyboard-shortcuts-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(8, 145, 178, 0.95);
+            color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .keyboard-shortcuts-indicator.show {
+            opacity: 1;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes glow {
+            from { 
+                text-shadow: 0 0 20px rgba(6, 182, 212, 0.5); 
+            }
+            to { 
+                text-shadow: 0 0 30px rgba(6, 182, 212, 0.8), 0 0 40px rgba(34, 211, 238, 0.4); 
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+        
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg); 
+                opacity: 0; 
+            }
+            50% { 
+                transform: translateY(-100px) rotate(180deg); 
+                opacity: 1; 
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .loading-container {
+                padding: 1.5rem;
+            }
+            
+            .loading-spinner {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .keyboard-shortcuts-indicator {
+                bottom: 10px;
+                right: 10px;
+                font-size: 0.75rem;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+  
+  <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fthetriumv8982back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
+  <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
+  </head>
+
+<body>
+    <!-- Navigation Header -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-surface-light" role="navigation" aria-label="Main navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="/index.html" class="flex items-center space-x-3 group" aria-label="ThirstysProjects.com Home">
+                    <svg class="w-10 h-10 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
+                        <title>The Triumvirate Logo</title>
+                        <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="url(#logo-gradient)" stroke-width="2" fill="none"/>
+                        <circle cx="20" cy="20" r="6" fill="url(#logo-gradient)" opacity="0.6"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="5" y1="5" x2="35" y2="35">
+                                <stop offset="0%" stop-color="#1E3A8A"/>
+                                <stop offset="100%" stop-color="#0891B2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="font-headline text-xl font-bold text-text-primary hidden sm:inline">ThirstysProjects</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/pages/manifesto_gateway.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Manifesto</a>
+                    <a href="/pages/trinity_deep_dive.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trinity</a>
+                    <a href="/pages/scenario_demonstrations.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Scenarios</a>
+                    <a href="/pages/research_center.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Research</a>
+                    <a href="/pages/future_architectures.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Future</a>
+                    <a href="/pages/trust_transparency_center.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trust</a>
+                </div>
+
+                <!-- Partner Button -->
+                <button class="btn-accent hidden md:inline-flex" aria-label="Partner with us - Contact form">Partner With Us</button>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-text-primary hover:text-accent transition-colors" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-surface border-t border-surface-light">
+            <div class="px-4 py-6 space-y-4">
+                <a href="/pages/manifesto_gateway.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Manifesto</a>
+                <a href="/pages/trinity_deep_dive.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trinity</a>
+                <a href="/pages/scenario_demonstrations.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Scenarios</a>
+                <a href="/pages/research_center.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Research</a>
+                <a href="/pages/future_architectures.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Future</a>
+                <a href="/pages/trust_transparency_center.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trust</a>
+                <button class="btn-accent w-full">Partner With Us</button>
+            </div>
+        </div>
+    </nav>
+    <!-- Skip to content link for keyboard navigation -->
+    <a href="#main-content" class="skip-link" aria-label="Skip to main content">Skip to main content</a>
+    
+    <!-- Keyboard shortcuts indicator -->
+    <div id="keyboard-shortcuts" class="keyboard-shortcuts-indicator" role="status" aria-live="polite">
+        Press 'H' to skip to homepage
+    </div>
+    
+    <div class="particles" id="particles" aria-hidden="true"></div>
+    
+    <main id="main-content" role="main" class="loading-container" aria-label="Welcome to The Triumvirate">
+        <h1 class="logo" aria-label="The Triumvirate - Main Logo">THE TRIUMVIRATE</h1>
+        <p class="subtitle" aria-label="Tagline">Exploring the Trinity of AI, Humanity & Technology</p>
+        <div class="loading-spinner" role="status" aria-label="Loading animation" aria-live="polite"></div>
+        <p class="loading-text" aria-live="polite" aria-atomic="true">Initializing Gateway...</p>
+    </main>
+
+    <script>
+        // Prevent multiple redirects
+        let redirectExecuted = false;
+        let redirectTimeout = null;
+        
+        function executeRedirect() {
+            // Prevent multiple redirects
+            if (redirectExecuted) {
+                return;
+            }
+            redirectExecuted = true;
+            
+            // Clear any pending timeout
+            if (redirectTimeout) {
+                clearTimeout(redirectTimeout);
+                redirectTimeout = null;
+            }
+            
+            try {
+                window.location.replace('/pages/manifesto_gateway.html');
+            } catch (e) {
+                // Fallback if replace fails
+                window.location.href = '/pages/manifesto_gateway.html';
+            }
+        }
+        
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.setAttribute('aria-hidden', 'true');
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles
+        createParticles();
+        
+        // Keyboard shortcuts
+        let shortcutIndicator = document.getElementById('keyboard-shortcuts');
+        let shortcutTimeout;
+        
+        document.addEventListener('keydown', function(e) {
+            // Show keyboard shortcut indicator
+            shortcutIndicator.classList.add('show');
+            clearTimeout(shortcutTimeout);
+            shortcutTimeout = setTimeout(() => {
+                shortcutIndicator.classList.remove('show');
+            }, 2000);
+            
+            // H key - Go to homepage/manifesto
+            if (e.key === 'h' || e.key === 'H') {
+                e.preventDefault();
+                executeRedirect();
+            }
+            
+            // ESC key - Cancel redirect
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                if (redirectTimeout) {
+                    clearTimeout(redirectTimeout);
+                    redirectTimeout = null;
+                }
+                // User can stay on splash page
+            }
+        });
+        
+        // Redirect to manifesto gateway after 3 seconds (only once)
+        redirectTimeout = setTimeout(executeRedirect, 3000);
+        
+        // Allow immediate redirect on click (only once)
+        document.addEventListener('click', function() {
+            executeRedirect();
+        }, { once: true });
+        
+        // Announce page load to screen readers
+        window.addEventListener('load', function() {
+            const loadingText = document.querySelector('.loading-text');
+            if (loadingText) {
+                loadingText.textContent = 'Gateway initialized. Redirecting to manifesto...';
+            }
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', function() {
+                const isHidden = mobileMenu.classList.contains('hidden');
+                mobileMenu.classList.toggle('hidden');
+                mobileMenuBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+            });
+        }
+    </script>
+<script id="dhws-dataInjector" src="/public/dhws-data-injector.js"></script>
+</body>
+</html>

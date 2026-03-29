@@ -1,0 +1,266 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Industrial PBR Collection",
+  "slug": "industrial-pbr",
+  "version": "1.0.0",
+  "description": "Professional-grade industrial and mechanical PBR texture library for technical visualization, engineering simulations, and realistic game environments. Comprehensive collection of metals, concrete, machinery parts, warning patterns, and industrial surfaces. All textures are physically accurate with measured roughness values and proper metallic workflows. Includes clean, worn, rusted, and damaged variations for realistic weathering. Perfect for sci-fi environments, factories, warehouses, mechanical objects, and industrial architecture. Optimized for real-time rendering with efficient channel packing and LOD generation.",
+  "author": {
+    "name": "IAmSoThirsty",
+    "organization": "Thirsty Studios - Industrial Division",
+    "url": "https://github.com/IAmSoThirsty"
+  },
+  "license": "Apache-2.0",
+  "licenseDetails": {
+    "url": "https://www.apache.org/licenses/LICENSE-2.0",
+    "attributionRequired": true,
+    "commercialUseAllowed": true,
+    "modificationAllowed": true,
+    "redistributionAllowed": true
+  },
+  "category": "industrial",
+  "subcategories": ["pbr", "metal", "concrete", "machinery", "architectural"],
+  "qualityTier": "cinematic",
+  "tags": [
+    "industrial",
+    "pbr",
+    "metal",
+    "steel",
+    "concrete",
+    "machinery",
+    "weathered",
+    "rust",
+    "technical",
+    "photorealistic",
+    "engineering",
+    "sci-fi"
+  ],
+  "targetEngines": ["unreal", "unity", "blender", "3dsmax"],
+  "targetPlatforms": ["windows", "console-ps5", "console-xbox", "linux"],
+  "renderPipeline": "hdrp",
+  "materialWorkflow": "pbr-metallic-roughness",
+  "assets": [
+    {
+      "filename": "steel-plate-rusted-albedo-4k.png",
+      "path": "textures/metal/steel/rusted/steel-plate-rusted-albedo-4k.png",
+      "type": "albedo",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 4096,
+        "height": 4096
+      },
+      "bitDepth": 8,
+      "channels": 3,
+      "compression": "none",
+      "sizeBytes": 50331648,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "k3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b933"
+      },
+      "lodLevel": 0,
+      "tiling": {
+        "seamless": true,
+        "horizontalRepeat": 1.0,
+        "verticalRepeat": 1.0
+      },
+      "metadata": {
+        "artist": "Technical Artist",
+        "software": "Substance Designer 2024",
+        "createdDate": "2026-01-25T14:30:00Z",
+        "materialType": "low-carbon-steel",
+        "weatheringState": "moderate-rust",
+        "corrosionType": "oxidation"
+      }
+    },
+    {
+      "filename": "steel-plate-rusted-normal-4k.png",
+      "path": "textures/metal/steel/rusted/steel-plate-rusted-normal-4k.png",
+      "type": "normalDX",
+      "format": "png",
+      "colorSpace": "linear",
+      "resolution": {
+        "width": 4096,
+        "height": 4096
+      },
+      "bitDepth": 8,
+      "channels": 3,
+      "compression": "none",
+      "sizeBytes": 50331648,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "l3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b944"
+      },
+      "lodLevel": 0,
+      "tiling": {
+        "seamless": true
+      },
+      "metadata": {
+        "normalFormat": "DirectX",
+        "detailLevel": "high"
+      }
+    },
+    {
+      "filename": "steel-plate-rusted-orm-4k.png",
+      "path": "textures/metal/steel/rusted/steel-plate-rusted-orm-4k.png",
+      "type": "packed",
+      "format": "png",
+      "colorSpace": "linear",
+      "resolution": {
+        "width": 4096,
+        "height": 4096
+      },
+      "bitDepth": 8,
+      "channels": 3,
+      "compression": "none",
+      "sizeBytes": 50331648,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "m3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b955"
+      },
+      "lodLevel": 0,
+      "channelPacking": {
+        "r": "ao",
+        "g": "roughness",
+        "b": "metallic"
+      },
+      "tiling": {
+        "seamless": true
+      },
+      "metadata": {
+        "metallicValue": "0.95",
+        "roughnessRange": "0.4-0.8",
+        "aoIntensity": "moderate"
+      }
+    },
+    {
+      "filename": "concrete-floor-industrial-albedo-4k.png",
+      "path": "textures/concrete/industrial-floor/concrete-floor-industrial-albedo-4k.png",
+      "type": "albedo",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 4096,
+        "height": 4096
+      },
+      "bitDepth": 8,
+      "channels": 3,
+      "compression": "none",
+      "sizeBytes": 50331648,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "n3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b966"
+      },
+      "lodLevel": 0,
+      "tiling": {
+        "seamless": true,
+        "horizontalRepeat": 2.0,
+        "verticalRepeat": 2.0
+      },
+      "metadata": {
+        "concreteType": "industrial-grade",
+        "finish": "polished-worn",
+        "usage": "factory-floor"
+      }
+    },
+    {
+      "filename": "warning-stripes-yellow-black-2k.png",
+      "path": "textures/patterns/warning/warning-stripes-yellow-black-2k.png",
+      "type": "diffuse",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 2048,
+        "height": 2048
+      },
+      "bitDepth": 8,
+      "channels": 3,
+      "compression": "none",
+      "sizeBytes": 12582912,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "o3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b977"
+      },
+      "tiling": {
+        "seamless": true,
+        "horizontalRepeat": 4.0,
+        "verticalRepeat": 1.0
+      },
+      "metadata": {
+        "patternType": "safety-warning",
+        "angleStandard": "45-degrees",
+        "colorCompliance": "ISO-3864"
+      }
+    }
+  ],
+  "preview": {
+    "thumbnail": "previews/thumbnail.jpg",
+    "images": [
+      "previews/steel-variations.jpg",
+      "previews/concrete-floor-scene.jpg",
+      "previews/warning-patterns.jpg",
+      "previews/pbr-material-balls.jpg",
+      "previews/weathering-stages.jpg",
+      "previews/factory-environment.jpg"
+    ],
+    "video": "previews/industrial-showcase.mp4"
+  },
+  "technical": {
+    "totalSizeBytes": 6442450944,
+    "assetCount": 5,
+    "compressionFormat": "zip",
+    "checksumSHA256": "p665p45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a44",
+    "minimumResolution": "2048x2048",
+    "maximumResolution": "4096x4096",
+    "includesLODs": true,
+    "includeMipmaps": true
+  },
+  "dependencies": [],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-02-18",
+      "changes": [
+        "Initial release with steel plate textures",
+        "Industrial concrete floors",
+        "Safety warning patterns (ISO compliant)",
+        "Complete PBR workflow with packed channels",
+        "Multiple weathering states"
+      ]
+    }
+  ],
+  "documentation": {
+    "readme": "README.md",
+    "installGuide": "docs/setup-guide.md",
+    "usageExamples": "docs/material-guide.md",
+    "apiReference": "docs/texture-specifications.md"
+  },
+  "support": {
+    "email": "industrial@thirstystudios.example.com",
+    "url": "https://github.com/IAmSoThirsty/TTP",
+    "issues": "https://github.com/IAmSoThirsty/TTP/issues",
+    "forum": "https://community.thirstystudios.example.com"
+  },
+  "metadata": {
+    "physicallyAccurate": true,
+    "measuredRoughness": true,
+    "industrialStandards": ["ISO-3864", "ASTM-D610"],
+    "weatheringCategories": ["clean", "used", "worn", "heavily-corroded"],
+    "materialDatabase": {
+      "steel": {
+        "type": "A36-low-carbon",
+        "ior": 2.9,
+        "reflectance": "0.56"
+      },
+      "concrete": {
+        "type": "industrial-grade",
+        "compressiveStrength": "4000-psi",
+        "finish": "power-troweled"
+      }
+    },
+    "renderingOptimizations": {
+      "channelPacking": "ORM",
+      "compressionFormat": "BC7",
+      "virtualTextures": true
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Project AI",
+  "slug": "project-ai",
+  "version": "1.0.0",
+  "description": "Advanced futuristic and tech-themed texture collection for AI-driven projects and interfaces. Includes comprehensive UI/UX elements, holographic effects, circuit patterns, data visualization components, and sci-fi themed assets. All textures support both raster and vector formats for maximum scalability. Features dark mode, light mode, neon, and minimal theme variations with carefully curated color schemes optimized for screen readability and modern interface design. Perfect for tech demos, AI applications, and futuristic game interfaces.",
+  "author": {
+    "name": "IAmSoThirsty",
+    "organization": "Thirsty Studios",
+    "url": "https://github.com/IAmSoThirsty"
+  },
+  "license": "MIT",
+  "licenseDetails": {
+    "attributionRequired": true,
+    "commercialUseAllowed": true,
+    "modificationAllowed": true,
+    "redistributionAllowed": true
+  },
+  "category": "ui",
+  "subcategories": ["tech", "sci-fi", "ai", "interface", "effects"],
+  "qualityTier": "standard",
+  "tags": [
+    "ai",
+    "tech",
+    "futuristic",
+    "ui",
+    "sci-fi",
+    "interface",
+    "holographic",
+    "neon",
+    "data-viz",
+    "modern"
+  ],
+  "targetEngines": ["unity", "unreal", "web", "generic"],
+  "targetPlatforms": ["windows", "macos", "linux", "web", "mobile"],
+  "renderPipeline": "forward",
+  "materialWorkflow": "stylized",
+  "assets": [
+    {
+      "filename": "button-primary-neon.svg",
+      "path": "ui/buttons/button-primary-neon.svg",
+      "type": "custom",
+      "format": "svg",
+      "colorSpace": "srgb",
+      "bitDepth": 8,
+      "channels": 4,
+      "compression": "none",
+      "sizeBytes": 2048,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "metadata": {
+        "artist": "UI Designer",
+        "software": "Figma",
+        "createdDate": "2026-02-05T09:15:00Z",
+        "scalable": true
+      }
+    },
+    {
+      "filename": "circuit-pattern-teal-1024.png",
+      "path": "backgrounds/circuit-patterns/circuit-pattern-teal-1024.png",
+      "type": "diffuse",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 1024,
+        "height": 1024
+      },
+      "bitDepth": 8,
+      "channels": 4,
+      "compression": "none",
+      "sizeBytes": 524288,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "tiling": {
+        "seamless": true,
+        "horizontalRepeat": 1.0,
+        "verticalRepeat": 1.0
+      },
+      "metadata": {
+        "themeVariant": "neon-dark"
+      }
+    },
+    {
+      "filename": "hologram-overlay-2048.png",
+      "path": "effects/holograms/hologram-overlay-2048.png",
+      "type": "emission",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 2048,
+        "height": 2048
+      },
+      "bitDepth": 8,
+      "channels": 4,
+      "compression": "none",
+      "sizeBytes": 2097152,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "tiling": {
+        "seamless": false
+      },
+      "metadata": {
+        "animationReady": true,
+        "blendMode": "additive"
+      }
+    }
+  ],
+  "preview": {
+    "thumbnail": "previews/thumbnail.png",
+    "images": [
+      "previews/ui-showcase-dark.png",
+      "previews/ui-showcase-light.png",
+      "previews/effects-demo.png",
+      "previews/color-palette.png"
+    ]
+  },
+  "technical": {
+    "totalSizeBytes": 10485760,
+    "assetCount": 3,
+    "compressionFormat": "zip",
+    "checksumSHA256": "c665c45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae5",
+    "minimumResolution": "512x512",
+    "maximumResolution": "2048x2048",
+    "includesLODs": false,
+    "includeMipmaps": false
+  },
+  "documentation": {
+    "readme": "README.md",
+    "usageExamples": "docs/ui-integration.md"
+  },
+  "support": {
+    "issues": "https://github.com/IAmSoThirsty/TTP/issues",
+    "url": "https://github.com/IAmSoThirsty/TTP"
+  },
+  "metadata": {
+    "colorSchemes": {
+      "neon": {
+        "primary": ["#00ffff", "#0080ff", "#ff00ff"],
+        "accent": ["#00ff00", "#ffff00", "#ff0080"],
+        "background": ["#0a0a0a", "#1a1a2e"]
+      },
+      "minimal": {
+        "primary": ["#2a2a2a", "#3a3a3a", "#4a4a4a"],
+        "accent": ["#0080ff", "#00ffaa"],
+        "background": ["#ffffff", "#f5f5f5"]
+      }
+    },
+    "themeVariants": ["dark-mode", "light-mode", "neon", "minimal"],
+    "scalabilityHint": "SVG-preferred-for-UI"
+  }
+}

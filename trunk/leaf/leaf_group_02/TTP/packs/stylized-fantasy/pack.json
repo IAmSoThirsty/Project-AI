@@ -1,0 +1,209 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Stylized Fantasy World",
+  "slug": "stylized-fantasy",
+  "version": "1.0.0",
+  "description": "Hand-painted stylized texture collection designed for fantasy game environments with a vibrant, artistic aesthetic. Features magical forests, ancient ruins, mystical crystals, enchanted waters, and fantasy architecture elements. All textures are painted with consistent art direction suitable for cel-shaded, toon, or stylized PBR rendering. Optimized for mobile and mid-range platforms while maintaining visual appeal. Includes both tileable environment textures and unique prop textures with hand-crafted details. Perfect for indie games, mobile RPGs, and stylized 3D projects.",
+  "author": {
+    "name": "IAmSoThirsty",
+    "organization": "Thirsty Studios - Fantasy Art Division",
+    "url": "https://github.com/IAmSoThirsty"
+  },
+  "license": "CC-BY-NC-SA-4.0",
+  "licenseDetails": {
+    "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "attributionRequired": true,
+    "commercialUseAllowed": false,
+    "modificationAllowed": true,
+    "redistributionAllowed": true
+  },
+  "category": "fantasy",
+  "subcategories": ["stylized", "hand-painted", "environment", "props", "magical"],
+  "qualityTier": "high",
+  "tags": [
+    "fantasy",
+    "stylized",
+    "hand-painted",
+    "magical",
+    "vibrant",
+    "cel-shaded",
+    "mobile-optimized",
+    "indie",
+    "rpg",
+    "colorful",
+    "artistic"
+  ],
+  "targetEngines": ["unity", "unreal", "godot"],
+  "targetPlatforms": ["mobile", "windows", "macos", "console-switch", "webgl"],
+  "renderPipeline": "urp",
+  "materialWorkflow": "stylized",
+  "assets": [
+    {
+      "filename": "magical-crystal-blue-diffuse-2k.png",
+      "path": "textures/crystals/magical-crystal-blue-diffuse-2k.png",
+      "type": "diffuse",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 2048,
+        "height": 2048
+      },
+      "bitDepth": 8,
+      "channels": 4,
+      "compression": "none",
+      "sizeBytes": 16777216,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "f3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b899"
+      },
+      "tiling": {
+        "seamless": false
+      },
+      "metadata": {
+        "artist": "Fantasy Texture Artist",
+        "software": "Photoshop 2024 + Procreate",
+        "paintingStyle": "hand-painted",
+        "artDirection": "vibrant-fantasy",
+        "createdDate": "2026-01-20T11:00:00Z"
+      }
+    },
+    {
+      "filename": "magical-crystal-blue-emission-2k.png",
+      "path": "textures/crystals/magical-crystal-blue-emission-2k.png",
+      "type": "emission",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 2048,
+        "height": 2048
+      },
+      "bitDepth": 8,
+      "channels": 3,
+      "compression": "none",
+      "sizeBytes": 12582912,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "g3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b900"
+      },
+      "tiling": {
+        "seamless": false
+      },
+      "metadata": {
+        "glowIntensity": "high",
+        "colorTemperature": "cool-blue",
+        "animationReady": true
+      }
+    },
+    {
+      "filename": "enchanted-forest-ground-2k.png",
+      "path": "textures/terrain/forest/enchanted-forest-ground-2k.png",
+      "type": "diffuse",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 2048,
+        "height": 2048
+      },
+      "bitDepth": 8,
+      "channels": 3,
+      "compression": "none",
+      "sizeBytes": 12582912,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "h3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b911"
+      },
+      "tiling": {
+        "seamless": true,
+        "horizontalRepeat": 4.0,
+        "verticalRepeat": 4.0
+      },
+      "metadata": {
+        "biome": "magical-forest",
+        "season": "eternal-spring",
+        "vegetationDensity": "high"
+      }
+    },
+    {
+      "filename": "ancient-stone-wall-2k.png",
+      "path": "textures/architecture/ruins/ancient-stone-wall-2k.png",
+      "type": "diffuse",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 2048,
+        "height": 2048
+      },
+      "bitDepth": 8,
+      "channels": 3,
+      "compression": "none",
+      "sizeBytes": 12582912,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "i3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b922"
+      },
+      "tiling": {
+        "seamless": true,
+        "horizontalRepeat": 2.0,
+        "verticalRepeat": 2.0
+      },
+      "metadata": {
+        "architectureStyle": "ancient-ruins",
+        "weathering": "heavy-moss",
+        "magical Elements": "runic-inscriptions"
+      }
+    }
+  ],
+  "preview": {
+    "thumbnail": "previews/thumbnail.png",
+    "images": [
+      "previews/crystal-showcase.png",
+      "previews/forest-environment.png",
+      "previews/ruins-scene.png",
+      "previews/color-palette.png",
+      "previews/art-style-guide.png"
+    ],
+    "video": "previews/fantasy-world-tour.mp4"
+  },
+  "technical": {
+    "totalSizeBytes": 157286400,
+    "assetCount": 4,
+    "compressionFormat": "zip",
+    "checksumSHA256": "j665j45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27a33",
+    "minimumResolution": "1024x1024",
+    "maximumResolution": "2048x2048",
+    "includesLODs": true,
+    "includeMipmaps": true
+  },
+  "dependencies": [],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-02-18",
+      "changes": [
+        "Initial release with magical crystals",
+        "Hand-painted forest terrain textures",
+        "Ancient ruins architecture set",
+        "Stylized PBR workflow with emission maps"
+      ]
+    }
+  ],
+  "documentation": {
+    "readme": "README.md",
+    "usageExamples": "docs/style-guide.md"
+  },
+  "support": {
+    "url": "https://github.com/IAmSoThirsty/TTP",
+    "issues": "https://github.com/IAmSoThirsty/TTP/issues"
+  },
+  "metadata": {
+    "artStyle": "stylized-fantasy",
+    "colorPalette": {
+      "primary": ["#4A90E2", "#9B59B6", "#27AE60"],
+      "accent": ["#F39C12", "#E74C3C", "#ECF0F1"],
+      "magical": ["#00D9FF", "#FF00FF", "#00FFA3"]
+    },
+    "targetAesthetic": "whimsical-vibrant",
+    "performanceProfile": "mobile-optimized",
+    "shaderCompatibility": ["toon", "cel-shaded", "stylized-pbr"]
+  }
+}

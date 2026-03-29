@@ -1,0 +1,88 @@
+{
+  "global": {
+    "privacy_mode": "maximum",
+    "kill_switch_enabled": true,
+    "telemetry_disabled": true,
+    "log_level": "INFO"
+  },
+  "firewalls": {
+    "packet_filtering": {
+      "enabled": true,
+      "default_policy": "deny"
+    },
+    "circuit_level": {
+      "enabled": true,
+      "proxy_timeout": 30
+    },
+    "stateful_inspection": {
+      "enabled": true,
+      "connection_timeout": 3600
+    },
+    "proxy": {
+      "enabled": true,
+      "cache_enabled": false
+    },
+    "next_generation": {
+      "enabled": true,
+      "ai_detection": true
+    },
+    "software": {
+      "enabled": true,
+      "user_space": true
+    },
+    "hardware": {
+      "enabled": true,
+      "bypass_mode": false
+    },
+    "cloud": {
+      "enabled": true,
+      "distributed": true
+    }
+  },
+  "vpn": {
+    "enabled": true,
+    "multi_hop": true,
+    "hop_count": 3,
+    "kill_switch": true,
+    "dns_leak_protection": true,
+    "ipv6_leak_protection": true,
+    "split_tunneling": false,
+    "stealth_mode": true,
+    "logging": "never",
+    "protocol_fallback": ["wireguard", "openvpn", "ikev2"],
+    "exit_node_selection": "user"
+  },
+  "browser": {
+    "incognito_mode": true,
+    "no_history": true,
+    "no_cache": true,
+    "no_cookies": true,
+    "tab_isolation": true,
+    "sandbox_enabled": true,
+    "fingerprint_protection": true,
+    "tracker_blocking": true,
+    "extension_whitelist": [],
+    "download_isolation": true,
+    "keyboard_cloaking": true,
+    "mouse_cloaking": true
+  },
+  "privacy": {
+    "anti_fingerprint": true,
+    "anti_tracker": true,
+    "anti_phishing": true,
+    "anti_malware": true,
+    "dns_over_https": true,
+    "onion_routing": true,
+    "ephemeral_storage": true,
+    "forensic_resistance": true,
+    "session_auditing": true,
+    "leak_auditing": true,
+    "privacy_vault_enabled": true
+  },
+  "storage": {
+    "encrypted": true,
+    "ephemeral_mode": true,
+    "secure_delete": true,
+    "memory_only": false
+  }
+}

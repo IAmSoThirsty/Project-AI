@@ -1,0 +1,32 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ttp-prod
+
+bases:
+  - ../../base
+
+patchesStrategicMerge:
+  - deployment-patch.yaml
+
+images:
+  - name: ttp-api
+    newName: your-registry.com/ttp-api
+    newTag: "1.0.0"
+  - name: ttp-web
+    newName: your-registry.com/ttp-web
+    newTag: "1.0.0"
+
+replicas:
+  - name: ttp-api
+    count: 3
+  - name: ttp-web
+    count: 2
+
+configMapGenerator:
+  - name: ttp-config
+    behavior: merge
+    literals:
+      - DEBUG=false
+      - LOG_LEVEL=INFO
+      - WORKERS=4

@@ -1,0 +1,74 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / functions.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / functions.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Thirsty-lang Functions Example
+// Demonstrates the glass keyword for function declarations
+
+// Simple function with no parameters
+glass greetWorld() {
+  pour "Hello from Thirsty-lang!"
+}
+
+// Function with parameters and return value
+glass add(a, b) {
+  return a + b
+}
+
+// Function with string concatenation
+glass greet(name) {
+  return "Hello, " + name + "!"
+}
+
+// Function with conditional logic
+glass max(a, b) {
+  thirsty a > b {
+    return a
+  }
+  hydrated {
+    return b
+  }
+}
+
+// Function with multiple operations
+glass calculateArea(length, width) {
+  drink area = length * width
+  return area
+}
+
+// Nested function calls
+glass double(x) {
+  return x * 2
+}
+
+glass quadruple(x) {
+  return double(double(x))
+}
+
+// Execute the examples
+pour "=== Function Examples ==="
+pour ""
+
+greetWorld()
+
+drink sum = add(10, 20)
+pour "10 + 20 = " + sum
+
+drink message = greet("Thirsty Developer")
+pour message
+
+drink maximum = max(42, 17)
+pour "Max of 42 and 17 is: " + maximum
+
+drink roomArea = calculateArea(10, 15)
+pour "Room area (10 x 15): " + roomArea
+
+drink result = quadruple(5)
+pour "Quadruple of 5 is: " + result

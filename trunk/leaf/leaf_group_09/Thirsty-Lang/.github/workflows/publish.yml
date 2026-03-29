@@ -1,0 +1,67 @@
+name: Publish to NPM
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to publish (e.g., v2.0.0)'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.inputs.tag || github.ref }}
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        registry-url: 'https://registry.npmjs.org'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Run tests
+      run: npm test
+    
+    - name: Verify package contents
+      run: |
+        npm pack --dry-run
+        echo "✓ Package verified successfully"
+    
+    - name: Publish to NPM
+      if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+      run: npm publish --provenance --access public
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    
+    - name: Create GitHub Release Asset
+      if: github.event_name == 'release'
+      run: |
+        npm pack
+        PKG_NAME=$(ls thirsty-lang-*.tgz)
+        echo "PKG_NAME=$PKG_NAME" >> $GITHUB_ENV
+        echo "Created package: $PKG_NAME"
+    
+    - name: Upload Release Asset
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./${{ env.PKG_NAME }}
+        asset_name: ${{ env.PKG_NAME }}
+        asset_content_type: application/gzip

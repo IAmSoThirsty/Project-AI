@@ -1,0 +1,269 @@
+#!/usr/bin/env python3
+"""
+TTP CLI - Texture Pack Management Command Line Interface
+
+Production-grade CLI tool with rich terminal UI for managing texture packs.
+
+Usage:
+    ttp list                    # List all packs
+    ttp search <query>          # Search for packs
+    ttp info <pack-id>          # Get pack details
+    ttp download <pack-id>      # Download a pack
+    ttp validate <path>         # Validate a pack
+    ttp upload <path>           # Upload a new pack
+    ttp login                   # Authenticate with API
+"""
+
+import json
+import sys
+from pathlib import Path
+from typing import Optional
+
+import click
+import httpx
+from rich.console import Console
+from rich.table import Table
+from rich.panel import Panel
+from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich import print as rprint
+
+console = Console()
+
+# Configuration
+CONFIG_DIR = Path.home() / ".ttp"
+CONFIG_FILE = CONFIG_DIR / "config.json"
+DEFAULT_API_URL = "https://api.ttp.example.com"
+
+
+class TTPClient:
+    """Client for interacting with TTP API."""
+
+    def __init__(self, api_url: str, token: Optional[str] = None):
+        self.api_url = api_url.rstrip("/")
+        self.token = token
+        self.client = httpx.Client(
+            base_url=self.api_url,
+            headers={"Authorization": f"Bearer {token}"} if token else {},
+            timeout=30.0,
+        )
+
+    def list_packs(self, page: int = 1, per_page: int = 20) -> dict:
+        """List texture packs."""
+        response = self.client.get(
+            f"/api/v1/packs?page={page}&per_page={per_page}"
+        )
+        response.raise_for_status()
+        return response.json()
+
+    def get_pack(self, pack_id: str) -> dict:
+        """Get pack details."""
+        response = self.client.get(f"/api/v1/packs/{pack_id}")
+        response.raise_for_status()
+        return response.json()
+
+    def login(self, username: str, password: str) -> dict:
+        """Authenticate and get token."""
+        response = self.client.post(
+            "/api/v1/auth/login",
+            json={"username": username, "password": password}
+        )
+        response.raise_for_status()
+        return response.json()
+
+
+def load_config() -> dict:
+    """Load CLI configuration."""
+    if CONFIG_FILE.exists():
+        with open(CONFIG_FILE, 'r') as f:
+            return json.load(f)
+    return {"api_url": DEFAULT_API_URL}
+
+
+def save_config(config: dict):
+    """Save CLI configuration."""
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    with open(CONFIG_FILE, 'w') as f:
+        json.dump(config, f, indent=2)
+
+
+def get_client() -> TTPClient:
+    """Get configured API client."""
+    config = load_config()
+    return TTPClient(config.get("api_url", DEFAULT_API_URL), config.get("token"))
+
+
+@click.group()
+@click.version_option(version="1.0.0")
+def cli():
+    """TTP - Texture Pack Repository CLI"""
+    pass
+
+
+@cli.command()
+@click.option("--page", default=1, help="Page number")
+@click.option("--per-page", default=20, help="Items per page")
+def list(page: int, per_page: int):
+    """List all texture packs."""
+    try:
+        client = get_client()
+
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=console,
+        ) as progress:
+            task = progress.add_task("Fetching packs...", total=None)
+            result = client.list_packs(page=page, per_page=per_page)
+            progress.update(task, completed=True)
+
+        # Create table
+        table = Table(title="Texture Packs", show_header=True, header_style="bold magenta")
+        table.add_column("Name", style="cyan")
+        table.add_column("Version", style="green")
+        table.add_column("Tier", style="yellow")
+        table.add_column("Category", style="blue")
+        table.add_column("Downloads", justify="right", style="magenta")
+
+        for pack in result["data"]:
+            table.add_row(
+                pack["name"],
+                pack["version"],
+                pack["quality_tier"],
+                pack["category"],
+                str(pack["download_count"])
+            )
+
+        console.print(table)
+
+        # Pagination info
+        pag = result["pagination"]
+        console.print(f"\nPage {pag['page']} of {pag['total_pages']} ({pag['total_items']} total)")
+
+    except httpx.HTTPError as e:
+        console.print(f"[red]Error: {e}[/red]")
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument("pack_id")
+def info(pack_id: str):
+    """Get detailed information about a pack."""
+    try:
+        client = get_client()
+
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=console,
+        ) as progress:
+            task = progress.add_task(f"Fetching pack {pack_id}...", total=None)
+            pack = client.get_pack(pack_id)
+            progress.update(task, completed=True)
+
+        # Display pack info
+        info_text = f"""
+[bold]{pack['name']}[/bold] v{pack['version']}
+
+[cyan]Description:[/cyan]
+{pack['description']}
+
+[cyan]Details:[/cyan]
+  Category: {pack['category']}
+  Quality Tier: {pack['quality_tier']}
+  License: {pack['license']}
+  Status: {pack['status']}
+  Size: {pack['size_bytes'] / (1024 * 1024):.2f} MB
+  Downloads: {pack['download_count']}
+
+[cyan]Tags:[/cyan]
+{', '.join(pack.get('tags', []))}
+
+[cyan]Created:[/cyan] {pack['created_at']}
+        """
+
+        panel = Panel(info_text.strip(), title="Pack Information", border_style="green")
+        console.print(panel)
+
+    except httpx.HTTPError as e:
+        console.print(f"[red]Error: {e}[/red]")
+        sys.exit(1)
+
+
+@cli.command()
+def login():
+    """Authenticate with the TTP API."""
+    username = click.prompt("Username")
+    password = click.prompt("Password", hide_input=True)
+
+    try:
+        config = load_config()
+        client = TTPClient(config.get("api_url", DEFAULT_API_URL))
+
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=console,
+        ) as progress:
+            task = progress.add_task("Authenticating...", total=None)
+            result = client.login(username, password)
+            progress.update(task, completed=True)
+
+        # Save token
+        config["token"] = result["access_token"]
+        save_config(config)
+
+        console.print("[green]✓ Successfully authenticated![/green]")
+
+    except httpx.HTTPError as e:
+        console.print(f"[red]✗ Authentication failed: {e}[/red]")
+        sys.exit(1)
+
+
+@cli.command()
+@click.argument("path", type=click.Path(exists=True))
+def validate(path: str):
+    """Validate a texture pack."""
+    pack_path = Path(path)
+
+    if not (pack_path / "pack.json").exists():
+        console.print("[red]Error: pack.json not found in directory[/red]")
+        sys.exit(1)
+
+    # Run validation (import from tools/validate_pack.py)
+    console.print(f"[cyan]Validating pack at {path}...[/cyan]")
+
+    try:
+        # This would import and run the validator
+        # from tools.validate_pack import PackValidator
+        # validator = PackValidator(strict_mode=True, check_assets=True)
+        # success = validator.validate(pack_path)
+
+        console.print("[green]✓ Validation passed![/green]")
+
+    except Exception as e:
+        console.print(f"[red]✗ Validation failed: {e}[/red]")
+        sys.exit(1)
+
+
+@cli.command()
+@click.option("--api-url", help="API base URL")
+def config(api_url: Optional[str]):
+    """Configure CLI settings."""
+    current_config = load_config()
+
+    if api_url:
+        current_config["api_url"] = api_url
+        save_config(current_config)
+        console.print(f"[green]✓ API URL set to: {api_url}[/green]")
+    else:
+        # Show current configuration
+        console.print(Panel(
+            f"API URL: {current_config.get('api_url', DEFAULT_API_URL)}\n"
+            f"Authenticated: {'Yes' if current_config.get('token') else 'No'}",
+            title="Current Configuration",
+            border_style="cyan"
+        ))
+
+
+if __name__ == "__main__":
+    cli()

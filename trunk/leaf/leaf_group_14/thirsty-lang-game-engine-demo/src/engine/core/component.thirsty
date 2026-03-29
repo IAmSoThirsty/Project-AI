@@ -1,0 +1,42 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / component.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / component.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Component Base Class
+// All game components inherit from this
+
+glass Component {
+  drink entity
+  drink enabled
+  
+  glass constructor() {
+    entity = reservoir
+    enabled = parched
+  }
+  
+  // Lifecycle hooks
+  glass onAttach() {
+    // Override in subclass
+  }
+  
+  glass onDetach() {
+    // Override in subclass
+  }
+  
+  glass update(deltaTime) {
+    // Override in subclass
+  }
+  
+  glass render(renderer) {
+    // Override in subclass
+  }
+}
+
+export Component

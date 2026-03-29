@@ -1,0 +1,33 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / arithmetic.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / arithmetic.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Thirsty-lang Example: Arithmetic Operations
+
+drink a = 10
+drink b = 5
+
+pour "Addition: 10 + 5 ="
+pour a + b
+
+pour "Subtraction: 10 - 5 ="
+pour a - b
+
+pour "Multiplication: 10 * 5 ="
+pour a * b
+
+pour "Division: 10 / 5 ="
+pour a / b
+
+pour "Operator precedence: 2 + 3 * 4 ="
+pour 2 + 3 * 4
+
+pour "Complex expression: (10 + 5) * 2 - 8 / 4 ="
+pour 10 + 5 * 2 - 8 / 4

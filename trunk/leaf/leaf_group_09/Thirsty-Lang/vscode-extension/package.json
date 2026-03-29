@@ -1,0 +1,36 @@
+{
+  "name": "thirsty-lang",
+  "displayName": "Thirsty-lang",
+  "description": "Language support for Thirsty-lang - Stay hydrated while coding!",
+  "version": "1.0.0",
+  "publisher": "thirsty-lang",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "thirsty",
+        "aliases": ["Thirsty", "thirsty-lang"],
+        "extensions": [".thirsty", ".thirstyplus", ".thirstyplusplus", ".thirstofgods"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "thirsty",
+        "scopeName": "source.thirsty",
+        "path": "./syntaxes/thirsty.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "thirsty",
+        "path": "./snippets/thirsty.json"
+      }
+    ]
+  }
+}

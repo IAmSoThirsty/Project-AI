@@ -1,0 +1,78 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / vector2d.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / vector2d.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// 2D Vector Mathematics
+// Essential for game physics and positioning
+
+glass Vector2D {
+  drink x
+  drink y
+  
+  glass constructor(x, y) {
+    this.x = x
+    this.y = y
+  }
+  
+  // Vector addition
+  glass add(other) {
+    return Vector2D(x + other.x, y + other.y)
+  }
+  
+  // Vector subtraction
+  glass subtract(other) {
+    return Vector2D(x - other.x, y - other.y)
+  }
+  
+  // Scalar multiplication
+  glass multiply(scalar) {
+    return Vector2D(x * scalar, y * scalar)
+  }
+  
+  // Dot product
+  glass dot(other) {
+    return x * other.x + y * other.y
+  }
+  
+  // Magnitude squared (faster than magnitude)
+  glass magnitudeSquared() {
+    return x * x + y * y
+  }
+  
+  // Magnitude
+  glass magnitude() {
+    return Math.sqrt(magnitudeSquared())
+  }
+  
+  // Normalize
+  glass normalize() {
+    drink mag = magnitude()
+    thirsty mag > 0
+      return Vector2D(x / mag, y / mag)
+    return Vector2D(0, 0)
+  }
+  
+  // Distance to another vector
+  glass distanceTo(other) {
+    drink dx = other.x - x
+    drink dy = other.y - y
+    return Math.sqrt(dx * dx + dy * dy)
+  }
+  
+  // Linear interpolation
+  glass lerp(other, t) {
+    return Vector2D(
+      x + (other.x - x) * t,
+      y + (other.y - y) * t
+    )
+  }
+}
+
+export Vector2D

@@ -1,0 +1,23 @@
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+# TTP Validation Tool Requirements
+# Python 3.12+ required
+
+# Core dependencies
+jsonschema>=4.21.0,<5.0.0          # JSON Schema validation (Draft 7)
+Pillow>=10.2.0,<11.0.0              # Image file validation and property checking
+pydantic>=2.6.0,<3.0.0              # Data validation and settings management
+
+# Optional dependencies for enhanced functionality
+python-magic>=0.4.27;sys_platform!='win32'  # File type detection via magic bytes (Unix/Linux/Mac)
+python-magic-bin>=0.4.14;sys_platform=='win32'  # File type detection for Windows
+
+# Development and testing
+pytest>=8.0.0,<9.0.0                # Testing framework
+pytest-cov>=4.1.0,<5.0.0            # Coverage reporting
+mypy>=1.8.0,<2.0.0                  # Static type checking
+black>=24.1.0,<25.0.0               # Code formatting
+ruff>=0.2.0,<1.0.0                  # Fast Python linter
+
+# Documentation
+sphinx>=7.2.0,<8.0.0                # Documentation generation
+sphinx-rtd-theme>=2.0.0,<3.0.0      # Read the Docs theme

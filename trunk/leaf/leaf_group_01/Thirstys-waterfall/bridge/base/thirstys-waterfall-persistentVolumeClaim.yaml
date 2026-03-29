@@ -1,0 +1,18 @@
+#! thirstys-waterfall-C:\Users\Quencher\.gemini\antigravity\scratch\sovereign-repos\Thirstys-waterfall\config-persistentVolumeClaim.yaml
+# Generated code, do not edit
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: thirstys-waterfall-c--users-quencher--gemini-antigravity-scratch-sovereign-repos-thirstys-waterfall-config
+    namespace: thirstys-waterfall
+    labels:
+        com.docker.compose.service: thirstys-waterfall
+        com.docker.compose.volume: C:\Users\Quencher\.gemini\antigravity\scratch\sovereign-repos\Thirstys-waterfall\config
+spec:
+    accessModes:
+        # TODO would need to check which services use this volume
+        - ReadOnlyMany
+    volumeMode: Filesystem
+    resources:
+        requests:
+            storage: 100Mi

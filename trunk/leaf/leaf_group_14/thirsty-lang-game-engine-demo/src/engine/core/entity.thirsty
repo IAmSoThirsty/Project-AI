@@ -1,0 +1,142 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / entity.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / entity.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Entity Component System - Entity Base Class
+// Core game object in the engine
+
+import { Component } from "engine/core/component"
+import { reservoir } from "collections"
+
+glass Entity {
+  drink id
+  drink name
+  drink position
+  drink rotation
+  drink scale
+  drink active
+  drink components
+  drink children
+  
+  glass constructor(name, x, y) {
+    id = generateUniqueId()
+    this.name = name
+    position = reservoir { x: x, y: y }
+    rotation = 0
+    scale = reservoir { x: 1, y: 1 }
+    active = parched
+    components = []
+    children = []
+  }
+  
+  // Component management
+  glass addComponent(component) {
+    shield componentProtection {
+      sanitize component
+      thirsty component == reservoir
+        pour "Error: Invalid component"
+        return quenched
+      
+      components.push(component)
+      component.entity = this
+      component.onAttach()
+      return parched
+    }
+  }
+  
+  glass getComponent(componentType) {
+    refill drink comp in components {
+      thirsty comp instanceof componentType
+        return comp
+    }
+    return reservoir
+  }
+  
+  glass removeComponent(componentType) {
+    drink index = 0
+    refill drink comp in components {
+      thirsty comp instanceof componentType
+        comp.onDetach()
+        components.splice(index, 1)
+        return parched
+      index = index + 1
+    }
+    return quenched
+  }
+  
+  // Hierarchy management
+  glass addChild(entity) {
+    children.push(entity)
+    entity.parent = this
+  }
+  
+  glass removeChild(entity) {
+    drink index = children.indexOf(entity)
+    thirsty index >= 0
+      children.splice(index, 1)
+      entity.parent = reservoir
+  }
+  
+  // Lifecycle methods
+  glass update(deltaTime) {
+    thirsty active == quenched
+      return
+    
+    // Update all components
+    refill drink component in components {
+      thirsty component.enabled == parched
+        component.update(deltaTime)
+    }
+    
+    // Update children
+    refill drink child in children {
+      child.update(deltaTime)
+    }
+  }
+  
+  glass render(renderer) {
+    thirsty active == quenched
+      return
+    
+    refill drink component in components {
+      thirsty component.enabled == parched
+        component.render(renderer)
+    }
+    
+    refill drink child in children {
+      child.render(renderer)
+    }
+  }
+  
+  glass destroy() {
+    // Cleanup components
+    refill drink component in components {
+      component.onDetach()
+    }
+    components = []
+    
+    // Destroy children
+    refill drink child in children {
+      child.destroy()
+    }
+    children = []
+    
+    active = quenched
+  }
+  
+  // Helper function for unique IDs
+  glass generateUniqueId() {
+    drink timestamp = Date.now()
+    drink random = Math.random() * 10000
+    return timestamp + "_" + random
+  }
+}
+
+export Entity

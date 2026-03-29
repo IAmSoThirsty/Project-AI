@@ -1,0 +1,496 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Neural Depth Palette - Primary Colors */
+    --color-primary: #1E3A8A; /* blue-900 - Core manifesto authority */
+    --color-primary-50: #EFF6FF; /* blue-50 */
+    --color-primary-100: #DBEAFE; /* blue-100 */
+    --color-primary-200: #BFDBFE; /* blue-200 */
+    --color-primary-300: #93C5FD; /* blue-300 */
+    --color-primary-400: #60A5FA; /* blue-400 */
+    --color-primary-500: #3B82F6; /* blue-500 */
+    --color-primary-600: #2563EB; /* blue-600 */
+    --color-primary-700: #1D4ED8; /* blue-700 */
+    --color-primary-800: #1E40AF; /* blue-800 */
+    --color-primary-900: #1E3A8A; /* blue-900 */
+
+    /* Secondary Colors - Technical Precision */
+    --color-secondary: #0891B2; /* cyan-600 - Technical precision accent */
+    --color-secondary-50: #ECFEFF; /* cyan-50 */
+    --color-secondary-100: #CFFAFE; /* cyan-100 */
+    --color-secondary-200: #A5F3FC; /* cyan-200 */
+    --color-secondary-300: #67E8F9; /* cyan-300 */
+    --color-secondary-400: #22D3EE; /* cyan-400 */
+    --color-secondary-500: #06B6D4; /* cyan-500 */
+    --color-secondary-600: #0891B2; /* cyan-600 */
+    --color-secondary-700: #0E7490; /* cyan-700 */
+    --color-secondary-800: #155E75; /* cyan-800 */
+    --color-secondary-900: #164E63; /* cyan-900 */
+
+    /* Accent Colors - Breakthrough Emphasis */
+    --color-accent: #06B6D4; /* cyan-500 - Focus moments */
+    --color-accent-light: #22D3EE; /* cyan-400 */
+    --color-accent-dark: #0891B2; /* cyan-600 */
+
+    /* Background Colors - Deep Contemplative Canvas */
+    --color-background: #0F172A; /* slate-900 - Neural network atmosphere */
+    --color-background-light: #1E293B; /* slate-800 */
+    --color-background-lighter: #334155; /* slate-700 */
+
+    /* Surface Colors - Content Elevation */
+    --color-surface: #1E293B; /* slate-800 - Subtle content elevation */
+    --color-surface-light: #334155; /* slate-700 */
+    --color-surface-lighter: #475569; /* slate-600 */
+
+    /* Text Colors - Reading Clarity */
+    --color-text-primary: #F8FAFC; /* slate-50 - Extended reading clarity */
+    --color-text-secondary: #94A3B8; /* slate-400 - Clear hierarchy support */
+    --color-text-tertiary: #64748B; /* slate-500 */
+    --color-text-muted: #475569; /* slate-600 */
+
+    /* Semantic Colors */
+    --color-success: #10B981; /* emerald-500 - Implementation validation */
+    --color-success-light: #34D399; /* emerald-400 */
+    --color-success-dark: #059669; /* emerald-600 */
+
+    --color-warning: #F59E0B; /* amber-500 - Complexity alerts */
+    --color-warning-light: #FBBF24; /* amber-400 */
+    --color-warning-dark: #D97706; /* amber-600 */
+
+    --color-error: #EF4444; /* red-500 - System concerns */
+    --color-error-light: #F87171; /* red-400 */
+    --color-error-dark: #DC2626; /* red-600 */
+
+    /* Enhanced Shadow Definitions - Neural Network Inspired */
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-sm: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+    --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-dramatic: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --shadow-glow-primary: 0 0 20px rgba(30, 58, 138, 0.5);
+    --shadow-glow-secondary: 0 0 20px rgba(8, 145, 178, 0.5);
+    --shadow-glow-accent: 0 0 20px rgba(6, 182, 212, 0.5);
+
+    /* Enhanced Animation Timing */
+    --transition-fast: 150ms;
+    --transition-base: 250ms;
+    --transition-medium: 350ms;
+    --transition-slow: 500ms;
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Refined Spacing Scale */
+    --spacing-xs: 0.25rem; /* 4px */
+    --spacing-sm: 0.5rem; /* 8px */
+    --spacing-md: 1rem; /* 16px */
+    --spacing-lg: 1.5rem; /* 24px */
+    --spacing-xl: 2rem; /* 32px */
+    --spacing-2xl: 3rem; /* 48px */
+    --spacing-3xl: 4rem; /* 64px */
+    --spacing-4xl: 6rem; /* 96px */
+  }
+
+  * {
+    @apply border-slate-700;
+  }
+
+  body {
+    @apply bg-background text-text-primary font-body antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    letter-spacing: -0.011em;
+  }
+
+  /* Enhanced Typography Hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline text-text-primary;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    letter-spacing: -0.025em;
+  }
+
+  h1 {
+    @apply text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+  }
+
+  h3 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-semibold leading-snug;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+
+  h4 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-semibold leading-snug;
+    line-height: 1.3;
+    margin-bottom: 0.875rem;
+  }
+
+  h5 {
+    @apply text-xl md:text-2xl lg:text-3xl font-medium leading-normal;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+  }
+
+  h6 {
+    @apply text-lg md:text-xl lg:text-2xl font-medium leading-normal;
+    line-height: 1.45;
+    margin-bottom: 0.625rem;
+  }
+
+  p {
+    @apply text-base md:text-lg leading-relaxed text-text-secondary;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+    max-width: 75ch;
+  }
+
+  a {
+    @apply text-secondary hover:text-accent transition-colors;
+    transition-duration: var(--transition-base);
+    text-decoration: none;
+  }
+
+  code {
+    @apply font-code text-accent bg-surface px-2 py-1 rounded text-sm;
+    font-size: 0.875em;
+    letter-spacing: -0.01em;
+  }
+
+  pre {
+    @apply font-code bg-surface p-6 rounded-lg overflow-x-auto border border-surface-light;
+    line-height: 1.6;
+    tab-size: 2;
+  }
+
+  button {
+    @apply font-cta transition-all;
+    transition-duration: var(--transition-base);
+    transition-timing-function: var(--ease-out);
+  }
+
+  /* List Typography */
+  ul, ol {
+    @apply text-text-secondary leading-relaxed;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+  }
+
+  /* Quote Typography */
+  blockquote {
+    @apply text-text-secondary border-l-4 border-accent pl-6 italic my-6;
+    line-height: 1.8;
+    font-size: 1.125rem;
+  }
+}
+
+@layer components {
+  /* Cybernetic Minimalism Components with Enhanced Spacing */
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-700 text-text-primary font-cta font-semibold rounded-lg transition-all shadow-subtle hover:shadow-medium hover:scale-105;
+    padding: 0.875rem 1.75rem;
+    transition-duration: var(--transition-base);
+    letter-spacing: 0.025em;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary hover:bg-secondary-700 text-text-primary font-cta font-semibold rounded-lg transition-all shadow-subtle hover:shadow-medium hover:scale-105;
+    padding: 0.875rem 1.75rem;
+    transition-duration: var(--transition-base);
+    letter-spacing: 0.025em;
+  }
+
+  .btn-accent {
+    @apply bg-accent hover:bg-accent-dark text-background font-cta font-semibold rounded-lg transition-all shadow-subtle hover:shadow-medium hover:scale-105;
+    padding: 0.875rem 1.75rem;
+    transition-duration: var(--transition-base);
+    letter-spacing: 0.025em;
+  }
+
+  .btn-outline {
+    @apply border-2 border-secondary text-secondary hover:bg-secondary hover:text-background font-cta font-medium rounded-lg transition-all;
+    padding: 0.8125rem 1.6875rem;
+    transition-duration: var(--transition-base);
+    letter-spacing: 0.025em;
+  }
+
+  .card {
+    @apply bg-surface rounded-lg shadow-subtle border border-surface-light transition-all hover:shadow-medium;
+    padding: 1.5rem;
+    transition-duration: var(--transition-medium);
+  }
+
+  .card-elevated {
+    @apply bg-surface rounded-lg shadow-medium border border-surface-light transition-all hover:shadow-dramatic;
+    padding: 2rem;
+    transition-duration: var(--transition-medium);
+  }
+
+  .manifesto-gateway {
+    @apply bg-gradient-to-br from-primary via-background to-secondary rounded-lg shadow-dramatic border border-primary-700;
+    padding: 3rem;
+  }
+
+  .technical-diagram {
+    @apply bg-surface rounded-lg border border-surface-light shadow-subtle hover:shadow-glow-secondary transition-all;
+    padding: 1.5rem;
+    transition-duration: var(--transition-medium);
+  }
+
+  .input-field {
+    @apply bg-surface border border-surface-light text-text-primary placeholder-text-tertiary rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent transition-all;
+    padding: 0.875rem 1.125rem;
+    transition-duration: var(--transition-base);
+  }
+
+  .section-divider {
+    @apply h-px bg-gradient-to-r from-transparent via-surface-light to-transparent;
+    margin: 3rem 0;
+  }
+
+  /* Enhanced Section Spacing */
+  .section-spacing {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  .section-spacing-sm {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .section-spacing-lg {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+
+  /* Content Width Constraints */
+  .content-wrapper {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .content-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .content-wide {
+    @apply max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Animation Utilities */
+  .fade-in {
+    animation: fadeIn var(--transition-base) var(--ease-out);
+  }
+
+  .slide-up {
+    animation: slideUp var(--transition-medium) var(--ease-out);
+  }
+
+  .scale-in {
+    animation: scaleIn var(--transition-medium) var(--ease-spring);
+  }
+
+  .stagger-delay-1 {
+    animation-delay: 150ms;
+  }
+
+  .stagger-delay-2 {
+    animation-delay: 300ms;
+  }
+
+  .stagger-delay-3 {
+    animation-delay: 450ms;
+  }
+
+  .stagger-delay-4 {
+    animation-delay: 600ms;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Enhanced Grid Layouts */
+  .grid-auto-fit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .grid-auto-fill {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  /* Consistent Card Grid */
+  .card-grid {
+    @apply grid gap-6 md:gap-8;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+
+  .card-grid-sm {
+    @apply grid gap-4 md:gap-6;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+
+  .card-grid-lg {
+    @apply grid gap-8 md:gap-12;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Enhanced Shadow Utilities */
+  .shadow-xs {
+    box-shadow: var(--shadow-xs);
+  }
+
+  .shadow-sm {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .shadow-lg {
+    box-shadow: var(--shadow-lg);
+  }
+
+  .shadow-glow-primary {
+    box-shadow: var(--shadow-glow-primary);
+  }
+
+  .shadow-glow-secondary {
+    box-shadow: var(--shadow-glow-secondary);
+  }
+
+  .shadow-glow-accent {
+    box-shadow: var(--shadow-glow-accent);
+  }
+
+  /* Enhanced Transition Utilities */
+  .transition-base {
+    transition-duration: var(--transition-base);
+    transition-timing-function: var(--ease-out);
+  }
+
+  .transition-fast {
+    transition-duration: var(--transition-fast);
+    transition-timing-function: var(--ease-out);
+  }
+
+  .transition-medium {
+    transition-duration: var(--transition-medium);
+    transition-timing-function: var(--ease-in-out);
+  }
+
+  .transition-slow {
+    transition-duration: var(--transition-slow);
+    transition-timing-function: var(--ease-in-out);
+  }
+
+  .transition-spring {
+    transition-timing-function: var(--ease-spring);
+  }
+
+  /* Consistent Spacing Utilities */
+  .spacing-xs {
+    gap: var(--spacing-xs);
+  }
+
+  .spacing-sm {
+    gap: var(--spacing-sm);
+  }
+
+  .spacing-md {
+    gap: var(--spacing-md);
+  }
+
+  .spacing-lg {
+    gap: var(--spacing-lg);
+  }
+
+  .spacing-xl {
+    gap: var(--spacing-xl);
+  }
+
+  .spacing-2xl {
+    gap: var(--spacing-2xl);
+  }
+
+  .spacing-3xl {
+    gap: var(--spacing-3xl);
+  }
+
+  /* Professional Text Treatment */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary-300 via-accent to-secondary-300 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-secondary {
+    @apply bg-gradient-to-r from-secondary-300 via-accent-light to-primary-300 bg-clip-text text-transparent;
+  }
+
+  /* Professional Background Treatments */
+  .bg-gradient-primary {
+    @apply bg-gradient-to-br from-primary via-background to-secondary;
+  }
+
+  .bg-gradient-secondary {
+    @apply bg-gradient-to-br from-secondary via-background to-primary;
+  }
+
+  /* Focus States */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background;
+  }
+}

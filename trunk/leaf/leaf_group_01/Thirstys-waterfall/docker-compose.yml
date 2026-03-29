@@ -1,0 +1,88 @@
+version: "3.8"
+
+services:
+  thirstys-waterfall:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: thirstys-waterfall:latest
+    container_name: thirstys-waterfall
+    restart: unless-stopped
+
+    # Override default command to start web interface
+    command: ["bash", "/app/web/start.sh"]
+
+    # Environment variables
+    environment:
+      - THIRSTYS_ENV=production
+      - PYTHONUNBUFFERED=1
+      # Production server configuration
+      - WORKERS=4
+      - WORKER_CLASS=gevent
+      - DEBUG=false
+      - LOG_LEVEL=info
+      - WEB_HOST=0.0.0.0
+      - WEB_PORT=8080
+
+    # Environment file for secrets
+    env_file:
+      - .env
+
+    # Volumes for persistent data and development
+    volumes:
+      - thirstys_data:/home/thirsty/.thirstys_waterfall
+      - ./config:/app/config:ro
+      # Development volume mounts for live code updates
+      - ./web:/app/web:rw
+      - ./thirstys_waterfall:/app/thirstys_waterfall:rw
+
+    # Network configuration
+    networks:
+      - thirstys_network
+
+    # Port mapping (if web interface is added)
+    ports:
+      - "8080:8080"
+
+    # Security options
+    security_opt:
+      - no-new-privileges:true
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+
+    # Capabilities (for VPN and firewall functionality)
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+    # Health check
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "from thirstys_waterfall import ThirstysWaterfall; print('healthy')",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+# Named volumes
+volumes:
+  thirstys_data:
+    driver: local
+
+# Networks
+networks:
+  thirstys_network:
+    driver: bridge

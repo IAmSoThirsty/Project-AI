@@ -1,0 +1,76 @@
+{
+  "entries": [
+    {
+      "timestamp": "2026-03-15T20:15:39.231478",
+      "constitutional_score": 0.9700000000000001,
+      "triumvirate": {
+        "galahad": 0.96,
+        "cerberus": 0.98,
+        "codex": 0.97
+      },
+      "shadow_thirst_triggered": false,
+      "leaf_group": "leaf_group_01",
+      "event_type": "network_inhale"
+    },
+    {
+      "timestamp": "2026-03-15T20:15:51.453932",
+      "constitutional_score": 0.9700000000000001,
+      "triumvirate": {
+        "galahad": 0.96,
+        "cerberus": 0.98,
+        "codex": 0.97
+      },
+      "shadow_thirst_triggered": false,
+      "leaf_group": "leaf_group_01",
+      "event_type": "network_inhale"
+    },
+    {
+      "timestamp": "2026-03-15T20:16:03.162840",
+      "constitutional_score": 0.9700000000000001,
+      "triumvirate": {
+        "galahad": 0.96,
+        "cerberus": 0.98,
+        "codex": 0.97
+      },
+      "shadow_thirst_triggered": false,
+      "leaf_group": "leaf_group_01",
+      "event_type": "network_inhale"
+    },
+    {
+      "timestamp": "2026-03-15T20:16:03.357730",
+      "constitutional_score": 0.9700000000000001,
+      "triumvirate": {
+        "galahad": 0.96,
+        "cerberus": 0.98,
+        "codex": 0.97
+      },
+      "shadow_thirst_triggered": false,
+      "leaf_group": "leaf_group_01",
+      "event_type": "network_inhale"
+    },
+    {
+      "timestamp": "2026-03-15T20:52:53.509887",
+      "constitutional_score": 0.9700000000000001,
+      "triumvirate": {
+        "galahad": 0.96,
+        "cerberus": 0.98,
+        "codex": 0.97
+      },
+      "shadow_thirst_triggered": false,
+      "leaf_group": "leaf_group_01",
+      "event_type": "network_inhale"
+    },
+    {
+      "timestamp": "2026-03-15T20:52:53.684339",
+      "constitutional_score": 0.9700000000000001,
+      "triumvirate": {
+        "galahad": 0.96,
+        "cerberus": 0.98,
+        "codex": 0.97
+      },
+      "shadow_thirst_triggered": false,
+      "leaf_group": "leaf_group_01",
+      "event_type": "network_inhale"
+    }
+  ]
+}

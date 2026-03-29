@@ -1,0 +1,96 @@
+# Development and test files
+src/test/
+*.test.js
+*.spec.js
+
+# Build and temporary files
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+node_modules/
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# Docker files (keep Dockerfile for users who want to build)
+.dockerignore
+docker-compose.yml
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation source (keep generated docs)
+IMPLEMENTATION_HISTORY.md
+PROJECT_AI_INTEGRATION.md
+
+# Configuration files
+.eslintrc*
+.prettierrc*
+tsconfig.json
+
+# Temporary and backup files
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+
+# CI/CD files
+.travis.yml
+.circleci/
+azure-pipelines.yml
+
+# Coverage and test results
+coverage/
+.nyc_output/
+test-results/
+
+# Development scripts
+setup_venv.sh
+setup_all.sh
+quickstart.sh
+
+# Tools directory (keep in package)
+# tools/
+
+# Keep these important files:
+# - src/ (all source files)
+# - examples/ (example programs)
+# - docs/ (documentation)
+# - playground/ (web playground)
+# - vscode-extension/ (VS Code extension)
+# - tarl/ (T.A.R.L. integration)
+# - Dockerfile (for Docker users)
+# - requirements.txt (for Python users)
+# - requirements-dev.txt (for Python developers)
+# - README.md
+# - LICENSE
+# - CHANGELOG.md
+# - DOCUMENTATION.md
+# - TUTORIAL.md
+# - QUICKSTART.md
+# - CONTRIBUTING.md
+# - AUTHORS.txt
+# - DEPENDENCIES.txt
+# - VERSION.txt
+# - package.json

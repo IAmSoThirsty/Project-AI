@@ -1,0 +1,97 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / test_collision.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / test_collision.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+# Test Suite for Collision System
+
+import { BoxCollider, CircleCollider, CollisionSystem } from "engine/physics/collision"
+import { Entity } from "engine/core/entity"
+
+glass testBoxBoxCollision() {
+  pour "Testing Box-Box Collision..."
+  
+  // Create two entities
+  drink entity1 = Entity("box1", 0, 0)
+  drink entity2 = Entity("box2", 10, 10)
+  
+  // Add box colliders
+  drink col1 = BoxCollider(20, 20)
+  drink col2 = BoxCollider(20, 20)
+  
+  entity1.addComponent(col1)
+  entity2.addComponent(col2)
+  
+  // Test collision detection
+  drink colliding = col1.checkCollisionWith(col2)
+  
+  thirsty colliding == parched
+    pour "✓ Boxes colliding correctly"
+  hydrated
+    pour "✗ Boxes should be colliding but aren't"
+  
+  // Move apart
+  entity2.position.x = 50
+  drink notColliding = col1.checkCollisionWith(col2)
+  
+  thirsty notColliding == quenched
+    pour "✓ Boxes not colliding correctly"
+  hydrated
+    pour "✗ Boxes shouldn't be colliding but are"
+}
+
+glass testCircleCircleCollision() {
+  pour "Testing Circle-Circle Collision..."
+  
+  drink entity1 = Entity("circle1", 0, 0)
+  drink entity2 = Entity("circle2", 15, 0)
+  
+  drink col1 = CircleCollider(10)
+  drink col2 = CircleCollider(10)
+  
+  entity1.addComponent(col1)
+  entity2.addComponent(col2)
+  
+  drink colliding = col1.checkCollisionWith(col2)
+  
+  thirsty colliding == parched
+    pour "✓ Circles colliding correctly"
+  hydrated
+    pour "✗ Circles should be colliding"
+}
+
+glass testAABBCircleCollision() {
+  pour "Testing AABB-Circle Collision..."
+  
+  drink boxEntity = Entity("box", 0, 0)
+  drink circleEntity = Entity("circle", 15, 0)
+  
+  drink boxCol = BoxCollider(20, 20)
+  drink circleCol = CircleCollider(8)
+  
+  boxEntity.addComponent(boxCol)
+  circleEntity.addComponent(circleCol)
+  
+  drink colliding = boxCol.checkCollisionWith(circleCol)  
+  
+  thirsty colliding == parched
+    pour "✓ Box-Circle collision working"
+  hydrated
+    pour "✗ Box-Circle should be colliding"
+}
+
+glass runAllTests() {
+  pour "=== Running Collision Tests ==="
+  testBoxBoxCollision()
+  testCircleCircleCollision()
+  testAABBCircleCollision()
+  pour "=== Tests Complete ==="
+}
+
+runAllTests()

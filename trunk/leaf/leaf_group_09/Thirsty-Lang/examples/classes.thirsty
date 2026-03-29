@@ -1,0 +1,125 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / classes.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / classes.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Thirsty-lang Classes Example
+// Demonstrates the fountain keyword for class declarations
+
+pour "=== Class Examples ==="
+pour ""
+
+// Simple class with properties
+fountain Person {
+  drink name = "Unknown"
+  drink age = 0
+}
+
+drink person = Person()
+pour "Person name: " + person.name
+pour "Person age: " + person.age
+
+// Class with methods
+fountain Calculator {
+  glass add(a, b) {
+    return a + b
+  }
+  
+  glass multiply(a, b) {
+    return a * b
+  }
+}
+
+drink calc = Calculator()
+drink sum = calc.add(10, 5)
+drink product = calc.multiply(10, 5)
+pour "10 + 5 = " + sum
+pour "10 * 5 = " + product
+
+// Class with properties and methods working together
+fountain Rectangle {
+  drink width = 10
+  drink height = 5
+  
+  glass area() {
+    return this.width * this.height
+  }
+  
+  glass perimeter() {
+    return this.width * 2 + this.height * 2
+  }
+}
+
+drink rect = Rectangle()
+drink rectArea = rect.area()
+drink rectPerimeter = rect.perimeter()
+pour ""
+pour "Rectangle (10 x 5):"
+pour "  Area: " + rectArea
+pour "  Perimeter: " + rectPerimeter
+
+// Class with state modification
+fountain Counter {
+  drink count = 0
+  
+  glass increment() {
+    drink this.count = this.count + 1
+  }
+  
+  glass decrement() {
+    drink this.count = this.count - 1
+  }
+  
+  glass getCount() {
+    return this.count
+  }
+}
+
+pour ""
+pour "Counter example:"
+drink counter = Counter()
+pour "Initial count: " + counter.getCount()
+
+counter.increment()
+counter.increment()
+counter.increment()
+pour "After 3 increments: " + counter.getCount()
+
+counter.decrement()
+pour "After 1 decrement: " + counter.getCount()
+
+// Class with conditional logic
+fountain Validator {
+  glass isPositive(num) {
+    thirsty num > 0 {
+      return true
+    }
+    hydrated {
+      return false
+    }
+  }
+  
+  glass isEven(num) {
+    drink remainder = num - num / 2 * 2
+    thirsty remainder == 0 {
+      return true
+    }
+    hydrated {
+      return false
+    }
+  }
+}
+
+pour ""
+pour "Validator example:"
+drink validator = Validator()
+drink is10Positive = validator.isPositive(10)
+drink is10Even = validator.isEven(10)
+pour "Is 10 positive? " + is10Positive
+pour "Is 10 even? " + is10Even

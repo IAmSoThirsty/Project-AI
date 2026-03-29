@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: Verifiable Reality Infrastructure (Post-AI Proof Layer)
+  namespace: default
+  labels:
+    app: Verifiable Reality Infrastructure (Post-AI Proof Layer)
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: Verifiable Reality Infrastructure (Post-AI Proof Layer)
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s

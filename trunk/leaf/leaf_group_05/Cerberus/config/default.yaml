@@ -1,0 +1,23 @@
+# Default Cerberus Configuration
+
+hub:
+  max_guardians: 27
+  initial_guardians: 3
+  guardian_growth_factor: 3
+
+logging:
+  level: INFO
+  format: json
+
+guardians:
+  strict:
+    enabled: true
+  heuristic:
+    enabled: true
+    thresholds:
+      critical: 0.9
+      high: 0.7
+      medium: 0.5
+      low: 0.3
+  pattern:
+    enabled: true

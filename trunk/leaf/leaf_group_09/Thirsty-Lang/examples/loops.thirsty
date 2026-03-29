@@ -1,0 +1,24 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / loops.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / loops.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Thirsty-lang Example: Simple Loops
+
+pour "Demonstrating loop with countdown:"
+
+drink water = 3
+
+refill water > 0 {
+  pour "Water level:"
+  pour water
+  drink water = water - 1
+}
+
+pour "Done drinking!"

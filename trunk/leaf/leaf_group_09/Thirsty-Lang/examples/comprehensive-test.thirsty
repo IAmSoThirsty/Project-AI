@@ -1,0 +1,39 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / comprehensive-test.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / comprehensive-test.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Comprehensive test of new features
+
+pour "=== Testing File I/O ==="
+drink testData = "Hello, Thirsty World!"
+drink writeSuccess = File.write("/tmp/thirsty-test.txt", testData)
+pour "Write success: " + writeSuccess
+
+drink readData = File.read("/tmp/thirsty-test.txt")
+pour "Read data: " + readData
+
+drink fileExists = File.exists("/tmp/thirsty-test.txt")
+pour "File exists: " + fileExists
+
+drink deleteSuccess = File.delete("/tmp/thirsty-test.txt")
+pour "Delete success: " + deleteSuccess
+
+pour ""
+pour "=== Testing Module System ==="
+pour "Module examples can be found in examples/module-demo.thirsty"
+pour "Run: node src/cli.js examples/module-demo.thirsty"
+
+pour ""
+pour "=== Testing Network Utilities ==="
+pour "Network utilities are available via Http.get(), Http.post(), Http.fetch()"
+pour "Note: HTTP requests require async/await (cascade functions)"
+
+pour ""
+pour "=== All Features Working! ==="

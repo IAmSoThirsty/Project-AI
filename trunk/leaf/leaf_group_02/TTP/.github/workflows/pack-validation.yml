@@ -1,0 +1,396 @@
+name: Pack Validation CI
+
+on:
+  push:
+    branches: [ main, develop, 'release/**' ]
+    paths:
+      - 'packs/**'
+      - 'schemas/**'
+      - 'tools/**'
+      - '.github/workflows/pack-validation.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'packs/**'
+      - 'schemas/**'
+      - 'tools/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+env:
+  PYTHON_VERSION: '3.12'
+
+jobs:
+  # Job 1: Validate all texture packs against schema
+  validate-packs:
+    name: Validate Texture Packs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better diff analysis
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tools/requirements.txt
+
+      - name: Find all packs
+        id: find-packs
+        run: |
+          PACKS=$(find packs -name "pack.json" -type f)
+          echo "Found packs:"
+          echo "$PACKS"
+          echo "pack_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$PACKS" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Validate pack schemas
+        id: validate
+        run: |
+          EXIT_CODE=0
+          FAILED_PACKS=""
+
+          while IFS= read -r pack_json; do
+            PACK_DIR=$(dirname "$pack_json")
+            PACK_NAME=$(basename "$PACK_DIR")
+
+            echo "::group::Validating $PACK_NAME"
+            if python tools/validate_pack.py --strict "$PACK_DIR"; then
+              echo "✅ $PACK_NAME validation passed"
+            else
+              echo "❌ $PACK_NAME validation failed"
+              FAILED_PACKS="$FAILED_PACKS\n- $PACK_NAME"
+              EXIT_CODE=1
+            fi
+            echo "::endgroup::"
+          done <<< "${{ steps.find-packs.outputs.pack_files }}"
+
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "failed_packs<<EOF" >> $GITHUB_OUTPUT
+            echo -e "$FAILED_PACKS" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+          exit $EXIT_CODE
+
+      - name: Comment on PR (if validation failed)
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const failedPacks = `${{ steps.validate.outputs.failed_packs }}`;
+            const comment = `## ❌ Pack Validation Failed
+
+            The following packs failed validation:
+            ${failedPacks}
+
+            Please review the validation errors and update your pack metadata accordingly.
+
+            See the [Pack Schema Documentation](./schemas/pack-schema-v1.json) for details.`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # Job 2: Security scanning for vulnerabilities
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner (filesystem)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          exit-code: '0'  # Don't fail on vulnerabilities, just report
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Secret scanning with TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  # Job 3: File integrity and checksum verification
+  file-integrity:
+    name: File Integrity Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r tools/requirements.txt
+
+      - name: Verify file checksums (with asset validation)
+        run: |
+          # Note: This will check if asset files exist and match declared checksums
+          # In actual implementation, asset files would be stored in Git LFS or S3
+
+          echo "Verifying pack file integrity..."
+
+          while IFS= read -r pack_json; do
+            PACK_DIR=$(dirname "$pack_json")
+            PACK_NAME=$(basename "$PACK_DIR")
+
+            echo "::group::Checking $PACK_NAME file integrity"
+            # Use --check-assets flag when actual asset files are present
+            python tools/validate_pack.py "$PACK_DIR" || true
+            echo "::endgroup::"
+          done < <(find packs -name "pack.json" -type f)
+
+  # Job 4: JSON and schema linting
+  lint-schemas:
+    name: Lint JSON Schemas
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate JSON syntax
+        run: |
+          find . -name "*.json" -type f | while read -r json_file; do
+            echo "Checking $json_file"
+            jq empty "$json_file" || {
+              echo "❌ Invalid JSON: $json_file"
+              exit 1
+            }
+          done
+
+      - name: Validate schema definitions
+        run: |
+          # Check that schema files are valid JSON Schema
+          for schema in schemas/*.json; do
+            echo "Validating schema: $schema"
+            # Could use ajv-cli or similar tool here
+            jq '.["$schema"]' "$schema" > /dev/null || {
+              echo "❌ Invalid schema: $schema"
+              exit 1
+            }
+          done
+
+  # Job 5: License compliance check
+  license-check:
+    name: License Compliance
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check pack licenses
+        run: |
+          INVALID_LICENSES=""
+
+          while IFS= read -r pack_json; do
+            PACK_NAME=$(basename "$(dirname "$pack_json")")
+            LICENSE=$(jq -r '.license' "$pack_json")
+
+            # Verify license is in approved list
+            APPROVED_LICENSES="CC0-1.0 CC-BY-4.0 CC-BY-SA-4.0 CC-BY-NC-4.0 CC-BY-NC-SA-4.0 MIT Apache-2.0 GPL-3.0 LGPL-3.0 BSD-3-Clause Unlicense Proprietary Custom"
+
+            if ! echo "$APPROVED_LICENSES" | grep -q "$LICENSE"; then
+              echo "⚠️ Pack '$PACK_NAME' has unapproved license: $LICENSE"
+              INVALID_LICENSES="$INVALID_LICENSES\n- $PACK_NAME: $LICENSE"
+            else
+              echo "✅ Pack '$PACK_NAME' license: $LICENSE"
+            fi
+          done < <(find packs -name "pack.json" -type f)
+
+          if [ -n "$INVALID_LICENSES" ]; then
+            echo "::warning::Some packs have unapproved licenses:$INVALID_LICENSES"
+          fi
+
+  # Job 6: Pack size and asset count verification
+  pack-metrics:
+    name: Pack Metrics
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Calculate pack metrics
+        run: |
+          echo "| Pack Name | Quality Tier | Asset Count | Declared Size | Status |"
+          echo "|-----------|--------------|-------------|---------------|--------|"
+
+          while IFS= read -r pack_json; do
+            PACK_NAME=$(basename "$(dirname "$pack_json")")
+            QUALITY=$(jq -r '.qualityTier' "$pack_json")
+            ASSET_COUNT=$(jq -r '.technical.assetCount' "$pack_json")
+            SIZE_BYTES=$(jq -r '.technical.totalSizeBytes' "$pack_json")
+
+            # Convert bytes to human-readable
+            SIZE_MB=$((SIZE_BYTES / 1024 / 1024))
+
+            # Check if size is reasonable for quality tier
+            STATUS="✅"
+            if [ "$QUALITY" = "cinematic" ] && [ "$SIZE_MB" -gt 10000 ]; then
+              STATUS="⚠️ Large"
+            elif [ "$QUALITY" = "pixel" ] && [ "$SIZE_MB" -gt 100 ]; then
+              STATUS="⚠️ Large for pixel art"
+            fi
+
+            echo "| $PACK_NAME | $QUALITY | $ASSET_COUNT | ${SIZE_MB}MB | $STATUS |"
+          done < <(find packs -name "pack.json" -type f)
+
+      - name: Check for oversized packs
+        run: |
+          MAX_SIZE=$((50 * 1024 * 1024 * 1024))  # 50 GB limit
+
+          while IFS= read -r pack_json; do
+            PACK_NAME=$(basename "$(dirname "$pack_json")")
+            SIZE_BYTES=$(jq -r '.technical.totalSizeBytes' "$pack_json")
+
+            if [ "$SIZE_BYTES" -gt "$MAX_SIZE" ]; then
+              echo "::error::Pack '$PACK_NAME' exceeds maximum size (50 GB): $((SIZE_BYTES / 1024 / 1024 / 1024))GB"
+              exit 1
+            fi
+          done < <(find packs -name "pack.json" -type f)
+
+  # Job 7: Documentation check
+  docs-check:
+    name: Documentation Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check required documentation
+        run: |
+          # Check that main documentation files exist
+          REQUIRED_DOCS="README.md CONTRIBUTING.md LICENSE ARCHITECTURE.md"
+
+          for doc in $REQUIRED_DOCS; do
+            if [ ! -f "$doc" ]; then
+              echo "::error::Missing required documentation: $doc"
+              exit 1
+            else
+              echo "✅ Found: $doc"
+            fi
+          done
+
+      - name: Check pack documentation
+        run: |
+          while IFS= read -r pack_json; do
+            PACK_DIR=$(dirname "$pack_json")
+            PACK_NAME=$(basename "$PACK_DIR")
+
+            # Check for pack-specific README
+            if [ ! -f "$PACK_DIR/README.md" ]; then
+              echo "::warning::Pack '$PACK_NAME' missing README.md"
+            else
+              echo "✅ $PACK_NAME has README"
+            fi
+          done < <(find packs -name "pack.json" -type f)
+
+      - name: Validate markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          config-file: '.github/markdown-link-check-config.json'
+        continue-on-error: true  # Don't fail build on broken links
+
+  # Job 8: Performance and best practices
+  performance-check:
+    name: Performance Best Practices
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for power-of-2 textures
+        run: |
+          echo "Checking for non-power-of-2 texture dimensions..."
+
+          while IFS= read -r pack_json; do
+            PACK_NAME=$(basename "$(dirname "$pack_json")")
+
+            # Extract resolution data and check if power of 2
+            jq -r '.assets[] | select(.resolution) | "\(.resolution.width)x\(.resolution.height) - \(.filename)"' "$pack_json" | while read -r line; do
+              WIDTH=$(echo "$line" | cut -d'x' -f1)
+              HEIGHT=$(echo "$line" | cut -d'x' -f2 | cut -d' ' -f1)
+              FILENAME=$(echo "$line" | cut -d'-' -f2- | xargs)
+
+              # Check if power of 2 using bit manipulation
+              is_power_of_2() {
+                local n=$1
+                [ $n -gt 0 ] && [ $(( n & (n - 1) )) -eq 0 ]
+              }
+
+              if ! is_power_of_2 "$WIDTH" || ! is_power_of_2 "$HEIGHT"; then
+                echo "::warning::$PACK_NAME/$FILENAME has non-power-of-2 dimensions: ${WIDTH}x${HEIGHT}"
+              fi
+            done
+          done < <(find packs -name "pack.json" -type f)
+
+# Summary job that depends on all validation jobs
+  validation-summary:
+    name: Validation Summary
+    runs-on: ubuntu-latest
+    needs: [validate-packs, security-scan, file-integrity, lint-schemas, license-check, pack-metrics, docs-check, performance-check]
+    if: always()
+
+    steps:
+      - name: Check validation status
+        run: |
+          if [ "${{ needs.validate-packs.result }}" != "success" ]; then
+            echo "::error::Pack validation failed"
+            exit 1
+          fi
+
+          if [ "${{ needs.security-scan.result }}" != "success" ]; then
+            echo "::warning::Security scan detected issues"
+          fi
+
+          echo "✅ All validation checks completed"

@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "VR Cinematics",
+  "slug": "vr-cinematics",
+  "version": "1.0.0",
+  "description": "Professional-grade 4K+ PBR texture collection optimized for virtual reality cinematic experiences and immersive storytelling. Featuring physically-based rendering materials with complete map sets (albedo, normal, roughness, metallic, AO) for studio environments, outdoor scenes, interiors, and abstract compositions. Designed for Unity HDRP and Unreal Engine 5 with performance optimization for VR frame rates. All textures include multiple LOD variants and are compressed for efficient streaming in VR applications.",
+  "author": {
+    "name": "IAmSoThirsty",
+    "organization": "Thirsty Studios",
+    "url": "https://github.com/IAmSoThirsty"
+  },
+  "license": "MIT",
+  "licenseDetails": {
+    "attributionRequired": true,
+    "commercialUseAllowed": true,
+    "modificationAllowed": true,
+    "redistributionAllowed": true
+  },
+  "category": "environment",
+  "subcategories": ["cinematic", "vr", "pbr", "photorealistic"],
+  "qualityTier": "cinematic",
+  "tags": [
+    "vr",
+    "cinematic",
+    "pbr",
+    "high-res",
+    "immersive",
+    "4k",
+    "photorealistic",
+    "hdrp",
+    "unreal",
+    "performance-optimized"
+  ],
+  "targetEngines": ["unity", "unreal"],
+  "targetPlatforms": ["vr", "windows", "console-ps5", "console-xbox"],
+  "renderPipeline": "hdrp",
+  "materialWorkflow": "pbr-metallic-roughness",
+  "assets": [
+    {
+      "filename": "studio-concrete-albedo-4k.exr",
+      "path": "textures/studio/concrete/albedo.exr",
+      "type": "albedo",
+      "format": "exr",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 4096,
+        "height": 4096
+      },
+      "bitDepth": 16,
+      "channels": 3,
+      "compression": "piz",
+      "sizeBytes": 201326592,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "lodLevel": 0,
+      "tiling": {
+        "seamless": true,
+        "horizontalRepeat": 1.0,
+        "verticalRepeat": 1.0
+      },
+      "metadata": {
+        "artist": "Senior Environment Artist",
+        "software": "Substance Designer 2023.2",
+        "createdDate": "2026-02-01T14:30:00Z"
+      }
+    },
+    {
+      "filename": "studio-concrete-normal-4k.exr",
+      "path": "textures/studio/concrete/normal.exr",
+      "type": "normalGL",
+      "format": "exr",
+      "colorSpace": "linear",
+      "resolution": {
+        "width": 4096,
+        "height": 4096
+      },
+      "bitDepth": 16,
+      "channels": 3,
+      "compression": "piz",
+      "sizeBytes": 201326592,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "lodLevel": 0,
+      "tiling": {
+        "seamless": true
+      }
+    },
+    {
+      "filename": "studio-concrete-orm-4k.exr",
+      "path": "textures/studio/concrete/orm.exr",
+      "type": "packed",
+      "format": "exr",
+      "colorSpace": "linear",
+      "resolution": {
+        "width": 4096,
+        "height": 4096
+      },
+      "bitDepth": 16,
+      "channels": 3,
+      "compression": "piz",
+      "sizeBytes": 201326592,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "lodLevel": 0,
+      "channelPacking": {
+        "r": "ao",
+        "g": "roughness",
+        "b": "metallic"
+      },
+      "tiling": {
+        "seamless": true
+      },
+      "metadata": {
+        "packingScheme": "ORM (Occlusion, Roughness, Metallic)"
+      }
+    }
+  ],
+  "preview": {
+    "thumbnail": "previews/thumbnail.png",
+    "images": [
+      "previews/vr-render-01.png",
+      "previews/vr-render-02.png",
+      "previews/material-breakdown.png",
+      "previews/vr-scene-overview.png"
+    ],
+    "video": "previews/vr-walkthrough.mp4"
+  },
+  "technical": {
+    "totalSizeBytes": 16106127360,
+    "assetCount": 3,
+    "compressionFormat": "zip",
+    "checksumSHA256": "b665b45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae4",
+    "minimumResolution": "2048x2048",
+    "maximumResolution": "4096x4096",
+    "includesLODs": true,
+    "includeMipmaps": true
+  },
+  "documentation": {
+    "readme": "README.md",
+    "installGuide": "docs/installation.md",
+    "usageExamples": "docs/vr-setup-guide.md"
+  },
+  "support": {
+    "issues": "https://github.com/IAmSoThirsty/TTP/issues",
+    "url": "https://github.com/IAmSoThirsty/TTP"
+  },
+  "metadata": {
+    "vrOptimized": true,
+    "targetFramerate": "90fps",
+    "compressionScheme": "BC7/ASTC",
+    "streamingSupported": true,
+    "lightingModel": "physically-based"
+  }
+}

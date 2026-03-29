@@ -1,0 +1,6 @@
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+# TTP CLI Requirements
+
+click>=8.1.7,<9.0.0
+httpx>=0.26.0,<1.0.0
+rich>=13.7.0,<14.0.0

@@ -1,0 +1,26 @@
+policies:
+  - name: development_policy
+    description: Permissive policy for development
+    rules:
+      - condition:
+          action: threat_detected
+        verdict: ALLOW
+        reason: Development mode allows testing
+      
+      - condition:
+          action: compile
+        verdict: ALLOW
+        reason: All compilation allowed in dev mode
+
+  - name: production_policy
+    description: Strict policy for production
+    rules:
+      - condition:
+          action: threat_detected
+        verdict: DENY
+        reason: Production blocks all threats
+      
+      - condition:
+          action: code_morph
+        verdict: ALLOW
+        reason: Code morphing allowed for security

@@ -1,0 +1,31 @@
+{
+  "name": "the-triumvirate",
+  "version": "1.0.0",
+  "description": "A comprehensive manifesto and architectural framework exploring the intersection of AI, Humanity, and Technology through ethical AI development, robust security, and transparent knowledge systems.",
+  "main": "index.html",
+  "dependencies": {
+    "@dhiwise/component-tagger": "^1.0.14",
+    "@tailwindcss/forms": "^0.5.7",
+    "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-elevation": "^2.0.0",
+    "tailwindcss-fluid-type": "^2.0.7"
+  },
+  "scripts": {
+    "build:css": "npx @dhiwise/component-tagger && npx tailwindcss -i ./css/tailwind.css -o ./css/main.css",
+    "watch:css": "npx @dhiwise/component-tagger && npx tailwindcss -i ./css/tailwind.css -o ./css/main.css --watch",
+    "dev": "npm run watch:css",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "author": "Jeremy Karrick (Thirsty) <thirstysprojects.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.4.17",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/line-clamp": "^0.1.0",
+    "@tailwindcss/typography": "^0.5.16",
+    "jest": "^29.7.0"
+  }
+}

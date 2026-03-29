@@ -1,0 +1,31 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / basic-protection.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / basic-protection.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Thirsty-lang Security Example: Basic Protection
+// Demonstrates shield, sanitize, and armor keywords
+
+shield basicProtection {
+  // User input (simulated)
+  drink userName = "Alice<script>alert('xss')</script>"
+  sanitize userName
+  
+  // Protected data
+  drink secretKey = "my-secret-123"
+  armor secretKey
+  
+  // Safe output
+  pour "Hello, " + userName
+  pour "Your data is protected!"
+  
+  // Attempt to modify armored variable (should be blocked)
+  drink secretKey = "hacked"
+  pour "Secret key: " + secretKey
+}

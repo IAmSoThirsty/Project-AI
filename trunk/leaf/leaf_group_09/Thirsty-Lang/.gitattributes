@@ -1,0 +1,8 @@
+# Thirsty language files
+*.thirsty linguist-language=Thirsty
+*.thirstyplus linguist-language=Thirsty
+*.thirstyplusplus linguist-language=Thirsty
+*.thirstofgods linguist-language=Thirsty
+
+# Documentation
+*.md linguist-documentation

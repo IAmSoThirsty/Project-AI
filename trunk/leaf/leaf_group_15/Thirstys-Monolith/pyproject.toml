@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "thirstys-monolith"
+version = "1.0.0"
+description = "Sovereign Stack multi-process runtime: priority scheduler, logical memory isolation, IPC, and Prometheus metrics"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {file = "LICENSE.txt"}
+authors = [
+    {name = "Thirstys-Hub"}
+]
+keywords = ["sovereign-stack", "scheduler", "runtime", "ipc", "thirsty-lang"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Operating System Kernels",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+# Runtime has zero third-party dependencies — stdlib only.
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "mypy>=1.8.0",
+    "ruff>=0.3.0",
+    "black>=24.0.0",
+    "pip-audit>=2.7.0",
+    "ipython>=8.20.0",
+    "build>=1.0.0",
+    "wheel>=0.43.0",
+]
+
+[project.urls]
+"Homepage"    = "https://github.com/IAmSoThirsty/Thirstys-Monolith"
+"Bug Tracker" = "https://github.com/IAmSoThirsty/Thirstys-Monolith/issues"
+
+# ── Package discovery ─────────────────────────────────────────────────────────
+[tool.setuptools.packages.find]
+where   = ["src"]
+include = ["monolith*"]
+
+# ── Test ──────────────────────────────────────────────────────────────────────
+[tool.pytest.ini_options]
+testpaths    = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts      = "--cov=monolith --cov-report=term-missing -q"
+
+# ── Lint / format ─────────────────────────────────────────────────────────────
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.black]
+line-length    = 100
+target-version = ["py311", "py312"]
+
+# ── Type-check ────────────────────────────────────────────────────────────────
+[tool.mypy]
+python_version       = "3.11"
+strict               = true
+warn_return_any      = true
+warn_unused_configs  = true
+# multiprocessing.Queue generics are evaluated at runtime only
+disable_error_code   = ["type-arg"]

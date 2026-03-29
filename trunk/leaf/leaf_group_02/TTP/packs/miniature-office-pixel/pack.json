@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "1.0.0",
+  "name": "Miniature Office Pixel",
+  "slug": "miniature-office-pixel",
+  "version": "1.0.0",
+  "description": "Comprehensive pixel-art texture pack for miniature office environments. Features meticulously crafted 16x16 to 64x64 pixel-perfect textures perfect for indie games, pixel art projects, and retro-styled applications. Includes furniture, equipment, decorations, floors, and walls with consistent color palette and style. All textures are tile-able and optimized for pixel-perfect rendering without texture filtering.",
+  "author": {
+    "name": "IAmSoThirsty",
+    "organization": "Thirsty Studios",
+    "url": "https://github.com/IAmSoThirsty"
+  },
+  "license": "MIT",
+  "licenseDetails": {
+    "attributionRequired": true,
+    "commercialUseAllowed": true,
+    "modificationAllowed": true,
+    "redistributionAllowed": true
+  },
+  "category": "pixel-art",
+  "subcategories": ["office", "furniture", "props", "interior"],
+  "qualityTier": "pixel",
+  "tags": [
+    "pixel-art",
+    "office",
+    "miniature",
+    "2d",
+    "isometric",
+    "retro",
+    "indie",
+    "furniture",
+    "props",
+    "tileable"
+  ],
+  "targetEngines": ["unity", "godot", "gamemaker", "web", "generic"],
+  "targetPlatforms": ["windows", "macos", "linux", "web", "mobile"],
+  "renderPipeline": "unlit",
+  "materialWorkflow": "non-pbr",
+  "assets": [
+    {
+      "filename": "office-desk-wood-32x32.png",
+      "path": "textures/furniture/office-desk-wood-32x32.png",
+      "type": "diffuse",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 32,
+        "height": 32
+      },
+      "bitDepth": 8,
+      "channels": 4,
+      "compression": "none",
+      "sizeBytes": 896,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "tiling": {
+        "seamless": false
+      },
+      "metadata": {
+        "artist": "Pixel Artist",
+        "software": "Aseprite 1.3"
+      }
+    },
+    {
+      "filename": "office-chair-gray-32x32.png",
+      "path": "textures/furniture/office-chair-gray-32x32.png",
+      "type": "diffuse",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 32,
+        "height": 32
+      },
+      "bitDepth": 8,
+      "channels": 4,
+      "compression": "none",
+      "sizeBytes": 854,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "tiling": {
+        "seamless": false
+      }
+    },
+    {
+      "filename": "floor-carpet-blue-64x64.png",
+      "path": "textures/floors/floor-carpet-blue-64x64.png",
+      "type": "diffuse",
+      "format": "png",
+      "colorSpace": "srgb",
+      "resolution": {
+        "width": 64,
+        "height": 64
+      },
+      "bitDepth": 8,
+      "channels": 3,
+      "compression": "none",
+      "sizeBytes": 1024,
+      "checksum": {
+        "algorithm": "sha256",
+        "value": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "tiling": {
+        "seamless": true,
+        "horizontalRepeat": 1.0,
+        "verticalRepeat": 1.0
+      }
+    }
+  ],
+  "preview": {
+    "thumbnail": "previews/thumbnail.png",
+    "images": [
+      "previews/office-scene-01.png",
+      "previews/furniture-grid.png"
+    ]
+  },
+  "technical": {
+    "totalSizeBytes": 2548736,
+    "assetCount": 3,
+    "compressionFormat": "zip",
+    "checksumSHA256": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+    "minimumResolution": "16x16",
+    "maximumResolution": "64x64",
+    "includesLODs": false,
+    "includeMipmaps": false
+  },
+  "documentation": {
+    "readme": "README.md",
+    "usageExamples": "examples/usage.md"
+  },
+  "support": {
+    "issues": "https://github.com/IAmSoThirsty/TTP/issues",
+    "url": "https://github.com/IAmSoThirsty/TTP"
+  },
+  "metadata": {
+    "colorPalette": "limited-16",
+    "pixelSize": "consistent",
+    "renderingHint": "disable-texture-filtering"
+  }
+}

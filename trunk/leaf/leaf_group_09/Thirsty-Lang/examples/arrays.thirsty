@@ -1,0 +1,91 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / arrays.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / arrays.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Thirsty-lang Arrays Example
+// Demonstrates the reservoir keyword for array declarations
+
+pour "=== Array Examples ==="
+pour ""
+
+// Create an array of numbers
+reservoir numbers = [1, 2, 3, 4, 5]
+pour "Numbers array: " + numbers.join(", ")
+
+// Create an array of strings
+reservoir fruits = ["apple", "banana", "orange"]
+pour "Fruits: " + fruits.join(", ")
+
+// Access array elements
+drink firstFruit = fruits[0]
+drink lastNumber = numbers[4]
+pour "First fruit: " + firstFruit
+pour "Last number: " + lastNumber
+
+// Array length
+pour "Number of fruits: " + fruits.length
+
+// Modify array elements
+drink numbers[2] = 99
+pour "Modified numbers: " + numbers.join(", ")
+
+// Array methods - push
+drink newLength = numbers.push(6)
+pour "After push: " + numbers.join(", ")
+pour "New length: " + newLength
+
+// Array methods - pop
+drink removed = numbers.pop()
+pour "Popped element: " + removed
+pour "After pop: " + numbers.join(", ")
+
+// Array methods - indexOf
+drink bananaIndex = fruits.indexOf("banana")
+pour "Index of banana: " + bananaIndex
+
+// Array methods - includes
+drink hasApple = fruits.includes("apple")
+thirsty hasApple {
+  pour "Array contains apple!"
+}
+
+// Arrays with functions
+glass getSum(arr) {
+  drink total = 0
+  drink i = 0
+  refill i < arr.length {
+    drink total = total + arr[i]
+    drink i = i + 1
+  }
+  return total
+}
+
+reservoir scores = [85, 92, 78, 95, 88]
+drink totalScore = getSum(scores)
+pour "Total score: " + totalScore
+
+// Array iteration
+pour ""
+pour "Iterating through fruits:"
+drink i = 0
+refill i < fruits.length {
+  pour "- " + fruits[i]
+  drink i = i + 1
+}
+
+// Dynamic array building
+reservoir squares = []
+drink n = 1
+refill n <= 5 {
+  squares.push(n * n)
+  drink n = n + 1
+}
+pour ""
+pour "Squares: " + squares.join(", ")

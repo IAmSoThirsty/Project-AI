@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Trinity Deep Dive - Comprehensive technical exploration of Project AI, Cerberus, and Codex Deus Maximus systems with architectural diagrams and implementation details">
+    <title>Trinity Deep Dive | The Triumvirate</title>
+    <link rel="stylesheet" href="/css/main.css">
+  <style>
+    /* ===== RADIAL MENU SYSTEM ===== */
+    
+    /* Centered Menu Header */
+    .menu-centered {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, rgba(8, 145, 178, 0.1), rgba(30, 58, 138, 0.1));
+        border: 2px solid rgba(8, 145, 178, 0.3);
+    }
+
+    .menu-centered:hover,
+    .menu-centered.active {
+        background: linear-gradient(135deg, rgba(8, 145, 178, 0.2), rgba(30, 58, 138, 0.2));
+        border-color: #0891B2;
+        box-shadow: 0 0 20px rgba(8, 145, 178, 0.4);
+    }
+
+    .menu-text {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #0891B2, #1E3A8A);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 0.05em;
+    }
+
+    /* Radial Menu Container */
+    .radial-menu-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 600px;
+        z-index: 9998;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .radial-menu-container.active {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    /* Radial Menu Overlay */
+    .radial-menu-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(8px);
+        z-index: 9997;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .radial-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Center Hub */
+    .radial-hub {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140px;
+        height: 140px;
+        background: linear-gradient(135deg, #1E3A8A, #0891B2);
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 40px rgba(8, 145, 178, 0.6),
+                    inset 0 0 20px rgba(255, 255, 255, 0.1);
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .radial-hub:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+        box-shadow: 0 0 60px rgba(8, 145, 178, 0.8),
+                    inset 0 0 30px rgba(255, 255, 255, 0.2);
+    }
+
+    .radial-hub-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        text-align: center;
+        margin-bottom: 0.25rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .radial-hub-subtitle {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+    }
+
+    /* Radial Menu Items */
+    .radial-menu-item {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 120px;
+        height: 120px;
+        margin: -60px 0 0 -60px;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    .radial-menu-container.active .radial-menu-item {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .radial-menu-item:nth-child(2) { transform: translate(0, -200px) scale(0); }
+    .radial-menu-container.active .radial-menu-item:nth-child(2) { transform: translate(0, -200px) scale(1); transition-delay: 0.1s; }
+    .radial-menu-item:nth-child(3) { transform: translate(-200px, -100px) scale(0); }
+    .radial-menu-container.active .radial-menu-item:nth-child(3) { transform: translate(-200px, -100px) scale(1); transition-delay: 0.15s; }
+    .radial-menu-item:nth-child(4) { transform: translate(200px, -100px) scale(0); }
+    .radial-menu-container.active .radial-menu-item:nth-child(4) { transform: translate(200px, -100px) scale(1); transition-delay: 0.2s; }
+    .radial-menu-item:nth-child(5) { transform: translate(-200px, 100px) scale(0); }
+    .radial-menu-container.active .radial-menu-item:nth-child(5) { transform: translate(-200px, 100px) scale(1); transition-delay: 0.25s; }
+    .radial-menu-item:nth-child(6) { transform: translate(200px, 100px) scale(0); }
+    .radial-menu-container.active .radial-menu-item:nth-child(6) { transform: translate(200px, 100px) scale(1); transition-delay: 0.3s; }
+
+    .radial-item-btn {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(30, 58, 138, 0.9), rgba(8, 145, 178, 0.9));
+        border: 3px solid rgba(8, 145, 178, 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .radial-item-btn::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(45deg, #0891B2, #1E3A8A, #059669);
+        border-radius: 50%;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .radial-item-btn:hover::before { opacity: 1; }
+    .radial-item-btn:hover {
+        transform: scale(1.15);
+        box-shadow: 0 12px 32px rgba(8, 145, 178, 0.5);
+        border-color: #0891B2;
+    }
+
+    .radial-item-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .radial-item-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .radial-submenu {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(12px);
+        border: 2px solid rgba(8, 145, 178, 0.3);
+        border-radius: 16px;
+        padding: 1.5rem;
+        min-width: 280px;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        z-index: 100;
+    }
+
+    .radial-menu-item:hover .radial-submenu {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    .radial-submenu-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid rgba(8, 145, 178, 0.2);
+    }
+
+    .radial-submenu-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .radial-submenu-item {
+        margin-bottom: 0.5rem;
+    }
+
+    .radial-submenu-link {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        border-radius: 8px;
+        color: #334155;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border-left: 3px solid transparent;
+    }
+
+    .radial-submenu-link:hover {
+        background: rgba(8, 145, 178, 0.1);
+        border-left-color: #0891B2;
+        padding-left: 1rem;
+        color: #0891B2;
+    }
+
+    .radial-submenu-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-right: 0.75rem;
+        color: #0891B2;
+    }
+
+    .radial-connection-line {
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(8, 145, 178, 0.3), rgba(8, 145, 178, 0.6), rgba(8, 145, 178, 0.3));
+        transform-origin: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .radial-menu-container.active .radial-connection-line { opacity: 1; }
+    .connection-line-1 { width: 180px; top: 30%; left: 50%; transform: translateX(-50%); }
+    .connection-line-2 { width: 180px; top: 45%; left: 28%; transform: rotate(-25deg); }
+    .connection-line-3 { width: 180px; top: 45%; right: 28%; transform: rotate(25deg); }
+    .connection-line-4 { width: 180px; bottom: 45%; left: 28%; transform: rotate(25deg); }
+    .connection-line-5 { width: 180px; bottom: 45%; right: 28%; transform: rotate(-25deg); }
+
+    @media (max-width: 768px) {
+        .radial-menu-container { width: 100vw; height: 100vh; }
+        .radial-menu-item { width: 100px; height: 100px; margin: -50px 0 0 -50px; }
+        .radial-menu-item:nth-child(2) { transform: translate(0, -140px) scale(0); }
+        .radial-menu-container.active .radial-menu-item:nth-child(2) { transform: translate(0, -140px) scale(1); }
+        .radial-menu-item:nth-child(3) { transform: translate(-140px, -80px) scale(0); }
+        .radial-menu-container.active .radial-menu-item:nth-child(3) { transform: translate(-140px, -80px) scale(1); }
+        .radial-menu-item:nth-child(4) { transform: translate(140px, -80px) scale(0); }
+        .radial-menu-container.active .radial-menu-item:nth-child(4) { transform: translate(140px, -80px) scale(1); }
+        .radial-menu-item:nth-child(5) { transform: translate(-140px, 80px) scale(0); }
+        .radial-menu-container.active .radial-menu-item:nth-child(5) { transform: translate(-140px, 80px) scale(1); }
+        .radial-menu-item:nth-child(6) { transform: translate(140px, 80px) scale(0); }
+        .radial-menu-container.active .radial-menu-item:nth-child(6) { transform: translate(140px, 80px) scale(1); }
+        .radial-item-icon { width: 2rem; height: 2rem; }
+        .radial-item-label { font-size: 0.75rem; }
+        .radial-submenu { min-width: 240px; max-width: 90vw; }
+    }
+  </style>
+  
+  <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fthetriumv8982back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
+  <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
+  </head>
+<body class="bg-background text-text-primary">
+    
+    <!-- Navigation Header -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-surface-light" role="navigation" aria-label="Main navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a href="/index.html" class="flex items-center space-x-3 group" aria-label="ThirstysProjects.com Home">
+                    <svg class="w-10 h-10 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="url(#logo-gradient)" stroke-width="2" fill="none"/>
+                        <circle cx="20" cy="20" r="6" fill="url(#logo-gradient)" opacity="0.6"/>
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="5" y1="5" x2="35" y2="35">
+                                <stop offset="0%" stop-color="#1E3A8A"/>
+                                <stop offset="100%" stop-color="#0891B2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="font-headline text-xl font-bold text-text-primary hidden sm:inline">ThirstysProjects</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/pages/manifesto_gateway.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Manifesto</a>
+                    <a href="/pages/trinity_deep_dive.html" class="text-accent font-cta font-medium hover:text-accent transition-colors">Trinity</a>
+                    <a href="/pages/scenario_demonstrations.html" class="text-text-secondary font-cta font-medium hover:text-accent-light transition-colors">Scenarios</a>
+                    <a href="/pages/research_center.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Research</a>
+                    <a href="/pages/future_architectures.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Future</a>
+                    <a href="/pages/trust_transparency_center.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trust</a>
+                    <button class="btn-accent">Partner With Us</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-text-primary hover:text-accent transition-colors" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-surface border-t border-surface-light">
+            <div class="px-4 py-6 space-y-4">
+                <a href="/pages/manifesto_gateway.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Manifesto</a>
+                <a href="/pages/trinity_deep_dive.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trinity</a>
+                <a href="/pages/scenario_demonstrations.html" class="block text-accent font-cta font-medium hover:text-accent-light transition-colors">Scenarios</a>
+                <a href="/pages/research_center.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Research</a>
+                <a href="/pages/future_architectures.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Future</a>
+                <a href="/pages/trust_transparency_center.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trust</a>
+                <button class="btn-accent w-full">Partner With Us</button>
+            </div>
+        </div>
+    </nav>
+
+<!-- Radial Menu Overlay -->
+<div class="radial-menu-overlay" id="radial-overlay" role="presentation"></div>
+
+<!-- Radial Menu Container -->
+<div class="radial-menu-container" id="radial-menu" role="menu" aria-label="Main navigation menu">
+    <!-- Decorative Connection Lines -->
+    <div class="radial-connection-line connection-line-1" aria-hidden="true"></div>
+    <div class="radial-connection-line connection-line-2" aria-hidden="true"></div>
+    <div class="radial-connection-line connection-line-3" aria-hidden="true"></div>
+    <div class="radial-connection-line connection-line-4" aria-hidden="true"></div>
+    <div class="radial-connection-line connection-line-5" aria-hidden="true"></div>
+
+    <!-- Center Hub -->
+    <div class="radial-hub" id="radial-close-btn" role="button" tabindex="0" aria-label="Close navigation menu">
+        <svg class="w-8 h-8 text-white mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        <span class="radial-hub-title">MENU</span>
+        <span class="radial-hub-subtitle">Click to close</span>
+            </div>
+
+    <!-- Home Menu Item -->
+    <div class="radial-menu-item" role="none">
+        <div class="radial-item-btn" role="menuitem" tabindex="0" aria-haspopup="true" aria-label="Home menu">
+            <svg class="radial-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span class="radial-item-label">Home</span>
+        </div>
+        <div class="radial-submenu" role="menu" aria-label="Home submenu">
+            <h3 class="radial-submenu-title">Home & Gateway</h3>
+            <ul class="radial-submenu-list">
+                <li class="radial-submenu-item">
+                    <a href="/index.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        <span>Main Home</span>
+                    </a>
+                </li>
+                <li class="radial-submenu-item">
+                    <a href="/pages/manifesto_gateway.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span>Manifesto Gateway</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Trinity Menu Item -->
+    <div class="radial-menu-item" role="none">
+        <div class="radial-item-btn" role="menuitem" tabindex="0" aria-haspopup="true" aria-label="Trinity systems menu">
+            <svg class="radial-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            <span class="radial-item-label">Trinity</span>
+        </div>
+        <div class="radial-submenu" role="menu" aria-label="Trinity submenu">
+            <h3 class="radial-submenu-title">Trinity Systems</h3>
+            <ul class="radial-submenu-list">
+                <li class="radial-submenu-item">
+                    <a href="/pages/trinity_deep_dive.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        <span>Trinity Deep Dive</span>
+                    </a>
+                </li>
+                <li class="radial-submenu-item">
+                    <a href="/pages/project_ai_cognitive_engine.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                        <span>Project AI Engine</span>
+                    </a>
+                </li>
+                <li class="radial-submenu-item">
+                    <a href="/pages/cerberus_security_fortress.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        <span>Cerberus Security</span>
+                    </a>
+                </li>
+                <li class="radial-submenu-item">
+                    <a href="/pages/codex_deus_maximus_repository.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                        <span>Codex Deus Maximus</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Scenarios Menu Item -->
+    <div class="radial-menu-item" role="none">
+        <div class="radial-item-btn" role="menuitem" tabindex="0" aria-haspopup="true" aria-label="Scenarios menu">
+            <svg class="radial-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+            </svg>
+            <span class="radial-item-label">Scenarios</span>
+        </div>
+        <div class="radial-submenu" role="menu" aria-label="Scenarios submenu">
+            <h3 class="radial-submenu-title">Demonstrations</h3>
+            <ul class="radial-submenu-list">
+                <li class="radial-submenu-item">
+                    <a href="/pages/scenario_demonstrations.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
+                        </svg>
+                        <span>Scenario Demonstrations</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Research Menu Item -->
+    <div class="radial-menu-item" role="none">
+        <div class="radial-item-btn" role="menuitem" tabindex="0" aria-haspopup="true" aria-label="Research menu">
+            <svg class="radial-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span class="radial-item-label">Research</span>
+        </div>
+        <div class="radial-submenu" role="menu" aria-label="Research submenu">
+            <h3 class="radial-submenu-title">Research & Insights</h3>
+            <ul class="radial-submenu-list">
+                <li class="radial-submenu-item">
+                    <a href="/pages/research_center.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                        </svg>
+                        <span>Research Center</span>
+                    </a>
+                </li>
+                <li class="radial-submenu-item">
+                    <a href="/pages/future_architectures.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                        <span>Future Architectures</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- About Menu Item -->
+    <div class="radial-menu-item" role="none">
+        <div class="radial-item-btn" role="menuitem" tabindex="0" aria-haspopup="true" aria-label="About menu">
+            <svg class="radial-item-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+            <span class="radial-item-label">About</span>
+        </div>
+        <div class="radial-submenu" role="menu" aria-label="About submenu">
+            <h3 class="radial-submenu-title">About Us</h3>
+            <ul class="radial-submenu-list">
+                <li class="radial-submenu-item">
+                    <a href="/pages/jeremy_karrick_founder_profile.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        <span>Founder Profile</span>
+                    </a>
+                </li>
+                <li class="radial-submenu-item">
+                    <a href="/pages/trust_transparency_center.html" class="radial-submenu-link" role="menuitem">
+                        <svg class="radial-submenu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        <span>Trust & Transparency</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 z-0">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/90 via-background/95 to-secondary/90 z-10"></div>
+            <img src="https://img.rocket.new/generatedImages/rocket_gen_img_1534f1e36-1764671525611.png" 
+                 alt="Abstract visualization of interconnected AI systems representing the Trinity architecture" 
+                 class="w-full h-full object-cover opacity-20"
+                 onerror="this.src='https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2940&auto=format&fit=crop'; this.onerror=null;">
+        </div>
+
+        <!-- Neural Network Overlay -->
+        <div class="absolute inset-0 z-10 opacity-10">
+            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="trinity-grid" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+                        <circle cx="60" cy="60" r="2" fill="#0891B2" opacity="0.6"/>
+                        <line x1="60" y1="60" x2="120" y2="60" stroke="#0891B2" stroke-width="0.5" opacity="0.4"/>
+                        <line x1="60" y1="60" x2="60" y2="120" stroke="#0891B2" stroke-width="0.5" opacity="0.4"/>
+                        <line x1="60" y1="60" x2="90" y2="30" stroke="#0891B2" stroke-width="0.5" opacity="0.3"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#trinity-grid)"/>
+            </svg>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="animate-fade-in">
+                <div class="inline-flex items-center space-x-2 bg-surface/50 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-surface-light">
+                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+                    </svg>
+                    <span class="text-text-secondary font-code text-sm">Technical Architecture v2.0</span>
+                </div>
+                <h1 class="font-headline text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-primary-300 via-accent to-secondary-300 bg-clip-text text-transparent">
+                    The Trinity Ecosystem
+                </h1>
+                <p class="text-xl md:text-2xl lg:text-3xl text-text-secondary mb-4 max-w-4xl mx-auto font-body">
+                    Three Pillars of AGI-Human Partnership
+                </p>
+                <p class="text-lg md:text-xl text-text-tertiary mb-12 max-w-3xl mx-auto">
+                    Explore the complete technical architecture, security protocols, and knowledge systems that power The Triumvirate framework
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                    <button class="btn-accent text-lg px-8 py-4 shadow-glow-accent" onclick="document.getElementById('trinity-overview').scrollIntoView({behavior: 'smooth'})">Explore Architecture</button>
+                    <button class="btn-outline text-lg px-8 py-4">Download Technical Specs</button>
+                </div>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce">
+                <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trinity Overview -->
+    <section id="trinity-overview" class="py-24 bg-background-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                    Symbiotic Intelligence Architecture
+                </h2>
+                <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                    Three interconnected systems working in perfect harmony to create confluent consciousness between human wisdom and artificial intelligence
+                </p>
+            </div>
+
+            <!-- Trinity Pillars Grid -->
+            <div class="grid lg:grid-cols-3 gap-8 mb-16">
+                <!-- Project AI -->
+                <div class="card-elevated group hover:shadow-glow-primary cursor-pointer animate-slide-up" id="project-ai-card">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                        <span class="font-code text-primary text-sm font-bold">PILLAR 01</span>
+                    </div>
+                    <h3 class="font-headline text-2xl font-bold mb-4 text-text-primary">Project AI</h3>
+                    <p class="text-text-secondary leading-relaxed mb-6">
+                        The cognitive core that processes complex scenarios, learns from interactions, and generates intelligent responses through advanced neural architectures.
+                    </p>
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center space-x-2 text-text-tertiary">
+                            <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm">Adaptive Learning Systems</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-text-tertiary">
+                            <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm">Ethical Decision Framework</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-text-tertiary">
+                            <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm">Real-time Pattern Recognition</span>
+                        </div>
+                    </div>
+                    <button class="text-accent hover:text-accent-light font-cta font-medium flex items-center space-x-2 group-hover:translate-x-2 transition-transform">
+                        <span>Explore Architecture</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Cerberus -->
+                <div class="card-elevated group hover:shadow-glow-secondary cursor-pointer animate-slide-up stagger-delay-1" id="cerberus-card">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <span class="font-code text-secondary text-sm font-bold">PILLAR 02</span>
+                    </div>
+                    <h3 class="font-headline text-2xl font-bold mb-4 text-text-primary">Cerberus</h3>
+                    <p class="text-text-secondary leading-relaxed mb-6">
+                        Multi-layered security fortress that evolves with emerging threats, ensuring robust protection while maintaining system flexibility and responsiveness.
+                    </p>
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center space-x-2 text-text-tertiary">
+                            <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm">Adaptive Threat Detection</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-text-tertiary">
+                            <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm">Zero-Trust Architecture</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-text-tertiary">
+                            <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm">Automated Response Protocols</span>
+                        </div>
+                    </div>
+                    <button class="text-accent hover:text-accent-light font-cta font-medium flex items-center space-x-2 group-hover:translate-x-2 transition-transform">
+                        <span>Explore Security</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Codex Deus Maximus -->
+                <div class="card-elevated group hover:shadow-glow-accent cursor-pointer animate-slide-up stagger-delay-2" id="codex-card">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                        </div>
+                        <span class="font-code text-accent text-sm font-bold">PILLAR 03</span>
+                    </div>
+                    <h3 class="font-headline text-2xl font-bold mb-4 text-text-primary">Codex Deus Maximus</h3>
+                    <p class="text-text-secondary leading-relaxed mb-6">
+                        Living knowledge repository that captures, preserves, and evolves organizational wisdom, ensuring continuity and accelerating collective learning.
+                    </p>
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center space-x-2 text-text-tertiary">
+                            <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm">Institutional Memory Systems</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-text-tertiary">
+                            <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm">Semantic Knowledge Graphs</span>
+                        </div>
+                        <div class="flex items-center space-x-2 text-text-tertiary">
+                            <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span class="text-sm">Continuous Learning Loops</span>
+                        </div>
+                    </div>
+                    <button class="text-accent hover:text-accent-light font-cta font-medium flex items-center space-x-2 group-hover:translate-x-2 transition-transform">
+                        <span>Explore Knowledge</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Interconnection Visualization -->
+            <div class="technical-diagram">
+                <div class="text-center mb-8">
+                    <h3 class="font-headline text-2xl font-bold mb-3 text-text-primary">Symbiotic Relationships</h3>
+                    <p class="text-text-secondary">How the three pillars work together to create confluent consciousness</p>
+                </div>
+                <div class="relative h-96 flex items-center justify-center">
+                    <svg class="w-full h-full" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Connection Lines -->
+                        <line x1="200" y1="200" x2="400" y2="100" stroke="#0891B2" stroke-width="2" opacity="0.5" stroke-dasharray="5,5">
+                            <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="400" y1="100" x2="600" y2="200" stroke="#0891B2" stroke-width="2" opacity="0.5" stroke-dasharray="5,5">
+                            <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="600" y1="200" x2="400" y2="300" stroke="#0891B2" stroke-width="2" opacity="0.5" stroke-dasharray="5,5">
+                            <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="400" y1="300" x2="200" y2="200" stroke="#0891B2" stroke-width="2" opacity="0.5" stroke-dasharray="5,5">
+                            <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="200" y1="200" x2="600" y2="200" stroke="#0891B2" stroke-width="2" opacity="0.3" stroke-dasharray="5,5">
+                            <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"/>
+                        </line>
+                        <line x1="400" y1="100" x2="400" y2="300" stroke="#0891B2" stroke-width="2" opacity="0.3" stroke-dasharray="5,5">
+                            <animate attributeName="stroke-dashoffset" from="0" to="10" dur="1s" repeatCount="indefinite"/>
+                        </line>
+                        
+                        <!-- Project AI Node -->
+                        <circle cx="200" cy="200" r="60" fill="#1E3A8A" opacity="0.8" stroke="#3B82F6" stroke-width="2"/>
+                        <text x="200" y="195" text-anchor="middle" fill="#F8FAFC" font-family="JetBrains Mono" font-size="14" font-weight="bold">Project AI</text>
+                        <text x="200" y="215" text-anchor="middle" fill="#94A3B8" font-family="Inter" font-size="11">Cognitive Core</text>
+                        
+                        <!-- Cerberus Node -->
+                        <circle cx="600" cy="200" r="60" fill="#0891B2" opacity="0.8" stroke="#22D3EE" stroke-width="2"/>
+                        <text x="600" y="195" text-anchor="middle" fill="#F8FAFC" font-family="JetBrains Mono" font-size="14" font-weight="bold">Cerberus</text>
+                        <text x="600" y="215" text-anchor="middle" fill="#94A3B8" font-family="Inter" font-size="11">Security Fortress</text>
+                        
+                        <!-- Codex Node -->
+                        <circle cx="400" cy="300" r="60" fill="#06B6D4" opacity="0.8" stroke="#22D3EE" stroke-width="2"/>
+                        <text x="400" y="295" text-anchor="middle" fill="#0F172A" font-family="JetBrains Mono" font-size="14" font-weight="bold">Codex Deus</text>
+                        <text x="400" y="315" text-anchor="middle" fill="#334155" font-family="Inter" font-size="11">Knowledge Repository</text>
+                        
+                        <!-- Central Convergence -->
+                        <circle cx="400" cy="200" r="30" fill="#06B6D4" opacity="0.3">
+                            <animate attributeName="r" from="30" to="35" dur="2s" repeatCount="indefinite" direction="alternate"/>
+                        </circle>
+                        <text x="400" y="205" text-anchor="middle" fill="#F8FAFC" font-family="JetBrains Mono" font-size="12" font-weight="bold">Confluent</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Filter System -->
+    <section class="py-24 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                    Explore Technical Aspects
+                </h2>
+                <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                    Filter and discover specific technical components, protocols, and implementation details
+                </p>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="flex flex-wrap items-center justify-center gap-4 mb-12">
+                <button class="filter-btn active" data-filter="all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                    </svg>
+                    <span>All Components</span>
+                </button>
+                <button class="filter-btn" data-filter="architecture">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    <span>Architecture</span>
+                </button>
+                <button class="filter-btn" data-filter="security">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    <span>Security</span>
+                </button>
+                <button class="filter-btn" data-filter="learning">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                    </svg>
+                    <span>Learning Systems</span>
+                </button>
+                <button class="filter-btn" data-filter="integration">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Integration</span>
+                </button>
+                <button class="btn-outline" id="reset-filters">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <span>Reset</span>
+                </button>
+            </div>
+
+            <!-- Technical Components Grid -->
+            <div id="components-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Architecture Components -->
+                <div class="component-card" data-category="architecture">
+                    <div class="card group hover:shadow-glow-primary cursor-pointer">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-code font-medium bg-primary/20 text-primary-300 border border-primary-700">Architecture</span>
+                            <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Neural Network Layers</h4>
+                        <p class="text-text-secondary text-sm leading-relaxed mb-4">
+                            Multi-layered neural architecture with attention mechanisms and transformer-based processing for complex pattern recognition.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-accent text-sm font-code">v2.3.1</span>
+                            <button class="text-accent hover:text-accent-light text-sm font-cta font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-card" data-category="architecture">
+                    <div class="card group hover:shadow-glow-primary cursor-pointer">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-code font-medium bg-primary/20 text-primary-300 border border-primary-700">Architecture</span>
+                            <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Microservices Framework</h4>
+                        <p class="text-text-secondary text-sm leading-relaxed mb-4">
+                            Distributed architecture enabling independent scaling and deployment of individual system components.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-accent text-sm font-code">v1.8.0</span>
+                            <button class="text-accent hover:text-accent-light text-sm font-cta font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Components -->
+                <div class="component-card" data-category="security">
+                    <div class="card group hover:shadow-glow-secondary cursor-pointer">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-code font-medium bg-secondary/20 text-secondary-300 border border-secondary-700">Security</span>
+                            <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Zero-Trust Protocol</h4>
+                        <p class="text-text-secondary text-sm leading-relaxed mb-4">
+                            Comprehensive security model requiring verification for every access request, regardless of source location.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-accent text-sm font-code">v3.1.2</span>
+                            <button class="text-accent hover:text-accent-light text-sm font-cta font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-card" data-category="security">
+                    <div class="card group hover:shadow-glow-secondary cursor-pointer">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-code font-medium bg-secondary/20 text-secondary-300 border border-secondary-700">Security</span>
+                            <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Threat Intelligence Engine</h4>
+                        <p class="text-text-secondary text-sm leading-relaxed mb-4">
+                            Real-time threat detection and response system with machine learning-based anomaly identification.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-accent text-sm font-code">v2.7.4</span>
+                            <button class="text-accent hover:text-accent-light text-sm font-cta font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Systems -->
+                <div class="component-card" data-category="learning">
+                    <div class="card group hover:shadow-glow-accent cursor-pointer">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-code font-medium bg-accent/20 text-accent-light border border-accent-dark">Learning</span>
+                            <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Adaptive Learning Core</h4>
+                        <p class="text-text-secondary text-sm leading-relaxed mb-4">
+                            Continuous learning system that evolves based on new data patterns and user interactions.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-accent text-sm font-code">v4.2.0</span>
+                            <button class="text-accent hover:text-accent-light text-sm font-cta font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-card" data-category="learning">
+                    <div class="card group hover:shadow-glow-accent cursor-pointer">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-code font-medium bg-accent/20 text-accent-light border border-accent-dark">Learning</span>
+                            <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Knowledge Graph Engine</h4>
+                        <p class="text-text-secondary text-sm leading-relaxed mb-4">
+                            Semantic relationship mapping system that connects concepts and enables contextual understanding.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-accent text-sm font-code">v3.5.1</span>
+                            <button class="text-accent hover:text-accent-light text-sm font-cta font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Integration Components -->
+                <div class="component-card" data-category="integration">
+                    <div class="card group hover:shadow-glow-primary cursor-pointer">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-code font-medium bg-primary/20 text-primary-300 border border-primary-700">Integration</span>
+                            <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">RESTful API Gateway</h4>
+                        <p class="text-text-secondary text-sm leading-relaxed mb-4">
+                            Unified API interface for seamless integration with external systems and third-party services.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-accent text-sm font-code">v2.9.3</span>
+                            <button class="text-accent hover:text-accent-light text-sm font-cta font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-card" data-category="integration">
+                    <div class="card group hover:shadow-glow-primary cursor-pointer">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-code font-medium bg-primary/20 text-primary-300 border border-primary-700">Integration</span>
+                            <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Plugin Architecture</h4>
+                        <p class="text-text-secondary text-sm leading-relaxed mb-4">
+                            Extensible framework allowing custom modules and third-party extensions to enhance functionality.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-accent text-sm font-code">v1.6.2</span>
+                            <button class="text-accent hover:text-accent-light text-sm font-cta font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-card" data-category="architecture">
+                    <div class="card group hover:shadow-glow-primary cursor-pointer">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-code font-medium bg-primary/20 text-primary-300 border border-primary-700">Architecture</span>
+                            <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Event-Driven Messaging</h4>
+                        <p class="text-text-secondary text-sm leading-relaxed mb-4">
+                            Asynchronous communication system enabling real-time data flow between distributed components.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-accent text-sm font-code">v2.4.7</span>
+                            <button class="text-accent hover:text-accent-light text-sm font-cta font-medium">View Details →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive 3D Architecture Diagram -->
+    <section class="py-24 bg-background-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                    Interactive System Architecture
+                </h2>
+                <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                    Explore the complete technical architecture with interactive 3D visualization
+                </p>
+            </div>
+
+            <div class="technical-diagram">
+                <div class="relative bg-surface rounded-lg p-8 border border-surface-light">
+                    <!-- Architecture Layers -->
+                    <div class="space-y-6">
+                        <!-- Presentation Layer -->
+                        <div class="architecture-layer" data-layer="presentation">
+                            <div class="flex items-center justify-between mb-4 cursor-pointer group">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-headline text-xl font-bold text-text-primary">Presentation Layer</h4>
+                                        <p class="text-text-tertiary text-sm">User interfaces and interaction endpoints</p>
+                                    </div>
+                                </div>
+                                <svg class="w-6 h-6 text-accent transform transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="layer-details hidden pl-16 space-y-3">
+                                <div class="flex items-center space-x-3 text-text-secondary">
+                                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Web Dashboard (React + TypeScript)</span>
+                                </div>
+                                <div class="flex items-center space-x-3 text-text-secondary">
+                                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Mobile Applications (iOS/Android)</span>
+                                </div>
+                                <div class="flex items-center space-x-3 text-text-secondary">
+                                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>API Documentation Portal</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider"></div>
+
+                        <!-- Application Layer -->
+                        <div class="architecture-layer" data-layer="application">
+                            <div class="flex items-center justify-between mb-4 cursor-pointer group">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-headline text-xl font-bold text-text-primary">Application Layer</h4>
+                                        <p class="text-text-tertiary text-sm">Business logic and processing engines</p>
+                                    </div>
+                                </div>
+                                <svg class="w-6 h-6 text-accent transform transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="layer-details hidden pl-16 space-y-3">
+                                <div class="flex items-center space-x-3 text-text-secondary">
+                                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Project AI Processing Core</span>
+                                </div>
+                                <div class="flex items-center space-x-3 text-text-secondary">
+                                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Cerberus Security Engine</span>
+                                </div>
+                                <div class="flex items-center space-x-3 text-text-secondary">
+                                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Codex Knowledge Manager</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-divider"></div>
+
+                        <!-- Data Layer -->
+                        <div class="architecture-layer" data-layer="data">
+                            <div class="flex items-center justify-between mb-4 cursor-pointer group">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-headline text-xl font-bold text-text-primary">Data Layer</h4>
+                                        <p class="text-text-tertiary text-sm">Storage and persistence systems</p>
+                                    </div>
+                                </div>
+                                <svg class="w-6 h-6 text-accent transform transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="layer-details hidden pl-16 space-y-3">
+                                <div class="flex items-center space-x-3 text-text-secondary">
+                                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>PostgreSQL (Relational Data)</span>
+                                </div>
+                                <div class="flex items-center space-x-3 text-text-secondary">
+                                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>MongoDB (Document Store)</span>
+                                </div>
+                                <div class="flex items-center space-x-3 text-text-secondary">
+                                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Redis (Caching Layer)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Download Architecture Docs -->
+                    <div class="mt-12 flex items-center justify-center">
+                        <button class="btn-accent">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            Download Complete Architecture Documentation
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Specifications Download Center -->
+    <section class="py-24 bg-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                    Technical Documentation Center
+                </h2>
+                <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                    Access comprehensive technical specifications, API documentation, and integration guides
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- API Documentation -->
+                <div class="card-elevated group hover:shadow-glow-primary cursor-pointer">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-code text-text-tertiary">PDF • 2.4 MB</span>
+                    </div>
+                    <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">API Reference Guide</h4>
+                    <p class="text-text-secondary text-sm leading-relaxed mb-6">
+                        Complete RESTful API documentation with endpoints, authentication, and code examples.
+                    </p>
+                    <button class="btn-outline w-full">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+
+                <!-- Integration Guide -->
+                <div class="card-elevated group hover:shadow-glow-secondary cursor-pointer">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-code text-text-tertiary">PDF • 3.1 MB</span>
+                    </div>
+                    <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Integration Handbook</h4>
+                    <p class="text-text-secondary text-sm leading-relaxed mb-6">
+                        Step-by-step guide for integrating The Triumvirate with existing systems and workflows.
+                    </p>
+                    <button class="btn-outline w-full">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+
+                <!-- Security Protocols -->
+                <div class="card-elevated group hover:shadow-glow-accent cursor-pointer">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-code text-text-tertiary">PDF • 1.8 MB</span>
+                    </div>
+                    <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Security Protocols</h4>
+                    <p class="text-text-secondary text-sm leading-relaxed mb-6">
+                        Comprehensive security documentation including threat models and response procedures.
+                    </p>
+                    <button class="btn-outline w-full">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+
+                <!-- Architecture Blueprints -->
+                <div class="card-elevated group hover:shadow-glow-primary cursor-pointer">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-code text-text-tertiary">PDF • 4.2 MB</span>
+                    </div>
+                    <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Architecture Blueprints</h4>
+                    <p class="text-text-secondary text-sm leading-relaxed mb-6">
+                        Detailed system architecture diagrams and component specifications for technical teams.
+                    </p>
+                    <button class="btn-outline w-full">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+
+                <!-- Plugin Development Kit -->
+                <div class="card-elevated group hover:shadow-glow-secondary cursor-pointer">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-code text-text-tertiary">ZIP • 12.5 MB</span>
+                    </div>
+                    <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Plugin Development Kit</h4>
+                    <p class="text-text-secondary text-sm leading-relaxed mb-6">
+                        Complete SDK with templates, examples, and tools for building custom extensions.
+                    </p>
+                    <button class="btn-outline w-full">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+
+                <!-- Implementation Playbook -->
+                <div class="card-elevated group hover:shadow-glow-accent cursor-pointer">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                            </svg>
+                        </div>
+                        <span class="text-xs font-code text-text-tertiary">PDF • 2.9 MB</span>
+                    </div>
+                    <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Implementation Playbook</h4>
+                    <p class="text-text-secondary text-sm leading-relaxed mb-6">
+                        Best practices and proven strategies for successful deployment and adoption.
+                    </p>
+                    <button class="btn-outline w-full">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-24 bg-gradient-to-br from-primary via-background to-secondary relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="cta-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                        <circle cx="40" cy="40" r="1.5" fill="#0891B2"/>
+                        <line x1="40" y1="40" x2="80" y2="40" stroke="#0891B2" stroke-width="0.5"/>
+                        <line x1="40" y1="40" x2="40" y2="80" stroke="#0891B2" stroke-width="0.5"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#cta-pattern)"/>
+            </svg>
+        </div>
+        
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                Ready to Implement The Trinity?
+            </h2>
+            <p class="text-xl text-text-secondary mb-12 max-w-3xl mx-auto">
+                Connect with our technical team to discuss integration strategies and implementation roadmaps
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <button class="btn-accent text-lg px-10 py-4 shadow-glow-accent">Schedule Technical Consultation</button>
+                <button class="btn-outline text-lg px-10 py-4">Explore Case Studies</button>
+            </div>
+            <div class="mt-12 flex flex-wrap items-center justify-center gap-8 text-text-tertiary">
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Free technical assessment</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Dedicated integration support</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Developer community access</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-surface border-t border-surface-light py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-12 mb-12">
+                <!-- Company Info -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <svg class="w-10 h-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="url(#footer-gradient)" stroke-width="2" fill="none"/>
+                            <circle cx="20" cy="20" r="6" fill="url(#footer-gradient)" opacity="0.6"/>
+                            <defs>
+                                <linearGradient id="footer-gradient" x1="5" y1="5" x2="35" y2="35">
+                                    <stop offset="0%" stop-color="#1E3A8A"/>
+                                    <stop offset="100%" stop-color="#0891B2"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span class="font-headline text-xl font-bold text-text-primary">The Triumvirate</span>
+                    </div>
+                    <p class="text-text-secondary mb-6 max-w-md">
+                        Shaping the path for AGI/Human Partnership through confluent consciousness, adaptive security, and institutional memory.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="javascript:void(0)" class="w-10 h-10 bg-surface-light rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <svg class="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="w-10 h-10 bg-surface-light rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <svg class="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                        <a href="javascript:void(0)" class="w-10 h-10 bg-surface-light rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                            <svg class="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-headline text-lg font-bold mb-4 text-text-primary">Explore</h4>
+                    <ul class="space-y-3">
+                        <li><a href="manifesto_gateway.html" class="text-text-secondary hover:text-accent transition-colors">Manifesto</a></li>
+                        <li><a href="trinity_deep_dive.html" class="text-text-secondary hover:text-accent transition-colors">Trinity Systems</a></li>
+                        <li><a href="scenario_demonstrations.html" class="text-text-secondary hover:text-accent transition-colors">Case Studies</a></li>
+                        <li><a href="research_center.html" class="text-text-secondary hover:text-accent transition-colors">Research</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div>
+                    <h4 class="font-headline text-lg font-bold mb-4 text-text-primary">Resources</h4>
+                    <ul class="space-y-3">
+                        <li><a href="future_architectures.html" class="text-text-secondary hover:text-accent transition-colors">Roadmap</a></li>
+                        <li><a href="trust_transparency_center.html" class="text-text-secondary hover:text-accent transition-colors">Security</a></li>
+                        <li><a href="javascript:void(0)" class="text-text-secondary hover:text-accent transition-colors">Documentation</a></li>
+                        <li><a href="javascript:void(0)" class="text-text-secondary hover:text-accent transition-colors">Community</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between text-text-tertiary text-sm">
+                <p>© 2025 The Triumvirate. All Rights Reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="javascript:void(0)" class="hover:text-accent transition-colors">Privacy Policy</a>
+                    <a href="javascript:void(0)" class="hover:text-accent transition-colors">Terms of Service</a>
+                    <a href="javascript:void(0)" class="hover:text-accent transition-colors">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Filter system
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const componentCards = document.querySelectorAll('.component-card');
+        const resetButton = document.getElementById('reset-filters');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const filter = button.getAttribute('data-filter');
+                
+                // Update active state
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Filter components
+                componentCards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+                    if (filter === 'all' || category === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        resetButton.addEventListener('click', () => {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            filterButtons[0].classList.add('active');
+            componentCards.forEach(card => card.style.display = 'block');
+        });
+
+        // Architecture layer expansion
+        const architectureLayers = document.querySelectorAll('.architecture-layer');
+        
+        architectureLayers.forEach(layer => {
+            const header = layer.querySelector('.cursor-pointer');
+            const details = layer.querySelector('.layer-details');
+            
+            header.addEventListener('click', () => {
+                details.classList.toggle('hidden');
+            });
+        });
+
+        // Trinity card interactions
+        const trinityCards = document.querySelectorAll('#project-ai-card, #cerberus-card, #codex-card');
+        
+        trinityCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // Smooth scroll to relevant section
+                const targetId = card.id.replace('-card', '');
+                console.log(`Navigating to ${targetId} details...`);
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-slide-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(el);
+        });
+
+        // Add custom styles for filter buttons
+        const style = document.createElement('style');
+        style.textContent = `
+            .filter-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1.5rem;
+                background-color: var(--color-surface);
+                color: var(--color-text-secondary);
+                border: 1px solid var(--color-surface-light);
+                border-radius: 0.5rem;
+                font-family: 'Space Grotesk', sans-serif;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+            
+            .filter-btn:hover {
+                background-color: var(--color-surface-light);
+                color: var(--color-accent);
+                border-color: var(--color-accent);
+            }
+            
+            .filter-btn.active {
+                background-color: var(--color-accent);
+                color: var(--color-background);
+                border-color: var(--color-accent);
+                box-shadow: var(--shadow-glow-accent);
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+    <!-- Radial Menu JavaScript -->
+    <script>
+        const menuTrigger = document.getElementById('menu-trigger');
+        const radialMenu = document.getElementById('radial-menu');
+        const radialOverlay = document.getElementById('radial-overlay');
+        const radialCloseBtn = document.getElementById('radial-close-btn');
+
+        function openRadialMenu() {
+            radialMenu.classList.add('active');
+            radialOverlay.classList.add('active');
+            menuTrigger.classList.add('active');
+            menuTrigger.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRadialMenu() {
+            radialMenu.classList.remove('active');
+            radialOverlay.classList.remove('active');
+            menuTrigger.classList.remove('active');
+            menuTrigger.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+
+        // Open radial menu
+        menuTrigger.addEventListener('click', openRadialMenu);
+        menuTrigger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openRadialMenu();
+            }
+        });
+
+        // Close radial menu
+        radialCloseBtn.addEventListener('click', closeRadialMenu);
+        radialCloseBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                closeRadialMenu();
+            }
+        });
+        radialOverlay.addEventListener('click', closeRadialMenu);
+
+        // Escape key to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && radialMenu.classList.contains('active')) {
+                closeRadialMenu();
+            }
+        });
+    </script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
+</body>
+</html>

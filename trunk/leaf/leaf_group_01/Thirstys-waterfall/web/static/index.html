@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Thirsty's Waterfall - Privacy Browser</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- ========================================================================
+         MAIN BROWSER INTERFACE
+         ======================================================================== -->
+
+    <!-- Top Navigation Bar -->
+    <nav id="browser-toolbar" class="browser-toolbar">
+        <!-- Navigation Controls -->
+        <div class="nav-controls">
+            <button id="btn-back" class="nav-btn" title="Back" aria-label="Go back">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <button id="btn-forward" class="nav-btn" title="Forward" aria-label="Go forward">
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            <button id="btn-refresh" class="nav-btn" title="Refresh" aria-label="Refresh page">
+                <i class="fas fa-redo"></i>
+            </button>
+            <button id="btn-home" class="nav-btn" title="Home" aria-label="Go to home">
+                <i class="fas fa-home"></i>
+            </button>
+        </div>
+
+        <!-- Address Bar with Privacy Indicators -->
+        <div class="address-bar-container">
+            <div class="security-indicator" id="security-indicator">
+                <i class="fas fa-lock"></i>
+                <span class="security-text">Secure</span>
+            </div>
+
+            <input type="text" id="address-bar" class="address-bar"
+                placeholder="Search or enter address (All queries encrypted)" autocomplete="off" spellcheck="false" />
+
+            <div class="privacy-indicators">
+                <div class="indicator" id="vpn-indicator" title="VPN Active">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="indicator" id="firewall-indicator" title="Firewalls Active">
+                    <i class="fas fa-fire"></i>
+                </div>
+                <div class="indicator" id="encryption-indicator" title="7-Layer Encryption">
+                    <i class="fas fa-key"></i>
+                </div>
+                <div class="indicator" id="tracker-blocker" title="Trackers Blocked">
+                    <i class="fas fa-eye-slash"></i>
+                    <span class="counter">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Browser Actions -->
+        <div class="browser-actions">
+            <button id="btn-bookmark" class="action-btn" title="Bookmark this page">
+                <i class="far fa-star"></i>
+            </button>
+            <button id="btn-downloads" class="action-btn" title="Downloads">
+                <i class="fas fa-download"></i>
+            </button>
+            <button id="btn-privacy-dashboard" class="action-btn" title="Privacy Dashboard">
+                <i class="fas fa-user-shield"></i>
+            </button>
+            <button id="btn-settings" class="action-btn" title="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
+            <button id="btn-menu" class="action-btn" title="Menu">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Tab Bar -->
+    <div id="tab-bar" class="tab-bar">
+        <div class="tabs-container" id="tabs-container">
+            <!-- Tabs will be dynamically added here -->
+        </div>
+        <button id="btn-new-tab" class="new-tab-btn" title="New Tab">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="main-content">
+        <!-- Browser Viewport -  This will contain iframe or custom rendering -->
+        <div id="browser-viewport" class="browser-viewport">
+            <!-- Start Page / New Tab Page -->
+            <div id="start-page" class="start-page">
+                <div class="start-page-content">
+                    <div class="logo-container">
+                        <i class="fas fa-water"></i>
+                        <h1>Thirsty's Waterfall</h1>
+                        <p class="tagline">Privacy-First Browser</p>
+                    </div>
+
+                    <!-- Privacy Status Cards -->
+                    <div class="privacy-status-grid">
+                        <div class="status-card vpn-card">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>VPN Protection</h3>
+                            <p class="status-value">Multi-Hop Active</p>
+                            <p class="status-detail">3 hops • WireGuard</p>
+                        </div>
+
+                        <div class="status-card firewall-card">
+                            <i class="fas fa-fire"></i>
+                            <h3>Firewalls</h3>
+                            <p class="status-value">8 Types Active</p>
+                            <p class="status-detail">All layers protected</p>
+                        </div>
+
+                        <div class="status-card encryption-card">
+                            <i class="fas fa-key"></i>
+                            <h3>Encryption</h3>
+                            <p class="status-value">7-Layer Active</p>
+                            <p class="status-detail">Everything encrypted</p>
+                        </div>
+
+                        <div class="status-card privacy-card">
+                            <i class="fas fa-eye-slash"></i>
+                            <h3>Privacy</h3>
+                            <p class="status-value">Maximum Mode</p>
+                            <p class="status-detail">No tracking • No history</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Search -->
+                    <div class="quick-search">
+                        <div class="search-wrapper">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="quick-search" class="quick-search-input"
+                                placeholder="Search the web (Encrypted)" />
+                        </div>
+                    </div>
+
+                    <!-- Bookmarks / Shortcuts -->
+                    <div class="shortcuts-grid">
+                        <div class="shortcut" data-url="https://duckduckgo.com">
+                            <i class="fas fa-search"></i>
+                            <span>DuckDuckGo</span>
+                        </div>
+                        <div class="shortcut" data-url="https://protonmail.com">
+                            <i class="fas fa-envelope"></i>
+                            <span>ProtonMail</span>
+                        </div>
+                        <div class="shortcut" data-url="https://signal.org">
+                            <i class="fas fa-comments"></i>
+                            <span>Signal</span>
+                        </div>
+                        <div class="shortcut" data-url="https://torproject.org">
+                            <i class="fas fa-user-secret"></i>
+                            <span>Tor Project</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy Dashboard Sidebar -->
+        <aside id="privacy-dashboard" class="privacy-dashboard hidden">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-user-shield"></i> Privacy Dashboard</h2>
+                <button id="close-dashboard" class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="dashboard-content">
+                <!-- Real-time Stats -->
+                <section class="dashboard-section">
+                    <h3>Session Statistics</h3>
+                    <div class="stat-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Trackers Blocked</span>
+                            <span class="stat-value" id="stat-trackers">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Ads Blocked</span>
+                            <span class="stat-value" id="stat-ads">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Malware Blocked</span>
+                            <span class="stat-value" id="stat-malware">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Data Encrypted</span>
+                            <span class="stat-value" id="stat-encrypted">0 MB</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VPN Controls -->
+                <section class="dashboard-section">
+                    <h3><i class="fas fa-shield-alt"></i> VPN Status</h3>
+                    <div class="control-panel">
+                        <div class="status-indicator connected">
+                            <span class="status-dot"></span>
+                            <span>Connected</span>
+                        </div>
+                        <div class="vpn-info">
+                            <p><strong>Protocol:</strong> <span id="vpn-protocol">WireGuard</span></p>
+                            <p><strong>Hops:</strong> <span id="vpn-hops">3</span></p>
+                            <p><strong>Location:</strong> <span id="vpn-location">Multi-hop chain</span></p>
+                        </div>
+                        <div class="control-buttons">
+                            <button id="btn-vpn-toggle" class="btn-primary">
+                                <i class="fas fa-power-off"></i> Disconnect
+                            </button>
+                            <button id="btn-vpn-settings" class="btn-secondary">
+                                <i class="fas fa-cog"></i> Settings
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Firewall Status -->
+                <section class="dashboard-section">
+                    <h3><i class="fas fa-fire"></i> Firewalls</h3>
+                    <div class="firewall-list">
+                        <div class="firewall-item active">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Packet-Filtering</span>
+                        </div>
+                        <div class="firewall-item active">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Circuit-Level Gateway</span>
+                        </div>
+                        <div class="firewall-item active">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Stateful Inspection</span>
+                        </div>
+                        <div class="firewall-item active">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Proxy Firewall</span>
+                        </div>
+                        <div class="firewall-item active">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Next-Gen (NGFW)</span>
+                        </div>
+                        <div class="firewall-item active">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Software Firewall</span>
+                        </div>
+                        <div class="firewall-item inactive">
+                            <i class="fas fa-times-circle"></i>
+                            <span>Hardware Firewall</span>
+                        </div>
+                        <div class="firewall-item active">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Cloud Firewall</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Privacy Settings -->
+                <section class="dashboard-section">
+                    <h3><i class="fas fa-sliders-h"></i> Privacy Settings</h3>
+                    <div class="settings-list">
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked disabled />
+                                <span class="toggle-slider"></span>
+                                <span>No History (Always On)</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked disabled />
+                                <span class="toggle-slider"></span>
+                                <span>No Cache (Always On)</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked disabled />
+                                <span class="toggle-slider"></span>
+                                <span>No Cookies (Always On)</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked />
+                                <span class="toggle-slider"></span>
+                                <span>Block Pop-ups</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked />
+                                <span class="toggle-slider"></span>
+                                <span>Block Redirects</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked />
+                                <span class="toggle-slider"></span>
+                                <span>Anti-Fingerprinting</span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="toggle-label">
+                                <input type="checkbox" checked />
+                                <span class="toggle-slider"></span>
+                                <span>Kill Switch</span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Encryption Status -->
+                <section class="dashboard-section">
+                    <h3><i class="fas fa-key"></i> Encryption Layers</h3>
+                    <div class="encryption-stack">
+                        <div class="encryption-layer active" data-layer="1">
+                            <span class="layer-number">1</span>
+                            <span class="layer-name">AES-256-GCM</span>
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="encryption-layer active" data-layer="2">
+                            <span class="layer-number">2</span>
+                            <span class="layer-name">RSA-4096</span>
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="encryption-layer active" data-layer="3">
+                            <span class="layer-number">3</span>
+                            <span class="layer-name">ChaCha20-Poly1305</span>
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="encryption-layer active" data-layer="4">
+                            <span class="layer-number">4</span>
+                            <span class="layer-name">ECC-521</span>
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="encryption-layer active" data-layer="5">
+                            <span class="layer-number">5</span>
+                            <span class="layer-name">Perfect Forward Secrecy</span>
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="encryption-layer active" data-layer="6">
+                            <span class="layer-number">6</span>
+                            <span class="layer-name">Quantum-Resistant</span>
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="encryption-layer active" data-layer="7">
+                            <span class="layer-number">7</span>
+                            <span class="layer-name">Onion Routing</span>
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </aside>
+    </main>
+
+    <!-- Downloads Panel -->
+    <div id="downloads-panel" class="side-panel hidden">
+        <div class="panel-header">
+            <h2><i class="fas fa-download"></i> Downloads</h2>
+            <button class="close-panel"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="panel-content">
+            <p class="empty-state">No downloads yet</p>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel" class="side-panel hidden">
+        <div class="panel-header">
+            <h2><i class="fas fa-cog"></i> Settings</h2>
+            <button class="close-panel"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="panel-content">
+            <!-- Settings categories will be populated by JS -->
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="context-menu" class="context-menu hidden">
+        <div class="context-menu-item" data-action="copy">
+            <i class="fas fa-copy"></i> Copy
+        </div>
+        <div class="context-menu-item" data-action="paste">
+            <i class="fas fa-paste"></i> Paste
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" data-action="inspect">
+            <i class="fas fa-code"></i> Inspect Element
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notifications" class="notifications"></div>
+
+    <!-- Loading Indicator -->
+    <div id="loading" class="loading-indicator hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>

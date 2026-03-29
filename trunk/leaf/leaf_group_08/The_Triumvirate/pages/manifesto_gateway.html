@@ -1,0 +1,2733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Thirsty's Projects Manifesto - Shaping the way forward for AGI/Human relations through Project AI, Cerberus, and Codex Deus Maximus">
+    <title>Manifesto Gateway | ThirstysProjects.com</title>
+    <link rel="stylesheet" href="../css/main.css">
+  <style>
+    /* Enhanced focus indicators for accessibility */
+    *:focus {
+        outline: 3px solid #0891B2;
+        outline-offset: 2px;
+    }
+    
+    button:focus,
+    a:focus,
+    input:focus {
+        outline: 3px solid #0891B2;
+        outline-offset: 4px;
+    }
+    
+    /* Skip to content link */
+    .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: #0891B2;
+        color: #ffffff;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 0 0 4px 0;
+        z-index: 100;
+        font-weight: 600;
+    }
+    
+    .skip-link:focus {
+        top: 0;
+        outline: 3px solid #ffffff;
+        outline-offset: 2px;
+    }
+    
+    /* Keyboard shortcuts modal */
+    .keyboard-shortcuts-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        background: rgba(15, 23, 42, 0.98);
+        backdrop-filter: blur(10px);
+        color: #F8FAFC;
+        padding: 2rem;
+        border-radius: 12px;
+        border: 2px solid #0891B2;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        max-width: 500px;
+        width: 90%;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .keyboard-shortcuts-modal.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    
+    .keyboard-shortcuts-modal h3 {
+        margin: 0 0 1.5rem 0;
+        font-size: 1.5rem;
+        color: #0891B2;
+    }
+    
+    .shortcut-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .shortcut-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        background: rgba(8, 145, 178, 0.1);
+        border-radius: 6px;
+        border-left: 3px solid #0891B2;
+    }
+    
+    .shortcut-key {
+        background: #0891B2;
+        color: #ffffff;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-weight: 700;
+        font-family: monospace;
+        font-size: 0.875rem;
+    }
+    
+    .close-shortcuts-btn {
+        margin-top: 1.5rem;
+        width: 100%;
+        padding: 0.75rem;
+        background: #0891B2;
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+    
+    .close-shortcuts-btn:hover,
+    .close-shortcuts-btn:focus {
+        background: #0E7490;
+    }
+    
+    /* Keyboard shortcuts indicator */
+    .keyboard-shortcuts-indicator {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(8, 145, 178, 0.95);
+        color: #ffffff;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+    }
+    
+    .keyboard-shortcuts-indicator:hover,
+    .keyboard-shortcuts-indicator:focus {
+        background: #0E7490;
+        transform: scale(1.05);
+    }
+    
+    /* Enhanced contrast for text elements */
+    .text-text-secondary {
+        color: #E2E8F0;
+    }
+    
+    .text-text-tertiary {
+        color: #CBD5E1;
+    }
+    
+    /* Trinity Navigation Widget Styles */
+    .trinity-node {
+        transition: all 0.3s ease;
+    }
+
+    .trinity-node:hover {
+        transform: scale(1.05) translateY(-5px);
+        z-index: 20 !important;
+    }
+
+    .trinity-hub-center {
+        animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+        0%, 100% {
+            box-shadow: 0 0 20px rgba(8, 145, 178, 0.3);
+        }
+        50% {
+            box-shadow: 0 0 40px rgba(8, 145, 178, 0.6);
+        }
+    }
+
+    /* ===== RADIAL MENU SYSTEM ===== */
+    
+    /* Centered Menu Header */
+    .menu-centered {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, rgba(8, 145, 178, 0.1), rgba(30, 58, 138, 0.1));
+        border: 2px solid rgba(8, 145, 178, 0.3);
+        z-index: 10;
+    }
+    
+    /* Hide scrollbar for navigation */
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    .menu-centered:hover,
+    .menu-centered.active {
+        background: linear-gradient(135deg, rgba(8, 145, 178, 0.2), rgba(30, 58, 138, 0.2));
+        border-color: #0891B2;
+        box-shadow: 0 0 20px rgba(8, 145, 178, 0.4);
+    }
+
+    .menu-text {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #0891B2, #1E3A8A);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 0.05em;
+    }
+
+    /* Radial Menu Container */
+    .radial-menu-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 600px;
+        z-index: 9998;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .radial-menu-container.active {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    /* Radial Menu Overlay */
+    .radial-menu-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(8px);
+        z-index: 9997;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .radial-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Center Hub */
+    .radial-hub {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140px;
+        height: 140px;
+        background: linear-gradient(135deg, #1E3A8A, #0891B2);
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 40px rgba(8, 145, 178, 0.6),
+                    inset 0 0 20px rgba(255, 255, 255, 0.1);
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .radial-hub:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+        box-shadow: 0 0 60px rgba(8, 145, 178, 0.8),
+                    inset 0 0 30px rgba(255, 255, 255, 0.2);
+    }
+
+    .radial-hub-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        text-align: center;
+        margin-bottom: 0.25rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .radial-hub-subtitle {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+    }
+
+    /* Radial Menu Items */
+    .radial-menu-item {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 120px;
+        height: 120px;
+        margin: -60px 0 0 -60px;
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    .radial-menu-container.active .radial-menu-item {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .radial-menu-item:nth-child(2) { /* Home */
+        transform: translate(0, -200px) scale(0);
+    }
+
+    .radial-menu-container.active .radial-menu-item:nth-child(2) {
+        transform: translate(0, -200px) scale(1);
+        transition-delay: 0.1s;
+    }
+
+    .radial-menu-item:nth-child(3) { /* Trinity */
+        transform: translate(-200px, -100px) scale(0);
+    }
+
+    .radial-menu-container.active .radial-menu-item:nth-child(3) {
+        transform: translate(-200px, -100px) scale(1);
+        transition-delay: 0.15s;
+    }
+
+    .radial-menu-item:nth-child(4) { /* Scenarios */
+        transform: translate(200px, -100px) scale(0);
+    }
+
+    .radial-menu-container.active .radial-menu-item:nth-child(4) {
+        transform: translate(200px, -100px) scale(1);
+        transition-delay: 0.2s;
+    }
+
+    .radial-menu-item:nth-child(5) { /* Research */
+        transform: translate(-200px, 100px) scale(0);
+    }
+
+    .radial-menu-container.active .radial-menu-item:nth-child(5) {
+        transform: translate(-200px, 100px) scale(1);
+        transition-delay: 0.25s;
+    }
+
+    .radial-menu-item:nth-child(6) { /* About */
+        transform: translate(200px, 100px) scale(0);
+    }
+
+    .radial-menu-container.active .radial-menu-item:nth-child(6) {
+        transform: translate(200px, 100px) scale(1);
+        transition-delay: 0.3s;
+    }
+
+    /* Menu Item Button */
+    .radial-item-btn {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(30, 58, 138, 0.9), rgba(8, 145, 178, 0.9));
+        border: 3px solid rgba(8, 145, 178, 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .radial-item-btn::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(45deg, #0891B2, #1E3A8A, #059669);
+        border-radius: 50%;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .radial-item-btn:hover::before {
+        opacity: 1;
+    }
+
+    .radial-item-btn:hover {
+        transform: scale(1.15);
+        box-shadow: 0 12px 32px rgba(8, 145, 178, 0.5);
+        border-color: #0891B2;
+    }
+
+    .radial-item-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .radial-item-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Submenu Popup */
+    .radial-submenu {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(12px);
+        border: 2px solid rgba(8, 145, 178, 0.3);
+        border-radius: 16px;
+        padding: 1.5rem;
+        min-width: 280px;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: all 0.3s ease;
+        z-index: 100;
+    }
+
+    .radial-menu-item:hover .radial-submenu {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    .radial-submenu-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid rgba(8, 145, 178, 0.2);
+    }
+
+    .radial-submenu-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .radial-submenu-item {
+        margin-bottom: 0.5rem;
+    }
+
+    .radial-submenu-link {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        border-radius: 8px;
+        color: #334155;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border-left: 3px solid transparent;
+    }
+
+    .radial-submenu-link:hover {
+        background: rgba(8, 145, 178, 0.1);
+        border-left-color: #0891B2;
+        padding-left: 1rem;
+        color: #0891B2;
+    }
+
+    .radial-submenu-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-right: 0.75rem;
+        color: #0891B2;
+    }
+
+    /* Decorative Lines */
+    .radial-connection-line {
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(90deg, 
+            rgba(8, 145, 178, 0.3), 
+            rgba(8, 145, 178, 0.6), 
+            rgba(8, 145, 178, 0.3));
+        transform-origin: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .radial-menu-container.active .radial-connection-line {
+        opacity: 1;
+    }
+
+    .connection-line-1 {
+        width: 180px;
+        top: 30%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .connection-line-2 {
+        width: 180px;
+        top: 45%;
+        left: 28%;
+        transform: rotate(-25deg);
+    }
+
+    .connection-line-3 {
+        width: 180px;
+        top: 45%;
+        right: 28%;
+        transform: rotate(25deg);
+    }
+
+    .connection-line-4 {
+        width: 180px;
+        bottom: 45%;
+        left: 28%;
+        transform: rotate(25deg);
+    }
+
+    .connection-line-5 {
+        width: 180px;
+        bottom: 45%;
+        right: 28%;
+        transform: rotate(-25deg);
+    }
+
+    /* Responsive Trinity Diagram */
+    @media (max-width: 768px) {
+        .trinity-node {
+            position: relative !important;
+            transform: none !important;
+            margin-bottom: 1.5rem;
+        }
+        
+        .trinity-hub-center {
+            position: relative !important;
+            transform: none !important;
+            margin: 2rem auto;
+        }
+        
+        .keyboard-shortcuts-modal {
+            padding: 1.5rem;
+        }
+        
+        .keyboard-shortcuts-indicator {
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.75rem;
+            padding: 8px 12px;
+        }
+
+        /* Radial Menu Mobile Adjustments */
+        .radial-menu-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .radial-menu-item {
+            width: 100px;
+            height: 100px;
+            margin: -50px 0 0 -50px;
+        }
+
+        .radial-menu-item:nth-child(2) {
+            transform: translate(0, -140px) scale(0);
+        }
+
+        .radial-menu-container.active .radial-menu-item:nth-child(2) {
+            transform: translate(0, -140px) scale(1);
+        }
+
+        .radial-menu-item:nth-child(3) {
+            transform: translate(-140px, -80px) scale(0);
+        }
+
+        .radial-menu-container.active .radial-menu-item:nth-child(3) {
+            transform: translate(-140px, -80px) scale(1);
+        }
+
+        .radial-menu-item:nth-child(4) {
+            transform: translate(140px, -80px) scale(0);
+        }
+
+        .radial-menu-container.active .radial-menu-item:nth-child(4) {
+            transform: translate(140px, -80px) scale(1);
+        }
+
+        .radial-menu-item:nth-child(5) {
+            transform: translate(-140px, 80px) scale(0);
+        }
+
+        .radial-menu-container.active .radial-menu-item:nth-child(5) {
+            transform: translate(-140px, 80px) scale(1);
+        }
+
+        .radial-menu-item:nth-child(6) {
+            transform: translate(140px, 80px) scale(0);
+        }
+
+        .radial-menu-container.active .radial-menu-item:nth-child(6) {
+            transform: translate(140px, 80px) scale(1);
+        }
+
+        .radial-item-icon {
+            width: 2rem;
+            height: 2rem;
+        }
+
+        .radial-item-label {
+            font-size: 0.75rem;
+        }
+
+        .radial-submenu {
+            min-width: 240px;
+            max-width: 90vw;
+        }
+    }
+
+    /* Custom padding for hero section to allow larger values */
+    .hero-section-padding {
+        padding-top: 12.5rem; /* 200px - equivalent to pt-50 in rem units */
+    }
+
+    @media (max-width: 768px) {
+        .hero-section-padding {
+            padding-top: 8rem; /* 128px on mobile */
+        }
+    }
+    
+    /* HEADER NAVIGATION OVERFLOW FIX - Responsive adjustments for 1327px viewport */
+    @media (min-width: 1024px) and (max-width: 1439px) {
+        /* Reduce spacing between nav items at large tablet breakpoint (1024px-1439px) */
+        nav .hidden.md\\:flex {
+            gap: 1rem; /* Reduce from space-x-8 (2rem) to 1rem */
+        }
+        
+        /* Make Partner button slightly smaller at this breakpoint */
+        nav .btn-accent {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+    }
+</style>
+  
+  <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fthetriumv8982back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.12"></script>
+  <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
+  </head>
+<body class="bg-background text-text-primary">
+
+<!-- Skip to content link for keyboard navigation -->
+<a href="#main-content" class="skip-link" aria-label="Skip to main navigation and content">Skip to main content</a>
+
+<!-- Keyboard shortcuts indicator -->
+<button id="keyboard-shortcuts-btn" class="keyboard-shortcuts-indicator" aria-label="View keyboard shortcuts (Press ? to toggle)" role="button" tabindex="0">
+    <span aria-hidden="true">⌨️</span> Keyboard Shortcuts (?)
+</button>
+
+<!-- Keyboard shortcuts modal -->
+<div id="keyboard-shortcuts-modal" class="keyboard-shortcuts-modal" role="dialog" aria-labelledby="shortcuts-title" aria-modal="true" tabindex="-1">
+    <h3 id="shortcuts-title">Keyboard Shortcuts</h3>
+    <ul class="shortcut-list" role="list">
+        <li class="shortcut-item" role="listitem">
+            <span>Show/Hide Shortcuts</span>
+            <kbd class="shortcut-key" aria-label="Question mark key">?</kbd>
+        </li>
+        <li class="shortcut-item" role="listitem">
+            <span>Go to Manifesto</span>
+            <kbd class="shortcut-key" aria-label="M key">M</kbd>
+        </li>
+        <li class="shortcut-item" role="listitem">
+            <span>Go to Trinity Deep Dive</span>
+            <kbd class="shortcut-key" aria-label="T key">T</kbd>
+        </li>
+        <li class="shortcut-item" role="listitem">
+            <span>Go to Research Center</span>
+            <kbd class="shortcut-key" aria-label="R key">R</kbd>
+        </li>
+        <li class="shortcut-item" role="listitem">
+            <span>Go to Scenarios</span>
+            <kbd class="shortcut-key" aria-label="S key">S</kbd>
+        </li>
+        <li class="shortcut-item" role="listitem">
+            <span>Go to Future Architectures</span>
+            <kbd class="shortcut-key" aria-label="F key">F</kbd>
+        </li>
+        <li class="shortcut-item" role="listitem">
+            <span>Go to Home</span>
+            <kbd class="shortcut-key" aria-label="H key">H</kbd>
+        </li>
+        <li class="shortcut-item" role="listitem">
+            <span>Close Modal</span>
+            <kbd class="shortcut-key" aria-label="Escape key">ESC</kbd>
+        </li>
+    </ul>
+    <button class="close-shortcuts-btn" id="close-shortcuts-btn" aria-label="Close keyboard shortcuts modal">Close</button>
+</div>
+
+<!-- Navigation Header -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-surface-light" role="navigation" aria-label="Main navigation">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-20">
+            <!-- Logo -->
+            <a href="/index.html" class="flex items-center space-x-3 group" aria-label="ThirstysProjects.com Home">
+                <svg class="w-10 h-10 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="url(#logo-gradient)" stroke-width="2" fill="none"/>
+                    <circle cx="20" cy="20" r="6" fill="url(#logo-gradient)" opacity="0.6"/>
+                    <defs>
+                        <linearGradient id="logo-gradient" x1="5" y1="5" x2="35" y2="35">
+                            <stop offset="0%" stop-color="#1E3A8A"/>
+                            <stop offset="100%" stop-color="#0891B2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="font-headline text-xl font-bold text-text-primary hidden sm:inline">ThirstysProjects</span>
+            </a>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="/pages/manifesto_gateway.html" class="text-accent font-cta font-medium hover:text-accent transition-colors">Manifesto</a>
+                <a href="/pages/trinity_deep_dive.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trinity</a>
+                <a href="/pages/scenario_demonstrations.html" class=" text-text-secondary font-cta font-medium hover:text-accent-light transition-colors">Scenarios</a>
+                <a href="/pages/research_center.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Research</a>
+                <a href="/pages/future_architectures.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Future</a>
+                <a href="/pages/trust_transparency_center.html" class="text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trust</a>
+                <button class="btn-accent">Partner With Us</button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-text-primary hover:text-accent transition-colors" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobile-menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-surface border-t border-surface-light">
+        <div class="px-4 py-6 space-y-4">
+            <a href="/pages/manifesto_gateway.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Manifesto</a>
+            <a href="/pages/trinity_deep_dive.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trinity</a>
+            <a href="/pages/scenario_demonstrations.html" class="block text-accent font-cta font-medium hover:text-accent-light transition-colors">Scenarios</a>
+            <a href="/pages/research_center.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Research</a>
+            <a href="/pages/future_architectures.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Future</a>
+            <a href="/pages/trust_transparency_center.html" class="block text-text-secondary font-cta font-medium hover:text-accent transition-colors">Trust</a>
+            <button class="btn-accent w-full">Partner With Us</button>
+        </div>
+    </div>
+</nav>
+
+<!-- Radial Menu Overlay -->
+
+<!-- Hero Section with Video Background -->
+<section class="relative min-h-screen overflow-hidden hero-section-padding">
+    <!-- Video Background -->
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary/90 via-background/95 to-secondary/90 z-10"></div>
+        <img src="https://img.rocket.new/generatedImages/rocket_gen_img_1d2ff8a91-1764660695242.png" 
+             alt="Abstract neural network visualization representing AI-human collaboration" 
+             class="w-full h-full object-cover opacity-30"
+             onerror="this.src='https://images.pexels.com/photos/8386440/pexels-photo-8386440.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'; this.onerror=null;">
+    </div>
+
+    <!-- Neural Network Animation Overlay -->
+    <div class="absolute inset-0 z-10 opacity-20">
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="neural-grid" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                    <circle cx="50" cy="50" r="2" fill="#0891B2" opacity="0.5"/>
+                    <line x1="50" y1="50" x2="100" y2="50" stroke="#0891B2" stroke-width="0.5" opacity="0.3"/>
+                    <line x1="50" y1="50" x2="50" y2="100" stroke="#0891B2" stroke-width="0.5" opacity="0.3"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#neural-grid)"/>
+        </svg>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
+        <div class="animate-fade-in">
+            <h1 class="font-headline text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-primary-300 via-accent to-secondary-300 bg-clip-text text-transparent">
+                Building the Scaffolding of the Infinite Enterprise
+            </h1>
+            <div class="max-w-4xl mx-auto space-y-6 mb-12">
+                <p class="text-xl md:text-2xl text-text-secondary font-body leading-relaxed">
+                    This project represents the development of a unified, self-advancing technological ecosystem known as <span class="text-accent font-bold">The Triumvirate</span>. 
+                </p>
+                <p class="text-lg md:text-xl text-text-tertiary leading-relaxed">
+                    Rather than building disjointed tools, this initiative converges <span class="text-primary-300 font-semibold">cognition</span>, 
+                    <span class="text-secondary-300 font-semibold">security</span>, and <span class="text-accent font-semibold">institutional knowledge</span> into a single cybernetic gestalt.
+                </p>
+                <p class="text-lg md:text-xl text-text-tertiary leading-relaxed">
+                    The goal is to bridge the gap between AI and Artificial General Intelligence (AGI) by creating a system where <span class="font-semibold text-accent">every node learns</span>, 
+                    <span class="font-semibold text-accent">every process improves</span>, and <span class="font-semibold text-accent">every act is grounded</span> in the confluence of intelligence and integrity.
+                </p>
+                <p class="text-base md:text-lg text-text-tertiary italic max-w-3xl mx-auto">
+                    This architecture is designed to empower a sustainable human-AGI partnership, ensuring that as the system evolves, it remains contextually grounded and ethically shielded.
+                </p>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <button class="btn-accent text-lg px-8 py-4 shadow-glow-accent">Explore the Vision</button>
+                <button class="btn-outline text-lg px-8 py-4">Download Manifesto</button>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- Manifesto Introduction -->
+<section class="py-24 bg-background-light">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="animate-slide-up">
+                <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                    A Revolutionary Paradigm for AGI-Human Partnership
+                </h2>
+                <p class="text-lg text-text-secondary mb-6 leading-relaxed">
+                    Thirsty's Projects transcends typical technology frameworks by presenting a visionary digital presence that combines philosophical depth with technical authority. This is not merely a technology company but a philosophical movement toward a future where AI and humanity enhance each other rather than compete.
+                </p>
+                <p class="text-lg text-text-secondary mb-8 leading-relaxed">
+                    Our framework—the triumvirate of three intermingled programs becoming one—embodies intellectual rigor, ethical leadership, and technological transcendence, speaking to visionaries, technologists, and forward-thinking organizations ready to embrace the "infinite enterprise" model.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-success" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-text-secondary">Philosophical Depth</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-success" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-text-secondary">Technical Authority</span>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <svg class="w-6 h-6 text-success" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="text-text-secondary">Ethical Leadership</span>
+                    </div>
+                </div>
+            </div>
+            <div class="relative animate-slide-up stagger-delay-1">
+                <div class="technical-diagram">
+                    <img src="https://img.rocket.new/generatedImages/rocket_gen_img_1be651a23-1766578680860.png" alt="Descriptive visual representation of AGI-human partnership and the Triumvirate Framework" class="w-full h-auto rounded-lg shadow-2xl border-4 border-accent/20">
+                    <div class="mt-6 p-4 bg-primary-50 rounded-lg">
+                        <h3 class="font-headline text-lg font-bold mb-2 text-text-primary">Triumvirate Framework Vision</h3>
+                        <p class="text-text-secondary text-sm">
+                            A comprehensive visual representation showcasing the convergence of confluent consciousness, adaptive security, and institutional memory—the three pillars that define our revolutionary approach to AGI-human collaboration.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Core Principles Section -->
+<section class="py-24 bg-background">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                The Triumvirate: Three Pillars of Intelligence
+            </h2>
+            <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                Converging cognition, security, and institutional knowledge into a unified AGI-human partnership ecosystem
+            </p>
+        </div>
+
+        <!-- Project AI Architecture Diagram -->
+        <div class="mb-16 max-w-4xl mx-auto">
+            <div class="card-elevated">
+                <img src="../assets/images/tmponrptw4m-1766462626908.jpg" 
+                     alt="Inside Project AI: The Anatomy of a Secure Desktop Assistant - showing AI core engine with ethical framework, autonomous learning system, and human-in-the-loop control" 
+                     class="w-full h-auto rounded-lg shadow-lg">
+                <div class="mt-4 p-4 bg-primary-50 rounded-lg">
+                    <h3 class="font-headline text-lg font-bold mb-2 text-text-primary">Project AI Architecture</h3>
+                    <p class="text-text-secondary text-sm">
+                        A transparent view into the core components that power our AGI-human partnership framework: immutable ethical foundations, autonomous learning capabilities, and human-in-the-loop control mechanisms.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Project AI - Enhanced -->
+            <a href="project_ai_cognitive_engine.html" class="card-elevated group hover:shadow-glow-primary cursor-pointer animate-slide-up">
+                <div class="mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-headline text-2xl font-bold mb-2 text-text-primary">Project AI</h3>
+                    <p class="text-accent font-semibold mb-4 text-sm">The Adaptive Cognitive Engine</p>
+                    <p class="text-text-secondary leading-relaxed mb-4 text-sm">
+                        Project AI is the heart of the ecosystem's intelligence, serving as an advanced assistant and adaptive intelligence engine meticulously engineered to analyze complex data streams, recognize patterns, and generate actionable strategic insights.
+                    </p>
+                    
+                    <!-- Key Features -->
+                    <div class="space-y-3 mb-4">
+                        <div class="p-3 bg-primary-50 rounded-lg border-l-3 border-primary-300">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">🧠 Self-Organizing Memory</h4>
+                            <p class="text-text-tertiary text-xs">Memory Expansion System with JSON persistence to autonomously categorize conversations, technical patterns, and user preferences</p>
+                        </div>
+                        <div class="p-3 bg-primary-50 rounded-lg border-l-3 border-primary-300">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">📡 Offline-First & RAG</h4>
+                            <p class="text-text-tertiary text-xs">Offline-first architecture with Retrieval-Augmented Generation for full functionality and semantic search without internet</p>
+                        </div>
+                        <div class="p-3 bg-primary-50 rounded-lg border-l-3 border-primary-300">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">⚖️ Ethical Sentience</h4>
+                            <p class="text-text-tertiary text-xs">Governed by Four Laws of AI Ethics (Asimovian hierarchy) with neural ThreatDetector identifying conflicts before action</p>
+                        </div>
+                        <div class="p-3 bg-primary-50 rounded-lg border-l-3 border-primary-300">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">👁️ The Gift of Sight (EED)</h4>
+                            <p class="text-text-tertiary text-xs">Energetic Epicenter Detector interprets energetic events in video feeds by treating pixels as fluid fields</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Cross-link Context -->
+                    <div class="mt-4 p-3 bg-primary-50 rounded-lg border border-primary-200">
+                        <p class="text-xs text-text-tertiary mb-2 font-semibold">System Connections:</p>
+                        <div class="space-y-1 text-xs">
+                            <div class="flex items-center space-x-2 text-text-secondary">
+                                <svg class="w-3 h-3 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Feeds learning to <a href="codex_deus_maximus_repository.html" class="text-accent hover:underline">Codex</a></span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-text-secondary">
+                                <svg class="w-3 h-3 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Secured by <a href="cerberus_security_fortress.html" class="text-secondary hover:underline">Cerberus</a></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 text-accent hover:text-accent-light font-cta font-medium group-hover:translate-x-2 transition-transform mt-4">
+                        <span>Explore Project AI</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Cerberus - Enhanced -->
+            <a href="cerberus_security_fortress.html" class="card-elevated group hover:shadow-glow-secondary cursor-pointer animate-slide-up stagger-delay-1">
+                <div class="mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-8 h-8 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-headline text-2xl font-bold mb-2 text-text-primary">Cerberus</h3>
+                    <p class="text-secondary font-semibold mb-4 text-sm">The Sentinel and Ethical Guardian</p>
+                    <p class="text-text-secondary leading-relaxed mb-4 text-sm">
+                        Cerberus is the "guardian system" and central authority responsible for the security, stability, and ethical compliance of the entire application. It transcends traditional firewalls to act as a proactive sentinel against cyber-kinetic and procedural threats.
+                    </p>
+
+                    <!-- Key Features -->
+                    <div class="space-y-3 mb-4">
+                        <div class="p-3 bg-secondary-50 rounded-lg border-l-3 border-secondary-300">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">🛡️ 15 Specialized Subsystems</h4>
+                            <p class="text-text-tertiary text-xs">SecurityManager for injection prevention, PrivilegeManager for access control, AISpecificThreatMitigator for model poisoning prevention</p>
+                        </div>
+                        <div class="p-3 bg-secondary-50 rounded-lg border-l-3 border-secondary-300">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">🤖 Guard Bot Defense</h4>
+                            <p class="text-text-tertiary text-xs">Multi-agent shield starting with 3 guardians, exponentially growing to 27 if bypass detected, with total safe shutdown for AGI safety</p>
+                        </div>
+                        <div class="p-3 bg-secondary-50 rounded-lg border-l-3 border-secondary-300">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">🔐 Integrated Governance</h4>
+                            <p class="text-text-tertiary text-xs">Gatekeeper for all interactions between Project AI and Codex, ensuring secure, authenticated, compliant knowledge transitions</p>
+                        </div>
+                    </div>
+
+                    <!-- Cross-link Context -->
+                    <div class="mt-4 p-3 bg-secondary-50 rounded-lg border border-secondary-200">
+                        <p class="text-xs text-text-tertiary mb-2 font-semibold">System Connections:</p>
+                        <div class="space-y-1 text-xs">
+                            <div class="flex items-center space-x-2 text-text-secondary">
+                                <svg class="w-3 h-3 text-accent" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Protects <a href="project_ai_cognitive_engine.html" class="text-primary hover:underline">Project AI</a> operations</span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-text-secondary">
+                                <svg class="w-3 h-3 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Encrypts <a href="codex_deus_maximus_repository.html" class="text-accent hover:underline">Codex</a> data</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 text-accent hover:text-accent-light font-cta font-medium group-hover:translate-x-2 transition-transform mt-4">
+                        <span>Explore Cerberus</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Codex Deus Maximus - Enhanced -->
+            <a href="codex_deus_maximus_repository.html" class="card-elevated group hover:shadow-glow-accent cursor-pointer animate-slide-up stagger-delay-2">
+                <div class="mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-8 h-8 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-headline text-2xl font-bold mb-2 text-text-primary">Codex Deus Maximus</h3>
+                    <p class="text-accent font-semibold mb-4 text-sm">The Dynamic Knowledge Core</p>
+                    <p class="text-text-secondary leading-relaxed mb-4 text-sm">
+                        Codex Deus Maximus serves as the institutional memory and operational blueprint for the entire program. It is not a static database but a living compendium that evolves through a dialectical synthesis of curated expertise and real-time learning.
+                    </p>
+
+                    <!-- Key Features -->
+                    <div class="space-y-3 mb-4">
+                        <div class="p-3 bg-accent-light rounded-lg border-l-3 border-accent">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">📚 Codified Best Practices</h4>
+                            <p class="text-text-tertiary text-xs">Encapsulates domain expertise, technical protocols, and operational playbooks as foundational logic for Project AI</p>
+                        </div>
+                        <div class="p-3 bg-accent-light rounded-lg border-l-3 border-accent">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">🔄 Validation Loop</h4>
+                            <p class="text-text-tertiary text-xs">Continuously enriched by Project AI insights, secured and validated by Cerberus before institutionalization</p>
+                        </div>
+                        <div class="p-3 bg-accent-light rounded-lg border-l-3 border-accent">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">📝 Traceable Rationale</h4>
+                            <p class="text-text-tertiary text-xs">Maintains traceable history of updates ensuring system wisdom preservation and transparent decision-making</p>
+                        </div>
+                        <div class="p-3 bg-accent-light rounded-lg border-l-3 border-accent">
+                            <h4 class="font-semibold text-text-primary text-sm mb-1">🏛️ Institutionalization</h4>
+                            <p class="text-text-tertiary text-xs">Prevents redundancy and knowledge loss, ensuring every crisis becomes grist for collective advancement</p>
+                        </div>
+                    </div>
+
+                    <!-- Cross-link Context -->
+                    <div class="mt-4 p-3 bg-accent-light rounded-lg border border-accent">
+                        <p class="text-xs text-text-tertiary mb-2 font-semibold">System Connections:</p>
+                        <div class="space-y-1 text-xs">
+                            <div class="flex items-center space-x-2 text-text-secondary">
+                                <svg class="w-3 h-3 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Learns from <a href="project_ai_cognitive_engine.html" class="text-primary hover:underline">Project AI</a></span>
+                            </div>
+                            <div class="flex items-center space-x-2 text-text-secondary">
+                                <svg class="w-3 h-3 text-success" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Protected by <a href="cerberus_security_fortress.html" class="text-secondary hover:underline">Cerberus</a></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 text-accent hover:text-accent-light font-cta font-medium group-hover:translate-x-2 transition-transform mt-4">
+                        <span>Explore Codex Deus Maximus</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Trinity Navigation Widget -->
+<section class="py-24 bg-gradient-to-br from-background via-surface to-background-light relative overflow-hidden">
+    <!-- Animated Background Pattern -->
+    <div class="absolute inset-0 opacity-10">
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="trinity-grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <circle cx="30" cy="30" r="1" fill="#0891B2" opacity="0.6">
+                        <animate attributeName="r" values="1;2;1" dur="3s" repeatCount="indefinite"/>
+                    </circle>
+                    <line x1="30" y1="30" x2="60" y2="30" stroke="#0891B2" stroke-width="0.5" opacity="0.4"/>
+                    <line x1="30" y1="30" x2="30" y2="60" stroke="#0891B2" stroke-width="0.5" opacity="0.4"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#trinity-grid)"/>
+        </svg>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                The Trinity Synergy Map
+            </h2>
+            <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                Explore how Project AI, Cerberus, and Codex Deus Maximus interconnect to form a unified AGI-human partnership framework
+            </p>
+        </div>
+
+        <!-- Interactive Trinity Diagram -->
+        <div class="relative max-w-5xl mx-auto mb-16">
+            <!-- Central Hub -->
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+                <div class="trinity-hub-center group">
+                    <div class="w-32 h-32 bg-gradient-to-br from-primary via-accent to-secondary rounded-full flex items-center justify-center shadow-glow-accent">
+                        <div class="text-center">
+                            <svg class="w-12 h-12 text-background mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                            <p class="text-background font-bold text-sm">Trinity<br/>Core</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trinity Nodes Container -->
+            <div class="relative" style="height: 600px;">
+                <!-- Connecting Lines -->
+                <svg class="absolute inset-0 w-full h-full" style="z-index: 1;">
+                    <defs>
+                        <linearGradient id="line-gradient-1" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#1E3A8A" stop-opacity="0.6"/>
+                            <stop offset="100%" stop-color="#0891B2" stop-opacity="0.6"/>
+                        </linearGradient>
+                        <linearGradient id="line-gradient-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0891B2" stop-opacity="0.6"/>
+                            <stop offset="100%" stop-color="#059669" stop-opacity="0.6"/>
+                        </linearGradient>
+                        <linearGradient id="line-gradient-3" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#1E3A8A" stop-opacity="0.6"/>
+                            <stop offset="100%" stop-color="#059669" stop-opacity="0.6"/>
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- Top Node to Center -->
+                    <line x1="50%" y1="15%" x2="50%" y2="50%" stroke="url(#line-gradient-1)" stroke-width="3" stroke-dasharray="10,5">
+                        <animate attributeName="stroke-dashoffset" values="0;-15" dur="1s" repeatCount="indefinite"/>
+                    </line>
+                    
+                    <!-- Bottom Left to Center -->
+                    <line x1="15%" y1="85%" x2="50%" y2="50%" stroke="url(#line-gradient-2)" stroke-width="3" stroke-dasharray="10,5">
+                        <animate attributeName="stroke-dashoffset" values="0;-15" dur="1s" repeatCount="indefinite"/>
+                    </line>
+                    
+                    <!-- Bottom Right to Center -->
+                    <line x1="85%" y1="85%" x2="50%" y2="50%" stroke="url(#line-gradient-3)" stroke-width="3" stroke-dasharray="10,5">
+                        <animate attributeName="stroke-dashoffset" values="0;-15" dur="1s" repeatCount="indefinite"/>
+                    </line>
+
+                    <!-- Interconnecting Lines Between Nodes -->
+                    <line x1="50%" y1="15%" x2="15%" y2="85%" stroke="url(#line-gradient-1)" stroke-width="2" stroke-opacity="0.3" stroke-dasharray="5,5"/>
+                    <line x1="50%" y1="15%" x2="85%" y2="85%" stroke="url(#line-gradient-2)" stroke-width="2" stroke-opacity="0.3" stroke-dasharray="5,5"/>
+                    <line x1="15%" y1="85%" x2="85%" y2="85%" stroke="url(#line-gradient-3)" stroke-width="2" stroke-opacity="0.3" stroke-dasharray="5,5"/>
+                </svg>
+
+                <!-- Project AI Node - Top -->
+                <a href="project_ai_cognitive_engine.html" class="trinity-node absolute top-0 left-1/2 transform -translate-x-1/2 group" style="z-index: 10;">
+                    <div class="card-elevated hover:shadow-glow-primary transition-all duration-300 p-6 w-64 bg-gradient-to-br from-primary-50 to-background border-2 border-primary-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                                </svg>
+                            </div>
+                            <svg class="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Project AI</h3>
+                        <p class="text-text-secondary text-sm mb-3">Cognitive Engine</p>
+                        <div class="space-y-1 text-xs text-text-tertiary">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-accent rounded-full"></span>
+                                <span>Feeds insights to Codex</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-success rounded-full"></span>
+                                <span>Protected by Cerberus</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Cerberus Node - Bottom Left -->
+                <a href="cerberus_security_fortress.html" class="trinity-node absolute bottom-0 left-0 group" style="z-index: 10;">
+                    <div class="card-elevated hover:shadow-glow-secondary transition-all duration-300 p-6 w-64 bg-gradient-to-br from-secondary-50 to-background border-2 border-secondary-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                            </div>
+                            <svg class="w-5 h-5 text-secondary group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Cerberus</h3>
+                        <p class="text-text-secondary text-sm mb-3">Security Fortress</p>
+                        <div class="space-y-1 text-xs text-text-tertiary">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-accent rounded-full"></span>
+                                <span>Secures Project AI operations</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-success rounded-full"></span>
+                                <span>Guards Codex repository</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Codex Deus Maximus Node - Bottom Right -->
+                <a href="codex_deus_maximus_repository.html" class="trinity-node absolute bottom-0 right-0 group" style="z-index: 10;">
+                    <div class="card-elevated hover:shadow-glow-accent transition-all duration-300 p-6 w-64 bg-gradient-to-br from-accent-light to-background border-2 border-accent">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg class="w-6 h-6 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                            </div>
+                            <svg class="w-5 h-5 text-accent group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Codex Deus Maximus</h3>
+                        <p class="text-text-secondary text-sm mb-3">Knowledge Repository</p>
+                        <div class="space-y-1 text-xs text-text-tertiary">
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-accent rounded-full"></span>
+                                <span>Learns from Project AI</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="w-2 h-2 bg-success rounded-full"></span>
+                                <span>Encrypted by Cerberus</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Synergy Explanation Cards -->
+        <div class="grid md:grid-cols-3 gap-6 mt-16">
+            <div class="card bg-gradient-to-br from-primary-50 to-background border-l-4 border-primary">
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="font-headline text-lg font-bold mb-2 text-text-primary">AI → Codex Flow</h4>
+                        <p class="text-text-secondary text-sm">Project AI generates insights and decisions that are automatically captured, categorized, and stored in Codex Deus Maximus, building institutional memory in real-time.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-gradient-to-br from-secondary-50 to-background border-l-4 border-secondary">
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="font-headline text-lg font-bold mb-2 text-text-primary">Cerberus Protection</h4>
+                        <p class="text-text-secondary text-sm">Multi-layered security monitors all Trinity operations, encrypts data at rest and in transit, and adapts threat detection based on behavioral patterns across all systems.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-gradient-to-br from-accent-light to-background border-l-4 border-accent">
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="font-headline text-lg font-bold mb-2 text-text-primary">Codex → AI Feedback</h4>
+                        <p class="text-text-secondary text-sm">Historical patterns and institutional knowledge from Codex feed back into Project AI, enabling contextual decision-making based on organizational history and proven strategies.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Navigation -->
+        <div class="mt-16 text-center">
+            <h3 class="font-headline text-2xl font-bold mb-6 text-text-primary">Explore Individual Systems</h3>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="trinity_deep_dive.html" class="btn-accent px-8 py-3">Complete Trinity Deep Dive</a>
+                <a href="scenario_demonstrations.html" class="btn-outline px-8 py-3">See Trinity in Action</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Interactive Feature Visualization System -->
+<section class="py-24 bg-background relative overflow-hidden">
+    <!-- Animated Grid Background -->
+    <div class="absolute inset-0 opacity-5">
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="feature-grid" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
+                    <circle cx="25" cy="25" r="1" fill="#0891B2">
+                        <animate attributeName="r" values="1;1.5;1" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                    <line x1="25" y1="0" x2="25" y2="50" stroke="#0891B2" stroke-width="0.5" opacity="0.3"/>
+                    <line x1="0" y1="25" x2="50" y2="25" stroke="#0891B2" stroke-width="0.5" opacity="0.3"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#feature-grid)"/>
+        </svg>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                Interactive Feature Visualization
+            </h2>
+            <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                Explore the complete technical capabilities of The Triumvirate ecosystem through our interactive visualization system
+            </p>
+        </div>
+
+        <!-- Feature Category Selector -->
+        <div class="flex flex-wrap justify-center gap-4 mb-12">
+            <button class="feature-tab active px-6 py-3 rounded-lg font-cta font-semibold transition-all duration-300" data-category="all" aria-label="Show all features">
+                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                </svg>
+                All Features
+            </button>
+            <button class="feature-tab px-6 py-3 rounded-lg font-cta font-semibold transition-all duration-300" data-category="project-ai" aria-label="Show Project AI features">
+                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+                Project AI
+            </button>
+            <button class="feature-tab px-6 py-3 rounded-lg font-cta font-semibold transition-all duration-300" data-category="cerberus" aria-label="Show Cerberus features">
+                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                Cerberus
+            </button>
+            <button class="feature-tab px-6 py-3 rounded-lg font-cta font-semibold transition-all duration-300" data-category="codex" aria-label="Show Codex features">
+                <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                </svg>
+                Codex
+            </button>
+        </div>
+
+        <!-- Interactive Feature Grid -->
+        <div id="feature-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <!-- Project AI Features -->
+            <div class="feature-card" data-category="project-ai" data-feature="memory">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-primary transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-xs font-bold">PROJECT AI</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Self-Organizing Memory</h3>
+                    <p class="text-text-secondary text-sm mb-4">Autonomous categorization system with JSON persistence for conversations, technical patterns, and user preferences</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card" data-category="project-ai" data-feature="rag">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-primary transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-xs font-bold">PROJECT AI</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Offline RAG System</h3>
+                    <p class="text-text-secondary text-sm mb-4">Offline-first architecture with Retrieval-Augmented Generation enabling full functionality and semantic search without internet</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card" data-category="project-ai" data-feature="ethics">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-primary transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-xs font-bold">PROJECT AI</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Ethical Sentience</h3>
+                    <p class="text-text-secondary text-sm mb-4">Governed by Four Laws of AI Ethics with neural ThreatDetector identifying conflicts before AI takes action</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card" data-category="project-ai" data-feature="eed">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-primary transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-xs font-bold">PROJECT AI</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Energetic Epicenter Detector</h3>
+                    <p class="text-text-secondary text-sm mb-4">Forensic interpretation of energetic events in video feeds by treating pixels as fluid fields to find true origins</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cerberus Features -->
+            <div class="feature-card" data-category="cerberus" data-feature="subsystems">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-secondary transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-xs font-bold">CERBERUS</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">15 Specialized Subsystems</h3>
+                    <p class="text-text-secondary text-sm mb-4">Comprehensive security layers including SecurityManager, PrivilegeManager, and AISpecificThreatMitigator for complete protection</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card" data-category="cerberus" data-feature="guardbot">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-secondary transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-xs font-bold">CERBERUS</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Guard Bot Defense</h3>
+                    <p class="text-text-secondary text-sm mb-4">Multi-agent shield starting with 3 guardians, exponentially growing to 27 if bypass detected, with total safe shutdown</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card" data-category="cerberus" data-feature="governance">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-secondary transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-xs font-bold">CERBERUS</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Integrated Governance</h3>
+                    <p class="text-text-secondary text-sm mb-4">Gatekeeper for all Project AI and Codex interactions ensuring secure, authenticated, and compliant knowledge transitions</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Codex Features -->
+            <div class="feature-card" data-category="codex" data-feature="practices">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-accent transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-accent-light text-accent-dark rounded-full text-xs font-bold">CODEX</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Codified Best Practices</h3>
+                    <p class="text-text-secondary text-sm mb-4">Encapsulates domain expertise, technical protocols, and operational playbooks as foundational logic for Project AI</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card" data-category="codex" data-feature="validation">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-accent transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-accent-light text-accent-dark rounded-full text-xs font-bold">CODEX</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Validation Loop</h3>
+                    <p class="text-text-secondary text-sm mb-4">Continuously enriched by Project AI insights, secured and validated by Cerberus before institutionalization</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card" data-category="codex" data-feature="traceable">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-accent transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-accent-light text-accent-dark rounded-full text-xs font-bold">CODEX</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Traceable Rationale</h3>
+                    <p class="text-text-secondary text-sm mb-4">Maintains traceable history of updates ensuring system wisdom preservation and transparent decision-making</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-card" data-category="codex" data-feature="institutional">
+                <div class="card-elevated group cursor-pointer hover:shadow-glow-accent transition-all duration-300">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-accent-light text-accent-dark rounded-full text-xs font-bold">CODEX</span>
+                    </div>
+                    <h3 class="font-headline text-xl font-bold mb-2 text-text-primary">Institutionalization</h3>
+                    <p class="text-text-secondary text-sm mb-4">Prevents redundancy and knowledge loss, ensuring every crisis becomes grist for collective advancement</p>
+                    <div class="flex items-center text-accent text-sm font-semibold">
+                        <span>Learn More</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Statistics Dashboard -->
+        <div class="grid md:grid-cols-4 gap-6">
+            <div class="card bg-gradient-to-br from-primary-50 to-background text-center p-6">
+                <div class="text-4xl font-bold text-primary mb-2" data-stat="project-ai">4</div>
+                <p class="text-text-secondary text-sm font-semibold">Project AI Features</p>
+            </div>
+            <div class="card bg-gradient-to-br from-secondary-50 to-background text-center p-6">
+                <div class="text-4xl font-bold text-secondary mb-2" data-stat="cerberus">3</div>
+                <p class="text-text-secondary text-sm font-semibold">Cerberus Systems</p>
+            </div>
+            <div class="card bg-gradient-to-br from-accent-light to-background text-center p-6">
+                <div class="text-4xl font-bold text-accent mb-2" data-stat="codex">4</div>
+                <p class="text-text-secondary text-sm font-semibold">Codex Capabilities</p>
+            </div>
+            <div class="card bg-gradient-to-br from-success/10 to-background text-center p-6">
+                <div class="text-4xl font-bold text-success mb-2" data-stat="total">11</div>
+                <p class="text-text-secondary text-sm font-semibold">Total Features</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- High-Tech Smart Estate Analogy -->
+<section class="py-24 bg-background-light relative overflow-hidden">
+    <!-- Decorative Background -->
+    <div class="absolute inset-0 opacity-5">
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="estate-pattern" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+                    <circle cx="60" cy="60" r="2" fill="#0891B2"/>
+                    <rect x="58" y="30" width="4" height="60" fill="#0891B2" opacity="0.3"/>
+                    <rect x="30" y="58" width="60" height="4" fill="#0891B2" opacity="0.3"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#estate-pattern)"/>
+        </svg>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                Understanding The Triumvirate Through Analogy
+            </h2>
+            <p class="text-xl text-accent font-semibold mb-4">
+                Think of the whole project as a High-Tech Smart Estate
+            </p>
+            <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                To help you grasp the magnitude and technical sophistication of this ecosystem, imagine a self-managing intelligent estate where every system works in perfect harmony
+            </p>
+        </div>
+
+        <!-- Estate Visualization -->
+        <div class="mb-16 max-w-5xl mx-auto">
+            <div class="relative">
+                <!-- Central Estate Graphic -->
+                <div class="card-elevated bg-gradient-to-br from-primary-50 via-background to-accent-light p-12">
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <!-- Project AI as Genius Architect -->
+                        <div class="relative">
+                            <div class="absolute -top-4 -left-4 w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-glow-primary">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                                </svg>
+                            </div>
+                            <div class="card bg-primary-50 border-2 border-primary-300 pt-8">
+                                <h3 class="font-headline text-xl font-bold mb-3 text-text-primary">The Genius Architect</h3>
+                                <p class="text-text-secondary text-sm mb-4">
+                                    <span class="font-bold text-primary">Project AI</span> is the visionary architect constantly designing new improvements, analyzing blueprints, and optimizing every system in the estate.
+                                </p>
+                                <div class="space-y-2">
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-primary mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-xs text-text-tertiary">Designs adaptive solutions</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-primary mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-xs text-text-tertiary">Learns from patterns</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-primary mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-xs text-text-tertiary">Proposes innovations</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cerberus as Elite Security -->
+                        <div class="relative">
+                            <div class="absolute -top-4 -left-4 w-16 h-16 bg-secondary rounded-full flex items-center justify-center shadow-glow-secondary">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                            </div>
+                            <div class="card bg-secondary-50 border-2 border-secondary-300 pt-8">
+                                <h3 class="font-headline text-xl font-bold mb-3 text-text-primary">The Elite Security Detail</h3>
+                                <p class="text-text-secondary text-sm mb-4">
+                                    <span class="font-bold text-secondary">Cerberus</span> is your estate's security force that vets every guest, guards every door, and monitors every corner 24/7.
+                                </p>
+                                <div class="space-y-2">
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-secondary mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-xs text-text-tertiary">Validates all access</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-secondary mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-xs text-text-tertiary">Prevents intrusions</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-secondary mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-xs text-text-tertiary">Enforces ethical rules</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Codex as Master Blueprint -->
+                        <div class="relative">
+                            <div class="absolute -top-4 -left-4 w-16 h-16 bg-accent rounded-full flex items-center justify-center shadow-glow-accent">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"/>
+                                </svg>
+                            </div>
+                            <div class="card bg-accent-light border-2 border-accent pt-8">
+                                <h3 class="font-headline text-xl font-bold mb-3 text-text-primary">The Master Blueprint & Library</h3>
+                                <p class="text-text-secondary text-sm mb-4">
+                                    <span class="font-bold text-accent">Codex Deus Maximus</span> is the comprehensive library containing every rule, design, and historical decision of the estate.
+                                </p>
+                                <div class="space-y-2">
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-accent mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-xs text-text-tertiary">Stores all knowledge</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-accent mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-xs text-text-tertiary">Maintains history</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-accent mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-xs text-text-tertiary">Guides decisions</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- EED Component -->
+                    <div class="mt-12 card bg-gradient-to-r from-primary-100 via-secondary-100 to-accent-light border-2 border-primary-300">
+                        <div class="flex items-start space-x-6">
+                            <div class="flex-shrink-0">
+                                <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center shadow-lg">
+                                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="font-headline text-xl font-bold mb-3 text-text-primary">The Security Cameras (EED)</h3>
+                                <p class="text-text-secondary mb-4">
+                                    The <span class="font-bold text-primary">Energetic Epicenter Detector (EED)</span> doesn't just record video—it can "feel" exactly where a disturbance started, so the Architect and Security can react instantly to any threat.
+                                </p>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-primary mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-sm text-text-tertiary">Detects energy patterns in video</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-primary mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-sm text-text-tertiary">Identifies true origin of impacts</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-primary mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-sm text-text-tertiary">Treats pixels as fluid fields</span>
+                                    </div>
+                                    <div class="flex items-start space-x-2">
+                                        <svg class="w-4 h-4 text-primary mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span class="text-sm text-text-tertiary">Enables instant threat response</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Synergy Explanation -->
+        <div class="max-w-4xl mx-auto">
+            <div class="card-elevated bg-gradient-to-br from-background to-surface-light">
+                <div class="text-center mb-8">
+                    <h3 class="font-headline text-3xl font-bold mb-4 text-text-primary">How They Work Together</h3>
+                    <p class="text-lg text-text-secondary">
+                        Just like a well-managed estate, each component has a specific role but works in harmony with the others
+                    </p>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="flex items-start space-x-4 p-4 bg-primary-50 rounded-lg border-l-4 border-primary">
+                        <div class="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">1</div>
+                        <div>
+                            <h4 class="font-bold text-text-primary mb-2">The Architect Proposes</h4>
+                            <p class="text-text-secondary text-sm">
+                                Project AI analyzes data, identifies patterns, and designs solutions for improvement. It continuously learns and adapts, proposing new architectural changes to the estate.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4 p-4 bg-secondary-50 rounded-lg border-l-4 border-secondary">
+                        <div class="flex-shrink-0 w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-white font-bold">2</div>
+                        <div>
+                            <h4 class="font-bold text-text-primary mb-2">Security Validates</h4>
+                            <p class="text-text-secondary text-sm">
+                                Cerberus reviews every proposal, ensuring it meets security standards, ethical guidelines, and operational compliance before allowing implementation.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4 p-4 bg-accent-light rounded-lg border-l-4 border-accent">
+                        <div class="flex-shrink-0 w-10 h-10 bg-accent rounded-full flex items-center justify-center text-white font-bold">3</div>
+                        <div>
+                            <h4 class="font-bold text-text-primary mb-2">The Library Records</h4>
+                            <p class="text-text-secondary text-sm">
+                                Codex Deus Maximus documents every approved change, creating institutional memory that informs future decisions and prevents redundant solutions.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-4 p-4 bg-gradient-to-r from-primary-100 to-accent-light rounded-lg border-l-4 border-primary">
+                        <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold">4</div>
+                        <div>
+                            <h4 class="font-bold text-text-primary mb-2">Cameras Monitor Continuously</h4>
+                            <p class="text-text-secondary text-sm">
+                                The EED provides real-time surveillance, detecting disturbances at their source and feeding critical information to both the Architect and Security for immediate action.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 p-6 bg-gradient-to-br from-accent-light to-primary-50 rounded-lg border-2 border-accent">
+                    <h4 class="font-headline text-xl font-bold mb-3 text-center text-text-primary">The Result: A Self-Improving, Secure Ecosystem</h4>
+                    <p class="text-text-secondary text-center">
+                        This estate doesn't just maintain itself—it evolves. Every challenge becomes an opportunity for growth, every threat is anticipated and neutralized, 
+                        and every lesson is preserved for the future. This is the power of The Triumvirate: a truly <span class="font-bold text-accent">infinite enterprise</span> 
+                        that scales with your ambitions while remaining grounded in security and wisdom.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Interactive Manifesto Sections -->
+<section class="py-24 bg-background-light">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                Explore the Complete Manifesto
+            </h2>
+            <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                Dive deep into each section of our comprehensive framework for AGI-human partnership
+            </p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Manifesto Section 1 -->
+            <div class="manifesto-gateway cursor-pointer group" id="section-1">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-4">
+                        <span class="font-code text-accent text-2xl font-bold">01</span>
+                        <h3 class="font-headline text-2xl md:text-3xl font-bold text-text-primary">The Post-Digital Epoch</h3>
+                    </div>
+                    <svg class="w-6 h-6 text-accent transform transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+                <div class="hidden group-hover:block transition-all duration-300">
+                    <p class="text-text-secondary text-lg leading-relaxed mb-4">
+                        We stand at the threshold of a transformative era where the boundaries between human cognition and artificial intelligence dissolve. The post-digital epoch is not about technology replacing humanity, but about creating a new paradigm of collaborative consciousness.
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="card">
+                            <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Key Insights</h4>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Transcending traditional human-machine interfaces</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Creating symbiotic intelligence ecosystems</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Establishing ethical frameworks for AGI development</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Technical Annotations</h4>
+                            <p class="text-text-secondary text-sm leading-relaxed">
+                                The post-digital transformation requires fundamental shifts in system architecture, moving from isolated AI modules to integrated consciousness frameworks. This involves advanced neural network designs, real-time learning systems, and adaptive security protocols.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manifesto Section 2 -->
+            <div class="manifesto-gateway cursor-pointer group" id="section-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-4">
+                        <span class="font-code text-accent text-2xl font-bold">02</span>
+                        <h3 class="font-headline text-2xl md:text-3xl font-bold text-text-primary">From Epistemic Chaos to Order</h3>
+                    </div>
+                    <svg class="w-6 h-6 text-accent transform transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+                <div class="hidden group-hover:block transition-all duration-300">
+                    <p class="text-text-secondary text-lg leading-relaxed mb-4">
+                        Modern organizations face unprecedented complexity and information overload. Our triumvirate framework transforms this epistemic chaos into structured, actionable intelligence through systematic knowledge management and adaptive learning systems.
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="card">
+                            <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Transformation Path</h4>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Systematic knowledge capture and organization</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Real-time pattern recognition and insight generation</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Continuous learning and system evolution</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Implementation Framework</h4>
+                            <p class="text-text-secondary text-sm leading-relaxed">
+                                Codex Deus Maximus serves as the living knowledge repository, capturing institutional wisdom and making it accessible across the organization. This creates a self-reinforcing cycle of learning and improvement.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manifesto Section 3 -->
+            <div class="manifesto-gateway cursor-pointer group" id="section-3">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-4">
+                        <span class="font-code text-accent text-2xl font-bold">03</span>
+                        <h3 class="font-headline text-2xl md:text-3xl font-bold text-text-primary">The Infinite Enterprise Model</h3>
+                    </div>
+                    <svg class="w-6 h-6 text-accent transform transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+                <div class="hidden group-hover:block transition-all duration-300">
+                    <p class="text-text-secondary text-lg leading-relaxed mb-4">
+                        Traditional business models are constrained by finite resources and linear growth patterns. The infinite enterprise model leverages AGI-human partnership to create exponential value through continuous adaptation, learning, and innovation.
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-6 mt-6">
+                        <div class="card">
+                            <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Core Characteristics</h4>
+                            <ul class="space-y-2 text-text-secondary">
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Adaptive systems that evolve with market dynamics</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Scalable intelligence that grows with complexity</span>
+                                </li>
+                                <li class="flex items-start space-x-2">
+                                    <svg class="w-5 h-5 text-success mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                    <span>Resilient architecture that anticipates disruption</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h4 class="font-headline text-xl font-bold mb-3 text-text-primary">Business Impact</h4>
+                            <p class="text-text-secondary text-sm leading-relaxed">
+                                Organizations implementing our triumvirate framework report 10x improvements in decision-making speed, 5x reduction in operational risks, and exponential growth in innovation capacity through continuous AGI-human collaboration.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-24 bg-gradient-to-br from-primary via-background to-secondary relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="cta-pattern" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                    <circle cx="40" cy="40" r="1.5" fill="#0891B2"/>
+                    <line x1="40" y1="40" x2="80" y2="40" stroke="#0891B2" stroke-width="0.5"/>
+                    <line x1="40" y1="40" x2="40" y2="80" stroke="#0891B2" stroke-width="0.5"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#cta-pattern)"/>
+        </svg>
+    </div>
+    
+    <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+            Ready to Shape the Future?
+        </h2>
+        <p class="text-xl text-text-secondary mb-12 max-w-3xl mx-auto">
+            Join visionaries, technologists, and forward-thinking organizations in embracing the AGI-human partnership revolution
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <a href="mailto:info@thirstysprojects.com" class="btn-accent text-lg px-10 py-4 shadow-glow-accent">Schedule Consultation</a>
+            <a href="research_center.html" class="btn-outline text-lg px-10 py-4">Download Full Manifesto</a>
+        </div>
+        
+        <!-- Founder Profile Section -->
+        <div class="mt-16 max-w-3xl mx-auto">
+            <div class="card-elevated bg-surface-light">
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-8 p-8">
+                    <!-- Founder Headshot -->
+                    <div class="flex-shrink-0">
+                        <div class="relative">
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-full blur-lg opacity-30 transform scale-110"></div>
+                            <img src="../assets/images/feff32e3-b148-4ff7-9f61-ca16450d376e-1_all_261-1766563232413.jpg" 
+                                 alt="Jeremy Karrick - Founder of Thirsty's Projects" 
+                                 class="relative w-48 h-48 rounded-full object-cover shadow-xl border-4 border-background">
+                        </div>
+                    </div>
+                    
+                    <!-- Founder Bio -->
+                    <div class="flex-1 text-left">
+                        <h3 class="font-headline text-2xl font-bold mb-2 text-text-primary">Jeremy Karrick</h3>
+                        <p class="text-accent font-semibold mb-4">Founder & Visionary</p>
+                        <p class="text-text-secondary leading-relaxed mb-4">
+                            Architect of the Triumvirate Framework and pioneer in AGI-human partnership paradigms. Jeremy's vision transcends traditional technology boundaries, creating philosophical and technical foundations for the post-digital epoch.
+                        </p>
+                        <div class="flex flex-wrap gap-3 mb-4">
+                            <span class="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-medium">AGI Ethics</span>
+                            <span class="px-3 py-1 bg-accent-light text-accent-dark rounded-full text-sm font-medium">System Architecture</span>
+                            <span class="px-3 py-1 bg-secondary-100 text-secondary-700 rounded-full text-sm font-medium">Future Vision</span>
+                        </div>
+                        <a href="jeremy_karrick_founder_profile.html" class="inline-flex items-center space-x-2 text-accent hover:text-accent-light font-cta font-medium group">
+                            <span>Read Full Profile</span>
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Newsletter Signup -->
+        <div class="mt-16 max-w-2xl mx-auto">
+            <div class="card-elevated">
+                <h3 class="font-headline text-2xl font-bold mb-4 text-text-primary">Stay Updated</h3>
+                <p class="text-text-secondary mb-6">Get the latest insights on AGI-human collaboration, research updates, and exclusive resources</p>
+                <form class="flex flex-col sm:flex-row gap-4">
+                    <input type="email" placeholder="Enter your email" class="flex-1 px-6 py-3 rounded-lg bg-surface border border-surface-light focus:border-accent focus:outline-none text-text-primary" required>
+                    <button type="submit" class="btn-accent px-8 py-3">Subscribe</button>
+                </form>
+                <p class="text-text-tertiary text-sm mt-4">Join our fellow researchers and industry leaders in our community in our paving the path forward towards our united goal of AGI/Human Relations.</p>
+            </div>
+        </div>
+        
+        <!-- Contact Methods -->
+        <div class="mt-12 max-w-3xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card bg-surface-light p-6">
+                    <h4 class="font-headline text-lg font-bold mb-3 text-text-primary">General Inquiries</h4>
+                    <a href="mailto:info@thirstysprojects.com" class="text-accent hover:text-accent-light flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <span>info@thirstysprojects.com</span>
+                    </a>
+                </div>
+                <div class="card bg-surface-light p-6">
+                    <h4 class="font-headline text-lg font-bold mb-3 text-text-primary">Administration</h4>
+                    <a href="mailto:admin@thirstysprojects.com" class="text-accent hover:text-accent-light flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <span>admin@thirstysprojects.com</span>
+                    </a>
+                </div>
+                <div class="card bg-surface-light p-6">
+                    <h4 class="font-headline text-lg font-bold mb-3 text-text-primary">Security & Trust</h4>
+                    <a href="mailto:security@thirstysprojects.com" class="text-accent hover:text-accent-light flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <span>security@thirstysprojects.com</span>
+                    </a>
+                </div>
+                <div class="card bg-surface-light p-6">
+                    <h4 class="font-headline text-lg font-bold mb-3 text-text-primary">Founder Direct</h4>
+                    <a href="mailto:founderoftp@thirstysprojects.com" class="text-accent hover:text-accent-light flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <span>founderoftp@thirstysprojects.com</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-12 flex flex-wrap items-center justify-center gap-8 text-text-tertiary">
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span>No credit card required</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span>Free technical documentation</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span>Community access</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Research & Resources -->
+<section class="py-24 bg-background-light">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="font-headline text-4xl md:text-5xl font-bold mb-6 text-text-primary">
+                Research & Resources
+            </h2>
+            <p class="text-lg text-text-secondary max-w-3xl mx-auto">
+                Explore our academic foundations and technical documentation
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- White Papers -->
+            <a href="research_center.html" class="card-elevated hover:shadow-glow-accent transition-all group">
+                <div class="w-12 h-12 bg-gradient-to-br from-accent to-accent-dark rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <h3 class="font-headline text-lg font-bold mb-2 text-text-primary">Research Papers</h3>
+                <p class="text-text-secondary text-sm">This Section is currently under development.</p>
+            </a>
+
+            <!-- Case Studies -->
+            <a href="scenario_demonstrations.html" class="card-elevated hover:shadow-glow-accent transition-all group">
+                <div class="w-12 h-12 bg-gradient-to-br from-primary to-primary-700 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                </div>
+                <h3 class="font-headline text-lg font-bold mb-2 text-text-primary">Case Studies</h3>
+                <p class="text-text-secondary text-sm">This Section is currently under development.</p>
+            </a>
+
+            <!-- Technical Docs -->
+            <a href="trinity_deep_dive.html" class="card-elevated hover:shadow-glow-accent transition-all group">
+                <div class="w-12 h-12 bg-gradient-to-br from-secondary to-secondary-700 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                    </svg>
+                </div>
+                <h3 class="font-headline text-lg font-bold mb-2 text-text-primary">Trinity Deep Dive</h3>
+                <p class="text-text-secondary text-sm">This Section is currently under development.</p>
+            </a>
+
+            <!-- Roadmap -->
+            <a href="future_architectures.html" class="card-elevated hover:shadow-glow-accent transition-all group">
+                <div class="w-12 h-12 bg-gradient-to-br from-accent to-secondary rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6 text-background" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                </div>
+                <h3 class="font-headline text-lg font-bold mb-2 text-text-primary">Future Roadmap</h3>
+                <p class="text-text-secondary text-sm">This Section is currently under development.</p>
+            </a>
+        </div>
+
+        <!-- External Resources -->
+        <div class="mt-16 card-elevated">
+            <h3 class="font-headline text-2xl font-bold mb-6 text-text-primary">Related Academic Research</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-text-primary mb-3">AI Ethics & Governance</h4>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="https://www.partnershiponai.org/" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-accent-light flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                                <span>Partnership on AI</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://futureoflife.org/ai/" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-accent-light flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                                <span>Future of Life Institute - AI Safety</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://ai100.stanford.edu/" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-accent-light flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                                <span>Stanford AI100 Study</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-text-primary mb-3">Technical Foundations</h4>
+                    <ul class="space-y-2">
+                        <li>
+                            <a href="https://arxiv.org/list/cs.AI/recent" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-accent-light flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                                <span>arXiv AI Research Papers</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://openai.com/research" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-accent-light flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                                <span>OpenAI Research Publications</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.deepmind.com/research" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-accent-light flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                                <span>DeepMind Research Archive</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-surface border-t border-surface-light py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-4 gap-12 mb-12">
+            <!-- Company Info -->
+            <div class="md:col-span-2">
+                <div class="flex items-center space-x-3 mb-6">
+                    <svg class="w-10 h-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="url(#footer-gradient)" stroke-width="2" fill="none"/>
+                        <circle cx="20" cy="20" r="6" fill="url(#footer-gradient)" opacity="0.6"/>
+                        <defs>
+                            <linearGradient id="footer-gradient" x1="5" y1="5" x2="35" y2="35">
+                                <stop offset="0%" stop-color="#1E3A8A"/>
+                                <stop offset="100%" stop-color="#0891B2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="font-headline text-xl font-bold text-text-primary">ThirstysProjects.com</span>
+                </div>
+                <p class="text-text-secondary mb-6 max-w-md">
+                    Shaping the way forward for AGI/Human relations through the triumvirate: three intermingled programs—confluent consciousness, adaptive security, and institutional memory—becoming one.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="javascript:void(0)" class="w-10 h-10 bg-surface-light rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                        <svg class="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                    <a href="javascript:void(0)" class="w-10 h-10 bg-surface-light rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                        <svg class="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                    <a href="javascript:void(0)" class="w-10 h-10 bg-surface-light rounded-lg flex items-center justify-center hover:bg-primary transition-colors">
+                        <svg class="w-5 h-5 text-text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h4 class="font-headline text-lg font-bold mb-4 text-text-primary">Explore</h4>
+                <ul class="space-y-3">
+                    <li><a href="manifesto_gateway.html" class="text-text-secondary hover:text-accent transition-colors">Manifesto</a></li>
+                    <li><a href="trinity_deep_dive.html" class="text-text-secondary hover:text-accent transition-colors">Trinity Systems</a></li>
+                    <li><a href="scenario_demonstrations.html" class="text-text-secondary hover:text-accent transition-colors">Case Studies</a></li>
+                    <li><a href="research_center.html" class="text-text-secondary hover:text-accent transition-colors">Research</a></li>
+                </ul>
+            </div>
+
+            <!-- Resources -->
+            <div>
+                <h4 class="font-headline text-lg font-bold mb-4 text-text-primary">Resources</h4>
+                <ul class="space-y-3">
+                    <li><a href="future_architectures.html" class="text-text-secondary hover:text-accent transition-colors">Roadmap</a></li>
+                    <li><a href="trust_transparency_center.html" class="text-text-secondary hover:text-accent transition-colors">Security</a></li>
+                    <li><a href="javascript:void(0)" class="text-text-secondary hover:text-accent transition-colors">Documentation</a></li>
+                    <li><a href="javascript:void(0)" class="text-text-secondary hover:text-accent transition-colors">Community</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="flex flex-col md:flex-row items-center justify-between text-text-tertiary text-sm">
+            <p>© 2025 ThirstysProjects.com. All Rights Reserved.</p>
+            <div class="flex space-x-6 mt-4 md:mt-0">
+                <a href="javascript:void(0)" class="hover:text-accent transition-colors">Privacy Policy</a>
+                <a href="javascript:void(0)" class="hover:text-accent transition-colors">Terms of Service</a>
+                <a href="javascript:void(0)" class="hover:text-accent transition-colors">Cookie Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+            const isExpanded = mobileMenu.classList.contains('hidden');
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
+        });
+    }
+
+    // ===== RADIAL MENU SYSTEM =====
+    
+    const menuTrigger = document.getElementById('menu-trigger');
+    const radialMenu = document.getElementById('radial-menu');
+    const radialOverlay = document.getElementById('radial-overlay');
+    const radialCloseBtn = document.getElementById('radial-close-btn');
+
+    // Only setup radial menu if all elements exist
+    if (menuTrigger && radialMenu && radialOverlay && radialCloseBtn) {
+        function openRadialMenu() {
+            radialMenu.classList.add('active');
+            radialOverlay.classList.add('active');
+            menuTrigger.classList.add('active');
+            menuTrigger.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRadialMenu() {
+            radialMenu.classList.remove('active');
+            radialOverlay.classList.remove('active');
+            menuTrigger.classList.remove('active');
+            menuTrigger.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+
+        // Open radial menu
+        menuTrigger.addEventListener('click', openRadialMenu);
+        menuTrigger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                openRadialMenu();
+            }
+        });
+
+        // Close radial menu
+        radialCloseBtn.addEventListener('click', closeRadialMenu);
+        radialCloseBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                closeRadialMenu();
+            }
+        });
+        radialOverlay.addEventListener('click', closeRadialMenu);
+
+        // Escape key to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && radialMenu.classList.contains('active')) {
+                closeRadialMenu();
+            }
+        });
+    }
+
+    // Expandable manifesto sections
+    document.querySelectorAll('.manifesto-gateway').forEach(section => {
+        section.addEventListener('click', function() {
+            const content = this.querySelector('div:last-child');
+            const icon = this.querySelector('svg:last-child');
+            
+            if (content && icon) {
+                content.classList.toggle('hidden');
+                icon.classList.toggle('rotate-180');
+            }
+        });
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Intersection Observer for animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-slide-up').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        observer.observe(el);
+    });
+    
+    // ===== ACCESSIBILITY ENHANCEMENTS =====
+    
+    // Keyboard shortcuts modal
+    const shortcutsModal = document.getElementById('keyboard-shortcuts-modal');
+    const shortcutsBtn = document.getElementById('keyboard-shortcuts-btn');
+    const closeShortcutsBtn = document.getElementById('close-shortcuts-btn');
+    
+    if (shortcutsModal && shortcutsBtn && closeShortcutsBtn) {
+        function openShortcutsModal() {
+            shortcutsModal.classList.add('show');
+            shortcutsModal.focus();
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeShortcutsModal() {
+            shortcutsModal.classList.remove('show');
+            shortcutsBtn.focus();
+            document.body.style.overflow = '';
+        }
+        
+        // Open shortcuts modal
+        shortcutsBtn.addEventListener('click', openShortcutsModal);
+        closeShortcutsBtn.addEventListener('click', closeShortcutsModal);
+        
+        // Close modal when clicking outside
+        shortcutsModal.addEventListener('click', function(e) {
+            if (e.target === shortcutsModal) {
+                closeShortcutsModal();
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Don't trigger if radial menu is open
+            if (radialMenu && radialMenu.classList.contains('active')) {
+                return;
+            }
+
+            // ? key - Toggle shortcuts modal
+            if (e.key === '?' && !e.shiftKey && !shortcutsModal.classList.contains('show')) {
+                e.preventDefault();
+                openShortcutsModal();
+                return;
+            }
+            
+            // ESC key - Close shortcuts modal
+            if (e.key === 'Escape' && shortcutsModal.classList.contains('show')) {
+                e.preventDefault();
+                closeShortcutsModal();
+                return;
+            }
+            
+            // Don't trigger shortcuts if modal is open or user is typing
+            if (shortcutsModal.classList.contains('show') || 
+                e.target.tagName === 'INPUT' || 
+                e.target.tagName === 'TEXTAREA') {
+                return;
+            }
+            
+            // M key - Toggle Menu radial menu
+            if ((e.key === 'm' || e.key === 'M') && radialMenu) {
+                e.preventDefault();
+                if (radialMenu.classList.contains('active')) {
+                    closeRadialMenu();
+                } else {
+                    openRadialMenu();
+                }
+            }
+            
+            // T key - Go to Trinity Deep Dive
+            if (e.key === 't' || e.key === 'T') {
+                e.preventDefault();
+                window.location.href = 'trinity_deep_dive.html';
+            }
+            
+            // R key - Go to Research Center
+            if (e.key === 'r' || e.key === 'R') {
+                e.preventDefault();
+                window.location.href = 'research_center.html';
+            }
+            
+            // S key - Go to Scenarios
+            if (e.key === 's' || e.key === 'S') {
+                e.preventDefault();
+                window.location.href = 'scenario_demonstrations.html';
+            }
+            
+            // F key - Go to Future Architectures
+            if (e.key === 'f' || e.key === 'F') {
+                e.preventDefault();
+                window.location.href = 'future_architectures.html';
+            }
+            
+            // H key - Go to Home
+            if (e.key === 'h' || e.key === 'H') {
+                e.preventDefault();
+                window.location.href = '../index.html';
+            }
+        });
+    }
+    
+    // Announce page load to screen readers
+    window.addEventListener('load', function() {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('role', 'status');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.style.position = 'absolute';
+        announcement.style.left = '-10000px';
+        announcement.style.width = '1px';
+        announcement.style.height = '1px';
+        announcement.style.overflow = 'hidden';
+        announcement.textContent = 'Manifesto Gateway page loaded. Press M to open navigation menu or ? for keyboard shortcuts.';
+        document.body.appendChild(announcement);
+    });
+    
+    // ===== INTERACTIVE FEATURE VISUALIZATION SYSTEM =====
+    
+    // Feature tab filtering
+    const featureTabs = document.querySelectorAll('.feature-tab');
+    const featureCards = document.querySelectorAll('.feature-card');
+    
+    if (featureTabs.length > 0 && featureCards.length > 0) {
+        featureTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const category = this.dataset.category;
+                
+                // Update active tab
+                featureTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Filter cards
+                featureCards.forEach(card => {
+                    if (category === 'all' || card.dataset.category === category) {
+                        card.style.display = 'block';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'scale(1)';
+                        }, 10);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'scale(0.9)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+                
+                // Update statistics
+                updateFeatureStats(category);
+            });
+        });
+        
+        function updateFeatureStats(category) {
+            const stats = {
+                'all': { 'project-ai': 4, 'cerberus': 3, 'codex': 4, 'total': 11 },
+                'project-ai': { 'project-ai': 4, 'cerberus': 0, 'codex': 0, 'total': 4 },
+                'cerberus': { 'project-ai': 0, 'cerberus': 3, 'codex': 0, 'total': 3 },
+                'codex': { 'project-ai': 0, 'cerberus': 0, 'codex': 4, 'total': 4 }
+            };
+            
+            const currentStats = stats[category] || stats['all'];
+            
+            document.querySelectorAll('[data-stat]').forEach(statEl => {
+                const statType = statEl.dataset.stat;
+                const newValue = currentStats[statType];
+                
+                const currentValue = parseInt(statEl.textContent);
+                animateValue(statEl, currentValue, newValue, 500);
+            });
+        }
+        
+        function animateValue(element, start, end, duration) {
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.round(current);
+            }, 16);
+        }
+        
+        // Add smooth transitions for feature cards
+        featureCards.forEach(card => {
+            card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1)';
+        });
+        
+        // Tab styling
+        featureTabs.forEach(tab => {
+            if (tab.classList.contains('active')) {
+                tab.style.background = 'linear-gradient(135deg, #0891B2, #06B6D4)';
+                tab.style.color = '#ffffff';
+                tab.style.boxShadow = '0 4px 12px rgba(8, 145, 178, 0.4)';
+            } else {
+                tab.style.background = 'rgba(226, 232, 240, 0.1)';
+                tab.style.color = '#94A3B8';
+                tab.style.boxShadow = 'none';
+            }
+            
+            tab.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.background = 'rgba(226, 232, 240, 0.2)';
+                    this.style.color = '#E2E8F0';
+                }
+            });
+            
+            tab.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('active')) {
+                    this.style.background = 'rgba(226, 232, 240, 0.1)';
+                    this.style.color = '#94A3B8';
+                }
+            });
+        });
+    }
+</script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
+</body>
+</html>

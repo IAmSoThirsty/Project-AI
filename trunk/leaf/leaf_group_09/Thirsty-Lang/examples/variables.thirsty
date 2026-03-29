@@ -1,0 +1,19 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / variables.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / variables.thirsty
+
+
+# Date: 2026-03-10 | Time: 20:38 | Status: Active | Tier: Master
+// Variable examples in Thirsty-lang
+drink water = "H2O"
+drink temperature = 25
+drink liters = 2.5
+
+pour water
+pour temperature
+pour liters

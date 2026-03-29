@@ -1,0 +1,17 @@
+{
+  "global": {
+    "privacy_mode": "maximum",
+    "kill_switch_enabled": true,
+    "log_level": "INFO"
+  },
+  "vpn": {
+    "enabled": true,
+    "multi_hop": true,
+    "hop_count": 3
+  },
+  "browser": {
+    "incognito_mode": true,
+    "no_history": true,
+    "no_cache": true
+  }
+}
