@@ -372,7 +372,7 @@ tasks.register<Exec>("pythonSecurityScan") {
     )
     
     doLast {
-        exec {
+        project.exec {
             val pipAudit = if (System.getProperty("os.name").lowercase().contains("windows")) {
                 file("${pythonVenvDir}/Scripts/pip-audit.exe").absolutePath
             } else {
@@ -500,9 +500,10 @@ tasks.register<Exec>("taarCI") {
 // Configure Node.js plugin
 apply(plugin = "com.github.node-gradle.node")
 
+val resolvedNpmVersion = npmVersion
 configure<com.github.gradle.node.NodeExtension> {
     version.set(nodeVersion)
-    npmVersion.set(this@Build_gradle.npmVersion)
+    npmVersion.set(resolvedNpmVersion)
     download.set(true)
     workDir.set(file("${projectRoot}/.gradle/nodejs"))
     npmWorkDir.set(file("${projectRoot}/.gradle/npm"))
@@ -935,7 +936,7 @@ tasks.register<Task>("sbomGenerate") {
         val pythonSbom = sbomDir.file("python-dependencies.txt").asFile
         pythonSbom.parentFile.mkdirs()
         
-        exec {
+        project.exec {
             val pipExec = if (System.getProperty("os.name").lowercase().contains("windows")) {
                 file("${pythonVenvDir}/Scripts/pip.exe").absolutePath
             } else {
@@ -1037,7 +1038,7 @@ tasks.register<Exec>("dockerPush") {
     val registry = findProperty("dockerRegistry")?.toString() ?: "ghcr.io/iamsothirsty"
     
     doFirst {
-        exec {
+        project.exec {
             commandLine("docker", "tag", "project-ai:${project.version}", "$registry/project-ai:${project.version}")
         }
     }
@@ -1107,7 +1108,7 @@ tasks.register<Exec>("releaseGitHubRelease") {
     doLast {
         // Upload artifacts
         fileTree(releaseDir).files.forEach { artifact ->
-            exec {
+            project.exec {
                 commandLine(
                     "gh", "release", "upload",
                     "v${project.version}",
