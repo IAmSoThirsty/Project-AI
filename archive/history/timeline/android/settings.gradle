@@ -1,0 +1,5 @@
+//                                           [2026-03-10 18:58]
+//                                          Productivity: Active
+rootProject.name = 'Project-AI'
+include ':app'
+include ':legion_mini'

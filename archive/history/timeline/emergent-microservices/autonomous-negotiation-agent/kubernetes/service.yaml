@@ -1,0 +1,27 @@
+#                                           [2026-03-10 18:58]
+#                                          Productivity: Active
+# ============================================================================ #
+#                                                            DATE: 2026-03-10 #
+#                                                          TIME: 15:01:56 PST #
+#                                                        PRODUCTIVITY: Active #
+# ============================================================================ #
+
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+apiVersion: v1
+kind: Service
+metadata:
+  name: Autonomous Negotiation Agent Infrastructure
+  namespace: default
+  labels:
+    app: Autonomous Negotiation Agent Infrastructure
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Autonomous Negotiation Agent Infrastructure
+  sessionAffinity: None

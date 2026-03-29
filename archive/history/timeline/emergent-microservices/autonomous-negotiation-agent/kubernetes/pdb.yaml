@@ -1,0 +1,20 @@
+#                                           [2026-03-10 18:58]
+#                                          Productivity: Active
+# ============================================================================ #
+#                                                            DATE: 2026-03-10 #
+#                                                          TIME: 15:01:56 PST #
+#                                                        PRODUCTIVITY: Active #
+# ============================================================================ #
+
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: Autonomous Negotiation Agent Infrastructure
+  namespace: default
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: Autonomous Negotiation Agent Infrastructure

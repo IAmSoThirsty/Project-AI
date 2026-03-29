@@ -1,0 +1,27 @@
+#                                           [2026-03-10 18:58]
+#                                          Productivity: Active
+# ============================================================================ #
+#                                                            DATE: 2026-03-10 #
+#                                                          TIME: 15:01:56 PST #
+#                                                        PRODUCTIVITY: Active #
+# ============================================================================ #
+
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: Autonomous Incident Reflex System
+  namespace: default
+  labels:
+    app: Autonomous Incident Reflex System
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: Autonomous Incident Reflex System
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
