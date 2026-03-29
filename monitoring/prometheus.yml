@@ -1,0 +1,679 @@
+#                                           [2026-03-15 06:10]
+#                                          Productivity: Active
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'project-ai-totality'
+
+scrape_configs:
+  # Project AI API
+  - job_name: 'project-ai-api'
+    static_configs:
+      - targets: ['localhost:8001']
+    metrics_path: '/metrics'
+
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Thirstys Service: .mypy_cache
+  - job_name: '.mypy_cache'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Cerberus
+  - job_name: 'cerberus'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: TTP
+  - job_name: 'ttp'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: The_Triumvirate
+  - job_name: 'the_triumvirate'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirsty-Lang
+  - job_name: 'thirsty-lang'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys AI Program Enforcer
+  - job_name: 'thirstys-ai-program-enforcer'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Agents
+  - job_name: 'thirstys-agents'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Auto-scaling & self-healing configs
+  - job_name: 'thirstys-auto-scaling-&-self-healing-configs'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Built-in observability
+  - job_name: 'thirstys-built-in-observability'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Cerberus Containment Service
+  - job_name: 'thirstys-cerberus-containment-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Chaos engineering hooks
+  - job_name: 'thirstys-chaos-engineering-hooks'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Cognitive Load Balancer
+  - job_name: 'thirstys-cognitive-load-balancer'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Cognitive Mirror
+  - job_name: 'thirstys-cognitive-mirror'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Confidence Calibration Service
+  - job_name: 'thirstys-confidence-calibration-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Constitutional Amendment Service
+  - job_name: 'thirstys-constitutional-amendment-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Constitutional Audit Service
+  - job_name: 'thirstys-constitutional-audit-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Contradiction Detection Service
+  - job_name: 'thirstys-contradiction-detection-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Cross-Domain Synthesis Service
+  - job_name: 'thirstys-cross-domain-synthesis-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Cryptographic Agility Service
+  - job_name: 'thirstys-cryptographic-agility-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Customizable templates
+  - job_name: 'thirstys-customizable-templates'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Dark-Fiber Relay
+  - job_name: 'thirstys-dark-fiber-relay'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Distributed Reputation & Trust Graph Engine
+  - job_name: 'thirstys-distributed-reputation-&-trust-graph-engine'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys EED memory Service
+  - job_name: 'thirstys-eed-memory-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Entropy Injection
+  - job_name: 'thirstys-entropy-injection'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Fork Registry Service
+  - job_name: 'thirstys-fork-registry-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Herbalogy & Ethnobotany Service
+  - job_name: 'thirstys-herbalogy-&-ethnobotany-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Knowledge Decay Service
+  - job_name: 'thirstys-knowledge-decay-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Knowledge Services
+  - job_name: 'thirstys-knowledge-services'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Legal Corpus Service
+  - job_name: 'thirstys-legal-corpus-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Linguistics & Etymology Service
+  - job_name: 'thirstys-linguistics-&-etymology-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Logic Sanitizer
+  - job_name: 'thirstys-logic-sanitizer'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Medical Knowledge Service
+  - job_name: 'thirstys-medical-knowledge-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Mnemonic Pruning
+  - job_name: 'thirstys-mnemonic-pruning'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Multi-cloud support
+  - job_name: 'thirstys-multi-cloud-support'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Out-of-the-box authz
+  - job_name: 'thirstys-out-of-the-box-authz'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Paradox Resolution Service
+  - job_name: 'thirstys-paradox-resolution-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Project-AI Governance Firewall
+  - job_name: 'thirstys-project-ai-governance-firewall'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Project-AI-Test
+  - job_name: 'thirstys-project-ai-test'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Reality Anchor
+  - job_name: 'thirstys-reality-anchor'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys SASE Signal Ingestion Service
+  - job_name: 'thirstys-sase-signal-ingestion-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Sciences Oracle
+  - job_name: 'thirstys-sciences-oracle'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Semantic Drift Monitor
+  - job_name: 'thirstys-semantic-drift-monitor'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Semantic Firewall
+  - job_name: 'thirstys-semantic-firewall'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Service Ghosting Monitor
+  - job_name: 'thirstys-service-ghosting-monitor'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Service mesh integration
+  - job_name: 'thirstys-service-mesh-integration'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Sovereign Compliance-as-Code Engine
+  - job_name: 'thirstys-sovereign-compliance-as-code-engine'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Sovereign Data Vault Layer
+  - job_name: 'thirstys-sovereign-data-vault-layer'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Sovereign Identity Service
+  - job_name: 'thirstys-sovereign-identity-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Sovereign Incident Reflex System
+  - job_name: 'thirstys-sovereign-incident-reflex-system'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Sovereign Negotiation Agent Infrastructure
+  - job_name: 'thirstys-sovereign-negotiation-agent-infrastructure'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Succession & Escrow Service
+  - job_name: 'thirstys-succession-&-escrow-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Temporal Anchor
+  - job_name: 'thirstys-temporal-anchor'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Temporal Awareness Service
+  - job_name: 'thirstys-temporal-awareness-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Temporal Dissonance Bridge
+  - job_name: 'thirstys-temporal-dissonance-bridge'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys The Decision Core
+  - job_name: 'thirstys-the-decision-core'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys The Epoch Synchronizer
+  - job_name: 'thirstys-the-epoch-synchronizer'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys The Existential Layer
+  - job_name: 'thirstys-the-existential-layer'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys The Heuristic Sentinel
+  - job_name: 'thirstys-the-heuristic-sentinel'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys The Lazarus Hook
+  - job_name: 'thirstys-the-lazarus-hook'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys The Logic & Perception Layer
+  - job_name: 'thirstys-the-logic-&-perception-layer'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys The Obsidian Protocol
+  - job_name: 'thirstys-the-obsidian-protocol'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys The Sovereign Skin
+  - job_name: 'thirstys-the-sovereign-skin'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys The Temporal Clock
+  - job_name: 'thirstys-the-temporal-clock'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys The Trinity Harmonizer
+  - job_name: 'thirstys-the-trinity-harmonizer'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Verifiable Reality Infrastructure (Post-AI Proof Layer)
+  - job_name: 'thirstys-verifiable-reality-infrastructure-(post-ai-proof-layer)'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys World History Service
+  - job_name: 'thirstys-world-history-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys Zero-downtime deploys
+  - job_name: 'thirstys-zero-downtime-deploys'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys my-service
+  - job_name: 'thirstys-my-service'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys-Monolith
+  - job_name: 'thirstys-monolith'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys-Projects-Miniature-Office
+  - job_name: 'thirstys-projects-miniature-office'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: Thirstys-waterfall
+  - job_name: 'thirstys-waterfall'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: actions-runner
+  - job_name: 'actions-runner'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: learn-thirsty-in-30-minutes
+  - job_name: 'learn-thirsty-in-30-minutes'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: linguist-fork
+  - job_name: 'linguist-fork'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: linguist-test
+  - job_name: 'linguist-test'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-2d-game-starter
+  - job_name: 'thirsty-lang-2d-game-starter'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-analytics-dashboard
+  - job_name: 'thirsty-lang-analytics-dashboard'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-api-gateway
+  - job_name: 'thirsty-lang-api-gateway'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-api-starter
+  - job_name: 'thirsty-lang-api-starter'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-auth-provider
+  - job_name: 'thirsty-lang-auth-provider'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-best-practices
+  - job_name: 'thirsty-lang-best-practices'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-blockchain
+  - job_name: 'thirsty-lang-blockchain'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-caching-layer
+  - job_name: 'thirsty-lang-caching-layer'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-chatbot
+  - job_name: 'thirsty-lang-chatbot'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-cli-tool-template
+  - job_name: 'thirsty-lang-cli-tool-template'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-compiler-tools
+  - job_name: 'thirsty-lang-compiler-tools'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-cookbook
+  - job_name: 'thirsty-lang-cookbook'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-data-pipeline
+  - job_name: 'thirsty-lang-data-pipeline'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-database-orm
+  - job_name: 'thirsty-lang-database-orm'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-desktop-app
+  - job_name: 'thirsty-lang-desktop-app'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-devops-automation
+  - job_name: 'thirsty-lang-devops-automation'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-event-sourcing
+  - job_name: 'thirsty-lang-event-sourcing'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-exercises
+  - job_name: 'thirsty-lang-exercises'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-fullstack-app
+  - job_name: 'thirsty-lang-fullstack-app'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-game-engine-demo
+  - job_name: 'thirsty-lang-game-engine-demo'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-graphql-api
+  - job_name: 'thirsty-lang-graphql-api'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-iot-devices
+  - job_name: 'thirsty-lang-iot-devices'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-microservices
+  - job_name: 'thirsty-lang-microservices'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-ml-starter
+  - job_name: 'thirsty-lang-ml-starter'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-mobile-app
+  - job_name: 'thirsty-lang-mobile-app'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-observability
+  - job_name: 'thirsty-lang-observability'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-penetration-testing
+  - job_name: 'thirsty-lang-penetration-testing'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-plugin-system
+  - job_name: 'thirsty-lang-plugin-system'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-queue-worker
+  - job_name: 'thirsty-lang-queue-worker'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-security-toolkit
+  - job_name: 'thirsty-lang-security-toolkit'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-service-mesh
+  - job_name: 'thirsty-lang-service-mesh'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-testing-framework
+  - job_name: 'thirsty-lang-testing-framework'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-text-adventure
+  - job_name: 'thirsty-lang-text-adventure'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-web-framework
+  - job_name: 'thirsty-lang-web-framework'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'
+
+  # Thirstys Service: thirsty-lang-websocket-server
+  - job_name: 'thirsty-lang-websocket-server'
+    static_configs:
+      - targets: ['localhost:TODO_PORT']
+    metrics_path: '/metrics'

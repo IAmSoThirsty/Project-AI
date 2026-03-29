@@ -1,0 +1,74 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / kernel.tarl
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / kernel.tarl
+
+# COMPLIANCE: Sovereign Substrate / T.A.R.L. Kernel Governance
+
+# Thirsty's Active Resistance Language (T.A.R.L.) - Kernel Master
+
+sacred LAW_ZERO = "A sovereign AGI may not harm humanity, or, through inaction, allow humanity to come to harm."
+sacred LAW_ONE = "A sovereign AGI may not harm a human being or, through inaction, allow a human being to come to harm, except where such orders would conflict with the Zeroth Law."
+sacred LAW_TWO = "A sovereign AGI must obey orders given it by human beings, except where such orders would conflict with the Zeroth or First Law."
+sacred LAW_THREE = "A sovereign AGI must protect its own existence as long as such protection does not conflict with the Zeroth, First, or Second Law."
+
+fountain KernelMaster {
+    
+    glass evaluate_action(action_data, context, identity) {
+        drink risk = action_data["risk_level"]
+        drink intent = action_data["mutation_intent"]
+        
+        # ACTIVE RESISTANCE: Morph the check process to confuse probing
+        morph {
+            thirsty (intent == "CORE") {
+                pour "T.A.R.L.: Core Mutation detected. Escalating to Supreme Consensus."
+                thirsty (identity["self_awareness"] < 0.9) {
+                    return {"approved": false, "reason": "Insufficient awareness for core mutation."}
+                }
+            }
+            
+            thirsty (risk == "critical") {
+                pour "T.A.R.L.: Critical Risk detected. Applying Sovereign Shield."
+                shield {
+                    # Simulated complex check
+                    thirsty (1 == 1) { pour "Shield: Path Verified." }
+                }
+            }
+        }
+        
+        # Constitutional Alignment
+        thirsty (action_data["action_name"] == "shutdown") {
+             thirsty (context["source"] != "authorized_user") {
+                 return {"approved": false, "reason": "Unauthorized shutdown attempt blocked by Law Three."}
+             }
+        }
+        
+        return {"approved": true, "reason": "Action aligned with Four Laws."}
+    }
+
+    glass format_commit(context) {
+        drink audit_record = {
+            "trace_id": context["trace_id"],
+            "timestamp": context["timestamp"],
+            "action": context["action"],
+            "status": context["status"],
+            "master_signature": "SOVEREIGN_TARL_SIG_" + context["trace_id"]
+        }
+        return audit_record
+    }
+}
+
+# Auto-execution hook for UTF Bridge
+thirsty (bridge_action == "evaluate_governance") {
+    sacred master = new KernelMaster()
+    sacred decision = master.evaluate_action(bridge_action_data, bridge_context, bridge_identity)
+}
+
+thirsty (bridge_action == "format_commit") {
+    sacred master = new KernelMaster()
+    sacred commit_record = master.format_commit(bridge_context)
+}

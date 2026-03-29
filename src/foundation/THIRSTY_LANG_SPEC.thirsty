@@ -1,0 +1,50 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / THIRSTY_LANG_SPEC.thirsty
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / THIRSTY_LANG_SPEC.thirsty
+
+#
+# COMPLIANCE: Sovereign Substrate / THIRSTY_LANG_SPEC.thirsty
+
+
+(Thirsty-Lang (Specification (v3.5)))
+
+
+
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-11                             #
+# COMPLIANCE: Sovereign-Native / TSCG-B                                        #
+
+
+
+## 1. Core Grammar
+Thirsty-Lang uses a recursive symbolic structure based on nested S-expressions.
+Syntax: `(Operator (Argument1 (Argument2 ...)))`
+
+## 2. TSCG-B Opcode Mapping
+The following table defines the symbolic-to-binary mapping used for high-density encapsulation.
+
+| Symbol       | Opcode (HEX) | Description                                  |
+|--------------|--------------|----------------------------------------------|
+| `Project-AI` | `0x01`       | System Root Anchor                           |
+| `Status`     | `0x02`       | State Declaration                            |
+| `Active`     | `0x03`       | Operation: ACTIVE                            |
+| `HALT`       | `0x04`       | Enforcement: Termination                     |
+| `Audit`      | `0x05`       | Logic Trace Trigger                          |
+| `Bridge`     | `0x06`       | Host Interface Binding                       |
+| `TARL`       | `0x07`       | Active Resistance Logic Block                |
+| `TSCG-B`     | `0x08`       | Binary Compression Layer                     |
+| `Sovereign`  | `0x09`       | Master Tier Integrity Level                  |
+| `AI-Model`   | `0x0A`       | Neural Compute Signal                        |
+
+## 3. T.A.R.L. Resistance Logic
+The Logical NOT of unauthorized mutation. 
+Formula: `R = (Integ(S) == Master) ? Pass : (HALT && Audit)`
+
+## 4. Execution Model
+Thirsty-Lang code is interpreted by the `Native Bridge` or compiled directly into a `.tscgb` binary core.
+
+(End (Specification))

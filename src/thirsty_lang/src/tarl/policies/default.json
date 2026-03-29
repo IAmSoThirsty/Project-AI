@@ -1,0 +1,45 @@
+{
+  "policies": [
+    {
+      "name": "default_security",
+      "description": "Default security policy for Thirsty-lang",
+      "rules": [
+        {
+          "condition": {
+            "action": "threat_detected"
+          },
+          "verdict": "DENY",
+          "reason": "Threats detected in input"
+        },
+        {
+          "condition": {
+            "action": "compile",
+            "mode": "production"
+          },
+          "verdict": "ALLOW",
+          "reason": "Production compilation allowed"
+        }
+      ]
+    },
+    {
+      "name": "strict_security",
+      "description": "Strict security policy - blocks suspicious operations",
+      "rules": [
+        {
+          "condition": {
+            "action": "threat_detected"
+          },
+          "verdict": "DENY",
+          "reason": "Any threat triggers denial"
+        },
+        {
+          "condition": {
+            "action": "code_morph"
+          },
+          "verdict": "ESCALATE",
+          "reason": "Code morphing requires approval"
+        }
+      ]
+    }
+  ]
+}

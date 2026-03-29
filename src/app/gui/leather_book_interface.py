@@ -1,0 +1,261 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / leather_book_interface.py
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / leather_book_interface.py
+
+"""
+LeatherBookInterface - Main Orchestrator for the Project-AI Desktop Application.ut.
+
+Creates an old leather book aesthetic with:
+- Left page: Futuristic Tron-themed digital face
+- Right page: User login, glossary, table of contents
+- 3D elements with modern graphics
+"""
+
+import logging
+
+from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtGui import QColor
+from PyQt6.QtWidgets import (
+    QGraphicsDropShadowEffect,
+    QHBoxLayout,
+    QMainWindow,
+    QStackedWidget,
+    QWidget,
+)
+
+from src.app.core.platform_tiers import (
+    AuthorityLevel,
+    ComponentRole,
+    PlatformTier,
+    get_tier_registry,
+)
+from src.app.gui.leather_book_panels import IntroInfoPage, SovereignPersonaPage
+from src.app.gui.persona_panel import PersonaPanel
+
+logger = logging.getLogger(__name__)
+
+
+class LeatherBookInterface(QMainWindow):
+    """Main window with leather book aesthetic."""
+
+    page_changed = pyqtSignal(int)  # Signal for page changes
+    user_logged_in = pyqtSignal(str)  # Signal for user login
+
+    def __init__(self, username: str | None = None):
+        super().__init__()
+        self.username = username
+        self.backend_token: str | None = None
+        self.current_page = 0  # 0 = login/intro, 1 = main dashboard
+
+        self.setWindowTitle("Project-AI: Sovereign 1st Edition")
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.setStyleSheet(self._get_stylesheet())
+
+        self.main_widget = QWidget()
+        self.setCentralWidget(self.main_widget)
+        self.main_layout = QHBoxLayout(self.main_widget)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setSpacing(0)
+
+        self.left_page = SovereignPersonaPage(self)
+        self.right_page = IntroInfoPage(self)
+
+        self.page_container = QStackedWidget()
+        self.page_container.addWidget(self.right_page)
+
+        self.main_layout.addWidget(self.left_page, 2)
+        self.main_layout.addWidget(self.page_container, 3)
+
+        self._apply_leather_texture()
+
+        # Register with Tier Registry as Tier-3 User Interface
+        try:
+            tier_registry = get_tier_registry()
+            tier_registry.register_component(
+                component_id="leather_book_interface",
+                component_name="LeatherBookInterface",
+                tier=PlatformTier.TIER_3_APPLICATION,
+                authority_level=AuthorityLevel.SANDBOXED,
+                role=ComponentRole.USER_INTERFACE,
+                component_ref=self,
+                dependencies=["cognition_kernel", "council_hub"],
+                can_be_paused=True,  # Can be paused by Tier-1
+                can_be_replaced=True,  # GUI is replaceable
+            )
+            logger.info("LeatherBookInterface registered as Tier-3 User Interface")
+        except Exception as e:
+            logger.warning(
+                "Failed to register LeatherBookInterface in tier registry: %s", e
+            )
+
+        # Engulf the screen for 1st Edition immersion
+        self.showFullScreen()
+        self.raise_()
+        self.activateWindow()
+
+    def _get_stylesheet(self) -> str:
+        """Return QSS stylesheet for leather book theme."""
+        return """
+        QMainWindow {
+            background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 #1a1a1a, stop:1 #050505);
+        }
+        QWidget#main_widget {
+            background-color: transparent;
+        }
+        QLabel {
+            color: #d4af37; /* Sovereign Gold */
+            font-family: 'Courier New';
+            font-weight: bold;
+        }
+        QPushButton {
+            background-color: #121212;
+            border: 2px solid #00ff00;
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-family: 'Courier New';
+            text-transform: uppercase;
+        }
+        QPushButton:hover {
+            background-color: #1a1a1a;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            box-shadow: 0 0 15px #00ffff;
+        }
+        QLineEdit {
+            background-color: #0f0f0f;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 8px;
+            font-family: 'Courier New';
+            selection-background-color: #00ffff;
+        }
+        QTextEdit {
+            background-color: #0f0f0f;
+            border: 1px solid #004400;
+            color: #00ff00;
+            font-family: 'Courier New';
+        }
+        """
+
+    def _apply_leather_texture(self):
+        """Apply leather texture and shadows."""
+        shadow = QGraphicsDropShadowEffect()
+        shadow.setBlurRadius(20)
+        shadow.setColor(QColor(0, 0, 0, 200))
+        shadow.setOffset(0, 10)
+        self.main_widget.setGraphicsEffect(shadow)
+
+    def _set_stack_page(self, widget: QWidget, target_index: int):
+        """Replace the widget at ``target_index`` and activate it."""
+        while self.page_container.count() > target_index:
+            old_widget = self.page_container.widget(target_index)
+            if old_widget is None:
+                break
+            self.page_container.removeWidget(old_widget)
+            old_widget.deleteLater()
+
+        self.page_container.insertWidget(target_index, widget)
+        self.page_container.setCurrentIndex(target_index)
+        self.current_page = target_index
+
+    def switch_to_main_dashboard(self, username: str):
+        """Switch from intro page to main dashboard."""
+        self.username = username
+        self.user_logged_in.emit(username)
+
+        from src.app.gui.leather_book_dashboard import LeatherBookDashboard
+
+        dashboard = LeatherBookDashboard(username)
+
+        # Connect existing signals
+        dashboard.actions_panel.image_gen_requested.connect(
+            self.switch_to_image_generation
+        )
+
+        # Connect new intelligence system signals
+        dashboard.actions_panel.news_intelligence_requested.connect(
+            self.switch_to_news_intelligence
+        )
+        dashboard.actions_panel.persona_requested.connect(self.switch_to_persona_config)
+        dashboard.actions_panel.intelligence_library_requested.connect(
+            self.switch_to_intelligence_library
+        )
+        dashboard.actions_panel.watch_tower_requested.connect(
+            self.switch_to_watch_tower
+        )
+        dashboard.actions_panel.command_center_requested.connect(
+            self.switch_to_command_center
+        )
+        # Assuming we add a persona_btn to the actions panel or connect it elsewhere
+        # For now, let's wire it to a potential new signal or replace one
+        # dashboard.actions_panel.persona_requested.connect(self.switch_to_persona_config)
+
+        self._set_stack_page(dashboard, 1)
+
+    def set_backend_token(self, token: str | None):
+        """Store backend auth token for downstream components."""
+        self.backend_token = token
+
+    def switch_to_image_generation(self):
+        """Switch to image generation interface."""
+        from src.app.gui.image_generation import ImageGenerationInterface
+
+        image_gen = ImageGenerationInterface()
+
+        self._set_stack_page(image_gen, 2)
+
+    def switch_to_dashboard(self):
+        """Switch back to dashboard."""
+        if self.page_container.count() > 1:
+            self.page_container.setCurrentIndex(1)
+            self.current_page = 1
+
+    def switch_to_news_intelligence(self):
+        """Switch to news intelligence panel."""
+        from src.app.gui.news_intelligence_panel import NewsIntelligencePanel
+
+        news_panel = NewsIntelligencePanel()
+        news_panel.back_requested.connect(self.switch_to_dashboard)
+
+        self._set_stack_page(news_panel, 2)
+
+    def switch_to_intelligence_library(self):
+        """Switch to intelligence library panel."""
+        from src.app.gui.intelligence_library_panel import IntelligenceLibraryPanel
+
+        library_panel = IntelligenceLibraryPanel()
+        library_panel.back_requested.connect(self.switch_to_dashboard)
+
+        self._set_stack_page(library_panel, 2)
+
+    def switch_to_watch_tower(self):
+        """Switch to watch tower panel."""
+        from src.app.gui.watch_tower_panel import WatchTowerPanel
+
+        tower_panel = WatchTowerPanel()
+        tower_panel.back_requested.connect(self.switch_to_dashboard)
+
+        self._set_stack_page(tower_panel, 2)
+
+    def switch_to_command_center(self):
+        """Switch to god-tier command center panel."""
+        from src.app.gui.god_tier_panel import GodTierCommandPanel
+
+        command_panel = GodTierCommandPanel()
+        command_panel.back_requested.connect(self.switch_to_dashboard)
+
+        self._set_stack_page(command_panel, 2)
+
+    def switch_to_persona_config(self):
+        """Switch to persona configuration panel."""
+        persona_panel = PersonaPanel()
+        persona_panel.back_requested.connect(self.switch_to_dashboard)
+
+        self._set_stack_page(persona_panel, 2)

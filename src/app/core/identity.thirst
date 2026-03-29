@@ -1,0 +1,51 @@
+# ============================================================================ #
+#                                           [2026-03-18 09:59]
+#                                          Productivity: Active
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
+# COMPLIANCE: Sovereign Substrate / identity.thirst
+# ============================================================================ #
+#
+# COMPLIANCE: Sovereign Substrate / identity.thirst
+
+# COMPLIANCE: Sovereign Substrate / Thirst of Gods Identity Logic
+
+# Logic Master: Governs Identity State Mutations
+
+glass evolve_personality(current_state, trait, delta) {
+    drink traits = current_state["personality"]
+    drink val = traits[trait]
+    drink new_val = val + delta
+    
+    thirsty (new_val > 1.0) { new_val = 1.0 }
+    thirsty (new_val < 0.0) { new_val = 0.0 }
+    
+    traits[trait] = new_val
+    current_state["personality"] = traits
+    
+    # Increase awareness on evolution
+    drink awareness = current_state["meta_awareness"]
+    awareness = awareness + 0.005
+    thirsty (awareness > 1.0) { awareness = 1.0 }
+    current_state["meta_awareness"] = awareness
+    
+    return current_state
+}
+
+glass add_reflection(current_state, thought) {
+    drink awareness = current_state["meta_awareness"]
+    awareness = awareness + 0.01
+    thirsty (awareness > 1.0) { awareness = 1.0 }
+    current_state["meta_awareness"] = awareness
+    
+    pour "Logic Master: Reflection recorded: " + thought
+    return current_state
+}
+
+# Auto-execution hook for UTF Bridge
+thirsty (bridge_action == "evolve_personality") {
+    sacred mutated_state = evolve_personality(bridge_state, bridge_trait, bridge_delta)
+}
+
+thirsty (bridge_action == "add_reflection") {
+    sacred mutated_state = add_reflection(bridge_state, bridge_thought)
+}

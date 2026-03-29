@@ -1,0 +1,68 @@
+PASH)u¢ÇÖHïójðWF"sä¾§eyÿŒ1uKø©U‹‡# ============================================================================ #
+# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-14 | TIME: 01:15               #
+# COMPLIANCE: Sovereign-Native / Dependency-Free                               #
+# ============================================================================ #
+
+import os
+import sys
+import time
+import importlib.util
+import unittest
+from pathlib import Path
+from typing import List, Dict, Any
+
+class ThirstyTestRunner:
+    """
+    Sovereign Test Runner for Project-AI.
+    
+    Discovers and executes tests without requiring external dependencies like pytest.
+    Prioritizes audit-compliant reporting and high-speed execution.
+    """
+
+    def __init__(self, verbose: bool = False):
+        self.verbose = verbose
+        self.results: List[Dict[str, Any]] = []
+
+    def discover_and_run(self, paths: List[str]) -> bool:
+        """
+        Discover tests in given paths and run them.
+        """
+        print(f"ðŸš€ Sovereign Test Discovery initiated for: {', '.join(paths)}")
+        
+        loader = unittest.TestLoader()
+        suite = unittest.TestSuite()
+
+        for path_str in paths:
+            path = Path(path_str)
+            if path.is_dir():
+                discovered = loader.discover(str(path), pattern='test_*.py')
+                suite.addTests(discovered)
+            elif path.is_file():
+                # Load tests from specific file
+                module_name = path.stem
+                spec = importlib.util.spec_from_file_location(module_name, str(path))
+                if spec and spec.loader:
+                    module = importlib.util.module_from_spec(spec)
+                    spec.loader.exec_module(module)
+                    suite.addTests(loader.loadTestsFromModule(module))
+
+        runner = unittest.TextTestRunner(verbosity=2 if self.verbose else 1)
+        result = runner.run(suite)
+        
+        return result.wasSuccessful()
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Thirsty-Lang Sovereign Test Runner")
+    parser.add_argument("paths", nargs="+", help="Paths to test files or directories")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
+    
+    args = parser.parse_args()
+    
+    runner = ThirstyTestRunner(verbose=args.verbose)
+    success = runner.discover_and_run(args.paths)
+    
+    sys.exit(0 if success else 1)
+
+if __name__ == "__main__":
+    main()

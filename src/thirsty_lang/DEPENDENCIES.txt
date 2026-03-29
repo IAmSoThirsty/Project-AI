@@ -1,0 +1,109 @@
+# Thirsty-lang Dependencies
+
+## Core Dependencies
+
+### Node.js (Primary Runtime)
+- **Version Required**: 14.0.0 or higher
+- **Recommended**: 20.x LTS
+- **Purpose**: Primary interpreter runtime
+- **License**: MIT
+
+### Python (Alternative Runtime)
+- **Version Required**: 3.8 or higher
+- **Recommended**: 3.10+
+- **Purpose**: Alternative interpreter implementation
+- **License**: PSF
+
+## Node.js Dependencies (package.json)
+
+### Production Dependencies
+None - Thirsty-lang core uses only Node.js standard library
+
+### Development Dependencies
+None - Testing and tools use Node.js standard library
+
+## Python Dependencies (requirements.txt)
+
+### Core Dependencies
+None - Python implementation uses only Python standard library
+
+### Optional Dependencies (Commented in requirements.txt)
+- colorama>=0.4.4 - Colored terminal output
+- prompt-toolkit>=3.0.0 - Enhanced REPL experience
+
+### Development Dependencies (requirements-dev.txt)
+- pytest>=7.0.0 - Testing framework
+- pytest-cov>=4.0.0 - Test coverage
+- pylint>=2.15.0 - Code linting
+- flake8>=6.0.0 - Style checking
+- black>=23.0.0 - Code formatting
+- mypy>=1.0.0 - Type checking
+- sphinx>=5.0.0 - Documentation generation
+
+## System Dependencies
+
+### Required
+- bash - Shell scripts
+- git - Version control
+
+### Optional
+- Docker - Containerized deployment
+- docker-compose - Multi-container orchestration
+
+## Browser Dependencies (Web Playground)
+- Modern web browser with ES6+ support
+- Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+
+## VS Code Extension Dependencies
+- Visual Studio Code 1.60.0 or higher
+
+## Build Dependencies
+None - Thirsty-lang is an interpreted language
+
+## Runtime Dependencies
+None - All interpreters use standard library only
+
+## Notes
+- Thirsty-lang is designed to have zero external dependencies for core functionality
+- All features work with just Node.js or Python standard libraries
+- Optional dependencies enhance but are not required for basic operation
+- Docker is optional and only needed for containerized deployment
+
+## Dependency Management
+
+### Node.js
+```bash
+npm install          # Install dependencies (if any added)
+npm ci              # Clean install
+```
+
+### Python
+```bash
+pip install -r requirements.txt           # Core dependencies
+pip install -r requirements-dev.txt       # Development dependencies
+./setup_venv.sh                          # Automated setup
+```
+
+### Docker
+```bash
+docker-compose build                     # Build images
+docker-compose up                        # Start services
+```
+
+## License Compliance
+All dependencies are compatible with the project's license.
+See LICENSE file for project license details.
+
+## Security
+- Keep Node.js and Python updated to latest stable versions
+- Regularly update dependencies for security patches
+- Run `npm audit` for Node.js security check
+- Run `safety check` for Python security check
+
+## Version Pinning
+- Development dependencies are pinned to major versions
+- Core remains dependency-free for maximum compatibility
+- Docker images use specific base image versions
+
+Last Updated: 2024-12-28
+Version: 1.0.0
