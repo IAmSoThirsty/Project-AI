@@ -1,0 +1,12 @@
+0. Update the csproj version
+1. Build with `dotnet build "RS Package Dev Project\Packages\com.unity.remote-config\Nuget~"`
+2. Publish with `dotnet nuget push "RS Package Dev Project\Packages\com.unity.remote-config\Nuget~\bin\Debug\Unity.Services.RemoteConfig.Authoring.Editor.Core.0.1.5.nupkg" -s https://artifactory.test.it.unity3d.com/artifactory/api/nuget/unity-nuget-local -k user.name:<secret>
+
+
+Test repo: https://artifactory.test.it.unity3d.com/artifactory/api/nuget/unity-nuget-local
+Prod Repo: https://artifactory.prd.it.unity3d.com/artifactory/api/nuget/unity-nuget-local
+
+Get your key either here: https://artifactory.test.it.unity3d.com/ui/packages
+or here: https://artifactory.prd.it.unity3d.com/ui/packages
+
+Permissions can be requested through #iaas-support (ticket required)

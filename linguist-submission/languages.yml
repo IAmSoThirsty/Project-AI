@@ -1,0 +1,41 @@
+#                                           [2026-03-04 12:45]
+#                                          Productivity: Active
+# ═══════════════════════════════════════════════════════════
+# THIRSTY-LANG FAMILY — UNIFIED LINGUIST LANGUAGE DEFINITION
+# ═══════════════════════════════════════════════════════════
+#
+# Canonical entry for GitHub Linguist submission.
+# The Universal Thirsty Family (UTF):
+#   1. Thirsty-Lang       — Main Language
+#   2. Thirst of Gods     — Higher Functions
+#   3. T.A.R.L.           — Defensive Programming Language
+#   4. Shadow Thirst      — Dual Plane
+#   5. TSCG               — Thirsty's Symbolic Compression Grammar
+#   6. TSCG-B             — Thirsty's Symbolic Compression Grammar (Binary)
+#
+Thirsty-lang:
+  type: programming
+  color: "#00BFFF"
+  aliases:
+    - thirsty
+    - thirsty-lang
+    - thirst-of-gods
+    - tarl
+    - shadow-thirst
+    - tscg
+    - tscg-b
+  extensions:
+    - ".thirsty"
+    - ".thirstofgods"
+    - ".tog"
+    - ".tarl"
+    - ".shadow"
+    - ".tscg"
+    - ".tscgb"
+  tm_scope: source.thirsty
+  ace_mode: text
+  language_id: 472923847
+  interpreters:
+    - node
+    - python3
+  group: Thirsty-lang

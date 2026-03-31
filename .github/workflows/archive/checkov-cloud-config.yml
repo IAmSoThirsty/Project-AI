@@ -1,0 +1,331 @@
+name: Checkov Cloud Configuration Security
+
+on:
+  push:
+    branches: [main, develop, 'release/**']
+    paths:
+      - '**.tf'
+      - '**.yml'
+      - '**.yaml'
+      - '**.json'
+      - 'docker-compose*.yml'
+      - '.github/workflows/checkov-cloud-config.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '**.tf'
+      - '**.yml'
+      - '**.yaml'
+      - '**.json'
+      - 'docker-compose*.yml'
+  schedule:
+    # Weekly on Mondays at 4 AM UTC
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+    inputs:
+      framework:
+        description: 'Framework to scan'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - 'all'
+          - 'terraform'
+          - 'cloudformation'
+          - 'kubernetes'
+          - 'dockerfile'
+          - 'github_actions'
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  checkov-scan:
+    name: Checkov Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Checkov
+        run: |
+          pip install checkov
+          checkov --version
+
+      - name: Run Checkov scan
+        id: checkov
+        run: |
+          FRAMEWORK="${{ github.event.inputs.framework || 'all' }}"
+          
+          mkdir -p checkov-results
+          
+          # Run Checkov with appropriate framework
+          if [ "$FRAMEWORK" = "all" ]; then
+            checkov -d . \
+              --output cli \
+              --output sarif \
+              --output-file-path checkov-results/ \
+              --soft-fail \
+              --skip-check CKV_DOCKER_* \
+              --quiet
+          else
+            checkov -d . \
+              --framework "$FRAMEWORK" \
+              --output cli \
+              --output sarif \
+              --output-file-path checkov-results/ \
+              --soft-fail \
+              --quiet
+          fi
+          
+          echo "scan_completed=true" >> $GITHUB_OUTPUT
+
+      - name: Upload Checkov results to GitHub Security tab
+        if: steps.checkov.outputs.scan_completed == 'true'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: checkov-results/results_sarif.sarif
+          category: 'checkov'
+
+      - name: Upload Checkov results as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkov-results
+          path: checkov-results/
+          retention-days: 30
+
+  checkov-detailed-report:
+    name: Generate Detailed Checkov Report
+    runs-on: ubuntu-latest
+    needs: checkov-scan
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Checkov results
+        uses: actions/download-artifact@v4
+        with:
+          name: checkov-results
+          path: checkov-results/
+
+      - name: Parse results and create summary
+        run: |
+          cat << 'EOF' >> $GITHUB_STEP_SUMMARY
+          # 🔐 Checkov Cloud Configuration Security Report
+          
+          **Repository**: ${{ github.repository }}
+          **Scan Date**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          **Triggered by**: ${{ github.event_name }}
+          **Framework**: ${{ github.event.inputs.framework || 'all' }}
+          
+          ## Scan Summary
+          
+          Checkov scanned the following file types:
+          - Terraform configurations (.tf)
+          - CloudFormation templates (.yml, .yaml, .json)
+          - Kubernetes manifests (.yml, .yaml)
+          - Dockerfiles
+          - GitHub Actions workflows (.yml)
+          
+          ## Configuration Issues by Severity
+          
+          Results have been uploaded to the [Security tab](/${{ github.repository }}/security/code-scanning).
+          
+          ## Common Issues Detected
+          
+          Checkov checks for:
+          - ✅ Encryption at rest and in transit
+          - ✅ IAM permissions and policies
+          - ✅ Network security configurations
+          - ✅ Logging and monitoring settings
+          - ✅ Resource exposure risks
+          - ✅ Compliance violations (PCI-DSS, HIPAA, GDPR, etc.)
+          
+          ## Remediation Steps
+          
+          1. Review findings in the Security tab
+          2. Address CRITICAL and HIGH severity issues first
+          3. Use Checkov inline suppressions for false positives:
+             ```
+             # checkov:skip=CKV_AWS_1:Reason for skipping
+             ```
+          4. Re-run scan after fixes
+          
+          ## Resources
+          
+          - [Checkov Documentation](https://www.checkov.io/1.Welcome/Quick%20Start.html)
+          - [Policy Reference](https://www.checkov.io/5.Policy%20Index/all.html)
+          - [Suppressing Checks](https://www.checkov.io/2.Basics/Suppressing%20and%20Skipping%20Policies.html)
+          
+          ---
+          *Automated by Checkov Cloud Configuration Security workflow*
+          EOF
+
+  checkov-pr-comment:
+    name: Comment on PR with Checkov Results
+    runs-on: ubuntu-latest
+    needs: checkov-scan
+    if: github.event_name == 'pull_request' && always()
+    steps:
+      - name: Download Checkov results
+        uses: actions/download-artifact@v4
+        with:
+          name: checkov-results
+          path: checkov-results/
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let comment = `## 🔐 Checkov Cloud Configuration Security Scan
+            
+            **Scan completed**: ${new Date().toUTCString()}
+            **Framework**: ${{ github.event.inputs.framework || 'all' }}
+            
+            ### Results
+            
+            Checkov has scanned your infrastructure-as-code files for security misconfigurations.
+            
+            `;
+            
+            if (fs.existsSync('checkov-results/results_sarif.sarif')) {
+              comment += `✅ Scan completed successfully. Check the [Security tab](${context.payload.repository.html_url}/security/code-scanning) for detailed findings.\n\n`;
+            } else {
+              comment += `⚠️ Scan completed with warnings. Review the workflow logs for details.\n\n`;
+            }
+            
+            comment += `### What Checkov Checks
+            
+            - Encryption settings
+            - IAM configurations
+            - Network security
+            - Logging & monitoring
+            - Compliance standards
+            
+            ### Next Steps
+            
+            1. Review findings in the Security tab
+            2. Fix HIGH and CRITICAL issues
+            3. Document suppressions for false positives
+            
+            ---
+            *Automated by Checkov Cloud Configuration Security*`;
+            
+            // Find existing comment
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+            
+            const existingComment = comments.data.find(c => 
+              c.body.includes('Checkov Cloud Configuration Security Scan')
+            );
+            
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: comment
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: comment
+              });
+            }
+
+  checkov-create-issue:
+    name: Create Issue for Critical Findings
+    runs-on: ubuntu-latest
+    needs: checkov-scan
+    if: needs.checkov-scan.result == 'failure'
+    steps:
+      - name: Create or update issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Checkov Detected Critical Cloud Configuration Issues - ${new Date().toISOString().split('T')[0]}`;
+            const body = `## Checkov Cloud Configuration Security Alert
+            
+            Critical cloud configuration issues were detected by Checkov.
+            
+            **Workflow Run**: ${context.payload.repository.html_url}/actions/runs/${context.runId}
+            **Branch**: ${context.ref}
+            **Commit**: ${context.sha}
+            **Framework**: ${{ github.event.inputs.framework || 'all' }}
+            
+            ### Issue Categories
+            
+            Checkov detected potential security misconfigurations in:
+            - Infrastructure-as-Code files
+            - Container configurations
+            - CI/CD workflows
+            - Cloud resource definitions
+            
+            ### Action Required
+            
+            1. Review the [Security tab](${context.payload.repository.html_url}/security/code-scanning?query=tool:Checkov) for detailed findings
+            2. Prioritize CRITICAL and HIGH severity issues
+            3. Apply recommended fixes or document suppressions
+            4. Re-run scan after remediation
+            
+            ### Common Fixes
+            
+            - Enable encryption for data at rest
+            - Restrict IAM permissions to least privilege
+            - Enable logging and monitoring
+            - Use private networking where possible
+            - Enable MFA for sensitive operations
+            
+            ### Resources
+            
+            - [Checkov Policy Index](https://www.checkov.io/5.Policy%20Index/all.html)
+            - [AWS Security Best Practices](https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards-fsbp.html)
+            - [Kubernetes Security](https://kubernetes.io/docs/concepts/security/)
+            
+            ---
+            *This issue was created automatically by the Checkov workflow*`;
+            
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'security,checkov,automated',
+              state: 'open'
+            });
+            
+            const existingIssue = issues.data.find(issue => 
+              issue.title.includes('Checkov Detected Critical Cloud Configuration Issues')
+            );
+            
+            if (!existingIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['security', 'checkov', 'infrastructure', 'automated', 'urgent']
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: existingIssue.number,
+                body: `New scan detected additional configuration issues. See [workflow run](${context.payload.repository.html_url}/actions/runs/${context.runId}).`
+              });
+            }

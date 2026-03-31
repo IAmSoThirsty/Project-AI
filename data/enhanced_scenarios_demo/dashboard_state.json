@@ -1,0 +1,154 @@
+{
+  "current_metrics": {
+    "timestamp": "2026-01-31T04:08:17.614010+00:00",
+    "data_points": 700,
+    "countries": 20,
+    "domains": 6,
+    "threshold_events": 24,
+    "scenarios": 30,
+    "alerts": 5,
+    "top_risks": [
+      {
+        "title": "Inflation Spiral with Social Unrest (2029)",
+        "likelihood": 0.434,
+        "year": 2029,
+        "severity": "high"
+      },
+      {
+        "title": "Inflation Spiral with Social Unrest (2028)",
+        "likelihood": 0.428,
+        "year": 2028,
+        "severity": "high"
+      },
+      {
+        "title": "Inflation Spiral with Social Unrest (2030)",
+        "likelihood": 0.412,
+        "year": 2030,
+        "severity": "high"
+      },
+      {
+        "title": "Inflation Spiral with Social Unrest (2027)",
+        "likelihood": 0.41,
+        "year": 2027,
+        "severity": "high"
+      },
+      {
+        "title": "Inflation Spiral with Social Unrest (2031)",
+        "likelihood": 0.38,
+        "year": 2031,
+        "severity": "high"
+      }
+    ]
+  },
+  "metrics_history": [
+    {
+      "timestamp": "2026-01-31T04:08:17.593015+00:00",
+      "data_points": 700,
+      "countries": 20,
+      "domains": 6,
+      "threshold_events": 24,
+      "scenarios": 30,
+      "alerts": 5,
+      "top_risks": [
+        {
+          "title": "Inflation Spiral with Social Unrest (2029)",
+          "likelihood": 0.434,
+          "year": 2029,
+          "severity": "high"
+        },
+        {
+          "title": "Inflation Spiral with Social Unrest (2028)",
+          "likelihood": 0.428,
+          "year": 2028,
+          "severity": "high"
+        },
+        {
+          "title": "Inflation Spiral with Social Unrest (2030)",
+          "likelihood": 0.412,
+          "year": 2030,
+          "severity": "high"
+        },
+        {
+          "title": "Inflation Spiral with Social Unrest (2027)",
+          "likelihood": 0.41,
+          "year": 2027,
+          "severity": "high"
+        },
+        {
+          "title": "Inflation Spiral with Social Unrest (2031)",
+          "likelihood": 0.38,
+          "year": 2031,
+          "severity": "high"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-01-31T04:08:17.614010+00:00",
+      "data_points": 700,
+      "countries": 20,
+      "domains": 6,
+      "threshold_events": 24,
+      "scenarios": 30,
+      "alerts": 5,
+      "top_risks": [
+        {
+          "title": "Inflation Spiral with Social Unrest (2029)",
+          "likelihood": 0.434,
+          "year": 2029,
+          "severity": "high"
+        },
+        {
+          "title": "Inflation Spiral with Social Unrest (2028)",
+          "likelihood": 0.428,
+          "year": 2028,
+          "severity": "high"
+        },
+        {
+          "title": "Inflation Spiral with Social Unrest (2030)",
+          "likelihood": 0.412,
+          "year": 2030,
+          "severity": "high"
+        },
+        {
+          "title": "Inflation Spiral with Social Unrest (2027)",
+          "likelihood": 0.41,
+          "year": 2027,
+          "severity": "high"
+        },
+        {
+          "title": "Inflation Spiral with Social Unrest (2031)",
+          "likelihood": 0.38,
+          "year": 2031,
+          "severity": "high"
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "alert_id": "alert_scenario_2029_inflation_spiral_with_social_unrest_1769832497",
+      "risk_score": 26.04,
+      "scenario_title": "Inflation Spiral with Social Unrest (2029)"
+    },
+    {
+      "alert_id": "alert_scenario_2028_inflation_spiral_with_social_unrest_1769832497",
+      "risk_score": 25.68,
+      "scenario_title": "Inflation Spiral with Social Unrest (2028)"
+    },
+    {
+      "alert_id": "alert_scenario_2030_inflation_spiral_with_social_unrest_1769832497",
+      "risk_score": 24.72,
+      "scenario_title": "Inflation Spiral with Social Unrest (2030)"
+    },
+    {
+      "alert_id": "alert_scenario_2027_inflation_spiral_with_social_unrest_1769832497",
+      "risk_score": 24.599999999999998,
+      "scenario_title": "Inflation Spiral with Social Unrest (2027)"
+    },
+    {
+      "alert_id": "alert_scenario_2031_inflation_spiral_with_social_unrest_1769832497",
+      "risk_score": 22.8,
+      "scenario_title": "Inflation Spiral with Social Unrest (2031)"
+    }
+  ]
+}

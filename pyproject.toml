@@ -1,6 +1,5 @@
-# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-16 | TIME: 15:18
-# COMPLIANCE: Sovereign Substrate / Project-AI Configuration
-
+# [2026-03-02 04:47]
+# Productivity: Active
 
 [build-system]
 requires = ["setuptools>=45", "wheel"]
@@ -63,7 +62,6 @@ dependencies = [
 
 [project.scripts]
 taar = "taar.cli:cli_main"
-pa-shield = "app.testing.pa_shield.cli:main"
 
 [project.optional-dependencies]
 dev = [

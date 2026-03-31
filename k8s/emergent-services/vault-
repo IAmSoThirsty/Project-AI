@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Sovereign Data Vault Layer
+  namespace: default
+  labels:
+    app: Sovereign Data Vault Layer
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Sovereign Data Vault Layer
+  sessionAffinity: None

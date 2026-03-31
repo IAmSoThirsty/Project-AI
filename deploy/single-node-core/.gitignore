@@ -1,0 +1,73 @@
+# ==============================================================================
+# Project-AI Single-Node Core Deployment - Git Ignore
+# ==============================================================================
+
+# Environment files with secrets
+env/.env
+mcp/.secrets.env
+*.local.env
+
+# Logs
+logs/
+*.log
+
+# Database data (managed by Docker volumes)
+postgres/data/
+redis/data/
+
+# Backups (should be stored separately)
+backups/
+*.sql
+*.sql.gz
+*.dump
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# SSL/TLS certificates (should be managed via secrets manager)
+*.pem
+*.key
+*.crt
+*.cert
+*.pfx
+
+# Docker override for local development
+docker-compose.override.local.yml
+
+# Terraform state (if using IaC)
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Kubernetes secrets (if using k8s)
+*.secret.yaml
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Node modules (if running MCP servers)
+node_modules/
+
+# OS files
+.DS_Store
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Local testing artifacts
+test-results/
+coverage/
+.pytest_cache/

@@ -1,0 +1,18 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+apiRules:
+  - exclude:
+      uidRegex: ^EditorTests
+      type: Namespace
+  - exclude:
+      uidRegex: ^Tests
+      type: Namespace
+  - exclude:
+      uidRegex: ^Common
+      type: Namespace  
+  - exclude:
+      uidRegex: ^Timeline\.Tests
+      type: Namespace
+  - exclude:
+      uidRegex: ^DocCodeExamples
+      type: Namespace

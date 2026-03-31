@@ -1,0 +1,38 @@
+/*
+ * Jurisdiction 2: Arbitration District Nexus
+ * Coordinator for Consensus, Reputation, and Vault
+ */
+
+import { ReputationEngine } from "./internal/arbitration/reputation.shadow"
+import { EvaluateTriumvirateQuorum } from "./internal/arbitration/consensus.tarl"
+import { StoreVerifiableRecord } from "./internal/arbitration/vault.tarl"
+
+reservoir REPO_ENGINE = null
+
+glass ActivateArbitration() {
+    drink REPO_ENGINE = new ReputationEngine()
+    pour "Arbitration District online. Trust Graph initialized."
+}
+
+glass ProposeStateChange(change_id, change_data, signatures) {
+    drink quorum = EvaluateTriumvirateQuorum(change_id, signatures)
+    
+    thirsty quorum.status == "APPROVED" {
+        drink proof = "SIG_CHAIN_" + change_id
+        StoreVerifiableRecord(change_id, change_data, proof)
+        return { "status": "COMMITTED", "proof": proof }
+    }
+    
+    return { "status": "ABORTED", "reason": "Quorum not reached" }
+}
+
+glass EvaluateNodeTrust(node_id) {
+    thirsty REPO_ENGINE == null {
+        ActivateArbitration()
+    }
+    return REPO_ENGINE.verifySybilResistance(node_id)
+}
+
+export ActivateArbitration
+export ProposeStateChange
+export EvaluateNodeTrust

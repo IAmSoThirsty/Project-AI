@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: Distributed Reputation & Trust Graph Engine
+  namespace: default
+  labels:
+    app: Distributed Reputation & Trust Graph Engine
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    app: Distributed Reputation & Trust Graph Engine
+  sessionAffinity: None

@@ -1,16 +1,6 @@
-<!-- # ============================================================================ # -->
-<!-- # STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59 # -->
-<!-- # COMPLIANCE: Sovereign Substrate / DEVELOPER_QUICK_REFERENCE.md # -->
-<!-- # ============================================================================ # -->
-<!-- # ============================================================================ #
-
-
-<!-- # COMPLIANCE: Sovereign Substrate / DEVELOPER_QUICK_REFERENCE.md # -->
-<!-- # ============================================================================ #
-
-<div align="right">
-  <img src="https://img.shields.io/badge/DATE-2026-03-18-blueviolet?style=for-the-badge" alt="Date" />
-  <img src="https://img.shields.io/badge/PRODUCTIVITY-ACTIVE-success?style=for-the-badge" alt="Productivity" />
+﻿<div align="right">
+  [2026-03-01 13:20] <br>
+  Productivity: Active
 </div>
 # Developer Quick Reference
 
@@ -35,11 +25,9 @@ Linting & Formatting
 - `black src tests`
 - `pre-commit` hooks configured in `.pre-commit-config.yaml`
 
-CI & Validation
+CI
 
 - GitHub Actions will run lint, tests, Codacy analysis and a Docker smoke test on PRs.
-- **Architect Audit**: `python tools/architect_agent.py`
-- **Logic Proof**: `python sovereign_runtime_proof.py`
 
 Secrets
 

@@ -1,0 +1,60 @@
+{
+  "name": "thirsty-lang",
+  "version": "1.0.0",
+  "description": "A fun, expressive programming language for anyone and everyone who is Thirsty",
+  "main": "src/index.js",
+  "bin": {
+    "thirsty": "./src/thirsty-cli.js",
+    "thirsty-repl": "./src/repl.js",
+    "thirsty-debug": "./src/debugger.js",
+    "thirsty-pkg": "./src/package-manager.js"
+  },
+  "scripts": {
+    "start": "node src/cli.js",
+    "train": "node src/training.js",
+    "repl": "node src/repl.js",
+    "test": "node src/test/runner.js",
+    "test:base": "node src/test/runner.js",
+    "test:plus": "echo 'Thirsty+ tests coming soon'",
+    "test:plusplus": "echo 'Thirsty++ tests coming soon'",
+    "test:gods": "echo 'ThirstOfGods tests coming soon'",
+    "thirstyplus": "echo 'Thirsty+ interpreter coming soon' && node src/cli.js",
+    "thirstyplusplus": "echo 'Thirsty++ interpreter coming soon' && node src/cli.js",
+    "thirstofgods": "echo 'ThirstOfGods interpreter coming soon' && node src/cli.js",
+    "lint": "node src/linter.js examples/*.thirsty",
+    "format": "node src/formatter.js examples/hello.thirsty",
+    "profile": "node src/profiler.js examples/hello.thirsty",
+    "debug": "node src/debugger.js",
+    "doc": "node src/doc-generator.js examples/hello.thirsty",
+    "ast": "node src/ast.js examples/hello.thirsty",
+    "transpile": "node src/transpiler.js",
+    "build": "echo 'Build complete - All tools ready!'",
+    "playground": "echo 'Open playground/index.html in your browser'",
+    "install-cli": "npm link"
+  },
+  "keywords": [
+    "programming-language",
+    "interpreter",
+    "thirsty",
+    "water",
+    "educational",
+    "fun",
+    "learning",
+    "repl",
+    "debugger",
+    "transpiler"
+  ],
+  "author": "IAmSoThirsty",
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IAmSoThirsty/Thirsty-lang.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IAmSoThirsty/Thirsty-lang/issues"
+  },
+  "homepage": "https://github.com/IAmSoThirsty/Thirsty-lang#readme"
+}

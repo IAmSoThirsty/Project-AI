@@ -1,449 +1,174 @@
 {
-    "settings": {
-        "chat.mcp.discovery.enabled": {
-            "windsurf": true,
-            "cursor-workspace": true,
-            "claude-desktop": true,
-            "cursor-global": true
-        },
-        "chat.mcp.gallery.enabled": true,
-        "chat.tools.terminal.autoReplyToPrompts": true,
-        "chat.mcp.assisted.nuget.enabled": true,
-        "inlineChat.enableV2": true,
-        "inlineChat.notebookAgent": true,
-        "chat.checkpoints.showFileChanges": true,
-        "chat.edits2.enabled": true,
-        "terminal.integrated.suggest.enabled": true,
-        "java.compile.nullAnalysis.mode": "automatic"
-    },
-    "folders": [
-        {
-            "name": "Project-AI Backbone",
-            "path": "Project-AI"
-        },
-        {
-            "name": "Cognition Matrix",
-            "path": "cognition"
-        },
-        {
-            "name": "Security Fortress",
-            "path": "security"
-        },
-        {
-            "name": "Sovereign Root",
-            "path": "."
-        },
-        {
-            "name": "Thirstys 2D Game Starter",
-            "path": "integrations/2d-game-starter"
-        },
-        {
-            "name": "Thirstys Actions Runner",
-            "path": "integrations/actions-runner"
-        },
-        {
-            "name": "Thirstys Agents",
-            "path": "integrations/agents"
-        },
-        {
-            "name": "Thirstys AI Program Enforcer",
-            "path": "integrations/ai-program-enforcer"
-        },
-        {
-            "name": "Thirstys Analytics Dashboard",
-            "path": "integrations/analytics-dashboard"
-        },
-        {
-            "name": "Thirstys Api Gateway",
-            "path": "integrations/api-gateway"
-        },
-        {
-            "name": "Thirstys Api Starter",
-            "path": "integrations/api-starter"
-        },
-        {
-            "name": "Thirstys Auth Provider",
-            "path": "integrations/auth-provider"
-        },
-        {
-            "name": "Thirstys Auto-scaling & self-healing configs",
-            "path": "integrations/auto-scaling--self-healing-configs"
-        },
-        {
-            "name": "Thirstys Best Practices",
-            "path": "integrations/best-practices"
-        },
-        {
-            "name": "Thirstys Blockchain",
-            "path": "integrations/blockchain"
-        },
-        {
-            "name": "Thirstys Built-in observability",
-            "path": "integrations/built-in-observability"
-        },
-        {
-            "name": "Thirstys Caching Layer",
-            "path": "integrations/caching-layer"
-        },
-        {
-            "name": "Thirstys Cerberus Containment Service",
-            "path": "integrations/cerberus-containment-service"
-        },
-        {
-            "name": "Thirstys Chaos engineering hooks",
-            "path": "integrations/chaos-engineering-hooks"
-        },
-        {
-            "name": "Thirstys Chatbot",
-            "path": "integrations/chatbot"
-        },
-        {
-            "name": "Thirstys Cli Tool Template",
-            "path": "integrations/cli-tool-template"
-        },
-        {
-            "name": "Thirstys Cognitive Load Balancer",
-            "path": "integrations/cognitive-load-balancer"
-        },
-        {
-            "name": "Thirstys Cognitive Mirror",
-            "path": "integrations/cognitive-mirror"
-        },
-        {
-            "name": "Thirstys Compiler Tools",
-            "path": "integrations/compiler-tools"
-        },
-        {
-            "name": "Thirstys Confidence Calibration Service",
-            "path": "integrations/confidence-calibration-service"
-        },
-        {
-            "name": "Thirstys Constitutional Amendment Service",
-            "path": "integrations/constitutional-amendment-service"
-        },
-        {
-            "name": "Thirstys Constitutional Audit Service",
-            "path": "integrations/constitutional-audit-service"
-        },
-        {
-            "name": "Thirstys Contradiction Detection Service",
-            "path": "integrations/contradiction-detection-service"
-        },
-        {
-            "name": "Thirstys Cookbook",
-            "path": "integrations/cookbook"
-        },
-        {
-            "name": "Thirstys Cross-Domain Synthesis Service",
-            "path": "integrations/cross-domain-synthesis-service"
-        },
-        {
-            "name": "Thirstys Cryptographic Agility Service",
-            "path": "integrations/cryptographic-agility-service"
-        },
-        {
-            "name": "Thirstys Customizable templates",
-            "path": "integrations/customizable-templates"
-        },
-        {
-            "name": "Thirstys Dark-Fiber Relay",
-            "path": "integrations/dark-fiber-relay"
-        },
-        {
-            "name": "Thirstys Data Pipeline",
-            "path": "integrations/data-pipeline"
-        },
-        {
-            "name": "Thirstys Database Orm",
-            "path": "integrations/database-orm"
-        },
-        {
-            "name": "Thirstys Desktop App",
-            "path": "integrations/desktop-app"
-        },
-        {
-            "name": "Thirstys Devops Automation",
-            "path": "integrations/devops-automation"
-        },
-        {
-            "name": "Thirstys Distributed Reputation & Trust Graph Engine",
-            "path": "integrations/distributed-reputation--trust-graph-engine"
-        },
-        {
-            "name": "Thirstys EED memory Service",
-            "path": "integrations/eed-memory-service"
-        },
-        {
-            "name": "Thirstys Entropy Injection",
-            "path": "integrations/entropy-injection"
-        },
-        {
-            "name": "Thirstys Event Sourcing",
-            "path": "integrations/event-sourcing"
-        },
-        {
-            "name": "Thirstys Exercises",
-            "path": "integrations/exercises"
-        },
-        {
-            "name": "Thirstys Fork Registry Service",
-            "path": "integrations/fork-registry-service"
-        },
-        {
-            "name": "Thirstys Fullstack App",
-            "path": "integrations/fullstack-app"
-        },
-        {
-            "name": "Thirstys Game Engine Demo",
-            "path": "integrations/game-engine-demo"
-        },
-        {
-            "name": "Thirstys Graphql Api",
-            "path": "integrations/graphql-api"
-        },
-        {
-            "name": "Thirstys Herbalogy & Ethnobotany Service",
-            "path": "integrations/herbalogy--ethnobotany-service"
-        },
-        {
-            "name": "Thirstys Iot Devices",
-            "path": "integrations/iot-devices"
-        },
-        {
-            "name": "Thirstys Knowledge Decay Service",
-            "path": "integrations/knowledge-decay-service"
-        },
-        {
-            "name": "Thirstys Knowledge Services",
-            "path": "integrations/knowledge-services"
-        },
-        {
-            "name": "Thirstys Legal Corpus Service",
-            "path": "integrations/legal-corpus-service"
-        },
-        {
-            "name": "Thirstys Linguistics & Etymology Service",
-            "path": "integrations/linguistics--etymology-service"
-        },
-        {
-            "name": "Thirstys Logic Sanitizer",
-            "path": "integrations/logic-sanitizer"
-        },
-        {
-            "name": "Thirstys Medical Knowledge Service",
-            "path": "integrations/medical-knowledge-service"
-        },
-        {
-            "name": "Thirstys Microservices",
-            "path": "integrations/microservices"
-        },
-        {
-            "name": "Thirstys Ml Starter",
-            "path": "integrations/ml-starter"
-        },
-        {
-            "name": "Thirstys Mnemonic Pruning",
-            "path": "integrations/mnemonic-pruning"
-        },
-        {
-            "name": "Thirstys Mobile App",
-            "path": "integrations/mobile-app"
-        },
-        {
-            "name": "Thirstys Multi-cloud support",
-            "path": "integrations/multi-cloud-support"
-        },
-        {
-            "name": "Thirstys my-service",
-            "path": "integrations/my-service"
-        },
-        {
-            "name": "Thirstys Observability",
-            "path": "integrations/observability"
-        },
-        {
-            "name": "Thirstys Out-of-the-box authz",
-            "path": "integrations/out-of-the-box-authz"
-        },
-        {
-            "name": "Thirstys Paradox Resolution Service",
-            "path": "integrations/paradox-resolution-service"
-        },
-        {
-            "name": "Thirstys Penetration Testing",
-            "path": "integrations/penetration-testing"
-        },
-        {
-            "name": "Thirstys Plugin System",
-            "path": "integrations/plugin-system"
-        },
-        {
-            "name": "Thirstys Project-AI Governance Firewall",
-            "path": "integrations/project-ai-governance-firewall"
-        },
-        {
-            "name": "Thirstys Project-AI-Test",
-            "path": "integrations/project-ai-test"
-        },
-        {
-            "name": "Thirstys Queue Worker",
-            "path": "integrations/queue-worker"
-        },
-        {
-            "name": "Thirstys Reality Anchor",
-            "path": "integrations/reality-anchor"
-        },
-        {
-            "name": "Thirstys SASE Signal Ingestion Service",
-            "path": "integrations/sase-signal-ingestion-service"
-        },
-        {
-            "name": "Thirstys Sciences Oracle",
-            "path": "integrations/sciences-oracle"
-        },
-        {
-            "name": "Thirstys Security Toolkit",
-            "path": "integrations/security-toolkit"
-        },
-        {
-            "name": "Thirstys Semantic Drift Monitor",
-            "path": "integrations/semantic-drift-monitor"
-        },
-        {
-            "name": "Thirstys Semantic Firewall",
-            "path": "integrations/semantic-firewall"
-        },
-        {
-            "name": "Thirstys Service Ghosting Monitor",
-            "path": "integrations/service-ghosting-monitor"
-        },
-        {
-            "name": "Thirstys Service Mesh",
-            "path": "integrations/service-mesh"
-        },
-        {
-            "name": "Thirstys Service mesh integration",
-            "path": "integrations/service-mesh-integration"
-        },
-        {
-            "name": "Thirstys Sovereign Compliance-as-Code Engine",
-            "path": "integrations/sovereign-compliance-as-code-engine"
-        },
-        {
-            "name": "Thirstys Sovereign Data Vault Layer",
-            "path": "integrations/sovereign-data-vault-layer"
-        },
-        {
-            "name": "Thirstys Sovereign Identity Service",
-            "path": "integrations/sovereign-identity-service"
-        },
-        {
-            "name": "Thirstys Sovereign Incident Reflex System",
-            "path": "integrations/sovereign-incident-reflex-system"
-        },
-        {
-            "name": "Thirstys Sovereign Negotiation Agent Infrastructure",
-            "path": "integrations/sovereign-negotiation-agent-infrastructure"
-        },
-        {
-            "name": "Thirstys Succession & Escrow Service",
-            "path": "integrations/succession--escrow-service"
-        },
-        {
-            "name": "Thirstys Temporal Anchor",
-            "path": "integrations/temporal-anchor"
-        },
-        {
-            "name": "Thirstys Temporal Awareness Service",
-            "path": "integrations/temporal-awareness-service"
-        },
-        {
-            "name": "Thirstys Temporal Dissonance Bridge",
-            "path": "integrations/temporal-dissonance-bridge"
-        },
-        {
-            "name": "Thirstys Testing Framework",
-            "path": "integrations/testing-framework"
-        },
-        {
-            "name": "Thirstys Text Adventure",
-            "path": "integrations/text-adventure"
-        },
-        {
-            "name": "Thirstys The Decision Core",
-            "path": "integrations/the-decision-core"
-        },
-        {
-            "name": "Thirstys The Epoch Synchronizer",
-            "path": "integrations/the-epoch-synchronizer"
-        },
-        {
-            "name": "Thirstys The Existential Layer",
-            "path": "integrations/the-existential-layer"
-        },
-        {
-            "name": "Thirstys The Heuristic Sentinel",
-            "path": "integrations/the-heuristic-sentinel"
-        },
-        {
-            "name": "Thirstys The Lazarus Hook",
-            "path": "integrations/the-lazarus-hook"
-        },
-        {
-            "name": "Thirstys The Logic & Perception Layer",
-            "path": "integrations/the-logic--perception-layer"
-        },
-        {
-            "name": "Thirstys The Obsidian Protocol",
-            "path": "integrations/the-obsidian-protocol"
-        },
-        {
-            "name": "Thirstys The Sovereign Skin",
-            "path": "integrations/the-sovereign-skin"
-        },
-        {
-            "name": "Thirstys The Temporal Clock",
-            "path": "integrations/the-temporal-clock"
-        },
-        {
-            "name": "Thirstys The Trinity Harmonizer",
-            "path": "integrations/the-trinity-harmonizer"
-        },
-        {
-            "name": "Thirstys Verifiable Reality Infrastructure (Post-AI Proof Layer)",
-            "path": "integrations/verifiable-reality-infrastructure-post-ai-proof-layer"
-        },
-        {
-            "name": "Thirstys Web Framework",
-            "path": "integrations/web-framework"
-        },
-        {
-            "name": "Thirstys Websocket Server",
-            "path": "integrations/websocket-server"
-        },
-        {
-            "name": "Thirstys World History Service",
-            "path": "integrations/world-history-service"
-        },
-        {
-            "name": "Thirstys Zero-downtime deploys",
-            "path": "integrations/zero-downtime-deploys"
-        },
-        {
-            "name": "Thirstys-Monolith",
-            "path": "src/monolith_runtime"
-        },
-        {
-            "name": "Thirstys-Projects-Miniature-Office",
-            "path": "projects/miniature-office"
-        },
-        {
-            "name": "Thirstys-waterfall",
-            "path": "integrations/waterfall"
-        },
-        {
-            "name": "TTP",
-            "path": "integrations/ttp"
-        }
-    ]
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../Thirsty-Lang"
+		},
+		{
+			"path": "../Cerberus"
+		},
+		{
+			"path": "../The_Triumvirate"
+		},
+		{
+			"path": "../Thirstys-Projects-Miniature-Office"
+		},
+		{
+			"path": "../Thirstys-waterfall"
+		},
+		{
+			"path": "../TTP"
+		},
+		{
+			"path": "../../../../../Desktop/Github/Integrationg Microservices/AI Mutation Governance Firewall"
+		},
+		{
+			"path": "../../../../../Desktop/Github/Integrationg Microservices/Autonomous Compliance-as-Code Engine"
+		},
+		{
+			"path": "../../../../../Desktop/Github/Integrationg Microservices/Autonomous Incident Reflex System"
+		},
+		{
+			"path": "../../../../../Desktop/Github/Integrationg Microservices/Autonomous Negotiation Agent Infrastructure"
+		},
+		{
+			"path": "../../../../../Desktop/Github/Integrationg Microservices/Distributed Reputation & Trust Graph Engine"
+		},
+		{
+			"path": "../../../../../Desktop/Github/Integrationg Microservices/Sovereign Data Vault Layer"
+		},
+		{
+			"path": "../../../../../Desktop/Github/Integrationg Microservices/Verifiable Reality Infrastructure (Post-AI Proof Layer)"
+		},
+		{
+			"path": "../thirsty-lang-analytics-dashboard"
+		},
+		{
+			"path": "../thirsty-lang-api-gateway"
+		},
+		{
+			"path": "../thirsty-lang-api-starter"
+		},
+		{
+			"path": "../thirsty-lang-auth-provider"
+		},
+		{
+			"path": "../thirsty-lang-best-practices"
+		},
+		{
+			"path": "../thirsty-lang-blockchain"
+		},
+		{
+			"path": "../thirsty-lang-caching-layer"
+		},
+		{
+			"path": "../thirsty-lang-chatbot"
+		},
+		{
+			"path": "../thirsty-lang-cli-tool-template"
+		},
+		{
+			"path": "../thirsty-lang-compiler-tools"
+		},
+		{
+			"path": "../thirsty-lang-cookbook"
+		},
+		{
+			"path": "../thirsty-lang-database-orm"
+		},
+		{
+			"path": "../thirsty-lang-data-pipeline"
+		},
+		{
+			"path": "../thirsty-lang-desktop-app"
+		},
+		{
+			"path": "../thirsty-lang-devops-automation"
+		},
+		{
+			"path": "../thirsty-lang-event-sourcing"
+		},
+		{
+			"path": "../thirsty-lang-exercises"
+		},
+		{
+			"path": "../thirsty-lang-fullstack-app"
+		},
+		{
+			"path": "../thirsty-lang-game-engine-demo"
+		},
+		{
+			"path": "../thirsty-lang-graphql-api"
+		},
+		{
+			"path": "../thirsty-lang-iot-devices"
+		},
+		{
+			"path": "../thirsty-lang-microservices"
+		},
+		{
+			"path": "../thirsty-lang-ml-starter"
+		},
+		{
+			"path": "../thirsty-lang-mobile-app"
+		},
+		{
+			"path": "../thirsty-lang-observability"
+		},
+		{
+			"path": "../thirsty-lang-penetration-testing"
+		},
+		{
+			"path": "../thirsty-lang-plugin-system"
+		},
+		{
+			"path": "../thirsty-lang-queue-worker"
+		},
+		{
+			"path": "../thirsty-lang-security-toolkit"
+		},
+		{
+			"path": "../thirsty-lang-service-mesh"
+		},
+		{
+			"path": "../thirsty-lang-testing-framework"
+		},
+		{
+			"path": "../thirsty-lang-text-adventure"
+		},
+		{
+			"path": "../thirsty-lang-web-framework"
+		},
+		{
+			"path": "../thirsty-lang-websocket-server"
+		}
+	],
+	"settings": {
+		"chat.checkpoints.showFileChanges": true,
+		"chat.edits2.enabled": true,
+		"chat.mcp.assisted.nuget.enabled": true,
+		"chat.mcp.discovery.enabled": {
+			"claude-desktop": true,
+			"windsurf": true,
+			"cursor-global": true,
+			"cursor-workspace": true
+		},
+		"chat.mcp.gallery.enabled": true,
+		"chat.tools.terminal.autoReplyToPrompts": true,
+		"inlineChat.enableV2": true,
+		"inlineChat.notebookAgent": true,
+		"terminal.integrated.suggest.enabled": true,
+		"php.validate.executablePath": "php",
+		"java.configuration.runtimes": [
+			{
+				"name": "JavaSE-17",
+				"path": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.18.8-hotspot",
+				"default": true
+			}
+		],
+		"java.jdt.ls.java.home": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.18.8-hotspot",
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
 }

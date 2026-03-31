@@ -1,0 +1,213 @@
+# Feature Development Workflow for Antigravity
+# Standard workflow for adding new features to Project-AI
+
+name: Feature Development
+description: Standard workflow for adding new features with ethical review and testing
+
+triggers:
+  - keyword: "add feature"
+  - keyword: "new feature"
+  - keyword: "implement"
+  - file_pattern: "src/**/*.py"
+
+steps:
+  - name: Requirements Analysis
+    agent: planning
+    description: Analyze requirements and create technical specification
+    actions:
+      - analyze_issue
+      - identify_dependencies
+      - create_technical_spec
+      - identify_affected_modules
+    outputs:
+      - technical_spec
+      - affected_files
+      - dependency_list
+  
+  - name: Ethical Review Check
+    agent: ethical_review
+    description: Determine if Triumvirate review is required
+    condition: |
+      task.affects_ai_persona OR
+      task.affects_memory OR
+      task.affects_four_laws OR
+      task.affects_security
+    actions:
+      - check_ethical_triggers
+      - assess_personhood_impact
+    decision_gate: true
+  
+  - name: Triumvirate Review
+    agent: triumvirate
+    description: Request approval from Galahad, Cerberus, and Codex
+    condition: ethical_review_required
+    actions:
+      - request_triumvirate_review
+      - wait_for_approval
+    fail_on_reject: true
+    timeout: 3600  # 1 hour
+  
+  - name: Implementation
+    agent: coding
+    description: Write code according to specification
+    actions:
+      - write_code
+      - add_type_hints
+      - add_docstrings
+      - follow_style_guide
+    style:
+      guide: google
+      line_length: 88
+      formatter: black
+    validation:
+      - syntax_check
+      - import_check
+  
+  - name: Unit Testing
+    agent: testing
+    description: Write and run unit tests
+    actions:
+      - write_unit_tests
+      - write_integration_tests
+      - run_pytest
+      - check_coverage
+    requirements:
+      coverage_threshold: 80
+      test_pattern: "test_*.py"
+    fail_on:
+      - coverage_below_threshold
+      - test_failures
+  
+  - name: Security Scan
+    agent: security
+    description: Run security analysis tools
+    actions:
+      - run_bandit
+      - run_pip_audit
+      - check_secrets
+      - check_vulnerabilities
+    tools:
+      - name: bandit
+        severity: medium
+        fail_on: high
+      - name: pip-audit
+        check_dependencies: true
+      - name: secret-scan
+        patterns:
+          - "sk-[a-zA-Z0-9]{32,}"
+          - "AIza[0-9A-Za-z_-]{35}"
+    fail_on:
+      - critical_vulnerability
+      - exposed_secret
+  
+  - name: Documentation
+    agent: documentation
+    description: Update documentation
+    actions:
+      - update_docstrings
+      - update_readme
+      - update_api_docs
+      - add_examples
+    style:
+      format: google
+      include_examples: true
+  
+  - name: Code Quality Check
+    agent: review
+    description: Automated code review
+    actions:
+      - check_style
+      - check_complexity
+      - check_duplicates
+      - suggest_improvements
+    thresholds:
+      complexity: 10
+      duplication: 5
+      maintainability: B
+  
+  - name: Temporal Workflow Validation
+    agent: temporal
+    description: Validate Temporal.io workflows if affected
+    condition: uses_temporal
+    actions:
+      - validate_workflow_schema
+      - test_workflow_execution
+      - verify_activities
+      - check_timeouts
+    fail_on:
+      - invalid_workflow
+      - missing_activities
+  
+  - name: Integration Test
+    agent: testing
+    description: Run integration tests
+    actions:
+      - run_integration_tests
+      - verify_system_behavior
+      - check_api_contracts
+    environment:
+      setup_temporal: true
+      setup_test_db: true
+
+gates:
+  - after: Ethical Review Check
+    require: no_ethical_concerns OR triumvirate_approved
+    message: "Ethical review approval required for personhood-critical changes"
+  
+  - after: Unit Testing
+    require: coverage >= 80%
+    message: "Test coverage must be at least 80%"
+  
+  - after: Security Scan
+    require: no_critical_vulnerabilities AND no_exposed_secrets
+    message: "Critical security issues must be resolved"
+  
+  - after: Code Quality Check
+    require: complexity <= 10 AND maintainability >= B
+    message: "Code quality standards must be met"
+
+notifications:
+  on_start:
+    message: "Feature development workflow started"
+    channels: ["slack", "email"]
+  
+  on_ethical_review:
+    message: "Triumvirate review requested for {{task_name}}"
+    channels: ["slack"]
+  
+  on_security_issue:
+    message: "Security vulnerability detected: {{issue}}"
+    channels: ["slack", "email"]
+    severity: high
+  
+  on_complete:
+    message: "Feature development complete - ready for review"
+    channels: ["slack"]
+  
+  on_failure:
+    message: "Workflow failed at {{step}}: {{reason}}"
+    channels: ["slack", "email"]
+
+artifacts:
+  preserve:
+    - technical_spec
+    - test_report
+    - coverage_report
+    - security_scan_results
+    - code_quality_report
+    - triumvirate_decision
+  
+  export:
+    format: json
+    location: ".antigravity/artifacts/"
+
+rollback:
+  on_failure: true
+  preserve_tests: true
+  restore_point: pre_implementation
+
+post_workflow:
+  - update_changelog
+  - tag_commit
+  - notify_team
+  - update_project_dashboard

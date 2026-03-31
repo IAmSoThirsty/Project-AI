@@ -1,0 +1,43 @@
+// ═══════════════════════════════════════════════════════════
+// T.A.R.L. (Thirstys Active Resistance Language)
+// Orchestration & Policy Enforcement Script
+// ═══════════════════════════════════════════════════════════
+// Date: 2026-03-04 | Status: Active
+
+// Define governance policy
+policy SovereignSafety
+    capability EXEC
+    constraint risk_level = "controlled"
+    constraint audit_required = true
+    enforce deterministic
+endpolicy
+
+// Define workflow
+workflow MasterVerification
+    provision agent = "THIRST-VERIFIER"
+    orchestrate
+        execute phase_1 = "constitutional_validation"
+        verify phase_1
+        execute phase_2 = "capsule_generation"
+        verify phase_2
+        audit trail = "full_accountability"
+    endorchestrate
+
+    compliance framework = "SOC2"
+    governance level = "sovereign"
+    provenance track = true
+endworkflow
+
+// Capsule creation with replay capability
+capsule BuildArtifact
+    deterministic hash = "sha256"
+    replay enabled = true
+    runtime constraint = "sandboxed"
+endcapsule
+
+// Override request (requires human authorization)
+override request
+    constraint reason = "Emergency deployment"
+    constraint authorizer = "Jeremy"
+    audit immutable = true
+endoverride

@@ -1,0 +1,96 @@
+/* Dark theme override for the book-like UI */
+QMainWindow {
+    background-color: #1e1e1e;
+    color: #e6e6e6;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11pt;
+}
+
+QTabWidget::pane {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2b2b2b, stop:1 #1f1f1f);
+    border: 1px solid #3a3a3a;
+}
+
+QTabBar::tab {
+    background: #2b2b2b;
+    color: #e6e6e6;
+    padding: 10px 14px;
+    margin: 3px;
+    border-radius: 6px;
+}
+
+QTabBar::tab:selected {
+    background: #383838;
+    font-weight: bold;
+}
+
+QPushButton {
+    background-color: #3a3a3a;
+    color: #e6e6e6;
+    border: 1px solid #4a4a4a;
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+QPushButton#alert_button {
+    background-color: #a33a34;
+}
+
+QStatusBar {
+    background: transparent;
+    color: #cfcfcf;
+}
+
+/* Neumorphic / subtle 3D additions (dark theme) */
+.card {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2b2b2b, stop:1 #242424);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.03);
+    padding: 12px;
+}
+
+.floating {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2f2f2f, stop:1 #242424);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.02);
+}
+
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4a4a4a, stop:1 #3a3a3a);
+    color: #e6e6e6;
+    border: 1px solid rgba(0,0,0,0.35);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #5a5a5a, stop:1 #444444);
+}
+
+QPushButton:pressed {
+    padding-top: 10px;
+}
+
+QListWidget.cardList {
+    background: transparent;
+    border: none;
+}
+
+/* Compatibility selectors for Qt dynamic properties (dark theme) */
+QWidget[class="card"] {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2b2b2b, stop:1 #242424);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.03);
+    padding: 12px;
+}
+
+QWidget[class="floating"] {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2f2f2f, stop:1 #242424);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.02);
+}
+
+QListWidget[class="cardList"] {
+    background: transparent;
+    border: none;
+}

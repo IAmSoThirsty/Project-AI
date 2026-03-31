@@ -1,0 +1,45 @@
+{
+  "name": "com.unity.services.cloud-build",
+  "displayName": "Build Automation",
+  "version": "1.0.5",
+  "unity": "2022.1",
+  "_upm": {
+    "gameService": {
+      "groupIndex": 0,
+      "groupName": "DevOps",
+      "genericDashboardUrl": "https://unity.com/solutions/ci-cd",
+      "projectDashboardUrl": "https://dashboard.unity3d.com/organizations/{0}/projects/{1}/cloud-build/history",
+      "projectDashboardUrlType": "OrganizationKeyAndProjectGuid",
+      "configurePath": "Project/Services/Build Automation"
+    },
+    "supportedPlatforms": [
+      "Android",
+      "iOS",
+      "Linux",
+      "Mac",
+      "PC",
+      "WebGL",
+      "Windows 8 Universal",
+      "Windows 10 Universal"
+    ],
+    "changelog": "### Modified \n- Added define constraints to the package assembly to don't load on Unity versions < 2022."
+  },
+  "description": "Integrate with Unity Build Automation \n\nThis package provides services to build and distribute your applications.",
+  "dependencies": {
+    "com.unity.services.core": "1.7.0",
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  },
+  "type": "library",
+  "relatedPackages": {
+    "com.unity.services.cloud-build.tests": "1.0.5"
+  },
+  "upmCi": {
+    "footprint": "39c8a9cb06e3dc2e2ae4a044820252caf3076248"
+  },
+  "repository": {
+    "url": "https://github.cds.internal.unity3d.com/unity/operate-services-sdk.git",
+    "type": "git",
+    "revision": "f6e177f5a1d135203e218bdf346bab842d959fb0"
+  },
+  "_fingerprint": "beebd6a8714d064b0c2f4b17baba4655a849f2ba"
+}

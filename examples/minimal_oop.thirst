@@ -1,0 +1,8 @@
+fountain Test
+    glass say()
+        pour "Hello from Test"
+    endglass
+endfountain
+
+drink t = new Test()
+t.say()

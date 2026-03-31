@@ -1,0 +1,221 @@
+{
+  "$schema": "https://antigravity.google.com/schemas/config.v1.json",
+  "version": "1.0.0",
+  "project": {
+    "name": "Project-AI",
+    "description": "Ethical AI assistant with autonomous learning and Triumvirate governance",
+    "language": "python",
+    "frameworks": ["PyQt6", "Flask", "Temporal.io", "scikit-learn"],
+    "ai_integration": {
+      "openai": true,
+      "huggingface": true,
+      "local_models": true
+    }
+  },
+  "agents": {
+    "coding": {
+      "enabled": true,
+      "autonomy_level": "supervised",
+      "languages": ["python", "javascript", "yaml", "json"],
+      "style_guide": "google",
+      "max_file_size": 1000,
+      "excluded_paths": [
+        "data/ai_persona/",
+        ".env",
+        "data/command_override_config.json",
+        "data/black_vault_secure/"
+      ]
+    },
+    "testing": {
+      "enabled": true,
+      "auto_run": true,
+      "coverage_threshold": 80,
+      "test_frameworks": ["pytest"],
+      "test_pattern": "test_*.py",
+      "exclude_patterns": ["**/test_artifacts/**"]
+    },
+    "security": {
+      "enabled": true,
+      "tools": ["bandit", "pip-audit", "ruff"],
+      "auto_fix": false,
+      "severity_threshold": "medium",
+      "scan_on_change": true,
+      "critical_paths": [
+        "src/app/core/user_manager.py",
+        "src/app/core/command_override.py",
+        "src/app/core/security_resources.py"
+      ]
+    },
+    "documentation": {
+      "enabled": true,
+      "auto_generate": false,
+      "style": "google",
+      "include_examples": true,
+      "update_on_change": true
+    },
+    "ethical_review": {
+      "enabled": true,
+      "auto_trigger": true,
+      "keywords": [
+        "ai_persona",
+        "four_laws",
+        "memory",
+        "learning",
+        "user_data",
+        "encryption",
+        "password"
+      ],
+      "triumvirate_integration": true,
+      "require_approval": true
+    }
+  },
+  "workflows": {
+    "pre_commit": [
+      {
+        "name": "lint",
+        "command": "ruff check .",
+        "required": true
+      },
+      {
+        "name": "type_check",
+        "command": "mypy src/",
+        "required": false
+      },
+      {
+        "name": "test",
+        "command": "pytest tests/ -v",
+        "required": true
+      }
+    ],
+    "pre_push": [
+      {
+        "name": "test",
+        "command": "pytest tests/ -v",
+        "required": true
+      },
+      {
+        "name": "security_scan",
+        "command": "bandit -r src/ -ll",
+        "required": true
+      },
+      {
+        "name": "build",
+        "command": "python -m build",
+        "required": false
+      }
+    ],
+    "daily": [
+      {
+        "name": "dependency_check",
+        "command": "pip-audit",
+        "schedule": "0 2 * * *"
+      },
+      {
+        "name": "security_audit",
+        "command": "bandit -r src/",
+        "schedule": "0 3 * * *"
+      }
+    ]
+  },
+  "integrations": {
+    "temporal": {
+      "enabled": true,
+      "server": "localhost:7233",
+      "namespace": "default",
+      "task_queue": "project-ai-tasks",
+      "workflows": {
+        "triumvirate_review": "temporal.workflows.triumvirate_workflow",
+        "security_scan": "temporal.workflows.security_agent_workflows",
+        "learning_workflow": "examples.temporal.learning_workflow_example"
+      }
+    },
+    "openai": {
+      "enabled": true,
+      "model": "gpt-3.5-turbo",
+      "fallback_model": "gpt-4",
+      "max_tokens": 2000,
+      "temperature": 0.7
+    },
+    "github": {
+      "enabled": true,
+      "auto_pr": false,
+      "require_review": true,
+      "branch_protection": true
+    },
+    "vscode": {
+      "compatible": true,
+      "settings_path": ".vscode/settings.json",
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff"
+      ]
+    }
+  },
+  "ai_systems": {
+    "four_laws": {
+      "enabled": true,
+      "module": "src.app.core.ai_systems.FourLaws",
+      "validate_all_actions": true,
+      "immutable": true
+    },
+    "triumvirate": {
+      "enabled": true,
+      "guardians": ["Galahad", "Cerberus", "Codex"],
+      "require_unanimous": false,
+      "majority_threshold": 2
+    },
+    "ai_persona": {
+      "enabled": true,
+      "module": "src.app.core.ai_systems.AIPersona",
+      "track_interactions": true,
+      "mood_aware": true
+    },
+    "memory_expansion": {
+      "enabled": true,
+      "module": "src.app.core.ai_systems.MemoryExpansionSystem",
+      "auto_log": true,
+      "search_enabled": true
+    }
+  },
+  "file_patterns": {
+    "personhood_critical": [
+      "src/app/core/ai_systems.py",
+      "data/ai_persona/**",
+      "data/memory/**",
+      "data/learning_requests/**"
+    ],
+    "security_critical": [
+      "src/app/core/user_manager.py",
+      "src/app/core/command_override.py",
+      "data/command_override_config.json"
+    ],
+    "workflow_definitions": [
+      "temporal/workflows/**/*.py",
+      "src/app/temporal/**/*.py"
+    ]
+  },
+  "code_quality": {
+    "linter": "ruff",
+    "formatter": "black",
+    "type_checker": "mypy",
+    "complexity_threshold": 10,
+    "line_length": 88
+  },
+  "ai_behavior": {
+    "explain_changes": true,
+    "request_approval_for": [
+      "file_deletion",
+      "config_changes",
+      "api_key_usage",
+      "database_operations",
+      "personhood_critical_changes"
+    ],
+    "auto_approve": [
+      "adding_tests",
+      "adding_documentation",
+      "adding_type_hints",
+      "fixing_typos"
+    ]
+  }
+}

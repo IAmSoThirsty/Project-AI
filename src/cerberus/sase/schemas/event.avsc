@@ -1,0 +1,117 @@
+{
+  "type": "record",
+  "name": "AdversarialEvent",
+  "namespace": "sase.telemetry",
+  "doc": "Canonical telemetry event schema for SASE adversarial signal ingestion",
+  "fields": [
+    {
+      "name": "event_id",
+      "type": "string",
+      "doc": "Unique event identifier (UUID v4)"
+    },
+    {
+      "name": "ingest_timestamp",
+      "type": "long",
+      "doc": "Unix timestamp (milliseconds) when event was ingested"
+    },
+    {
+      "name": "source_ip",
+      "type": "string",
+      "doc": "Source IP address of adversarial event"
+    },
+    {
+      "name": "asn",
+      "type": "string",
+      "doc": "Autonomous System Number"
+    },
+    {
+      "name": "geo",
+      "type": {
+        "type": "record",
+        "name": "Geo",
+        "fields": [
+          {"name": "country", "type": "string", "doc": "ISO 3166-1 alpha-2 country code"},
+          {"name": "city", "type": ["null", "string"], "default": null},
+          {"name": "lat", "type": ["null", "double"], "default": null},
+          {"name": "lon", "type": ["null", "double"], "default": null},
+          {"name": "region", "type": ["null", "string"], "default": null}
+        ]
+      }
+    },
+    {
+      "name": "artifact_id",
+      "type": "string",
+      "doc": "ID of tracked artifact (canary token, honeypot, etc.)"
+    },
+    {
+      "name": "artifact_type",
+      "type": {
+        "type": "enum",
+        "name": "ArtifactType",
+        "symbols": [
+          "DNS_RESOLUTION",
+          "HTTP_CALLBACK",
+          "CREDENTIAL_MISUSE",
+          "OAUTH_VALIDATION",
+          "API_MISUSE",
+          "WEBHOOK_INVOCATION",
+          "SYNTHETIC_LEAK"
+        ]
+      },
+      "doc": "Type of adversarial artifact triggered"
+    },
+    {
+      "name": "campaign_id",
+      "type": "string",
+      "doc": "Campaign/deployment identifier for artifact correlation"
+    },
+    {
+      "name": "user_agent",
+      "type": ["null", "string"],
+      "default": null,
+      "doc": "User-Agent header if HTTP-based"
+    },
+    {
+      "name": "transport_type",
+      "type": {
+        "type": "enum",
+        "name": "TransportType",
+        "symbols": ["HTTP", "HTTPS", "DNS", "TCP", "UDP", "OTHER"]
+      },
+      "doc": "Network transport protocol used"
+    },
+    {
+      "name": "raw_payload_hash",
+      "type": "string",
+      "doc": "SHA-256 hash of raw payload for immutability verification"
+    },
+    {
+      "name": "model_version",
+      "type": "string",
+      "doc": "SASE model version used for scoring"
+    },
+    {
+      "name": "signature",
+      "type": "string",
+      "doc": "Cryptographic signature (HSM-signed event hash)"
+    },
+    {
+      "name": "enrichment",
+      "type": ["null", {
+        "type": "record",
+        "name": "Enrichment",
+        "fields": [
+          {"name": "asn_risk_index", "type": ["null", "double"], "default": null},
+          {"name": "is_tor", "type": "boolean", "default": false},
+          {"name": "is_vpn", "type": "boolean", "default": false},
+          {"name": "cloud_provider", "type": ["null", "string"], "default": null},
+          {"name": "infrastructure_type", "type": ["null", "string"], "default": null},
+          {"name": "historical_reuse_count", "type": "int", "default": 0},
+          {"name": "token_sensitivity", "type": ["null", "double"], "default": null}
+        ]
+      }],
+      "default": null,
+      "doc": "L3 enrichment data (added post-ingestion)"
+    }
+  ]
+}

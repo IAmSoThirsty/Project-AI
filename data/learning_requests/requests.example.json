@@ -1,0 +1,18 @@
+{
+    "_schema_version": "1.0.0",
+    "_description": "Learning requests template. Copy to requests.json. Entries are added at runtime by the learning request manager.",
+    "requests": [
+        {
+            "id": "example-001",
+            "topic": "example_topic",
+            "status": "pending",
+            "priority": "normal",
+            "requested_by": "user",
+            "requested_at": "2026-01-01T00:00:00Z",
+            "approved_by": null,
+            "approved_at": null,
+            "sources": [],
+            "metadata": {}
+        }
+    ]
+}

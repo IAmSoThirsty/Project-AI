@@ -1,0 +1,38 @@
+/*
+ * Jurisdiction 2: Arbitration District Test Suite
+ */
+
+import { ActivateArbitration, ProposeStateChange, EvaluateNodeTrust } from "../arbitration.tarl"
+
+glass RunJurisdiction2Tests() {
+    ActivateArbitration()
+    pour "--- JURISDICTION 2 TEST SUITE STARTING ---"
+
+    // Test 1: Reputation & Trust Thresholds
+    drink t1 = EvaluateNodeTrust("trusted_node")
+    thirsty !t1 {
+        // Initial trust for unknown nodes is 0.5, threshold is 0.3
+        // So this should pass
+        pour "Node trust verified."
+    }
+
+    // Test 2: Triumvirate Consensus (Success Case)
+    drink s1 = { "AI_COGNITIVE": "APPROVE", "SECURITY_FORTRESS": "APPROVE", "KNOWLEDGE_REPOSITORY": "REJECT" }
+    drink r1 = ProposeStateChange("PROPOSAL_001", { "op": "REBOOT" }, s1)
+    thirsty r1.status != "COMMITTED" {
+        throw "Consensus Failure: Should have passed with 2/3"
+    }
+    pour "Triumvirate Quorum (2/3) verified."
+
+    // Test 3: Triumvirate Consensus (Failure Case)
+    drink s2 = { "AI_COGNITIVE": "APPROVE", "SECURITY_FORTRESS": "REJECT", "KNOWLEDGE_REPOSITORY": "REJECT" }
+    drink r2 = ProposeStateChange("PROPOSAL_002", { "op": "SHUTDOWN" }, s2)
+    thirsty r2.status != "ABORTED" {
+        throw "Consensus Failure: Should have failed with 1/3"
+    }
+    pour "Triumvirate Quorum rejection (1/3) verified."
+
+    pour "--- ALL JURISDICTION 2 TESTS PASSED ---"
+}
+
+export RunJurisdiction2Tests

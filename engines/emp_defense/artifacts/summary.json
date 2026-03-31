@@ -1,0 +1,7 @@
+{
+  "scenario": "standard",
+  "duration_days": 364,
+  "total_deaths": 3179540,
+  "grid_operational_pct": 0.15200000000000002,
+  "event_count": 3
+}
