@@ -1,11 +1,5 @@
-# ============================================================================ #
-#                                           [2026-03-18 09:59]
+#                                           [2026-03-04 10:36]
 #                                          Productivity: Active
-# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
-# COMPLIANCE: Sovereign Substrate / boot_sovereign.py
-# ============================================================================ #
-# COMPLIANCE: Sovereign Substrate / Project-AI Master Control
-
 """
 Project-AI Sovereign Ignition (Boot) Sequence - v1.0.0-E1
 
@@ -21,11 +15,12 @@ Ignition Order:
 6.  Interface: Leather Book Master UI
 """
 
-import argparse
-import logging
 import os
 import sys
 import time
+import argparse
+import logging
+import argparse
 from pathlib import Path
 
 # Add src to sys.path
@@ -70,12 +65,8 @@ class SovereignIgnition:
             if not self.dev_mode:
                 self._enter_governance_loop()
 
-        except (ImportError, RuntimeError, KeyboardInterrupt) as e:
-            logger.critical("❌ IGNITION ABORTED: %s", e)
-            self._emergency_halt()
-            sys.exit(1)
         except Exception as e:
-            logger.error("⚠️ UNEXPECTED CRITICAL FAILURE: %s", e)
+            logger.critical("❌ IGNITION ABORTED: %s", e)
             self._emergency_halt()
             sys.exit(1)
 
@@ -116,21 +107,10 @@ class SovereignIgnition:
         """Cognition Layer - Triumvirate"""
         logger.info("[Layer 2] Initializing Triumvirate (Council, Identity, Memory)...")
         # Load Identity
-        # Load Identity (Verified during audit)
-        # from app.core.identity import AGIIdentity
+        from app.core.identity import AGIIdentity
 
-        # Load Memory (Verified during audit)
-        # from app.core.memory_engine import MemoryEngine
-
-        # SOVEREIGN INTEGRATION: Initialize UTF Bridge
-        logger.info("[Layer 2] Mounting Universal Translation Family (UTF) Bridge...")
-        try:
-            from src.app.core.utf_bridge import get_utf_bridge
-            self.layers["utf_bridge"] = get_utf_bridge()
-            logger.info("✅ UTF Bridge mounted.")
-        except Exception as e:
-            logger.error("[Layer 2] Failed to mount UTF Bridge: %s", e)
-            raise
+        # Load Memory
+        from app.core.memory_engine import MemoryEngine
 
         # Placeholder for Triumvirate orchestration
         time.sleep(1)
@@ -163,7 +143,6 @@ class SovereignIgnition:
             # Trigger the start.ps1 or equivalent GUI launch
             logger.info("✅ Interface Layer initialized. Launching GUI...")
             # In production build, we would launch the .exe here
-            # Layer specific logic
             pass
 
     def _enter_governance_loop(self):

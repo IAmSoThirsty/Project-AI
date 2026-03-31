@@ -1,0 +1,28 @@
+// Advanced Thirsty++ Example
+// This demonstrates future features
+
+// Function to calculate daily water intake
+glass calculateWaterIntake(weight, activity_level)
+  drink base_intake = weight * 0.033
+  drink activity_multiplier = activity_level * 0.5
+  drink total = base_intake + activity_multiplier
+  return total
+
+// Main program
+drink my_weight = 70
+drink my_activity = 2
+
+drink daily_water = calculateWaterIntake(my_weight, my_activity)
+
+pour "Daily water intake:"
+pour daily_water
+pour "liters"
+
+// Array example (future feature)
+reservoir hydration_log = [2.0, 1.5, 2.5, 3.0]
+
+// Loop through log (future feature)
+refill 4 times
+  pour hydration_log[index]
+
+// Stay hydrated! 💧

@@ -1,0 +1,34 @@
+{
+    "_schema_version": "1.0.0",
+    "_description": "Application settings template. Copy to settings.json and customize.",
+    "app_name": "Project-AI",
+    "debug_mode": false,
+    "log_level": "INFO",
+    "data_dir": "data",
+    "security": {
+        "enable_encryption": true,
+        "encryption_algorithm": "AES-256-GCM",
+        "key_derivation": "scrypt",
+        "audit_logging": true,
+        "max_login_attempts": 5,
+        "session_timeout_minutes": 30
+    },
+    "governance": {
+        "triumvirate_enabled": true,
+        "four_laws_enforcement": "strict",
+        "consensus_threshold": 0.67,
+        "audit_retention_days": 365
+    },
+    "performance": {
+        "max_threads": 16,
+        "processing_loop_interval_ms": 1000,
+        "cache_ttl_seconds": 300,
+        "max_memory_mb": 2048
+    },
+    "integrations": {
+        "llm_provider": "openai",
+        "llm_model": "gpt-4",
+        "vector_store_backend": "local",
+        "telemetry_enabled": true
+    }
+}

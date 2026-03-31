@@ -1,0 +1,9 @@
+{
+  "GENESIS-6985DC0939714B77": {
+    "genesis_id": "GENESIS-6985DC0939714B77",
+    "public_key_hash": "4a295a3abb4efd6627a3e12479375d570da7e6a94dd9f4c195055d2ae84b039e",
+    "pinned_at": "2026-02-13T18:52:54.434338+00:00",
+    "initial_merkle_root": null,
+    "pin_version": "1.0"
+  }
+}

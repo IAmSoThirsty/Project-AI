@@ -1,17 +1,3 @@
-<!-- # ============================================================================ # -->
-<!-- # STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59 # -->
-<!-- # COMPLIANCE: Sovereign Substrate / DIRECTORY_INDEX.md # -->
-<!-- # ============================================================================ # -->
-<div align="right">
-  <img src="https://img.shields.io/badge/DATE-2026-03-18-blueviolet?style=for-the-badge" alt="Date" />
-  <img src="https://img.shields.io/badge/PRODUCTIVITY-ACTIVE-success?style=for-the-badge" alt="Productivity" />
-</div>
-<!-- # ============================================================================ #
-
-
-<!-- # COMPLIANCE: Sovereign Substrate / DIRECTORY_INDEX.md # -->
-<!-- # ============================================================================ #
-
 <!--                                        [2026-03-04 15:48]  -->
 <!--                                       Productivity: Active  -->
 
@@ -27,7 +13,7 @@
 
 | Module | What Lives Here |
 |---|---|
-| [**PACE Engine**](Project-AI/README.md) | The heart — Identity, State, Cognition, Capabilities, Skills, Policy, Agents, IO *(Python orchestration engine)* |
+| [**PACE Engine**](project_ai/README.md) | The heart — Identity, State, Cognition, Capabilities, Skills, Policy, Agents, IO *(Python orchestration engine)* |
 | [**Cognition Matrix**](cognition/README.md) | Triumvirate governance, invariant checking, boundary enforcement *(reasoning & decision-making layer)* |
 | [**Orchestrator**](orchestrator/README.md) | Cerberus security interface bridge *(routes external signals to internal defense)* |
 | [**Governance Vault**](governance/README.md) | Iron Path, existential proofs, singularity override *(constitutional law enforcement)* |
@@ -139,20 +125,13 @@
 
 ---
 
-## 🌐 The Integrated Fleet (Sovereign Microservices)
+## 🔗 The Allies (External & Mirrors)
 
 | Module | What Lives Here |
 |---|---|
-| [**Integrations Hub**](integrations/README.md) | Central entry point for all 113 integrated services. |
-| [**Monolith Runtime**](src/monolith_runtime/README.md) | Multi-process execution kernel for Thirsty-Lang payloads. |
-| [**Miniature Office**](projects/miniature-office/README.md) | The Sovereign Command Nexus visualization. |
-| [**2D Game Starter**](integrations/2d-game-starter/README.md) | Game engine templates. |
-| [**Auth Provider**](integrations/auth-provider/README.md) | Sovereign identity and authentication layer. |
-| [**Blockchain Substrate**](integrations/blockchain/README.md) | Distributed ledger for governance anchoring. |
-| [**Cerberus Guard**](integrations/cerberus-guard/README.md) | Adaptive security service. |
-| [**Cognitive Load Balancer**](integrations/cognitive-load-balancer/README.md) | Dynamic task distribution engine. |
-| [**Constitutional Audit**](integrations/constitutional-audit-service/README.md) | Automated law enforcement auditing. |
-| [**... and 100+ more**](integrations/README.md) | See integrations/ for the complete fleet list. |
+| [**External Mirrors**](external/README.md) | Cerberus, Thirsty-Lang, Waterfall, Triumvirate, Monolith *(vendored copies of sibling repos)* |
+| [**OctoReflex**](octoreflex/README.md) | OctoReflex integration *(multi-tentacle response system)* |
+| [**Plugin Forge**](plugins/README.md) | Plugin extensibility framework *(runtime-loadable extensions)* |
 
 ---
 
@@ -172,8 +151,8 @@
 
 ---
 
-> **171+ modules. 100% sovereign transparency.**
-
-Every name inspires awe. Every parenthetical inspires confidence.
-
-*— AGI Charter v2.1, Article IX: "Full transparency is not a feature. It is a constitutional requirement."*
+> **58 modules. 58 READMEs. 100% sovereign transparency.**
+>
+> Every name inspires awe. Every parenthetical inspires confidence.
+>
+> *— AGI Charter v2.1, Article IX: "Full transparency is not a feature. It is a constitutional requirement."*

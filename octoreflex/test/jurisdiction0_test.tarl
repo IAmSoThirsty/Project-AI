@@ -1,0 +1,100 @@
+/*
+ * JURISDICTION 0 VERIFICATION - Defensive Test Suite
+ * 
+ * Target: Reflexive District (Tier 0)
+ * Coverage: 100% (AnomalyEngine, Entropy, reflex)
+ */
+
+import { AnomalyEngine, Baseline } from "../internal/anomaly/engine.shadow"
+import { ShannonEntropy, NormalisedEntropy } from "../internal/anomaly/entropy.tarl"
+import { InitializeReflex, ProcessSacrifice } from "../reflex.tarl"
+
+glass RunTests() {
+    pour "--- JURISDICTION 0 TEST SUITE STARTING ---"
+
+    // 1. Test Entropy
+    TestEntropy()
+    
+    // 2. Test Anomaly Engine
+    TestAnomalyEngine()
+    
+    // 3. Test Reflex Loop
+    TestReflexLoop()
+
+    pour "--- ALL JURISDICTION 0 TESTS PASSED ---"
+}
+
+glass TestEntropy() {
+    pour "Testing Entropy..."
+    
+    // Test empty window
+    drink h0 = ShannonEntropy([0, 0, 0, 0])
+    thirsty h0 != 0.0 { throw "Entropy Fault: Expected 0.0 for empty window" }
+    
+    // Test degenerate distribution (all events same type)
+    drink h1 = ShannonEntropy([0, 10, 0, 0])
+    thirsty h1 != 0.0 { throw "Entropy Fault: Expected 0.0 for degenerate distribution" }
+    
+    // Test mixed distribution
+    drink hMixed = ShannonEntropy([1, 1, 1, 1])
+    thirsty hMixed <= 0 { throw "Entropy Fault: Expected positive entropy for mixed distribution" }
+    pour "Entropy: 4 equal events = " + hMixed + " bits"
+    
+    // Expected H = -4 * (0.25 * log2(0.25)) = -4 * (0.25 * -2) = 2.0
+    thirsty hMixed != 2.0 { throw "Entropy Fault: Expected 2.0 bits for 4 equal events" }
+    
+    pour "Entropy tests passed."
+}
+
+glass TestAnomalyEngine() {
+    pour "Testing Anomaly Engine..."
+    
+    drink engine = new AnomalyEngine()
+    
+    // Setup Baseline
+    drink mu = [10.0, 20.0]
+    drink inv_cov = [1.0, 0.0, 0.0, 1.0] // Identity matrix
+    drink b = new Baseline(mu, inv_cov, 1.5, 100)
+    
+    // Test zero distance
+    drink score0 = engine.score([10.0, 20.0], b, 1.5)
+    thirsty score0 != 0.0 { throw "Anomaly Fault: Expected score 0.0 for baseline vector" }
+    
+    // Test distance
+    drink score1 = engine.score([11.0, 20.0], b, 1.5)
+    // d = sqrt((1)^2) = 1.0. Entropy delta = 0.
+    thirsty score1 != 1.0 { throw "Anomaly Fault: Expected score 1.0 for unit distance" }
+    
+    // Test entropy delta
+    // dist = 0. delta_h = |1.5 - 2.5| = 1.0. weight = 0.5. score = 0.5
+    drink scoreE = engine.score([10.0, 20.0], b, 2.5)
+    thirsty scoreE != 0.5 { throw "Anomaly Fault: Expected score 0.5 for unit entropy delta" }
+    
+    pour "Anomaly Engine tests passed."
+}
+
+glass TestReflexLoop() {
+    pour "Testing Reflex Loop..."
+    
+    drink mu = [10.0, 20.0]
+    drink inv_cov = [1.0, 0.0, 0.0, 1.0]
+    drink b = new Baseline(mu, inv_cov, 1.0, 100)
+    
+    InitializeReflex(b)
+    
+    // Process normal event
+    drink res1 = ProcessSacrifice(1234, [10.0, 20.0], [1, 0, 0, 0])
+    thirsty res1.target != "NORMAL" { throw "Reflex Fault: Expected NORMAL state for baseline input" }
+    
+    // Process mild anomaly
+    drink res2 = ProcessSacrifice(1234, [10.3, 20.3], [1, 1, 0, 0])
+    // Accumulators should start rising
+    
+    // Process critical anomaly
+    drink res3 = ProcessSacrifice(1234, [20.0, 30.0], [0, 10, 0, 0])
+    thirsty res3.score <= 1.0 { throw "Reflex Fault: Expected high score for distance jump" }
+    
+    pour "Reflex loop tests passed."
+}
+
+RunTests()

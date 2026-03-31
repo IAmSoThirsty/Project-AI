@@ -1,0 +1,26 @@
+// ═══════════════════════════════════════════════════════════
+// TSCG-B — Binary Constitutional Protocol
+// ═══════════════════════════════════════════════════════════
+// Date: 2026-03-04 | Status: Active
+
+// Binary encoding of constitutional wire
+ENCODE T_BLOB binary
+    ING -> COG -> D_NT -> SHD (1) -> INV (5) AND CAP
+    QRM_LINEAR (3,1,2,1) -> COM -> ANC -> LED
+
+// Bijective decode and parity verification
+DECODE T_BLOB verify
+    BIJECTIVITY = true
+    PARITY = "100%"
+    VALIDATE integrity = "cryptographic"
+
+// Binary stream operations
+ENCODE stream protocol
+    T_BLOB = "4F01A2B3C4D5E6F7"
+    PARITY check = true
+    BIJECTIVITY assert = "bijective"
+
+DECODE stream reconstruct
+    VALIDATE PARITY = true
+    VALIDATE BIJECTIVITY = true
+    T_BLOB integrity = "sovereign"

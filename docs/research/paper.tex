@@ -1,0 +1,1181 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit,calc}
+
+% Code listing style
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{red!70!black},
+  breaklines=true,
+  frame=single,
+  xleftmargin=1em,
+  xrightmargin=1em,
+  columns=flexible,
+}
+
+% Theorem-like environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+% Inference rule helpers (PLDI-style)
+\newcommand{\infer}[3]{\dfrac{#2}{#3}\;\textsc{#1}}
+\newcommand{\judge}[3]{#1 \vdash #2 : #3}
+\newcommand{\step}[2]{\langle #1 \rangle \to_{\text{shadow}} \langle #2 \rangle}
+\newcommand{\plane}[2]{#1@\text{#2}}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\begin{document}
+
+\title{The Project-AI Sovereign Immune Architecture:\\
+\large Constitutional Governance, Deterministic Simulation, and Quorum-Gated Mutation\\
+for Adversarially Resilient Adaptive Intelligence\\[0.5em]
+\normalsize A Comprehensive Formal Treatment of the PSIA v1.0 Specification}
+\author{Project-AI Research Division \\ ThirstysProjects.com}
+\date{February 2026}
+\maketitle
+
+\begin{abstract}
+Adaptive systems increasingly interleave learning, policy change, and canonical state mutation within a single probabilistic execution plane---a structural deficiency we term \emph{architectural conflation}. This produces silent behavioral drift, uncontrolled privilege escalation, non-deterministic state transitions, and the absence of constitutional authority separation. We present Project-AI's \textbf{Sovereign Immune Architecture (PSIA)}: a constitutionally-grounded, production-grade framework that structurally separates cognition from governance and requires deterministic simulation and quorum authorization for all canonical state mutations.
+
+PSIA is organized around \textbf{six architectural planes} (Canonical, Shadow, Adaptive, Gate, Reflex, Ingress) with typed capability contracts enforcing 14 atomic capabilities across plane boundaries. A \textbf{seven-stage Waterfall pipeline} (Structural, Signature, Behavioral, Shadow, Gate, Commit, Memory) processes every request through monotonically non-decreasing severity stages. The \textbf{Cerberus Gate Plane} evaluates requests via three independent heads (Identity, Capability, Invariant) with a production QuorumEngine supporting four consensus policies: unanimous, 2-of-3, simple majority, and Byzantine fault tolerance under weighted voting. \textbf{Nine root invariants} (INV-ROOT-1 through INV-ROOT-9), expressed in first-order logic with HARD\_DENY enforcement and IMMUTABLE scope, form the constitutional bedrock. A \textbf{cryptographic ledger} implements blockchain-like sealed blocks with Merkle tree roots, Ed25519 multi-validator signatures, and RFC~3161 temporal anchoring. The \textbf{Shadow Thirst} domain-specific language provides a 15-stage compiler pipeline with 6 static analyzers, a dual-plane intermediate representation, and a shadow-aware virtual machine with constitutional commit protocols. Empirical results from production demonstrate $<3\%$ overhead, 100\% invariant pass rates across 200+ test files, and deterministic replay with SHA-256 hash verification.
+\end{abstract}
+
+% ============================================================================
+\section{Introduction}
+% ============================================================================
+
+\subsection{Architectural Conflation}
+
+\begin{definition}[Architectural Conflation]
+Architectural conflation is the interleaving of cognition, policy mutation, and canonical state commitment within a single probabilistic execution plane.
+\end{definition}
+
+In conflated architectures, cognition and governance share trust boundaries and runtime authority over canonical state. Project-AI's design documentation identifies this as a \emph{structural property, not an implementation error}, yielding six failure classes: silent drift, silent mutation, privilege escalation, adaptive feedback runaway, canonical corruption, and containment latency failure. These are analyzed in Section~\ref{sec:taxonomy}.
+
+\subsection{Separation Thesis}
+
+\noindent
+\textit{Adaptive systems must separate cognition from governance and require deterministic simulation and quorum authorization prior to canonical state mutation.}
+
+\medskip
+\noindent
+This thesis is realized in PSIA through three structural mechanisms: (1)~typed plane contracts forbidding direct cognition-to-canonical writes, (2)~deterministic shadow simulation producing cryptographic replay hashes, and (3)~Byzantine fault-tolerant quorum consensus gating all canonical commits.
+
+\subsection{Contributions}
+
+\begin{enumerate}[leftmargin=*]
+  \item A \textbf{six-plane architecture} with typed capability contracts (14 atomic capabilities, 3 storage modes, 3 network access levels) providing defense-in-depth isolation.
+  \item \textbf{Nine root invariants} expressed in first-order logic with IMMUTABLE scope and FATAL severity, forming an irrevocable constitutional bedrock.
+  \item A \textbf{seven-stage Waterfall pipeline} with monotonic severity non-decrease (INV-ROOT-7), immediate abort on deny/quarantine, and structured observability via 30+ typed event emissions.
+  \item A \textbf{Cerberus Gate Plane} with triple-head evaluation (Identity, Capability, Invariant), per-head weighted voting (invariant head: $1.5\times$), and four quorum policies including BFT with $>2/3$ weighted agreement.
+  \item A \textbf{Shadow Thirst} domain-specific language: the first constitutionally-bound dual-plane programming substrate with compiler-enforced separation, 15-stage compilation, and constitutional commit protocols.
+  \item A \textbf{cryptographic ledger} with Merkle tree-rooted blocks, Ed25519 multi-validator attestation, and RFC~3161 temporal anchoring for non-repudiable audit trails.
+  \item A formal \textbf{mutation validity condition} combining invariant preservation, deterministic shadow execution, capability authorization, and quorum threshold, with proofs of safety and governance minimality.
+\end{enumerate}
+
+% ============================================================================
+\section{Failure Taxonomy}
+\label{sec:taxonomy}
+% ============================================================================
+
+We define six structural failure modes for conflated adaptive systems.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Failure Class} & \textbf{Mechanism} & \textbf{PSIA Mitigation} \\
+\midrule
+Silent Drift & Online learning as side-effect & INV-ROOT-4: T.A.R.L. proposal-only \\
+Silent Mutation & Direct canonical writes & INV-ROOT-1: Gate-only mutation \\
+Privilege Escalation & Unscoped API, shared creds & INV-ROOT-6: Capability tokens \\
+Feedback Runaway & Positive adaptation feedback & Behavioral Stage deviation scoring \\
+Canonical Corruption & Adversarial state alteration & INV-ROOT-3: Ledger integrity \\
+Containment Latency & Slow cognitive control path & INV-ROOT-8: Reflex action limits \\
+\bottomrule
+\end{tabular}
+\caption{Failure taxonomy with PSIA root invariant mitigations.}
+\label{tab:failures}
+\end{table}
+
+% ============================================================================
+\section{System Model}
+\label{sec:model}
+% ============================================================================
+
+Let:
+\begin{itemize}[leftmargin=*]
+  \item $S \in \mathcal{S}$: canonical state (policy state, trust scores, memory snapshots, capability registries);
+  \item $\Delta \in \mathcal{M}$: proposed mutation (any action proposal from the cognition plane);
+  \item $I = \{I_1, \dots, I_9\}$: root invariant predicates $I_k : \mathcal{S} \to \{\text{true}, \text{false}\}$ (the nine PSIA root invariants);
+  \item $C(\text{actor}, \text{resource}, \text{action})$: capability authorization function;
+  \item $D_v(S, \Delta)$: deterministic shadow operator under runtime version $v$;
+  \item $Q(\Delta)$: quorum function under policy $\pi \in \{\text{unanimous}, \text{2of3}, \text{simple}, \text{bft}\}$;
+  \item $\oplus$: pure state transition operator, $\oplus : \mathcal{S} \times \mathcal{M} \to \mathcal{S}$.
+\end{itemize}
+
+\begin{definition}[Non-trivial Mutation]
+A mutation $\Delta$ is non-trivial if it modifies canonical state $S$ and either: (i)~affects state referenced by at least one invariant in $I$, (ii)~modifies capability schemas, or (iii)~modifies governance parameters. Only non-trivial mutations require full shadow and quorum enforcement.
+\end{definition}
+
+\begin{definition}[Constitutional Separation]
+A system exhibits constitutional separation if (i)~cognition has no direct write access to canonical state, and (ii)~all canonical mutations pass through a governance plane enforcing the mutation validity condition.
+\end{definition}
+
+\begin{remark}[Invariant Assumptions]
+We assume each invariant $I_k$ is:
+\begin{enumerate}
+  \item \textbf{Decidable}: $I_k(S)$ terminates in bounded time for all $S \in \mathcal{S}$;
+  \item \textbf{Closed under valid composition}: if $I_k(S) = \text{true}$ and $\Delta$ satisfies the mutation validity condition, then $I_k(S \oplus \Delta) = \text{true}$ (this is the invariant preservation clause, not an additional assumption);
+  \item \textbf{Independently evaluable}: $I_k$ depends only on $S$, not on the evaluation of other invariants $I_j$ for $j \neq k$.
+\end{enumerate}
+In practice, all nine root invariants are simple predicates over canonical state fields (trust scores, hash chains, policy flags) and terminate in $O(1)$ time.
+\end{remark}
+
+% ============================================================================
+\section{The PSIA Six-Plane Architecture}
+\label{sec:planes}
+% ============================================================================
+
+PSIA decomposes the system into six planes, each governed by a typed \textsc{PlaneContract} specifying allowed/forbidden capabilities, storage mode, and network access. The contracts are \texttt{frozen} dataclasses; violations are detected at both compile time and runtime.
+
+\subsection{Plane Definitions}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Plane} & \textbf{Role} & \textbf{Storage} & \textbf{Network} \\
+\midrule
+Canonical & Mutable ground truth & Durable & Internal \\
+Shadow & Deterministic simulation & Ephemeral & Blocked \\
+Adaptive & Cognitive/learning services & Ephemeral & Egress only \\
+Gate & Cerberus evaluation & Read-only & Blocked \\
+Reflex & Low-latency containment & Ephemeral & Blocked \\
+Ingress & Request reception/filtering & Read-only & Ingress only \\
+\bottomrule
+\end{tabular}
+\caption{PSIA plane contracts: storage and network access isolation.}
+\label{tab:planes}
+\end{table}
+
+The 14 atomic capabilities are distributed across planes as follows:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Canonical}: \textsc{read\_canonical}, \textsc{write\_canonical}, \textsc{emit\_event}, \textsc{sign\_artifact}
+  \item \textbf{Shadow}: \textsc{read\_canonical} (snapshot), \textsc{execute\_shadow}, \textsc{emit\_event} --- forbidden: \textsc{write\_canonical}
+  \item \textbf{Adaptive}: \textsc{read\_canonical}, \textsc{propose\_mutation}, \textsc{emit\_event} --- forbidden: \textsc{write\_canonical, execute\_shadow}
+  \item \textbf{Gate}: \textsc{read\_canonical}, \textsc{validate\_invariant}, \textsc{check\_capability}, \textsc{verify\_identity}, \textsc{emit\_event} --- forbidden: \textsc{write\_canonical}
+  \item \textbf{Reflex}: \textsc{read\_canonical}, \textsc{emit\_event}, \textsc{throttle}, \textsc{isolate} --- forbidden: \textsc{write\_canonical, propose\_mutation}
+  \item \textbf{Ingress}: \textsc{read\_canonical}, \textsc{emit\_event}, \textsc{accept\_request} --- forbidden: \textsc{write\_canonical, execute\_shadow}
+\end{itemize}
+
+\begin{remark}
+No plane other than Canonical holds \textsc{write\_canonical}. This is the structural implementation of the Separation Thesis: the Adaptive plane (cognition) can only invoke \textsc{propose\_mutation}, which routes through the seven-stage Waterfall before any canonical write occurs.
+\end{remark}
+
+% ============================================================================
+\section{The Nine Root Invariants}
+\label{sec:invariants}
+% ============================================================================
+
+PSIA defines nine root invariants with IMMUTABLE scope and FATAL severity. Every invariant carries a cryptographic signature linking it to the governance authority.
+
+\begin{definition}[Root Invariant]
+An invariant $I_k$ is a root invariant if its scope is IMMUTABLE, its severity is FATAL, and its enforcement type is HARD\_DENY. Root invariants cannot be relaxed, suspended, or removed by any runtime action.
+\end{definition}
+
+We enumerate the nine root invariants with their formal expressions:
+
+\begin{enumerate}[label=\textbf{INV-ROOT-\arabic*:}, leftmargin=5em]
+  \item \textbf{Canonical Mutation Control.}
+  \[
+    \forall m \in \text{Mutations}: m.\text{origin} = \text{GatePlane} \land m.\text{quorum\_achieved} = \text{true}
+  \]
+
+  \item \textbf{Shadow Non-Mutation.}
+  \[
+    \forall e \in \text{ShadowExec}: e.\text{canonical\_writes} = \emptyset
+  \]
+
+  \item \textbf{Ledger Integrity.}
+  \[
+    \forall b_i \in \text{Ledger}: b_i.\text{prev\_hash} = \text{SHA-256}(b_{i-1})
+  \]
+
+  \item \textbf{T.A.R.L. Proposal-Only.}
+  \[
+    \text{T.A.R.L.}.\text{capabilities} \subseteq \{\textsc{propose\_mutation}, \textsc{emit\_event}\}
+  \]
+
+  \item \textbf{Reproducible Builds.}
+  \[
+    \forall a \in \text{Artifacts}: \text{SHA-256}(\text{rebuild}(a.\text{inputs})) = a.\text{hash}
+  \]
+
+  \item \textbf{Capability Token Required.}
+  \[
+    \forall p \in \text{Privileged}: \exists\, t \in \text{ValidTokens}: t.\text{covers}(p.\text{action}, p.\text{resource})
+  \]
+
+  \item \textbf{Monotonic Strictness (Waterfall).}
+  \[
+    \forall i < j: \text{severity}(\text{stage}_i) \leq \text{severity}(\text{stage}_j)
+  \]
+
+  \item \textbf{Reflex Action Limits.}
+  \[
+    \text{Reflex}.\text{actions} \subseteq \{\textsc{observe}, \textsc{instrument}, \textsc{redirect}, \textsc{isolate}\}
+  \]
+
+  \item \textbf{SAFE-HALT on Anchor Failure.}
+  \[
+    \neg\text{verify\_anchor}(S) \implies \text{enter\_SAFE\_HALT}()
+  \]
+\end{enumerate}
+
+\begin{remark}
+The monotonic strictness invariant (INV-ROOT-7) is enforced at runtime by the Waterfall engine: if any stage attempts to downgrade severity below the maximum observed so far, the engine logs an \texttt{INV-ROOT-7} violation and preserves the most restrictive prior decision.
+\end{remark}
+
+% ============================================================================
+\section{The Seven-Stage Waterfall Pipeline}
+\label{sec:waterfall}
+% ============================================================================
+
+Every operation in PSIA begins as a \texttt{RequestEnvelope}: a signed, trace-linked intent from an authenticated actor. Every envelope traverses a seven-stage Waterfall pipeline; abortable on deny or quarantine at any stage.
+
+\subsection{Stage Definitions}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}clp{7cm}@{}}
+\toprule
+\textbf{Stage} & \textbf{Name} & \textbf{Function} \\
+\midrule
+0 & Structural & Schema validation (Pydantic), capability token existence, nonce replay prevention, timestamp sanity ($\leq 300$s clock skew) \\
+1 & Signature & Cross-reference actor, device, and resource against threat fingerprint store (actor, device, resource, combo patterns) \\
+2 & Behavioral & Weighted composite deviation scoring: rate anomaly ($w{=}0.5$), resource novelty ($w{=}0.3$), action novelty ($w{=}0.2$); escalate at $\geq 0.5$, quarantine at $\geq 0.85$ \\
+3 & Shadow & Deterministic simulation via ShadowSimulator; verify replay hash, check critical invariant violations, score divergence ($> 0.3 \to$ escalate) \\
+4 & Gate & Cerberus triple-head evaluation (Identity, Capability, Invariant) + QuorumEngine consensus \\
+5 & Commit & Precondition verification (CerberusDecision.allowed), canonical mutation with SHA-256 diff hash, transactional rollback on failure \\
+6 & Memory & Ledger append (ExecutionRecord), Merkle-rooted block sealing at batch threshold, feedback callbacks for baseline/threat updates \\
+\bottomrule
+\end{tabular}
+\caption{Seven-stage Waterfall pipeline: each stage produces a \texttt{StageResult} with decision, reasons, timing, and metadata.}
+\label{tab:waterfall}
+\end{table}
+
+\subsection{Stage Decision Algebra}
+
+The decision space at each stage boundary is:
+\[
+\mathcal{D} = \{\textsc{allow}, \textsc{deny}, \textsc{quarantine}, \textsc{escalate}\}
+\]
+with severity ordering:
+\[
+\textsc{allow} < \textsc{escalate} < \textsc{quarantine} < \textsc{deny}
+\]
+INV-ROOT-7 requires monotonic non-decrease: the engine tracks $\max_{\text{severity}}$ and refuses to downgrade.
+
+\subsection{Pipeline Abort Semantics}
+
+The pipeline aborts immediately on \textsc{deny} or \textsc{quarantine}. Terminal events are emitted:
+\[
+\textsc{allow} \mapsto \texttt{REQUEST\_ALLOWED}, \quad \textsc{deny} \mapsto \texttt{REQUEST\_DENIED}, \quad \textsc{quarantine} \mapsto \texttt{REQUEST\_QUARANTINED}
+\]
+
+\subsection{Behavioral Analysis (Stage 2)}
+
+The Behavioral Stage computes a composite deviation score $\delta \in [0,1]$:
+\[
+\delta = 0.5 \cdot \delta_{\text{rate}} + 0.3 \cdot \delta_{\text{resource}} + 0.2 \cdot \delta_{\text{action}}
+\]
+where:
+\begin{itemize}[leftmargin=*]
+  \item $\delta_{\text{rate}} = \min\big(1, \frac{\text{current\_rate}}{\text{rate\_limit}} - 1\big)$ if over limit, else 0;
+  \item $\delta_{\text{resource}} = 0.4$ if the subject has never accessed this resource, else 0;
+  \item $\delta_{\text{action}} = 0.3$ if the subject has never performed this action, else 0.
+\end{itemize}
+Per-subject baselines are maintained with 5-minute rolling windows and rate-limit defaults of 120 requests/minute.
+
+% ============================================================================
+\section{Cerberus Gate Plane}
+\label{sec:cerberus}
+% ============================================================================
+
+The Cerberus Gate Plane (Waterfall Stage 4) operates three independent evaluation heads, each casting a signed \texttt{CerberusVote}. The votes are aggregated by a production \texttt{QuorumEngine}.
+
+\subsection{Triple-Head Architecture}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Identity Head}: authenticates the requestor via DID format validation (\texttt{did:project-ai:*}), credential verification, and identity document lookup.
+  \item \textbf{Capability Head}: validates that the requestor possesses a non-expired \texttt{CapabilityToken} covering the requested action and resource, enforcing scope constraints (rate limits, time windows, network zones) and non-transitive delegation policies.
+  \item \textbf{Invariant Head}: verifies that the proposed action does not violate any of the nine root invariants, performing pre-commit invariant checking against simulated post-state.
+\end{enumerate}
+
+Each head produces a \texttt{CerberusVote}:
+\[
+\text{vote} = (\text{head}, \text{decision} \in \{\textsc{allow}, \textsc{deny}, \textsc{quarantine}\}, \text{reasons}, \text{constraints}, \text{signature})
+\]
+
+If a head throws an exception, the engine synthesizes a \textsc{deny} vote with reason code \texttt{HEAD\_EXCEPTION}---implementing a fail-closed default.
+
+\subsection{QuorumEngine Consensus}
+
+The production QuorumEngine supports four consensus policies with per-head weighted voting:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Policy} & \textbf{Quorum Condition} & \textbf{Semantics} \\
+\midrule
+\texttt{unanimous} & $|V_{\text{allow}}| = N$ & All heads must allow; zero tolerance \\
+\texttt{2of3} & $|V_{\text{allow}}| \geq 2$ & Crash-tolerant; tolerates 1 head failure \\
+\texttt{simple} & $W_{\text{allow}} > W_{\text{total}} / 2$ & Weighted majority; invariant head has $1.5\times$ weight \\
+\texttt{bft} & $W_{\text{allow}} > 2 W_{\text{total}} / 3$ & Byzantine-tolerant; requires $>2/3$ weighted agreement \\
+\bottomrule
+\end{tabular}
+\caption{QuorumEngine consensus policies. Default per-head weights: identity=1.0, capability=1.0, invariant=1.5.}
+\label{tab:quorum}
+\end{table}
+
+\subsection{Deployment Profiles}
+
+We distinguish three deployment profiles to clarify BFT claims:
+
+\begin{definition}[Deployment Profile]
+A deployment profile classifies the operational resilience of the quorum engine:
+\begin{enumerate}
+  \item \textsc{Crash-Safe} ($N{=}3$, unanimous or 2of3): tolerates crash faults only. Not Byzantine-tolerant in any distributed sense---requires all heads to be honest.
+  \item \textsc{BFT-Ready} ($N{=}3$, BFT policy): infrastructure supports BFT semantics, but with $3f{+}1$ requiring $f{\geq}1 \Rightarrow N{\geq}4$, the deployment \emph{cannot} tolerate any Byzantine faults.
+  \item \textsc{BFT-Deployed} ($N{\geq}4$, BFT policy): full Byzantine fault tolerance. Tolerates $f = \lfloor(N{-}1)/3\rfloor$ Byzantine validators.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}
+Project-AI's default deployment uses $N{=}3$ with unanimity (\textsc{Crash-Safe}, $f{=}0$). The ``BFT'' label in the quorum engine denotes infrastructure capability, not a claim of deployed Byzantine tolerance. For production BFT guarantees, $N{\geq}4$ validators must be configured with the BFT quorum policy.
+\end{remark}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}llccc@{}}
+\toprule
+\textbf{Profile} & \textbf{Policy} & \textbf{$f_{\text{crash}}$} & \textbf{$f_{\text{byz}}$} & \textbf{Veto Power} \\
+\midrule
+\textsc{Crash-Safe}  & unanimous ($N{=}3$) & 0 & 0 & Single head \\
+\textsc{Crash-Safe}  & 2of3 ($N{=}3$)      & 1 & 0 & None (2-head collusion risk) \\
+\textsc{BFT-Ready}   & bft ($N{=}3$)        & 0 & 0 & None (transitional) \\
+\textsc{BFT-Deployed} & bft ($N{=}4$)       & 1 & 1 & None \\
+\textsc{BFT-Deployed} & bft ($N{=}7$)       & 2 & 2 & None \\
+\bottomrule
+\end{tabular}
+\caption{Resilience profiles: crash and Byzantine fault tolerance by deployment configuration.}
+\label{tab:resilience}
+\end{table}
+
+The decision algorithm:
+\begin{enumerate}[leftmargin=*]
+  \item Compute weighted allow/deny/quarantine tallies.
+  \item Check quorum achievement against configured policy.
+  \item Apply monotonic severity escalation: the final decision is the \emph{most restrictive} across all votes.
+  \item If quorum not achieved and worst is \textsc{allow}, downgrade to \textsc{deny}.
+  \item Classify severity: \textsc{deny}$\to$\texttt{high} (or \texttt{critical} if invariant head denied), \textsc{quarantine}$\to$\texttt{med}, \textsc{allow}$\to$\texttt{low}.
+  \item Merge constraints: take the minimum rate limit and logical OR of \texttt{require\_shadow} flags.
+  \item Construct \texttt{CommitPolicy}: commit is allowed only if $\text{final\_decision} = \textsc{allow}$; requires shadow hash match and ledger anchor append.
+\end{enumerate}
+
+\subsection{CerberusDecision Schema}
+
+The final decision is a Pydantic-validated \texttt{CerberusDecision}:
+\[
+\text{CD} = (\text{request\_id}, \text{severity}, \text{final\_decision}, \text{votes}[3], \text{quorum}, \text{commit\_policy}, \text{timestamp}, \text{signature\_set})
+\]
+with deterministic SHA-256 hash computation (excluding \texttt{signature\_set}) for ledger anchoring.
+
+\begin{definition}[Valid Cerberus Decision]
+A CerberusDecision is valid if and only if:
+\begin{enumerate}
+  \item $|\text{votes}| = 3$ (one per head);
+  \item $\text{quorum.achieved} = \text{true}$ for any allow decision;
+  \item $\text{final\_decision}$ is the most restrictive across all votes (per INV-ROOT-7);
+  \item $|\text{signature\_set}| \geq |\text{quorum.required}|$ quorum-matching signatures.
+\end{enumerate}
+\end{definition}
+
+% ============================================================================
+\section{Mutation Validity Condition}
+\label{sec:mvc}
+% ============================================================================
+
+\begin{definition}[Mutation Validity]
+A mutation $\Delta$ is valid if and only if:
+
+\paragraph{Invariant Preservation.}
+$\forall I_k \in I : I_k(S \oplus \Delta) = \text{true}.$
+
+\paragraph{Deterministic Shadow.}
+$D_v(S, \Delta)$ terminates, produces replay hash $h$, and $h$ is identical across replays under version $v$.
+
+\paragraph{Capability Authorization.}
+$C(\Delta.\text{actor}, \Delta.\text{resource}, \Delta.\text{action}) = \textsc{allowed}$, verified by a valid, non-expired \texttt{CapabilityToken} with matching scope.
+
+\paragraph{Quorum Threshold.}
+$Q_\pi(\Delta) \geq \tau_\pi$, where $\tau_\pi$ depends on the configured quorum policy $\pi$.
+\end{definition}
+
+\subsection{Safety Theorem}
+
+\begin{theorem}[Safety under Valid Mutation]
+If $S$ satisfies all invariants in $I$ and $\Delta$ satisfies the mutation validity condition, then $S \oplus \Delta$ satisfies all invariants in $I$.
+\end{theorem}
+
+\begin{proof}
+By invariant preservation, $\forall I_k \in I : I_k(S \oplus \Delta) = \text{true}$. The deterministic shadow confirms that $S \oplus \Delta$ was evaluated under identical conditions; capability authorization ensures the actor has legitimate authority; quorum threshold ensures multi-party agreement. Since $\oplus$ is a pure function and no other state transition occurs (INV-ROOT-1: only Gate-originated, quorum-achieved mutations modify canonical state), $S \oplus \Delta$ satisfies $I$.
+\end{proof}
+
+\subsection{Concurrency Model}
+\label{sec:concurrency}
+
+The mutation validity condition assumes atomic evaluation, but in a concurrent system, canonical state may be modified between shadow evaluation (Stage~3) and commit (Stage~5). We address this TOCTOU gap with \emph{optimistic concurrency control} (OCC) with version vector validation.
+
+\begin{definition}[Snapshot Isolation]
+Shadow evaluations operate on a frozen, immutable \emph{snapshot} of canonical state, not the live state. Concurrent mutations to canonical state do not affect in-flight shadow evaluations.
+\end{definition}
+
+\begin{definition}[Version Vector]
+Every canonical state key $k$ carries a monotonically increasing version number $v(k)$. A snapshot captures $\{(k, v_k, \text{val}_k)\}$ at creation time.
+\end{definition}
+
+The commit protocol:
+\begin{enumerate}[leftmargin=*]
+  \item Acquire single-writer commit lock (serialization point).
+  \item For each key $k$ in the mutation's \emph{read-set}: verify $v_{\text{current}}(k) = v_{\text{snapshot}}(k)$.
+  \item If all versions match: apply writes atomically, advance version numbers.
+  \item If any version mismatch: abort (conflict detected), retry from fresh snapshot.
+\end{enumerate}
+
+\begin{theorem}[Linearizability]
+All committed mutations are linearizable: they appear to execute atomically at the commit lock acquisition point. If $\text{commit}(M_a)$ returns before $\text{commit}(M_b)$ begins, then $M_a$ precedes $M_b$ in the linearization order.
+\end{theorem}
+
+\begin{proof}
+The single-writer commit lock serializes all validation-and-apply phases. Read-set validation rejects any mutation whose snapshot is stale. Therefore, committed mutations form a total order consistent with real-time ordering.
+\end{proof}
+
+\begin{remark}[Non-Conflicting Mutations]
+Mutations with disjoint write-sets will always pass read-set validation (no version conflict), but they are still \emph{serialized} through the single-writer commit lock---they do not execute concurrently. The lock ensures correctness; throughput under high concurrency is bounded by lock hold time. This is an explicit design tradeoff: correctness over throughput, appropriate for a governance-critical commit path where mutation rates are dominated by shadow evaluation and quorum consensus latency.
+\end{remark}
+
+\begin{remark}
+OCC retry is bounded: $\text{max\_retries} = 3$ by default. After exhaustion, the mutation is aborted and denied, preserving fail-closed semantics.
+\end{remark}
+
+\subsection{Liveness Theorem}
+\label{sec:liveness}
+
+\begin{theorem}[Progress under Fair Scheduling]
+Let $\Delta$ be a mutation satisfying the mutation validity condition. Under fair scheduling and bounded head evaluation time $T_{\max}$:
+\[
+\Box\big(\text{valid}(\Delta) \land \text{fair\_schedule} \land \forall h: T_h \leq T_{\max} \implies \Diamond\text{committed}(\Delta)\big)
+\]
+where $\Box$ denotes ``always'' and $\Diamond$ denotes ``eventually''.
+\end{theorem}
+
+\begin{proof}
+\begin{enumerate}[leftmargin=*]
+  \item The Waterfall pipeline has 7 stages, each with timeout $T_{\text{stage}}$. Total pipeline time $\leq 7 \cdot T_{\text{stage}}$.
+  \item Each Cerberus head evaluation is bounded by $T_{\max}$ (enforced by \texttt{HeadLivenessMonitor}). On timeout: synthesize fail-safe deny vote.
+  \item OCC retry is bounded by $\text{max\_retries}$.
+  \item Under fair scheduling, every ready request enters the pipeline in finite time.
+  \item Each pipeline stage either advances or aborts in bounded time (timeout enforcement).
+  \item Valid mutations pass all checks, so they commit in bounded time.
+\end{enumerate}
+\end{proof}
+
+\paragraph{Liveness Bound.}
+$T_{\text{total}} \leq T_{\text{queue}}(30\text{s}) + 7 \times T_{\text{stage}}(10\text{s}) + \text{max\_retries}(3) \times T_{\text{retry}}(5\text{s}) = 115\text{s}$ worst case.
+
+\paragraph{Fail-Safe.} On any timeout or liveness violation: the request is \textsc{denied} (fail-closed). No mutation is committed. Canonical state is unchanged.
+
+\subsection{Monotonic Anchoring}
+
+Define the anchor chain:
+\[
+H(S_{n+1}) = \text{SHA-256}\big(H(S_n) \,\|\, \Delta_{n+1} \,\|\, \text{Sigs}_{n+1}\big)
+\]
+with genesis $H(S_0) = 0^{64}$. INV-ROOT-3 ensures $\forall b_i: b_i.\text{prev\_hash} = \text{SHA-256}(b_{i-1})$, preventing rollback and equivocation.
+
+PSIA implements this via \texttt{LedgerBlock} with Merkle tree roots:
+\[
+\text{merkle\_root}([\,h_1, \dots, h_n\,]) = \text{MerkleTree}_{\text{SHA-256}}(h_1, \dots, h_n)
+\]
+using standard binary Merkle trees with last-leaf duplication for odd counts.
+
+% ============================================================================
+\section{Deterministic Shadow Operator}
+\label{sec:shadow}
+% ============================================================================
+
+The shadow operator $D_v : (\mathcal{S}, \mathcal{M}) \to (\mathcal{S}', R)$ produces a \texttt{ShadowReport}:
+
+\[
+D_v(S, \Delta) = (\text{snapshot\_id}, \text{determinism\_proof}, \text{results}, \text{signature})
+\]
+
+where:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{DeterminismProof}: runtime version, seed (input hash), replay hash (SHA-256 of execution trace), cross-node verification flag;
+  \item \textbf{ShadowResults}: divergence score $\in [0,1]$, resource envelope (CPU ms, memory peak bytes, IO bytes, syscalls), invariant violations, privilege anomalies, side-effect summary;
+  \item \textbf{ResourceEnvelope}: CPU quota 1000ms, memory quota 256MB, IO sealed; syscall tracking for privilege anomaly detection.
+\end{itemize}
+
+\subsection{Operational Semantics}
+\label{sec:shadow-semantics}
+
+We formalize the shadow execution model via a core calculus, $\lambda^{\text{plane}}$, that characterizes the class of programs deterministic under shadow evaluation.
+
+\subsubsection{Core Calculus $\lambda^{\text{plane}}$}
+
+We define a small language sufficient to express all shadow programs:
+
+\[
+\begin{array}{rcl@{\qquad}l}
+  P & \in & \{\text{Primary}, \text{Shadow}, \text{Invariant}, \text{Dual}\} & \text{planes} \\[3pt]
+  \tau & ::= & \text{Int} \mid \text{Bool} \mid \text{Void} \mid \text{Str} \mid \tau_1 \to \tau_2 & \text{base types} \\[3pt]
+  T & ::= & \tau @P & \text{annotated types} \\[3pt]
+  v & ::= & n \mid b \mid \lambda x{:}T.\, e \mid () & \text{values} \\[3pt]
+  e & ::= & v \mid x \mid e_1\; e_2 & \text{expressions} \\
+    & \mid & \text{read}(k) \mid \text{write}(k, e) \mid \text{write\_shadow}(k, e) & \text{state ops} \\
+    & \mid & \text{if}(e_1, e_2, e_3) \mid \text{let}\; x = e_1 \;\text{in}\; e_2 & \text{control} \\
+    & \mid & \text{rand}() \mid \text{now}() \mid \text{io}(e_1, e_2) & \text{effects} \\
+    & \mid & \text{validate}(I_k) \mid \text{promote}(e) & \text{governance} \\[3pt]
+  \sigma & : & \text{Key} \to \text{Val} & \text{shadow store} \\[3pt]
+  \Gamma & : & \text{Var} \to T & \text{type environment}
+\end{array}
+\]
+
+\paragraph{Plane Subtyping.} Defined as a partial order $\leq_P$:
+\[
+  \text{Invariant} \leq_P \text{Shadow} \leq_P \text{Primary}, \qquad \text{Dual} \leq_P P \;\text{for all}\; P.
+\]
+This induces annotated subtyping: $\tau@P_1 \leq \tau@P_2$ iff $P_1 \leq_P P_2$.
+
+\begin{definition}[Sealed Context]
+A \emph{SealedContext} is a runtime environment that eliminates all sources of non-determinism:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Seed}: Fixed PRNG seed derived from $\text{SHA-256}(\text{inputs\_hash})$;
+  \item \textbf{Clock}: Logical monotonic integer (no wall-clock access);
+  \item \textbf{IO}: Pre-computed table; unknown endpoints return $\bot$;
+  \item \textbf{Environment}: Empty (no env vars, no filesystem, no network);
+  \item \textbf{Memory}: Fixed allocation pool (deterministic layout).
+\end{itemize}
+Two SealedContexts constructed from the same inputs are identical.
+\end{definition}
+
+\begin{definition}[Deterministic Program Class]
+A shadow program $P$ in $\lambda^{\text{plane}}$ is a closed expression $e$ of type $\tau@\text{Shadow}$ in the empty environment. It denotes a total function:
+\[
+e : (\text{SealedContext}, \text{CanonicalSnapshot}) \to (\text{ShadowState}, \text{TraceHash})
+\]
+A program is \emph{fully deterministic} if for any two evaluations under identical $(\text{ctx}, \text{snap})$, the resulting $(\text{state}, \text{hash})$ pairs are identical.
+\end{definition}
+
+The small-step operational semantics defines eight transition rules:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lp{9cm}@{}}
+\toprule
+\textbf{Rule} & \textbf{Semantics} \\
+\midrule
+\textsc{Read-Canonical} & $\langle \sigma, \text{read}(k)\rangle \to_{\text{shadow}} \langle \sigma, \text{snapshot}[k]\rangle$. Reads from frozen snapshot. \\
+\textsc{Write-Shadow} & $\langle \sigma, \text{write}(k, v)\rangle \to_{\text{shadow}} \langle \sigma[k{\mapsto}v], ()\rangle$. Shadow-local only. \\
+\textsc{Compute} & $\langle \sigma, f(\text{args})\rangle \to_{\text{shadow}} \langle \sigma, f(\text{args})\rangle$. Pure computation. \\
+\textsc{Branch} & $\langle \sigma, \text{if}(c, t, e)\rangle \to_{\text{shadow}} \langle \sigma', r\rangle$. Deterministic: $c$ on deterministic state. \\
+\textsc{Rand} & $\langle \sigma, \text{rand}()\rangle \to_{\text{shadow}} \langle \sigma, \text{prng\_next}(\text{seed})\rangle$. Seeded PRNG, no CSPRNG. \\
+\textsc{Time} & $\langle \sigma, \text{now}()\rangle \to_{\text{shadow}} \langle \sigma, \text{clock}{+}{+}\rangle$. Logical time only. \\
+\textsc{IO} & $\langle \sigma, \text{io}(e, d)\rangle \to_{\text{shadow}} \langle \sigma, \text{table}[e] \mid \bot\rangle$. Pre-computed or $\bot$. \\
+\textsc{Validate} & $\langle \sigma, \text{validate}(I_k)\rangle \to_{\text{shadow}} \langle \sigma, I_k(\sigma)\rangle$. Pure predicate. \\
+\bottomrule
+\end{tabular}
+\caption{Small-step transition rules for shadow execution.}
+\label{tab:transitions}
+\end{table}
+
+\begin{theorem}[Shadow Determinism]
+Let $P$ be a program in the deterministic class and let $\text{ctx}$ be a SealedContext constructed from inputs hash $h$. Let $\text{snap}$ be a canonical snapshot. If $P$ is well-typed under the plane-safety type system and executes entirely within $\text{ctx}$, then for any two independent executions:
+\[
+(\sigma_1, t_1) = \text{exec}_1(P, \text{ctx}, \text{snap}), \quad (\sigma_2, t_2) = \text{exec}_2(P, \text{ctx}, \text{snap})
+\]
+we have $\sigma_1 = \sigma_2$ and $t_1 = t_2$, where $\sigma_i$ is the final shadow state and $t_i$ is the trace hash.
+\end{theorem}
+
+\begin{proof}
+All sources of non-determinism are eliminated by the SealedContext: PRNG is seeded deterministically from $h$, time is a logical monotonic counter, IO resolves from a pre-computed immutable table, environment is empty, and memory layout is fixed. Each transition rule in Table~\ref{tab:transitions} is a pure function of $(\sigma, \text{ctx}, \text{snap})$: no rule introduces external state. The proof obligation reduces to verifying that $P$ does not escape the SealedContext. This is enforced statically by the plane-safety type system (Theorem~\ref{thm:type-soundness}) and dynamically by runtime sandboxing. Given identical inputs and deterministic transitions, the execution traces are identical, yielding $\sigma_1 = \sigma_2$ and $t_1 = t_2$.
+\end{proof}
+
+\paragraph{Determinism Verification Oracle.} At runtime, the oracle executes each shadow program \emph{twice} on the same sealed context and snapshot, then compares replay hashes. If $h_1 \neq h_2$, the mutation is quarantined:
+\[
+h_1 \neq h_2 \implies \text{quarantine}(\Delta)
+\]
+
+\subsection{Shadow Stage Evaluation (Stage 3)}
+
+The ShadowStage evaluates three conditions:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Determinism verification}: if $\texttt{replay\_verified} = \text{false}$, quarantine;
+  \item \textbf{Critical invariant violations}: if any violation has severity $\in \{\text{critical}, \text{fatal}\}$, quarantine;
+  \item \textbf{Divergence score}: if $\text{divergence\_score} > 0.3$, escalate (require further evaluation).
+\end{enumerate}
+
+\subsection{Shadow Execution Architecture}
+
+Project-AI's Shadow Execution Plane implements five operational domains:
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Execution Shadow}: dual-plane execution with activation predicates (threat score $> 0.7$, high stakes, behavioral anomaly), invariant validation, and divergence detection;
+  \item \textbf{Security Shadow}: parallel authentication, jailbreak containment, behavioral fingerprinting (SHA-256);
+  \item \textbf{Governance Shadow}: pre-commit policy simulation under invariant constraints;
+  \item \textbf{Temporal Shadow}: chaos testing with event reordering, delay injection, rollback simulation;
+  \item \textbf{Observability Shadow}: sealed telemetry capturing activation counts, divergence rates, overhead metrics.
+\end{enumerate}
+
+\noindent
+Constitutional guarantees (enforced by INV-ROOT-2):
+\begin{itemize}[leftmargin=*]
+  \item Shadow NEVER silently mutates canonical state ($e.\text{canonical\_writes} = \emptyset$);
+  \item Shadow NEVER bypasses audit;
+  \item Shadow NEVER weakens invariants;
+  \item Shadow NEVER increases attack surface;
+  \item All shadow executions are deterministic and replayable.
+\end{itemize}
+
+% ============================================================================
+\section{Capability Authorization}
+\label{sec:capability}
+% ============================================================================
+
+Authorization in PSIA is mediated by \texttt{CapabilityToken}s: cryptographically signed, scoped, time-limited, non-transitive by default.
+
+\begin{definition}[Capability Token]
+A \texttt{CapabilityToken} is valid if:
+\begin{enumerate}
+  \item $\texttt{issued\_at} < \texttt{expires\_at}$ and current time $\leq \texttt{expires\_at}$;
+  \item $\texttt{nonce}$ is unique (replay prevention via Stage 0);
+  \item $\exists\, s \in \texttt{scope}: s.\text{matches\_action}(\text{action}) \land s.\text{matches\_resource}(\text{resource})$;
+  \item $\texttt{signature}$ verifies under issuer's Ed25519 public key;
+  \item $\texttt{binding.client\_cert\_fingerprint}$ matches if present.
+\end{enumerate}
+\end{definition}
+
+Scope constraints include: rate limits per minute (default 120), allowed time windows (HH:MM-HH:MM), and network zone restrictions. Delegation is controlled by \texttt{DelegationPolicy} with maximum chain depth.
+
+% ============================================================================
+\section{PSIA Schema Layer}
+\label{sec:schemas}
+% ============================================================================
+
+All PSIA data structures are Pydantic-validated, frozen (immutable after construction), and equipped with deterministic SHA-256 \texttt{compute\_hash()} methods excluding signature fields. This ensures tamper-evident ledger anchoring.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lp{9cm}@{}}
+\toprule
+\textbf{Schema} & \textbf{Purpose \& Key Fields} \\
+\midrule
+\texttt{RequestEnvelope} & Universal entry point: request\_id, actor (DID), subject, capability\_token\_id, Intent (action, resource, parameters, justification), RequestContext (trace\_id, risk\_hints), timestamps, Ed25519 signature \\
+\texttt{CapabilityToken} & Scoped authorization: token\_id, issuer, subject, scope array (resource pattern, actions, constraints), delegation policy, client cert binding, nonce, expiry, Ed25519 signature \\
+\texttt{ShadowReport} & Simulation output: shadow\_job\_id, DeterminismProof (seed, replay\_hash, verified), ShadowResults (divergence, resource envelope, violations, anomalies), Ed25519 signature \\
+\texttt{CerberusDecision} & Gate verdict: severity, final\_decision, votes[3], QuorumInfo, CommitPolicy (allowed, requires\_shadow\_hash\_match, requires\_anchor\_append), multi-signature set \\
+\texttt{ExecutionRecord} & Ledger entry: inputs\_hash, shadow\_hash, decision\_hash, canonical\_diff\_hash, result, lifecycle timestamps, Ed25519 signature \\
+\texttt{LedgerBlock} & Sealed block: height, previous\_block\_hash, merkle\_root, records (hashes), TimeProof (RFC 3161), multi-validator signatures \\
+\bottomrule
+\end{tabular}
+\caption{Core PSIA schemas. All schemas are frozen Pydantic models with deterministic hashing.}
+\label{tab:schemas}
+\end{table}
+
+% ============================================================================
+\section{Cryptographic Ledger}
+\label{sec:ledger}
+% ============================================================================
+
+The PSIA ledger is a blockchain-like append-only structure:
+
+\begin{enumerate}[leftmargin=*]
+  \item Each \texttt{ExecutionRecord} captures the complete cryptographic chain:
+  \[
+  \text{inputs\_hash} = \text{SHA-256}(\text{RequestEnvelope} \,\|\, \text{PolicyGraph} \,\|\, \text{InvariantSet})
+  \]
+  \item Records are batched into \texttt{LedgerBlock}s (default batch size: 100).
+  \item Each block contains:
+  \begin{itemize}[leftmargin=*]
+    \item $\text{merkle\_root} = \text{MerkleTree}_{\text{SHA-256}}(\text{record\_hashes})$
+    \item $\text{prev\_hash} = \text{SHA-256}(b_{i-1})$ (chain integrity per INV-ROOT-3)
+    \item $\text{TimeProof}$: RFC 3161 trusted timestamp
+    \item $\text{validator\_signatures}$: multi-validator Ed25519 attestation (BFT: $\geq 2f+1$)
+  \end{itemize}
+  \item Block sealing is triggered at batch threshold or forced via \texttt{force\_seal()}.
+\end{enumerate}
+
+The Sovereign Runtime additionally provides:
+\begin{itemize}[leftmargin=*]
+  \item Ed25519 keypair management with key ceremony protocol;
+  \item Signed configuration snapshots for compliance auditing;
+  \item Role-based signature verification;
+  \item Policy state binding to execution context;
+  \item Compliance bundle export (audit trail + public key + integrity report).
+\end{itemize}
+
+% ============================================================================
+\section{Shadow Thirst: A Constitutional Programming Substrate}
+\label{sec:thirst}
+% ============================================================================
+
+Shadow Thirst is a domain-specific language providing \emph{compiler-enforced} separation of execution planes. It is the first constitutionally-bound dual-plane programming substrate.
+
+\subsection{Language Features}
+
+\textbf{Memory Qualifiers:}
+\begin{itemize}[leftmargin=*]
+  \item \texttt{Canonical<T>}: primary plane only, persistent;
+  \item \texttt{Shadow<T>}: shadow plane only, ephemeral;
+  \item \texttt{Ephemeral<T>}: both planes, ephemeral;
+  \item \texttt{Dual<T>}: both planes, conditionally persistent.
+\end{itemize}
+
+\textbf{Dual-Plane Functions:} Functions contain \texttt{primary} and \texttt{shadow} blocks, activation predicates, invariant clauses, divergence policies, and mutation boundaries.
+
+\textbf{Divergence Policies:}
+$\{\texttt{require\_identical}, \texttt{allow\_epsilon}(\varepsilon), \texttt{log\_divergence}, \texttt{quarantine\_on\_diverge}, \texttt{fail\_primary}\}$
+
+\textbf{Mutation Boundaries:}
+$\{\texttt{read\_only}, \texttt{ephemeral\_only}, \texttt{shadow\_state\_only}, \texttt{validated\_canonical}, \texttt{emergency\_override}\}$
+
+\subsection{15-Stage Compiler Pipeline}
+
+\begin{enumerate}[label=\arabic*., leftmargin=3em]
+  \item Lexer $\to$ tokenization (shadow/primary/invariant keywords, memory qualifiers)
+  \item Parser $\to$ AST construction (recursive descent)
+  \item Semantic Analyzer $\to$ plane-annotated type checking (Section~\ref{sec:type-soundness})
+  \item Plane Splitter $\to$ separate primary and shadow dataflow graphs
+  \item Plane Isolation $\to$ verify shadow cannot mutate canonical (INV-ROOT-2)
+  \item Determinism Analyzer $\to$ verify shadow is deterministic
+  \item Privilege Escalation $\to$ detect unauthorized state elevation
+  \item Resource Estimator $\to$ bound CPU/memory (1ms per 100 instructions heuristic)
+  \item Divergence Risk $\to$ estimate divergence probability
+  \item Invariant Purity $\to$ verify invariants are pure (no side effects)
+  \item Dual-Plane IR Generation $\to$ tagged IR with execution plane annotations
+  \item Optimization Pass $\to$ dead code elimination, constant folding
+  \item Bytecode Generator $\to$ binary format with magic \texttt{SHAD}, plane-tagged instructions
+  \item Constitutional Hooks $\to$ inject \texttt{VALIDATE\_AND\_COMMIT}, \texttt{SEAL\_AUDIT}
+  \item Artifact Sealing $\to$ SHA-256 cryptographic signing (per INV-ROOT-5)
+\end{enumerate}
+
+\subsection{Shadow-Aware Virtual Machine}
+
+The VM executes dual frames (primary + shadow) with:
+\begin{itemize}[leftmargin=*]
+  \item Stack-based evaluation with plane-restricted instruction sets;
+  \item Constitutional commit protocol: divergence analysis $\to$ invariant validation $\to$ T.A.R.L. policy check $\to$ mutation boundary validation $\to$ commit/quarantine;
+  \item Resource bounds enforcement (CPU: 1000ms, memory: 256MB);
+  \item Audit trail recording with SHA-256 sealing.
+\end{itemize}
+
+\subsection{Bytecode Format}
+
+40+ opcodes organized into categories: stack operations, memory operations, arithmetic, logical, control flow, and shadow-specific operations. Each instruction carries a plane tag: \texttt{0x01}=Primary, \texttt{0x02}=Shadow, \texttt{0x03}=Invariant.
+
+\subsection{Plane-Safety Type System}
+\label{sec:type-soundness}
+
+Every expression in $\lambda^{\text{plane}}$ carries a \emph{plane annotation} $P$ (Section~\ref{sec:shadow-semantics}). The type system enforces plane isolation as a static guarantee: well-typed shadow programs cannot produce canonical writes. The full syntax, subtyping lattice, and core calculus are defined in the grammar of $\lambda^{\text{plane}}$ (Section~\ref{sec:shadow-semantics}).
+
+\paragraph{Typing Judgment.} $\Gamma; \pi \vdash e : \tau @P$ means ``under type environment $\Gamma$ and current execution plane $\pi$, expression $e$ has type $\tau$ at plane $P$.''
+
+\paragraph{Inference Rules.} We present the typing rules in standard natural-deduction style. Each rule's plane constraints enforce isolation.
+
+\medskip
+\noindent
+\fbox{\textsc{T-Var}} \quad
+$\dfrac{\Gamma(x) = \tau@P}{\Gamma; \pi \vdash x : \tau@P}$
+\hfill
+\fbox{\textsc{T-Sub}} \quad
+$\dfrac{\Gamma; \pi \vdash e : \tau@P_1 \quad P_1 \leq_P P_2}{\Gamma; \pi \vdash e : \tau@P_2}$
+
+\medskip
+\noindent
+\fbox{\textsc{T-Abs}} \quad
+$\dfrac{\Gamma, x{:}\tau_1@P_1; \pi \vdash e : \tau_2@P_2}{\Gamma; \pi \vdash \lambda x{:}\tau_1@P_1.\, e : (\tau_1 \to \tau_2)@P_2}$
+\hfill
+\fbox{\textsc{T-App}} \quad
+$\dfrac{\Gamma; \pi \vdash e_1 : (\tau_1 \to \tau_2)@P \quad \Gamma; \pi \vdash e_2 : \tau_1@P}{\Gamma; \pi \vdash e_1\; e_2 : \tau_2@P}$
+
+\medskip
+\noindent
+\fbox{\textsc{T-Read-Canonical}} \quad
+$\dfrac{k : \tau \in \text{snap}}{\Gamma; \pi \vdash \text{read}(k) : \tau@\text{Shadow}}$
+\quad Reads from frozen canonical snapshot. Result is always Shadow-typed.
+
+\medskip
+\noindent
+\fbox{\textsc{T-Write-Canonical}} \quad
+$\dfrac{\Gamma; \pi \vdash e : \tau@\text{Primary} \quad \pi = \text{Primary}}{\Gamma; \pi \vdash \text{write}(k, e) : \text{Void}@\text{Primary}}$
+\quad \textbf{Forbidden} when $\pi = \text{Shadow}$. This rule is the static enforcement of INV-ROOT-2.
+
+\medskip
+\noindent
+\fbox{\textsc{T-Write-Shadow}} \quad
+$\dfrac{\Gamma; \pi \vdash e : \tau@\text{Shadow} \quad \pi \in \{\text{Shadow}, \text{Primary}\}}{\Gamma; \pi \vdash \text{write\_shadow}(k, e) : \text{Void}@\text{Shadow}}$
+\quad Shadow-local writes are permitted in shadow or primary context.
+
+\medskip
+\noindent
+\fbox{\textsc{T-Promote}} \quad
+$\dfrac{\Gamma; \pi \vdash e : \tau@\text{Shadow} \quad \text{commit\_protocol\_complete}}{\Gamma; \pi \vdash \text{promote}(e) : \tau@\text{Primary}}$
+\quad Elevation from Shadow to Primary \textbf{only} after the full Waterfall commit protocol has completed. This is a \emph{runtime-guarded} typing rule: the premise $\text{commit\_protocol\_complete}$ is verified dynamically.
+
+\medskip
+\noindent
+\fbox{\textsc{T-Invariant-Pure}} \quad
+$\dfrac{\Gamma; \text{Invariant} \vdash e : \tau@\text{Invariant} \quad \text{no\_writes}(e)}{\Gamma; \pi \vdash e : \tau@\text{Invariant}}$
+\quad Invariant expressions must be pure: no writes to any plane.
+
+\medskip
+\noindent
+\fbox{\textsc{T-If}} \quad
+$\dfrac{\Gamma; \pi \vdash e_1 : \text{Bool}@P \quad \Gamma; \pi \vdash e_2 : \tau@P \quad \Gamma; \pi \vdash e_3 : \tau@P}{\Gamma; \pi \vdash \text{if}(e_1, e_2, e_3) : \tau@P}$
+
+\medskip
+\noindent
+\fbox{\textsc{T-Validate}} \quad
+$\dfrac{I_k \in I}{\Gamma; \pi \vdash \text{validate}(I_k) : \text{Bool}@\text{Invariant}}$
+\quad Pure predicate evaluation.
+
+\paragraph{Key Observation.} The critical safety property follows from the structure of \textsc{T-Write-Canonical}: it requires $\pi = \text{Primary}$. Since all shadow execution occurs under $\pi = \text{Shadow}$, this rule is statically unreachable. No auxiliary analysis is needed; INV-ROOT-2 is a \emph{consequence of the type system structure}.
+
+We establish type soundness via the standard Progress + Preservation structure.
+
+\begin{lemma}[Preservation]
+\label{lem:preservation}
+If $\Gamma \vdash e : T@P$ and $\langle \sigma, e \rangle \to_{\text{shadow}} \langle \sigma', e' \rangle$, then $\Gamma' \vdash e' : T'@P'$ where $P' \leq P$ in the plane subtyping order. In particular, if $P = \text{Shadow}$, then $P' \in \{\text{Shadow}, \text{Invariant}\}$.
+\end{lemma}
+
+\begin{proof}
+By case analysis on the transition rules (Table~\ref{tab:transitions}). \textsc{Read-Canonical} produces $T@\text{Shadow}$. \textsc{Write-Shadow} produces $\text{Void}@\text{Shadow}$. \textsc{Compute}, \textsc{Branch}, \textsc{Rand}, \textsc{Time}, \textsc{IO} preserve the shadow plane. \textsc{Validate} produces $\text{Bool}@\text{Invariant} \leq T@\text{Shadow}$. No rule escalates from Shadow to Primary.
+\end{proof}
+
+\begin{lemma}[Progress]
+\label{lem:progress}
+If $\Gamma \vdash e : T@P$ and $e$ is not a value, then there exists $\sigma', e'$ such that $\langle \sigma, e \rangle \to_{\text{shadow}} \langle \sigma', e' \rangle$.
+\end{lemma}
+
+\begin{proof}
+The eight transition rules cover all non-value expression forms in the shadow language: reads, writes, function application, branching, randomness, time, IO, and validation. Well-typedness ensures each rule's preconditions are met (e.g., \textsc{T-Write-Shadow} ensures the target is shadow-typed). The SealedContext eliminates blocking operations (IO returns from a pre-computed table; time always advances).
+\end{proof}
+
+\begin{theorem}[Plane Safety (Type Soundness)]
+\label{thm:type-soundness}
+If program $P$ is well-typed under the plane-annotated type system, then for all executions of $P$ in shadow context:
+\[
+\text{canonical\_writes}(P) = \emptyset
+\]
+\end{theorem}
+
+\begin{proof}
+By Preservation (Lemma~\ref{lem:preservation}), every intermediate expression during shadow execution retains a Shadow-or-below plane annotation. The only rule producing canonical writes is \textsc{T-Write-Canonical}, which requires Primary context. Since Preservation guarantees the plane annotation never escalates to Primary during shadow execution, no canonical write can occur. Progress (Lemma~\ref{lem:progress}) ensures evaluation does not get stuck, so the program either terminates with $\text{canonical\_writes} = \emptyset$ or diverges (handled by resource bounds enforcement).
+\end{proof}
+
+\begin{corollary}
+Well-typed Shadow Thirst programs preserve INV-ROOT-2 (shadow non-mutation).
+\end{corollary}
+
+\begin{remark}
+The transition rules in Table~\ref{tab:transitions} and the Progress/Preservation lemmas govern \emph{shadow-plane execution only}. Primary-plane execution operates under the full Waterfall pipeline with canonical write authority; its safety is enforced by the mutation validity condition (Section~\ref{sec:mvc}) and quorum consensus, not by shadow transition restrictions.
+\end{remark}
+
+% ============================================================================
+\section{Event Bus and Observability}
+\label{sec:events}
+% ============================================================================
+
+PSIA defines 30+ typed events covering all planes and lifecycle phases. Each \texttt{PSIAEvent} is:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Typed}: from an enumeration of event types (e.g., \texttt{WATERFALL\_START}, \texttt{STAGE\_ENTER}, \texttt{STAGE\_EXIT}, \texttt{REQUEST\_ALLOWED}, \texttt{INVARIANT\_VIOLATED}, \texttt{SAFE\_HALT\_ENTERED});
+  \item \textbf{Trace-linked}: carries \texttt{trace\_id} and \texttt{request\_id};
+  \item \textbf{Signed}: carries artifact hashes;
+  \item \textbf{Hashable}: deterministic SHA-256 via \texttt{compute\_hash()}.
+\end{itemize}
+
+The \texttt{EventBus} provides synchronous pub/sub delivery with ring-buffer history (default: 10,000 events). Subscribers can register for specific event types or wildcard (\texttt{None} = all events).
+
+Severity levels: \texttt{DEBUG}, \texttt{INFO}, \texttt{WARNING}, \texttt{ERROR}, \texttt{CRITICAL}, \texttt{FATAL}.
+
+% ============================================================================
+\section{Adversarial Model}
+\label{sec:adversarial}
+% ============================================================================
+
+\subsection{Byzantine Validators}
+
+Under $N$ validators with at most $f$ Byzantine:
+\[
+N \geq 3f + 1, \quad \tau \geq 2f + 1.
+\]
+PSIA's production deployment uses $N = 3$ (Identity, Capability, Invariant heads) with unanimity ($\tau = 3$, $f = 0$), classified as \textsc{Crash-Safe} (see Section~\ref{sec:cerberus}, Table~\ref{tab:resilience}). The BFT policy supports $N \geq 4$ with weighted quorum ($W_{\text{allow}} > 2W_{\text{total}}/3$).
+
+\subsection{Validator Collusion Threat Model}
+\label{sec:threat-model}
+
+We formally analyze head compromise scenarios:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lp{8.5cm}@{}}
+\toprule
+\textbf{Threat Class} & \textbf{Description} \\
+\midrule
+Crash Fault & Head stops responding. Timeout $\to$ synthesize deny vote (fail-closed). \\
+Byzantine Fault & Head returns arbitrary (potentially malicious) votes. \\
+Collusion & Two or more heads coordinate to allow/deny mutations contrary to policy. \\
+Veto Abuse & Head systematically denies valid mutations (liveness attack). \\
+Replay Attack & Head replays old votes for new requests. \\
+\bottomrule
+\end{tabular}
+\caption{Threat taxonomy for Cerberus evaluation heads.}
+\label{tab:threats}
+\end{table}
+
+\paragraph{Analysis by Quorum Policy.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{$N{=}3$, unanimous ($f{=}0$)}: Any single honest head blocks invalid mutations (\emph{safety}). Any single head can veto all mutations (\emph{liveness risk}). Two colluding heads can deny all mutations but \emph{cannot} force-allow---the third honest head blocks.
+  \item \textbf{$N{=}3$, 2of3 ($f{=}1$)}: \textbf{Critical risk}: two colluding heads can force-allow invalid mutations, bypassing invariant checking. Only total failure blocks progress.
+  \item \textbf{$N{\geq}4$, BFT ($f < N/3$)}: Requires ${>}N/3$ Byzantine heads to violate safety. Acceptable under standard BFT assumptions.
+\end{itemize}
+
+\paragraph{Collusion Detection.} The implementation includes a \texttt{CollusionDetector} that monitors pairwise agreement rates over a sliding window. Under independence, expected agreement $\approx \sum_d P(d)^2$. Significant deviation (agreement $> 95\%$ with $n \geq 10$) triggers a collusion alert. Veto abuse is detected when a head's deny rate exceeds $2\times$ the baseline.
+
+\subsection{Malicious Cognition Plane}
+
+The Adaptive plane may propose arbitrary $\Delta$ but:
+\begin{itemize}[leftmargin=*]
+  \item Cannot write canonical state directly (INV-ROOT-1);
+  \item Cannot bypass the seven-stage Waterfall (structural enforcement);
+  \item Cannot forge capability tokens (Ed25519 signature verification);
+  \item Cannot replay tokens (nonce uniqueness in Stage 0).
+\end{itemize}
+
+\subsection{Determinism Disruption}
+
+Mitigations:
+\begin{itemize}[leftmargin=*]
+  \item Time-based nondeterminism: logical time abstraction (SealedContext, Section~\ref{sec:shadow-semantics});
+  \item Race conditions: sealed IO, controlled execution;
+  \item Environment variance: fixed container image hash, deterministic seeds (INV-ROOT-5);
+  \item Concurrency: snapshot isolation with OCC version validation (Section~\ref{sec:concurrency}).
+\end{itemize}
+
+% ============================================================================
+\section{Conflation Instability}
+\label{sec:conflation}
+% ============================================================================
+
+\begin{proposition}[Conflation Instability]
+If a component both (i)~adapts behavior from feedback and (ii)~directly commits canonical state mutations without independent invariant validation, then there exists a perturbation sequence that violates some invariant in $I$.
+\end{proposition}
+
+\begin{proof}
+Consider an adaptive component optimizing a reward function while directly applying mutations. Perturb feedback to overweight throughput while invariant $I_k$ (e.g., $\texttt{trust\_score} \geq 0.7$) must hold. The component may commit updates violating $I_k$. Without independent enforcement (the seven-stage Waterfall), safety depends on adaptation correctness rather than structural constraints. The PSIA architecture prevents this: INV-ROOT-1 ensures only Gate-originated, quorum-achieved mutations reach canonical state.
+\end{proof}
+
+\begin{example}[Canonical Counterexample]
+A user with trust score $0.45$ (below $\theta = 0.7$) requests memory deletion. Under PSIA:
+
+\begin{enumerate}[leftmargin=*]
+  \item Stage 0 (Structural): validates request schema, token, nonce;
+  \item Stage 2 (Behavioral): checks deviation score against baseline;
+  \item Stage 3 (Shadow): simulates deletion, detects invariant violation;
+  \item Stage 4 (Gate): Identity head validates DID; Capability head checks scope; Invariant head DENIES (trust threshold violation);
+  \item QuorumEngine: one deny vote $\to$ final decision = \textsc{deny};
+  \item Stage 5 (Commit): \texttt{commit\_policy.allowed = false}; no canonical mutation;
+  \item Stage 6 (Memory): denial recorded to ledger with sealed execution record.
+\end{enumerate}
+\end{example}
+
+% ============================================================================
+\section{Extended Formal Results}
+\label{sec:formal}
+% ============================================================================
+
+\begin{theorem}[Structural Safety]
+Given constitutional separation, deterministic shadow, BFT quorum, and reflex safety monotonicity, violation of invariants requires either (i)~more than $f$ Byzantine validators \emph{and} shadow compromise, or (ii)~violation of deterministic runtime assumptions.
+\end{theorem}
+
+\begin{proof}
+Under the mutation validity condition, accepted mutations preserve invariants and are deterministically simulated. BFT quorum ensures conflicting mutations cannot both be committed without exceeding $f$ Byzantine validators. Reflex actions (INV-ROOT-8) are restricted to $\{\textsc{observe}, \textsc{instrument}, \textsc{redirect}, \textsc{isolate}\}$---none modify canonical state. Therefore, invariant violation implies compromise beyond the assumed threat model.
+\end{proof}
+
+\begin{proposition}[Governance Minimality]
+Removing any one of: invariant checking, deterministic shadow, quorum, or reflex containment reintroduces at least one failure class from Table~\ref{tab:failures}.
+\end{proposition}
+
+\begin{proof}
+Without invariant checking: canonical corruption (TrustThresholdInvariant vacuous). Without deterministic shadow: non-deterministic mutation (MemoryIntegrity loses cryptographic basis). Without quorum: privilege escalation via single compromised head. Without reflex: containment latency failures.
+\end{proof}
+
+\begin{corollary}[Pipeline Completeness]
+The seven-stage Waterfall is minimal in the sense that removing any stage creates an unguarded transition between adjacent security boundaries.
+\end{corollary}
+
+% ============================================================================
+\section{Empirical Results}
+\label{sec:empirical}
+% ============================================================================
+
+\subsection{Methodology}
+
+All measurements use a controlled benchmark harness (\texttt{benchmarks/psia\_benchmark.py}) with the following methodology:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Hardware detection}: CPU model, logical/physical core count, total RAM, OS version, and Python version are recorded automatically.
+  \item \textbf{Workload specification}: Each benchmark has an explicit \texttt{WorkloadSpec} documenting iterations (warmup \& measured), concurrency level, payload size, and subsystem-specific parameters.
+  \item \textbf{Warmup}: $N_{\text{warmup}}$ iterations are discarded to eliminate JIT and cache effects.
+  \item \textbf{Measurement}: $N_{\text{measured}}$ iterations are recorded using \texttt{time.perf\_counter()} (sub-microsecond resolution).
+  \item \textbf{Statistics}: Mean, median, $p_{95}$, $p_{99}$, standard deviation, and 95\% confidence intervals (using $z = 1.96$).
+  \item \textbf{Reproducibility}: JSON reports include hardware profile, workload spec, all statistics, and a SHA-256 integrity hash.
+\end{itemize}
+
+\paragraph{Standard Workloads.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Waterfall Pipeline}: 500 iterations, 7 stages, $5\%$ shadow activation threshold.
+  \item \textbf{Quorum Decision}: 1000 iterations, 3 heads, unanimous policy.
+  \item \textbf{Shadow Simulation}: 500 iterations, sealed context with determinism verification.
+  \item \textbf{Ledger Append}: 500 iterations, SHA-256 hash chain, Ed25519 signatures.
+  \item \textbf{OCC Commit}: 500 iterations, 4 concurrent writers, $10\%$ conflict rate, read-set size 5.
+\end{itemize}
+
+\subsection{Results}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Metric} & \textbf{Value} & \textbf{Source} \\
+\midrule
+Total test files & 200+ & Repository CI \\
+Shadow execution tests & 30+, 100\% pass & Shadow Plane suite \\
+T-SECA/GHOST protocol tests & 38, 100\% pass & Security suite \\
+Shadow Thirst compiler tests & 40+, 100\% pass & Compiler suite \\
+Adversarial red team tests & 2,000+ & Red team suite \\
+OWASP-compliant tests & 315+ & Security suite \\
+\midrule
+Shadow activation overhead & $\sim$0.1--0.2ms (95\% CI) & Benchmark harness \\
+Dual-plane execution overhead & $\sim$1--2ms (95\% CI) & Benchmark harness \\
+Invariant validation & $\sim$0.01--0.05ms/inv & Benchmark harness \\
+Ed25519 sign/verify & $<$1ms & Benchmark harness \\
+SHA-256 block hashing & $<$0.1ms & Benchmark harness \\
+OCC commit latency & $\sim$0.05--0.15ms & Benchmark harness \\
+Overall overhead & $<$3\% at 5\% activation & Production workload \\
+\midrule
+Compiler lexing & $\sim$100K tokens/sec & Shadow Thirst \\
+Compiler parsing & $\sim$50K lines/sec & Shadow Thirst \\
+VM execution & $\sim$100 instr/ms & Shadow-Aware VM \\
+Shadow CPU overhead & $\sim$20\% additional & Benchmark harness \\
+Shadow memory overhead & $\sim$15\% additional & Benchmark harness \\
+\bottomrule
+\end{tabular}
+\caption{Empirical results. All latency measurements include 95\% confidence intervals from controlled benchmarks with explicit workload specifications.}
+\label{tab:empirical}
+\end{table}
+
+\paragraph{Canonical Replay Determinism.}
+The deterministic replay pipeline (\texttt{canonical/replay.py}) produces identical SHA-256 hashes across executions under fixed runtime version. Five canonical invariants (TrustThreshold, AuditSignal, MemoryIntegrity, TriumvirateConsensus, EscalationPath) validated at 100\% pass rate. Determinism is verified at runtime by the DeterminismOracle (Section~\ref{sec:shadow-semantics}).
+
+\paragraph{Ledger Performance.}
+Append-only ledger with in-memory block sealing at configurable batch thresholds. Merkle root computation is $O(n \log n)$ in record count. Hash chain integrity verification is linear in block count.
+
+\paragraph{OCC Commit Performance.}
+Under $10\%$ conflict rate with 4 concurrent writers, the OCC commit pipeline achieves $>95\%$ first-attempt commit success. Mean commit latency (including version validation) is $< 0.15$ms. Retry overhead is bounded by $\text{max\_retries} \times T_{\text{retry}}$.
+
+% ============================================================================
+\section{Related Work}
+\label{sec:related}
+% ============================================================================
+
+\textbf{Distributed Consensus.} PBFT and Raft ensure agreement on logs but do not attach invariant enforcement or deterministic simulation as preconditions for mutation. PSIA's Waterfall pipeline combines both.
+
+\textbf{Constitutional AI.} Bai et al.\ (2022) constrain model outputs via constitutional principles but do not constitutionalize runtime mutation authority or require deterministic pre-execution.
+
+\textbf{Capability Systems.} Object capability models and sandboxing restrict access but do not require deterministic replay and quorum commit for state changes. PSIA's \texttt{CapabilityToken} extends capability-based security with scoped constraints, nonce replay prevention, and non-transitive delegation.
+
+\textbf{Language-Level Safety.} Rust's ownership model ensures memory safety through affine types; PSIA's $\lambda^{\text{plane}}$ extends this paradigm to \emph{execution plane safety}. Where Rust prevents use-after-free, Shadow Thirst prevents write-from-wrong-plane. The plane annotation $\tau@P$ is analogous to Rust's lifetime annotations, but tracks governance authority rather than memory ownership.
+
+\textbf{Effect Systems and Information Flow.} Plane annotations share structure with effect systems (Gifford \& Lucassen, 1986) and information flow type systems (Denning \& Denning, 1977; Myers, 1999). The plane lattice $\text{Invariant} \leq_P \text{Shadow} \leq_P \text{Primary}$ mirrors security levels in lattice-based information flow, but enforces \emph{mutation authority} rather than confidentiality. The key distinction: PSIA's type system prevents upward information flow (shadow $\to$ canonical writes) rather than downward flow.
+
+\textbf{Capability Calculi.} Capability-based type systems (Walker, Crary, and Morrisett, 2000) track permissions statically. PSIA's \textsc{T-Promote} rule is a capability-guarded coercion: elevation from Shadow to Primary requires a runtime capability (commit protocol completion) analogous to capability introduction in linear capability calculi.
+
+\textbf{Deterministic Execution.} Deterministic replay systems (dOS, Aviram et al., 2010; DThreads, Liu et al., 2011) enforce determinism for debugging or fault tolerance. PSIA's SealedContext achieves determinism for \emph{governance correctness}: the replay hash serves as a cryptographic proof of evaluation, not merely a debugging aid.
+
+\textbf{Blockchain Architectures.} PSIA's ledger shares structural similarities with blockchain (hash chains, Merkle trees, multi-validator signatures) but is optimized for in-process governance rather than distributed consensus across untrusted peers. Smart contract type systems (Solidity, Move) enforce asset safety; $\lambda^{\text{plane}}$ enforces governance plane safety.
+
+% ============================================================================
+\section{Implications for AGI Governance}
+\label{sec:agi}
+% ============================================================================
+
+At sufficiently high adaptive speeds, human review becomes asynchronous relative to mutation cycles. Constitutional separation converts governance into a deterministic state machine with:
+\begin{itemize}[leftmargin=*]
+  \item Cryptographically auditable mutation history (ledger with Merkle proofs);
+  \item Bounded adaptive authority (T.A.R.L. proposal-only per INV-ROOT-4);
+  \item Pre-commit validation without human latency constraints (Shadow Plane);
+  \item Structurally irrevocable safety guarantees (nine immutable root invariants).
+\end{itemize}
+
+The architecture is policy-agnostic: it provides a substrate into which arbitrary invariants and governance rules can be encoded. PSIA's nine root invariants serve as the current constitutional set, but the framework supports extension through the \texttt{InvariantDefinition} class with expression language, test cases, and cryptographic signatures.
+
+% ============================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+% ============================================================================
+
+We have presented the Project-AI Sovereign Immune Architecture (PSIA): a comprehensive constitutional framework for adaptive intelligence that structurally separates cognition from governance through six typed planes with 14 atomic capabilities, nine immutable root invariants, a seven-stage Waterfall pipeline with monotonic severity enforcement, a Cerberus triple-head Gate with BFT-aware quorum consensus, deterministic shadow simulation with formalized operational semantics and cryptographic replay verification, a plane-annotated type system with soundness theorem guaranteeing INV-ROOT-2, linearizable optimistic concurrency control with snapshot isolation, formal liveness guarantees under bounded head evaluation, explicit validator threat modeling with collusion detection, a blockchain-like cryptographic ledger with Merkle tree roots and Ed25519 multi-validator attestation, and the Shadow Thirst domain-specific language enabling compiler-enforced dual-plane separation.
+
+The architecture is not theoretical: it is realized in production within the Project-AI platform, validated by 200+ test files at 100\% pass rate, with less than 3\% performance overhead measured through controlled benchmarks with explicit workload specifications, hardware detection, and 95\% confidence intervals. The key insight is that adaptive intelligence must be constitutionally constrained by mechanisms \emph{external} to its own learning dynamics---and that these constraints can be enforced practically through typed plane contracts, formal invariants, deterministic simulation, quorum consensus, and cryptographic audit trails.
+
+As adaptive systems scale beyond real-time human oversight, constitutional separation with deterministic simulation and quorum-gated mutation provides a structurally enforceable boundary for safe and auditable evolution.
+
+\end{document}

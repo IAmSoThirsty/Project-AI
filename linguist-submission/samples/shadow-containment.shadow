@@ -1,0 +1,41 @@
+// ═══════════════════════════════════════════════════════════
+// Shadow Thirst — Containment & Bytecode Operations
+// ═══════════════════════════════════════════════════════════
+// Date: 2026-03-04 | Status: Active
+
+// Shadow VM bytecode program
+shadow program SovereignContainment
+    plane primary
+
+    // Push values and execute guarded operations
+    bytecode __main__
+        PUSH 99
+        PUSH 42
+        LOAD "sovereign_key"
+        STORE "result"
+        GUARD max_instructions = 100
+        CALL verify_containment
+        RETURN
+    endbytecode
+
+    // Containment verification function
+    bytecode verify_containment
+        PUSH 1
+        LOAD "result"
+        PUSH 0
+        opcode COMPARE_EQ
+        GUARD stack_overflow = false
+        RETURN
+    endbytecode
+endshadow
+
+// Secondary plane operations
+shadow program ShadowPlane
+    plane secondary
+
+    containment level = "maximum"
+    bytecode shadow_exec
+        PUSH 0
+        HALT
+    endbytecode
+endshadow

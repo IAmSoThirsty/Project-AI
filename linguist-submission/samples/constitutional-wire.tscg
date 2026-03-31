@@ -1,0 +1,38 @@
+// ═══════════════════════════════════════════════════════════
+// TSCG / TSCG-B — Constitutional Grammar Protocol
+// ═══════════════════════════════════════════════════════════
+// Date: 2026-03-04 | Status: Active
+
+// TSCG Constitutional Wire Expression
+// Full grammar path through the sovereign architecture
+ING -> COG -> D_NT -> SHD (1) -> INV (5) AND CAP -> QRM_LINEAR (3,1,2,1) -> COM -> ANC -> LED
+
+// TSCG-B Binary Protocol Operations
+ENCODE expression = "ING -> COG -> D_NT"
+VALIDATE BIJECTIVITY = true
+PARITY check = "100%"
+
+// T-BLOB Stream encoding/decoding
+ENCODE T_BLOB stream
+    ING -> COG -> D_NT -> SHD (1)
+    PARITY = true
+    BIJECTIVITY = "bijective"
+DECODE T_BLOB verify
+
+// Constitutional validation chain
+VALIDATE constitutional_wire
+    ING = "Ingestion Layer"
+    COG = "Cognition Engine"
+    D_NT = "Deterministic Node Tree"
+    SHD = "Shadow Plane"
+    INV = "Invariant Check"
+    CAP = "Capability Gate"
+    QRM_LINEAR = "Quantum Resistance Module"
+    COM = "Communication Bus"
+    ANC = "Anchor Point"
+    LED = "Ledger Finality"
+
+// Parity assertion
+PARITY check = "sovereign_wire"
+    BIJECTIVITY = true
+    T_BLOB integrity = "cryptographic"

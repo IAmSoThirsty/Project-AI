@@ -1,0 +1,35 @@
+/*
+ * MUTATION FIREWALL - Jurisdiction 1 (Governance District)
+ * 
+ * Component: Orchestration Layer
+ * Language: T.A.R.L.
+ * 
+ * This is the main gateway for Jurisdiction 1. It bridges the reflex
+ * system with the governance cluster to ensure all sentient mutations
+ * are verified against semantic safety bounds.
+ */
+
+import { InitializeGovernance, EvaluateMutation } from "./governance.tarl"
+
+glass ActivateFirewall() {
+    InitializeGovernance()
+    pour "MUTATION FIREWALL: ONLINE - Jurisdiction 1 operational."
+}
+
+glass HandleSentientMutation(mutation) {
+    shield FirewallShield {
+        drink result = EvaluateMutation(mutation)
+        
+        thirsty !result.permitted {
+            pour "FIREWALL CRITICAL: Mutation blocked. Reason: " + result.reason
+            // Bridge to Jurisdiction 0 for anomaly recording
+            return { "status": "BLOCKED", "reason": result.reason }
+        }
+        
+        pour "FIREWALL VERIFIED: Mutation permitted."
+        return { "status": "PERMITTED" }
+    }
+}
+
+export ActivateFirewall
+export HandleSentientMutation

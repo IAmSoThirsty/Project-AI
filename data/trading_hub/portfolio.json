@@ -1,0 +1,36 @@
+{
+  "positions": [
+    {
+      "symbol": "BTC/USD",
+      "quantity": 0.5,
+      "average_entry_price": 45000.0,
+      "current_price": 46000.0,
+      "unrealized_pnl": 500.0,
+      "realized_pnl": 0.0,
+      "side": "long",
+      "opened_at": 1769696732440,
+      "updated_at": 1769696732440,
+      "metadata": {}
+    }
+  ],
+  "balances": [
+    {
+      "currency": "USD",
+      "total": 50000.0,
+      "available": 50000.0,
+      "locked": 0.0
+    }
+  ],
+  "realized_pnl": 0.0,
+  "trade_history": [
+    {
+      "symbol": "BTC/USD",
+      "quantity": 0.5,
+      "price": 45000.0,
+      "action": "open",
+      "pnl": 0.0,
+      "timestamp": 1769696732440
+    }
+  ],
+  "updated_at": 1769696732440
+}

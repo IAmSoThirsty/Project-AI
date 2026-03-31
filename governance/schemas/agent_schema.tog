@@ -1,0 +1,18 @@
+[2026-03-05 17:55] | Productivity: Active
+// -- SOVEREIGN AGENT DEFINITION SCHEMA (UTF-V1) --
+
+glass AgentSchema
+    fountain definition
+        sacred string name
+        sacred string role
+        sacred list tools
+        sacred string memory_strategy
+        sacred map routing_hints
+    endfountain
+
+    shield validate(AgentData data) {
+        pour "--- VALIDATING SOVEREIGN AGENT CONTRACT ---"
+        if data.name == "" then freeze "Agent Name Missing"
+        if data.role == "" then freeze "Agent Role Missing"
+    }
+endglass

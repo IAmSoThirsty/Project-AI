@@ -1,0 +1,14 @@
+{
+  "simulation_day": 364,
+  "global_population": 7996820460,
+  "total_deaths": 3179540,
+  "grid_operational_pct": 0.15200000000000002,
+  "gdp_trillion": 15.200000000000003,
+  "major_events": [
+    "T+0: Pre-EMP baseline established",
+    "Day 0: EMP event - 90.0% grid failure",
+    "Day 98: recovery_milestone",
+    "Day 189: recovery_milestone",
+    "Day 280: recovery_milestone"
+  ]
+}
