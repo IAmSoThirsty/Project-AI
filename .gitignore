@@ -1,7 +1,6 @@
 # Health report snapshots and archives (keep canonical report only)
 data/health_snapshots/
 docs/assets/health_report_*.png
-governance/audit_log.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -237,8 +236,11 @@ engines/waterfall_native/target/
 ci-reports/pa-shield/
 ci-reports/red-team-winning/
 data/cerberus/agents/
-data/cerberus/logs/
+data/cerberus/logs/*
+!data/cerberus/logs/
+!data/cerberus/logs/*.jsonl
 test-artifacts/junit/
 test-artifacts/security_compliance/
 archive/history/timeline/**/RELEASE_BUNDLE/
 data/audit/genesis_keys/genesis_audit.key
+governance/sovereign_data/*keypair.json
