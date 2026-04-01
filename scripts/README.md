@@ -40,6 +40,7 @@
 | `validate_all_code.py` | Full codebase validation |
 | `validate_production_claims.py` | Verify production readiness claims |
 | `validate_release.py` | Release validation checks |
+| `verify_thirsty_interpreter.py` | Thirsty-lang interpreter smoke test |
 | `verify_job_board.py` | Job board integrity verification |
 | `verify-supply-chain.sh` | Supply chain verification |
 | `audit_sovereign.py` | Sovereign architecture audit |
@@ -49,6 +50,7 @@
 | `run_security_worker.py` | Security worker process |
 | `run_asl_assessment.py` | ASL safety assessment |
 | `run_asl3_security.py` | ASL-3 security validation |
+| `validate_thirstys_security.py` | Thirsty's asymmetric security validation |
 
 ### 🧠 AI & Training
 
