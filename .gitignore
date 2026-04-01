@@ -207,3 +207,38 @@ k8s/tk8s/security/*.backup
 # Unity installers
 unity/UnityHubSetup.exe
 *.exe
+
+# Repo-local build caches and virtual environments
+.tmp/
+.pip-cache/
+.uv-cache/
+.uv-python/
+.venv/
+.venv-linux/
+.venv_prod/
+.env.wsl
+IDE_Work_Spaces/
+scripts/check_git_access.ps1
+
+# Scratch output generated under tmp/
+tmp/
+tmp/pdfs/
+tmp/*.html
+tmp/*.png
+tmp/*.json
+tmp/*.xml
+tmp/*.pdf
+
+# Generated repo snapshots and reports
+workspace/
+output/
+logs/
+engines/waterfall_native/target/
+ci-reports/pa-shield/
+ci-reports/red-team-winning/
+data/cerberus/agents/
+data/cerberus/logs/
+test-artifacts/junit/
+test-artifacts/security_compliance/
+archive/history/timeline/**/RELEASE_BUNDLE/
+data/audit/genesis_keys/genesis_audit.key
