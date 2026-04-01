@@ -73,6 +73,10 @@
 | `quickstart.py` | Quick start guide runner |
 | `bootstrap.py` | Bootstrap environment setup |
 | `healthcheck.py` | System health check |
+| `maintenance/verify_system.py` | Final system verification |
+| `maintenance/audit_repo.py` | Repository audit and stub detection |
+| `maintenance/archive_files.py` | Archive audit results into history |
+| `maintenance/fix_toml_descriptions.py` | Repair malformed integration TOML descriptions |
 | `cleanup_root.ps1` | Root directory cleanup |
 | `setup_temporal.py` | Temporal service setup |
 | `sync_sovereign_workspace.py` | Workspace sync |
