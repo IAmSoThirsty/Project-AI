@@ -1,4 +1,4 @@
-#                                           [2026-03-05 08:49]
+# [Project-AI Sovereign]                         [2026-04-03 14:15]
 #                                          Productivity: Active
 """
 Main entry point for the AI Desktop Application with AGI Identity System.
@@ -374,7 +374,7 @@ def initialize_security_systems(
     logger.info("🛡️  INITIALIZING SECURITY COUNTERMEASURES")
     logger.info("=" * 60)
 
-    security_components = {}
+    security_components: dict[str, Any] = {}
 
     # Phase 1: Initialize Global Watch Tower Security Command Center
     try:
@@ -695,7 +695,7 @@ def initialize_enhanced_defenses(
     logger.info("🛡️  INITIALIZING ENHANCED DEFENSIVE CAPABILITIES")
     logger.info("=" * 60)
 
-    enhanced_components = {}
+    enhanced_components: dict[str, Any] = {}
 
     # Phase 1: IP Blocking and Rate Limiting
     try:
