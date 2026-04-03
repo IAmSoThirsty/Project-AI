@@ -1,0 +1,59 @@
+// ═══════════════════════════════════════════════════════════
+// [UTF] UNIVERSAL THIRSTY FAMILY — SOVEREIGN SHOWCASE
+// ═══════════════════════════════════════════════════════════
+// Family: Thirsty-Lang | Thirst of Gods | T.A.R.L. |
+//         Shadow Thirst | TSCG | TSCG-B
+// Date: 2026-03-04 | Status: Active
+
+// ─── Stage 1: Core Thirsty-Lang ──────────────────────────
+drink greeting = "Universal Thirsty Family — Sovereign Showcase"
+pour greeting
+
+// Variables and arithmetic
+drink x = 42
+drink y = (x + 8) * 2
+pour "Arithmetic result: "
+pour y
+
+// ─── Stage 2: OOP via Fountain (Thirst of Gods) ─────────
+fountain SovereignAgent
+    drink model = "V1-Sovereign"
+    drink status = "ACTIVE"
+
+    glass init(id)
+        drink this.id = id
+        pour "Agent initialized: "
+        pour this.id
+    endglass
+
+    cascade glass execute(mission)
+        pour "Executing mission: "
+        pour mission
+        drink result = 200
+        thirsty result > 100
+            pour "Mission critical threshold reached."
+        return result
+    endglass
+endfountain
+
+// ─── Stage 3: Async Cascade + Error Handling ─────────────
+glass main()
+    spillage
+        pour "Instantiating SovereignAgent..."
+        drink agent = new SovereignAgent("THIRST-001")
+
+        pour "Running async cascade..."
+        await agent.execute("Sovereign Verification")
+
+        pour "Testing conditional logic..."
+        drink score = 95
+        thirsty score >= 90
+            pour "PASS: Score meets sovereign threshold."
+
+    cleanup err
+        pour "Sovereign Error: "
+        pour err
+    endcleanup
+endglass
+
+main()

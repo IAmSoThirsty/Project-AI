@@ -1,0 +1,36 @@
+@startuml
+' Simple UI wireframes using PlantUML rectangles
+
+skinparam shadowing false
+
+rectangle "Main Window" as Main {
+  rectangle "Top Bar - App Title / Menu" as TopBar
+  rectangle "Left Pane - Navigation (Chat, Tasks, Paths, Data, Security)" as LeftNav
+  rectangle "Center - Chat / Content Area" as Center
+  rectangle "Right Pane - Persona & Stats" as RightPane
+  rectangle "Bottom - Input Bar & Send Button" as BottomBar
+}
+
+LeftNav -[hidden]-> Center
+Center -[hidden]-> RightPane
+
+note left of LeftNav
+ - Chat list
+ - User settings
+ - Plugins
+end note
+
+note right of RightPane
+ - Personality sliders
+ - Mood indicators
+ - Quiet hours
+end note
+
+note bottom of BottomBar
+ - Text input
+ - Attachments
+ - Voice input
+ - Send button
+end note
+
+@enduml

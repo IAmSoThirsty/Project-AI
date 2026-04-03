@@ -1,0 +1,110 @@
+name: Universal Security & Fixer Bot (Aggressive)
+on: [push, pull_request]
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            # ========================================================================
+            # DEPENDENCY INSTALLATION - Install ALL project dependencies
+            # No conditionals, no ambiguity - just install everything to ensure
+            # workflows work reliably every time
+            # ========================================================================
+            
+            - name: Upgrade pip and build tools
+              run: |
+                  echo "📦 Upgrading pip, setuptools, wheel, and build tools..."
+                  python -m pip install --upgrade pip setuptools wheel build
+                  echo "✅ Build tools upgraded"
+
+            - name: Install requirements.txt
+              run: |
+                  echo "📦 Installing requirements.txt..."
+                  if [ -f requirements.txt ]; then
+                    python -m pip install -r requirements.txt
+                    echo "✅ requirements.txt installed"
+                  else
+                    echo "⚠️  requirements.txt not found - skipping"
+                  fi
+
+            - name: Install requirements-dev.txt
+              run: |
+                  echo "📦 Installing requirements-dev.txt..."
+                  if [ -f requirements-dev.txt ]; then
+                    python -m pip install -r requirements-dev.txt
+                    echo "✅ requirements-dev.txt installed"
+                  else
+                    echo "⚠️  requirements-dev.txt not found - skipping"
+                  fi
+
+            - name: Install from pyproject.toml
+              run: |
+                  echo "📦 Installing from pyproject.toml..."
+                  if [ -f pyproject.toml ]; then
+                    # Try pip install first (works for PEP 621 compliant pyproject.toml)
+                    python -m pip install -e . || echo "⚠️  pip install from pyproject.toml failed, continuing..."
+                    echo "✅ pyproject.toml dependencies processed"
+                  else
+                    echo "⚠️  pyproject.toml not found - skipping"
+                  fi
+
+            - name: Install from setup.py
+              run: |
+                  echo "📦 Installing from setup.py..."
+                  if [ -f setup.py ]; then
+                    python -m pip install -e .
+                    echo "✅ setup.py installed"
+                  else
+                    echo "⚠️  setup.py not found - skipping"
+                  fi
+
+            - name: Install additional libraries
+              run: |
+                  echo "📦 Installing additional Python libraries..."
+                  # Install SNN framework libraries
+                  python -m pip install torch==2.0.0 torchvision
+                  python -m pip install bindsnet>=0.3.0 || echo "bindsnet install failed"
+                  python -m pip install sinabs>=1.2.0 || echo "sinabs install failed"
+                  python -m pip install snntorch>=0.7.0 || echo "snntorch install failed"
+                  python -m pip install spikingjelly>=0.0.0.14 || echo "spikingjelly install failed"
+                  python -m pip install norse>=0.0.7 || echo "norse install failed"
+                  echo "✅ Additional libraries installed"
+
+            - name: Install Ruby dependencies
+              run: |
+                  sudo gem install rubocop || gem install rubocop --user-install
+
+            - name: Install Java Formatter
+              run: |
+                  wget https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar -O /home/runner/google-java-format.jar
+                  export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+                  export PATH=$JAVA_HOME/bin:$PATH
+                  java -jar /home/runner/google-java-format.jar --version
+
+            - name: .NET Project Check
+              run: |
+                  if ! ls *.csproj 1> /dev/null 2>&1 && ! ls *.sln 1> /dev/null 2>&1; then
+                    echo "No .csproj or .sln file found! Add your project files before building."
+                    exit 1
+                  fi
+                  pip install norse>=0.0.7 || echo "norse install failed"
+
+            - name: Install Ruby dependencies
+              run: |
+                  sudo gem install rubocop || gem install rubocop --user-install
+
+            - name: Install Java Formatter
+              run: |
+                  wget https://github.com/google/google-java-format/releases/download/v1.15.0/google-java-format-1.15.0-all-deps.jar -O /home/runner/google-java-format.jar
+                  export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+                  export PATH=$JAVA_HOME/bin:$PATH
+                  java -jar /home/runner/google-java-format.jar --version
+
+            - name: .NET Project Check
+              run: |
+                  if ! ls *.csproj 1> /dev/null 2>&1 && ! ls *.sln 1> /dev/null 2>&1; then
+                    echo "No .csproj or .sln file found! Add your project files before building."
+                    exit 1
+                  fi

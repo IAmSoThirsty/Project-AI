@@ -1,0 +1,17 @@
+# C# build artifacts
+csharp/bin/
+csharp/obj/
+
+# Go build artifacts
+go/go_impossibility
+
+# Rust build artifacts
+rust/rust_impossibility
+rust/target/
+rust/**/*.pdb
+
+# IDE files
+.vs/
+.vscode/
+*.swp
+*.swo

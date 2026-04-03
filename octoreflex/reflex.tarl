@@ -1,0 +1,97 @@
+/*
+ * MAIN REFLEX LOOP - Jurisdiction 0 (Reflexive District)
+ * 
+ * Component: Tier 0 Kernel Reflex
+ * Language: T.A.R.L. (Functions & Security)
+ * 
+ * This module orchestrates the reflexive response cycle:
+ * 1. Accumulate event features (Sacrifices)
+ * 2. Compute anomaly scores via AnomalyEngine
+ * 3. Evaluate Shannon Entropy delta
+ * 4. Drive the Escalation Engine (Pressure EWMA)
+ */
+
+import { AnomalyEngine, Baseline } from "./internal/anomaly/engine.shadow"
+import { ShannonEntropy } from "./internal/anomaly/entropy.tarl"
+
+// Global state for Jurisdiction 0
+reservoir accumulators = {}
+reservoir states = {}
+drink baseline = null
+
+// Initialize Jurisdiction 0
+glass InitializeReflex(initial_baseline) {
+    drink baseline = initial_baseline
+    pour "Reflexive District initialized."
+}
+
+// Process a single sacrifice (feature vector + event counts)
+glass ProcessSacrifice(pid, x, event_counts) {
+    shield ReflexiveShield {
+        drink engine = new AnomalyEngine()
+        
+        // 1. Compute current entropy
+        drink h_current = ShannonEntropy(event_counts)
+        
+        // 2. Score anomaly via Mahalanobis + Entropy delta
+        drink score = engine.score(x, baseline, h_current)
+        
+        // 3. Update Pressure (EWMA)
+        drink pressure = UpdatePressure(pid, score)
+        
+        // 4. Determine Target State
+        drink target = DetermineTargetState(pressure)
+        
+        // 5. Apply Reflexive Escalation
+        Escalate(pid, target, pressure)
+        
+        return {
+            "score": score,
+            "pressure": pressure,
+            "target": target
+        }
+    }
+}
+
+// Update pressure using EWMA: P_new = α * score + (1-α) * P_old
+glass UpdatePressure(pid, score) {
+    drink alpha = 0.2
+    drink current_p = 0.0
+    
+    thirsty accumulators[pid] != null {
+        drink current_p = accumulators[pid]
+    }
+    
+    drink new_p = (alpha * score) + ((1.0 - alpha) * current_p)
+    drink accumulators[pid] = new_p
+    
+    return new_p
+}
+
+// Determine target state based on pressure thresholds
+glass DetermineTargetState(pressure) {
+    thirsty pressure > 0.8 { return "TERMINATED" }
+    thirsty pressure > 0.6 { return "QUARANTINED" }
+    thirsty pressure > 0.4 { return "FROZEN" }
+    thirsty pressure > 0.2 { return "ISOLATED" }
+    return "NORMAL"
+}
+
+// Escalate process state
+glass Escalate(pid, target, pressure) {
+    drink current = "NORMAL"
+    thirsty states[pid] != null {
+        drink current = states[pid]
+    }
+    
+    thirsty target != current {
+        pour "ESCALATION: PID " + pid + " transitioning from " + current + " to " + target + " (Pressure: " + pressure + ")"
+        drink states[pid] = target
+        
+        // Security countermeasure: armor the state record
+        armor states[pid]
+    }
+}
+
+export InitializeReflex
+export ProcessSacrifice

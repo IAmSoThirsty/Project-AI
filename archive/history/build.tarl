@@ -1,0 +1,95 @@
+# Example build.tarl configuration file
+# Using Thirsty-Lang syntax for build automation
+
+# Project configuration
+drink project = "Project-AI"
+drink version = "1.0.0"
+drink author = "Project-AI Team"
+
+# Build output directories
+drink build_dir = "./build"
+drink dist_dir = "./dist"
+
+# Compile task
+glass compile() {
+    pour "🔨 Compiling TARL sources..."
+    
+    input files ./tarl/**/*.py
+    output to ${build_dir}/bytecode
+    
+    shield {
+        compile sources with optimization_level=2
+        verify bytecode integrity
+    }
+}
+
+# Test task
+glass test() {
+    depends on compile
+    
+    pour "🧪 Running test suite..."
+    
+    run pytest ./tarl/tests -v
+    
+    thirsty test_failed {
+        pour "❌ Tests failed!"
+        hydrate {
+            pour "✅ Tests passed!"
+        }
+    }
+}
+
+# Lint task
+glass lint() {
+    pour "🔍 Running code quality checks..."
+    
+    run ruff check ./tarl
+    run black --check ./tarl
+}
+
+# Package task
+glass package() {
+    depends on compile, test, lint
+    
+    pour "📦 Creating distribution package..."
+    
+    package ${build_dir} to ${dist_dir}/tarl-build-${version}.zip
+    
+    shield {
+        verify package integrity
+        sign package with gpg
+    }
+}
+
+# Clean task
+glass clean() {
+    pour "🧹 Cleaning build artifacts..."
+    
+    remove ${build_dir}
+    remove ${dist_dir}
+    remove .tarl_cache
+}
+
+# Deploy task
+glass deploy() {
+    depends on package
+    
+    pour "🚀 Deploying to production..."
+    
+    shield {
+        verify deployment credentials
+        morph {
+            upload package to artifact_server
+            detect deployment_issues
+        }
+    }
+}
+
+# Default task (runs when no target specified)
+glass build() {
+    depends on compile, test, lint, package
+    
+    pour "🎯 Full build completed!"
+    pour "   Version: ${version}"
+    pour "   Output: ${dist_dir}"
+}

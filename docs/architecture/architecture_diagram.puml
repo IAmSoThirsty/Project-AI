@@ -1,0 +1,57 @@
+@startuml
+' Project-AI architecture component & sequence diagrams
+' Render with PlantUML (jar) or VSCode PlantUML extension
+
+skinparam componentStyle rectangle
+
+package "Project-AI" {
+  [Desktop App\n(PyQt6 GUI) ] as Desktop
+  [Web Backend\n(Flask)] as Backend
+  [Core\nai_systems.py] as Core
+  [Memory DB\n(data/ memory_system)] as Memory
+  [Learning Request Log] as LR
+  [Command Override\n(master password)] as Override
+  [Plugin Manager\n(src/app/agents)] as Plugins
+  [External: Cerberus\n(submodule)] as Cerberus
+  [Data & Config\n(data/, app-config.json)] as Data
+  [Tests & CI] as CI
+}
+
+Desktop --> Core : calls (process_message, persona, UI actions)
+Backend --> Core : REST API calls (auth, sync, ml, image)
+Core --> Memory : store / retrieve semantic memory
+Core --> LR : submit learning requests
+Core --> Override : check safety / policy
+Core --> Plugins : trigger hooks (message_received, before_action)
+Plugins --> Core : extend behavior / callbacks
+Cerberus --> Core : guardians / external checks
+Data --> Core : model & config persistence
+CI --> Tests : run pytest, coverage, linters
+
+' --- Sequence: typical message processing ---
+
+@startuml
+actor User
+participant Desktop
+participant Core
+participant Override
+participant Plugins
+participant Memory
+participant LR
+
+User -> Desktop : send message
+Desktop -> Core : process_message(message)
+Core -> Override : validate_against_overrides(message)
+alt override blocks
+    Override --> Core : blocked(reason)
+    Core -> Desktop : notify_blocked(reason)
+else allowed
+    Core -> Plugins : trigger(message_received)
+    Plugins -> Core : plugin-augmented-context
+    Core -> Memory : log_conversation(metadata)
+    Core -> Core : evaluate_persona + run_ML_checks
+    Core -> LR : maybe_create_learning_request
+    Core -> Desktop : deliver_response
+end
+
+@enduml

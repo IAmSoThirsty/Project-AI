@@ -1,0 +1,97 @@
+{
+  "BTC/USD_1h_10": {
+    "timestamp": 1769696714.0342207,
+    "candles": [
+      {
+        "timestamp": 1769664314034,
+        "open": 41560.64,
+        "high": 41747.94,
+        "low": 41028.43,
+        "close": 41143.95,
+        "volume": 451230.59,
+        "symbol": "BTC/USD"
+      },
+      {
+        "timestamp": 1769667914034,
+        "open": 41143.95,
+        "high": 41485.34,
+        "low": 41073.59,
+        "close": 41284.65,
+        "volume": 3302531.2,
+        "symbol": "BTC/USD"
+      },
+      {
+        "timestamp": 1769671514034,
+        "open": 41284.65,
+        "high": 41523.6,
+        "low": 40236.47,
+        "close": 40601.76,
+        "volume": 2523563.0,
+        "symbol": "BTC/USD"
+      },
+      {
+        "timestamp": 1769675114034,
+        "open": 40601.76,
+        "high": 41384.48,
+        "low": 40517.58,
+        "close": 41125.49,
+        "volume": 3223955.09,
+        "symbol": "BTC/USD"
+      },
+      {
+        "timestamp": 1769678714034,
+        "open": 41125.49,
+        "high": 41560.03,
+        "low": 40803.72,
+        "close": 41269.72,
+        "volume": 341702.36,
+        "symbol": "BTC/USD"
+      },
+      {
+        "timestamp": 1769682314034,
+        "open": 41269.72,
+        "high": 42245.96,
+        "low": 41124.42,
+        "close": 41905.13,
+        "volume": 555323.45,
+        "symbol": "BTC/USD"
+      },
+      {
+        "timestamp": 1769685914034,
+        "open": 41905.13,
+        "high": 42323.0,
+        "low": 41884.08,
+        "close": 42049.6,
+        "volume": 3302266.36,
+        "symbol": "BTC/USD"
+      },
+      {
+        "timestamp": 1769689514034,
+        "open": 42049.6,
+        "high": 42066.7,
+        "low": 41791.64,
+        "close": 41994.0,
+        "volume": 1020045.71,
+        "symbol": "BTC/USD"
+      },
+      {
+        "timestamp": 1769693114034,
+        "open": 41994.0,
+        "high": 42403.61,
+        "low": 41638.19,
+        "close": 42062.99,
+        "volume": 1171867.67,
+        "symbol": "BTC/USD"
+      },
+      {
+        "timestamp": 1769696714034,
+        "open": 42062.99,
+        "high": 42482.32,
+        "low": 41374.74,
+        "close": 41417.76,
+        "volume": 3076203.66,
+        "symbol": "BTC/USD"
+      }
+    ]
+  }
+}

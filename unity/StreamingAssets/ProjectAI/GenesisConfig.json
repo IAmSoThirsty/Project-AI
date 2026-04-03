@@ -1,0 +1,44 @@
+{
+  "Timings": {
+    "OrbFormingDuration": 3.0,
+    "SubsystemsIgnitingDuration": 4.0,
+    "PresenceStabilizingDuration": 3.0,
+    "RoomAwakeningDuration": 5.0,
+    "AcknowledgementDuration": 4.0
+  },
+  "RoleConfigs": {
+    "owner": {
+      "RoleName": "owner",
+      "AllowInterruption": true,
+      "NarrationLines": [
+        "Initializing... Coalescing form...",
+        "Core systems coming online... Subsystems igniting...",
+        "Presence stabilizing... Identity forming...",
+        "Archive awakening... Environment systems online...",
+        "Genesis complete. Welcome, Owner. I am ready to serve."
+      ]
+    },
+    "guest": {
+      "RoleName": "guest",
+      "AllowInterruption": false,
+      "NarrationLines": [
+        "Initializing... Coalescing form...",
+        "Core systems coming online... Subsystems igniting...",
+        "Presence stabilizing... Identity forming...",
+        "Archive awakening... Environment systems online...",
+        "Genesis complete. Welcome, Guest. How may I assist you?"
+      ]
+    },
+    "admin": {
+      "RoleName": "admin",
+      "AllowInterruption": true,
+      "NarrationLines": [
+        "Initializing... Coalescing form...",
+        "Core systems coming online... Subsystems igniting...",
+        "Presence stabilizing... Identity forming...",
+        "Archive awakening... Environment systems online...",
+        "Genesis complete. Welcome, Administrator. Systems ready."
+      ]
+    }
+  }
+}

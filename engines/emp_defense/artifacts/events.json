@@ -1,0 +1,29 @@
+[
+  {
+    "id": "evt_0001",
+    "type": "recovery_milestone",
+    "parameters": {
+      "quarter": 1,
+      "progress": "25%"
+    },
+    "day": 98
+  },
+  {
+    "id": "evt_0002",
+    "type": "recovery_milestone",
+    "parameters": {
+      "quarter": 2,
+      "progress": "50%"
+    },
+    "day": 189
+  },
+  {
+    "id": "evt_0003",
+    "type": "recovery_milestone",
+    "parameters": {
+      "quarter": 3,
+      "progress": "75%"
+    },
+    "day": 280
+  }
+]

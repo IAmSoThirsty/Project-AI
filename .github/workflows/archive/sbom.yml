@@ -1,0 +1,289 @@
+name: SBOM Generation
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write  # For Sigstore signing
+
+jobs:
+  generate-sbom:
+    name: Generate Software Bill of Materials
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@0ae58b7817e9b40c6232e8bf08f42a7a6b8e60ec  # v4
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4
+        with:
+          node-version: '18'
+
+      - name: Install Syft
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Install Cosign for signing
+        uses: sigstore/cosign-installer@dc72c7d5c4d10cd6bcb8cf6e3fd625a9e5e537da  # v3.7.0
+
+      - name: Generate SBOM for Python dependencies
+        run: |
+          syft scan dir:. \
+            --scope all-layers \
+            --output cyclonedx-json \
+            --file sbom-python.cyclonedx.json \
+            --source-name "project-ai-python" \
+            --source-version "${{ github.sha }}"
+
+      - name: Generate SBOM for Node.js dependencies
+        run: |
+          if [ -f "package.json" ]; then
+            syft scan dir:. \
+              --scope all-layers \
+              --output cyclonedx-json \
+              --file sbom-nodejs.cyclonedx.json \
+              --source-name "project-ai-nodejs" \
+              --source-version "${{ github.sha }}"
+          else
+            echo "No package.json found, skipping Node.js SBOM"
+          fi
+
+      - name: Generate comprehensive SBOM
+        run: |
+          syft scan dir:. \
+            --scope all-layers \
+            --output cyclonedx-json \
+            --file sbom-comprehensive.cyclonedx.json \
+            --source-name "project-ai" \
+            --source-version "${{ github.sha }}"
+
+      - name: Generate human-readable SBOM report
+        run: |
+          syft scan dir:. \
+            --scope all-layers \
+            --output table \
+            --file sbom-report.txt
+
+      - name: Create SBOM metadata
+        run: |
+          cat > sbom-metadata.json << EOF
+          {
+            "repository": "${{ github.repository }}",
+            "commit": "${{ github.sha }}",
+            "branch": "${{ github.ref_name }}",
+            "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "generator": "Syft (Anchore)",
+            "format": "CycloneDX 1.5 JSON",
+            "files": {
+              "comprehensive": "sbom-comprehensive.cyclonedx.json",
+              "python": "sbom-python.cyclonedx.json",
+              "nodejs": "sbom-nodejs.cyclonedx.json",
+              "report": "sbom-report.txt"
+            }
+          }
+          EOF
+
+      - name: Generate SBOM checksums
+        run: |
+          sha256sum sbom-*.json sbom-*.txt > sbom-checksums.txt
+
+      - name: Sign SBOM files with Cosign
+        run: |
+          for sbom in sbom-*.json; do
+            if [ -f "$sbom" ]; then
+              echo "Signing $sbom..."
+              cosign sign-blob --yes "$sbom" \
+                --output-signature="${sbom}.sig" \
+                --output-certificate="${sbom}.pem"
+              echo "✓ Signed: $sbom"
+            fi
+          done
+          
+          # Sign the checksums file
+          cosign sign-blob --yes sbom-checksums.txt \
+            --output-signature="sbom-checksums.txt.sig" \
+            --output-certificate="sbom-checksums.txt.pem"
+
+      - name: Create SBOM summary
+        run: |
+          cat > SBOM_SUMMARY.md << 'EOF'
+          # Software Bill of Materials (SBOM) Summary
+
+          **Generated:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")  
+          **Repository:** ${{ github.repository }}  
+          **Commit:** ${{ github.sha }}  
+          **Branch:** ${{ github.ref_name }}
+
+          ## Overview
+
+          This directory contains Software Bill of Materials (SBOM) documents for Project-AI,
+          generated using [Syft](https://github.com/anchore/syft) in CycloneDX 1.5 JSON format.
+
+          ## Files
+
+          ### SBOM Documents
+          - **sbom-comprehensive.cyclonedx.json** - Complete SBOM for all dependencies
+          - **sbom-python.cyclonedx.json** - Python dependencies only
+          - **sbom-nodejs.cyclonedx.json** - Node.js dependencies only (if applicable)
+          - **sbom-report.txt** - Human-readable dependency list
+
+          ### Verification Files
+          - **sbom-checksums.txt** - SHA-256 checksums for all SBOM files
+          - **sbom-metadata.json** - SBOM generation metadata
+          - **\*.sig** - Sigstore Cosign signatures for each SBOM
+          - **\*.pem** - Sigstore certificates for verification
+
+          ## Verification Instructions
+
+          ### Verify SBOM Signatures
+          ```bash
+          # Install Cosign
+          curl -O -L "https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64"
+          sudo mv cosign-linux-amd64 /usr/local/bin/cosign
+          sudo chmod +x /usr/local/bin/cosign
+
+          # Verify SBOM signature
+          cosign verify-blob sbom-comprehensive.cyclonedx.json \
+            --signature=sbom-comprehensive.cyclonedx.json.sig \
+            --certificate=sbom-comprehensive.cyclonedx.json.pem \
+            --certificate-identity-regexp="https://github.com/${{ github.repository }}/*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
+          ```
+
+          ### Verify Checksums
+          ```bash
+          # Verify checksum signature first
+          cosign verify-blob sbom-checksums.txt \
+            --signature=sbom-checksums.txt.sig \
+            --certificate=sbom-checksums.txt.pem \
+            --certificate-identity-regexp="https://github.com/${{ github.repository }}/*" \
+            --certificate-oidc-issuer="https://token.actions.githubusercontent.com"
+
+          # Then verify file checksums
+          sha256sum -c sbom-checksums.txt
+          ```
+
+          ## SBOM Usage
+
+          ### Security Scanning
+          Use the SBOM to scan for vulnerabilities:
+          ```bash
+          # Using Grype (Anchore)
+          grype sbom:sbom-comprehensive.cyclonedx.json
+
+          # Using OSV Scanner
+          osv-scanner --sbom=sbom-comprehensive.cyclonedx.json
+          ```
+
+          ### License Compliance
+          Analyze licenses in dependencies:
+          ```bash
+          # Using syft
+          syft sbom-comprehensive.cyclonedx.json -o json | jq '.artifacts[].licenses'
+          ```
+
+          ### Dependency Analysis
+          View all components:
+          ```bash
+          cat sbom-report.txt
+          ```
+
+          ## Standards Compliance
+
+          - **Format:** CycloneDX 1.5 (OWASP standard)
+          - **NTIA Minimum Elements:** ✓ Compliant
+          - **Supply Chain Security:** Signed and verifiable
+          - **NIST SP 800-218:** SSDF compliance
+
+          ## Policy
+
+          See [SBOM_POLICY.md](../../docs/security/SBOM_POLICY.md) for complete SBOM generation,
+          publication, and verification policies.
+
+          ## Resources
+
+          - [CycloneDX Specification](https://cyclonedx.org/)
+          - [Syft Documentation](https://github.com/anchore/syft)
+          - [NTIA SBOM Guidelines](https://www.ntia.gov/sbom)
+          - [Sigstore Documentation](https://docs.sigstore.dev/)
+          EOF
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@ea3d6fb60d47c0a8aab02e95a1c69d16b0f24c1e  # v4
+        with:
+          name: sbom-${{ github.sha }}
+          path: |
+            sbom-*.json
+            sbom-*.txt
+            sbom-*.sig
+            sbom-*.pem
+            sbom-metadata.json
+            SBOM_SUMMARY.md
+          retention-days: 90
+
+      - name: Attach SBOM to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@e7a8f85e1c67a31e6ed99a94b41bd0b71bbee6b8  # v2.2.0
+        with:
+          files: |
+            sbom-comprehensive.cyclonedx.json
+            sbom-comprehensive.cyclonedx.json.sig
+            sbom-comprehensive.cyclonedx.json.pem
+            sbom-python.cyclonedx.json
+            sbom-nodejs.cyclonedx.json
+            sbom-report.txt
+            sbom-checksums.txt
+            sbom-checksums.txt.sig
+            sbom-checksums.txt.pem
+            sbom-metadata.json
+            SBOM_SUMMARY.md
+          fail_on_unmatched_files: false
+
+      - name: Comment SBOM summary on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('sbom-report.txt', 'utf8');
+            const lines = summary.split('\n').slice(0, 50);
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 📦 SBOM Generated\n\n\`\`\`\n${lines.join('\n')}\n...\n\`\`\`\n\nFull SBOM available in workflow artifacts.`
+            });
+
+      - name: Generate vulnerability report
+        run: |
+          echo "🔍 Running vulnerability scan on SBOM..."
+          if command -v grype &> /dev/null; then
+            grype sbom:sbom-comprehensive.cyclonedx.json -o json > sbom-vulnerabilities.json || true
+            grype sbom:sbom-comprehensive.cyclonedx.json -o table > sbom-vulnerabilities.txt || true
+          else
+            echo "Grype not installed, skipping vulnerability scan"
+          fi
+        continue-on-error: true
+
+      - name: Upload vulnerability report
+        if: hashFiles('sbom-vulnerabilities.json') != ''
+        uses: actions/upload-artifact@ea3d6fb60d47c0a8aab02e95a1c69d16b0f24c1e  # v4
+        with:
+          name: sbom-vulnerabilities-${{ github.sha }}
+          path: |
+            sbom-vulnerabilities.json
+            sbom-vulnerabilities.txt
+          retention-days: 30

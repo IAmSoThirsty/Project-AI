@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package projectai.sovereign.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// Sovereign Event Stream
+// Designed for O(1) auditability and cryptographic verification
+
+message SovereignEvent {
+    string event_id = 1;
+    google.protobuf.Timestamp timestamp = 2;
+    EventType type = 3;
+    string origin_node = 4;
+    bytes payload = 5;
+    bytes signature = 6; // Ed25519 signature of (payload + event_id + timestamp)
+}
+
+enum EventType {
+    EVENT_TYPE_UNSPECIFIED = 0;
+    EVENT_TYPE_GOVERNANCE_DECISION = 1;
+    EVENT_TYPE_REFLEX_HALT = 2;
+    EVENT_TYPE_AUDIT_LOG = 3;
+    EVENT_TYPE_INFRA_MUTATION = 4;
+}
+
+message GovernanceDecision {
+    string intent_hash = 1;
+    string tarl_version = 2;
+    string verdict = 3;
+    repeated string votes = 4;
+}
+
+message ReflexAction {
+    string reason = 1;
+    string target_namespace = 2;
+    string action = 3; // e.g. QUARANTINE, HALT
+}

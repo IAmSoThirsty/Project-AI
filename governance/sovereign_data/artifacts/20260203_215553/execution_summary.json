@@ -1,0 +1,233 @@
+{
+  "execution_id": "253ecaed-7901-4b54-acc0-cc8ac06ac5e4",
+  "started_at": "2026-02-03T21:55:53.023341",
+  "completed_at": "2026-02-03T21:55:53.035590",
+  "status": "completed",
+  "stages_completed": [
+    {
+      "stage": "data_preparation",
+      "type": "data_preparation",
+      "status": "success",
+      "timestamp": "2026-02-03T21:55:53.029388",
+      "role_signature": {
+        "role": "pipeline_executor",
+        "payload_hash": "6a89a6f74fd19220f27cd7c5c37f084a1c95fea4ac690929dcf14c5b3709e239",
+        "signature": "249583047d9ce9acc79f4cdd3f14d3501c469cb88124512c3c63946ee8a008c3aded079b31ed0874e7626e538ffaab3b70427c10cd94d97b9de3e6af6f6c1d05",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.028702"
+      },
+      "policy_binding": {
+        "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+        "context_hash": "4fe99df34da58357c455b17e6f463ed8078b7c52d69186c34b864ed83128a20d",
+        "binding_hash": "75fa899f8a79888f26c73701178f8f739a124a37d45a6a1b9597ce1a59bab771",
+        "signature": "8971296182caae2602bf67871bc2dcbe3ec459ee4bbb05a4424f2158415ea43826d2664fb9b0cd5aa08d4a70c1018abc0b162bdc4c974f531228045414f1af0e",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.029062"
+      },
+      "output": {
+        "dataset_name": "sovereign_demo_dataset",
+        "records_processed": 1000,
+        "features": [
+          "feature_a",
+          "feature_b",
+          "feature_c"
+        ],
+        "train_split": 0.8,
+        "test_split": 0.2,
+        "preparation_method": "standardization",
+        "dataset_hash": "45480beeb35958d65785cacb977eb4b3059d3e67d0565702f7f9a5ef1cb228af"
+      },
+      "artifact_hash": "8a0931b1ee7f2f1e2e1c8acbced11e1e2d2b9e79604f8088c3e4286bd86c62ee",
+      "artifact_path": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_data_preparation_8a0931b1.json"
+    },
+    {
+      "stage": "model_training",
+      "type": "model_training",
+      "status": "success",
+      "timestamp": "2026-02-03T21:55:53.030374",
+      "role_signature": {
+        "role": "pipeline_executor",
+        "payload_hash": "859e3157438f268a3b2eed6846312b480c34b30d7bc234538de74ac2fc49ea68",
+        "signature": "8ae37fdeded444fddd838227ef36cb6ced153b8830a4f3596adc01dd509c35c0e6085227803c4c84179df0e78b753ffed2616fc5391242ca91c8ef79ab26e600",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.029738"
+      },
+      "policy_binding": {
+        "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+        "context_hash": "2ff20f1dcb0250fb98b6568aacf85d7ae0d1658e7b51898f3a17dd08b6cec18e",
+        "binding_hash": "33fc913845968b86070ed6af646fe13ebbc13b5cf4a38548234d940ab86fa581",
+        "signature": "6502f9666ef44a7c91ee582cde4de1f8d16424cf6b26de6b2115843975207f1e4ba142e41ff28a6a58df4543a61d37c947452d37956fbcd4ab8f3076b3705309",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.030070"
+      },
+      "output": {
+        "model_name": "sovereign_demo_model",
+        "algorithm": "neural_network",
+        "epochs": 100,
+        "accuracy": 0.95,
+        "loss": 0.05,
+        "training_time_seconds": 120,
+        "model_hash": "4e811acb6ff8b53ab74d04722778c880ef3c4f6a096e387844813d8462891bc4"
+      },
+      "artifact_hash": "c06747901120727123e362cf9cc5144140e5b5d950ca63937d1f49793fb9581e",
+      "artifact_path": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_model_training_c0674790.json"
+    },
+    {
+      "stage": "agent_chain",
+      "type": "agent_chain",
+      "status": "success",
+      "timestamp": "2026-02-03T21:55:53.031298",
+      "role_signature": {
+        "role": "pipeline_executor",
+        "payload_hash": "b39c21e49fef470ca3c2eddd47d37d74f6d342717c5c0d4f2f96053de43df679",
+        "signature": "f64265aee72a0700edbf465124d2b4104409463e909aa5d059cec6b831c56b4575538fe45c760fafaa48373a9c5f30c07cef853c780ffa67cbf5304954db4308",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.030672"
+      },
+      "policy_binding": {
+        "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+        "context_hash": "c80b856f5ca9874b3edf4f12720ded6a0b62fb818c430ea303397dc0f0634450",
+        "binding_hash": "7d7c82afb405dd7bd899a8cd26e3cbdbe80bc493bc361d20b0bc9a28fcb4f551",
+        "signature": "de07490267eefcfe5258f698a80122882102edfa18b3a870b6ee17edc4a70092c9d36cda8c639f5c497b6cf3552de9cf4778e83544cd188ba17487a006d4b406",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.030999"
+      },
+      "output": {
+        "chain_name": "sovereign_demo_chain",
+        "agents": [
+          "planner",
+          "validator",
+          "executor",
+          "oversight"
+        ],
+        "decisions_made": 5,
+        "consensus_reached": true,
+        "execution_path": "approved",
+        "chain_hash": "16a25ca427f7cc315ab8e3d37e2162aac8836e053579b91f9cac15e9aa7ea993"
+      },
+      "artifact_hash": "ded81e5b0ee93e2debf1cb08252923b0bdb2399bd79e384103eb0b586b31057f",
+      "artifact_path": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_agent_chain_ded81e5b.json"
+    },
+    {
+      "stage": "promotion",
+      "type": "promotion",
+      "status": "success",
+      "timestamp": "2026-02-03T21:55:53.032212",
+      "role_signature": {
+        "role": "pipeline_executor",
+        "payload_hash": "643258c82b96893f81465220c8d41cb89f9023bcd0c3c3758a199e0d8d47cd3e",
+        "signature": "d05560411b742dd33d6b850bbb8de14f24be392e04ae948f3335668c9b871b9fe353856e1c48ccca8a022336ec749c9881d54c4d7626b9cc1b33ddcc7976500b",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.031594"
+      },
+      "policy_binding": {
+        "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+        "context_hash": "5b408350d08d50778bddfd81063c28e47c46704541b4e7953f561ebe492edc00",
+        "binding_hash": "8766f2326235604463651c3e698b206fed62769eba8a58e07f8035cb463e7fed",
+        "signature": "471a7914caa0ab6a3f312654e95a8ff7a57266a06cb4c1d5dc63c31644a9747ad7c219334b4e3ea63b4e4de3fc266cbb7492c7cdeae697359e98e723b8349f01",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.031913"
+      },
+      "output": {
+        "promotion_type": "production",
+        "promoted_at": "2026-02-03T21:55:53.032216",
+        "approval_status": "approved",
+        "approvers": [
+          "operator",
+          "admin"
+        ],
+        "environment": "production",
+        "promotion_hash": "b40993d5fffa2637abe3cad2167639e0a9fe99cf83547145d547aa0ba6ea3d44"
+      },
+      "artifact_hash": "1a72fe09013706b54a6be95add38aa407e7baf6b97790ca26adf0c0e5b4644cd",
+      "artifact_path": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_promotion_1a72fe09.json"
+    },
+    {
+      "stage": "rollback",
+      "type": "rollback",
+      "status": "success",
+      "timestamp": "2026-02-03T21:55:53.033155",
+      "role_signature": {
+        "role": "pipeline_executor",
+        "payload_hash": "d2374aff5c3774376a9e142f9780a36b9d301a8f1f993020caa79cd913f5b704",
+        "signature": "6acb52a1701e6f6798ca50bfce686b50862c5cd52fb452f8ba1eed567dd8f5037e64eeb90d46e70bb0ab3357df8ab71efe910523182715b210894a1ae0829803",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.032508"
+      },
+      "policy_binding": {
+        "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+        "context_hash": "e8379aa212360a2d1d4abf7931ae50378690e64f7fd7b7c0e427a81a5c276fcf",
+        "binding_hash": "2257b1df1d8671e8934328cf9b3bbe3d1ce41b248290292fbb89283a498276a6",
+        "signature": "0e19597a5fd3c39ad9483e289ae0569b5b19babaa57b65f6a9f8c6d2d8546376154eca0840abb7600d131594353ce3f496cd2eead005f4badd0cabeaaac8400a",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.032841"
+      },
+      "output": {
+        "rollback_reason": "demonstration",
+        "rolled_back_at": "2026-02-03T21:55:53.033159",
+        "previous_state_restored": true,
+        "rollback_successful": true,
+        "environment": "production",
+        "rollback_hash": "576ec1ac7f5e893d152bfd231cca89570f0cf91699b60f2d812ed4d67e12521b"
+      },
+      "artifact_hash": "ef9d79d091dc0dc7893657e9e8225acd2f8c691caacf1866e763e93196b7df1c",
+      "artifact_path": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_rollback_ef9d79d0.json"
+    },
+    {
+      "stage": "audit_export",
+      "type": "audit_export",
+      "status": "success",
+      "timestamp": "2026-02-03T21:55:53.034054",
+      "role_signature": {
+        "role": "pipeline_executor",
+        "payload_hash": "4b9c1aac753d59cd6bc1e52660ad71d7975267c1c8254d6ce02fe005f0d10ba5",
+        "signature": "7ec513ff9af5f8c9259bb814a0ac3ba6493fbb57ceb7fa393676085a30d05c6ac07ae852c660c1816c2721ab2ac6e5edcbc75e5ca051c4bbdaf2de4090b9ca0f",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.033424"
+      },
+      "policy_binding": {
+        "policy_hash": "950c6be9c046f561131d1ee08eaf27e8c4179812819e19a86d800358d53d76d3",
+        "context_hash": "2cfc23457cf31caaecf60d0d16855315d57dc39cee0ed9adc3d82746d12b3129",
+        "binding_hash": "e3dbe0537f69a1ee2d924d6ac56cf21ea9f0708c1818e1e38fd9b3a10cec616a",
+        "signature": "9eb315ebc7b159e72526838192844c7f3894b6b1e251dc7cb85f8fdcc14ad902bb9cfc740bbcffc7a9d9537f9e5b7ba8d58730c47c12d46c6ea9304e8aa28802",
+        "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+        "timestamp": "2026-02-03T21:55:53.033755"
+      },
+      "output": {
+        "exported_at": "2026-02-03T21:55:53.035331",
+        "bundle_path": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/compliance_bundle.json",
+        "export_successful": true,
+        "format": "json"
+      },
+      "artifact_hash": "b080876e9384eca0470c7df00ce4d90be0938f158caef037bc2f989d15f88c94",
+      "artifact_path": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_audit_export_b080876e.json"
+    }
+  ],
+  "artifacts": {
+    "data_preparation": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_data_preparation_8a0931b1.json",
+    "model_training": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_model_training_c0674790.json",
+    "agent_chain": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_agent_chain_ded81e5b.json",
+    "promotion": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_promotion_1a72fe09.json",
+    "rollback": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_rollback_ef9d79d0.json",
+    "audit_export": "/home/runner/work/Project-AI/Project-AI/governance/sovereign_data/artifacts/20260203_215553/stage_audit_export_b080876e.json"
+  },
+  "hashes": {
+    "data_preparation": "8a0931b1ee7f2f1e2e1c8acbced11e1e2d2b9e79604f8088c3e4286bd86c62ee",
+    "model_training": "c06747901120727123e362cf9cc5144140e5b5d950ca63937d1f49793fb9581e",
+    "agent_chain": "ded81e5b0ee93e2debf1cb08252923b0bdb2399bd79e384103eb0b586b31057f",
+    "promotion": "1a72fe09013706b54a6be95add38aa407e7baf6b97790ca26adf0c0e5b4644cd",
+    "rollback": "ef9d79d091dc0dc7893657e9e8225acd2f8c691caacf1866e763e93196b7df1c",
+    "audit_export": "b080876e9384eca0470c7df00ce4d90be0938f158caef037bc2f989d15f88c94"
+  },
+  "config_snapshot": {
+    "config_hash": "c270c0b3c7a62e88a22ea6b6df4dbdfff457a4806a66a867908f2feebda4273b",
+    "signature": "3d213700981fbb7dc664d40c1d0bc9ff6449175dee1a512cdb9f2386393caf2de4c559cf4d8f73a57326dfbaf5103389205e154e08aa7b0cc003b7361cbabc05",
+    "public_key": "36e6c390cd815ce254831f7d3b3a66218310049855e6ce03f232b84fa65fba53",
+    "timestamp": "2026-02-03T21:55:53.028166",
+    "algorithm": "Ed25519"
+  },
+  "audit_integrity": {
+    "is_valid": true,
+    "issues": []
+  }
+}

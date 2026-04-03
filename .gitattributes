@@ -29,32 +29,29 @@
 #   6. TSCG-B             — TSCG (Binary)
 
 # 1. Thirsty-Lang (Main)
-*.thirsty linguist-language=thirsty-lang linguist-detectable
-*.thirstyplus linguist-language=thirsty-lang linguist-detectable
-*.thirstyplusplus linguist-language=thirsty-lang linguist-detectable
+*.thirsty linguist-language=Thirsty-lang linguist-detectable
 
 # 2. Thirst of Gods (Higher Functions)
-*.thirstofgods linguist-language=thirst-of-gods linguist-detectable
-*.tog linguist-language=thirst-of-gods linguist-detectable
+*.thirstofgods linguist-language=Thirsty-lang linguist-detectable
+*.tog linguist-language=Thirsty-lang linguist-detectable
 
 # 3. T.A.R.L. (Defensive Programming)
-*.tarl linguist-language=tarl linguist-detectable
+*.tarl linguist-language=Thirsty-lang linguist-detectable
 
 # 4. Shadow Thirst (Dual Plane)
-*.shadow linguist-language=shadow-thirst linguist-detectable
+*.shadow linguist-language=Thirsty-lang linguist-detectable
 
 # 5. TSCG (Symbolic Compression Grammar)
-*.tscg linguist-language=tscg linguist-detectable
+*.tscg linguist-language=Thirsty-lang linguist-detectable
 
 # 6. TSCG-B (Binary)
-*.tscgb linguist-language=tscg-b linguist-detectable
+*.tscgb linguist-language=Thirsty-lang linguist-detectable
 
 # ───────────────────────────────────────────────────────────
 # Ensure language samples count in statistics
 # ───────────────────────────────────────────────────────────
 src/thirsty_lang/examples/** linguist-vendored=false
 src/thirsty_lang/playground/** linguist-vendored=false
-integrations/thirsty-lang-engine/examples/** linguist-vendored=false
 examples/** linguist-vendored=false
 linguist-submission/samples/** linguist-vendored=false
 
@@ -64,9 +61,6 @@ linguist-submission/samples/** linguist-vendored=false
 src/thirsty_lang/node_modules/** linguist-vendored
 src/thirsty_lang/vscode-extension/** linguist-vendored
 src/thirsty_lang/.venv/** linguist-vendored
-integrations/thirsty-lang-engine/node_modules/** linguist-vendored
-integrations/thirsty-lang-engine/vscode-extension/** linguist-vendored
-integrations/thirsty-lang-engine/thirsty-extension/** linguist-vendored
 node_modules/** linguist-vendored
 .venv/** linguist-vendored
 external/** linguist-vendored
