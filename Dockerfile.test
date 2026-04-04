@@ -1,0 +1,17 @@
+#                                           [2026-04-02 10:49]
+#                                          Productivity: Active
+FROM python:3.11-slim
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app/src:/app
+
+COPY requirements.txt requirements-dev.txt /tmp/
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir -r /tmp/requirements.txt -r /tmp/requirements-dev.txt
+
+COPY . /app
+
+CMD ["python", "Verify-SovereignLoaders.py"]

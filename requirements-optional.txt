@@ -1,0 +1,8 @@
+# Optional runtime dependencies for feature-complete recovery.
+# Base install remains in requirements.txt; use this file when you want the
+# optional video, audio, and Redis-backed paths enabled in the current env.
+
+opencv-python-headless
+openai-whisper
+pydub
+redis

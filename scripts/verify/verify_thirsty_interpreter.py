@@ -1,33 +1,43 @@
 #!/usr/bin/env python3
-"""Run the canonical Thirsty interpreter smoke test."""
+"""Smoke verifier for the Thirsty-lang Python interpreter."""
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-for candidate in (ROOT, ROOT / "src"):
-    candidate_str = str(candidate)
-    if candidate_str not in sys.path:
-        sys.path.insert(0, candidate_str)
+SRC = ROOT / "src"
 
-from thirsty_lang.interpreter_smoke import (  # noqa: E402
-    format_thirsty_interpreter_smoke_result,
-    run_thirsty_interpreter_smoke,
-)
+for path in (ROOT, SRC):
+    path_str = str(path)
+    if path_str not in sys.path:
+        sys.path.insert(0, path_str)
+
+from thirsty_lang.src.thirsty_interpreter import ThirstyInterpreter
 
 
 def main() -> int:
-    """Execute the smoke test and print a short report."""
+    """Run a small interpreter smoke check and report the result."""
+    interpreter = ThirstyInterpreter()
+    output = interpreter.interpret('\n'.join(['drink water = "thirsty"', "pour water"]))
 
-    result = run_thirsty_interpreter_smoke()
-    print("=" * 80)
-    print("THIRSTY INTERPRETER SMOKE TEST")
-    print("=" * 80)
-    print(format_thirsty_interpreter_smoke_result(result))
-    print("=" * 80)
-    return 0 if result.passed else 1
+    if output != ["thirsty"]:
+        print(
+            f"THIRSTY_INTERPRETER_SMOKE_FAIL: expected ['thirsty'], got {output!r}",
+            file=sys.stderr,
+        )
+        return 1
+
+    if interpreter.get_variables().get("water") != "thirsty":
+        print(
+            "THIRSTY_INTERPRETER_SMOKE_FAIL: variable state did not persist",
+            file=sys.stderr,
+        )
+        return 1
+
+    print("THIRSTY_INTERPRETER_SMOKE_OK")
+    return 0
 
 
 if __name__ == "__main__":
