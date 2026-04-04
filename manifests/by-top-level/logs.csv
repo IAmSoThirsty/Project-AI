@@ -1,0 +1,3 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+"logs/api.log","logs","logs","api.log",".log","341311","333.312","2026-04-04T03:01:58.6689139Z","0.04","False","True",,,,,
+"logs/app.log","logs","logs","app.log",".log","0","0","2026-04-01T15:28:03.6893073Z","2.522","True","False","0","0","0","0","0"

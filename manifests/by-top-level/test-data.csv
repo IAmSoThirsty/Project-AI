@@ -1,0 +1,3 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+"test-data/adversarial_stress_tests_2000.json","test-data","test-data","adversarial_stress_tests_2000.json",".json","3495799","3413.866","2026-03-29T00:58:41.4945780Z","6.125","True","False","109068","109068","3277665","30.052","100"
+"test-data/owasp_compliant_tests.json","test-data","test-data","owasp_compliant_tests.json",".json","330466","322.721","2026-03-29T00:58:41.4955790Z","6.125","True","False","9103","9103","312262","34.303","134"
