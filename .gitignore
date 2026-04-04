@@ -207,3 +207,5 @@ k8s/tk8s/security/*.backup
 # Unity installers
 unity/UnityHubSetup.exe
 *.exe
+
+workspace/.git_workspace_nested_backup/
