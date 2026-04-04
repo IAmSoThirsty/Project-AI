@@ -1306,6 +1306,19 @@ taar --help
 | **TK8s Pipeline** | `tk8s-civilization-pipeline.yml` | Kubernetes civilization deployment |
 | **Deploy Standard** | `update-deployment-standard.yml` | Deployment standard enforcement |
 
+CircleCI release hardening is defined in `.circleci/config.yml` and includes:
+
+- dependency and package installation verification for Python and Node.js
+- container image availability checks for all compose-defined images
+- lockfile integrity enforcement for `package-lock.json` and `requirements.lock`
+
+When lockfiles drift, regenerate locally before pushing:
+
+```bash
+npm install --package-lock-only
+pip-compile --allow-unsafe --generate-hashes --output-file=requirements.lock requirements.in
+```
+
 ---
 
 ## 🏁 Quick Start

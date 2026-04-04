@@ -1,6 +1,7 @@
 # Health report snapshots and archives (keep canonical report only)
 data/health_snapshots/
 docs/assets/health_report_*.png
+governance/audit_log.yaml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -207,40 +208,4 @@ k8s/tk8s/security/*.backup
 unity/UnityHubSetup.exe
 *.exe
 
-# Repo-local build caches and virtual environments
-.tmp/
-.pip-cache/
-.uv-cache/
-.uv-python/
-.venv/
-.venv-linux/
-.venv_prod/
-.env.wsl
-IDE_Work_Spaces/
-scripts/check_git_access.ps1
-
-# Scratch output generated under tmp/
-tmp/
-tmp/pdfs/
-tmp/*.html
-tmp/*.png
-tmp/*.json
-tmp/*.xml
-tmp/*.pdf
-
-# Generated repo snapshots and reports
-workspace/
-output/
-logs/
-engines/waterfall_native/target/
-ci-reports/pa-shield/
-ci-reports/red-team-winning/
-data/cerberus/agents/
-data/cerberus/logs/*
-!data/cerberus/logs/
-!data/cerberus/logs/*.jsonl
-test-artifacts/junit/
-test-artifacts/security_compliance/
-archive/history/timeline/**/RELEASE_BUNDLE/
-data/audit/genesis_keys/genesis_audit.key
-governance/sovereign_data/*keypair.json
+workspace/.git_workspace_nested_backup/
