@@ -476,6 +476,15 @@ pip-audit
 # Alternative dependency check
 
 safety check
+
+# Lockfile and manifest consistency checks
+
+npm install --package-lock-only
+pip-compile --allow-unsafe --generate-hashes --output-file=requirements.lock requirements.in
+
+# Verify no dependency drift remains
+
+git diff -- package-lock.json requirements.lock
 ```
 
 ______________________________________________________________________

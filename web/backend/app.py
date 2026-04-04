@@ -1,9 +1,17 @@
-# [2026-03-02 10:34] | Productivity: Active | Status: ACTIVE [Sovereign 2.1 Hardened]
+# [2026-04-03 23:25] | Productivity: Active | Status: ACTIVE [Sovereign 2.1 Hardened]
 """Flask backend for Project-AI's lightweight web API."""
 
 from __future__ import annotations
 
 import logging
+import os
+import sys
+
+# Ensure the Project-AI source directory is in the path for security module imports
+# Root is Sovereign-Governance-Substrate
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
 
 try:  # pragma: no cover - import guard for environments without Flask
     from flask import Flask, jsonify, request
@@ -12,28 +20,31 @@ except ModuleNotFoundError as exc:  # pragma: no cover
         "Flask must be installed to use the Project-AI web backend."
     ) from exc
 
+# Sovereign Security Imports
+from src.app.security.oauth2_provider import provider as oauth2_provider
+
 app = Flask(__name__)
 
 
 logger = logging.getLogger(__name__)
 
-# In-memory demo credential store used purely for backend tests.
+# In-memory demo credential store (to be replaced by Identity Engine)
+# Hardened in Sovereign 2.1 - only for local testing.
 _USERS: dict[str, dict[str, str]] = {
     "admin": {"password": "open-sesame", "role": "superuser"},
     "guest": {"password": "letmein", "role": "viewer"},
 }
-_TOKENS: dict[str, str] = {}  # token -> username
 
 
 @app.route("/api/status")
 def status():
     """Return a simple health snapshot."""
-    return jsonify(status="ok", component="web-backend"), 200
+    return jsonify(status="ok", component="web-backend", sovereign_auth="active"), 200
 
 
 @app.route("/api/auth/login", methods=["POST"])
 def login():
-    """Authenticate a user and return a session token."""
+    """Authenticate a user and return a session token using OAuth2Provider."""
     payload = request.get_json(silent=True)
     if not payload:
         return (
@@ -43,14 +54,8 @@ def login():
 
     username = (payload.get("username") or "").strip()
     password = payload.get("password")
-    if not username or not password:
-        return (
-            jsonify(
-                error="missing-credentials", message="username and password required"
-            ),
-            400,
-        )
-
+    
+    # 1. Validate Initial Credentials
     user = _USERS.get(username)
     if not user or user.get("password") != password:
         return (
@@ -60,36 +65,63 @@ def login():
             401,
         )
 
-    token = f"token-{username}"
-    _TOKENS[token] = username
-    return (
-        jsonify(
-            status="ok",
-            token=token,
-            user={"username": username, "role": user["role"]},
-        ),
-        200,
-    )
+    # 2. Issue Sovereign OAuth2 Token
+    try:
+        # Generate an auth code for the web client
+        code = oauth2_provider.authorize(
+            client_id="sovereign-web-ui",
+            response_type="code",
+            scope=f"role:{user['role']}",
+            redirect_uri="http://localhost:5000/callback"
+        )
+        
+        # Immediate exchange for web-bound sessions (simplified flow for internal UI)
+        token_data = oauth2_provider.exchange_token(
+            code=code,
+            client_id="sovereign-web-ui",
+            client_secret="cert-hardened-secret-991"  # Defined in provider
+        )
+        
+        return (
+            jsonify(
+                status="ok",
+                token=token_data["access_token"],
+                expires_in=token_data["expires_in"],
+                user={"username": username, "role": user["role"]},
+            ),
+            200,
+        )
+    except Exception as e:
+        logger.error("OAuth2 Error during login for %s: %s", username, str(e))
+        return jsonify(error="auth_service_failure", message=str(e)), 500
 
 
 @app.route("/api/auth/profile", methods=["GET"])
 def profile():
-    """Return user profile if a valid token is provided."""
+    """Return user profile after validating via OAuth2Provider."""
     token = request.headers.get("X-Auth-Token")
     if not token:
         return (
             jsonify(error="missing-token", message="X-Auth-Token header required"),
             401,
         )
-    username = _TOKENS.get(token)
-    if not username:
+    
+    # Validate via hardened provider
+    token_metadata = oauth2_provider.validate_token(token)
+    if not token_metadata:
         return (
-            jsonify(error="invalid-token", message="Provided token is not recognized"),
+            jsonify(error="invalid-token", message="Provided token is not recognized or expired"),
             403,
         )
-    user = _USERS.get(username, {})
+        
+    # In a real system, we'd map the token back to a user ID via the Identity Engine
+    # For now, we mock it based on the token pattern or metadata
     return jsonify(
-        status="ok", user={"username": username, "role": user.get("role", "unknown")}
+        status="ok", 
+        user={
+            "client_id": token_metadata["client_id"],
+            "scope": token_metadata["scope"]
+        }
     )
 
 

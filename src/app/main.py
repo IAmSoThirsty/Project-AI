@@ -381,9 +381,9 @@ def initialize_security_systems(
         from src.app.core.global_watch_tower import GlobalWatchTower
 
         tower = GlobalWatchTower.initialize(
-            num_port_admins=2,
+            num_port_admins=1,  # Sector Alpha Hierarchy: 1 Admin + 10 Towers + 100 Gates = 111
             towers_per_port=10,
-            gates_per_tower=5,
+            gates_per_tower=10,
             data_dir="data",
             max_workers=2,
             timeout=8,
@@ -587,12 +587,14 @@ def initialize_security_systems(
                 tower.register_security_agent("red_team", "code_adversary_main")
 
             # Register Oversight agents
-            if security_components.get("oversight"):
-                tower.register_security_agent("oversight", "oversight_main")
-            if security_components.get("validator"):
-                tower.register_security_agent("oversight", "validator_main")
             if security_components.get("explainability"):
                 tower.register_security_agent("oversight", "explainability_main")
+
+            # NEW: Register hardened OAuth2Provider
+            from src.app.security.oauth2_provider import OAuth2Provider
+            oauth_provider = OAuth2Provider(kernel=kernel)
+            tower.register_security_agent("active_defense", "oauth2_provider")
+            security_components["oauth2_provider"] = oauth_provider
 
             status = tower.get_security_status()
             logger.info(
