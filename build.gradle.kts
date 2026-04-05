@@ -20,6 +20,7 @@
  */
 
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.gradle.process.ExecOperations
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -372,7 +373,7 @@ tasks.register<Exec>("pythonSecurityScan") {
     )
     
     doLast {
-        project.exec {
+        services.get(ExecOperations::class.java).exec {
             val pipAudit = if (System.getProperty("os.name").lowercase().contains("windows")) {
                 file("${pythonVenvDir}/Scripts/pip-audit.exe").absolutePath
             } else {
@@ -936,7 +937,7 @@ tasks.register<Task>("sbomGenerate") {
         val pythonSbom = sbomDir.file("python-dependencies.txt").asFile
         pythonSbom.parentFile.mkdirs()
         
-        project.exec {
+        services.get(ExecOperations::class.java).exec {
             val pipExec = if (System.getProperty("os.name").lowercase().contains("windows")) {
                 file("${pythonVenvDir}/Scripts/pip.exe").absolutePath
             } else {
@@ -1038,7 +1039,7 @@ tasks.register<Exec>("dockerPush") {
     val registry = findProperty("dockerRegistry")?.toString() ?: "ghcr.io/iamsothirsty"
     
     doFirst {
-        project.exec {
+        services.get(ExecOperations::class.java).exec {
             commandLine("docker", "tag", "project-ai:${project.version}", "$registry/project-ai:${project.version}")
         }
     }
@@ -1108,7 +1109,7 @@ tasks.register<Exec>("releaseGitHubRelease") {
     doLast {
         // Upload artifacts
         fileTree(releaseDir).files.forEach { artifact ->
-            project.exec {
+            services.get(ExecOperations::class.java).exec {
                 commandLine(
                     "gh", "release", "upload",
                     "v${project.version}",
