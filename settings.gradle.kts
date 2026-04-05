@@ -69,7 +69,6 @@ buildCache {
     local {
         isEnabled = true
         directory = file("${rootProject.projectDir}/.gradle/build-cache")
-        removeUnusedEntriesAfterDays = 30
     }
 }
 
