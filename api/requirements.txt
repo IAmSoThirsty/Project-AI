@@ -10,4 +10,4 @@ pydantic==2.5.3
 python-multipart==0.0.22
 
 # Optional: Production deployment
-gunicorn==22.0.0
+gunicorn==25.3.0
