@@ -16,7 +16,7 @@ jobs:
         name: Mark & Close Stale Items
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/stale@v9
+            - uses: actions/stale@11bd71901bbe5b1630ceea73d27597364c9af683
               with:
                   repo-token: ${{ secrets.GITHUB_TOKEN }}
                   stale-issue-message: >
