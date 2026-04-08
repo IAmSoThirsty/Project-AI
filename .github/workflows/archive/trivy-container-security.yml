@@ -45,10 +45,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Run Trivy vulnerability scanner in fs mode
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -58,14 +58,14 @@ jobs:
           ignore-unfixed: true
 
       - name: Upload Trivy results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@0c366fd6a839edf440554fa01a7085ccba70ac98
         if: always()
         with:
           sarif_file: 'trivy-fs-results.sarif'
           category: 'trivy-filesystem'
 
       - name: Run Trivy vulnerability scanner (table output)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -86,7 +86,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Check if Dockerfile exists
         id: check-dockerfile
@@ -109,7 +109,7 @@ jobs:
 
       - name: Run Trivy vulnerability scanner on Docker image
         if: steps.check-dockerfile.outputs.exists == 'true'
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           image-ref: '${{ env.IMAGE_NAME }}:${{ github.sha }}'
           format: 'sarif'
@@ -119,14 +119,14 @@ jobs:
 
       - name: Upload Trivy Docker results to GitHub Security tab
         if: steps.check-dockerfile.outputs.exists == 'true' && always()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           sarif_file: 'trivy-docker-${{ matrix.dockerfile }}.sarif'
           category: 'trivy-docker-${{ matrix.dockerfile }}'
 
       - name: Run Trivy vulnerability scanner (table output)
         if: steps.check-dockerfile.outputs.exists == 'true'
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           image-ref: '${{ env.IMAGE_NAME }}:${{ github.sha }}'
           format: 'table'
@@ -138,10 +138,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Run Trivy configuration scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           scan-type: 'config'
           scan-ref: '.'
@@ -151,14 +151,14 @@ jobs:
           ignore-unfixed: true
 
       - name: Upload Trivy config results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@0c366fd6a839edf440554fa01a7085ccba70ac98
         if: always()
         with:
           sarif_file: 'trivy-config-results.sarif'
           category: 'trivy-config'
 
       - name: Run Trivy configuration scanner (table output)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           scan-type: 'config'
           scan-ref: '.'
@@ -173,7 +173,7 @@ jobs:
     if: always()
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Generate summary
         run: |
@@ -206,7 +206,7 @@ jobs:
 
       - name: Create issue for critical findings
         if: needs.trivy-filesystem-scan.result == 'failure' || needs.trivy-docker-scan.result == 'failure'
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const title = `🚨 Trivy Security Scan Detected Critical Vulnerabilities - ${new Date().toISOString().split('T')[0]}`;

@@ -101,7 +101,7 @@ jobs:
       python_version: ${{ steps.decide.outputs.python_version }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -145,20 +145,20 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           submodules: recursive
       
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           languages: python, javascript
       
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@0c366fd6a839edf440554fa01a7085ccba70ac98
       
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@0c366fd6a839edf440554fa01a7085ccba70ac98
 
   bandit-security-scan:
     name: Bandit Python Security Linting
@@ -170,7 +170,7 @@ jobs:
       security-events: write
       actions: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Bandit Scan
         uses: shundor/python-bandit-scan@ab1d87dfccc5a0ffab88be3aaac6ffe35c10d6cd
@@ -180,7 +180,7 @@ jobs:
       
       - name: Upload SARIF results
         if: always()
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           sarif_file: results.sarif
 
@@ -191,12 +191,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: ${{ needs.initialization.outputs.python_version }}
       
@@ -231,7 +231,7 @@ jobs:
       
       - name: Upload scan results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           name: security-scan-results
           path: |
@@ -245,10 +245,10 @@ jobs:
     if: needs.initialization.outputs.should_run_security == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: ${{ needs.initialization.outputs.python_version }}
       
@@ -272,7 +272,7 @@ jobs:
       
       - name: Upload vulnerability reports
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           name: dependency-vulnerability-reports
           path: |
@@ -289,12 +289,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
       - name: Run Super-Linter
-        uses: github/super-linter@v5
+        uses: github/super-linter@0c366fd6a839edf440554fa01a7085ccba70ac98
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
@@ -311,10 +311,10 @@ jobs:
     needs: initialization
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: ${{ needs.initialization.outputs.python_version }}
       
@@ -331,10 +331,10 @@ jobs:
     needs: initialization
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: ${{ needs.initialization.outputs.python_version }}
       
@@ -360,10 +360,10 @@ jobs:
       matrix:
         python-version: ['3.11', '3.12']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: ${{ matrix.python-version }}
       
@@ -378,7 +378,7 @@ jobs:
       
       - name: Upload coverage reports
         if: matrix.python-version == '3.12'
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           files: ./coverage.xml
           flags: unittests
@@ -390,10 +390,10 @@ jobs:
     if: needs.initialization.outputs.should_run_tests == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           node-version: ${{ env.NODE_VERSION }}
       
@@ -418,10 +418,10 @@ jobs:
     needs: [initialization, pytest-tests]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: ${{ needs.initialization.outputs.python_version }}
       
@@ -437,7 +437,7 @@ jobs:
       
       - name: Upload build artifacts
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           name: python-dist
           path: dist/
@@ -448,10 +448,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@0c366fd6a839edf440554fa01a7085ccba70ac98
       
       - name: Build Docker image
         if: hashFiles('Dockerfile') != ''
@@ -460,7 +460,7 @@ jobs:
       
       - name: Run Trivy vulnerability scanner
         if: hashFiles('Dockerfile') != ''
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           image-ref: 'project-ai:${{ github.sha }}'
           format: 'sarif'
@@ -468,7 +468,7 @@ jobs:
       
       - name: Upload Trivy results
         if: hashFiles('Dockerfile') != ''
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           sarif_file: 'trivy-results.sarif'
 
@@ -485,13 +485,13 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: '3.12'
       
@@ -524,10 +524,10 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: '3.12'
       
@@ -549,7 +549,7 @@ jobs:
       
       - name: Create PR if fixes available
         if: steps.scan.outcome == 'failure'
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "security: auto-fix dependency vulnerabilities"
@@ -577,7 +577,7 @@ jobs:
       issues: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -588,7 +588,7 @@ jobs:
       
       - name: Discover branches without PRs
         id: discover
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const branches = await github.paginate(github.rest.repos.listBranches, {
@@ -615,7 +615,7 @@ jobs:
       
       - name: Create PRs for branches
         if: fromJson(steps.discover.outputs.count) > 0
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const branches = JSON.parse('${{ steps.discover.outputs.branches }}');
@@ -645,10 +645,10 @@ jobs:
       issues: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Label issues
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             if (context.eventName === 'issues' && context.payload.action === 'opened') {
@@ -679,7 +679,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/first-interaction@v1
+      - uses: actions/first-interaction@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           issue-message: |
@@ -697,7 +697,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/stale@v8
+      - uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: 'This issue has been automatically marked as stale due to inactivity.'
@@ -715,10 +715,10 @@ jobs:
     needs: [codeql-analysis, pytest-tests]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: '3.12'
       
@@ -737,7 +737,7 @@ jobs:
       
       - name: Create validation report
         if: always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             await github.rest.issues.createComment({
@@ -763,7 +763,7 @@ jobs:
       name: staging
       url: https://staging.project-ai.example.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Deploy to staging
         run: |
@@ -782,7 +782,7 @@ jobs:
       name: production
       url: https://project-ai.example.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Deploy to production
         run: |
@@ -801,7 +801,7 @@ jobs:
       actions: write
     steps:
       - name: Delete old artifacts
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const daysToKeep = 30;

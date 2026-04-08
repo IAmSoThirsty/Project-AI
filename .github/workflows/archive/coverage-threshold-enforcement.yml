@@ -54,10 +54,10 @@ jobs:
         python-version: ['3.11', '3.12']
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
@@ -87,7 +87,7 @@ jobs:
 
       - name: Upload coverage reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b
         with:
           name: python-coverage-${{ matrix.python-version }}
           path: |
@@ -112,7 +112,7 @@ jobs:
 
       - name: Comment coverage on PR
         if: github.event_name == 'pull_request' && always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const coverage = '${{ steps.coverage.outputs.coverage }}';
@@ -174,10 +174,10 @@ jobs:
     if: hashFiles('package.json') != ''
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           node-version: '20'
           cache: 'npm'
@@ -220,7 +220,7 @@ jobs:
 
       - name: Upload coverage reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b
         with:
           name: javascript-coverage
           path: |
@@ -229,7 +229,7 @@ jobs:
 
       - name: Comment coverage on PR
         if: github.event_name == 'pull_request' && always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const coverage = '${{ steps.js-coverage.outputs.coverage }}' || '0';
@@ -327,7 +327,7 @@ jobs:
       (needs.python-coverage.result == 'failure' || needs.javascript-coverage.result == 'failure')
     steps:
       - name: Create or update coverage issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const title = `📊 Code Coverage Below Threshold - Action Required`;
