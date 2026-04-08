@@ -55,7 +55,7 @@
     }
   },
 
-  "postCreateCommand": "pip install -r requirements.txt && npm install",
+  "postCreateCommand": "[ -f requirements.txt ] && pip install -r requirements.txt || true && [ -f package.json ] && npm install || true",
 
   "remoteUser": "vscode"
 }
