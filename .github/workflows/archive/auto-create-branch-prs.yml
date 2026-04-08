@@ -39,7 +39,7 @@ jobs:
       branch-count: ${{ steps.get-branches.outputs.count }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           fetch-depth: 0  # Fetch all history for all branches
 
@@ -54,7 +54,7 @@ jobs:
 
       - name: Get all non-main branches
         id: get-branches
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const targetBranch = '${{ github.event.inputs.target_branch }}';
@@ -167,7 +167,7 @@ jobs:
       fail-fast: false  # Continue even if one fails
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           ref: ${{ matrix.branch }}
           fetch-depth: 0
@@ -220,7 +220,7 @@ jobs:
 
       - name: Get branch info
         id: branch-info
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const branch = '${{ matrix.branch }}';
@@ -346,7 +346,7 @@ jobs:
           PR_TITLE: ${{ steps.pr-content.outputs.title }}
           PR_BODY: ${{ steps.pr-content.outputs.body }}
           CONFLICTS_PRESENT: ${{ env.CONFLICTS_PRESENT }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const branch = process.env.BRANCH;
@@ -436,7 +436,7 @@ jobs:
     if: always()
     steps:
       - name: Generate final summary
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const branchCount = ${{ needs.discover-and-create-prs.outputs.branch-count }};
@@ -502,7 +502,7 @@ jobs:
     if: failure()
     steps:
       - name: Create failure alert
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const alert = `

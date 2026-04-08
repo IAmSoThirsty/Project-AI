@@ -122,7 +122,7 @@ cleanup-old-summaries:
 
     - name: Close summary issues older than 7 days
 
-      uses: actions/github-script@v7
+      uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
       with:
         script: |
           const sevenDaysAgo = new Date();

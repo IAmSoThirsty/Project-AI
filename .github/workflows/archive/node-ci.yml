@@ -10,9 +10,9 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           node-version: '18'
       - name: Install dependencies
@@ -45,7 +45,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       - name: Detect Python files
         id: detect_py
         run: |
@@ -56,7 +56,7 @@ jobs:
         run: echo "No Python files found — skipping Python CI."
       - name: Setup Python
         if: steps.detect_py.outputs.found != '0'
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: '3.x'
       # ========================================================================

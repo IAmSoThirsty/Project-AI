@@ -15,10 +15,10 @@ jobs:
     name: T.A.R.L. Linting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: '3.11'
       
@@ -42,10 +42,10 @@ jobs:
       matrix:
         python-version: ['3.11', '3.12']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: ${{ matrix.python-version }}
       
@@ -59,7 +59,7 @@ jobs:
           pytest tarl/tests/test_tarl_integration.py -v --cov=tarl --cov-report=xml --cov-report=term
       
       - name: Upload coverage to artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b
         with:
           name: coverage-${{ matrix.python-version }}
           path: coverage.xml
@@ -68,10 +68,10 @@ jobs:
     name: T.A.R.L. Security Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: '3.11'
       
@@ -86,7 +86,7 @@ jobs:
           bandit -r tarl/ -f screen
       
       - name: Upload Bandit report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b
         with:
           name: bandit-report
           path: bandit-report.json
@@ -95,7 +95,7 @@ jobs:
     name: T.A.R.L. Documentation Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       
       - name: Check documentation exists
         run: |
@@ -121,10 +121,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [tarl-lint, tarl-test, tarl-security]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
       
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           python-version: '3.11'
       

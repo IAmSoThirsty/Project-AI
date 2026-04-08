@@ -48,10 +48,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
         with:
           python-version: '3.11'
 
@@ -90,14 +90,14 @@ jobs:
 
       - name: Upload Checkov results to GitHub Security tab
         if: steps.checkov.outputs.scan_completed == 'true'
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           sarif_file: checkov-results/results_sarif.sarif
           category: 'checkov'
 
       - name: Upload Checkov results as artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b
         with:
           name: checkov-results
           path: checkov-results/
@@ -110,10 +110,10 @@ jobs:
     if: always()
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - name: Download Checkov results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           name: checkov-results
           path: checkov-results/
@@ -178,13 +178,13 @@ jobs:
     if: github.event_name == 'pull_request' && always()
     steps:
       - name: Download Checkov results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           name: checkov-results
           path: checkov-results/
 
       - name: Comment on PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const fs = require('fs');
@@ -257,7 +257,7 @@ jobs:
     if: needs.checkov-scan.result == 'failure'
     steps:
       - name: Create or update issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@0c366fd6a839edf440554fa01a7085ccba70ac98
         with:
           script: |
             const title = `🚨 Checkov Detected Critical Cloud Configuration Issues - ${new Date().toISOString().split('T')[0]}`;

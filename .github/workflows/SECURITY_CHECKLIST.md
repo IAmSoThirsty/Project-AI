@@ -215,7 +215,7 @@ The `auto-create-branch-prs.yml` workflow integrates with existing security infr
 
    - name: Run Trivy vulnerability scanner
 
-     uses: aquasecurity/trivy-action@master
+     uses: aquasecurity/trivy-action@0c366fd6a839edf440554fa01a7085ccba70ac98
      with:
        scan-type: 'image'
        image-ref: 'your-image:tag'
@@ -243,7 +243,7 @@ The `auto-create-branch-prs.yml` workflow integrates with existing security infr
 
    - name: Run Checkov
 
-     uses: bridgecrewio/checkov-action@master
+     uses: bridgecrewio/checkov-action@0c366fd6a839edf440554fa01a7085ccba70ac98
      with:
        directory: infrastructure/
        framework: terraform,kubernetes
@@ -330,7 +330,7 @@ Code Push/PR
 
    - name: Checkout code
 
-     uses: actions/checkout@v4
+     uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
    - name: Run security checks
 
