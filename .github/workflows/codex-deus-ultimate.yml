@@ -196,7 +196,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
           submodules: recursive
@@ -354,7 +354,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -391,7 +391,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -449,7 +449,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -508,7 +508,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -564,7 +564,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -627,7 +627,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -671,7 +671,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -708,7 +708,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -747,7 +747,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -773,7 +773,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -807,7 +807,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Run actionlint
         uses: reviewdog/action-actionlint@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -838,7 +838,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           submodules: recursive
       
@@ -893,7 +893,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
@@ -918,7 +918,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -955,7 +955,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           submodules: recursive
       
@@ -990,7 +990,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1026,7 +1026,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1064,7 +1064,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download coverage artifacts
         uses: actions/download-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -1146,7 +1146,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1196,7 +1196,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -1232,7 +1232,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up JDK
         uses: actions/setup-java@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -1276,7 +1276,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1323,7 +1323,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Install Syft
         run: |
@@ -1377,7 +1377,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download SBOM artifacts
         uses: actions/download-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -1434,7 +1434,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Run Trivy filesystem scan
         uses: aquasecurity/trivy-action@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -1467,7 +1467,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -1512,7 +1512,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Run Trivy config scan
         uses: aquasecurity/trivy-action@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -1545,7 +1545,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Run Checkov scan
         uses: bridgecrewio/checkov-action@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -1583,7 +1583,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -1638,7 +1638,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1691,7 +1691,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download security reports
         uses: actions/download-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -1731,12 +1731,12 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
       - name: Label PR based on changed files
-        uses: actions/labeler@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/labeler@8558fd74291d67161a8a78ce36a881fa63b766a9
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       
@@ -1769,7 +1769,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Auto-approve PR
         if: success()
@@ -1831,7 +1831,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Auto-label issue
         uses: github/issue-labeler@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -1866,7 +1866,7 @@ jobs:
     
     steps:
       - name: Close stale issues and PRs
-        uses: actions/stale@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/stale@28ca1036281a5e5922ead5184a1bbf96e5fc984e
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: 'This issue has been automatically marked as stale because it has not had recent activity.'
@@ -1898,7 +1898,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -1959,7 +1959,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -2020,7 +2020,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download all release artifacts
         uses: actions/download-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -2062,7 +2062,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download signed artifacts
         uses: actions/download-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -2101,7 +2101,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download wheel artifacts
         uses: actions/download-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -2132,7 +2132,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -2184,7 +2184,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -2234,7 +2234,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -2268,7 +2268,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Delete old artifacts
         uses: c-hive/gha-remove-artifacts@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -2291,7 +2291,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Cleanup old caches
         run: |
@@ -2321,7 +2321,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -2356,7 +2356,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download all artifacts
         uses: actions/download-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
@@ -2408,7 +2408,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Generate badge data
         run: |
@@ -2449,7 +2449,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download all reports
         uses: actions/download-artifact@0c366fd6a839edf440554fa01a7085ccba70ac98
