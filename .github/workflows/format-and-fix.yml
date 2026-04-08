@@ -19,13 +19,13 @@ jobs:
         # Only auto-commit on push to develop, not on PRs
         if: github.event_name == 'push'
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
               with:
                   ref: ${{ github.head_ref || github.ref }}
                   token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Set up Python 3.12
-              uses: actions/setup-python@v5
+              uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
               with:
                   python-version: "3.12"
 
@@ -53,10 +53,10 @@ jobs:
         runs-on: ubuntu-latest
         if: github.event_name == 'pull_request'
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
             - name: Set up Python 3.12
-              uses: actions/setup-python@v5
+              uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
               with:
                   python-version: "3.12"
 

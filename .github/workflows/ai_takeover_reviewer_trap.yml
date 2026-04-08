@@ -35,13 +35,13 @@ jobs:
       
       - name: Checkout repository
         if: steps.check-files.outputs.skip != 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
       - name: Set up Python
         if: steps.check-files.outputs.skip != 'true'
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
         with:
           python-version: '3.12'
           

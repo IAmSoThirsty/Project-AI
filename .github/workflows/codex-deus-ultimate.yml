@@ -196,7 +196,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
           submodules: recursive
@@ -354,21 +354,21 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@b611370bfb0c015ddb8bc882260650d03222a7f5
         with:
           languages: python
           queries: security-extended,security-and-quality
       
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@b611370bfb0c015ddb8bc882260650d03222a7f5
       
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@b611370bfb0c015ddb8bc882260650d03222a7f5
         with:
           category: "/language:python"
           upload: true
@@ -391,7 +391,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -418,7 +418,7 @@ jobs:
             --severity-level medium --confidence-level medium || true
       
       - name: Upload SARIF to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@b611370bfb0c015ddb8bc882260650d03222a7f5
         if: always()
         with:
           sarif_file: reports/bandit-sarif.sarif
@@ -449,7 +449,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -508,7 +508,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -564,7 +564,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -627,7 +627,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -671,7 +671,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -708,7 +708,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -747,7 +747,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -773,7 +773,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -807,7 +807,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Run actionlint
         uses: reviewdog/action-actionlint@v1
@@ -838,7 +838,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           submodules: recursive
       
@@ -893,7 +893,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Node environment
         uses: ./.github/actions/setup-node-env
@@ -918,7 +918,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -955,7 +955,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           submodules: recursive
       
@@ -990,7 +990,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1026,7 +1026,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1064,7 +1064,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download coverage artifacts
         uses: actions/download-artifact@v3
@@ -1146,7 +1146,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1196,10 +1196,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226
       
       - name: Extract dockerfile name
         id: extract
@@ -1232,7 +1232,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up JDK
         uses: actions/setup-java@v3
@@ -1276,7 +1276,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1323,7 +1323,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Install Syft
         run: |
@@ -1377,7 +1377,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download SBOM artifacts
         uses: actions/download-artifact@v3
@@ -1401,7 +1401,7 @@ jobs:
           grype sbom:sbom/sbom-spdx.json || true
       
       - name: Upload Grype SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@b611370bfb0c015ddb8bc882260650d03222a7f5
         if: always()
         with:
           sarif_file: reports/grype-sarif.sarif
@@ -1434,10 +1434,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Run Trivy filesystem scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -1446,7 +1446,7 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM'
       
       - name: Upload Trivy SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@b611370bfb0c015ddb8bc882260650d03222a7f5
         if: always()
         with:
           sarif_file: trivy-fs-results.sarif
@@ -1467,10 +1467,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226
       
       - name: Build Docker image for scanning
         uses: docker/build-push-action@v5
@@ -1482,7 +1482,7 @@ jobs:
           tags: project-ai:scan
       
       - name: Run Trivy image scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2
         with:
           scan-type: 'image'
           image-ref: 'project-ai:scan'
@@ -1491,7 +1491,7 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM'
       
       - name: Upload Trivy image SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@b611370bfb0c015ddb8bc882260650d03222a7f5
         if: always()
         with:
           sarif_file: trivy-image-results.sarif
@@ -1512,10 +1512,10 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Run Trivy config scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2
         with:
           scan-type: 'config'
           scan-ref: '.'
@@ -1524,7 +1524,7 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM'
       
       - name: Upload Trivy config SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@b611370bfb0c015ddb8bc882260650d03222a7f5
         if: always()
         with:
           sarif_file: trivy-config-results.sarif
@@ -1545,7 +1545,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Run Checkov scan
         uses: bridgecrewio/checkov-action@master
@@ -1557,7 +1557,7 @@ jobs:
           soft_fail: true
       
       - name: Upload Checkov SARIF
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@b611370bfb0c015ddb8bc882260650d03222a7f5
         if: always()
         with:
           sarif_file: checkov-results.sarif
@@ -1583,7 +1583,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -1638,7 +1638,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -1691,7 +1691,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download security reports
         uses: actions/download-artifact@v3
@@ -1731,7 +1731,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -1769,7 +1769,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Auto-approve PR
         if: success()
@@ -1831,7 +1831,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Auto-label issue
         uses: github/issue-labeler@v3.1
@@ -1898,7 +1898,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -1959,7 +1959,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -2020,7 +2020,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download all release artifacts
         uses: actions/download-artifact@v3
@@ -2062,7 +2062,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download signed artifacts
         uses: actions/download-artifact@v3
@@ -2101,7 +2101,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download wheel artifacts
         uses: actions/download-artifact@v3
@@ -2132,13 +2132,13 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226
       
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -2184,7 +2184,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Setup Python environment
         uses: ./.github/actions/setup-python-env
@@ -2234,7 +2234,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -2268,7 +2268,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Delete old artifacts
         uses: c-hive/gha-remove-artifacts@v1
@@ -2291,7 +2291,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Cleanup old caches
         run: |
@@ -2321,7 +2321,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
       
@@ -2356,7 +2356,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download all artifacts
         uses: actions/download-artifact@v3
@@ -2408,7 +2408,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Generate badge data
         run: |
@@ -2449,7 +2449,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       
       - name: Download all reports
         uses: actions/download-artifact@v3
