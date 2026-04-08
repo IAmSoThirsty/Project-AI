@@ -44,7 +44,7 @@ jobs:
       # PHASE 1: SOURCE TRUST - VERIFY COMMIT SIGNATURE
       # ========================================================================
       - name: 📥 Checkout Repository
-        uses: actions/checkout@v4.2.2  # Pinned to latest stable
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # Pinned to latest stable
         with:
           fetch-depth: 0  # Full history for commit verification
 
@@ -63,7 +63,7 @@ jobs:
       # PHASE 2: ENVIRONMENT SETUP - DETERMINISTIC DEPENDENCIES
       # ========================================================================
       - name: 🐍 Set up Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
@@ -147,7 +147,7 @@ jobs:
 
       - name: 📊 Upload Canonical Execution Trace
         if: always()
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b
         with:
           name: canonical-execution-trace
           path: canonical/execution_trace.json
@@ -171,7 +171,7 @@ jobs:
 
       - name: 📊 Upload Adversarial Test Reports
         if: always()
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b
         with:
           name: adversarial-test-reports
           path: ci-reports/
@@ -196,7 +196,7 @@ jobs:
           echo "SBOM_HASH=${SBOM_HASH}" >> $GITHUB_ENV
 
       - name: 📊 Upload SBOM
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b
         with:
           name: sbom
           path: sbom.json
@@ -206,11 +206,11 @@ jobs:
       # PHASE 9: DOCKER BUILD & PUSH - DETERMINISTIC CONTAINER IMAGE
       # ========================================================================
       - name: 🔧 Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.7.1
+        uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349
 
       - name: 🔐 Log in to GitHub Container Registry
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3.3.0
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -218,7 +218,7 @@ jobs:
 
       - name: 🏷️ Extract Docker Metadata
         id: meta
-        uses: docker/metadata-action@v5.6.1
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -231,7 +231,7 @@ jobs:
 
       - name: 🏗️ Build and Push Docker Image
         id: push
-        uses: docker/build-push-action@v6.10.0
+        uses: docker/build-push-action@48aba3b46d1b1fec4febb7c5d0c644b249a11355
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
@@ -250,7 +250,7 @@ jobs:
       # ========================================================================
       - name: 🔏 Attest Build Provenance
         if: github.event_name != 'pull_request'
-        uses: actions/attest-build-provenance@v2.0.0
+        uses: actions/attest-build-provenance@619dbb2e03e0189af0c55118e7d3c5e129e99726
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.push.outputs.digest }}
@@ -261,7 +261,7 @@ jobs:
       # ========================================================================
       - name: 📦 Upload Test Coverage Report
         if: always()
-        uses: actions/upload-artifact@v4.5.0
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b
         with:
           name: coverage-report
           path: htmlcov/
