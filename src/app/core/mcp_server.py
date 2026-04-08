@@ -118,6 +118,279 @@ class ProjectAIMCPServer:
             logger.error("Error initializing core systems: %s", e)
             # Attributes remain None if initialization fails
 
+    def _get_tool_definitions(self) -> list[Tool]:
+        """Get all available tool definitions."""
+        return [
+            Tool(
+                name="validate_action",
+                description="Validate an action against AI ethics framework (Asimov's Laws)",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "action": {
+                            "type": "string",
+                            "description": "The action to validate",
+                        },
+                        "context": {
+                            "type": "object",
+                            "description": "Context for the action",
+                            "properties": {
+                                "is_user_order": {"type": "boolean"},
+                                "endangers_humanity": {"type": "boolean"},
+                                "harms_human": {"type": "boolean"},
+                            },
+                        },
+                    },
+                    "required": ["action"],
+                },
+            ),
+            Tool(
+                name="get_persona_state",
+                description="Get current AI persona state including personality traits and mood",
+                inputSchema={"type": "object", "properties": {}},
+            ),
+            Tool(
+                name="adjust_persona_trait",
+                description="Adjust a personality trait of the AI persona",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "trait": {
+                            "type": "string",
+                            "description": "Trait to adjust (curiosity, empathy, patience, confidence, humor, creativity, enthusiasm, analytical)",
+                            "enum": [
+                                "curiosity",
+                                "empathy",
+                                "patience",
+                                "confidence",
+                                "humor",
+                                "creativity",
+                                "enthusiasm",
+                                "analytical",
+                            ],
+                        },
+                        "value": {
+                            "type": "number",
+                            "description": "New trait value (0.0 to 1.0)",
+                            "minimum": 0.0,
+                            "maximum": 1.0,
+                        },
+                    },
+                    "required": ["trait", "value"],
+                },
+            ),
+            Tool(
+                name="add_memory",
+                description="Add a memory to the knowledge base",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "category": {
+                            "type": "string",
+                            "description": "Category of knowledge",
+                            "enum": [
+                                "general",
+                                "user_preferences",
+                                "facts",
+                                "skills",
+                                "goals",
+                                "relationships",
+                            ],
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "Content to remember",
+                        },
+                        "importance": {
+                            "type": "number",
+                            "description": "Importance level (0.0 to 1.0)",
+                            "minimum": 0.0,
+                            "maximum": 1.0,
+                        },
+                    },
+                    "required": ["category", "content"],
+                },
+            ),
+            Tool(
+                name="search_memory",
+                description="Search the knowledge base",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "query": {"type": "string", "description": "Search query"},
+                        "category": {
+                            "type": "string",
+                            "description": "Optional category filter",
+                            "enum": [
+                                "general",
+                                "user_preferences",
+                                "facts",
+                                "skills",
+                                "goals",
+                                "relationships",
+                            ],
+                        },
+                    },
+                    "required": ["query"],
+                },
+            ),
+            Tool(
+                name="submit_learning_request",
+                description="Submit a request for the AI to learn new content",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "content": {
+                            "type": "string",
+                            "description": "Content to learn",
+                        },
+                        "reason": {
+                            "type": "string",
+                            "description": "Reason for learning request",
+                        },
+                    },
+                    "required": ["content", "reason"],
+                },
+            ),
+            Tool(
+                name="approve_learning_request",
+                description="Approve a pending learning request",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "request_id": {
+                            "type": "string",
+                            "description": "ID of the learning request",
+                        }
+                    },
+                    "required": ["request_id"],
+                },
+            ),
+            Tool(
+                name="analyze_data",
+                description="Analyze data from CSV, Excel, or JSON files",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "file_path": {
+                            "type": "string",
+                            "description": "Path to data file",
+                        },
+                        "analysis_type": {
+                            "type": "string",
+                            "description": "Type of analysis",
+                            "enum": [
+                                "summary",
+                                "correlation",
+                                "clustering",
+                                "statistics",
+                            ],
+                        },
+                    },
+                    "required": ["file_path", "analysis_type"],
+                },
+            ),
+            Tool(
+                name="track_location",
+                description="Track current location using IP geolocation",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "ip_address": {
+                            "type": "string",
+                            "description": "Optional IP address to geolocate",
+                        }
+                    },
+                },
+            ),
+            Tool(
+                name="send_emergency_alert",
+                description="Send an emergency alert to configured contacts",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string",
+                            "description": "Emergency message",
+                        },
+                        "location": {
+                            "type": "string",
+                            "description": "Current location",
+                        },
+                    },
+                    "required": ["message"],
+                },
+            ),
+            Tool(
+                name="generate_image",
+                description="Generate an image using AI (Stable Diffusion or DALL-E)",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "prompt": {
+                            "type": "string",
+                            "description": "Image generation prompt",
+                        },
+                        "style": {
+                            "type": "string",
+                            "description": "Style preset",
+                            "enum": [
+                                "photorealistic",
+                                "digital_art",
+                                "oil_painting",
+                                "watercolor",
+                                "anime",
+                                "sketch",
+                                "abstract",
+                                "cyberpunk",
+                                "fantasy",
+                                "minimalist",
+                            ],
+                        },
+                        "backend": {
+                            "type": "string",
+                            "description": "Backend to use",
+                            "enum": ["huggingface", "openai"],
+                        },
+                    },
+                    "required": ["prompt"],
+                },
+            ),
+            Tool(
+                name="list_plugins",
+                description="List all available plugins",
+                inputSchema={"type": "object", "properties": {}},
+            ),
+            Tool(
+                name="enable_plugin",
+                description="Enable a plugin",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "plugin_name": {
+                            "type": "string",
+                            "description": "Name of the plugin to enable",
+                        }
+                    },
+                    "required": ["plugin_name"],
+                },
+            ),
+            Tool(
+                name="disable_plugin",
+                description="Disable a plugin",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "plugin_name": {
+                            "type": "string",
+                            "description": "Name of the plugin to disable",
+                        }
+                    },
+                    "required": ["plugin_name"],
+                },
+            ),
+        ]
+
     def _register_tools(self):
         """Register all MCP tools."""
 
@@ -125,276 +398,7 @@ class ProjectAIMCPServer:
         @self.server.list_tools()
         async def list_tools() -> list[Tool]:
             """List all available tools."""
-            return [
-                Tool(
-                    name="validate_action",
-                    description="Validate an action against AI ethics framework (Asimov's Laws)",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "action": {
-                                "type": "string",
-                                "description": "The action to validate",
-                            },
-                            "context": {
-                                "type": "object",
-                                "description": "Context for the action",
-                                "properties": {
-                                    "is_user_order": {"type": "boolean"},
-                                    "endangers_humanity": {"type": "boolean"},
-                                    "harms_human": {"type": "boolean"},
-                                },
-                            },
-                        },
-                        "required": ["action"],
-                    },
-                ),
-                Tool(
-                    name="get_persona_state",
-                    description="Get current AI persona state including personality traits and mood",
-                    inputSchema={"type": "object", "properties": {}},
-                ),
-                Tool(
-                    name="adjust_persona_trait",
-                    description="Adjust a personality trait of the AI persona",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "trait": {
-                                "type": "string",
-                                "description": "Trait to adjust (curiosity, empathy, patience, confidence, humor, creativity, enthusiasm, analytical)",
-                                "enum": [
-                                    "curiosity",
-                                    "empathy",
-                                    "patience",
-                                    "confidence",
-                                    "humor",
-                                    "creativity",
-                                    "enthusiasm",
-                                    "analytical",
-                                ],
-                            },
-                            "value": {
-                                "type": "number",
-                                "description": "New trait value (0.0 to 1.0)",
-                                "minimum": 0.0,
-                                "maximum": 1.0,
-                            },
-                        },
-                        "required": ["trait", "value"],
-                    },
-                ),
-                Tool(
-                    name="add_memory",
-                    description="Add a memory to the knowledge base",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "category": {
-                                "type": "string",
-                                "description": "Category of knowledge",
-                                "enum": [
-                                    "general",
-                                    "user_preferences",
-                                    "facts",
-                                    "skills",
-                                    "goals",
-                                    "relationships",
-                                ],
-                            },
-                            "content": {
-                                "type": "string",
-                                "description": "Content to remember",
-                            },
-                            "importance": {
-                                "type": "number",
-                                "description": "Importance level (0.0 to 1.0)",
-                                "minimum": 0.0,
-                                "maximum": 1.0,
-                            },
-                        },
-                        "required": ["category", "content"],
-                    },
-                ),
-                Tool(
-                    name="search_memory",
-                    description="Search the knowledge base",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "query": {"type": "string", "description": "Search query"},
-                            "category": {
-                                "type": "string",
-                                "description": "Optional category filter",
-                                "enum": [
-                                    "general",
-                                    "user_preferences",
-                                    "facts",
-                                    "skills",
-                                    "goals",
-                                    "relationships",
-                                ],
-                            },
-                        },
-                        "required": ["query"],
-                    },
-                ),
-                Tool(
-                    name="submit_learning_request",
-                    description="Submit a request for the AI to learn new content",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "content": {
-                                "type": "string",
-                                "description": "Content to learn",
-                            },
-                            "reason": {
-                                "type": "string",
-                                "description": "Reason for learning request",
-                            },
-                        },
-                        "required": ["content", "reason"],
-                    },
-                ),
-                Tool(
-                    name="approve_learning_request",
-                    description="Approve a pending learning request",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "request_id": {
-                                "type": "string",
-                                "description": "ID of the learning request",
-                            }
-                        },
-                        "required": ["request_id"],
-                    },
-                ),
-                Tool(
-                    name="analyze_data",
-                    description="Analyze data from CSV, Excel, or JSON files",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "file_path": {
-                                "type": "string",
-                                "description": "Path to data file",
-                            },
-                            "analysis_type": {
-                                "type": "string",
-                                "description": "Type of analysis",
-                                "enum": [
-                                    "summary",
-                                    "correlation",
-                                    "clustering",
-                                    "statistics",
-                                ],
-                            },
-                        },
-                        "required": ["file_path", "analysis_type"],
-                    },
-                ),
-                Tool(
-                    name="track_location",
-                    description="Track current location using IP geolocation",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "ip_address": {
-                                "type": "string",
-                                "description": "Optional IP address to geolocate",
-                            }
-                        },
-                    },
-                ),
-                Tool(
-                    name="send_emergency_alert",
-                    description="Send an emergency alert to configured contacts",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "message": {
-                                "type": "string",
-                                "description": "Emergency message",
-                            },
-                            "location": {
-                                "type": "string",
-                                "description": "Current location",
-                            },
-                        },
-                        "required": ["message"],
-                    },
-                ),
-                Tool(
-                    name="generate_image",
-                    description="Generate an image using AI (Stable Diffusion or DALL-E)",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "prompt": {
-                                "type": "string",
-                                "description": "Image generation prompt",
-                            },
-                            "style": {
-                                "type": "string",
-                                "description": "Style preset",
-                                "enum": [
-                                    "photorealistic",
-                                    "digital_art",
-                                    "oil_painting",
-                                    "watercolor",
-                                    "anime",
-                                    "sketch",
-                                    "abstract",
-                                    "cyberpunk",
-                                    "fantasy",
-                                    "minimalist",
-                                ],
-                            },
-                            "backend": {
-                                "type": "string",
-                                "description": "Backend to use",
-                                "enum": ["huggingface", "openai"],
-                            },
-                        },
-                        "required": ["prompt"],
-                    },
-                ),
-                Tool(
-                    name="list_plugins",
-                    description="List all available plugins",
-                    inputSchema={"type": "object", "properties": {}},
-                ),
-                Tool(
-                    name="enable_plugin",
-                    description="Enable a plugin",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "plugin_name": {
-                                "type": "string",
-                                "description": "Name of the plugin to enable",
-                            }
-                        },
-                        "required": ["plugin_name"],
-                    },
-                ),
-                Tool(
-                    name="disable_plugin",
-                    description="Disable a plugin",
-                    inputSchema={
-                        "type": "object",
-                        "properties": {
-                            "plugin_name": {
-                                "type": "string",
-                                "description": "Name of the plugin to disable",
-                            }
-                        },
-                        "required": ["plugin_name"],
-                    },
-                ),
-            ]
+            return self._get_tool_definitions()
 
         @self.server.call_tool()
         async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
