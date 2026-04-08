@@ -91,7 +91,7 @@ jobs:
           fi
 
       - name: Run pip-audit
-        uses: pypa/gh-action-pip-audit@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: pypa/gh-action-pip-audit@v1.1.0
         with:
           inputs: requirements.txt requirements-dev.txt
           # Generate SARIF report for GitHub Security tab

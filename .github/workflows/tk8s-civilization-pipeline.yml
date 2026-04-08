@@ -79,12 +79,12 @@ jobs:
       security-events: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       
       - name: Set up Python
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
@@ -102,7 +102,7 @@ jobs:
         run: bandit -r src/ -f json -o bandit-report.json || true
       
       - name: Upload Bandit results
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
+        uses: actions/upload-artifact@v4
         with:
           name: bandit-report
           path: bandit-report.json
@@ -117,10 +117,10 @@ jobs:
     if: ${{ !inputs.skip_tests }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
       
       - name: Set up Python
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
@@ -136,7 +136,7 @@ jobs:
           pytest tests/ -v --cov=src/app --cov-report=xml --cov-report=html
       
       - name: Upload coverage reports
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: |
@@ -153,10 +153,10 @@ jobs:
     if: ${{ !inputs.skip_tests }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
       
       - name: Set up Python
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
@@ -183,10 +183,10 @@ jobs:
     needs: unit-tests
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
       
       - name: Set up Python
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
@@ -224,10 +224,10 @@ jobs:
       security-events: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
       
       - name: Run Trivy vulnerability scanner (filesystem)
-        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2
+        uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -235,7 +235,7 @@ jobs:
           output: 'trivy-fs-results.sarif'
       
       - name: Upload Trivy results to GitHub Security
-        uses: github/codeql-action/upload-sarif@b611370bfb0c015ddb8bc882260650d03222a7f5
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-fs-results.sarif'
 
@@ -256,13 +256,13 @@ jobs:
       eca-image-tag: ${{ steps.meta-eca.outputs.tags }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
       
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226
+        uses: docker/setup-buildx-action@v3
       
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -270,7 +270,7 @@ jobs:
       
       - name: Extract metadata for Core image
         id: meta-core
-        uses: docker/metadata-action@8e5348fca590fa25e6ebdf22f9cd74c5ea49bf25
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_CORE }}
           tags: |
@@ -283,7 +283,7 @@ jobs:
       
       - name: Build and push Core image
         id: build-core
-        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
@@ -298,7 +298,7 @@ jobs:
       
       - name: Extract metadata for ECA image
         id: meta-eca
-        uses: docker/metadata-action@8e5348fca590fa25e6ebdf22f9cd74c5ea49bf25
+        uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_ECA }}
           tags: |
@@ -311,7 +311,7 @@ jobs:
       
       - name: Build and push ECA image
         id: build-eca
-        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile.eca
@@ -339,14 +339,14 @@ jobs:
         image: [core, eca]
     steps:
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@915b19bbe73b92a6cf82a1bc12b087c9a19a5fe2
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ needs.build-images.outputs[format('{0}-image-tag', matrix.image)] }}
           format: 'sarif'
           output: 'trivy-${{ matrix.image }}-results.sarif'
       
       - name: Upload Trivy results
-        uses: github/codeql-action/upload-sarif@b611370bfb0c015ddb8bc882260650d03222a7f5
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-${{ matrix.image }}-results.sarif'
           category: 'trivy-${{ matrix.image }}'
@@ -370,7 +370,7 @@ jobs:
           curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
       
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -383,7 +383,7 @@ jobs:
           syft "$IMAGE_TAG" -o cyclonedx-json > sbom-${{ matrix.image }}-cyclonedx.json
       
       - name: Upload SBOM artifacts
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
+        uses: actions/upload-artifact@v4
         with:
           name: sbom-${{ matrix.image }}
           path: |
@@ -406,10 +406,10 @@ jobs:
         image: [core, eca]
     steps:
       - name: Install Cosign
-        uses: sigstore/cosign-installer@e1523de758713c20c0c59ba2d4dd48a52ee1f67f
+        uses: sigstore/cosign-installer@v3
       
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -452,7 +452,7 @@ jobs:
       url: https://staging.project-ai.example.com
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
       
       - name: Update staging manifests
         run: |
@@ -480,10 +480,10 @@ jobs:
     needs: deploy-staging
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
       
       - name: Set up Python
-        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       
@@ -513,7 +513,7 @@ jobs:
       url: https://project-ai.example.com
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
       
       - name: Constitutional approval checkpoint
         run: |
@@ -550,7 +550,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        uses: actions/checkout@v4
       
       - name: Update CIVILIZATION_TIMELINE.md
         run: |

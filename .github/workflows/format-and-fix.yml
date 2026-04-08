@@ -19,13 +19,13 @@ jobs:
         # Only auto-commit on push to develop, not on PRs
         if: github.event_name == 'push'
         steps:
-            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+            - uses: actions/checkout@v4
               with:
                   ref: ${{ github.head_ref || github.ref }}
                   token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Set up Python 3.12
-              uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
+              uses: actions/setup-python@v5
               with:
                   python-version: "3.12"
 
@@ -42,7 +42,7 @@ jobs:
               run: ruff check src/ tests/ --fix --quiet || true
 
             - name: Commit changes
-              uses: stefanzweifel/git-auto-commit-action@11bd71901bbe5b1630ceea73d27597364c9af683
+              uses: stefanzweifel/git-auto-commit-action@v5
               with:
                   commit_message: "style: auto-format with black, isort, ruff"
                   commit_user_name: "github-actions[bot]"
@@ -53,10 +53,10 @@ jobs:
         runs-on: ubuntu-latest
         if: github.event_name == 'pull_request'
         steps:
-            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+            - uses: actions/checkout@v4
 
             - name: Set up Python 3.12
-              uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b
+              uses: actions/setup-python@v5
               with:
                   python-version: "3.12"
 
