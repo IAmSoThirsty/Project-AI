@@ -181,6 +181,94 @@ def get_cognition_kernel() -> CognitionKernel:
     return _global_cognition_kernel
 
 
+def _initialize_memory_engine() -> MemoryEngine | None:
+    try:
+        return MemoryEngine(data_dir="data")
+    except Exception as e:
+        logger.warning("MemoryEngine initialization failed: %s, using fallback", e)
+        return None
+
+
+def _initialize_governance_system() -> GovernanceTriumvirate | None:
+    try:
+        return GovernanceTriumvirate()
+    except Exception as e:
+        logger.warning(
+            "GovernanceTriumvirate initialization failed: %s, using fallback", e
+        )
+        return None
+
+
+def _initialize_reflection_engine() -> ReflectionCycle | None:
+    try:
+        return ReflectionCycle(data_dir="data")
+    except Exception as e:
+        logger.warning(
+            "ReflectionCycle initialization failed: %s, using fallback", e
+        )
+        return None
+
+
+def _initialize_triumvirate() -> Triumvirate | None:
+    try:
+        triumvirate = Triumvirate()
+        logger.info(
+            "Triumvirate initialized: Galahad, Cerberus, Codex Deus Maximus"
+        )
+        return triumvirate
+    except Exception as e:
+        logger.warning("Triumvirate initialization failed: %s, using fallback", e)
+        return None
+
+
+def _initialize_bio_brain_mapper() -> BioBrainMappingSystem | None:
+    try:
+        if yaml is None:
+            logger.warning(
+                "PyYAML not available, using default bio brain mapper config"
+            )
+            return BioBrainMappingSystem(data_dir="data")
+
+        # Load configuration from YAML
+        config_path = "config/bio_brain_mapping.yaml"
+        if os.path.exists(config_path):
+            with open(config_path) as f:
+                bio_config_data = yaml.safe_load(f)
+            # Use active preset if specified
+            active_preset = bio_config_data.get("active_preset", "production")
+            if active_preset in bio_config_data.get("presets", {}):
+                preset = bio_config_data["presets"][active_preset]
+                # Merge preset with base config (only merge dictionaries)
+                for key, value in preset.items():
+                    if (
+                        key in bio_config_data
+                        and isinstance(value, dict)
+                        and isinstance(bio_config_data[key], dict)
+                    ):
+                        bio_config_data[key].update(value)
+                    elif key in bio_config_data:
+                        bio_config_data[key] = value
+            bio_brain_mapper = BioBrainMappingSystem(
+                config=bio_config_data, data_dir="data"
+            )
+            logger.info(
+                "✅ BioBrainMappingSystem initialized with preset: %s",
+                active_preset,
+            )
+            return bio_brain_mapper
+        else:
+            bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
+            logger.info(
+                "✅ BioBrainMappingSystem initialized with default config"
+            )
+            return bio_brain_mapper
+    except Exception as e:
+        logger.warning(
+            "BioBrainMappingSystem initialization failed: %s, using fallback", e
+        )
+        return None
+
+
 def initialize_kernel() -> CognitionKernel:
     """Initialize the CognitionKernel with all subsystems.
 
@@ -204,84 +292,19 @@ def initialize_kernel() -> CognitionKernel:
         identity_system = get_identity_engine()
 
         # 2. Memory Engine (four-channel recording)
-        try:
-            memory_engine = MemoryEngine(data_dir="data")
-        except Exception as e:
-            logger.warning("MemoryEngine initialization failed: %s, using fallback", e)
-            memory_engine = None
+        memory_engine = _initialize_memory_engine()
 
         # 3. Governance System (Four Laws enforcement)
-        try:
-            governance_system = GovernanceTriumvirate()
-        except Exception as e:
-            logger.warning(
-                "GovernanceTriumvirate initialization failed: %s, using fallback", e
-            )
-            governance_system = None
+        governance_system = _initialize_governance_system()
 
         # 4. Reflection Engine (post-hoc reasoning)
-        try:
-            reflection_engine = ReflectionCycle(data_dir="data")
-        except Exception as e:
-            logger.warning(
-                "ReflectionCycle initialization failed: %s, using fallback", e
-            )
-            reflection_engine = None
+        reflection_engine = _initialize_reflection_engine()
 
         # 5. Triumvirate (Galahad, Cerberus, Codex)
-        try:
-            triumvirate = Triumvirate()
-            logger.info(
-                "Triumvirate initialized: Galahad, Cerberus, Codex Deus Maximus"
-            )
-        except Exception as e:
-            logger.warning("Triumvirate initialization failed: %s, using fallback", e)
-            triumvirate = None
+        triumvirate = _initialize_triumvirate()
 
         # 6. Bio-Inspired Brain Mapping System
-        try:
-            if yaml is None:
-                logger.warning(
-                    "PyYAML not available, using default bio brain mapper config"
-                )
-                bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
-            else:
-                # Load configuration from YAML
-                config_path = "config/bio_brain_mapping.yaml"
-                if os.path.exists(config_path):
-                    with open(config_path) as f:
-                        bio_config_data = yaml.safe_load(f)
-                    # Use active preset if specified
-                    active_preset = bio_config_data.get("active_preset", "production")
-                    if active_preset in bio_config_data.get("presets", {}):
-                        preset = bio_config_data["presets"][active_preset]
-                        # Merge preset with base config (only merge dictionaries)
-                        for key, value in preset.items():
-                            if (
-                                key in bio_config_data
-                                and isinstance(value, dict)
-                                and isinstance(bio_config_data[key], dict)
-                            ):
-                                bio_config_data[key].update(value)
-                            elif key in bio_config_data:
-                                bio_config_data[key] = value
-                    bio_brain_mapper = BioBrainMappingSystem(
-                        config=bio_config_data, data_dir="data"
-                    )
-                    logger.info(
-                        "✅ BioBrainMappingSystem initialized with preset: %s",
-                        active_preset,
-                    )
-                else:
-                    bio_brain_mapper = BioBrainMappingSystem(data_dir="data")
-                    logger.info(
-                        "✅ BioBrainMappingSystem initialized with default config"
-                    )
-        except Exception as e:
-            logger.warning(
-                "BioBrainMappingSystem initialization failed: %s, using fallback", e
-            )
-            bio_brain_mapper = None
+        bio_brain_mapper = _initialize_bio_brain_mapper()
 
         # 7. Create CognitionKernel with all subsystems
         kernel = CognitionKernel(
