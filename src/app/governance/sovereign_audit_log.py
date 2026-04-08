@@ -484,142 +484,15 @@ class SovereignAuditLog:
                 "Install with: pip install cryptography"
             )
 
-        # Setup directories
-        if data_dir:
-            self.data_dir = Path(data_dir) if isinstance(data_dir, str) else data_dir
-        else:
-            self.data_dir = SOVEREIGN_AUDIT_DIR
-
-        self.data_dir.mkdir(parents=True, exist_ok=True)
-
-        # Initialize Genesis continuity guard FIRST
-        # Pass consistent genesis pins directory
-        genesis_pins_dir = self.data_dir.parent / "genesis_pins"
-        self.continuity_guard = GenesisContinuityGuard(
-            external_pins_file=genesis_pins_dir / "external_pins.json",
-            continuity_log_file=genesis_pins_dir / "continuity_log.json",
+        self._setup_directories(data_dir)
+        self._initialize_continuity_guard()
+        self._initialize_genesis_keypair()
+        self._verify_genesis_continuity()
+        self._initialize_core_components(deterministic_mode)
+        self._initialize_external_anchoring(
+            enable_external_anchoring, external_anchor_backends
         )
-
-        # System freeze flag for constitutional violations
-        self.system_frozen = False
-
-        # Check if system has prior constitutional violations
-        if self.continuity_guard.is_system_compromised():
-            self.system_frozen = True
-            violations = self.continuity_guard.get_violations()
-            raise GenesisDiscontinuityError(
-                f"System has {len(violations)} prior constitutional violations. "
-                f"System is PERMANENTLY FROZEN. Manual intervention required."
-            )
-
-        # Initialize Genesis key pair (cryptographic root of trust)
-        # Use consistent key directory relative to data_dir
-        genesis_key_dir = self.data_dir.parent / "genesis_keys"
-        self.genesis_keypair = GenesisKeyPair(key_dir=genesis_key_dir)
-
-        # Get expected Genesis ID from external pins
-        pinned_genesis_ids = self.continuity_guard.get_pinned_genesis_ids()
-
-        # VECTOR 1 & 11 CHECK: Detect Genesis discontinuity
-        if pinned_genesis_ids:
-            # System has history - verify continuity
-            expected_genesis_id = pinned_genesis_ids[0]  # Should only have one
-            is_discontinuity, error_msg = (
-                self.continuity_guard.detect_genesis_discontinuity(
-                    expected_genesis_id=expected_genesis_id,
-                    actual_genesis_id=self.genesis_keypair.genesis_id,
-                )
-            )
-
-            if is_discontinuity:
-                self.system_frozen = True
-                logger.critical("Genesis discontinuity detected - FREEZING SYSTEM")
-                raise GenesisDiscontinuityError(error_msg)
-
-        # Get Genesis public key bytes for pinning/verification
-        genesis_pub_key_bytes = self.genesis_keypair.public_key.public_bytes(
-            encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
-        )
-
-        # VECTOR 2 CHECK: Verify Genesis public key continuity
-        if pinned_genesis_ids:
-            is_valid, error_msg = self.continuity_guard.verify_genesis_continuity(
-                genesis_id=self.genesis_keypair.genesis_id,
-                public_key_bytes=genesis_pub_key_bytes,
-            )
-
-            if not is_valid:
-                self.system_frozen = True
-                logger.critical(
-                    "Genesis public key replacement detected - FREEZING SYSTEM"
-                )
-                raise GenesisReplacementError(error_msg)
-        else:
-            # First initialization - pin Genesis externally
-            self.continuity_guard.pin_genesis(
-                genesis_id=self.genesis_keypair.genesis_id,
-                public_key_bytes=genesis_pub_key_bytes,
-            )
-            logger.info(
-                "First initialization - Genesis %s pinned externally",
-                self.genesis_keypair.genesis_id,
-            )
-
-        # Initialize operational audit log
-        self.operational_log = AuditLog(
-            log_file=self.data_dir / "operational_audit.yaml"
-        )
-
-        # Get Genesis public key bytes for HMAC seed derivation
-        genesis_pub_key_bytes = self.genesis_keypair.public_key.public_bytes(
-            encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
-        )
-
-        # Initialize HMAC key rotator with deterministic mode support
-        self.hmac_rotator = HMACKeyRotator(
-            deterministic_mode=deterministic_mode,
-            genesis_seed=genesis_pub_key_bytes if deterministic_mode else None,
-        )
-
-        # Initialize Merkle tree anchoring
-        self.merkle_anchor = MerkleTreeAnchor()
-
-        # Initialize external Merkle anchoring (VECTOR 3 & 10)
-        self.enable_external_anchoring = enable_external_anchoring
-        if enable_external_anchoring:
-            external_anchor_dir = self.data_dir.parent / "external_merkle_anchors"
-            self.external_anchor = ExternalMerkleAnchor(
-                backends=external_anchor_backends or ["filesystem"],
-                filesystem_dir=external_anchor_dir,
-            )
-        else:
-            self.external_anchor = None
-
-        # Initialize TSA anchor manager (VECTOR 3, 4, 10)
-        self.enable_tsa = enable_notarization
-        if enable_notarization:
-            tsa_anchor_file = (
-                self.data_dir.parent / "tsa_anchors" / "tsa_anchor_chain.json"
-            )
-            tsa_anchor_file.parent.mkdir(parents=True, exist_ok=True)
-            self.tsa_anchor_manager = TSAAnchorManager(
-                genesis_private_key=self.genesis_keypair.private_key,
-                anchor_path=tsa_anchor_file,
-            )
-            logger.info("TSA anchor manager initialized (VECTOR 3, 4, 10 protection)")
-            # Initialize TSAProvider for RFC 3161 notarization
-            try:
-                self.tsa_provider = TSAProvider()
-                logger.info("TSAProvider initialized for RFC 3161 notarization")
-            except Exception as e:
-                logger.warning(
-                    "Failed to initialize TSAProvider: %s (notarization degraded)", e
-                )
-                self.tsa_provider = None
-        else:
-            self.tsa_anchor_manager = None
-            self.tsa_provider = None
-            logger.warning("TSA disabled - VECTOR 3, 4, 10 protection unavailable")
+        self._initialize_tsa(enable_notarization)
 
         # Configuration
         self.deterministic_mode = deterministic_mode
@@ -641,6 +514,137 @@ class SovereignAuditLog:
             self.genesis_keypair.genesis_id,
             deterministic_mode,
         )
+
+    def _setup_directories(self, data_dir: Path | str | None) -> None:
+        """Set up necessary directories for audit data."""
+        if data_dir:
+            self.data_dir = Path(data_dir) if isinstance(data_dir, str) else data_dir
+        else:
+            self.data_dir = SOVEREIGN_AUDIT_DIR
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+
+    def _initialize_continuity_guard(self) -> None:
+        """Initialize Genesis continuity guard and check for constitutional violations."""
+        genesis_pins_dir = self.data_dir.parent / "genesis_pins"
+        self.continuity_guard = GenesisContinuityGuard(
+            external_pins_file=genesis_pins_dir / "external_pins.json",
+            continuity_log_file=genesis_pins_dir / "continuity_log.json",
+        )
+
+        self.system_frozen = False
+        if self.continuity_guard.is_system_compromised():
+            self.system_frozen = True
+            violations = self.continuity_guard.get_violations()
+            raise GenesisDiscontinuityError(
+                f"System has {len(violations)} prior constitutional violations. "
+                f"System is PERMANENTLY FROZEN. Manual intervention required."
+            )
+
+    def _initialize_genesis_keypair(self) -> None:
+        """Initialize the Genesis key pair."""
+        genesis_key_dir = self.data_dir.parent / "genesis_keys"
+        self.genesis_keypair = GenesisKeyPair(key_dir=genesis_key_dir)
+
+    def _verify_genesis_continuity(self) -> None:
+        """Verify the continuity and integrity of the Genesis key."""
+        pinned_genesis_ids = self.continuity_guard.get_pinned_genesis_ids()
+
+        if pinned_genesis_ids:
+            expected_genesis_id = pinned_genesis_ids[0]
+            is_discontinuity, error_msg = (
+                self.continuity_guard.detect_genesis_discontinuity(
+                    expected_genesis_id=expected_genesis_id,
+                    actual_genesis_id=self.genesis_keypair.genesis_id,
+                )
+            )
+
+            if is_discontinuity:
+                self.system_frozen = True
+                logger.critical("Genesis discontinuity detected - FREEZING SYSTEM")
+                raise GenesisDiscontinuityError(error_msg)
+
+        genesis_pub_key_bytes = self.genesis_keypair.public_key.public_bytes(
+            encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
+        )
+
+        if pinned_genesis_ids:
+            is_valid, error_msg = self.continuity_guard.verify_genesis_continuity(
+                genesis_id=self.genesis_keypair.genesis_id,
+                public_key_bytes=genesis_pub_key_bytes,
+            )
+
+            if not is_valid:
+                self.system_frozen = True
+                logger.critical(
+                    "Genesis public key replacement detected - FREEZING SYSTEM"
+                )
+                raise GenesisReplacementError(error_msg)
+        else:
+            self.continuity_guard.pin_genesis(
+                genesis_id=self.genesis_keypair.genesis_id,
+                public_key_bytes=genesis_pub_key_bytes,
+            )
+            logger.info(
+                "First initialization - Genesis %s pinned externally",
+                self.genesis_keypair.genesis_id,
+            )
+
+    def _initialize_core_components(self, deterministic_mode: bool) -> None:
+        """Initialize core audit log components."""
+        self.operational_log = AuditLog(
+            log_file=self.data_dir / "operational_audit.yaml"
+        )
+
+        genesis_pub_key_bytes = self.genesis_keypair.public_key.public_bytes(
+            encoding=serialization.Encoding.Raw, format=serialization.PublicFormat.Raw
+        )
+
+        self.hmac_rotator = HMACKeyRotator(
+            deterministic_mode=deterministic_mode,
+            genesis_seed=genesis_pub_key_bytes if deterministic_mode else None,
+        )
+
+        self.merkle_anchor = MerkleTreeAnchor()
+
+    def _initialize_external_anchoring(
+        self, enable_external_anchoring: bool, external_anchor_backends: list[str] | None
+    ) -> None:
+        """Initialize external Merkle tree anchoring."""
+        self.enable_external_anchoring = enable_external_anchoring
+        if enable_external_anchoring:
+            external_anchor_dir = self.data_dir.parent / "external_merkle_anchors"
+            self.external_anchor = ExternalMerkleAnchor(
+                backends=external_anchor_backends or ["filesystem"],
+                filesystem_dir=external_anchor_dir,
+            )
+        else:
+            self.external_anchor = None
+
+    def _initialize_tsa(self, enable_notarization: bool) -> None:
+        """Initialize TSA (Timestamp Authority) integration."""
+        self.enable_tsa = enable_notarization
+        if enable_notarization:
+            tsa_anchor_file = (
+                self.data_dir.parent / "tsa_anchors" / "tsa_anchor_chain.json"
+            )
+            tsa_anchor_file.parent.mkdir(parents=True, exist_ok=True)
+            self.tsa_anchor_manager = TSAAnchorManager(
+                genesis_private_key=self.genesis_keypair.private_key,
+                anchor_path=tsa_anchor_file,
+            )
+            logger.info("TSA anchor manager initialized (VECTOR 3, 4, 10 protection)")
+            try:
+                self.tsa_provider = TSAProvider()
+                logger.info("TSAProvider initialized for RFC 3161 notarization")
+            except Exception as e:
+                logger.warning(
+                    "Failed to initialize TSAProvider: %s (notarization degraded)", e
+                )
+                self.tsa_provider = None
+        else:
+            self.tsa_anchor_manager = None
+            self.tsa_provider = None
+            logger.warning("TSA disabled - VECTOR 3, 4, 10 protection unavailable")
 
     def _log_sovereign_init(self) -> None:
         """Log sovereign audit system initialization."""
