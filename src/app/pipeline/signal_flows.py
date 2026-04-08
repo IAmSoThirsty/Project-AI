@@ -439,273 +439,6 @@ def validate_signal(signal: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def _execute_validation_step(signal: Dict[str, Any], incident_id: str, audit: Any, aggregator: Any, vault: Any) -> Optional[Dict[str, Any]]:
-    """Execute schema validation step."""
-    try:
-        validation_result = circuit_breakers["validation"].call(validate_signal, signal)
-
-        audit.log_event(
-            event_type="signal_validated",
-            data={
-                "incident_id": incident_id,
-                "validation_result": validation_result,
-            },
-            actor="signal_kernel",
-            description="Signal validation completed",
-        )
-        return None
-    except Exception as ve:
-        aggregator.log(ve, {"stage": "schema_validation", "incident_id": incident_id})
-        vault_id = aggregator.flush_to_vault(vault, str(signal))
-
-        audit.log_event(
-            event_type="signal_validation_failed",
-            data={
-                "incident_id": incident_id,
-                "error": str(ve),
-                "vault_id": vault_id,
-            },
-            actor="signal_kernel",
-            description="Signal validation failed - denied",
-        )
-
-        return {
-            "status": "denied",
-            "reason": "validation_failed",
-            "incident_id": incident_id,
-            "vault_id": vault_id,
-            "errors": [str(ve)],
-        }
-
-
-def _execute_transcription_step(signal: Dict[str, Any], incident_id: str, audit: Any, aggregator: Any, enable_transcript: bool) -> None:
-    """Execute media transcription step if applicable."""
-    if signal.get("media_type") in ("audio", "video") and signal.get("asset_path"):
-        if enable_transcript:
-            try:
-                # Import transcription plugin
-                from src.app.plugins.ttp_audio_processing import transcribe_audio
-
-                transcript = circuit_breakers["transcription"].call(
-                    transcribe_audio, signal["asset_path"], aggregator
-                )
-
-                if transcript:
-                    signal["transcript"] = transcript
-
-                    # Validate transcript for forbidden phrases
-                    transcript_signal = {**signal, "text": transcript}
-                    validate_signal(transcript_signal)
-
-                    audit.log_event(
-                        event_type="signal_transcribed",
-                        data={"incident_id": incident_id},
-                        actor="signal_kernel",
-                        description="Media transcription completed",
-                    )
-                else:
-                    audit.log_event(
-                        event_type="transcript_skipped",
-                        data={
-                            "incident_id": incident_id,
-                            "reason": "transcription_unavailable",
-                        },
-                        actor="signal_kernel",
-                        description="Transcription skipped - service unavailable",
-                    )
-
-            except Exception as te:
-                logger.warning(f"Transcription failed: {te}")
-                aggregator.log(
-                    te, {"stage": "transcription", "incident_id": incident_id}
-                )
-
-                audit.log_event(
-                    event_type="transcript_skipped",
-                    data={"incident_id": incident_id, "error": str(te)},
-                    actor="signal_kernel",
-                    description="Transcription failed",
-                )
-
-
-def _check_score_threshold(signal: Dict[str, Any], incident_id: str, audit: Any, is_incident: bool, anomaly_score_threshold: float, score_threshold: float) -> Optional[Dict[str, Any]]:
-    """Check score threshold."""
-    threshold = anomaly_score_threshold if is_incident else score_threshold
-    score_key = "anomaly_score" if is_incident else "score"
-    score = signal.get(score_key)
-
-    if score is not None and score < threshold:
-        audit.log_event(
-            event_type="signal_ignored",
-            data={
-                "incident_id": incident_id,
-                "score": score,
-                "threshold": threshold,
-                "score_type": score_key,
-            },
-            actor="signal_kernel",
-            description="Signal ignored due to low score",
-        )
-
-        return {
-            "status": "ignored",
-            "reason": "below_threshold",
-            "incident_id": incident_id,
-            "score": score,
-            "threshold": threshold,
-        }
-    return None
-
-
-def _execute_processing_step(signal: Dict[str, Any], incident_id: str, audit: Any, aggregator: Any, vault: Any) -> Dict[str, Any]:
-    """Execute processing step with retry logic."""
-    service_name = signal.get("source", "unknown")
-
-    for attempt in range(1, MAX_RETRIES_PER_SIGNAL + 1):
-        try:
-            # Check service-specific retry limit
-            if check_retry_limit(service_name):
-                audit.log_event(
-                    event_type="service_retry_limit",
-                    data={"service": service_name, "incident_id": incident_id},
-                    actor="signal_kernel",
-                    description=f"Service {service_name} retry limit exceeded",
-                )
-
-                raise GlobalThrottlingError(
-                    f"Service {service_name} retry limit exceeded"
-                )
-
-            # Check global retry limit
-            if check_retry_limit("global"):
-                audit.log_event(
-                    event_type="global_retry_limit",
-                    data={"incident_id": incident_id},
-                    actor="signal_kernel",
-                    description="Global retry limit exceeded",
-                )
-
-                raise GlobalThrottlingError("Global retry limit exceeded")
-
-            # Simulate processing (replace with actual logic)
-            def process_logic():
-                # This is where actual signal processing happens
-                # (agent routing, knowledge ingestion, policy checks, etc.)
-
-                if (
-                    signal.get("simulate") == "retry"
-                    and attempt < MAX_RETRIES_PER_SIGNAL
-                ):
-                    raise RuntimeError("Simulated retry error")
-                elif signal.get("simulate") == "permanent":
-                    raise RuntimeError("Simulated permanent error")
-
-                return {
-                    "processed": True,
-                    "timestamp": datetime.utcnow().isoformat(),
-                }
-
-            # Process through circuit breaker
-            result = circuit_breakers["processing"].call(process_logic)
-
-            audit.log_event(
-                event_type="signal_processed",
-                data={
-                    "incident_id": incident_id,
-                    "attempt": attempt,
-                    "service": service_name,
-                },
-                actor="signal_kernel",
-                description="Signal processing successful",
-            )
-
-            return {
-                "status": "processed",
-                "incident_id": incident_id,
-                "attempts": attempt,
-                "service": service_name,
-                "result": result,
-            }
-
-        except GlobalThrottlingError as gte:
-            return {
-                "status": "throttled",
-                "reason": str(gte),
-                "incident_id": incident_id,
-                "attempt": attempt,
-                "service": service_name,
-            }
-
-        except Exception as e:
-            increment_retry_counter(service_name)
-            increment_retry_counter("global")
-            aggregator.log(
-                e,
-                {
-                    "attempt": attempt,
-                    "incident_id": incident_id,
-                    "service": service_name,
-                },
-            )
-
-            audit.log_event(
-                event_type="signal_processing_retry",
-                data={
-                    "incident_id": incident_id,
-                    "attempt": attempt,
-                    "max_attempts": MAX_RETRIES_PER_SIGNAL,
-                    "error": str(e),
-                    "service": service_name,
-                },
-                actor="signal_kernel",
-                description=f"Processing retry {attempt}/{MAX_RETRIES_PER_SIGNAL}",
-            )
-
-            if attempt < MAX_RETRIES_PER_SIGNAL:
-                # Exponential backoff with jitter
-                delay = min(RETRY_BACKOFF_BASE**attempt, RETRY_MAX_DELAY)
-                logger.warning(
-                    f"Retry {attempt}/{MAX_RETRIES_PER_SIGNAL} after {delay}s: {e}"
-                )
-                time.sleep(delay)
-            else:
-                # Max retries exceeded - this is a failure, not denial
-                logger.error(f"Max retries exceeded for signal {incident_id}")
-                raise
-
-    # Should not reach here, but handle gracefully
-    vault_id = aggregator.flush_to_vault(vault, str(signal))
-
-    return {
-        "status": "failed",
-        "reason": "max_retries_exceeded",
-        "incident_id": incident_id,
-        "vault_id": vault_id,
-    }
-
-
-def _handle_processing_failure(signal: Dict[str, Any], incident_id: str, audit: Any, aggregator: Any, vault: Any, error: Exception) -> Dict[str, Any]:
-    """Handle terminal processing failure."""
-    logger.error(f"Signal processing failed: {error}")
-    aggregator.log(error, {"stage": "final_catch", "incident_id": incident_id})
-    vault_id = aggregator.flush_to_vault(vault, str(signal))
-
-    audit.log_event(
-        event_type="signal_processing_failed",
-        data={"incident_id": incident_id, "error": str(error), "vault_id": vault_id},
-        actor="signal_kernel",
-        description="Signal processing failed terminally",
-    )
-
-    return {
-        "status": "failed",
-        "reason": "processing_error",
-        "incident_id": incident_id,
-        "vault_id": vault_id,
-        "error": str(error),
-    }
-
-
 def process_signal(signal: Dict[str, Any], is_incident: bool = False) -> Dict[str, Any]:
     """
     Process signal through complete pipeline.
@@ -757,24 +490,265 @@ def process_signal(signal: Dict[str, Any], is_incident: bool = False) -> Dict[st
     )
 
     try:
-        # Step 1: Schema validation
-        validation_error = _execute_validation_step(signal, incident_id, audit, aggregator, vault)
-        if validation_error:
-            return validation_error
+        # Step 1: Schema validation with circuit breaker
+        try:
+            validation_result = circuit_breakers["validation"].call(
+                validate_signal, signal
+            )
 
-        # Step 2: Media transcription
-        _execute_transcription_step(signal, incident_id, audit, aggregator, enable_transcript)
+            audit.log_event(
+                event_type="signal_validated",
+                data={
+                    "incident_id": incident_id,
+                    "validation_result": validation_result,
+                },
+                actor="signal_kernel",
+                description="Signal validation completed",
+            )
+
+        except Exception as ve:
+            aggregator.log(
+                ve, {"stage": "schema_validation", "incident_id": incident_id}
+            )
+            vault_id = aggregator.flush_to_vault(vault, str(signal))
+
+            audit.log_event(
+                event_type="signal_validation_failed",
+                data={
+                    "incident_id": incident_id,
+                    "error": str(ve),
+                    "vault_id": vault_id,
+                },
+                actor="signal_kernel",
+                description="Signal validation failed - denied",
+            )
+
+            return {
+                "status": "denied",
+                "reason": "validation_failed",
+                "incident_id": incident_id,
+                "vault_id": vault_id,
+                "errors": [str(ve)],
+            }
+
+        # Step 2: Media transcription (if applicable)
+        if signal.get("media_type") in ("audio", "video") and signal.get("asset_path"):
+            if enable_transcript:
+                try:
+                    # Import transcription plugin
+                    from src.app.plugins.ttp_audio_processing import transcribe_audio
+
+                    transcript = circuit_breakers["transcription"].call(
+                        transcribe_audio, signal["asset_path"], aggregator
+                    )
+
+                    if transcript:
+                        signal["transcript"] = transcript
+
+                        # Validate transcript for forbidden phrases
+                        transcript_signal = {**signal, "text": transcript}
+                        validate_signal(transcript_signal)
+
+                        audit.log_event(
+                            event_type="signal_transcribed",
+                            data={"incident_id": incident_id},
+                            actor="signal_kernel",
+                            description="Media transcription completed",
+                        )
+                    else:
+                        audit.log_event(
+                            event_type="transcript_skipped",
+                            data={
+                                "incident_id": incident_id,
+                                "reason": "transcription_unavailable",
+                            },
+                            actor="signal_kernel",
+                            description="Transcription skipped - service unavailable",
+                        )
+
+                except Exception as te:
+                    logger.warning(f"Transcription failed: {te}")
+                    aggregator.log(
+                        te, {"stage": "transcription", "incident_id": incident_id}
+                    )
+
+                    audit.log_event(
+                        event_type="transcript_skipped",
+                        data={"incident_id": incident_id, "error": str(te)},
+                        actor="signal_kernel",
+                        description="Transcription failed",
+                    )
 
         # Step 3: Score threshold check
-        score_error = _check_score_threshold(signal, incident_id, audit, is_incident, anomaly_score_threshold, score_threshold)
-        if score_error:
-            return score_error
+        threshold = anomaly_score_threshold if is_incident else score_threshold
+        score_key = "anomaly_score" if is_incident else "score"
+        score = signal.get(score_key)
+
+        if score is not None and score < threshold:
+            audit.log_event(
+                event_type="signal_ignored",
+                data={
+                    "incident_id": incident_id,
+                    "score": score,
+                    "threshold": threshold,
+                    "score_type": score_key,
+                },
+                actor="signal_kernel",
+                description="Signal ignored due to low score",
+            )
+
+            return {
+                "status": "ignored",
+                "reason": "below_threshold",
+                "incident_id": incident_id,
+                "score": score,
+                "threshold": threshold,
+            }
 
         # Step 4: Process with retry logic
-        return _execute_processing_step(signal, incident_id, audit, aggregator, vault)
+        service_name = signal.get("source", "unknown")
+
+        for attempt in range(1, MAX_RETRIES_PER_SIGNAL + 1):
+            try:
+                # Check service-specific retry limit
+                if check_retry_limit(service_name):
+                    audit.log_event(
+                        event_type="service_retry_limit",
+                        data={"service": service_name, "incident_id": incident_id},
+                        actor="signal_kernel",
+                        description=f"Service {service_name} retry limit exceeded",
+                    )
+
+                    raise GlobalThrottlingError(
+                        f"Service {service_name} retry limit exceeded"
+                    )
+
+                # Check global retry limit
+                if check_retry_limit("global"):
+                    audit.log_event(
+                        event_type="global_retry_limit",
+                        data={"incident_id": incident_id},
+                        actor="signal_kernel",
+                        description="Global retry limit exceeded",
+                    )
+
+                    raise GlobalThrottlingError("Global retry limit exceeded")
+
+                # Simulate processing (replace with actual logic)
+                def process_logic():
+                    # This is where actual signal processing happens
+                    # (agent routing, knowledge ingestion, policy checks, etc.)
+
+                    if (
+                        signal.get("simulate") == "retry"
+                        and attempt < MAX_RETRIES_PER_SIGNAL
+                    ):
+                        raise RuntimeError("Simulated retry error")
+                    elif signal.get("simulate") == "permanent":
+                        raise RuntimeError("Simulated permanent error")
+
+                    return {
+                        "processed": True,
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+
+                # Process through circuit breaker
+                result = circuit_breakers["processing"].call(process_logic)
+
+                audit.log_event(
+                    event_type="signal_processed",
+                    data={
+                        "incident_id": incident_id,
+                        "attempt": attempt,
+                        "service": service_name,
+                    },
+                    actor="signal_kernel",
+                    description="Signal processing successful",
+                )
+
+                return {
+                    "status": "processed",
+                    "incident_id": incident_id,
+                    "attempts": attempt,
+                    "service": service_name,
+                    "result": result,
+                }
+
+            except GlobalThrottlingError as gte:
+                return {
+                    "status": "throttled",
+                    "reason": str(gte),
+                    "incident_id": incident_id,
+                    "attempt": attempt,
+                    "service": service_name,
+                }
+
+            except Exception as e:
+                increment_retry_counter(service_name)
+                increment_retry_counter("global")
+                aggregator.log(
+                    e,
+                    {
+                        "attempt": attempt,
+                        "incident_id": incident_id,
+                        "service": service_name,
+                    },
+                )
+
+                audit.log_event(
+                    event_type="signal_processing_retry",
+                    data={
+                        "incident_id": incident_id,
+                        "attempt": attempt,
+                        "max_attempts": MAX_RETRIES_PER_SIGNAL,
+                        "error": str(e),
+                        "service": service_name,
+                    },
+                    actor="signal_kernel",
+                    description=f"Processing retry {attempt}/{MAX_RETRIES_PER_SIGNAL}",
+                )
+
+                if attempt < MAX_RETRIES_PER_SIGNAL:
+                    # Exponential backoff with jitter
+                    delay = min(RETRY_BACKOFF_BASE**attempt, RETRY_MAX_DELAY)
+                    logger.warning(
+                        f"Retry {attempt}/{MAX_RETRIES_PER_SIGNAL} after {delay}s: {e}"
+                    )
+                    time.sleep(delay)
+                else:
+                    # Max retries exceeded - this is a failure, not denial
+                    logger.error(f"Max retries exceeded for signal {incident_id}")
+                    raise
+
+        # Should not reach here, but handle gracefully
+        vault_id = aggregator.flush_to_vault(vault, str(signal))
+
+        return {
+            "status": "failed",
+            "reason": "max_retries_exceeded",
+            "incident_id": incident_id,
+            "vault_id": vault_id,
+        }
 
     except Exception as e:
-        return _handle_processing_failure(signal, incident_id, audit, aggregator, vault, e)
+        logger.error(f"Signal processing failed: {e}")
+        aggregator.log(e, {"stage": "final_catch", "incident_id": incident_id})
+        vault_id = aggregator.flush_to_vault(vault, str(signal))
+
+        audit.log_event(
+            event_type="signal_processing_failed",
+            data={"incident_id": incident_id, "error": str(e), "vault_id": vault_id},
+            actor="signal_kernel",
+            description="Signal processing failed terminally",
+        )
+
+        return {
+            "status": "failed",
+            "reason": "processing_error",
+            "incident_id": incident_id,
+            "vault_id": vault_id,
+            "error": str(e),
+        }
 
 
 def process_batch(
