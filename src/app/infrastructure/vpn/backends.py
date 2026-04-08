@@ -244,7 +244,9 @@ class OpenVPNBackend(VPNBackend):
         try:
             if self.platform == "Windows":
                 cmd = ["where", "openvpn"]
-                result = subprocess.run(cmd, capture_output=True, timeout=5, shell=False)
+                result = subprocess.run(
+                    cmd, capture_output=True, timeout=5, shell=False
+                )
             else:
                 cmd = ["which", "openvpn"]
                 result = subprocess.run(cmd, capture_output=True, timeout=5)
