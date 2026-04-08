@@ -1,4 +1,4 @@
-<!--                                         [2026-03-03 13:45] -->
+<!--                                         [2026-04-08 08:42] -->
 <!--                                        Productivity: Active -->
 # Security Validation Claims Policy
 
@@ -268,7 +268,7 @@ This policy does NOT apply to:
 - [Pull Request Template](pull_request_template.md)
 - [Security Policy](../SECURITY.md)
 - [Contributing Guidelines](../CONTRIBUTING.md)
-- [Copilot Workspace Profile](copilot_workspace_profile.md)
+- [Active Governance Policy](Active_Governance_Policy.md)
 
 ---
 
@@ -284,6 +284,6 @@ If you have questions about this policy, please:
 
 ---
 
-**Last Updated:** 2026-02-12
+**Last Updated:** 2026-04-08 08:42 -06:00
 **Policy Owner:** Project-AI Maintainers
 **Review Cycle:** Quarterly

@@ -1,11 +1,11 @@
-<!--                                         [2026-03-04 09:48] -->
+<!--                                         [2026-04-08 08:42] -->
 <!--                                        Productivity: Active -->
 # THIRSTY_LANG_TARL_WHITEPAPER.md
 >
 > [!WARNING]
 > **RELEVANCE STATUS**: ARCHIVED / SUPERSEDED
 > **CURRENT ROLE**: Historical implementation documentation for Thirsty-Lang and T.A.R.L. v2.0. Replaced by production whitepapers in `docs/whitepapers/`.
-> **LAST VERIFIED**: 2026-03-01
+> **LAST VERIFIED**: 2026-04-08 08:42 -06:00
 
 ## Thirsty-Lang & T.A.R.L. (Thirsty's Active Resistance Language) Technical White Paper Productivity: Out-Dated(archive)
 
@@ -1464,7 +1464,7 @@ ______________________________________________________________________
 01. **Program Summary**: `PROGRAM_SUMMARY.md`
 01. **Architecture Quick Ref**: `.github/instructions/ARCHITECTURE_QUICK_REF.md`
 01. **Constitution**: `CONSTITUTION.md`
-01. **Workspace Profile**: `.github/copilot_workspace_profile.md`
+01. **Workspace Profile**: `.github/Active_Governance_Policy.md`
 
 ### 11.7 External Resources
 
@@ -1681,8 +1681,8 @@ ______________________________________________________________________
 
 ______________________________________________________________________
 
-**Status:** ✅ **Production Ready** **Last Updated:** January 29, 2026 **Document Classification:** Technical White Paper **Intended Audience:** Developers, Researchers, Enterprise Architects
+**Status:** ✅ **Production Ready** **Last Updated:** 2026-04-08 08:42 -06:00 **Document Classification:** Technical White Paper **Intended Audience:** Developers, Researchers, Enterprise Architects
 
 ______________________________________________________________________
 
-*This document represents the current state of Thirsty-Lang and T.A.R.L. as of January 29, 2026. For the latest updates, please refer to the GitHub repository and official documentation.*
+*This document was originally published on January 29, 2026 and last verified on 2026-04-08 08:42 -06:00. For the latest updates, please refer to the GitHub repository and official documentation.*

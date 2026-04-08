@@ -1,4 +1,4 @@
-<!--                                         [2026-03-04 09:48] -->
+<!--                                         [2026-04-08 08:42] -->
 <!--                                        Productivity: Active -->
 # Contributing to Project-AI: Code, Docs, and Civilization-Scale Impact
 
@@ -77,7 +77,7 @@ ______________________________________________________________________
 
 ## Quick Start: How to Contribute
 
-- **Read the [Copilot Workspace Profile](../../.github/copilot_workspace_profile.md)** - All contributions must meet production-grade standards
+- **Read the [Active Governance Policy](../../.github/Active_Governance_Policy.md)** - All contributions must meet production-grade standards
 - **For documentation**: See [Documentation Contributing Guide](../../.github/CONTRIBUTING_DOCS.md)
 - Fork the repository
 - Create a branch with a descriptive name
@@ -96,7 +96,7 @@ ______________________________________________________________________
 
 All contributions—whether from humans or AI assistants—MUST comply with:
 
-**[../../.github/copilot_workspace_profile.md](../../.github/copilot_workspace_profile.md)**
+**[../../.github/Active_Governance_Policy.md](../../.github/Active_Governance_Policy.md)**
 
 This governance profile enforces:
 
@@ -613,4 +613,4 @@ ______________________________________________________________________
 
 **Document Maintenance:** This document is reviewed quarterly and updated based on community feedback and evolving best practices.
 
-**Last Updated:** 2026-02-05 **Next Review:** 2026-05-05
+**Last Updated:** 2026-04-08 08:42 -06:00 **Next Review:** 2026-07-08

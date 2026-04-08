@@ -1,9 +1,9 @@
-<!--                                         [2026-03-03 13:45] -->
+<!--                                         [2026-04-08 08:42] -->
 <!--                                        Productivity: Out-Dated(archive) -->
 # Project-AI Copilot Instructions
 
 > **⚠️ GOVERNANCE POLICY SUPERSEDED**
-> This file contains legacy technical instructions. All AI assistants MUST follow the comprehensive governance policy in [copilot_workspace_profile.md](./copilot_workspace_profile.md).
+> This file contains legacy technical instructions. All AI assistants MUST follow the comprehensive governance policy in [Active_Governance_Policy.md](../../.github/Active_Governance_Policy.md).
 > **The Workspace Profile takes precedence over all instructions in this file.**
 
 ---
@@ -12,7 +12,7 @@
 
 Before proceeding, all AI assistants MUST read and comply with:
 
-**[.github/copilot_workspace_profile.md](./copilot_workspace_profile.md)**
+**[.github/Active_Governance_Policy.md](../../.github/Active_Governance_Policy.md)**
 
 This profile establishes:
 
@@ -509,7 +509,7 @@ Security issues are tracked through:
 
 All outputs generated using these technical instructions MUST comply with the standards defined in:
 
-**[.github/copilot_workspace_profile.md](./copilot_workspace_profile.md)**
+**[.github/Active_Governance_Policy.md](../../.github/Active_Governance_Policy.md)**
 
 Key requirements:
 
