@@ -66,7 +66,7 @@ class WireGuardBackend(VPNBackend):
             elif self.platform == "Windows":
                 # Check for wireguard.exe
                 result = subprocess.run(
-                    ["where", "wireguard"], capture_output=True, timeout=5
+                    ["where", "wireguard"], capture_output=True, timeout=5, shell=True
                 )
                 return result.returncode == 0
 
@@ -133,7 +133,7 @@ class WireGuardBackend(VPNBackend):
             # Use WireGuard Windows service
             # Assumes WireGuard for Windows is installed
             cmd = ["wireguard", "/installtunnelservice", self.config_path]
-            result = subprocess.run(cmd, capture_output=True, timeout=30)
+            result = subprocess.run(cmd, capture_output=True, timeout=30, shell=True)
 
             if result.returncode == 0:
                 self.connected = True
@@ -186,7 +186,7 @@ class WireGuardBackend(VPNBackend):
             elif self.platform == "Windows":
                 cmd = ["wireguard", "/uninstalltunnelservice", self.interface_name]
                 result = subprocess.run(
-                    cmd, capture_output=True, timeout=30
+                    cmd, capture_output=True, timeout=30, shell=True
                 )
 
                 if result.returncode == 0:
@@ -244,7 +244,7 @@ class OpenVPNBackend(VPNBackend):
         try:
             if self.platform == "Windows":
                 cmd = ["where", "openvpn"]
-                result = subprocess.run(cmd, capture_output=True, timeout=5)
+                result = subprocess.run(cmd, capture_output=True, timeout=5, shell=True)
             else:
                 cmd = ["which", "openvpn"]
                 result = subprocess.run(cmd, capture_output=True, timeout=5)
@@ -368,7 +368,7 @@ class IKEv2Backend(VPNBackend):
         try:
             # Use rasdial command
             cmd = ["rasdial", self.connection_name]
-            result = subprocess.run(cmd, capture_output=True, timeout=30)
+            result = subprocess.run(cmd, capture_output=True, timeout=30, shell=True)
 
             if result.returncode == 0:
                 self.connected = True
@@ -419,6 +419,7 @@ class IKEv2Backend(VPNBackend):
                 cmd,
                 capture_output=True,
                 timeout=30,
+                shell=self.platform == "Windows",
             )
 
             if result.returncode == 0:
