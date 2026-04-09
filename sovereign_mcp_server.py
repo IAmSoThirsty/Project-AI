@@ -1,11 +1,6 @@
-# [Sovereign MCP Server]                     [2026-04-09 04:10]
+# (Substrate Interface Gateway)             [2026-04-09 04:12]
 #                                          Status: Active
-# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-04-09 | TIME: 04:10             #
-# COMPLIANCE: Sovereign Substrate / sovereign_mcp_server.py
-# ============================================================================ #
-#
-# COMPLIANCE: Sovereign-Native / UTF-8 / Thirsty-Lang                          #
-# PURPOSE: Project-AI MCP Server — exposes sovereign services to AI clients   #
+# PURPOSE: Project-AI MCP Server — exposes sovereign services to AI clients
 
 
 
