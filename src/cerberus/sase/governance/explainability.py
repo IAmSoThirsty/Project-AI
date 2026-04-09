@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-04-09 06:25]
 #                                          Productivity: Active
 """
 SASE Explainability Module
@@ -14,7 +14,8 @@ OUTPUT:
 - Threat classification rationale
 """
 
-from dataclasses import dataclass
+from datetime import datetime, timezone
+from dataclasses import dataclass, field
 from typing import Any
 
 
@@ -58,6 +59,9 @@ class ExplainabilityReport:
 
     # Summary for SOC
     human_summary: str
+
+    # Metadata
+    generated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 class ExplainabilityEngine:
@@ -141,6 +145,7 @@ class ExplainabilityEngine:
             actor_class=threat_class.get("primary_class", "UNKNOWN"),
             actor_probability=threat_class.get("confidence", 0.0),
             human_summary=human_summary,
+            generated_at=datetime.now(timezone.utc).isoformat(),
         )
 
     def _rank_feature_contributions(
@@ -204,9 +209,9 @@ class ExplainabilityEngine:
         interp = interpretations.get(feature_name)
 
         if isinstance(interp, dict):
-            return interp.get(value, f"{feature_name}: {value}")
+            return str(interp.get(value, f"{feature_name}: {value}"))
         elif callable(interp):
-            return interp(value)
+            return str(interp(value))
         else:
             return f"{feature_name}: {value}"
 
@@ -219,11 +224,6 @@ class ExplainabilityEngine:
     ) -> str:
         """
         Generate human-readable summary for SOC
-
-        Example:
-        "HIGH confidence (85%) adversarial activity detected. Primary indicators:
-        Tor exit node, high token reuse (90%), unusual geographic pattern.
-        Behavioral state: EXPLOITATION. Classified as CREDENTIAL_HARVESTING_BOT."
         """
         # Confidence level
         if confidence_pct >= 75:
@@ -258,12 +258,11 @@ class ExplainabilityEngine:
     def format_for_soc(self, report: ExplainabilityReport) -> str:
         """
         Format report for SOC dashboard display
-
-        Returns multi-line string suitable for logging/display
         """
         lines = [
             "=" * 60,
             f"THREAT DETECTION EXPLANATION - {report.event_id}",
+            f"GENERATED AT: {report.generated_at}",
             "=" * 60,
             f"VERDICT: {report.verdict}",
             f"CONFIDENCE: {report.final_confidence * 100:.1f}%",

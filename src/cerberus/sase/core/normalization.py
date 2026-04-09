@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-04-09 05:58]
 #                                          Productivity: Active
 """
 SASE - Sovereign Adversarial Signal Engine
@@ -23,6 +23,7 @@ INVARIANTS:
 import logging
 import urllib.request
 import urllib.error
+from datetime import datetime, timezone
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
@@ -56,6 +57,7 @@ class EnrichmentData:
     historical_reuse_count: int = 0
     token_sensitivity: float | None = None  # 0.0-1.0
     enrichment_version: str = "1.0.0"
+    processed_at: str = ""  # UTC ISO format
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary"""
@@ -78,9 +80,10 @@ class ASNRiskIndexer:
     Maintains risk index for Autonomous Systems
     """
 
-    def __init__(self):
+    def __init__(self, max_cache_size: int = 5000):
         # Known high-risk ASNs (example data)
         self.high_risk_asns: set[str] = {"AS12345", "AS67890"}  # Example malicious ASN
+        self.max_cache_size = max_cache_size
 
         # ASN risk scores (0.0-1.0)
         self.asn_scores: dict[str, float] = {}
@@ -108,6 +111,11 @@ class ASNRiskIndexer:
 
     def update_risk(self, asn: str, new_score: float):
         """Update ASN risk score (learning)"""
+        if len(self.asn_scores) >= self.max_cache_size and asn not in self.asn_scores:
+            # Simple eviction: clear oldest entries if full
+            # In production this would be LRU
+            self.asn_scores.clear()
+
         self.asn_scores[asn] = max(0.0, min(1.0, new_score))
         logger.info(f"ASN risk updated: {asn} -> {new_score:.2f}")
 
@@ -120,6 +128,7 @@ class TorDetector:
     """
 
     def __init__(self):
+        """Active: SASE L3 Tor Detection Service"""
         self.tor_exit_nodes: set[str] = set()
         self._load_tor_list()
 
@@ -175,7 +184,7 @@ class CloudProviderClassifier:
         # IP ranges (TODO: implement CIDR matching)
         self.cloud_ranges: dict[str, str] = {}
 
-    def classify(self, asn: str, ip: str = None) -> str | None:
+    def classify(self, asn: str, _ip: str | None = None) -> str | None:
         """Classify cloud provider"""
         return self.cloud_asns.get(asn)
 
@@ -208,9 +217,10 @@ class HistoricalCorrelator:
     Counts reuse of tokens/artifacts for pattern detection
     """
 
-    def __init__(self):
+    def __init__(self, max_history: int = 20000):
         self.interaction_counts: dict[str, int] = {}  # artifact_id -> count
         self.ip_artifact_map: dict[str, set[str]] = {}  # ip -> {artifact_ids}
+        self.max_history = max_history
 
     def record_interaction(self, ip: str, artifact_id: str):
         """Record artifact interaction"""
@@ -221,6 +231,9 @@ class HistoricalCorrelator:
 
         # Track IP-artifact associations
         if ip not in self.ip_artifact_map:
+            if len(self.ip_artifact_map) >= self.max_history:
+                # Evict one entry
+                self.ip_artifact_map.pop(next(iter(self.ip_artifact_map)))
             self.ip_artifact_map[ip] = set()
 
         self.ip_artifact_map[ip].add(artifact_id)
@@ -329,6 +342,7 @@ class EventEnrichmentPipeline:
             infrastructure_type=infrastructure_type,
             historical_reuse_count=historical_reuse_count,
             token_sensitivity=token_sensitivity,
+            processed_at=datetime.now(timezone.utc).isoformat(),
         )
 
         logger.info(f"Event enriched: {event.event_id}")

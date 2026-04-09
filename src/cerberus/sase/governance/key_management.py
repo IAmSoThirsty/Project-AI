@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-04-09 06:25]
 #                                          Productivity: Active
 """
 SASE - Sovereign Adversarial Signal Engine
@@ -21,6 +21,7 @@ ROTATION:
 import hashlib
 import logging
 import time
+from datetime import datetime, timezone
 from dataclasses import dataclass
 from enum import Enum
 
@@ -49,11 +50,13 @@ class CryptographicKey:
 
     def is_expired(self) -> bool:
         """Check if key expired"""
-        return time.time() > self.expires_at
+        now = datetime.now(timezone.utc).timestamp()
+        return now > self.expires_at
 
     def days_until_expiry(self) -> int:
         """Days until expiration"""
-        seconds = self.expires_at - time.time()
+        now = datetime.now(timezone.utc).timestamp()
+        seconds = self.expires_at - now
         return max(0, int(seconds / 86400))
 
 
@@ -75,14 +78,15 @@ class KeyRotationScheduler:
             return True
 
         last = self.last_rotation[key_type]
-        elapsed_days = (time.time() - last) / 86400
+        now = datetime.now(timezone.utc).timestamp()
+        elapsed_days = (now - last) / 86400
 
         return elapsed_days >= self.ROTATION_INTERVAL_DAYS
 
     def record_rotation(self, key_type: KeyType):
         """Record key rotation"""
-        self.last_rotation[key_type] = time.time()
-        logger.info(f"Key rotation recorded: {key_type.value}")
+        self.last_rotation[key_type] = datetime.now(timezone.utc).timestamp()
+        logger.info("Key rotation recorded: %s", key_type.value)
 
 
 class HSMInterface:
@@ -107,10 +111,11 @@ class HSMInterface:
             pass
 
         # Fallback: software key generation (DEV ONLY)
-        key_material = f"{key_type.value}:{time.time()}".encode()
+        now = datetime.now(timezone.utc).timestamp()
+        key_material = f"{key_type.value}:{now}".encode()
         key_id = hashlib.sha256(key_material).hexdigest()
 
-        logger.info(f"Key generated: {key_type.value} -> {key_id[:16]}")
+        logger.info("Key generated: %s -> %s", key_type.value, key_id[:16])
 
         return key_id
 
@@ -129,7 +134,7 @@ class HSMInterface:
 
     def revoke_key(self, key_id: str):
         """Revoke compromised key"""
-        logger.critical(f"KEY REVOKED: {key_id[:16]}")
+        logger.critical("KEY REVOKED: %s", key_id[:16])
         # TODO: HSM revocation
 
 
@@ -161,13 +166,13 @@ class KeyManagementCeremony:
 
         Generates new key in HSM and updates active keys
         """
-        logger.warning(f"ROTATING KEY: {key_type.value}")
+        logger.warning("ROTATING KEY: %s", key_type.value)
 
         # Generate new key
         key_id = self.hsm.generate_key(key_type)
 
         # Create key metadata
-        created = time.time()
+        created = datetime.now(timezone.utc).timestamp()
         expires = created + (self.scheduler.ROTATION_INTERVAL_DAYS * 86400)
 
         key = CryptographicKey(
@@ -184,7 +189,7 @@ class KeyManagementCeremony:
         # Record rotation
         self.scheduler.record_rotation(key_type)
 
-        logger.info(f"Key rotated successfully: {key_type.value}")
+        logger.info("Key rotated successfully: %s", key_type.value)
 
         return key
 
@@ -192,7 +197,7 @@ class KeyManagementCeremony:
         """Check and perform automatic rotations"""
         for key_type in KeyType:
             if self.scheduler.should_rotate(key_type):
-                logger.warning(f"Automatic rotation triggered: {key_type.value}")
+                logger.warning("Automatic rotation triggered: %s", key_type.value)
                 self.rotate_key(key_type)
 
     def revoke_compromised_key(self, key_type: KeyType):
@@ -201,7 +206,7 @@ class KeyManagementCeremony:
 
         Immediately rotates compromised key
         """
-        logger.critical(f"COMPROMISE REVOCATION: {key_type.value}")
+        logger.critical("COMPROMISE REVOCATION: %s", key_type.value)
 
         # Mark old key as revoked
         if key_type in self.active_keys:
