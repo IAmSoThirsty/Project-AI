@@ -1,4 +1,4 @@
-# [Boot Sovereign]                          [2026-04-09 04:10]
+# (Sovereign Ignition Core)                 [2026-04-09 04:12]
 #                                          Status: Active
 """
 Project-AI Sovereign Ignition (Boot) Sequence - v1.0.0-E1
@@ -14,9 +14,6 @@ Ignition Order:
 5.  Operational: Autonomous Agents
 6.  Interface: Leather Book Master UI
 """
-
-# [Boot Sovereign]                          [2026-04-09 04:10]
-#                                          Status: Active
 import os
 import sys
 import time
