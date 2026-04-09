@@ -1,13 +1,5 @@
-# [Launcher]                                  [2026-04-09 04:10]
+# (Master Launch Vector)                    [2026-04-09 04:12]
 #                                          Status: Active
-# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-04-09 | TIME: 04:10             #
-# COMPLIANCE: Sovereign Substrate / launcher.py
-# ============================================================================ #
-#
-# COMPLIANCE: Sovereign Substrate / launcher.py
-
-
-# STATUS: ACTIVE | TIER: SUBSTRATE | DATE: 2026-03-17 | TIME: 11:35
 # This file owns nothing. It starts the engine and steps aside.
 import sys
 import os
