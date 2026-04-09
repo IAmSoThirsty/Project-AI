@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# [Sovereign Entrypoint]                    [2026-04-09 04:10]
+# (Substrate Docker Execution Vector)       [2026-04-09 04:12]
 #                                          Status: Active
 set -euo pipefail
 
