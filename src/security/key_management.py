@@ -1,5 +1,5 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Out-Dated(archive)
+#                                           [2026-04-09 05:20]
+#                                          Productivity: Active
 """
 Enterprise-Grade Key Management System
 Supports HSM, Cloud KMS (AWS KMS, GCP KMS, Azure Key Vault), and automated key rotation.
@@ -9,14 +9,14 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 from typing import Any
 
 try:
     from cryptography.fernet import Fernet
     from cryptography.hazmat.backends import default_backend
-    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives import serialization
     from cryptography.hazmat.primitives.asymmetric import rsa
 except ImportError:
     pass  # Will be handled at runtime
@@ -269,8 +269,8 @@ class KeyManagementSystem:
             key_type=key_type,
             provider=self.provider,
             status=KeyStatus.ACTIVE,
-            created_at=datetime.utcnow(),
-            expires_at=datetime.utcnow()
+            created_at=datetime.now(timezone.utc),
+            expires_at=datetime.now(timezone.utc)
             + timedelta(days=rotation_policy.get("rotation_days", 90)),
             rotation_policy=rotation_policy,
             access_control=access_control,
@@ -287,7 +287,7 @@ class KeyManagementSystem:
                 "key_id": key_id,
                 "key_type": key_type.value,
                 "provider": self.provider.value,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
 
@@ -310,7 +310,11 @@ class KeyManagementSystem:
             pem = private_key.private_bytes(
                 encoding=serialization.Encoding.PEM,
                 format=serialization.PrivateFormat.PKCS8,
-                encryption_algorithm=serialization.BestAvailableEncryption(b"changeme"),
+                encryption_algorithm=serialization.BestAvailableEncryption(
+                    self.config.get("local_key_passphrase", os.urandom(32)).encode()
+                    if isinstance(self.config.get("local_key_passphrase"), str)
+                    else self.config.get("local_key_passphrase", os.urandom(32))
+                ),
             )
 
             with open(key_path, "wb") as f:
@@ -348,7 +352,7 @@ class KeyManagementSystem:
         if (
             not force
             and metadata.expires_at
-            and datetime.utcnow() < metadata.expires_at
+            and datetime.now(timezone.utc) < metadata.expires_at
         ):
             logger.info(f"Key {key_id} rotation not due yet")
             return metadata
@@ -357,7 +361,7 @@ class KeyManagementSystem:
         metadata.status = KeyStatus.DEPRECATED
 
         # Generate new key version
-        new_key_id = f"{key_id}_v{datetime.utcnow().strftime('%Y%m%d%H%M%S')}"
+        new_key_id = f"{key_id}_v{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
 
         new_metadata = self.generate_key(
             key_id=new_key_id,
@@ -367,7 +371,7 @@ class KeyManagementSystem:
         )
 
         # Update metadata
-        metadata.rotated_at = datetime.utcnow()
+        metadata.rotated_at = datetime.now(timezone.utc)
         self._save_keys()
 
         # Audit log
@@ -376,7 +380,7 @@ class KeyManagementSystem:
                 "event": "key_rotated",
                 "old_key_id": key_id,
                 "new_key_id": new_key_id,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
 
@@ -401,7 +405,11 @@ class KeyManagementSystem:
         metadata = self.keys[key_id]
 
         if not metadata.access_control:
-            # No access control defined, allow all (development mode)
+            # Sovereign Restriction: Fail Closed if no rules are defined in production
+            if self.config.get("environment") == "production":
+                logger.warning(f"Access denied to {key_id}: No access control defined in production.")
+                return False
+            # Permissive dev mode
             return True
 
         allowed_identities = metadata.access_control.get(action, [])
@@ -415,7 +423,7 @@ class KeyManagementSystem:
                 "identity": identity,
                 "action": action,
                 "granted": has_access,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
 
@@ -431,7 +439,7 @@ class KeyManagementSystem:
         Returns:
             str: Path to exported file
         """
-        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
         if format == "json":
             output_path = os.path.join(self.audit_dir, f"audit_log_{timestamp}.json")
