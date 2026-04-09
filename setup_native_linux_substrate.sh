@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# [Setup Native Linux Substrate]           [2026-04-09 04:10]
+# (Native Linux Substrate Architect)       [2026-04-09 04:12]
 #                                          Status: Active
 set -euo pipefail
 
