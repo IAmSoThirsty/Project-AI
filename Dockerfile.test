@@ -1,5 +1,5 @@
-#                                           [2026-04-02 10:49]
-#                                          Productivity: Active
+# (Substrate Validation Blueprint)         [2026-04-09 04:26]
+#                                          Status: Active
 FROM python:3.11-slim
 
 WORKDIR /app
