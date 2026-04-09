@@ -1,3 +1,5 @@
+# (Substrate Ignore Vector)                  [2026-04-09 04:26]
+#                                          Status: Active
 # Health report snapshots and archives (keep canonical report only)
 data/health_snapshots/
 docs/assets/health_report_*.png
