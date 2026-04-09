@@ -1,4 +1,4 @@
-# (Substrate Transcendence Activator)        [2026-04-09 04:12]
+# (Substrate Transcendence Activator)        [2026-04-09 04:26]
 #                                          Status: Active
 
 
@@ -32,4 +32,4 @@ def main():
     print("Snapshot: reports/transcendent_lock.json")
 
 if __name__ == "__main__":
-    activate_yggdrasil()
+    main()
