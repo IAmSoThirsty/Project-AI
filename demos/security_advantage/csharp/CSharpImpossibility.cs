@@ -55,7 +55,7 @@ class CSharpImpossibility
         Console.WriteLine("ATTEMPT 1: Private Field Encapsulation");
         Console.WriteLine("-".PadRight(80, '-'));
 
-        var holder = new PrivateFieldSecret("sk-PRODUCTION-SECRET-12345");
+        var holder = new PrivateFieldSecret("demo-token-12345");
         
         // Bypass: Use reflection to access private field
         var fieldInfo = typeof(PrivateFieldSecret).GetField("_apiKey", 
@@ -87,7 +87,7 @@ class CSharpImpossibility
         Console.WriteLine("ATTEMPT 2: Readonly Field (Immutability)");
         Console.WriteLine("-".PadRight(80, '-'));
 
-        var holder = new ReadonlyFieldSecret("sk-PRODUCTION-SECRET-12345");
+        var holder = new ReadonlyFieldSecret("demo-token-12345");
         
         // Bypass: Reflection can modify readonly fields
         var fieldInfo = typeof(ReadonlyFieldSecret).GetField("_apiKey",
@@ -123,7 +123,7 @@ class CSharpImpossibility
         Console.WriteLine("ATTEMPT 3: Property with Private Backing Field");
         Console.WriteLine("-".PadRight(80, '-'));
 
-        var holder = new PropertySecret("sk-PRODUCTION-SECRET-12345");
+        var holder = new PropertySecret("demo-token-12345");
         
         // Bypass 1: Access auto-generated backing field
         var backingField = typeof(PropertySecret).GetField("<ApiKey>k__BackingField",
@@ -162,7 +162,7 @@ class CSharpImpossibility
         Console.WriteLine("ATTEMPT 4: SecureString (Microsoft's Security Class)");
         Console.WriteLine("-".PadRight(80, '-'));
 
-        var secureSecret = CreateSecureString("sk-PRODUCTION-SECRET-12345");
+        var secureSecret = CreateSecureString("demo-token-12345");
         
         // Bypass: Marshal to extract from SecureString
         IntPtr ptr = Marshal.SecureStringToBSTR(secureSecret);
@@ -210,7 +210,7 @@ class CSharpImpossibility
         Console.WriteLine("ATTEMPT 5: Primary Constructors (C# 12 Feature)");
         Console.WriteLine("-".PadRight(80, '-'));
 
-        var holder = new PrimaryConstructorSecret("sk-PRODUCTION-SECRET-12345");
+        var holder = new PrimaryConstructorSecret("demo-token-12345");
         
         // Bypass: Access captured parameter field
         var fieldInfo = typeof(PrimaryConstructorSecret).GetField("apiKey",
@@ -243,7 +243,7 @@ class CSharpImpossibility
         Console.WriteLine("-".PadRight(80, '-'));
 
         // C# 12: Collection expression syntax
-        string[] secrets = ["sk-PRODUCTION-SECRET-12345", "backup-key-67890"];
+        string[] secrets = ["demo-token-12345", "backup-key-67890"];
         
         // Bypass: Direct array access
         Console.WriteLine($"✗ BYPASSED (Array Access): {secrets[0]}");
@@ -267,7 +267,7 @@ class CSharpImpossibility
         Console.WriteLine("ATTEMPT 7: ref readonly Parameters (C# 12 Feature)");
         Console.WriteLine("-".PadRight(80, '-'));
 
-        var secret = new SecretData { Value = "sk-PRODUCTION-SECRET-12345" };
+        var secret = new SecretData { Value = "demo-token-12345" };
         ProcessSecret(in secret);
         
         // Bypass: ref readonly doesn't prevent reading
@@ -295,7 +295,7 @@ class CSharpImpossibility
         Console.WriteLine("ATTEMPT 8: Unsafe Pointers for Direct Memory Control");
         Console.WriteLine("-".PadRight(80, '-'));
 
-        string secret = "sk-PRODUCTION-SECRET-12345";
+        string secret = "demo-token-12345";
         
         // Even with unsafe pointers, the string is still in managed memory
         fixed (char* ptr = secret)
@@ -320,7 +320,7 @@ class CSharpImpossibility
         Console.WriteLine("ATTEMPT 9: Internal Modifier (Assembly Protection)");
         Console.WriteLine("-".PadRight(80, '-'));
 
-        var holder = new InternalSecret("sk-PRODUCTION-SECRET-12345");
+        var holder = new InternalSecret("demo-token-12345");
         
         // Bypass: Reflection ignores internal modifier
         var fieldInfo = typeof(InternalSecret).GetField("_apiKey",
@@ -362,7 +362,7 @@ class CSharpImpossibility
 
     static string GetInterceptableSecret()
     {
-        return "sk-PRODUCTION-SECRET-12345";
+        return "demo-token-12345";
     }
 
     // ========================================================================
