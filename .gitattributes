@@ -1,8 +1,5 @@
-# ═══════════════════════════════════════════════════════════
-# Project-AI — GitHub Linguist & LFS Configuration
-# ═══════════════════════════════════════════════════════════
-#                                           [2026-03-04 12:45]
-#                                          Productivity: Active
+# (Substrate Attribute Vector)               [2026-04-09 04:26]
+#                                          Status: Active
 
 # Auto detect text files and perform LF normalization
 * text=auto
