@@ -1,22 +1,9 @@
 /*
- * ═══════════════════════════════════════════════════════════════════════════
- * THIRSTY'S GRADLE: GOD TIER MONOLITHIC BUILD ORCHESTRATION
- * ═══════════════════════════════════════════════════════════════════════════
- * 
- * Enterprise-grade, unified build system for Project-AI
- * Coordinates ALL builds, tests, packaging, and deployments across:
- *   - Python backends (Flask/FastAPI)
- *   - Android applications (Legion Mini)
- *   - Electron Desktop (TypeScript/React)
- *   - Documentation generation
- *   - USB/Portable distributions
- *   - Testing, linting, security scanning
- *   - CI/CD integration and release automation
- * 
- * Version: 1.0.0
- * Architecture: Monolithic Density Pattern
- * Paradigm: Maximum Coordination, Zero Fragmentation
- * ═══════════════════════════════════════════════════════════════════════════
+ * (Monolithic Build Synthesis)              [2026-04-09 04:26]
+ *                                          Status: Active
+ *
+ * Unified build orchestration layer for the Sovereign Substrate.
+ * Coordinates Python, Android, Electron, and Documentation synthesis.
  */
 
 import org.gradle.api.tasks.testing.logging.TestLogEvent
