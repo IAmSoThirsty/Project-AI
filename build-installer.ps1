@@ -1,6 +1,6 @@
-# [2026-03-04 11:55]
-# Productivity: Active
-# Project-AI Build Script - Hardened Pathing
+# (Installer Synthesis Vector)             [2026-04-09 04:12]
+#                                          Status: Active
+# Project-AI Build Script — Hardened Pathing
 
 param(
     [string]$Platform = "windows",
