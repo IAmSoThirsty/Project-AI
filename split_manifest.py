@@ -1,3 +1,5 @@
+# [Split Manifest]                           [2026-04-09 04:10]
+#                                          Status: Active
 import os
 
 root = r'C:\Users\Quencher\.gemini\antigravity\scratch\Sovereign-Governance-Substrate'

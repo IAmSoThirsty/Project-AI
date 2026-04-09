@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# [Verify Sovereign Loaders]               [2026-04-03 19:30]
+# [Verify Sovereign Loaders]               [2026-04-09 04:10]
 #                                          Status: Active
 """Verify that the canonical Project-AI loaders can be imported."""
 
