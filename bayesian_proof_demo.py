@@ -1,9 +1,5 @@
-# ============================================================================ #
-#                                           [2026-03-18 09:59]
-#                                          Productivity: Active
-# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
-# COMPLIANCE: Sovereign Substrate / bayesian_proof_demo.py
-# ============================================================================ #
+# (Bayesian Governance Calculus)             [2026-04-09 04:12]
+#                                          Status: Active
 """
 
 
