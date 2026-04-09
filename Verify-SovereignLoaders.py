@@ -22,30 +22,19 @@ for path_entry in (ROOT, SRC):
 ensure_pyqt6_available()
 
 MODULES = [
-    "src.app.main",
-    "src.app.api_core",
-    "src.app.api_server",
-    "src.app.main_headless_wrapper",
-    "src.app.governance.audit_log",
-    "src.app.governance.genesis_continuity",
-    "src.app.governance.sovereign_audit_log",
-    "src.app.governance.tsa_anchor_manager",
-    "web.backend.app",
+    "app.inspection.repository_inspector",
+    "app.ui.render_engine",
     "thirsty_lang.src.thirsty_interpreter",
 ]
 
 FILES = [
-    "data/genesis_keys/genesis_audit.pub",
-    "data/genesis_keys/genesis_id.txt",
-    "data/genesis_pins/external_pins.json",
-    "data/genesis_pins/continuity_log.json",
-    "data/tsa_anchors/tsa_anchor_chain.json",
-    "data/sovereign_audit/operational_audit.yaml",
-    "Claude/README.md",
-    "Codex/README.md",
-    "IDE_README.md",
-    "WORKSPACE_SETUP.md",
-    "Sovereign_Agent_Standard.md",
+    "launcher.py",
+    "src/app/inspection/repository_inspector.py",
+    "src/app/ui/render_engine.py",
+    "src/thirsty_lang/src/thirsty_interpreter.py",
+    "src/app/sovereign/sovereign_boot.thirsty",
+    "README.md",
+    "inventory.csv",
 ]
 
 

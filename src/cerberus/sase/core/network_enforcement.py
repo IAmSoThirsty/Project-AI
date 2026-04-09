@@ -9,9 +9,8 @@ Implements rate-limiting, ASN blocking, and high-entropy connection termination.
 """
 
 import logging
-import time
-from collections import deque
-from typing import Any, Optional
+from collections import OrderedDict
+from typing import Any
 
 logger = logging.getLogger("SASE.L7.Network")
 
@@ -28,8 +27,9 @@ class EdgeEnforcementPlane:
     """
 
     def __init__(self, capacity: int = 10000):
-        # Sliding window for deduplication
-        self.request_hashes: deque[str] = deque(maxlen=capacity)
+        # LRU cache for O(1) deduplication
+        self.capacity = capacity
+        self.request_hashes: OrderedDict[str, None] = OrderedDict()
         self.blocked_ips: set[str] = set()
 
         logger.info("L7 Enforcement Plane initialized (capacity: %d)", capacity)
@@ -71,10 +71,12 @@ class EdgeEnforcementPlane:
             logger.critical("ENFORCEMENT: IP %s BLOCKED. Reason: %s", ip, reason)
 
     def _is_duplicate(self, event_hash: str) -> bool:
-        """Check if event hash is in recent window"""
+        """Check if event hash is in recent window (O(1) lookup)"""
         if event_hash in self.request_hashes:
             return True
-        self.request_hashes.append(event_hash)
+        self.request_hashes[event_hash] = None
+        if len(self.request_hashes) > self.capacity:
+            self.request_hashes.popitem(last=False)
         return False
 
     def reset_blocklist(self):

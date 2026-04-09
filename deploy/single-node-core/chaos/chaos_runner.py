@@ -120,7 +120,11 @@ class ChaosRunner:
 
     def load_experiment(self, experiment_file: Path) -> ChaosExperiment:
         """Load experiment definition from YAML/JSON file."""
-        content = experiment_file.read_text()
+        experiment_file = experiment_file.resolve()
+        if not str(experiment_file).startswith(str(self.experiments_dir.resolve())):
+            raise ValueError(f"Path traversal attempt prevented: {experiment_file}")
+            
+        content = experiment_file.read_text()  # nosec B108
 
         if experiment_file.suffix in [".yaml", ".yml"]:
             import yaml

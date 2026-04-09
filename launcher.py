@@ -7,8 +7,8 @@ import os
 # Add src to path for relative imports if needed
 sys.path.append(os.path.join(os.getcwd(), "src"))
 
-from src.thirsty_lang.src.thirsty_interpreter import ThirstyInterpreter
-from src.app.ui.render_engine import RenderEngine
+from thirsty_lang.src.thirsty_interpreter import ThirstyInterpreter
+from app.ui.render_engine import RenderEngine
 
 def main():
     renderer = RenderEngine()
