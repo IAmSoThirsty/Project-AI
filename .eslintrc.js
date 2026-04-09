@@ -15,6 +15,7 @@ module.exports = {
   },
   rules: {
     // Adjust rules based on project needs
+    'linebreak-style': 'off', // Disabled to allow native CRLF development on Windows
     'no-console': 'off', // Allow console for debugging
     'import/prefer-default-export': 'off',
     'max-len': ['error', { code: 100 }],

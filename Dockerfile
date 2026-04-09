@@ -26,6 +26,9 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /build/wheels -r requirements
 # Stage 2: Runtime
 FROM python:3.11-slim@sha256:0b23cfb7425d065008b778022a17b1551c82f8b4866ee5a7a200084b7e2eafbf
 
+# Create non-root user for security
+RUN groupadd -r sovereign && useradd -r -g sovereign sovereign
+
 WORKDIR /app
 
 # Install runtime dependencies only
@@ -39,19 +42,24 @@ COPY --from=builder /build/wheels /wheels
 
 # Install wheels
 COPY requirements.txt .
-RUN pip install --no-cache /wheels/*
+RUN pip install --no-cache-dir /wheels/*
 
-# Copy application
-COPY src/ /app/src/
-COPY data/ /app/data/
+# Copy application with correct ownership
+COPY --chown=sovereign:sovereign src/ /app/src/
+COPY --chown=sovereign:sovereign data/ /app/data/
+COPY --chown=sovereign:sovereign launcher.py /app/
 
 # Set environment
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app/src
+ENV PATH="/home/sovereign/.local/bin:${PATH}"
+
+# Switch to non-root user
+USER sovereign
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import sys; sys.exit(0)" || exit 1
 
-# Entry point
-CMD ["python", "-m", "app.main"]
+# Entry point: Use the repaired master launch vector
+CMD ["python", "launcher.py"]

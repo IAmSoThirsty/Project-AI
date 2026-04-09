@@ -1719,3 +1719,31 @@ For all tasks:            gradle tasks --all
 // ═══════════════════════════════════════════════════════════════════════════
 // END OF GOD TIER BUILD ORCHESTRATION WITH EVOLUTION SUBSTRATE
 // ═══════════════════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ROBUST CLEANUP STRATEGY
+// ═══════════════════════════════════════════════════════════════════════════
+tasks.named<Delete>("clean") {
+    doFirst {
+        logger.lifecycle("🧹 Aggressive cleanup: Terminating lingering build daemons to release file locks...")
+        if (System.getProperty("os.name").lowercase().contains("windows")) {
+            exec {
+                commandLine("cmd", "/c", "taskkill /F /IM node.exe /FI \"MEMUSAGE gt 1000\" 2>nul || exit 0")
+                isIgnoreExitValue = true
+            }
+            exec {
+                commandLine("cmd", "/c", "taskkill /F /IM python.exe /FI \"MEMUSAGE gt 150000\" 2>nul || exit 0")
+                isIgnoreExitValue = true
+            }
+        } else {
+            exec {
+                commandLine("sh", "-c", "pkill -f node || true")
+                isIgnoreExitValue = true
+            }
+            exec {
+                commandLine("sh", "-c", "pkill -f python || true")
+                isIgnoreExitValue = true
+            }
+        }
+    }
+}
