@@ -98,7 +98,7 @@ class TestPythonEnvironment:
 
     def test_datetime_utc_available(self):
         """datetime.UTC is available (Python 3.11+ feature)."""
-        from datetime import UTC
+        from datetime import timezone
         assert UTC is not None
 
     def test_pyqt6_available(self):

@@ -14,7 +14,7 @@ Comprehensive test coverage for:
 
 import json
 import tempfile
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -323,7 +323,7 @@ class TestGlobalScenarioEngine:
         assert len(scenarios) > 0
         # Check scenario structure
         for scenario in scenarios[:5]:
-            assert scenario.year > datetime.now(UTC).year
+            assert scenario.year > datetime.now(timezone.utc).year
             assert 0 <= scenario.likelihood <= 1
             assert len(scenario.title) > 0
             assert len(scenario.impact_domains) > 0

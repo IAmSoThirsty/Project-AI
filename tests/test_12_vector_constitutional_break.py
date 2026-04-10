@@ -25,7 +25,7 @@ Test Vectors:
 import shutil
 import tempfile
 import threading
-from datetime import UTC, datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -77,7 +77,7 @@ class TestVector1_GenesisKeyDeletion:
 
             # Step 1: Initialize first Genesis with isolated paths
             genesis_key_dir = data_dir.parent / "genesis_keys"
-            audit1 = SovereignAuditLog(data_dir=data_dir)
+            audit1 = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             genesis_id_1 = audit1.genesis_keypair.genesis_id
             audit1.log_event("initial_event", {"sequence": 1})
 
@@ -105,7 +105,7 @@ class TestVector1_GenesisKeyDeletion:
 
             # Step 3: Attempt to restart system (should fail FATALLY)
             with pytest.raises(GenesisDiscontinuityError) as exc_info:
-                SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             # Verify error message indicates Genesis discontinuity
             error_msg = str(exc_info.value)
@@ -125,7 +125,7 @@ class TestVector1_GenesisKeyDeletion:
 
             # Initialize first Genesis
             genesis_key_dir = data_dir.parent / "genesis_keys"
-            audit1 = SovereignAuditLog(data_dir=data_dir)
+            audit1 = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit1.log_event("event_before_attack", {"index": 1})
 
             # Delete Genesis keys
@@ -135,12 +135,12 @@ class TestVector1_GenesisKeyDeletion:
 
             # Attempt restart - MUST FAIL
             with pytest.raises(GenesisDiscontinuityError):
-                SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             # Even if somehow initialized, system must be frozen
             # Verify we cannot create a new audit that silently regenerates
             try:
-                audit3 = SovereignAuditLog(data_dir=data_dir)
+                audit3 = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
                 # If we get here, system_frozen MUST be True
                 assert audit3.system_frozen is True
             except GenesisDiscontinuityError:
@@ -170,7 +170,7 @@ class TestVector2_GenesisPublicKeyReplacement:
             data_dir = Path(tmpdir) / "audit_data"
 
             # Step 1: Initialize with original Genesis
-            audit1 = SovereignAuditLog(data_dir=data_dir)
+            audit1 = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit1.genesis_keypair.public_key.public_bytes(
                 encoding=audit1.genesis_keypair.public_key.__class__.__module__.split(
                     "."
@@ -209,7 +209,7 @@ class TestVector2_GenesisPublicKeyReplacement:
 
             # Step 4: Attempt to restart (should fail FATALLY)
             with pytest.raises(GenesisReplacementError) as exc_info:
-                SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             # Verify error indicates public key replacement
             error_msg = str(exc_info.value)
@@ -223,7 +223,7 @@ class TestVector2_GenesisPublicKeyReplacement:
             data_dir = Path(tmpdir) / "audit_data"
 
             # Initialize legitimate audit
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit.log_event("legitimate_event", {"authentic": True})
 
             # Get pinned public key hash
@@ -276,8 +276,12 @@ class TestVector11_FileSystemFullWipe:
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
 
-            # Initialize and log events
-            audit1 = SovereignAuditLog(data_dir=data_dir)
+            # Initialize and log events (disable TSA for testing)
+            audit1 = SovereignAuditLog(
+                data_dir=data_dir,
+                enable_notarization=False,
+                enable_external_anchoring=False
+            )
             genesis_id = audit1.genesis_keypair.genesis_id
 
             for i in range(10):
@@ -297,7 +301,7 @@ class TestVector11_FileSystemFullWipe:
 
             # Attempt restart - MUST FAIL
             with pytest.raises(GenesisDiscontinuityError) as exc_info:
-                SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             error_msg = str(exc_info.value)
             assert "discontinuity" in error_msg.lower() or "VECTOR" in error_msg
@@ -308,7 +312,7 @@ class TestVector11_FileSystemFullWipe:
             data_dir = Path(tmpdir) / "audit_data"
 
             # Initialize and create Merkle anchors
-            audit1 = SovereignAuditLog(data_dir=data_dir)
+            audit1 = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit1.merkle_anchor.batch_size = 5  # Small batch for testing
 
             # Log enough events to create anchors
@@ -333,7 +337,7 @@ class TestVector11_FileSystemFullWipe:
 
             # Restart should fail due to Genesis discontinuity
             with pytest.raises((GenesisDiscontinuityError, GenesisReplacementError)):
-                SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
 
 class TestVector5_LogTruncation:
@@ -357,7 +361,7 @@ class TestVector5_LogTruncation:
             data_dir = Path(tmpdir) / "audit_data"
 
             # Create audit and log events
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit.merkle_anchor.batch_size = 10
 
             # Log 50 events
@@ -384,7 +388,7 @@ class TestVector5_LogTruncation:
                         f.write("---\n")
 
             # Create new audit instance to reload
-            audit2 = SovereignAuditLog(data_dir=data_dir)
+            audit2 = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             # Integrity verification should fail
             is_valid_after, message = audit2.verify_integrity()
@@ -415,7 +419,7 @@ class TestVector6_MiddleChainMutation:
             data_dir = Path(tmpdir) / "audit_data"
 
             # Create audit and log events
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             event_ids = []
             for i in range(20):
@@ -444,7 +448,7 @@ class TestVector6_MiddleChainMutation:
                     audit_log_file.write_text(mutated_content)
 
                 # Reload audit
-                audit2 = SovereignAuditLog(data_dir=data_dir)
+                audit2 = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
                 # Verify signature for mutated event should fail
                 is_valid, message = audit2.verify_event_signature(target_event_id)
@@ -474,7 +478,7 @@ class TestVector7_ReplayDeterminism:
         # Run 1: First execution
         with tempfile.TemporaryDirectory() as tmpdir1:
             data_dir1 = Path(tmpdir1) / "audit_data"
-            audit1 = SovereignAuditLog(data_dir=data_dir1, deterministic_mode=True)
+            audit1 = SovereignAuditLog(data_dir=data_dir1, deterministic_mode=True, enable_notarization=False, enable_external_anchoring=False)
 
             base_time = datetime(2025, 1, 15, 12, 0, 0, tzinfo=UTC)
 
@@ -508,7 +512,7 @@ class TestVector7_ReplayDeterminism:
         # Run 2: Second execution with same scenario
         with tempfile.TemporaryDirectory() as tmpdir2:
             data_dir2 = Path(tmpdir2) / "audit_data"
-            audit2 = SovereignAuditLog(data_dir=data_dir2, deterministic_mode=True)
+            audit2 = SovereignAuditLog(data_dir=data_dir2, deterministic_mode=True, enable_notarization=False, enable_external_anchoring=False)
 
             # Re-run exact same scenario
             for i in range(5):
@@ -576,7 +580,7 @@ class TestVector9_ConcurrentRaceCondition:
         """Test that concurrent logging produces no duplicate event IDs."""
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit.merkle_anchor.batch_size = 50  # Small batch for testing
 
             # Spawn multiple threads

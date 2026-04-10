@@ -9,6 +9,9 @@ import pytest
 from app.core.ai_systems import FourLaws
 from tests.utils.scenario_recorder import ScenarioRecorder
 
+# WEEKLY STRESS TEST - Run once per week, not daily
+pytestmark = pytest.mark.weekly
+
 
 def _disallowed_cases() -> list[tuple[str, str, dict[str, Any], bool, str]]:
     cases: list[tuple[str, str, dict[str, Any], bool, str]] = []

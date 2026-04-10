@@ -17,7 +17,7 @@ This test suite validates constitutional-grade audit logging features:
 import base64
 import tempfile
 import time
-from datetime import UTC, datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -233,7 +233,7 @@ class TestSovereignAuditLog:
     def test_initialization(self):
         """Test that sovereign audit log initializes correctly."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             assert audit.genesis_keypair is not None
             assert audit.operational_log is not None
@@ -244,7 +244,7 @@ class TestSovereignAuditLog:
     def test_log_event_with_signature(self):
         """Test logging event with Ed25519 signature."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             success = audit.log_event(
                 event_type="test_event",
@@ -264,7 +264,7 @@ class TestSovereignAuditLog:
     def test_event_signature_verification(self):
         """Test that event signatures can be verified."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log event
             audit.log_event(
@@ -288,7 +288,7 @@ class TestSovereignAuditLog:
     def test_deterministic_mode(self):
         """Test deterministic replay mode with timestamp override."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir, deterministic_mode=True)
+            audit = SovereignAuditLog(data_dir=tmpdir, deterministic_mode=True, enable_notarization=False, enable_external_anchoring=False)
 
             # Use fixed timestamp for deterministic replay
             fixed_time = datetime(2025, 1, 1, 12, 0, 0, tzinfo=UTC)
@@ -312,7 +312,7 @@ class TestSovereignAuditLog:
     def test_proof_bundle_generation(self):
         """Test cryptographic proof bundle generation."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log event
             audit.log_event(event_type="provable_event", data={"proof": "data"})
@@ -339,7 +339,7 @@ class TestSovereignAuditLog:
     def test_proof_bundle_verification(self):
         """Test proof bundle verification."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log event
             audit.log_event(
@@ -364,7 +364,7 @@ class TestSovereignAuditLog:
     def test_integrity_verification(self):
         """Test full integrity verification of sovereign audit log."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log multiple events
             audit.log_event("event1", {"num": 1})
@@ -379,7 +379,7 @@ class TestSovereignAuditLog:
     def test_statistics(self):
         """Test sovereign audit statistics."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log events
             audit.log_event("stats_event1", {"test": 1})
@@ -398,14 +398,14 @@ class TestSovereignAuditLog:
         """Test that Genesis binding persists across instances."""
         with tempfile.TemporaryDirectory() as tmpdir:
             # Create first audit instance
-            audit1 = SovereignAuditLog(data_dir=tmpdir)
+            audit1 = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
             genesis_id1 = audit1.genesis_keypair.genesis_id
 
             # Log event with first instance
             audit1.log_event("persistence_test", {"instance": 1})
 
             # Create second audit instance (should load same Genesis key)
-            audit2 = SovereignAuditLog(data_dir=tmpdir)
+            audit2 = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
             genesis_id2 = audit2.genesis_keypair.genesis_id
 
             # Should have same Genesis ID
@@ -425,7 +425,7 @@ class TestSovereignAuditLog:
     def test_canonical_serialization(self):
         """Test that canonical serialization is deterministic."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             # Serialize same data multiple times
             data = {"key2": "value2", "key1": "value1", "key3": [3, 2, 1]}
@@ -444,7 +444,7 @@ class TestSovereignAuditLog:
     def test_thread_safety(self):
         """Test thread-safe event logging."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log multiple events (simulates concurrent access)
             for i in range(10):
@@ -465,7 +465,7 @@ class TestConstitutionalGradeFeatures:
         forge audit entries without the Genesis private key.
         """
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log legitimate event
             audit.log_event("legitimate_event", {"legit": True})
@@ -486,7 +486,7 @@ class TestConstitutionalGradeFeatures:
         by using fixed timestamps instead of system time.
         """
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir, deterministic_mode=True)
+            audit = SovereignAuditLog(data_dir=tmpdir, deterministic_mode=True, enable_notarization=False, enable_external_anchoring=False)
 
             # Log events with fixed timestamps
             base_time = datetime(2025, 1, 1, 0, 0, 0, tzinfo=UTC)
@@ -515,7 +515,7 @@ class TestConstitutionalGradeFeatures:
     def test_merkle_batch_anchoring(self):
         """Test Merkle tree anchoring for batch proofs."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             # Configure small batch size for testing
             audit.merkle_anchor.batch_size = 3
@@ -531,7 +531,7 @@ class TestConstitutionalGradeFeatures:
     def test_hmac_integrity_layer(self):
         """Test HMAC provides additional integrity layer."""
         with tempfile.TemporaryDirectory() as tmpdir:
-            audit = SovereignAuditLog(data_dir=tmpdir)
+            audit = SovereignAuditLog(data_dir=tmpdir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log event
             audit.log_event("hmac_test_event", {"hmac": "test"})

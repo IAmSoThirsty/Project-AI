@@ -147,7 +147,7 @@ def test_deterministic_replay():
     """Test deterministic replay mode."""
     print("\nTesting Deterministic Replay...")
 
-    from datetime import UTC, datetime, timedelta
+    from datetime import timezone, datetime, timedelta
 
     with tempfile.TemporaryDirectory() as tmpdir:
         audit = SovereignAuditLog(data_dir=tmpdir, deterministic_mode=True)

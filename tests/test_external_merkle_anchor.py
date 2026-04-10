@@ -14,7 +14,7 @@ This test suite validates external Merkle root storage for constitutional sovere
 
 import json
 import tempfile
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from unittest.mock import MagicMock, Mock, patch
 
@@ -59,7 +59,7 @@ class TestExternalMerkleAnchor:
             batch_info = {
                 "anchor_id": "test_anchor_1",
                 "batch_size": 1000,
-                "created_at": datetime.now(UTC).isoformat(),
+                "created_at": datetime.now(timezone.utc).isoformat(),
             }
 
             results = anchor.pin_merkle_root(
