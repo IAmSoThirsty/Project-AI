@@ -17,7 +17,7 @@ import logging
 import time
 from collections import OrderedDict
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -48,7 +48,7 @@ class SecurityContext:
     audit_span_id: str | None = None
     replay_token: str | None = None
     # UTC-aware timestamp for constitutional alignment
-    timestamp: float = field(default_factory=lambda: datetime.now(datetime.UTC).timestamp())
+    timestamp: float = field(default_factory=lambda: datetime.now(timezone.utc).timestamp())
     metadata: dict[str, Any] = field(default_factory=dict)
     dimensions: dict[str, float] = field(default_factory=dict)
 

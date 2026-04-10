@@ -10,10 +10,10 @@ Implements tiered pricing for government tier:
 """
 
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import Enum
 
 
-class GovernmentBillingCycle(StrEnum):
+class GovernmentBillingCycle(str, Enum):
     """Government billing cycle options"""
 
     MONTHLY = "monthly"

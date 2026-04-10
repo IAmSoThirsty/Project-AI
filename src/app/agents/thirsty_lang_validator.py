@@ -15,7 +15,7 @@ import logging
 import os
 import shutil
 import subprocess  # nosec B404 - subprocess usage for trusted Node.js testing tools only
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
@@ -66,7 +66,7 @@ class ThirstyLangValidator(KernelRoutedAgent):
         )
 
         report = {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "validation_type": "T-A-R-L_capabilities",
             "tests": {
                 "basic_language": self._test_basic_language(),

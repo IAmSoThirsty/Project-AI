@@ -21,7 +21,7 @@ import json
 import sqlite3
 import time
 from dataclasses import dataclass, field
-from enum import StrEnum
+from enum import Enum
 from pathlib import Path
 
 try:
@@ -39,7 +39,7 @@ except ImportError:
     CRYPTO_AVAILABLE = False
 
 
-class TierLevel(StrEnum):
+class TierLevel(str, Enum):
     """User tier levels"""
 
     SOLO = "solo"
@@ -47,7 +47,7 @@ class TierLevel(StrEnum):
     GOVERNMENT = "government"
 
 
-class SubscriptionPlan(StrEnum):
+class SubscriptionPlan(str, Enum):
     """Subscription plan types for Company and Government tiers"""
 
     # Company plans
@@ -65,7 +65,7 @@ class SubscriptionPlan(StrEnum):
     SOLO_LIFETIME = "solo_lifetime"
 
 
-class AcceptanceType(StrEnum):
+class AcceptanceType(str, Enum):
     """Types of acceptance records"""
 
     INITIAL_MSA = "initial_msa"
@@ -77,7 +77,7 @@ class AcceptanceType(StrEnum):
     AUDIT_LOCK = "audit_lock"
 
 
-class SigningMethod(StrEnum):
+class SigningMethod(str, Enum):
     """Cryptographic signing methods"""
 
     SOFTWARE_ED25519 = "software_ed25519"

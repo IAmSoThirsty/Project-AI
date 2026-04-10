@@ -20,7 +20,7 @@ import json
 import logging
 import os
 import re
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any, cast
 
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
@@ -423,7 +423,7 @@ Strategic defensive protection active
                 "strategy": strategy,
                 "protection_level": level,
                 "backup": backup,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "tarl_mode": self.tarl_mode,
                 "enhancement_factor": self._get_protection_multiplier(level),
             }

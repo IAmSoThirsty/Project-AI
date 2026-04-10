@@ -13,7 +13,7 @@ import json
 import logging
 import threading
 import time
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -140,7 +140,7 @@ class JSONAuditLog:
 
                 # Create structured event
                 event = {
-                    "timestamp": datetime.now(UTC).isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "event_type": event_type,
                     "actor": actor,
                     "action": action or event_type,
