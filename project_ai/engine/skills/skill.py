@@ -13,7 +13,7 @@ Design Principle:
    its ability to pull it off."
 """
 
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 

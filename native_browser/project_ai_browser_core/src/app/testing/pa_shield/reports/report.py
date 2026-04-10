@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 
@@ -26,7 +26,7 @@ def build_run_report(
     audit_ok, audit_errors = AuditVerifier.verify_chain(audit_log)
     return {
         "metadata": {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "benchmark": "PA-SHIELD",
             "system": system_name,
             "version": system_version,

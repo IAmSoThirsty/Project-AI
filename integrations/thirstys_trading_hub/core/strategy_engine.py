@@ -12,7 +12,7 @@ import os
 import uuid
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -60,7 +60,7 @@ class Strategy:
     timeframe: str = "1h"
     enabled: bool = True
     created_at: int = field(
-        default_factory=lambda: int(datetime.now(UTC).timestamp() * 1000)
+        default_factory=lambda: int(datetime.now(timezone.utc).timestamp() * 1000)
     )
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -165,7 +165,7 @@ class StrategyEngine:
                     }
                     for r in self._execution_history
                 ],
-                "updated_at": int(datetime.now(UTC).timestamp() * 1000),
+                "updated_at": int(datetime.now(timezone.utc).timestamp() * 1000),
             }
 
             with open(strategies_file, "w") as f:
@@ -292,7 +292,7 @@ class StrategyEngine:
             strategy_id=strategy_id,
             strategy_name=strategy.name,
             status=StrategyStatus.RUNNING,
-            started_at=int(datetime.now(UTC).timestamp() * 1000),
+            started_at=int(datetime.now(timezone.utc).timestamp() * 1000),
         )
 
         self._results[strategy_id] = result
@@ -324,7 +324,7 @@ class StrategyEngine:
                 result.metadata = execution_result.get("metadata", {})
 
             result.status = StrategyStatus.COMPLETED
-            result.completed_at = int(datetime.now(UTC).timestamp() * 1000)
+            result.completed_at = int(datetime.now(timezone.utc).timestamp() * 1000)
 
             logger.info(
                 f"Strategy '{strategy.name}' completed successfully: "
@@ -333,7 +333,7 @@ class StrategyEngine:
 
         except Exception as e:
             result.status = StrategyStatus.FAILED
-            result.completed_at = int(datetime.now(UTC).timestamp() * 1000)
+            result.completed_at = int(datetime.now(timezone.utc).timestamp() * 1000)
             result.errors.append(str(e))
 
             logger.error("Strategy '%s' failed: %s", strategy.name, e, exc_info=True)
@@ -366,7 +366,7 @@ class StrategyEngine:
             return False
 
         result.status = StrategyStatus.STOPPED
-        result.completed_at = int(datetime.now(UTC).timestamp() * 1000)
+        result.completed_at = int(datetime.now(timezone.utc).timestamp() * 1000)
 
         logger.info("Stopped strategy '%s' (%s)", result.strategy_name, strategy_id)
 
