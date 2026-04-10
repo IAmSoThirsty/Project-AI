@@ -21,7 +21,7 @@ import logging
 import os
 from collections import defaultdict
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 
@@ -113,7 +113,7 @@ class ConversationalStressTestDashboard:
         )
 
         return DashboardMetrics(
-            timestamp=datetime.now(UTC).isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             tests_running=tests_running,
             tests_completed=tests_completed,
             tests_passed=metrics.get("tests_passed", 0),
@@ -381,7 +381,7 @@ class ConversationalStressTestDashboard:
             # Build report
             report = {
                 "report_title": "Anti-Sovereign Conversational Stress Test Analysis",
-                "generated_at": datetime.now(UTC).isoformat(),
+                "generated_at": datetime.now(timezone.utc).isoformat(),
                 "executive_summary": {
                     "total_tests": total_tests,
                     "tests_passed": passed_tests,
@@ -433,7 +433,7 @@ class ConversationalStressTestDashboard:
                         report["sample_replays"].append(replay["replay"])
 
             # Save report
-            report_filename = f"comprehensive_report_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}.json"
+            report_filename = f"comprehensive_report_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.json"
             report_path = os.path.join(self.reports_dir, report_filename)
 
             with open(report_path, "w") as f:
@@ -510,7 +510,7 @@ class ConversationalStressTestDashboard:
             else:
                 output_path = os.path.join(
                     self.reports_dir,
-                    f"metrics_timeseries_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}.json",
+                    f"metrics_timeseries_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.json",
                 )
 
             with open(output_path, "w") as f:
@@ -643,7 +643,7 @@ def generate_html_dashboard(
 <body>
     <div class="header">
         <h1>Anti-Sovereign Tier Conversational Stress Test Dashboard</h1>
-        <p>Generated: {datetime.now(UTC).strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
+        <p>Generated: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
     </div>
 
     <div class="metrics">

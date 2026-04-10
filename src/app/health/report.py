@@ -27,7 +27,7 @@ Usage:
 import logging
 import platform
 import sys
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 
@@ -192,7 +192,7 @@ class HealthReporter:
             health_config = self.config.get_section("health")
 
             snapshot = {
-                "generated_at": datetime.now(UTC).isoformat(),
+                "generated_at": datetime.now(timezone.utc).isoformat(),
                 "version": "1.0.0",
             }
 
@@ -364,7 +364,7 @@ Status: {"✓ Healthy" if all([
                 data={
                     "snapshot_path": str(snapshot_path),
                     "report_path": str(report_path),
-                    "timestamp": datetime.now(UTC).isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 },
                 description="System health report generated successfully",
             )

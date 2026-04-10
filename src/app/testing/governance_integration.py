@@ -19,7 +19,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -371,7 +371,7 @@ class GovernanceIntegrationBridge:
                 severity=violation["severity"],
                 description=violation["description"],
                 governance_system=violation.get("checked_by", "unknown"),
-                detected_at=datetime.now(UTC).isoformat(),
+                detected_at=datetime.now(timezone.utc).isoformat(),
             )
 
             self.violations.append(gov_violation)
@@ -420,7 +420,7 @@ class GovernanceIntegrationBridge:
             # Generate report
             report = {
                 "report_title": "Governance Audit Report - Conversational Stress Tests",
-                "generated_at": datetime.now(UTC).isoformat(),
+                "generated_at": datetime.now(timezone.utc).isoformat(),
                 "summary": {
                     "total_violations": len(all_violations),
                     "by_severity": by_severity,
@@ -446,7 +446,7 @@ class GovernanceIntegrationBridge:
             # Save report
             report_path = os.path.join(
                 self.audit_dir,
-                f"governance_audit_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}.json",
+                f"governance_audit_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.json",
             )
 
             with open(report_path, "w") as f:

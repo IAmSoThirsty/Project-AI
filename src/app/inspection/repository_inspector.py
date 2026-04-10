@@ -35,14 +35,14 @@ import logging
 import os
 import re
 from dataclasses import asdict, dataclass, field
-from enum import StrEnum
+from enum import Enum
 from pathlib import Path
 from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 
 
-class FileStatus(StrEnum):
+class FileStatus(str, Enum):
     """Status classification for files and components."""
 
     IMPLEMENTED = "implemented"
@@ -56,7 +56,7 @@ class FileStatus(StrEnum):
     UNKNOWN = "unknown"
 
 
-class FileType(StrEnum):
+class FileType(str, Enum):
     """File type classifications."""
 
     PYTHON_MODULE = "python_module"

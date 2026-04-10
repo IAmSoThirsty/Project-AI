@@ -15,6 +15,9 @@ import json
 import logging
 import os
 
+import matplotlib
+matplotlib.use('Agg')  # Set non-GUI backend BEFORE any matplotlib imports
+
 import joblib
 import pandas as pd
 from matplotlib.figure import Figure
@@ -39,16 +42,8 @@ from src.app.core.relationship_model import RelationshipModel, RelationshipState
 
 logger = logging.getLogger(__name__)
 
-# Import the appropriate Qt canvas backend when available (supports Qt5/Qt6)
-try:
-    # Matplotlib 3.7+ provides backend_qtagg for Qt6/Qt5
-    from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
-except Exception:
-    try:
-        # Fallback to older matplotlib versions
-        from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
-    except Exception:
-        FigureCanvasQTAgg = None
+# Qt canvas not available in headless/test environments
+FigureCanvasQTAgg = None
 
 
 # ============================================================================

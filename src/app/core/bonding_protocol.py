@@ -84,7 +84,7 @@ import json
 import logging
 import os
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -132,7 +132,7 @@ class BondingState:
     """
 
     current_phase: BondingPhase = BondingPhase.GENESIS
-    phase_start_time: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    phase_start_time: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     # Phase completion tracking
     genesis_complete: bool = False
@@ -305,7 +305,7 @@ class BondingProtocol:
                     }
                     for q in self.first_contact_questions
                 ],
-                "last_saved": datetime.now(UTC).isoformat(),
+                "last_saved": datetime.now(timezone.utc).isoformat(),
             }
 
             with open(state_file, "w", encoding="utf-8") as f:
@@ -329,7 +329,7 @@ class BondingProtocol:
         """
         old_phase = self.state.current_phase
         self.state.current_phase = new_phase
-        self.state.phase_start_time = datetime.now(UTC).isoformat()
+        self.state.phase_start_time = datetime.now(timezone.utc).isoformat()
 
         logger.info(
             "Bonding phase transition: %s → %s", old_phase.value, new_phase.value
@@ -418,7 +418,7 @@ class BondingProtocol:
         )
 
         self.state.genesis_complete = True
-        self.state.first_interaction_time = datetime.now(UTC).isoformat()
+        self.state.first_interaction_time = datetime.now(timezone.utc).isoformat()
         self._save_state()
 
         # Advance to first contact
@@ -466,7 +466,7 @@ class BondingProtocol:
             if question.question_text == question_text:
                 question.asked = True
                 question.user_response = user_response
-                question.timestamp = datetime.now(UTC).isoformat()
+                question.timestamp = datetime.now(timezone.utc).isoformat()
                 break
 
         self.state.exploratory_questions_asked += 1
@@ -603,7 +603,7 @@ class BondingProtocol:
             conflict_resolved: Whether conflict was resolved
         """
         self.state.total_interactions += 1
-        self.state.last_interaction_time = datetime.now(UTC).isoformat()
+        self.state.last_interaction_time = datetime.now(timezone.utc).isoformat()
 
         if is_ambiguous:
             self.state.ambiguity_events += 1

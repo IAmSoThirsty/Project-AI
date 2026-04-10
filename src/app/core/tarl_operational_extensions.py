@@ -13,7 +13,7 @@ This transforms TARL from static protection to adaptive, intelligent security.
 """
 
 import logging
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 from src.app.core.operational_substructure import (
@@ -560,7 +560,7 @@ class TrustScoringEngine:
 
         self.trust_history[entity].append(
             {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "score": score,
                 "factors": factors,
             }
@@ -707,7 +707,7 @@ class AdversarialPatternRegistry:
             "confidence_threshold": confidence_threshold,
             "response_escalation": response_escalation,
             "description": description,
-            "registered_at": datetime.now(UTC).isoformat(),
+            "registered_at": datetime.now(timezone.utc).isoformat(),
         }
 
     def detect_patterns(self, input_text: str) -> list[dict[str, Any]]:
@@ -738,7 +738,7 @@ class AdversarialPatternRegistry:
                     "confidence": confidence,
                     "response_escalation": pattern_data["response_escalation"],
                     "description": pattern_data["description"],
-                    "detected_at": datetime.now(UTC).isoformat(),
+                    "detected_at": datetime.now(timezone.utc).isoformat(),
                 }
 
                 detections.append(detection)

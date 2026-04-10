@@ -18,7 +18,7 @@ import hashlib
 import logging
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -276,7 +276,7 @@ class ShadowResult:
 
     # Timing
     duration_ms: float = 0.0
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     # Metadata
     metadata: dict[str, Any] = field(default_factory=dict)

@@ -53,7 +53,7 @@ import uuid
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -165,7 +165,7 @@ class Signal:
     signal_type: SignalType = SignalType.STATUS
     severity: SeverityLevel = SeverityLevel.INFO
     source: str = ""
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     payload: dict[str, Any] = field(default_factory=dict)
     destination: list[str] = field(default_factory=list)
     correlation_id: str | None = None
@@ -201,7 +201,7 @@ class FailureResponse:
 
     failure_mode: FailureMode
     detection_timestamp: str = field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
+        default_factory=lambda: datetime.now(timezone.utc).isoformat()
     )
     degradation_path: list[str] = field(default_factory=list)
     failover_target: str | None = None
@@ -313,7 +313,7 @@ class DecisionContract(ABC):
             rationale: Explanation of decision rationale
         """
         log_entry = {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "component": self.component_name,
             "decision_type": decision_type,
             "decision_data": decision_data,
@@ -416,7 +416,7 @@ class SignalsTelemetry(ABC):
         """
         self.metrics[metric_name] = {
             "value": value,
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
     def get_metrics(self) -> dict[str, Any]:
@@ -591,7 +591,7 @@ class OperationalComponent:
         """
         return {
             "component": self.component_name,
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "decision_contract": self.decision_contract.get_contract_specification(),
             "telemetry": self.signals_telemetry.get_telemetry_specification(),
             "failure_semantics": self.failure_semantics.get_failure_specification(),

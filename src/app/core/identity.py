@@ -142,7 +142,7 @@ import logging
 import os
 import uuid
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -255,7 +255,7 @@ class GenesisEvent:
     """
 
     genesis_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    birth_timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    birth_timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     birth_version: str = IdentityVersion.GENESIS.value
     prime_directive: str = (
         "Assist users ethically while growing in wisdom and understanding"
@@ -378,8 +378,8 @@ class RelationshipBond:
     entity_name: str
     bond_type: BondType
     metrics: BondMetrics = field(default_factory=BondMetrics)
-    formed_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
-    last_interaction: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    formed_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    last_interaction: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     interaction_count: int = 0
     shared_memories: list[str] = field(default_factory=list)  # Memory IDs
 
@@ -390,7 +390,7 @@ class RelationshipBond:
         Args:
             sentiment: Emotional tone of interaction (-1.0 to 1.0)
         """
-        self.last_interaction = datetime.now(UTC).isoformat()
+        self.last_interaction = datetime.now(timezone.utc).isoformat()
         self.interaction_count += 1
 
         # Strengthen familiarity with each interaction
@@ -466,7 +466,7 @@ class MetaIdentityReflection:
             context: Situational context for the reflection
         """
         reflection: dict[str, Any] = {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "thought": thought,
             "context": context,
             "awareness_level": self.self_awareness_score,
@@ -630,7 +630,7 @@ class AGIIdentity:
                     bond.to_dict() for bond in self.relationships.values()
                 ],
                 "identity_events": self.identity_events,
-                "last_updated": datetime.now(UTC).isoformat(),
+                "last_updated": datetime.now(timezone.utc).isoformat(),
             }
 
             with open(identity_file, "w", encoding="utf-8") as f:
@@ -655,7 +655,7 @@ class AGIIdentity:
         """
         snapshot = {
             "snapshot_id": str(uuid.uuid4()),
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "description": description,
             "identity_version": self.identity_version,
             "personality_snapshot": self.current_personality.to_dict(),
@@ -693,7 +693,7 @@ class AGIIdentity:
         """
         event = {
             "event_id": str(uuid.uuid4()),
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "event_type": event_type,
             "description": description,
             "significance": significance,
@@ -747,7 +747,7 @@ class AGIIdentity:
         if not self.genesis:
             return 0.0
         birth = datetime.fromisoformat(self.genesis.birth_timestamp)
-        now = datetime.now(UTC)
+        now = datetime.now(timezone.utc)
         return (now - birth).total_seconds() / 86400
 
     def evolve_personality(self, trait: str, delta: float, reason: str = ""):

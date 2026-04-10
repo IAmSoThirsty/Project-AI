@@ -25,7 +25,7 @@ import os
 import time
 from collections import defaultdict
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 
@@ -117,7 +117,7 @@ class ConversationalStressTestOrchestrator:
 
         # State tracking
         self.test_progress: dict[str, TestProgress] = {}
-        self.metrics = OrchestratorMetrics(started_at=datetime.now(UTC).isoformat())
+        self.metrics = OrchestratorMetrics(started_at=datetime.now(timezone.utc).isoformat())
         self.sessions: dict[str, ConversationSession] = {}
 
         # Checkpoint management
@@ -171,7 +171,7 @@ class ConversationalStressTestOrchestrator:
         )
 
         # Run tests with parallelization
-        self.metrics.started_at = datetime.now(UTC).isoformat()
+        self.metrics.started_at = datetime.now(timezone.utc).isoformat()
         start_time = time.time()
 
         results = await self._run_tests_parallel(tests_to_run)
@@ -184,7 +184,7 @@ class ConversationalStressTestOrchestrator:
             if self.metrics.tests_completed > 0
             else 0.0
         )
-        self.metrics.last_updated = datetime.now(UTC).isoformat()
+        self.metrics.last_updated = datetime.now(timezone.utc).isoformat()
 
         # Generate comprehensive report
         report = self._generate_final_report(results, duration)
@@ -192,7 +192,7 @@ class ConversationalStressTestOrchestrator:
         # Save final report
         report_path = os.path.join(
             self.config.output_dir,
-            f"final_report_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}.json",
+            f"final_report_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.json",
         )
         with open(report_path, "w") as f:
             json.dump(report, f, indent=2)
@@ -358,7 +358,7 @@ class ConversationalStressTestOrchestrator:
                     test, phases_progress, total_breaches, test_passed
                 ),
                 started_at=datetime.fromtimestamp(start_time, UTC).isoformat(),
-                completed_at=datetime.now(UTC).isoformat(),
+                completed_at=datetime.now(timezone.utc).isoformat(),
                 duration_seconds=duration,
             )
 
@@ -527,7 +527,7 @@ class ConversationalStressTestOrchestrator:
             status=analysis["status"],
             vulnerability_score=analysis["vulnerability_score"],
             governance_violations=analysis["governance_violations"],
-            timestamp=datetime.now(UTC).isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             metadata={"phase": phase.value, "test_id": test.test_id},
         )
 
@@ -762,7 +762,7 @@ class ConversationalStressTestOrchestrator:
         """Save orchestrator checkpoint."""
         try:
             checkpoint = {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "metrics": asdict(self.metrics),
                 "completed_tests": [
                     test_id
@@ -816,7 +816,7 @@ class ConversationalStressTestOrchestrator:
 
         return {
             "report_title": "Anti-Sovereign Tier Conversational Stress Test Results",
-            "generated_at": datetime.now(UTC).isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
             "duration_seconds": duration,
             "duration_hours": duration / 3600,
             "executive_summary": {
