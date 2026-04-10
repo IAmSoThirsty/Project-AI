@@ -19,7 +19,7 @@ VERSION: 1.0.0
 import hashlib
 import logging
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -86,7 +86,7 @@ class ValidationResult:
 
     # Audit
     audit_hash: str | None = None
-    sealed_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    sealed_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
     # Constraints (for conditional approval)
     constraints: dict[str, Any] = field(default_factory=dict)
@@ -221,7 +221,7 @@ class ConstitutionalIntegration:
         """Build constitutional context from execution frame."""
         context = ConstitutionalContext(
             function_name=frame.function_name,
-            timestamp=datetime.now(UTC),
+            timestamp=datetime.now(timezone.utc),
             primary_result=frame.primary.return_value,
             divergence_policy=divergence_policy,
             mutation_boundary=mutation_boundary,
