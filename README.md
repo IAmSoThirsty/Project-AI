@@ -49,6 +49,21 @@ Project-AI/
 
 ---
 
+## Research Publications
+
+This project is supported by **14 peer-reviewed publications** archived on Zenodo with permanent DOIs. For full citations and references, see [CITATIONS.md](CITATIONS.md).
+
+**Key Publications:**
+- [OctoReflex](https://doi.org/10.5281/zenodo.18726064) - Distributed threat detection
+- [The Sovereign Covenant](https://doi.org/10.5281/zenodo.18726221) - Governance framework  
+- [TSCG](https://doi.org/10.5281/zenodo.18794292) - Symbolic compression grammar
+- [Asymmetric Security](https://doi.org/10.5281/zenodo.19162019) - Security architecture
+- [Genesis MicroServices](https://doi.org/10.5281/zenodo.19481152) - Service generation
+
+**[View All 14 Publications →](CITATIONS.md)**
+
+---
+
 ## Current State (Honest Assessment)
 
 ### ✅ What Works
