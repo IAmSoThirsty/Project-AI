@@ -7,7 +7,7 @@ Enforcing sovereignty through social connection.
 
 from typing import Any
 from uuid import UUID, uuid4
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 
 from pydantic import BaseModel, Field
 from .models import Item, ItemCreate
@@ -57,7 +57,7 @@ class LonelinessService:
         profile = {
             "user_id": user_id,
             "interests": interests,
-            "timestamp": datetime.now(UTC),
+            "timestamp": datetime.now(timezone.utc),
             "profile_vector": self._calculate_vector(interests),
         }
         DOMAIN_EVENTS.labels(event_type="interest_profile_built").inc()
@@ -104,6 +104,6 @@ class LonelinessService:
         return item
 
     async def create_item(self, item_data: ItemCreate) -> Item:
-        now = datetime.now(UTC)
+        now = datetime.now(timezone.utc)
         item = Item(**item_data.model_dump(), created_at=now, updated_at=now)
         return await self.repository.create(item)
