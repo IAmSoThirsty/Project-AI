@@ -23,7 +23,7 @@ import json
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from enum import StrEnum
+from enum import Enum
 from pathlib import Path
 from typing import Any
 
@@ -32,7 +32,7 @@ from cryptography.hazmat.primitives.asymmetric import ed25519
 logger = logging.getLogger(__name__)
 
 
-class InvariantType(StrEnum):
+class InvariantType(str, Enum):
     """Types of constitutional invariants"""
 
     ASIMOV_LAWS = "asimov_laws"  # Four Laws compliance
@@ -43,7 +43,7 @@ class InvariantType(StrEnum):
     HUMAN_OVERSIGHT = "human_oversight"  # Human-in-the-loop requirement
 
 
-class ViolationSeverity(StrEnum):
+class ViolationSeverity(str, Enum):
     """Severity levels for invariant violations"""
 
     INFO = "info"

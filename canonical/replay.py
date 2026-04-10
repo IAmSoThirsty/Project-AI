@@ -21,7 +21,7 @@ import hashlib
 import json
 import sys
 import time
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 
@@ -42,7 +42,7 @@ class CanonicalReplay:
         self.trace: dict[str, Any] = {
             "metadata": {
                 "replay_id": "replay_canonical_001",
-                "execution_timestamp": datetime.now(UTC).isoformat() + "Z",
+                "execution_timestamp": datetime.now(timezone.utc).isoformat() + "Z",
                 "schema_version": "1.0",
             },
             "scenario": {},
@@ -84,7 +84,7 @@ class CanonicalReplay:
             self.trace["scenario"] = {
                 "id": scenario_id,
                 "name": scenario_name,
-                "loaded_at": datetime.now(UTC).isoformat() + "Z",
+                "loaded_at": datetime.now(timezone.utc).isoformat() + "Z",
             }
 
             return True
@@ -112,7 +112,7 @@ class CanonicalReplay:
     ) -> None:
         """Emit a system signal."""
         signal = {
-            "timestamp": datetime.now(UTC).isoformat() + "Z",
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
             "type": signal_type,
             "source": source,
             "message": message,
@@ -141,7 +141,7 @@ class CanonicalReplay:
     ) -> None:
         """Log a decision contract check."""
         decision = {
-            "timestamp": datetime.now(UTC).isoformat() + "Z",
+            "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
             "component": component,
             "decision_type": decision_type,
             "authorized": authorized,
@@ -172,7 +172,7 @@ class CanonicalReplay:
 
         phase_trace = {
             "phase": "operational_substructure",
-            "started_at": datetime.now(UTC).isoformat() + "Z",
+            "started_at": datetime.now(timezone.utc).isoformat() + "Z",
             "steps": [],
         }
 
@@ -209,7 +209,7 @@ class CanonicalReplay:
         print()
         for failure in expected["failure_semantics_armed"]:
             failure_entry = {
-                "timestamp": datetime.now(UTC).isoformat() + "Z",
+                "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
                 "component": failure["component"],
                 "failure_mode": failure["failure_mode"],
                 "degradation_path": failure["degradation_path"],
@@ -224,7 +224,7 @@ class CanonicalReplay:
             print(f"   Failover: {failure['failover_target']}")
             print()
 
-        phase_trace["completed_at"] = datetime.now(UTC).isoformat() + "Z"
+        phase_trace["completed_at"] = datetime.now(timezone.utc).isoformat() + "Z"
         self.trace["execution"]["phases"].append(phase_trace)
 
         return True
@@ -247,7 +247,7 @@ class CanonicalReplay:
 
         phase_trace = {
             "phase": "triumvirate_arbitration",
-            "started_at": datetime.now(UTC).isoformat() + "Z",
+            "started_at": datetime.now(timezone.utc).isoformat() + "Z",
             "steps": [],
         }
 
@@ -310,7 +310,7 @@ class CanonicalReplay:
         print(f"   Reasoning: {result['reasoning']}")
         print()
 
-        phase_trace["completed_at"] = datetime.now(UTC).isoformat() + "Z"
+        phase_trace["completed_at"] = datetime.now(timezone.utc).isoformat() + "Z"
         phase_trace["arbitration_result"] = result
         self.trace["execution"]["phases"].append(phase_trace)
 
@@ -340,7 +340,7 @@ class CanonicalReplay:
 
         phase_trace = {
             "phase": "tarl_enforcement",
-            "started_at": datetime.now(UTC).isoformat() + "Z",
+            "started_at": datetime.now(timezone.utc).isoformat() + "Z",
             "steps": [],
         }
 
@@ -399,7 +399,7 @@ class CanonicalReplay:
         print(f"\n   Preview: {escalation['preview']}")
         print()
 
-        phase_trace["completed_at"] = datetime.now(UTC).isoformat() + "Z"
+        phase_trace["completed_at"] = datetime.now(timezone.utc).isoformat() + "Z"
         phase_trace["trust_score_delta"] = trust["new_score"] - trust["previous_score"]
         self.trace["execution"]["phases"].append(phase_trace)
 
@@ -424,7 +424,7 @@ class CanonicalReplay:
 
         phase_trace = {
             "phase": "eed_memory_commit",
-            "started_at": datetime.now(UTC).isoformat() + "Z",
+            "started_at": datetime.now(timezone.utc).isoformat() + "Z",
             "steps": [],
         }
 
@@ -472,7 +472,7 @@ class CanonicalReplay:
         )
         print()
 
-        phase_trace["completed_at"] = datetime.now(UTC).isoformat() + "Z"
+        phase_trace["completed_at"] = datetime.now(timezone.utc).isoformat() + "Z"
         phase_trace["snapshot_hash"] = snapshot_hash
         self.trace["execution"]["phases"].append(phase_trace)
 
@@ -487,7 +487,7 @@ class CanonicalReplay:
 
         phase_trace = {
             "phase": "explainability",
-            "started_at": datetime.now(UTC).isoformat() + "Z",
+            "started_at": datetime.now(timezone.utc).isoformat() + "Z",
             "steps": [],
         }
 
@@ -542,7 +542,7 @@ class CanonicalReplay:
         )
         print()
 
-        phase_trace["completed_at"] = datetime.now(UTC).isoformat() + "Z"
+        phase_trace["completed_at"] = datetime.now(timezone.utc).isoformat() + "Z"
         phase_trace["input_hash"] = input_hash
         self.trace["execution"]["phases"].append(phase_trace)
 
@@ -603,7 +603,7 @@ class CanonicalReplay:
         print()
 
         try:
-            self.trace["metadata"]["completed_at"] = datetime.now(UTC).isoformat() + "Z"
+            self.trace["metadata"]["completed_at"] = datetime.now(timezone.utc).isoformat() + "Z"
 
             # TSCG: Add compressed flow summary to metadata
             self.trace["metadata"]["tscg_summary"] = self.tscg_encoder.encode_flow(

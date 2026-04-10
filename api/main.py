@@ -9,7 +9,7 @@ import hashlib
 import json
 import os
 import time
-from enum import StrEnum
+from enum import Enum
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Request
@@ -148,20 +148,20 @@ app.router.lifespan_context = lifespan
 # ==========================================================
 
 
-class ActorType(StrEnum):
+class ActorType(str, Enum):
     human = "human"
     agent = "agent"
     system = "system"
 
 
-class ActionType(StrEnum):
+class ActionType(str, Enum):
     read = "read"
     write = "write"
     execute = "execute"
     mutate = "mutate"
 
 
-class Verdict(StrEnum):
+class Verdict(str, Enum):
     allow = "allow"
     deny = "deny"
     degrade = "degrade"

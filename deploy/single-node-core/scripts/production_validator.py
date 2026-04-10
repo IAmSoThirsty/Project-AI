@@ -26,7 +26,7 @@ import subprocess
 import sys
 import time
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -595,7 +595,7 @@ class ProductionValidator:
 
         # Create report
         report = ValidationReport(
-            timestamp=datetime.now(UTC).isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             version="1.0",
             checks=self.checks,
             summary=summary,

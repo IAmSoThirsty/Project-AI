@@ -24,7 +24,7 @@ import subprocess
 import sys
 import time
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -416,7 +416,7 @@ class ChaosRunner:
     def _monitor_experiment(self, experiment: ChaosExperiment) -> dict[str, Any]:
         """Monitor system during experiment and collect metrics."""
         metrics = {
-            "start_time": datetime.now(UTC).isoformat(),
+            "start_time": datetime.now(timezone.utc).isoformat(),
             "observations": [],
             "blast_radius_breached": False,
         }
@@ -428,7 +428,7 @@ class ChaosRunner:
             health = self._check_system_health()
 
             observation = {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "elapsed_seconds": int(time.time() - start_time),
                 "system_health": health,
             }
@@ -445,7 +445,7 @@ class ChaosRunner:
 
             time.sleep(5)  # Check every 5 seconds
 
-        metrics["end_time"] = datetime.now(UTC).isoformat()
+        metrics["end_time"] = datetime.now(timezone.utc).isoformat()
         return metrics
 
     def _evaluate_success_criteria(
@@ -499,7 +499,7 @@ class ChaosRunner:
 
         # Update status
         experiment.status = ExperimentStatus.RUNNING
-        experiment.started_at = datetime.now(UTC).isoformat()
+        experiment.started_at = datetime.now(timezone.utc).isoformat()
 
         try:
             # Pre-flight checks
@@ -531,7 +531,7 @@ class ChaosRunner:
             experiment.status = (
                 ExperimentStatus.COMPLETED if success else ExperimentStatus.FAILED
             )
-            experiment.completed_at = datetime.now(UTC).isoformat()
+            experiment.completed_at = datetime.now(timezone.utc).isoformat()
             experiment.results = {
                 "success": success,
                 "message": message,

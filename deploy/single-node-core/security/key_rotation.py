@@ -19,7 +19,7 @@ Features:
 import json
 import logging
 import time
-from datetime import UTC, datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO)
@@ -106,7 +106,7 @@ class KeyRotationManager:
     ) -> str:
         """Calculate next rotation date."""
         if from_date is None:
-            from_date = datetime.now(UTC)
+            from_date = datetime.now(timezone.utc)
 
         if schedule == KeyRotationSchedule.DAILY:
             next_rotation = from_date + timedelta(days=1)
@@ -146,7 +146,7 @@ class KeyRotationManager:
         # Check if rotation is due
         if not force:
             next_rotation = datetime.fromisoformat(config["next_rotation"])
-            now = datetime.now(UTC)
+            now = datetime.now(timezone.utc)
 
             if now < next_rotation:
                 logger.info(f"Rotation not due yet for {key_name}")
@@ -155,7 +155,7 @@ class KeyRotationManager:
 
         logger.info(f"Starting key rotation for {key_name}...")
 
-        start_time = datetime.now(UTC)
+        start_time = datetime.now(timezone.utc)
 
         try:
             # Execute key generation command
@@ -188,7 +188,7 @@ class KeyRotationManager:
                 "forced": force,
                 "status": "success",
                 "execution_time_seconds": (
-                    datetime.now(UTC) - start_time
+                    datetime.now(timezone.utc) - start_time
                 ).total_seconds(),
             }
 
@@ -232,7 +232,7 @@ class KeyRotationManager:
             return []
 
         all_config = json.loads(self.config_file.read_text())
-        now = datetime.now(UTC)
+        now = datetime.now(timezone.utc)
 
         needs_rotation = []
 
