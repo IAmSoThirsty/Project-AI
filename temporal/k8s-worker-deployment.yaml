@@ -1,0 +1,536 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: temporal-workers
+  labels:
+    name: temporal-workers
+    environment: production
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: temporal-worker-config
+  namespace: temporal-workers
+data:
+  TEMPORAL_ADDRESS: "temporal.sovereign-agent-orchestration.temporalcloud.io:7233"
+  TEMPORAL_NAMESPACE: "sovereign-agent-orchestration"
+  LOG_LEVEL: "info"
+  MAX_CONCURRENT_ACTIVITIES: "10"
+  MAX_CONCURRENT_WORKFLOW_TASKS: "1000"
+  WORKER_IDENTITY_PREFIX: "k8s-worker"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: general-purpose-workers
+  namespace: temporal-workers
+  labels:
+    app: temporal-worker
+    worker-type: general-purpose
+spec:
+  replicas: 500
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 10%
+  selector:
+    matchLabels:
+      app: temporal-worker
+      worker-type: general-purpose
+  template:
+    metadata:
+      labels:
+        app: temporal-worker
+        worker-type: general-purpose
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: temporal-worker
+      
+      # Anti-affinity: distribute pods across nodes and zones
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - temporal-worker
+              topologyKey: kubernetes.io/hostname
+          - weight: 50
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - temporal-worker
+              topologyKey: topology.kubernetes.io/zone
+      
+      containers:
+      - name: worker
+        image: sovereign-agents/temporal-worker:latest
+        imagePullPolicy: Always
+        
+        env:
+        - name: TEMPORAL_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: temporal-worker-config
+              key: TEMPORAL_ADDRESS
+        
+        - name: TEMPORAL_NAMESPACE
+          valueFrom:
+            configMapKeyRef:
+              name: temporal-worker-config
+              key: TEMPORAL_NAMESPACE
+        
+        - name: WORKER_TASK_QUEUE
+          value: "general-purpose-agents"
+        
+        - name: WORKER_IDENTITY
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        
+        # Resource limits
+        resources:
+          requests:
+            cpu: "2"
+            memory: "4Gi"
+          limits:
+            cpu: "4"
+            memory: "8Gi"
+        
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        
+        # Metrics port
+        ports:
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+        - name: health
+          containerPort: 8080
+          protocol: TCP
+        
+        # Graceful shutdown
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 60"]
+      
+      # Graceful termination
+      terminationGracePeriodSeconds: 90
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-inference-workers
+  namespace: temporal-workers
+  labels:
+    app: temporal-worker
+    worker-type: ml-inference
+spec:
+  replicas: 100
+  selector:
+    matchLabels:
+      app: temporal-worker
+      worker-type: ml-inference
+  template:
+    metadata:
+      labels:
+        app: temporal-worker
+        worker-type: ml-inference
+    spec:
+      serviceAccountName: temporal-worker
+      
+      containers:
+      - name: worker
+        image: sovereign-agents/temporal-worker-ml:latest
+        imagePullPolicy: Always
+        
+        env:
+        - name: TEMPORAL_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: temporal-worker-config
+              key: TEMPORAL_ADDRESS
+        
+        - name: TEMPORAL_NAMESPACE
+          valueFrom:
+            configMapKeyRef:
+              name: temporal-worker-config
+              key: TEMPORAL_NAMESPACE
+        
+        - name: WORKER_TASK_QUEUE
+          value: "ml-inference-agents"
+        
+        - name: WORKER_IDENTITY
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        
+        # GPU-specific resources
+        resources:
+          requests:
+            cpu: "4"
+            memory: "16Gi"
+            nvidia.com/gpu: "1"
+          limits:
+            cpu: "8"
+            memory: "32Gi"
+            nvidia.com/gpu: "1"
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 15
+        
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      
+      terminationGracePeriodSeconds: 120
+      
+      # Node selector for GPU nodes
+      nodeSelector:
+        workload-type: gpu
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-processing-workers
+  namespace: temporal-workers
+  labels:
+    app: temporal-worker
+    worker-type: data-processing
+spec:
+  replicas: 200
+  selector:
+    matchLabels:
+      app: temporal-worker
+      worker-type: data-processing
+  template:
+    metadata:
+      labels:
+        app: temporal-worker
+        worker-type: data-processing
+    spec:
+      serviceAccountName: temporal-worker
+      
+      containers:
+      - name: worker
+        image: sovereign-agents/temporal-worker-data:latest
+        imagePullPolicy: Always
+        
+        env:
+        - name: TEMPORAL_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: temporal-worker-config
+              key: TEMPORAL_ADDRESS
+        
+        - name: TEMPORAL_NAMESPACE
+          valueFrom:
+            configMapKeyRef:
+              name: temporal-worker-config
+              key: TEMPORAL_NAMESPACE
+        
+        - name: WORKER_TASK_QUEUE
+          value: "data-processing-agents"
+        
+        - name: WORKER_IDENTITY
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        
+        # High CPU/Memory for data processing
+        resources:
+          requests:
+            cpu: "8"
+            memory: "32Gi"
+          limits:
+            cpu: "16"
+            memory: "64Gi"
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 5
+      
+      terminationGracePeriodSeconds: 90
+      
+      # Node selector for compute-optimized nodes
+      nodeSelector:
+        workload-type: compute
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: general-purpose-workers-hpa
+  namespace: temporal-workers
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: general-purpose-workers
+  minReplicas: 50
+  maxReplicas: 5000
+  metrics:
+  # CPU-based scaling
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  
+  # Memory-based scaling
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 70
+  
+  # Custom metric: Temporal queue depth
+  - type: Pods
+    pods:
+      metric:
+        name: temporal_queue_depth
+      target:
+        type: AverageValue
+        averageValue: "100"
+  
+  # Scale-up/down behavior
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 120
+      - type: Pods
+        value: 100
+        periodSeconds: 120
+      selectPolicy: Max
+    
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 300
+      - type: Pods
+        value: 10
+        periodSeconds: 300
+      selectPolicy: Min
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ml-inference-workers-hpa
+  namespace: temporal-workers
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ml-inference-workers
+  minReplicas: 10
+  maxReplicas: 1000
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Pods
+    pods:
+      metric:
+        name: temporal_queue_depth
+      target:
+        type: AverageValue
+        averageValue: "50"
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: data-processing-workers-hpa
+  namespace: temporal-workers
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: data-processing-workers
+  minReplicas: 20
+  maxReplicas: 2000
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Pods
+    pods:
+      metric:
+        name: temporal_queue_depth
+      target:
+        type: AverageValue
+        averageValue: "100"
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: temporal-worker
+  namespace: temporal-workers
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: temporal-worker-role
+  namespace: temporal-workers
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: temporal-worker-rolebinding
+  namespace: temporal-workers
+subjects:
+- kind: ServiceAccount
+  name: temporal-worker
+  namespace: temporal-workers
+roleRef:
+  kind: Role
+  name: temporal-worker-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: general-purpose-workers-pdb
+  namespace: temporal-workers
+spec:
+  minAvailable: 80%
+  selector:
+    matchLabels:
+      app: temporal-worker
+      worker-type: general-purpose
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: ml-inference-workers-pdb
+  namespace: temporal-workers
+spec:
+  minAvailable: 70%
+  selector:
+    matchLabels:
+      app: temporal-worker
+      worker-type: ml-inference
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporal-worker-metrics
+  namespace: temporal-workers
+  labels:
+    app: temporal-worker
+spec:
+  type: ClusterIP
+  clusterIP: None  # Headless service for Prometheus scraping
+  ports:
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+    protocol: TCP
+  selector:
+    app: temporal-worker
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: temporal-worker-metrics
+  namespace: temporal-workers
+spec:
+  selector:
+    matchLabels:
+      app: temporal-worker
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics

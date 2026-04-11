@@ -1,0 +1,3 @@
+// Placeholder eBPF object file
+// In production, compile with: make -C bpf/
+// This file is embedded but will be empty until compilation

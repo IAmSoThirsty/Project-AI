@@ -1,0 +1,807 @@
+openapi: 3.0.3
+info:
+  title: Temporal Control Plane API
+  description: |
+    RESTful API for deploying, scaling, monitoring, and managing cloud infrastructure.
+    
+    ## Features
+    - **Deployment Management**: Deploy agents, workflows, and services
+    - **Scaling Controls**: Horizontal and vertical scaling with autoscaling policies
+    - **Monitoring**: Query metrics, logs, and distributed traces
+    - **Lifecycle Management**: Start, stop, restart, update agents
+    
+  version: 1.0.0
+  contact:
+    name: Control Plane Team
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local development server
+  - url: https://controlplane.example.com/api/v1
+    description: Production server
+
+tags:
+  - name: Health
+    description: Health check endpoints
+  - name: Deployment
+    description: Deployment management
+  - name: Scaling
+    description: Scaling and autoscaling
+  - name: Monitoring
+    description: Metrics, logs, and traces
+  - name: Lifecycle
+    description: Agent lifecycle management
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+                    example: "1.0.0"
+
+  /deployments:
+    post:
+      summary: Create deployment
+      tags: [Deployment]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeploymentRequest'
+      responses:
+        '200':
+          description: Deployment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deployment'
+        '400':
+          description: Invalid request
+
+    get:
+      summary: List deployments
+      tags: [Deployment]
+      parameters:
+        - name: deployment_type
+          in: query
+          schema:
+            type: string
+            enum: [agent, workflow, service]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, in_progress, deployed, failed]
+      responses:
+        '200':
+          description: List of deployments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deployment'
+
+  /deployments/{deployment_id}:
+    get:
+      summary: Get deployment
+      tags: [Deployment]
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deployment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deployment'
+        '404':
+          description: Deployment not found
+
+    put:
+      summary: Update deployment
+      tags: [Deployment]
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeploymentUpdateRequest'
+      responses:
+        '200':
+          description: Deployment updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deployment'
+        '404':
+          description: Deployment not found
+
+    delete:
+      summary: Delete deployment
+      tags: [Deployment]
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deployment deleted
+        '404':
+          description: Deployment not found
+
+  /deployments/{deployment_id}/rollback:
+    post:
+      summary: Rollback deployment
+      tags: [Deployment]
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: revision
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deployment rolled back
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deployment'
+
+  /scaling/{deployment_id}/horizontal:
+    post:
+      summary: Scale horizontally
+      tags: [Scaling]
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [replicas]
+              properties:
+                replicas:
+                  type: integer
+                  minimum: 1
+      responses:
+        '200':
+          description: Scaling operation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScalingOperation'
+
+  /scaling/{deployment_id}/vertical:
+    post:
+      summary: Scale vertically
+      tags: [Scaling]
+      parameters:
+        - name: deployment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cpu:
+                  type: string
+                  example: "500m"
+                memory:
+                  type: string
+                  example: "1Gi"
+      responses:
+        '200':
+          description: Scaling operation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScalingOperation'
+
+  /scaling/policies:
+    post:
+      summary: Create autoscaling policy
+      tags: [Scaling]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoscalingPolicyRequest'
+      responses:
+        '200':
+          description: Policy created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutoscalingPolicy'
+
+    get:
+      summary: List autoscaling policies
+      tags: [Scaling]
+      parameters:
+        - name: target_id
+          in: query
+          schema:
+            type: string
+        - name: enabled
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of policies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AutoscalingPolicy'
+
+  /monitoring/metrics:
+    get:
+      summary: Query metrics
+      tags: [Monitoring]
+      parameters:
+        - name: metric_name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: deployment_id
+          in: query
+          schema:
+            type: string
+        - name: aggregation
+          in: query
+          schema:
+            type: string
+            enum: [avg, sum, min, max]
+            default: avg
+      responses:
+        '200':
+          description: Metric data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetricData'
+
+  /monitoring/logs:
+    get:
+      summary: Query logs
+      tags: [Monitoring]
+      parameters:
+        - name: deployment_id
+          in: query
+          schema:
+            type: string
+        - name: level
+          in: query
+          schema:
+            type: string
+            enum: [debug, info, warning, error, critical]
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Log entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  logs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LogEntry'
+
+  /monitoring/traces:
+    get:
+      summary: Query traces
+      tags: [Monitoring]
+      parameters:
+        - name: deployment_id
+          in: query
+          schema:
+            type: string
+        - name: trace_id
+          in: query
+          schema:
+            type: string
+        - name: min_duration
+          in: query
+          schema:
+            type: number
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Trace data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  traces:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Trace'
+
+  /agents:
+    post:
+      summary: Create agent
+      tags: [Lifecycle]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentRequest'
+      responses:
+        '200':
+          description: Agent created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+
+    get:
+      summary: List agents
+      tags: [Lifecycle]
+      parameters:
+        - name: agent_type
+          in: query
+          schema:
+            type: string
+        - name: state
+          in: query
+          schema:
+            type: string
+            enum: [stopped, starting, running, stopping, failed]
+      responses:
+        '200':
+          description: List of agents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Agent'
+
+  /agents/{agent_id}:
+    get:
+      summary: Get agent
+      tags: [Lifecycle]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Agent details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+
+    put:
+      summary: Update agent
+      tags: [Lifecycle]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentUpdateRequest'
+      responses:
+        '200':
+          description: Agent updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+
+    delete:
+      summary: Delete agent
+      tags: [Lifecycle]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: force
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Agent deleted
+
+  /agents/{agent_id}/start:
+    post:
+      summary: Start agent
+      tags: [Lifecycle]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Agent started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LifecycleOperation'
+
+  /agents/{agent_id}/stop:
+    post:
+      summary: Stop agent
+      tags: [Lifecycle]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: graceful
+          in: query
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Agent stopped
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LifecycleOperation'
+
+  /agents/{agent_id}/restart:
+    post:
+      summary: Restart agent
+      tags: [Lifecycle]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Agent restarted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LifecycleOperation'
+
+components:
+  schemas:
+    DeploymentRequest:
+      type: object
+      required: [name, deployment_type, image]
+      properties:
+        name:
+          type: string
+        deployment_type:
+          type: string
+          enum: [agent, workflow, service]
+        image:
+          type: string
+        replicas:
+          type: integer
+          minimum: 1
+          default: 1
+        strategy:
+          type: string
+          enum: [recreate, rolling_update, blue_green, canary]
+          default: rolling_update
+        environment:
+          type: object
+          additionalProperties:
+            type: string
+        resources:
+          type: object
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+
+    DeploymentUpdateRequest:
+      type: object
+      properties:
+        image:
+          type: string
+        replicas:
+          type: integer
+          minimum: 1
+        environment:
+          type: object
+        resources:
+          type: object
+
+    Deployment:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        image:
+          type: string
+        replicas:
+          type: integer
+        strategy:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        revision:
+          type: integer
+
+    AutoscalingPolicyRequest:
+      type: object
+      required: [name, target_id]
+      properties:
+        name:
+          type: string
+        target_id:
+          type: string
+        scaling_type:
+          type: string
+          enum: [horizontal, vertical]
+          default: horizontal
+        min_replicas:
+          type: integer
+          minimum: 1
+          default: 1
+        max_replicas:
+          type: integer
+          minimum: 1
+          default: 10
+        target_metric:
+          type: string
+          enum: [cpu, memory, requests, custom]
+          default: cpu
+        target_value:
+          type: number
+          default: 80.0
+
+    AutoscalingPolicy:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        target_id:
+          type: string
+        scaling_type:
+          type: string
+        min_replicas:
+          type: integer
+        max_replicas:
+          type: integer
+        target_metric:
+          type: string
+        target_value:
+          type: number
+        enabled:
+          type: boolean
+
+    ScalingOperation:
+      type: object
+      properties:
+        id:
+          type: string
+        deployment_id:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    MetricData:
+      type: object
+      properties:
+        metric:
+          type: string
+        deployment_id:
+          type: string
+        data_points:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+              value:
+                type: number
+        summary:
+          type: object
+          properties:
+            avg:
+              type: number
+            min:
+              type: number
+            max:
+              type: number
+
+    LogEntry:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        level:
+          type: string
+        message:
+          type: string
+        deployment_id:
+          type: string
+        source:
+          type: string
+
+    Trace:
+      type: object
+      properties:
+        trace_id:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        duration_ms:
+          type: number
+        spans:
+          type: array
+          items:
+            type: object
+
+    AgentRequest:
+      type: object
+      required: [name, agent_type]
+      properties:
+        name:
+          type: string
+        agent_type:
+          type: string
+        version:
+          type: string
+          default: "1.0.0"
+        config:
+          type: object
+        auto_start:
+          type: boolean
+          default: false
+
+    AgentUpdateRequest:
+      type: object
+      properties:
+        version:
+          type: string
+        config:
+          type: object
+        restart:
+          type: boolean
+          default: true
+
+    Agent:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        version:
+          type: string
+        state:
+          type: string
+        config:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    LifecycleOperation:
+      type: object
+      properties:
+        agent:
+          $ref: '#/components/schemas/Agent'
+        operation:
+          type: object
+          properties:
+            id:
+              type: string
+            operation:
+              type: string
+            status:
+              type: string
+            timestamp:
+              type: string
+              format: date-time

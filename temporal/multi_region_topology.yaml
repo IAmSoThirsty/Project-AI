@@ -1,0 +1,734 @@
+# Multi-Region Deployment Topology
+# 
+# Defines the infrastructure deployment across 6 regions
+# with active-active configuration for high availability
+
+version: "1.0"
+
+# ============================================================================
+# Global Configuration
+# ============================================================================
+
+global:
+  deployment_name: "sovereign-agent-orchestration"
+  availability_target: 99.99  # 99.99% uptime SLA
+  disaster_recovery:
+    rpo_seconds: 1      # Recovery Point Objective
+    rto_seconds: 60     # Recovery Time Objective
+  
+  dns:
+    provider: "route53"
+    domain: "agents.sovereign.cloud"
+    health_check_interval: 30
+    health_check_timeout: 10
+    failover_threshold: 2
+
+# ============================================================================
+# Regional Deployments
+# ============================================================================
+
+regions:
+  
+  # --------------------------------------------------------------------------
+  # Americas - Primary
+  # --------------------------------------------------------------------------
+  
+  - name: "us-east-1"
+    role: "primary"
+    cloud_provider: "aws"
+    traffic_weight: 40  # Percentage of global traffic
+    
+    networking:
+      vpc_cidr: "10.0.0.0/16"
+      availability_zones:
+        - name: "us-east-1a"
+          public_subnet: "10.0.1.0/24"
+          private_subnet: "10.0.10.0/24"
+          database_subnet: "10.0.20.0/24"
+        
+        - name: "us-east-1b"
+          public_subnet: "10.0.2.0/24"
+          private_subnet: "10.0.11.0/24"
+          database_subnet: "10.0.21.0/24"
+        
+        - name: "us-east-1c"
+          public_subnet: "10.0.3.0/24"
+          private_subnet: "10.0.12.0/24"
+          database_subnet: "10.0.22.0/24"
+    
+    temporal_cluster:
+      frontend_service:
+        instances: 6  # 2 per AZ
+        instance_type: "c5.2xlarge"
+        load_balancer:
+          type: "alb"
+          scheme: "internet-facing"
+          health_check_path: "/health"
+      
+      history_service:
+        instances: 12  # 4 per AZ
+        instance_type: "c5.4xlarge"
+        num_shards: 1024
+        persistence: "aurora-postgresql"
+      
+      matching_service:
+        instances: 9  # 3 per AZ
+        instance_type: "c5.2xlarge"
+      
+      worker_service:
+        instances: 6  # System workers
+        instance_type: "c5.xlarge"
+    
+    database:
+      type: "aurora-postgresql"
+      version: "14.7"
+      multi_az: true
+      global_database: true
+      instances:
+        writer:
+          count: 1
+          instance_class: "db.r5.8xlarge"
+          cpu: 32
+          memory_gb: 256
+        readers:
+          count: 3  # One per AZ
+          instance_class: "db.r5.4xlarge"
+          cpu: 16
+          memory_gb: 128
+      storage:
+        type: "aurora"
+        initial_size_gb: 100
+        max_size_gb: 65536
+        iops: 100000
+        backup_retention_days: 30
+    
+    worker_pools:
+      - name: "general-workers"
+        deployment: "kubernetes"
+        cluster: "eks"
+        node_count:
+          min: 50
+          max: 5000
+          target: 500
+        node_type: "c5.4xlarge"
+        task_queues:
+          - "general-purpose-agents"
+          - "us-east-agents"
+      
+      - name: "ml-workers"
+        deployment: "kubernetes"
+        cluster: "eks"
+        node_count:
+          min: 10
+          max: 1000
+          target: 100
+        node_type: "p3.2xlarge"  # GPU instances
+        task_queues:
+          - "ml-inference-agents"
+      
+      - name: "data-workers"
+        deployment: "kubernetes"
+        cluster: "eks"
+        node_count:
+          min: 20
+          max: 2000
+          target: 200
+        node_type: "c5.4xlarge"
+        task_queues:
+          - "data-processing-agents"
+    
+    monitoring:
+      prometheus:
+        instances: 3
+        instance_type: "m5.xlarge"
+        storage_gb: 1000
+        retention_days: 30
+      
+      grafana:
+        instances: 2
+        instance_type: "m5.large"
+  
+  # --------------------------------------------------------------------------
+  # Americas - Secondary
+  # --------------------------------------------------------------------------
+  
+  - name: "us-west-2"
+    role: "secondary"
+    cloud_provider: "aws"
+    traffic_weight: 0  # Receives traffic only on failover
+    
+    # Similar configuration to us-east-1 but scaled at 60%
+    # Full configuration omitted for brevity
+    temporal_cluster:
+      frontend_service:
+        instances: 4
+        instance_type: "c5.2xlarge"
+      history_service:
+        instances: 8
+        instance_type: "c5.4xlarge"
+      matching_service:
+        instances: 6
+        instance_type: "c5.2xlarge"
+    
+    database:
+      type: "aurora-postgresql"
+      global_database_secondary: true
+      instances:
+        readers:
+          count: 2
+    
+    worker_pools:
+      - name: "general-workers"
+        node_count:
+          min: 30
+          max: 3000
+          target: 300
+  
+  # --------------------------------------------------------------------------
+  # Europe - Primary
+  # --------------------------------------------------------------------------
+  
+  - name: "eu-west-1"
+    role: "primary"
+    cloud_provider: "aws"
+    traffic_weight: 30
+    
+    networking:
+      vpc_cidr: "10.1.0.0/16"
+      availability_zones:
+        - name: "eu-west-1a"
+          public_subnet: "10.1.1.0/24"
+          private_subnet: "10.1.10.0/24"
+          database_subnet: "10.1.20.0/24"
+        
+        - name: "eu-west-1b"
+          public_subnet: "10.1.2.0/24"
+          private_subnet: "10.1.11.0/24"
+          database_subnet: "10.1.21.0/24"
+        
+        - name: "eu-west-1c"
+          public_subnet: "10.1.3.0/24"
+          private_subnet: "10.1.12.0/24"
+          database_subnet: "10.1.22.0/24"
+    
+    temporal_cluster:
+      frontend_service:
+        instances: 6
+        instance_type: "c5.2xlarge"
+      history_service:
+        instances: 12
+        instance_type: "c5.4xlarge"
+        num_shards: 1024
+      matching_service:
+        instances: 9
+        instance_type: "c5.2xlarge"
+    
+    database:
+      type: "aurora-postgresql"
+      global_database: true
+      instances:
+        writer:
+          count: 1
+          instance_class: "db.r5.8xlarge"
+        readers:
+          count: 3
+          instance_class: "db.r5.4xlarge"
+    
+    worker_pools:
+      - name: "general-workers"
+        node_count:
+          min: 50
+          max: 5000
+          target: 500
+        task_queues:
+          - "general-purpose-agents"
+          - "eu-west-agents"
+      
+      - name: "ml-workers"
+        node_count:
+          min: 10
+          max: 1000
+          target: 100
+      
+      - name: "data-workers"
+        node_count:
+          min: 20
+          max: 2000
+          target: 200
+    
+    data_residency:
+      enabled: true
+      compliance:
+        - "GDPR"
+        - "EU Cloud Code of Conduct"
+      data_transfer_restrictions:
+        - "no_cross_border_transfer"
+  
+  # --------------------------------------------------------------------------
+  # Europe - Secondary
+  # --------------------------------------------------------------------------
+  
+  - name: "eu-central-1"
+    role: "secondary"
+    cloud_provider: "aws"
+    traffic_weight: 0
+    
+    temporal_cluster:
+      frontend_service:
+        instances: 4
+        instance_type: "c5.2xlarge"
+      history_service:
+        instances: 8
+        instance_type: "c5.4xlarge"
+      matching_service:
+        instances: 6
+        instance_type: "c5.2xlarge"
+    
+    database:
+      type: "aurora-postgresql"
+      global_database_secondary: true
+    
+    worker_pools:
+      - name: "general-workers"
+        node_count:
+          min: 30
+          max: 3000
+          target: 300
+  
+  # --------------------------------------------------------------------------
+  # Asia Pacific - Primary
+  # --------------------------------------------------------------------------
+  
+  - name: "ap-south-1"
+    role: "primary"
+    cloud_provider: "aws"
+    traffic_weight: 30
+    
+    networking:
+      vpc_cidr: "10.2.0.0/16"
+      availability_zones:
+        - name: "ap-south-1a"
+          public_subnet: "10.2.1.0/24"
+          private_subnet: "10.2.10.0/24"
+          database_subnet: "10.2.20.0/24"
+        
+        - name: "ap-south-1b"
+          public_subnet: "10.2.2.0/24"
+          private_subnet: "10.2.11.0/24"
+          database_subnet: "10.2.21.0/24"
+        
+        - name: "ap-south-1c"
+          public_subnet: "10.2.3.0/24"
+          private_subnet: "10.2.12.0/24"
+          database_subnet: "10.2.22.0/24"
+    
+    temporal_cluster:
+      frontend_service:
+        instances: 6
+        instance_type: "c5.2xlarge"
+      history_service:
+        instances: 12
+        instance_type: "c5.4xlarge"
+        num_shards: 1024
+      matching_service:
+        instances: 9
+        instance_type: "c5.2xlarge"
+    
+    database:
+      type: "aurora-postgresql"
+      global_database: true
+      instances:
+        writer:
+          count: 1
+          instance_class: "db.r5.8xlarge"
+        readers:
+          count: 3
+          instance_class: "db.r5.4xlarge"
+    
+    worker_pools:
+      - name: "general-workers"
+        node_count:
+          min: 50
+          max: 5000
+          target: 500
+        task_queues:
+          - "general-purpose-agents"
+          - "ap-south-agents"
+      
+      - name: "ml-workers"
+        node_count:
+          min: 10
+          max: 1000
+          target: 100
+      
+      - name: "data-workers"
+        node_count:
+          min: 20
+          max: 2000
+          target: 200
+  
+  # --------------------------------------------------------------------------
+  # Asia Pacific - Secondary
+  # --------------------------------------------------------------------------
+  
+  - name: "ap-southeast-1"
+    role: "secondary"
+    cloud_provider: "aws"
+    traffic_weight: 0
+    
+    temporal_cluster:
+      frontend_service:
+        instances: 4
+        instance_type: "c5.2xlarge"
+      history_service:
+        instances: 8
+        instance_type: "c5.4xlarge"
+      matching_service:
+        instances: 6
+        instance_type: "c5.2xlarge"
+    
+    database:
+      type: "aurora-postgresql"
+      global_database_secondary: true
+    
+    worker_pools:
+      - name: "general-workers"
+        node_count:
+          min: 30
+          max: 3000
+          target: 300
+
+# ============================================================================
+# Cross-Region Connectivity
+# ============================================================================
+
+networking:
+  
+  # VPC Peering (full mesh)
+  vpc_peering:
+    enabled: true
+    topology: "full_mesh"
+    connections:
+      - regions: ["us-east-1", "us-west-2"]
+        bandwidth_gbps: 10
+      
+      - regions: ["us-east-1", "eu-west-1"]
+        bandwidth_gbps: 10
+      
+      - regions: ["us-east-1", "ap-south-1"]
+        bandwidth_gbps: 10
+      
+      - regions: ["eu-west-1", "eu-central-1"]
+        bandwidth_gbps: 10
+      
+      - regions: ["eu-west-1", "ap-south-1"]
+        bandwidth_gbps: 10
+      
+      - regions: ["ap-south-1", "ap-southeast-1"]
+        bandwidth_gbps: 10
+  
+  # Transit Gateway
+  transit_gateway:
+    enabled: true
+    regions:
+      - name: "us-east-1"
+        asn: 64512
+        attachments: ["us-west-2", "eu-west-1", "ap-south-1"]
+      
+      - name: "eu-west-1"
+        asn: 64513
+        attachments: ["eu-central-1", "us-east-1"]
+      
+      - name: "ap-south-1"
+        asn: 64514
+        attachments: ["ap-southeast-1", "us-east-1"]
+  
+  # Service Mesh
+  service_mesh:
+    technology: "istio"
+    version: "1.19"
+    features:
+      mtls: true
+      circuit_breaking: true
+      fault_injection: false  # Disable in production
+      traffic_mirroring: true
+      observability: true
+    
+    multi_cluster:
+      enabled: true
+      topology: "multi_primary"
+      trust_domain: "sovereign-agents"
+
+# ============================================================================
+# Database Replication
+# ============================================================================
+
+database_replication:
+  technology: "aurora-global-database"
+  topology: "multi-master"
+  
+  global_clusters:
+    - name: "sovereign-agents-global-db"
+      primary_regions:
+        - "us-east-1"
+        - "eu-west-1"
+        - "ap-south-1"
+      
+      secondary_regions:
+        - "us-west-2"
+        - "eu-central-1"
+        - "ap-southeast-1"
+      
+      replication:
+        mode: "synchronous"  # Between primaries
+        lag_target_ms: 100
+        consistency: "strong"
+      
+      failover:
+        automatic: true
+        detection_timeout_seconds: 30
+        promotion_timeout_seconds: 60
+
+# ============================================================================
+# Load Balancing & Traffic Routing
+# ============================================================================
+
+load_balancing:
+  
+  # Global Load Balancer
+  global:
+    provider: "route53"
+    policy: "geoproximity"
+    health_checks:
+      enabled: true
+      interval_seconds: 30
+      timeout_seconds: 10
+      failure_threshold: 2
+    
+    routing_rules:
+      # Primary regions receive traffic by default
+      - source: "north_america"
+        target: "us-east-1"
+        bias: 100
+      
+      - source: "europe"
+        target: "eu-west-1"
+        bias: 100
+      
+      - source: "asia_pacific"
+        target: "ap-south-1"
+        bias: 100
+      
+      # Failover to secondary
+      - source: "north_america"
+        target: "us-west-2"
+        bias: 0
+        condition: "us-east-1 unhealthy"
+      
+      - source: "europe"
+        target: "eu-central-1"
+        bias: 0
+        condition: "eu-west-1 unhealthy"
+      
+      - source: "asia_pacific"
+        target: "ap-southeast-1"
+        bias: 0
+        condition: "ap-south-1 unhealthy"
+  
+  # Regional Load Balancers
+  regional:
+    type: "application_load_balancer"
+    cross_zone: true
+    algorithm: "least_outstanding_requests"
+    
+    health_check:
+      path: "/health"
+      interval_seconds: 10
+      timeout_seconds: 5
+      healthy_threshold: 2
+      unhealthy_threshold: 2
+    
+    connection_draining:
+      enabled: true
+      timeout_seconds: 60
+
+# ============================================================================
+# Disaster Recovery
+# ============================================================================
+
+disaster_recovery:
+  
+  # Automated Failover
+  failover:
+    automatic: true
+    
+    scenarios:
+      # Single AZ failure
+      - name: "az_failure"
+        detection_time_seconds: 10
+        recovery_time_seconds: 0  # Automatic, no downtime
+        impact: "none"
+        actions:
+          - "redistribute_load_to_healthy_azs"
+      
+      # Single region failure
+      - name: "region_failure"
+        detection_time_seconds: 30
+        recovery_time_seconds: 60
+        impact: "reduced_capacity"
+        actions:
+          - "update_dns_to_remove_region"
+          - "scale_up_remaining_regions"
+          - "notify_operations_team"
+      
+      # Multi-region failure (2+ regions)
+      - name: "multi_region_failure"
+        detection_time_seconds: 30
+        recovery_time_seconds: 120
+        impact: "degraded_service"
+        actions:
+          - "activate_all_secondary_regions"
+          - "emergency_capacity_scaling"
+          - "page_on_call_engineer"
+          - "initiate_incident_response"
+  
+  # Backup & Restore
+  backup:
+    automated:
+      database:
+        frequency: "continuous"  # Transaction log
+        retention_days: 30
+        cross_region_copy: true
+      
+      configuration:
+        frequency: "on_change"
+        storage: "git"
+        retention: "indefinite"
+    
+    manual:
+      enabled: true
+      storage: "s3"
+      encryption: true
+      retention_days: 365
+  
+  # Recovery Testing
+  testing:
+    frequency: "monthly"
+    scenarios:
+      - "single_az_failure"
+      - "single_region_failure"
+      - "database_failover"
+      - "complete_region_evacuation"
+    
+    success_criteria:
+      rpo_achieved: true
+      rto_achieved: true
+      zero_workflow_failures: true
+      automated_recovery: true
+
+# ============================================================================
+# Cost Allocation
+# ============================================================================
+
+cost_allocation:
+  
+  # Per-region cost estimates (monthly, 1000 agents)
+  regions:
+    us-east-1:
+      compute: 15000
+      database: 4000
+      networking: 1500
+      storage: 500
+      total: 21000
+    
+    eu-west-1:
+      compute: 15000
+      database: 4000
+      networking: 1500
+      storage: 500
+      total: 21000
+    
+    ap-south-1:
+      compute: 15000
+      database: 4000
+      networking: 1500
+      storage: 500
+      total: 21000
+    
+    # Secondary regions (60% of primary)
+    us-west-2:
+      total: 12600
+    
+    eu-central-1:
+      total: 12600
+    
+    ap-southeast-1:
+      total: 12600
+  
+  # Shared services
+  shared:
+    temporal_cloud: 15000
+    monitoring: 2000
+    security: 1000
+    total: 18000
+  
+  # Total monthly cost
+  total_monthly: 119800
+  cost_per_agent: 119.80  # For 1000 agents
+
+# ============================================================================
+# Security
+# ============================================================================
+
+security:
+  
+  # Network security
+  network:
+    vpc_isolation: true
+    security_groups:
+      - name: "temporal-frontend"
+        ingress:
+          - port: 7233
+            protocol: "tcp"
+            source: "load_balancer"
+        egress:
+          - port: 5432
+            protocol: "tcp"
+            destination: "database"
+      
+      - name: "temporal-workers"
+        ingress:
+          - port: 9090
+            protocol: "tcp"
+            source: "prometheus"
+        egress:
+          - port: 7233
+            protocol: "tcp"
+            destination: "temporal_frontend"
+    
+    nacls:
+      enabled: true
+      default_deny: true
+  
+  # Encryption
+  encryption:
+    in_transit:
+      tls_version: "1.3"
+      cipher_suites:
+        - "TLS_AES_256_GCM_SHA384"
+        - "TLS_CHACHA20_POLY1305_SHA256"
+    
+    at_rest:
+      kms_provider: "aws-kms"
+      key_rotation_days: 365
+      regions:
+        us-east-1: "arn:aws:kms:us-east-1:xxx:key/xxx"
+        eu-west-1: "arn:aws:kms:eu-west-1:xxx:key/xxx"
+        ap-south-1: "arn:aws:kms:ap-south-1:xxx:key/xxx"
+  
+  # Access control
+  access_control:
+    authentication: "oauth2_oidc"
+    authorization: "rbac"
+    mfa_required: true
+    session_timeout_minutes: 60

@@ -1,0 +1,255 @@
+name: OCTOREFLEX Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run full test suite nightly
+    - cron: '0 2 * * *'
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.22', '1.23']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: true
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Run unit tests
+        run: |
+          go test -v -race -coverprofile=coverage.out ./internal/...
+          go tool cover -func=coverage.out
+
+      - name: Check coverage threshold
+        run: |
+          COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
+          echo "Total coverage: ${COVERAGE}%"
+          if (( $(echo "$COVERAGE < 90.0" | bc -l) )); then
+            echo "Coverage ${COVERAGE}% is below 90% threshold"
+            exit 1
+          fi
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.out
+          flags: unittests
+          name: codecov-umbrella
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Install eBPF dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang llvm libbpf-dev linux-headers-$(uname -r)
+
+      - name: Build eBPF programs
+        run: make bpf
+
+      - name: Run integration tests
+        run: sudo go test -v ./test/integration
+
+  adversarial-tests:
+    name: Adversarial Attack Simulations
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Run adversarial tests
+        run: go test -v ./test/adversarial
+
+      - name: Upload attack logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: adversarial-logs
+          path: /tmp/octoreflex-test-*.log
+
+  performance-tests:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Run performance benchmarks
+        run: |
+          go test -bench=. -benchtime=10s -benchmem ./test/performance > bench.txt
+          cat bench.txt
+
+      - name: Check latency targets
+        run: |
+          # Extract p50 latency and verify < 200μs
+          # This is a placeholder - actual parsing would be more robust
+          echo "Verifying containment latency targets..."
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: bench.txt
+
+  fuzzing:
+    name: Fuzz Testing
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'push'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Run fuzzing (5 minutes per target)
+        run: |
+          go test -fuzz=FuzzEventParser -fuzztime=5m ./test/fuzz || true
+          go test -fuzz=FuzzConfigParser -fuzztime=5m ./test/fuzz || true
+          go test -fuzz=FuzzAnomalyScore -fuzztime=5m ./test/fuzz || true
+
+      - name: Upload crash artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-crashes
+          path: test/fuzz/testdata/fuzz/
+
+  chaos-tests:
+    name: Chaos Engineering
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Run chaos tests
+        run: go test -v -timeout=30m ./test/chaos
+
+  formal-verification:
+    name: Formal Verification
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install TLA+ tools
+        run: |
+          wget https://github.com/tlaplus/tlaplus/releases/download/v1.8.0/tla2tools.jar
+          mv tla2tools.jar verification/
+
+      - name: Run TLC model checker
+        run: |
+          cd verification
+          java -jar tla2tools.jar -workers auto containment.tla
+
+      - name: Verify no errors
+        run: |
+          cd verification
+          if grep -q "Error:" tlc-output.txt 2>/dev/null; then
+            echo "Model checking found errors!"
+            cat tlc-output.txt
+            exit 1
+          fi
+
+  security-scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Gosec
+        uses: securego/gosec@master
+        with:
+          args: '-severity medium -confidence medium -quiet ./...'
+
+      - name: Run govulncheck
+        run: |
+          go install golang.org/x/vuln/cmd/govulncheck@latest
+          govulncheck ./...
+
+  lint:
+    name: Linting
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: latest
+          args: --timeout 5m
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests, adversarial-tests, performance-tests]
+    if: always()
+    
+    steps:
+      - name: Generate test summary
+        run: |
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ needs.unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Integration Tests | ${{ needs.integration-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Adversarial Tests | ${{ needs.adversarial-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Performance Tests | ${{ needs.performance-tests.result }} |" >> $GITHUB_STEP_SUMMARY

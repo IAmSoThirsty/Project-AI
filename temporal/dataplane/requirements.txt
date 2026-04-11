@@ -1,0 +1,31 @@
+# Data Plane Requirements
+
+# Message Queue Support
+aiokafka>=0.10.0
+kafka-python>=2.0.2
+nats-py>=2.6.0
+
+# Object Storage
+minio>=7.2.0
+boto3>=1.34.0  # For AWS S3 compatibility
+
+# Cache
+redis>=5.0.1
+
+# RDMA (Optional)
+# pyverbs>=0.15.0  # Uncomment if RDMA support is needed
+
+# Performance
+ujson>=5.9.0
+lz4>=4.3.3
+
+# Monitoring
+prometheus-client>=0.19.0
+
+# Async utilities
+aiofiles>=23.2.1
+
+# Testing
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+pytest-benchmark>=4.0.0

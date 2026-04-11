@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Omega Enhanced - Civilization Forecast Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .chart-container {
+            margin: 30px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            color: #999;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Atlas Omega Enhanced</h1>
+        <div class="subtitle">Long-Term Civilization Forecast Dashboard</div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-label">Collapse Probability</div>
+                <div class="metric-value">0.0%</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Avg Final Year</div>
+                <div class="metric-value">2126</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Avg Kardashev Scale</div>
+                <div class="metric-value">3.00</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Sustainability Index</div>
+                <div class="metric-value">0.50</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">📈 Technological Evolution (Median Trajectory)</div>
+            <div id="tech-chart"></div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">🚀 Kardashev Scale Progression</div>
+            <div id="kardashev-chart"></div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-title">📊 Outcome Distribution</div>
+            <div id="distribution-chart"></div>
+        </div>
+
+        <div class="footer">
+            Generated: 2026-04-11T02:19:13.277161<br>
+            Atlas Omega Enhanced - Civilization Modeling Engine<br>
+            ⚠️ Analytical tool for research purposes only
+        </div>
+    </div>
+
+    <script>
+        // Technology Evolution Chart
+        const techData = [{
+            x: [2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057, 2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068, 2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100, 2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125, 2126],
+            y: [0.39499382459146937, 0.41667694904437835, 0.44261149319917503, 0.4687942259765582, 0.4826358264039448, 0.499229553303207, 0.5216544630082052, 0.5428774182922589, 0.566395006079084, 0.5837581677995625, 0.6044504160315013, 0.6195960717850715, 0.6329977450337938, 0.6590156337270399, 0.6844381962980999, 0.709878982384786, 0.7308665558698606, 0.7600442131207437, 0.7885243778765005, 0.8129331742181565, 0.8446351537534762, 0.8695718518389375, 0.8933627343906597, 0.9179904146658017, 0.9397819789112647, 0.9650347108332885, 0.9887803901890359, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Technology Level',
+            line: {color: '#667eea', width: 3}
+        }];
+
+        const techLayout = {
+            xaxis: {title: 'Year'},
+            yaxis: {title: 'Technology Level (0-1)', range: [0, 1]},
+            margin: {l: 50, r: 30, t: 30, b: 50}
+        };
+
+        Plotly.newPlot('tech-chart', techData, techLayout, {responsive: true});
+
+        // Kardashev Scale Chart
+        const kardashevData = [{
+            x: [2026, 2027, 2028, 2029, 2030, 2031, 2032, 2033, 2034, 2035, 2036, 2037, 2038, 2039, 2040, 2041, 2042, 2043, 2044, 2045, 2046, 2047, 2048, 2049, 2050, 2051, 2052, 2053, 2054, 2055, 2056, 2057, 2058, 2059, 2060, 2061, 2062, 2063, 2064, 2065, 2066, 2067, 2068, 2069, 2070, 2071, 2072, 2073, 2074, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2082, 2083, 2084, 2085, 2086, 2087, 2088, 2089, 2090, 2091, 2092, 2093, 2094, 2095, 2096, 2097, 2098, 2099, 2100, 2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111, 2112, 2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125, 2126],
+            y: [0.0, 1.749952522009636, 2.1481486593749928, 2.203191338964837, 2.2239537396059172, 2.24884432995481, 2.282481694512308, 2.314316127438388, 2.349592509118626, 2.375637251699344, 2.406675624047252, 2.429394107677607, 2.4494966175506905, 2.4885234505905593, 2.52665729444715, 2.564818473577179, 2.5962998338047907, 2.6400663196811154, 2.682786566814751, 2.7193997613272347, 2.7669527306302144, 2.8043577777584066, 2.840044101585989, 2.8769856219987027, 2.909672968366897, 2.9475520662499326, 2.9831705852835535, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0],
+            type: 'scatter',
+            mode: 'lines',
+            name: 'Kardashev Scale',
+            line: {color: '#764ba2', width: 3},
+            fill: 'tozeroy',
+            fillcolor: 'rgba(118, 75, 162, 0.2)'
+        }];
+
+        const kardashevLayout = {
+            xaxis: {title: 'Year'},
+            yaxis: {title: 'Kardashev Scale', range: [0, 3]},
+            margin: {l: 50, r: 30, t: 30, b: 50}
+        };
+
+        Plotly.newPlot('kardashev-chart', kardashevData, kardashevLayout, {responsive: true});
+
+        // Distribution Chart
+        const kardashevDist = {"mean": 3.0, "std": 0.0, "min": 3.0, "max": 3.0, "percentiles": {"25": 3.0, "50": 3.0, "75": 3.0}};
+        const distributionData = [{
+            x: ['Min', 'P25', 'Median', 'P75', 'Max'],
+            y: [
+                kardashevDist.min || 0,
+                kardashevDist.percentiles?.['25'] || 0,
+                kardashevDist.percentiles?.['50'] || 0,
+                kardashevDist.percentiles?.['75'] || 0,
+                kardashevDist.max || 0
+            ],
+            type: 'bar',
+            marker: {
+                color: ['#e74c3c', '#f39c12', '#f1c40f', '#2ecc71', '#27ae60']
+            }
+        }];
+
+        const distributionLayout = {
+            xaxis: {title: 'Percentile'},
+            yaxis: {title: 'Final Kardashev Scale', range: [0, 3]},
+            margin: {l: 50, r: 30, t: 30, b: 50}
+        };
+
+        Plotly.newPlot('distribution-chart', distributionData, distributionLayout, {responsive: true});
+    </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: temporal-ca-issuer
+spec:
+  ca:
+    secretName: temporal-ca-secret
+
+---
+# CA Certificate Secret (to be created separately)
+# kubectl create secret tls temporal-ca-secret \
+#   --cert=certs/ca.crt \
+#   --key=certs/ca.key \
+#   -n cert-manager
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: temporal-frontend
+  namespace: temporal
+spec:
+  secretName: temporal-frontend-tls
+  duration: 8760h  # 1 year
+  renewBefore: 720h  # 30 days
+  subject:
+    organizations:
+      - Temporal Technologies
+  commonName: temporal-frontend
+  dnsNames:
+    - temporal-frontend
+    - temporal-frontend.temporal.svc.cluster.local
+    - temporal-frontend.temporal.svc
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  usages:
+    - server auth
+    - client auth
+    - digital signature
+    - key encipherment
+  issuerRef:
+    name: temporal-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: temporal-history
+  namespace: temporal
+spec:
+  secretName: temporal-history-tls
+  duration: 8760h
+  renewBefore: 720h
+  subject:
+    organizations:
+      - Temporal Technologies
+  commonName: temporal-history
+  dnsNames:
+    - temporal-history
+    - temporal-history.temporal.svc.cluster.local
+    - temporal-history.temporal.svc
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  usages:
+    - server auth
+    - client auth
+    - digital signature
+    - key encipherment
+  issuerRef:
+    name: temporal-ca-issuer
+    kind: ClusterIssuer
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: temporal-matching
+  namespace: temporal
+spec:
+  secretName: temporal-matching-tls
+  duration: 8760h
+  renewBefore: 720h
+  subject:
+    organizations:
+      - Temporal Technologies
+  commonName: temporal-matching
+  dnsNames:
+    - temporal-matching
+    - temporal-matching.temporal.svc.cluster.local
+    - temporal-matching.temporal.svc
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  usages:
+    - server auth
+    - client auth
+    - digital signature
+    - key encipherment
+  issuerRef:
+    name: temporal-ca-issuer
+    kind: ClusterIssuer
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: temporal-worker
+  namespace: temporal
+spec:
+  secretName: temporal-worker-tls
+  duration: 8760h
+  renewBefore: 720h
+  subject:
+    organizations:
+      - Temporal Technologies
+  commonName: temporal-worker
+  dnsNames:
+    - temporal-worker
+    - temporal-worker.temporal.svc.cluster.local
+    - temporal-worker.temporal.svc
+  isCA: false
+  privateKey:
+    algorithm: RSA
+    encoding: PKCS8
+    size: 2048
+  usages:
+    - server auth
+    - client auth
+    - digital signature
+    - key encipherment
+  issuerRef:
+    name: temporal-ca-issuer
+    kind: ClusterIssuer

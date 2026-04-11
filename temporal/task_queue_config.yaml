@@ -1,0 +1,516 @@
+# Task Queue Configuration for Distributed Agent Orchestration
+# 
+# This file defines the task queue topology for routing work to specialized
+# agents across multiple regions with different priorities.
+
+version: "1.0"
+
+# ============================================================================
+# Global Configuration
+# ============================================================================
+
+global:
+  namespace: "sovereign-agent-orchestration"
+  max_concurrent_workflow_task_executions: 1000
+  max_concurrent_activity_task_executions: 10000
+  default_workflow_task_timeout: "10s"
+  default_activity_task_timeout: "60s"
+
+# ============================================================================
+# Task Queue Hierarchy
+# ============================================================================
+
+task_queues:
+  
+  # --------------------------------------------------------------------------
+  # Level 1: Geographic Task Queues
+  # Route work based on data locality and regional affinity
+  # --------------------------------------------------------------------------
+  
+  geographic:
+    - name: "us-east-agents"
+      description: "Agents in US East region"
+      region: "us-east-1"
+      worker_count:
+        min: 50
+        max: 3000
+        target: 500
+      
+    - name: "us-west-agents"
+      description: "Agents in US West region"
+      region: "us-west-2"
+      worker_count:
+        min: 30
+        max: 2000
+        target: 300
+      
+    - name: "eu-west-agents"
+      description: "Agents in EU West region"
+      region: "eu-west-1"
+      worker_count:
+        min: 50
+        max: 3000
+        target: 500
+      
+    - name: "eu-central-agents"
+      description: "Agents in EU Central region"
+      region: "eu-central-1"
+      worker_count:
+        min: 30
+        max: 2000
+        target: 300
+      
+    - name: "ap-south-agents"
+      description: "Agents in Asia Pacific South region"
+      region: "ap-south-1"
+      worker_count:
+        min: 50
+        max: 3000
+        target: 500
+      
+    - name: "ap-southeast-agents"
+      description: "Agents in Asia Pacific Southeast region"
+      region: "ap-southeast-1"
+      worker_count:
+        min: 30
+        max: 2000
+        target: 300
+  
+  # --------------------------------------------------------------------------
+  # Level 2: Specialized Agent Task Queues
+  # Route work based on required capabilities
+  # --------------------------------------------------------------------------
+  
+  specialized:
+    - name: "ml-inference-agents"
+      description: "Machine Learning inference workloads"
+      capabilities:
+        - "ml"
+        - "inference"
+        - "gpu"
+      resources:
+        cpu: 8
+        memory: "32Gi"
+        gpu: "nvidia.com/gpu=1"  # Optional
+      worker_count:
+        min: 10
+        max: 1000
+        target: 100
+      auto_scaling:
+        metric: "queue_depth"
+        target_value: 100
+        scale_up_cooldown: "2m"
+        scale_down_cooldown: "5m"
+    
+    - name: "data-processing-agents"
+      description: "Data ETL and batch processing workloads"
+      capabilities:
+        - "data"
+        - "etl"
+        - "batch"
+      resources:
+        cpu: 16
+        memory: "64Gi"
+      worker_count:
+        min: 20
+        max: 2000
+        target: 200
+      auto_scaling:
+        metric: "queue_depth_and_cpu"
+        target_value: 100
+        scale_up_cooldown: "2m"
+        scale_down_cooldown: "5m"
+    
+    - name: "security-analysis-agents"
+      description: "Security scanning and compliance analysis"
+      capabilities:
+        - "security"
+        - "compliance"
+        - "audit"
+      resources:
+        cpu: 4
+        memory: "16Gi"
+      worker_count:
+        min: 5
+        max: 500
+        target: 50
+      auto_scaling:
+        metric: "queue_depth"
+        target_value: 50
+    
+    - name: "governance-agents"
+      description: "Governance and policy enforcement"
+      capabilities:
+        - "governance"
+        - "policy"
+        - "validation"
+      resources:
+        cpu: 4
+        memory: "16Gi"
+      worker_count:
+        min: 5
+        max: 500
+        target: 50
+      auto_scaling:
+        metric: "queue_depth"
+        target_value: 50
+    
+    - name: "general-purpose-agents"
+      description: "General purpose workloads"
+      capabilities:
+        - "general"
+      resources:
+        cpu: 4
+        memory: "16Gi"
+      worker_count:
+        min: 50
+        max: 5000
+        target: 500
+      auto_scaling:
+        metric: "queue_depth"
+        target_value: 100
+  
+  # --------------------------------------------------------------------------
+  # Level 3: Priority-based Task Queues
+  # Route work based on urgency and SLA requirements
+  # --------------------------------------------------------------------------
+  
+  priority:
+    - name: "critical-priority-agents"
+      description: "Critical priority tasks (SLA: 1 minute)"
+      priority: "critical"
+      sla_seconds: 60
+      worker_count:
+        min: 10
+        max: 1000
+        target: 100
+      dedicated_resources: true
+    
+    - name: "high-priority-agents"
+      description: "High priority tasks (SLA: 5 minutes)"
+      priority: "high"
+      sla_seconds: 300
+      worker_count:
+        min: 20
+        max: 2000
+        target: 200
+    
+    - name: "normal-priority-agents"
+      description: "Normal priority tasks (SLA: 30 minutes)"
+      priority: "normal"
+      sla_seconds: 1800
+      worker_count:
+        min: 50
+        max: 5000
+        target: 500
+    
+    - name: "low-priority-agents"
+      description: "Low priority tasks (best effort)"
+      priority: "low"
+      sla_seconds: 3600
+      worker_count:
+        min: 10
+        max: 1000
+        target: 100
+      spot_instances: true  # Use spot instances for cost savings
+  
+  # --------------------------------------------------------------------------
+  # Level 4: Sticky Task Queues (Session-based)
+  # For stateful workflows requiring session affinity
+  # --------------------------------------------------------------------------
+  
+  sticky:
+    enabled: true
+    pattern: "sticky-session-{agent_id}"
+    schedule_to_start_timeout: "5s"
+    description: "Session-specific task queues for stateful workflows"
+    worker_count:
+      min: 0
+      max: 10000
+      target: 1000
+
+# ============================================================================
+# Composite Task Queues
+# Combine multiple routing dimensions
+# ============================================================================
+
+composite_queues:
+  # Example: Regional + Specialized
+  - name: "us-east-ml-inference"
+    combines:
+      - "us-east-agents"
+      - "ml-inference-agents"
+    
+  - name: "eu-west-data-processing"
+    combines:
+      - "eu-west-agents"
+      - "data-processing-agents"
+  
+  # Example: Specialized + Priority
+  - name: "ml-inference-agents-critical-priority"
+    combines:
+      - "ml-inference-agents"
+      - "critical-priority-agents"
+  
+  - name: "data-processing-agents-high-priority"
+    combines:
+      - "data-processing-agents"
+      - "high-priority-agents"
+  
+  - name: "security-analysis-agents-critical-priority"
+    combines:
+      - "security-analysis-agents"
+      - "critical-priority-agents"
+  
+  - name: "general-purpose-agents-normal-priority"
+    combines:
+      - "general-purpose-agents"
+      - "normal-priority-agents"
+
+# ============================================================================
+# Task Routing Rules
+# Define intelligent routing logic
+# ============================================================================
+
+routing:
+  default_queue: "general-purpose-agents-normal-priority"
+  
+  strategies:
+    # Capability-based routing
+    - name: "capability_based"
+      description: "Route tasks based on required capabilities"
+      rules:
+        - if: "task.type == 'ml_inference'"
+          then: "ml-inference-agents"
+        - if: "task.type == 'data_processing'"
+          then: "data-processing-agents"
+        - if: "task.type == 'security_analysis'"
+          then: "security-analysis-agents"
+        - if: "task.type == 'governance'"
+          then: "governance-agents"
+        - default: "general-purpose-agents"
+    
+    # Region-based routing
+    - name: "region_based"
+      description: "Route tasks to nearest region for data locality"
+      rules:
+        - if: "task.region_affinity == 'us-east'"
+          then: "us-east-agents"
+        - if: "task.region_affinity == 'us-west'"
+          then: "us-west-agents"
+        - if: "task.region_affinity == 'eu-west'"
+          then: "eu-west-agents"
+        - if: "task.region_affinity == 'eu-central'"
+          then: "eu-central-agents"
+        - if: "task.region_affinity == 'ap-south'"
+          then: "ap-south-agents"
+        - if: "task.region_affinity == 'ap-southeast'"
+          then: "ap-southeast-agents"
+        - default: "us-east-agents"
+    
+    # Priority-based routing
+    - name: "priority_based"
+      description: "Route tasks based on priority and SLA"
+      rules:
+        - if: "task.priority == 'critical'"
+          then: "{base_queue}-critical-priority"
+        - if: "task.priority == 'high'"
+          then: "{base_queue}-high-priority"
+        - if: "task.priority == 'normal'"
+          then: "{base_queue}-normal-priority"
+        - if: "task.priority == 'low'"
+          then: "{base_queue}-low-priority"
+    
+    # Load-based routing
+    - name: "load_based"
+      description: "Route to least loaded queue"
+      rules:
+        - if: "queue_depth < 50"
+          then: "current_queue"
+        - if: "queue_depth >= 50 AND queue_depth < 200"
+          then: "find_least_loaded_queue_in_region"
+        - if: "queue_depth >= 200"
+          then: "find_least_loaded_queue_globally"
+    
+    # Composite strategy (most common)
+    - name: "smart_routing"
+      description: "Intelligent routing combining multiple factors"
+      priority:
+        - "priority_based"     # First, check priority
+        - "capability_based"   # Then, match capabilities
+        - "region_based"       # Then, prefer region affinity
+        - "load_based"         # Finally, balance load
+
+# ============================================================================
+# Rate Limiting & Backpressure
+# ============================================================================
+
+rate_limiting:
+  enabled: true
+  
+  per_queue:
+    # Critical priority queues: unlimited
+    - queue_pattern: "*-critical-priority"
+      max_tasks_per_second: -1  # Unlimited
+    
+    # High priority queues: high limit
+    - queue_pattern: "*-high-priority"
+      max_tasks_per_second: 10000
+    
+    # Normal priority queues: moderate limit
+    - queue_pattern: "*-normal-priority"
+      max_tasks_per_second: 5000
+    
+    # Low priority queues: limited
+    - queue_pattern: "*-low-priority"
+      max_tasks_per_second: 1000
+  
+  backpressure:
+    enabled: true
+    # When queue depth exceeds threshold, apply backpressure
+    high_watermark: 1000
+    low_watermark: 100
+    strategy: "exponential_backoff"
+    max_retry_interval: "30s"
+
+# ============================================================================
+# Monitoring & Alerting
+# ============================================================================
+
+monitoring:
+  metrics:
+    - name: "queue_depth"
+      description: "Current depth of task queue"
+      type: "gauge"
+      export_interval: "10s"
+    
+    - name: "task_age_seconds"
+      description: "Age of oldest task in queue"
+      type: "gauge"
+      export_interval: "10s"
+    
+    - name: "worker_count"
+      description: "Number of active workers"
+      type: "gauge"
+      export_interval: "30s"
+    
+    - name: "tasks_dispatched_total"
+      description: "Total tasks dispatched"
+      type: "counter"
+    
+    - name: "tasks_completed_total"
+      description: "Total tasks completed"
+      type: "counter"
+    
+    - name: "tasks_failed_total"
+      description: "Total tasks failed"
+      type: "counter"
+    
+    - name: "task_execution_duration_seconds"
+      description: "Task execution duration"
+      type: "histogram"
+      buckets: [0.1, 0.5, 1, 5, 10, 30, 60, 300]
+  
+  alerts:
+    - name: "high_queue_depth"
+      condition: "queue_depth > 1000"
+      severity: "warning"
+      duration: "5m"
+      message: "Queue {{queue_name}} depth is {{queue_depth}}"
+    
+    - name: "critical_queue_depth"
+      condition: "queue_depth > 5000"
+      severity: "critical"
+      duration: "2m"
+      message: "Queue {{queue_name}} depth is critically high: {{queue_depth}}"
+    
+    - name: "old_tasks_in_queue"
+      condition: "task_age_seconds > 300"
+      severity: "warning"
+      duration: "5m"
+      message: "Tasks in {{queue_name}} are aging (oldest: {{task_age_seconds}}s)"
+    
+    - name: "no_workers"
+      condition: "worker_count == 0"
+      severity: "critical"
+      duration: "1m"
+      message: "No workers available for queue {{queue_name}}"
+    
+    - name: "high_failure_rate"
+      condition: "rate(tasks_failed_total[5m]) / rate(tasks_completed_total[5m]) > 0.05"
+      severity: "warning"
+      duration: "5m"
+      message: "High task failure rate in {{queue_name}}"
+
+# ============================================================================
+# Cost Optimization
+# ============================================================================
+
+cost_optimization:
+  # Use spot instances for non-critical workloads
+  spot_instances:
+    enabled: true
+    queues:
+      - "low-priority-agents"
+      - "general-purpose-agents-low-priority"
+    savings_target: 70  # Percentage
+    fallback_to_on_demand: true
+  
+  # Auto-scaling based on schedule
+  scheduled_scaling:
+    enabled: true
+    schedules:
+      - name: "business_hours_us"
+        cron: "0 8-18 * * 1-5"  # Mon-Fri 8am-6pm
+        timezone: "America/New_York"
+        scale_multiplier: 1.5
+      
+      - name: "off_hours"
+        cron: "0 19-7 * * *"  # 7pm-7am daily
+        timezone: "America/New_York"
+        scale_multiplier: 0.5
+      
+      - name: "weekend"
+        cron: "0 * * * 0,6"  # Saturday and Sunday
+        timezone: "America/New_York"
+        scale_multiplier: 0.3
+  
+  # Resource right-sizing
+  right_sizing:
+    enabled: true
+    analysis_interval: "24h"
+    target_utilization: 75
+    recommendations_only: false  # Apply automatically
+
+# ============================================================================
+# Security & Compliance
+# ============================================================================
+
+security:
+  # mTLS for worker authentication
+  mtls:
+    enabled: true
+    cert_rotation_days: 90
+  
+  # Task queue isolation
+  isolation:
+    enabled: true
+    mode: "namespace"  # namespace | queue | worker
+  
+  # Data encryption
+  encryption:
+    in_transit: true
+    at_rest: true
+    payload_codec: "aes-256-gcm"
+  
+  # Audit logging
+  audit:
+    enabled: true
+    log_level: "info"
+    events:
+      - "task_scheduled"
+      - "task_started"
+      - "task_completed"
+      - "task_failed"
+      - "worker_registered"
+      - "worker_deregistered"

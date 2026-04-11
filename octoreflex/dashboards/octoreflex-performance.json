@@ -1,0 +1,80 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "octoreflex-performance",
+    "title": "OctoReflex - Performance Analysis",
+    "tags": ["octoreflex", "performance", "latency"],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "10s",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Processing Latency Distribution",
+        "type": "histogram",
+        "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(octoreflex_processing_latency_seconds_bucket[5m])",
+            "format": "heatmap",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Containment Latency P95",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(octoreflex_containment_latency_seconds_bucket[5m]))",
+            "legendFormat": "p95",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth"
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Event Processing Rate",
+        "type": "graph",
+        "gridPos": {"x": 0, "y": 8, "w": 12, "h": 6},
+        "targets": [
+          {
+            "expr": "rate(octoreflex_events_processed_total[1m])",
+            "legendFormat": "Events/sec",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [{"format": "ops"}]
+      },
+      {
+        "id": 4,
+        "title": "State Transition Rate",
+        "type": "bargauge",
+        "gridPos": {"x": 12, "y": 8, "w": 12, "h": 6},
+        "targets": [
+          {
+            "expr": "rate(octoreflex_state_transitions_total[5m])",
+            "legendFormat": "{{from_state}} → {{to_state}}",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        }
+      }
+    ]
+  }
+}

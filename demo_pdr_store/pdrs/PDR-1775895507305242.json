@@ -1,0 +1,31 @@
+{
+  "pdr_id": "PDR-1775895507305242",
+  "metadata": {
+    "timestamp": "2026-04-11T08:18:27.305242+00:00",
+    "request_id": "REQ-BATCH-007",
+    "decision": "deny",
+    "severity": "medium",
+    "policy_version": "1.0",
+    "agent_id": "agent-1",
+    "context_hash": "99abbcd97881f5ebec40fc8e6f9a2f718489581160c3ddd25ac6bcc38c58dc25"
+  },
+  "decision_rationale": "Batch test PDR 7",
+  "context": {
+    "batch_id": "DEMO-4",
+    "index": 7
+  },
+  "content_hash": "f3cd2f4e361da6f55f8f280dfda74c2b153aa1767857e46e2894f834feafdbd1",
+  "signature": {
+    "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+    "signature": "fmZucMHfw6t8FSFgONpjKPlM37w9kJzIa5+YBLlVsHslEwSGiyq3vPZeRQ/pI2ryPhHH32MniRiD4H1+19mSDg==",
+    "signed_at": "2026-04-11T08:18:27.305242+00:00"
+  },
+  "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQCEQhUwAoGo/qygMtZVQ52/hZnUABMccemF7R4ZJC6sDZ3X+jRJSg=",
+  "merkle_proof": [
+    "f3cd2f4e361da6f55f8f280dfda74c2b153aa1767857e46e2894f834feafdbd1",
+    "cdb527872dbd255487872acce3f307cd5908ccd6f53be303c584e1e46ccce597"
+  ],
+  "created_at": "2026-04-11T08:18:27.305242+00:00",
+  "modified_at": null,
+  "version": 1
+}

@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-04-11T01:55:05.047458",
+  "duration": 0.5119912624359131,
+  "success": false,
+  "total_jobs": 5,
+  "successful_jobs": 4,
+  "failed_jobs": 1,
+  "cache_hits": 0,
+  "cache_hit_rate": 0.0,
+  "speedup": 5273.527495672769,
+  "jobs": [
+    {
+      "job_id": "job-0003",
+      "success": false,
+      "duration": 0.0010020732879638672,
+      "node_id": "unknown",
+      "cache_hit": false,
+      "artifacts": [],
+      "log_path": "",
+      "error": "pop from empty list"
+    },
+    {
+      "job_id": "job-0005",
+      "success": true,
+      "duration": 0.507373571395874,
+      "node_id": "node-004",
+      "cache_hit": false,
+      "artifacts": [],
+      "log_path": "/logs/job-0005.log",
+      "error": null
+    },
+    {
+      "job_id": "job-0002",
+      "success": true,
+      "duration": 0.5083756446838379,
+      "node_id": "node-002",
+      "cache_hit": false,
+      "artifacts": [],
+      "log_path": "/logs/job-0002.log",
+      "error": null
+    },
+    {
+      "job_id": "job-0004",
+      "success": true,
+      "duration": 0.507373571395874,
+      "node_id": "node-003",
+      "cache_hit": false,
+      "artifacts": [],
+      "log_path": "/logs/job-0004.log",
+      "error": null
+    },
+    {
+      "job_id": "job-0001",
+      "success": true,
+      "duration": 0.508981466293335,
+      "node_id": "node-001",
+      "cache_hit": false,
+      "artifacts": [],
+      "log_path": "/logs/job-0001.log",
+      "error": null
+    }
+  ]
+}

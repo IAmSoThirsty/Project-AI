@@ -1,9 +1,40 @@
-<!--                                        [2026-03-04 14:24]  -->
+<!--                                        [2026-03-05 00:00]  -->
 <!--                                       Productivity: Active  -->
 
 # `engines/` — Simulation & Scenario Engines
 
 > **Specialized engines for adversarial simulation, war gaming, defense modeling, and scenario evaluation.**
+
+## 🔐 NEW: Enhanced Cryptographic War Engine (Post-Quantum Cryptography)
+
+**File**: `crypto_war_enhanced.py` | **Tests**: `test_crypto_war_enhanced.py` (40 tests)
+
+Complete post-quantum cryptography implementation protecting against quantum computing threats:
+
+**Features**:
+- ✅ **NIST PQC Finalists**: Kyber (KEM), Dilithium (signatures), SPHINCS+ (signatures)
+- ✅ **Lattice-Based Schemes**: LWE, NTRU
+- ✅ **Algorithm Agility**: Dynamic threat-based crypto selection
+- ✅ **Migration Engine**: Automated classical → PQC migration with rollback
+- ✅ **Hybrid Mode**: Classical + PQC for transitional security
+
+**Quick Start**:
+```python
+from engines.crypto_war_enhanced import create_pqc_engine, CryptoAlgorithm
+
+engine = create_pqc_engine(threat_level="high")
+keypair = engine.generate_pqc_keypair(CryptoAlgorithm.KYBER_768, "key1")
+signature = engine.pqc_sign(b"message", "key1", CryptoAlgorithm.DILITHIUM_3)
+```
+
+**Documentation**:
+- 📖 [POST_QUANTUM_CRYPTO_GUIDE.md](POST_QUANTUM_CRYPTO_GUIDE.md) - Complete PQC guide
+- 📋 [PQC_EXAMPLES.md](PQC_EXAMPLES.md) - 12 practical examples
+- 🔄 [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) - Classical to PQC migration
+
+**Demo**: `python engines/crypto_war_enhanced.py`
+
+---
 
 ## Engines
 

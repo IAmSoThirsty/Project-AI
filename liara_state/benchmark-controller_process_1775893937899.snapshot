@@ -1,0 +1,1844 @@
+{
+  "snapshot_id": "benchmark-controller_process_1775893937899",
+  "timestamp": 1775893937.8994617,
+  "controller_id": "benchmark-controller",
+  "state_type": "process",
+  "state_data": {
+    "processes": {
+      "1000": {
+        "pid": 1000,
+        "name": "process_0",
+        "priority": 5,
+        "state": "new",
+        "cpu_time": 7385,
+        "memory_kb": 100667,
+        "parent_pid": 422,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user0",
+          "USER": "user0"
+        }
+      },
+      "1001": {
+        "pid": 1001,
+        "name": "process_1",
+        "priority": 6,
+        "state": "ready",
+        "cpu_time": 7429,
+        "memory_kb": 69507,
+        "parent_pid": 650,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user1",
+          "USER": "user1"
+        }
+      },
+      "1002": {
+        "pid": 1002,
+        "name": "process_2",
+        "priority": 4,
+        "state": "running",
+        "cpu_time": 2770,
+        "memory_kb": 52788,
+        "parent_pid": 660,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user2",
+          "USER": "user2"
+        }
+      },
+      "1003": {
+        "pid": 1003,
+        "name": "process_3",
+        "priority": 1,
+        "state": "new",
+        "cpu_time": 7582,
+        "memory_kb": 5542,
+        "parent_pid": 175,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user3",
+          "USER": "user3"
+        }
+      },
+      "1004": {
+        "pid": 1004,
+        "name": "process_4",
+        "priority": 1,
+        "state": "ready",
+        "cpu_time": 9517,
+        "memory_kb": 21988,
+        "parent_pid": 758,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user4",
+          "USER": "user4"
+        }
+      },
+      "1005": {
+        "pid": 1005,
+        "name": "process_5",
+        "priority": 1,
+        "state": "running",
+        "cpu_time": 3601,
+        "memory_kb": 56551,
+        "parent_pid": 495,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user5",
+          "USER": "user5"
+        }
+      },
+      "1006": {
+        "pid": 1006,
+        "name": "process_6",
+        "priority": 4,
+        "state": "ready",
+        "cpu_time": 4001,
+        "memory_kb": 42299,
+        "parent_pid": 996,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user6",
+          "USER": "user6"
+        }
+      },
+      "1007": {
+        "pid": 1007,
+        "name": "process_7",
+        "priority": 1,
+        "state": "ready",
+        "cpu_time": 8760,
+        "memory_kb": 60286,
+        "parent_pid": 956,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user7",
+          "USER": "user7"
+        }
+      },
+      "1008": {
+        "pid": 1008,
+        "name": "process_8",
+        "priority": 3,
+        "state": "new",
+        "cpu_time": 5097,
+        "memory_kb": 61202,
+        "parent_pid": 736,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user8",
+          "USER": "user8"
+        }
+      },
+      "1009": {
+        "pid": 1009,
+        "name": "process_9",
+        "priority": 3,
+        "state": "ready",
+        "cpu_time": 6640,
+        "memory_kb": 49715,
+        "parent_pid": 989,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user9",
+          "USER": "user9"
+        }
+      },
+      "1010": {
+        "pid": 1010,
+        "name": "process_10",
+        "priority": 1,
+        "state": "suspended",
+        "cpu_time": 8423,
+        "memory_kb": 51052,
+        "parent_pid": 852,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user10",
+          "USER": "user10"
+        }
+      },
+      "1011": {
+        "pid": 1011,
+        "name": "process_11",
+        "priority": 4,
+        "state": "running",
+        "cpu_time": 8195,
+        "memory_kb": 92081,
+        "parent_pid": 525,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user11",
+          "USER": "user11"
+        }
+      },
+      "1012": {
+        "pid": 1012,
+        "name": "process_12",
+        "priority": 4,
+        "state": "suspended",
+        "cpu_time": 6125,
+        "memory_kb": 58131,
+        "parent_pid": 779,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user12",
+          "USER": "user12"
+        }
+      },
+      "1013": {
+        "pid": 1013,
+        "name": "process_13",
+        "priority": 1,
+        "state": "ready",
+        "cpu_time": 3517,
+        "memory_kb": 60094,
+        "parent_pid": 289,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user13",
+          "USER": "user13"
+        }
+      },
+      "1014": {
+        "pid": 1014,
+        "name": "process_14",
+        "priority": 0,
+        "state": "ready",
+        "cpu_time": 4250,
+        "memory_kb": 58807,
+        "parent_pid": 929,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user14",
+          "USER": "user14"
+        }
+      },
+      "1015": {
+        "pid": 1015,
+        "name": "process_15",
+        "priority": 2,
+        "state": "ready",
+        "cpu_time": 7511,
+        "memory_kb": 23272,
+        "parent_pid": 499,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user15",
+          "USER": "user15"
+        }
+      },
+      "1016": {
+        "pid": 1016,
+        "name": "process_16",
+        "priority": 4,
+        "state": "ready",
+        "cpu_time": 8301,
+        "memory_kb": 51220,
+        "parent_pid": 435,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user16",
+          "USER": "user16"
+        }
+      },
+      "1017": {
+        "pid": 1017,
+        "name": "process_17",
+        "priority": 7,
+        "state": "suspended",
+        "cpu_time": 6834,
+        "memory_kb": 33568,
+        "parent_pid": 488,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user17",
+          "USER": "user17"
+        }
+      },
+      "1018": {
+        "pid": 1018,
+        "name": "process_18",
+        "priority": 5,
+        "state": "ready",
+        "cpu_time": 7637,
+        "memory_kb": 61310,
+        "parent_pid": 810,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user18",
+          "USER": "user18"
+        }
+      },
+      "1019": {
+        "pid": 1019,
+        "name": "process_19",
+        "priority": 3,
+        "state": "suspended",
+        "cpu_time": 7523,
+        "memory_kb": 56287,
+        "parent_pid": 444,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user19",
+          "USER": "user19"
+        }
+      },
+      "1020": {
+        "pid": 1020,
+        "name": "process_20",
+        "priority": 4,
+        "state": "new",
+        "cpu_time": 6141,
+        "memory_kb": 66869,
+        "parent_pid": 168,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user20",
+          "USER": "user20"
+        }
+      },
+      "1021": {
+        "pid": 1021,
+        "name": "process_21",
+        "priority": 1,
+        "state": "ready",
+        "cpu_time": 2181,
+        "memory_kb": 41624,
+        "parent_pid": 763,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user21",
+          "USER": "user21"
+        }
+      },
+      "1022": {
+        "pid": 1022,
+        "name": "process_22",
+        "priority": 7,
+        "state": "blocked",
+        "cpu_time": 9790,
+        "memory_kb": 66407,
+        "parent_pid": 279,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user22",
+          "USER": "user22"
+        }
+      },
+      "1023": {
+        "pid": 1023,
+        "name": "process_23",
+        "priority": 7,
+        "state": "ready",
+        "cpu_time": 727,
+        "memory_kb": 73994,
+        "parent_pid": 62,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user23",
+          "USER": "user23"
+        }
+      },
+      "1024": {
+        "pid": 1024,
+        "name": "process_24",
+        "priority": 5,
+        "state": "running",
+        "cpu_time": 3786,
+        "memory_kb": 74816,
+        "parent_pid": 568,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user24",
+          "USER": "user24"
+        }
+      },
+      "1025": {
+        "pid": 1025,
+        "name": "process_25",
+        "priority": 3,
+        "state": "new",
+        "cpu_time": 2047,
+        "memory_kb": 87450,
+        "parent_pid": 220,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user25",
+          "USER": "user25"
+        }
+      },
+      "1026": {
+        "pid": 1026,
+        "name": "process_26",
+        "priority": 6,
+        "state": "running",
+        "cpu_time": 1429,
+        "memory_kb": 44835,
+        "parent_pid": 794,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user26",
+          "USER": "user26"
+        }
+      },
+      "1027": {
+        "pid": 1027,
+        "name": "process_27",
+        "priority": 1,
+        "state": "ready",
+        "cpu_time": 7098,
+        "memory_kb": 91041,
+        "parent_pid": 251,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user27",
+          "USER": "user27"
+        }
+      },
+      "1028": {
+        "pid": 1028,
+        "name": "process_28",
+        "priority": 6,
+        "state": "new",
+        "cpu_time": 2902,
+        "memory_kb": 53277,
+        "parent_pid": 398,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user28",
+          "USER": "user28"
+        }
+      },
+      "1029": {
+        "pid": 1029,
+        "name": "process_29",
+        "priority": 4,
+        "state": "running",
+        "cpu_time": 5419,
+        "memory_kb": 17520,
+        "parent_pid": 378,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user29",
+          "USER": "user29"
+        }
+      },
+      "1030": {
+        "pid": 1030,
+        "name": "process_30",
+        "priority": 1,
+        "state": "new",
+        "cpu_time": 4295,
+        "memory_kb": 90106,
+        "parent_pid": 598,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user30",
+          "USER": "user30"
+        }
+      },
+      "1031": {
+        "pid": 1031,
+        "name": "process_31",
+        "priority": 5,
+        "state": "blocked",
+        "cpu_time": 7492,
+        "memory_kb": 18725,
+        "parent_pid": 517,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user31",
+          "USER": "user31"
+        }
+      },
+      "1032": {
+        "pid": 1032,
+        "name": "process_32",
+        "priority": 6,
+        "state": "blocked",
+        "cpu_time": 9591,
+        "memory_kb": 12828,
+        "parent_pid": 564,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user32",
+          "USER": "user32"
+        }
+      },
+      "1033": {
+        "pid": 1033,
+        "name": "process_33",
+        "priority": 0,
+        "state": "new",
+        "cpu_time": 1875,
+        "memory_kb": 36540,
+        "parent_pid": 420,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user33",
+          "USER": "user33"
+        }
+      },
+      "1034": {
+        "pid": 1034,
+        "name": "process_34",
+        "priority": 0,
+        "state": "blocked",
+        "cpu_time": 5434,
+        "memory_kb": 21739,
+        "parent_pid": 779,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user34",
+          "USER": "user34"
+        }
+      },
+      "1035": {
+        "pid": 1035,
+        "name": "process_35",
+        "priority": 0,
+        "state": "running",
+        "cpu_time": 5397,
+        "memory_kb": 78229,
+        "parent_pid": 107,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user35",
+          "USER": "user35"
+        }
+      },
+      "1036": {
+        "pid": 1036,
+        "name": "process_36",
+        "priority": 5,
+        "state": "suspended",
+        "cpu_time": 5045,
+        "memory_kb": 18773,
+        "parent_pid": 146,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user36",
+          "USER": "user36"
+        }
+      },
+      "1037": {
+        "pid": 1037,
+        "name": "process_37",
+        "priority": 2,
+        "state": "ready",
+        "cpu_time": 2854,
+        "memory_kb": 82944,
+        "parent_pid": 899,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user37",
+          "USER": "user37"
+        }
+      },
+      "1038": {
+        "pid": 1038,
+        "name": "process_38",
+        "priority": 4,
+        "state": "running",
+        "cpu_time": 3845,
+        "memory_kb": 89041,
+        "parent_pid": 914,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user38",
+          "USER": "user38"
+        }
+      },
+      "1039": {
+        "pid": 1039,
+        "name": "process_39",
+        "priority": 4,
+        "state": "ready",
+        "cpu_time": 6176,
+        "memory_kb": 70135,
+        "parent_pid": 913,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user39",
+          "USER": "user39"
+        }
+      },
+      "1040": {
+        "pid": 1040,
+        "name": "process_40",
+        "priority": 1,
+        "state": "running",
+        "cpu_time": 186,
+        "memory_kb": 85809,
+        "parent_pid": 503,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user40",
+          "USER": "user40"
+        }
+      },
+      "1041": {
+        "pid": 1041,
+        "name": "process_41",
+        "priority": 3,
+        "state": "blocked",
+        "cpu_time": 6047,
+        "memory_kb": 42269,
+        "parent_pid": 808,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user41",
+          "USER": "user41"
+        }
+      },
+      "1042": {
+        "pid": 1042,
+        "name": "process_42",
+        "priority": 2,
+        "state": "blocked",
+        "cpu_time": 312,
+        "memory_kb": 8398,
+        "parent_pid": 473,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user42",
+          "USER": "user42"
+        }
+      },
+      "1043": {
+        "pid": 1043,
+        "name": "process_43",
+        "priority": 5,
+        "state": "suspended",
+        "cpu_time": 7762,
+        "memory_kb": 28804,
+        "parent_pid": 945,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user43",
+          "USER": "user43"
+        }
+      },
+      "1044": {
+        "pid": 1044,
+        "name": "process_44",
+        "priority": 4,
+        "state": "running",
+        "cpu_time": 370,
+        "memory_kb": 98210,
+        "parent_pid": 421,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user44",
+          "USER": "user44"
+        }
+      },
+      "1045": {
+        "pid": 1045,
+        "name": "process_45",
+        "priority": 7,
+        "state": "blocked",
+        "cpu_time": 5606,
+        "memory_kb": 72720,
+        "parent_pid": 691,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user45",
+          "USER": "user45"
+        }
+      },
+      "1046": {
+        "pid": 1046,
+        "name": "process_46",
+        "priority": 6,
+        "state": "blocked",
+        "cpu_time": 5546,
+        "memory_kb": 83004,
+        "parent_pid": 333,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user46",
+          "USER": "user46"
+        }
+      },
+      "1047": {
+        "pid": 1047,
+        "name": "process_47",
+        "priority": 1,
+        "state": "suspended",
+        "cpu_time": 7922,
+        "memory_kb": 54324,
+        "parent_pid": 793,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user47",
+          "USER": "user47"
+        }
+      },
+      "1048": {
+        "pid": 1048,
+        "name": "process_48",
+        "priority": 7,
+        "state": "running",
+        "cpu_time": 4047,
+        "memory_kb": 97334,
+        "parent_pid": 881,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user48",
+          "USER": "user48"
+        }
+      },
+      "1049": {
+        "pid": 1049,
+        "name": "process_49",
+        "priority": 0,
+        "state": "suspended",
+        "cpu_time": 446,
+        "memory_kb": 17643,
+        "parent_pid": 216,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user49",
+          "USER": "user49"
+        }
+      },
+      "1050": {
+        "pid": 1050,
+        "name": "process_50",
+        "priority": 1,
+        "state": "blocked",
+        "cpu_time": 916,
+        "memory_kb": 58524,
+        "parent_pid": 185,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user50",
+          "USER": "user50"
+        }
+      },
+      "1051": {
+        "pid": 1051,
+        "name": "process_51",
+        "priority": 4,
+        "state": "new",
+        "cpu_time": 2049,
+        "memory_kb": 45015,
+        "parent_pid": 185,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user51",
+          "USER": "user51"
+        }
+      },
+      "1052": {
+        "pid": 1052,
+        "name": "process_52",
+        "priority": 2,
+        "state": "ready",
+        "cpu_time": 6193,
+        "memory_kb": 71666,
+        "parent_pid": 282,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user52",
+          "USER": "user52"
+        }
+      },
+      "1053": {
+        "pid": 1053,
+        "name": "process_53",
+        "priority": 2,
+        "state": "new",
+        "cpu_time": 1232,
+        "memory_kb": 18898,
+        "parent_pid": 729,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user53",
+          "USER": "user53"
+        }
+      },
+      "1054": {
+        "pid": 1054,
+        "name": "process_54",
+        "priority": 4,
+        "state": "ready",
+        "cpu_time": 1546,
+        "memory_kb": 1960,
+        "parent_pid": 710,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user54",
+          "USER": "user54"
+        }
+      },
+      "1055": {
+        "pid": 1055,
+        "name": "process_55",
+        "priority": 0,
+        "state": "new",
+        "cpu_time": 2252,
+        "memory_kb": 56917,
+        "parent_pid": 778,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user55",
+          "USER": "user55"
+        }
+      },
+      "1056": {
+        "pid": 1056,
+        "name": "process_56",
+        "priority": 5,
+        "state": "running",
+        "cpu_time": 4451,
+        "memory_kb": 93962,
+        "parent_pid": 661,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user56",
+          "USER": "user56"
+        }
+      },
+      "1057": {
+        "pid": 1057,
+        "name": "process_57",
+        "priority": 4,
+        "state": "ready",
+        "cpu_time": 8848,
+        "memory_kb": 40933,
+        "parent_pid": 832,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user57",
+          "USER": "user57"
+        }
+      },
+      "1058": {
+        "pid": 1058,
+        "name": "process_58",
+        "priority": 1,
+        "state": "new",
+        "cpu_time": 4676,
+        "memory_kb": 68482,
+        "parent_pid": 403,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user58",
+          "USER": "user58"
+        }
+      },
+      "1059": {
+        "pid": 1059,
+        "name": "process_59",
+        "priority": 6,
+        "state": "running",
+        "cpu_time": 8710,
+        "memory_kb": 21202,
+        "parent_pid": 34,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user59",
+          "USER": "user59"
+        }
+      },
+      "1060": {
+        "pid": 1060,
+        "name": "process_60",
+        "priority": 4,
+        "state": "running",
+        "cpu_time": 7767,
+        "memory_kb": 74909,
+        "parent_pid": 838,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user60",
+          "USER": "user60"
+        }
+      },
+      "1061": {
+        "pid": 1061,
+        "name": "process_61",
+        "priority": 4,
+        "state": "new",
+        "cpu_time": 697,
+        "memory_kb": 56699,
+        "parent_pid": 391,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user61",
+          "USER": "user61"
+        }
+      },
+      "1062": {
+        "pid": 1062,
+        "name": "process_62",
+        "priority": 6,
+        "state": "new",
+        "cpu_time": 4414,
+        "memory_kb": 15395,
+        "parent_pid": 479,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user62",
+          "USER": "user62"
+        }
+      },
+      "1063": {
+        "pid": 1063,
+        "name": "process_63",
+        "priority": 0,
+        "state": "new",
+        "cpu_time": 5595,
+        "memory_kb": 45827,
+        "parent_pid": 131,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user63",
+          "USER": "user63"
+        }
+      },
+      "1064": {
+        "pid": 1064,
+        "name": "process_64",
+        "priority": 6,
+        "state": "running",
+        "cpu_time": 4804,
+        "memory_kb": 73420,
+        "parent_pid": 359,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user64",
+          "USER": "user64"
+        }
+      },
+      "1065": {
+        "pid": 1065,
+        "name": "process_65",
+        "priority": 7,
+        "state": "new",
+        "cpu_time": 5074,
+        "memory_kb": 27668,
+        "parent_pid": 822,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user65",
+          "USER": "user65"
+        }
+      },
+      "1066": {
+        "pid": 1066,
+        "name": "process_66",
+        "priority": 0,
+        "state": "new",
+        "cpu_time": 2285,
+        "memory_kb": 34685,
+        "parent_pid": 990,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user66",
+          "USER": "user66"
+        }
+      },
+      "1067": {
+        "pid": 1067,
+        "name": "process_67",
+        "priority": 0,
+        "state": "running",
+        "cpu_time": 7872,
+        "memory_kb": 17037,
+        "parent_pid": 551,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user67",
+          "USER": "user67"
+        }
+      },
+      "1068": {
+        "pid": 1068,
+        "name": "process_68",
+        "priority": 4,
+        "state": "new",
+        "cpu_time": 8602,
+        "memory_kb": 2285,
+        "parent_pid": 792,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user68",
+          "USER": "user68"
+        }
+      },
+      "1069": {
+        "pid": 1069,
+        "name": "process_69",
+        "priority": 7,
+        "state": "blocked",
+        "cpu_time": 7118,
+        "memory_kb": 24124,
+        "parent_pid": 273,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user69",
+          "USER": "user69"
+        }
+      },
+      "1070": {
+        "pid": 1070,
+        "name": "process_70",
+        "priority": 5,
+        "state": "blocked",
+        "cpu_time": 4417,
+        "memory_kb": 55208,
+        "parent_pid": 935,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user70",
+          "USER": "user70"
+        }
+      },
+      "1071": {
+        "pid": 1071,
+        "name": "process_71",
+        "priority": 1,
+        "state": "suspended",
+        "cpu_time": 4784,
+        "memory_kb": 65676,
+        "parent_pid": 653,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user71",
+          "USER": "user71"
+        }
+      },
+      "1072": {
+        "pid": 1072,
+        "name": "process_72",
+        "priority": 5,
+        "state": "suspended",
+        "cpu_time": 9271,
+        "memory_kb": 71527,
+        "parent_pid": 671,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user72",
+          "USER": "user72"
+        }
+      },
+      "1073": {
+        "pid": 1073,
+        "name": "process_73",
+        "priority": 1,
+        "state": "running",
+        "cpu_time": 5524,
+        "memory_kb": 83337,
+        "parent_pid": 619,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user73",
+          "USER": "user73"
+        }
+      },
+      "1074": {
+        "pid": 1074,
+        "name": "process_74",
+        "priority": 6,
+        "state": "new",
+        "cpu_time": 4954,
+        "memory_kb": 97028,
+        "parent_pid": 67,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user74",
+          "USER": "user74"
+        }
+      },
+      "1075": {
+        "pid": 1075,
+        "name": "process_75",
+        "priority": 6,
+        "state": "blocked",
+        "cpu_time": 2215,
+        "memory_kb": 30432,
+        "parent_pid": 72,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user75",
+          "USER": "user75"
+        }
+      },
+      "1076": {
+        "pid": 1076,
+        "name": "process_76",
+        "priority": 3,
+        "state": "new",
+        "cpu_time": 7898,
+        "memory_kb": 102133,
+        "parent_pid": 554,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user76",
+          "USER": "user76"
+        }
+      },
+      "1077": {
+        "pid": 1077,
+        "name": "process_77",
+        "priority": 7,
+        "state": "ready",
+        "cpu_time": 5483,
+        "memory_kb": 8912,
+        "parent_pid": 751,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user77",
+          "USER": "user77"
+        }
+      },
+      "1078": {
+        "pid": 1078,
+        "name": "process_78",
+        "priority": 4,
+        "state": "new",
+        "cpu_time": 2200,
+        "memory_kb": 88773,
+        "parent_pid": 904,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user78",
+          "USER": "user78"
+        }
+      },
+      "1079": {
+        "pid": 1079,
+        "name": "process_79",
+        "priority": 2,
+        "state": "new",
+        "cpu_time": 2440,
+        "memory_kb": 51888,
+        "parent_pid": 13,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user79",
+          "USER": "user79"
+        }
+      },
+      "1080": {
+        "pid": 1080,
+        "name": "process_80",
+        "priority": 0,
+        "state": "new",
+        "cpu_time": 387,
+        "memory_kb": 83006,
+        "parent_pid": 494,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user80",
+          "USER": "user80"
+        }
+      },
+      "1081": {
+        "pid": 1081,
+        "name": "process_81",
+        "priority": 3,
+        "state": "ready",
+        "cpu_time": 7676,
+        "memory_kb": 73808,
+        "parent_pid": 533,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user81",
+          "USER": "user81"
+        }
+      },
+      "1082": {
+        "pid": 1082,
+        "name": "process_82",
+        "priority": 5,
+        "state": "new",
+        "cpu_time": 6025,
+        "memory_kb": 91704,
+        "parent_pid": 49,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user82",
+          "USER": "user82"
+        }
+      },
+      "1083": {
+        "pid": 1083,
+        "name": "process_83",
+        "priority": 3,
+        "state": "suspended",
+        "cpu_time": 1322,
+        "memory_kb": 61610,
+        "parent_pid": 407,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user83",
+          "USER": "user83"
+        }
+      },
+      "1084": {
+        "pid": 1084,
+        "name": "process_84",
+        "priority": 3,
+        "state": "new",
+        "cpu_time": 6973,
+        "memory_kb": 43495,
+        "parent_pid": 245,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user84",
+          "USER": "user84"
+        }
+      },
+      "1085": {
+        "pid": 1085,
+        "name": "process_85",
+        "priority": 0,
+        "state": "running",
+        "cpu_time": 2088,
+        "memory_kb": 38133,
+        "parent_pid": 185,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user85",
+          "USER": "user85"
+        }
+      },
+      "1086": {
+        "pid": 1086,
+        "name": "process_86",
+        "priority": 7,
+        "state": "blocked",
+        "cpu_time": 134,
+        "memory_kb": 92529,
+        "parent_pid": 290,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user86",
+          "USER": "user86"
+        }
+      },
+      "1087": {
+        "pid": 1087,
+        "name": "process_87",
+        "priority": 3,
+        "state": "suspended",
+        "cpu_time": 684,
+        "memory_kb": 87802,
+        "parent_pid": 757,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user87",
+          "USER": "user87"
+        }
+      },
+      "1088": {
+        "pid": 1088,
+        "name": "process_88",
+        "priority": 1,
+        "state": "ready",
+        "cpu_time": 6523,
+        "memory_kb": 38392,
+        "parent_pid": 855,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user88",
+          "USER": "user88"
+        }
+      },
+      "1089": {
+        "pid": 1089,
+        "name": "process_89",
+        "priority": 5,
+        "state": "blocked",
+        "cpu_time": 5615,
+        "memory_kb": 73449,
+        "parent_pid": 452,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user89",
+          "USER": "user89"
+        }
+      },
+      "1090": {
+        "pid": 1090,
+        "name": "process_90",
+        "priority": 6,
+        "state": "blocked",
+        "cpu_time": 3276,
+        "memory_kb": 16589,
+        "parent_pid": 552,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user90",
+          "USER": "user90"
+        }
+      },
+      "1091": {
+        "pid": 1091,
+        "name": "process_91",
+        "priority": 1,
+        "state": "ready",
+        "cpu_time": 7600,
+        "memory_kb": 63124,
+        "parent_pid": 154,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt",
+          "/tmp/file_4.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user91",
+          "USER": "user91"
+        }
+      },
+      "1092": {
+        "pid": 1092,
+        "name": "process_92",
+        "priority": 4,
+        "state": "blocked",
+        "cpu_time": 2767,
+        "memory_kb": 4402,
+        "parent_pid": 992,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user92",
+          "USER": "user92"
+        }
+      },
+      "1093": {
+        "pid": 1093,
+        "name": "process_93",
+        "priority": 4,
+        "state": "suspended",
+        "cpu_time": 1952,
+        "memory_kb": 7943,
+        "parent_pid": 356,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user93",
+          "USER": "user93"
+        }
+      },
+      "1094": {
+        "pid": 1094,
+        "name": "process_94",
+        "priority": 1,
+        "state": "suspended",
+        "cpu_time": 6573,
+        "memory_kb": 57560,
+        "parent_pid": 767,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user94",
+          "USER": "user94"
+        }
+      },
+      "1095": {
+        "pid": 1095,
+        "name": "process_95",
+        "priority": 3,
+        "state": "ready",
+        "cpu_time": 8692,
+        "memory_kb": 79021,
+        "parent_pid": 537,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user95",
+          "USER": "user95"
+        }
+      },
+      "1096": {
+        "pid": 1096,
+        "name": "process_96",
+        "priority": 3,
+        "state": "ready",
+        "cpu_time": 8356,
+        "memory_kb": 48926,
+        "parent_pid": 243,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user96",
+          "USER": "user96"
+        }
+      },
+      "1097": {
+        "pid": 1097,
+        "name": "process_97",
+        "priority": 4,
+        "state": "running",
+        "cpu_time": 2955,
+        "memory_kb": 20782,
+        "parent_pid": 250,
+        "open_files": [
+          "/tmp/file_0.txt",
+          "/tmp/file_1.txt",
+          "/tmp/file_2.txt",
+          "/tmp/file_3.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user97",
+          "USER": "user97"
+        }
+      },
+      "1098": {
+        "pid": 1098,
+        "name": "process_98",
+        "priority": 6,
+        "state": "new",
+        "cpu_time": 8474,
+        "memory_kb": 37333,
+        "parent_pid": 167,
+        "open_files": [],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user98",
+          "USER": "user98"
+        }
+      },
+      "1099": {
+        "pid": 1099,
+        "name": "process_99",
+        "priority": 5,
+        "state": "blocked",
+        "cpu_time": 1946,
+        "memory_kb": 47307,
+        "parent_pid": 872,
+        "open_files": [
+          "/tmp/file_0.txt"
+        ],
+        "environment": {
+          "PATH": "/usr/bin:/bin",
+          "HOME": "/home/user99",
+          "USER": "user99"
+        }
+      }
+    }
+  },
+  "merkle_root": "8c3cbc67b49073f0b3cd4de2405d97c81a90193e991ebb2b95c6d0b8e9c632bc",
+  "signature": "a3860b3f736f0c5ba0152b6b318e6544e9d13b190bfd86c859f7071d1a57c798",
+  "public_key": "mock_public_key_deterministic",
+  "version": 1,
+  "compression": null,
+  "size_bytes": 28657,
+  "recovery_proof": null
+}

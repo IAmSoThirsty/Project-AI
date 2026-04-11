@@ -502,3 +502,109 @@ data:
   feature_disabled: true
 metadata: {}
 hash: 5d9a66a99a0b431e3da537f33109452f5987dc41f7ce1dce60f04bb55077c1e4
+---
+timestamp: '2026-04-11T08:21:19.285456+00:00'
+event_type: temporal_event
+actor: chronos:test_chronos
+description: 'Temporal event: action'
+severity: info
+previous_hash: 5d9a66a99a0b431e3da537f33109452f5987dc41f7ce1dce60f04bb55077c1e4
+data:
+  event_id: chronos_evt_1
+  event_type: action
+  agent_id: agent1
+  temporal_weight: 1.0
+  vector_clock: VectorClock(agent1, [agent1:1])
+  causes: []
+metadata:
+  chronos_instance: test_chronos
+hash: 742d4e57aa4721ec43a84613e04f9a3a71c5179642ece3c952f8d0a60961bab8
+---
+timestamp: '2026-04-11T08:21:19.364477+00:00'
+event_type: temporal_event
+actor: chronos:test_chronos
+description: 'Temporal event: action'
+severity: info
+previous_hash: 742d4e57aa4721ec43a84613e04f9a3a71c5179642ece3c952f8d0a60961bab8
+data:
+  event_id: chronos_evt_2
+  event_type: action
+  agent_id: agent2
+  temporal_weight: 1.02
+  vector_clock: VectorClock(agent2, [agent1:1, agent2:2])
+  causes:
+  - chronos_evt_1
+metadata:
+  chronos_instance: test_chronos
+hash: 28cd3f68cc2550ca237725e8d619192b276bd2a4e63d69f0138dc2bec7617b34
+---
+timestamp: '2026-04-11T08:21:25.998664+00:00'
+event_type: temporal_event
+actor: chronos:demo_chronos
+description: 'Temporal event: create_user'
+severity: info
+previous_hash: 28cd3f68cc2550ca237725e8d619192b276bd2a4e63d69f0138dc2bec7617b34
+data:
+  event_id: evt_create_user
+  event_type: create_user
+  agent_id: agent1
+  temporal_weight: 1.0
+  vector_clock: VectorClock(agent1, [agent1:1])
+  causes: []
+metadata:
+  chronos_instance: demo_chronos
+hash: 7d74b6fc852f6105012e34d15b2b082da669250610249dbcd36f13fc4c3cfa37
+---
+timestamp: '2026-04-11T08:21:26.053833+00:00'
+event_type: temporal_event
+actor: chronos:demo_chronos
+description: 'Temporal event: verify_email'
+severity: info
+previous_hash: 7d74b6fc852f6105012e34d15b2b082da669250610249dbcd36f13fc4c3cfa37
+data:
+  event_id: evt_verify_email
+  event_type: verify_email
+  agent_id: agent1
+  temporal_weight: 1.0
+  vector_clock: VectorClock(agent1, [agent1:2])
+  causes:
+  - create_user
+metadata:
+  chronos_instance: demo_chronos
+hash: 93f90f16b1bdb9ff1e2c51a8f29a10d83dcbdaffb544c9d13312122dd72837a6
+---
+timestamp: '2026-04-11T08:21:26.123085+00:00'
+event_type: temporal_event
+actor: chronos:demo_chronos
+description: 'Temporal event: update_profile'
+severity: info
+previous_hash: 93f90f16b1bdb9ff1e2c51a8f29a10d83dcbdaffb544c9d13312122dd72837a6
+data:
+  event_id: evt_update_profile
+  event_type: update_profile
+  agent_id: agent2
+  temporal_weight: 1.0
+  vector_clock: VectorClock(agent2, [agent2:1])
+  causes:
+  - verify_email
+metadata:
+  chronos_instance: demo_chronos
+hash: fc87084a4db4306dc2cd0496bd5ff7dfdaf57a400322e8f11c2fdd903c5393c9
+---
+timestamp: '2026-04-11T08:21:26.179081+00:00'
+event_type: temporal_event
+actor: chronos:demo_chronos
+description: 'Temporal event: grant_permissions'
+severity: info
+previous_hash: fc87084a4db4306dc2cd0496bd5ff7dfdaf57a400322e8f11c2fdd903c5393c9
+data:
+  event_id: evt_grant_permissions
+  event_type: grant_permissions
+  agent_id: agent2
+  temporal_weight: 1.0
+  vector_clock: VectorClock(agent2, [agent2:2])
+  causes:
+  - update_profile
+metadata:
+  chronos_instance: demo_chronos
+hash: 2a71bfba70fac5e1b520c4f61e8cc8d7e9c92f874052f864f7922f930559690c

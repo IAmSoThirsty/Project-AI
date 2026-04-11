@@ -1,0 +1,80 @@
+{
+  "detected_at": "2026-04-11T08:21:26.237681+00:00",
+  "total_anomalies": 4,
+  "anomaly_types": {
+    "clock_drift": 0,
+    "timestamp_future": 0,
+    "timestamp_past": 0,
+    "sequence_violation": 0,
+    "duplicate_event": 4,
+    "causal_inconsistency": 0,
+    "replay_detected": 0,
+    "temporal_paradox": 0
+  },
+  "anomalies": [
+    {
+      "anomaly_id": "ANOM_d108d859",
+      "anomaly_type": "duplicate_event",
+      "severity": "high",
+      "description": "Duplicate event detected (potential replay attack)",
+      "detected_at": "2026-04-11T08:21:26.232679+00:00",
+      "event_ids": [
+        "test_1"
+      ],
+      "evidence": {
+        "event_hash": "14aa3908535b84c6",
+        "event_type": "test"
+      },
+      "confidence": 0.98,
+      "recommended_action": "Block duplicate event, investigate replay attack"
+    },
+    {
+      "anomaly_id": "ANOM_5f6259c8",
+      "anomaly_type": "duplicate_event",
+      "severity": "high",
+      "description": "Duplicate event detected (potential replay attack)",
+      "detected_at": "2026-04-11T08:21:26.232679+00:00",
+      "event_ids": [
+        "test_2"
+      ],
+      "evidence": {
+        "event_hash": "14aa3908535b84c6",
+        "event_type": "test"
+      },
+      "confidence": 0.98,
+      "recommended_action": "Block duplicate event, investigate replay attack"
+    },
+    {
+      "anomaly_id": "ANOM_5e369e40",
+      "anomaly_type": "duplicate_event",
+      "severity": "high",
+      "description": "Duplicate event detected (potential replay attack)",
+      "detected_at": "2026-04-11T08:21:26.232679+00:00",
+      "event_ids": [
+        "test_3"
+      ],
+      "evidence": {
+        "event_hash": "14aa3908535b84c6",
+        "event_type": "test"
+      },
+      "confidence": 0.98,
+      "recommended_action": "Block duplicate event, investigate replay attack"
+    },
+    {
+      "anomaly_id": "ANOM_ac46a90c",
+      "anomaly_type": "duplicate_event",
+      "severity": "high",
+      "description": "Duplicate event detected (potential replay attack)",
+      "detected_at": "2026-04-11T08:21:26.232679+00:00",
+      "event_ids": [
+        "test_4"
+      ],
+      "evidence": {
+        "event_hash": "14aa3908535b84c6",
+        "event_type": "test"
+      },
+      "confidence": 0.98,
+      "recommended_action": "Block duplicate event, investigate replay attack"
+    }
+  ]
+}

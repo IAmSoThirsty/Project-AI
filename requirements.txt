@@ -35,6 +35,7 @@ httpx==0.26.0
 requests>=2.32.2
 rfc3161ng>=2.1.2
 pyasn1>=0.4.8
+aiohttp>=3.9.0  # Enhanced build system distributed cache
 
 # Save points system dependencies
 # Note: uses Python standard library only
@@ -48,6 +49,9 @@ pytest-cov==4.1.0
 black==24.1.1
 flake8==7.0.0
 mypy==1.8.0
+
+# Enhanced Existential Proof System
+z3-solver>=4.12.0  # SMT solver for formal verification
 
 # Legion integration
 # Note: uses existing dependencies listed above

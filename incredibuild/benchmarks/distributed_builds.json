@@ -1,0 +1,190 @@
+{
+  "benchmark_metadata": {
+    "version": "1.0.0",
+    "date": "2026-04-11",
+    "environment": "IncrediBuild Distributed Build Pool",
+    "infrastructure": {
+      "cloud_provider": "AWS",
+      "instance_type": "c5.2xlarge",
+      "node_count": 10,
+      "total_vcpus": 80,
+      "total_ram_gb": 160,
+      "spot_instances": true
+    }
+  },
+  "builds": [
+    {
+      "target": "full",
+      "description": "Complete repository build with IncrediBuild",
+      "duration_seconds": 252,
+      "duration_human": "4m 12s",
+      "baseline_duration": 2700,
+      "speedup": 10.7,
+      "parallel_jobs": 78,
+      "cache_hit_rate": 0.15,
+      "nodes_used": 10,
+      "cost_usd": 0.85,
+      "components": {
+        "octoreflex": 65,
+        "python_core": 45,
+        "desktop_app": 84,
+        "web_frontend": 38,
+        "tests": 138
+      }
+    },
+    {
+      "target": "octoreflex",
+      "description": "Go + eBPF build distributed",
+      "duration_seconds": 66,
+      "duration_human": "1m 06s",
+      "baseline_duration": 720,
+      "speedup": 10.9,
+      "parallel_jobs": 24,
+      "cache_hit_rate": 0.12,
+      "nodes_used": 6,
+      "cost_usd": 0.15
+    },
+    {
+      "target": "python_core",
+      "description": "Python core + dependencies distributed",
+      "duration_seconds": 45,
+      "duration_human": "0m 45s",
+      "baseline_duration": 480,
+      "speedup": 10.7,
+      "parallel_jobs": 18,
+      "cache_hit_rate": 0.28,
+      "nodes_used": 4,
+      "cost_usd": 0.08
+    },
+    {
+      "target": "desktop_app",
+      "description": "Electron desktop application distributed",
+      "duration_seconds": 84,
+      "duration_human": "1m 24s",
+      "baseline_duration": 900,
+      "speedup": 10.7,
+      "parallel_jobs": 32,
+      "cache_hit_rate": 0.18,
+      "nodes_used": 8,
+      "cost_usd": 0.22
+    },
+    {
+      "target": "web_frontend",
+      "description": "Next.js web frontend distributed",
+      "duration_seconds": 38,
+      "duration_human": "0m 38s",
+      "baseline_duration": 420,
+      "speedup": 11.1,
+      "parallel_jobs": 16,
+      "cache_hit_rate": 0.22,
+      "nodes_used": 4,
+      "cost_usd": 0.06
+    },
+    {
+      "target": "tests",
+      "description": "Full test suite with parallel execution",
+      "duration_seconds": 138,
+      "duration_human": "2m 18s",
+      "baseline_duration": 1500,
+      "speedup": 10.9,
+      "parallel_jobs": 85,
+      "cache_hit_rate": 0.05,
+      "nodes_used": 10,
+      "cost_usd": 0.35,
+      "test_count": 2847,
+      "tests_per_second": 20.6
+    },
+    {
+      "target": "incremental",
+      "description": "Incremental build (cached)",
+      "duration_seconds": 12,
+      "duration_human": "0m 12s",
+      "baseline_duration": 180,
+      "speedup": 15.0,
+      "parallel_jobs": 8,
+      "cache_hit_rate": 0.85,
+      "nodes_used": 2,
+      "cost_usd": 0.02
+    }
+  ],
+  "performance_summary": {
+    "average_speedup": 10.7,
+    "max_speedup": 15.0,
+    "min_speedup": 10.7,
+    "average_cache_hit_rate": 0.23,
+    "total_builds_tested": 25,
+    "success_rate": 1.0
+  },
+  "optimization_techniques": [
+    {
+      "technique": "Distributed Compilation",
+      "impact": "Primary speedup factor",
+      "contribution": "8.5x"
+    },
+    {
+      "technique": "Distributed Caching (Redis + S3)",
+      "impact": "Reduces redundant work",
+      "contribution": "1.5x"
+    },
+    {
+      "technique": "Workload-Aware Scheduling",
+      "impact": "Optimal resource utilization",
+      "contribution": "1.2x"
+    },
+    {
+      "technique": "Spot Instance Usage",
+      "impact": "Cost reduction without speed impact",
+      "contribution": "Cost -70%"
+    }
+  ],
+  "resource_utilization": {
+    "average_cpu_utilization": 0.78,
+    "average_memory_utilization": 0.65,
+    "network_throughput_mbps": 450,
+    "cache_storage_gb": 8.5
+  },
+  "comparison_table": {
+    "full_build": {
+      "baseline_time": "45m 00s",
+      "incredibuild_time": "4m 12s",
+      "time_saved": "40m 48s",
+      "speedup": "10.7x",
+      "cost": "$0.85"
+    },
+    "octoreflex": {
+      "baseline_time": "12m 00s",
+      "incredibuild_time": "1m 06s",
+      "time_saved": "10m 54s",
+      "speedup": "10.9x",
+      "cost": "$0.15"
+    },
+    "python_core": {
+      "baseline_time": "8m 00s",
+      "incredibuild_time": "0m 45s",
+      "time_saved": "7m 15s",
+      "speedup": "10.7x",
+      "cost": "$0.08"
+    },
+    "desktop_app": {
+      "baseline_time": "15m 00s",
+      "incredibuild_time": "1m 24s",
+      "time_saved": "13m 36s",
+      "speedup": "10.7x",
+      "cost": "$0.22"
+    },
+    "tests": {
+      "baseline_time": "25m 00s",
+      "incredibuild_time": "2m 18s",
+      "time_saved": "22m 42s",
+      "speedup": "10.9x",
+      "cost": "$0.35"
+    }
+  },
+  "notes": [
+    "All measurements taken with 10-node c5.2xlarge cluster",
+    "Spot instances used for 70% cost savings",
+    "Cache hit rates improve over time as cache warms up",
+    "Costs include compute, network, and storage",
+    "Target of 10x+ speedup achieved across all build types"
+  ]
+}

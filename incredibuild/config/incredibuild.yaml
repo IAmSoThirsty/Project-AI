@@ -1,0 +1,305 @@
+# IncrediBuild Configuration
+# Version: 1.0.0
+
+# Cloud Provider Settings
+cloud:
+  provider: aws  # Options: aws, gcp, azure, multi
+  
+  # AWS Configuration
+  aws:
+    region: us-east-1
+    access_key_id: ${AWS_ACCESS_KEY_ID}
+    secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+    
+    # Instance Configuration
+    instance_type: c5.2xlarge  # 8 vCPU, 16 GB RAM
+    spot_instances: true  # Use spot instances for 70% cost savings
+    max_spot_price: 0.15  # USD per hour
+    
+    # Auto-scaling
+    min_nodes: 2
+    max_nodes: 20
+    target_utilization: 0.75
+    
+    # AMI Configuration
+    base_ami: ami-0c55b159cbfafe1f0  # Ubuntu 22.04 with build tools
+    custom_ami: null  # Set to custom AMI ID if using pre-baked image
+    
+    # Security
+    security_group: incredibuild-sg
+    subnet_id: subnet-xxxxxxxxx
+    iam_role: incredibuild-worker-role
+    
+  # GCP Configuration (alternative/backup)
+  gcp:
+    project_id: ${GCP_PROJECT_ID}
+    region: us-central1
+    zone: us-central1-a
+    
+    machine_type: n1-highcpu-8
+    preemptible: true
+    
+    min_nodes: 2
+    max_nodes: 20
+    
+  # Azure Configuration (alternative/backup)
+  azure:
+    subscription_id: ${AZURE_SUBSCRIPTION_ID}
+    resource_group: incredibuild-rg
+    location: eastus
+    
+    vm_size: Standard_F8s_v2
+    low_priority: true
+    
+    min_nodes: 2
+    max_nodes: 20
+
+# Build Configuration
+build:
+  # Compilation Settings
+  compiler:
+    c_compiler: gcc
+    cpp_compiler: g++
+    go_compiler: go
+    rust_compiler: rustc
+    
+  # Parallelization
+  max_parallel_jobs: 100  # Max concurrent compilation jobs
+  jobs_per_node: 8  # Parallel jobs per node (match vCPU count)
+  
+  # Build Targets
+  targets:
+    - name: octoreflex
+      type: go
+      path: octoreflex/
+      cache_enabled: true
+      priority: high
+      
+    - name: python-core
+      type: python
+      path: src/
+      cache_enabled: true
+      priority: medium
+      
+    - name: desktop-app
+      type: node
+      path: desktop/
+      cache_enabled: true
+      priority: medium
+      
+    - name: web-frontend
+      type: node
+      path: web/
+      cache_enabled: true
+      priority: low
+      
+    - name: tests
+      type: pytest
+      path: tests/
+      cache_enabled: false
+      priority: high
+
+# Distributed Cache Configuration
+cache:
+  # Cache Backend
+  backend: hybrid  # Options: redis, s3, hybrid, disabled
+  
+  # Redis (L1 Cache - Fast)
+  redis:
+    enabled: true
+    host: ${REDIS_HOST:-localhost}
+    port: ${REDIS_PORT:-6379}
+    password: ${REDIS_PASSWORD}
+    db: 0
+    max_memory: 8GB
+    eviction_policy: allkeys-lru
+    
+    # Redis Cluster (for high availability)
+    cluster_mode: false
+    cluster_nodes: []
+    
+  # S3 (L2 Cache - Persistent)
+  s3:
+    enabled: true
+    bucket: incredibuild-cache-${AWS_ACCOUNT_ID}
+    region: us-east-1
+    prefix: cache/
+    
+    # Lifecycle rules
+    max_age_days: 30
+    cleanup_interval: 24h
+    
+  # sccache Configuration
+  sccache:
+    enabled: true
+    cache_size: 10GB
+    remote_cache: true
+    
+  # ccache Configuration (for C/C++)
+  ccache:
+    enabled: true
+    max_size: 10GB
+    compression: true
+    compression_level: 6
+
+# Cost Management
+cost:
+  # Budget Limits
+  daily_limit: 50.00  # USD
+  monthly_limit: 1000.00  # USD
+  per_build_limit: 5.00  # USD
+  
+  # Cost Optimization
+  optimize_for: cost  # Options: cost, speed, balance
+  
+  # Alerts
+  alerts:
+    enabled: true
+    threshold_percent: 80  # Alert at 80% of budget
+    email: devops@example.com
+    slack_webhook: ${SLACK_WEBHOOK_URL}
+    
+  # Regional Cost Optimization
+  prefer_cheap_regions: true
+  region_fallback:
+    - us-east-1
+    - us-west-2
+    - eu-central-1
+
+# Monitoring & Observability
+monitoring:
+  # Metrics Collection
+  metrics:
+    enabled: true
+    interval: 30s
+    retention: 30d
+    
+  # Exporters
+  prometheus:
+    enabled: true
+    port: 9090
+    
+  grafana:
+    enabled: true
+    port: 3000
+    dashboard_path: incredibuild/monitoring/grafana_dashboard.json
+    
+  # Logging
+  logging:
+    level: INFO  # DEBUG, INFO, WARNING, ERROR
+    format: json
+    output: stdout
+    
+    # Log Aggregation
+    elasticsearch:
+      enabled: false
+      host: ${ES_HOST}
+      index: incredibuild-logs
+      
+  # Tracing
+  jaeger:
+    enabled: false
+    endpoint: ${JAEGER_ENDPOINT}
+
+# Network Configuration
+network:
+  # Bandwidth Limits
+  max_upload_mbps: 1000
+  max_download_mbps: 1000
+  
+  # Compression
+  compress_artifacts: true
+  compression_level: 6
+  
+  # CDN for artifact distribution
+  cdn:
+    enabled: false
+    provider: cloudfront
+    distribution_id: ${CDN_DISTRIBUTION_ID}
+
+# Security Settings
+security:
+  # Encryption
+  encrypt_at_rest: true
+  encrypt_in_transit: true
+  tls_version: "1.3"
+  
+  # Authentication
+  auth:
+    type: iam  # Options: iam, api_key, oauth
+    api_key: ${INCREDIBUILD_API_KEY}
+    
+  # Secrets Management
+  secrets:
+    provider: aws_secrets_manager  # Options: aws_secrets_manager, vault, env
+    region: us-east-1
+    
+  # Audit Logging
+  audit:
+    enabled: true
+    log_all_builds: true
+    retention_days: 90
+
+# Advanced Settings
+advanced:
+  # Scheduling
+  scheduler:
+    algorithm: workload_aware  # Options: round_robin, least_loaded, workload_aware
+    health_check_interval: 60s
+    
+  # Retry Logic
+  retry:
+    max_attempts: 3
+    backoff_multiplier: 2
+    max_backoff: 300s
+    
+  # Failover
+  failover:
+    enabled: true
+    fallback_to_local: true
+    timeout: 600s
+    
+  # Warm Pool
+  warm_pool:
+    enabled: true
+    size: 2  # Keep 2 nodes always ready
+    
+  # Container Runtime
+  container:
+    runtime: docker  # Options: docker, podman, containerd
+    image: incredibuild/build-agent:latest
+    registry: ${DOCKER_REGISTRY}
+    
+  # Git Integration
+  git:
+    clone_depth: 1  # Shallow clone for speed
+    use_reference_repo: true
+    reference_path: /var/cache/git-reference
+
+# Feature Flags
+features:
+  predictive_scaling: true
+  cache_warming: true
+  build_analytics: true
+  cost_forecasting: true
+  ml_optimization: false  # Requires ML service
+
+# Notifications
+notifications:
+  # Build Status
+  on_success:
+    enabled: true
+    channels: [slack, email]
+    
+  on_failure:
+    enabled: true
+    channels: [slack, email, pagerduty]
+    
+  on_timeout:
+    enabled: true
+    channels: [slack, pagerduty]
+    
+  # Cost Alerts
+  cost_threshold:
+    enabled: true
+    channels: [email, slack]

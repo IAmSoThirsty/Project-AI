@@ -1,0 +1,17 @@
+{
+  "snapshot_id": "test_process_1775893880407",
+  "timestamp": 1775893880.4072301,
+  "controller_id": "test",
+  "state_type": "process",
+  "state_data": {
+    "test": "data",
+    "value": 123
+  },
+  "merkle_root": "86d0fdac2ec2165c30dbf75cf73b96a47f9b9109e8e45b754f00cac7fb969d06",
+  "signature": "b5ad725d801718acc66380e9cd385193047373000dddc37d3a11c570dca44af0",
+  "public_key": "mock_public_key_deterministic",
+  "version": 1,
+  "compression": null,
+  "size_bytes": 403,
+  "recovery_proof": null
+}

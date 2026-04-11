@@ -1,0 +1,168 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: temporal
+  labels:
+    name: temporal
+    security: zero-trust
+
+---
+# Default deny all traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: temporal
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# Temporal Frontend Network Policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: temporal-frontend
+  namespace: temporal
+spec:
+  podSelector:
+    matchLabels:
+      app: temporal-frontend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from clients
+    - from:
+        - podSelector:
+            matchLabels:
+              role: temporal-client
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 7233
+  egress:
+    # Allow to history service
+    - to:
+        - podSelector:
+            matchLabels:
+              app: temporal-history
+      ports:
+        - protocol: TCP
+          port: 7234
+    # Allow to matching service
+    - to:
+        - podSelector:
+            matchLabels:
+              app: temporal-matching
+      ports:
+        - protocol: TCP
+          port: 7235
+    # Allow DNS
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+---
+# Temporal Workers Network Policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: temporal-workers
+  namespace: temporal
+spec:
+  podSelector:
+    matchLabels:
+      app: temporal-worker
+  policyTypes:
+    - Egress
+  egress:
+    # Allow to frontend
+    - to:
+        - podSelector:
+            matchLabels:
+              app: temporal-frontend
+      ports:
+        - protocol: TCP
+          port: 7233
+    # Allow DNS
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # Allow to external services (HTTP/HTTPS)
+    - to:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
+
+---
+# Temporal Internal Services Network Policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: temporal-internal
+  namespace: temporal
+spec:
+  podSelector:
+    matchLabels:
+      component: temporal-internal
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow from frontend and other internal services
+    - from:
+        - podSelector:
+            matchLabels:
+              app: temporal-frontend
+        - podSelector:
+            matchLabels:
+              component: temporal-internal
+      ports:
+        - protocol: TCP
+          port: 7234
+        - protocol: TCP
+          port: 7235
+  egress:
+    # Allow to database
+    - to:
+        - podSelector:
+            matchLabels:
+              app: temporal-database
+      ports:
+        - protocol: TCP
+          port: 5432  # PostgreSQL
+        - protocol: TCP
+          port: 9042  # Cassandra
+    # Allow to other Temporal services
+    - to:
+        - podSelector:
+            matchLabels:
+              component: temporal-internal
+    # Allow DNS
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53

@@ -1,0 +1,227 @@
+---
+# ArgoCD Application for Sovereign Governance Substrate
+# Declarative GitOps deployment configuration
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sovereign-governance
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/your-org/sovereign-governance-substrate
+    targetRevision: main
+    path: k8s/base
+    
+    # Kustomize configuration
+    kustomize:
+      namePrefix: sovereign-
+      commonLabels:
+        app.kubernetes.io/name: sovereign-governance
+        app.kubernetes.io/managed-by: argocd
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: sovereign-governance
+  
+  syncPolicy:
+    automated:
+      prune: true      # Auto-delete resources removed from Git
+      selfHeal: true   # Auto-sync when cluster state drifts
+      allowEmpty: false
+    
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  # Health assessment
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas  # Ignore HPA-managed replicas
+    - group: apps
+      kind: StatefulSet
+      jsonPointers:
+        - /spec/replicas
+
+---
+# ArgoCD Application for Temporal Components
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: temporal-workflows
+  namespace: argocd
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/your-org/sovereign-governance-substrate
+    targetRevision: main
+    path: temporal
+    
+    directory:
+      recurse: true
+      jsonnet: {}
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: temporal
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+  
+  # Progressive rollout with health checks
+  health:
+    checks:
+      - kind: Deployment
+        liveness: true
+        readiness: true
+
+---
+# Multi-environment AppProject
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: sovereign-project
+  namespace: argocd
+spec:
+  description: Sovereign Governance multi-environment project
+  
+  sourceRepos:
+    - https://github.com/your-org/sovereign-governance-substrate
+  
+  destinations:
+    - namespace: 'sovereign-*'
+      server: https://kubernetes.default.svc
+    - namespace: temporal
+      server: https://kubernetes.default.svc
+  
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
+  
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  
+  roles:
+    - name: admin
+      description: Admin access to project
+      policies:
+        - p, proj:sovereign-project:admin, applications, *, sovereign-project/*, allow
+      groups:
+        - sovereign-admins
+    
+    - name: developer
+      description: Developer access (read-only)
+      policies:
+        - p, proj:sovereign-project:developer, applications, get, sovereign-project/*, allow
+        - p, proj:sovereign-project:developer, applications, sync, sovereign-project/*, allow
+      groups:
+        - sovereign-developers
+
+---
+# ApplicationSet for multi-cluster deployment
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: sovereign-governance-multicluster
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: dev
+            url: https://dev-cluster.example.com
+            namespace: sovereign-dev
+            replicas: "1"
+          - cluster: staging
+            url: https://staging-cluster.example.com
+            namespace: sovereign-staging
+            replicas: "2"
+          - cluster: production
+            url: https://prod-cluster.example.com
+            namespace: sovereign-prod
+            replicas: "5"
+  
+  template:
+    metadata:
+      name: 'sovereign-{{cluster}}'
+    spec:
+      project: sovereign-project
+      
+      source:
+        repoURL: https://github.com/your-org/sovereign-governance-substrate
+        targetRevision: main
+        path: k8s/overlays/{{cluster}}
+        
+        kustomize:
+          commonLabels:
+            environment: '{{cluster}}'
+          replicas:
+            - name: temporal-worker
+              count: '{{replicas}}'
+      
+      destination:
+        server: '{{url}}'
+        namespace: '{{namespace}}'
+      
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+
+---
+# Notification configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+  namespace: argocd
+data:
+  service.slack: |
+    token: $slack-token
+  
+  template.app-deployed: |
+    message: |
+      Application {{.app.metadata.name}} is now running new version.
+      Sync Status: {{.app.status.sync.status}}
+      Health Status: {{.app.status.health.status}}
+  
+  template.app-health-degraded: |
+    message: |
+      Application {{.app.metadata.name}} has degraded.
+      Health Status: {{.app.status.health.status}}
+      
+  trigger.on-deployed: |
+    - when: app.status.sync.status == 'Synced'
+      send: [app-deployed]
+  
+  trigger.on-health-degraded: |
+    - when: app.status.health.status == 'Degraded'
+      send: [app-health-degraded]

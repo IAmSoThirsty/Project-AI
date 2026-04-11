@@ -1,0 +1,276 @@
+---
+# Litmus Chaos Engine Configuration
+# Alternative to Chaos Mesh for chaos engineering
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: litmus
+---
+# Install Litmus
+# kubectl apply -f https://litmuschaos.github.io/litmus/litmus-operator-latest.yaml
+
+---
+# Service Account for Chaos
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: temporal-chaos-sa
+  namespace: litmus
+
+---
+# Role for Chaos Experiments
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: temporal-chaos-role
+  namespace: default
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "events"]
+    verbs: ["get", "list", "patch", "delete", "create"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "statefulsets"]
+    verbs: ["get", "list", "patch"]
+
+---
+# RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: temporal-chaos-rb
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: temporal-chaos-role
+subjects:
+  - kind: ServiceAccount
+    name: temporal-chaos-sa
+    namespace: litmus
+
+---
+# Pod Delete Experiment
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: temporal-pod-delete
+  namespace: default
+spec:
+  engineState: "active"
+  appinfo:
+    appns: default
+    applabel: "app=temporal-worker"
+    appkind: deployment
+  chaosServiceAccount: temporal-chaos-sa
+  experiments:
+    - name: pod-delete
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "60"
+            - name: CHAOS_INTERVAL
+              value: "10"
+            - name: FORCE
+              value: "false"
+            - name: PODS_AFFECTED_PERC
+              value: "50"
+
+---
+# Container Kill Experiment
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: temporal-container-kill
+  namespace: default
+spec:
+  engineState: "active"
+  appinfo:
+    appns: default
+    applabel: "app=temporal-server"
+    appkind: deployment
+  chaosServiceAccount: temporal-chaos-sa
+  experiments:
+    - name: container-kill
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "60"
+            - name: CHAOS_INTERVAL
+              value: "10"
+            - name: CONTAINER_RUNTIME
+              value: "containerd"
+            - name: SOCKET_PATH
+              value: "/run/containerd/containerd.sock"
+
+---
+# Network Loss Experiment
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: temporal-network-loss
+  namespace: default
+spec:
+  engineState: "active"
+  appinfo:
+    appns: default
+    applabel: "app=temporal-worker"
+    appkind: deployment
+  chaosServiceAccount: temporal-chaos-sa
+  experiments:
+    - name: pod-network-loss
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "120"
+            - name: NETWORK_INTERFACE
+              value: "eth0"
+            - name: NETWORK_PACKET_LOSS_PERCENTAGE
+              value: "30"
+            - name: DESTINATION_IPS
+              value: ""  # Target all traffic
+
+---
+# Network Latency Experiment
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: temporal-network-latency
+  namespace: default
+spec:
+  engineState: "active"
+  appinfo:
+    appns: default
+    applabel: "app=temporal-worker"
+    appkind: deployment
+  chaosServiceAccount: temporal-chaos-sa
+  experiments:
+    - name: pod-network-latency
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "120"
+            - name: NETWORK_INTERFACE
+              value: "eth0"
+            - name: NETWORK_LATENCY
+              value: "2000"  # 2 second latency
+            - name: JITTER
+              value: "500"
+
+---
+# Disk Fill Experiment
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: temporal-disk-fill
+  namespace: default
+spec:
+  engineState: "active"
+  appinfo:
+    appns: default
+    applabel: "app=temporal-server"
+    appkind: deployment
+  chaosServiceAccount: temporal-chaos-sa
+  experiments:
+    - name: disk-fill
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "60"
+            - name: FILL_PERCENTAGE
+              value: "80"
+            - name: TARGET_DIRECTORY
+              value: "/var/lib/temporal"
+
+---
+# Node CPU Hog Experiment
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: temporal-node-cpu-hog
+  namespace: default
+spec:
+  engineState: "active"
+  appinfo:
+    appns: default
+    applabel: "app=temporal-worker"
+    appkind: deployment
+  chaosServiceAccount: temporal-chaos-sa
+  experiments:
+    - name: node-cpu-hog
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "120"
+            - name: NODE_CPU_CORE
+              value: "2"
+            - name: CPU_LOAD
+              value: "100"
+
+---
+# Node Memory Hog Experiment
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: temporal-node-memory-hog
+  namespace: default
+spec:
+  engineState: "active"
+  appinfo:
+    appns: default
+    applabel: "app=temporal-worker"
+    appkind: deployment
+  chaosServiceAccount: temporal-chaos-sa
+  experiments:
+    - name: node-memory-hog
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "120"
+            - name: MEMORY_PERCENTAGE
+              value: "80"
+
+---
+# Cascading Failure Workflow
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosSchedule
+metadata:
+  name: temporal-cascading-failure
+  namespace: default
+spec:
+  schedule:
+    repeat:
+      properties:
+        minChaosInterval: "5m"
+        includedDays: "Mon,Tue,Wed,Thu,Fri"
+      workHours:
+        includedHours: "10-18"
+  engineTemplateSpec:
+    engineState: "active"
+    appinfo:
+      appns: default
+      applabel: "app=temporal-worker"
+      appkind: deployment
+    chaosServiceAccount: temporal-chaos-sa
+    experiments:
+      - name: pod-delete
+        spec:
+          components:
+            env:
+              - name: TOTAL_CHAOS_DURATION
+                value: "30"
+      - name: pod-network-loss
+        spec:
+          components:
+            env:
+              - name: TOTAL_CHAOS_DURATION
+                value: "60"
+              - name: NETWORK_PACKET_LOSS_PERCENTAGE
+                value: "50"

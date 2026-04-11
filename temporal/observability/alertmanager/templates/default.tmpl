@@ -1,0 +1,70 @@
+{{ define "slack.default.title" }}
+[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "slack.default.text" }}
+{{ range .Alerts }}
+*Alert:* {{ .Labels.alertname }}
+*Severity:* {{ .Labels.severity }}
+*Summary:* {{ .Annotations.summary }}
+*Description:* {{ .Annotations.description }}
+*Details:*
+{{ range .Labels.SortedPairs }}  • {{ .Name }}: {{ .Value }}
+{{ end }}
+{{ end }}
+{{ end }}
+
+{{ define "email.default.subject" }}
+[{{ .Status | toUpper }}] {{ .GroupLabels.alertname }} ({{ .Alerts.Firing | len }} firing)
+{{ end }}
+
+{{ define "email.default.html" }}
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .critical { color: #d9534f; }
+    .warning { color: #f0ad4e; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+  <h2>{{ .Status | toUpper }}: {{ .GroupLabels.alertname }}</h2>
+  <p><strong>Time:</strong> {{ .CommonAnnotations.summary }}</p>
+  
+  <table>
+    <tr>
+      <th>Alert</th>
+      <th>Severity</th>
+      <th>Description</th>
+      <th>Started At</th>
+    </tr>
+    {{ range .Alerts }}
+    <tr class="{{ .Labels.severity }}">
+      <td>{{ .Labels.alertname }}</td>
+      <td>{{ .Labels.severity }}</td>
+      <td>{{ .Annotations.description }}</td>
+      <td>{{ .StartsAt.Format "2006-01-02 15:04:05" }}</td>
+    </tr>
+    {{ end }}
+  </table>
+  
+  <h3>Labels:</h3>
+  <ul>
+    {{ range .CommonLabels.SortedPairs }}
+    <li><strong>{{ .Name }}:</strong> {{ .Value }}</li>
+    {{ end }}
+  </ul>
+</body>
+</html>
+{{ end }}
+
+{{ define "pagerduty.default.description" }}
+{{ .CommonAnnotations.summary }}
+{{ range .Alerts }}
+{{ .Annotations.description }}
+{{ end }}
+{{ end }}

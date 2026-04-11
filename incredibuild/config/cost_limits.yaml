@@ -1,0 +1,308 @@
+# Cost Limits and Budget Configuration
+# Version: 1.0.0
+
+# Budget Limits
+limits:
+  # Daily Limit
+  daily:
+    amount_usd: 50.00
+    alert_threshold: 0.80  # Alert at 80%
+    hard_stop: true  # Stop builds if exceeded
+    
+  # Weekly Limit
+  weekly:
+    amount_usd: 200.00
+    alert_threshold: 0.85
+    hard_stop: false
+    
+  # Monthly Limit
+  monthly:
+    amount_usd: 1000.00
+    alert_threshold: 0.90
+    hard_stop: false
+    
+  # Per-Build Limit
+  per_build:
+    amount_usd: 5.00
+    alert_threshold: 0.90
+    hard_stop: true
+    
+  # Hourly Rate Limit
+  hourly_rate:
+    max_usd_per_hour: 10.00
+    alert_threshold: 0.85
+
+# Cost Optimization Strategy
+optimization:
+  # Primary Goal
+  optimize_for: balance  # Options: cost, speed, balance
+  
+  # Strategies
+  strategies:
+    # Spot/Preemptible Instances
+    spot_instances:
+      enabled: true
+      max_price_multiplier: 0.5  # Max 50% of on-demand price
+      fallback_to_on_demand: true
+      
+    # Auto-Scaling
+    auto_scaling:
+      enabled: true
+      scale_down_idle_minutes: 10
+      scale_up_delay_seconds: 0
+      aggressive_scale_down: true
+      
+    # Regional Selection
+    regional_optimization:
+      enabled: true
+      prefer_cheap_regions: true
+      max_latency_penalty_ms: 100
+      
+    # Resource Right-Sizing
+    right_sizing:
+      enabled: true
+      analyze_interval_hours: 24
+      auto_adjust: false
+      
+    # Cache Optimization
+    cache_optimization:
+      enabled: true
+      target_hit_rate: 0.30
+      invest_in_cache_infrastructure: true
+      
+    # Workload Scheduling
+    workload_scheduling:
+      enabled: true
+      defer_non_critical: true
+      batch_small_jobs: true
+
+# Cost Tracking
+tracking:
+  # Granularity
+  granularity: hourly  # Options: hourly, daily, weekly
+  
+  # Breakdown By
+  breakdown:
+    by_component: true
+    by_target: true
+    by_user: true
+    by_region: true
+    by_instance_type: true
+    
+  # Retention
+  retention:
+    raw_data_days: 90
+    aggregated_data_days: 365
+    
+  # Export
+  export:
+    enabled: true
+    format: json
+    destination: incredibuild/benchmarks/cost_tracking/
+    interval_hours: 24
+
+# Alerts
+alerts:
+  # Budget Alerts
+  budget:
+    - name: daily_80_percent
+      type: daily
+      threshold: 0.80
+      channels: [email, slack]
+      
+    - name: daily_100_percent
+      type: daily
+      threshold: 1.00
+      channels: [email, slack, pagerduty]
+      action: pause_builds
+      
+    - name: monthly_90_percent
+      type: monthly
+      threshold: 0.90
+      channels: [email, slack]
+      
+  # Anomaly Detection
+  anomaly:
+    enabled: true
+    sensitivity: medium  # Options: low, medium, high
+    alert_on_spike: true
+    spike_threshold_multiplier: 2.0
+    
+  # Forecast Alerts
+  forecast:
+    enabled: true
+    alert_if_projected_over_budget: true
+    forecast_horizon_days: 7
+
+# Cost Allocation
+allocation:
+  # Tag-Based Allocation
+  tags:
+    - key: Team
+      values: [backend, frontend, infrastructure, ml]
+      
+    - key: Project
+      values: [sovereign-governance, incredibuild, vault]
+      
+    - key: Environment
+      values: [development, staging, production]
+      
+  # Chargeback
+  chargeback:
+    enabled: false
+    reporting_period: monthly
+    report_recipients:
+      - finance@example.com
+      - engineering-leads@example.com
+
+# Cost Forecasting
+forecasting:
+  enabled: true
+  
+  # Models
+  models:
+    - type: linear_regression
+      weight: 0.3
+      
+    - type: moving_average
+      window_days: 30
+      weight: 0.4
+      
+    - type: exponential_smoothing
+      alpha: 0.3
+      weight: 0.3
+      
+  # Horizon
+  horizon_days: 30
+  
+  # Confidence
+  confidence_interval: 0.95
+  
+  # Reporting
+  reporting:
+    enabled: true
+    interval: weekly
+    format: json
+    include_breakdown: true
+
+# Reserved Instances / Savings Plans
+reserved:
+  # Analysis
+  analyze:
+    enabled: true
+    recommendation_interval_days: 30
+    
+  # Thresholds for Recommendation
+  thresholds:
+    min_utilization: 0.70  # Recommend RI if utilization > 70%
+    min_duration_days: 60  # Only if pattern stable for 60+ days
+    
+  # Commitment
+  commitment:
+    enabled: false
+    max_commitment_percent: 0.50  # Max 50% of capacity as reserved
+    term: 1_year  # Options: 1_year, 3_year
+    payment_option: partial_upfront
+
+# Cost Optimization Recommendations
+recommendations:
+  # Generation
+  generate:
+    enabled: true
+    interval_days: 7
+    
+  # Categories
+  categories:
+    - instance_sizing
+    - spot_usage
+    - regional_optimization
+    - cache_tuning
+    - idle_resource_elimination
+    
+  # Auto-Apply
+  auto_apply:
+    enabled: false  # Require manual approval
+    confidence_threshold: 0.90
+    max_impact_usd: 10.00
+
+# Cost Reports
+reports:
+  # Daily Report
+  daily:
+    enabled: true
+    recipients:
+      - devops@example.com
+    format: summary
+    
+  # Weekly Report
+  weekly:
+    enabled: true
+    recipients:
+      - devops@example.com
+      - engineering-leads@example.com
+    format: detailed
+    include_forecast: true
+    include_recommendations: true
+    
+  # Monthly Report
+  monthly:
+    enabled: true
+    recipients:
+      - devops@example.com
+      - engineering-leads@example.com
+      - finance@example.com
+    format: executive
+    include_roi_analysis: true
+    include_comparison: true
+
+# Emergency Controls
+emergency:
+  # Runaway Cost Protection
+  runaway_protection:
+    enabled: true
+    threshold_multiplier: 5.0  # Alert if cost 5x normal
+    action: pause_and_alert
+    
+  # Kill Switch
+  kill_switch:
+    enabled: true
+    manual_trigger: true
+    auto_trigger_conditions:
+      - daily_limit_exceeded
+      - hourly_rate_exceeded
+      - anomaly_detected
+    action: terminate_all_builds
+    notification: emergency
+
+# Integration
+integration:
+  # Billing Systems
+  billing:
+    aws:
+      enabled: true
+      cost_explorer: true
+      budgets: true
+      
+    gcp:
+      enabled: false
+      billing_export: false
+      
+    azure:
+      enabled: false
+      cost_management: false
+      
+  # Financial Tools
+  financial:
+    # Export to accounting software
+    export_format: csv
+    export_interval: monthly
+    
+  # Monitoring
+  monitoring:
+    prometheus:
+      enabled: true
+      metrics_prefix: incredibuild_cost_
+      
+    grafana:
+      enabled: true
+      dashboard: cost_dashboard.json

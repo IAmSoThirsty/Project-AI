@@ -1,0 +1,46 @@
+groups:
+  - name: agent_health
+    interval: 30s
+    rules:
+      # Agent Availability
+      - alert: AgentDown
+        expr: up{job="agents"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: agent
+        annotations:
+          summary: "Agent {{ $labels.agent_id }} is down"
+          description: "Agent {{ $labels.agent_id }} in region {{ $labels.region }} has been down for more than 2 minutes."
+
+      - alert: HighAgentDownRate
+        expr: (count(up{job="agents"} == 0) / count(up{job="agents"})) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          component: fleet
+        annotations:
+          summary: "High agent down rate detected"
+          description: "More than 5% of agents are down ({{ $value | humanizePercentage }} of fleet)."
+
+      # Agent Performance
+      - alert: HighAgentErrorRate
+        expr: rate(agent_errors_total[5m]) > 0.01
+        for: 10m
+        labels:
+          severity: warning
+          component: agent
+        annotations:
+          summary: "High error rate on agent {{ $labels.agent_id }}"
+          description: "Agent {{ $labels.agent_id }} has error rate of {{ $value | humanize }} errors/sec."
+
+      # Resource Usage
+      - alert: AgentHighCPU
+        expr: rate(process_cpu_seconds_total{job="agents"}[5m]) > 0.85
+        for: 15m
+        labels:
+          severity: warning
+          component: agent
+        annotations:
+          summary: "High CPU usage on agent {{ $labels.agent_id }}"
+          description: "Agent {{ $labels.agent_id }} CPU usage is {{ $value | humanizePercentage }}."

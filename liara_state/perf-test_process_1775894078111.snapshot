@@ -1,0 +1,16 @@
+{
+  "snapshot_id": "perf-test_process_1775894078111",
+  "timestamp": 1775894078.1116686,
+  "controller_id": "perf-test",
+  "state_type": "process",
+  "state_data": {
+    "test": "value_99"
+  },
+  "merkle_root": "8bacd21207a449dd91118b6dfaa46f4ca0e768e10673f566e227bb416a438fd7",
+  "signature": "20dd212aed66aba6aac1195664e96a8652338a7cdec260b24e16d2fc2e4570c3",
+  "public_key": "mock_public_key_deterministic",
+  "version": 1,
+  "compression": null,
+  "size_bytes": 403,
+  "recovery_proof": null
+}

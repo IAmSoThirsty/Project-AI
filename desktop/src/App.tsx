@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Intent from './pages/Intent';
 import Audit from './pages/Audit';
 import Tarl from './pages/Tarl';
+import EnhancedCognitiveIDE from './components/EnhancedCognitiveIDE';
 
 const App: React.FC = () => {
   return (
@@ -32,6 +33,7 @@ const App: React.FC = () => {
             <Route path="/intent" element={<Intent />} />
             <Route path="/audit" element={<Audit />} />
             <Route path="/tarl" element={<Tarl />} />
+            <Route path="/cognitive-ide" element={<EnhancedCognitiveIDE />} />
           </Routes>
         </Box>
       </Box>

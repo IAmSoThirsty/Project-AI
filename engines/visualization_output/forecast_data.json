@@ -1,0 +1,1121 @@
+{
+  "initial_state": {
+    "timestamp": "2026-04-11T02:21:07.976858",
+    "timestep": 0,
+    "year": 2026,
+    "technological_level": 0.4,
+    "economic_power": 0.5,
+    "political_stability": 0.6,
+    "social_cohesion": 0.6,
+    "environmental_health": 0.7,
+    "military_capacity": 0.3,
+    "cultural_influence": 0.4,
+    "knowledge_accumulation": 0.5,
+    "population": 0.6,
+    "civilization_type": "agricultural",
+    "kardashev_scale": 0.0,
+    "sustainability_index": 0.5,
+    "resilience_index": 0.5,
+    "collapse_risk": 0.0,
+    "state_hash": null
+  },
+  "horizon_years": 50,
+  "analysis": {
+    "total_runs": 5,
+    "collapse_probability": 0.0,
+    "avg_final_year": 2076.0,
+    "avg_kardashev": 3.0,
+    "avg_sustainability": 0.7081963375077797,
+    "kardashev_distribution": {
+      "mean": 3.0,
+      "std": 0.0,
+      "min": 3.0,
+      "max": 3.0,
+      "percentiles": {
+        "25": 3.0,
+        "50": 3.0,
+        "75": 3.0
+      }
+    }
+  },
+  "trajectories": {
+    "p10": [
+      {
+        "timestep": 0,
+        "year": 2026,
+        "tech_level": 0.38492223273566917,
+        "econ_power": 0.44688972775340474,
+        "kardashev": 0.0
+      },
+      {
+        "timestep": 1,
+        "year": 2027,
+        "tech_level": 0.4080507211823406,
+        "econ_power": 0.692046993262635,
+        "kardashev": 1.653677159300324
+      },
+      {
+        "timestep": 2,
+        "year": 2028,
+        "tech_level": 0.4266811716528965,
+        "econ_power": 0.9359952119167851,
+        "kardashev": 2.048117874844894
+      },
+      {
+        "timestep": 3,
+        "year": 2029,
+        "tech_level": 0.44531377883380147,
+        "econ_power": 1.0,
+        "kardashev": 2.1679706682507023
+      },
+      {
+        "timestep": 4,
+        "year": 2030,
+        "tech_level": 0.4603742179410233,
+        "econ_power": 1.0,
+        "kardashev": 2.190561326911535
+      },
+      {
+        "timestep": 5,
+        "year": 2031,
+        "tech_level": 0.4779544494004307,
+        "econ_power": 1.0,
+        "kardashev": 2.216931674100646
+      },
+      {
+        "timestep": 6,
+        "year": 2032,
+        "tech_level": 0.4966575987876395,
+        "econ_power": 1.0,
+        "kardashev": 2.2449863981814593
+      },
+      {
+        "timestep": 7,
+        "year": 2033,
+        "tech_level": 0.5187869195491084,
+        "econ_power": 1.0,
+        "kardashev": 2.2781803793236626
+      },
+      {
+        "timestep": 8,
+        "year": 2034,
+        "tech_level": 0.544719362231861,
+        "econ_power": 1.0,
+        "kardashev": 2.3170790433477917
+      },
+      {
+        "timestep": 9,
+        "year": 2035,
+        "tech_level": 0.5646104111533308,
+        "econ_power": 1.0,
+        "kardashev": 2.346915616729996
+      },
+      {
+        "timestep": 10,
+        "year": 2036,
+        "tech_level": 0.580012319937142,
+        "econ_power": 1.0,
+        "kardashev": 2.370018479905713
+      },
+      {
+        "timestep": 11,
+        "year": 2037,
+        "tech_level": 0.5946275306341703,
+        "econ_power": 1.0,
+        "kardashev": 2.391941295951255
+      },
+      {
+        "timestep": 12,
+        "year": 2038,
+        "tech_level": 0.6192786712921731,
+        "econ_power": 1.0,
+        "kardashev": 2.42891800693826
+      },
+      {
+        "timestep": 13,
+        "year": 2039,
+        "tech_level": 0.640787846300519,
+        "econ_power": 1.0,
+        "kardashev": 2.4611817694507785
+      },
+      {
+        "timestep": 14,
+        "year": 2040,
+        "tech_level": 0.664738286962477,
+        "econ_power": 1.0,
+        "kardashev": 2.497107430443716
+      },
+      {
+        "timestep": 15,
+        "year": 2041,
+        "tech_level": 0.6849542767124215,
+        "econ_power": 1.0,
+        "kardashev": 2.5274314150686323
+      },
+      {
+        "timestep": 16,
+        "year": 2042,
+        "tech_level": 0.7053621739389754,
+        "econ_power": 1.0,
+        "kardashev": 2.5580432609084633
+      },
+      {
+        "timestep": 17,
+        "year": 2043,
+        "tech_level": 0.7322158863369265,
+        "econ_power": 1.0,
+        "kardashev": 2.59832382950539
+      },
+      {
+        "timestep": 18,
+        "year": 2044,
+        "tech_level": 0.7538066611326522,
+        "econ_power": 1.0,
+        "kardashev": 2.6307099916989785
+      },
+      {
+        "timestep": 19,
+        "year": 2045,
+        "tech_level": 0.7754765965317264,
+        "econ_power": 1.0,
+        "kardashev": 2.6632148947975893
+      },
+      {
+        "timestep": 20,
+        "year": 2046,
+        "tech_level": 0.8058592074487315,
+        "econ_power": 1.0,
+        "kardashev": 2.7087888111730973
+      },
+      {
+        "timestep": 21,
+        "year": 2047,
+        "tech_level": 0.8336473200204899,
+        "econ_power": 1.0,
+        "kardashev": 2.7504709800307348
+      },
+      {
+        "timestep": 22,
+        "year": 2048,
+        "tech_level": 0.8608227697006428,
+        "econ_power": 1.0,
+        "kardashev": 2.7912341545509642
+      },
+      {
+        "timestep": 23,
+        "year": 2049,
+        "tech_level": 0.8843781657655341,
+        "econ_power": 1.0,
+        "kardashev": 2.826567248648301
+      },
+      {
+        "timestep": 24,
+        "year": 2050,
+        "tech_level": 0.902516148975569,
+        "econ_power": 1.0,
+        "kardashev": 2.853774223463353
+      },
+      {
+        "timestep": 25,
+        "year": 2051,
+        "tech_level": 0.92967985958171,
+        "econ_power": 1.0,
+        "kardashev": 2.894519789372565
+      },
+      {
+        "timestep": 26,
+        "year": 2052,
+        "tech_level": 0.954915708564917,
+        "econ_power": 1.0,
+        "kardashev": 2.9323735628473755
+      },
+      {
+        "timestep": 27,
+        "year": 2053,
+        "tech_level": 0.9844410526562235,
+        "econ_power": 1.0,
+        "kardashev": 2.976661578984335
+      },
+      {
+        "timestep": 28,
+        "year": 2054,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 29,
+        "year": 2055,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 30,
+        "year": 2056,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 31,
+        "year": 2057,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 32,
+        "year": 2058,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 33,
+        "year": 2059,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 34,
+        "year": 2060,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 35,
+        "year": 2061,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 36,
+        "year": 2062,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 37,
+        "year": 2063,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 38,
+        "year": 2064,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 39,
+        "year": 2065,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 40,
+        "year": 2066,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 41,
+        "year": 2067,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 42,
+        "year": 2068,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 43,
+        "year": 2069,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 44,
+        "year": 2070,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 45,
+        "year": 2071,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 46,
+        "year": 2072,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 47,
+        "year": 2073,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 48,
+        "year": 2074,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 49,
+        "year": 2075,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 50,
+        "year": 2076,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      }
+    ],
+    "p50": [
+      {
+        "timestep": 0,
+        "year": 2026,
+        "tech_level": 0.40976270078546495,
+        "econ_power": 0.541629564523621,
+        "kardashev": 0.0
+      },
+      {
+        "timestep": 1,
+        "year": 2027,
+        "tech_level": 0.421683770179682,
+        "econ_power": 0.7838374183755691,
+        "kardashev": 1.8514311092188591
+      },
+      {
+        "timestep": 2,
+        "year": 2028,
+        "tech_level": 0.43887818148252355,
+        "econ_power": 1.0,
+        "kardashev": 2.158317272223785
+      },
+      {
+        "timestep": 3,
+        "year": 2029,
+        "tech_level": 0.45939036901536734,
+        "econ_power": 1.0,
+        "kardashev": 2.189085553523051
+      },
+      {
+        "timestep": 4,
+        "year": 2030,
+        "tech_level": 0.47866115920438995,
+        "econ_power": 1.0,
+        "kardashev": 2.217991738806585
+      },
+      {
+        "timestep": 5,
+        "year": 2031,
+        "tech_level": 0.5001879350949455,
+        "econ_power": 1.0,
+        "kardashev": 2.250281902642418
+      },
+      {
+        "timestep": 6,
+        "year": 2032,
+        "tech_level": 0.5174504695914487,
+        "econ_power": 1.0,
+        "kardashev": 2.276175704387173
+      },
+      {
+        "timestep": 7,
+        "year": 2033,
+        "tech_level": 0.5387252098032413,
+        "econ_power": 1.0,
+        "kardashev": 2.3080878147048622
+      },
+      {
+        "timestep": 8,
+        "year": 2034,
+        "tech_level": 0.5710674779817327,
+        "econ_power": 1.0,
+        "kardashev": 2.356601216972599
+      },
+      {
+        "timestep": 9,
+        "year": 2035,
+        "tech_level": 0.5969829298893001,
+        "econ_power": 1.0,
+        "kardashev": 2.39547439483395
+      },
+      {
+        "timestep": 10,
+        "year": 2036,
+        "tech_level": 0.618406855588622,
+        "econ_power": 1.0,
+        "kardashev": 2.4276102833829327
+      },
+      {
+        "timestep": 11,
+        "year": 2037,
+        "tech_level": 0.641611556732363,
+        "econ_power": 1.0,
+        "kardashev": 2.4624173350985448
+      },
+      {
+        "timestep": 12,
+        "year": 2038,
+        "tech_level": 0.66945261427302,
+        "econ_power": 1.0,
+        "kardashev": 2.5041789214095305
+      },
+      {
+        "timestep": 13,
+        "year": 2039,
+        "tech_level": 0.7032110809689116,
+        "econ_power": 1.0,
+        "kardashev": 2.5548166214533676
+      },
+      {
+        "timestep": 14,
+        "year": 2040,
+        "tech_level": 0.7289880816978388,
+        "econ_power": 1.0,
+        "kardashev": 2.5934821225467584
+      },
+      {
+        "timestep": 15,
+        "year": 2041,
+        "tech_level": 0.7544613397799687,
+        "econ_power": 1.0,
+        "kardashev": 2.631692009669953
+      },
+      {
+        "timestep": 16,
+        "year": 2042,
+        "tech_level": 0.778476145637993,
+        "econ_power": 1.0,
+        "kardashev": 2.6677142184569895
+      },
+      {
+        "timestep": 17,
+        "year": 2043,
+        "tech_level": 0.8013000209324723,
+        "econ_power": 1.0,
+        "kardashev": 2.7019500313987086
+      },
+      {
+        "timestep": 18,
+        "year": 2044,
+        "tech_level": 0.8257673166623978,
+        "econ_power": 1.0,
+        "kardashev": 2.7386509749935968
+      },
+      {
+        "timestep": 19,
+        "year": 2045,
+        "tech_level": 0.8436150558265707,
+        "econ_power": 1.0,
+        "kardashev": 2.765422583739856
+      },
+      {
+        "timestep": 20,
+        "year": 2046,
+        "tech_level": 0.8646847228854625,
+        "econ_power": 1.0,
+        "kardashev": 2.797027084328194
+      },
+      {
+        "timestep": 21,
+        "year": 2047,
+        "tech_level": 0.8878684531506222,
+        "econ_power": 1.0,
+        "kardashev": 2.8318026797259335
+      },
+      {
+        "timestep": 22,
+        "year": 2048,
+        "tech_level": 0.907510234070961,
+        "econ_power": 1.0,
+        "kardashev": 2.8612653511064416
+      },
+      {
+        "timestep": 23,
+        "year": 2049,
+        "tech_level": 0.9339321566852434,
+        "econ_power": 1.0,
+        "kardashev": 2.9008982350278654
+      },
+      {
+        "timestep": 24,
+        "year": 2050,
+        "tech_level": 0.9596276834102626,
+        "econ_power": 1.0,
+        "kardashev": 2.939441525115394
+      },
+      {
+        "timestep": 25,
+        "year": 2051,
+        "tech_level": 0.9877038804019523,
+        "econ_power": 1.0,
+        "kardashev": 2.981555820602929
+      },
+      {
+        "timestep": 26,
+        "year": 2052,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 27,
+        "year": 2053,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 28,
+        "year": 2054,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 29,
+        "year": 2055,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 30,
+        "year": 2056,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 31,
+        "year": 2057,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 32,
+        "year": 2058,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 33,
+        "year": 2059,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 34,
+        "year": 2060,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 35,
+        "year": 2061,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 36,
+        "year": 2062,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 37,
+        "year": 2063,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 38,
+        "year": 2064,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 39,
+        "year": 2065,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 40,
+        "year": 2066,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 41,
+        "year": 2067,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 42,
+        "year": 2068,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 43,
+        "year": 2069,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 44,
+        "year": 2070,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 45,
+        "year": 2071,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 46,
+        "year": 2072,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 47,
+        "year": 2073,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 48,
+        "year": 2074,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 49,
+        "year": 2075,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 50,
+        "year": 2076,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      }
+    ],
+    "p90": [
+      {
+        "timestep": 0,
+        "year": 2026,
+        "tech_level": 0.46010741288760726,
+        "econ_power": 0.5436540885228525,
+        "kardashev": 0.0
+      },
+      {
+        "timestep": 1,
+        "year": 2027,
+        "tech_level": 0.4818977204733017,
+        "econ_power": 0.8073819360848994,
+        "kardashev": 1.9067284242662617
+      },
+      {
+        "timestep": 2,
+        "year": 2028,
+        "tech_level": 0.502979857809343,
+        "econ_power": 1.0,
+        "kardashev": 2.2544697867140147
+      },
+      {
+        "timestep": 3,
+        "year": 2029,
+        "tech_level": 0.5254583427704033,
+        "econ_power": 1.0,
+        "kardashev": 2.288187514155605
+      },
+      {
+        "timestep": 4,
+        "year": 2030,
+        "tech_level": 0.5448817563046953,
+        "econ_power": 1.0,
+        "kardashev": 2.317322634457043
+      },
+      {
+        "timestep": 5,
+        "year": 2031,
+        "tech_level": 0.5678587080177561,
+        "econ_power": 1.0,
+        "kardashev": 2.351788062026634
+      },
+      {
+        "timestep": 6,
+        "year": 2032,
+        "tech_level": 0.5844994953719792,
+        "econ_power": 1.0,
+        "kardashev": 2.376749243057969
+      },
+      {
+        "timestep": 7,
+        "year": 2033,
+        "tech_level": 0.6003191138289551,
+        "econ_power": 1.0,
+        "kardashev": 2.4004786707434325
+      },
+      {
+        "timestep": 8,
+        "year": 2034,
+        "tech_level": 0.6165642074041507,
+        "econ_power": 1.0,
+        "kardashev": 2.424846311106226
+      },
+      {
+        "timestep": 9,
+        "year": 2035,
+        "tech_level": 0.6396125372232231,
+        "econ_power": 1.0,
+        "kardashev": 2.4594188058348347
+      },
+      {
+        "timestep": 10,
+        "year": 2036,
+        "tech_level": 0.6593201541411092,
+        "econ_power": 1.0,
+        "kardashev": 2.488980231211664
+      },
+      {
+        "timestep": 11,
+        "year": 2037,
+        "tech_level": 0.6746846044718895,
+        "econ_power": 1.0,
+        "kardashev": 2.5120269067078342
+      },
+      {
+        "timestep": 12,
+        "year": 2038,
+        "tech_level": 0.6980748726343478,
+        "econ_power": 1.0,
+        "kardashev": 2.5471123089515215
+      },
+      {
+        "timestep": 13,
+        "year": 2039,
+        "tech_level": 0.7163840065533262,
+        "econ_power": 1.0,
+        "kardashev": 2.5745760098299897
+      },
+      {
+        "timestep": 14,
+        "year": 2040,
+        "tech_level": 0.741190350466164,
+        "econ_power": 1.0,
+        "kardashev": 2.611785525699246
+      },
+      {
+        "timestep": 15,
+        "year": 2041,
+        "tech_level": 0.7665560322072801,
+        "econ_power": 1.0,
+        "kardashev": 2.64983404831092
+      },
+      {
+        "timestep": 16,
+        "year": 2042,
+        "tech_level": 0.7899548916372905,
+        "econ_power": 1.0,
+        "kardashev": 2.684932337455936
+      },
+      {
+        "timestep": 17,
+        "year": 2043,
+        "tech_level": 0.8140942200611546,
+        "econ_power": 1.0,
+        "kardashev": 2.721141330091732
+      },
+      {
+        "timestep": 18,
+        "year": 2044,
+        "tech_level": 0.8364196805347229,
+        "econ_power": 1.0,
+        "kardashev": 2.7546295208020846
+      },
+      {
+        "timestep": 19,
+        "year": 2045,
+        "tech_level": 0.8633401376206605,
+        "econ_power": 1.0,
+        "kardashev": 2.795010206430991
+      },
+      {
+        "timestep": 20,
+        "year": 2046,
+        "tech_level": 0.8921621068052045,
+        "econ_power": 1.0,
+        "kardashev": 2.838243160207807
+      },
+      {
+        "timestep": 21,
+        "year": 2047,
+        "tech_level": 0.9253514715965949,
+        "econ_power": 1.0,
+        "kardashev": 2.8880272073948925
+      },
+      {
+        "timestep": 22,
+        "year": 2048,
+        "tech_level": 0.9505248357958722,
+        "econ_power": 1.0,
+        "kardashev": 2.9257872536938083
+      },
+      {
+        "timestep": 23,
+        "year": 2049,
+        "tech_level": 0.9760966543543399,
+        "econ_power": 1.0,
+        "kardashev": 2.96414498153151
+      },
+      {
+        "timestep": 24,
+        "year": 2050,
+        "tech_level": 0.9973117788538718,
+        "econ_power": 1.0,
+        "kardashev": 2.995967668280808
+      },
+      {
+        "timestep": 25,
+        "year": 2051,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 26,
+        "year": 2052,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 27,
+        "year": 2053,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 28,
+        "year": 2054,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 29,
+        "year": 2055,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 30,
+        "year": 2056,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 31,
+        "year": 2057,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 32,
+        "year": 2058,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 33,
+        "year": 2059,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 34,
+        "year": 2060,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 35,
+        "year": 2061,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 36,
+        "year": 2062,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 37,
+        "year": 2063,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 38,
+        "year": 2064,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 39,
+        "year": 2065,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 40,
+        "year": 2066,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 41,
+        "year": 2067,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 42,
+        "year": 2068,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 43,
+        "year": 2069,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 44,
+        "year": 2070,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 45,
+        "year": 2071,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 46,
+        "year": 2072,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 47,
+        "year": 2073,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 48,
+        "year": 2074,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 49,
+        "year": 2075,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      },
+      {
+        "timestep": 50,
+        "year": 2076,
+        "tech_level": 1.0,
+        "econ_power": 1.0,
+        "kardashev": 3.0
+      }
+    ]
+  },
+  "generated_at": "2026-04-11T02:21:08.031591"
+}

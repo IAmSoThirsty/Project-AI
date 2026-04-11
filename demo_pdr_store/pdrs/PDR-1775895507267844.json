@@ -1,0 +1,30 @@
+{
+  "pdr_id": "PDR-1775895507267844",
+  "metadata": {
+    "timestamp": "2026-04-11T08:18:27.267844+00:00",
+    "request_id": "REQ-2026-001",
+    "decision": "allow",
+    "severity": "low",
+    "policy_version": "1.0",
+    "agent_id": "cerberus-identity-head",
+    "context_hash": "dacd0c1edb06cecf1a815b2bfa860e88eeaf13daa702879d3b48a2b0d77eb6f1"
+  },
+  "decision_rationale": "User successfully authenticated with valid JWT token",
+  "context": {
+    "user_id": "user_alice_123",
+    "ip_address": "203.0.113.42",
+    "auth_method": "JWT",
+    "session_id": "sess_abc123"
+  },
+  "content_hash": "e626eb80a664b762308a56183b6147ee2871cc2535ebbbfbb20a94d5fa781f7b",
+  "signature": {
+    "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+    "signature": "SO8wCYhxw+ayRLT7tXMF1Svotwz2MhCOV1gllMXQ7EwuLMIszY0ubYDAXfIGmeNRkD8dfjW9Us+pLTBqlTBwDQ==",
+    "signed_at": "2026-04-11T08:18:27.268853+00:00"
+  },
+  "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+  "merkle_proof": null,
+  "created_at": "2026-04-11T08:18:27.267844+00:00",
+  "modified_at": null,
+  "version": 1
+}

@@ -1,0 +1,204 @@
+# Capacity Planning for Distributed Agent Orchestration
+# This CSV file contains detailed capacity planning for scaling from 10 to 10,000 agents
+
+# ============================================================================
+# SCALING TIERS
+# ============================================================================
+
+Tier,Agent Count,Workflows/sec,Tasks/sec,Total CPU Cores,Total Memory (GB),Database IOPS,Network (Gbps),Monthly Cost ($),Cost per Agent ($)
+Minimum,10,10,100,40,128,1000,1,8500,850.00
+Small,100,100,1000,400,1280,5000,5,15000,150.00
+Medium,500,500,5000,2000,6400,15000,15,35000,70.00
+Large,1000,1000,10000,4000,12800,30000,30,53000,53.00
+X-Large,2500,2500,25000,10000,32000,60000,60,95000,38.00
+XX-Large,5000,5000,50000,20000,64000,100000,100,165000,33.00
+Maximum,10000,10000,100000,40000,128000,150000,150,310000,31.00
+
+# ============================================================================
+# COMPUTE RESOURCES BY COMPONENT
+# ============================================================================
+
+Component,Agent Count: 10,Agent Count: 100,Agent Count: 500,Agent Count: 1000,Agent Count: 2500,Agent Count: 5000,Agent Count: 10000
+Temporal Frontend (Instances),2,2,4,6,8,12,16
+Temporal History (Instances),2,4,8,12,16,24,32
+Temporal Matching (Instances),2,2,4,9,12,18,24
+Worker Pods,10,50,250,500,1250,2500,5000
+Database Writer (Instance Class),db.r5.large,db.r5.xlarge,db.r5.2xlarge,db.r5.8xlarge,db.r5.12xlarge,db.r5.16xlarge,db.r5.24xlarge
+Database Readers,1,1,2,3,4,6,8
+Monitoring Instances,1,1,2,3,4,6,8
+
+# ============================================================================
+# RESOURCE UTILIZATION TARGETS
+# ============================================================================
+
+Resource,Target Utilization (%),Minimum (%),Maximum (%),Scale Up Threshold (%),Scale Down Threshold (%)
+CPU,70,40,90,75,30
+Memory,70,40,85,80,30
+Database Connections,60,20,80,70,25
+Network Bandwidth,50,10,80,65,20
+Disk IOPS,60,20,85,75,25
+
+# ============================================================================
+# COST BREAKDOWN BY TIER
+# ============================================================================
+
+Cost Category,10 Agents,100 Agents,500 Agents,1000 Agents,2500 Agents,5000 Agents,10000 Agents
+Temporal Services,2000,3000,6000,8000,12000,18000,30000
+Worker Compute,1500,4000,12000,25000,45000,85000,165000
+Database,1500,2500,5000,8000,15000,28000,55000
+Load Balancers,500,500,1000,2000,3000,5000,8000
+Data Transfer,500,1000,2000,3000,6000,10000,18000
+Storage,500,1000,2000,3000,5000,8000,12000
+Monitoring & Logs,1000,1500,2500,4000,6000,9000,15000
+Security & Compliance,500,500,1000,1000,2000,3000,5000
+Temporal Cloud License,0,1000,3500,5000,8000,12000,20000
+Total Monthly,8500,15000,35000,53000,95000,165000,310000
+
+# ============================================================================
+# NETWORK CAPACITY
+# ============================================================================
+
+Metric,10 Agents,100 Agents,500 Agents,1000 Agents,2500 Agents,5000 Agents,10000 Agents
+Inbound Traffic (Mbps),100,500,2500,5000,12500,25000,50000
+Outbound Traffic (Mbps),100,500,2500,5000,12500,25000,50000
+Total Bandwidth (Gbps),0.2,1,5,10,25,50,100
+Cross-Region Traffic (GB/month),100,500,2500,5000,12500,25000,50000
+CloudFront Requests (millions/month),1,10,50,100,250,500,1000
+
+# ============================================================================
+# STORAGE REQUIREMENTS
+# ============================================================================
+
+Storage Type,10 Agents,100 Agents,500 Agents,1000 Agents,2500 Agents,5000 Agents,10000 Agents
+Database Storage (GB),50,100,250,500,1000,2500,5000
+Workflow History (GB),10,50,250,500,1250,2500,5000
+Logs (GB/month),25,100,500,1000,2500,5000,10000
+Metrics (GB/month),5,25,125,250,625,1250,2500
+Backups (GB),50,150,500,1000,2500,5000,10000
+Total Storage (GB),140,425,1625,3250,7875,16250,32500
+
+# ============================================================================
+# PERFORMANCE METRICS
+# ============================================================================
+
+Metric,Target,10 Agents,100 Agents,500 Agents,1000 Agents,2500 Agents,5000 Agents,10000 Agents
+Workflow Start Latency P50 (ms),<50,25,30,35,40,45,50,55
+Workflow Start Latency P99 (ms),<100,50,60,70,80,90,100,110
+Activity Execution Latency P50 (ms),<200,100,120,140,160,180,200,220
+Activity Execution Latency P99 (ms),<500,250,300,350,400,450,500,550
+Database Query Latency P50 (ms),<10,3,4,5,6,7,8,9
+Database Query Latency P99 (ms),<50,15,20,25,30,35,40,45
+Health Check Success Rate (%),>99.9,99.99,99.98,99.97,99.95,99.93,99.91,99.90
+
+# ============================================================================
+# SCALING TIMELINE
+# ============================================================================
+
+Phase,Duration (minutes),From,To,Action,Expected Outcome
+Initial Scale-Out,2,10,100,Deploy 40 worker pods,90 new agents active
+Rapid Scale-Out,5,100,500,Deploy 200 worker pods + scale DB,400 new agents active
+Major Scale-Out,10,500,1000,Deploy 250 worker pods + add DB reader,500 new agents active
+Massive Scale-Out,15,1000,2500,Deploy 750 worker pods + upgrade DB,1500 new agents active
+Extreme Scale-Out,20,2500,5000,Deploy 1250 worker pods + add DB readers,2500 new agents active
+Maximum Scale-Out,30,5000,10000,Deploy 2500 worker pods + add regions,5000 new agents active
+
+# ============================================================================
+# FAILURE SCENARIOS & IMPACT
+# ============================================================================
+
+Failure Scenario,Probability,Detection Time (sec),Recovery Time (sec),Impact (% capacity loss),Mitigation
+Single Worker Pod Failure,High,10,30,0.02-0.1,Kubernetes auto-restart
+Worker Node Failure,Medium,15,60,0.5-2,Kubernetes reschedule pods
+Single AZ Failure,Low,30,0,0,Multi-AZ redundancy
+Database Failover,Low,30,60,0,Aurora automatic failover
+Regional Failure,Very Low,60,120,33,Multi-region active-active
+Multi-Region Failure,Extremely Low,60,300,67,Emergency capacity scaling
+Complete Outage,Negligible,120,600,100,Disaster recovery procedures
+
+# ============================================================================
+# AUTO-SCALING BEHAVIOR
+# ============================================================================
+
+Trigger,Threshold,Scale-Out Action,Scale-Out Time (min),Scale-In Action,Scale-In Time (min),Cooldown (min)
+Queue Depth,>100 tasks/worker,Add 50% capacity,2,Remove 10% capacity,5,5
+CPU Utilization,>75%,Add 25% capacity,3,Remove 10% capacity,10,10
+Memory Utilization,>80%,Add 25% capacity,3,Remove 10% capacity,10,10
+Workflow Latency P99,>100ms,Add 50% capacity,2,Remove 5% capacity,15,5
+Error Rate,>5%,Add 100% capacity,1,No auto scale-in,N/A,0
+Manual Override,API/CLI,Immediate,<1,Immediate,<1,0
+
+# ============================================================================
+# REGIONAL DISTRIBUTION
+# ============================================================================
+
+Region,10 Agents,100 Agents,500 Agents,1000 Agents,2500 Agents,5000 Agents,10000 Agents,Traffic Weight (%)
+us-east-1,4,40,200,400,1000,2000,4000,40
+us-west-2,0,0,0,0,250,500,1000,0 (failover only)
+eu-west-1,3,30,150,300,750,1500,3000,30
+eu-central-1,0,0,0,0,200,400,800,0 (failover only)
+ap-south-1,3,30,150,300,750,1500,3000,30
+ap-southeast-1,0,0,0,0,200,400,800,0 (failover only)
+
+# ============================================================================
+# SLA TARGETS BY TIER
+# ============================================================================
+
+Tier,Availability Target (%),Downtime/Month (min),P50 Latency (ms),P99 Latency (ms),Error Rate (%),Support Level
+Minimum,99.9,43.2,<100,<300,<1,Business Hours
+Small,99.95,21.6,<75,<200,<0.5,Extended Hours
+Medium,99.99,4.38,<60,<150,<0.1,24/7
+Large,99.99,4.38,<50,<100,<0.1,24/7
+X-Large,99.995,2.19,<40,<80,<0.05,24/7 + Dedicated TAM
+XX-Large,99.995,2.19,<35,<70,<0.05,24/7 + Dedicated TAM
+Maximum,99.999,0.44,<30,<60,<0.01,24/7 + Dedicated TAM + Red Team
+
+# ============================================================================
+# GROWTH PROJECTIONS
+# ============================================================================
+
+Quarter,Target Agent Count,Monthly Workflows,Monthly Tasks,Infrastructure Cost,Engineering Cost,Total Cost,Revenue Target,Margin (%)
+Q1 2024,100,259200,2592000,15000,50000,65000,100000,35
+Q2 2024,500,1296000,12960000,35000,75000,110000,250000,56
+Q3 2024,1500,3888000,38880000,75000,100000,175000,500000,65
+Q4 2024,3000,7776000,77760000,125000,125000,250000,900000,72
+Q1 2025,5000,12960000,129600000,165000,150000,315000,1500000,79
+Q2 2025,7500,19440000,194400000,230000,175000,405000,2250000,82
+Q3 2025,10000,25920000,259200000,310000,200000,510000,3000000,83
+
+# ============================================================================
+# DISASTER RECOVERY CAPACITY
+# ============================================================================
+
+Scenario,Normal Capacity,DR Capacity,Recovery Time (min),Data Loss (sec),Cost Impact (%),Tested Frequency
+Single AZ Failure,100%,100%,0,0,0,Weekly
+Single Region Failure,100%,67%,2,<1,0,Monthly
+Multi-Region Failure,100%,33%,5,<5,+50% (emergency scaling),Quarterly
+Complete Outage,100%,10%,60,<30,+200% (full DR),Annually
+
+# ============================================================================
+# OPTIMIZATION OPPORTUNITIES
+# ============================================================================
+
+Opportunity,Current State,Optimized State,Savings ($),Savings (%),Implementation Effort,Risk Level
+Spot Instances for Low Priority,0%,30%,15000,15,Medium,Low
+Reserved Instances,0%,50%,25000,25,Low,None
+Database Right-Sizing,Over-provisioned,Right-sized,8000,15,Medium,Medium
+Auto-scaling Tuning,Conservative,Optimized,12000,10,High,Low
+Multi-tenancy,Single tenant,Multi-tenant,40000,20,High,Medium
+Compression,Minimal,Aggressive,5000,5,Low,Low
+Total Optimization,N/A,N/A,105000,34,N/A,N/A
+
+# ============================================================================
+# NOTES
+# ============================================================================
+
+# All costs are in USD
+# Pricing based on AWS us-east-1 region (2024 rates)
+# Assumes 730 hours/month (average month)
+# Network costs include cross-region data transfer
+# Temporal Cloud pricing varies by volume (contact sales)
+# Reserved Instance pricing assumes 1-year term
+# Spot Instance pricing assumes 70% discount
+# Does not include data egress charges for external APIs
+# Monitoring costs include Prometheus, Grafana, and log storage
+# Security costs include WAF, Shield, and compliance tools

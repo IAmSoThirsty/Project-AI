@@ -1,0 +1,272 @@
+{
+  "chain_info": {
+    "consensus_type": "poa",
+    "total_blocks": 4,
+    "total_transactions": 9,
+    "total_contracts": 1,
+    "pending_transactions": 0
+  },
+  "blocks": [
+    {
+      "block_number": 0,
+      "timestamp": "2026-04-11T08:19:09.687390+00:00",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "transactions": [
+        {
+          "tx_id": "4c5b59a0446cf3a779db40613fdeb2e2",
+          "tx_type": "governance_decision",
+          "sender": "governance_council",
+          "data": {
+            "decision": "approve_budget",
+            "amount": 1000000,
+            "department": "research"
+          },
+          "timestamp": "2026-04-11T08:19:09.687390+00:00",
+          "nonce": 1775895549687390,
+          "signature": "6e4f2ff9276cd554acf6129483c9f0711d395f502625e4b3c263a9b1692c23f8b8df0dd36a8991614dae46a8af06016c440d8e7ccffa6c1d8b0895cd33e1c40b",
+          "gas_limit": 1000000,
+          "gas_used": 0
+        },
+        {
+          "tx_id": "4896cf9cb960f69987ad898999ba539d",
+          "tx_type": "policy_update",
+          "sender": "policy_admin",
+          "data": {
+            "policy": "data_retention",
+            "retention_days": 365,
+            "effective_date": "2026-06-01"
+          },
+          "timestamp": "2026-04-11T08:19:09.687390+00:00",
+          "nonce": 1775895549687390,
+          "signature": "f9355303a189080b05db6e8e9f7d1bf8d20f7b9ea090f4737b18656698c540b57c4a9e464652b80d9d11bdbdf73260f0976356ea15d6424a58e6b54aa0b7d400",
+          "gas_limit": 1000000,
+          "gas_used": 0
+        },
+        {
+          "tx_id": "3813cc36a06d31468daa95d7668b9e1e",
+          "tx_type": "audit_event",
+          "sender": "audit_system",
+          "data": {
+            "event": "compliance_check",
+            "status": "passed",
+            "findings": []
+          },
+          "timestamp": "2026-04-11T08:19:09.687390+00:00",
+          "nonce": 1775895549687390,
+          "signature": "6f0691c31f104d05f2e9b047745b83461148aa96132fc03674218027ce7b39541e36b38d0e5d9084af0f5f1a3a94f1bd50cbc9c232315cf50db6c839ec6ea205",
+          "gas_limit": 1000000,
+          "gas_used": 0
+        }
+      ],
+      "merkle_root": "cc5664986a735aa47c9ce77b3ae16c5fc20841733eefcd3cb9e99dae5885840d",
+      "validator": "validator_0",
+      "consensus_proof": {
+        "type": "poa",
+        "validator": "validator_0",
+        "block_number": 0,
+        "timestamp": "2026-04-11T08:19:09.687390+00:00"
+      },
+      "block_hash": "748bc97eea41c821e693bd17df5c0fdd7694101a30c2a7a258a2f11667e65814",
+      "signature": "6fb883cee10d2e96a8a1a4e69507c9c3e8400282448ff160d9afd99f9394671216e2c20241edb522a86690678576a2b16ef6cdb7f3cb76d5aa4d6a7774aed104"
+    },
+    {
+      "block_number": 1,
+      "timestamp": "2026-04-11T08:19:09.689891+00:00",
+      "previous_hash": "748bc97eea41c821e693bd17df5c0fdd7694101a30c2a7a258a2f11667e65814",
+      "transactions": [
+        {
+          "tx_id": "0d668fca13dd432b3b6c6688237bd431",
+          "tx_type": "contract_deploy",
+          "sender": "governance_council",
+          "data": {
+            "contract_id": "96cad9d3d812ceb22bc4b18cc7980a3c",
+            "name": "GovernancePolicies",
+            "version": "1.0.0"
+          },
+          "timestamp": "2026-04-11T08:19:09.689891+00:00",
+          "nonce": 1775895549689891,
+          "signature": "b51e0076cc479454581cfa8701b989156d97a5ff004b7a11db08c58f32bfbac8d3782afbc727f15390cca983148d8d06989b93d9809f2af2833e0690bd85dc0f",
+          "gas_limit": 1000000,
+          "gas_used": 0
+        }
+      ],
+      "merkle_root": "815acd35af7a7156f8f5524c693be49d0636100783b8f1de29c5852e6873a65d",
+      "validator": "validator_1",
+      "consensus_proof": {
+        "type": "poa",
+        "validator": "validator_1",
+        "block_number": 1,
+        "timestamp": "2026-04-11T08:19:09.689891+00:00"
+      },
+      "block_hash": "3dbd3b4a36438a9cdd1437c8d06aab2d74566b0efdde00bd14b08e742dbeb3f1",
+      "signature": "1a6d85f97f72ec179295da0343b3914798e2def90f0cbe76315b4b82398a68aefa9fec4d6834453e39e0ded5935bbc92090c6b66ed86ce9f628d2917ec34e508"
+    },
+    {
+      "block_number": 2,
+      "timestamp": "2026-04-11T08:19:09.691898+00:00",
+      "previous_hash": "3dbd3b4a36438a9cdd1437c8d06aab2d74566b0efdde00bd14b08e742dbeb3f1",
+      "transactions": [
+        {
+          "tx_id": "6078bf947c15caf3d99bffcd43c1c413",
+          "tx_type": "contract_execute",
+          "sender": "governance_system",
+          "data": {
+            "contract_id": "96cad9d3d812ceb22bc4b18cc7980a3c",
+            "function": "check_quorum",
+            "args": {
+              "votes_for": 15,
+              "votes_against": 5,
+              "total_members": 25
+            },
+            "result": "True",
+            "gas_used": 104
+          },
+          "timestamp": "2026-04-11T08:19:09.690898+00:00",
+          "nonce": 1775895549690898,
+          "signature": "9e592875e53b12faa27c655a75e9e6f7d070e22a01e3046e6986b429b531ddf1768adf234214c4ca234835a1850c69f2cd3e910b4477e367f3902cce6bdced02",
+          "gas_limit": 1000000,
+          "gas_used": 104
+        },
+        {
+          "tx_id": "2d1ce840d757e0d1b62c37a4c82b6220",
+          "tx_type": "contract_execute",
+          "sender": "budget_system",
+          "data": {
+            "contract_id": "96cad9d3d812ceb22bc4b18cc7980a3c",
+            "function": "calculate_budget_approval",
+            "args": {
+              "requested": 500000,
+              "available": 1000000,
+              "priority": "high"
+            },
+            "result": "True",
+            "gas_used": 104
+          },
+          "timestamp": "2026-04-11T08:19:09.691898+00:00",
+          "nonce": 1775895549691898,
+          "signature": "dbab8c10aa323e741ef71ca122fbb0db29932f2771d34b7c305decaf636460e5dbe5caa9beb3c0df57468cfdcf9c0501fc8ef4d0b3e9ca77cb7f1b6d8c6f6e00",
+          "gas_limit": 1000000,
+          "gas_used": 104
+        }
+      ],
+      "merkle_root": "07fbccea6fcac2e6017daa1eb7247cf8603c2727928b18857035d502fbfb8731",
+      "validator": "validator_2",
+      "consensus_proof": {
+        "type": "poa",
+        "validator": "validator_2",
+        "block_number": 2,
+        "timestamp": "2026-04-11T08:19:09.691898+00:00"
+      },
+      "block_hash": "85c1d7061774a3082f14969c3bcc842246711d29f955acdbb2d3860d1bdd546b",
+      "signature": "d00da347f7cc28aebd518ceb8472e30003c9e404b101a133673dd4844ce6b409edef00101cc77d0bd80a25c875c00158faadc1e4a89227613400e7cf33ee150c"
+    },
+    {
+      "block_number": 3,
+      "timestamp": "2026-04-11T08:19:09.692898+00:00",
+      "previous_hash": "85c1d7061774a3082f14969c3bcc842246711d29f955acdbb2d3860d1bdd546b",
+      "transactions": [
+        {
+          "tx_id": "53e6073f6e8ac6348992f38e596b2498",
+          "tx_type": "multisig_proposal",
+          "sender": "council_member_1",
+          "data": {
+            "proposal_id": "11028bc9c1925ef778eee2ba13079300",
+            "required_signatures": 2,
+            "authorized_signers": [
+              "council_member_1",
+              "council_member_2",
+              "council_member_3"
+            ]
+          },
+          "timestamp": "2026-04-11T08:19:09.692898+00:00",
+          "nonce": 1775895549692898,
+          "signature": "6f0b7d252d9cf3bc9acdaf35ab946509b109af9f61e6d3bd8a2497018f643c7a2f2131ae73346cbcf29d32c739582834fccd233787ee384bb96e1e0e2fa8a000",
+          "gas_limit": 1000000,
+          "gas_used": 0
+        },
+        {
+          "tx_id": "47da7ec7784b10268010cbbe2a60b33c",
+          "tx_type": "multisig_approval",
+          "sender": "council_member_1",
+          "data": {
+            "proposal_id": "11028bc9c1925ef778eee2ba13079300",
+            "signature": "8a21038ec7c00a4ca43e9b77228943e307079553e7ff4f4dbb4bff35851067278850a9a59290224f7fb904cf4da0a033ec1177494d70dc6b9ddcf1f0d820080b"
+          },
+          "timestamp": "2026-04-11T08:19:09.692898+00:00",
+          "nonce": 1775895549692898,
+          "signature": "b94dd49c5f6c2793c8230d8335fffddaf674a709b3e7332a9faf877681d40cd27dc6fc44b15db62f6a379db9b684edd4ca95094b6370fcbaa450d20768d73d0e",
+          "gas_limit": 1000000,
+          "gas_used": 0
+        },
+        {
+          "tx_id": "f678a56b8c5b05efc5dc7d5cc84e2ebd",
+          "tx_type": "multisig_approval",
+          "sender": "council_member_2",
+          "data": {
+            "proposal_id": "11028bc9c1925ef778eee2ba13079300",
+            "signature": "8a21038ec7c00a4ca43e9b77228943e307079553e7ff4f4dbb4bff35851067278850a9a59290224f7fb904cf4da0a033ec1177494d70dc6b9ddcf1f0d820080b"
+          },
+          "timestamp": "2026-04-11T08:19:09.692898+00:00",
+          "nonce": 1775895549692898,
+          "signature": "bb0614112ce1b6f0ee4bf398a75c3d7dec8087a93f69e79b1b4d852f41568d352105de82a9ade561391c2dc1ae1bb47f6359142a9bfbbe8314880475256b260e",
+          "gas_limit": 1000000,
+          "gas_used": 0
+        }
+      ],
+      "merkle_root": "469b878794047fb14758f3994d3face2d785e6739f41bfbc60fe4dc843da2e46",
+      "validator": "validator_0",
+      "consensus_proof": {
+        "type": "poa",
+        "validator": "validator_0",
+        "block_number": 3,
+        "timestamp": "2026-04-11T08:19:09.692898+00:00"
+      },
+      "block_hash": "b5e9ec188e795c5064ff9857f14834b3ef91e96af3cbe05889d969e8dc17a16f",
+      "signature": "6f5324614223c1acb2c6c787bde920fb75da624be0cc7b3c36d05c3293a4aa916e126e607a8ed176d5047ffa1c3aac0880b13e1e2a675467decc281cfddbb202"
+    }
+  ],
+  "contracts": {
+    "96cad9d3d812ceb22bc4b18cc7980a3c": {
+      "contract_id": "96cad9d3d812ceb22bc4b18cc7980a3c",
+      "name": "GovernancePolicies",
+      "bytecode": "\ndef check_quorum(votes_for, votes_against, total_members):\n    '''Check if a proposal has quorum (50%+1)'''\n    total_votes = votes_for + votes_against\n    required = (total_members // 2) + 1\n    return total_votes >= required and votes_for > votes_against\n\ndef calculate_budget_approval(requested, available, priority):\n    '''Calculate if budget should be approved'''\n    if requested > available:\n        return False\n    if priority == \"critical\":\n        return True\n    if priority == \"high\" and requested <= available * 0.7:\n        return True\n    if priority == \"medium\" and requested <= available * 0.5:\n        return True\n    return False\n\ndef validate_policy_change(severity, approvals_required, approvals_received):\n    '''Validate policy change has sufficient approvals'''\n    if severity == \"critical\":\n        return approvals_received >= approvals_required\n    if severity == \"high\":\n        return approvals_received >= (approvals_required * 0.75)\n    return approvals_received >= (approvals_required * 0.5)\n",
+      "source_code": "\ndef check_quorum(votes_for, votes_against, total_members):\n    '''Check if a proposal has quorum (50%+1)'''\n    total_votes = votes_for + votes_against\n    required = (total_members // 2) + 1\n    return total_votes >= required and votes_for > votes_against\n\ndef calculate_budget_approval(requested, available, priority):\n    '''Calculate if budget should be approved'''\n    if requested > available:\n        return False\n    if priority == \"critical\":\n        return True\n    if priority == \"high\" and requested <= available * 0.7:\n        return True\n    if priority == \"medium\" and requested <= available * 0.5:\n        return True\n    return False\n\ndef validate_policy_change(severity, approvals_required, approvals_received):\n    '''Validate policy change has sufficient approvals'''\n    if severity == \"critical\":\n        return approvals_received >= approvals_required\n    if severity == \"high\":\n        return approvals_received >= (approvals_required * 0.75)\n    return approvals_received >= (approvals_required * 0.5)\n",
+      "version": "1.0.0",
+      "deployer": "governance_council",
+      "deployed_at": "2026-04-11T08:19:09.689891+00:00",
+      "status": "active",
+      "metadata": {
+        "description": "Governance policy decision engine",
+        "category": "governance"
+      },
+      "execution_count": 2
+    }
+  },
+  "multisig_proposals": {
+    "11028bc9c1925ef778eee2ba13079300": {
+      "proposal_id": "11028bc9c1925ef778eee2ba13079300",
+      "transaction_data": {
+        "type": "authority_change",
+        "action": "add_validator",
+        "validator_id": "validator_4",
+        "reason": "Expand consensus network"
+      },
+      "config": {
+        "required_signatures": 2,
+        "authorized_signers": [
+          "council_member_1",
+          "council_member_2",
+          "council_member_3"
+        ],
+        "timeout_seconds": 3600,
+        "description": "Critical governance decisions require 2-of-3 approvals"
+      },
+      "signatures": {
+        "council_member_1": "8a21038ec7c00a4ca43e9b77228943e307079553e7ff4f4dbb4bff35851067278850a9a59290224f7fb904cf4da0a033ec1177494d70dc6b9ddcf1f0d820080b",
+        "council_member_2": "8a21038ec7c00a4ca43e9b77228943e307079553e7ff4f4dbb4bff35851067278850a9a59290224f7fb904cf4da0a033ec1177494d70dc6b9ddcf1f0d820080b"
+      },
+      "created_at": "2026-04-11T08:19:09.692898+00:00",
+      "status": "approved"
+    }
+  }
+}

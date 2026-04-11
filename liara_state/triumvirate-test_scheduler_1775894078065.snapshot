@@ -1,0 +1,19 @@
+{
+  "snapshot_id": "triumvirate-test_scheduler_1775894078065",
+  "timestamp": 1775894078.0658782,
+  "controller_id": "triumvirate-test",
+  "state_type": "scheduler",
+  "state_data": {
+    "queue": [
+      "task1",
+      "task2"
+    ]
+  },
+  "merkle_root": "4e3039ac78a01b8c96826f8e3aef317ededb1bbd084d9f75d5c03b45c1872af9",
+  "signature": "7a4956a7bd4a018eca570ba1f0abc98bf125d3355dd0e840418117316b383d7a",
+  "public_key": "mock_public_key_deterministic",
+  "version": 1,
+  "compression": null,
+  "size_bytes": 430,
+  "recovery_proof": null
+}

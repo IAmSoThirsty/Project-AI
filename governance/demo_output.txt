@@ -1,0 +1,170 @@
+
+======================================================================
+          ENHANCED GOVERNANCE LEDGER DEMONSTRATION
+======================================================================
+
+======================================================================
+DEMO 1: BASIC BLOCKCHAIN WITH PROOF-OF-AUTHORITY
+======================================================================
+
+[OK] Created ledger with Proof-of-Authority consensus
+  Validators: 3
+  Storage: governance_ledger.json
+
+Creating transactions...
+[OK] Created 3 transactions
+
+Mining genesis block...
+[OK] Block 0 created
+  Hash: 748bc97eea41c821e693bd17df5c0fdd...
+  Transactions: 3
+  Validator: validator_0
+
+======================================================================
+DEMO 2: SMART CONTRACT DEPLOYMENT AND EXECUTION
+======================================================================
+
+Deploying governance policy contract...
+[OK] Contract deployed: 96cad9d3d812ceb22bc4b18cc7980a3c
+  Name: GovernancePolicies
+  Version: 1.0.0
+
+[OK] Block 1 mined (deployment transaction)
+
+Executing contract: check_quorum()...
+  Result: True
+  Gas used: 104
+
+Executing contract: calculate_budget_approval()...
+  Result: True
+  Gas used: 104
+
+[OK] Block 2 mined (contract executions)
+
+======================================================================
+DEMO 3: MULTI-SIGNATURE PROPOSALS
+======================================================================
+
+Creating multi-signature proposal...
+  Required signatures: 2
+  Authorized signers: 3
+
+[OK] Proposal created: 11028bc9c1925ef778eee2ba13079300
+  Status: pending
+
+Council member 1 approves...
+  Signatures: 1/2
+  Status: pending
+
+Council member 2 approves...
+  Signatures: 2/2
+  Status: approved
+  Approved: True
+
+[OK] Block 3 mined (multisig proposal)
+
+======================================================================
+DEMO 4: EXTERNAL BLOCKCHAIN ANCHORING
+======================================================================
+
+Anchoring block 3 to Bitcoin...
+[OK] Anchored to Bitcoin
+  Transaction ID: btc_7c7d85c44ab457403e383e5e87b67004fb34b2299474b5216a43b1eb98c3c348
+  Block height: 800430
+  Timestamp: 2026-04-11T08:19:09.694897+00:00
+
+Anchoring block 3 to Ethereum...
+[OK] Anchored to Ethereum
+  Transaction hash: 0x28c7a3a9679bcf8764a8d1dc196839c201c9e0d86b2cf694b76bc695c5e4f078
+  Block number: 18004986
+  Contract: 0xb5e25f7a77fc985eab633e0071df32d800091fc9
+  Gas used: 21000
+
+======================================================================
+DEMO 5: AUDIT TOOLS AND VERIFICATION
+======================================================================
+
+Block Explorer:
+--------------------------------------------------
+  Total blocks: 4
+  Total transactions: 9
+  Total contracts: 1
+  Consensus: poa
+
+Chain Validation:
+--------------------------------------------------
+  [OK] Blockchain is VALID
+  Blocks verified: 4
+
+Anomaly Detection:
+--------------------------------------------------
+  [OK] No anomalies detected
+
+Generating audit report...
+[OK] Audit report saved: governance_audit_report.json
+
+Exporting block explorer data...
+[OK] Block explorer data saved: governance_block_explorer.json
+
+======================================================================
+DEMO 6: PBFT CONSENSUS (Byzantine Fault Tolerance)
+======================================================================
+
+[OK] Created ledger with PBFT consensus
+  Validators: 4
+  Byzantine fault tolerance: f=1
+  Quorum size: 3 (2f+1)
+
+PBFT Consensus Process:
+  1. Pre-prepare: Primary proposes block
+  2. Prepare: Validators vote on proposal
+  3. Commit: Validators commit the block
+
+[OK] Block 0 created with PBFT consensus
+  Consensus proof: {
+    "type": "pbft",
+    "view": 0,
+    "sequence_number": 0,
+    "primary": "validator_0",
+    "prepare_votes": 0,
+    "commit_votes": 0,
+    "quorum_size": 3,
+    "f": 1
+}
+
+======================================================================
+DEMONSTRATION COMPLETE
+======================================================================
+
+Files created:
+  - governance_ledger.json (PoA blockchain)
+  - governance_ledger_pbft.json (PBFT blockchain)
+  - governance_audit_report.json (Audit report)
+  - governance_block_explorer.json (Block explorer data)
+
+Next steps:
+  1. Explore the blockchain:
+     python audit_tools.py stats
+
+  2. Verify a block:
+     python audit_tools.py block 0
+
+  3. Validate entire chain:
+     python audit_tools.py validate
+
+  4. Search for transactions:
+     python audit_tools.py contracts
+
+  5. Generate audit report:
+     python audit_tools.py report custom_report.json
+
+Features demonstrated:
+  [OK] Proof-of-Authority (PoA) consensus
+  [OK] Practical Byzantine Fault Tolerance (PBFT)
+  [OK] Smart contract deployment and execution
+  [OK] Multi-signature proposals (M-of-N)
+  [OK] External blockchain anchoring (Bitcoin/Ethereum)
+  [OK] Block explorer and transaction verification
+  [OK] Chain validation and anomaly detection
+  [OK] Comprehensive audit reporting
+

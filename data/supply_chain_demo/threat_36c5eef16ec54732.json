@@ -1,0 +1,21 @@
+{
+  "threat_id": "36c5eef16ec54732",
+  "timestamp": 1775917198.706722,
+  "attack_vector": "malicious_package",
+  "threat_level": "info",
+  "package": {
+    "name": "requests",
+    "version": "2.28.2",
+    "package_manager": "pip"
+  },
+  "indicators": [
+    {
+      "type": "network_capability",
+      "severity": "info",
+      "description": "Package has network communication capability",
+      "confidence": 1.0
+    }
+  ],
+  "auto_remediated": false,
+  "quarantined": false
+}

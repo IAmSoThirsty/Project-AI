@@ -1,0 +1,338 @@
+# Distributed Cache Configuration
+# Version: 1.0.0
+
+# Cache Backend Selection
+backend: hybrid  # Options: redis, s3, hybrid, disabled
+
+# Redis Configuration (L1 Cache - Fast)
+redis:
+  enabled: true
+  
+  # Connection
+  connection:
+    host: ${REDIS_HOST:-localhost}
+    port: ${REDIS_PORT:-6379}
+    password: ${REDIS_PASSWORD}
+    db: 0
+    ssl: false
+    timeout_seconds: 5
+    
+  # Cluster Mode (for high availability)
+  cluster:
+    enabled: false
+    nodes:
+      - host: redis-node-1
+        port: 6379
+      - host: redis-node-2
+        port: 6379
+      - host: redis-node-3
+        port: 6379
+    
+  # Memory Management
+  memory:
+    max_memory: 8GB
+    eviction_policy: allkeys-lru  # Least Recently Used
+    
+  # Performance
+  performance:
+    pipeline_size: 100
+    connection_pool_size: 50
+    
+  # Persistence
+  persistence:
+    enabled: true
+    save_interval_seconds: 300
+    aof_enabled: false
+
+# S3 Configuration (L2 Cache - Persistent)
+s3:
+  enabled: true
+  
+  # Connection
+  connection:
+    bucket: incredibuild-cache-${AWS_ACCOUNT_ID}
+    region: ${AWS_REGION:-us-east-1}
+    endpoint: ${S3_ENDPOINT}  # Optional for S3-compatible storage
+    
+  # Organization
+  organization:
+    prefix: cache/
+    key_pattern: '{compiler}/{hash}/{timestamp}'
+    
+  # Lifecycle Rules
+  lifecycle:
+    enabled: true
+    rules:
+      - name: expire-old-cache
+        expiration_days: 30
+        transition_glacier_days: 90
+        
+      - name: cleanup-incomplete
+        abort_incomplete_days: 7
+        
+  # Performance
+  performance:
+    multipart_threshold: 100MB
+    multipart_chunk_size: 10MB
+    max_concurrency: 10
+    use_accelerate: false
+    
+  # Compression
+  compression:
+    enabled: true
+    algorithm: zstd  # Options: gzip, zstd, lz4
+    level: 6
+    
+  # Encryption
+  encryption:
+    enabled: true
+    type: AES256  # Options: AES256, aws:kms
+    kms_key_id: ${KMS_KEY_ID}  # Required if type: aws:kms
+
+# sccache Configuration (Rust, C, C++)
+sccache:
+  enabled: true
+  
+  # Storage Backend (uses S3 config above)
+  storage: s3
+  
+  # Local Cache
+  local_cache:
+    enabled: true
+    path: ~/.cache/sccache
+    max_size: 10GB
+    
+  # Remote Cache
+  remote_cache:
+    enabled: true
+    bucket: ${S3_BUCKET}
+    key_prefix: sccache/
+    
+  # Compiler Support
+  compilers:
+    - gcc
+    - g++
+    - clang
+    - clang++
+    - rustc
+    
+  # Performance
+  performance:
+    idle_timeout_seconds: 600
+    startup_timeout_seconds: 10
+    
+  # Statistics
+  statistics:
+    enabled: true
+    output_format: json
+
+# ccache Configuration (C/C++)
+ccache:
+  enabled: true
+  
+  # Storage
+  storage:
+    max_size: 10GB
+    cache_dir: ~/.ccache
+    
+  # Compression
+  compression:
+    enabled: true
+    level: 6
+    
+  # Remote Storage (uses S3)
+  remote:
+    enabled: true
+    storage: s3
+    bucket: ${S3_BUCKET}
+    prefix: ccache/
+    
+  # Performance
+  performance:
+    hard_link: true
+    file_clone: true
+    direct_mode: true
+    
+  # Statistics
+  statistics:
+    enabled: true
+    log_file: ~/.ccache/stats.log
+
+# Cache Warming (Predictive)
+cache_warming:
+  enabled: true
+  
+  # Strategies
+  strategies:
+    # Pre-populate cache based on git activity
+    git_based:
+      enabled: true
+      monitor_branches:
+        - main
+        - develop
+        - release/*
+      lookback_commits: 100
+      
+    # Pre-populate based on time patterns
+    time_based:
+      enabled: true
+      warm_before_hours:
+        - 8  # 8 AM
+        - 13  # 1 PM
+      warm_days:
+        - monday
+        - tuesday
+        - wednesday
+        - thursday
+        - friday
+        
+    # Pre-populate based on dependencies
+    dependency_based:
+      enabled: true
+      monitor_files:
+        - package.json
+        - requirements.txt
+        - Cargo.toml
+        - go.mod
+        
+  # Execution
+  execution:
+    background: true
+    max_concurrent_warmes: 3
+    
+# Cache Validation
+validation:
+  # Hash Verification
+  hash_verification:
+    enabled: true
+    algorithm: sha256
+    
+  # Integrity Checks
+  integrity_checks:
+    enabled: true
+    check_interval_hours: 24
+    auto_repair: true
+    
+  # Consistency
+  consistency:
+    check_enabled: true
+    l1_l2_sync_interval_seconds: 300
+
+# Cache Analytics
+analytics:
+  enabled: true
+  
+  # Metrics Collection
+  metrics:
+    hit_rate: true
+    miss_rate: true
+    eviction_rate: true
+    storage_utilization: true
+    access_patterns: true
+    
+  # Reporting
+  reporting:
+    enabled: true
+    interval_hours: 24
+    format: json
+    output_path: incredibuild/benchmarks/cache_analytics/
+    
+  # Optimization Recommendations
+  recommendations:
+    enabled: true
+    auto_tune: false  # If true, automatically adjust cache settings
+
+# Cache Cleanup
+cleanup:
+  # Automatic Cleanup
+  automatic:
+    enabled: true
+    schedule: '0 2 * * *'  # Daily at 2 AM
+    
+  # Rules
+  rules:
+    - name: remove-unused
+      condition: not_accessed_days > 30
+      action: delete
+      
+    - name: archive-old
+      condition: not_accessed_days > 90
+      action: archive_to_glacier
+      
+    - name: remove-failed
+      condition: build_failed == true
+      action: delete
+      
+  # Manual Cleanup
+  manual:
+    commands:
+      - name: clear_all
+        description: Clear entire cache
+        
+      - name: clear_l1
+        description: Clear Redis cache only
+        
+      - name: clear_l2
+        description: Clear S3 cache only
+        
+      - name: clear_old
+        description: Clear entries older than N days
+
+# Monitoring & Alerts
+monitoring:
+  # Health Checks
+  health_checks:
+    enabled: true
+    interval_seconds: 60
+    
+  # Alerts
+  alerts:
+    low_hit_rate:
+      enabled: true
+      threshold: 0.15  # Alert if hit rate < 15%
+      
+    high_eviction_rate:
+      enabled: true
+      threshold: 0.30  # Alert if eviction rate > 30%
+      
+    storage_full:
+      enabled: true
+      threshold: 0.90  # Alert if 90% full
+      
+    sync_lag:
+      enabled: true
+      threshold_seconds: 600  # Alert if L1/L2 sync lags > 10 min
+      
+  # Notification Channels
+  notifications:
+    slack:
+      enabled: true
+      webhook: ${SLACK_WEBHOOK_URL}
+      
+    email:
+      enabled: true
+      recipients:
+        - devops@example.com
+
+# Security
+security:
+  # Access Control
+  access_control:
+    enabled: true
+    require_authentication: true
+    allowed_ips:
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      
+  # Encryption
+  encryption:
+    at_rest: true
+    in_transit: true
+    key_rotation_days: 90
+    
+  # Audit
+  audit:
+    enabled: true
+    log_access: true
+    log_modifications: true
+    retention_days: 90

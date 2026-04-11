@@ -8,6 +8,8 @@ A single entry point for building all Project-AI components:
 - Project-AI Core (Python)
 - Desktop App (Electron/Node)
 - Sovereign Web (Next.js)
+
+Enhanced with IncrediBuild distributed compilation support for 10x+ speedup.
 """
 
 import os
@@ -28,27 +30,76 @@ PROJECT_ROOT = Path(__file__).parent.absolute()
 
 
 class BuildOrchestrator:
-    def __init__(self, clean: bool = False):
+    def __init__(self, clean: bool = False, use_incredibuild: bool = False):
         self.clean = clean
+        self.use_incredibuild = use_incredibuild
+        self.incredibuild_coordinator = None
+        
+        # Initialize IncrediBuild if requested
+        if self.use_incredibuild:
+            self._init_incredibuild()
 
+    def _init_incredibuild(self):
+        """Initialize IncrediBuild distributed compilation"""
+        try:
+            # Import IncrediBuild coordinator
+            sys.path.insert(0, str(PROJECT_ROOT))
+            from incredibuild_coordinator import IncrediBuildCoordinator
+            
+            logger.info("Initializing IncrediBuild distributed compilation...")
+            self.incredibuild_coordinator = IncrediBuildCoordinator()
+            
+            if not self.incredibuild_coordinator.initialize():
+                logger.warning("IncrediBuild initialization failed, falling back to local builds")
+                self.use_incredibuild = False
+                self.incredibuild_coordinator = None
+            else:
+                logger.info("✅ IncrediBuild enabled - expect 10x+ speedup")
+                
+        except ImportError:
+            logger.warning("IncrediBuild not available, falling back to local builds")
+            self.use_incredibuild = False
+            self.incredibuild_coordinator = None
+    
     def run(self):
         logger.info("=" * 60)
         logger.info("PROJECT-AI FIRST EDITION (v1.0.0-E1) - BUILD ORCHESTRATOR")
+        if self.use_incredibuild:
+            logger.info("Mode: DISTRIBUTED BUILD (IncrediBuild)")
+        else:
+            logger.info("Mode: LOCAL BUILD")
         logger.info("=" * 60)
 
         try:
-            self._build_octoreflex()
-            self._build_core_python()
-            self._build_desktop_app()
-            self._generate_release_manifest()
+            # Use IncrediBuild if available
+            if self.use_incredibuild and self.incredibuild_coordinator:
+                logger.info("Using IncrediBuild distributed compilation...")
+                success = self.incredibuild_coordinator.build(target="all", clean=self.clean)
+                
+                if success:
+                    logger.info("=" * 60)
+                    logger.info("🏗️  BUILD COMPLETE: v1.0.0-E1 READY FOR IGNITION")
+                    logger.info("=" * 60)
+                else:
+                    raise Exception("IncrediBuild build failed")
+            else:
+                # Fallback to local builds
+                self._build_octoreflex()
+                self._build_core_python()
+                self._build_desktop_app()
+                self._generate_release_manifest()
 
-            logger.info("=" * 60)
-            logger.info("🏗️  BUILD COMPLETE: v1.0.0-E1 READY FOR IGNITION")
-            logger.info("=" * 60)
+                logger.info("=" * 60)
+                logger.info("🏗️  BUILD COMPLETE: v1.0.0-E1 READY FOR IGNITION")
+                logger.info("=" * 60)
 
         except Exception as e:
             logger.error("❌ BUILD FAILED: %s", e)
             sys.exit(1)
+        finally:
+            # Cleanup IncrediBuild if used
+            if self.use_incredibuild and self.incredibuild_coordinator:
+                self.incredibuild_coordinator.cleanup()
 
     def _build_octoreflex(self):
         """Build Layer 0: OctoReflex"""
@@ -112,7 +163,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--clean", action="store_true", help="Clean previous build artifacts"
     )
+    parser.add_argument(
+        "--incredibuild", 
+        action="store_true", 
+        help="Use IncrediBuild distributed compilation for 10x+ speedup"
+    )
     args = parser.parse_args()
 
-    orchestrator = BuildOrchestrator(clean=args.clean)
+    orchestrator = BuildOrchestrator(clean=args.clean, use_incredibuild=args.incredibuild)
     orchestrator.run()
+

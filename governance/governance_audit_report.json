@@ -1,0 +1,79 @@
+{
+  "report_metadata": {
+    "generated_at": "2026-04-11T08:19:09.695898+00:00",
+    "ledger_path": "governance_ledger.json",
+    "consensus_type": "poa"
+  },
+  "chain_statistics": {
+    "total_blocks": 4,
+    "total_transactions": 9,
+    "total_contracts": 1,
+    "pending_transactions": 0,
+    "consensus_type": "poa",
+    "average_block_size": 2.25,
+    "transaction_types": {
+      "governance_decision": 1,
+      "policy_update": 1,
+      "audit_event": 1,
+      "contract_deploy": 1,
+      "contract_execute": 2,
+      "multisig_proposal": 1,
+      "multisig_approval": 2
+    }
+  },
+  "validation": {
+    "valid": true,
+    "total_blocks": 4,
+    "errors": [],
+    "block_errors": [],
+    "consensus_type": "poa"
+  },
+  "anomalies": {
+    "anomalies": [],
+    "total_checked": 4
+  },
+  "contracts": [
+    {
+      "contract_id": "96cad9d3d812ceb22bc4b18cc7980a3c",
+      "name": "GovernancePolicies",
+      "version": "1.0.0",
+      "status": "active",
+      "execution_count": 2
+    }
+  ],
+  "multisig": {
+    "total_proposals": 1,
+    "approved": 1,
+    "pending": 0
+  },
+  "recent_blocks": [
+    {
+      "block_number": 0,
+      "timestamp": "2026-04-11T08:19:09.687390+00:00",
+      "block_hash": "748bc97eea41c821e693bd17df5c0fdd7694101a30c2a7a258a2f11667e65814",
+      "validator": "validator_0",
+      "tx_count": 3
+    },
+    {
+      "block_number": 1,
+      "timestamp": "2026-04-11T08:19:09.689891+00:00",
+      "block_hash": "3dbd3b4a36438a9cdd1437c8d06aab2d74566b0efdde00bd14b08e742dbeb3f1",
+      "validator": "validator_1",
+      "tx_count": 1
+    },
+    {
+      "block_number": 2,
+      "timestamp": "2026-04-11T08:19:09.691898+00:00",
+      "block_hash": "85c1d7061774a3082f14969c3bcc842246711d29f955acdbb2d3860d1bdd546b",
+      "validator": "validator_2",
+      "tx_count": 2
+    },
+    {
+      "block_number": 3,
+      "timestamp": "2026-04-11T08:19:09.692898+00:00",
+      "block_hash": "b5e9ec188e795c5064ff9857f14834b3ef91e96af3cbe05889d969e8dc17a16f",
+      "validator": "validator_0",
+      "tx_count": 3
+    }
+  ]
+}

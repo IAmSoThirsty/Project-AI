@@ -30,6 +30,12 @@ const (
 	EventSocketConnect EventType = 1
 	EventFileOpen      EventType = 2
 	EventSetUID        EventType = 3
+	EventExec          EventType = 4
+	EventMmap          EventType = 5
+	EventPtrace        EventType = 6
+	EventModuleLoad    EventType = 7
+	EventBPFLoad       EventType = 8
+	EventMemViolation  EventType = 9
 )
 
 // String returns a human-readable event type name.
@@ -41,6 +47,18 @@ func (e EventType) String() string {
 		return "file_open"
 	case EventSetUID:
 		return "setuid"
+	case EventExec:
+		return "exec"
+	case EventMmap:
+		return "mmap"
+	case EventPtrace:
+		return "ptrace"
+	case EventModuleLoad:
+		return "module_load"
+	case EventBPFLoad:
+		return "bpf_load"
+	case EventMemViolation:
+		return "mem_violation"
 	default:
 		return fmt.Sprintf("unknown(%d)", uint8(e))
 	}
@@ -52,8 +70,9 @@ type KernelEvent struct {
 	PID         uint32    // [0..3]
 	UID         uint32    // [4..7]
 	EventType   EventType // [8]
-	_pad        [3]uint8  // [9..11]
-	_pad2       uint32    // [12..15]
+	Flags       uint8     // [9]      event flags
+	_pad        [2]uint8  // [10..11]
+	Metadata    uint32    // [12..15] event-specific metadata
 	TimestampNS int64     // [16..23]
 }
 
@@ -88,7 +107,9 @@ func ParseEvent(raw []byte) (KernelEvent, error) {
 	e.PID = binary.LittleEndian.Uint32(raw[0:4])
 	e.UID = binary.LittleEndian.Uint32(raw[4:8])
 	e.EventType = EventType(raw[8])
-	// raw[9..15] are padding — skip.
+	e.Flags = raw[9]
+	// raw[10..11] are padding — skip.
+	e.Metadata = binary.LittleEndian.Uint32(raw[12:16])
 	e.TimestampNS = int64(binary.LittleEndian.Uint64(raw[16:24]))
 	return e, nil
 }

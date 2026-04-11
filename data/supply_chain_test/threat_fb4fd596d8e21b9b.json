@@ -1,0 +1,21 @@
+{
+  "threat_id": "fb4fd596d8e21b9b",
+  "timestamp": 1775917161.453279,
+  "attack_vector": "typosquatting",
+  "threat_level": "high",
+  "package": {
+    "name": "requets",
+    "version": "2.28.0",
+    "package_manager": "pip"
+  },
+  "indicators": [
+    {
+      "type": "typosquatting",
+      "severity": "high",
+      "description": "Package name similar to popular package 'requests'",
+      "confidence": 0.8
+    }
+  ],
+  "auto_remediated": false,
+  "quarantined": false
+}

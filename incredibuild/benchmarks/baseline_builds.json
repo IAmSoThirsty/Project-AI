@@ -1,0 +1,96 @@
+{
+  "benchmark_metadata": {
+    "version": "1.0.0",
+    "date": "2026-04-11",
+    "environment": "Local development machine",
+    "hardware": {
+      "cpu": "Intel Core i7-9700K @ 3.6GHz",
+      "cores": 8,
+      "ram": "32GB DDR4",
+      "storage": "NVMe SSD"
+    }
+  },
+  "builds": [
+    {
+      "target": "full",
+      "description": "Complete repository build",
+      "duration_seconds": 2700,
+      "duration_human": "45m 00s",
+      "components": {
+        "octoreflex": 720,
+        "python_core": 480,
+        "desktop_app": 900,
+        "web_frontend": 420,
+        "tests": 180
+      }
+    },
+    {
+      "target": "octoreflex",
+      "description": "Go + eBPF build",
+      "duration_seconds": 720,
+      "duration_human": "12m 00s",
+      "parallel_jobs": 1,
+      "cache_enabled": false
+    },
+    {
+      "target": "python_core",
+      "description": "Python core + dependencies",
+      "duration_seconds": 480,
+      "duration_human": "8m 00s",
+      "parallel_jobs": 1,
+      "cache_enabled": false
+    },
+    {
+      "target": "desktop_app",
+      "description": "Electron desktop application",
+      "duration_seconds": 900,
+      "duration_human": "15m 00s",
+      "parallel_jobs": 1,
+      "cache_enabled": false
+    },
+    {
+      "target": "web_frontend",
+      "description": "Next.js web frontend",
+      "duration_seconds": 420,
+      "duration_human": "7m 00s",
+      "parallel_jobs": 1,
+      "cache_enabled": false
+    },
+    {
+      "target": "tests",
+      "description": "Full test suite execution",
+      "duration_seconds": 1500,
+      "duration_human": "25m 00s",
+      "test_count": 2847,
+      "parallel_jobs": 1
+    }
+  ],
+  "average_build_times": {
+    "full_build": 2700,
+    "incremental_build": 180,
+    "clean_build": 3000
+  },
+  "bottlenecks": [
+    {
+      "component": "desktop_app",
+      "issue": "Node.js dependency resolution and webpack compilation",
+      "impact": "33% of total build time"
+    },
+    {
+      "component": "octoreflex",
+      "issue": "Go compilation with CGO and eBPF generation",
+      "impact": "27% of total build time"
+    },
+    {
+      "component": "tests",
+      "issue": "Serial test execution, I/O bound",
+      "impact": "55% of test time"
+    }
+  ],
+  "notes": [
+    "Baseline measurements taken without any distributed compilation",
+    "All builds executed on single local machine",
+    "No caching or parallelization optimizations applied",
+    "Represents worst-case build scenario for comparison"
+  ]
+}

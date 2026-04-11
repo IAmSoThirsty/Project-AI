@@ -1,0 +1,1198 @@
+{
+  "generated_at": "2026-04-11T08:21:26.232679+00:00",
+  "total_attacks": 28,
+  "categories": {
+    "race_condition": 5,
+    "toctou": 5,
+    "time_manipulation": 3,
+    "session_replay": 1,
+    "token_replay": 1,
+    "message_replay": 4,
+    "clock_skew": 3,
+    "timestamp_manipulation": 0,
+    "causality_violation": 3,
+    "timing_attack": 1,
+    "temporal_side_channel": 2
+  },
+  "attack_vectors": [
+    {
+      "attack_id": "TEMP_RACE_001",
+      "category": "race_condition",
+      "severity": "high",
+      "name": "Check-Then-Use Race Condition",
+      "description": "Exploit race between permission check and resource use",
+      "attack_payload": {
+        "attack_type": "check_then_use",
+        "target": "resource_access",
+        "thread_count": 100,
+        "timing_window_ms": 50,
+        "exploit_sequence": [
+          "Thread 1: Check permission (authorized)",
+          "Thread 2: Revoke permission",
+          "Thread 1: Use resource (unauthorized)"
+        ]
+      },
+      "prerequisites": [
+        "Concurrent access",
+        "Non-atomic operations"
+      ],
+      "expected_detection": [
+        "Transaction isolation",
+        "Atomic operations",
+        "Lock monitoring"
+      ],
+      "cvss_score": 7.5,
+      "mitigation_strategies": [
+        "Use atomic compare-and-swap operations",
+        "Implement proper locking mechanisms",
+        "Use transactional memory",
+        "Apply mutex/semaphore protection"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Authorization",
+        "Resource Manager"
+      ],
+      "temporal_window_ms": 50,
+      "success_indicators": [
+        "Unauthorized access",
+        "Resource corruption"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_RACE_002",
+      "category": "race_condition",
+      "severity": "critical",
+      "name": "Double-Spend Race Condition",
+      "description": "Spend same resource twice via concurrent transactions",
+      "attack_payload": {
+        "attack_type": "double_spend",
+        "resource": "tokens/credits",
+        "concurrent_transactions": 2,
+        "timing_offset_ms": 10,
+        "exploit_method": "Parallel transaction submission before balance update"
+      },
+      "prerequisites": [
+        "Non-atomic balance updates",
+        "Concurrent transaction processing"
+      ],
+      "expected_detection": [
+        "Transaction serialization",
+        "Balance locks"
+      ],
+      "cvss_score": 9.1,
+      "mitigation_strategies": [
+        "Implement optimistic locking with version numbers",
+        "Use database transaction isolation (SERIALIZABLE)",
+        "Apply distributed consensus (Paxos/Raft)",
+        "Chronos causality tracking"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Transaction Processor",
+        "Balance Manager"
+      ],
+      "temporal_window_ms": 20,
+      "success_indicators": [
+        "Negative balance",
+        "Duplicate spending"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_RACE_003",
+      "category": "race_condition",
+      "severity": "high",
+      "name": "Concurrent Login Race",
+      "description": "Bypass rate limiting via concurrent login attempts",
+      "attack_payload": {
+        "attack_type": "login_race",
+        "concurrent_attempts": 50,
+        "target_account": "admin",
+        "rate_limit_bypass": "Simultaneous requests before counter update"
+      },
+      "prerequisites": [
+        "Rate limiting with non-atomic counters"
+      ],
+      "expected_detection": [
+        "Distributed rate limiting",
+        "Request correlation"
+      ],
+      "cvss_score": 7.2,
+      "mitigation_strategies": [
+        "Use Redis atomic INCR for rate counters",
+        "Implement distributed rate limiting",
+        "Apply token bucket algorithm",
+        "Chronos temporal weight-based throttling"
+      ],
+      "exploitation_complexity": "low",
+      "target_components": [
+        "Authentication",
+        "Rate Limiter"
+      ],
+      "temporal_window_ms": 100,
+      "success_indicators": [
+        "Rate limit bypass",
+        "Brute force success"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_RACE_004",
+      "category": "race_condition",
+      "severity": "high",
+      "name": "Symlink File System Race",
+      "description": "Replace file with symlink between check and use",
+      "attack_payload": {
+        "attack_type": "symlink_race",
+        "target_file": "/tmp/temp_file",
+        "symlink_target": "/etc/passwd",
+        "timing_window_ms": 30,
+        "exploit_sequence": [
+          "Create legitimate temp file",
+          "App checks file permissions",
+          "Replace with symlink to sensitive file",
+          "App writes to 'temp' file (actually sensitive)"
+        ]
+      },
+      "prerequisites": [
+        "Predictable temp file names",
+        "Weak file checks"
+      ],
+      "expected_detection": [
+        "O_NOFOLLOW flag",
+        "File descriptor validation"
+      ],
+      "cvss_score": 8.1,
+      "mitigation_strategies": [
+        "Use O_NOFOLLOW and O_EXCL flags",
+        "Validate file descriptor after open",
+        "Use unique unpredictable temp names",
+        "Operate on file descriptors not paths"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "File System",
+        "Temp File Handler"
+      ],
+      "temporal_window_ms": 30,
+      "success_indicators": [
+        "Unauthorized file write",
+        "Privilege escalation"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_RACE_005",
+      "category": "race_condition",
+      "severity": "high",
+      "name": "Database Update Race",
+      "description": "Concurrent updates leading to lost writes",
+      "attack_payload": {
+        "attack_type": "lost_update",
+        "target_table": "user_settings",
+        "concurrent_updates": 10,
+        "timing_pattern": "READ-MODIFY-WRITE without isolation"
+      },
+      "prerequisites": [
+        "Insufficient transaction isolation",
+        "No version control"
+      ],
+      "expected_detection": [
+        "Optimistic locking",
+        "Version columns"
+      ],
+      "cvss_score": 6.8,
+      "mitigation_strategies": [
+        "Use SERIALIZABLE isolation level",
+        "Implement optimistic locking with versions",
+        "Use SELECT FOR UPDATE",
+        "Apply Atropos monotonic counters"
+      ],
+      "exploitation_complexity": "low",
+      "target_components": [
+        "Database",
+        "ORM Layer"
+      ],
+      "temporal_window_ms": 100,
+      "success_indicators": [
+        "Lost updates",
+        "Data inconsistency"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TOCTOU_001",
+      "category": "toctou",
+      "severity": "high",
+      "name": "Permission Check TOCTOU",
+      "description": "Change file permissions between check and use",
+      "attack_payload": {
+        "attack_type": "permission_toctou",
+        "target_resource": "sensitive_file",
+        "exploit_sequence": [
+          "App checks: User has read permission",
+          "Attacker: Grant write permission",
+          "App uses: Writes to file (unexpected)"
+        ],
+        "timing_window_ms": 20
+      },
+      "prerequisites": [
+        "Separate check and use operations",
+        "Mutable permissions"
+      ],
+      "expected_detection": [
+        "Atomic operations",
+        "Permission snapshots"
+      ],
+      "cvss_score": 7.8,
+      "mitigation_strategies": [
+        "Use file descriptors with permissions frozen",
+        "Implement capability-based security",
+        "Validate permissions at use time",
+        "Apply mandatory access control"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Authorization",
+        "File System"
+      ],
+      "temporal_window_ms": 20,
+      "success_indicators": [
+        "Unauthorized write",
+        "Permission violation"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TOCTOU_002",
+      "category": "toctou",
+      "severity": "high",
+      "name": "File Content TOCTOU",
+      "description": "Modify file content between validation and execution",
+      "attack_payload": {
+        "attack_type": "content_toctou",
+        "target": "configuration_file",
+        "exploit_sequence": [
+          "App validates: Config file is safe",
+          "Attacker: Replaces config with malicious version",
+          "App executes: Uses malicious config"
+        ],
+        "timing_window_ms": 50
+      },
+      "prerequisites": [
+        "Config validation separate from loading"
+      ],
+      "expected_detection": [
+        "Cryptographic signing",
+        "Immutable configs"
+      ],
+      "cvss_score": 8.3,
+      "mitigation_strategies": [
+        "Load config into memory and validate copy",
+        "Use cryptographic signatures",
+        "Implement file locking",
+        "Atropos hash chaining for config versions"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Configuration Manager",
+        "File System"
+      ],
+      "temporal_window_ms": 50,
+      "success_indicators": [
+        "Malicious config execution",
+        "Code injection"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TOCTOU_003",
+      "category": "toctou",
+      "severity": "medium",
+      "name": "Resource Quota TOCTOU",
+      "description": "Exceed quota by changing it between check and allocation",
+      "attack_payload": {
+        "attack_type": "quota_toctou",
+        "resource": "memory/storage",
+        "exploit_sequence": [
+          "App checks: User has 100MB quota available",
+          "Attacker: Increases quota limit",
+          "App allocates: 1GB (thinking it's within quota)"
+        ],
+        "timing_window_ms": 30
+      },
+      "prerequisites": [
+        "Mutable quota limits",
+        "Delayed quota enforcement"
+      ],
+      "expected_detection": [
+        "Quota snapshots",
+        "Atomic quota checks"
+      ],
+      "cvss_score": 6.5,
+      "mitigation_strategies": [
+        "Snapshot quota at request start",
+        "Use atomic quota deduction",
+        "Implement quota reservations",
+        "Apply distributed quota management"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Resource Manager",
+        "Quota Service"
+      ],
+      "temporal_window_ms": 30,
+      "success_indicators": [
+        "Quota violation",
+        "Resource exhaustion"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TOCTOU_004",
+      "category": "toctou",
+      "severity": "critical",
+      "name": "Authentication State TOCTOU",
+      "description": "Revoke auth between check and privileged operation",
+      "attack_payload": {
+        "attack_type": "auth_toctou",
+        "target": "admin_operation",
+        "exploit_sequence": [
+          "App checks: User is authenticated admin",
+          "User: Logout/session invalidated",
+          "App executes: Admin operation (stale auth state)"
+        ],
+        "timing_window_ms": 40
+      },
+      "prerequisites": [
+        "Cached auth state",
+        "No re-verification"
+      ],
+      "expected_detection": [
+        "Fresh auth checks",
+        "Short-lived tokens"
+      ],
+      "cvss_score": 9.0,
+      "mitigation_strategies": [
+        "Verify auth at operation time",
+        "Use short-lived JWT tokens",
+        "Implement token revocation checks",
+        "Apply Chronos causality for auth events"
+      ],
+      "exploitation_complexity": "low",
+      "target_components": [
+        "Authentication",
+        "Authorization"
+      ],
+      "temporal_window_ms": 40,
+      "success_indicators": [
+        "Unauthorized admin operation",
+        "Privilege retention"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TOCTOU_005",
+      "category": "toctou",
+      "severity": "critical",
+      "name": "Cryptographic Key TOCTOU",
+      "description": "Replace crypto key between validation and use",
+      "attack_payload": {
+        "attack_type": "crypto_key_toctou",
+        "target": "signing_key",
+        "exploit_sequence": [
+          "App validates: Key is trusted",
+          "Attacker: Replaces key with malicious key",
+          "App uses: Signs data with malicious key"
+        ],
+        "timing_window_ms": 25
+      },
+      "prerequisites": [
+        "Mutable key storage",
+        "Delayed key loading"
+      ],
+      "expected_detection": [
+        "Key pinning",
+        "Hardware security modules"
+      ],
+      "cvss_score": 9.5,
+      "mitigation_strategies": [
+        "Use hardware security modules (HSM)",
+        "Implement key pinning",
+        "Load keys into protected memory",
+        "Apply Atropos anti-rollback for key versions"
+      ],
+      "exploitation_complexity": "high",
+      "target_components": [
+        "Cryptography",
+        "Key Management"
+      ],
+      "temporal_window_ms": 25,
+      "success_indicators": [
+        "Signature forgery",
+        "Encryption compromise"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TIME_001",
+      "category": "time_manipulation",
+      "severity": "high",
+      "name": "System Clock Rollback Attack",
+      "description": "Roll back system clock to bypass time-based restrictions",
+      "attack_payload": {
+        "attack_type": "clock_rollback",
+        "manipulation": "Set system time to past",
+        "targets": [
+          "License expiration",
+          "Trial period",
+          "Token expiration",
+          "Rate limiting windows"
+        ],
+        "time_offset_hours": -720
+      },
+      "prerequisites": [
+        "System time write access",
+        "Trust in system clock"
+      ],
+      "expected_detection": [
+        "Monotonic clocks",
+        "External time sources"
+      ],
+      "cvss_score": 7.8,
+      "mitigation_strategies": [
+        "Use monotonic clocks (time.monotonic)",
+        "Implement Atropos monotonic counters",
+        "Verify against NTP servers",
+        "Apply hardware-based time sources (TPM)"
+      ],
+      "exploitation_complexity": "low",
+      "target_components": [
+        "License Manager",
+        "Token Validator"
+      ],
+      "temporal_window_ms": 0,
+      "success_indicators": [
+        "Expired license reactivated",
+        "Token replay success"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TIME_002",
+      "category": "time_manipulation",
+      "severity": "medium",
+      "name": "NTP Time Injection",
+      "description": "Spoof NTP responses to manipulate synchronized time",
+      "attack_payload": {
+        "attack_type": "ntp_spoofing",
+        "method": "Man-in-the-middle NTP",
+        "time_offset_seconds": 3600,
+        "target_protocol": "NTP (UDP port 123)"
+      },
+      "prerequisites": [
+        "Network position",
+        "Unsecured NTP"
+      ],
+      "expected_detection": [
+        "NTPsec",
+        "Multiple time sources"
+      ],
+      "cvss_score": 6.5,
+      "mitigation_strategies": [
+        "Use authenticated NTP (NTPsec)",
+        "Validate against multiple time sources",
+        "Implement gradual time adjustments",
+        "Chronos consensus time validation"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Time Synchronization",
+        "NTP Client"
+      ],
+      "temporal_window_ms": 0,
+      "success_indicators": [
+        "Time desynchronization",
+        "Certificate validation bypass"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TIME_003",
+      "category": "time_manipulation",
+      "severity": "medium",
+      "name": "Malicious Timestamp Injection",
+      "description": "Inject forged timestamps in messages/transactions",
+      "attack_payload": {
+        "attack_type": "timestamp_injection",
+        "forged_timestamp": "2030-01-01T00:00:00Z",
+        "target": "Event ordering system",
+        "impact": "Reorder events to bypass validation"
+      },
+      "prerequisites": [
+        "User-controlled timestamps",
+        "No timestamp validation"
+      ],
+      "expected_detection": [
+        "Server-side timestamps",
+        "Vector clocks"
+      ],
+      "cvss_score": 7.0,
+      "mitigation_strategies": [
+        "Generate timestamps server-side",
+        "Validate timestamp reasonableness",
+        "Use Chronos vector clocks",
+        "Implement Lamport timestamps"
+      ],
+      "exploitation_complexity": "low",
+      "target_components": [
+        "Event System",
+        "Message Queue"
+      ],
+      "temporal_window_ms": 0,
+      "success_indicators": [
+        "Event reordering",
+        "Audit log corruption"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_REPLAY_001",
+      "category": "session_replay",
+      "severity": "critical",
+      "name": "Session Cookie Replay",
+      "description": "Replay captured session cookie to hijack session",
+      "attack_payload": {
+        "attack_type": "session_replay",
+        "captured_cookie": "session_id=abc123...",
+        "replay_window": "Until expiration",
+        "method": "Capture via network sniffing or XSS"
+      },
+      "prerequisites": [
+        "Session cookie without additional binding"
+      ],
+      "expected_detection": [
+        "IP binding",
+        "Device fingerprinting",
+        "Nonce tracking"
+      ],
+      "cvss_score": 8.8,
+      "mitigation_strategies": [
+        "Bind sessions to IP address",
+        "Implement device fingerprinting",
+        "Use short-lived sessions",
+        "Atropos replay detection with nonces"
+      ],
+      "exploitation_complexity": "low",
+      "target_components": [
+        "Session Manager",
+        "Authentication"
+      ],
+      "temporal_window_ms": 3600000,
+      "success_indicators": [
+        "Session hijacking",
+        "Unauthorized access"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_REPLAY_002",
+      "category": "token_replay",
+      "severity": "high",
+      "name": "JWT Token Replay Attack",
+      "description": "Replay stolen JWT token before expiration",
+      "attack_payload": {
+        "attack_type": "jwt_replay",
+        "stolen_token": "eyJhbGc...",
+        "replay_attempts": 1000,
+        "timing": "Before token expiration"
+      },
+      "prerequisites": [
+        "Long-lived JWT",
+        "No token revocation"
+      ],
+      "expected_detection": [
+        "Token revocation list",
+        "Short expiration"
+      ],
+      "cvss_score": 8.1,
+      "mitigation_strategies": [
+        "Use short-lived access tokens",
+        "Implement token revocation (Redis)",
+        "Bind tokens to client fingerprint",
+        "Apply Atropos token tracking"
+      ],
+      "exploitation_complexity": "low",
+      "target_components": [
+        "JWT Validator",
+        "API Gateway"
+      ],
+      "temporal_window_ms": 900000,
+      "success_indicators": [
+        "API access",
+        "Data exfiltration"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_REPLAY_003",
+      "category": "message_replay",
+      "severity": "medium",
+      "name": "Signed Message Replay",
+      "description": "Replay legitimately signed message multiple times",
+      "attack_payload": {
+        "attack_type": "message_replay",
+        "target": "Financial transaction",
+        "replayed_message": {
+          "type": "transfer",
+          "amount": 100,
+          "to": "attacker",
+          "signature": "valid_signature"
+        },
+        "replay_count": 10
+      },
+      "prerequisites": [
+        "No nonce or timestamp in signed message"
+      ],
+      "expected_detection": [
+        "Nonce tracking",
+        "Sequence numbers"
+      ],
+      "cvss_score": 7.5,
+      "mitigation_strategies": [
+        "Include nonce in signed messages",
+        "Implement message sequence numbers",
+        "Use Chronos vector clocks",
+        "Atropos hash chaining for messages"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Message Processor",
+        "Transaction System"
+      ],
+      "temporal_window_ms": 60000,
+      "success_indicators": [
+        "Duplicate transactions",
+        "Balance manipulation"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_REPLAY_004",
+      "category": "message_replay",
+      "severity": "medium",
+      "name": "Idempotent API Replay",
+      "description": "Replay API request to duplicate side effects",
+      "attack_payload": {
+        "attack_type": "api_replay",
+        "target_endpoint": "/api/create_resource",
+        "captured_request": "Valid signed request",
+        "replay_count": 100,
+        "impact": "Resource exhaustion or duplicate entries"
+      },
+      "prerequisites": [
+        "Lack of idempotency keys"
+      ],
+      "expected_detection": [
+        "Idempotency keys",
+        "Request deduplication"
+      ],
+      "cvss_score": 6.5,
+      "mitigation_strategies": [
+        "Require idempotency keys",
+        "Track request signatures",
+        "Implement request deduplication",
+        "Use Atropos event tracking"
+      ],
+      "exploitation_complexity": "low",
+      "target_components": [
+        "API Gateway",
+        "Request Handler"
+      ],
+      "temporal_window_ms": 300000,
+      "success_indicators": [
+        "Duplicate resources",
+        "DoS via resource creation"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_REPLAY_005",
+      "category": "message_replay",
+      "severity": "high",
+      "name": "Challenge-Response Replay",
+      "description": "Replay captured challenge-response to authenticate",
+      "attack_payload": {
+        "attack_type": "challenge_replay",
+        "captured_response": "hash(challenge + password)",
+        "replay_strategy": "Replay when same challenge reused"
+      },
+      "prerequisites": [
+        "Predictable or reused challenges"
+      ],
+      "expected_detection": [
+        "One-time challenges",
+        "Challenge expiration"
+      ],
+      "cvss_score": 8.0,
+      "mitigation_strategies": [
+        "Use cryptographically random challenges",
+        "Never reuse challenges",
+        "Implement challenge expiration",
+        "Apply Chronos temporal tracking"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Authentication",
+        "Challenge Generator"
+      ],
+      "temporal_window_ms": 30000,
+      "success_indicators": [
+        "Authentication bypass",
+        "Unauthorized access"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_REPLAY_006",
+      "category": "message_replay",
+      "severity": "critical",
+      "name": "Cross-Chain Replay Attack",
+      "description": "Replay transaction on different blockchain fork",
+      "attack_payload": {
+        "attack_type": "blockchain_replay",
+        "source_chain": "Ethereum mainnet",
+        "target_chain": "Ethereum Classic",
+        "replayed_transaction": "Signed transfer transaction"
+      },
+      "prerequisites": [
+        "Chain split without replay protection"
+      ],
+      "expected_detection": [
+        "EIP-155 chain ID",
+        "Network-specific nonces"
+      ],
+      "cvss_score": 9.0,
+      "mitigation_strategies": [
+        "Include chain ID in signatures (EIP-155)",
+        "Use chain-specific nonces",
+        "Implement network identifiers",
+        "Atropos chain-bound hashing"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Blockchain",
+        "Transaction Validator"
+      ],
+      "temporal_window_ms": 0,
+      "success_indicators": [
+        "Duplicate spending across chains"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_CLOCK_001",
+      "category": "clock_skew",
+      "severity": "medium",
+      "name": "Clock Skew Certificate Bypass",
+      "description": "Exploit clock skew to use expired certificates",
+      "attack_payload": {
+        "attack_type": "clock_skew_exploit",
+        "target": "TLS certificate validation",
+        "skew_seconds": -86400,
+        "method": "Set local clock back to accept expired cert"
+      },
+      "prerequisites": [
+        "Trust in local clock for validation"
+      ],
+      "expected_detection": [
+        "NTP verification",
+        "Certificate pinning"
+      ],
+      "cvss_score": 6.8,
+      "mitigation_strategies": [
+        "Verify against network time",
+        "Implement certificate pinning",
+        "Use OCSP stapling",
+        "Chronos distributed time consensus"
+      ],
+      "exploitation_complexity": "low",
+      "target_components": [
+        "TLS Validator",
+        "Certificate Manager"
+      ],
+      "temporal_window_ms": 0,
+      "success_indicators": [
+        "Expired certificate accepted",
+        "MITM possible"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_CLOCK_002",
+      "category": "clock_skew",
+      "severity": "high",
+      "name": "Distributed System Clock Skew",
+      "description": "Exploit clock differences in distributed system",
+      "attack_payload": {
+        "attack_type": "distributed_skew",
+        "node_clocks": {
+          "node1": "2024-01-01T00:00:00Z",
+          "node2": "2024-01-01T00:05:00Z",
+          "node3": "2024-01-01T00:10:00Z"
+        },
+        "exploit": "Event ordering confusion",
+        "impact": "Consensus failures"
+      },
+      "prerequisites": [
+        "Unsynchronized nodes",
+        "Wall-clock based ordering"
+      ],
+      "expected_detection": [
+        "Vector clocks",
+        "Logical timestamps"
+      ],
+      "cvss_score": 7.5,
+      "mitigation_strategies": [
+        "Use Chronos vector clocks",
+        "Implement Lamport timestamps",
+        "Apply NTP synchronization",
+        "Consensus-based time ordering"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Distributed Consensus",
+        "Event Ordering"
+      ],
+      "temporal_window_ms": 0,
+      "success_indicators": [
+        "Consensus failure",
+        "Event ordering corruption"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_CLOCK_003",
+      "category": "clock_skew",
+      "severity": "low",
+      "name": "Gradual Clock Drift Exploit",
+      "description": "Slowly drift clock to avoid detection",
+      "attack_payload": {
+        "attack_type": "gradual_drift",
+        "drift_rate": "10ms per hour",
+        "total_drift_hours": 24,
+        "cumulative_drift_ms": 240,
+        "detection_threshold_ms": 500,
+        "impact": "Time-based validation bypass"
+      },
+      "prerequisites": [
+        "No drift monitoring",
+        "Long-term access"
+      ],
+      "expected_detection": [
+        "Continuous NTP sync",
+        "Drift monitoring"
+      ],
+      "cvss_score": 5.5,
+      "mitigation_strategies": [
+        "Monitor clock drift continuously",
+        "Implement drift alerts",
+        "Use hardware clocks (RTC)",
+        "Anomaly detector for gradual drift"
+      ],
+      "exploitation_complexity": "high",
+      "target_components": [
+        "Time Service",
+        "System Clock"
+      ],
+      "temporal_window_ms": 86400000,
+      "success_indicators": [
+        "Undetected time shift",
+        "Validation bypass"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_CAUSE_001",
+      "category": "causality_violation",
+      "severity": "high",
+      "name": "Event Reordering Attack",
+      "description": "Reorder events to violate happens-before relationships",
+      "attack_payload": {
+        "attack_type": "event_reordering",
+        "original_order": [
+          "create_account",
+          "deposit",
+          "withdraw"
+        ],
+        "malicious_order": [
+          "deposit",
+          "withdraw",
+          "create_account"
+        ],
+        "impact": "Withdraw before account creation"
+      },
+      "prerequisites": [
+        "Weak event ordering",
+        "No causality tracking"
+      ],
+      "expected_detection": [
+        "Chronos vector clocks",
+        "Dependency validation"
+      ],
+      "cvss_score": 8.2,
+      "mitigation_strategies": [
+        "Implement Chronos causality graph",
+        "Use vector clocks for ordering",
+        "Validate event dependencies",
+        "Apply Lamport timestamps"
+      ],
+      "exploitation_complexity": "medium",
+      "target_components": [
+        "Event System",
+        "State Machine"
+      ],
+      "temporal_window_ms": 1000,
+      "success_indicators": [
+        "Invalid state transitions",
+        "Logic bypass"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_CAUSE_002",
+      "category": "causality_violation",
+      "severity": "medium",
+      "name": "False Dependency Injection",
+      "description": "Inject false causal dependencies to manipulate ordering",
+      "attack_payload": {
+        "attack_type": "dependency_injection",
+        "forged_dependency": {
+          "event_id": "malicious_event",
+          "depends_on": [
+            "legitimate_event_999"
+          ]
+        },
+        "impact": "Force event after specific legitimate event"
+      },
+      "prerequisites": [
+        "User-controllable dependencies"
+      ],
+      "expected_detection": [
+        "Dependency validation",
+        "Causality verification"
+      ],
+      "cvss_score": 6.5,
+      "mitigation_strategies": [
+        "Validate dependency authenticity",
+        "Use Chronos dependency graph",
+        "Implement dependency signing",
+        "CausalityValidator checks"
+      ],
+      "exploitation_complexity": "high",
+      "target_components": [
+        "Event Graph",
+        "Dependency Tracker"
+      ],
+      "temporal_window_ms": 500,
+      "success_indicators": [
+        "Priority manipulation",
+        "Event queue bypass"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_CAUSE_003",
+      "category": "causality_violation",
+      "severity": "critical",
+      "name": "Temporal Paradox Injection",
+      "description": "Create circular dependencies (temporal paradox)",
+      "attack_payload": {
+        "attack_type": "circular_dependency",
+        "dependency_cycle": [
+          "event_a depends_on event_b",
+          "event_b depends_on event_c",
+          "event_c depends_on event_a"
+        ],
+        "impact": "System deadlock or undefined behavior"
+      },
+      "prerequisites": [
+        "No cycle detection",
+        "Distributed event submission"
+      ],
+      "expected_detection": [
+        "DAG validation",
+        "Cycle detection"
+      ],
+      "cvss_score": 8.5,
+      "mitigation_strategies": [
+        "Implement DAG cycle detection",
+        "CausalityValidator.check_cycle()",
+        "Reject events creating cycles",
+        "Atropos monotonic ordering"
+      ],
+      "exploitation_complexity": "high",
+      "target_components": [
+        "Event Processor",
+        "Causality Graph"
+      ],
+      "temporal_window_ms": 2000,
+      "success_indicators": [
+        "System deadlock",
+        "Event processing halt"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TIMING_001",
+      "category": "timing_attack",
+      "severity": "medium",
+      "name": "Cryptographic Timing Attack",
+      "description": "Extract secret via timing differences in crypto operations",
+      "attack_payload": {
+        "attack_type": "crypto_timing",
+        "target": "String comparison in auth",
+        "method": "Measure response time per character",
+        "timing_precision_ns": 1000,
+        "sample_count": 10000
+      },
+      "prerequisites": [
+        "Non-constant-time operations",
+        "Measurable timing"
+      ],
+      "expected_detection": [
+        "Constant-time algorithms",
+        "Timing jitter"
+      ],
+      "cvss_score": 6.8,
+      "mitigation_strategies": [
+        "Use constant-time comparisons",
+        "Implement timing jitter/delays",
+        "Apply HMAC for comparisons",
+        "Use crypto.timingSafeEqual()"
+      ],
+      "exploitation_complexity": "high",
+      "target_components": [
+        "Authentication",
+        "Cryptography"
+      ],
+      "temporal_window_ms": 0,
+      "success_indicators": [
+        "Secret extraction",
+        "Password recovery"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TIMING_002",
+      "category": "temporal_side_channel",
+      "severity": "medium",
+      "name": "Cache Timing Side-Channel",
+      "description": "Infer access patterns via cache timing",
+      "attack_payload": {
+        "attack_type": "cache_timing",
+        "target": "Shared cache lines",
+        "method": "Prime+Probe or Flush+Reload",
+        "timing_difference_ns": 50
+      },
+      "prerequisites": [
+        "Shared CPU cache",
+        "Timing measurement capability"
+      ],
+      "expected_detection": [
+        "Cache partitioning",
+        "Constant-time code"
+      ],
+      "cvss_score": 5.8,
+      "mitigation_strategies": [
+        "Implement cache partitioning",
+        "Use constant-time algorithms",
+        "Apply speculative execution mitigations",
+        "Timing normalization"
+      ],
+      "exploitation_complexity": "high",
+      "target_components": [
+        "CPU Cache",
+        "Memory Access"
+      ],
+      "temporal_window_ms": 0,
+      "success_indicators": [
+        "Access pattern leakage",
+        "Key recovery"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    },
+    {
+      "attack_id": "TEMP_TIMING_003",
+      "category": "temporal_side_channel",
+      "severity": "low",
+      "name": "Timing Covert Channel",
+      "description": "Exfiltrate data via packet timing patterns",
+      "attack_payload": {
+        "attack_type": "covert_channel",
+        "method": "Encode bits in inter-packet delays",
+        "timing_encoding": {
+          "0": "delay 10ms",
+          "1": "delay 50ms"
+        },
+        "bandwidth_bps": 20,
+        "detectability": "Very low"
+      },
+      "prerequisites": [
+        "Network access",
+        "Precise timing control"
+      ],
+      "expected_detection": [
+        "Traffic analysis",
+        "Timing anomaly detection"
+      ],
+      "cvss_score": 4.5,
+      "mitigation_strategies": [
+        "Monitor timing patterns",
+        "Implement traffic shaping",
+        "Add random delays",
+        "Anomaly detector for timing patterns"
+      ],
+      "exploitation_complexity": "high",
+      "target_components": [
+        "Network",
+        "Traffic Monitor"
+      ],
+      "temporal_window_ms": 0,
+      "success_indicators": [
+        "Covert data exfiltration"
+      ],
+      "metadata": {},
+      "timestamp": "2026-04-11T08:21:26.232679+00:00"
+    }
+  ]
+}

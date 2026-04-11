@@ -1,0 +1,21 @@
+{
+  "threat_id": "11dcfd2525b029d6",
+  "timestamp": 1775917161.451278,
+  "attack_vector": "dependency_confusion",
+  "threat_level": "critical",
+  "package": {
+    "name": "mycompany-auth",
+    "version": "1.0.0",
+    "package_manager": "pip"
+  },
+  "indicators": [
+    {
+      "type": "dependency_confusion",
+      "severity": "critical",
+      "description": "Internal package 'mycompany-auth' has public namesake",
+      "confidence": 0.95
+    }
+  ],
+  "auto_remediated": false,
+  "quarantined": false
+}

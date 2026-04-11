@@ -64,8 +64,9 @@ GOLANGCI_LINT  ?= golangci-lint
 STATICCHECK    ?= staticcheck
 PYTEST         ?= pytest
 
-.PHONY: all bpf agent sim cli test release proto clean lint vet \
-        vmlinux check-tools install uninstall
+.PHONY: all bpf agent sim cli test test-unit test-integration test-adversarial \
+        test-fuzz test-performance test-chaos test-all coverage release proto \
+        clean lint vet vmlinux check-tools install uninstall bench-latency bench-lockfree
 
 # ── bpf ───────────────────────────────────────────────────────────────────────
 # Compile the BPF CO-RE object. Delegates to bpf/Makefile.
@@ -112,23 +113,79 @@ cli:
 	@echo "==> Binary: $(BIN_DIR)/octoreflex-cli"
 
 # ── test ──────────────────────────────────────────────────────────────────────
-# Run all Go unit + integration tests, then Python simulator tests.
-# BPF kernel-attach tests are skipped unless running as root on a BPF-capable
-# kernel (detected via presence of /sys/kernel/btf/vmlinux).
-test:
-	@echo "==> Running Go tests..."
-	$(GO) test -v -race -count=1 ./internal/... ./cmd/...
-	@echo ""
-	@echo "==> Running integration tests (requires root + BPF kernel)..."
-	@if [ -f /sys/kernel/btf/vmlinux ] && [ "$$(id -u)" = "0" ]; then \
-	    $(GO) test -v -count=1 -tags integration ./test/integration/...; \
+# Default test target: run unit tests only (fast, no root required)
+test: test-unit
+
+# Run unit tests with race detector and coverage
+test-unit:
+	@echo "==> Running unit tests..."
+	$(GO) test -v -race -count=1 -coverprofile=coverage.out ./internal/...
+	@echo "==> Unit tests complete."
+
+# Run integration tests (requires root + BPF kernel)
+test-integration: bpf
+	@echo "==> Running integration tests..."
+	@if [ -f /sys/kernel/btf/vmlinux ]; then \
+	    sudo $(GO) test -v -count=1 ./test/integration/...; \
 	else \
-	    echo "    SKIP: /sys/kernel/btf/vmlinux not found or not root."; \
+	    echo "    SKIP: /sys/kernel/btf/vmlinux not found (BPF kernel required)."; \
 	fi
+
+# Run adversarial attack simulations
+test-adversarial:
+	@echo "==> Running adversarial tests..."
+	$(GO) test -v -count=1 ./test/adversarial/...
+	@echo "==> Adversarial tests complete."
+
+# Run fuzzing tests
+test-fuzz:
+	@echo "==> Running fuzz tests (10s per target)..."
+	$(GO) test -fuzz=FuzzEventParser -fuzztime=10s ./test/fuzz || true
+	$(GO) test -fuzz=FuzzConfigParser -fuzztime=10s ./test/fuzz || true
+	$(GO) test -fuzz=FuzzAnomalyScore -fuzztime=10s ./test/fuzz || true
+	@echo "==> Fuzzing complete."
+
+# Run performance benchmarks
+test-performance:
+	@echo "==> Running performance benchmarks..."
+	$(GO) test -bench=. -benchtime=10s -benchmem ./internal/lockfree/... | tee bench_lockfree.txt
+	$(GO) test -bench=. -benchtime=10s -benchmem ./test/performance/... | tee bench.txt
+	@echo "==> Performance tests complete."
+
+# Run extreme latency benchmark (requires root for full optimization)
+bench-latency:
+	@echo "==> Building latency benchmark..."
+	@mkdir -p $(BIN_DIR)
+	$(GO) build -ldflags "-s -w" -o $(BIN_DIR)/latency-bench ./bench/cmd/latency-extreme/
+	@echo "==> Benchmark binary: $(BIN_DIR)/latency-bench"
 	@echo ""
-	@echo "==> Running Python simulator tests..."
-	$(PYTEST) test/simulation/ -v
-	@echo "==> All tests complete."
+	@echo "Run with: ./$(BIN_DIR)/latency-bench -iterations 100000"
+	@echo "With optimizations (requires root): sudo ./$(BIN_DIR)/latency-bench -cpu 8 -rt 80 -iterations 100000"
+
+# Run lock-free structure benchmarks
+bench-lockfree:
+	@echo "==> Benchmarking lock-free data structures..."
+	$(GO) test -bench=. -benchtime=10s -benchmem ./internal/lockfree/
+	@echo "==> Lock-free benchmarks complete."
+
+# Run chaos engineering tests
+test-chaos:
+	@echo "==> Running chaos engineering tests..."
+	$(GO) test -v -timeout=30m ./test/chaos
+	@echo "==> Chaos tests complete."
+
+# Run full test suite (unit + integration + adversarial + performance)
+test-all: test-unit test-integration test-adversarial test-performance
+	@echo "==> Full test suite complete."
+
+# Generate coverage report
+coverage:
+	@echo "==> Generating coverage report..."
+	$(GO) test -coverprofile=coverage.out ./internal/...
+	$(GO) tool cover -html=coverage.out -o coverage.html
+	@echo "==> Coverage summary:"
+	@$(GO) tool cover -func=coverage.out | grep total
+	@echo "==> Full report: coverage.html"
 
 # ── release ───────────────────────────────────────────────────────────────────
 # Fully static, stripped release build of all binaries.

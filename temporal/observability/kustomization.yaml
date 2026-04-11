@@ -1,0 +1,76 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: observability
+
+resources:
+  - namespace.yaml
+  - jaeger/deployment.yaml
+  - prometheus/deployment.yaml
+  - loki/deployment.yaml
+  - grafana/deployment.yaml
+  - alertmanager/deployment.yaml
+
+configMapGenerator:
+  - name: prometheus-config
+    files:
+      - prometheus/prometheus.yml
+  - name: prometheus-rules
+    files:
+      - prometheus/rules/agent-alerts.yml
+      - prometheus/rules/workflow-alerts.yml
+      - prometheus/rules/resource-alerts.yml
+  - name: loki-config
+    files:
+      - loki/loki.yml
+  - name: promtail-config
+    files:
+      - loki/promtail.yml
+  - name: alertmanager-config
+    files:
+      - alertmanager/alertmanager.yml
+  - name: alertmanager-templates
+    files:
+      - alertmanager/templates/default.tmpl
+  - name: grafana-datasources
+    files:
+      - grafana/provisioning/datasources.yml
+  - name: grafana-dashboards
+    files:
+      - grafana/provisioning/dashboards.yml
+  - name: grafana-dashboard-files
+    files:
+      - grafana/dashboards/agent-health.json
+      - grafana/dashboards/workflow-performance.json
+      - grafana/dashboards/resource-usage.json
+
+secretGenerator:
+  - name: thanos-objstore-config
+    files:
+      - prometheus/thanos-bucket.yml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+images:
+  - name: jaegertracing/jaeger-collector
+    newTag: "1.53"
+  - name: jaegertracing/jaeger-query
+    newTag: "1.53"
+  - name: jaegertracing/jaeger-agent
+    newTag: "1.53"
+  - name: prom/prometheus
+    newTag: "v2.48.1"
+  - name: quay.io/thanos/thanos
+    newTag: "v0.33.0"
+  - name: grafana/loki
+    newTag: "2.9.3"
+  - name: grafana/promtail
+    newTag: "2.9.3"
+  - name: grafana/grafana
+    newTag: "10.2.3"
+  - name: prom/alertmanager
+    newTag: "v0.26.0"
+
+commonLabels:
+  app.kubernetes.io/part-of: observability-stack

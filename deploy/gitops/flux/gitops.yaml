@@ -1,0 +1,301 @@
+---
+# Flux GitRepository Source
+# Defines the Git repository as a source for Flux
+
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: sovereign-governance
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/your-org/sovereign-governance-substrate
+  ref:
+    branch: main
+  secretRef:
+    name: git-credentials
+  ignore: |
+    # Ignore CI/CD and development files
+    .github/
+    .vscode/
+    *.md
+    test/
+
+---
+# Flux Kustomization for base deployment
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: sovereign-governance-base
+  namespace: flux-system
+spec:
+  interval: 10m
+  targetNamespace: sovereign-governance
+  sourceRef:
+    kind: GitRepository
+    name: sovereign-governance
+  path: ./k8s/base
+  prune: true
+  wait: true
+  timeout: 5m
+  
+  # Health checks
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: temporal-worker
+      namespace: sovereign-governance
+    - apiVersion: apps/v1
+      kind: StatefulSet
+      name: temporal-server
+      namespace: sovereign-governance
+  
+  # Post-deployment validation
+  postBuild:
+    substitute:
+      CLUSTER_NAME: "production"
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-settings
+
+---
+# Flux Kustomization for Temporal workflows
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: temporal-workflows
+  namespace: flux-system
+spec:
+  interval: 5m
+  targetNamespace: temporal
+  sourceRef:
+    kind: GitRepository
+    name: sovereign-governance
+  path: ./temporal
+  prune: true
+  wait: true
+  
+  dependsOn:
+    - name: sovereign-governance-base
+
+---
+# HelmRepository for external charts
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: temporal-charts
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://go.temporal.io/helm-charts
+
+---
+# HelmRelease for Temporal Server
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: temporal-server
+  namespace: flux-system
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: temporal
+      version: '>=0.30.0'
+      sourceRef:
+        kind: HelmRepository
+        name: temporal-charts
+  
+  releaseName: temporal
+  targetNamespace: temporal
+  
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    cleanupOnFail: true
+  
+  rollback:
+    timeout: 10m
+    recreate: true
+    cleanupOnFail: true
+  
+  values:
+    server:
+      replicaCount: 3
+      
+      frontend:
+        service:
+          type: LoadBalancer
+      
+      resources:
+        limits:
+          cpu: 2
+          memory: 4Gi
+        requests:
+          cpu: 1
+          memory: 2Gi
+    
+    cassandra:
+      enabled: true
+      persistence:
+        enabled: true
+        size: 100Gi
+    
+    elasticsearch:
+      enabled: true
+      replicas: 3
+    
+    prometheus:
+      enabled: true
+    
+    grafana:
+      enabled: true
+  
+  # Post-deployment tests
+  test:
+    enable: true
+
+---
+# ImageRepository for automated image updates
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: sovereign-worker-image
+  namespace: flux-system
+spec:
+  image: ghcr.io/your-org/sovereign-worker
+  interval: 5m
+  secretRef:
+    name: ghcr-credentials
+
+---
+# ImagePolicy for semantic versioning
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: sovereign-worker-policy
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: sovereign-worker-image
+  policy:
+    semver:
+      range: '>=1.0.0 <2.0.0'
+
+---
+# ImageUpdateAutomation for automated deployments
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: sovereign-image-update
+  namespace: flux-system
+spec:
+  interval: 1h
+  sourceRef:
+    kind: GitRepository
+    name: sovereign-governance
+  
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: flux@example.com
+        name: Flux Bot
+      messageTemplate: |
+        Update image to {{range .Updated.Images}}{{println .}}{{end}}
+    push:
+      branch: main
+  
+  update:
+    path: ./k8s/base
+    strategy: Setters
+
+---
+# Flux Alert for Slack notifications
+apiVersion: notification.toolkit.fluxcd.io/v1beta1
+kind: Alert
+metadata:
+  name: sovereign-governance-alerts
+  namespace: flux-system
+spec:
+  providerRef:
+    name: slack
+  eventSeverity: info
+  eventSources:
+    - kind: GitRepository
+      name: sovereign-governance
+    - kind: Kustomization
+      name: sovereign-governance-base
+    - kind: HelmRelease
+      name: temporal-server
+  summary: "Sovereign Governance deployment notifications"
+
+---
+# Slack notification provider
+apiVersion: notification.toolkit.fluxcd.io/v1beta1
+kind: Provider
+metadata:
+  name: slack
+  namespace: flux-system
+spec:
+  type: slack
+  channel: deployments
+  secretRef:
+    name: slack-webhook-url
+
+---
+# Flux webhook receiver for manual triggers
+apiVersion: notification.toolkit.fluxcd.io/v1beta1
+kind: Receiver
+metadata:
+  name: sovereign-webhook
+  namespace: flux-system
+spec:
+  type: github
+  events:
+    - "ping"
+    - "push"
+  secretRef:
+    name: webhook-token
+  resources:
+    - kind: GitRepository
+      name: sovereign-governance
+
+---
+# Multi-cluster deployment with Flux
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: production-cluster
+  namespace: flux-system
+spec:
+  interval: 10m
+  sourceRef:
+    kind: GitRepository
+    name: sovereign-governance
+  path: ./k8s/overlays/production
+  prune: true
+  
+  kubeConfig:
+    secretRef:
+      name: prod-cluster-kubeconfig
+  
+  patches:
+    - patch: |
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: temporal-worker
+        spec:
+          replicas: 10
+      target:
+        kind: Deployment
+        name: temporal-worker

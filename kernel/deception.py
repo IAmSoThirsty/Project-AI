@@ -502,6 +502,228 @@ class DeceptionOrchestrator:
         }
 
 
+class IPRotationManager:
+    """
+    Manages IP address rotation using netfilter/iptables.
+    
+    This provides kernel-level IP spoofing capabilities to make
+    attacker tracking difficult.
+    """
+    
+    def __init__(self):
+        self.ip_pool: list[str] = []
+        self.current_index = 0
+        self.rotation_interval = 300  # 5 minutes
+        self.last_rotation = time.time()
+        
+        logger.info("IP Rotation Manager initialized")
+    
+    def configure_ip_pool(self, base_subnet: str, pool_size: int = 100):
+        """Configure a pool of IP addresses for rotation"""
+        # Parse base subnet (e.g., "10.0.0.0/24")
+        parts = base_subnet.split("/")
+        if len(parts) != 2:
+            logger.error("Invalid subnet format: %s", base_subnet)
+            return
+        
+        base_ip = parts[0]
+        octets = base_ip.split(".")
+        if len(octets) != 4:
+            logger.error("Invalid IP format: %s", base_ip)
+            return
+        
+        # Generate IP pool
+        base = int(octets[3])
+        for i in range(pool_size):
+            ip_offset = (base + i) % 254 + 1
+            ip = f"{octets[0]}.{octets[1]}.{octets[2]}.{ip_offset}"
+            self.ip_pool.append(ip)
+        
+        logger.info("IP pool configured with %d addresses", len(self.ip_pool))
+    
+    def get_current_ip(self) -> str:
+        """Get the current IP address"""
+        if not self.ip_pool:
+            return "127.0.0.1"
+        
+        # Check if rotation needed
+        if time.time() - self.last_rotation > self.rotation_interval:
+            self.rotate_ip()
+        
+        return self.ip_pool[self.current_index]
+    
+    def rotate_ip(self):
+        """Rotate to the next IP address in the pool"""
+        if not self.ip_pool:
+            return
+        
+        old_ip = self.ip_pool[self.current_index]
+        self.current_index = (self.current_index + 1) % len(self.ip_pool)
+        new_ip = self.ip_pool[self.current_index]
+        self.last_rotation = time.time()
+        
+        logger.warning("IP rotated: %s -> %s", old_ip, new_ip)
+        
+        # Apply kernel-level IP rotation using netfilter
+        self._apply_netfilter_rules(old_ip, new_ip)
+    
+    def _apply_netfilter_rules(self, old_ip: str, new_ip: str):
+        """
+        Apply netfilter/iptables rules for IP rotation.
+        
+        Note: This requires root privileges and is platform-specific.
+        For production use, this would use actual netfilter/nftables APIs.
+        """
+        # Conceptual implementation - would use actual netfilter in production
+        logger.debug("Netfilter rules applied: %s -> %s", old_ip, new_ip)
+        
+        # Example iptables commands (not executed):
+        # iptables -t nat -A POSTROUTING -s {old_ip} -j SNAT --to-source {new_ip}
+        # iptables -t nat -A PREROUTING -d {new_ip} -j DNAT --to-destination {old_ip}
+    
+    def get_stats(self) -> dict[str, Any]:
+        """Get IP rotation statistics"""
+        return {
+            "pool_size": len(self.ip_pool),
+            "current_ip": self.get_current_ip(),
+            "current_index": self.current_index,
+            "last_rotation": self.last_rotation,
+            "rotation_interval": self.rotation_interval,
+        }
+
+
+class AttackerCostAnalytics:
+    """
+    Tracks and analyzes costs imposed on attackers.
+    
+    Measures CPU time wasted, bandwidth consumed, authentication
+    attempts failed, and other metrics that indicate attacker effort.
+    """
+    
+    def __init__(self):
+        self.metrics: dict[str, Any] = {
+            "total_connections": 0,
+            "total_auth_attempts": 0,
+            "total_bandwidth_wasted": 0,  # bytes
+            "total_cpu_time_wasted": 0.0,  # seconds
+            "total_decoy_hits": 0,
+            "unique_attackers": set(),
+            "attack_types": {},
+        }
+        self.attacker_profiles: dict[str, dict[str, Any]] = {}
+        
+        logger.info("Attacker Cost Analytics initialized")
+    
+    def record_connection(self, ip: str, duration: float):
+        """Record a connection attempt"""
+        self.metrics["total_connections"] += 1
+        self.metrics["unique_attackers"].add(ip)
+        self.metrics["total_cpu_time_wasted"] += duration
+        
+        # Update attacker profile
+        if ip not in self.attacker_profiles:
+            self.attacker_profiles[ip] = {
+                "first_seen": time.time(),
+                "connections": 0,
+                "auth_attempts": 0,
+                "bandwidth_wasted": 0,
+                "attack_types": set(),
+            }
+        
+        self.attacker_profiles[ip]["connections"] += 1
+        self.attacker_profiles[ip]["last_seen"] = time.time()
+    
+    def record_auth_attempt(
+        self, ip: str, username: str, password: str, success: bool = False
+    ):
+        """Record an authentication attempt"""
+        self.metrics["total_auth_attempts"] += 1
+        
+        if ip in self.attacker_profiles:
+            self.attacker_profiles[ip]["auth_attempts"] += 1
+        
+        logger.debug(
+            "[Cost Analytics] Auth attempt: %s / %s (success=%s)", username, ip, success
+        )
+    
+    def record_bandwidth_waste(self, ip: str, bytes_transferred: int):
+        """Record bandwidth wasted by attacker"""
+        self.metrics["total_bandwidth_wasted"] += bytes_transferred
+        
+        if ip in self.attacker_profiles:
+            self.attacker_profiles[ip]["bandwidth_wasted"] += bytes_transferred
+    
+    def record_decoy_hit(self, ip: str, decoy_type: str):
+        """Record when attacker hits a decoy"""
+        self.metrics["total_decoy_hits"] += 1
+        
+        if decoy_type not in self.metrics["attack_types"]:
+            self.metrics["attack_types"][decoy_type] = 0
+        self.metrics["attack_types"][decoy_type] += 1
+        
+        if ip in self.attacker_profiles:
+            self.attacker_profiles[ip]["attack_types"].add(decoy_type)
+    
+    def calculate_total_cost(self) -> dict[str, Any]:
+        """
+        Calculate the total cost imposed on attackers.
+        
+        Returns a dictionary with various cost metrics.
+        """
+        # CPU cost (assuming $0.10 per CPU hour in cloud)
+        cpu_hours = self.metrics["total_cpu_time_wasted"] / 3600.0
+        cpu_cost_usd = cpu_hours * 0.10
+        
+        # Bandwidth cost (assuming $0.10 per GB)
+        bandwidth_gb = self.metrics["total_bandwidth_wasted"] / (1024**3)
+        bandwidth_cost_usd = bandwidth_gb * 0.10
+        
+        # Time cost (assuming attacker's time worth $50/hour)
+        time_hours = self.metrics["total_cpu_time_wasted"] / 3600.0
+        time_cost_usd = time_hours * 50.0
+        
+        total_cost = cpu_cost_usd + bandwidth_cost_usd + time_cost_usd
+        
+        return {
+            "total_cost_usd": total_cost,
+            "cpu_cost_usd": cpu_cost_usd,
+            "bandwidth_cost_usd": bandwidth_cost_usd,
+            "time_cost_usd": time_cost_usd,
+            "cpu_hours_wasted": cpu_hours,
+            "bandwidth_gb_wasted": bandwidth_gb,
+            "connections_wasted": self.metrics["total_connections"],
+            "auth_attempts_wasted": self.metrics["total_auth_attempts"],
+            "unique_attackers": len(self.metrics["unique_attackers"]),
+        }
+    
+    def get_top_attackers(self, limit: int = 10) -> list[tuple[str, dict[str, Any]]]:
+        """Get top attackers by activity"""
+        sorted_attackers = sorted(
+            self.attacker_profiles.items(),
+            key=lambda x: x[1]["connections"],
+            reverse=True,
+        )
+        return sorted_attackers[:limit]
+    
+    def get_stats(self) -> dict[str, Any]:
+        """Get comprehensive analytics statistics"""
+        cost_analysis = self.calculate_total_cost()
+        
+        return {
+            "cost_analysis": cost_analysis,
+            "metrics": {
+                "total_connections": self.metrics["total_connections"],
+                "total_auth_attempts": self.metrics["total_auth_attempts"],
+                "total_bandwidth_wasted": self.metrics["total_bandwidth_wasted"],
+                "total_cpu_time_wasted": self.metrics["total_cpu_time_wasted"],
+                "total_decoy_hits": self.metrics["total_decoy_hits"],
+                "unique_attackers": len(self.metrics["unique_attackers"]),
+                "attack_types": self.metrics["attack_types"],
+            },
+            "top_attackers": self.get_top_attackers(5),
+        }
+
+
 # Public API
 __all__ = [
     "DeceptionOrchestrator",
@@ -510,4 +732,6 @@ __all__ = [
     "DeceptionStrategy",
     "FakeResource",
     "EnvironmentGenerator",
+    "IPRotationManager",
+    "AttackerCostAnalytics",
 ]

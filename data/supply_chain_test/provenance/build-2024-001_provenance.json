@@ -1,0 +1,36 @@
+{
+  "subject": "test_artifact.bin",
+  "digest": "2362660f9e876799563237b854032040dd853aee58f6d135884c5f3f63712183",
+  "builder_id": "github-actions",
+  "build_type": "https://github.com/slsa-framework/slsa-github-generator",
+  "invocation": {
+    "configSource": {
+      "uri": "https://github.com/example/project",
+      "digest": {
+        "sha1": "abc123def456"
+      }
+    },
+    "parameters": {},
+    "environment": {}
+  },
+  "metadata": {
+    "buildInvocationId": "build-2024-001",
+    "buildStartedOn": "2026-04-11T08:19:21.462754",
+    "buildFinishedOn": "2026-04-11T08:19:21.462754",
+    "completeness": {
+      "parameters": true,
+      "environment": true,
+      "materials": true
+    },
+    "reproducible": true
+  },
+  "materials": [
+    {
+      "uri": "https://github.com/example/project",
+      "digest": {
+        "sha1": "abc123def456"
+      }
+    }
+  ],
+  "slsa_level": 3
+}

@@ -1,0 +1,27 @@
+{
+  "pdr_id": "PDR-1775895542805466",
+  "metadata": {
+    "timestamp": "2026-04-11T08:19:02.805466+00:00",
+    "request_id": "REQ-CLI-001",
+    "decision": "deny",
+    "severity": "low",
+    "policy_version": "1.0",
+    "agent_id": null,
+    "context_hash": "9caf1f672d20295b64f5671e7ac13b5ce4788a1758a88aa35e7f52e6f547fbe0"
+  },
+  "decision_rationale": "CLI test PDR 1",
+  "context": {
+    "index": 1
+  },
+  "content_hash": "20832e5c5dac5bd22da6358e3d1d5d19ff0a312d1dc948360e13f1cefbc0ebee",
+  "signature": {
+    "public_key": "wjszrCRIQA+NPcMhE5T4Tp+dLanFheQQrcPj7mry+bc=",
+    "signature": "KZf2TCFMEb1vpkDHzmB5Qswb1bgmUmMLfJIms8JneYu8ttoSPAVJbLnTxa5G0RcunBX43S6dovZf5u5CnjdLDw==",
+    "signed_at": "2026-04-11T08:19:02.806009+00:00"
+  },
+  "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQBEQhWhrRfd8cKMmHFKk+LijWV6tYIfzeA9PmLDIVKkAFbXPXFgX4=",
+  "merkle_proof": null,
+  "created_at": "2026-04-11T08:19:02.805466+00:00",
+  "modified_at": null,
+  "version": 1
+}

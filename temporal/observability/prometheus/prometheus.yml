@@ -1,0 +1,194 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'sovereign-cluster'
+    region: 'us-east-1'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - '/etc/prometheus/rules/*.yml'
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets:
+          - localhost:9090
+
+  # Node Exporter - System Metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets:
+          - node-exporter:9100
+
+  # cAdvisor - Container Metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets:
+          - cadvisor:8080
+
+  # Temporal Services
+  - job_name: 'temporal-frontend'
+    scrape_interval: 10s
+    static_configs:
+      - targets:
+          - temporal-frontend:9090
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: temporal-frontend:9090
+
+  - job_name: 'temporal-worker'
+    scrape_interval: 10s
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - temporal
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: keep
+        regex: temporal-worker
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+      - source_labels: [__meta_kubernetes_pod_node_name]
+        target_label: node
+
+  # Agent Health Metrics
+  - job_name: 'agents'
+    scrape_interval: 30s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+            - agents
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_component]
+        action: keep
+        regex: agent
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: agent_id
+      - source_labels: [__meta_kubernetes_pod_label_region]
+        target_label: region
+      - source_labels: [__meta_kubernetes_pod_label_zone]
+        target_label: zone
+      - source_labels: [__address__]
+        regex: ([^:]+)(?::\d+)?
+        replacement: ${1}:8080
+        target_label: __address__
+
+  # Workflow Metrics
+  - job_name: 'workflow-metrics'
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - workflow-exporter:9091
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'workflow_.*'
+        action: keep
+
+  # Jaeger Metrics
+  - job_name: 'jaeger'
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+          - jaeger:14269
+
+  # Loki Metrics
+  - job_name: 'loki'
+    scrape_interval: 30s
+    static_configs:
+      - targets:
+          - loki:3100
+
+  # Thanos Components
+  - job_name: 'thanos-sidecar'
+    static_configs:
+      - targets:
+          - thanos-sidecar:10902
+
+  - job_name: 'thanos-query'
+    static_configs:
+      - targets:
+          - thanos-query:10904
+
+  - job_name: 'thanos-store'
+    static_configs:
+      - targets:
+          - thanos-store:10906
+
+  - job_name: 'thanos-compactor'
+    static_configs:
+      - targets:
+          - thanos-compactor:10907
+
+  # Multi-region federation
+  - job_name: 'federate-us-west'
+    scrape_interval: 30s
+    honor_labels: true
+    metrics_path: /federate
+    params:
+      'match[]':
+        - '{job=~"agents|temporal-.*"}'
+    static_configs:
+      - targets:
+          - prometheus-us-west:9090
+        labels:
+          region: 'us-west-1'
+
+  - job_name: 'federate-eu-central'
+    scrape_interval: 30s
+    honor_labels: true
+    metrics_path: /federate
+    params:
+      'match[]':
+        - '{job=~"agents|temporal-.*"}'
+    static_configs:
+      - targets:
+          - prometheus-eu-central:9090
+        labels:
+          region: 'eu-central-1'
+
+  - job_name: 'federate-ap-southeast'
+    scrape_interval: 30s
+    honor_labels: true
+    metrics_path: /federate
+    params:
+      'match[]':
+        - '{job=~"agents|temporal-.*"}'
+    static_configs:
+      - targets:
+          - prometheus-ap-southeast:9090
+        labels:
+          region: 'ap-southeast-1'
+
+# Remote write to Thanos (optional)
+remote_write:
+  - url: http://thanos-receive:19291/api/v1/receive
+    queue_config:
+      capacity: 10000
+      max_shards: 50
+      min_shards: 1
+      max_samples_per_send: 5000
+      batch_send_deadline: 5s
+      min_backoff: 30ms
+      max_backoff: 100ms

@@ -1,0 +1,193 @@
+# Prometheus Alerting Rules for OctoReflex
+
+groups:
+  - name: octoreflex_alerts
+    interval: 30s
+    rules:
+      
+      # High threat score alert
+      - alert: HighThreatScore
+        expr: octoreflex_threat_score_current > 90
+        for: 1m
+        labels:
+          severity: critical
+          component: octoreflex
+        annotations:
+          summary: "Critical threat score detected"
+          description: "Threat score is {{ $value }}, exceeding critical threshold of 90"
+      
+      # Elevated threat score
+      - alert: ElevatedThreatScore
+        expr: octoreflex_threat_score_current > 75
+        for: 5m
+        labels:
+          severity: warning
+          component: octoreflex
+        annotations:
+          summary: "Elevated threat score"
+          description: "Threat score {{ $value }} above warning threshold"
+      
+      # High false positive rate
+      - alert: HighFalsePositiveRate
+        expr: |
+          (
+            rate(octoreflex_false_positives_total[5m]) / 
+            (rate(octoreflex_false_positives_total[5m]) + rate(octoreflex_true_positives_total[5m]))
+          ) * 100 > 10
+        for: 10m
+        labels:
+          severity: warning
+          component: octoreflex
+        annotations:
+          summary: "High false positive rate detected"
+          description: "False positive rate is {{ $value | humanizePercentage }}, exceeding 10% threshold"
+      
+      # Slow containment
+      - alert: SlowContainment
+        expr: |
+          histogram_quantile(0.95, rate(octoreflex_containment_latency_seconds_bucket[5m])) > 1.0
+        for: 5m
+        labels:
+          severity: warning
+          component: octoreflex
+        annotations:
+          summary: "Slow containment response"
+          description: "P95 containment latency is {{ $value }}s, exceeding 1s SLA"
+      
+      # Critical containment latency
+      - alert: CriticalContainmentLatency
+        expr: |
+          histogram_quantile(0.95, rate(octoreflex_containment_latency_seconds_bucket[5m])) > 10.0
+        for: 2m
+        labels:
+          severity: critical
+          component: octoreflex
+        annotations:
+          summary: "Critical containment latency"
+          description: "P95 containment latency {{ $value }}s is critically high"
+      
+      # Event processing backlog
+      - alert: EventProcessingBacklog
+        expr: |
+          rate(octoreflex_events_processed_total[1m]) < 
+          rate(octoreflex_events_processed_total[5m] offset 5m) * 0.5
+        for: 5m
+        labels:
+          severity: warning
+          component: octoreflex
+        annotations:
+          summary: "Event processing slowdown"
+          description: "Event processing rate dropped by >50%"
+      
+      # No events being processed
+      - alert: NoEventsProcessed
+        expr: rate(octoreflex_events_processed_total[5m]) == 0
+        for: 5m
+        labels:
+          severity: critical
+          component: octoreflex
+        annotations:
+          summary: "Event processing stopped"
+          description: "No events processed in the last 5 minutes"
+      
+      # High processing latency
+      - alert: HighProcessingLatency
+        expr: |
+          histogram_quantile(0.99, rate(octoreflex_processing_latency_seconds_bucket[5m])) > 0.1
+        for: 10m
+        labels:
+          severity: warning
+          component: octoreflex
+        annotations:
+          summary: "High event processing latency"
+          description: "P99 processing latency is {{ $value }}s"
+      
+      # Frequent state transitions (potential flapping)
+      - alert: FrequentStateTransitions
+        expr: |
+          sum(rate(octoreflex_state_transitions_total[1m])) > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: octoreflex
+        annotations:
+          summary: "Frequent state transitions detected"
+          description: "State transition rate {{ $value }}/sec may indicate flapping"
+      
+      # OctoReflex down
+      - alert: OctoReflexDown
+        expr: up{job="octoreflex"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: octoreflex
+        annotations:
+          summary: "OctoReflex is down"
+          description: "OctoReflex instance {{ $labels.instance }} is unreachable"
+      
+      # High memory usage (if kernel metrics available)
+      - alert: HighMemoryUsage
+        expr: |
+          (kernel_memory_used_bytes / (kernel_memory_used_bytes + kernel_memory_free_bytes)) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          component: kernel
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value | humanizePercentage }}"
+      
+      # Syscall denial spike
+      - alert: SyscallDenialSpike
+        expr: |
+          rate(kernel_syscalls_denied_total[5m]) > 
+          rate(kernel_syscalls_denied_total[30m] offset 30m) * 5
+        for: 2m
+        labels:
+          severity: warning
+          component: kernel
+        annotations:
+          summary: "Spike in syscall denials"
+          description: "Syscall denial rate increased 5x"
+
+  - name: octoreflex_recording_rules
+    interval: 30s
+    rules:
+      
+      # Pre-compute false positive rate
+      - record: octoreflex:false_positive_rate:5m
+        expr: |
+          (
+            rate(octoreflex_false_positives_total[5m]) / 
+            (rate(octoreflex_false_positives_total[5m]) + rate(octoreflex_true_positives_total[5m]))
+          ) * 100
+      
+      # Pre-compute detection accuracy
+      - record: octoreflex:detection_accuracy:5m
+        expr: |
+          (
+            rate(octoreflex_true_positives_total[5m]) / 
+            (rate(octoreflex_true_positives_total[5m]) + rate(octoreflex_false_positives_total[5m]))
+          ) * 100
+      
+      # Pre-compute containment latency percentiles
+      - record: octoreflex:containment_latency_p95:5m
+        expr: |
+          histogram_quantile(0.95, rate(octoreflex_containment_latency_seconds_bucket[5m]))
+      
+      - record: octoreflex:containment_latency_p99:5m
+        expr: |
+          histogram_quantile(0.99, rate(octoreflex_containment_latency_seconds_bucket[5m]))
+      
+      # Pre-compute processing latency percentiles
+      - record: octoreflex:processing_latency_p95:5m
+        expr: |
+          histogram_quantile(0.95, rate(octoreflex_processing_latency_seconds_bucket[5m]))
+      
+      - record: octoreflex:processing_latency_p99:5m
+        expr: |
+          histogram_quantile(0.99, rate(octoreflex_processing_latency_seconds_bucket[5m]))
+      
+      # Event processing rate
+      - record: octoreflex:events_per_second:1m
+        expr: rate(octoreflex_events_processed_total[1m])

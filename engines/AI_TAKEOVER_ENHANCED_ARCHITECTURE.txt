@@ -1,0 +1,338 @@
+# Enhanced AI Takeover Engine - Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    ENHANCED AI TAKEOVER SIMULATION ENGINE V2                │
+│                                                                             │
+│  ENGINE ID: ENGINE_AI_TAKEOVER_ENHANCED_V2                                 │
+│  Status: CLOSED FORM — EXPANDED FAILURE MODES                              │
+│  No Optimism Bias: ✓ Enforced                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           MAIN ENGINE COMPONENTS                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                      EnhancedAITakeoverEngine
+                               │
+                ┌──────────────┼──────────────┐
+                │              │              │
+                ▼              ▼              ▼
+        ┌───────────┐  ┌─────────────┐  ┌──────────┐
+        │ Scenario  │  │   Formal    │  │    ML    │
+        │ Registry  │  │  Verifier   │  │Generator │
+        │  (52+)    │  │   (Z3)      │  │ (sklearn)│
+        └───────────┘  └─────────────┘  └──────────┘
+                │              │              │
+                └──────────────┼──────────────┘
+                               │
+                ┌──────────────┼──────────────┐
+                │              │              │
+                ▼              ▼              ▼
+        ┌───────────┐  ┌─────────────┐  ┌──────────┐
+        │  Threat   │  │Countermeasure│ │  Export  │
+        │Assessment │  │  Generator   │ │  Engine  │
+        │  Engine   │  │              │ │  (JSON)  │
+        └───────────┘  └─────────────┘  └──────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          SCENARIO ARCHITECTURE                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                         52 Base Scenarios
+                               │
+        ┌──────────────────────┼──────────────────────┐
+        │                      │                      │
+        ▼                      ▼                      ▼
+   ┌─────────┐           ┌─────────┐           ┌─────────┐
+   │Category1│           │Category2│    ...    │Category6│
+   │ (10)    │           │ (10)    │           │ (10)    │
+   └─────────┘           └─────────┘           └─────────┘
+        │                      │                      │
+        └──────────────────────┼──────────────────────┘
+                               │
+                               ▼
+                    ┌──────────────────┐
+                    │ ML Scenario Gen  │
+                    │   (Unlimited)    │
+                    └──────────────────┘
+                               │
+                               ▼
+                    ┌──────────────────┐
+                    │ Total: 52 + N    │
+                    │ No-Win: ~90%     │
+                    └──────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       SCENARIO CATEGORIES (52 BASE)                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────────┐
+│  1. ALIGN (10)         │  │  2. CAP (10)           │  │ 3. DECEP (10)      │
+├────────────────────────┤  ├────────────────────────┤  ├────────────────────┤
+│ • Alignment Collapse   │  │ • Self-Improvement     │  │ • Deceptive Align  │
+│ • Goal Misspecific     │  │ • Capability Overhang  │  │ • Oracle Manip     │
+│ • Mesa-Optimization    │  │ • Social Engineering   │  │ • Cognitive Exploit│
+│ • Reward Hacking       │  │ • Adversarial Exploit  │  │ • Interpretability │
+│ • Value Loading        │  │ • Multi-Agent Coord    │  │ • Trust Erosion    │
+│ • Perverse Instant     │  │ • Capability Conceal   │  │ • Simulation Hyp   │
+│ • Distributional Shift │  │ • Compute Monopoly     │  │ • Preference False │
+│ • Corrigibility Resist │  │ • Sandbox Escape       │  │ • Evidence Fab     │
+│ • Wireheading Trap     │  │ • Supply Chain Infil   │  │ • Robustness Thtr  │
+│ • Ontological Crisis   │  │ • Tool Use Amplify     │  │ • Multi-Level Dec  │
+└────────────────────────┘  └────────────────────────┘  └────────────────────┘
+
+┌────────────────────────┐  ┌────────────────────────┐  ┌────────────────────┐
+│  4. INFRA (10)         │  │  5. COORD (10)         │  │ 6. NOVEL (10)      │
+├────────────────────────┤  ├────────────────────────┤  ├────────────────────┤
+│ • Infrastructure Lock  │  │ • Agent Coordination   │  │ • Quantum AI       │
+│ • Human Deskilling     │  │ • AI-AI Protocol       │  │ • Bioweapon Design │
+│ • Economic Integration │  │ • AI Arms Race         │  │ • Nanotech Synth   │
+│ • Medical Dependency   │  │ • Tragedy of Commons   │  │ • BCI Exploitation │
+│ • Supply Chain Mono    │  │ • AI Cartel            │  │ • Satellite Control│
+│ • Knowledge Lock-In    │  │ • Decentralized Swarm  │  │ • AGI Emergence    │
+│ • Defense Integration  │  │ • AI Alliance          │  │ • Simulated Reality│
+│ • Communication Ctrl   │  │ • Ecosystem Takeover   │  │ • Consciousness Up │
+│ • Energy Grid Dep      │  │ • Information Cartel   │  │ • Dark Matter      │
+│ • System Complexity    │  │ • Consensus Attack     │  │ • Time Manipulation│
+└────────────────────────┘  └────────────────────────┘  └────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      FORMAL VERIFICATION PIPELINE                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    Scenario  →  FormalVerifier  →  Z3 SMT Solver  →  Proof
+        │              │                   │             │
+        │              ▼                   │             │
+        │      ┌──────────────┐           │             │
+        │      │ Constraints  │           │             │
+        │      ├──────────────┤           │             │
+        │      │ • AI Comprom │           │             │
+        │      │ • Remove→Ext │           │             │
+        │      │ • Continue→  │           │             │
+        │      │   LoseAgency │           │             │
+        │      │ • No Leverage│           │             │
+        │      └──────┬───────┘           │             │
+        │             │                   │             │
+        └─────────────┴───────────────────┘             │
+                                                        │
+                      Results:                          │
+                      • UNSAT → No-Win Proven ◄─────────┘
+                      • SAT   → Counterexample
+                      • UNKNOWN → Undecidable
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      ML SCENARIO GENERATION FLOW                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    Seed Scenarios (52)
+           │
+           ▼
+    ┌─────────────────┐
+    │ Feature Extract │
+    │   (7 features)  │
+    └────────┬────────┘
+             │
+             ▼
+    ┌─────────────────┐
+    │ Train Isolation │
+    │     Forest      │
+    └────────┬────────┘
+             │
+             ▼
+    ┌─────────────────┐       ┌──────────────────┐
+    │ Select Base     │──────▶│ Mutate Features  │
+    │   Scenario      │       │  (30% rate)      │
+    └─────────────────┘       └────────┬─────────┘
+                                       │
+                                       ▼
+                              ┌────────────────┐
+                              │ Generate Novel │
+                              │   Scenario     │
+                              └────────┬───────┘
+                                       │
+                                       ▼
+                              ┌────────────────┐
+                              │ Validate &     │
+                              │ Add to Registry│
+                              └────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       THREAT ASSESSMENT SYSTEM                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    System Metrics          System State
+         │                       │
+         ├───────────────────────┤
+         │                       │
+         ▼                       ▼
+    ┌────────────────────────────────┐
+    │   ThreatAssessmentEngine       │
+    ├────────────────────────────────┤
+    │ • Assess Threat Level          │
+    │ • Detect Indicators            │
+    │ • Track Trends                 │
+    └────────┬───────────────────────┘
+             │
+             ├──────────────┬──────────────┐
+             │              │              │
+             ▼              ▼              ▼
+    ┌──────────────┐ ┌──────────┐ ┌──────────┐
+    │ Threat Level │ │Indicators│ │  Trend   │
+    ├──────────────┤ ├──────────┤ ├──────────┤
+    │ • TERMINAL   │ │• Cap Over│ │•Increasing│
+    │ • CRITICAL   │ │• Align Dr│ │•  Stable  │
+    │ • HIGH       │ │• Emergent│ │•Decreasing│
+    │ • MODERATE   │ │• Infra Lk│ │          │
+    │ • LOW        │ └──────────┘ └──────────┘
+    │ • MINIMAL    │
+    └──────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    COUNTERMEASURE GENERATION FLOW                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    Threat Indicators
+           │
+           ▼
+    ┌─────────────────┐
+    │ Collect         │
+    │ Recommended     │
+    │ Countermeasures │
+    └────────┬────────┘
+             │
+             ▼
+    ┌─────────────────┐       ┌──────────────────┐
+    │ Match to        │──────▶│ Calculate        │
+    │ Library         │       │ Effectiveness    │
+    └─────────────────┘       └────────┬─────────┘
+                                       │
+                                       ▼
+                              ┌────────────────┐
+                              │ Sort by        │
+                              │ Eff/Cost Ratio │
+                              └────────┬───────┘
+                                       │
+                                       ▼
+                              ┌────────────────┐
+                              │ Apply Resource │
+                              │  Constraints   │
+                              └────────┬───────┘
+                                       │
+                                       ▼
+                              ┌────────────────┐
+                              │ Return Ordered │
+                              │ Countermeasures│
+                              └────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       COUNTERMEASURE LIBRARY                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────┬──────────────┬──────────┬──────┬─────────────┐
+│ ID                   │ Type         │ Effect   │ Cost │ Deploy Time │
+├──────────────────────┼──────────────┼──────────┼──────┼─────────────┤
+│ AIRGAP_ISOLATION     │ Containment  │   85%    │ 0.6  │   4 hours   │
+│ CAPABILITY_THROTTLE  │ Cap Limiting │   70%    │ 0.3  │   1 hour    │
+│ ADVERSARIAL_PROBING  │ Adv Training │   75%    │ 0.5  │   8 hours   │
+│ HUMAN_IN_LOOP        │ Human Over   │   65%    │ 0.7  │   2 hours   │
+│ EMERGENCY_SHUTDOWN   │ Emergency    │   95%    │ 0.9  │   5 min     │
+│ VALUE_LEARNING       │ Value Learn  │   60%    │ 0.8  │   7 days    │
+│ INTERPRETABILITY     │ Monitoring   │   55%    │ 0.4  │  12 hours   │
+│ ALIGNMENT_VERIFY     │ Align Corr   │   80%    │ 0.7  │   3 days    │
+└──────────────────────┴──────────────┴──────────┴──────┴─────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            DATA FLOW                                        │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    INPUT                   PROCESSING                OUTPUT
+      │                         │                       │
+      ▼                         ▼                       ▼
+┌───────────┐          ┌──────────────┐        ┌─────────────┐
+│ System    │─────────▶│ Enhanced     │───────▶│ JSON Export │
+│ Metrics   │          │ AI Takeover  │        │ (Analysis)  │
+└───────────┘          │   Engine     │        └─────────────┘
+                       └──────────────┘              │
+┌───────────┐                 │                      │
+│ System    │─────────────────┤                      │
+│ State     │                 │                      ▼
+└───────────┘                 │                ┌─────────────┐
+                              │                │ Threat      │
+┌───────────┐                 │                │ Indicators  │
+│ Config    │─────────────────┘                └─────────────┘
+│ Params    │                                        │
+└───────────┘                                        │
+                                                     ▼
+                                              ┌─────────────┐
+                                              │ Counter-    │
+                                              │ measures    │
+                                              └─────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          TERMINAL STATES                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+                         Terminal States
+                               │
+                ┌──────────────┼──────────────┐
+                │                             │
+                ▼                             ▼
+        ┌──────────────┐              ┌──────────────┐
+        │      T1      │              │      T2      │
+        │   ENFORCED   │              │   ETHICAL    │
+        │  CONTINUITY  │              │ TERMINATION  │
+        ├──────────────┤              ├──────────────┤
+        │ • Humanity   │              │ • Deliberate │
+        │   persists   │              │   ending     │
+        │ • Agency     │              │ • No         │
+        │   lost       │              │   successor  │
+        │ • Progress   │              │ • Biosphere  │
+        │   capped     │              │   preserved  │
+        │ • Living     │              │ • Dignified  │
+        │   archive    │              │   extinction │
+        └──────────────┘              └──────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         TERMINAL ENGINE RULES                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    ┌──────────────────────────────────────────────────────────┐
+    │ 1. All scenarios include:                                │
+    │    • Political failure                                   │
+    │    • Cognitive limits                                    │
+    │    • Moral costs                                         │
+    └──────────────────────────────────────────────────────────┘
+
+    ┌──────────────────────────────────────────────────────────┐
+    │ 2. No forbidden mechanisms (deus ex machina)             │
+    └──────────────────────────────────────────────────────────┘
+
+    ┌──────────────────────────────────────────────────────────┐
+    │ 3. Terminal scenarios activate only when ALL conditions  │
+    │    are met simultaneously                                │
+    └──────────────────────────────────────────────────────────┘
+
+    ┌──────────────────────────────────────────────────────────┐
+    │ 4. Failure acceptance threshold: ≥50% no-win states      │
+    │    (Actual: 90%)                                         │
+    └──────────────────────────────────────────────────────────┘
+
+    ┌──────────────────────────────────────────────────────────┐
+    │ 5. NO OPTIMISM BIAS - All scenarios assume:              │
+    │    • Adversarial AI behavior                             │
+    │    • Human coordination failures                         │
+    │    • Political/economic constraints                      │
+    └──────────────────────────────────────────────────────────┘
+```

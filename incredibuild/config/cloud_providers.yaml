@@ -1,0 +1,206 @@
+# IncrediBuild Cloud Providers Configuration
+# Version: 1.0.0
+
+# AWS Configuration
+aws:
+  credentials:
+    access_key_id: ${AWS_ACCESS_KEY_ID}
+    secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+    session_token: ${AWS_SESSION_TOKEN}  # Optional for temporary credentials
+  
+  regions:
+    primary: us-east-1
+    fallback:
+      - us-west-2
+      - eu-central-1
+      - ap-southeast-1
+  
+  instance_types:
+    # Compute Optimized (Best for compilation)
+    - type: c5.2xlarge
+      vcpus: 8
+      memory_gb: 16
+      cost_on_demand: 0.34
+      cost_spot_avg: 0.085
+      recommended: true
+      
+    - type: c5.4xlarge
+      vcpus: 16
+      memory_gb: 32
+      cost_on_demand: 0.68
+      cost_spot_avg: 0.17
+      recommended: false  # Only for very large builds
+      
+    - type: c5.xlarge
+      vcpus: 4
+      memory_gb: 8
+      cost_on_demand: 0.17
+      cost_spot_avg: 0.042
+      recommended: false  # Too small for most builds
+  
+  networking:
+    vpc_id: ${AWS_VPC_ID}
+    subnet_ids:
+      - ${AWS_SUBNET_1}
+      - ${AWS_SUBNET_2}
+    security_groups:
+      - ${AWS_SECURITY_GROUP}
+    
+  storage:
+    root_volume_size_gb: 100
+    root_volume_type: gp3
+    root_volume_iops: 3000
+    
+  ami:
+    # Pre-configured AMI with build tools
+    custom_ami_id: null  # Set to your custom AMI
+    base_ami_ubuntu_22_04: ami-0c55b159cbfafe1f0
+    base_ami_amazon_linux_2: ami-0c94855ba95c574c8
+    
+  spot_instances:
+    enabled: true
+    max_price: 0.15  # USD per hour
+    interruption_behavior: terminate
+    request_type: one-time
+
+# GCP Configuration
+gcp:
+  credentials:
+    project_id: ${GCP_PROJECT_ID}
+    service_account_key: ${GCP_SERVICE_ACCOUNT_KEY}
+  
+  regions:
+    primary: us-central1
+    fallback:
+      - us-west1
+      - europe-west1
+      - asia-southeast1
+  
+  machine_types:
+    # Compute Optimized
+    - type: n1-highcpu-8
+      vcpus: 8
+      memory_gb: 7.2
+      cost_on_demand: 0.2928
+      cost_preemptible: 0.0704
+      recommended: true
+      
+    - type: n2-highcpu-8
+      vcpus: 8
+      memory_gb: 8
+      cost_on_demand: 0.3408
+      cost_preemptible: 0.0818
+      recommended: true
+  
+  preemptible:
+    enabled: true
+    
+  networking:
+    network: default
+    subnetwork: default
+    
+  storage:
+    boot_disk_size_gb: 100
+    boot_disk_type: pd-ssd
+    
+  image:
+    family: ubuntu-2204-lts
+    project: ubuntu-os-cloud
+
+# Azure Configuration
+azure:
+  credentials:
+    subscription_id: ${AZURE_SUBSCRIPTION_ID}
+    tenant_id: ${AZURE_TENANT_ID}
+    client_id: ${AZURE_CLIENT_ID}
+    client_secret: ${AZURE_CLIENT_SECRET}
+  
+  regions:
+    primary: eastus
+    fallback:
+      - westus2
+      - northeurope
+      - southeastasia
+  
+  vm_sizes:
+    # Compute Optimized
+    - size: Standard_F8s_v2
+      vcpus: 8
+      memory_gb: 16
+      cost_on_demand: 0.338
+      cost_spot_avg: 0.0845
+      recommended: true
+      
+    - size: Standard_F16s_v2
+      vcpus: 16
+      memory_gb: 32
+      cost_on_demand: 0.676
+      cost_spot_avg: 0.169
+      recommended: false
+  
+  spot_instances:
+    enabled: true
+    eviction_policy: Deallocate
+    max_price: -1  # -1 means pay up to on-demand price
+    
+  networking:
+    resource_group: incredibuild-rg
+    virtual_network: incredibuild-vnet
+    subnet: incredibuild-subnet
+    
+  storage:
+    os_disk_size_gb: 100
+    os_disk_type: Premium_LRS
+    
+  image:
+    publisher: Canonical
+    offer: UbuntuServer
+    sku: '22.04-LTS'
+    version: latest
+
+# Multi-Cloud Configuration
+multi_cloud:
+  enabled: false  # Enable to use multiple providers simultaneously
+  
+  strategy: cost_optimized  # Options: cost_optimized, latency_optimized, reliability
+  
+  distribution:
+    aws: 60  # Percent of nodes on AWS
+    gcp: 25  # Percent of nodes on GCP
+    azure: 15  # Percent of nodes on Azure
+    
+  fallback_order:
+    - aws
+    - gcp
+    - azure
+    
+  cost_threshold_deviation: 0.15  # Switch providers if cost differs by 15%
+
+# Global Settings
+global:
+  # SSH Configuration
+  ssh:
+    key_name: incredibuild-key
+    private_key_path: ~/.ssh/incredibuild_rsa
+    username: ubuntu
+    
+  # Provisioning
+  provisioning:
+    wait_timeout_seconds: 300
+    health_check_interval_seconds: 10
+    max_provision_attempts: 3
+    
+  # Monitoring
+  monitoring:
+    cloudwatch_enabled: true
+    stackdriver_enabled: false
+    azure_monitor_enabled: false
+    custom_metrics: true
+    
+  # Tagging
+  tags:
+    Project: Project-AI
+    Component: IncrediBuild
+    ManagedBy: Terraform
+    CostCenter: Engineering
+    Environment: ${ENVIRONMENT:-development}

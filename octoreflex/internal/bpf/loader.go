@@ -69,14 +69,21 @@ const (
 // Callers must call Close() when done to release kernel resources.
 type Objects struct {
 	// Programs (LSM hooks)
-	SocketConnect *ebpf.Program
-	FileOpen      *ebpf.Program
-	TaskFixSetuid *ebpf.Program
+	SocketConnect       *ebpf.Program
+	FileOpen            *ebpf.Program
+	TaskFixSetuid       *ebpf.Program
+	BprmCheckSecurity   *ebpf.Program
+	FileMmap            *ebpf.Program
+	PtraceAccessCheck   *ebpf.Program
+	KernelModuleRequest *ebpf.Program
+	BpfProg             *ebpf.Program
 
 	// Maps
-	ProcessStateMap *ebpf.Map
-	Events          *ebpf.Map
-	DropCounter     *ebpf.Map
+	ProcessStateMap     *ebpf.Map
+	Events              *ebpf.Map
+	DropCounter         *ebpf.Map
+	CgroupMap           *ebpf.Map
+	MemoryTrackingMap   *ebpf.Map
 
 	// Links (keep alive to maintain LSM attachment)
 	links []link.Link
@@ -100,6 +107,21 @@ func (o *Objects) Close() error {
 	if o.TaskFixSetuid != nil {
 		errs = append(errs, o.TaskFixSetuid.Close())
 	}
+	if o.BprmCheckSecurity != nil {
+		errs = append(errs, o.BprmCheckSecurity.Close())
+	}
+	if o.FileMmap != nil {
+		errs = append(errs, o.FileMmap.Close())
+	}
+	if o.PtraceAccessCheck != nil {
+		errs = append(errs, o.PtraceAccessCheck.Close())
+	}
+	if o.KernelModuleRequest != nil {
+		errs = append(errs, o.KernelModuleRequest.Close())
+	}
+	if o.BpfProg != nil {
+		errs = append(errs, o.BpfProg.Close())
+	}
 	if o.ProcessStateMap != nil {
 		errs = append(errs, o.ProcessStateMap.Close())
 	}
@@ -108,6 +130,12 @@ func (o *Objects) Close() error {
 	}
 	if o.DropCounter != nil {
 		errs = append(errs, o.DropCounter.Close())
+	}
+	if o.CgroupMap != nil {
+		errs = append(errs, o.CgroupMap.Close())
+	}
+	if o.MemoryTrackingMap != nil {
+		errs = append(errs, o.MemoryTrackingMap.Close())
 	}
 	return errors.Join(errs...)
 }
@@ -169,12 +197,19 @@ func Load() (*Objects, error) {
 	}
 
 	objs := &Objects{
-		SocketConnect:   coll.Programs["octo_socket_connect"],
-		FileOpen:        coll.Programs["octo_file_open"],
-		TaskFixSetuid:   coll.Programs["octo_task_fix_setuid"],
-		ProcessStateMap: coll.Maps[ProcessStateMapName],
-		Events:          coll.Maps[EventsMapName],
-		DropCounter:     coll.Maps[DropCounterMapName],
+		SocketConnect:       coll.Programs["octo_socket_connect"],
+		FileOpen:            coll.Programs["octo_file_open"],
+		TaskFixSetuid:       coll.Programs["octo_task_fix_setuid"],
+		BprmCheckSecurity:   coll.Programs["octo_bprm_check_security"],
+		FileMmap:            coll.Programs["octo_file_mmap"],
+		PtraceAccessCheck:   coll.Programs["octo_ptrace_access_check"],
+		KernelModuleRequest: coll.Programs["octo_kernel_module_request"],
+		BpfProg:             coll.Programs["octo_bpf_prog"],
+		ProcessStateMap:     coll.Maps[ProcessStateMapName],
+		Events:              coll.Maps[EventsMapName],
+		DropCounter:         coll.Maps[DropCounterMapName],
+		CgroupMap:           coll.Maps["cgroup_map"],
+		MemoryTrackingMap:   coll.Maps["memory_tracking_map"],
 	}
 
 	// Validate all expected objects were found.
@@ -212,6 +247,21 @@ func (o *Objects) validate() error {
 	if o.TaskFixSetuid == nil {
 		missing = append(missing, "program:octo_task_fix_setuid")
 	}
+	if o.BprmCheckSecurity == nil {
+		missing = append(missing, "program:octo_bprm_check_security")
+	}
+	if o.FileMmap == nil {
+		missing = append(missing, "program:octo_file_mmap")
+	}
+	if o.PtraceAccessCheck == nil {
+		missing = append(missing, "program:octo_ptrace_access_check")
+	}
+	if o.KernelModuleRequest == nil {
+		missing = append(missing, "program:octo_kernel_module_request")
+	}
+	if o.BpfProg == nil {
+		missing = append(missing, "program:octo_bpf_prog")
+	}
 	if o.ProcessStateMap == nil {
 		missing = append(missing, "map:process_state_map")
 	}
@@ -220,6 +270,12 @@ func (o *Objects) validate() error {
 	}
 	if o.DropCounter == nil {
 		missing = append(missing, "map:octo_drop_counter")
+	}
+	if o.CgroupMap == nil {
+		missing = append(missing, "map:cgroup_map")
+	}
+	if o.MemoryTrackingMap == nil {
+		missing = append(missing, "map:memory_tracking_map")
 	}
 	if len(missing) > 0 {
 		return fmt.Errorf("missing BPF objects: %v", missing)
@@ -237,6 +293,11 @@ func (o *Objects) attachLSM() error {
 		{o.SocketConnect, "octo_socket_connect"},
 		{o.FileOpen, "octo_file_open"},
 		{o.TaskFixSetuid, "octo_task_fix_setuid"},
+		{o.BprmCheckSecurity, "octo_bprm_check_security"},
+		{o.FileMmap, "octo_file_mmap"},
+		{o.PtraceAccessCheck, "octo_ptrace_access_check"},
+		{o.KernelModuleRequest, "octo_kernel_module_request"},
+		{o.BpfProg, "octo_bpf_prog"},
 	}
 
 	for _, p := range programs {
@@ -299,6 +360,56 @@ func (o *Objects) ReadDropCount() (uint64, error) {
 		total += v
 	}
 	return total, nil
+}
+
+// SetProcessCgroup records a PID's cgroup ID for containment tracking.
+// cgroupID should be obtained from bpf_get_current_cgroup_id() or equivalent.
+func (o *Objects) SetProcessCgroup(pid uint32, cgroupID uint64) error {
+	if err := o.CgroupMap.Put(pid, cgroupID); err != nil {
+		return fmt.Errorf("SetProcessCgroup pid=%d: %w", pid, err)
+	}
+	return nil
+}
+
+// GetProcessCgroup retrieves a PID's tracked cgroup ID.
+// Returns 0 if PID is not in cgroup tracking.
+func (o *Objects) GetProcessCgroup(pid uint32) (uint64, error) {
+	var cgroupID uint64
+	err := o.CgroupMap.Lookup(pid, &cgroupID)
+	if errors.Is(err, ebpf.ErrKeyNotExist) {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, fmt.Errorf("GetProcessCgroup pid=%d: %w", pid, err)
+	}
+	return cgroupID, nil
+}
+
+// DeleteProcessCgroup removes a PID from cgroup tracking.
+func (o *Objects) DeleteProcessCgroup(pid uint32) error {
+	err := o.CgroupMap.Delete(pid)
+	if errors.Is(err, ebpf.ErrKeyNotExist) {
+		return nil
+	}
+	return err
+}
+
+// TrackMemoryAllocation records a memory allocation for overflow detection.
+// addr is the allocation address, size is the allocation size in bytes.
+func (o *Objects) TrackMemoryAllocation(addr uint64, size uint32) error {
+	if err := o.MemoryTrackingMap.Put(addr, size); err != nil {
+		return fmt.Errorf("TrackMemoryAllocation addr=0x%x size=%d: %w", addr, size, err)
+	}
+	return nil
+}
+
+// UntrackMemoryAllocation removes a memory allocation from tracking.
+func (o *Objects) UntrackMemoryAllocation(addr uint64) error {
+	err := o.MemoryTrackingMap.Delete(addr)
+	if errors.Is(err, ebpf.ErrKeyNotExist) {
+		return nil
+	}
+	return err
 }
 
 // ─── Kernel / environment checks ─────────────────────────────────────────────

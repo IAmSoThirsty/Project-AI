@@ -1,0 +1,42 @@
+{
+  "consensus_type": "pbft",
+  "blocks": [
+    {
+      "block_number": 0,
+      "timestamp": "2026-04-11T08:19:09.698978+00:00",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "transactions": [
+        {
+          "tx_id": "bf664aa6241429c22dacc5e645f6c18d",
+          "tx_type": "governance_decision",
+          "sender": "pbft_council",
+          "data": {
+            "decision": "critical_system_upgrade",
+            "requires_consensus": true
+          },
+          "timestamp": "2026-04-11T08:19:09.698978+00:00",
+          "nonce": 1775895549698978,
+          "signature": "b148c3692a87d8781901bfd78281f19d3dab08e25c912eae0b38df5e2f79c97ce6e24151d427cfecd3fb44b57eac2c8b74edb46c2d239b810573fb43b53b0e04",
+          "gas_limit": 1000000,
+          "gas_used": 0
+        }
+      ],
+      "merkle_root": "b62303f58ddb957fefe38437621d83a1bb0cbd1459b7fa66d3faa07c3d466ce7",
+      "validator": "validator_0",
+      "consensus_proof": {
+        "type": "pbft",
+        "view": 0,
+        "sequence_number": 0,
+        "primary": "validator_0",
+        "prepare_votes": 0,
+        "commit_votes": 0,
+        "quorum_size": 3,
+        "f": 1
+      },
+      "block_hash": "50302262121ae33a26d765c31d87c8eab2afe99f39c9df76e3e277d3f16ba58a",
+      "signature": "2a6ccda06da2d3a14b350f9dd4621f6f8252733c738655881479dcf15f0f4fd429856c7486131278363ddf2febf53b568b632427b47ad97974b85177e2dd6c05"
+    }
+  ],
+  "pending_transactions": [],
+  "contracts": {}
+}

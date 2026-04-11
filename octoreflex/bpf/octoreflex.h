@@ -49,6 +49,12 @@ typedef enum __attribute__((packed)) octo_event_type {
     OCTO_EVT_SOCKET_CONNECT = 1,  /* lsm/socket_connect hook fired         */
     OCTO_EVT_FILE_OPEN      = 2,  /* lsm/file_open hook fired              */
     OCTO_EVT_SETUID         = 3,  /* lsm/task_fix_setuid hook fired        */
+    OCTO_EVT_EXEC           = 4,  /* lsm/bprm_check_security hook fired    */
+    OCTO_EVT_MMAP           = 5,  /* lsm/file_mmap hook fired              */
+    OCTO_EVT_PTRACE         = 6,  /* lsm/ptrace_access_check hook fired    */
+    OCTO_EVT_MODULE_LOAD    = 7,  /* lsm/kernel_module_request hook fired  */
+    OCTO_EVT_BPF_LOAD       = 8,  /* lsm/bpf_prog hook fired               */
+    OCTO_EVT_MEM_VIOLATION  = 9,  /* memory access violation detected      */
 } octo_event_type_t;
 
 /* =========================================================================
@@ -72,8 +78,9 @@ struct octo_event {
     __u32              pid;
     __u32              uid;
     __u8               event_type;   /* octo_event_type_t */
-    __u8               _pad[3];
-    __u32              _pad2;
+    __u8               flags;        /* event flags (exec_suid, mmap_exec, etc) */
+    __u8               _pad[2];
+    __u32              metadata;     /* event-specific metadata */
     __s64              timestamp_ns; /* bpf_ktime_get_ns() */
 };
 
@@ -99,6 +106,15 @@ struct octo_budget {
 #define OCTO_PROCESS_STATE_MAP_MAX  16384U
 #define OCTO_RINGBUF_SIZE           (1U << 24)  /* 16 MiB */
 #define OCTO_BUDGET_MAP_MAX         1U
+#define OCTO_CGROUP_MAP_MAX         4096U
+#define OCTO_MEM_TRACK_MAP_MAX      8192U
+
+/* Event flag bits */
+#define OCTO_FLAG_EXEC_SUID         (1 << 0)  /* exec with setuid bit */
+#define OCTO_FLAG_MMAP_EXEC         (1 << 1)  /* mmap with PROT_EXEC */
+#define OCTO_FLAG_MMAP_WRITE        (1 << 2)  /* mmap with PROT_WRITE */
+#define OCTO_FLAG_PTRACE_ATTACH     (1 << 3)  /* ptrace attach (not read) */
+#define OCTO_FLAG_MEM_OVERFLOW      (1 << 4)  /* buffer overflow detected */
 
 /* =========================================================================
  * ENFORCEMENT RETURN CODES

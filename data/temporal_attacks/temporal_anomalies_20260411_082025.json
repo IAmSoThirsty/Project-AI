@@ -1,0 +1,15 @@
+{
+  "detected_at": "2026-04-11T08:20:25.297992+00:00",
+  "total_anomalies": 0,
+  "anomaly_types": {
+    "clock_drift": 0,
+    "timestamp_future": 0,
+    "timestamp_past": 0,
+    "sequence_violation": 0,
+    "duplicate_event": 0,
+    "causal_inconsistency": 0,
+    "replay_detected": 0,
+    "temporal_paradox": 0
+  },
+  "anomalies": []
+}

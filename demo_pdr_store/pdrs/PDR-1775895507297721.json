@@ -1,0 +1,28 @@
+{
+  "pdr_id": "PDR-1775895507297721",
+  "metadata": {
+    "timestamp": "2026-04-11T08:18:27.297721+00:00",
+    "request_id": "REQ-BATCH-003",
+    "decision": "allow",
+    "severity": "low",
+    "policy_version": "1.0",
+    "agent_id": "agent-0",
+    "context_hash": "a5ab34c07ae8b915422835215966c3079e1ea45407803a7f73691a7cec81f4a3"
+  },
+  "decision_rationale": "Batch test PDR 3",
+  "context": {
+    "batch_id": "DEMO-4",
+    "index": 3
+  },
+  "content_hash": "3c379c33521bf08211aa2b81ef4e27a391bf3f5114ef3ca135efd5f3a40a34d1",
+  "signature": {
+    "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+    "signature": "cigq/SDVXDxeJDRYKnk1aHETPnOHzKb4dQStgonhVPBlczjPj5RhNisdwIHfrTJdnJ/d1KF7vLhP5qqDRxWyBA==",
+    "signed_at": "2026-04-11T08:18:27.298231+00:00"
+  },
+  "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+  "merkle_proof": null,
+  "created_at": "2026-04-11T08:18:27.297721+00:00",
+  "modified_at": null,
+  "version": 1
+}

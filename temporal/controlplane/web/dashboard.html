@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Plane Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #1e293b;
+            padding: 1rem 2rem;
+            border-bottom: 2px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            color: #3b82f6;
+        }
+        
+        .header-info {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+        
+        .container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #1e293b;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+        }
+        
+        .stat-card h3 {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f1f5f9;
+        }
+        
+        .stat-change {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .stat-change.positive {
+            color: #10b981;
+        }
+        
+        .stat-change.negative {
+            color: #ef4444;
+        }
+        
+        .section {
+            background: #1e293b;
+            border-radius: 0.5rem;
+            border: 1px solid #334155;
+            margin-bottom: 2rem;
+        }
+        
+        .section-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .section-content {
+            padding: 1.5rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+        
+        .btn-secondary {
+            background: #475569;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #334155;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th {
+            text-align: left;
+            padding: 0.75rem;
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .table tr:hover {
+            background: #0f172a;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-running {
+            background: #10b981;
+            color: #022c22;
+        }
+        
+        .status-stopped {
+            background: #64748b;
+            color: #0f172a;
+        }
+        
+        .status-failed {
+            background: #ef4444;
+            color: #450a0a;
+        }
+        
+        .status-deployed {
+            background: #10b981;
+            color: #022c22;
+        }
+        
+        .status-pending {
+            background: #f59e0b;
+            color: #451a03;
+        }
+        
+        .chart-container {
+            height: 200px;
+            background: #0f172a;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 1rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            color: #94a3b8;
+        }
+        
+        .tab:hover {
+            color: #e2e8f0;
+        }
+        
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-warning {
+            background: #7c2d12;
+            border: 1px solid #ea580c;
+            color: #fed7aa;
+        }
+        
+        .alert-info {
+            background: #1e3a8a;
+            border: 1px solid #3b82f6;
+            color: #bfdbfe;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚡ Control Plane Dashboard</h1>
+        <div class="header-info">
+            <span>API: <strong id="api-status">Connected</strong></span>
+            <span>Last Update: <strong id="last-update">--:--:--</strong></span>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Deployments</h3>
+                <div class="stat-value" id="total-deployments">0</div>
+                <div class="stat-change positive">↑ 12% from last week</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Running Agents</h3>
+                <div class="stat-value" id="running-agents">0</div>
+                <div class="stat-change positive">↑ 8% from last week</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Avg CPU Usage</h3>
+                <div class="stat-value" id="avg-cpu">0%</div>
+                <div class="stat-change negative">↓ 3% from last week</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Avg Memory Usage</h3>
+                <div class="stat-value" id="avg-memory">0%</div>
+                <div class="stat-change positive">↑ 5% from last week</div>
+            </div>
+        </div>
+        
+        <!-- Alerts -->
+        <div id="alerts-container"></div>
+        
+        <!-- Main Content Tabs -->
+        <div class="section">
+            <div class="section-header">
+                <div class="tabs">
+                    <div class="tab active" data-tab="deployments">Deployments</div>
+                    <div class="tab" data-tab="agents">Agents</div>
+                    <div class="tab" data-tab="monitoring">Monitoring</div>
+                    <div class="tab" data-tab="scaling">Scaling</div>
+                </div>
+                <button class="btn btn-primary" onclick="showCreateModal()">+ Create New</button>
+            </div>
+            
+            <div class="section-content">
+                <!-- Deployments Tab -->
+                <div id="deployments-tab" class="tab-content">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Image</th>
+                                <th>Replicas</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deployments-table">
+                            <tr>
+                                <td colspan="7" class="empty-state">No deployments found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Agents Tab -->
+                <div id="agents-tab" class="tab-content" style="display: none;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Version</th>
+                                <th>State</th>
+                                <th>Restarts</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="agents-table">
+                            <tr>
+                                <td colspan="7" class="empty-state">No agents found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Monitoring Tab -->
+                <div id="monitoring-tab" class="tab-content" style="display: none;">
+                    <div class="chart-container">
+                        <div style="text-align: center; padding-top: 4rem; color: #64748b;">
+                            <div>📊 Metrics Chart</div>
+                            <div style="font-size: 0.875rem; margin-top: 0.5rem;">CPU, Memory, Request metrics over time</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem;">Recent Logs</h3>
+                        <div id="logs-container" style="background: #0f172a; padding: 1rem; border-radius: 0.375rem; font-family: monospace; font-size: 0.875rem; max-height: 300px; overflow-y: auto;">
+                            <div style="color: #64748b;">No recent logs</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scaling Tab -->
+                <div id="scaling-tab" class="tab-content" style="display: none;">
+                    <h3 style="margin-bottom: 1rem;">Autoscaling Policies</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Target</th>
+                                <th>Type</th>
+                                <th>Min/Max Replicas</th>
+                                <th>Metric</th>
+                                <th>Enabled</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="policies-table">
+                            <tr>
+                                <td colspan="7" class="empty-state">No autoscaling policies found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.style.display = 'none';
+                });
+                
+                const tabName = tab.dataset.tab;
+                document.getElementById(`${tabName}-tab`).style.display = 'block';
+            });
+        });
+        
+        // Fetch and update data
+        async function fetchDashboardData() {
+            try {
+                const response = await fetch(`${API_BASE}/monitoring/dashboard`);
+                const data = await response.json();
+                
+                // Update stats
+                document.getElementById('total-deployments').textContent = data.summary.total_deployments;
+                document.getElementById('running-agents').textContent = data.summary.healthy_deployments;
+                document.getElementById('avg-cpu').textContent = data.metrics.avg_cpu_usage.toFixed(1) + '%';
+                document.getElementById('avg-memory').textContent = data.metrics.avg_memory_usage.toFixed(1) + '%';
+                
+                // Update alerts
+                if (data.alerts && data.alerts.length > 0) {
+                    const alertsHtml = data.alerts.map(alert => `
+                        <div class="alert alert-warning">
+                            <strong>${alert.severity.toUpperCase()}</strong>: ${alert.message}
+                        </div>
+                    `).join('');
+                    document.getElementById('alerts-container').innerHTML = alertsHtml;
+                }
+                
+                // Update last update time
+                const now = new Date();
+                document.getElementById('last-update').textContent = now.toLocaleTimeString();
+                
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+                document.getElementById('api-status').textContent = 'Disconnected';
+            }
+        }
+        
+        async function fetchDeployments() {
+            try {
+                const response = await fetch(`${API_BASE}/deployments`);
+                const deployments = await response.json();
+                
+                if (deployments.length === 0) return;
+                
+                const html = deployments.map(dep => `
+                    <tr>
+                        <td><strong>${dep.name}</strong></td>
+                        <td>${dep.type}</td>
+                        <td>${dep.image}</td>
+                        <td>${dep.replicas}</td>
+                        <td><span class="status status-${dep.status}">${dep.status}</span></td>
+                        <td>${new Date(dep.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-secondary" onclick="viewDeployment('${dep.id}')">View</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('deployments-table').innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error fetching deployments:', error);
+            }
+        }
+        
+        async function fetchAgents() {
+            try {
+                const response = await fetch(`${API_BASE}/agents`);
+                const agents = await response.json();
+                
+                if (agents.length === 0) return;
+                
+                const html = agents.map(agent => `
+                    <tr>
+                        <td><strong>${agent.name}</strong></td>
+                        <td>${agent.type}</td>
+                        <td>${agent.version}</td>
+                        <td><span class="status status-${agent.state}">${agent.state}</span></td>
+                        <td>${agent.restarts}</td>
+                        <td>${new Date(agent.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-secondary" onclick="manageAgent('${agent.id}')">Manage</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                document.getElementById('agents-table').innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error fetching agents:', error);
+            }
+        }
+        
+        function showCreateModal() {
+            alert('Create modal - implement based on active tab');
+        }
+        
+        function viewDeployment(id) {
+            alert(`View deployment: ${id}`);
+        }
+        
+        function manageAgent(id) {
+            alert(`Manage agent: ${id}`);
+        }
+        
+        // Initialize
+        fetchDashboardData();
+        fetchDeployments();
+        fetchAgents();
+        
+        // Refresh every 30 seconds
+        setInterval(() => {
+            fetchDashboardData();
+            fetchDeployments();
+            fetchAgents();
+        }, 30000);
+    </script>
+</body>
+</html>

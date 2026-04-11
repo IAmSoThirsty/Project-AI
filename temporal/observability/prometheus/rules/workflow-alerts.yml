@@ -1,0 +1,24 @@
+groups:
+  - name: workflow_performance
+    interval: 30s
+    rules:
+      # Workflow Execution
+      - alert: WorkflowHighFailureRate
+        expr: rate(temporal_workflow_failed_total[5m]) / rate(temporal_workflow_completed_total[5m]) > 0.01
+        for: 10m
+        labels:
+          severity: warning
+          component: workflow
+        annotations:
+          summary: "High workflow failure rate for {{ $labels.workflow_type }}"
+          description: "Workflow {{ $labels.workflow_type }} failure rate is {{ $value | humanizePercentage }}."
+
+      - alert: WorkflowStuck
+        expr: temporal_workflow_execution_duration_seconds > 3600
+        for: 30m
+        labels:
+          severity: critical
+          component: workflow
+        annotations:
+          summary: "Workflow {{ $labels.workflow_id }} appears stuck"
+          description: "Workflow {{ $labels.workflow_id }} of type {{ $labels.workflow_type }} has been running for {{ $value }}s."

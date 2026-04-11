@@ -1,0 +1,802 @@
+{
+  "export_timestamp": "2026-04-11T08:18:27.350340+00:00",
+  "total_pdrs": 27,
+  "total_checkpoints": 2,
+  "checkpoints": [
+    {
+      "checkpoint_id": "CP-000000",
+      "root_hash": "cdb527872dbd255487872acce3f307cd5908ccd6f53be303c584e1e46ccce597",
+      "timestamp": "2026-04-11T08:18:27.305242+00:00",
+      "pdr_count": 10,
+      "pdr_range": [
+        0,
+        10
+      ],
+      "tree_height": 4,
+      "signature": null
+    },
+    {
+      "checkpoint_id": "CP-000001",
+      "root_hash": "25a888589f7fb34c496961c198f6aa4070512bb7b89154e83cc94db820979ff5",
+      "timestamp": "2026-04-11T08:18:27.331294+00:00",
+      "pdr_count": 10,
+      "pdr_range": [
+        10,
+        20
+      ],
+      "tree_height": 4,
+      "signature": null
+    }
+  ],
+  "pdrs": [
+    {
+      "pdr_id": "PDR-1775895507267844",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.267844+00:00",
+        "request_id": "REQ-2026-001",
+        "decision": "allow",
+        "severity": "low",
+        "policy_version": "1.0",
+        "agent_id": "cerberus-identity-head",
+        "context_hash": "dacd0c1edb06cecf1a815b2bfa860e88eeaf13daa702879d3b48a2b0d77eb6f1"
+      },
+      "decision_rationale": "User successfully authenticated with valid JWT token",
+      "context": {
+        "user_id": "user_alice_123",
+        "ip_address": "203.0.113.42",
+        "auth_method": "JWT",
+        "session_id": "sess_abc123"
+      },
+      "content_hash": "e626eb80a664b762308a56183b6147ee2871cc2535ebbbfbb20a94d5fa781f7b",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "SO8wCYhxw+ayRLT7tXMF1Svotwz2MhCOV1gllMXQ7EwuLMIszY0ubYDAXfIGmeNRkD8dfjW9Us+pLTBqlTBwDQ==",
+        "signed_at": "2026-04-11T08:18:27.268853+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.267844+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507272854",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.272854+00:00",
+        "request_id": "REQ-ATTACK-001",
+        "decision": "deny",
+        "severity": "critical",
+        "policy_version": "1.0",
+        "agent_id": "cerberus-invariant-head",
+        "context_hash": "70480bfd9e92a37498b05a3e353976a91e8eb9ba1b68fb269ab1f67a5129ff3c"
+      },
+      "decision_rationale": "SQL injection attempt detected in user input field 'username'",
+      "context": {
+        "attack_type": "SQL Injection",
+        "attack_vector": "admin' OR '1'='1'--",
+        "source_ip": "198.51.100.66",
+        "blocked_at": "2026-04-11T08:18:27.272854+00:00",
+        "waf_rule_id": "INV-SQL-001",
+        "threat_score": 95,
+        "user_agent": "sqlmap/1.0"
+      },
+      "content_hash": "29e2d58e5b067d5364457c7293d1c068779aad97f2698f611f3b7b6dd906c179",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "nNY9cyNZe+VKFSxJk1vU+r0lgOKIbc+v8vXfjcRSFVtx1EYzfqOlhUBcx3fUgdFOLPu1e0MvYGn/SIj0Cv9hDg==",
+        "signed_at": "2026-04-11T08:18:27.272854+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQEEQhQTXa0N8sx5Z6UATtT6YaKnJShWNY7oS5SOwYHLqdNxo1lO/U=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.272854+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507289710",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.289710+00:00",
+        "request_id": "REQ-BATCH-000",
+        "decision": "allow",
+        "severity": "low",
+        "policy_version": "1.0",
+        "agent_id": "agent-0",
+        "context_hash": "0cefa7c700cb3801cceebe1d6655ca9f7a21a349a5dd232a8c5e56062e60bb04"
+      },
+      "decision_rationale": "Batch test PDR 0",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 0
+      },
+      "content_hash": "ce6eccb8039999d1b1e92db125a3e133ec44b579da2ed09807ec4dc3e8b14073",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "NatiyPFAaJWAcIHjdmQAfdRSDJviC/DaUH2RCti26txPUQZdjFHrAnEgtZlVrX8MZbOi6Xfz7iM+xGpOYmiwDg==",
+        "signed_at": "2026-04-11T08:18:27.289710+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.289710+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507292724",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.292724+00:00",
+        "request_id": "REQ-BATCH-001",
+        "decision": "deny",
+        "severity": "medium",
+        "policy_version": "1.0",
+        "agent_id": "agent-1",
+        "context_hash": "bd69415bb9267258972e5e2395101d97d7e8957b151aec79234b920d3c20f121"
+      },
+      "decision_rationale": "Batch test PDR 1",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 1
+      },
+      "content_hash": "f2b7e2d7e7363a6a9d7b12b9f145b4480e14ec8759439838c606d1c1728eb48d",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "ilTrw+afUi71J+IXG0jPJyM2mfPtxHSJdiMxEN4ZA5ZVzJnvxkyrU9u9y3sNFKjuu5FwRnzYgnwLn0XVobadAw==",
+        "signed_at": "2026-04-11T08:18:27.292724+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQCEQhUwAoGo/qygMtZVQ52/hZnUABMccemF7R4ZJC6sDZ3X+jRJSg=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.292724+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507294723",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.294723+00:00",
+        "request_id": "REQ-BATCH-002",
+        "decision": "quarantine",
+        "severity": "high",
+        "policy_version": "1.0",
+        "agent_id": "agent-2",
+        "context_hash": "72334db5c6268bf0d64aa1111f53d0ab708facf0e7afc436513705a9c8a5f5d3"
+      },
+      "decision_rationale": "Batch test PDR 2",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 2
+      },
+      "content_hash": "ec4d744ff03f46c4634283493fc9ca877ad0d0f8a92dcacb041c86527c5a67d2",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "6EyX4xGN4K77II7Z6m2DlAAEzMDXKdtk60Qsa0EjW00aNusj3xCNFi1pjhe6pcBBs3fhrsw4P9tx0+8+YRgDCw==",
+        "signed_at": "2026-04-11T08:18:27.295725+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAEEAQDEQieXrOUv4/6rRlpLVTq9OJixXzxdztCpl2d0gSWUYw2/z/yMpw=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.294723+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507297721",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.297721+00:00",
+        "request_id": "REQ-BATCH-003",
+        "decision": "allow",
+        "severity": "low",
+        "policy_version": "1.0",
+        "agent_id": "agent-0",
+        "context_hash": "a5ab34c07ae8b915422835215966c3079e1ea45407803a7f73691a7cec81f4a3"
+      },
+      "decision_rationale": "Batch test PDR 3",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 3
+      },
+      "content_hash": "3c379c33521bf08211aa2b81ef4e27a391bf3f5114ef3ca135efd5f3a40a34d1",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "cigq/SDVXDxeJDRYKnk1aHETPnOHzKb4dQStgonhVPBlczjPj5RhNisdwIHfrTJdnJ/d1KF7vLhP5qqDRxWyBA==",
+        "signed_at": "2026-04-11T08:18:27.298231+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.297721+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507299239",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.299239+00:00",
+        "request_id": "REQ-BATCH-004",
+        "decision": "deny",
+        "severity": "medium",
+        "policy_version": "1.0",
+        "agent_id": "agent-1",
+        "context_hash": "94bebda260aad2be6dba11d916218b28680bb0fb26fb367434bd67e79d0287b9"
+      },
+      "decision_rationale": "Batch test PDR 4",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 4
+      },
+      "content_hash": "18ce4108ec829ddec11faf34f4e3c56ecc6e416efc35da87ba2973d7f2e0707b",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "mOagJEl8kQ9ClTXIEg8oUHCZDpo+36Ft5hJvJ8v9HFTKqyFn0zQySXUPay/XkklgY5h6JzPa2+LcaPmk6qFWCQ==",
+        "signed_at": "2026-04-11T08:18:27.299239+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQCEQhUwAoGo/qygMtZVQ52/hZnUABMccemF7R4ZJC6sDZ3X+jRJSg=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.299239+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507301244",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.301244+00:00",
+        "request_id": "REQ-BATCH-005",
+        "decision": "quarantine",
+        "severity": "high",
+        "policy_version": "1.0",
+        "agent_id": "agent-2",
+        "context_hash": "0a4413071f89e8c4aad382ae23c0389e186f2ccae4696cd51014dd41a78b35f6"
+      },
+      "decision_rationale": "Batch test PDR 5",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 5
+      },
+      "content_hash": "6134beac28f4d8720bf992657d2dc86902369b631ff2027d7d221a14cd5e3b21",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "wQL0iuPJKz0XTxtHyxsdUHx5bZYhmy/gqa/KbLbWvXRYqK1mUM8XuHW+8lers2cNuiKaY4rRUeM6nu7jol2BAg==",
+        "signed_at": "2026-04-11T08:18:27.301244+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAEEAQDEQieXrOUv4/6rRlpLVTq9OJixXzxdztCpl2d0gSWUYw2/z/yMpw=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.301244+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507303248",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.303248+00:00",
+        "request_id": "REQ-BATCH-006",
+        "decision": "allow",
+        "severity": "low",
+        "policy_version": "1.0",
+        "agent_id": "agent-0",
+        "context_hash": "8f66e0948bacb336a1767dc35f244b4a30af495a59845a9417116693f62a0dc6"
+      },
+      "decision_rationale": "Batch test PDR 6",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 6
+      },
+      "content_hash": "d1a64d4bdcaed5a739cbfbedc0e297bffa1373b437ad8ea8e5cd1b043f9413a1",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "j/eryb4AamKamcY+HZ0Qjd4+oQzZMI/HmAf+sixQF6ohuFSSjCHgiOWDELVAZm4G72bpsSO0xhObQVb3YSuPAg==",
+        "signed_at": "2026-04-11T08:18:27.303248+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.303248+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507305242",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.305242+00:00",
+        "request_id": "REQ-BATCH-007",
+        "decision": "deny",
+        "severity": "medium",
+        "policy_version": "1.0",
+        "agent_id": "agent-1",
+        "context_hash": "99abbcd97881f5ebec40fc8e6f9a2f718489581160c3ddd25ac6bcc38c58dc25"
+      },
+      "decision_rationale": "Batch test PDR 7",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 7
+      },
+      "content_hash": "f3cd2f4e361da6f55f8f280dfda74c2b153aa1767857e46e2894f834feafdbd1",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "fmZucMHfw6t8FSFgONpjKPlM37w9kJzIa5+YBLlVsHslEwSGiyq3vPZeRQ/pI2ryPhHH32MniRiD4H1+19mSDg==",
+        "signed_at": "2026-04-11T08:18:27.305242+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQCEQhUwAoGo/qygMtZVQ52/hZnUABMccemF7R4ZJC6sDZ3X+jRJSg=",
+      "merkle_proof": [
+        "f3cd2f4e361da6f55f8f280dfda74c2b153aa1767857e46e2894f834feafdbd1",
+        "cdb527872dbd255487872acce3f307cd5908ccd6f53be303c584e1e46ccce597"
+      ],
+      "created_at": "2026-04-11T08:18:27.305242+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507307241",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.307241+00:00",
+        "request_id": "REQ-BATCH-008",
+        "decision": "quarantine",
+        "severity": "high",
+        "policy_version": "1.0",
+        "agent_id": "agent-2",
+        "context_hash": "10ea300d28cfbf6c4c80bb2b5a0869443de33f8550d637a6aa4c23dfc31676ac"
+      },
+      "decision_rationale": "Batch test PDR 8",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 8
+      },
+      "content_hash": "9721162b68c035ef5c5f7bb22f165fb2af135af242ab0506017d963bafa856ab",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "AMB+RaAns9J3dj3lbyf8Ehs2+Pzm9VzKa9ded62DE4dF6ZbCP2L6fhTUl64yqaqjeLOWiHSpHjygE5FUUcVVBw==",
+        "signed_at": "2026-04-11T08:18:27.307241+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAEEAQDEQieXrOUv4/6rRlpLVTq9OJixXzxdztCpl2d0gSWUYw2/z/yMpw=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.307241+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507308748",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.308748+00:00",
+        "request_id": "REQ-BATCH-009",
+        "decision": "allow",
+        "severity": "low",
+        "policy_version": "1.0",
+        "agent_id": "agent-0",
+        "context_hash": "506d9fd22e1e133ced58adf6b9789bac539e97c380a53a9f7216df89f47b5b17"
+      },
+      "decision_rationale": "Batch test PDR 9",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 9
+      },
+      "content_hash": "202f7ac173666dc7f8cb8a79b1e7943d46af1ec3e4059a2ee4c05e287adcac9c",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "QnUsiA9ETqF1yBUa71u8Ize7JxQLmHiVxyhSbx/FZbTeVCxFvuE4r8xfVURS9A7v+o2fDSD65tLLWGbQPLYFBQ==",
+        "signed_at": "2026-04-11T08:18:27.309758+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.308748+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507311761",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.311761+00:00",
+        "request_id": "REQ-BATCH-010",
+        "decision": "deny",
+        "severity": "medium",
+        "policy_version": "1.0",
+        "agent_id": "agent-1",
+        "context_hash": "3d94443b8fceaab5ff551f946675b043024eaf5568a08217159a3d7b0f4c9dff"
+      },
+      "decision_rationale": "Batch test PDR 10",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 10
+      },
+      "content_hash": "87fb7db0cde09a24124892eb7e0de96809a8dcf9d6ee34572b78df8feb9afc81",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "QqdTqcXy+AhlAyWGbfCqdmiShujZN6x0baDLOGHDnCKaPFLU+3pALHXFTM9piVzRGXbDGXKHq/m80jiZkusKDQ==",
+        "signed_at": "2026-04-11T08:18:27.311761+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQCEQhUwAoGo/qygMtZVQ52/hZnUABMccemF7R4ZJC6sDZ3X+jRJSg=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.311761+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507313758",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.313758+00:00",
+        "request_id": "REQ-BATCH-011",
+        "decision": "quarantine",
+        "severity": "high",
+        "policy_version": "1.0",
+        "agent_id": "agent-2",
+        "context_hash": "4effefa162fc9587026ced640315d7b5911500a5cf8ae3395d8bdc8a2d042abc"
+      },
+      "decision_rationale": "Batch test PDR 11",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 11
+      },
+      "content_hash": "51e6ed7db30d9764a6f74e7f3e32c3cdf05561918ae8c74d59d24f8ffb20a908",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "oVgBpQgmgipa5jsYQW/7UIfxLyH5jiUgwPQYr1uzWdLRmXBexmF2IZ54FJL1hb7DTcht54VZpxs/9zCq6R/2AA==",
+        "signed_at": "2026-04-11T08:18:27.313758+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAEEAQDEQieXrOUv4/6rRlpLVTq9OJixXzxdztCpl2d0gSWUYw2/z/yMpw=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.313758+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507315765",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.315765+00:00",
+        "request_id": "REQ-BATCH-012",
+        "decision": "allow",
+        "severity": "low",
+        "policy_version": "1.0",
+        "agent_id": "agent-0",
+        "context_hash": "6676a325ecaa6cf02d1d7da7842969259fac3e2a504ec8de89a916e8574a6782"
+      },
+      "decision_rationale": "Batch test PDR 12",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 12
+      },
+      "content_hash": "8d182aa21df517a08db8165cc1b3663a0af3b40ebae430c8c89beffc39def3f5",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "vP1HBxpFLQJFZM4OqQCtdMUqK49PQ3c1oj59UVFKlenVtmqBxVycmaM4vZlNRHrSwqFn1Jer85+WAWxJjA+cCQ==",
+        "signed_at": "2026-04-11T08:18:27.315765+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.315765+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507319301",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.319300+00:00",
+        "request_id": "REQ-BATCH-013",
+        "decision": "deny",
+        "severity": "medium",
+        "policy_version": "1.0",
+        "agent_id": "agent-1",
+        "context_hash": "154894b4b36cce6cc99411c7eebefb56a9f714e155e57d8cc327e605a68c6513"
+      },
+      "decision_rationale": "Batch test PDR 13",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 13
+      },
+      "content_hash": "0e1fedd6aa4f37031531ed2ac2915ffeaf63402d22a5dd9edd2a4e08922fa2a5",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "cdNWA7KDU5is314IFGRABBcUXo3clTU4YujO7wFUSkh61KOVzEr32nLOc8zzJ/MZ24HPht8eo2clHHZCo157Bw==",
+        "signed_at": "2026-04-11T08:18:27.319300+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQCEQhUwAoGo/qygMtZVQ52/hZnUABMccemF7R4ZJC6sDZ3X+jRJSg=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.319300+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507321303",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.321302+00:00",
+        "request_id": "REQ-BATCH-014",
+        "decision": "quarantine",
+        "severity": "high",
+        "policy_version": "1.0",
+        "agent_id": "agent-2",
+        "context_hash": "a173ca7ee835d69a462b50d76099dd68d6e6b97f0da59d2f62ce17d539b6f34e"
+      },
+      "decision_rationale": "Batch test PDR 14",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 14
+      },
+      "content_hash": "93fd04afa5194b19019fb0eb9cc371d549baed4de77e843553abab57ce439adb",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "7BY83nUDXi5jOjiaFMeKlo+c9jFjnJrqKWiS0x+xPTexm7trWwJgEUfN6zr7DYcg3NEv2YY7u96UuXYn+k9wCQ==",
+        "signed_at": "2026-04-11T08:18:27.322293+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAEEAQDEQieXrOUv4/6rRlpLVTq9OJixXzxdztCpl2d0gSWUYw2/z/yMpw=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.321302+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507325296",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.325295+00:00",
+        "request_id": "REQ-BATCH-015",
+        "decision": "allow",
+        "severity": "low",
+        "policy_version": "1.0",
+        "agent_id": "agent-0",
+        "context_hash": "0caf66df88c09d4ba33a7e8f9c6609695a5efe7f8cb0beb971f91292a3d479c8"
+      },
+      "decision_rationale": "Batch test PDR 15",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 15
+      },
+      "content_hash": "bdb3f17df479c1af4236395b27e2ee1d4922315df0a06d30c7bbd6f79ca3eb42",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "SL+Ld96ZyMX/pc2lWImTM62/P2ZHPqG19dpJS2SWiSdJqZ6pTPjrdJQz3F9bEHxaUuPJccDjOCmOEqYZ2TMDDw==",
+        "signed_at": "2026-04-11T08:18:27.325295+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.325295+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507327296",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.327296+00:00",
+        "request_id": "REQ-BATCH-016",
+        "decision": "deny",
+        "severity": "medium",
+        "policy_version": "1.0",
+        "agent_id": "agent-1",
+        "context_hash": "db75698229ed127629fb82219a1b122f43eb798460da3aa31431821cb62889c4"
+      },
+      "decision_rationale": "Batch test PDR 16",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 16
+      },
+      "content_hash": "5d4bc7c7f9265e35919a5d15997acca370dceb2063409d5e174f980408226e9c",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "yBYIbuUGJciUCauJjNsUFiO2xLVBnH2YpPNniGm3EgWgbgCCus7dm/QJeerY6dbTdO5PK8dd888suV0MGIbxCQ==",
+        "signed_at": "2026-04-11T08:18:27.328301+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQCEQhUwAoGo/qygMtZVQ52/hZnUABMccemF7R4ZJC6sDZ3X+jRJSg=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.327296+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507330296",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.330296+00:00",
+        "request_id": "REQ-BATCH-017",
+        "decision": "quarantine",
+        "severity": "high",
+        "policy_version": "1.0",
+        "agent_id": "agent-2",
+        "context_hash": "e9fb4644479ee06403cdbafb627ba9e2221df51b659d885eb307f82712b7c55c"
+      },
+      "decision_rationale": "Batch test PDR 17",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 17
+      },
+      "content_hash": "4ea6dc3db01e91a4b57b8ab2c452ff1d81ac2e2d6ef4d72ac9bd6c31e0fb1188",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "2uGHC7WlSL504qlmjJpwa+VE/gNSwE7tZy9JlgPUuLlARAKgZjqXyNxTaYjh2gcFmRM/4O3BFb6oU03IyR1LBQ==",
+        "signed_at": "2026-04-11T08:18:27.331294+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAEEAQDEQieXrOUv4/6rRlpLVTq9OJixXzxdztCpl2d0gSWUYw2/z/yMpw=",
+      "merkle_proof": [
+        "4ea6dc3db01e91a4b57b8ab2c452ff1d81ac2e2d6ef4d72ac9bd6c31e0fb1188",
+        "25a888589f7fb34c496961c198f6aa4070512bb7b89154e83cc94db820979ff5"
+      ],
+      "created_at": "2026-04-11T08:18:27.330296+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507332299",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.332299+00:00",
+        "request_id": "REQ-BATCH-018",
+        "decision": "allow",
+        "severity": "low",
+        "policy_version": "1.0",
+        "agent_id": "agent-0",
+        "context_hash": "e72e2dc99e92d02ab23c78700c000d4065a60594999d0e083439b7c019d27bd3"
+      },
+      "decision_rationale": "Batch test PDR 18",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 18
+      },
+      "content_hash": "010c2c8793c28422d0469b723ec2660a4c80f478f11870658b7ed8c2548e58a9",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "SN5+vNT6673JB4+xAqtv2sZcRpH2GXSqTr6c/xG9hOEoDLmdLM/RqrG7mcpKMPHE/UPQz893yqUX1Y3r56ERCA==",
+        "signed_at": "2026-04-11T08:18:27.333295+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.333295+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507334295",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.334295+00:00",
+        "request_id": "REQ-BATCH-019",
+        "decision": "deny",
+        "severity": "medium",
+        "policy_version": "1.0",
+        "agent_id": "agent-1",
+        "context_hash": "5918aaedc0a86d8cc77e795450b39ee4c16f03d14894973804d95ccc9cbd33c7"
+      },
+      "decision_rationale": "Batch test PDR 19",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 19
+      },
+      "content_hash": "32204f97b2e62a9067c5695ba4e242f18ebd0a5ee636f3fa7a1683c21f4d26fb",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "lF0iDV5wQMPcJKVoORGECtelQ6Hs8wBdH5XYkYhcW0rQjWR+8pyAR2qlw15lee52zLJOtvx2Fbu5j4oJ7lMSCw==",
+        "signed_at": "2026-04-11T08:18:27.334295+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQCEQhUwAoGo/qygMtZVQ52/hZnUABMccemF7R4ZJC6sDZ3X+jRJSg=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.334295+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507336295",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.336295+00:00",
+        "request_id": "REQ-BATCH-020",
+        "decision": "quarantine",
+        "severity": "high",
+        "policy_version": "1.0",
+        "agent_id": "agent-2",
+        "context_hash": "c22484fd5a62d02d378c930130dace83b997a16a30168ca90849e523fea6c755"
+      },
+      "decision_rationale": "Batch test PDR 20",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 20
+      },
+      "content_hash": "b9abb9ec15437d1bc67a84470dc8cca84b3c082494b1361bafb579df68ef5ed3",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "qTMo1KGNAS77POtEi5aeprgTd+nb1dmthgjh/eCMwuvcb65yofYodTnbPxgG0FFA+SIauSf//PwNJv5rdjOCCA==",
+        "signed_at": "2026-04-11T08:18:27.337299+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAEEAQDEQieXrOUv4/6rRlpLVTq9OJixXzxdztCpl2d0gSWUYw2/z/yMpw=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.336295+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507338809",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.338809+00:00",
+        "request_id": "REQ-BATCH-021",
+        "decision": "allow",
+        "severity": "low",
+        "policy_version": "1.0",
+        "agent_id": "agent-0",
+        "context_hash": "a6f8cb86bbebb70146b54b2d0f831677d35d3c387dd1c56da4724f7c94004614"
+      },
+      "decision_rationale": "Batch test PDR 21",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 21
+      },
+      "content_hash": "da4109b33cbc01d9364b06f8678aca1cb5c91aaa9bc0311a2447545a3e2a58fc",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "Vy5ixPRsk1ZSk2+/OQDvLl349L4cT4qoYNH7O1pml/40KsgsWkeD/qGkfDQhZqsRJt3jyzq0SU7F9Ogfzb+FCg==",
+        "signed_at": "2026-04-11T08:18:27.338809+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.338809+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507340823",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.340823+00:00",
+        "request_id": "REQ-BATCH-022",
+        "decision": "deny",
+        "severity": "medium",
+        "policy_version": "1.0",
+        "agent_id": "agent-1",
+        "context_hash": "71a76f6204b43e0d53ac4776f0ce10d8278199af2be8e54e139b2431057be145"
+      },
+      "decision_rationale": "Batch test PDR 22",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 22
+      },
+      "content_hash": "cfef4380362a50c1b9b5ba5348a1884f76fa85b5580047319e7d6ebbada9f67b",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "WDMsTfo/Bf7wwuBLMjK1fu4IDMaDPKXjkZl6TnjB447nFMPQEEoALWLluqPdM9OdxlX6HWjkooN1YScaFab9Aw==",
+        "signed_at": "2026-04-11T08:18:27.341820+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAFEAQCEQhUwAoGo/qygMtZVQ52/hZnUABMccemF7R4ZJC6sDZ3X+jRJSg=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.340823+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507342824",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.342824+00:00",
+        "request_id": "REQ-BATCH-023",
+        "decision": "quarantine",
+        "severity": "high",
+        "policy_version": "1.0",
+        "agent_id": "agent-2",
+        "context_hash": "c69478de648c616a956d0a3e453eb8e2b8aa0bb58b0d4461bc8747832faa8407"
+      },
+      "decision_rationale": "Batch test PDR 23",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 23
+      },
+      "content_hash": "2c5d2c59a92c41bc9cfbf7a513078ba5e4d76734702802be257b61e7387b1f93",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "0Ke0CB1wc6+vvnk9jlXVPI3Pfak21z2wqMhv1VnSa1nH2jRRjkP7PZfM8seMPnIw05RJ3Pm+iXJwgBHBol4rBA==",
+        "signed_at": "2026-04-11T08:18:27.342824+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAEEAQDEQieXrOUv4/6rRlpLVTq9OJixXzxdztCpl2d0gSWUYw2/z/yMpw=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.342824+00:00",
+      "modified_at": null,
+      "version": 1
+    },
+    {
+      "pdr_id": "PDR-1775895507345329",
+      "metadata": {
+        "timestamp": "2026-04-11T08:18:27.345329+00:00",
+        "request_id": "REQ-BATCH-024",
+        "decision": "allow",
+        "severity": "low",
+        "policy_version": "1.0",
+        "agent_id": "agent-0",
+        "context_hash": "1332c66cbc967f8feeef4c144b52a726268eb9ef5f0b27550f55e2c1411e82cc"
+      },
+      "decision_rationale": "Batch test PDR 24",
+      "context": {
+        "batch_id": "DEMO-4",
+        "index": 24
+      },
+      "content_hash": "5ee0dbffbd4fe480eca5b19012266bc37f8bb761d3971bdb889b68cf5fe48a1e",
+      "signature": {
+        "public_key": "Qdrhw3i85i+45XbAEDFUqaTRPGATBAWKMgB3T5pk4PI=",
+        "signature": "txlSSc/Oc1Zr/dAXO3tnEvA8hQPU0pXgyGgFl94kckjLL1eqd50O3OEchbvPTVlYsBJa046MjCu5qio9yJH/Cw==",
+        "signed_at": "2026-04-11T08:18:27.346337+00:00"
+      },
+      "tscgb_compressed": "VFNHQgEBAQAACgEQAhAGEAQBEQjQEsbxXF7ipX2dou2Ez2IP/oQ50sGdQdohVTJYQFRSxpBbY+g=",
+      "merkle_proof": null,
+      "created_at": "2026-04-11T08:18:27.345329+00:00",
+      "modified_at": null,
+      "version": 1
+    }
+  ]
+}

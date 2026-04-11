@@ -1,0 +1,295 @@
+---
+# Chaos Mesh Configuration for Temporal Workflow Testing
+# Simulates node crashes, network partitions, and cascading failures
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: chaos-testing
+---
+# Install Chaos Mesh (apply once)
+# kubectl apply -f https://mirrors.chaos-mesh.org/latest/crd.yaml
+# kubectl apply -f https://mirrors.chaos-mesh.org/latest/chaos-mesh.yaml
+
+---
+# Pod Failure: Simulate Temporal worker pod crashes
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: temporal-worker-pod-failure
+  namespace: chaos-testing
+spec:
+  action: pod-failure
+  mode: one
+  duration: "30s"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-worker
+  scheduler:
+    cron: "@every 5m"
+
+---
+# Pod Kill: Immediately kill Temporal server pods
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: temporal-server-pod-kill
+  namespace: chaos-testing
+spec:
+  action: pod-kill
+  mode: fixed
+  value: "1"
+  duration: "60s"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-server
+  scheduler:
+    cron: "@every 10m"
+
+---
+# Network Partition: Isolate Temporal worker from server
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: temporal-network-partition
+  namespace: chaos-testing
+spec:
+  action: partition
+  mode: all
+  duration: "45s"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-worker
+  direction: both
+  target:
+    mode: all
+    selector:
+      namespaces:
+        - default
+      labelSelectors:
+        app: temporal-server
+
+---
+# Network Delay: Add latency to network communication
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: temporal-network-delay
+  namespace: chaos-testing
+spec:
+  action: delay
+  mode: all
+  duration: "2m"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-worker
+  delay:
+    latency: "500ms"
+    correlation: "50"
+    jitter: "200ms"
+
+---
+# Network Packet Loss: Simulate packet loss
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: temporal-network-loss
+  namespace: chaos-testing
+spec:
+  action: loss
+  mode: all
+  duration: "90s"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-worker
+  loss:
+    loss: "10"  # 10% packet loss
+    correlation: "25"
+
+---
+# Network Bandwidth Limit: Throttle network bandwidth
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: temporal-network-bandwidth
+  namespace: chaos-testing
+spec:
+  action: bandwidth
+  mode: all
+  duration: "3m"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-worker
+  bandwidth:
+    rate: "1mbps"
+    limit: 20000
+    buffer: 10000
+
+---
+# Stress Test: CPU stress on worker pods
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: temporal-worker-cpu-stress
+  namespace: chaos-testing
+spec:
+  mode: one
+  duration: "2m"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-worker
+  stressors:
+    cpu:
+      workers: 4
+      load: 80
+
+---
+# Stress Test: Memory stress on worker pods
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: temporal-worker-memory-stress
+  namespace: chaos-testing
+spec:
+  mode: one
+  duration: "2m"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-worker
+  stressors:
+    memory:
+      workers: 4
+      size: "512MB"
+
+---
+# IO Chaos: Disk I/O delays
+apiVersion: chaos-mesh.org/v1alpha1
+kind: IOChaos
+metadata:
+  name: temporal-io-delay
+  namespace: chaos-testing
+spec:
+  action: latency
+  mode: one
+  duration: "90s"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-server
+  volumePath: /var/lib/temporal
+  delay: "100ms"
+  percent: 50
+
+---
+# Time Chaos: Clock skew simulation
+apiVersion: chaos-mesh.org/v1alpha1
+kind: TimeChaos
+metadata:
+  name: temporal-time-skew
+  namespace: chaos-testing
+spec:
+  mode: one
+  duration: "5m"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-worker
+  timeOffset: "-10m"  # Shift clock 10 minutes back
+
+---
+# DNS Chaos: DNS resolution failures
+apiVersion: chaos-mesh.org/v1alpha1
+kind: DNSChaos
+metadata:
+  name: temporal-dns-chaos
+  namespace: chaos-testing
+spec:
+  action: error
+  mode: all
+  duration: "30s"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-worker
+  patterns:
+    - temporal-frontend.*
+    - temporal-matching.*
+
+---
+# JVM Chaos: Java application-level chaos (if using Java workers)
+apiVersion: chaos-mesh.org/v1alpha1
+kind: JVMChaos
+metadata:
+  name: temporal-jvm-gc-chaos
+  namespace: chaos-testing
+spec:
+  action: gc
+  mode: one
+  duration: "60s"
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: temporal-worker
+
+---
+# Workflow Chaos Schedule: Orchestrate multiple chaos experiments
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Schedule
+metadata:
+  name: temporal-chaos-schedule
+  namespace: chaos-testing
+spec:
+  schedule: "@every 1h"
+  type: "Workflow"
+  workflow:
+    entry: "network-and-pod-chaos"
+    templates:
+      - name: "network-and-pod-chaos"
+        templateType: "Serial"
+        children:
+          - "network-delay"
+          - "pod-failure"
+      - name: "network-delay"
+        templateType: "NetworkChaos"
+        networkChaos:
+          action: delay
+          mode: all
+          duration: "1m"
+          selector:
+            namespaces:
+              - default
+            labelSelectors:
+              app: temporal-worker
+          delay:
+            latency: "300ms"
+      - name: "pod-failure"
+        templateType: "PodChaos"
+        podChaos:
+          action: pod-failure
+          mode: one
+          duration: "30s"
+          selector:
+            namespaces:
+              - default
+            labelSelectors:
+              app: temporal-worker

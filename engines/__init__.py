@@ -8,6 +8,7 @@ Production-grade simulation engines for modeling catastrophic scenarios:
 - Alien Invaders: Planetary defense with causal physics
 - EMP Defense: Electromagnetic pulse cascade failures
 - Django State: Human misunderstanding extinction dynamics
+- Social Engineering: Phishing, pretexting, trust exploitation, human factor analysis
 """
 
 __all__ = [
@@ -15,4 +16,5 @@ __all__ = [
     "alien_invaders",
     "emp_defense",
     "django_state",
+    "social_engineering_enhanced",
 ]

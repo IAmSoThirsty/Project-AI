@@ -1,0 +1,99 @@
+# Server Configuration
+server:
+  host: 0.0.0.0
+  port: 8000
+  workers: 4
+  log_level: INFO
+  reload: false
+
+# CORS Configuration
+cors:
+  enabled: true
+  origins:
+    - http://localhost:3000
+    - http://localhost:8080
+    - https://app.example.com
+  allow_credentials: true
+  allow_methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+  allow_headers:
+    - "*"
+
+# Database Configuration
+database:
+  url: postgresql://controlplane:password@localhost:5432/controlplane
+  pool_size: 10
+  max_overflow: 20
+  pool_timeout: 30
+  pool_recycle: 3600
+
+# Redis Configuration
+redis:
+  url: redis://localhost:6379/0
+  max_connections: 50
+
+# Kubernetes Configuration
+kubernetes:
+  config_path: ~/.kube/config
+  namespace: default
+  context: default
+
+# Monitoring Configuration
+monitoring:
+  enabled: true
+  metrics:
+    backend: prometheus
+    port: 9090
+    path: /metrics
+  logs:
+    backend: elasticsearch
+    url: http://localhost:9200
+    index_prefix: controlplane
+  traces:
+    backend: jaeger
+    agent_host: localhost
+    agent_port: 6831
+
+# Security Configuration
+security:
+  api_key_required: false
+  jwt_secret: your-secret-key-here
+  jwt_algorithm: HS256
+  jwt_expiration: 3600
+
+# Autoscaling Configuration
+autoscaling:
+  enabled: true
+  check_interval: 30
+  scale_up_threshold: 0.8
+  scale_down_threshold: 0.3
+  cooldown_period: 300
+
+# Deployment Configuration
+deployment:
+  default_strategy: rolling_update
+  default_replicas: 1
+  max_replicas: 100
+  image_pull_policy: IfNotPresent
+  rolling_update:
+    max_surge: 1
+    max_unavailable: 0
+
+# Resource Limits
+resources:
+  default_cpu: "100m"
+  default_memory: "128Mi"
+  default_cpu_limit: "500m"
+  default_memory_limit: "512Mi"
+
+# Feature Flags
+features:
+  blue_green_deployments: true
+  canary_deployments: true
+  auto_rollback: true
+  health_checks: true
+  distributed_tracing: true

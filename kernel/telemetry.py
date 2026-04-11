@@ -12,6 +12,7 @@ Production-grade metrics collection and exposition with:
 - Metric aggregation and downsampling
 - Alert threshold monitoring
 - Historical trend analysis
+- OctoReflex telemetry bridge integration
 
 Thirst of Gods Level Architecture
 """
@@ -23,6 +24,13 @@ from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
+
+# Import OctoReflex telemetry for unified observability
+try:
+    from octoreflex.internal.telemetry.bridge import get_telemetry_bridge
+    OCTOREFLEX_TELEMETRY_AVAILABLE = True
+except ImportError:
+    OCTOREFLEX_TELEMETRY_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
 
@@ -100,6 +108,15 @@ class TelemetrySystem:
         # Aggregation caches
         self.rate_cache: Dict[str, Dict[str, float]] = defaultdict(dict)
         self.last_values: Dict[str, float] = {}
+
+        # OctoReflex telemetry bridge
+        self.octo_bridge = None
+        if OCTOREFLEX_TELEMETRY_AVAILABLE:
+            try:
+                self.octo_bridge = get_telemetry_bridge()
+                logger.info("OctoReflex telemetry bridge connected")
+            except Exception as e:
+                logger.warning(f"Failed to connect OctoReflex bridge: {e}")
 
         # Initialize standard kernel metrics
         self._init_standard_metrics()

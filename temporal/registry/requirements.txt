@@ -1,0 +1,12 @@
+# Agent Registry Requirements
+
+# Core dependencies
+aiohttp>=3.8.0,<4.0.0  # For HTTP health checks and service discovery
+
+# Optional: Service discovery backends
+# python-etcd3>=0.12.0  # For etcd integration
+# python-consul>=1.1.0   # For Consul integration
+
+# Development dependencies
+pytest>=7.0.0
+pytest-asyncio>=0.21.0

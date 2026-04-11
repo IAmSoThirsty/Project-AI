@@ -1,0 +1,18 @@
+{
+  "snapshot_id": "triumvirate-test_memory_1775894078063",
+  "timestamp": 1775894078.0638773,
+  "controller_id": "triumvirate-test",
+  "state_type": "memory",
+  "state_data": {
+    "pages": {
+      "0": "allocated"
+    }
+  },
+  "merkle_root": "93d02b0ba9f249d09969810498e61d753da78e8d92e0dce54f34c63140ce170e",
+  "signature": "f3748b126e701d1fc37053aac77060d7c76a03cd5bcd7b777df12dae7fb0979c",
+  "public_key": "mock_public_key_deterministic",
+  "version": 1,
+  "compression": null,
+  "size_bytes": 424,
+  "recovery_proof": null
+}

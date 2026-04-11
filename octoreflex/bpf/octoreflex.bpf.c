@@ -21,14 +21,25 @@
  *   7. All maps pinned under /sys/fs/bpf/octoreflex/ by the Go loader.
  *
  * LSM hooks implemented:
- *   lsm/socket_connect   — blocks outbound connections for ISOLATED+ PIDs.
- *   lsm/file_open        — blocks file opens for ISOLATED+ PIDs.
- *   lsm/task_fix_setuid  — blocks UID changes for PRESSURE+ PIDs.
+ *   lsm/socket_connect       — blocks outbound connections for ISOLATED+ PIDs.
+ *   lsm/file_open            — blocks file opens for ISOLATED+ PIDs.
+ *   lsm/task_fix_setuid      — blocks UID changes for PRESSURE+ PIDs.
+ *   lsm/bprm_check_security  — blocks exec for ISOLATED+ PIDs.
+ *   lsm/file_mmap            — blocks executable mmaps for ISOLATED+ PIDs.
+ *   lsm/ptrace_access_check  — blocks ptrace for PRESSURE+ PIDs.
+ *   lsm/kernel_module_request— blocks module loading for PRESSURE+ PIDs.
+ *   lsm/bpf_prog             — blocks BPF program loading for PRESSURE+ PIDs.
  *
  * Event types emitted to ring buffer (see octoreflex.h):
  *   OCTO_EVT_SOCKET_CONNECT = 1
  *   OCTO_EVT_FILE_OPEN      = 2
  *   OCTO_EVT_SETUID         = 3
+ *   OCTO_EVT_EXEC           = 4
+ *   OCTO_EVT_MMAP           = 5
+ *   OCTO_EVT_PTRACE         = 6
+ *   OCTO_EVT_MODULE_LOAD    = 7
+ *   OCTO_EVT_BPF_LOAD       = 8
+ *   OCTO_EVT_MEM_VIOLATION  = 9
  */
 
 #include "octoreflex.h"
@@ -97,21 +108,54 @@ struct {
   __type(value, __u64);
 } octo_drop_counter SEC(".maps");
 
-/* =========================================================================
- * HELPER: emit_event
+/*
+ * cgroup_map
  *
- * Reserves a slot in the ring buffer, fills the event record, and submits.
+ * Track PIDs in containment cgroups for enhanced isolation.
+ * Key:   u32 PID
+ * Value: u64 cgroup_id (from bpf_get_current_cgroup_id())
+ */
+struct {
+  __uint(type, BPF_MAP_TYPE_HASH);
+  __uint(max_entries, OCTO_CGROUP_MAP_MAX);
+  __type(key, __u32);
+  __type(value, __u64);
+} cgroup_map SEC(".maps");
+
+/*
+ * memory_tracking_map
+ *
+ * Track memory allocations for overflow detection.
+ * Key:   u64 address
+ * Value: u32 size
+ * Used for stack canary and heap overflow detection.
+ */
+struct {
+  __uint(type, BPF_MAP_TYPE_LRU_HASH);
+  __uint(max_entries, OCTO_MEM_TRACK_MAP_MAX);
+  __type(key, __u64);
+  __type(value, __u32);
+} memory_tracking_map SEC(".maps");
+
+/* =========================================================================
+ * HELPER: emit_event_extended
+ *
+ * Extended event emission with flags and metadata support.
  * On ring buffer full: increments per-CPU drop counter and returns without
- * blocking. This is the only path that writes to the ring buffer.
+ * blocking.
  *
  * Parameters:
  *   event_type  — one of octo_event_type_t values
  *   pid         — tgid of the calling process
  *   uid         — uid of the calling process
+ *   flags       — event-specific flags
+ *   metadata    — event-specific metadata (32 bits)
  *
  * Returns: void (errors are counted, not propagated to LSM return value).
  * ========================================================================= */
-static __always_inline void emit_event(__u8 event_type, __u32 pid, __u32 uid) {
+static __always_inline void emit_event_extended(__u8 event_type, __u32 pid, 
+                                                __u32 uid, __u8 flags, 
+                                                __u32 metadata) {
   struct octo_event *e;
 
   e = bpf_ringbuf_reserve(&events, sizeof(struct octo_event), 0);
@@ -127,13 +171,22 @@ static __always_inline void emit_event(__u8 event_type, __u32 pid, __u32 uid) {
   e->pid = pid;
   e->uid = uid;
   e->event_type = event_type;
+  e->flags = flags;
   e->_pad[0] = 0;
   e->_pad[1] = 0;
-  e->_pad[2] = 0;
-  e->_pad2 = 0;
+  e->metadata = metadata;
   e->timestamp_ns = bpf_ktime_get_ns();
 
   bpf_ringbuf_submit(e, 0);
+}
+
+/* =========================================================================
+ * HELPER: emit_event
+ *
+ * Simplified event emission (backwards compatibility).
+ * ========================================================================= */
+static __always_inline void emit_event(__u8 event_type, __u32 pid, __u32 uid) {
+  emit_event_extended(event_type, pid, uid, 0, 0);
 }
 
 /* =========================================================================
@@ -241,6 +294,165 @@ int BPF_PROG(octo_task_fix_setuid, struct cred *new, const struct cred *old,
   emit_event(OCTO_EVT_SETUID, pid, uid);
 
   /* Block UID changes for any process under observation (PRESSURE+). */
+  if (state >= OCTO_PRESSURE)
+    return -EPERM;
+
+  return OCTO_PERMIT;
+}
+
+/* =========================================================================
+ * LSM HOOK: lsm/bprm_check_security
+ *
+ * Fires before a process executes a new binary (execve, execveat).
+ *
+ * Enforcement:
+ *   - State >= OCTO_ISOLATED → deny (-EPERM). Execution quarantine.
+ *   - Detect setuid/setgid binaries and emit enhanced events.
+ *
+ * Critical for preventing privilege escalation chains and lateral movement.
+ * ========================================================================= */
+SEC("lsm/bprm_check_security")
+int BPF_PROG(octo_bprm_check_security, struct linux_binprm *bprm) {
+  __u64 pid_tgid = bpf_get_current_pid_tgid();
+  __u32 pid = (__u32)(pid_tgid >> 32);
+  __u32 uid = bpf_get_current_uid_gid() & 0xFFFFFFFF;
+  __u8 state = get_process_state(pid);
+
+  /* Check for setuid/setgid execution */
+  __u8 flags = 0;
+  struct inode *inode = BPF_CORE_READ(bprm, file, f_inode);
+  __u16 mode = BPF_CORE_READ(inode, i_mode);
+  if (mode & 0004000) /* S_ISUID */
+    flags |= OCTO_FLAG_EXEC_SUID;
+
+  emit_event_extended(OCTO_EVT_EXEC, pid, uid, flags, mode & 0007777);
+
+  if (state >= OCTO_ISOLATED)
+    return -EPERM;
+
+  return OCTO_PERMIT;
+}
+
+/* =========================================================================
+ * LSM HOOK: lsm/file_mmap
+ *
+ * Fires before a process maps memory (mmap, mprotect with executable pages).
+ *
+ * Enforcement:
+ *   - State >= OCTO_ISOLATED → deny PROT_EXEC mmaps (-EPERM).
+ *   - Track PROT_WRITE + PROT_EXEC (W^X violations) for all states.
+ *
+ * Prevents JIT-spray attacks and memory corruption exploits.
+ * ========================================================================= */
+SEC("lsm/file_mmap")
+int BPF_PROG(octo_file_mmap, struct file *file, unsigned long reqprot,
+             unsigned long prot, unsigned long flags) {
+  __u64 pid_tgid = bpf_get_current_pid_tgid();
+  __u32 pid = (__u32)(pid_tgid >> 32);
+  __u32 uid = bpf_get_current_uid_gid() & 0xFFFFFFFF;
+  __u8 state = get_process_state(pid);
+
+  __u8 event_flags = 0;
+  if (prot & 0x4) /* PROT_EXEC */
+    event_flags |= OCTO_FLAG_MMAP_EXEC;
+  if (prot & 0x2) /* PROT_WRITE */
+    event_flags |= OCTO_FLAG_MMAP_WRITE;
+
+  /* W^X violation detection */
+  if ((event_flags & OCTO_FLAG_MMAP_EXEC) && 
+      (event_flags & OCTO_FLAG_MMAP_WRITE)) {
+    emit_event_extended(OCTO_EVT_MEM_VIOLATION, pid, uid, 
+                       event_flags, (__u32)prot);
+  }
+
+  emit_event_extended(OCTO_EVT_MMAP, pid, uid, event_flags, (__u32)prot);
+
+  /* Block executable mmaps for isolated processes */
+  if (state >= OCTO_ISOLATED && (prot & 0x4))
+    return -EPERM;
+
+  return OCTO_PERMIT;
+}
+
+/* =========================================================================
+ * LSM HOOK: lsm/ptrace_access_check
+ *
+ * Fires when a process attempts to ptrace another process.
+ *
+ * Enforcement:
+ *   - State >= OCTO_PRESSURE → deny (-EPERM).
+ *   - PTRACE_ATTACH is a strong indicator of malicious behavior.
+ *
+ * Prevents debugging-based privilege escalation and code injection.
+ * ========================================================================= */
+SEC("lsm/ptrace_access_check")
+int BPF_PROG(octo_ptrace_access_check, struct task_struct *child, 
+             unsigned int mode) {
+  __u64 pid_tgid = bpf_get_current_pid_tgid();
+  __u32 pid = (__u32)(pid_tgid >> 32);
+  __u32 uid = bpf_get_current_uid_gid() & 0xFFFFFFFF;
+  __u8 state = get_process_state(pid);
+
+  __u8 flags = 0;
+  if (mode == 1) /* PTRACE_MODE_ATTACH */
+    flags |= OCTO_FLAG_PTRACE_ATTACH;
+
+  __u32 target_pid = BPF_CORE_READ(child, tgid);
+  emit_event_extended(OCTO_EVT_PTRACE, pid, uid, flags, target_pid);
+
+  if (state >= OCTO_PRESSURE)
+    return -EPERM;
+
+  return OCTO_PERMIT;
+}
+
+/* =========================================================================
+ * LSM HOOK: lsm/kernel_module_request
+ *
+ * Fires when a process attempts to load a kernel module.
+ *
+ * Enforcement:
+ *   - State >= OCTO_PRESSURE → deny (-EPERM).
+ *
+ * Kernel module loading is a critical privilege that should never be
+ * available to monitored processes.
+ * ========================================================================= */
+SEC("lsm/kernel_module_request")
+int BPF_PROG(octo_kernel_module_request, char *kmod_name) {
+  __u64 pid_tgid = bpf_get_current_pid_tgid();
+  __u32 pid = (__u32)(pid_tgid >> 32);
+  __u32 uid = bpf_get_current_uid_gid() & 0xFFFFFFFF;
+  __u8 state = get_process_state(pid);
+
+  emit_event(OCTO_EVT_MODULE_LOAD, pid, uid);
+
+  if (state >= OCTO_PRESSURE)
+    return -EPERM;
+
+  return OCTO_PERMIT;
+}
+
+/* =========================================================================
+ * LSM HOOK: lsm/bpf_prog
+ *
+ * Fires when a process attempts to load a BPF program.
+ *
+ * Enforcement:
+ *   - State >= OCTO_PRESSURE → deny (-EPERM).
+ *
+ * BPF program loading grants kernel-level access and must be blocked
+ * for any process under observation.
+ * ========================================================================= */
+SEC("lsm/bpf_prog")
+int BPF_PROG(octo_bpf_prog, struct bpf_prog *prog, union bpf_attr *attr,
+             enum bpf_prog_type ptype) {
+  __u64 pid_tgid = bpf_get_current_pid_tgid();
+  __u32 pid = (__u32)(pid_tgid >> 32);
+  __u32 uid = bpf_get_current_uid_gid() & 0xFFFFFFFF;
+  __u8 state = get_process_state(pid);
+
+  emit_event_extended(OCTO_EVT_BPF_LOAD, pid, uid, 0, (__u32)ptype);
+
   if (state >= OCTO_PRESSURE)
     return -EPERM;
 

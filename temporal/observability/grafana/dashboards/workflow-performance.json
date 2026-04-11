@@ -1,0 +1,193 @@
+{
+  "dashboard": {
+    "title": "Workflow Performance",
+    "uid": "workflow-performance",
+    "version": 1,
+    "timezone": "browser",
+    "editable": true,
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Workflow Success Rate",
+        "type": "gauge",
+        "gridPos": {"x": 0, "y": 0, "w": 8, "h": 6},
+        "targets": [
+          {
+            "expr": "(sum(rate(temporal_workflow_completed_total[5m])) / (sum(rate(temporal_workflow_completed_total[5m])) + sum(rate(temporal_workflow_failed_total[5m])))) * 100",
+            "legendFormat": "Success Rate",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "red"},
+                {"value": 95, "color": "yellow"},
+                {"value": 99, "color": "green"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Workflows Running",
+        "type": "stat",
+        "gridPos": {"x": 8, "y": 0, "w": 8, "h": 6},
+        "targets": [
+          {
+            "expr": "sum(temporal_workflow_running)",
+            "legendFormat": "Running",
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "colorMode": "value",
+          "graphMode": "area"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Workflow Throughput",
+        "type": "stat",
+        "gridPos": {"x": 16, "y": 0, "w": 8, "h": 6},
+        "targets": [
+          {
+            "expr": "sum(rate(temporal_workflow_completed_total[5m]))",
+            "legendFormat": "Workflows/sec",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ops"
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Workflow Execution Time P95",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 6, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(temporal_workflow_execution_duration_seconds_bucket[5m])) by (le, workflow_type))",
+            "legendFormat": "{{workflow_type}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth"
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Workflow Failure Rate by Type",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 6, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(rate(temporal_workflow_failed_total[5m])) by (workflow_type)",
+            "legendFormat": "{{workflow_type}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ops"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Task Queue Depth",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 14, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(temporal_task_queue_depth) by (task_queue)",
+            "legendFormat": "{{task_queue}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Activity Success Rate",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 14, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "(sum(rate(temporal_activity_completed_total[5m])) by (activity_type) / (sum(rate(temporal_activity_completed_total[5m])) by (activity_type) + sum(rate(temporal_activity_failed_total[5m])) by (activity_type))) * 100",
+            "legendFormat": "{{activity_type}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Worker Pool Utilization",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 22, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "((temporal_worker_task_slots_total - temporal_worker_task_slots_available) / temporal_worker_task_slots_total) * 100",
+            "legendFormat": "{{worker_pool}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "max": 100
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "Workflow Retry Rate",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 22, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "sum(rate(temporal_workflow_retry_total[5m])) by (workflow_type)",
+            "legendFormat": "{{workflow_type}}",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ops"
+          }
+        }
+      }
+    ]
+  }
+}

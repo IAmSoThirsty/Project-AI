@@ -1,0 +1,28 @@
+2026-04-11T07:49:53.118440 | LIARA_REVOKED | pillar_restored
+2026-04-11T07:49:53.344928 | HANDOFF_VALIDATION_FAILED | invalid_pillar
+2026-04-11T07:49:53.347968 | STATE_SYNC_TO_LIARA | {'pillar': 'galahad'}
+2026-04-11T07:49:53.348967 | HANDOFF_TO_LIARA_COMPLETE | {'pillar': 'galahad', 'reason': 'test1'}
+2026-04-11T07:49:53.349968 | HANDOFF_VALIDATION_FAILED | cerberus
+2026-04-11T07:49:53.389563 | LIARA_REVOKED | pillar_restored
+2026-04-11T07:49:53.415615 | STATE_SYNC_TO_LIARA | {'pillar': 'galahad'}
+2026-04-11T07:49:53.415615 | HANDOFF_TO_LIARA_COMPLETE | {'pillar': 'galahad', 'reason': 'health_degradation'}
+2026-04-11T07:49:53.427133 | STATE_SYNC_TO_LIARA | {'pillar': 'galahad'}
+2026-04-11T07:49:53.428136 | HANDOFF_TO_LIARA_COMPLETE | {'pillar': 'galahad', 'reason': 'test'}
+2026-04-11T07:51:04.359790 | LIARA_REVOKED | pillar_restored
+2026-04-11T07:51:04.573033 | HANDOFF_VALIDATION_FAILED | invalid_pillar
+2026-04-11T07:51:04.576806 | STATE_SYNC_TO_LIARA | {'pillar': 'galahad'}
+2026-04-11T07:51:04.577341 | HANDOFF_TO_LIARA_COMPLETE | {'pillar': 'galahad', 'reason': 'test1'}
+2026-04-11T07:51:04.577870 | HANDOFF_VALIDATION_FAILED | cerberus
+2026-04-11T07:51:04.620016 | LIARA_REVOKED | pillar_restored
+2026-04-11T07:51:04.653229 | STATE_SYNC_TO_LIARA | {'pillar': 'galahad'}
+2026-04-11T07:51:04.653795 | HANDOFF_TO_LIARA_COMPLETE | {'pillar': 'galahad', 'reason': 'health_degradation'}
+2026-04-11T07:51:04.668519 | STATE_SYNC_TO_LIARA | {'pillar': 'galahad'}
+2026-04-11T07:51:04.669048 | HANDOFF_TO_LIARA_COMPLETE | {'pillar': 'galahad', 'reason': 'test'}
+2026-04-11T07:51:43.982112 | HANDOFF_VALIDATION_FAILED | invalid_pillar
+2026-04-11T07:51:43.985785 | STATE_SYNC_TO_LIARA | {'pillar': 'galahad'}
+2026-04-11T07:51:43.986785 | HANDOFF_TO_LIARA_COMPLETE | {'pillar': 'galahad', 'reason': 'test1'}
+2026-04-11T07:51:43.986785 | HANDOFF_VALIDATION_FAILED | cerberus
+2026-04-11T07:51:44.035899 | STATE_SYNC_TO_LIARA | {'pillar': 'galahad'}
+2026-04-11T07:51:44.035899 | HANDOFF_TO_LIARA_COMPLETE | {'pillar': 'galahad', 'reason': 'health_degradation'}
+2026-04-11T07:51:44.045937 | STATE_SYNC_TO_LIARA | {'pillar': 'galahad'}
+2026-04-11T07:51:44.046932 | HANDOFF_TO_LIARA_COMPLETE | {'pillar': 'galahad', 'reason': 'test'}

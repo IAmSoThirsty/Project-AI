@@ -1,0 +1,30 @@
+# OCTOREFLEX DNS Blocklist
+#
+# Format: one domain per line, # for comments
+# Subdomains are automatically blocked (e.g., blocking evil.com blocks sub.evil.com)
+#
+# Last updated: 2026-04-11
+
+# Malware C2 servers
+malware-c2.example.com
+botnet.example.net
+
+# Phishing domains
+phishing.example.org
+fake-bank.example.com
+
+# Crypto miners
+crypto-miner.example.io
+coinhive.example.net
+
+# Suspicious domains
+suspicious.example.biz
+badactor.example.info
+
+# Known ransomware infrastructure
+ransomware-drop.example.com
+encryption-pay.example.net
+
+# Data exfiltration
+exfil.example.org
+upload.malicious.example.com

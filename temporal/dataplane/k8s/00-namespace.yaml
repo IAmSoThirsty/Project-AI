@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dataplane
+  labels:
+    name: dataplane
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dataplane-config
+  namespace: dataplane
+data:
+  MESSAGE_QUEUE_TYPE: "kafka"
+  KAFKA_BROKERS: "kafka-service:9092"
+  NATS_URL: "nats://nats-service:4222"
+  MINIO_ENDPOINT: "minio-service:9000"
+  MINIO_BUCKET: "sovereign-artifacts"
+  REDIS_URL: "redis://redis-service:6379"
+  LARGE_MESSAGE_THRESHOLD: "1048576"
+  ENABLE_COMPRESSION: "true"
+  ENABLE_METRICS: "true"
+  ENABLE_RDMA: "false"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dataplane-secrets
+  namespace: dataplane
+type: Opaque
+stringData:
+  MINIO_ACCESS_KEY: "minioadmin"
+  MINIO_SECRET_KEY: "minioadmin"
+  REDIS_PASSWORD: ""
+  KAFKA_SASL_USERNAME: ""
+  KAFKA_SASL_PASSWORD: ""

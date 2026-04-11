@@ -1,0 +1,30 @@
+# Control Plane Requirements
+
+## Python Dependencies
+
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.4.0
+click>=8.1.0
+requests>=2.31.0
+
+## Optional Dependencies
+
+# Kubernetes support
+kubernetes>=28.0.0
+kopf>=1.36.0
+
+# Database
+sqlalchemy>=2.0.0
+asyncpg>=0.29.0
+alembic>=1.12.0
+
+# Monitoring
+prometheus-client>=0.18.0
+opentelemetry-api>=1.20.0
+opentelemetry-sdk>=1.20.0
+
+# Security
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+python-multipart>=0.0.6

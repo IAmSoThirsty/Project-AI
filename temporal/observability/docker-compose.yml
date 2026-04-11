@@ -1,0 +1,271 @@
+version: '3.8'
+
+services:
+  # Jaeger - Distributed Tracing
+  jaeger:
+    image: jaegertracing/all-in-one:1.53
+    container_name: jaeger
+    ports:
+      - "5775:5775/udp"    # zipkin.thrift compact
+      - "6831:6831/udp"    # jaeger.thrift compact
+      - "6832:6832/udp"    # jaeger.thrift binary
+      - "5778:5778"        # serve configs
+      - "16686:16686"      # UI
+      - "14268:14268"      # jaeger.thrift directly
+      - "14250:14250"      # model.proto
+      - "9411:9411"        # zipkin compatible endpoint
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+      - COLLECTOR_OTLP_ENABLED=true
+      - SPAN_STORAGE_TYPE=badger
+      - BADGER_EPHEMERAL=false
+      - BADGER_DIRECTORY_VALUE=/badger/data
+      - BADGER_DIRECTORY_KEY=/badger/key
+    volumes:
+      - jaeger-data:/badger
+    networks:
+      - observability
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:14269/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Prometheus - Metrics Collection
+  prometheus:
+    image: prom/prometheus:v2.48.1
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/rules:/etc/prometheus/rules
+      - prometheus-data:/prometheus
+    networks:
+      - observability
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Thanos Sidecar - Long-term Storage
+  thanos-sidecar:
+    image: quay.io/thanos/thanos:v0.33.0
+    container_name: thanos-sidecar
+    command:
+      - 'sidecar'
+      - '--tsdb.path=/prometheus'
+      - '--prometheus.url=http://prometheus:9090'
+      - '--grpc-address=0.0.0.0:10901'
+      - '--http-address=0.0.0.0:10902'
+      - '--objstore.config-file=/etc/thanos/bucket.yml'
+    volumes:
+      - prometheus-data:/prometheus:ro
+      - ./prometheus/thanos-bucket.yml:/etc/thanos/bucket.yml
+    networks:
+      - observability
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  # Thanos Query - Multi-cluster Query Layer
+  thanos-query:
+    image: quay.io/thanos/thanos:v0.33.0
+    container_name: thanos-query
+    command:
+      - 'query'
+      - '--http-address=0.0.0.0:10904'
+      - '--grpc-address=0.0.0.0:10903'
+      - '--store=thanos-sidecar:10901'
+      - '--store=thanos-store:10905'
+    ports:
+      - "10904:10904"
+    networks:
+      - observability
+    restart: unless-stopped
+    depends_on:
+      - thanos-sidecar
+
+  # Thanos Store - Long-term Storage Gateway
+  thanos-store:
+    image: quay.io/thanos/thanos:v0.33.0
+    container_name: thanos-store
+    command:
+      - 'store'
+      - '--data-dir=/thanos/store'
+      - '--objstore.config-file=/etc/thanos/bucket.yml'
+      - '--http-address=0.0.0.0:10906'
+      - '--grpc-address=0.0.0.0:10905'
+    volumes:
+      - ./prometheus/thanos-bucket.yml:/etc/thanos/bucket.yml
+      - thanos-store-data:/thanos/store
+    networks:
+      - observability
+    restart: unless-stopped
+
+  # Thanos Compactor - Data Compaction
+  thanos-compactor:
+    image: quay.io/thanos/thanos:v0.33.0
+    container_name: thanos-compactor
+    command:
+      - 'compact'
+      - '--data-dir=/thanos/compact'
+      - '--objstore.config-file=/etc/thanos/bucket.yml'
+      - '--http-address=0.0.0.0:10907'
+      - '--consistency-delay=30m'
+      - '--retention.resolution-raw=30d'
+      - '--retention.resolution-5m=90d'
+      - '--retention.resolution-1h=1y'
+    volumes:
+      - ./prometheus/thanos-bucket.yml:/etc/thanos/bucket.yml
+      - thanos-compact-data:/thanos/compact
+    networks:
+      - observability
+    restart: unless-stopped
+
+  # Loki - Log Aggregation
+  loki:
+    image: grafana/loki:2.9.3
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki.yml
+    volumes:
+      - ./loki/loki.yml:/etc/loki/loki.yml
+      - loki-data:/loki
+    networks:
+      - observability
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Promtail - Log Shipper
+  promtail:
+    image: grafana/promtail:2.9.3
+    container_name: promtail
+    command: -config.file=/etc/promtail/promtail.yml
+    volumes:
+      - ./loki/promtail.yml:/etc/promtail/promtail.yml
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    networks:
+      - observability
+    restart: unless-stopped
+    depends_on:
+      - loki
+
+  # AlertManager - Alert Management
+  alertmanager:
+    image: prom/alertmanager:v0.26.0
+    container_name: alertmanager
+    ports:
+      - "9093:9093"
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093'
+      - '--cluster.advertise-address=0.0.0.0:9093'
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./alertmanager/templates:/etc/alertmanager/templates
+      - alertmanager-data:/alertmanager
+    networks:
+      - observability
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Grafana - Visualization
+  grafana:
+    image: grafana/grafana:10.2.3
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+      - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana-data:/var/lib/grafana
+    networks:
+      - observability
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+      - loki
+      - jaeger
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Node Exporter - System Metrics
+  node-exporter:
+    image: prom/node-exporter:v1.7.0
+    container_name: node-exporter
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/host'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+    ports:
+      - "9100:9100"
+    networks:
+      - observability
+    restart: unless-stopped
+
+  # cAdvisor - Container Metrics
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - observability
+    restart: unless-stopped
+    privileged: true
+
+networks:
+  observability:
+    driver: bridge
+
+volumes:
+  jaeger-data:
+  prometheus-data:
+  thanos-store-data:
+  thanos-compact-data:
+  loki-data:
+  alertmanager-data:
+  grafana-data:

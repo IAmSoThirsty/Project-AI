@@ -1,0 +1,18 @@
+{
+  "snapshot_id": "triumvirate-test_process_1775894078061",
+  "timestamp": 1775894078.0618792,
+  "controller_id": "triumvirate-test",
+  "state_type": "process",
+  "state_data": {
+    "processes": {
+      "1": "running"
+    }
+  },
+  "merkle_root": "887ff533f65c6e9e52c5c27185b7f97c46fa79427f84533432766934a4c2465c",
+  "signature": "f61e7dab597b7a105f1f80eb96b17a3ca96f4630403d6ddf6b437405c4851f23",
+  "public_key": "mock_public_key_deterministic",
+  "version": 1,
+  "compression": null,
+  "size_bytes": 428,
+  "recovery_proof": null
+}
