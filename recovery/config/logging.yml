@@ -1,0 +1,205 @@
+#                                           [2026-04-09 Production]
+#                                          Status: Production-Grade
+# Production Logging Configuration - 7-Year Audit Retention
+# Structured JSON logging with comprehensive rotation policies
+
+version: 1
+disable_existing_loggers: false
+
+# Formatters - Structured Logging
+formatters:
+  json:
+    (): pythonjsonlogger.jsonlogger.JsonFormatter
+    format: '%(asctime)s %(name)s %(levelname)s %(message)s %(pathname)s %(lineno)d'
+    datefmt: '%Y-%m-%dT%H:%M:%S'
+    
+  structured:
+    (): config.logging_formatters.StructuredFormatter
+    format: '%(asctime)s | %(levelname)-8s | %(name)-40s | %(correlation_id)s | %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+    
+  detailed:
+    format: '%(asctime)s | %(levelname)-8s | %(name)s:%(lineno)d | [%(correlation_id)s] %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+    
+  console:
+    format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+
+# Filters - Add correlation IDs and context
+filters:
+  correlation:
+    (): config.logging_filters.CorrelationFilter
+    
+  security_redaction:
+    (): config.logging_filters.SecurityRedactionFilter
+
+# Handlers - Multiple destinations with rotation
+handlers:
+  # Console output (JSON for production, readable for dev)
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: console
+    stream: ext://sys.stdout
+    filters: [correlation, security_redaction]
+    
+  # Application logs - 10MB rotation, 100 backups (~1GB)
+  app_file:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: logs/app.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 100
+    encoding: utf8
+    filters: [correlation, security_redaction]
+    
+  # Error logs - Critical issues only, long retention
+  error_file:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: detailed
+    filename: logs/error.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 200
+    encoding: utf8
+    filters: [correlation]
+    
+  # Security/Audit logs - IMMUTABLE 7-year retention
+  audit_file:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: logs/audit/audit.log
+    when: midnight
+    interval: 1
+    backupCount: 2555  # 7 years (365 * 7)
+    encoding: utf8
+    utc: true
+    filters: [correlation]
+    
+  # Performance/Metrics logs - 30-day retention
+  metrics_file:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: logs/metrics/metrics.log
+    when: midnight
+    interval: 1
+    backupCount: 30
+    encoding: utf8
+    utc: true
+    
+  # Debug logs - Development only, daily rotation
+  debug_file:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: logs/debug/debug.log
+    when: midnight
+    interval: 1
+    backupCount: 7
+    encoding: utf8
+    utc: true
+    filters: [correlation, security_redaction]
+    
+  # Access logs - API/Web requests
+  access_file:
+    class: logging.handlers.TimedRotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: logs/access/access.log
+    when: midnight
+    interval: 1
+    backupCount: 90  # 90 days
+    encoding: utf8
+    utc: true
+
+# Loggers - Per-component configuration
+loggers:
+  # Root logger
+  root:
+    level: INFO
+    handlers: [console, app_file, error_file]
+    
+  # Application loggers
+  app:
+    level: INFO
+    handlers: [console, app_file, error_file]
+    propagate: false
+    
+  app.core:
+    level: INFO
+    handlers: [app_file, error_file]
+    propagate: false
+    
+  # Security/Audit logger - CRITICAL
+  app.security:
+    level: INFO
+    handlers: [audit_file, error_file]
+    propagate: false
+    
+  app.audit:
+    level: INFO
+    handlers: [audit_file]
+    propagate: false
+    
+  # Performance metrics
+  app.metrics:
+    level: INFO
+    handlers: [metrics_file]
+    propagate: false
+    
+  # API access logs
+  app.api:
+    level: INFO
+    handlers: [access_file, app_file]
+    propagate: false
+    
+  uvicorn.access:
+    level: INFO
+    handlers: [access_file]
+    propagate: false
+    
+  # Microservices
+  ai_mutation_governance_firewall:
+    level: INFO
+    handlers: [app_file, error_file]
+    propagate: false
+    
+  incident_reflex_system:
+    level: INFO
+    handlers: [app_file, error_file]
+    propagate: false
+    
+  trust_graph_engine:
+    level: INFO
+    handlers: [app_file, error_file]
+    propagate: false
+    
+  sovereign_data_vault:
+    level: INFO
+    handlers: [app_file, error_file, audit_file]
+    propagate: false
+    
+  # Third-party libraries - Reduce noise
+  uvicorn:
+    level: WARNING
+    handlers: [app_file]
+    propagate: false
+    
+  sqlalchemy:
+    level: WARNING
+    handlers: [app_file]
+    propagate: false
+    
+  httpx:
+    level: WARNING
+    propagate: false
+    
+  # Development/Debug loggers
+  development:
+    level: DEBUG
+    handlers: [debug_file, console]
+    propagate: false

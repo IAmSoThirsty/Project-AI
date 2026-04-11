@@ -1,0 +1,226 @@
+# Integrations Architecture
+
+## Overview
+The `src/integrations` module provides external system integration capabilities for the Sovereign Governance Substrate. Currently focused on Temporal workflow integration with plans for expanding to additional external services.
+
+**Purpose**: Enable integration with external systems while maintaining sovereignty and security boundaries.
+
+**Scope**: Temporal.io workflows, future external API integrations, third-party service connections.
+
+## Components
+
+### Temporal Integration
+- **temporal/**: Temporal.io workflow integration
+  - Workflow definitions
+  - Activity implementations
+  - Worker management
+  - Workflow orchestration
+
+### Module Structure
+```
+integrations/
+├── __init__.py           # Module initialization
+├── temporal/             # Temporal.io integration
+└── __pycache__/          # Python cache
+```
+
+## Dependencies
+
+### Internal Dependencies
+- `src.security`: Security validation for external calls
+- `src.governance`: Policy enforcement for integrations
+- `src.app.core`: Core system integration
+- `src.cognition`: AI-enhanced workflow decisions
+
+### External Dependencies
+- **temporalio**: Temporal workflow SDK
+- **grpc**: gRPC communication
+- **logging**: Structured logging
+- **asyncio**: Async workflow support
+
+## Data Flow
+
+### Temporal Workflow Flow
+```
+Workflow Request
+  ↓
+Security Validation
+  ↓
+Governance Policy Check
+  ↓
+Temporal Worker
+  ↓
+Activity Execution
+  ↓
+Result Validation
+  ↓
+Response
+```
+
+### Integration Security Boundary
+```
+Internal System
+  ↓
+Security Gateway
+  ↓
+Policy Enforcement
+  ↓
+Integration Adapter
+  ↓
+External System
+```
+
+## Integration Points
+
+### APIs
+- Temporal workflow start/query API
+- Integration registration API
+- Security gateway API
+- Policy validation API
+
+### Events
+- Workflow started/completed events
+- Activity execution events
+- Integration failure events
+- Policy violation events
+
+### Hooks
+- Pre-integration hooks (security check)
+- Post-integration hooks (validation)
+- Workflow lifecycle hooks
+- Error handling hooks
+
+### Temporal Workflows
+- Long-running processes
+- Distributed transactions
+- Event-driven workflows
+- Scheduled jobs
+
+## Deployment
+
+### Temporal Configuration
+```python
+temporal_config = {
+    "host": "localhost:7233",
+    "namespace": "sovereign-governance",
+    "task_queue": "sovereign-tasks",
+    "worker_count": 4
+}
+```
+
+### Worker Deployment
+- Workers run as separate processes
+- Configurable concurrency
+- Health monitoring
+- Graceful shutdown
+
+### Kubernetes Integration
+- Worker pods in k8s cluster
+- ConfigMap for configuration
+- Secret management for credentials
+- Service mesh integration
+
+## Architecture Patterns
+
+### Adapter Pattern
+- Each integration has dedicated adapter
+- Standardized interface across integrations
+- Security and policy enforcement at adapter boundary
+- Error isolation per integration
+
+### Gateway Pattern
+- Security gateway for all external calls
+- Policy enforcement layer
+- Audit logging
+- Rate limiting and throttling
+
+### Workflow-Driven
+- Long-running processes as workflows
+- State persistence via Temporal
+- Automatic retry and recovery
+- Saga pattern for distributed transactions
+
+## Security Considerations
+- All external calls validated by security gateway
+- Credentials stored in vault
+- Mutual TLS for external connections
+- Policy enforcement before external calls
+- Audit trail for all integrations
+- Network isolation in production
+
+## Performance Characteristics
+- Async-first design
+- Connection pooling
+- Request batching where appropriate
+- Timeout and circuit breaker patterns
+- Efficient workflow state management
+
+## Monitoring and Observability
+- Integration health checks
+- Workflow execution metrics
+- Activity success/failure rates
+- Latency tracking
+- Error rate monitoring
+- External service availability tracking
+
+## Error Handling
+- Retry logic with exponential backoff
+- Circuit breaker for failing services
+- Graceful degradation
+- Detailed error context
+- Dead letter queue for failed messages
+
+## Testing Strategy
+- Integration tests with mock external services
+- Workflow testing framework
+- Contract testing for APIs
+- Chaos engineering for resilience
+- Load testing for scalability
+
+## Future Extensions
+
+### Planned Integrations
+- **Database Integrations**: PostgreSQL, Redis, MongoDB
+- **Message Queues**: Kafka, RabbitMQ, NATS
+- **Cloud Providers**: AWS, GCP, Azure APIs
+- **AI Services**: OpenAI, Anthropic, HuggingFace
+- **Monitoring**: Datadog, Prometheus, Grafana
+- **Security**: Vault, SSO providers
+- **Communication**: Email, SMS, Slack, Teams
+
+### Integration Framework
+- Generic integration adapter base class
+- Standardized configuration format
+- Automatic health check registration
+- Metric collection framework
+- Error handling patterns
+
+### Service Mesh
+- Istio/Linkerd integration
+- Distributed tracing
+- Traffic management
+- Security policies
+
+## Temporal-Specific Features
+
+### Workflow Types
+- Long-running business processes
+- Distributed transactions
+- Scheduled jobs (cron-like)
+- Event-driven workflows
+
+### Activities
+- Database operations
+- External API calls
+- File processing
+- Notification sending
+
+### Signals and Queries
+- External workflow control
+- State inspection
+- Dynamic workflow modification
+
+### Versioning
+- Workflow version management
+- Backward compatibility
+- Progressive rollout

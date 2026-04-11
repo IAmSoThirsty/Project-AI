@@ -1,0 +1,263 @@
+# Cognition Architecture
+
+## Overview
+
+The `src/cognition` module implements the Triumvirate orchestrator system for coordinated AI decision-making. It coordinates three specialized engines (Codex, Galahad, Cerberus) to provide unified, production-ready AI workflows with telemetry, error handling, and policy enforcement.
+
+**Purpose**: Orchestrate multi-engine AI decision-making with governance, reasoning, and ML inference capabilities.
+
+**Scope**: AI model coordination, policy enforcement, reasoning workflows, and memory management.
+
+## Components
+
+### Core Orchestrator
+
+- **triumvirate.py**: Primary orchestrator coordinating three engines
+  - Workflow: Validation (Cerberus) → Inference (Codex) → Reasoning (Galahad)
+  - `TriumvirateConfig`: Configuration dataclass
+  - `Triumvirate`: Main orchestrator class
+  - Telemetry support with correlation IDs
+  - Error handling and recovery
+
+### Adapters
+
+- **adapters/**: Integration adapters for external systems
+  - `memory_adapter.py`: Memory system integration
+  - `model_adapter.py`: Model provider abstraction
+  - `policy_engine.py`: Policy enforcement integration
+
+### Cerberus Engine (Policy Enforcement)
+
+- **cerberus/**: Policy validation and enforcement
+  - `engine.py`: Core policy engine
+  - `CerberusConfig`: Configuration for policy rules
+  - `CerberusEngine`: Policy validation and enforcement
+  - Constitutional policy checks
+  - Input/output validation
+  - Security policy enforcement
+
+### Codex Engine (ML Inference)
+
+- **codex/**: Machine learning inference engine
+  - `engine.py`: Core ML inference engine
+  - `CodexConfig`: Model configuration
+  - `CodexEngine`: Production ML inference
+  - Multi-model support
+  - Feature extraction
+  - Prediction generation
+  - Model versioning
+
+### Galahad Engine (Reasoning & Arbitration)
+
+- **galahad/**: Reasoning and decision arbitration
+  - `engine.py`: Core reasoning engine
+  - `GalahadConfig`: Reasoning configuration
+  - `GalahadEngine`: Arbitration and reasoning
+  - Multi-agent reasoning
+  - Conflict resolution
+  - Decision synthesis
+  - Explanation generation
+
+### Reasoning Matrix
+
+- **reasoning_matrix/**: Advanced reasoning capabilities
+  - Multi-dimensional reasoning
+  - Pattern recognition
+  - Logical inference
+  - Decision trees
+
+## Dependencies
+
+### Internal Dependencies
+
+- `src.security`: Security framework for policy enforcement
+- `src.app.core`: Core system integration
+- Model providers (configurable)
+
+### External Dependencies
+
+- **logging**: Structured logging
+- **uuid**: Correlation ID generation
+- **datetime**: Temporal tracking
+- **dataclasses**: Configuration management
+
+## Data Flow
+
+### Triumvirate Workflow
+
+```
+Input Request
+  ↓
+Cerberus (Policy Validation)
+  ├─ Constitutional checks
+  ├─ Security validation
+  └─ Input sanitization
+  ↓
+Codex (ML Inference)
+  ├─ Feature extraction
+  ├─ Model prediction
+  └─ Confidence scoring
+  ↓
+Galahad (Reasoning & Arbitration)
+  ├─ Multi-agent reasoning
+  ├─ Conflict resolution
+  └─ Decision synthesis
+  ↓
+Validated Output
+```
+
+### Memory Integration
+
+```
+Request → Memory Adapter → Memory Engine
+         ← Context Retrieval ←
+```
+
+### Model Adaptation
+
+```
+Request → Model Adapter → Model Provider (OpenAI/Anthropic/Local)
+         ← Inference Results ←
+```
+
+## Integration Points
+
+### APIs
+
+- `Triumvirate.process()`: Main orchestration entry point
+- `CerberusEngine.validate()`: Policy validation
+- `CodexEngine.infer()`: ML inference
+- `GalahadEngine.reason()`: Reasoning and arbitration
+- Memory adapter interface
+- Model adapter interface
+- Policy engine interface
+
+### Events
+
+- Workflow start/complete events
+- Engine execution events
+- Policy violation events
+- Error and recovery events
+
+### Telemetry
+
+- Correlation ID tracking
+- Execution timing
+- Success/failure metrics
+- Engine-specific metrics
+
+### Hooks
+
+- Pre-validation hooks (Cerberus)
+- Post-inference hooks (Codex)
+- Pre-reasoning hooks (Galahad)
+- Error handling hooks
+
+## Deployment
+
+### Configuration
+
+Each engine requires its own configuration:
+```python
+triumvirate_config = TriumvirateConfig(
+    codex_config=CodexConfig(...),
+    galahad_config=GalahadConfig(...),
+    cerberus_config=CerberusConfig(...),
+    enable_telemetry=True
+)
+```
+
+### Initialization
+
+```python
+from src.cognition.triumvirate import Triumvirate
+
+triumvirate = Triumvirate(config)
+result = triumvirate.process(request)
+```
+
+### Production Features
+
+- Telemetry enabled by default
+- Structured error handling
+- Correlation ID propagation
+- Logging integration
+- Health monitoring
+
+## Architecture Patterns
+
+### Three-Engine Coordination
+
+1. **Sequential Processing**: Each engine processes in order
+2. **Policy-First**: Validation before execution
+3. **Reasoning-Last**: Final arbitration and synthesis
+4. **Error Recovery**: Graceful degradation on failure
+
+### Adapter Pattern
+
+- Memory adapter abstracts memory systems
+- Model adapter abstracts model providers
+- Policy engine adapter abstracts policy enforcement
+
+### Configuration-Driven
+
+- Each engine independently configurable
+- Telemetry toggleable
+- Provider-agnostic design
+
+## Security Considerations
+
+- Policy enforcement at entry (Cerberus)
+- Input sanitization
+- Output validation
+- Security context propagation
+- Audit span integration
+- Constitutional policy compliance
+
+## Performance Characteristics
+
+- Sequential engine execution (optimized for correctness)
+- Configurable model selection
+- Memory caching via adapters
+- Async-capable design
+- Telemetry overhead minimal
+
+## Monitoring and Observability
+
+- Correlation ID tracking across engines
+- Execution timing per engine
+- Success/failure rates
+- Policy violation tracking
+- Model performance metrics
+- Reasoning quality metrics
+
+## Error Handling
+
+- Per-engine error isolation
+- Graceful degradation
+- Detailed error context
+- Recovery strategies
+- Audit trail maintenance
+
+## Testing Strategy
+
+- Unit tests per engine
+- Integration tests for orchestration
+- Smoke tests for dependencies
+- Policy validation tests
+- Reasoning correctness tests
+
+## Status
+
+- **Status**: SOLID
+- **Last Verified**: 2026-04-09
+- **Dependencies**: Verified in smoke tests
+
+## Future Extensions
+
+- Parallel engine execution for independent tasks
+- Enhanced reasoning strategies
+- Additional model providers
+- Advanced policy languages
+- Multi-modal inference support
+- Distributed engine deployment

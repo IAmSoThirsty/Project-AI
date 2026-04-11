@@ -1,0 +1,1076 @@
+# 🛡️ SECRETS ARCHITECTURE REPORT
+
+**Sovereign Governance Substrate - Production Security Audit**
+
+Generated: 2026-04-11  
+Architect: Secrets Architect  
+Status: **SECURITY CRITICAL**  
+Classification: **CONFIDENTIAL**
+
+---
+
+## 📋 EXECUTIVE SUMMARY
+
+This report provides a comprehensive security audit of secret management across the Sovereign Governance Substrate, identifies critical vulnerabilities, and establishes a production-grade secrets architecture.
+
+### 🚨 CRITICAL FINDINGS
+
+**Status: ACTIVE SECURITY INCIDENT**
+
+1. **Ed25519 Sovereign Keypair EXPOSED in git history** - P0 CRITICAL
+2. **Genesis Audit Private Key stored in repository** - P0 CRITICAL  
+3. **Active .env file contains real secrets** - P1 HIGH
+4. **No centralized secret management system active** - P1 HIGH
+5. **Multiple hardcoded credentials across codebase** - P2 MEDIUM
+
+### ✅ POSITIVE FINDINGS
+
+1. **.env correctly in .gitignore** - No .env in git history
+2. **No AWS/cloud provider keys detected** in codebase
+3. **Existing secrets_manager.py** - Good foundation exists
+4. **Vault integration manifests** - K8s integration prepared
+5. **Black Vault implementation** - Encrypted storage system exists
+
+### 📊 RISK ASSESSMENT
+
+| Risk Area | Current State | Target State | Gap |
+|-----------|---------------|--------------|-----|
+| **Key Storage** | 🔴 Files in repo | 🟢 HSM/Vault | CRITICAL |
+| **Secret Rotation** | 🔴 Manual only | 🟢 Automated 90-day | HIGH |
+| **Access Control** | 🟡 Basic env vars | 🟢 RBAC + audit | MEDIUM |
+| **Encryption** | 🟢 Fernet (AES-256) | 🟢 Fernet + HSM | LOW |
+| **Monitoring** | 🔴 None | 🟢 Full audit trail | HIGH |
+| **Git Scanning** | 🔴 Ad-hoc | 🟢 Automated CI/CD | MEDIUM |
+
+**Overall Security Posture: 🔴 CRITICAL - Immediate action required**
+
+---
+
+## 🏗️ CURRENT ARCHITECTURE
+
+### Secret Storage Locations
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    CURRENT SECRET STORAGE                   │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. Environment Variables (.env file)                      │
+│     └─ Location: .env (working directory)                  │
+│     └─ Security: 🟡 Protected by .gitignore only           │
+│     └─ Secrets: SECRET_KEY, FERNET_KEY, API keys           │
+│                                                             │
+│  2. Repository Files (🔴 CRITICAL ISSUE)                    │
+│     └─ governance/sovereign_data/sovereign_keypair.json    │
+│     └─ data/audit/genesis_keys/genesis_audit.key           │
+│     └─ Security: 🔴 EXPOSED - In git history               │
+│                                                             │
+│  3. Encrypted File Store (Black Vault)                     │
+│     └─ Location: var/vault.store                           │
+│     └─ Security: 🟢 Fernet encrypted (AES-256-GCM)         │
+│     └─ Purpose: Denied content storage                     │
+│                                                             │
+│  4. Kubernetes Secrets (deployment)                        │
+│     └─ Location: k8s/base/redis-secret.yaml.example        │
+│     └─ Security: 🟡 Base64 encoded (not encrypted)         │
+│     └─ Status: Example files only                          │
+│                                                             │
+│  5. Vault Integration (prepared but not active)            │
+│     └─ Location: k8s/vault-integration.yaml                │
+│     └─ Security: 🟢 External Secrets Operator ready        │
+│     └─ Status: ⚠️ Not deployed                              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Secret Types Inventory
+
+```
+┌──────────────────────────────────────────────────────┐
+│ SECRET TYPE          │ LOCATION        │ SECURITY    │
+├──────────────────────────────────────────────────────┤
+│ Ed25519 Signing Keys │ 🔴 Git Repo     │ CRITICAL    │
+│ API Keys (OpenAI)    │ 🟡 .env file    │ MEDIUM      │
+│ Fernet Encryption    │ 🟡 .env file    │ MEDIUM      │
+│ Database Passwords   │ 🟡 .env/.yaml   │ MEDIUM      │
+│ JWT Secret Keys      │ 🟡 .env file    │ MEDIUM      │
+│ SMTP Credentials     │ 🟡 .env file    │ LOW         │
+│ Redis Passwords      │ 🟡 K8s manifests│ LOW         │
+│ Grafana Credentials  │ 🟡 .env (admin) │ LOW         │
+└──────────────────────────────────────────────────────┘
+```
+
+### Existing Secret Management Code
+
+**✅ GOOD: Foundation exists**
+
+1. **`src/app/core/secrets_manager.py`** (551 lines)
+   - Comprehensive SecretsManager class
+   - Fernet encryption support
+   - Secret rotation capabilities
+   - Environment variable fallback
+   - Expiration tracking
+   - **STATUS:** Implemented but underutilized
+
+2. **`security/black_vault.py`** (524 lines)
+   - Encrypted vault for denied content
+   - Automatic key rotation
+   - Audit trail integration
+   - KMS integration support (not active)
+   - **STATUS:** Functional for specific use case
+
+3. **`k8s/vault-integration.yaml`** (181 lines)
+   - HashiCorp Vault configuration
+   - External Secrets Operator setup
+   - Kubernetes auth integration
+   - Secret mapping templates
+   - **STATUS:** Ready to deploy (not active)
+
+**Gap:** Integration not complete, secrets still in files/env vars
+
+---
+
+## 🎯 TARGET ARCHITECTURE
+
+### Production-Grade Secret Management
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    TARGET SECRET ARCHITECTURE                        │
+│                                                                      │
+│   ┌──────────────┐         ┌─────────────────┐                     │
+│   │ Application  │────────▶│ SecretsManager  │                     │
+│   │  Services    │  Get    │   (Python)      │                     │
+│   └──────────────┘ Secret  └─────────────────┘                     │
+│                                     │                                │
+│                                     │ Fetch                          │
+│                                     ▼                                │
+│            ┌────────────────────────────────────────┐               │
+│            │      SECRET STORAGE HIERARCHY          │               │
+│            ├────────────────────────────────────────┤               │
+│            │                                        │               │
+│            │  1️⃣ HashiCorp Vault (PRIMARY)         │               │
+│            │     └─ Dynamic secrets                │               │
+│            │     └─ Automatic rotation             │               │
+│            │     └─ Audit logging                  │               │
+│            │     └─ RBAC policies                  │               │
+│            │                                        │               │
+│            │  2️⃣ Kubernetes Secrets (via ESO)      │               │
+│            │     └─ Synced from Vault              │               │
+│            │     └─ Namespace isolated             │               │
+│            │     └─ Encrypted at rest (etcd)       │               │
+│            │                                        │               │
+│            │  3️⃣ HSM for Signing Keys              │               │
+│            │     └─ Sovereign keypair              │               │
+│            │     └─ Triumvirate keys               │               │
+│            │     └─ Audit signing keys             │               │
+│            │                                        │               │
+│            │  4️⃣ Environment Variables (FALLBACK)  │               │
+│            │     └─ Non-sensitive config only      │               │
+│            │     └─ No secrets allowed             │               │
+│            │                                        │               │
+│            └────────────────────────────────────────┘               │
+│                                                                      │
+│   ┌──────────────────────────────────────────────────────┐         │
+│   │              SECURITY CONTROLS                        │         │
+│   ├──────────────────────────────────────────────────────┤         │
+│   │ • Pre-commit secret scanning                         │         │
+│   │ • CI/CD pipeline secret detection                    │         │
+│   │ • Runtime secret scanning                            │         │
+│   │ • Automated rotation (90-day max)                    │         │
+│   │ • Access audit logging                               │         │
+│   │ • Anomaly detection                                  │         │
+│   │ • Zero-downtime rotation                             │         │
+│   └──────────────────────────────────────────────────────┘         │
+│                                                                      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Secret Lifecycle Management
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   SECRET LIFECYCLE                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. GENERATION                                              │
+│     └─ Cryptographically secure random generation          │
+│     └─ Minimum entropy requirements enforced               │
+│     └─ Audit log: secret_created event                     │
+│                                                             │
+│  2. STORAGE                                                 │
+│     └─ Store in Vault with metadata                        │
+│     └─ Set expiration (max 90 days)                        │
+│     └─ Define access policies (RBAC)                       │
+│     └─ Encrypt at rest + in transit                        │
+│                                                             │
+│  3. DISTRIBUTION                                            │
+│     └─ External Secrets Operator (K8s)                     │
+│     └─ SecretsManager (Python apps)                        │
+│     └─ Just-in-time credential generation                  │
+│     └─ Audit log: secret_accessed event                    │
+│                                                             │
+│  4. ROTATION                                                │
+│     └─ Automated: 90-day maximum TTL                       │
+│     └─ Emergency: Immediate rotation on compromise         │
+│     └─ Zero-downtime: Dual-key overlap period              │
+│     └─ Audit log: secret_rotated event                     │
+│                                                             │
+│  5. REVOCATION                                              │
+│     └─ Immediate revocation on security event              │
+│     └─ Graceful revocation on planned rotation             │
+│     └─ Audit log: secret_revoked event                     │
+│                                                             │
+│  6. DESTRUCTION                                             │
+│     └─ Cryptographic shredding                             │
+│     └─ Audit retention (metadata only)                     │
+│     └─ Audit log: secret_destroyed event                   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🔐 SECRET CATEGORIES & POLICIES
+
+### 1. Signing Keys (Ed25519)
+
+**Examples:** Sovereign keypair, Triumvirate keys, Audit signing keys
+
+**Policy:**
+
+- **Storage:** HSM or Vault Transit Engine only
+- **Rotation:** 180 days maximum
+- **Access:** Governance services only (RBAC)
+- **Audit:** All signature operations logged
+- **Backup:** Encrypted offline backup in secure location
+
+**Implementation:**
+```python
+
+# Use HSM-backed signing
+
+from src.app.core.hsm_signer import HSMSigner
+
+signer = HSMSigner(key_id="sovereign-signing-key")
+signature = signer.sign(message)
+```
+
+### 2. API Keys (External Services)
+
+**Examples:** OpenAI, DeepSeek, HuggingFace, cloud providers
+
+**Policy:**
+
+- **Storage:** Vault KV v2 secret engine
+- **Rotation:** 90 days maximum
+- **Access:** Service-specific (least privilege)
+- **Audit:** All API calls logged
+- **Monitoring:** Rate limiting, usage tracking
+
+**Implementation:**
+```python
+
+# Fetch from Vault via SecretsManager
+
+from src.app.core.secrets_manager import get_secrets_manager
+
+secrets = get_secrets_manager()
+api_key = secrets.get_required_secret("openai_api_key")
+```
+
+### 3. Encryption Keys (Fernet, JWT)
+
+**Examples:** FERNET_KEY, JWT_SECRET_KEY, data encryption keys
+
+**Policy:**
+
+- **Storage:** Vault KV v2 secret engine
+- **Rotation:** 90 days maximum
+- **Access:** Encryption services only
+- **Audit:** Key usage logged
+- **Key Derivation:** PBKDF2-HMAC-SHA256 from master key
+
+**Implementation:**
+```python
+
+# Use SecretsManager for encryption keys
+
+from src.app.core.secrets_manager import SecretsManager
+
+secrets = SecretsManager()
+fernet_key = secrets.get_required_secret("fernet_key")
+```
+
+### 4. Database Credentials
+
+**Examples:** PostgreSQL, Redis, MongoDB passwords
+
+**Policy:**
+
+- **Storage:** Vault Database Secrets Engine (dynamic credentials)
+- **Rotation:** 30 days or dynamic (per-session)
+- **Access:** Database clients only
+- **Audit:** All connections logged
+- **Least Privilege:** Read-only vs read-write credentials
+
+**Implementation:**
+```yaml
+
+# Vault Database Secrets Engine config
+
+vault write database/roles/project-ai-readonly \
+  db_name=projectai \
+  creation_statements="CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}'; GRANT SELECT ON projectai.* TO '{{name}}'@'%';" \
+  default_ttl="24h" \
+  max_ttl="72h"
+```
+
+### 5. Service-to-Service Authentication
+
+**Examples:** mTLS certificates, service account tokens
+
+**Policy:**
+
+- **Storage:** Vault PKI engine (for certificates)
+- **Rotation:** 30 days (short-lived certificates)
+- **Access:** Service identity-based
+- **Audit:** Certificate issuance logged
+- **Zero Trust:** Every service authenticates
+
+### 6. User Credentials
+
+**Examples:** User passwords, MFA secrets, session tokens
+
+**Policy:**
+
+- **Storage:** Hashed (bcrypt/Argon2) in database
+- **Never Store:** Plaintext passwords
+- **Rotation:** User-initiated or forced on compromise
+- **Access:** Authentication service only
+- **MFA:** TOTP secrets in encrypted user table
+
+---
+
+## 🔄 SECRET ROTATION STRATEGY
+
+### Rotation Schedules
+
+| Secret Type | Max TTL | Auto-Rotate | Emergency Rotate |
+|-------------|---------|-------------|------------------|
+| **Signing Keys** | 180 days | ✅ Yes | ✅ On compromise |
+| **API Keys** | 90 days | ✅ Yes | ✅ On compromise |
+| **Encryption Keys** | 90 days | ✅ Yes | ✅ On compromise |
+| **Database Creds** | 30 days | ✅ Yes (dynamic) | ✅ On compromise |
+| **Certificates** | 30 days | ✅ Yes | ✅ On compromise |
+| **User Passwords** | 90 days | ⚠️ Recommended | ✅ On compromise |
+
+### Zero-Downtime Rotation Process
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│          ZERO-DOWNTIME SECRET ROTATION PROCESS              │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Phase 1: PREPARATION (T-24h)                               │
+│    └─ Generate new secret (NEW_SECRET)                     │
+│    └─ Store in Vault with version N+1                      │
+│    └─ Notify services of upcoming rotation                 │
+│                                                             │
+│  Phase 2: DUAL-KEY PERIOD (T-0h to T+24h)                   │
+│    └─ Both OLD_SECRET and NEW_SECRET valid                 │
+│    └─ Services gradually adopt NEW_SECRET                  │
+│    └─ Monitor for authentication failures                  │
+│    └─ Fallback to OLD_SECRET if issues                     │
+│                                                             │
+│  Phase 3: NEW KEY ACTIVATION (T+24h)                        │
+│    └─ Mark NEW_SECRET as primary                           │
+│    └─ OLD_SECRET still accepted (grace period)             │
+│    └─ Validate all services using NEW_SECRET               │
+│                                                             │
+│  Phase 4: OLD KEY DEPRECATION (T+48h)                       │
+│    └─ Reject OLD_SECRET                                    │
+│    └─ Archive OLD_SECRET (encrypted backup)                │
+│    └─ Audit log: rotation_complete                         │
+│    └─ Alert on any OLD_SECRET usage attempts               │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Automated Rotation Implementation
+
+**Vault Policy:**
+```hcl
+
+# /etc/vault/policies/auto-rotate.hcl
+
+path "secret/data/project-ai/*" {
+  capabilities = ["create", "read", "update", "list"]
+}
+
+path "secret/metadata/project-ai/*" {
+  capabilities = ["list", "read", "delete"]
+}
+```
+
+**Rotation Script (Cron: Daily):**
+```python
+
+# scripts/rotate_secrets.py
+
+from src.app.core.secrets_manager import SecretsManager
+from datetime import datetime, timedelta
+
+secrets = SecretsManager()
+
+# Check secrets needing rotation
+
+for secret_key in secrets.get_secrets_needing_rotation():
+    print(f"Rotating {secret_key}...")
+    new_value = generate_secret(secret_key)
+    secrets.rotate_secret(secret_key, new_value)
+    notify_services(secret_key, "rotated")
+```
+
+---
+
+## 🔍 SECRET SCANNING & DETECTION
+
+### Pre-Commit Protection
+
+**Install git-secrets or detect-secrets:**
+```bash
+
+# Install detect-secrets
+
+pip install detect-secrets
+
+# Initialize in repository
+
+detect-secrets scan > .secrets.baseline
+
+# Create pre-commit hook
+
+cat > .git/hooks/pre-commit << 'EOF'
+#!/bin/bash
+detect-secrets scan --baseline .secrets.baseline
+if [ $? -ne 0 ]; then
+    echo "❌ Secret detected! Commit blocked."
+    exit 1
+fi
+EOF
+
+chmod +x .git/hooks/pre-commit
+```
+
+**Pre-commit configuration:**
+```yaml
+
+# .pre-commit-config.yaml (add to existing)
+
+repos:
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: package-lock.json
+
+```
+
+### CI/CD Pipeline Scanning
+
+**GitHub Actions workflow:**
+```yaml
+
+# .github/workflows/secret-scan.yml
+
+name: Secret Scan
+on: [push, pull_request]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Full history for git history scanning
+      
+      - name: TruffleHog Secret Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
+      
+      - name: Detect Secrets
+        run: |
+          pip install detect-secrets
+          detect-secrets scan --all-files --force-use-all-plugins
+
+```
+
+### Git History Scanning
+
+**Scan for historical leaks:**
+```bash
+
+# Using TruffleHog
+
+docker run -it -v "$(pwd):/pwd" trufflesecurity/trufflehog:latest git file:///pwd --since-commit HEAD~1000
+
+# Using gitleaks
+
+docker run -v $(pwd):/path zricethezav/gitleaks:latest detect --source="/path" -v
+```
+
+### Runtime Secret Detection
+
+**Monitor logs for accidental secret exposure:**
+```python
+
+# src/app/core/log_sanitizer.py
+
+import re
+
+SECRET_PATTERNS = [
+    r'sk-[a-zA-Z0-9]{20,}',  # OpenAI keys
+    r'AKIA[0-9A-Z]{16}',     # AWS access keys
+    r'-----BEGIN (RSA|PRIVATE) KEY-----',  # Private keys
+    r'password\s*[:=]\s*["\']?[^"\'\s]+',  # Passwords
+]
+
+def sanitize_log(message):
+    for pattern in SECRET_PATTERNS:
+        message = re.sub(pattern, '[REDACTED]', message, flags=re.IGNORECASE)
+    return message
+```
+
+---
+
+## 🎫 ACCESS CONTROL & AUDITING
+
+### Vault RBAC Policies
+
+**Policy structure:**
+```hcl
+
+# Signing keys - only governance services
+
+path "secret/data/project-ai/signing/*" {
+  capabilities = ["read"]
+  allowed_parameters = {
+    "service" = ["governance-service"]
+  }
+}
+
+# API keys - per-service access
+
+path "secret/data/project-ai/api-keys/openai" {
+  capabilities = ["read"]
+  allowed_parameters = {
+    "service" = ["ai-service", "engine-service"]
+  }
+}
+
+# Encryption keys - encryption services only
+
+path "secret/data/project-ai/encryption/*" {
+  capabilities = ["read"]
+  allowed_parameters = {
+    "service" = ["encryption-service"]
+  }
+}
+
+# Admin - full access (emergency only)
+
+path "secret/data/project-ai/*" {
+  capabilities = ["create", "read", "update", "delete", "list"]
+  required_parameters = ["mfa"]
+}
+```
+
+### Kubernetes RBAC
+
+**ServiceAccount permissions:**
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: secret-reader
+  namespace: project-ai
+rules:
+
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list"]
+  resourceNames: ["project-ai-secrets"]  # Specific secret only
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: governance-service-secret-reader
+  namespace: project-ai
+subjects:
+
+- kind: ServiceAccount
+  name: governance-service
+  namespace: project-ai
+
+roleRef:
+  kind: Role
+  name: secret-reader
+  apiGroup: rbac.authorization.k8s.io
+```
+
+### Audit Logging
+
+**All secret access logged:**
+```json
+{
+  "event_type": "secret_accessed",
+  "timestamp": "2026-04-11T10:30:00Z",
+  "actor": "governance-service",
+  "action": "read",
+  "resource": "secret/project-ai/signing/sovereign-keypair",
+  "result": "success",
+  "client_ip": "10.0.1.15",
+  "service_account": "governance-service",
+  "namespace": "project-ai"
+}
+```
+
+**Audit query examples:**
+```bash
+
+# All secret access in last 24h
+
+vault audit list
+vault audit read -format=json | jq '.[] | select(.time > (now - 86400))'
+
+# Access by specific service
+
+vault audit read -format=json | jq '.[] | select(.auth.entity_id == "governance-service")'
+
+# Failed access attempts
+
+vault audit read -format=json | jq '.[] | select(.error != null)'
+```
+
+---
+
+## 🚀 IMPLEMENTATION ROADMAP
+
+### Phase 1: IMMEDIATE (Week 1)
+
+**Priority 0 - Emergency Response:**
+
+- [ ] **DAY 1:** Rotate sovereign_keypair.json (use `rotate_sovereign_keypair.py`)
+- [ ] **DAY 1:** Rotate genesis_audit.key
+- [ ] **DAY 1:** Rotate all .env secrets (SECRET_KEY, FERNET_KEY)
+- [ ] **DAY 2:** Remove private keys from repository
+- [ ] **DAY 2:** Update .gitignore for `*.key`, `*keypair.json`
+- [ ] **DAY 3:** Install pre-commit secret scanning hooks
+- [ ] **DAY 4:** Audit all services using rotated secrets
+- [ ] **DAY 5:** Complete incident report and lessons learned
+
+**Deliverables:**
+
+- ✅ All exposed secrets rotated
+- ✅ Pre-commit hooks installed
+- ✅ Incident report completed
+
+### Phase 2: FOUNDATION (Weeks 2-3)
+
+**Vault Deployment:**
+
+- [ ] **Week 2:** Deploy HashiCorp Vault (development)
+- [ ] **Week 2:** Configure Vault authentication (Kubernetes, AppRole)
+- [ ] **Week 2:** Create Vault policies for each service
+- [ ] **Week 2:** Migrate 3 non-critical secrets to Vault (test)
+- [ ] **Week 3:** Deploy External Secrets Operator
+- [ ] **Week 3:** Create ExternalSecret manifests for K8s
+- [ ] **Week 3:** Test secret synchronization
+- [ ] **Week 3:** Document Vault usage for developers
+
+**Deliverables:**
+
+- ✅ Vault deployed and configured
+- ✅ ESO operational in K8s
+- ✅ 3+ secrets migrated successfully
+- ✅ Developer documentation
+
+### Phase 3: MIGRATION (Weeks 4-6)
+
+**Secret Migration:**
+
+- [ ] **Week 4:** Migrate all API keys to Vault
+- [ ] **Week 4:** Migrate encryption keys to Vault
+- [ ] **Week 5:** Migrate database credentials to Vault (dynamic secrets)
+- [ ] **Week 5:** Migrate signing keys to Vault Transit Engine
+- [ ] **Week 6:** Remove all secrets from .env (use Vault exclusively)
+- [ ] **Week 6:** Update all services to use SecretsManager
+- [ ] **Week 6:** Validate end-to-end secret retrieval
+
+**Deliverables:**
+
+- ✅ 100% secrets in Vault (0% in .env/files)
+- ✅ All services using SecretsManager
+- ✅ .env contains only non-sensitive config
+
+### Phase 4: AUTOMATION (Weeks 7-8)
+
+**Automated Rotation:**
+
+- [ ] **Week 7:** Implement automated rotation for API keys
+- [ ] **Week 7:** Implement automated rotation for encryption keys
+- [ ] **Week 7:** Configure Vault auto-rotation policies
+- [ ] **Week 8:** Implement zero-downtime rotation process
+- [ ] **Week 8:** Test emergency rotation procedures
+- [ ] **Week 8:** Create rotation runbooks
+
+**Deliverables:**
+
+- ✅ Automated rotation for all secrets (90-day max)
+- ✅ Zero-downtime rotation tested
+- ✅ Emergency rotation runbooks
+
+### Phase 5: HARDENING (Weeks 9-12)
+
+**Security Hardening:**
+
+- [ ] **Week 9:** Deploy HSM for signing keys (or Vault Transit Engine)
+- [ ] **Week 9:** Migrate sovereign keypair to HSM
+- [ ] **Week 10:** Implement secret access anomaly detection
+- [ ] **Week 10:** Configure alerting for unauthorized access
+- [ ] **Week 11:** CI/CD secret scanning (TruffleHog, Gitleaks)
+- [ ] **Week 11:** Runtime secret detection in logs
+- [ ] **Week 12:** Security audit and penetration testing
+- [ ] **Week 12:** Final documentation and training
+
+**Deliverables:**
+
+- ✅ HSM integration for signing keys
+- ✅ Full audit trail and monitoring
+- ✅ CI/CD secret scanning operational
+- ✅ Security audit passed
+
+---
+
+## 📚 OPERATIONAL PROCEDURES
+
+### Emergency Secret Rotation
+
+**Trigger:** Secret compromise detected or suspected
+
+**Procedure:**
+```bash
+
+# 1. Assess scope
+
+identify_affected_services.sh <secret_name>
+
+# 2. Generate new secret
+
+python rotate_sovereign_keypair.py --emergency
+
+# 3. Update Vault immediately
+
+vault kv put secret/project-ai/<path> value="<new_secret>"
+
+# 4. Revoke old secret
+
+vault kv delete secret/project-ai/<path> version=<old_version>
+
+# 5. Restart affected services
+
+kubectl rollout restart deployment/<service> -n project-ai
+
+# 6. Verify services operational
+
+kubectl get pods -n project-ai
+curl https://api.sovereign.local/health
+
+# 7. Audit log analysis
+
+check_unauthorized_access.sh <secret_name> --since 7d
+
+# 8. Incident report
+
+create_incident_report.sh --secret <secret_name> --date <date>
+```
+
+### Regular Secret Audit
+
+**Schedule:** Monthly
+
+**Checklist:**
+
+- [ ] Review Vault audit logs for anomalies
+- [ ] Check secret expiration dates (rotate if < 30 days)
+- [ ] Verify RBAC policies still appropriate
+- [ ] Test emergency rotation procedures
+- [ ] Review .gitignore effectiveness
+- [ ] Scan git history for new leaks
+- [ ] Update secret inventory
+- [ ] Review and update documentation
+
+### Onboarding New Service
+
+**Procedure for adding a new service:**
+```bash
+
+# 1. Create Vault policy
+
+vault policy write <service>-policy <service>-policy.hcl
+
+# 2. Create Kubernetes ServiceAccount
+
+kubectl create serviceaccount <service> -n project-ai
+
+# 3. Bind Vault role to ServiceAccount
+
+vault write auth/kubernetes/role/<service> \
+  bound_service_account_names=<service> \
+  bound_service_account_namespaces=project-ai \
+  policies=<service>-policy \
+  ttl=24h
+
+# 4. Create secrets in Vault
+
+vault kv put secret/project-ai/<service>/config \
+  api_key=<value> \
+  db_password=<value>
+
+# 5. Create ExternalSecret manifest
+
+kubectl apply -f k8s/<service>-external-secret.yaml
+
+# 6. Update service to use SecretsManager
+
+# (See developer documentation)
+
+# 7. Verify secret retrieval
+
+kubectl exec -it <pod> -- env | grep -i secret
+```
+
+---
+
+## 🔧 TOOLING & UTILITIES
+
+### Required Tools
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| **HashiCorp Vault** | Secret storage & management | `helm install vault hashicorp/vault` |
+| **External Secrets Operator** | K8s secret sync | `helm install external-secrets external-secrets/external-secrets` |
+| **detect-secrets** | Pre-commit scanning | `pip install detect-secrets` |
+| **TruffleHog** | Git history scanning | `docker pull trufflesecurity/trufflehog` |
+| **gitleaks** | Git secret detection | `brew install gitleaks` |
+| **vault-cli** | Vault CLI | `brew install vault` |
+| **kubectl** | Kubernetes management | `brew install kubectl` |
+
+### Custom Scripts
+
+**`rotate_sovereign_keypair.py`** (to be created)
+
+- Generate new Ed25519 keypair
+- Update Vault with new keypair
+- Notify services of rotation
+- Audit log rotation event
+
+**`scan_secrets.sh`**
+
+- Run TruffleHog on git history
+- Run detect-secrets on codebase
+- Report findings to security team
+
+**`verify_secrets.py`**
+
+- Verify all secrets in Vault
+- Check expiration dates
+- Test secret retrieval for each service
+
+---
+
+## 📖 DEVELOPER DOCUMENTATION
+
+### Using Secrets in Python
+
+```python
+from src.app.core.secrets_manager import get_secrets_manager
+
+# Initialize (uses Vault by default)
+
+secrets = get_secrets_manager()
+
+# Get secret (returns None if not found)
+
+api_key = secrets.get_secret("openai_api_key")
+
+# Get required secret (raises exception if not found)
+
+db_password = secrets.get_required_secret("database_password")
+
+# Set secret (stores in Vault)
+
+secrets.set_secret(
+    "new_api_key", 
+    "sk-...", 
+    SecretType.API_KEY,
+    expires_in_days=90
+)
+
+# Rotate secret
+
+secrets.rotate_secret("api_key", new_value="sk-new...")
+```
+
+### Using Secrets in Kubernetes
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-service
+spec:
+  template:
+    spec:
+      serviceAccountName: my-service  # Required for Vault auth
+      containers:
+
+      - name: app
+        image: my-service:latest
+        env:
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: project-ai-secrets  # ExternalSecret
+              key: openai_api_key
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: project-ai-secrets
+              key: db_password
+
+```
+
+### Environment Variable Naming
+
+**Standard:** Use SHOUTY_SNAKE_CASE
+
+```bash
+
+# Good
+
+OPENAI_API_KEY=sk-...
+DATABASE_PASSWORD=...
+FERNET_ENCRYPTION_KEY=...
+
+# Bad
+
+openai-api-key=sk-...
+databasePassword=...
+```
+
+---
+
+## 🎓 TRAINING & AWARENESS
+
+### Security Training Topics
+
+1. **Secret Management Basics**
+   - What is a secret?
+   - Why secrets in code are bad
+   - How to use SecretsManager
+
+2. **Vault Usage**
+   - How to retrieve secrets
+   - How to request access to secrets
+   - Emergency rotation procedures
+
+3. **Incident Response**
+   - What to do if secret is exposed
+   - How to report security incidents
+   - Emergency contacts
+
+### Security Checklist for Developers
+
+**Before committing code:**
+
+- [ ] No hardcoded passwords or API keys
+- [ ] No private keys in repository
+- [ ] All secrets use SecretsManager
+- [ ] .env file not committed
+- [ ] Pre-commit hooks passed
+- [ ] Secret scanner clean
+
+**Before deploying:**
+
+- [ ] All secrets in Vault
+- [ ] ExternalSecret manifests created
+- [ ] RBAC policies configured
+- [ ] Service account has correct permissions
+- [ ] Rotation policy defined
+
+---
+
+## 📊 METRICS & KPIs
+
+### Security Metrics (Track Monthly)
+
+| Metric | Target | Current | Status |
+|--------|--------|---------|--------|
+| **Secrets in Vault** | 100% | TBD | 🔴 |
+| **Secrets in Files/Code** | 0% | >0% | 🔴 |
+| **Average Secret Age** | <45 days | TBD | 🔴 |
+| **Secrets >90 days old** | 0% | TBD | 🔴 |
+| **Pre-commit hook compliance** | 100% | 0% | 🔴 |
+| **Failed secret access attempts** | <5/month | TBD | - |
+| **Time to rotate (emergency)** | <1 hour | TBD | - |
+| **Services using SecretsManager** | 100% | <50% | 🔴 |
+
+### Audit Metrics
+
+- **Secret access events:** Track monthly trend
+- **Unauthorized access attempts:** Alert on >0
+- **Secret rotation events:** Ensure regular rotation
+- **Secret creation/deletion:** Track lifecycle
+
+---
+
+## 🏁 CONCLUSION
+
+This comprehensive secrets architecture provides a production-grade foundation for secure secret management across the Sovereign Governance Substrate. Immediate action is required to address critical exposures, followed by systematic migration to Vault-based secret management.
+
+**Critical Next Steps:**
+
+1. ✅ Rotate all exposed secrets (P0)
+2. ✅ Deploy HashiCorp Vault (P1)
+3. ✅ Migrate secrets to Vault (P1)
+4. ✅ Implement automated rotation (P2)
+5. ✅ Deploy HSM for signing keys (P2)
+
+**Success Criteria:**
+
+- 🎯 Zero secrets in code or configuration files
+- 🎯 100% secrets in Vault or HSM
+- 🎯 Automated rotation for all secrets (≤90 day TTL)
+- 🎯 Complete audit trail for all secret access
+- 🎯 Pre-commit hooks prevent new secret commits
+
+---
+
+**Document Classification:** CONFIDENTIAL  
+**Approval Required:** Security Team Lead  
+**Review Schedule:** Quarterly  
+**Next Review:** 2026-07-11  
+
+**Prepared by:** Secrets Architect  
+**Date:** 2026-04-11  
+**Version:** 1.0

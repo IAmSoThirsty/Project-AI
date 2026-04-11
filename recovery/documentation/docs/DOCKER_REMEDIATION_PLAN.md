@@ -1,0 +1,1103 @@
+# Docker Architecture - Remediation Plan
+
+**Sovereign-Governance-Substrate Production Readiness**
+
+
+
+## Executive Summary
+
+**Current Production Readiness: 78/100** ⚠️  
+**Target Production Readiness: 95/100** ✅  
+**Estimated Effort: 32 engineering hours (1 sprint)**  
+**Risk Level: MEDIUM** (requires fixes before production deployment)
+
+---
+
+
+
+## Sprint Plan (5 Days)
+
+
+
+### Day 1: Critical Security Fixes (P0)
+
+**Owner:** Security Team + Platform Engineering  
+**Effort:** 8 hours  
+**Goal:** Eliminate all supply chain and privilege escalation risks
+
+
+
+#### Tasks
+
+**Task 1.1: Pin All Base Images to SHA-256 (2 hours)**
+
+- [ ] Dockerfile.sovereign: Add SHA-256 pins (2 FROM statements)
+- [ ] All microservices (8x): Add SHA-256 pins
+- [ ] Verify no floating tags remain
+
+```bash
+
+# Execution script: scripts/pin-docker-images.sh
+
+#!/bin/bash
+set -euo pipefail
+
+IMAGES=(
+  "python:3.11-slim"
+  "python:3.11-slim-bookworm"
+  "golang:1.22-bookworm"
+)
+
+for image in "${IMAGES[@]}"; do
+  echo "Fetching digest for $image..."
+  DIGEST=$(docker pull "$image" 2>/dev/null | grep Digest | awk '{print $2}')
+  echo "$image@$DIGEST"
+done
+```
+
+**Task 1.2: Add Non-Root User to Dockerfile.sovereign (1 hour)**
+```dockerfile
+
+# Add after line 31 (before ENTRYPOINT)
+
+RUN groupadd -r sovereign && useradd -r -g sovereign sovereign \
+    && chown -R sovereign:sovereign /app
+
+USER sovereign
+```
+
+**Task 1.3: Add Health Check to Dockerfile.sovereign (1 hour)**
+```dockerfile
+
+# Add after line 35 (before ENTRYPOINT)
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+EXPOSE 8000
+```
+
+**Task 1.4: Make Security Scans Blocking (2 hours)**
+
+- [ ] Update `.github/workflows/tk8s-civilization-pipeline.yml`
+- [ ] Update `.github/workflows/project-ai-monolith.yml`
+- [ ] Test pipeline with intentionally vulnerable package
+
+```yaml
+
+# Add to all Trivy scan steps
+
+- name: Run Trivy vulnerability scanner
+  uses: aquasecurity/trivy-action@master
+  with:
+    scan-type: 'fs'
+    severity: 'CRITICAL,HIGH'
+    exit-code: '1'              # NEW: Block on vulnerabilities
+
+    ignore-unfixed: false        # NEW: Report all issues
+
+    timeout: '10m'
+```
+
+**Task 1.5: Build and Test All Images (2 hours)**
+```bash
+
+# Rebuild all Dockerfiles with changes
+
+docker build -f Dockerfile -t project-ai:v1.0.0-rc1 .
+docker build -f Dockerfile.sovereign -t sovereign:v1.0.0-rc1 .
+docker build -f Dockerfile.test -t project-ai-test:v1.0.0-rc1 .
+
+
+
+# Run security scans
+
+trivy image --severity CRITICAL,HIGH --exit-code 1 project-ai:v1.0.0-rc1
+trivy image --severity CRITICAL,HIGH --exit-code 1 sovereign:v1.0.0-rc1
+
+
+
+# Verify non-root
+
+docker run --rm project-ai:v1.0.0-rc1 whoami  # Should output: sovereign
+
+docker run --rm sovereign:v1.0.0-rc1 whoami    # Should output: sovereign
+
+
+
+# Test health checks
+
+docker run -d --name health-test sovereign:v1.0.0-rc1
+sleep 30
+docker inspect --format='{{.State.Health.Status}}' health-test
+docker rm -f health-test
+```
+
+**Acceptance Criteria:**
+
+- ✅ All Dockerfiles have SHA-256 pinned base images
+- ✅ All containers run as non-root users
+- ✅ All production images have health checks
+- ✅ CI/CD pipeline fails on CRITICAL/HIGH vulnerabilities
+- ✅ All security scans pass with 0 issues
+
+---
+
+
+
+### Day 2: Image Size Optimization (P0/P1)
+
+**Owner:** DevOps Team  
+**Effort:** 8 hours  
+**Goal:** Reduce main image from 1.12GB to <500MB
+
+
+
+#### Tasks
+
+**Task 2.1: Dependency Audit (2 hours)**
+```bash
+
+# Generate dependency tree
+
+docker run --rm project-ai:latest pip install pipdeptree
+docker run --rm project-ai:latest pipdeptree --warn silence > dependency-tree.txt
+
+
+
+# Identify heavy packages
+
+docker run --rm project-ai:latest pip list --format=freeze | \
+  xargs -I {} sh -c 'pip show {} | grep -E "Name|Size"' | \
+  awk '/^Name:/ {name=$2} /^Size:/ {print $2, name}' | \
+  sort -hr > package-sizes.txt
+
+
+
+# Review top 20 largest packages
+
+head -20 package-sizes.txt
+```
+
+**Expected findings:**
+
+- ML libraries (torch, tensorflow): 300-500MB each (remove if unused)
+- Scientific stack (numpy, scipy, pandas): 50-100MB (keep if needed)
+- Development tools (pytest, black, ruff): 20-40MB (remove from runtime)
+
+**Task 2.2: Create requirements-runtime.txt (1 hour)**
+```bash
+
+# Split requirements into runtime vs build/test
+
+
+# Create: requirements-runtime.txt (production only)
+
+
+# Keep: requirements.txt (full development)
+
+
+# Keep: requirements-dev.txt (testing only)
+
+
+
+# requirements-runtime.txt
+
+cat > requirements-runtime.txt << 'EOF'
+fastapi>=0.112.2
+uvicorn[standard]==0.27.0
+pydantic>=2.9.0
+python-dotenv==1.0.0
+gunicorn>=22.0.0
+sqlalchemy==2.0.25
+python-multipart==0.0.22
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+cryptography>=43.0.0
+httpx==0.26.0
+requests>=2.32.2
+EOF
+```
+
+**Task 2.3: Externalize Data Directory (2 hours)**
+```dockerfile
+
+# Dockerfile - Change data copy strategy
+
+
+# BEFORE:
+
+COPY --chown=sovereign:sovereign data/ /app/data/
+
+
+
+# AFTER: Only copy static data (migrations, schemas)
+
+COPY --chown=sovereign:sovereign data/migrations/ /app/data/migrations/
+COPY --chown=sovereign:sovereign data/schemas/ /app/data/schemas/
+
+
+
+# Update docker-compose.yml
+
+services:
+  project-ai:
+    volumes:
+
+      - ./data:/app/data:ro  # Mount as read-only
+
+      - app-data:/app/data/runtime:rw  # Writable runtime data
+
+volumes:
+  app-data:
+```
+
+**Task 2.4: Add Layer Cleanup (2 hours)**
+```dockerfile
+
+# Dockerfile - Enhance cleanup in runtime stage
+
+RUN pip install --no-cache-dir /wheels/* \
+    && rm -rf /wheels \
+
+    # Remove Python cache files
+
+    && find /usr/local/lib/python3.11 -type d -name '__pycache__' -exec rm -rf {} + \
+    && find /usr/local/lib/python3.11 -type f -name '*.pyc' -delete \
+
+    # Remove test directories from packages
+
+    && find /usr/local/lib/python3.11/site-packages -type d -name 'tests' -exec rm -rf {} + 2>/dev/null || true \
+    && find /usr/local/lib/python3.11/site-packages -type d -name 'test' -exec rm -rf {} + 2>/dev/null || true \
+
+    # Remove documentation
+
+    && find /usr/local/lib/python3.11/site-packages -type d -name 'docs' -exec rm -rf {} + 2>/dev/null || true \
+
+    # Remove examples
+
+    && find /usr/local/lib/python3.11/site-packages -type d -name 'examples' -exec rm -rf {} + 2>/dev/null || true
+```
+
+**Task 2.5: Build and Measure (1 hour)**
+```bash
+
+# Rebuild with optimizations
+
+docker build -f Dockerfile -t project-ai:optimized .
+
+
+
+# Measure size
+
+docker images | grep project-ai
+
+
+
+# Expected results:
+
+
+# BEFORE: 1.12GB
+
+
+# AFTER:  <500MB (target achieved)
+
+
+
+# Layer breakdown
+
+docker history project-ai:optimized --human --no-trunc
+```
+
+**Acceptance Criteria:**
+
+- ✅ Main image size < 500MB
+- ✅ Runtime requirements separated from development
+- ✅ Data directory externalized to volumes
+- ✅ All cleanup commands execute successfully
+- ✅ Application still runs correctly
+
+---
+
+
+
+### Day 3: Production Configuration (P1)
+
+**Owner:** SRE Team  
+**Effort:** 8 hours  
+**Goal:** Implement signal handling, resource limits, and operational readiness
+
+
+
+#### Tasks
+
+**Task 3.1: Implement Graceful Shutdown (3 hours)**
+
+**Step 1: Install tini in Dockerfile**
+```dockerfile
+
+# Dockerfile - Add to runtime stage
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libssl3 \
+    libffi8 \
+    tini \
+    && rm -rf /var/lib/apt/lists/*
+
+
+
+# Change ENTRYPOINT
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["python", "launcher.py"]
+```
+
+**Step 2: Add signal handlers to launcher.py**
+```python
+
+# src/launcher.py or launcher.py
+
+import signal
+import sys
+import logging
+
+logger = logging.getLogger(__name__)
+
+def graceful_shutdown(signum, frame):
+    """Handle SIGTERM/SIGINT gracefully"""
+    logger.info(f"Received signal {signum}, initiating graceful shutdown...")
+    
+    # Close database connections
+
+    try:
+        from src.db import close_all_connections
+        close_all_connections()
+        logger.info("Database connections closed")
+    except Exception as e:
+        logger.error(f"Error closing database: {e}")
+    
+    # Stop background workers
+
+    try:
+        from src.workers import stop_all_workers
+        stop_all_workers()
+        logger.info("Background workers stopped")
+    except Exception as e:
+        logger.error(f"Error stopping workers: {e}")
+    
+    # Flush logs
+
+    logging.shutdown()
+    
+    logger.info("Graceful shutdown complete")
+    sys.exit(0)
+
+
+
+# Register signal handlers
+
+signal.signal(signal.SIGTERM, graceful_shutdown)
+signal.signal(signal.SIGINT, graceful_shutdown)
+
+if __name__ == "__main__":
+    logger.info("Starting application...")
+
+    # Existing application startup code
+
+```
+
+**Step 3: Test graceful shutdown**
+```bash
+
+# Start container
+
+docker run -d --name shutdown-test project-ai:latest
+
+
+
+# Send SIGTERM
+
+docker kill --signal=SIGTERM shutdown-test
+
+
+
+# Verify graceful shutdown in logs
+
+docker logs shutdown-test | grep -i "graceful shutdown"
+
+
+
+# Cleanup
+
+docker rm shutdown-test
+```
+
+**Task 3.2: Add Resource Limits to docker-compose.yml (2 hours)**
+```yaml
+
+# docker-compose.yml
+
+version: "3.8"
+
+services:
+  project-ai:
+
+    # ... existing config ...
+
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+          pids: 1000
+        reservations:
+          cpus: '2.0'
+          memory: 4G
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+      nproc:
+        soft: 32768
+        hard: 32768
+    stop_grace_period: 60s
+    stop_signal: SIGTERM
+
+  # Microservices: Smaller limits
+
+  mutation-firewall:
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    stop_grace_period: 30s
+
+  trust-graph:
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    stop_grace_period: 30s
+
+  # Apply to all other services...
+
+```
+
+**Task 3.3: Fix Microservice Health Checks (2 hours)**
+```dockerfile
+
+# emergent-microservices/*/Dockerfile
+
+
+# BEFORE (uses 'requests' which isn't installed):
+
+HEALTHCHECK CMD python -c "import requests; requests.get('http://localhost:8000/health').raise_for_status()"
+
+
+
+# AFTER Option 1 (use httpx, already in requirements):
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import httpx; httpx.get('http://localhost:8000/health', timeout=5.0).raise_for_status()" || exit 1
+
+
+
+# AFTER Option 2 (use curl):
+
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+```
+
+**Task 3.4: Convert CMD to ENTRYPOINT (1 hour)**
+```dockerfile
+
+# Dockerfile - Main application
+
+
+# BEFORE:
+
+CMD ["python", "launcher.py"]
+
+
+
+# AFTER:
+
+ENTRYPOINT ["/usr/bin/tini", "--", "python", "launcher.py"]
+CMD ["--config=/app/config/production.yaml"]
+
+
+
+# Dockerfile.sovereign - Already correct ✅
+
+ENTRYPOINT ["python", "boot_sovereign.py"]
+
+
+
+# Microservices - Update all
+
+
+# BEFORE:
+
+CMD ["gunicorn", "app.main:app", "--bind", "0.0.0.0:8000", "--workers", "4"]
+
+
+
+# AFTER:
+
+ENV WORKERS=4 \
+    BIND_ADDRESS=0.0.0.0:8000
+ENTRYPOINT ["gunicorn", "app.main:app"]
+CMD ["--bind", "${BIND_ADDRESS}", "--workers", "${WORKERS}", "--worker-class", "uvicorn.workers.UvicornWorker"]
+```
+
+**Acceptance Criteria:**
+
+- ✅ Signal handlers implemented and tested
+- ✅ Resource limits defined for all services
+- ✅ Graceful shutdown tested (no data loss)
+- ✅ Health checks use correct dependencies
+- ✅ ENTRYPOINT/CMD properly configured
+
+---
+
+
+
+### Day 4: Standardization & Documentation (P1/P2)
+
+**Owner:** Platform Team  
+**Effort:** 6 hours  
+**Goal:** Eliminate duplication, improve maintainability
+
+
+
+#### Tasks
+
+**Task 4.1: Create Shared Base Image (3 hours)**
+```dockerfile
+
+# emergent-microservices/_common/Dockerfile.base
+
+FROM python:3.11-slim@sha256:0b23cfb7425d065008b778022a17b1551c82f8b4866ee5a7a200084b7e2eafbf
+
+LABEL org.opencontainers.image.authors="platform-team@example.com" \
+      org.opencontainers.image.vendor="Sovereign-Governance-Substrate"
+
+
+
+# Security: Create non-root user
+
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+
+
+# Install common runtime dependencies
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libssl3 \
+    curl \
+    tini \
+    && rm -rf /var/lib/apt/lists/*
+
+
+
+# Install common Python packages
+
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir \
+    fastapi==0.110.1 \
+    uvicorn[standard]==0.29.0 \
+    gunicorn==21.2.0 \
+    pydantic==2.6.4 \
+    prometheus-client==0.20.0 \
+    python-dotenv==1.0.1 \
+    httpx==0.27.0
+
+WORKDIR /app
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    ENVIRONMENT=production
+
+
+
+# Default health check (can be overridden)
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+```
+
+**Task 4.2: Update Microservice Dockerfiles (2 hours)**
+```dockerfile
+
+# emergent-microservices/ai-mutation-governance-firewall/Dockerfile
+
+FROM ghcr.io/org/microservice-base:v1.0.0
+
+
+
+# Install service-specific dependencies
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+
+
+# Copy application code
+
+COPY app/ ./app/
+
+
+
+# Security: Set ownership
+
+RUN chown -R appuser:appuser /app
+
+USER appuser
+
+EXPOSE 8000
+
+ENTRYPOINT ["/usr/bin/tini", "--", "gunicorn", "app.main:app"]
+CMD ["--bind", "0.0.0.0:8000", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker"]
+```
+
+**Task 4.3: Document Build Process (1 hour)**
+```markdown
+
+# emergent-microservices/BUILD.md
+
+
+
+## Microservices Build Process
+
+
+
+### Base Image
+
+All microservices inherit from: `ghcr.io/org/microservice-base:v1.0.0`
+
+
+
+### Build Order
+
+1. Build base image: `docker build -f _common/Dockerfile.base -t microservice-base:v1.0.0 .`
+2. Build services: `docker build -f <service>/Dockerfile -t <service>:latest .`
+
+
+
+### Local Development
+
+```bash
+
+# Build all services
+
+./build-all.sh
+
+
+
+# Run single service
+
+docker run -p 8000:8000 ai-mutation-firewall:latest
+
+
+
+# Run with Docker Compose
+
+docker-compose up
+```
+
+
+
+### Production Deployment
+
+See: [DOCKER_QUICK_REFERENCE.md](../DOCKER_QUICK_REFERENCE.md)
+```
+
+**Acceptance Criteria:**
+
+- ✅ Base image created and tested
+- ✅ All 8 microservices updated to use base image
+- ✅ Build documentation complete
+- ✅ No duplicate code in Dockerfiles
+
+---
+
+
+
+### Day 5: Validation & Documentation (P2)
+
+**Owner:** QA + Documentation Team  
+**Effort:** 4 hours  
+**Goal:** Comprehensive testing and production certification
+
+
+
+#### Tasks
+
+**Task 5.1: Build Time Benchmarking (2 hours)**
+```bash
+#!/bin/bash
+
+
+# scripts/benchmark-builds.sh
+
+DOCKERFILES=(
+  "Dockerfile:project-ai"
+  "Dockerfile.sovereign:sovereign"
+  "Dockerfile.test:project-ai-test"
+)
+
+echo "Docker Build Benchmarks" > build-benchmarks.txt
+echo "======================" >> build-benchmarks.txt
+echo "" >> build-benchmarks.txt
+
+for entry in "${DOCKERFILES[@]}"; do
+  IFS=':' read -r dockerfile image <<< "$entry"
+  
+  echo "Testing: $dockerfile" >> build-benchmarks.txt
+  
+  # No cache build
+
+  echo "  No cache:" >> build-benchmarks.txt
+  time_nocache=$( { time docker build --no-cache -f "$dockerfile" -t "$image:bench-nocache" . ; } 2>&1 | grep real )
+  echo "    $time_nocache" >> build-benchmarks.txt
+  
+  # Cached build (rebuild immediately)
+
+  echo "  Cached:" >> build-benchmarks.txt
+  time_cached=$( { time docker build -f "$dockerfile" -t "$image:bench-cached" . ; } 2>&1 | grep real )
+  echo "    $time_cached" >> build-benchmarks.txt
+  
+  # Image size
+
+  size=$(docker images "$image:bench-nocache" --format "{{.Size}}")
+  echo "  Size: $size" >> build-benchmarks.txt
+  echo "" >> build-benchmarks.txt
+done
+
+cat build-benchmarks.txt
+```
+
+**Task 5.2: End-to-End Testing (1 hour)**
+```bash
+#!/bin/bash
+
+
+# scripts/e2e-docker-test.sh
+
+set -euo pipefail
+
+echo "Starting E2E Docker Tests..."
+
+
+
+# 1. Build all images
+
+echo "Building images..."
+docker-compose build
+
+
+
+# 2. Start services
+
+echo "Starting services..."
+docker-compose up -d
+
+
+
+# 3. Wait for health checks
+
+echo "Waiting for services to be healthy..."
+sleep 60
+
+
+
+# 4. Test main application
+
+echo "Testing main application..."
+curl -f http://localhost:5000/health || exit 1
+
+
+
+# 5. Test microservices
+
+for port in 8011 8012 8013 8014 8015 8016 8017 8018; do
+  echo "Testing service on port $port..."
+  curl -f http://localhost:$port/health || exit 1
+done
+
+
+
+# 6. Test graceful shutdown
+
+echo "Testing graceful shutdown..."
+docker-compose kill -s SIGTERM project-ai
+sleep 5
+docker logs project-ai | grep -i "graceful shutdown" || exit 1
+
+
+
+# 7. Cleanup
+
+echo "Cleaning up..."
+docker-compose down
+
+echo "✅ All E2E tests passed!"
+```
+
+**Task 5.3: Security Validation (30 minutes)**
+```bash
+#!/bin/bash
+
+
+# scripts/security-validation.sh
+
+echo "Running security validation..."
+
+
+
+# 1. Scan all images
+
+for image in $(docker images --format "{{.Repository}}:{{.Tag}}" | grep sovereign); do
+  echo "Scanning $image..."
+  trivy image --severity CRITICAL,HIGH --exit-code 1 "$image"
+done
+
+
+
+# 2. Check for root users
+
+echo "Checking for non-root users..."
+for image in $(docker images --format "{{.Repository}}:{{.Tag}}" | grep sovereign); do
+  user=$(docker run --rm "$image" whoami)
+  if [ "$user" == "root" ]; then
+    echo "❌ FAIL: $image runs as root!"
+    exit 1
+  fi
+  echo "✅ PASS: $image runs as $user"
+done
+
+
+
+# 3. Verify no secrets in images
+
+echo "Scanning for secrets..."
+for image in $(docker images --format "{{.Repository}}:{{.Tag}}" | grep sovereign); do
+  docker history "$image" --no-trunc | grep -iE 'password|secret|key|token' && exit 1 || true
+done
+
+echo "✅ All security validations passed!"
+```
+
+**Task 5.4: Update Production Certification (30 minutes)**
+```markdown
+
+# Add to DOCKER_ARCHITECTURE_REPORT.md
+
+
+
+## Final Production Certification
+
+**Certification Date:** 2026-01-XX  
+**Certified By:** Docker Architecture Team  
+**Production Readiness Score:** 95/100 ✅
+
+
+
+### Remediation Summary
+
+- P0 Issues Fixed: 5/5 ✅
+- P1 Issues Fixed: 10/10 ✅
+- P2 Issues Fixed: 3/5 ⚠️ (acceptable)
+
+
+
+### Production Certification Checklist
+
+✅ All base images SHA-256 pinned  
+✅ All containers run as non-root  
+✅ Zero CRITICAL/HIGH vulnerabilities  
+✅ Main image size: 485MB (<500MB target)  
+✅ Build time: 4m 32s (<5min target)  
+✅ Health checks implemented and tested  
+✅ Graceful shutdown verified  
+✅ Resource limits defined  
+✅ Multi-platform builds working  
+✅ SBOM generated for all images  
+
+
+
+### Production Deployment Approved
+
+This architecture is APPROVED for production deployment.
+
+**Signed:**  
+
+- Security Team: [Name] - 2026-01-XX  
+- Platform Engineering: [Name] - 2026-01-XX  
+- DevOps Lead: [Name] - 2026-01-XX
+
+```
+
+**Acceptance Criteria:**
+
+- ✅ Build benchmarks documented
+- ✅ E2E tests passing
+- ✅ Security validation complete
+- ✅ Production certification updated
+
+---
+
+
+
+## Risk Assessment
+
+
+
+### High Risk (Mitigation Required)
+
+**Risk 1: Data Loss During Migration**
+
+- **Probability:** Medium
+- **Impact:** High
+- **Mitigation:** 
+  - Backup all data before data directory externalization
+  - Test volume mounts in staging environment first
+  - Document rollback procedure
+
+**Risk 2: Service Downtime During Deployment**
+
+- **Probability:** Low
+- **Impact:** Medium
+- **Mitigation:**
+  - Blue-green deployment strategy
+  - Rolling updates with health check validation
+  - Automated rollback on failure
+
+
+
+### Medium Risk (Monitor)
+
+**Risk 3: Build Pipeline Failures**
+
+- **Probability:** Medium
+- **Impact:** Low
+- **Mitigation:**
+  - Test all pipeline changes in feature branch
+  - Keep old workflow files as backup
+  - Phased rollout of blocking scans
+
+**Risk 4: Performance Regression**
+
+- **Probability:** Low
+- **Impact:** Medium
+- **Mitigation:**
+  - Load testing before/after optimization
+  - Monitor CPU/memory metrics in staging
+  - A/B testing for new images
+
+---
+
+
+
+## Success Metrics
+
+
+
+### Key Performance Indicators (KPIs)
+
+| Metric | Baseline | Target | Current | Status |
+|--------|----------|--------|---------|--------|
+| Image Size (Main) | 1.12GB | <500MB | TBD | 🔄 |
+| Build Time (No Cache) | Unknown | <5min | TBD | 🔄 |
+| Build Time (Cached) | Unknown | <2min | TBD | 🔄 |
+| Security Scan Score | 78/100 | 95/100 | TBD | 🔄 |
+| SHA-256 Pin Coverage | 30% | 100% | TBD | 🔄 |
+| Health Check Coverage | 70% | 100% | TBD | 🔄 |
+
+
+
+### Quality Gates
+
+**Gate 1: Security** (Day 1)
+
+- All Trivy scans pass ✅
+- All containers non-root ✅
+- All images SHA-256 pinned ✅
+
+**Gate 2: Performance** (Day 2)
+
+- Image size <500MB ✅
+- Build time <5min ✅
+
+**Gate 3: Reliability** (Day 3)
+
+- Graceful shutdown working ✅
+- Resource limits defined ✅
+- Health checks passing ✅
+
+**Gate 4: Production Ready** (Day 5)
+
+- All tests passing ✅
+- Documentation complete ✅
+- Team sign-off received ✅
+
+---
+
+
+
+## Appendix
+
+
+
+### Team Assignments
+
+| Team | Responsibilities | Days |
+|------|------------------|------|
+| Security Team | SHA-256 pins, non-root users, scan blocking | 1 |
+| DevOps Team | Image optimization, layer cleanup | 2 |
+| SRE Team | Signal handling, resource limits | 3 |
+| Platform Team | Base image, standardization | 4 |
+| QA Team | Testing, validation | 5 |
+
+
+
+### Communication Plan
+
+**Daily Standup:** 9:00 AM (15 minutes)
+
+- Blocker review
+- Progress updates
+- Risk assessment
+
+**End-of-Day Sync:** 5:00 PM (30 minutes)
+
+- Demo completed work
+- Plan next day
+- Update tracking board
+
+**Final Review:** Day 5, 2:00 PM (2 hours)
+
+- Full demo
+- Production certification
+- Go/no-go decision
+
+---
+
+**Plan Version:** 1.0  
+**Created:** 2026-01-09  
+**Last Updated:** 2026-01-09  
+**Next Review:** Daily during execution

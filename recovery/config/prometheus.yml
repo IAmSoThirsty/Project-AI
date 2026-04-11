@@ -1,0 +1,208 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+# Prometheus Configuration for Project-AI
+# Monitors AI assistant metrics, security events, and system performance
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'project-ai'
+    environment: 'production'
+
+# AlertManager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load alerting and recording rules
+rule_files:
+  - 'alerts/*.yml'
+  - 'recording_rules.yml'
+
+# Scrape configurations for Project-AI components
+scrape_configs:
+  # Project-AI Main Application Metrics
+  - job_name: 'project-ai-app'
+    static_configs:
+      - targets: ['project-ai:8000']
+        labels:
+          component: 'main-application'
+          service: 'project-ai'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+  # AI System Metrics (Persona, Four Laws, Memory)
+  - job_name: 'project-ai-ai-systems'
+    static_configs:
+      - targets: ['project-ai:8001']
+        labels:
+          component: 'ai-systems'
+          service: 'persona-fourlaws-memory'
+    metrics_path: '/ai-metrics'
+    scrape_interval: 30s
+
+  # Security & Cerberus Monitoring
+  - job_name: 'project-ai-security'
+    static_configs:
+      - targets: ['project-ai:8002']
+        labels:
+          component: 'security'
+          service: 'cerberus-monitoring'
+    metrics_path: '/security-metrics'
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+  # Plugin System Metrics
+  - job_name: 'project-ai-plugins'
+    static_configs:
+      - targets: ['project-ai:8003']
+        labels:
+          component: 'plugins'
+          service: 'plugin-manager'
+    metrics_path: '/plugin-metrics'
+    scrape_interval: 60s
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node exporter for system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+    scrape_interval: 15s
+
+  # cAdvisor for container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          component: 'containers'
+    scrape_interval: 15s
+
+  # PostgreSQL exporter for database metrics
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          component: 'database'
+          database: 'postgresql'
+    scrape_interval: 15s
+
+  # Temporal PostgreSQL database
+  - job_name: 'temporal-postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          component: 'temporal-database'
+          database: 'temporal'
+    scrape_interval: 30s
+
+  # Redis exporter (if Redis is used)
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+        labels:
+          component: 'cache'
+          database: 'redis'
+    scrape_interval: 15s
+
+  # Emergent Microservices
+  - job_name: 'mutation-firewall'
+    static_configs:
+      - targets: ['mutation-firewall:8000']
+        labels:
+          component: 'microservice'
+          service: 'ai-mutation-governance-firewall'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  - job_name: 'incident-reflex'
+    static_configs:
+      - targets: ['incident-reflex:8000']
+        labels:
+          component: 'microservice'
+          service: 'autonomous-incident-reflex-system'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  - job_name: 'trust-graph'
+    static_configs:
+      - targets: ['trust-graph:8000']
+        labels:
+          component: 'microservice'
+          service: 'trust-graph-engine'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  - job_name: 'data-vault'
+    static_configs:
+      - targets: ['data-vault:8000']
+        labels:
+          component: 'microservice'
+          service: 'sovereign-data-vault'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  - job_name: 'negotiation-agent'
+    static_configs:
+      - targets: ['negotiation-agent:8000']
+        labels:
+          component: 'microservice'
+          service: 'autonomous-negotiation-agent'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  - job_name: 'compliance-engine'
+    static_configs:
+      - targets: ['compliance-engine:8000']
+        labels:
+          component: 'microservice'
+          service: 'autonomous-compliance'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  - job_name: 'verifiable-reality'
+    static_configs:
+      - targets: ['verifiable-reality:8000']
+        labels:
+          component: 'microservice'
+          service: 'verifiable-reality'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  - job_name: 'i-believe-in-you'
+    static_configs:
+      - targets: ['i-believe-in-you:8000']
+        labels:
+          component: 'microservice'
+          service: 'i-believe-in-you'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+# Remote write configuration for long-term storage (Thanos/Mimir compatible)
+# Uncomment and configure for federated setup
+# remote_write:
+#   - url: "http://thanos-receiver:19291/api/v1/receive"
+#     queue_config:
+#       capacity: 10000
+#       max_shards: 50
+#       min_shards: 1
+#       max_samples_per_send: 5000
+#       batch_send_deadline: 5s
+#   - url: "http://mimir:9009/api/v1/push"
+#     headers:
+#       X-Scope-OrgID: project-ai
+
+# Remote read configuration for querying federated data
+# remote_read:
+#   - url: "http://thanos-query:19192/api/v1/read"
+#     read_recent: true

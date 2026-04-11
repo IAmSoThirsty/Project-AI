@@ -1,0 +1,1496 @@
+#                                           [2026-04-09 Production]
+
+
+#                                          Status: PRODUCTION-GUIDE
+
+
+# Logging Configuration Guide - Setup & Operations
+
+
+
+## Quick Start (5 Minutes)
+
+
+
+### 1. Install Dependencies
+
+```bash
+pip install python-json-logger pyyaml
+```
+
+Add to `requirements.txt`:
+```
+python-json-logger>=2.0.0
+pyyaml>=6.0
+```
+
+
+
+### 2. Initialize Logging
+
+```python
+
+# At application startup (main.py, app.py, etc.)
+
+from config.logging_config import setup_logging
+
+setup_logging()
+```
+
+
+
+### 3. Use in Your Code
+
+```python
+from config.logging_config import get_logger
+
+logger = get_logger(__name__)
+logger.info("Application started")
+```
+
+
+
+### 4. Start Centralized Logging (Optional)
+
+```bash
+
+# Terminal 1: Start Loki + Promtail + Grafana
+
+docker-compose -f docker-compose.logging.yml up -d
+
+
+
+# Terminal 2: View logs in Grafana
+
+
+# Open browser: http://localhost:3001 (admin/admin)
+
+```
+
+✅ **Done!** You now have production-grade logging.
+
+---
+
+
+
+## Detailed Setup
+
+
+
+### Prerequisites
+
+**System Requirements**:
+
+- Python 3.11+
+- Docker & Docker Compose (for centralized logging)
+- 100GB+ disk space for 7-year retention
+- Linux/Unix: logrotate installed
+- Windows: PowerShell 5.1+
+
+**Python Packages**:
+```bash
+pip install -r requirements.txt
+```
+
+Required additions to `requirements.txt`:
+```
+python-json-logger>=2.0.0  # Structured JSON logging
+
+pyyaml>=6.0                # Configuration file parsing
+```
+
+
+
+### Installation Steps
+
+
+
+#### Step 1: Copy Configuration Files
+
+All configuration files are in `config/`:
+```
+config/
+├── logging.yml              # Main logging configuration
+
+├── logging_config.py        # Python logging setup
+
+├── logging_formatters.py    # Custom formatters
+
+├── logging_filters.py       # Security filters
+
+├── logrotate.conf          # Linux log rotation
+
+├── logrotate.ps1           # Windows log rotation
+
+├── loki-config.yml         # Loki aggregation config
+
+└── promtail-config.yml     # Promtail shipper config
+```
+
+
+
+#### Step 2: Create Log Directories
+
+```bash
+
+# Linux/Unix
+
+mkdir -p logs/{audit,metrics,debug,access,microservices}
+chown -R sovereign:sovereign logs/
+chmod 755 logs/
+chmod 750 logs/audit/  # More restrictive for audit
+
+
+
+# Windows
+
+New-Item -ItemType Directory -Path logs\audit
+New-Item -ItemType Directory -Path logs\metrics
+New-Item -ItemType Directory -Path logs\debug
+New-Item -ItemType Directory -Path logs\access
+New-Item -ItemType Directory -Path logs\microservices
+```
+
+
+
+#### Step 3: Initialize Logging in Application
+
+**Option A: Automatic (Recommended)**
+```python
+
+# src/app/__init__.py or main.py
+
+from config.logging_config import setup_logging
+
+
+
+# Call once at startup
+
+setup_logging()
+```
+
+**Option B: Manual Configuration**
+```python
+import logging.config
+import yaml
+
+with open('config/logging.yml', 'r') as f:
+    config = yaml.safe_load(f)
+    logging.config.dictConfig(config)
+```
+
+
+
+#### Step 4: Setup Log Rotation
+
+**Linux/Unix**:
+```bash
+
+# Copy to system logrotate directory
+
+sudo cp config/logrotate.conf /etc/logrotate.d/sovereign-governance
+
+
+
+# Test configuration
+
+sudo logrotate -d /etc/logrotate.d/sovereign-governance
+
+
+
+# Force first rotation (optional)
+
+sudo logrotate -f /etc/logrotate.d/sovereign-governance
+
+
+
+# Logrotate runs daily via cron automatically
+
+```
+
+**Windows**:
+```powershell
+
+# Create scheduled task
+
+schtasks /create `
+  /tn "SovereignLogRotate" `
+  /tr "powershell.exe -ExecutionPolicy Bypass -File C:\app\config\logrotate.ps1" `
+  /sc daily `
+  /st 00:00 `
+  /ru SYSTEM `
+  /rl HIGHEST
+
+
+
+# Test manually
+
+.\config\logrotate.ps1 -DryRun
+
+
+
+# Run for real
+
+.\config\logrotate.ps1
+```
+
+
+
+#### Step 5: Setup Centralized Logging (Optional but Recommended)
+
+```bash
+
+# Start Loki + Promtail + Grafana
+
+docker-compose -f docker-compose.logging.yml up -d
+
+
+
+# Check status
+
+docker-compose -f docker-compose.logging.yml ps
+
+
+
+# View logs
+
+docker-compose -f docker-compose.logging.yml logs -f promtail
+
+
+
+# Access Grafana
+
+
+# URL: http://localhost:3001
+
+
+# User: admin
+
+
+# Pass: admin (change on first login)
+
+```
+
+**Configure Grafana**:
+
+1. Login to Grafana (http://localhost:3001)
+2. Add Loki data source:
+   - URL: `http://loki:3100`
+   - Click "Save & Test"
+3. Import dashboard:
+   - Upload `config/grafana/log-dashboard.json`
+
+---
+
+
+
+## Configuration Options
+
+
+
+### Environment Variables
+
+Set these in `.env` or system environment:
+```bash
+
+# Log configuration file path
+
+LOG_CONFIG=config/logging.yml
+
+
+
+# Override log level
+
+LOG_LEVEL=INFO  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+
+
+
+# Enable JSON logging
+
+LOG_JSON=true   # true for production, false for development
+
+
+
+# Log directory
+
+LOG_DIR=logs    # Relative or absolute path
+```
+
+
+
+### Log Levels
+
+**By Component**:
+```yaml
+
+# config/logging.yml
+
+loggers:
+  app.core:
+    level: INFO
+  
+  app.security:
+    level: DEBUG  # More verbose for security
+
+  
+  uvicorn:
+    level: WARNING  # Less verbose for third-party
+```
+
+**Runtime Override**:
+```bash
+export LOG_LEVEL=DEBUG
+python app.py
+```
+
+
+
+### Output Formats
+
+**JSON (Production)**:
+```yaml
+formatters:
+  json:
+    (): pythonjsonlogger.jsonlogger.JsonFormatter
+```
+
+**Structured (Development)**:
+```yaml
+formatters:
+  structured:
+    format: '%(asctime)s | %(levelname)-8s | %(name)s | %(message)s'
+```
+
+**Switch at Runtime**:
+```bash
+
+# Production
+
+export LOG_JSON=true
+
+
+
+# Development
+
+export LOG_JSON=false
+```
+
+---
+
+
+
+## Usage Patterns
+
+
+
+### Basic Logging
+
+```python
+from config.logging_config import get_logger
+
+logger = get_logger(__name__)
+
+
+
+# Different log levels
+
+logger.debug("Debugging info: variable=%s", some_var)
+logger.info("User logged in: user_id=%s", user_id)
+logger.warning("Resource usage high: %d%%", usage)
+logger.error("Failed to process: %s", error_msg)
+logger.critical("System failure: %s", critical_error)
+```
+
+
+
+### Exception Logging
+
+```python
+try:
+    risky_operation()
+except Exception as e:
+    logger.error("Operation failed", exc_info=True)
+
+    # Logs full traceback
+
+```
+
+
+
+### Structured Logging
+
+```python
+logger.info(
+    "User action",
+    extra={
+        'user_id': user.id,
+        'action': 'purchase',
+        'amount': 99.99,
+        'currency': 'USD',
+    }
+)
+```
+
+
+
+### Correlation IDs
+
+```python
+from config.logging_formatters import set_correlation_id
+import uuid
+
+
+
+# Generate correlation ID
+
+correlation_id = f"req-{uuid.uuid4()}"
+set_correlation_id(correlation_id)
+
+
+
+# All logs now include correlation_id
+
+logger.info("Processing request")
+perform_action()
+logger.info("Request complete")
+
+
+
+# Clear when done
+
+from config.logging_formatters import clear_correlation_id
+clear_correlation_id()
+```
+
+
+
+### Audit Logging
+
+```python
+from config.logging_config import get_audit_logger
+
+audit = get_audit_logger()
+
+
+
+# Log access to protected resource
+
+audit.log_access(
+    user_id="user-123",
+    resource="/api/vault/secret-key",
+    action="read",
+    outcome="success",
+    correlation_id=correlation_id,
+    ip_address=request.remote_addr,
+)
+
+
+
+# Log security event
+
+audit.log_security_event(
+    event_type="failed_authentication",
+    severity="WARNING",
+    description="Invalid password",
+    user_id="user-456",
+    correlation_id=correlation_id,
+    ip_address="192.168.1.100",
+)
+
+
+
+# Log data access (GDPR compliance)
+
+audit.log_data_access(
+    user_id="admin-001",
+    data_type="customer_pii",
+    operation="export",
+    outcome="success",
+    correlation_id=correlation_id,
+    record_count=1500,
+)
+```
+
+
+
+### Performance Logging
+
+```python
+from config.logging_config import get_performance_logger
+import time
+
+perf = get_performance_logger()
+
+
+
+# Log API request
+
+start = time.time()
+response = handle_request()
+duration_ms = (time.time() - start) * 1000
+
+perf.log_request(
+    endpoint="/api/v1/action",
+    method="POST",
+    duration_ms=duration_ms,
+    status_code=200,
+    correlation_id=correlation_id,
+)
+
+
+
+# Log custom metric
+
+perf.log_metric(
+    metric_name="queue_depth",
+    value=1234,
+    unit="messages",
+    tags={'queue': 'processing'},
+)
+```
+
+
+
+### Microservice Logging
+
+```python
+from config.logging_config import configure_microservice_logging
+
+
+
+# Initialize microservice logger
+
+logger = configure_microservice_logging(
+    service_name="ai-mutation-firewall",
+    log_level="INFO",
+    json_logging=True,
+)
+
+logger.info("Service started", extra={'version': '1.0.0'})
+```
+
+---
+
+
+
+## Log Rotation Management
+
+
+
+### Manual Rotation
+
+**Linux**:
+```bash
+
+# Test configuration
+
+sudo logrotate -d /etc/logrotate.d/sovereign-governance
+
+
+
+# Force rotation now
+
+sudo logrotate -f /etc/logrotate.d/sovereign-governance
+
+
+
+# Check status
+
+sudo cat /var/lib/logrotate/status
+```
+
+**Windows**:
+```powershell
+
+# Dry run (shows what would happen)
+
+.\config\logrotate.ps1 -DryRun
+
+
+
+# Execute rotation
+
+.\config\logrotate.ps1
+
+
+
+# Check scheduled task
+
+Get-ScheduledTask -TaskName "SovereignLogRotate"
+```
+
+
+
+### Verify Rotation
+
+```bash
+
+# Check rotated files
+
+ls -lh logs/
+ls -lh logs/audit/
+
+
+
+# Verify compression
+
+file logs/app.log-20260409.gz
+
+
+
+# Check integrity
+
+gzip -t logs/app.log-*.gz
+```
+
+
+
+### Cleanup Old Logs
+
+```bash
+
+# Find logs older than 7 years
+
+find logs/audit -name "*.gz" -mtime +2555 -ls
+
+
+
+# Delete if approved (CAUTION!)
+
+
+# find logs/audit -name "*.gz" -mtime +2555 -delete
+
+```
+
+---
+
+
+
+## Centralized Logging Operations
+
+
+
+### Starting the Stack
+
+```bash
+
+# Start all services
+
+docker-compose -f docker-compose.logging.yml up -d
+
+
+
+# Start specific service
+
+docker-compose -f docker-compose.logging.yml up -d loki
+
+
+
+# Check status
+
+docker-compose -f docker-compose.logging.yml ps
+
+
+
+# View logs
+
+docker-compose -f docker-compose.logging.yml logs -f promtail
+```
+
+
+
+### Querying Logs in Loki
+
+**LogQL Examples**:
+```logql
+
+# All logs from a service
+
+{job="sovereign-app"}
+
+
+
+# Error logs only
+
+{job="sovereign-app"} |= "ERROR"
+
+
+
+# Logs with correlation ID
+
+{job="sovereign-app"} | json | correlation_id="req-abc123"
+
+
+
+# Count errors per minute
+
+sum(rate({job="sovereign-app"} |= "ERROR" [1m]))
+
+
+
+# Filter by user
+
+{job="sovereign-audit"} | json | user_id="user-123"
+
+
+
+# Search for specific message
+
+{job="sovereign-app"} |~ "failed to.*"
+```
+
+
+
+### Grafana Dashboards
+
+**Pre-built Queries**:
+
+1. **Error Rate**:
+
+```logql
+sum(rate({job=~"sovereign-.*"} |= "ERROR" [5m])) by (job)
+```
+
+2. **Request Duration p95**:
+
+```logql
+histogram_quantile(0.95,
+  sum(rate({job="sovereign-access"} | json | unwrap duration_ms [5m])) by (le, endpoint)
+)
+```
+
+3. **Audit Events**:
+
+```logql
+{job="sovereign-audit"} | json | action="read"
+```
+
+
+
+### Backup Logs
+
+```bash
+
+# Backup to external storage
+
+tar -czf logs-backup-$(date +%Y%m%d).tar.gz logs/
+
+
+
+# Upload to S3 (example)
+
+aws s3 cp logs-backup-*.tar.gz s3://my-bucket/logs/
+
+
+
+# Restore
+
+tar -xzf logs-backup-20260409.tar.gz
+```
+
+---
+
+
+
+## Troubleshooting
+
+
+
+### Issue: Logs Not Appearing
+
+**Check 1**: Verify logging is initialized
+```python
+import logging
+print(logging.root.handlers)  # Should not be empty
+```
+
+**Check 2**: Verify log directory exists
+```bash
+ls -la logs/
+```
+
+**Check 3**: Check permissions
+```bash
+
+# Should be writable
+
+touch logs/test.log
+```
+
+**Check 4**: Check log level
+```bash
+export LOG_LEVEL=DEBUG
+python app.py
+```
+
+
+
+### Issue: Log Files Too Large
+
+**Solution 1**: Reduce log level
+```bash
+export LOG_LEVEL=WARNING
+```
+
+**Solution 2**: Enable sampling for debug logs
+```python
+
+# In config/logging.yml
+
+handlers:
+  debug_file:
+    filters: [sampling]  # Only logs 10%
+```
+
+**Solution 3**: Force rotation
+```bash
+sudo logrotate -f /etc/logrotate.d/sovereign-governance
+```
+
+
+
+### Issue: Rotation Not Working
+
+**Check 1**: Verify cron is running
+```bash
+systemctl status cron
+```
+
+**Check 2**: Check logrotate status
+```bash
+sudo cat /var/lib/logrotate/status | grep sovereign
+```
+
+**Check 3**: Test configuration
+```bash
+sudo logrotate -d /etc/logrotate.d/sovereign-governance
+```
+
+**Check 4**: Check permissions
+```bash
+ls -l /etc/logrotate.d/sovereign-governance
+
+
+# Should be readable by root
+
+```
+
+
+
+### Issue: Loki Not Receiving Logs
+
+**Check 1**: Verify Promtail is running
+```bash
+docker-compose -f docker-compose.logging.yml ps promtail
+```
+
+**Check 2**: Check Promtail logs
+```bash
+docker-compose -f docker-compose.logging.yml logs promtail
+```
+
+**Check 3**: Test Loki connectivity
+```bash
+curl http://localhost:3100/ready
+
+
+# Should return "ready"
+
+```
+
+**Check 4**: Verify log file paths in Promtail config
+```yaml
+
+# config/promtail-config.yml
+
+__path__: /app/logs/app*.log  # Must match mounted volume
+```
+
+
+
+### Issue: High Disk Usage
+
+**Check disk usage**:
+```bash
+du -sh logs/*
+df -h /app/logs
+```
+
+**Compress old logs**:
+```bash
+find logs -name "*.log-*" -mtime +7 ! -name "*.gz" -exec gzip {} \;
+```
+
+**Clean up debug logs**:
+```bash
+find logs/debug -name "*.gz" -mtime +7 -delete
+```
+
+**Move to cold storage**:
+```bash
+
+# Move logs older than 1 year to archive
+
+find logs -name "*.gz" -mtime +365 -exec mv {} /archive/logs/ \;
+```
+
+---
+
+
+
+## Performance Tuning
+
+
+
+### Reduce Log Volume
+
+**1. Adjust log levels**:
+```yaml
+loggers:
+  uvicorn:
+    level: WARNING  # Instead of INFO
+
+  sqlalchemy:
+    level: ERROR    # Instead of WARNING
+```
+
+**2. Sample high-volume logs**:
+```python
+
+# In logging_filters.py
+
+class SamplingFilter(logging.Filter):
+    def __init__(self, sample_rate=0.1):  # Keep 10%
+
+        ...
+```
+
+**3. Rate limiting**:
+```python
+
+# In logging_filters.py
+
+class RateLimitFilter(logging.Filter):
+    def __init__(self, rate=100):  # Max 100 logs/sec
+
+        ...
+```
+
+
+
+### Optimize Storage
+
+**1. Compression**:
+
+- Enable gzip in logrotate
+- Saves 70-80% space
+
+**2. Retention tiers**:
+
+- Hot: 30 days (uncompressed)
+- Warm: 31-365 days (compressed)
+- Cold: 1-7 years (archived)
+
+**3. Separate volumes**:
+```yaml
+volumes:
+
+  - ./logs/audit:/app/logs/audit      # High retention
+
+  - ./logs/debug:/app/logs/debug      # Low retention
+
+```
+
+
+
+### Buffer Configuration
+
+**1. Increase batch size**:
+```yaml
+
+# config/promtail-config.yml
+
+clients:
+
+  - url: http://loki:3100/loki/api/v1/push
+    batchsize: 2097152  # 2MB instead of 1MB
+
+```
+
+**2. Async logging**:
+```python
+from logging.handlers import QueueHandler
+import queue
+
+log_queue = queue.Queue()
+queue_handler = QueueHandler(log_queue)
+```
+
+---
+
+
+
+## Security Best Practices
+
+
+
+### 1. Credential Redaction
+
+**Automatic** (already enabled):
+```python
+logger.info("Login with password=secret")
+
+
+# Logged as: "Login with password=[REDACTED]"
+
+```
+
+**Manual**:
+```python
+from config.logging_filters import SecurityRedactionFilter
+
+
+
+# Add custom patterns
+
+SecurityRedactionFilter.PATTERNS.append(
+    (re.compile(r'custom-pattern'), '[REDACTED]')
+)
+```
+
+
+
+### 2. Access Control
+
+```bash
+
+# Restrict audit log access
+
+chmod 640 logs/audit/*.log
+chown sovereign:audit-team logs/audit/
+
+
+
+# App user can only append, not read
+
+chmod 620 logs/audit/*.log
+```
+
+
+
+### 3. Encryption at Rest
+
+```bash
+
+# Use encrypted filesystem
+
+cryptsetup luksFormat /dev/sdb
+cryptsetup open /dev/sdb logs-encrypted
+mkfs.ext4 /dev/mapper/logs-encrypted
+mount /dev/mapper/logs-encrypted /app/logs
+```
+
+
+
+### 4. Tamper Detection
+
+```bash
+
+# Generate checksums before rotation
+
+sha256sum logs/audit/audit.log > logs/audit/audit.log.sha256
+
+
+
+# Verify integrity
+
+sha256sum -c logs/audit/audit.log.sha256
+```
+
+
+
+### 5. Log Shipping Over TLS
+
+```yaml
+
+# config/promtail-config.yml
+
+clients:
+
+  - url: https://loki:3100/loki/api/v1/push
+    tls_config:
+      cert_file: /certs/client.crt
+      key_file: /certs/client.key
+      ca_file: /certs/ca.crt
+
+```
+
+---
+
+
+
+## Monitoring & Alerts
+
+
+
+### Prometheus Metrics
+
+```python
+from prometheus_client import Counter, Histogram
+
+
+
+# Export log metrics
+
+log_lines_total = Counter('log_lines_total', 'Total log lines', ['level'])
+log_errors = Counter('log_errors_total', 'Total errors logged')
+log_size_bytes = Gauge('log_file_size_bytes', 'Log file size', ['file'])
+```
+
+
+
+### Alert Rules
+
+```yaml
+
+# config/prometheus/alerts.yml
+
+groups:
+
+  - name: logging
+    rules:
+      - alert: HighErrorRate
+        expr: rate(log_errors_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate detected"
+      
+      - alert: LogDiskFull
+        expr: disk_used_percent{mount="/app/logs"} > 80
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Log disk usage above 80%"
+      
+      - alert: LogRotationFailure
+        expr: time() - log_last_rotation_timestamp > 86400
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Logs not rotated in 24h"
+
+```
+
+---
+
+
+
+## Testing
+
+
+
+### Test Log Output
+
+```python
+
+# test_logging.py
+
+from config.logging_config import setup_logging, get_logger
+
+setup_logging()
+logger = get_logger(__name__)
+
+logger.debug("Debug message")
+logger.info("Info message")
+logger.warning("Warning message")
+logger.error("Error message")
+logger.critical("Critical message")
+
+
+
+# Check logs/app.log for output
+
+```
+
+
+
+### Test Correlation IDs
+
+```python
+from config.logging_formatters import set_correlation_id
+
+set_correlation_id("test-correlation-123")
+logger.info("Test with correlation ID")
+
+
+
+# Verify correlation_id in log output
+
+```
+
+
+
+### Test Audit Logging
+
+```python
+from config.logging_config import get_audit_logger
+
+audit = get_audit_logger()
+audit.log_access(
+    user_id="test-user",
+    resource="/test/resource",
+    action="read",
+    outcome="success",
+)
+
+
+
+# Check logs/audit/audit.log
+
+```
+
+
+
+### Test Rotation
+
+```bash
+
+# Create large log file
+
+for i in {1..100000}; do
+  echo "Log line $i" >> logs/app.log
+done
+
+
+
+# Force rotation
+
+sudo logrotate -f /etc/logrotate.d/sovereign-governance
+
+
+
+# Verify rotated file exists
+
+ls -lh logs/app.log-*
+```
+
+---
+
+
+
+## Migration Guide
+
+
+
+### From Basic Logging
+
+**Before**:
+```python
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+```
+
+**After**:
+```python
+from config.logging_config import setup_logging, get_logger
+
+setup_logging()
+logger = get_logger(__name__)
+```
+
+
+
+### From God Tier Integration
+
+**Before** (`src/app/core/god_tier_integration.py`):
+```python
+file_handler = logging.handlers.RotatingFileHandler(
+    self.config.file_path,
+    maxBytes=self.config.max_bytes,
+    backupCount=self.config.backup_count,
+)
+```
+
+**After**:
+```python
+from config.logging_config import setup_logging
+setup_logging()  # Handles everything
+```
+
+
+
+### From Microservice Custom Logging
+
+**Before** (`emergent-microservices/*/app/logging_config.py`):
+```python
+class JSONFormatter(logging.Formatter):
+    def format(self, record):
+
+        # Custom implementation
+
+```
+
+**After**:
+```python
+from config.logging_config import configure_microservice_logging
+logger = configure_microservice_logging("service-name")
+```
+
+---
+
+
+
+## Quick Reference
+
+
+
+### Import Statements
+
+```python
+
+# Basic logging
+
+from config.logging_config import setup_logging, get_logger
+
+
+
+# Audit logging
+
+from config.logging_config import get_audit_logger
+
+
+
+# Performance logging
+
+from config.logging_config import get_performance_logger
+
+
+
+# Correlation IDs
+
+from config.logging_formatters import set_correlation_id, clear_correlation_id
+
+
+
+# Microservices
+
+from config.logging_config import configure_microservice_logging
+```
+
+
+
+### Common Commands
+
+```bash
+
+# Start logging stack
+
+docker-compose -f docker-compose.logging.yml up -d
+
+
+
+# View live logs
+
+tail -f logs/app.log
+
+
+
+# Force rotation
+
+sudo logrotate -f /etc/logrotate.d/sovereign-governance
+
+
+
+# Check disk usage
+
+du -sh logs/*
+
+
+
+# Compress old logs
+
+find logs -name "*.log-*" ! -name "*.gz" -exec gzip {} \;
+
+
+
+# Query Loki
+
+curl -G -s "http://localhost:3100/loki/api/v1/query" \
+  --data-urlencode 'query={job="sovereign-app"}'
+```
+
+
+
+### Log Locations
+
+```
+logs/
+├── app.log              # Main application (1 year)
+
+├── error.log            # Errors (2 years)
+
+├── audit/audit.log      # Audit trail (7 YEARS)
+
+├── metrics/metrics.log  # Performance (30 days)
+
+├── debug/debug.log      # Debug (7 days)
+
+└── access/access.log    # API access (90 days)
+```
+
+
+
+### Environment Variables
+
+```bash
+export LOG_LEVEL=INFO           # DEBUG, INFO, WARNING, ERROR
+
+export LOG_JSON=true            # true/false
+
+export LOG_DIR=logs             # Path to log directory
+
+export LOG_CONFIG=config/logging.yml  # Config file
+```
+
+---
+
+
+
+## Support & Resources
+
+**Documentation**:
+
+- [LOGGING_ARCHITECTURE_REPORT.md](./LOGGING_ARCHITECTURE_REPORT.md) - Architecture overview
+- [config/logging.yml](./config/logging.yml) - Configuration reference
+- [Python Logging Docs](https://docs.python.org/3/library/logging.html) - Official docs
+
+**Configuration Files**:
+
+- `config/logging.yml` - Main configuration
+- `config/logging_config.py` - Python setup
+- `config/logging_formatters.py` - Custom formatters
+- `config/logging_filters.py` - Security filters
+
+**Troubleshooting**:
+
+- Check `logs/error.log` for errors
+- Enable DEBUG level: `export LOG_LEVEL=DEBUG`
+- Test configuration: `sudo logrotate -d /etc/logrotate.d/sovereign-governance`
+
+**Contact**:
+
+- Issues: Open GitHub issue
+- Questions: @logging-team
+- Security: security@sovereign-governance.com
+
+---
+
+**Version**: 1.0.0  
+**Last Updated**: 2026-04-09  
+**Status**: ✅ PRODUCTION-READY

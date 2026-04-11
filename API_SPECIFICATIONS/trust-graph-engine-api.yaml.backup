@@ -1,0 +1,618 @@
+openapi: 3.1.0
+info:
+  title: Trust Graph Engine API
+  description: |
+    Microservice for computing and maintaining trust relationships in a distributed system.
+    Provides graph-based trust scoring, relationship mapping, and reputation management.
+    
+    **IMPLEMENTATION STATUS**: Currently implements generic CRUD using /api/v1/items endpoints.
+    Spec-defined trust graph endpoints (nodes, relationships, trust-score) are PARTIALLY IMPLEMENTED.
+    See "Actual Implementation" section for currently available endpoints.
+    
+    **IMPLEMENTATION**: emergent-microservices/trust-graph-engine/app/routes.py
+    - Generic CRUD endpoints for items (/api/v1/items)
+  version: 1.0.0
+  contact:
+    name: Project AI Team
+    email: governance@project-ai.dev
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8013
+    description: Local development server
+  - url: http://trust-graph:8000
+    description: Docker network (internal)
+  - url: https://trust.sovereign.ai
+    description: Production server
+
+tags:
+  - name: System
+    description: System information
+  - name: Health
+    description: Health checks
+  - name: Observability
+    description: Metrics and monitoring
+  - name: Trust Nodes
+    description: Trust node operations
+  - name: Trust Relationships
+    description: Trust relationship management
+  - name: Trust Analysis
+    description: Trust computation and analysis
+
+paths:
+  /:
+    get:
+      summary: Service information
+      operationId: root
+      tags: [System]
+      responses:
+        '200':
+          description: Service metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInfo'
+
+  /api/v1/health/liveness:
+    get:
+      summary: Liveness probe
+      operationId: liveness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is alive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+
+  /api/v1/health/readiness:
+    get:
+      summary: Readiness probe
+      operationId: readiness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+        '503':
+          description: Service not ready
+
+  /api/v1/health/startup:
+    get:
+      summary: Startup probe
+      operationId: startup
+      tags: [Health]
+      responses:
+        '200':
+          description: Service started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      operationId: metrics
+      tags: [Observability]
+      responses:
+        '200':
+          description: Metrics in Prometheus format
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /api/v1/nodes:
+    get:
+      summary: List trust nodes (ACTUAL: /api/v1/items)
+      description: |
+        Returns paginated list of trust nodes in the graph.
+        **ACTUAL IMPLEMENTATION**: Currently available as /api/v1/items (generic CRUD).
+        The implementation uses generic "items" instead of "nodes" terminology.
+      operationId: list_nodes
+      tags: [Trust Nodes]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: min_trust_score
+          in: query
+          description: Filter nodes by minimum trust score
+          schema:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 1
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedNodes'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      summary: Create trust node (ACTUAL: /api/v1/items)
+      description: |
+        Register a new entity in the trust graph.
+        **ACTUAL IMPLEMENTATION**: Currently available as POST /api/v1/items (generic CRUD).
+      operationId: create_node
+      tags: [Trust Nodes]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeCreate'
+      responses:
+        '201':
+          description: Node created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustNode'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/v1/nodes/{node_id}:
+    parameters:
+      - name: node_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get trust node
+      description: Retrieve details and trust score for a specific node
+      operationId: get_node
+      tags: [Trust Nodes]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Node found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustNode'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Update trust node
+      operationId: update_node
+      tags: [Trust Nodes]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeUpdate'
+      responses:
+        '200':
+          description: Node updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustNode'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/v1/relationships:
+    post:
+      summary: Create trust relationship (NOT IMPLEMENTED)
+      description: |
+        Establish a trust relationship between two nodes.
+        **NOT YET IMPLEMENTED**: This endpoint is defined in spec but not available in code.
+      operationId: create_relationship
+      tags: [Trust Relationships - Planned]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelationshipCreate'
+      responses:
+        '201':
+          description: Relationship created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationship'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/v1/relationships/{source_id}/{target_id}:
+    parameters:
+      - name: source_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: target_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get trust relationship
+      operationId: get_relationship
+      tags: [Trust Relationships]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Relationship found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationship'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Update trust relationship
+      operationId: update_relationship
+      tags: [Trust Relationships]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelationshipUpdate'
+      responses:
+        '200':
+          description: Relationship updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustRelationship'
+
+  /api/v1/analysis/trust-score/{node_id}:
+    get:
+      summary: Calculate trust score (NOT IMPLEMENTED)
+      description: |
+        Compute comprehensive trust score for a node based on graph analysis.
+        **NOT YET IMPLEMENTED**: This endpoint is defined in spec but not available in code.
+      operationId: calculate_trust_score
+      tags: [Trust Analysis - Planned]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: node_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: depth
+          in: query
+          description: Graph traversal depth for score calculation
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+            default: 3
+      responses:
+        '200':
+          description: Trust score computed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustScore'
+
+  /api/v1/analysis/shortest-path/{source_id}/{target_id}:
+    get:
+      summary: Find shortest trust path
+      description: Find the shortest path of trust relationships between two nodes
+      operationId: find_shortest_path
+      tags: [Trust Analysis]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: source_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: target_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Path found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustPath'
+        '404':
+          description: No path exists
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ServiceInfo:
+      type: object
+      properties:
+        service:
+          type: string
+          example: trust-graph-engine
+        version:
+          type: string
+        status:
+          type: string
+
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        checks:
+          type: object
+          properties:
+            database:
+              type: string
+            cache:
+              type: string
+            graph_engine:
+              type: string
+
+    NodeCreate:
+      type: object
+      required:
+        - name
+        - entity_type
+      properties:
+        name:
+          type: string
+        entity_type:
+          type: string
+          enum: [user, service, organization, device]
+        metadata:
+          type: object
+          additionalProperties: true
+
+    NodeUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+
+    TrustNode:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        entity_type:
+          type: string
+        trust_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        metadata:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    PaginatedNodes:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrustNode'
+        total:
+          type: integer
+        page:
+          type: integer
+        page_size:
+          type: integer
+        total_pages:
+          type: integer
+
+    RelationshipCreate:
+      type: object
+      required:
+        - source_id
+        - target_id
+        - relationship_type
+      properties:
+        source_id:
+          type: string
+          format: uuid
+        target_id:
+          type: string
+          format: uuid
+        relationship_type:
+          type: string
+          enum: [trusts, verified_by, managed_by, depends_on]
+        weight:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          default: 0.5
+
+    RelationshipUpdate:
+      type: object
+      properties:
+        weight:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+
+    TrustRelationship:
+      type: object
+      properties:
+        source_id:
+          type: string
+          format: uuid
+        target_id:
+          type: string
+          format: uuid
+        relationship_type:
+          type: string
+        weight:
+          type: number
+          format: float
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    TrustScore:
+      type: object
+      properties:
+        node_id:
+          type: string
+          format: uuid
+        score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        contributing_factors:
+          type: object
+          properties:
+            direct_relationships:
+              type: integer
+            indirect_relationships:
+              type: integer
+            verification_count:
+              type: integer
+            age_days:
+              type: integer
+        computed_at:
+          type: string
+          format: date-time
+
+    TrustPath:
+      type: object
+      properties:
+        source_id:
+          type: string
+          format: uuid
+        target_id:
+          type: string
+          format: uuid
+        path:
+          type: array
+          items:
+            type: string
+            format: uuid
+        total_weight:
+          type: number
+          format: float
+        hop_count:
+          type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+        details:
+          type: object
+
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'

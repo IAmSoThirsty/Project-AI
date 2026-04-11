@@ -1,0 +1,4 @@
+{"timestamp": "2026-04-10T15:27:52.024511", "level": "INFO", "category": "demo", "event": "starting", "details": {"user": "demo_user"}}
+{"timestamp": "2026-04-10T15:27:52.024511", "level": "INFO", "category": "file_op", "event": "open", "details": {"path": "/test/file.txt", "pid": 1234, "result": "success"}}
+{"timestamp": "2026-04-10T15:27:52.025510", "level": "WARN", "category": "network", "event": "connect", "details": {"pid": 1234, "blocked": true, "destination": "8.8.8.8", "port": 80}}
+{"timestamp": "2026-04-10T15:27:52.025510", "level": "DEBUG", "category": "syscall", "event": "write", "details": {"pid": 1234, "args": ["fd=1", "buf=..."], "return": "10"}}

@@ -1,0 +1,241 @@
+openapi: 3.1.0
+info:
+  title: Verifiable Reality API
+  description: |
+    Cryptographic verification service for establishing verifiable reality claims,
+    timestamping events, and maintaining immutable audit trails.
+    
+    **IMPLEMENTATION STATUS**: Currently implements generic CRUD using /api/v1/items endpoints.
+    Spec-defined proof/verification endpoints are NOT YET IMPLEMENTED.
+    Note: VR command routing is available via separate /vr endpoints (see vr-routes-api.yaml).
+    
+    **IMPLEMENTATION**: emergent-microservices/verifiable-reality/app/routes.py
+    - Generic CRUD endpoints for items (/api/v1/items)
+  version: 1.0.0
+  contact:
+    name: Project AI Team
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8017
+    description: Local development
+  - url: http://verifiable-reality:8000
+    description: Docker network
+
+tags:
+  - name: System
+  - name: Health
+  - name: Claims
+  - name: Verification
+
+paths:
+  /:
+    get:
+      summary: Service info
+      operationId: root
+      tags: [System]
+      responses:
+        '200':
+          description: OK
+
+  /api/v1/health/liveness:
+    get:
+      summary: Liveness
+      operationId: liveness
+      tags: [Health]
+      responses:
+        '200':
+          description: Alive
+
+  /api/v1/health/readiness:
+    get:
+      summary: Readiness
+      operationId: readiness
+      tags: [Health]
+      responses:
+        '200':
+          description: Ready
+
+  /metrics:
+    get:
+      summary: Metrics
+      operationId: metrics
+      tags: [System]
+      responses:
+        '200':
+          description: Prometheus metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /api/v1/claims:
+    get:
+      summary: List claims
+      operationId: list_claims
+      tags: [Claims]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Claim list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RealityClaim'
+
+    post:
+      summary: Submit claim
+      operationId: submit_claim
+      tags: [Claims]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClaimCreate'
+      responses:
+        '201':
+          description: Claim submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealityClaim'
+
+  /api/v1/claims/{claim_id}/verify:
+    post:
+      summary: Verify claim
+      operationId: verify_claim
+      tags: [Verification]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: claim_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResult'
+
+  /api/v1/timestamps:
+    post:
+      summary: Create timestamp
+      description: Create cryptographic timestamp proof for data
+      operationId: create_timestamp
+      tags: [Verification]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data_hash
+              properties:
+                data_hash:
+                  type: string
+                metadata:
+                  type: object
+      responses:
+        '201':
+          description: Timestamp created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  timestamp_id:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+                  proof:
+                    type: string
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    ClaimCreate:
+      type: object
+      required:
+        - claim_type
+        - data
+      properties:
+        claim_type:
+          type: string
+        data:
+          type: object
+        evidence:
+          type: array
+          items:
+            type: object
+
+    RealityClaim:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        claim_type:
+          type: string
+        data:
+          type: object
+        verification_status:
+          type: string
+          enum: [pending, verified, rejected, disputed]
+        created_at:
+          type: string
+          format: date-time
+        verified_at:
+          type: string
+          format: date-time
+
+    VerificationResult:
+      type: object
+      properties:
+        claim_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        confidence:
+          type: number
+          format: float
+        evidence:
+          type: array
+        verified_at:
+          type: string
+          format: date-time

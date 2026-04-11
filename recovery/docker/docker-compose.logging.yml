@@ -1,0 +1,90 @@
+#                                           [2026-04-09 Production]
+#                                          Status: Production-Grade
+# Docker Compose Logging Stack - Centralized Log Aggregation
+# Loki + Promtail + Grafana for production observability
+
+version: "3.8"
+
+services:
+  # Loki - Log aggregation and storage
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: sovereign-loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ./config/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki-data:/loki
+    networks:
+      - logging
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Promtail - Log collector and shipper
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: sovereign-promtail
+    command: -config.file=/etc/promtail/promtail-config.yml
+    volumes:
+      - ./config/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - ./logs:/app/logs:ro
+      - /var/log:/var/log:ro
+      - promtail-positions:/tmp/positions
+    networks:
+      - logging
+    restart: unless-stopped
+    depends_on:
+      - loki
+
+  # Grafana - Log visualization (if not already running)
+  grafana-logs:
+    image: grafana/grafana:10.2.0
+    container_name: sovereign-grafana-logs
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=http://localhost:3001
+    volumes:
+      - grafana-logs-data:/var/lib/grafana
+      - ./config/grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ./config/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./config/grafana/log-dashboard.json:/var/lib/grafana/dashboards/log-dashboard.json:ro
+    networks:
+      - logging
+    restart: unless-stopped
+    depends_on:
+      - loki
+
+  # Vector - Alternative log aggregator (optional)
+  # Uncomment for multi-destination shipping (S3, ElasticSearch, etc.)
+  # vector:
+  #   image: timberio/vector:0.34.0-alpine
+  #   container_name: sovereign-vector
+  #   command: --config /etc/vector/vector.toml
+  #   volumes:
+  #     - ./config/vector.toml:/etc/vector/vector.toml:ro
+  #     - ./logs:/app/logs:ro
+  #   networks:
+  #     - logging
+  #   restart: unless-stopped
+
+volumes:
+  loki-data:
+    driver: local
+  promtail-positions:
+    driver: local
+  grafana-logs-data:
+    driver: local
+
+networks:
+  logging:
+    driver: bridge
+    name: sovereign-logging

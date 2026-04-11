@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "project-ai": {
+      "command": "python3",
+      "args": [
+        "-m",
+        "src.app.core.mcp_server"
+      ],
+      "cwd": "/home/username/Projects/Project-AI",
+      "env": {
+        "PYTHONPATH": ".",
+        "OPENAI_API_KEY": "sk-your-openai-key-here",
+        "HUGGINGFACE_API_KEY": "hf_your-huggingface-key-here",
+        "FERNET_KEY": "your-fernet-encryption-key-here"
+      }
+    }
+  },
+  "globalShortcut": "CommandOrControl+Shift+Space",
+  "logLevel": "info"
+}

@@ -1,0 +1,1 @@
+{"operation": "connect", "timestamp": "2026-04-10T15:27:52.024511", "pid": 1234, "destination": "8.8.8.8", "port": 80, "blocked": true, "details": {}}

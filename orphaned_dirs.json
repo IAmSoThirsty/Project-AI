@@ -1,0 +1,1825 @@
+{
+  "summary_by_reason": [
+    {
+      "count": 139,
+      "total_size_kb": 0.0,
+      "reason": "empty"
+    },
+    {
+      "count": 82,
+      "total_size_kb": 171226.37,
+      "reason": "ignored-only"
+    },
+    {
+      "count": 3,
+      "total_size_kb": 0.0,
+      "reason": "subdirs-only"
+    }
+  ],
+  "orphaned_directories": [
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 1111.16,
+      "reason": "ignored-only",
+      "size_bytes": 1137823.0,
+      "path": "src\\project_ai.egg-info",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 6
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\ad_blocking\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\agents\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\agents\\consigliere\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\agents\\firewalls\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\ai\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\alignment\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\audit\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\browser\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\cli\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\core\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 10622.92,
+      "reason": "ignored-only",
+      "size_bytes": 10877874.0,
+      "path": "src\\app\\core\\.mypy_cache",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 3
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "subdirs-only",
+      "size_bytes": 0,
+      "path": "src\\app\\core\\encoding",
+      "recommendation": "DELETE - Only contains empty subdirectories",
+      "item_count": 1
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "subdirs-only",
+      "size_bytes": 0,
+      "path": "src\\app\\core\\language",
+      "recommendation": "DELETE - Only contains empty subdirectories",
+      "item_count": 1
+    },
+    {
+      "size_kb": 10622.7,
+      "reason": "ignored-only",
+      "size_bytes": 10877645.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 112
+    },
+    {
+      "size_kb": 134.83,
+      "reason": "ignored-only",
+      "size_bytes": 138071.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\_typeshed",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 822.95,
+      "reason": "ignored-only",
+      "size_bytes": 842697.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\collections",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 251.61,
+      "reason": "ignored-only",
+      "size_bytes": 257649.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\concurrent",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 3
+    },
+    {
+      "size_kb": 109.9,
+      "reason": "ignored-only",
+      "size_bytes": 112540.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\ctypes",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 366.54,
+      "reason": "ignored-only",
+      "size_bytes": 375338.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\email",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 16
+    },
+    {
+      "size_kb": 309.99,
+      "reason": "ignored-only",
+      "size_bytes": 317434.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\importlib",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 18
+    },
+    {
+      "size_kb": 51.15,
+      "reason": "ignored-only",
+      "size_bytes": 52376.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\json",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 6
+    },
+    {
+      "size_kb": 175.72,
+      "reason": "ignored-only",
+      "size_bytes": 179936.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\logging",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 936.27,
+      "reason": "ignored-only",
+      "size_bytes": 958739.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\multiprocessing",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 34
+    },
+    {
+      "size_kb": 304.99,
+      "reason": "ignored-only",
+      "size_bytes": 312305.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\os",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 99.13,
+      "reason": "ignored-only",
+      "size_bytes": 101508.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\src",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 3
+    },
+    {
+      "size_kb": 179.21,
+      "reason": "ignored-only",
+      "size_bytes": 183513.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\sys",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 116.46,
+      "reason": "ignored-only",
+      "size_bytes": 119250.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\zipfile",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 248.22,
+      "reason": "ignored-only",
+      "size_bytes": 254177.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\concurrent\\futures",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 8
+    },
+    {
+      "size_kb": 144.61,
+      "reason": "ignored-only",
+      "size_bytes": 148077.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\importlib\\metadata",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 25.42,
+      "reason": "ignored-only",
+      "size_bytes": 26031.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\importlib\\resources",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 6
+    },
+    {
+      "size_kb": 95.91,
+      "reason": "ignored-only",
+      "size_bytes": 98211.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\src\\app",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 26.53,
+      "reason": "ignored-only",
+      "size_bytes": 27166.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\src\\app\\agents",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 8
+    },
+    {
+      "size_kb": 66.12,
+      "reason": "ignored-only",
+      "size_bytes": 67702.0,
+      "path": "src\\app\\core\\.mypy_cache\\3.11\\src\\app\\core",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\core\\encoding\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\core\\language\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\core\\memory_optimization\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\core\\mocks\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\core\\services\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\core\\utils\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\deployment\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\domains\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\governance\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\gui\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\gui\\archive\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\health\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\infrastructure\\networking\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\infrastructure\\vpn\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\inspection\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\knowledge\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\miniature_office\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\miniature_office\\agents\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\miniature_office\\analysis\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\miniature_office\\client\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\miniature_office\\core\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\miniature_office\\departments\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\miniature_office\\interfaces\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\miniature_office\\server\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\miniature_office\\tools\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\monitoring\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\pipeline\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\plugins\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\privacy\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\remote\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\reporting\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\resilience\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\security\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 43580.35,
+      "reason": "ignored-only",
+      "size_bytes": 44626277.0,
+      "path": "src\\app\\security\\.mypy_cache",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 3
+    },
+    {
+      "size_kb": 43580.12,
+      "reason": "ignored-only",
+      "size_bytes": 44626048.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 194
+    },
+    {
+      "size_kb": 134.83,
+      "reason": "ignored-only",
+      "size_bytes": 138071.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\_typeshed",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 1061.75,
+      "reason": "ignored-only",
+      "size_bytes": 1087231.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\asyncio",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 48
+    },
+    {
+      "size_kb": 6.05,
+      "reason": "ignored-only",
+      "size_bytes": 6197.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\bcrypt",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 822.95,
+      "reason": "ignored-only",
+      "size_bytes": 842697.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\collections",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 251.61,
+      "reason": "ignored-only",
+      "size_bytes": 257649.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\concurrent",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 3
+    },
+    {
+      "size_kb": 2203.67,
+      "reason": "ignored-only",
+      "size_bytes": 2256561.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 10
+    },
+    {
+      "size_kb": 109.9,
+      "reason": "ignored-only",
+      "size_bytes": 112540.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\ctypes",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 396.01,
+      "reason": "ignored-only",
+      "size_bytes": 405513.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\email",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 18
+    },
+    {
+      "size_kb": 287.27,
+      "reason": "ignored-only",
+      "size_bytes": 294163.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\importlib",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 16
+    },
+    {
+      "size_kb": 51.15,
+      "reason": "ignored-only",
+      "size_bytes": 52376.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\json",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 6
+    },
+    {
+      "size_kb": 175.72,
+      "reason": "ignored-only",
+      "size_bytes": 179936.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\logging",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 936.25,
+      "reason": "ignored-only",
+      "size_bytes": 958718.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\multiprocessing",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 34
+    },
+    {
+      "size_kb": 25276.81,
+      "reason": "ignored-only",
+      "size_bytes": 25883455.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 37
+    },
+    {
+      "size_kb": 304.99,
+      "reason": "ignored-only",
+      "size_bytes": 312305.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\os",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 18.72,
+      "reason": "ignored-only",
+      "size_bytes": 19168.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\security",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 182.81,
+      "reason": "ignored-only",
+      "size_bytes": 187199.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\sqlite3",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 201.55,
+      "reason": "ignored-only",
+      "size_bytes": 206384.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\src",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 3
+    },
+    {
+      "size_kb": 179.21,
+      "reason": "ignored-only",
+      "size_bytes": 183513.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\sys",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 489.53,
+      "reason": "ignored-only",
+      "size_bytes": 501283.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\unittest",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 20
+    },
+    {
+      "size_kb": 158.05,
+      "reason": "ignored-only",
+      "size_bytes": 161839.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\xml",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 3
+    },
+    {
+      "size_kb": 116.46,
+      "reason": "ignored-only",
+      "size_bytes": 119250.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\zipfile",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 248.22,
+      "reason": "ignored-only",
+      "size_bytes": 254177.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\concurrent\\futures",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 8
+    },
+    {
+      "size_kb": 1380.71,
+      "reason": "ignored-only",
+      "size_bytes": 1413851.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 7
+    },
+    {
+      "size_kb": 776.82,
+      "reason": "ignored-only",
+      "size_bytes": 795465.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\x509",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 16
+    },
+    {
+      "size_kb": 135.46,
+      "reason": "ignored-only",
+      "size_bytes": 138707.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat\\backends",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 3
+    },
+    {
+      "size_kb": 350.52,
+      "reason": "ignored-only",
+      "size_bytes": 358930.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat\\bindings",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 842.05,
+      "reason": "ignored-only",
+      "size_bytes": 862260.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat\\primitives",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 15
+    },
+    {
+      "size_kb": 131.06,
+      "reason": "ignored-only",
+      "size_bytes": 134208.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat\\backends\\openssl",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 8
+    },
+    {
+      "size_kb": 304.32,
+      "reason": "ignored-only",
+      "size_bytes": 311622.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat\\bindings\\_rust",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 11
+    },
+    {
+      "size_kb": 42.7,
+      "reason": "ignored-only",
+      "size_bytes": 43729.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat\\bindings\\openssl",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 6
+    },
+    {
+      "size_kb": 235.4,
+      "reason": "ignored-only",
+      "size_bytes": 241048.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat\\bindings\\_rust\\openssl",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 32
+    },
+    {
+      "size_kb": 341.04,
+      "reason": "ignored-only",
+      "size_bytes": 349222.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat\\primitives\\asymmetric",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 24
+    },
+    {
+      "size_kb": 199.59,
+      "reason": "ignored-only",
+      "size_bytes": 204378.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat\\primitives\\ciphers",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 10
+    },
+    {
+      "size_kb": 177.89,
+      "reason": "ignored-only",
+      "size_bytes": 182162.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\cryptography\\hazmat\\primitives\\serialization",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 8
+    },
+    {
+      "size_kb": 144.61,
+      "reason": "ignored-only",
+      "size_bytes": 148077.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\importlib\\metadata",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 25.42,
+      "reason": "ignored-only",
+      "size_bytes": 26031.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\importlib\\resources",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 6
+    },
+    {
+      "size_kb": 4632.12,
+      "reason": "ignored-only",
+      "size_bytes": 4743293.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\_core",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 38
+    },
+    {
+      "size_kb": 1187.23,
+      "reason": "ignored-only",
+      "size_bytes": 1215725.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\_typing",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 22
+    },
+    {
+      "size_kb": 8.94,
+      "reason": "ignored-only",
+      "size_bytes": 9156.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\char",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 3.3,
+      "reason": "ignored-only",
+      "size_bytes": 3378.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\core",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 181.15,
+      "reason": "ignored-only",
+      "size_bytes": 185502.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\ctypeslib",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 144.64,
+      "reason": "ignored-only",
+      "size_bytes": 148116.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\f2py",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 10
+    },
+    {
+      "size_kb": 69.36,
+      "reason": "ignored-only",
+      "size_bytes": 71026.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\fft",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 6
+    },
+    {
+      "size_kb": 4294.72,
+      "reason": "ignored-only",
+      "size_bytes": 4397791.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\lib",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 58
+    },
+    {
+      "size_kb": 410.66,
+      "reason": "ignored-only",
+      "size_bytes": 420515.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\linalg",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 6
+    },
+    {
+      "size_kb": 3996.16,
+      "reason": "ignored-only",
+      "size_bytes": 4092071.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\ma",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 8
+    },
+    {
+      "size_kb": 561.1,
+      "reason": "ignored-only",
+      "size_bytes": 574571.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\matrixlib",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 979.23,
+      "reason": "ignored-only",
+      "size_bytes": 1002735.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\polynomial",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 20
+    },
+    {
+      "size_kb": 993.43,
+      "reason": "ignored-only",
+      "size_bytes": 1017270.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\random",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 16
+    },
+    {
+      "size_kb": 4.63,
+      "reason": "ignored-only",
+      "size_bytes": 4739.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\rec",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 8.05,
+      "reason": "ignored-only",
+      "size_bytes": 8239.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\strings",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 266.53,
+      "reason": "ignored-only",
+      "size_bytes": 272930.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\testing",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 5
+    },
+    {
+      "size_kb": 4.18,
+      "reason": "ignored-only",
+      "size_bytes": 4283.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\typing",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 249.34,
+      "reason": "ignored-only",
+      "size_bytes": 255321.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\numpy\\testing\\_private",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 6
+    },
+    {
+      "size_kb": 198.33,
+      "reason": "ignored-only",
+      "size_bytes": 203087.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\src\\app",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 3.32,
+      "reason": "ignored-only",
+      "size_bytes": 3400.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\src\\app\\core",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 2
+    },
+    {
+      "size_kb": 191.74,
+      "reason": "ignored-only",
+      "size_bytes": 196344.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\src\\app\\security",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 16
+    },
+    {
+      "size_kb": 154.3,
+      "reason": "ignored-only",
+      "size_bytes": 158003.0,
+      "path": "src\\app\\security\\.mypy_cache\\3.11\\xml\\etree",
+      "recommendation": "INVESTIGATE - Contains only ignored files (build artifacts, cache, etc)",
+      "item_count": 4
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\security\\advanced\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\service\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\setup\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\temporal\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\testing\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\ui\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\ui\\themes\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\vault\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\vault\\isolation",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\vault\\audit\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\vault\\auth\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\app\\vault\\core\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cerberus\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cerberus\\sase\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cerberus\\sase\\advanced\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cerberus\\sase\\audit\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cerberus\\sase\\core\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cerberus\\sase\\governance\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cerberus\\sase\\integration\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cerberus\\sase\\intelligence\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cerberus\\sase\\policy\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cerberus\\sase\\testing\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cognition\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cognition\\adapters\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cognition\\cerberus\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cognition\\codex\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cognition\\galahad\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\cognition\\reasoning_matrix\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\core\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\features\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\governance\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\integrations\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\integrations\\temporal\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\integrations\\temporal\\activities\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\integrations\\temporal\\workflows\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\plugins\\osint\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\psia\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\psia\\bootstrap\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\psia\\canonical\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\psia\\crypto\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\psia\\gate\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\psia\\observability\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\psia\\schemas\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\psia\\server\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\psia\\shadow\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\psia\\waterfall\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\security\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\shadow_thirst\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\thirsty_lang\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\thirsty_lang\\src\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "subdirs-only",
+      "size_bytes": 0,
+      "path": "src\\thirsty_lang\\src\\tarl",
+      "recommendation": "DELETE - Only contains empty subdirectories",
+      "item_count": 1
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\thirsty_lang\\src\\tarl\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "src\\utils\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\ai-mutation-governance-firewall\\app\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\ai-mutation-governance-firewall\\database\\migrations\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\ai-mutation-governance-firewall\\database\\scripts\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\ai-mutation-governance-firewall\\tests\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-compliance\\app\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-compliance\\database\\migrations\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-compliance\\database\\scripts\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-compliance\\tests\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-incident-reflex-system\\app\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-incident-reflex-system\\database\\migrations\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-incident-reflex-system\\database\\scripts\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-incident-reflex-system\\tests\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-negotiation-agent\\app\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-negotiation-agent\\database\\migrations\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-negotiation-agent\\database\\scripts\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\autonomous-negotiation-agent\\tests\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\i-believe-in-you\\app\\core\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\i-believe-in-you\\app\\features\\loneliness\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\sovereign-data-vault\\app\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\sovereign-data-vault\\database\\migrations\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\sovereign-data-vault\\database\\scripts\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\sovereign-data-vault\\tests\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\trust-graph-engine\\app\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\trust-graph-engine\\database\\migrations\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\trust-graph-engine\\database\\scripts\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\trust-graph-engine\\tests\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\verifiable-reality\\app\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\verifiable-reality\\database\\migrations\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\verifiable-reality\\database\\scripts\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\verifiable-reality\\tests\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "emergent-microservices\\_common\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "infra\\configs",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "infra\\dockerfiles",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "infra\\k8s",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "scripts\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "scripts\\demo\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "scripts\\demos\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "scripts\\kernel\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "scripts\\maintenance\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "scripts\\tools\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "scripts\\verify\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    },
+    {
+      "size_kb": 0.0,
+      "reason": "empty",
+      "size_bytes": 0,
+      "path": "config\\__pycache__",
+      "recommendation": "DELETE - Completely empty directory",
+      "item_count": 0
+    }
+  ],
+  "scan_timestamp": "2026-04-10 11:15:16",
+  "focus_areas_scanned": [
+    "src",
+    "services",
+    "emergent-microservices",
+    "infra",
+    "scripts",
+    "config"
+  ],
+  "total_orphaned": 224
+}
+___BEGIN___COMMAND_DONE_MARKER___0
+PS C:\Users\Quencher\.gemini\antigravity\scratch\Sovereign-Governance-Substrate>

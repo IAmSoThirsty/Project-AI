@@ -1,0 +1,553 @@
+# Incident Response Playbook
+
+**Team Charlie - SRE Documentation Lead**
+
+
+
+## 🚨 Incident Severity Classification
+
+| Severity | Definition | Example | Response Time |
+|----------|------------|---------|---------------|
+| **P0 - Critical** | Complete service outage, data loss | All services down, database corruption | <15 minutes |
+| **P1 - High** | Major functionality impaired | Authentication failing, 50%+ error rate | <30 minutes |
+| **P2 - Medium** | Partial service degradation | Single microservice degraded, <10% errors | <2 hours |
+| **P3 - Low** | Minor issues, no user impact | Non-critical logging errors | <24 hours |
+
+---
+
+
+
+## 📞 On-Call Escalation Path
+
+
+
+### Tier 1: Initial Response (0-15 minutes)
+
+- **Primary On-Call Engineer** (Pager)
+  - Acknowledge incident in PagerDuty/Opsgenie
+  - Assess severity
+  - Begin initial investigation
+  - Create incident channel: `#incident-YYYY-MM-DD-brief-description`
+
+
+
+### Tier 2: Service Owners (15-30 minutes)
+
+- **Microservices Team Lead**
+- **Infrastructure Team Lead**
+- **Security Team Lead** (for security incidents)
+
+
+
+### Tier 3: Management (30+ minutes for P0/P1)
+
+- **Director of Engineering**
+- **CTO** (P0 only)
+
+
+
+### External Contacts
+
+- **AWS Support**: +1-XXX-XXX-XXXX (Premium Support)
+- **External Vendor**: [List critical vendors]
+
+---
+
+
+
+## 🔥 P0: Complete Service Outage
+
+
+
+### Immediate Actions (0-5 minutes)
+
+1. **Acknowledge Incident**
+   ```bash
+   # Acknowledge in alerting system
+
+   pd-cli incident acknowledge <incident-id>
+   ```
+
+2. **Create War Room**
+   - Slack: Create `#incident-P0-YYYY-MM-DD-HH-MM`
+   - Zoom: Start video call (link in pinned message)
+   - Update status page: https://status.sovereign.ai
+
+3. **Initial Assessment**
+   ```bash
+   # Check overall cluster health
+
+   kubectl get nodes
+   kubectl get pods --all-namespaces | grep -v Running
+   
+   # Check Istio control plane
+
+   kubectl get pods -n istio-system
+   
+   # Check monitoring systems
+
+   kubectl get pods -n observability
+   ```
+
+
+
+### Investigation (5-15 minutes)
+
+4. **Check Recent Changes**
+   ```bash
+   # Recent deployments
+
+   kubectl get events --sort-by='.lastTimestamp' | head -20
+   
+   # Recent Helm releases
+
+   helm list --all-namespaces
+   
+   # Git deployments (last hour)
+
+   git log --since="1 hour ago" --oneline
+   ```
+
+5. **Check System Metrics**
+   - **Grafana**: https://grafana.sovereign.ai
+     - Dashboard: "System Overview"
+     - Look for: CPU spikes, memory exhaustion, network issues
+   
+   - **Jaeger**: https://jaeger.sovereign.ai
+     - Check for trace errors in last 15 minutes
+   
+   - **Logs**:
+     ```bash
+     # Check critical errors across all services
+
+     kubectl logs -n default --all-containers --since=15m | grep -i "error\|fatal\|panic"
+     ```
+
+
+
+### Resolution Actions
+
+6. **Quick Wins to Try First**
+   
+   **A. Restart Failed Pods**
+   ```bash
+   # Identify crashlooping pods
+
+   kubectl get pods --all-namespaces --field-selector=status.phase=Failed
+   
+   # Delete to force restart
+
+   kubectl delete pod <pod-name> -n <namespace>
+   ```
+   
+   **B. Scale Up if Resource Exhaustion**
+   ```bash
+   # Check resource usage
+
+   kubectl top nodes
+   kubectl top pods -n default --sort-by=cpu
+   
+   # Scale deployment
+
+   kubectl scale deployment <deployment-name> --replicas=5 -n default
+   ```
+   
+   **C. Rollback Recent Deployment**
+   ```bash
+   # List recent deployments
+
+   kubectl rollout history deployment/<deployment-name> -n default
+   
+   # Rollback to previous version
+
+   kubectl rollout undo deployment/<deployment-name> -n default
+   
+   # Check rollout status
+
+   kubectl rollout status deployment/<deployment-name> -n default
+   ```
+   
+   **D. Check Database Connectivity**
+   ```bash
+   # Test database from a pod
+
+   kubectl exec -it <pod-name> -n default -- \
+     psql -h postgres.default -U sovereign -d sovereign_db -c "SELECT 1;"
+   
+   # Check database pods
+
+   kubectl get pods -l app=postgresql
+   kubectl logs -l app=postgresql --tail=50
+   ```
+
+
+
+### Communication (Throughout)
+
+7. **Update Stakeholders Every 15 Minutes**
+   - Post in `#incident-P0-*` channel
+   - Update status page
+   - Template:
+     ```
+     [TIME] Update: [Brief status]
+     - What we know: [Current situation]
+     - What we're doing: [Active investigation/fix]
+     - ETA for next update: [15 minutes]
+     ```
+
+
+
+### Post-Resolution
+
+8. **Recovery Verification**
+   ```bash
+   # Verify all services healthy
+
+   for svc in firewall vault trust-graph compliance incident-reflex negotiation verifiable-reality; do
+     echo "Checking $svc..."
+     kubectl exec -n default deploy/$svc -- curl -f http://localhost:8000/api/v1/health/readiness
+   done
+   
+   # Run smoke tests
+
+   pytest tests/e2e/test_smoke.py -v
+   
+   # Check error rates in last 5 minutes
+
+   # (Prometheus query in Grafana)
+
+   sum(rate(http_requests_total{status=~"5.."}[5m]))
+   ```
+
+9. **Declare Incident Resolved**
+   - Post in incident channel: "✅ RESOLVED at [TIME]"
+   - Update status page: "All systems operational"
+   - Schedule postmortem within 24 hours
+
+---
+
+
+
+## 🔴 P1: Authentication Service Failure
+
+
+
+### Symptoms
+
+- Users cannot log in
+- 401/403 errors across all services
+- JWT validation failing
+
+
+
+### Quick Diagnostic
+```bash
+# Check auth service pods
+
+kubectl get pods -n default -l app=auth-service
+
+
+
+# Check logs
+
+kubectl logs -n default -l app=auth-service --tail=100 | grep -i error
+
+
+
+# Test auth endpoint
+
+curl -X POST https://auth.sovereign.ai/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"test","password":"test"}'
+```
+
+
+
+### Common Causes & Fixes
+
+
+
+#### Cause 1: JWT Secret Rotation Failed
+```bash
+# Check secret exists
+
+kubectl get secret jwt-signing-key -n default
+
+
+
+# Verify secret content (base64 decode)
+
+kubectl get secret jwt-signing-key -n default -o jsonpath='{.data.key}' | base64 -d
+
+
+
+# If missing, restore from Vault
+
+./scripts/rotate-jwt-secret.sh --restore
+```
+
+
+
+#### Cause 2: Database Connection Pool Exhausted
+```bash
+# Check database connections
+
+kubectl exec -n default postgresql-0 -- psql -U sovereign -c \
+  "SELECT count(*) FROM pg_stat_activity WHERE datname='sovereign_db';"
+
+
+
+# If > 90 connections, restart auth service
+
+kubectl rollout restart deployment/auth-service -n default
+```
+
+
+
+#### Cause 3: Redis Cache Down
+```bash
+# Check Redis
+
+kubectl get pods -l app=redis -n default
+
+
+
+# Test connection
+
+kubectl exec -n default redis-0 -- redis-cli ping
+
+
+
+# Restart if needed
+
+kubectl delete pod redis-0 -n default
+```
+
+---
+
+
+
+## 🟡 P2: High Error Rate on Single Microservice
+
+
+
+### Investigation Steps
+
+1. **Identify Affected Service**
+   - Grafana dashboard: "Microservices Overview"
+   - Look for error rate > 5%
+
+2. **Check Service Health**
+   ```bash
+   SERVICE_NAME="sovereign-vault"
+   
+   # Pod status
+
+   kubectl get pods -l app=$SERVICE_NAME -n default
+   
+   # Recent logs
+
+   kubectl logs -l app=$SERVICE_NAME -n default --tail=200 | grep -i "error\|exception"
+   
+   # Metrics
+
+   kubectl top pods -l app=$SERVICE_NAME -n default
+   ```
+
+3. **Check Dependencies**
+   ```bash
+   # Test database
+
+   kubectl exec deploy/$SERVICE_NAME -n default -- \
+     nc -zv postgresql.default 5432
+   
+   # Test Redis
+
+   kubectl exec deploy/$SERVICE_NAME -n default -- \
+     nc -zv redis.default 6379
+   ```
+
+4. **Check Istio Traffic Management**
+   ```bash
+   # Check circuit breaker status
+
+   kubectl get destinationrules -n default $SERVICE_NAME-circuit-breaker -o yaml
+   
+   # Check for ejected pods
+
+   istioctl proxy-status | grep $SERVICE_NAME
+   ```
+
+
+
+### Resolution
+```bash
+# Restart pods one by one (rolling restart)
+
+kubectl rollout restart deployment/$SERVICE_NAME -n default
+
+
+
+# If no improvement, scale up
+
+kubectl scale deployment/$SERVICE_NAME --replicas=5 -n default
+
+
+
+# Last resort: disable traffic temporarily
+
+kubectl patch virtualservice $SERVICE_NAME -n default --type=json \
+  -p='[{"op": "add", "path": "/spec/http/0/fault/abort", "value": {"httpStatus": 503, "percentage": {"value": 100}}}]'
+```
+
+---
+
+
+
+## 🟢 P3: Non-Critical Logging Errors
+
+
+
+### Assessment
+
+- Review during business hours
+- No immediate action required
+- Create ticket for next sprint
+
+
+
+### Investigation
+```bash
+# Aggregate error patterns
+
+kubectl logs -n default --all-containers --since=24h | \
+  grep -i error | \
+  awk '{print $5}' | \
+  sort | uniq -c | sort -nr | head -20
+```
+
+---
+
+
+
+## 🛡️ Security Incident Response
+
+
+
+### Immediate Actions
+
+1. **Assess Threat**
+   - Check incident reflex system
+   - Review Jaeger traces for suspicious patterns
+   - Check audit logs
+
+2. **Containment**
+   ```bash
+   # Block suspicious IP
+
+   kubectl apply -f - <<EOF
+   apiVersion: security.istio.io/v1beta1
+   kind: AuthorizationPolicy
+   metadata:
+     name: block-malicious-ip
+     namespace: default
+   spec:
+     action: DENY
+     rules:
+     - from:
+       - source:
+           ipBlocks: ["X.X.X.X/32"]
+   EOF
+   ```
+
+3. **Isolate Compromised Service**
+   ```bash
+   # Scale to zero
+
+   kubectl scale deployment/<compromised-service> --replicas=0 -n default
+   
+   # Block all traffic
+
+   kubectl patch virtualservice <service> -n default --type=json \
+     -p='[{"op": "add", "path": "/spec/http/0/fault/abort", "value": {"httpStatus": 403, "percentage": {"value": 100}}}]'
+   ```
+
+4. **Notify Security Team**
+   - Slack: `#security-incidents`
+   - Email: security@sovereign.ai
+   - Include: Affected service, evidence, actions taken
+
+---
+
+
+
+## 📊 Postmortem Template
+
+
+
+### Incident Summary
+
+- **Date/Time**: YYYY-MM-DD HH:MM UTC
+- **Duration**: X hours Y minutes
+- **Severity**: PX
+- **Impact**: [User-facing impact]
+
+
+
+### Timeline
+
+| Time (UTC) | Event |
+|------------|-------|
+| 12:00 | Alert fired: High error rate |
+| 12:05 | Engineer acknowledged |
+| 12:15 | Root cause identified |
+| 12:30 | Fix deployed |
+| 12:45 | Incident resolved |
+
+
+
+### Root Cause
+
+[Detailed explanation]
+
+
+
+### Resolution
+
+[What fixed the issue]
+
+
+
+### Action Items
+
+1. [ ] [Preventive measure] - Owner: @engineer - Due: DATE
+2. [ ] [Monitoring improvement] - Owner: @sre - Due: DATE
+3. [ ] [Documentation update] - Owner: @tech-writer - Due: DATE
+
+---
+
+
+
+## 📚 Related Runbooks
+
+- [Database Failover Procedure](./database-failover-runbook.md)
+- [Secret Rotation Guide](./secret-rotation-runbook.md)
+- [Disaster Recovery Execution](./disaster-recovery-runbook.md)
+- [Traffic Rerouting Procedure](./traffic-management-runbook.md)
+
+
+
+## 🔗 Quick Links
+
+- **Status Page**: https://status.sovereign.ai
+- **Grafana**: https://grafana.sovereign.ai
+- **Jaeger**: https://jaeger.sovereign.ai
+- **Prometheus**: https://prometheus.sovereign.ai
+- **Runbook Repository**: https://github.com/sovereign/runbooks
+- **PagerDuty**: https://sovereign.pagerduty.com
+
+---
+
+**Last Updated**: 2025-01-15  
+**Owner**: Team Charlie - SRE Documentation Lead  
+**Review Cycle**: Monthly

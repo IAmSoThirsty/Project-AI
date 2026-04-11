@@ -1,0 +1,259 @@
+# Promtail Configuration - Log Collection and Shipping
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+  log_level: info
+
+positions:
+  filename: /tmp/positions/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+    batchwait: 1s
+    batchsize: 1048576  # 1MB
+    
+    external_labels:
+      environment: production
+      cluster: sovereign-governance
+      
+    # Retry configuration
+    backoff_config:
+      min_period: 500ms
+      max_period: 5m
+      max_retries: 10
+
+scrape_configs:
+  # Application logs
+  - job_name: application
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: sovereign-app
+          __path__: /app/logs/app*.log
+    
+    pipeline_stages:
+      # Parse JSON logs
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            logger: logger
+            message: message
+            correlation_id: correlation_id
+            service: service
+      
+      # Extract timestamp
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      
+      # Add labels
+      - labels:
+          level:
+          service:
+          correlation_id:
+      
+      # Output to Loki
+      - output:
+          source: message
+
+  # Audit logs - CRITICAL
+  - job_name: audit
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: sovereign-audit
+          retention: 7years
+          __path__: /app/logs/audit/audit*.log
+    
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            audit_type: audit_type
+            user_id: user_id
+            action: action
+            resource: resource
+            outcome: outcome
+            correlation_id: correlation_id
+      
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      
+      - labels:
+          audit_type:
+          user_id:
+          outcome:
+          correlation_id:
+
+  # Error logs
+  - job_name: errors
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: sovereign-errors
+          severity: high
+          __path__: /app/logs/error*.log
+    
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            logger: logger
+            message: message
+            exception: exception
+            correlation_id: correlation_id
+      
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      
+      - labels:
+          level:
+          logger:
+          correlation_id:
+
+  # Access logs
+  - job_name: access
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: sovereign-access
+          __path__: /app/logs/access/access*.log
+    
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            endpoint: endpoint
+            method: method
+            status_code: status_code
+            duration_ms: duration_ms
+            correlation_id: correlation_id
+      
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      
+      - labels:
+          method:
+          endpoint:
+          status_code:
+          correlation_id:
+      
+      # Add metrics from logs
+      - metrics:
+          request_duration_ms:
+            type: Histogram
+            description: "Request duration in milliseconds"
+            source: duration_ms
+            config:
+              buckets: [10, 50, 100, 250, 500, 1000, 2500, 5000, 10000]
+
+  # Metrics logs
+  - job_name: metrics
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: sovereign-metrics
+          __path__: /app/logs/metrics/metrics*.log
+    
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            metric_name: metric_name
+            value: value
+            unit: unit
+      
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      
+      - labels:
+          metric_name:
+          unit:
+
+  # Debug logs (development only)
+  - job_name: debug
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: sovereign-debug
+          __path__: /app/logs/debug/debug*.log
+    
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            logger: logger
+            message: message
+      
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      
+      # Sample debug logs (only keep 10%)
+      - match:
+          selector: '{job="sovereign-debug"}'
+          stages:
+            - sampling:
+                rate: 0.1
+
+  # Microservice logs
+  - job_name: microservices
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: sovereign-microservices
+          __path__: /app/logs/microservices/*.log
+    
+    pipeline_stages:
+      - json:
+          expressions:
+            timestamp: timestamp
+            level: level
+            service: service
+            message: message
+            correlation_id: correlation_id
+      
+      - timestamp:
+          source: timestamp
+          format: RFC3339
+      
+      - labels:
+          level:
+          service:
+          correlation_id:
+
+  # System logs (Linux/Unix only)
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: system
+          __path__: /var/log/syslog
+    
+    pipeline_stages:
+      - regex:
+          expression: '^(?P<timestamp>\w+\s+\d+\s+\d+:\d+:\d+)\s+(?P<hostname>\S+)\s+(?P<app>\S+):\s+(?P<message>.*)$'
+      
+      - timestamp:
+          source: timestamp
+          format: 'Jan 02 15:04:05'
+      
+      - labels:
+          hostname:
+          app:

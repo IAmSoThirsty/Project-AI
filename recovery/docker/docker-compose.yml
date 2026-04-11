@@ -1,0 +1,294 @@
+# [2026-03-01 13:20]
+# Productivity: Active
+
+version: "3.8"
+
+services:
+  project-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: project-ai-dev
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app/src
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - FERNET_KEY=${FERNET_KEY}
+      - DATA_DIR=/app/data
+      - LOG_DIR=/app/logs
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_JSON=${LOG_JSON:-true}
+      - ENABLE_METRICS=true
+      - METRICS_PORT=8000
+    volumes:
+      - ./src:/app/src
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    ports:
+      - "5000:5000"
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+      - "8003:8003"
+    env_file:
+      - .env
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        labels: "service,environment"
+        tag: "{{.Name}}/{{.ID}}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: project-ai-prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+    volumes:
+      - ./config/prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+    depends_on:
+      - project-ai
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: project-ai-alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    volumes:
+      - ./config/alertmanager:/etc/alertmanager
+      - alertmanager-data:/alertmanager
+    ports:
+      - "9093:9093"
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: project-ai-grafana
+    volumes:
+      - ./config/grafana:/etc/grafana/provisioning
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    depends_on:
+      - prometheus
+
+  temporal:
+    image: temporalio/auto-setup:latest
+    container_name: project-ai-temporal
+    ports:
+      - "7233:7233"
+      - "8233:8233"
+    networks:
+      - project-ai-network
+    depends_on:
+      - temporal-postgresql
+    restart: unless-stopped
+
+  temporal-postgresql:
+    image: postgres:13
+    container_name: project-ai-temporal-db
+    environment:
+      - POSTGRES_USER=temporal
+      - POSTGRES_PASSWORD=temporal
+      - POSTGRES_DB=temporal
+    volumes:
+      - temporal-postgresql-data:/var/lib/postgresql/data
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+
+  temporal-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: project-ai-temporal-worker
+    command: python -m app.temporal.worker
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app/src
+      - TEMPORAL_HOST=temporal:7233
+    volumes:
+      - ./src:/app/src
+    networks:
+      - project-ai-network
+    depends_on:
+      - temporal
+    restart: unless-stopped
+    env_file:
+      - .env
+
+  # --- Emergent Microservices (Governance Tier 2) ---
+
+  mutation-firewall:
+    build:
+      context: ./emergent-microservices/ai-mutation-governance-firewall
+    container_name: ai-mutation-firewall
+    ports: ["8011:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  incident-reflex:
+    build:
+      context: ./emergent-microservices/autonomous-incident-reflex-system
+    container_name: incident-reflex-system
+    ports: ["8012:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  trust-graph:
+    build:
+      context: ./emergent-microservices/trust-graph-engine
+    container_name: trust-graph-engine
+    ports: ["8013:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  data-vault:
+    build:
+      context: ./emergent-microservices/sovereign-data-vault
+    container_name: sovereign-data-vault
+    ports: ["8014:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  negotiation-agent:
+    build:
+      context: ./emergent-microservices/autonomous-negotiation-agent
+    container_name: negotiation-agent
+    ports: ["8015:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  compliance-engine:
+    build:
+      context: ./emergent-microservices/autonomous-compliance
+    container_name: compliance-engine
+    ports: ["8016:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  verifiable-reality:
+    build:
+      context: ./emergent-microservices/verifiable-reality
+    container_name: verifiable-reality
+    ports: ["8017:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  i-believe-in-you:
+    build:
+      context: ./emergent-microservices/i-believe-in-you
+    container_name: i-believe-in-you
+    ports: ["8018:8000"]
+    networks:
+      - project-ai-network
+    depends_on:
+      - prometheus
+
+  # --- Monitoring Exporters ---
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: project-ai-node-exporter
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    ports:
+      - "9100:9100"
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: project-ai-cadvisor
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - project-ai-network
+    restart: unless-stopped
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: project-ai-postgres-exporter
+    environment:
+      - DATA_SOURCE_NAME=postgresql://temporal:temporal@temporal-postgresql:5432/temporal?sslmode=disable
+    ports:
+      - "9187:9187"
+    networks:
+      - project-ai-network
+    depends_on:
+      - temporal-postgresql
+    restart: unless-stopped
+
+volumes:
+  prometheus-data:
+  alertmanager-data:
+  grafana-data:
+  temporal-postgresql-data:
+
+networks:
+  project-ai-network:
+    driver: bridge

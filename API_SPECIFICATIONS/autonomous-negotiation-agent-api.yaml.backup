@@ -1,0 +1,228 @@
+openapi: 3.1.0
+info:
+  title: Autonomous Negotiation Agent API
+  description: |
+    AI-powered negotiation service for automated contract negotiation, resource allocation,
+    and multi-party consensus building in distributed systems.
+    
+    **IMPLEMENTATION STATUS**: Currently implements generic CRUD using /api/v1/items endpoints.
+    Spec-defined negotiation endpoints (negotiations, propose, accept, reject) are NOT YET IMPLEMENTED.
+    
+    **IMPLEMENTATION**: emergent-microservices/autonomous-negotiation-agent/app/routes.py
+    - Generic CRUD endpoints for items (/api/v1/items)
+  version: 1.0.0
+  contact:
+    name: Project AI Team
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8016
+    description: Local development
+  - url: http://negotiation-agent:8000
+    description: Docker network
+
+tags:
+  - name: System
+  - name: Health
+  - name: Negotiations
+  - name: Proposals
+
+paths:
+  /:
+    get:
+      summary: Service info
+      operationId: root
+      tags: [System]
+      responses:
+        '200':
+          description: OK
+
+  /api/v1/health/liveness:
+    get:
+      summary: Liveness
+      operationId: liveness
+      tags: [Health]
+      responses:
+        '200':
+          description: Alive
+
+  /api/v1/health/readiness:
+    get:
+      summary: Readiness
+      operationId: readiness
+      tags: [Health]
+      responses:
+        '200':
+          description: Ready
+
+  /metrics:
+    get:
+      summary: Metrics
+      operationId: metrics
+      tags: [System]
+      responses:
+        '200':
+          description: Prometheus metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /api/v1/negotiations:
+    get:
+      summary: List negotiations
+      operationId: list_negotiations
+      tags: [Negotiations]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Negotiation list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Negotiation'
+                  total:
+                    type: integer
+
+    post:
+      summary: Start negotiation
+      operationId: start_negotiation
+      tags: [Negotiations]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NegotiationCreate'
+      responses:
+        '201':
+          description: Negotiation started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Negotiation'
+
+  /api/v1/negotiations/{negotiation_id}:
+    get:
+      summary: Get negotiation
+      operationId: get_negotiation
+      tags: [Negotiations]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: negotiation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Negotiation details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Negotiation'
+
+  /api/v1/negotiations/{negotiation_id}/proposals:
+    post:
+      summary: Submit proposal
+      operationId: submit_proposal
+      tags: [Proposals]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: negotiation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProposalSubmit'
+      responses:
+        '201':
+          description: Proposal submitted
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    NegotiationCreate:
+      type: object
+      required:
+        - topic
+        - parties
+      properties:
+        topic:
+          type: string
+        parties:
+          type: array
+          items:
+            type: string
+            format: uuid
+        parameters:
+          type: object
+
+    Negotiation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        topic:
+          type: string
+        status:
+          type: string
+          enum: [active, completed, failed, cancelled]
+        parties:
+          type: array
+        proposals:
+          type: array
+        outcome:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+
+    ProposalSubmit:
+      type: object
+      required:
+        - party_id
+        - terms
+      properties:
+        party_id:
+          type: string
+          format: uuid
+        terms:
+          type: object
+        priority:
+          type: integer

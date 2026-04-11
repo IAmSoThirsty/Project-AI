@@ -1,0 +1,282 @@
+# Governance Architecture
+
+## Overview
+The `src/governance` module implements constitutional governance and abliteration management for the Sovereign Governance Substrate. It enforces sovereign policies, manages AI alignment through abliteration techniques, and ensures constitutional compliance across all system operations.
+
+**Purpose**: Enforce constitutional governance, manage AI safety through abliteration, and maintain sovereign decision-making boundaries.
+
+**Scope**: Constitutional policy enforcement, abliteration manager, governance policies, and jurisdictional boundaries.
+
+## Components
+
+### Core Components
+- **abliteration_manager.py**: AI abliteration management
+  - AI safety mechanisms
+  - Behavior modification
+  - Alignment enforcement
+  - Safety boundary management
+  - Neural network pruning for unwanted behaviors
+
+### Module Structure
+```
+governance/
+├── __init__.py                    # Module initialization
+├── abliteration_manager.py        # Abliteration management
+└── __pycache__/                   # Python cache
+```
+
+## Dependencies
+
+### Internal Dependencies
+- `src.cognition`: AI systems requiring governance
+- `src.security`: Security policy enforcement
+- `src.app.core`: Core governance integration
+- `src.data`: Policy storage
+
+### External Dependencies
+- **logging**: Governance event logging
+- **dataclasses**: Policy configuration
+- **enum**: Governance state definitions
+- AI model libraries (for abliteration)
+
+## Data Flow
+
+### Constitutional Enforcement Flow
+```
+Operation Request
+  ↓
+Constitutional Policy Lookup
+  ↓
+Jurisdictional Boundary Check
+  ↓
+Sovereign Authority Validation
+  ↓
+Policy Enforcement Decision
+  ↓
+Operation Execution (if approved)
+  ↓
+Governance Audit Log
+  ↓
+Response
+```
+
+### Abliteration Flow
+```
+AI Model
+  ↓
+Behavior Analysis
+  ↓
+Safety Violation Detection
+  ↓
+Abliteration Manager
+  ├─ Identify unwanted behavior patterns
+  ├─ Apply neural pruning
+  ├─ Validate safety boundaries
+  └─ Re-test behavior
+  ↓
+Safe AI Model
+```
+
+### Governance Decision Flow
+```
+Policy Question
+  ↓
+Triumvirate Consultation
+  ↓
+Constitutional Reference
+  ↓
+Jurisdictional Analysis
+  ↓
+Governance Decision
+  ↓
+Audit Trail
+```
+
+## Integration Points
+
+### APIs
+- `GovernanceEngine.enforce_policy()`: Policy enforcement
+- `AbliterationManager.apply()`: Apply abliteration
+- `GovernanceEngine.check_jurisdiction()`: Jurisdictional validation
+- `GovernanceEngine.get_policy()`: Policy retrieval
+
+### Events
+- Policy violation events
+- Abliteration applied events
+- Governance decision events
+- Constitutional amendment events
+- Jurisdictional boundary events
+
+### Hooks
+- Pre-operation governance checks
+- Post-operation policy validation
+- AI behavior monitoring hooks
+- Policy update hooks
+- Constitutional review hooks
+
+## Deployment
+
+### Governance Configuration
+```python
+governance_config = {
+    "enforcement_mode": "strict",
+    "constitutional_source": "constitutional.thirsty",
+    "abliteration_enabled": True,
+    "jurisdictional_boundaries": ["sovereign", "enterprise"],
+    "policy_cache_ttl": 3600
+}
+```
+
+### Initialization
+```python
+from src.governance.abliteration_manager import AbliterationManager
+
+manager = AbliterationManager(config)
+safe_model = manager.apply_abliteration(model, safety_policies)
+```
+
+### Production Deployment
+- Governance service as authority layer (Tier 1)
+- Constitutional policies in version control
+- Immutable audit trail
+- Distributed governance for high availability
+- Emergency override mechanisms (audited)
+
+## Architecture Patterns
+
+### Constitutional Governance
+- All policies derived from constitution
+- Constitutional amendments require high authority
+- Immutable governance history
+- Transparent policy derivation
+
+### Abliteration Management
+- Proactive AI safety enforcement
+- Behavior pattern detection
+- Neural network modification
+- Continuous safety validation
+- Reversible abliteration (with audit)
+
+### Sovereign Authority
+- Hierarchical authority model
+- Delegation with constraints
+- Revocation mechanisms
+- Authority audit trail
+
+### Jurisdictional Boundaries
+- Clearly defined jurisdictions
+- Cross-jurisdictional protocols
+- Boundary enforcement
+- Conflict resolution
+
+## Security Considerations
+- Governance decisions are tamper-proof
+- Constitutional policies cryptographically signed
+- Authority delegation validated
+- Abliteration operations audited
+- Emergency governance procedures secured
+- Governance key management (separate from operational keys)
+
+## Performance Characteristics
+- Cached policy decisions (<1ms for common cases)
+- Async abliteration processing
+- Efficient constitutional lookups
+- Optimized jurisdiction checks
+- Minimal governance overhead on operations
+
+## Monitoring and Observability
+- Policy enforcement metrics
+- Abliteration application tracking
+- Governance decision audit
+- Constitutional reference tracking
+- Jurisdictional violation monitoring
+- Authority delegation tracking
+
+## Error Handling
+- Governance failures are fail-safe (deny by default)
+- Detailed policy violation context
+- Escalation procedures
+- Manual override mechanisms (audited)
+- Governance recovery procedures
+
+## Testing Strategy
+- Constitutional policy compliance tests
+- Abliteration effectiveness tests
+- Jurisdiction boundary tests
+- Authority delegation tests
+- Emergency governance scenario tests
+- Policy conflict resolution tests
+
+## Abliteration Techniques
+
+### Safety Mechanisms
+- **Behavior Pattern Detection**: Identify unsafe AI behaviors
+- **Neural Pruning**: Remove dangerous capability nodes
+- **Boundary Enforcement**: Hard limits on AI actions
+- **Continuous Monitoring**: Real-time safety validation
+- **Reversible Modification**: Ability to restore (with audit)
+
+### Application Areas
+- Harmful content generation prevention
+- Privacy violation prevention
+- Security bypass prevention
+- Manipulation resistance
+- Bias mitigation
+
+### Validation
+- Pre-abliteration safety assessment
+- Post-abliteration validation
+- Continuous behavior monitoring
+- A/B testing for effectiveness
+- Red team testing
+
+## Constitutional Framework
+
+### Core Principles
+1. **Sovereignty**: System maintains autonomous decision-making
+2. **Transparency**: All governance decisions are auditable
+3. **Accountability**: Clear authority and responsibility chains
+4. **Safety**: AI safety is paramount
+5. **Privacy**: Individual privacy is protected
+6. **Fairness**: Equitable treatment enforced
+
+### Policy Hierarchy
+1. Constitutional principles (highest authority)
+2. Sovereign policies
+3. Governance policies
+4. Operational policies
+5. Application preferences (lowest authority)
+
+### Amendment Process
+- Proposal creation
+- Impact analysis
+- Stakeholder review
+- Approval by governance authority
+- Immutable recording
+- Propagation and enforcement
+
+## Future Extensions
+- Enhanced abliteration techniques
+- ML-based policy learning
+- Distributed governance consensus
+- Smart contract integration
+- Policy simulation and testing
+- Constitutional AI framework
+- Multi-stakeholder governance
+- Automated policy conflict resolution
+- Governance as code
+- International jurisdiction support
+
+## Compliance and Standards
+- AI safety standards alignment
+- Ethical AI principles compliance
+- Regulatory compliance framework
+- Industry best practices
+- International governance standards
+
+## Research Integration
+- Constitutional AI research
+- Abliteration methodology research
+- AI alignment research
+- Governance theory
+- Safety engineering research

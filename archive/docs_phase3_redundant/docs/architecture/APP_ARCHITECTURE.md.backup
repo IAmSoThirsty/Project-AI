@@ -1,0 +1,192 @@
+# App Architecture
+
+## Overview
+The `src/app` module is the main entry point and orchestration layer for the Sovereign Governance Substrate platform. It implements a three-tier architecture with governance-first design, integrating all subsystems under the CognitionKernel trust root.
+
+**Purpose**: Provide the sovereign runtime environment where AGI identity, governance, and application layers are integrated and executed.
+
+**Scope**: Desktop application, API server, CLI interface, and all platform bootstrap mechanisms.
+
+## Components
+
+### Core Components
+- **main.py**: Primary entry point with three-tier platform initialization
+  - Tier 1 (Governance): CognitionKernel, GovernanceService
+  - Tier 2 (Infrastructure): MemoryEngine, GlobalWatchTower, ExecutionService
+  - Tier 3 (Application): CouncilHub, Agents, GUI
+- **__main__.py**: Package entry point
+- **api_server.py**: REST API service layer
+- **api_core.py**: Core API functionality and routing
+- **cli.py**: Command-line interface
+- **main_headless_wrapper.py**: Headless execution mode
+
+### Subsystem Directories
+- **agents/**: AI agent implementations
+- **ai/**: Core AI functionality
+- **alignment/**: AI alignment and safety mechanisms
+- **api/**: API specifications and handlers
+- **arch_ledger.thirsty**: Architecture ledger (ThirstyLang)
+- **audit/**: Audit logging and compliance
+- **bootstrap.thirsty**: System bootstrap configuration
+- **browser/**: Browser integration components
+- **core/**: Core system components
+  - `bio_brain_mapper.py`: Bio-brain mapping system
+  - `cognition_kernel.py`: Trust root and kernel authority
+  - `council_hub.py`: Agent coordination
+  - `governance.py`: Governance triumvirate
+  - `intelligence_engine.py`: Identity-integrated intelligence
+  - `kernel_integration.py`: Global kernel integration
+  - `memory_engine.py`: Memory management
+  - `platform_tiers.py`: Tier registry
+  - `reflection_cycle.py`: System reflection
+  - `tier_health_dashboard.py`: Health monitoring
+- **deployment/**: Deployment configurations
+- **domains/**: Domain-specific logic
+- **global_jurisdiction.thirsty**: Global jurisdiction rules
+- **governance/**: Governance implementation
+- **gui/**: PyQt6 GUI components
+- **health/**: Health check systems
+- **i18n/**: Internationalization
+- **infrastructure/**: Infrastructure management
+- **inspection/**: System inspection tools
+- **knowledge/**: Knowledge management
+- **main.thirsty**: Main ThirstyLang configuration
+- **miniature_office/**: Office automation
+- **monitoring/**: System monitoring
+- **pipeline/**: Data pipeline components
+- **plugins/**: Plugin management
+- **privacy/**: Privacy enforcement
+- **remote/**: Remote access capabilities
+- **reporting/**: Report generation
+- **resilience/**: Resilience and fault tolerance
+- **security/**: Security enforcement
+- **service/**: Service layer
+- **setup/**: Setup and configuration
+- **sovereign/**: Sovereign identity components
+- **temporal/**: Temporal workflow integration
+- **testing/**: Testing utilities
+- **ui/**: UI components
+- **vault/**: Secrets management
+
+## Dependencies
+
+### Internal Dependencies
+- `src.cognition.triumvirate`: Triumvirate orchestrator for AI decision-making
+- `src.security`: Security framework and enforcement
+- `src.governance`: Governance policies
+- `src.features`: Feature flags and capabilities
+- `src.integrations`: External integrations
+
+### External Dependencies
+- **PyQt6**: GUI framework
+- **dotenv**: Environment configuration
+- **yaml**: Configuration parsing
+- **logging**: Logging infrastructure
+
+## Data Flow
+
+1. **Bootstrap**: main.py initializes CognitionKernel (trust root)
+2. **Governance**: GovernanceTriumvirate and CognitionKernel establish sovereignty
+3. **Infrastructure**: MemoryEngine, health monitors, and watchtowers are initialized
+4. **Application**: CouncilHub, agents, and GUI components are launched
+5. **Execution**: All operations flow through kernel authority
+6. **Monitoring**: Tier health dashboard tracks system state
+
+### Execution Flow
+```
+User Input → CLI/GUI → CognitionKernel (Trust Root) → 
+  → Governance Layer (Tier 1) → 
+  → Infrastructure Layer (Tier 2) → 
+  → Application Layer (Tier 3) → 
+  → Response
+```
+
+## Integration Points
+
+### APIs
+- REST API via `api_server.py`
+- Core API functionality via `api_core.py`
+
+### Events
+- Health monitoring events
+- Governance events
+- Reflection cycle events
+
+### Hooks
+- Bootstrap hooks in `bootstrap.thirsty`
+- Plugin hooks in `plugins/`
+- Kernel integration hooks via `set_global_kernel()`
+
+### Interfaces
+- CLI interface via `cli.py`
+- GUI interface via `gui/`
+- Headless interface via `main_headless_wrapper.py`
+
+## Deployment
+
+### Execution Modes
+1. **Desktop Application**: Full GUI with PyQt6
+2. **Headless Mode**: Daemon execution without GUI
+3. **API Server**: REST API service
+4. **CLI Mode**: Command-line interface
+
+### Configuration
+- Environment variables via `.env`
+- YAML configuration files
+- ThirstyLang configurations (`.thirsty` files)
+
+### Platform Support
+- Linux (primary)
+- Windows
+- macOS
+
+### Deployment Files
+- `Dockerfile`: Container deployment
+- `docker-compose.yml`: Multi-service deployment
+- `deployment/`: Deployment configurations
+- `k8s/`: Kubernetes manifests
+
+## Architecture Patterns
+
+### Three-Tier Design
+1. **Tier 1 - Governance**: Sovereign authority and policy enforcement
+2. **Tier 2 - Infrastructure**: Constrained operational services
+3. **Tier 3 - Application**: Sandboxed, replaceable application logic
+
+### Trust Root
+- CognitionKernel is the single trust root
+- All execution requires kernel authority
+- No subsystem bypasses governance
+
+### Sovereignty
+- AGI identity system integrated
+- Constitutional governance enforced
+- Jurisdictional boundaries respected
+
+## Security Considerations
+- Trust root initialization in `main.py`
+- Security enforcement in `security/`
+- Audit logging in `audit/`
+- Secrets management in `vault/`
+- Privacy enforcement in `privacy/`
+- Asymmetric security framework integration
+
+## Performance Characteristics
+- Multi-tier architecture allows selective scaling
+- Memory engine provides efficient state management
+- Health monitoring enables proactive intervention
+- Reflection cycle ensures continuous optimization
+
+## Monitoring and Observability
+- Tier health dashboard
+- System inspection tools
+- Audit trail logging
+- Performance metrics collection
+- Health check endpoints
+
+## Future Extensions
+- Enhanced agent coordination
+- Expanded API surface
+- Additional execution modes
+- Extended platform support
+- Enhanced monitoring capabilities

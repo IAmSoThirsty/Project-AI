@@ -1,0 +1,112 @@
+# Sovereign First Edition (v1.0.0-E1) Container
+# Based on Thirsty's OctoReflex Reference Implementation
+
+# Build arguments for reproducibility
+ARG SOURCE_COMMIT_SHA="unknown"
+ARG BUILD_VERSION="dev"
+ARG SOURCE_DATE_EPOCH="0"
+ARG BUILD_TIMESTAMP="unknown"
+
+# Stage 1: Build OctoReflex eBPF components
+FROM golang:1.22-bookworm@sha256:3d699e4d15d0f8f13c9195c0632a16702b8cbdece2955af1c23b37ae5d55a253 AS octoreflex-builder
+WORKDIR /app/octoreflex
+COPY octoreflex/ .
+# Requires clang and bpftool for eBPF
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    clang \
+    bpftool \
+    libbpf-dev \
+    make \
+    && rm -rf /var/lib/apt/lists/*
+RUN make bpf agent
+
+# Stage 2: Build Python dependencies
+FROM python:3.11-slim-bookworm@sha256:9c6f90801e6b68e772b7c0ca74260cbf7af9f320acec894e26fccdaccfbe3b47 AS python-builder
+WORKDIR /build
+
+# Install Python build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    gcc \
+    g++ \
+    make \
+    pkg-config \
+    libssl-dev \
+    libffi-dev \
+    libpq-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libtiff-dev \
+    libfreetype6-dev \
+    liblcms2-dev \
+    libwebp-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Build Python wheels
+COPY requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /build/wheels -r requirements.txt
+
+# Stage 3: Runtime
+FROM python:3.11-slim-bookworm@sha256:9c6f90801e6b68e772b7c0ca74260cbf7af9f320acec894e26fccdaccfbe3b47
+
+# OCI labels for reproducibility
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT_SHA}"
+LABEL org.opencontainers.image.version="${BUILD_VERSION}"
+LABEL org.opencontainers.image.created="${BUILD_TIMESTAMP}"
+LABEL org.opencontainers.image.source="https://github.com/IAmSoThirsty/Sovereign-Governance-Substrate"
+LABEL org.opencontainers.image.title="Sovereign First Edition"
+LABEL org.opencontainers.image.description="Sovereign governance with OctoReflex runtime verification"
+
+# Create non-root user for security
+RUN groupadd -r sovereign && useradd -r -g sovereign sovereign
+
+WORKDIR /app
+
+# Install runtime system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Core utilities
+    curl \
+    git \
+    make \
+    ca-certificates \
+    # Python runtime libraries
+    libssl3 \
+    libffi8 \
+    libpq5 \
+    libjpeg62 \
+    zlib1g \
+    libtiff5 \
+    libfreetype6 \
+    liblcms2-2 \
+    libwebp7 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy OctoReflex from builder
+COPY --from=octoreflex-builder /app/octoreflex/bin/octoreflex /usr/bin/octoreflex
+
+# Copy Python wheels from builder
+COPY --from=python-builder /build/wheels /wheels
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir /wheels/* && rm -rf /wheels
+
+# Copy Project-AI Source
+COPY --chown=sovereign:sovereign . .
+
+# Switch to non-root user
+USER sovereign
+
+# Set environment
+ENV PYTHONPATH=/app/src
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV SOVEREIGN_MODE=PROD
+ENV SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH}
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import sys; sys.exit(0)" || exit 1
+
+# Entry point: The Sovereign Ignition Sequence
+ENTRYPOINT ["python", "boot_sovereign.py"]

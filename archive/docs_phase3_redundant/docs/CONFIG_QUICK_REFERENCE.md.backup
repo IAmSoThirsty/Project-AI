@@ -1,0 +1,463 @@
+# Configuration Quick Reference
+
+**Sovereign Governance Substrate**
+
+⚡ **Quick access to common configuration tasks**
+
+---
+
+
+
+## 🚀 Quick Start (New Developer)
+```bash
+# 1. Copy environment template
+
+cp .env.example .env
+
+
+
+# 2. Generate secrets
+
+python -c "import secrets; print('SECRET_KEY=' + secrets.token_urlsafe(32))"
+python -c "import secrets; print('JWT_SECRET=' + secrets.token_urlsafe(64))"
+
+
+
+# 3. Add to .env (use values from step 2)
+
+
+# Also add: OPENAI_API_KEY=your-key-here
+
+
+
+# 4. Validate configuration
+
+python config_validator.py
+
+
+
+# 5. Start services
+
+docker-compose up -d
+```
+
+---
+
+
+
+## 📋 Essential Environment Variables
+
+
+
+### Required for Production
+```bash
+OPENAI_API_KEY=sk-proj-xxx          # OpenAI API key
+
+SECRET_KEY=<random-32-bytes>        # App secret key
+
+JWT_SECRET=<random-64-bytes>        # JWT signing key
+
+API_KEYS=key1,key2,key3             # API auth keys
+
+ENVIRONMENT=production              # Environment
+```
+
+
+
+### Common Optional Variables
+```bash
+API_HOST=0.0.0.0                    # Server bind address
+
+API_PORT=8001                       # Server port
+
+LOG_LEVEL=INFO                      # Logging level
+
+CORS_ORIGINS=https://app.com        # CORS origins
+
+DATABASE_URL=postgresql://...       # Database URL
+
+TEMPORAL_HOST=temporal:7233         # Temporal server
+```
+
+---
+
+
+
+## 🔍 Validation Commands
+```bash
+# Validate all configs
+
+python config_validator.py
+
+
+
+# Fail on errors (CI/CD)
+
+python config_validator.py --fail-on-error
+
+
+
+# Save report
+
+python config_validator.py --output report.txt
+
+
+
+# Check specific config
+
+python -c "from config.settings import Config; print(Config.API_HOST)"
+```
+
+---
+
+
+
+## 🐳 Docker Commands
+```bash
+# Start all services
+
+docker-compose up -d
+
+
+
+# View logs
+
+docker-compose logs -f project-ai
+
+
+
+# Restart service
+
+docker-compose restart project-ai
+
+
+
+# Stop all
+
+docker-compose down
+
+
+
+# Rebuild after config changes
+
+docker-compose down && docker-compose up -d --build
+```
+
+---
+
+
+
+## ☸️ Kubernetes Commands
+```bash
+# Apply base config
+
+kubectl apply -k k8s/base/
+
+
+
+# Apply dev overlay
+
+kubectl apply -k k8s/overlays/dev/
+
+
+
+# Apply production overlay
+
+kubectl apply -k k8s/overlays/production/
+
+
+
+# View ConfigMap
+
+kubectl get configmap project-ai-config -o yaml
+
+
+
+# Update ConfigMap
+
+kubectl edit configmap project-ai-config
+
+
+
+# Restart deployment (apply new config)
+
+kubectl rollout restart deployment/project-ai
+```
+
+---
+
+
+
+## 🔐 Secret Generation
+```bash
+# SECRET_KEY (32 bytes)
+
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+
+
+
+# JWT_SECRET (64 bytes)
+
+python -c "import secrets; print(secrets.token_urlsafe(64))"
+
+
+
+# API_KEYS (3 keys)
+
+python -c "import secrets; print(','.join([secrets.token_urlsafe(32) for _ in range(3)]))"
+
+
+
+# FERNET_KEY (for encryption)
+
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
+
+---
+
+
+
+## 🗂️ Configuration File Locations
+
+| File | Purpose |
+|------|---------|
+| `.env` | Local environment variables (git-ignored) |
+| `.env.example` | Environment template (committed) |
+| `config/settings.py` | Main application settings |
+| `config/settings_manager.py` | Encrypted settings manager |
+| `config/god_tier_config.yaml` | AI system configuration |
+| `config/defense_engine.toml` | Defense subsystems config |
+| `docker-compose.yml` | Docker orchestration |
+| `k8s/base/configmap.yaml` | Kubernetes base config |
+| `pyproject.toml` | Python project configuration |
+
+---
+
+
+
+## 🔧 Common Configuration Tasks
+
+
+
+### Add New Environment Variable
+
+1. Add to `.env.example` with documentation
+2. Add to `config/settings.py` with `os.getenv()`
+3. Add to `CONFIG_REFERENCE.md` documentation
+4. Update microservice configs if needed
+5. Update K8s ConfigMap if needed
+6. Run validator: `python config_validator.py`
+
+
+
+### Add New Microservice
+
+1. Copy template: `config/microservice_config_template.py`
+2. Update `SERVICE_NAME`, `VERSION`, `PORT`
+3. Add to `docker-compose.yml`
+4. Create `.env.example` in service directory
+5. Create `kubernetes/configmap.yaml`
+6. Document in `CONFIG_REFERENCE.md`
+
+
+
+### Update Production Config
+
+1. **Never edit .env directly in production**
+2. Use secrets manager (Vault, AWS Secrets Manager)
+3. Update K8s Secret: `kubectl create secret generic ...`
+4. Update ConfigMap if needed
+5. Validate: `python config_validator.py --fail-on-error`
+6. Apply: `kubectl apply -k k8s/overlays/production/`
+7. Restart: `kubectl rollout restart deployment/project-ai`
+
+---
+
+
+
+## 🚨 Troubleshooting
+
+
+
+### Service won't start
+```bash
+# Check environment variables
+
+docker-compose config
+
+
+
+# View logs
+
+docker-compose logs project-ai
+
+
+
+# Validate config
+
+python config_validator.py
+
+
+
+# Check .env file exists
+
+ls -la .env
+```
+
+
+
+### Configuration not loading
+```bash
+# Verify .env location
+
+pwd && ls .env
+
+
+
+# Check environment in container
+
+docker-compose exec project-ai env | grep API_KEY
+
+
+
+# Restart with fresh config
+
+docker-compose down && docker-compose up -d
+```
+
+
+
+### Kubernetes config not applied
+```bash
+# Check ConfigMap
+
+kubectl get configmap project-ai-config -o yaml
+
+
+
+# Check Secret
+
+kubectl get secret project-ai-secrets -o yaml
+
+
+
+# Verify pod environment
+
+kubectl exec -it <pod-name> -- env | grep API
+
+
+
+# Restart deployment
+
+kubectl rollout restart deployment/project-ai
+```
+
+
+
+### Production validation failing
+```bash
+# Run validator with details
+
+python config_validator.py
+
+
+
+# Common issues:
+
+
+# - API_KEYS not set → Set in environment
+
+
+# - JWT_SECRET not set → Set in environment  
+
+
+# - CORS_ORIGINS='*' → Set specific origins
+
+
+# - LOG_LEVEL=DEBUG → Set to INFO/WARNING
+```
+
+---
+
+
+
+## 📊 Configuration Status Check
+```bash
+# Quick health check
+
+python -c "
+from config.settings import Config
+from config.settings_manager import SettingsManager
+
+print('API Host:', Config.API_HOST)
+print('API Port:', Config.API_PORT)
+print('Log Level:', Config.LOG_LEVEL)
+print('Environment:', Config.get('ENVIRONMENT', 'unknown'))
+"
+
+
+
+# Detailed status
+
+python config_validator.py --output status.txt
+cat status.txt
+```
+
+---
+
+
+
+## 🎯 Production Deployment Checklist
+
+- [ ] All secrets generated (not default values)
+- [ ] `SECRET_KEY` is random (32+ bytes)
+- [ ] `JWT_SECRET` is random (64+ bytes)
+- [ ] `API_KEYS` are strong and unique
+- [ ] `ENVIRONMENT=production`
+- [ ] `LOG_LEVEL=INFO` or `WARNING`
+- [ ] `CORS_ORIGINS` specific (not `*`)
+- [ ] `DEBUG=false` or unset
+- [ ] Configuration validated: `python config_validator.py --fail-on-error`
+- [ ] Secrets in secrets manager (not .env file)
+- [ ] `.env` not committed to git
+- [ ] Database connection secure
+- [ ] SSL/TLS enabled
+- [ ] Rate limiting enabled
+- [ ] Monitoring configured
+- [ ] Backup configured
+
+---
+
+
+
+## 📚 Documentation Links
+
+- **Complete Reference**: [`CONFIG_REFERENCE.md`](CONFIG_REFERENCE.md)
+- **Architecture Report**: [`CONFIGURATION_ARCHITECTURE_REPORT.md`](CONFIGURATION_ARCHITECTURE_REPORT.md)
+- **Implementation Summary**: [`CONFIGURATION_IMPLEMENTATION_SUMMARY.md`](CONFIGURATION_IMPLEMENTATION_SUMMARY.md)
+- **Microservice Template**: [`config/microservice_config_template.py`](config/microservice_config_template.py)
+- **Schema Documentation**: [`config/schemas/README.md`](config/schemas/README.md)
+
+---
+
+
+
+## 🆘 Support
+
+**Issues?** Check these resources in order:
+
+1. This quick reference (you are here)
+2. [`CONFIG_REFERENCE.md`](CONFIG_REFERENCE.md) - Complete documentation
+3. [`CONFIGURATION_ARCHITECTURE_REPORT.md`](CONFIGURATION_ARCHITECTURE_REPORT.md) - Deep dive
+4. Run validator: `python config_validator.py`
+5. Check logs: `docker-compose logs -f`
+
+**Still stuck?** 
+- Check existing issues: `grep -r "your-error" logs/`
+- Review recent changes: `git log --oneline -10`
+- Verify environment: `env | grep -i api`
+
+---
+
+**Last Updated**: 2026-04-10  
+**Maintained By**: Configuration Architect

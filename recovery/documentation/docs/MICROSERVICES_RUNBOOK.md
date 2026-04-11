@@ -1,0 +1,1024 @@
+# Microservices Operations Runbook
+
+## Purpose
+
+Operational procedures for the 8 emergent microservices in the Governance Tier 2 layer, including start/stop procedures, health monitoring, log aggregation, and troubleshooting.
+
+## Microservices Architecture
+
+### Service Registry
+
+| Service | Port | Container Name | API Prefix | Purpose |
+|---------|------|----------------|------------|---------|
+| AI Mutation Firewall | 8011 | ai-mutation-firewall | `/api/v1` | Prevents unauthorized AI modifications |
+| Incident Reflex System | 8012 | incident-reflex-system | `/api/v1` | Real-time security incident detection |
+| Trust Graph Engine | 8013 | trust-graph-engine | `/api/v1` | Trust relationship management |
+| Sovereign Data Vault | 8014 | sovereign-data-vault | `/api/v1` | Encrypted data storage |
+| Negotiation Agent | 8015 | negotiation-agent | `/api/v1` | Autonomous negotiation workflows |
+| Compliance Engine | 8016 | compliance-engine | `/api/v1` | Regulatory compliance checks |
+| Verifiable Reality | 8017 | verifiable-reality | `/api/v1` | Reality verification system |
+| I Believe In You | 8018 | i-believe-in-you | `/api/v1` | Confidence and support module |
+
+---
+
+## Start/Stop Procedures
+
+### Docker Compose Operations
+
+#### Start All Microservices
+
+```bash
+
+# Start all governance microservices
+
+docker-compose up -d \
+  mutation-firewall \
+  incident-reflex \
+  trust-graph \
+  data-vault \
+  negotiation-agent \
+  compliance-engine \
+  verifiable-reality \
+  i-believe-in-you
+
+# Verify all services started
+
+docker-compose ps | grep -E "(mutation-firewall|incident-reflex|trust-graph|data-vault|negotiation-agent|compliance-engine|verifiable-reality|i-believe-in-you)"
+```
+
+#### Start Individual Microservice
+
+```bash
+
+# Start specific microservice
+
+docker-compose up -d mutation-firewall
+
+# Rebuild and start
+
+docker-compose up -d --build mutation-firewall
+
+# View logs during startup
+
+docker-compose logs -f mutation-firewall
+```
+
+#### Start in Dependency Order
+
+```bash
+
+# 1. Start core dependencies (if not running)
+
+docker-compose up -d prometheus
+
+# 2. Start data-layer microservices
+
+docker-compose up -d data-vault trust-graph
+
+# Wait for readiness
+
+sleep 10
+
+# 3. Start security microservices
+
+docker-compose up -d mutation-firewall incident-reflex
+
+# 4. Start governance microservices
+
+docker-compose up -d compliance-engine negotiation-agent
+
+# 5. Start verification services
+
+docker-compose up -d verifiable-reality i-believe-in-you
+
+# Verify all healthy
+
+for port in {8011..8018}; do
+  curl -sf http://localhost:$port/api/v1/health/liveness && echo " - Port $port: OK" || echo " - Port $port: FAILED"
+done
+```
+
+#### Stop All Microservices
+
+```bash
+
+# Stop gracefully
+
+docker-compose stop \
+  mutation-firewall \
+  incident-reflex \
+  trust-graph \
+  data-vault \
+  negotiation-agent \
+  compliance-engine \
+  verifiable-reality \
+  i-believe-in-you
+
+# Stop immediately (if needed)
+
+docker-compose kill \
+  mutation-firewall \
+  incident-reflex \
+  trust-graph \
+  data-vault \
+  negotiation-agent \
+  compliance-engine \
+  verifiable-reality \
+  i-believe-in-you
+```
+
+#### Restart Microservices
+
+```bash
+
+# Restart all microservices
+
+docker-compose restart \
+  mutation-firewall \
+  incident-reflex \
+  trust-graph \
+  data-vault \
+  negotiation-agent \
+  compliance-engine \
+  verifiable-reality \
+  i-believe-in-you
+
+# Restart specific microservice
+
+docker-compose restart incident-reflex
+
+# Restart with rebuild
+
+docker-compose up -d --build --force-recreate incident-reflex
+```
+
+### Kubernetes Operations
+
+#### Start Microservices in Kubernetes
+
+```bash
+
+# Deploy all microservices
+
+kubectl apply -k k8s/emergent-services/production -n ${NAMESPACE}
+
+# Verify deployments
+
+kubectl get deployments -n ${NAMESPACE} -l tier=governance
+
+# Wait for all to be ready
+
+kubectl wait --for=condition=available --timeout=300s \
+  deployment -l tier=governance -n ${NAMESPACE}
+```
+
+#### Stop Microservices in Kubernetes
+
+```bash
+
+# Scale down to 0 (stop without deleting)
+
+kubectl scale deployment \
+  --replicas=0 \
+  -l tier=governance \
+  -n ${NAMESPACE}
+
+# Delete deployments completely
+
+kubectl delete deployment -l tier=governance -n ${NAMESPACE}
+```
+
+#### Restart Microservices in Kubernetes
+
+```bash
+
+# Rolling restart
+
+kubectl rollout restart deployment -l tier=governance -n ${NAMESPACE}
+
+# Restart specific microservice
+
+kubectl rollout restart deployment/mutation-firewall -n ${NAMESPACE}
+
+# Monitor restart progress
+
+kubectl rollout status deployment/mutation-firewall -n ${NAMESPACE}
+```
+
+---
+
+## Health Checks
+
+### Health Check Endpoints
+
+All microservices expose standard health check endpoints:
+
+- **Liveness**: `/api/v1/health/liveness` - Is the service alive?
+- **Readiness**: `/api/v1/health/readiness` - Is the service ready to accept traffic?
+- **Metrics**: `/metrics` - Prometheus metrics
+
+### Manual Health Checks
+
+#### Check All Services (Docker)
+
+```bash
+
+# Quick health check script
+
+echo "=== Microservices Health Check ==="
+services=(
+  "8011:AI Mutation Firewall"
+  "8012:Incident Reflex System"
+  "8013:Trust Graph Engine"
+  "8014:Sovereign Data Vault"
+  "8015:Negotiation Agent"
+  "8016:Compliance Engine"
+  "8017:Verifiable Reality"
+  "8018:I Believe In You"
+)
+
+for service in "${services[@]}"; do
+  IFS=':' read -r port name <<< "$service"
+  if curl -sf http://localhost:$port/api/v1/health/liveness > /dev/null 2>&1; then
+    echo "✓ $name (port $port): HEALTHY"
+  else
+    echo "✗ $name (port $port): UNHEALTHY"
+  fi
+done
+```
+
+#### Check Readiness
+
+```bash
+
+# Check if services are ready to serve traffic
+
+for port in {8011..8018}; do
+  response=$(curl -s http://localhost:$port/api/v1/health/readiness)
+  status=$(echo $response | jq -r '.status // "unknown"')
+  echo "Port $port: $status"
+done
+```
+
+#### Check Detailed Health (Kubernetes)
+
+```bash
+
+# Check pod health
+
+kubectl get pods -n ${NAMESPACE} -l tier=governance
+
+# Describe pod for events
+
+kubectl describe pod -l tier=governance -n ${NAMESPACE}
+
+# Check readiness/liveness probes
+
+kubectl get pods -n ${NAMESPACE} -l tier=governance -o json | \
+  jq '.items[] | {name: .metadata.name, ready: .status.conditions[] | select(.type=="Ready") | .status}'
+```
+
+### Automated Health Monitoring
+
+#### Health Check Script
+
+```bash
+#!/bin/bash
+
+# health_check_microservices.sh
+
+SERVICES=(
+  "mutation-firewall:8011"
+  "incident-reflex:8012"
+  "trust-graph:8013"
+  "data-vault:8014"
+  "negotiation-agent:8015"
+  "compliance-engine:8016"
+  "verifiable-reality:8017"
+  "i-believe-in-you:8018"
+)
+
+FAILED=0
+
+for service in "${SERVICES[@]}"; do
+  IFS=':' read -r name port <<< "$service"
+  
+  # Liveness check
+
+  if ! curl -sf http://localhost:$port/api/v1/health/liveness > /dev/null 2>&1; then
+    echo "ERROR: $name liveness check failed"
+    FAILED=1
+  fi
+  
+  # Readiness check
+
+  if ! curl -sf http://localhost:$port/api/v1/health/readiness > /dev/null 2>&1; then
+    echo "WARNING: $name not ready"
+  fi
+done
+
+if [ $FAILED -eq 1 ]; then
+  echo "Health check FAILED"
+  exit 1
+else
+  echo "All services healthy"
+  exit 0
+fi
+```
+
+---
+
+## Log Aggregation
+
+### Viewing Logs
+
+#### View All Microservice Logs (Docker)
+
+```bash
+
+# Follow logs from all microservices
+
+docker-compose logs -f \
+  mutation-firewall \
+  incident-reflex \
+  trust-graph \
+  data-vault \
+  negotiation-agent \
+  compliance-engine \
+  verifiable-reality \
+  i-believe-in-you
+
+# View last 100 lines from each
+
+docker-compose logs --tail=100 \
+  mutation-firewall \
+  incident-reflex \
+  trust-graph \
+  data-vault \
+  negotiation-agent \
+  compliance-engine \
+  verifiable-reality \
+  i-believe-in-you
+```
+
+#### View Specific Service Logs
+
+```bash
+
+# Single service
+
+docker-compose logs -f incident-reflex
+
+# With timestamps
+
+docker-compose logs -t incident-reflex
+
+# Last hour
+
+docker-compose logs --since 1h incident-reflex
+
+# Search logs
+
+docker-compose logs incident-reflex | grep ERROR
+```
+
+#### Kubernetes Logs
+
+```bash
+
+# View logs from all governance pods
+
+kubectl logs -l tier=governance -n ${NAMESPACE} --tail=50
+
+# Follow logs from specific service
+
+kubectl logs -f deployment/incident-reflex -n ${NAMESPACE}
+
+# View logs from all replicas
+
+kubectl logs -l app=incident-reflex -n ${NAMESPACE} --all-containers=true
+
+# View logs from previous container (after crash)
+
+kubectl logs deployment/incident-reflex -n ${NAMESPACE} --previous
+```
+
+### Log Export and Analysis
+
+#### Export Logs to Files
+
+```bash
+
+# Export all microservice logs
+
+mkdir -p logs/microservices/$(date +%Y%m%d)
+
+services=(mutation-firewall incident-reflex trust-graph data-vault negotiation-agent compliance-engine verifiable-reality i-believe-in-you)
+
+for service in "${services[@]}"; do
+  echo "Exporting $service logs..."
+  docker-compose logs --no-color $service > \
+    logs/microservices/$(date +%Y%m%d)/${service}.log
+done
+
+echo "Logs exported to logs/microservices/$(date +%Y%m%d)/"
+```
+
+#### Aggregate and Search Logs
+
+```bash
+
+# Search for errors across all microservices
+
+docker-compose logs \
+  mutation-firewall \
+  incident-reflex \
+  trust-graph \
+  data-vault \
+  negotiation-agent \
+  compliance-engine \
+  verifiable-reality \
+  i-believe-in-you | \
+  grep -i "error"
+
+# Count errors by service
+
+for service in mutation-firewall incident-reflex trust-graph data-vault negotiation-agent compliance-engine verifiable-reality i-believe-in-you; do
+  count=$(docker-compose logs $service | grep -c "ERROR")
+  echo "$service: $count errors"
+done
+
+# Find slow requests
+
+docker-compose logs | grep "duration" | awk '{if ($NF > 1000) print}'
+```
+
+### Centralized Logging
+
+#### Configure Log Shipping (Docker)
+
+```bash
+
+# Update docker-compose.yml logging driver
+
+# logging:
+
+#   driver: "fluentd"
+
+#   options:
+
+#     fluentd-address: localhost:24224
+
+#     tag: "{{.Name}}"
+
+# Or use JSON file with external collector
+
+# logging:
+
+#   driver: "json-file"
+
+#   options:
+
+#     max-size: "10m"
+
+#     max-file: "3"
+
+```
+
+#### Configure Logging (Kubernetes)
+
+```bash
+
+# Logs are automatically collected by:
+
+# - Fluentd/Fluent Bit
+
+# - Datadog agent
+
+# - Elastic Filebeat
+
+# - CloudWatch Logs (EKS)
+
+# - Azure Monitor (AKS)
+
+# - Google Cloud Logging (GKE)
+
+# Query logs from centralized system
+
+# Example: kubectl logs with stern
+
+stern -n ${NAMESPACE} -l tier=governance
+```
+
+---
+
+## Monitoring and Metrics
+
+### Prometheus Metrics
+
+#### Access Metrics Endpoints
+
+```bash
+
+# View Prometheus metrics for each service
+
+for port in {8011..8018}; do
+  echo "=== Port $port Metrics ==="
+  curl -s http://localhost:$port/metrics | head -20
+  echo ""
+done
+
+# Specific metrics
+
+curl -s http://localhost:8011/metrics | grep http_requests_total
+```
+
+#### Common Metrics to Monitor
+
+**Request Metrics**:
+
+- `http_requests_total` - Total HTTP requests
+- `http_request_duration_seconds` - Request latency
+- `http_requests_in_progress` - Concurrent requests
+
+**Error Metrics**:
+
+- `http_requests_failed_total` - Failed requests
+- `exceptions_total` - Application exceptions
+
+**Resource Metrics**:
+
+- `process_cpu_seconds_total` - CPU usage
+- `process_resident_memory_bytes` - Memory usage
+- `process_open_fds` - Open file descriptors
+
+**Business Metrics** (service-specific):
+
+- `incidents_reported_total` - Incidents reported (Incident Reflex)
+- `policies_evaluated_total` - Policies evaluated (Mutation Firewall)
+- `trust_scores_calculated_total` - Trust scores (Trust Graph)
+- `vault_operations_total` - Vault operations (Data Vault)
+
+### Grafana Dashboards
+
+#### Access Grafana
+
+```bash
+
+# Port-forward Grafana (Docker)
+
+# Access: http://localhost:3000
+
+# Port-forward Grafana (Kubernetes)
+
+kubectl port-forward -n ${NAMESPACE} svc/grafana 3000:3000
+
+# Default credentials: admin/admin
+
+```
+
+#### Import Microservices Dashboard
+
+```bash
+
+# Dashboard JSON location
+
+ls k8s/grafana-dashboards.yaml
+
+# Import via API
+
+curl -X POST http://admin:admin@localhost:3000/api/dashboards/db \
+  -H "Content-Type: application/json" \
+  -d @k8s/grafana-dashboards.yaml
+```
+
+---
+
+## Service Configuration
+
+### Environment Variables
+
+#### View Current Configuration (Docker)
+
+```bash
+
+# View environment for service
+
+docker-compose exec incident-reflex env | sort
+
+# View specific variable
+
+docker-compose exec incident-reflex printenv API_KEY
+```
+
+#### Update Configuration (Docker)
+
+```bash
+
+# Update .env file
+
+echo "NEW_CONFIG_VALUE=123" >> .env
+
+# Recreate services
+
+docker-compose up -d --force-recreate incident-reflex
+
+# Verify
+
+docker-compose exec incident-reflex printenv NEW_CONFIG_VALUE
+```
+
+#### Update Configuration (Kubernetes)
+
+```bash
+
+# Update ConfigMap
+
+kubectl edit configmap microservices-config -n ${NAMESPACE}
+
+# Or patch
+
+kubectl patch configmap microservices-config -n ${NAMESPACE} --patch '
+data:
+  LOG_LEVEL: "DEBUG"
+'
+
+# Restart services to pick up changes
+
+kubectl rollout restart deployment -l tier=governance -n ${NAMESPACE}
+```
+
+---
+
+## Scaling Operations
+
+### Manual Scaling (Docker)
+
+```bash
+
+# Scale using docker-compose scale (legacy)
+
+docker-compose up -d --scale incident-reflex=3
+
+# Note: Better to update docker-compose.yml and use deploy.replicas
+
+```
+
+### Manual Scaling (Kubernetes)
+
+```bash
+
+# Scale specific microservice
+
+kubectl scale deployment/incident-reflex --replicas=5 -n ${NAMESPACE}
+
+# Scale all microservices
+
+for service in mutation-firewall incident-reflex trust-graph data-vault negotiation-agent compliance-engine verifiable-reality; do
+  kubectl scale deployment/$service --replicas=3 -n ${NAMESPACE}
+done
+
+# Verify scaling
+
+kubectl get deployments -n ${NAMESPACE} -l tier=governance
+```
+
+### Auto-Scaling (Kubernetes)
+
+```bash
+
+# Enable HPA for microservice
+
+kubectl autoscale deployment incident-reflex \
+  --cpu-percent=70 \
+  --min=3 \
+  --max=10 \
+  -n ${NAMESPACE}
+
+# View HPA status
+
+kubectl get hpa -n ${NAMESPACE}
+
+# Describe HPA
+
+kubectl describe hpa incident-reflex -n ${NAMESPACE}
+```
+
+---
+
+## Inter-Service Communication
+
+### Testing Service-to-Service Communication
+
+#### Test from Main Application
+
+```bash
+
+# Docker
+
+docker-compose exec project-ai curl http://incident-reflex:8000/api/v1/health/liveness
+
+# Kubernetes
+
+kubectl exec -it deployment/project-ai-app -n ${NAMESPACE} -- \
+  curl http://incident-reflex.${NAMESPACE}.svc.cluster.local:8000/api/v1/health/liveness
+```
+
+#### Test Between Microservices
+
+```bash
+
+# Test from one microservice to another
+
+docker-compose exec mutation-firewall \
+  curl http://incident-reflex:8000/api/v1/health/liveness
+
+# Kubernetes
+
+kubectl exec -it deployment/mutation-firewall -n ${NAMESPACE} -- \
+  curl http://incident-reflex.${NAMESPACE}.svc.cluster.local:8000/api/v1/health/liveness
+```
+
+#### Test Service Discovery
+
+```bash
+
+# Docker DNS resolution
+
+docker-compose exec mutation-firewall nslookup incident-reflex
+
+# Kubernetes DNS resolution
+
+kubectl run -it --rm dnstest \
+  --image=busybox \
+  --restart=Never \
+  -n ${NAMESPACE} -- \
+  nslookup incident-reflex.${NAMESPACE}.svc.cluster.local
+```
+
+---
+
+## Troubleshooting
+
+### Service Not Starting
+
+#### Check Container Logs
+
+```bash
+
+# View startup logs
+
+docker-compose logs incident-reflex
+
+# Check for common issues:
+
+# - Port conflicts
+
+# - Missing environment variables
+
+# - Dependency failures
+
+# Check container status
+
+docker-compose ps incident-reflex
+```
+
+#### Check Dependencies
+
+```bash
+
+# Ensure Prometheus is running
+
+docker-compose ps prometheus
+
+# Test dependency connectivity
+
+docker-compose exec incident-reflex curl http://prometheus:9090/-/healthy
+```
+
+### Service Not Responding
+
+#### Check if Service is Running
+
+```bash
+
+# Docker
+
+docker-compose ps | grep incident-reflex
+
+# Kubernetes
+
+kubectl get pods -n ${NAMESPACE} -l app=incident-reflex
+```
+
+#### Test Health Endpoint
+
+```bash
+
+# From host
+
+curl -v http://localhost:8012/api/v1/health/liveness
+
+# From within network
+
+docker-compose exec project-ai curl -v http://incident-reflex:8000/api/v1/health/liveness
+```
+
+#### Check Resource Usage
+
+```bash
+
+# Docker
+
+docker stats incident-reflex-system
+
+# Kubernetes
+
+kubectl top pod -n ${NAMESPACE} -l app=incident-reflex
+```
+
+### High Error Rate
+
+#### View Error Logs
+
+```bash
+
+# Filter error logs
+
+docker-compose logs incident-reflex | grep ERROR | tail -50
+
+# Count errors
+
+docker-compose logs incident-reflex | grep -c ERROR
+
+# View error context
+
+docker-compose logs incident-reflex | grep -B 5 -A 5 ERROR
+```
+
+#### Check Error Metrics
+
+```bash
+
+# View error rate from metrics
+
+curl http://localhost:8012/metrics | grep failed
+
+# Query Prometheus for error rate
+
+curl "http://localhost:9090/api/v1/query?query=rate(http_requests_failed_total{job='incident-reflex'}[5m])"
+```
+
+### Performance Issues
+
+#### Check Response Times
+
+```bash
+
+# View request duration from metrics
+
+curl http://localhost:8012/metrics | grep duration
+
+# Check slow requests in logs
+
+docker-compose logs incident-reflex | grep "duration" | awk '{if ($NF > 1000) print}'
+```
+
+#### Optimize Performance
+
+```bash
+
+# Increase replicas (Kubernetes)
+
+kubectl scale deployment/incident-reflex --replicas=5 -n ${NAMESPACE}
+
+# Adjust resource limits
+
+kubectl edit deployment/incident-reflex -n ${NAMESPACE}
+
+# Update resources.requests and resources.limits
+
+# Enable caching (if applicable)
+
+# Update configuration to enable caching
+
+```
+
+---
+
+## Emergency Procedures
+
+### Emergency Stop All Microservices
+
+```bash
+
+# Docker
+
+docker-compose kill \
+  mutation-firewall \
+  incident-reflex \
+  trust-graph \
+  data-vault \
+  negotiation-agent \
+  compliance-engine \
+  verifiable-reality \
+  i-believe-in-you
+
+# Kubernetes
+
+kubectl scale deployment -l tier=governance --replicas=0 -n ${NAMESPACE}
+```
+
+### Emergency Restart
+
+```bash
+
+# Docker
+
+docker-compose restart \
+  mutation-firewall \
+  incident-reflex \
+  trust-graph \
+  data-vault \
+  negotiation-agent \
+  compliance-engine \
+  verifiable-reality \
+  i-believe-in-you
+
+# Kubernetes
+
+kubectl rollout restart deployment -l tier=governance -n ${NAMESPACE}
+```
+
+### Rollback to Previous Version
+
+```bash
+
+# Docker - restore from backup or git tag
+
+git checkout v1.0.0
+docker-compose build
+docker-compose up -d
+
+# Kubernetes - rollback deployment
+
+kubectl rollout undo deployment -l tier=governance -n ${NAMESPACE}
+```
+
+---
+
+## Service-Specific Notes
+
+### AI Mutation Firewall (Port 8011)
+
+- Monitors all AI model changes
+- Rate limit: 250 requests/minute
+- Policies stored in database
+
+### Incident Reflex System (Port 8012)
+
+- Real-time security monitoring
+- Auto-escalation for critical incidents
+- Integration with alerting systems
+
+### Trust Graph Engine (Port 8013)
+
+- Graph database backend required
+- Computationally intensive trust calculations
+- May need higher CPU allocation
+
+### Sovereign Data Vault (Port 8014)
+
+- Encrypted storage
+- Requires FERNET_KEY environment variable
+- High disk I/O
+
+### Negotiation Agent (Port 8015)
+
+- Stateful service
+- Session management via Redis
+- Requires external negotiation API
+
+### Compliance Engine (Port 8016)
+
+- Regular compliance checks
+- Configurable check intervals
+- Audit log generation
+
+### Verifiable Reality (Port 8017)
+
+- External verification sources
+- Network-intensive
+- Caching recommended
+
+### I Believe In You (Port 8018)
+
+- Morale and confidence tracking
+- Low resource usage
+- Optional service
+
+---
+
+**Last Updated**: 2026-04-09  
+**Maintained By**: SRE Team  
+**Review Frequency**: Quarterly

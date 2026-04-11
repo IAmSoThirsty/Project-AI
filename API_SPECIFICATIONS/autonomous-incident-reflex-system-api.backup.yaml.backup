@@ -1,0 +1,434 @@
+openapi: 3.1.0
+info:
+  title: Autonomous Incident Reflex System API
+  description: |
+    Real-time security incident detection, automated response, and forensic analysis.
+    Provides autonomous reflexes for common attack patterns and threat mitigation.
+  version: 1.0.0
+  contact:
+    name: Project AI Team
+    email: security@project-ai.dev
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8015
+    description: Local development
+  - url: http://incident-reflex:8000
+    description: Docker network
+  - url: https://reflex.sovereign.ai
+    description: Production
+
+tags:
+  - name: System
+  - name: Health
+  - name: Observability
+  - name: Incidents
+  - name: Reflexes
+  - name: Forensics
+
+paths:
+  /:
+    get:
+      summary: Service information
+      operationId: root
+      tags: [System]
+      responses:
+        '200':
+          description: Service metadata
+
+  /api/v1/health/liveness:
+    get:
+      summary: Liveness probe
+      operationId: liveness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service alive
+
+  /api/v1/health/readiness:
+    get:
+      summary: Readiness probe
+      operationId: readiness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service ready
+        '503':
+          description: Not ready
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      operationId: metrics
+      tags: [Observability]
+      responses:
+        '200':
+          description: Metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /api/v1/incidents:
+    get:
+      summary: List security incidents
+      operationId: list_incidents
+      tags: [Incidents]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [critical, high, medium, low, info]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [new, investigating, contained, resolved, false_positive]
+      responses:
+        '200':
+          description: Incident list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedIncidents'
+
+    post:
+      summary: Report incident
+      description: Report a new security incident for reflex processing
+      operationId: report_incident
+      tags: [Incidents]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentCreate'
+      responses:
+        '201':
+          description: Incident reported
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityIncident'
+
+  /api/v1/incidents/{incident_id}:
+    get:
+      summary: Get incident details
+      operationId: get_incident
+      tags: [Incidents]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: incident_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Incident details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityIncident'
+        '404':
+          description: Not found
+
+    patch:
+      summary: Update incident
+      operationId: update_incident
+      tags: [Incidents]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: incident_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentUpdate'
+      responses:
+        '200':
+          description: Incident updated
+
+  /api/v1/incidents/{incident_id}/contain:
+    post:
+      summary: Contain incident
+      description: Trigger automated containment reflex for an incident
+      operationId: contain_incident
+      tags: [Incidents]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: incident_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Containment initiated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  incident_id:
+                    type: string
+                  containment_actions:
+                    type: array
+                    items:
+                      type: string
+                  status:
+                    type: string
+
+  /api/v1/reflexes:
+    get:
+      summary: List configured reflexes
+      description: Get all automated response reflexes
+      operationId: list_reflexes
+      tags: [Reflexes]
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Reflex configurations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReflexConfig'
+
+    post:
+      summary: Create reflex
+      operationId: create_reflex
+      tags: [Reflexes]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReflexCreate'
+      responses:
+        '201':
+          description: Reflex created
+
+  /api/v1/forensics/{incident_id}:
+    get:
+      summary: Get forensic analysis
+      description: Retrieve detailed forensic analysis for an incident
+      operationId: get_forensics
+      tags: [Forensics]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: incident_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Forensic data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForensicAnalysis'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    IncidentCreate:
+      type: object
+      required:
+        - title
+        - severity
+        - source
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        severity:
+          type: string
+          enum: [critical, high, medium, low, info]
+        source:
+          type: string
+        indicators:
+          type: object
+        metadata:
+          type: object
+
+    IncidentUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [new, investigating, contained, resolved, false_positive]
+        notes:
+          type: string
+        assigned_to:
+          type: string
+
+    SecurityIncident:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        severity:
+          type: string
+        status:
+          type: string
+        source:
+          type: string
+        indicators:
+          type: object
+        reflexes_triggered:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        resolved_at:
+          type: string
+          format: date-time
+
+    PaginatedIncidents:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityIncident'
+        total:
+          type: integer
+        page:
+          type: integer
+        page_size:
+          type: integer
+        total_pages:
+          type: integer
+
+    ReflexCreate:
+      type: object
+      required:
+        - name
+        - trigger_pattern
+        - actions
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        trigger_pattern:
+          type: object
+        actions:
+          type: array
+          items:
+            type: object
+        enabled:
+          type: boolean
+          default: true
+
+    ReflexConfig:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        trigger_pattern:
+          type: object
+        actions:
+          type: array
+        enabled:
+          type: boolean
+        trigger_count:
+          type: integer
+        last_triggered:
+          type: string
+          format: date-time
+
+    ForensicAnalysis:
+      type: object
+      properties:
+        incident_id:
+          type: string
+          format: uuid
+        timeline:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+              event:
+                type: string
+              source:
+                type: string
+        indicators_of_compromise:
+          type: array
+          items:
+            type: object
+        attack_chain:
+          type: object
+        evidence:
+          type: object
+        recommendations:
+          type: array
+          items:
+            type: string

@@ -1,0 +1,166 @@
+openapi: 3.1.0
+info:
+  title: Autonomous Negotiation Agent API - ACTUAL IMPLEMENTATION
+  description: |
+    **SALVAGE REPORT - PHASE 2**
+    This spec documents the ACTUAL implementation as of the current codebase inspection.
+    
+    **Reality**: Generic CRUD boilerplate using /api/v1/items endpoints.
+    **Source**: emergent-microservices/autonomous-negotiation-agent/app/routes.py
+    **Date**: 2026-03-03
+    
+    The service currently implements only generic Item CRUD operations with no domain-specific
+    negotiation logic exposed via HTTP API. The negotiation logic exists in negotiation_logic.thirsty
+    but is not integrated with the HTTP routes.
+  version: 1.0.0-actual
+
+servers:
+  - url: http://localhost:8016
+    description: Local development
+  - url: http://negotiation-agent:8000
+    description: Docker network
+
+tags:
+  - name: System
+  - name: Health
+  - name: Items (Generic CRUD)
+
+paths:
+  /:
+    get:
+      summary: Service information
+      operationId: root
+      tags: [System]
+      responses:
+        '200':
+          description: Service metadata
+
+  /api/v1/health/liveness:
+    get:
+      summary: Liveness probe
+      operationId: liveness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is alive
+
+  /api/v1/health/readiness:
+    get:
+      summary: Readiness probe
+      operationId: readiness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is ready
+
+  /api/v1/health/startup:
+    get:
+      summary: Startup probe
+      operationId: startup
+      tags: [Health]
+      responses:
+        '200':
+          description: Service started
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      operationId: metrics
+      tags: [Observability]
+      responses:
+        '200':
+          description: Prometheus metrics
+
+  /api/v1/items:
+    get:
+      summary: List all items with pagination
+      operationId: listItems
+      tags: [Items (Generic CRUD)]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: Paginated list of items
+    
+    post:
+      summary: Create a new item
+      operationId: createItem
+      tags: [Items (Generic CRUD)]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '201':
+          description: Item created
+
+  /api/v1/items/{item_id}:
+    get:
+      summary: Get a specific item by ID
+      operationId: getItem
+      tags: [Items (Generic CRUD)]
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Item details
+        '404':
+          description: Item not found
+    
+    put:
+      summary: Update an existing item
+      operationId: updateItem
+      tags: [Items (Generic CRUD)]
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Item updated
+    
+    delete:
+      summary: Delete an item
+      operationId: deleteItem
+      tags: [Items (Generic CRUD)]
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Item deleted

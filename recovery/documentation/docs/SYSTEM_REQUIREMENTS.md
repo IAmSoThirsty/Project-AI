@@ -1,0 +1,1236 @@
+# System Requirements
+
+**Version**: 1.0.1  
+**Last Updated**: 2026-04-09  
+**Platform Coverage**: Linux, macOS, Windows, Android
+
+---
+
+
+
+## Overview
+
+This document provides complete system-level requirements for installing and running the Sovereign Governance Substrate platform on all supported platforms.
+
+**Quick Links**:
+
+- [Linux (Ubuntu/Debian)](#linux-ubuntudebian)
+- [Linux (RHEL/Fedora/CentOS)](#linux-rhelfedoracentos)
+- [Linux (Alpine)](#linux-alpine)
+- [macOS](#macos)
+- [Windows](#windows)
+- [Android](#android)
+- [Docker](#docker-requirements)
+
+---
+
+
+
+## Minimum Hardware Requirements
+
+| Component | Minimum | Recommended | Production |
+|-----------|---------|-------------|------------|
+| **CPU** | 2 cores | 4 cores | 8+ cores |
+| **RAM** | 4 GB | 8 GB | 16+ GB |
+| **Storage** | 10 GB | 20 GB | 50+ GB SSD |
+| **Network** | 1 Mbps | 10 Mbps | 100+ Mbps |
+
+
+
+### Special Requirements
+
+- **eBPF (OctoReflex)**: Linux kernel 5.15+ with CONFIG_BPF=y
+- **VPN/Firewall**: Linux kernel with WireGuard, nftables support
+- **Hardware Token**: USB port, FIDO2/U2F compatible device (optional)
+- **TPM**: TPM 2.0 for sovereign key storage (optional but recommended)
+
+---
+
+
+
+## Linux (Ubuntu/Debian)
+
+
+
+### Supported Versions
+
+- Ubuntu: 20.04 LTS, 22.04 LTS, 24.04 LTS
+- Debian: 11 (Bullseye), 12 (Bookworm)
+
+
+
+### Prerequisites
+
+```bash
+
+# Update package lists
+
+sudo apt-get update
+```
+
+
+
+### Core Dependencies
+
+
+
+#### Python & Build Tools
+
+```bash
+sudo apt-get install -y \
+    python3.11 \
+    python3.11-venv \
+    python3-pip \
+    build-essential \
+    gcc \
+    g++ \
+    make \
+    git \
+    curl \
+    wget \
+    ca-certificates
+```
+
+
+
+#### SSL/TLS Libraries
+
+```bash
+sudo apt-get install -y \
+    libssl-dev \
+    libssl3 \
+    libffi-dev \
+    libffi8
+```
+
+
+
+#### Database Support (Optional)
+
+```bash
+
+# PostgreSQL client libraries (if using PostgreSQL)
+
+sudo apt-get install -y \
+    libpq-dev \
+    libpq5 \
+    postgresql-client
+```
+
+
+
+#### Image Processing (Optional - for Miniature Office)
+
+```bash
+sudo apt-get install -y \
+    libjpeg-dev \
+    libjpeg62 \
+    zlib1g-dev \
+    zlib1g \
+    libtiff-dev \
+    libtiff5 \
+    libfreetype6-dev \
+    libfreetype6 \
+    liblcms2-dev \
+    liblcms2-2 \
+    libwebp-dev \
+    libwebp7
+```
+
+
+
+#### Scientific Computing (Optional - for ML features)
+
+```bash
+sudo apt-get install -y \
+    gfortran \
+    libopenblas-dev \
+    libopenblas0 \
+    liblapack-dev \
+    liblapack3 \
+    libgomp1
+```
+
+
+
+#### GUI Desktop (Optional - for PyQt6)
+
+```bash
+sudo apt-get install -y \
+    libgl1 \
+    libxkbcommon0 \
+    libdbus-1-3 \
+    libxcb-xinerama0 \
+    libxcb-cursor0 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender1
+```
+
+
+
+#### Audio/Video Processing (Optional - for tests)
+
+```bash
+sudo apt-get install -y \
+    ffmpeg \
+    libgstreamer1.0-0
+```
+
+
+
+#### eBPF Support (Required for OctoReflex Tier 0)
+
+```bash
+sudo apt-get install -y \
+    clang \
+    llvm \
+    libbpf-dev \
+    bpftool \
+    linux-headers-$(uname -r)
+```
+
+
+
+#### VPN/Firewall (Optional - for Waterfall)
+
+```bash
+sudo apt-get install -y \
+    wireguard-tools \
+    openvpn \
+    nftables \
+    strongswan
+```
+
+
+
+#### USB Token Support (Optional)
+
+```bash
+sudo apt-get install -y \
+    libusb-1.0-0-dev \
+    libusb-1.0-0 \
+    libudev-dev \
+    pcscd \
+    libpcsclite-dev
+```
+
+
+
+### Complete Installation Script
+
+```bash
+#!/bin/bash
+
+
+# Complete system dependencies for Ubuntu/Debian
+
+set -e
+
+echo "Installing Sovereign Governance Substrate system dependencies..."
+
+
+
+# Core
+
+sudo apt-get update
+sudo apt-get install -y \
+    python3.11 python3.11-venv python3-pip \
+    build-essential gcc g++ make git curl wget ca-certificates \
+    libssl-dev libssl3 libffi-dev libffi8
+
+
+
+# Database (optional)
+
+read -p "Install PostgreSQL support? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    sudo apt-get install -y libpq-dev libpq5 postgresql-client
+fi
+
+
+
+# Image processing (optional)
+
+read -p "Install image processing support? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    sudo apt-get install -y \
+        libjpeg-dev libjpeg62 zlib1g-dev zlib1g \
+        libtiff-dev libtiff5 libfreetype6-dev libfreetype6 \
+        liblcms2-dev liblcms2-2 libwebp-dev libwebp7
+fi
+
+
+
+# Scientific computing (optional)
+
+read -p "Install scientific computing support? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    sudo apt-get install -y \
+        gfortran libopenblas-dev libopenblas0 \
+        liblapack-dev liblapack3 libgomp1
+fi
+
+
+
+# GUI (optional)
+
+read -p "Install GUI desktop support? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    sudo apt-get install -y \
+        libgl1 libxkbcommon0 libdbus-1-3 \
+        libxcb-xinerama0 libxcb-cursor0
+fi
+
+
+
+# eBPF (optional)
+
+read -p "Install eBPF support for OctoReflex? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    sudo apt-get install -y \
+        clang llvm libbpf-dev bpftool linux-headers-$(uname -r)
+fi
+
+echo "✅ System dependencies installed successfully!"
+echo "Next: Install Python dependencies with 'pip install -r requirements.txt'"
+```
+
+---
+
+
+
+## Linux (RHEL/Fedora/CentOS)
+
+
+
+### Supported Versions
+
+- Fedora: 38, 39, 40
+- RHEL: 8, 9
+- CentOS Stream: 8, 9
+
+
+
+### Prerequisites
+
+```bash
+
+# Update package lists
+
+sudo dnf update
+```
+
+
+
+### Core Dependencies
+
+```bash
+sudo dnf install -y \
+    python3.11 \
+    python3-pip \
+    python3-devel \
+    gcc \
+    gcc-c++ \
+    make \
+    git \
+    curl \
+    wget \
+    ca-certificates \
+    openssl-devel \
+    libffi-devel
+```
+
+
+
+### Database Support (Optional)
+
+```bash
+sudo dnf install -y \
+    postgresql-devel \
+    postgresql-libs
+```
+
+
+
+### Image Processing (Optional)
+
+```bash
+sudo dnf install -y \
+    libjpeg-turbo-devel \
+    zlib-devel \
+    libtiff-devel \
+    freetype-devel \
+    lcms2-devel \
+    libwebp-devel
+```
+
+
+
+### Scientific Computing (Optional)
+
+```bash
+sudo dnf install -y \
+    gcc-gfortran \
+    openblas-devel \
+    lapack-devel
+```
+
+
+
+### eBPF Support (Optional)
+
+```bash
+sudo dnf install -y \
+    clang \
+    llvm \
+    libbpf-devel \
+    kernel-headers \
+    kernel-devel
+```
+
+
+
+### Audio/Video (Optional)
+
+```bash
+
+# Enable RPM Fusion repository first
+
+sudo dnf install -y \
+    https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+
+sudo dnf install -y ffmpeg
+```
+
+---
+
+
+
+## Linux (Alpine)
+
+
+
+### Supported Versions
+
+- Alpine Linux: 3.17, 3.18, 3.19
+
+
+
+### Core Dependencies
+
+```bash
+apk add --no-cache \
+    python3 \
+    py3-pip \
+    build-base \
+    gcc \
+    g++ \
+    make \
+    git \
+    curl \
+    wget \
+    ca-certificates \
+    openssl-dev \
+    libffi-dev
+```
+
+
+
+### Database Support (Optional)
+
+```bash
+apk add --no-cache \
+    postgresql-dev \
+    postgresql-libs
+```
+
+
+
+### Image Processing (Optional)
+
+```bash
+apk add --no-cache \
+    jpeg-dev \
+    zlib-dev \
+    tiff-dev \
+    freetype-dev \
+    lcms2-dev \
+    libwebp-dev
+```
+
+
+
+### Scientific Computing (Optional)
+
+```bash
+apk add --no-cache \
+    gfortran \
+    openblas-dev \
+    lapack-dev
+```
+
+
+
+### eBPF Support (Optional)
+
+```bash
+apk add --no-cache \
+    clang \
+    llvm \
+    libbpf-dev \
+    linux-headers
+```
+
+**Note**: Alpine uses musl libc instead of glibc. Some Python packages may require additional patches or may not be available as wheels.
+
+---
+
+
+
+## macOS
+
+
+
+### Supported Versions
+
+- macOS Monterey (12.x)
+- macOS Ventura (13.x)
+- macOS Sonoma (14.x)
+
+
+
+### Prerequisites
+
+
+
+#### Install Homebrew (if not already installed)
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+
+
+### Core Dependencies
+
+```bash
+brew install \
+    python@3.11 \
+    openssl@3 \
+    libffi \
+    git \
+    make \
+    cmake
+```
+
+
+
+### Database Support (Optional)
+
+```bash
+brew install postgresql@15
+```
+
+
+
+### Image Processing (Optional)
+
+```bash
+brew install \
+    jpeg \
+    zlib \
+    libtiff \
+    freetype \
+    lcms2 \
+    libwebp
+```
+
+
+
+### Scientific Computing (Optional)
+
+```bash
+brew install \
+    openblas \
+    lapack \
+    gcc  # For gfortran
+```
+
+
+
+### Audio/Video (Optional)
+
+```bash
+brew install ffmpeg
+```
+
+
+
+### USB Token Support (Optional)
+
+```bash
+brew install libusb
+```
+
+
+
+### Environment Setup
+
+```bash
+
+# Add to ~/.zshrc or ~/.bash_profile
+
+export PATH="/usr/local/opt/python@3.11/bin:$PATH"
+export LDFLAGS="-L/usr/local/opt/openssl@3/lib -L/usr/local/opt/libffi/lib"
+export CPPFLAGS="-I/usr/local/opt/openssl@3/include -I/usr/local/opt/libffi/include"
+export PKG_CONFIG_PATH="/usr/local/opt/openssl@3/lib/pkgconfig:/usr/local/opt/libffi/lib/pkgconfig"
+```
+
+**Note**: Apple Silicon (M1/M2/M3) users may need Rosetta 2 for some packages:
+```bash
+softwareupdate --install-rosetta
+```
+
+---
+
+
+
+## Windows
+
+
+
+### Supported Versions
+
+- Windows 10 (version 1809 or later)
+- Windows 11
+- Windows Server 2019, 2022
+
+
+
+### Prerequisites
+
+
+
+#### Install Chocolatey (Package Manager)
+
+```powershell
+
+# Run PowerShell as Administrator
+
+Set-ExecutionPolicy Bypass -Scope Process -Force
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+```
+
+
+
+### Core Dependencies
+
+```powershell
+
+# Install Python
+
+choco install python311 -y
+
+
+
+# Install Git
+
+choco install git -y
+
+
+
+# Install Visual C++ Build Tools (required for native extensions)
+
+choco install visualstudio2022buildtools -y
+choco install visualstudio2022-workload-vctools -y
+```
+
+
+
+### Additional Tools
+
+```powershell
+
+# OpenSSL
+
+choco install openssl -y
+
+
+
+# PostgreSQL (optional)
+
+choco install postgresql15 -y
+
+
+
+# Redis (optional)
+
+choco install redis-64 -y
+
+
+
+# FFmpeg (optional)
+
+choco install ffmpeg -y
+
+
+
+# Protocol Buffers compiler (optional)
+
+choco install protoc -y
+
+
+
+# Node.js (for web components)
+
+choco install nodejs-lts -y
+```
+
+
+
+### Alternative: Windows Subsystem for Linux (WSL2)
+
+For the best Linux compatibility, especially for eBPF features:
+```powershell
+
+# Install WSL2
+
+wsl --install
+
+
+
+# Set WSL2 as default
+
+wsl --set-default-version 2
+
+
+
+# Install Ubuntu
+
+wsl --install -d Ubuntu-22.04
+```
+
+Then follow the [Linux (Ubuntu/Debian)](#linux-ubuntudebian) instructions inside WSL.
+
+
+
+### Environment Variables
+
+Add to System Environment Variables:
+```
+PYTHONPATH=C:\Users\<YourUser>\.project-ai\src
+PATH=%PATH%;C:\Program Files\Python311;C:\Program Files\Python311\Scripts
+```
+
+**Note**: Most Python packages on Windows use pre-compiled wheels from PyPI. The Visual C++ Build Tools are primarily needed for packages without wheels or for development.
+
+---
+
+
+
+## Android
+
+
+
+### Supported Versions
+
+- Android 8.0 (Oreo) or later
+- Android SDK API Level 26+
+
+
+
+### Prerequisites
+
+This is for building Android apps, not running the server.
+
+
+
+#### Install Android Studio
+
+Download from: https://developer.android.com/studio
+
+
+
+### Required SDK Components
+
+```bash
+
+# Using sdkmanager (from Android Studio)
+
+sdkmanager "platforms;android-33"
+sdkmanager "build-tools;33.0.2"
+sdkmanager "ndk;25.2.9519653"
+```
+
+
+
+### Build Dependencies
+
+```bash
+
+# On Linux (for building APK)
+
+sudo apt-get install -y \
+    openjdk-11-jdk \
+    gradle
+```
+
+
+
+### Gradle Configuration
+
+Edit `android/gradle.properties`:
+```properties
+android.useAndroidX=true
+android.enableJetifier=true
+org.gradle.jvmargs=-Xmx4096m
+```
+
+**Note**: The Android app is a mobile client. The server runs on Linux/macOS/Windows.
+
+---
+
+
+
+## Docker Requirements
+
+
+
+### Supported Docker Versions
+
+- Docker Engine: 20.10+
+- Docker Compose: 2.0+
+
+
+
+### Installation
+
+
+
+#### Linux
+
+```bash
+
+# Ubuntu/Debian
+
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+
+
+
+# Fedora/RHEL
+
+sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+
+
+#### macOS
+
+```bash
+brew install --cask docker
+
+
+# Or download Docker Desktop from https://www.docker.com/products/docker-desktop
+
+```
+
+
+
+#### Windows
+
+Download Docker Desktop from https://www.docker.com/products/docker-desktop
+
+
+
+### Docker System Requirements
+
+- **CPU**: x86_64 or ARM64
+- **RAM**: 4 GB minimum, 8 GB recommended
+- **Storage**: 20 GB available disk space
+- **Kernel** (Linux): 5.10+ recommended for full cgroup v2 support
+
+
+
+### Build Cache Configuration
+
+```bash
+
+# Enable BuildKit (faster, better caching)
+
+export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
+
+
+
+# Add to ~/.bashrc or ~/.zshrc for persistence
+
+```
+
+---
+
+
+
+## Kubernetes Requirements
+
+
+
+### Supported Versions
+
+- Kubernetes: 1.25+
+- Helm: 3.10+
+
+
+
+### Minimum Cluster Specs
+
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| Nodes | 3 | 5+ |
+| CPU per node | 2 cores | 4 cores |
+| RAM per node | 4 GB | 8 GB |
+| Storage | 50 GB | 200+ GB SSD |
+
+
+
+### Required Add-ons
+
+- **Ingress Controller**: nginx-ingress or traefik
+- **Storage Class**: For persistent volumes
+- **Metrics Server**: For autoscaling
+- **Cert-Manager**: For TLS certificates (optional but recommended)
+
+
+
+### Installation
+
+```bash
+
+# Install kubectl
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+
+
+# Install Helm
+
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+```
+
+---
+
+
+
+## Development Environment
+
+
+
+### IDE Recommendations
+
+- **Visual Studio Code**: Recommended
+  - Extensions: Python, Docker, Kubernetes, GitLens
+- **PyCharm Professional**: Excellent Python IDE
+- **IntelliJ IDEA**: For Java/Kotlin components
+
+
+
+### Development Tools
+
+```bash
+
+# Python development tools
+
+pip install \
+    pytest \
+    pytest-cov \
+    black \
+    flake8 \
+    mypy \
+    ruff
+
+
+
+# Pre-commit hooks
+
+pip install pre-commit
+pre-commit install
+```
+
+
+
+### Node.js (for web components)
+
+```bash
+
+# Install Node.js 18 LTS
+
+
+# Ubuntu/Debian
+
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+
+
+# macOS
+
+brew install node@18
+
+
+
+# Windows
+
+choco install nodejs-lts -y
+```
+
+---
+
+
+
+## Verification
+
+
+
+### Verify Installation
+
+
+
+#### Python
+
+```bash
+python3.11 --version  # Should be 3.11.x
+
+pip --version
+```
+
+
+
+#### System Libraries
+
+```bash
+
+# Check OpenSSL
+
+python3 -c "import ssl; print(ssl.OPENSSL_VERSION)"
+
+
+
+# Check cryptography
+
+python3 -c "import cryptography; print(cryptography.__version__)"
+
+
+
+# Check if build tools are available
+
+gcc --version
+make --version
+```
+
+
+
+#### Docker
+
+```bash
+docker --version
+docker compose version
+docker run hello-world
+```
+
+
+
+#### Kubernetes (if applicable)
+
+```bash
+kubectl version --client
+helm version
+```
+
+
+
+### Run Test Suite
+
+```bash
+
+# Clone repository
+
+git clone https://github.com/IAmSoThirsty/Project-AI.git
+cd Project-AI
+
+
+
+# Create virtual environment
+
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+
+
+# Install dependencies
+
+pip install -r requirements.txt
+pip install -r requirements-test.txt
+
+
+
+# Run tests
+
+pytest tests/ -v
+```
+
+---
+
+
+
+## Troubleshooting
+
+
+
+### Common Issues
+
+
+
+#### "Python.h: No such file or directory"
+
+**Solution**: Install Python development headers
+```bash
+
+# Ubuntu/Debian
+
+sudo apt-get install python3.11-dev
+
+
+
+# Fedora/RHEL
+
+sudo dnf install python3-devel
+```
+
+
+
+#### "error: command 'gcc' failed"
+
+**Solution**: Install build tools
+```bash
+
+# Ubuntu/Debian
+
+sudo apt-get install build-essential
+
+
+
+# macOS
+
+xcode-select --install
+
+
+
+# Windows
+
+choco install visualstudio2022buildtools
+```
+
+
+
+#### "ImportError: libssl.so.3: cannot open shared object file"
+
+**Solution**: Install OpenSSL runtime libraries
+```bash
+
+# Ubuntu/Debian
+
+sudo apt-get install libssl3
+
+
+
+# Fedora
+
+sudo dnf install openssl-libs
+```
+
+
+
+#### "eBPF program failed to load"
+
+**Solution**: Check kernel version and capabilities
+```bash
+uname -r  # Should be 5.15+
+
+cat /proc/sys/kernel/unprivileged_bpf_disabled  # Should be 0 or 1
+
+sudo sysctl -w kernel.unprivileged_bpf_disabled=1  # If needed
+```
+
+
+
+#### Docker build fails with "no space left on device"
+
+**Solution**: Clean Docker cache
+```bash
+docker system prune -a
+docker volume prune
+```
+
+---
+
+
+
+## Production Checklist
+
+Before deploying to production, ensure:
+
+- [ ] All system dependencies installed
+- [ ] Python 3.11+ with all required packages
+- [ ] SSL/TLS certificates configured
+- [ ] Database (PostgreSQL/SQLite) set up
+- [ ] Redis running (if using caching)
+- [ ] Firewall rules configured
+- [ ] Monitoring tools installed (Prometheus, Grafana)
+- [ ] Log aggregation configured
+- [ ] Backup solution in place
+- [ ] eBPF support verified (if using OctoReflex)
+- [ ] TPM/HSM configured (if using hardware security)
+- [ ] Security audit completed
+- [ ] Load testing performed
+- [ ] Disaster recovery plan documented
+
+---
+
+
+
+## Additional Resources
+
+- **Installation Guide**: [INSTALL.md](INSTALL.md)
+- **Deployment Guide**: [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+- **Docker Setup**: [docs/developer/DOCKER_WSL_SETUP.md](docs/developer/DOCKER_WSL_SETUP.md)
+- **Kubernetes Guide**: [k8s_SETUP_GUIDE.md](k8s_SETUP_GUIDE.md)
+- **System Dependencies Report**: [SYSTEM_DEPENDENCIES_REPORT.md](SYSTEM_DEPENDENCIES_REPORT.md)
+
+---
+
+
+
+## Support
+
+- **GitHub Issues**: https://github.com/IAmSoThirsty/Project-AI/issues
+- **Documentation**: https://docs.projectai.dev
+- **Discord**: https://discord.gg/projectai
+
+---
+
+**Version**: 1.0.1  
+**Maintained by**: System Dependency Architect  
+**Last Verified**: 2026-04-09

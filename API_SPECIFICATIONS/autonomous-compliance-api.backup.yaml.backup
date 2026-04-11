@@ -1,0 +1,379 @@
+openapi: 3.1.0
+info:
+  title: Autonomous Compliance API
+  description: |
+    Microservice for automated compliance checking, policy enforcement, and regulatory auditing.
+    Monitors system behavior and ensures adherence to configured compliance frameworks.
+  version: 1.0.0
+  contact:
+    name: Project AI Team
+    email: governance@project-ai.dev
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8014
+    description: Local development
+  - url: http://compliance:8000
+    description: Docker network
+  - url: https://compliance.sovereign.ai
+    description: Production
+
+tags:
+  - name: System
+  - name: Health
+  - name: Observability
+  - name: Compliance Checks
+  - name: Policy Management
+  - name: Audit Reports
+
+paths:
+  /:
+    get:
+      summary: Service information
+      operationId: root
+      tags: [System]
+      responses:
+        '200':
+          description: Service metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                  version:
+                    type: string
+                  status:
+                    type: string
+
+  /api/v1/health/liveness:
+    get:
+      summary: Liveness probe
+      operationId: liveness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service alive
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/v1/health/readiness:
+    get:
+      summary: Readiness probe
+      operationId: readiness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service ready
+        '503':
+          description: Service not ready
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      operationId: metrics
+      tags: [Observability]
+      responses:
+        '200':
+          description: Metrics
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /api/v1/checks:
+    get:
+      summary: List compliance checks
+      description: Returns all configured compliance checks
+      operationId: list_checks
+      tags: [Compliance Checks]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: status
+          in: query
+          description: Filter by check status
+          schema:
+            type: string
+            enum: [passing, failing, warning, unknown]
+      responses:
+        '200':
+          description: List of checks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ComplianceCheck'
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  page_size:
+                    type: integer
+
+    post:
+      summary: Create compliance check
+      operationId: create_check
+      tags: [Compliance Checks]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckCreate'
+      responses:
+        '201':
+          description: Check created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComplianceCheck'
+
+  /api/v1/checks/{check_id}/execute:
+    post:
+      summary: Execute compliance check
+      description: Run a specific compliance check immediately
+      operationId: execute_check
+      tags: [Compliance Checks]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: check_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Check executed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckResult'
+
+  /api/v1/policies:
+    get:
+      summary: List policies
+      operationId: list_policies
+      tags: [Policy Management]
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Policy list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CompliancePolicy'
+
+    post:
+      summary: Create policy
+      operationId: create_policy
+      tags: [Policy Management]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyCreate'
+      responses:
+        '201':
+          description: Policy created
+
+  /api/v1/reports:
+    get:
+      summary: List audit reports
+      operationId: list_reports
+      tags: [Audit Reports]
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Report list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditReport'
+
+    post:
+      summary: Generate audit report
+      operationId: generate_report
+      tags: [Audit Reports]
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                framework:
+                  type: string
+                  enum: [SOC2, GDPR, HIPAA, ISO27001]
+                time_range:
+                  type: object
+                  properties:
+                    start:
+                      type: string
+                      format: date-time
+                    end:
+                      type: string
+                      format: date-time
+      responses:
+        '202':
+          description: Report generation started
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    CheckCreate:
+      type: object
+      required:
+        - name
+        - check_type
+      properties:
+        name:
+          type: string
+        check_type:
+          type: string
+        schedule:
+          type: string
+        parameters:
+          type: object
+
+    ComplianceCheck:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        check_type:
+          type: string
+        status:
+          type: string
+          enum: [passing, failing, warning, unknown]
+        last_run:
+          type: string
+          format: date-time
+        next_run:
+          type: string
+          format: date-time
+
+    CheckResult:
+      type: object
+      properties:
+        check_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        details:
+          type: string
+        evidence:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+
+    PolicyCreate:
+      type: object
+      required:
+        - name
+        - framework
+      properties:
+        name:
+          type: string
+        framework:
+          type: string
+        rules:
+          type: array
+          items:
+            type: object
+
+    CompliancePolicy:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        framework:
+          type: string
+        enabled:
+          type: boolean
+        rules:
+          type: array
+
+    AuditReport:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        framework:
+          type: string
+        generated_at:
+          type: string
+          format: date-time
+        status:
+          type: string
+        summary:
+          type: object

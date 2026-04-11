@@ -1,0 +1,118 @@
+openapi: 3.1.0
+info:
+  title: Sovereign Data Vault API - ACTUAL IMPLEMENTATION
+  description: |
+    **SALVAGE REPORT - PHASE 2**
+    
+    **Reality**: Generic CRUD boilerplate using /api/v1/items endpoints.
+    **Source**: emergent-microservices/sovereign-data-vault/app/routes.py
+    **Date**: 2026-03-03
+    
+    Generic Item CRUD. No vault-specific operations (encryption, keys, access control).
+  version: 1.0.0-actual
+
+servers:
+  - url: http://localhost:8017
+    description: Local development
+
+tags:
+  - name: System
+  - name: Health
+  - name: Items (Generic CRUD)
+
+paths:
+  /:
+    get:
+      summary: Service information
+      operationId: root
+      tags: [System]
+      responses:
+        '200':
+          description: Service metadata
+
+  /api/v1/health/liveness:
+    get:
+      summary: Liveness probe
+      tags: [Health]
+      responses:
+        '200':
+          description: Service alive
+
+  /api/v1/health/readiness:
+    get:
+      summary: Readiness probe
+      tags: [Health]
+      responses:
+        '200':
+          description: Service ready
+
+  /api/v1/health/startup:
+    get:
+      summary: Startup probe
+      tags: [Health]
+      responses:
+        '200':
+          description: Service started
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      tags: [Observability]
+      responses:
+        '200':
+          description: Metrics
+
+  /api/v1/items:
+    get:
+      summary: List items
+      tags: [Items (Generic CRUD)]
+      responses:
+        '200':
+          description: Items list
+    post:
+      summary: Create item
+      tags: [Items (Generic CRUD)]
+      responses:
+        '201':
+          description: Item created
+
+  /api/v1/items/{item_id}:
+    get:
+      summary: Get item
+      tags: [Items (Generic CRUD)]
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Item details
+    put:
+      summary: Update item
+      tags: [Items (Generic CRUD)]
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Item updated
+    delete:
+      summary: Delete item
+      tags: [Items (Generic CRUD)]
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Item deleted

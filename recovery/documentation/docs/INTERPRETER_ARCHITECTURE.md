@@ -1,0 +1,335 @@
+# Interpreter Architecture
+
+## Overview
+
+The `src/interpreter` module provides JavaScript interpretation capabilities for the Sovereign Governance Substrate. It implements control flow and expression evaluation for JavaScript code execution within the sovereign runtime.
+
+**Purpose**: Enable safe JavaScript code execution with control flow analysis and expression evaluation for browser integration and scripting capabilities.
+
+**Scope**: JavaScript interpretation, control flow analysis, expression evaluation, and runtime integration.
+
+## Components
+
+### Core Components
+
+- **control-flow.js**: Control flow analysis and execution
+  - Statement execution
+  - Control structures (if/else, loops, switch)
+  - Function calls
+  - Exception handling
+  - Scope management
+
+- **expression-evaluator.js**: Expression evaluation engine
+  - Binary operations
+  - Unary operations
+  - Function invocations
+  - Property access
+  - Array/object literals
+  - Type coercion
+
+### Module Structure
+
+```
+interpreter/
+├── control-flow.js            # Control flow interpreter
+└── expression-evaluator.js    # Expression evaluator
+```
+
+## Dependencies
+
+### Internal Dependencies
+
+- `src.security`: Security validation for script execution
+- `src.governance`: Policy enforcement on scripts
+- `src.app.browser`: Browser integration
+
+### External Dependencies
+
+- **JavaScript Engine**: V8 or similar
+- **AST Parser**: Acorn or similar for AST generation
+- **Sandbox**: VM2 or similar for isolation
+
+## Data Flow
+
+### Interpretation Flow
+
+```
+JavaScript Source Code
+  ↓
+AST Parsing
+  ↓
+Security Validation
+  ↓
+Policy Check
+  ↓
+Control Flow Interpreter
+  ├─ Statement execution
+  ├─ Expression evaluation
+  ├─ Scope management
+  └─ Resource monitoring
+  ↓
+Result or Exception
+```
+
+### Expression Evaluation Flow
+
+```
+Expression AST Node
+  ↓
+Type Identification
+  ↓
+Operator Dispatch
+  ↓
+Operand Evaluation (recursive)
+  ↓
+Operation Execution
+  ↓
+Result Value
+```
+
+### Control Flow Execution
+
+```
+Statement Block
+  ↓
+Statement Type Dispatch
+  ↓
+Control Structure Handling
+  ├─ Conditionals
+  ├─ Loops
+  ├─ Function calls
+  └─ Exception handling
+  ↓
+Next Statement or Return
+```
+
+## Integration Points
+
+### APIs
+
+- `Interpreter.execute()`: Execute JavaScript code
+- `ControlFlow.executeStatement()`: Execute statement
+- `ExpressionEvaluator.evaluate()`: Evaluate expression
+- `Interpreter.createContext()`: Create execution context
+
+### Events
+
+- Script execution events
+- Error events
+- Security violation events
+- Resource limit events
+
+### Hooks
+
+- Pre-execution hooks (security check)
+- Post-execution hooks (cleanup)
+- Expression evaluation hooks
+- Control flow hooks
+- Error handling hooks
+
+## Deployment
+
+### Interpreter Configuration
+
+```javascript
+const interpreterConfig = {
+    timeout: 10000,  // 10 seconds
+    maxMemory: 50 * 1024 * 1024,  // 50MB
+    allowedAPIs: ['console.log', 'Math', 'Date'],
+    sandbox: true,
+    strictMode: true
+};
+```
+
+### Execution
+
+```javascript
+const { Interpreter } = require('./src/interpreter');
+
+const interpreter = new Interpreter(interpreterConfig);
+const result = interpreter.execute(code, context);
+```
+
+### Sandboxing
+
+- Isolated execution context
+- Limited API access
+- Resource constraints
+- No file system access
+- No network access (unless explicitly allowed)
+
+## Architecture Patterns
+
+### AST-Based Interpretation
+
+- Parse to AST first
+- Tree-walking interpreter
+- Recursive evaluation
+- Visitor pattern for AST nodes
+
+### Sandboxed Execution
+
+- Isolated global scope
+- API whitelisting
+- Resource limits
+- Capability-based security
+
+### Context Management
+
+- Lexical scoping
+- Closure support
+- Context chains
+- Variable resolution
+
+## Security Considerations
+
+- Sandboxed execution (no host access)
+- API whitelisting (no dangerous functions)
+- Resource limits (CPU, memory, time)
+- No eval or Function constructor
+- Code sanitization
+- Policy enforcement before execution
+- Audit logging for all executions
+- No prototype pollution
+- Safe property access
+
+## Performance Characteristics
+
+- AST caching for repeated scripts
+- Optimized expression evaluation
+- Efficient scope chain lookup
+- Timeout enforcement
+- Memory monitoring
+
+## Monitoring and Observability
+
+- Execution time tracking
+- Memory usage monitoring
+- Error rate tracking
+- API usage statistics
+- Resource limit violations
+
+## Error Handling
+
+- SyntaxError for parsing failures
+- ReferenceError for undefined variables
+- TypeError for type mismatches
+- RangeError for resource limits
+- Custom SecurityError for policy violations
+- Stack trace preservation
+
+## Testing Strategy
+
+- Expression evaluation tests
+- Control flow tests
+- Scope resolution tests
+- Error handling tests
+- Security boundary tests
+- Resource limit tests
+- Edge case tests (recursion, loops)
+
+## JavaScript Language Support
+
+### Supported Features
+
+- Variable declarations (var, let, const)
+- All primitive types (number, string, boolean, null, undefined)
+- Objects and arrays
+- Functions (regular and arrow)
+- Closures
+- Conditionals (if/else, switch)
+- Loops (for, while, do-while)
+- Try/catch/finally
+- Operators (arithmetic, logical, comparison, bitwise)
+- Property access (dot and bracket notation)
+- Destructuring (basic)
+
+### Unsupported Features
+
+- eval() and Function constructor (security)
+- Generators and iterators (not implemented)
+- Async/await (not implemented)
+- Classes (not implemented, use functions)
+- Modules (not implemented, use single script)
+- Proxies and Reflect (security)
+- WeakMap/WeakSet (not implemented)
+
+## Use Cases
+
+### Browser Integration
+
+- Page script execution
+- Extension scripts
+- User scripts (with sandboxing)
+- Automation scripts
+
+### Configuration Scripts
+
+- Dynamic configuration
+- Feature toggles
+- Policy expressions
+- Computed values
+
+### Automation
+
+- Workflow scripts
+- Data transformation
+- Report generation
+- Task automation
+
+## Future Extensions
+
+- Async/await support
+- Generator functions
+- ES6+ class support
+- Module system
+- Debugger integration
+- Source maps
+- Performance profiling
+- JIT compilation
+- WASM integration
+- Enhanced sandboxing
+- More language features
+- Better error messages
+- IDE integration
+
+## Integration with ThirstyLang
+
+- ThirstyLang for policies, JavaScript for scripting
+- Interop layer between languages
+- Shared type system (future)
+- Cross-language function calls
+- Unified security model
+
+## Example Usage
+
+```javascript
+// Execute user script safely
+const script = `
+function processData(data) {
+    return data.map(x => x * 2).filter(x => x > 10);
+}
+
+const result = processData([1, 3, 5, 7, 9, 11]);
+result;
+`;
+
+const interpreter = new Interpreter({
+    timeout: 5000,
+    maxMemory: 10 * 1024 * 1024
+});
+
+const result = interpreter.execute(script);
+console.log(result); // [14, 18, 22]
+```
+
+## Best Practices
+
+- Always use sandboxing for untrusted code
+- Set strict resource limits
+- Whitelist APIs carefully
+- Validate input and output
+- Log all executions for audit
+- Use strict mode
+- Avoid long-running scripts
+- Cache parsed ASTs when possible

@@ -1,0 +1,117 @@
+openapi: 3.1.0
+info:
+  title: Verifiable Reality API - ACTUAL IMPLEMENTATION
+  description: |
+    **SALVAGE REPORT - PHASE 2**
+    
+    **Reality**: Generic CRUD boilerplate using /api/v1/items endpoints.
+    **Source**: emergent-microservices/verifiable-reality/app/routes.py
+    **Date**: 2026-03-03
+    
+    Generic Item CRUD. No reality verification operations (proofs, attestations).
+  version: 1.0.0-actual
+
+servers:
+  - url: http://localhost:8019
+    description: Local development
+
+tags:
+  - name: System
+  - name: Health
+  - name: Items (Generic CRUD)
+
+paths:
+  /:
+    get:
+      summary: Service information
+      tags: [System]
+      responses:
+        '200':
+          description: Metadata
+
+  /api/v1/health/liveness:
+    get:
+      summary: Liveness probe
+      tags: [Health]
+      responses:
+        '200':
+          description: Alive
+
+  /api/v1/health/readiness:
+    get:
+      summary: Readiness probe
+      tags: [Health]
+      responses:
+        '200':
+          description: Ready
+
+  /api/v1/health/startup:
+    get:
+      summary: Startup probe
+      tags: [Health]
+      responses:
+        '200':
+          description: Started
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      tags: [Observability]
+      responses:
+        '200':
+          description: Metrics
+
+  /api/v1/items:
+    get:
+      summary: List items
+      tags: [Items (Generic CRUD)]
+      responses:
+        '200':
+          description: Items
+    post:
+      summary: Create item
+      tags: [Items (Generic CRUD)]
+      responses:
+        '201':
+          description: Created
+
+  /api/v1/items/{item_id}:
+    get:
+      summary: Get item
+      tags: [Items (Generic CRUD)]
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Item
+    put:
+      summary: Update item
+      tags: [Items (Generic CRUD)]
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete item
+      tags: [Items (Generic CRUD)]
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Deleted

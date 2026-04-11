@@ -1,0 +1,153 @@
+# API Specifications Index
+**Integration Architecture - OpenAPI Specifications**  
+**Last Updated**: 2026-04-10
+
+---
+
+## Overview
+
+This directory contains OpenAPI 3.1.0 specifications for all microservices and main API endpoints in the Sovereign Governance Substrate. All specifications include implementation status and links to actual code.
+
+---
+
+## Specifications
+
+### Main API (Port 8000)
+
+| Specification | Description | Implementation | Status |
+|--------------|-------------|----------------|--------|
+| **explainability-api.yaml** | AI decision explainability | api/main.py | ✅ Complete |
+| **save-points-api.yaml** | Time-travel debugging & recovery | api/save_points_routes.py | ✅ Complete |
+| **vr-routes-api.yaml** | VR command routing | api/vr_routes.py | ✅ Complete |
+
+### Core Microservices
+
+| Service | Specification | Port | Implementation | Status |
+|---------|--------------|------|----------------|--------|
+| **Sovereign Data Vault** | `sovereign-data-vault-api.yaml` | 8012 | emergent-microservices/sovereign-data-vault | 🔄 Generic CRUD |
+| **Trust Graph Engine** | `trust-graph-engine-api.yaml` | 8013 | emergent-microservices/trust-graph-engine | 🔄 Generic CRUD |
+| **Autonomous Compliance** | `autonomous-compliance-api.yaml` | 8014 | emergent-microservices/autonomous-compliance | 🔄 Generic CRUD |
+| **Autonomous Incident Reflex** | `autonomous-incident-reflex-system-api.yaml` | 8015 | emergent-microservices/autonomous-incident-reflex-system | 🔄 Basic + Planned |
+| **Autonomous Negotiation Agent** | `autonomous-negotiation-agent-api.yaml` | 8016 | emergent-microservices/autonomous-negotiation-agent | 🔄 Generic CRUD |
+| **Verifiable Reality** | `verifiable-reality-api.yaml` | 8017 | emergent-microservices/verifiable-reality | 🔄 Generic CRUD |
+
+**Status Legend**:
+- ✅ Complete: Fully implemented as spec
+- 🔄 Generic CRUD: Using `/api/v1/items` pattern (spec-defined endpoints planned)
+- 🔄 Basic + Planned: Core features implemented, advanced features planned
+
+### Archived Specifications
+
+See `archive/` directory for deprecated or superseded specifications.
+
+---
+
+## Common Endpoints (All Services)
+
+### Health Checks
+```
+GET /api/v1/health/liveness   - Kubernetes liveness probe
+GET /api/v1/health/readiness  - Kubernetes readiness probe
+GET /api/v1/health/startup    - Kubernetes startup probe
+```
+
+### Observability
+```
+GET /metrics                   - Prometheus metrics (text/plain)
+```
+
+### Documentation
+```
+GET /api/v1/docs              - Swagger UI
+GET /api/v1/redoc             - ReDoc documentation
+GET /api/v1/openapi.json      - OpenAPI specification
+```
+
+---
+
+## Authentication
+
+All APIs support dual authentication:
+
+### API Key Authentication
+```http
+GET /api/v1/resource
+X-API-Key: your-api-key-here
+```
+
+### JWT Bearer Token
+```http
+GET /api/v1/resource
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+---
+
+## Usage
+
+### Viewing Specifications
+
+**Swagger UI** (Interactive):
+```bash
+# Local
+http://localhost:8011/api/v1/docs
+
+# Docker network
+http://mutation-firewall:8000/api/v1/docs
+```
+
+**ReDoc** (Documentation):
+```bash
+http://localhost:8011/api/v1/redoc
+```
+
+### Generating Client Libraries
+
+#### Python
+```bash
+openapi-generator-cli generate \
+  -i API_SPECIFICATIONS/mutation-firewall-api.json \
+  -g python \
+  -o clients/python/mutation-firewall
+```
+
+#### TypeScript
+```bash
+openapi-generator-cli generate \
+  -i API_SPECIFICATIONS/trust-graph-api.json \
+  -g typescript-axios \
+  -o clients/typescript/trust-graph
+```
+
+---
+
+## Rate Limiting
+
+Default rate limits:
+- **Authenticated**: 1000 requests/hour, burst of 100
+- **Unauthenticated**: 100 requests/hour, burst of 10
+
+## Testing APIs
+
+```bash
+# Using newman (Postman CLI)
+newman run postman_collection.json -e environment.json
+
+# Validate OpenAPI specs
+swagger-cli validate API_SPECIFICATIONS/*.yaml
+```
+
+## Service Mesh Integration
+
+All APIs configured for Istio service mesh with mTLS STRICT mode. See `k8s/istio/` for configurations.
+
+---
+
+**Maintained By**: Phase 3 API Integration Task  
+**Last Updated**: 2026-04-10  
+**Status**: ✅ Complete (9 specifications integrated, all validated OpenAPI 3.1.0)
+
+**See Also**: 
+- `audit/reintegration_api.json` - Detailed integration report
+- `PHASE_3_API_INTEGRATION_COMPLETE.md` - Integration summary
+- `recovery/api_docs/README.md` - Phase 2 reconstruction notes

@@ -1,0 +1,958 @@
+{
+  "python": {
+    "path": "external/Thirstys-Waterfall/web/app.py",
+    "type": "useful",
+    "state": "complete",
+    "confidence": 0.85,
+    "reason": "Python script"
+  },
+  "markdown": null,
+  "json": [
+    {
+      "path": "usb_installer/vault/forensics/forensics_output/credentials.json",
+      "type": "critical",
+      "state": "unknown",
+      "confidence": 0.7,
+      "reason": "Potential credentials - needs verification"
+    },
+    {
+      "path": ".vscode/settings.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": ".vscode/launch.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": ".vscode/extensions.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "audit/temp_artifacts.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00000.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00001.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00002.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00003.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00004.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00005.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00006.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00007.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00008.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00009.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00010.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00011.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00012.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00013.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00014.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00015.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00016.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00017.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00018.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00019.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00020.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00021.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00022.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00023.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00024.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00025.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00026.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00027.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00028.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00029.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00030.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00031.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00032.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00033.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00034.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00035.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00036.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00037.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00038.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00039.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00040.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00041.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00042.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00043.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00044.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00045.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00046.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00047.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00048.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00049.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00050.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00051.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00052.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00053.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00054.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00055.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00056.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00057.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00058.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00059.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00060.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00061.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00062.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00063.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00064.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00065.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00066.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00067.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00068.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00069.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00070.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00071.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00072.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00073.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00074.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00075.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00076.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00077.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00078.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00079.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00080.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00081.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00082.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00083.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00084.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00085.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00086.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00087.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00088.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00089.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00090.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00091.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00092.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00093.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00094.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00095.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00096.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00097.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00098.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00099.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00100.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00101.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00102.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00103.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00104.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00105.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00106.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00107.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00108.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00109.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00110.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00111.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00112.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00113.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00114.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00115.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00116.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00117.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00118.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00119.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00120.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00121.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00122.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00123.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00124.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00125.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00126.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00127.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00128.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    },
+    {
+      "path": "config/settings_00129.json",
+      "type": "useful",
+      "state": "unknown",
+      "confidence": 0.5,
+      "reason": "Unknown file type - needs manual review"
+    }
+  ],
+  "yaml": null
+}

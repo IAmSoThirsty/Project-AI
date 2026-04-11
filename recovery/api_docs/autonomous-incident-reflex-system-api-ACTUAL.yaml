@@ -1,0 +1,222 @@
+openapi: 3.1.0
+info:
+  title: Autonomous Incident Reflex System API - ACTUAL IMPLEMENTATION
+  description: |
+    **SALVAGE REPORT - PHASE 2**
+    This spec documents the ACTUAL implementation as of the current codebase inspection.
+    
+    **Reality**: Partial domain implementation. Has incident CRUD but missing reflex/forensics.
+    **Source**: emergent-microservices/autonomous-incident-reflex-system/app/routes.py
+    **Date**: 2026-03-03
+    
+    The service implements basic incident management (list, create, get) using domain-specific
+    models (SecurityIncident, IncidentCreate). However, advanced features like autonomous reflexes,
+    containment actions, and forensic analysis are NOT exposed via HTTP API.
+  version: 1.0.0-actual
+  contact:
+    name: Fleet B Phase 2 Salvage
+    email: security@project-ai.dev
+
+servers:
+  - url: http://localhost:8015
+    description: Local development
+  - url: http://incident-reflex:8000
+    description: Docker network
+
+tags:
+  - name: System
+  - name: Health
+  - name: Incidents
+
+paths:
+  /:
+    get:
+      summary: Service information
+      operationId: root
+      tags: [System]
+      responses:
+        '200':
+          description: Service metadata
+
+  /api/v1/health/liveness:
+    get:
+      summary: Liveness probe
+      operationId: liveness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is alive
+
+  /api/v1/health/readiness:
+    get:
+      summary: Readiness probe
+      operationId: readiness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is ready
+        '503':
+          description: Service not ready
+
+  /api/v1/health/startup:
+    get:
+      summary: Startup probe
+      operationId: startup
+      tags: [Health]
+      responses:
+        '200':
+          description: Service started successfully
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      operationId: metrics
+      tags: [Observability]
+      responses:
+        '200':
+          description: Prometheus metrics
+
+  /api/v1/incidents:
+    get:
+      summary: List security incidents with pagination
+      operationId: listIncidents
+      tags: [Incidents]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Paginated list of incidents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedIncidents'
+    
+    post:
+      summary: Report a new security incident for reflex processing
+      operationId: reportIncident
+      tags: [Incidents]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentCreate'
+      responses:
+        '201':
+          description: Incident reported successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityIncident'
+
+  /api/v1/incidents/{incident_id}:
+    get:
+      summary: Fetch status and evidence of a specific incident
+      operationId: getIncident
+      tags: [Incidents]
+      parameters:
+        - name: incident_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Incident details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityIncident'
+        '404':
+          description: Incident not found
+
+components:
+  schemas:
+    SecurityIncident:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        description:
+          type: string
+        source:
+          type: string
+        status:
+          type: string
+          enum: [detected, analyzing, contained, resolved, false_positive]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - severity
+        - description
+        - status
+        - created_at
+        - updated_at
+    
+    IncidentCreate:
+      type: object
+      properties:
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        description:
+          type: string
+          minLength: 1
+        source:
+          type: string
+      required:
+        - severity
+        - description
+    
+    IncidentUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [detected, analyzing, contained, resolved, false_positive]
+        notes:
+          type: string
+    
+    PaginatedIncidents:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityIncident'
+        total:
+          type: integer
+        page:
+          type: integer
+        page_size:
+          type: integer
+        total_pages:
+          type: integer
+      required:
+        - items
+        - total
+        - page
+        - page_size
+        - total_pages

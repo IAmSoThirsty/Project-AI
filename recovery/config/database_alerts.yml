@@ -1,0 +1,212 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+# Database Alert Rules for Project-AI
+# Monitors PostgreSQL, Temporal database, and connection pools
+
+groups:
+  - name: postgresql_alerts
+    interval: 15s
+    rules:
+      # Connection Pool Alerts
+      - alert: PostgreSQLConnectionPoolExhaustion
+        expr: |
+          (pg_stat_database_numbackends / pg_settings_max_connections) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "PostgreSQL connection pool nearing exhaustion"
+          description: "Database {{ $labels.datname }} is using {{ $value | humanize }}% of max connections"
+
+      - alert: PostgreSQLConnectionPoolCritical
+        expr: |
+          (pg_stat_database_numbackends / pg_settings_max_connections) * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "PostgreSQL connection pool nearly exhausted"
+          description: "Database {{ $labels.datname }} is using {{ $value | humanize }}% of max connections. New connections will fail."
+
+      # Query Performance
+      - alert: PostgreSQLSlowQueries
+        expr: |
+          rate(pg_stat_database_blks_read[5m]) > 1000
+        for: 10m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "High number of slow queries"
+          description: "Database {{ $labels.datname }} is reading {{ $value | humanize }} blocks/sec from disk. Queries may be slow."
+
+      - alert: PostgreSQLDeadlocks
+        expr: |
+          increase(pg_stat_database_deadlocks[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Database deadlocks detected"
+          description: "Database {{ $labels.datname }} had {{ $value }} deadlocks in the last 5 minutes"
+
+      # Transaction Rate Anomalies
+      - alert: PostgreSQLHighCommitRate
+        expr: |
+          rate(pg_stat_database_xact_commit[5m]) > 1000
+        for: 10m
+        labels:
+          severity: info
+          component: database
+        annotations:
+          summary: "High transaction commit rate"
+          description: "Database {{ $labels.datname }} is committing {{ $value | humanize }} transactions/sec"
+
+      - alert: PostgreSQLHighRollbackRate
+        expr: |
+          (rate(pg_stat_database_xact_rollback[5m]) / rate(pg_stat_database_xact_commit[5m])) * 100 > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "High transaction rollback rate"
+          description: "Database {{ $labels.datname }} has {{ $value | humanize }}% rollback rate"
+
+      # Replication Alerts
+      - alert: PostgreSQLReplicationLag
+        expr: |
+          pg_replication_lag > 30
+        for: 5m
+        labels:
+          severity: warning
+          component: database-replication
+        annotations:
+          summary: "PostgreSQL replication lag detected"
+          description: "Replication lag is {{ $value | humanize }} seconds on {{ $labels.instance }}"
+
+      - alert: PostgreSQLReplicationLagCritical
+        expr: |
+          pg_replication_lag > 300
+        for: 2m
+        labels:
+          severity: critical
+          component: database-replication
+        annotations:
+          summary: "Critical PostgreSQL replication lag"
+          description: "Replication lag is {{ $value | humanize }} seconds on {{ $labels.instance }}. Data loss risk."
+
+      # Lock Monitoring
+      - alert: PostgreSQLTooManyLocks
+        expr: |
+          sum by (datname) (pg_locks_count) > 100
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Too many database locks"
+          description: "Database {{ $labels.datname }} has {{ $value }} active locks"
+
+      # Cache Hit Ratio
+      - alert: PostgreSQLLowCacheHitRatio
+        expr: |
+          (pg_stat_database_blks_hit / (pg_stat_database_blks_hit + pg_stat_database_blks_read)) * 100 < 90
+        for: 10m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Low database cache hit ratio"
+          description: "Database {{ $labels.datname }} cache hit ratio is {{ $value | humanize }}%. Consider increasing shared_buffers."
+
+  - name: temporal_database_alerts
+    interval: 30s
+    rules:
+      # Temporal-specific Database Health
+      - alert: TemporalDatabaseDown
+        expr: |
+          up{job="temporal-postgres"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: temporal-database
+        annotations:
+          summary: "Temporal database is down"
+          description: "Temporal PostgreSQL database is not responding"
+
+      - alert: TemporalWorkflowBacklog
+        expr: |
+          pg_stat_database_tup_inserted{datname="temporal"} > 10000
+        for: 10m
+        labels:
+          severity: warning
+          component: temporal
+        annotations:
+          summary: "High Temporal workflow backlog"
+          description: "Temporal database has {{ $value | humanize }} new workflow insertions"
+
+  - name: redis_alerts
+    interval: 15s
+    rules:
+      # Redis Memory
+      - alert: RedisHighMemoryUsage
+        expr: |
+          (redis_memory_used_bytes / redis_memory_max_bytes) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: redis
+        annotations:
+          summary: "Redis high memory usage"
+          description: "Redis is using {{ $value | humanize }}% of max memory"
+
+      - alert: RedisCriticalMemoryUsage
+        expr: |
+          (redis_memory_used_bytes / redis_memory_max_bytes) * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+          component: redis
+        annotations:
+          summary: "Redis critical memory usage"
+          description: "Redis is using {{ $value | humanize }}% of max memory. Evictions or OOM imminent."
+
+      # Redis Connections
+      - alert: RedisHighConnections
+        expr: |
+          redis_connected_clients > 1000
+        for: 5m
+        labels:
+          severity: warning
+          component: redis
+        annotations:
+          summary: "High number of Redis connections"
+          description: "Redis has {{ $value }} connected clients"
+
+      # Redis Performance
+      - alert: RedisSlowCommands
+        expr: |
+          redis_slowlog_length > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: redis
+        annotations:
+          summary: "Redis slow commands detected"
+          description: "Redis has {{ $value }} slow commands in the log"
+
+      # Redis Replication
+      - alert: RedisReplicationBroken
+        expr: |
+          redis_connected_slaves == 0 and redis_replication_role == "master"
+        for: 5m
+        labels:
+          severity: critical
+          component: redis-replication
+        annotations:
+          summary: "Redis replication broken"
+          description: "Redis master has no connected slaves. Replication is broken."

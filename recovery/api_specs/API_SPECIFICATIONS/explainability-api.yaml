@@ -1,0 +1,173 @@
+openapi: 3.1.0
+info:
+  title: Explainability API
+  description: |
+    API for AI decision explainability and transparency.
+    Provides explanations for automated actions and decisions made by the sovereign system.
+  version: 1.0.0
+  contact:
+    name: Project AI Team
+    email: governance@project-ai.dev
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://api.sovereign.ai
+    description: Production
+
+tags:
+  - name: Explainability
+    description: AI decision explanation endpoints
+
+paths:
+  /explain:
+    get:
+      summary: Get recent explainable actions
+      description: Returns a list of recent actions that have explanations available
+      operationId: list_explainable_actions
+      tags: [Explainability]
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of actions to return
+          schema:
+            type: integer
+            default: 50
+            maximum: 100
+        - name: since
+          in: query
+          description: Return actions after this timestamp
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: List of explainable actions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  actions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ExplainableAction'
+                  total:
+                    type: integer
+
+  /explain/{action_id}:
+    get:
+      summary: Get explanation for specific action
+      description: Returns detailed explanation for a specific action or decision
+      operationId: explain_action
+      tags: [Explainability]
+      parameters:
+        - name: action_id
+          in: path
+          required: true
+          description: Unique identifier of the action to explain
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Action explanation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionExplanation'
+        '404':
+          description: Action not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  action_id:
+                    type: string
+
+components:
+  schemas:
+    ExplainableAction:
+      type: object
+      properties:
+        action_id:
+          type: string
+          description: Unique action identifier
+        action_type:
+          type: string
+          description: Type of action performed
+        timestamp:
+          type: string
+          format: date-time
+        service:
+          type: string
+          description: Service that performed the action
+        summary:
+          type: string
+          description: Brief summary of the action
+
+    ActionExplanation:
+      type: object
+      properties:
+        action_id:
+          type: string
+        action_type:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        service:
+          type: string
+        explanation:
+          type: object
+          description: Detailed explanation structure
+          properties:
+            reasoning:
+              type: string
+              description: Why this action was taken
+            inputs:
+              type: object
+              description: Input data that influenced the decision
+            model_info:
+              type: object
+              description: Information about AI model used (if applicable)
+              properties:
+                model_name:
+                  type: string
+                model_version:
+                  type: string
+                confidence:
+                  type: number
+                  format: float
+            alternatives:
+              type: array
+              description: Alternative actions considered
+              items:
+                type: object
+                properties:
+                  action:
+                    type: string
+                  score:
+                    type: number
+                  reason_not_chosen:
+                    type: string
+            evidence:
+              type: array
+              description: Evidence supporting the decision
+              items:
+                type: object
+            compliance_check:
+              type: object
+              description: Compliance validation results
+              properties:
+                status:
+                  type: string
+                  enum: [compliant, non_compliant, warning]
+                frameworks:
+                  type: array
+                  items:
+                    type: string

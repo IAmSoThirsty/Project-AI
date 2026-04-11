@@ -1,0 +1,849 @@
+# Environment Variables Integration Guide
+
+**Quick Start for Development & Deployment**  
+**Generated**: 2026-04-09  
+
+---
+
+
+
+## Quick Setup (Development)
+
+
+
+### 1. Create Your Environment File
+
+```bash
+
+# Copy the template
+
+cp .env.example .env
+
+
+
+# Edit with your favorite editor
+
+nano .env  # or vim, code, etc.
+```
+
+
+
+### 2. Minimal Development Configuration
+
+For local development, you only need to set a few variables:
+```bash
+
+# .env (minimal development setup)
+
+ENVIRONMENT=development
+SECRET_KEY=dev-secret-key-at-least-32-characters-long-please
+CORS_ORIGINS=http://localhost:3000,http://localhost:8000
+```
+
+
+
+### 3. Validate Your Configuration
+
+```bash
+
+# Run the validator
+
+python env_validator.py
+
+
+
+# Should output:
+
+
+# ✅ VALIDATION PASSED
+
+```
+
+
+
+### 4. Start the Application
+
+```bash
+
+# Using Docker Compose
+
+docker-compose up
+
+
+
+# Or direct Python
+
+python launcher.py
+```
+
+---
+
+
+
+## Production Deployment
+
+
+
+### 1. Generate Secure Keys
+
+```bash
+
+# Generate FERNET_KEY
+
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+
+
+
+# Generate SECRET_KEY
+
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+
+
+
+# Generate JWT_SECRET (use same command, but different value)
+
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+
+
+
+# Generate API_KEYS (multiple keys recommended)
+
+python -c "import secrets; print(','.join([secrets.token_urlsafe(32) for _ in range(3)]))"
+```
+
+
+
+### 2. Required Production Variables
+
+```bash
+
+# .env (production minimal)
+
+ENVIRONMENT=production
+
+
+
+# Security (ALL REQUIRED)
+
+FERNET_KEY=your-generated-fernet-key-44-characters-long
+SECRET_KEY=your-generated-secret-key-minimum-32-characters
+JWT_SECRET=your-generated-jwt-secret-different-from-secret-key
+API_KEYS=key1-prod-xxxxx,key2-prod-yyyyy,key3-prod-zzzzz
+
+
+
+# CORS (MUST be specific, NO wildcards)
+
+CORS_ORIGINS=https://yourdomain.com,https://app.yourdomain.com
+
+
+
+# API Configuration
+
+API_HOST=0.0.0.0
+API_PORT=8001
+LOG_LEVEL=WARN
+
+
+
+# Disable API docs in production
+
+ENABLE_API_DOCS=false
+```
+
+
+
+### 3. Validate Production Configuration
+
+```bash
+
+# Test as production environment
+
+python env_validator.py --env production
+
+
+
+# Strict mode (warnings = errors)
+
+python env_validator.py --env production --strict
+```
+
+
+
+### 4. Store Secrets Securely
+
+**DO NOT** store production .env in git. Use a secret management system:
+
+
+
+#### Option 1: HashiCorp Vault
+
+```bash
+
+# Store secrets in Vault
+
+vault kv put secret/project-ai \
+  FERNET_KEY="${FERNET_KEY}" \
+  SECRET_KEY="[REDACTED]" \
+  JWT_SECRET="[REDACTED]"
+```
+
+
+
+#### Option 2: AWS Secrets Manager
+
+```bash
+
+# Store secrets in AWS
+
+aws secretsmanager create-secret \
+  --name project-ai/production \
+  --secret-string file://.env
+```
+
+
+
+#### Option 3: Kubernetes Secrets
+
+```bash
+
+# Create Kubernetes secret from .env
+
+kubectl create secret generic project-ai-secrets \
+  --from-env-file=.env
+```
+
+---
+
+
+
+## Integration with Existing Code
+
+
+
+### Python Applications
+
+
+
+#### Using Pydantic Settings (Recommended)
+
+```python
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    ENVIRONMENT: str = "development"
+    SECRET_KEY: str
+    API_PORT: int = 8001
+    
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+    )
+
+
+
+# Global instance
+
+settings = Settings()
+
+
+
+# Production validation
+
+if settings.ENVIRONMENT == "production":
+    if settings.SECRET_KEY == "changeme":
+        raise ValueError("SECRET_KEY must be changed in production")
+```
+
+
+
+#### Using os.getenv (Legacy)
+
+```python
+import os
+
+
+
+# Get with default
+
+api_port = int(os.getenv("API_PORT", "8001"))
+
+
+
+# Get required variable
+
+secret_key = os.getenv("SECRET_KEY")
+if not secret_key:
+    raise ValueError("SECRET_KEY must be set")
+
+
+
+# Boolean parsing
+
+enable_metrics = os.getenv("ENABLE_METRICS", "true").lower() == "true"
+```
+
+
+
+#### Using SecretsManager
+
+```python
+from pathlib import Path
+from app.core.secrets_manager import get_secrets_manager
+
+
+
+# Initialize secrets manager
+
+secrets = get_secrets_manager(
+    storage_path=Path.home() / ".project-ai" / "secrets.enc"
+)
+
+
+
+# Get secrets (with env fallback)
+
+openai_key = secrets.get_secret("openai_api_key")
+db_password = secrets.get_required_secret("database_password")
+```
+
+
+
+### Docker Integration
+
+
+
+#### docker-compose.yml
+
+```yaml
+services:
+  app:
+    build: .
+    env_file:
+
+      - .env
+    environment:
+      # Override specific variables
+
+      - PYTHONUNBUFFERED=1
+      - PYTHONPATH=/app/src
+
+```
+
+
+
+#### Dockerfile (multi-stage)
+
+```dockerfile
+
+# Build stage
+
+FROM python:3.11-slim as builder
+
+
+# ... build steps ...
+
+
+
+# Runtime stage
+
+FROM python:3.11-slim
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app/src
+
+
+# Environment variables come from docker-compose or runtime
+
+```
+
+
+
+### Kubernetes Deployment
+
+
+
+#### ConfigMap (non-sensitive)
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-ai-config
+data:
+  ENVIRONMENT: "production"
+  API_PORT: "8001"
+  LOG_LEVEL: "WARN"
+  ENABLE_METRICS: "true"
+```
+
+
+
+#### Secret (sensitive)
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: project-ai-secrets
+type: Opaque
+stringData:
+  FERNET_KEY: "your-fernet-key"
+  SECRET_KEY: "your-secret-key"
+  JWT_SECRET: "your-jwt-secret"
+  OPENAI_API_KEY: "sk-..."
+```
+
+
+
+#### Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-ai
+spec:
+  template:
+    spec:
+      containers:
+
+      - name: app
+        image: project-ai:latest
+        envFrom:
+        - configMapRef:
+            name: project-ai-config
+        - secretRef:
+            name: project-ai-secrets
+
+```
+
+---
+
+
+
+## Environment-Specific Configurations
+
+
+
+### Development
+
+```bash
+ENVIRONMENT=development
+LOG_LEVEL=DEBUG
+ENABLE_API_DOCS=true
+CORS_ORIGINS=*
+
+
+# Minimal security for convenience
+
+```
+
+
+
+### Staging
+
+```bash
+ENVIRONMENT=staging
+LOG_LEVEL=INFO
+ENABLE_API_DOCS=true
+CORS_ORIGINS=https://staging.example.com
+
+
+# Real secrets, but test data
+
+```
+
+
+
+### Production
+
+```bash
+ENVIRONMENT=production
+LOG_LEVEL=WARN
+ENABLE_API_DOCS=false
+CORS_ORIGINS=https://example.com,https://app.example.com
+
+
+# Strict security, real secrets
+
+```
+
+---
+
+
+
+## Validation Workflow
+
+
+
+### Pre-Deployment Checklist
+
+```bash
+
+# 1. Validate environment
+
+python env_validator.py --env production --strict
+
+
+
+# 2. Run tests with production config
+
+ENVIRONMENT=production pytest
+
+
+
+# 3. Security scan
+
+python tools/secret_scan.py
+
+
+
+# 4. Check git status (ensure .env not staged)
+
+git status | grep -i "\.env"
+
+
+# Should return nothing or only .env.example
+
+
+
+# 5. Verify .gitignore
+
+git check-ignore .env
+
+
+# Should output: .env
+
+```
+
+
+
+### Continuous Integration
+
+Add to your CI pipeline:
+```yaml
+
+# .github/workflows/ci.yml
+
+- name: Validate Environment Configuration
+  run: |
+    cp .env.example .env
+    python env_validator.py --strict
+    
+- name: Check for Exposed Secrets
+  run: |
+    python tools/secret_scan.py
+    git log --all --full-history -- .env
+    # Should be empty
+
+```
+
+---
+
+
+
+## Troubleshooting
+
+
+
+### Problem: "FERNET_KEY invalid"
+
+```bash
+
+# Regenerate key
+
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+
+
+
+# Verify length
+
+echo -n "your-key" | wc -c  # Should be 44
+```
+
+
+
+### Problem: "CORS origin blocked"
+
+```bash
+
+# Check CORS_ORIGINS in .env
+
+grep CORS_ORIGINS .env
+
+
+
+# Production: MUST NOT contain '*'
+
+
+# Development: Can use '*' for convenience
+
+```
+
+
+
+### Problem: "Database connection failed"
+
+```bash
+
+# Verify DATABASE_URL format
+
+
+# Correct: postgresql://user:[REDACTED]@host:port/db
+
+
+# Check connection
+
+psql "${DATABASE_URL}"
+```
+
+
+
+### Problem: "Environment validation failed"
+
+```bash
+
+# See what's wrong
+
+python env_validator.py
+
+
+
+# Get detailed schema
+
+python env_validator.py --export-schema
+```
+
+
+
+### Problem: ".env file not loaded"
+
+```bash
+
+# Verify file location
+
+ls -la .env
+
+
+
+# Check file permissions
+
+chmod 600 .env
+
+
+
+# Verify loading in code
+
+python -c "import os; from dotenv import load_dotenv; load_dotenv(); print(os.getenv('ENVIRONMENT'))"
+```
+
+---
+
+
+
+## Security Best Practices
+
+
+
+### 1. Never Commit .env
+
+```bash
+
+# Verify exclusion
+
+git check-ignore .env  # Should output: .env
+
+
+
+# Check history
+
+git log --all --full-history -- .env  # Should be empty
+
+
+
+# If accidentally committed:
+
+git filter-branch --force --index-filter \
+  "git rm --cached --ignore-unmatch .env" \
+  --prune-empty --tag-name-filter cat -- --all
+```
+
+
+
+### 2. Rotate Secrets Regularly
+
+```python
+
+# Using secrets manager
+
+from app.core.secrets_manager import get_secrets_manager
+
+secrets = get_secrets_manager()
+
+
+
+# Check rotation status
+
+needs_rotation = secrets.get_secrets_needing_rotation()
+if needs_rotation:
+    print(f"⚠️  Secrets needing rotation: {needs_rotation}")
+
+
+
+# Rotate a secret
+
+secrets.rotate_secret("api_key", new_value="new-key-value")
+```
+
+
+
+### 3. Use Different Keys Per Environment
+
+```bash
+
+# Development
+
+FERNET_KEY=dev-fernet-key-xxxxx
+
+
+
+# Staging
+
+FERNET_KEY=staging-fernet-key-yyyyy
+
+
+
+# Production
+
+FERNET_KEY=prod-fernet-key-zzzzz
+```
+
+
+
+### 4. Encrypt .env in Transit
+
+```bash
+
+# Using GPG
+
+gpg --symmetric --cipher-algo AES256 .env
+
+
+# Produces: .env.gpg
+
+
+
+# Decrypt on server
+
+gpg --decrypt .env.gpg > .env
+chmod 600 .env
+```
+
+---
+
+
+
+## Migration from Old Configuration
+
+
+
+### From Hardcoded Values
+
+```python
+
+# Before (BAD)
+
+OPENAI_KEY = "sk-hardcoded-key"
+
+
+
+# After (GOOD)
+
+import os
+OPENAI_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_KEY:
+    raise ValueError("OPENAI_API_KEY must be set")
+```
+
+
+
+### From config.py Files
+
+```python
+
+# Before (config.py)
+
+class Config:
+    SECRET_KEY = "[REDACTED]"
+    DATABASE_URL = "postgresql://localhost/db"
+
+
+
+# After (config.py)
+
+import os
+class Config:
+    SECRET_KEY = os.getenv("SECRET_KEY")
+    DATABASE_URL = os.getenv("DATABASE_URL")
+```
+
+
+
+### Migration Script
+
+```python
+
+# migrate_config.py
+
+import os
+import re
+
+def extract_env_vars(config_file):
+    """Extract environment variables from old config"""
+    with open(config_file) as f:
+        content = f.read()
+    
+    # Find assignments
+
+    pattern = r'(\w+)\s*=\s*["\']([^"\']+)["\']'
+    matches = re.findall(pattern, content)
+    
+    # Create .env
+
+    with open('.env', 'w') as f:
+        for key, value in matches:
+            f.write(f"{key}={value}\n")
+    
+    print("✅ Migrated configuration to .env")
+
+if __name__ == "__main__":
+    extract_env_vars("old_config.py")
+```
+
+---
+
+
+
+## References
+
+- **Complete Variable List**: See `ENV_VARIABLES_REFERENCE.md`
+- **Architecture Overview**: See `ENVIRONMENT_ARCHITECTURE_REPORT.md`
+- **Template File**: `.env.example`
+- **Validator**: `env_validator.py`
+- **Secrets Manager**: `src/app/core/secrets_manager.py`
+
+---
+
+
+
+## Support
+
+If you encounter issues:
+
+1. Check validation: `python env_validator.py`
+2. Review documentation: `ENV_VARIABLES_REFERENCE.md`
+3. Verify git exclusion: `git check-ignore .env`
+4. Check secret scanner: `python tools/secret_scan.py`
+
+**Remember**: Environment variables are the foundation of secure configuration. Take the time to set them up correctly! 🔒

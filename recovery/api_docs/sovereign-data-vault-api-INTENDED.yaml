@@ -1,0 +1,469 @@
+openapi: 3.1.0
+info:
+  title: Sovereign Data Vault API
+  description: |
+    Secure microservice for storing and managing sovereign data with encryption at rest,
+    fine-grained access control, and comprehensive audit trails.
+    
+    **IMPLEMENTATION STATUS**: Currently implements generic CRUD using /api/v1/items endpoints.
+    Spec-defined vault-specific endpoints (vaults, secrets) are NOT YET IMPLEMENTED.
+  version: 1.0.0
+  contact:
+    name: Project AI Team
+    email: governance@project-ai.dev
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8012
+    description: Local development server
+  - url: http://sovereign-vault:8000
+    description: Docker network (internal)
+  - url: https://vault.sovereign.ai
+    description: Production server
+
+tags:
+  - name: System
+    description: System information and status
+  - name: Health
+    description: Kubernetes health probes
+  - name: Observability
+    description: Metrics and monitoring
+  - name: Vault Items
+    description: Secure data storage operations
+
+paths:
+  /:
+    get:
+      summary: Service information
+      operationId: root
+      tags: [System]
+      responses:
+        '200':
+          description: Service metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInfo'
+
+  /api/v1/health/liveness:
+    get:
+      summary: Liveness probe
+      description: Kubernetes liveness check - service is alive
+      operationId: liveness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is alive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+
+  /api/v1/health/readiness:
+    get:
+      summary: Readiness probe
+      description: Kubernetes readiness check - service is ready to serve traffic
+      operationId: readiness
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+        '503':
+          description: Service not ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/health/startup:
+    get:
+      summary: Startup probe
+      description: Kubernetes startup check - service has started successfully
+      operationId: startup
+      tags: [Health]
+      responses:
+        '200':
+          description: Service started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      description: Returns Prometheus-format metrics for monitoring
+      operationId: metrics
+      tags: [Observability]
+      responses:
+        '200':
+          description: Metrics in Prometheus format
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |
+                  # HELP vault_items_total Total number of vault items
+                  # TYPE vault_items_total counter
+                  vault_items_total 42
+
+  /api/v1/items:
+    get:
+      summary: List vault items
+      description: Returns paginated list of encrypted vault items accessible to the requester
+      operationId: list_items
+      tags: [Vault Items]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          description: Page number (1-indexed)
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: page_size
+          in: query
+          description: Items per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedItems'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+    post:
+      summary: Create vault item
+      description: Create a new encrypted item in the vault
+      operationId: create_item
+      tags: [Vault Items]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemCreate'
+      responses:
+        '201':
+          description: Item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VaultItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /api/v1/items/{item_id}:
+    parameters:
+      - name: item_id
+        in: path
+        required: true
+        description: UUID of the vault item
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get vault item
+      description: Retrieve a specific vault item by ID (decrypted for authorized users)
+      operationId: get_item
+      tags: [Vault Items]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Item found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VaultItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Update vault item
+      description: Update an existing vault item (re-encrypted)
+      operationId: update_item
+      tags: [Vault Items]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemUpdate'
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VaultItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Delete vault item
+      description: Securely delete a vault item (including encrypted data)
+      operationId: delete_item
+      tags: [Vault Items]
+      security:
+        - ApiKeyAuth: []
+        - BearerAuth: []
+      responses:
+        '204':
+          description: Item deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for service-to-service authentication
+
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for user authentication
+
+  schemas:
+    ServiceInfo:
+      type: object
+      properties:
+        service:
+          type: string
+          example: sovereign-data-vault
+        version:
+          type: string
+          example: 1.0.0
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+          example: healthy
+
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+          example: healthy
+        timestamp:
+          type: string
+          format: date-time
+        checks:
+          type: object
+          properties:
+            database:
+              type: string
+              enum: [healthy, degraded, unhealthy]
+            cache:
+              type: string
+              enum: [healthy, degraded, unhealthy]
+            encryption_service:
+              type: string
+              enum: [healthy, degraded, unhealthy]
+
+    ItemCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Name of the vault item
+          example: my-secret-credential
+        description:
+          type: string
+          maxLength: 1000
+          description: Optional description
+          example: API key for external service
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Custom metadata fields
+
+    ItemUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        description:
+          type: string
+          maxLength: 1000
+        metadata:
+          type: object
+          additionalProperties: true
+
+    VaultItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier
+        name:
+          type: string
+          description: Item name
+        description:
+          type: string
+          description: Item description
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Custom metadata
+        encrypted:
+          type: boolean
+          description: Whether data is encrypted at rest
+          example: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        owner_id:
+          type: string
+          format: uuid
+          description: User ID of owner
+
+    PaginatedItems:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/VaultItem'
+        total:
+          type: integer
+          description: Total number of items
+        page:
+          type: integer
+          description: Current page number
+        page_size:
+          type: integer
+          description: Items per page
+        total_pages:
+          type: integer
+          description: Total number of pages
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional error details
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    Unauthorized:
+      description: Authentication required or failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    Forbidden:
+      description: Access denied - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    RateLimited:
+      description: Too many requests - rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+          description: Request limit per hour
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+          description: Remaining requests
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+          description: Time when limit resets (Unix timestamp)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+x-rate-limits:
+  authenticated:
+    requests_per_hour: 1000
+    burst: 100
+  unauthenticated:
+    requests_per_hour: 100
+    burst: 10

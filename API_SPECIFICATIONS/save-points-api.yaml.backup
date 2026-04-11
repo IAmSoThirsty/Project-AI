@@ -1,0 +1,249 @@
+openapi: 3.1.0
+info:
+  title: Save Points API
+  description: |
+    API for creating, managing, and restoring system save points.
+    Enables time-travel debugging and system state recovery.
+    
+    **IMPLEMENTATION**: api/save_points_routes.py
+    - POST /api/savepoints/create - Create user-initiated save point
+    - GET /api/savepoints/list - List all save points
+    - POST /api/savepoints/restore/{save_id} - Restore from save point
+    - DELETE /api/savepoints/delete/{save_id} - Delete save point
+    - GET /api/savepoints/auto/status - Auto-save service status
+  version: 1.0.0
+  contact:
+    name: Project AI Team
+    email: governance@project-ai.dev
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8000/api/savepoints
+    description: Local development
+  - url: https://api.sovereign.ai/api/savepoints
+    description: Production
+
+tags:
+  - name: Save Points
+    description: System state snapshot management
+
+paths:
+  /create:
+    post:
+      summary: Create a save point
+      description: Creates a user-initiated save point with optional metadata
+      operationId: create_save_point
+      tags: [Save Points]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSaveRequest'
+      responses:
+        '200':
+          description: Save point created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  save_point:
+                    $ref: '#/components/schemas/SavePoint'
+        '500':
+          description: Save point creation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /list:
+    get:
+      summary: List all save points
+      description: Returns all save points (both user-created and auto-generated)
+      operationId: list_save_points
+      tags: [Save Points]
+      responses:
+        '200':
+          description: List of save points
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_saves:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SavePoint'
+                  auto_saves:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SavePoint'
+                  total:
+                    type: integer
+        '500':
+          description: Failed to retrieve save points
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /restore/{save_id}:
+    post:
+      summary: Restore from save point
+      description: Restores system state to a specific save point
+      operationId: restore_save_point
+      tags: [Save Points]
+      parameters:
+        - name: save_id
+          in: path
+          required: true
+          description: ID of the save point to restore
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Restore successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '404':
+          description: Save point not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Restore failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /delete/{save_id}:
+    delete:
+      summary: Delete a save point
+      description: Deletes a user-created save point (auto-saves cannot be deleted)
+      operationId: delete_save_point
+      tags: [Save Points]
+      parameters:
+        - name: save_id
+          in: path
+          required: true
+          description: ID of the save point to delete
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Save point deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '404':
+          description: Save point not found or cannot be deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Deletion failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auto/status:
+    get:
+      summary: Get auto-save status
+      description: Returns status and statistics of the auto-save background service
+      operationId: auto_save_status
+      tags: [Save Points]
+      responses:
+        '200':
+          description: Auto-save service status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  enabled:
+                    type: boolean
+                  interval_seconds:
+                    type: integer
+                  total_auto_saves:
+                    type: integer
+                  last_auto_save:
+                    type: string
+                    format: date-time
+                  next_auto_save:
+                    type: string
+                    format: date-time
+        '500':
+          description: Failed to retrieve status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CreateSaveRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Human-readable name for the save point
+        metadata:
+          type: object
+          description: Optional metadata to store with the save point
+          additionalProperties: true
+
+    SavePoint:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the save point
+        name:
+          type: string
+          description: Human-readable name
+        type:
+          type: string
+          enum: [user, auto]
+          description: Whether this is a user-created or auto-generated save
+        timestamp:
+          type: string
+          format: date-time
+          description: When the save point was created
+        metadata:
+          type: object
+          description: Additional metadata
+          additionalProperties: true
+        size_bytes:
+          type: integer
+          description: Size of the saved state in bytes
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        detail:
+          type: string

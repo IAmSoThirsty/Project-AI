@@ -1,0 +1,61 @@
+# Thirsty Lang Architecture
+
+## Overview
+The `src/thirsty_lang` module is a placeholder or alias for the ThirstyLang compiler and runtime system. The main implementation resides in `src/shadow_thirst`. This module may serve as an API facade or provide additional language utilities.
+
+**Purpose**: Provide ThirstyLang language support, potentially with additional tooling, utilities, or API wrappers.
+
+**Scope**: Language tooling, utilities, and integration support for ThirstyLang.
+
+## Components
+
+### Module Structure
+```
+thirsty_lang/
+└── (components to be determined based on actual implementation)
+```
+
+**Note**: This module appears to be minimal or in early stages. The primary ThirstyLang implementation is in `src/shadow_thirst`. See `SHADOW_THIRST_ARCHITECTURE.md` for comprehensive ThirstyLang documentation.
+
+## Dependencies
+
+### Internal Dependencies
+- `src.shadow_thirst`: Core ThirstyLang compiler and VM
+- `src.governance`: Policy integration
+- `src.security`: Security enforcement
+
+### External Dependencies
+- Same as shadow_thirst module
+
+## Integration Points
+
+### APIs
+- Potential wrapper APIs for ThirstyLang compilation
+- Utility functions for ThirstyLang integration
+- IDE support utilities (future)
+
+## Architecture Patterns
+
+### Facade Pattern
+- Simplified API over shadow_thirst
+- Convenience functions
+- Integration helpers
+
+## Future Extensions
+- Language Server Protocol (LSP) implementation
+- Package manager for ThirstyLang
+- Build tools integration
+- IDE plugins
+- Syntax highlighting support
+- Formatter and linter
+- Documentation generator
+- Testing framework
+- Benchmarking tools
+
+## Reference
+For complete ThirstyLang architecture documentation, see:
+- `SHADOW_THIRST_ARCHITECTURE.md` - Core compiler and VM
+- `src/shadow_thirst/README.md` - Implementation details
+
+## Status
+This module appears to be a stub or in early development. The main ThirstyLang implementation is mature and documented in the `shadow_thirst` module.

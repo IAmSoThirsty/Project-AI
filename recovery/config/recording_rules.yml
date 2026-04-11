@@ -1,0 +1,309 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+# Prometheus Recording Rules for Project-AI
+# Pre-computes expensive queries for better performance and SLO tracking
+
+groups:
+  # API Performance Recording Rules
+  - name: api_performance_rules
+    interval: 30s
+    rules:
+      # API Availability (30-day rolling)
+      - record: api:availability:30d
+        expr: |
+          sum(rate(project_ai_api_requests_total{status!~"5.."}[30d])) /
+          sum(rate(project_ai_api_requests_total[30d])) * 100
+
+      # API Availability (5-minute window)
+      - record: api:availability:5m
+        expr: |
+          sum(rate(project_ai_api_requests_total{status!~"5.."}[5m])) /
+          sum(rate(project_ai_api_requests_total[5m])) * 100
+
+      # API Error Rate
+      - record: api:error_rate:5m
+        expr: |
+          sum(rate(project_ai_api_errors_total[5m])) / 
+          sum(rate(project_ai_api_requests_total[5m])) * 100
+
+      # API Latency p50
+      - record: api:latency:p50
+        expr: |
+          histogram_quantile(0.50, 
+            sum(rate(project_ai_api_request_duration_seconds_bucket[5m])) by (le)
+          )
+
+      # API Latency p95
+      - record: api:latency:p95
+        expr: |
+          histogram_quantile(0.95, 
+            sum(rate(project_ai_api_request_duration_seconds_bucket[5m])) by (le)
+          )
+
+      # API Latency p99
+      - record: api:latency:p99
+        expr: |
+          histogram_quantile(0.99, 
+            sum(rate(project_ai_api_request_duration_seconds_bucket[5m])) by (le)
+          )
+
+      # API Request Rate (requests per second)
+      - record: api:requests:rate
+        expr: |
+          sum(rate(project_ai_api_requests_total[5m]))
+
+      # API Request Rate by Endpoint
+      - record: api:requests:rate:by_endpoint
+        expr: |
+          sum(rate(project_ai_api_requests_total[5m])) by (endpoint)
+
+  # SLO Tracking Recording Rules
+  - name: slo_tracking_rules
+    interval: 1m
+    rules:
+      # Error Budget Remaining (%)
+      - record: slo:error_budget:remaining_pct
+        expr: |
+          (1 - (
+            (1 - (
+              sum(rate(project_ai_api_requests_total{status!~"5.."}[30d])) /
+              sum(rate(project_ai_api_requests_total[30d]))
+            )) / 0.001
+          )) * 100
+
+      # Error Budget Burn Rate (1 hour window)
+      - record: slo:error_budget:burn_rate:1h
+        expr: |
+          (1 - (
+            sum(rate(project_ai_api_requests_total{status!~"5.."}[1h])) /
+            sum(rate(project_ai_api_requests_total[1h]))
+          )) / 0.001
+
+      # Error Budget Burn Rate (6 hour window)
+      - record: slo:error_budget:burn_rate:6h
+        expr: |
+          (1 - (
+            sum(rate(project_ai_api_requests_total{status!~"5.."}[6h])) /
+            sum(rate(project_ai_api_requests_total[6h]))
+          )) / 0.001
+
+      # Error Budget Burn Rate (24 hour window)
+      - record: slo:error_budget:burn_rate:24h
+        expr: |
+          (1 - (
+            sum(rate(project_ai_api_requests_total{status!~"5.."}[24h])) /
+            sum(rate(project_ai_api_requests_total[24h]))
+          )) / 0.001
+
+  # Four Laws System Recording Rules
+  - name: four_laws_rules
+    interval: 30s
+    rules:
+      # Four Laws Denial Rate
+      - record: four_laws:denial_rate:5m
+        expr: |
+          rate(project_ai_four_laws_denials_total[5m])
+
+      # Four Laws Success Rate
+      - record: four_laws:success_rate:5m
+        expr: |
+          sum(rate(project_ai_four_laws_validations_total{result="allowed"}[5m])) /
+          sum(rate(project_ai_four_laws_validations_total[5m])) * 100
+
+      # Four Laws Validation Rate
+      - record: four_laws:validation_rate:5m
+        expr: |
+          sum(rate(project_ai_four_laws_validations_total[5m]))
+
+  # Security Recording Rules
+  - name: security_rules
+    interval: 30s
+    rules:
+      # Security Incident Rate (per hour)
+      - record: security:incidents:rate:1h
+        expr: |
+          rate(project_ai_security_incidents_total[1h])
+
+      # Critical Security Incident Rate
+      - record: security:incidents:critical:rate:1h
+        expr: |
+          rate(project_ai_security_incidents_total{severity="critical"}[1h])
+
+      # Cerberus Block Rate
+      - record: security:cerberus:blocks:rate:5m
+        expr: |
+          rate(project_ai_cerberus_blocks_total[5m])
+
+      # Authentication Failure Rate
+      - record: security:auth:failures:rate:5m
+        expr: |
+          rate(project_ai_auth_failures_total[5m])
+
+      # Unauthorized Access Rate
+      - record: security:access:unauthorized:rate:5m
+        expr: |
+          rate(project_ai_unauthorized_access_total[5m])
+
+  # System Performance Recording Rules
+  - name: system_rules
+    interval: 30s
+    rules:
+      # Overall CPU Usage (%)
+      - record: system:cpu:usage_pct
+        expr: |
+          100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+      # Memory Usage (%)
+      - record: system:memory:usage_pct
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
+
+      # Disk Usage (%)
+      - record: system:disk:usage_pct
+        expr: |
+          (1 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"})) * 100
+
+      # Disk I/O Utilization
+      - record: system:disk:io_utilization
+        expr: |
+          rate(node_disk_io_time_seconds_total[5m])
+
+      # Network Receive Throughput (bytes/sec)
+      - record: system:network:receive_bytes:rate
+        expr: |
+          rate(node_network_receive_bytes_total[5m])
+
+      # Network Transmit Throughput (bytes/sec)
+      - record: system:network:transmit_bytes:rate
+        expr: |
+          rate(node_network_transmit_bytes_total[5m])
+
+      # Network Error Rate
+      - record: system:network:errors:rate
+        expr: |
+          rate(node_network_receive_errs_total[5m]) + 
+          rate(node_network_transmit_errs_total[5m])
+
+  # Container Recording Rules
+  - name: container_rules
+    interval: 30s
+    rules:
+      # Container CPU Usage (%)
+      - record: container:cpu:usage_pct
+        expr: |
+          sum(rate(container_cpu_usage_seconds_total[5m])) by (name) * 100
+
+      # Container Memory Usage (%)
+      - record: container:memory:usage_pct
+        expr: |
+          (container_memory_usage_bytes / container_spec_memory_limit_bytes) * 100
+
+      # Container Memory Usage (bytes)
+      - record: container:memory:usage_bytes
+        expr: |
+          sum(container_memory_usage_bytes) by (name)
+
+      # Container Network Receive (bytes/sec)
+      - record: container:network:receive_bytes:rate
+        expr: |
+          sum(rate(container_network_receive_bytes_total[5m])) by (name)
+
+      # Container Network Transmit (bytes/sec)
+      - record: container:network:transmit_bytes:rate
+        expr: |
+          sum(rate(container_network_transmit_bytes_total[5m])) by (name)
+
+  # Database Recording Rules
+  - name: database_rules
+    interval: 30s
+    rules:
+      # PostgreSQL Connection Usage (%)
+      - record: db:postgres:connections:usage_pct
+        expr: |
+          (pg_stat_database_numbackends / pg_settings_max_connections) * 100
+
+      # PostgreSQL Cache Hit Ratio (%)
+      - record: db:postgres:cache_hit_ratio
+        expr: |
+          (pg_stat_database_blks_hit / (pg_stat_database_blks_hit + pg_stat_database_blks_read)) * 100
+
+      # PostgreSQL Transaction Rate
+      - record: db:postgres:transactions:rate
+        expr: |
+          rate(pg_stat_database_xact_commit[5m]) + 
+          rate(pg_stat_database_xact_rollback[5m])
+
+      # PostgreSQL Commit Rate
+      - record: db:postgres:commits:rate
+        expr: |
+          rate(pg_stat_database_xact_commit[5m])
+
+      # PostgreSQL Rollback Rate
+      - record: db:postgres:rollbacks:rate
+        expr: |
+          rate(pg_stat_database_xact_rollback[5m])
+
+      # PostgreSQL Rollback Ratio (%)
+      - record: db:postgres:rollback_ratio
+        expr: |
+          (rate(pg_stat_database_xact_rollback[5m]) / 
+          (rate(pg_stat_database_xact_commit[5m]) + rate(pg_stat_database_xact_rollback[5m]))) * 100
+
+  # Microservices Recording Rules
+  - name: microservices_rules
+    interval: 30s
+    rules:
+      # Microservice Request Rate
+      - record: microservice:requests:rate
+        expr: |
+          sum(rate(project_ai_api_requests_total{component="microservice"}[5m])) by (service)
+
+      # Microservice Error Rate
+      - record: microservice:errors:rate
+        expr: |
+          sum(rate(project_ai_api_errors_total{component="microservice"}[5m])) by (service)
+
+      # Microservice Latency p95
+      - record: microservice:latency:p95
+        expr: |
+          histogram_quantile(0.95, 
+            sum(rate(project_ai_api_request_duration_seconds_bucket{component="microservice"}[5m])) by (service, le)
+          )
+
+      # Microservice Availability
+      - record: microservice:availability
+        expr: |
+          sum(rate(project_ai_api_requests_total{component="microservice",status!~"5.."}[5m])) by (service) /
+          sum(rate(project_ai_api_requests_total{component="microservice"}[5m])) by (service) * 100
+
+  # AI System Recording Rules
+  - name: ai_system_rules
+    interval: 30s
+    rules:
+      # Memory System Query Rate
+      - record: ai:memory:query_rate:5m
+        expr: |
+          rate(project_ai_memory_queries_total[5m])
+
+      # Memory System Query Latency p95
+      - record: ai:memory:query_latency:p95
+        expr: |
+          histogram_quantile(0.95, 
+            rate(project_ai_memory_query_duration_seconds_bucket[5m])
+          )
+
+      # Plugin Execution Rate
+      - record: ai:plugins:execution_rate:5m
+        expr: |
+          sum(rate(project_ai_plugin_execution_total[5m])) by (plugin_name)
+
+      # Plugin Success Rate
+      - record: ai:plugins:success_rate
+        expr: |
+          sum(rate(project_ai_plugin_execution_total{status="success"}[5m])) by (plugin_name) /
+          sum(rate(project_ai_plugin_execution_total[5m])) by (plugin_name) * 100
+
+      # Learning Request Backlog
+      - record: ai:learning:backlog
+        expr: |
+          project_ai_learning_pending_requests

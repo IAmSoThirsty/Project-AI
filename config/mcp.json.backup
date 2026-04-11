@@ -1,0 +1,40 @@
+{
+  "mcpServers": {
+    "project-ai": {
+      "command": "python",
+      "args": [
+        "-m",
+        "src.app.core.mcp_server"
+      ],
+      "env": {
+        "PYTHONPATH": ".",
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "HUGGINGFACE_API_KEY": "${HUGGINGFACE_API_KEY}",
+        "FERNET_KEY": "${FERNET_KEY}"
+      },
+      "description": "Project-AI MCP Server - Advanced AI Assistant with Ethics Framework",
+      "metadata": {
+        "version": "1.0.0",
+        "author": "Project-AI Team",
+        "homepage": "https://github.com/IAmSoThirsty/Project-AI",
+        "features": [
+          "AI Ethics (Asimov's Laws) validation",
+          "AI Persona management with 8 personality traits",
+          "Memory expansion and knowledge base",
+          "Autonomous learning with human-in-the-loop approval",
+          "Command override system",
+          "Data analysis (CSV, Excel, JSON)",
+          "Location tracking (IP geolocation)",
+          "Emergency alert system",
+          "Image generation (Stable Diffusion, DALL-E)",
+          "Plugin management system"
+        ],
+        "capabilities": {
+          "tools": 14,
+          "resources": 4,
+          "prompts": 3
+        }
+      }
+    }
+  }
+}

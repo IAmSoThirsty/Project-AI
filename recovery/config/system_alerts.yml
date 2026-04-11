@@ -1,0 +1,210 @@
+#                                           [2026-03-03 13:45]
+#                                          Productivity: Active
+# System Alert Rules for Project-AI
+# Monitors system resources, containers, and infrastructure health
+
+groups:
+  - name: system_alerts
+    interval: 15s
+    rules:
+      # CPU Alerts
+      - alert: HighCPUUsage
+        expr: |
+          (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is {{ $value | humanize }}% on {{ $labels.instance }}"
+
+      - alert: CriticalCPUUsage
+        expr: |
+          (100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)) > 95
+        for: 2m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "Critical CPU usage"
+          description: "CPU usage is {{ $value | humanize }}% on {{ $labels.instance }}. System may become unresponsive."
+
+      # Memory Alerts
+      - alert: HighMemoryUsage
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "High memory usage"
+          description: "Memory usage is {{ $value | humanize }}% on {{ $labels.instance }}"
+
+      - alert: CriticalMemoryUsage
+        expr: |
+          (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 95
+        for: 2m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "Critical memory usage"
+          description: "Memory usage is {{ $value | humanize }}% on {{ $labels.instance }}. OOM killer may trigger."
+
+      # Disk Space Alerts
+      - alert: LowDiskSpace
+        expr: |
+          (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 20
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "Low disk space"
+          description: "Disk space on {{ $labels.mountpoint }} is {{ $value | humanize }}% free on {{ $labels.instance }}"
+
+      - alert: CriticalDiskSpace
+        expr: |
+          (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100 < 10
+        for: 2m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "Critical disk space"
+          description: "Disk space on {{ $labels.mountpoint }} is {{ $value | humanize }}% free on {{ $labels.instance }}. Service degradation imminent."
+
+      # Disk I/O Alerts
+      - alert: HighDiskIOUsage
+        expr: |
+          rate(node_disk_io_time_seconds_total[5m]) > 0.8
+        for: 10m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "High disk I/O utilization"
+          description: "Disk {{ $labels.device }} I/O utilization is {{ $value | humanize }} on {{ $labels.instance }}"
+
+      # Network Alerts
+      - alert: HighNetworkErrors
+        expr: |
+          rate(node_network_receive_errs_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+          component: network
+        annotations:
+          summary: "High network error rate"
+          description: "Network interface {{ $labels.device }} receiving {{ $value | humanize }} errors/sec on {{ $labels.instance }}"
+
+      - alert: NetworkSaturation
+        expr: |
+          rate(node_network_receive_bytes_total[5m]) > 100000000
+        for: 5m
+        labels:
+          severity: info
+          component: network
+        annotations:
+          summary: "High network throughput"
+          description: "Network interface {{ $labels.device }} receiving {{ $value | humanize }} bytes/sec on {{ $labels.instance }}"
+
+  - name: container_alerts
+    interval: 15s
+    rules:
+      # Container Health
+      - alert: ContainerDown
+        expr: |
+          time() - container_last_seen > 60
+        for: 1m
+        labels:
+          severity: critical
+          component: containers
+        annotations:
+          summary: "Container is down"
+          description: "Container {{ $labels.name }} has been down for more than 1 minute"
+
+      - alert: ContainerRestartingFrequently
+        expr: |
+          rate(container_last_seen[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          component: containers
+        annotations:
+          summary: "Container restarting frequently"
+          description: "Container {{ $labels.name }} has restarted {{ $value | humanize }} times in the last 5 minutes"
+
+      # Container Resources
+      - alert: ContainerHighMemory
+        expr: |
+          (container_memory_usage_bytes / container_spec_memory_limit_bytes) * 100 > 90
+        for: 5m
+        labels:
+          severity: warning
+          component: containers
+        annotations:
+          summary: "Container using high memory"
+          description: "Container {{ $labels.name }} is using {{ $value | humanize }}% of memory limit"
+
+      - alert: ContainerHighCPU
+        expr: |
+          rate(container_cpu_usage_seconds_total[5m]) * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: containers
+        annotations:
+          summary: "Container using high CPU"
+          description: "Container {{ $labels.name }} is using {{ $value | humanize }}% CPU"
+
+      - alert: ContainerMemoryOOM
+        expr: |
+          container_memory_failcnt > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: containers
+        annotations:
+          summary: "Container hit memory limit"
+          description: "Container {{ $labels.name }} has hit its memory limit {{ $value }} times. Increase memory limit."
+
+  - name: infrastructure_alerts
+    interval: 30s
+    rules:
+      # Load Average
+      - alert: HighLoadAverage
+        expr: |
+          node_load15 / count(node_cpu_seconds_total{mode="system"}) without (cpu, mode) > 2
+        for: 10m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "High system load average"
+          description: "Load average is {{ $value | humanize }} on {{ $labels.instance }}"
+
+      # System Uptime
+      - alert: SystemRecentlyRebooted
+        expr: |
+          node_time_seconds - node_boot_time_seconds < 600
+        labels:
+          severity: info
+          component: system
+        annotations:
+          summary: "System recently rebooted"
+          description: "System {{ $labels.instance }} rebooted less than 10 minutes ago"
+
+      # Clock Skew
+      - alert: ClockSkewDetected
+        expr: |
+          abs(node_timex_offset_seconds) > 0.05
+        for: 10m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "System clock skew detected"
+          description: "Clock on {{ $labels.instance }} is skewed by {{ $value | humanize }} seconds"

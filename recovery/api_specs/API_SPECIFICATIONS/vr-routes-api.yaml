@@ -1,0 +1,103 @@
+openapi: 3.1.0
+info:
+  title: VR Routes API
+  description: |
+    API for Verifiable Reality command routing and VR client communication.
+    Provides a simple command queue for sending commands to VR systems.
+  version: 1.0.0
+  contact:
+    name: Project AI Team
+    email: governance@project-ai.dev
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8000/vr
+    description: Local development
+  - url: https://api.sovereign.ai/vr
+    description: Production
+
+tags:
+  - name: VR
+    description: Verifiable Reality command routing
+
+paths:
+  /command:
+    post:
+      summary: Send command to VR system
+      description: Sends a command to the VR system command queue
+      operationId: send_vr_command
+      tags: [VR]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VRCommand'
+      responses:
+        '200':
+          description: Command queued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [queued]
+                  queue_size:
+                    type: integer
+                    description: Current size of the command queue
+
+  /commands:
+    get:
+      summary: Poll for new commands
+      description: |
+        VR clients call this endpoint to poll for new commands.
+        Returns commands with timestamp greater than the 'since' parameter.
+      operationId: get_vr_commands
+      tags: [VR]
+      parameters:
+        - name: since
+          in: query
+          description: Return commands after this Unix timestamp
+          required: false
+          schema:
+            type: number
+            format: float
+            default: 0
+      responses:
+        '200':
+          description: List of commands
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VRCommand'
+
+components:
+  schemas:
+    VRCommand:
+      type: object
+      required:
+        - type
+        - params
+      properties:
+        type:
+          type: string
+          description: Type of command to execute
+          example: "teleport"
+        params:
+          type: object
+          description: Command parameters (flexible structure)
+          additionalProperties: true
+          example:
+            x: 100.5
+            y: 50.0
+            z: 200.0
+        timestamp:
+          type: number
+          format: float
+          description: Unix timestamp when command was created (auto-generated if not provided)
+          example: 1704067200.123
