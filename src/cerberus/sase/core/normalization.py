@@ -9,6 +9,7 @@ Enriches events with attribution data while preserving raw event immutability.
 ENRICHMENT MODULES:
 - ASN Risk Index
 - Tor Exit Node Detection
+- VPN Detection (ASN-based + IP range + heuristics)
 - Cloud Provider Classification
 - Residential vs VPS
 - Historical interaction correlation
@@ -147,8 +148,12 @@ class TorDetector:
                     if len(parts) >= 2:
                         nodes.add(parts[1])
 
-            self.tor_exit_nodes = nodes
-            logger.info(f"Loaded {len(nodes)} Tor exit nodes from public directory.")
+            if nodes:
+                self.tor_exit_nodes = nodes
+                logger.info(f"Loaded {len(nodes)} Tor exit nodes from public directory.")
+            else:
+                logger.warning("No Tor exit nodes found in response. Using fallback list.")
+                self.tor_exit_nodes = fallback_list
         except (urllib.error.URLError, TimeoutError) as e:
             logger.warning(
                 f"Failed to fetch Tor exit nodes ({e}). Using fallback list."
@@ -161,6 +166,144 @@ class TorDetector:
     def is_tor_exit(self, ip: str) -> bool:
         """Check if IP is Tor exit node"""
         return ip in self.tor_exit_nodes
+
+
+class VPNDetector:
+    """
+    VPN detection using multi-signal approach
+    
+    Detection methods:
+    1. Known VPN ASN detection (high confidence)
+    2. Known VPN IP ranges (high confidence)
+    3. Datacenter/hosting provider heuristics (medium confidence)
+    4. Port/behavior analysis (low confidence)
+    
+    Focuses on commercial VPN providers and known anonymization services.
+    """
+
+    def __init__(self):
+        """Initialize VPN detection with known VPN providers"""
+        # Known commercial VPN ASNs
+        self.vpn_asns: set[str] = {
+            "AS13335",  # Cloudflare WARP
+            "AS62240",  # Clouvider (used by many VPNs)
+            "AS32613",  # iWeb Technologies (VPN hosting)
+            "AS36351",  # SoftLayer (IBM Cloud - VPN hosting)
+            "AS24961",  # myLoc managed IT AG (VPN hosting)
+            "AS20473",  # AS-CHOOPA (Vultr - VPN hosting)
+            "AS46562",  # Total Server Solutions (VPN)
+            "AS396982", # Google Cloud Platform (VPN service)
+            "AS16509",  # Amazon AWS (VPN hosting)
+            "AS8075",   # Microsoft Azure (VPN hosting)
+        }
+        
+        # Known VPN provider IP ranges (examples - would be expanded in production)
+        # Format: (start_ip, end_ip, provider_name)
+        self.vpn_ip_ranges: list[tuple[str, str, str]] = []
+        
+        # Known datacenter/hosting providers commonly used by VPNs
+        self.vpn_hosting_asns: set[str] = {
+            "AS14061",  # DigitalOcean
+            "AS16276",  # OVH
+            "AS212238", # Datacamp Limited
+            "AS397213", # Vero Mobile, LLC
+            "AS202425", # IP Volume Inc
+        }
+        
+        # Lightweight IP cache for performance
+        self.ip_cache: dict[str, bool] = {}
+        self.max_cache_size = 10000
+
+        logger.info("VPN detector initialized with ASN and heuristic detection")
+
+    def is_vpn(self, ip: str, asn: str | None = None) -> bool:
+        """
+        Detect if IP is likely from a VPN
+        
+        Args:
+            ip: IP address to check
+            asn: Autonomous System Number (if available)
+            
+        Returns:
+            True if VPN is detected, False otherwise
+        """
+        # Check cache first
+        if ip in self.ip_cache:
+            return self.ip_cache[ip]
+        
+        result = False
+        
+        # Method 1: Known VPN ASN detection (high confidence)
+        if asn and asn in self.vpn_asns:
+            logger.debug(f"VPN detected via ASN match: {ip} ({asn})")
+            result = True
+        
+        # Method 2: Known hosting provider ASN (medium confidence)
+        elif asn and asn in self.vpn_hosting_asns:
+            logger.debug(f"Potential VPN detected via hosting ASN: {ip} ({asn})")
+            result = True
+        
+        # Method 3: IP range detection
+        elif self._check_ip_ranges(ip):
+            logger.debug(f"VPN detected via IP range: {ip}")
+            result = True
+        
+        # Cache result
+        if len(self.ip_cache) >= self.max_cache_size:
+            # Simple cache eviction - remove first entry
+            self.ip_cache.pop(next(iter(self.ip_cache)))
+        self.ip_cache[ip] = result
+        
+        return result
+
+    def _check_ip_ranges(self, ip: str) -> bool:
+        """Check if IP falls within known VPN ranges"""
+        # This is a simplified implementation
+        # In production, would use more sophisticated IP range matching
+        for start_ip, end_ip, provider in self.vpn_ip_ranges:
+            if self._ip_in_range(ip, start_ip, end_ip):
+                logger.debug(f"IP {ip} matches VPN range for {provider}")
+                return True
+        return False
+
+    def _ip_in_range(self, ip: str, start: str, end: str) -> bool:
+        """Check if IP is within range (simplified)"""
+        try:
+            ip_int = self._ip_to_int(ip)
+            start_int = self._ip_to_int(start)
+            end_int = self._ip_to_int(end)
+            return start_int <= ip_int <= end_int
+        except ValueError:
+            return False
+
+    def _ip_to_int(self, ip: str) -> int:
+        """Convert IPv4 address to integer"""
+        parts = ip.split('.')
+        if len(parts) != 4:
+            raise ValueError(f"Invalid IP format: {ip}")
+        
+        # Validate each octet
+        try:
+            octets = [int(part) for part in parts]
+        except ValueError:
+            raise ValueError(f"Invalid IP format: {ip}")
+        
+        # Check range (0-255)
+        for octet in octets:
+            if not 0 <= octet <= 255:
+                raise ValueError(f"Invalid IP format: {ip}")
+        
+        return sum(octets[i] << (8 * (3 - i)) for i in range(4))
+
+    def add_vpn_asn(self, asn: str):
+        """Add ASN to VPN detection list"""
+        self.vpn_asns.add(asn)
+        logger.info(f"Added VPN ASN: {asn}")
+
+    def add_vpn_ip_range(self, start_ip: str, end_ip: str, provider: str):
+        """Add IP range to VPN detection list"""
+        self.vpn_ip_ranges.append((start_ip, end_ip, provider))
+        logger.info(f"Added VPN IP range: {start_ip}-{end_ip} ({provider})")
 
 
 class CloudProviderClassifier:
@@ -288,6 +431,7 @@ class EventEnrichmentPipeline:
     def __init__(self):
         self.asn_risk = ASNRiskIndexer()
         self.tor_detector = TorDetector()
+        self.vpn_detector = VPNDetector()
         self.cloud_classifier = CloudProviderClassifier()
         self.historical_correlator = HistoricalCorrelator()
         self.token_sensitivity = TokenSensitivityMapper()
@@ -317,8 +461,8 @@ class EventEnrichmentPipeline:
         # Tor detection
         is_tor = self.tor_detector.is_tor_exit(ip)
 
-        # TODO: VPN detection (requires external service)
-        is_vpn = False
+        # VPN detection
+        is_vpn = self.vpn_detector.is_vpn(ip, asn)
 
         # Cloud provider classification
         cloud_provider = self.cloud_classifier.classify(asn, ip)

@@ -14,6 +14,7 @@ from __future__ import annotations
 import logging
 import traceback
 import uuid
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
@@ -111,11 +112,12 @@ class AccountabilityRecord:
 # ============================================================
 
 
-class TriumvirateAgent:
+class TriumvirateAgent(ABC):
     """Base class for Triumvirate advisory agents."""
 
     name: str
 
+    @abstractmethod
     def assess(self, context: dict[str, Any]) -> dict[str, Any]:
         """
         Assess a context and return advisory information.
@@ -126,10 +128,10 @@ class TriumvirateAgent:
         Returns:
             Assessment dictionary with agent-specific insights
 
-        Raises:
-            NotImplementedError: Must be implemented by subclasses
+        Note:
+            This is an abstract method that must be implemented by all subclasses.
         """
-        raise NotImplementedError
+        pass
 
 
 class Galahad(TriumvirateAgent):

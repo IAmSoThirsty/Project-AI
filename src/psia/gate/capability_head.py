@@ -152,7 +152,11 @@ class CapabilityHead:
 
         # ── Check 4: Token expiry ──
         try:
-            expires_at = datetime.fromisoformat(token.expires_at)
+            expires_at_str = token.expires_at
+            # Handle 'Z' suffix (Python 3.10's fromisoformat doesn't support it)
+            if expires_at_str.endswith('Z'):
+                expires_at_str = expires_at_str[:-1] + '+00:00'
+            expires_at = datetime.fromisoformat(expires_at_str)
             if expires_at.tzinfo is None:
                 expires_at = expires_at.replace(tzinfo=timezone.utc)
             now = datetime.now(timezone.utc)

@@ -45,15 +45,15 @@ from .clotho import (
     ResourceLock,
 )
 
-# Consensus protocol components (TODO: Fix import paths)
-# from .lamport import LamportClock as LamportClockNew, LamportTimestamp
-# from .consensus import (
-#     EventRecord,
-#     EventType,
-#     ConflictResolver,
-#     ConsensusProtocol,
-#     BFTConsensus,
-# )
+# Consensus protocol components
+from .lamport import LamportClock as LamportClockNew, LamportTimestamp
+from .consensus import (
+    EventRecord,
+    EventType,
+    ConflictResolver,
+    ConsensusProtocol,
+    BFTConsensus,
+)
 
 __all__ = [
     "Chronos",

@@ -72,6 +72,16 @@ except ImportError:
     S3_AVAILABLE = False
     logger.warning("boto3 not available - S3 backend disabled")
 
+try:
+    from web3 import Web3
+    from web3.middleware import geth_poa_middleware
+    from eth_account import Account
+    
+    WEB3_AVAILABLE = True
+except ImportError:
+    WEB3_AVAILABLE = False
+    logger.warning("web3 not available - blockchain backend disabled")
+
 
 class ExternalMerkleAnchor:
     """External Merkle root anchoring system.
@@ -92,6 +102,10 @@ class ExternalMerkleAnchor:
         s3_bucket: str | None = None,
         s3_region: str = "us-east-1",
         s3_retention_days: int = 3650,  # 10 years default retention
+        blockchain_rpc_url: str | None = None,
+        blockchain_contract_address: str | None = None,
+        blockchain_private_key: str | None = None,
+        blockchain_chain_id: int = 1337,  # Local Ganache/Hardhat default
     ):
         """Initialize external Merkle anchor system.
 
@@ -102,6 +116,10 @@ class ExternalMerkleAnchor:
             s3_bucket: S3 bucket name for cloud storage
             s3_region: AWS region for S3 bucket
             s3_retention_days: S3 object lock retention period (days)
+            blockchain_rpc_url: Ethereum RPC endpoint (e.g., "http://localhost:8545")
+            blockchain_contract_address: Deployed smart contract address
+            blockchain_private_key: Private key for signing transactions
+            blockchain_chain_id: Chain ID (1=Ethereum mainnet, 1337=local)
         """
         self.backends = backends or ["filesystem"]
         self.filesystem_dir = (
@@ -111,12 +129,20 @@ class ExternalMerkleAnchor:
         self.s3_bucket = s3_bucket
         self.s3_region = s3_region
         self.s3_retention_days = s3_retention_days
+        self.blockchain_rpc_url = blockchain_rpc_url or "http://127.0.0.1:8545"
+        self.blockchain_contract_address = blockchain_contract_address
+        self.blockchain_private_key = blockchain_private_key
+        self.blockchain_chain_id = blockchain_chain_id
 
         # IPFS client (lazy initialization)
         self._ipfs_client = None
 
         # S3 client (lazy initialization)
         self._s3_client = None
+        
+        # Web3 client (lazy initialization)
+        self._web3_client = None
+        self._blockchain_contract = None
 
         # Validate backends
         valid_backends: set[AnchorBackend] = {"filesystem", "ipfs", "s3", "blockchain"}
@@ -133,6 +159,8 @@ class ExternalMerkleAnchor:
                 )
             if backend == "s3" and not S3_AVAILABLE:
                 raise ValueError("S3 backend requested but boto3 not installed")
+            if backend == "blockchain" and not WEB3_AVAILABLE:
+                raise ValueError("Blockchain backend requested but web3 not installed")
 
         # Setup filesystem backend
         if "filesystem" in self.backends:
@@ -534,21 +562,242 @@ class ExternalMerkleAnchor:
             logger.error("S3 verification error: %s", e)
             return None
 
-    # Blockchain Backend (stub implementation)
+    # Blockchain Backend - Web3.py Implementation
+    
+    # Smart contract ABI (Solidity interface)
+    MERKLE_ANCHOR_ABI = [
+        {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "anonymous": False,
+            "inputs": [
+                {"indexed": True, "internalType": "bytes32", "name": "merkleRoot", "type": "bytes32"},
+                {"indexed": True, "internalType": "string", "name": "genesisId", "type": "string"},
+                {"indexed": False, "internalType": "uint256", "name": "timestamp", "type": "uint256"},
+                {"indexed": False, "internalType": "string", "name": "metadata", "type": "string"}
+            ],
+            "name": "MerkleRootAnchored",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {"internalType": "bytes32", "name": "merkleRoot", "type": "bytes32"},
+                {"internalType": "string", "name": "genesisId", "type": "string"},
+                {"internalType": "string", "name": "metadata", "type": "string"}
+            ],
+            "name": "anchorMerkleRoot",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {"internalType": "bytes32", "name": "merkleRoot", "type": "bytes32"},
+                {"internalType": "string", "name": "genesisId", "type": "string"}
+            ],
+            "name": "verifyAnchor",
+            "outputs": [
+                {"internalType": "bool", "name": "exists", "type": "bool"},
+                {"internalType": "uint256", "name": "timestamp", "type": "uint256"},
+                {"internalType": "string", "name": "metadata", "type": "string"}
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {"internalType": "bytes32", "name": "", "type": "bytes32"},
+                {"internalType": "string", "name": "", "type": "string"}
+            ],
+            "name": "anchors",
+            "outputs": [
+                {"internalType": "uint256", "name": "timestamp", "type": "uint256"},
+                {"internalType": "string", "name": "metadata", "type": "string"},
+                {"internalType": "bool", "name": "exists", "type": "bool"}
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]
+    
+    # Solidity contract source (for deployment/reference)
+    MERKLE_ANCHOR_SOLIDITY = """
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract MerkleAnchor {
+    struct Anchor {
+        uint256 timestamp;
+        string metadata;
+        bool exists;
+    }
+    
+    // Mapping: merkleRoot => genesisId => Anchor
+    mapping(bytes32 => mapping(string => Anchor)) public anchors;
+    
+    event MerkleRootAnchored(
+        bytes32 indexed merkleRoot,
+        string indexed genesisId,
+        uint256 timestamp,
+        string metadata
+    );
+    
+    function anchorMerkleRoot(
+        bytes32 merkleRoot,
+        string memory genesisId,
+        string memory metadata
+    ) public {
+        require(!anchors[merkleRoot][genesisId].exists, "Anchor already exists");
+        
+        anchors[merkleRoot][genesisId] = Anchor({
+            timestamp: block.timestamp,
+            metadata: metadata,
+            exists: true
+        });
+        
+        emit MerkleRootAnchored(merkleRoot, genesisId, block.timestamp, metadata);
+    }
+    
+    function verifyAnchor(
+        bytes32 merkleRoot,
+        string memory genesisId
+    ) public view returns (bool exists, uint256 timestamp, string memory metadata) {
+        Anchor memory anchor = anchors[merkleRoot][genesisId];
+        return (anchor.exists, anchor.timestamp, anchor.metadata);
+    }
+}
+"""
+
+    def _get_web3_client(self):
+        """Get or create Web3 client (lazy initialization)."""
+        if self._web3_client is None:
+            if not WEB3_AVAILABLE:
+                raise RuntimeError("web3 package not installed")
+            
+            self._web3_client = Web3(Web3.HTTPProvider(self.blockchain_rpc_url))
+            
+            # Add PoA middleware for networks like Ganache/Polygon
+            self._web3_client.middleware_onion.inject(geth_poa_middleware, layer=0)
+            
+            # Verify connection
+            if not self._web3_client.is_connected():
+                raise ConnectionError(
+                    f"Cannot connect to blockchain at {self.blockchain_rpc_url}"
+                )
+            
+            logger.info("Connected to blockchain (chain_id=%s)", self._web3_client.eth.chain_id)
+        
+        return self._web3_client
+    
+    def _get_blockchain_contract(self):
+        """Get or create blockchain contract instance."""
+        if self._blockchain_contract is None:
+            if not self.blockchain_contract_address:
+                raise ValueError("Blockchain contract address not configured")
+            
+            w3 = self._get_web3_client()
+            
+            # Convert address to checksum format
+            contract_address = w3.to_checksum_address(self.blockchain_contract_address)
+            
+            # Create contract instance
+            self._blockchain_contract = w3.eth.contract(
+                address=contract_address,
+                abi=self.MERKLE_ANCHOR_ABI
+            )
+            
+            logger.info("Loaded contract at %s", contract_address)
+        
+        return self._blockchain_contract
+    
+    def _get_blockchain_account(self):
+        """Get account from private key."""
+        if not self.blockchain_private_key:
+            raise ValueError("Blockchain private key not configured")
+        
+        return Account.from_key(self.blockchain_private_key)
+
     def _pin_to_blockchain(self, anchor_record: dict[str, Any]) -> dict[str, Any]:
         """Pin anchor to blockchain smart contract."""
-        # TODO: Implement blockchain anchoring
-        # Options:
-        # 1. Ethereum smart contract
-        # 2. Polygon (cheaper gas fees)
-        # 3. Custom blockchain
-
-        logger.warning("Blockchain backend not implemented - returning stub response")
-        return {
-            "status": "stub",
-            "message": "Blockchain integration pending",
-            "todo": "Implement Web3.py smart contract interaction",
-        }
+        if not WEB3_AVAILABLE:
+            logger.warning("web3 not available - blockchain backend disabled")
+            return {
+                "status": "error",
+                "message": "web3 package not installed",
+            }
+        
+        try:
+            w3 = self._get_web3_client()
+            contract = self._get_blockchain_contract()
+            account = self._get_blockchain_account()
+            
+            # Convert merkle root to bytes32
+            merkle_root = anchor_record["merkle_root"]
+            if merkle_root.startswith("0x"):
+                merkle_root_bytes = bytes.fromhex(merkle_root[2:])
+            else:
+                merkle_root_bytes = bytes.fromhex(merkle_root)
+            
+            # Pad to 32 bytes if needed
+            if len(merkle_root_bytes) < 32:
+                merkle_root_bytes = merkle_root_bytes + b'\x00' * (32 - len(merkle_root_bytes))
+            elif len(merkle_root_bytes) > 32:
+                merkle_root_bytes = merkle_root_bytes[:32]
+            
+            genesis_id = anchor_record["genesis_id"]
+            metadata = json.dumps({
+                "anchor_id": anchor_record.get("anchor_id", ""),
+                "batch_size": anchor_record.get("batch_info", {}).get("size", 0),
+                "timestamp": anchor_record.get("timestamp", ""),
+            })
+            
+            # Build transaction
+            tx = contract.functions.anchorMerkleRoot(
+                merkle_root_bytes,
+                genesis_id,
+                metadata
+            ).build_transaction({
+                'from': account.address,
+                'nonce': w3.eth.get_transaction_count(account.address),
+                'gas': 200000,
+                'gasPrice': w3.eth.gas_price,
+                'chainId': self.blockchain_chain_id,
+            })
+            
+            # Sign transaction
+            signed_tx = account.sign_transaction(tx)
+            
+            # Send transaction
+            tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
+            
+            # Wait for receipt (with timeout)
+            logger.info("Waiting for transaction %s to be mined...", tx_hash.hex())
+            tx_receipt = w3.eth.wait_for_transaction_receipt(tx_hash, timeout=120)
+            
+            logger.info(
+                "Merkle root anchored to blockchain (tx=%s, block=%s)",
+                tx_hash.hex(),
+                tx_receipt['blockNumber']
+            )
+            
+            return {
+                "status": "success",
+                "transaction_hash": tx_hash.hex(),
+                "block_number": tx_receipt['blockNumber'],
+                "gas_used": tx_receipt['gasUsed'],
+                "contract_address": self.blockchain_contract_address,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            }
+        
+        except Exception as e:
+            logger.error("Blockchain anchoring failed: %s", e, exc_info=True)
+            return {
+                "status": "error",
+                "message": str(e),
+            }
 
     def _verify_from_blockchain(
         self,
@@ -556,8 +805,57 @@ class ExternalMerkleAnchor:
         genesis_id: str,
     ) -> dict[str, Any] | None:
         """Verify anchor from blockchain."""
-        # TODO: Implement blockchain verification
-        logger.warning("Blockchain verification not implemented")
+        if not WEB3_AVAILABLE:
+            logger.warning("web3 not available - blockchain verification disabled")
+            return None
+        
+        try:
+            w3 = self._get_web3_client()
+            contract = self._get_blockchain_contract()
+            
+            # Convert merkle root to bytes32
+            if merkle_root.startswith("0x"):
+                merkle_root_bytes = bytes.fromhex(merkle_root[2:])
+            else:
+                merkle_root_bytes = bytes.fromhex(merkle_root)
+            
+            # Pad to 32 bytes
+            if len(merkle_root_bytes) < 32:
+                merkle_root_bytes = merkle_root_bytes + b'\x00' * (32 - len(merkle_root_bytes))
+            elif len(merkle_root_bytes) > 32:
+                merkle_root_bytes = merkle_root_bytes[:32]
+            
+            # Call contract
+            exists, timestamp, metadata = contract.functions.verifyAnchor(
+                merkle_root_bytes,
+                genesis_id
+            ).call()
+            
+            if not exists:
+                logger.warning("No blockchain anchor found for merkle_root=%s, genesis_id=%s", 
+                             merkle_root, genesis_id)
+                return None
+            
+            # Parse metadata
+            try:
+                metadata_dict = json.loads(metadata) if metadata else {}
+            except json.JSONDecodeError:
+                metadata_dict = {}
+            
+            logger.info("Found blockchain anchor (timestamp=%s)", timestamp)
+            
+            return {
+                "merkle_root": merkle_root,
+                "genesis_id": genesis_id,
+                "timestamp": datetime.fromtimestamp(timestamp, tz=timezone.utc).isoformat(),
+                "block_timestamp": timestamp,
+                "metadata": metadata_dict,
+                "exists": True,
+                "backend": "blockchain",
+            }
+        
+        except Exception as e:
+            logger.error("Blockchain verification error: %s", e, exc_info=True)
         return None
 
     def list_anchors(

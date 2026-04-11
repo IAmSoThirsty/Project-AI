@@ -19,6 +19,7 @@ from app.governance.planetary_defense_monolith import (
     LawViolationError,
     MoralCertaintyError,
     PlanetaryDefenseCore,
+    TriumvirateAgent,
     get_accountability_ledger,
     get_ledger_stats,
     planetary_interposition,
@@ -130,6 +131,40 @@ class TestAccountabilityRecord:
 
 class TestTriumvirateAgents:
     """Test Triumvirate advisory agents."""
+
+    def test_triumvirate_agent_abstract_base_class(self):
+        """Test that TriumvirateAgent cannot be instantiated directly."""
+        # TriumvirateAgent is an abstract base class and should not be instantiable
+        with pytest.raises(TypeError) as exc_info:
+            TriumvirateAgent()
+        assert "abstract" in str(exc_info.value).lower()
+
+    def test_triumvirate_agent_requires_assess_implementation(self):
+        """Test that subclasses must implement assess method."""
+        # Create an incomplete subclass
+        class IncompleteAgent(TriumvirateAgent):
+            name = "Incomplete"
+            # Missing assess() implementation
+
+        # Should not be instantiable
+        with pytest.raises(TypeError) as exc_info:
+            IncompleteAgent()
+        assert "abstract" in str(exc_info.value).lower()
+
+    def test_triumvirate_agent_complete_subclass(self):
+        """Test that complete subclass can be instantiated."""
+        # Create a complete subclass
+        class CompleteAgent(TriumvirateAgent):
+            name = "Complete"
+
+            def assess(self, context):
+                return {"status": "assessed"}
+
+        # Should be instantiable
+        agent = CompleteAgent()
+        assert agent.name == "Complete"
+        result = agent.assess({})
+        assert result["status"] == "assessed"
 
     def test_galahad_assessment(self):
         """Test Galahad threat assessment."""

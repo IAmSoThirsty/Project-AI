@@ -4,9 +4,9 @@
 Stage 4: Gate — Cerberus Triple-Head Evaluation.
 
 Runs the three Cerberus heads (Identity, Capability, Invariant) and
-collects their votes.  In Phase 1, heads are stubs that always allow.
-In Phase 3, they will be replaced by real implementations wrapping
-the existing ``src/cerberus/sase/governance/`` modules.
+collects their votes.  The CapabilityHead has been upgraded to production
+implementation with full scope checking.  Identity and Invariant heads
+are also using their production implementations.
 
 The QuorumEngine determines the final CerberusDecision based on the
 configured quorum policy (unanimous, 2of3, simple).
@@ -19,6 +19,9 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any, Literal, Protocol
 
+from psia.gate.identity_head import IdentityHead
+from psia.gate.invariant_head import InvariantHead
+from psia.gate.capability_head import CapabilityHead, CapabilityTokenStore
 from psia.schemas.cerberus_decision import (
     CerberusDecision,
     CerberusVote,
@@ -39,56 +42,20 @@ class CerberusHead(Protocol):
     def evaluate(self, envelope: Any) -> CerberusVote: ...
 
 
-class StubIdentityHead:
-    """Phase 1 stub — always allows after basic DID format check."""
-
-    def evaluate(self, envelope: Any) -> CerberusVote:
-        decision: Literal["allow", "deny", "quarantine"] = "allow"
-        reasons: list[DenyReason] = []
-
-        if not envelope.actor.startswith("did:project-ai:"):
-            decision = "deny"
-            reasons.append(
-                DenyReason(
-                    code="IDENTITY_INVALID_DID",
-                    detail=f"actor DID '{envelope.actor}' is not did:project-ai:",
-                )
-            )
-
-        return CerberusVote(
-            request_id=envelope.request_id,
-            head="identity",
-            decision=decision,
-            reasons=reasons,
-            constraints_applied=ConstraintsApplied(),
-            timestamp=datetime.now(timezone.utc).isoformat(),
-            signature=Signature(
-                alg="ed25519", kid="cerberus_id_k1", sig="stub_identity_sig"
-            ),
-        )
-
-
-class StubCapabilityHead:
-    """Phase 1 stub — always allows (scope checking deferred to Phase 3)."""
-
-    def evaluate(self, envelope: Any) -> CerberusVote:
-        return CerberusVote(
-            request_id=envelope.request_id,
-            head="capability",
-            decision="allow",
-            reasons=[],
-            constraints_applied=ConstraintsApplied(),
-            timestamp=datetime.now(timezone.utc).isoformat(),
-            signature=Signature(
-                alg="ed25519", kid="cerberus_cap_k1", sig="stub_capability_sig"
-            ),
-        )
+# StubCapabilityHead removed — replaced by production CapabilityHead
+# from src/psia/gate/capability_head.py
 
 
 class StubInvariantHead:
-    """Phase 1 stub — always allows (invariant checking deferred to Phase 3)."""
+    """Phase 1 stub — deprecated, use InvariantHead from psia.gate.invariant_head.
+    
+    Kept for backward compatibility only. New code should use production InvariantHead.
+    """
 
     def evaluate(self, envelope: Any) -> CerberusVote:
+        logger.warning(
+            "StubInvariantHead is deprecated; use InvariantHead from psia.gate.invariant_head"
+        )
         return CerberusVote(
             request_id=envelope.request_id,
             head="invariant",
@@ -187,6 +154,14 @@ class GateStage:
 
     Runs three heads, collects votes, and uses the QuorumEngine
     to produce a final CerberusDecision.
+    
+    The CapabilityHead now uses production-grade scope enforcement with:
+    - Token resolution via CapabilityTokenStore
+    - Token expiry validation (with clock skew tolerance)
+    - Scope matching (action + resource coverage)
+    - Delegation chain depth verification
+    - Certificate binding verification (optional)
+    - Constraint propagation (rate limits, time windows)
     """
 
     def __init__(
@@ -196,10 +171,13 @@ class GateStage:
         capability_head: CerberusHead | None = None,
         invariant_head: CerberusHead | None = None,
         quorum_engine: QuorumEngine | None = None,
+        capability_token_store: CapabilityTokenStore | None = None,
     ) -> None:
-        self.identity_head = identity_head or StubIdentityHead()
-        self.capability_head = capability_head or StubCapabilityHead()
-        self.invariant_head = invariant_head or StubInvariantHead()
+        self.identity_head = identity_head or IdentityHead()
+        self.capability_head = capability_head or CapabilityHead(
+            token_store=capability_token_store
+        )
+        self.invariant_head = invariant_head or InvariantHead()
         self.quorum_engine = quorum_engine or QuorumEngine()
 
     def evaluate(self, envelope, prior_results: list[StageResult]) -> StageResult:
@@ -273,9 +251,9 @@ class GateStage:
 
 __all__ = [
     "CerberusHead",
-    "StubIdentityHead",
-    "StubCapabilityHead",
-    "StubInvariantHead",
+    "StubInvariantHead",  # Deprecated, kept for backward compatibility
     "QuorumEngine",
     "GateStage",
+    "CapabilityHead",
+    "CapabilityTokenStore",
 ]

@@ -8,3 +8,11 @@ opencv-python-headless
 openai-whisper
 pydub
 redis
+
+# Blockchain anchoring (Chainlink integration)
+web3>=6.0.0  # Ethereum/EVM blockchain interaction
+
+# HSM Integration (Hardware Security Module)
+# python-yubihsm>=2.0.0  # YubiHSM 2 support (uncomment if using YubiHSM)
+# boto3>=1.34.24  # AWS CloudHSM support (already in main requirements.txt)
+

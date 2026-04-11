@@ -4,6 +4,28 @@
 
 This module implements a comprehensive distributed consensus protocol for temporal agents (Chronos, Atropos, and Clotho) in the Sovereign Governance Substrate. The protocol ensures that all agents reach agreement on event ordering even in the presence of network delays, concurrent events, and Byzantine failures.
 
+## Quick Start
+
+All consensus components are available through the temporal module:
+
+```python
+from src.cognition.temporal import (
+    # Lamport timestamps for total ordering
+    LamportClockNew,
+    LamportTimestamp,
+    
+    # Consensus protocol components
+    EventRecord,
+    EventType,
+    ConflictResolver,
+    ConsensusProtocol,
+    BFTConsensus,
+    
+    # Vector clocks for partial ordering
+    VectorClockImpl,
+)
+```
+
 ## Components
 
 ### 1. Vector Clocks (`vector_clock.py`)

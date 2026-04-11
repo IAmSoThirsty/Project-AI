@@ -85,7 +85,11 @@ class StructuralStage:
         # ── Check 4: Token expiry ──
         if token_data and "expires_at" in token_data:
             try:
-                expires_at = datetime.fromisoformat(token_data["expires_at"])
+                expires_at_str = token_data["expires_at"]
+                # Handle 'Z' suffix (Python 3.10's fromisoformat doesn't support it)
+                if expires_at_str.endswith('Z'):
+                    expires_at_str = expires_at_str[:-1] + '+00:00'
+                expires_at = datetime.fromisoformat(expires_at_str)
                 if expires_at.tzinfo is None:
                     expires_at = expires_at.replace(tzinfo=timezone.utc)
                 if expires_at < datetime.now(timezone.utc):
