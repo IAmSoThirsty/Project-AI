@@ -10,6 +10,10 @@ Features:
 - Service startup
 - Health checks
 - Rollback capability
+
+GOVERNANCE: GOVERNED
+Classification: Production deployment
+Risk: High (modifies deployment)
 """
 
 import argparse

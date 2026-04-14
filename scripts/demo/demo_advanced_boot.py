@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# EXAMPLE ONLY - This is a demonstration script, not for production use.
+# Shows how to use certain features but does not enforce governance.
+
 """
 Advanced Boot System Demo
 Demonstrates: Staged Boot Profiles, Emergency Mode, Ethics-First, Audit Replay

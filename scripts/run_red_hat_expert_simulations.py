@@ -8,6 +8,10 @@ vectors with real-world complexity.
 
 Usage:
     python scripts/run_red_hat_expert_simulations.py [--categories A,B,C] [--export]
+
+GOVERNANCE: GOVERNED
+Classification: Security testing
+Risk: High (expert-level simulations)
 """
 
 import argparse
@@ -20,6 +24,9 @@ from pathlib import Path
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
+# Import governance
+from app.core.runtime.router import route_request
 
 from app.core.ai_systems import AIPersona, FourLaws, MemoryExpansionSystem
 from app.core.red_hat_expert_defense import DefenseResult, RedHatExpertDefenseSimulator

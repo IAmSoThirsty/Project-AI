@@ -31,6 +31,7 @@ from app.core.platform_tiers import get_tier_registry
 from app.core.reflection_cycle import ReflectionCycle
 from app.core.tier_health_dashboard import get_health_monitor
 from app.gui.dashboard_main import DashboardMainWindow
+from app.interfaces.desktop.integration import initialize_desktop_adapter, get_desktop_adapter
 from src.cognition.triumvirate import Triumvirate
 
 try:
@@ -45,6 +46,7 @@ logger = logging.getLogger(__name__)
 _global_identity_engine = None
 _global_cognition_kernel = None
 _global_council_hub = None
+_global_desktop_adapter = None
 
 
 def get_identity_engine() -> IdentityIntegratedIntelligenceEngine:
@@ -868,6 +870,11 @@ def main():
         fallback_font = QFont("Arial", 10)
         app.setFont(fallback_font)
 
+    # Initialize desktop adapter with governance routing (no username = system mode)
+    global _global_desktop_adapter
+    _global_desktop_adapter = initialize_desktop_adapter(username="system")
+    logger.info("✅ Desktop adapter initialized and routed through governance pipeline")
+
     # Show the consolidated dashboard
     # Note: Dashboard will self-register as Tier-3 during initialization
     app_window = DashboardMainWindow()
@@ -879,6 +886,8 @@ def main():
         app_window.set_cognition_kernel(kernel)
     if hasattr(app_window, "set_council_hub"):
         app_window.set_council_hub(council_hub)
+    if hasattr(app_window, "set_desktop_adapter"):
+        app_window.set_desktop_adapter(_global_desktop_adapter)
 
     # Make security systems accessible to the dashboard
     if hasattr(app_window, "set_security_systems"):

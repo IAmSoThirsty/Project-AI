@@ -15,6 +15,10 @@ Features:
 - Rate limiting and quota management
 - Streaming support for real-time responses
 - Fine-tuning support and model adaptation
+
+DEFERRED: Complex 500+ line file with 7 AI bypass calls.
+Marked for future refactor to route through orchestrator.
+This file requires comprehensive refactoring due to its size and complexity.
 """
 
 import hashlib

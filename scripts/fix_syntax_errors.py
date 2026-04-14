@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Fix broken bracket patterns from logging conversion"""
+"""
+Fix broken bracket patterns from logging conversion.
+
+GOVERNANCE: ADMIN-BYPASS
+Classification: Code maintenance tool
+Risk: Medium (modifies source files)
+"""
 
 import re
 import sys

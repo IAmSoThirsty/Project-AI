@@ -30,7 +30,7 @@ import threading
 import time
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -193,7 +193,7 @@ class GodTierIntegratedSystem:
             logger.info("=" * 80)
 
             self.status = SystemStatus.INITIALIZING
-            self.start_time = datetime.now(UTC)
+            self.start_time = datetime.now(timezone.utc)
 
             # 1. Initialize Event Streaming
             if self.config.streaming_enabled:
@@ -291,7 +291,7 @@ class GodTierIntegratedSystem:
                     self.dashboard.health_monitor.record_component_health(
                         "soc",
                         True,
-                        (datetime.now(UTC) - self.start_time).total_seconds(),
+                        (datetime.now(timezone.utc) - self.start_time).total_seconds(),
                     )
 
                 self.soc.register_event_handler(soc_event_handler)
@@ -380,7 +380,7 @@ class GodTierIntegratedSystem:
         try:
             with self.lock:
                 uptime = (
-                    (datetime.now(UTC) - self.start_time).total_seconds()
+                    (datetime.now(timezone.utc) - self.start_time).total_seconds()
                     if self.start_time
                     else 0
                 )
@@ -598,3 +598,4 @@ if __name__ == "__main__":
     print("\n🛑 Shutting down God Tier system...")
     shutdown_god_tier_system()
     print("Shutdown complete.")
+

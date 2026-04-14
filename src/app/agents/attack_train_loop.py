@@ -14,12 +14,21 @@ Key Components:
 This is a stub implementation providing the foundation for future development
 of advanced adversarial training capabilities.
 
+GOVERNANCE BYPASS: Training loop stub with no active implementation
+Justification: Currently a disabled stub returning mock data. Future implementation
+               WILL require governance integration when RL/adversarial training
+               is actually implemented. Bypass acceptable only while disabled.
+Risk: None currently (all methods return stub responses)
+TODO: INTEGRATE WITH GOVERNANCE when enabling actual training loops
+Alternative: When implementing, inherit from KernelRoutedAgent
+
 Future Enhancements:
 - Implement full adversary-defender loop
 - Add reinforcement learning integration
 - Multi-agent tournament dynamics
 - Curriculum learning for progressive difficulty
 - Integration with Alpha Red agent
+- ⚠️ GOVERNANCE INTEGRATION REQUIRED before enabling
 """
 
 import logging

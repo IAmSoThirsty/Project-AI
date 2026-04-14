@@ -61,7 +61,7 @@ CRITICAL PRINCIPLES:
 
 import logging
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from enum import Enum
 from typing import Any
 
@@ -386,7 +386,7 @@ class CrossTierPolicyEngine:
             logger.info("Block requires approval: %s → %s", blocked_by, component_id)
 
         # Calculate expiration
-        started_at = datetime.now(UTC)
+        started_at = datetime.now(timezone.utc)
         expires_at = None
 
         if duration_seconds:
@@ -449,7 +449,7 @@ class CrossTierPolicyEngine:
             return False
 
         block.is_active = False
-        block.lifted_at = datetime.now(UTC).isoformat()
+        block.lifted_at = datetime.now(timezone.utc).isoformat()
 
         logger.info("Block lifted: %s by %s", block_id, lifted_by)
         return True
@@ -492,7 +492,7 @@ class CrossTierPolicyEngine:
             appellant=appellant,
             justification=justification,
             status=AppealStatus.PENDING,
-            filed_at=datetime.now(UTC).isoformat(),
+            filed_at=datetime.now(timezone.utc).isoformat(),
         )
 
         self._appeals[appeal_id] = appeal
@@ -531,7 +531,7 @@ class CrossTierPolicyEngine:
 
         appeal = self._appeals[appeal_id]
         appeal.status = AppealStatus.APPROVED if approved else AppealStatus.DENIED
-        appeal.reviewed_at = datetime.now(UTC).isoformat()
+        appeal.reviewed_at = datetime.now(timezone.utc).isoformat()
         appeal.decided_by = decided_by
         appeal.decision = decision
 
@@ -576,7 +576,7 @@ class CrossTierPolicyEngine:
         Returns:
             List of block IDs that were auto-lifted
         """
-        now = datetime.now(UTC)
+        now = datetime.now(timezone.utc)
         lifted_blocks = []
 
         for block in self._blocks.values():
@@ -630,3 +630,4 @@ def get_policy_engine() -> CrossTierPolicyEngine:
     if _global_policy_engine is None:
         _global_policy_engine = CrossTierPolicyEngine()
     return _global_policy_engine
+

@@ -15,6 +15,10 @@ Integration:
     2. Upload resulting SARIF to GitHub Security
     3. Use level=error findings to drive deployment gates
 
+GOVERNANCE: GOVERNED
+Classification: Security reporting
+Risk: Low (exports security findings)
+
 Author: Security Agents Team
 Date: 2026-01-21
 """

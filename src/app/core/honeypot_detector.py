@@ -21,7 +21,7 @@ import re
 import uuid
 from collections import defaultdict
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -52,7 +52,7 @@ class AttackAttempt:
     """Record of an attack attempt on honeypot."""
 
     attempt_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     ip_address: str = ""
     endpoint: str = ""
     attack_type: str = AttackType.UNKNOWN.value
@@ -72,8 +72,8 @@ class AttackerProfile:
     """Profile of an attacker based on behavior."""
 
     ip_address: str
-    first_seen: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
-    last_seen: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    first_seen: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    last_seen: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     attempt_count: int = 0
     attack_types_used: list[str] = field(default_factory=list)
     tools_detected: list[str] = field(default_factory=list)
@@ -362,7 +362,7 @@ class HoneypotDetector:
             self.attacker_profiles[ip_address] = AttackerProfile(ip_address=ip_address)
 
         profile = self.attacker_profiles[ip_address]
-        profile.last_seen = datetime.now(UTC).isoformat()
+        profile.last_seen = datetime.now(timezone.utc).isoformat()
         profile.attempt_count += 1
 
         if attack_type not in profile.attack_types_used:
@@ -438,7 +438,7 @@ class HoneypotDetector:
         """Count attacks in last N hours."""
         from datetime import timedelta
 
-        cutoff = datetime.now(UTC) - timedelta(hours=hours)
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
         count = 0
 
         for attempt in self.attack_attempts:
@@ -504,3 +504,4 @@ class HoneypotDetector:
 
         except Exception as e:
             logger.error("Error saving honeypot state: %s", e)
+

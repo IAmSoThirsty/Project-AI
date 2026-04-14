@@ -1,5 +1,9 @@
 """
 Performance benchmarking for Project AI API.
+
+GOVERNANCE: GOVERNED
+Classification: Performance testing tool
+Risk: Low (read-only operations)
 """
 
 import statistics

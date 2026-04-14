@@ -1,12 +1,14 @@
 """
 Learning path generator and manager.
+
+REFACTORED: Now uses AI orchestrator instead of direct provider calls.
 """
 
 import json
 import logging
 import os
 
-from app.core.model_providers import get_provider
+from app.core.ai.orchestrator import run_ai, AIRequest
 
 logger = logging.getLogger(__name__)
 
@@ -17,15 +19,15 @@ class LearningPathManager:
         Initialize learning path manager.
 
         Args:
-            api_key: API key for the model provider
+            api_key: API key for the model provider (deprecated - uses orchestrator)
             provider: Model provider to use ('openai' or 'perplexity')
         """
         self.provider_name = provider
-        self.provider = get_provider(provider, api_key=api_key)
+        logger.info("LearningPathManager initialized with AI orchestrator")
 
     def generate_path(self, interest, skill_level="beginner", model=None):
         """
-        Generate a personalized learning path.
+        Generate a personalized learning path via AI orchestrator.
 
         Args:
             interest: Topic of interest
@@ -35,13 +37,10 @@ class LearningPathManager:
         Returns:
             Generated learning path content or error message
         """
-        if not self.provider.is_available():
-            return f"Error: {self.provider_name} provider is not available. Please check API key."
-
         try:
-            # Build a prompt without long indented triple-quoted literal
-            # to satisfy linters
-            prompt = (
+            # Build a prompt for the learning path
+            system_context = "You are an educational expert creating learning paths."
+            user_prompt = (
                 f"Create a structured learning path for {interest} at "
                 f"{skill_level} level.\n"
                 "Include:\n"
@@ -51,25 +50,25 @@ class LearningPathManager:
                 "4. Timeline estimates\n"
                 "5. Milestones and checkpoints"
             )
+            
+            full_prompt = f"{system_context}\n\n{user_prompt}"
 
-            messages = [
-                {
-                    "role": "system",
-                    "content": "You are an educational expert creating learning paths.",
-                },
-                {"role": "user", "content": prompt},
-            ]
-
-            # Use default model based on provider if not specified
-            if model is None:
-                model = (
-                    "gpt-3.5-turbo"
-                    if self.provider_name == "openai"
-                    else "llama-3.1-sonar-small-128k-online"
-                )
-
-            response = self.provider.chat_completion(messages=messages, model=model)
-            return response
+            # Use AI orchestrator (with fallback support)
+            request = AIRequest(
+                task_type="chat",
+                prompt=full_prompt,
+                model=model or "gpt-3.5-turbo",
+                provider=self.provider_name if self.provider_name != "openai" else None,
+                context={"interest": interest, "skill_level": skill_level}
+            )
+            
+            response = run_ai(request)
+            
+            if response.status == "success":
+                return response.result
+            else:
+                return f"Error generating learning path: {response.error}"
+                
         except Exception as e:
             logger.error("Error generating learning path: %s", e)
             return f"Error generating learning path: {str(e)}"

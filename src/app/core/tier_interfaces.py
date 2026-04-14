@@ -38,7 +38,7 @@ CRITICAL BOUNDARIES:
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -99,7 +99,7 @@ class TierRequest:
     target_component: str
     operation: str
     payload: dict[str, Any]
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -110,7 +110,7 @@ class TierResponse:
     success: bool
     result: Any
     error_message: str | None = None
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -584,3 +584,4 @@ def get_tier_router() -> TierInterfaceRouter:
     if _global_router is None:
         _global_router = TierInterfaceRouter()
     return _global_router
+

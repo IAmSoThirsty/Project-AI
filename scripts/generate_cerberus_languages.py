@@ -2,6 +2,10 @@
 """
 Generate comprehensive language database for Cerberus Hydra Defense.
 Creates mappings for 50 human languages and 50 programming languages.
+
+GOVERNANCE: ADMIN-BYPASS
+Classification: Data generation tool
+Risk: Low (creates static data files)
 """
 
 import json

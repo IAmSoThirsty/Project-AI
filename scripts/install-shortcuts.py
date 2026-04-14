@@ -1,6 +1,10 @@
 """
 Create Windows Desktop Shortcuts for Project-AI
 This script creates shortcuts on the Windows desktop and Start Menu
+
+GOVERNANCE: ADMIN-BYPASS
+Classification: Installation utility
+Risk: Low (creates shortcuts)
 """
 
 import json

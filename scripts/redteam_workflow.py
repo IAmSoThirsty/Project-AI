@@ -16,6 +16,10 @@ Usage:
     # Execute campaign
     python redteam_workflow.py execute --personas jailbreak_attacker,data_exfiltrator --targets api_assistant,api_chat
 
+GOVERNANCE: GOVERNED
+Classification: Production security testing
+Risk: High (tests security boundaries)
+
 Author: Security Agents Team
 Date: 2026-01-21
 """
@@ -28,6 +32,12 @@ import sys
 import uuid
 from datetime import timedelta
 from pathlib import Path
+
+# Add src to path
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
+# Import governance
+from app.core.runtime.router import route_request
 from typing import Any
 
 from temporalio import activity, workflow

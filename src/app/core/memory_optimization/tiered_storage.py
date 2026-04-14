@@ -19,7 +19,7 @@ import logging
 import threading
 import time
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -40,17 +40,17 @@ class AccessPattern:
     """Access pattern tracking for tier optimization."""
 
     key: str
-    last_access: datetime = field(default_factory=lambda: datetime.now(UTC))
+    last_access: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     access_count: int = 0
     total_access_time_ms: float = 0.0
-    creation_time: datetime = field(default_factory=lambda: datetime.now(UTC))
+    creation_time: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     size_bytes: int = 0
     current_tier: StorageTier = StorageTier.HOT
     pin_to_tier: StorageTier | None = None  # Force tier (no auto-migration)
 
     def record_access(self, access_time_ms: float):
         """Record an access event."""
-        self.last_access = datetime.now(UTC)
+        self.last_access = datetime.now(timezone.utc)
         self.access_count += 1
         self.total_access_time_ms += access_time_ms
 
@@ -64,11 +64,11 @@ class AccessPattern:
 
     def get_age_hours(self) -> float:
         """Get age since creation in hours."""
-        return (datetime.now(UTC) - self.creation_time).total_seconds() / 3600
+        return (datetime.now(timezone.utc) - self.creation_time).total_seconds() / 3600
 
     def get_idle_hours(self) -> float:
         """Get hours since last access."""
-        return (datetime.now(UTC) - self.last_access).total_seconds() / 3600
+        return (datetime.now(timezone.utc) - self.last_access).total_seconds() / 3600
 
     def should_promote(self) -> bool:
         """Check if data should be promoted to higher tier."""
@@ -718,3 +718,4 @@ class TieredStorageManager:
                 else 0
             ),
         }
+

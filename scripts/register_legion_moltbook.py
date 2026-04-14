@@ -2,6 +2,10 @@
 """
 Register Legion on Moltbook
 One-time setup script
+
+GOVERNANCE: ADMIN-BYPASS
+Classification: Registration utility
+Risk: Low (one-time setup)
 """
 
 import asyncio

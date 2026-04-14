@@ -4,6 +4,10 @@ Temporal.io Setup Script for Project-AI.
 
 This script helps set up and start Temporal.io services for Project-AI.
 It can run Temporal locally via Docker or connect to Temporal Cloud.
+
+GOVERNANCE: GOVERNED
+Classification: Infrastructure setup
+Risk: High (modifies infrastructure)
 """
 
 import argparse

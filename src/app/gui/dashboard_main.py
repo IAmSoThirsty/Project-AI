@@ -46,6 +46,9 @@ class DashboardMainWindow(QMainWindow):
         self.lrm = LearningRequestManager(data_dir="data")
         self.codex_adapter = CodexAdapter()
         self.codex_adapter.register_with_manager(self.lrm)
+        
+        # Governance adapter (injected from main.py)
+        self.desktop_adapter = None
 
         # Tabs
         self._init_requests_tab()
@@ -120,28 +123,73 @@ class DashboardMainWindow(QMainWindow):
         return pend[0] if pend else None
 
     def approve_selected(self) -> None:
+        """Approve the selected learning request."""
         sel = self._selected_req_id()
         if not sel:
             QMessageBox.warning(self, "No Selection", "No request selected")
             return
-        ok = self.lrm.approve_request(sel, response="Approved via Dashboard")
-        if ok:
+        
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                self, 
+                "Governance Error", 
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+        
+        response = self._route_through_governance(
+            "learning.approve",
+            {
+                "request_id": sel,
+                "response": "Approved via Dashboard"
+            }
+        )
+        
+        if response.get("status") == "success":
             QMessageBox.information(self, "Approved", f"Request {sel} approved")
             self.refresh_pending()
         else:
-            QMessageBox.critical(self, "Error", "Failed to approve request")
+            QMessageBox.critical(
+                self, 
+                "Error", 
+                f"Failed to approve request: {response.get('error', 'Unknown error')}"
+            )
 
     def deny_selected(self) -> None:
+        """Deny the selected learning request (send to Black Vault)."""
         sel = self._selected_req_id()
         if not sel:
             QMessageBox.warning(self, "No Selection", "No request selected")
             return
-        ok = self.lrm.deny_request(sel, reason="Denied via Dashboard", to_vault=True)
-        if ok:
+        
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                self, 
+                "Governance Error", 
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+        
+        response = self._route_through_governance(
+            "learning.deny",
+            {
+                "request_id": sel,
+                "reason": "Denied via Dashboard",
+                "to_vault": True
+            }
+        )
+        
+        if response.get("status") == "success":
             QMessageBox.information(self, "Denied", f"Request {sel} denied and vaulted")
             self.refresh_pending()
         else:
-            QMessageBox.critical(self, "Error", "Failed to deny request")
+            QMessageBox.critical(
+                self, 
+                "Error", 
+                f"Failed to deny request: {response.get('error', 'Unknown error')}"
+            )
 
     def _init_cerberus_tab(self) -> None:
         widget = QWidget()
@@ -189,18 +237,32 @@ class DashboardMainWindow(QMainWindow):
         self.central.addTab(widget, "Codex (Head Butler)")
 
     def run_codex_fix(self) -> None:
-        try:
-            adapter = self.codex_adapter
-            # Use codex instance
-            codex = adapter.codex
-            res = codex.fix_repo(root=os.getcwd())
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                self, 
+                "Governance Error", 
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+        
+        # Route through governance pipeline
+        response = self._route_through_governance(
+            "codex.fix",
+            {
+                "root": os.getcwd()
+            }
+        )
+        
+        if response.get("status") == "success":
+            result = response.get("result", {})
             QMessageBox.information(
                 self,
                 "Codex Fix Report",
-                f"Fixed: {len(res.get('fixed', []))}, Errors: {len(res.get('errors', []))}",
+                f"Fixed: {len(result.get('fixed', []))}, Errors: {len(result.get('errors', []))}",
             )
-        except Exception as e:
-            QMessageBox.critical(self, "Codex Error", str(e))
+        else:
+            QMessageBox.critical(self, "Codex Error", response.get("error", "Unknown error"))
 
     def show_codex_styles(self) -> None:
         styles = self.codex_adapter.codex.list_styles()
@@ -252,21 +314,59 @@ class DashboardMainWindow(QMainWindow):
             self.logs_view.setPlainText(str(e))
 
     def grant_integrator(self) -> None:
-        ac = get_access_control()
-        ac.grant_role("system", "integrator")
-        QMessageBox.information(
-            self, "Access Control", "Granted 'integrator' role to 'system'"
+        """Grant integrator role to system user."""
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                self, 
+                "Governance Error", 
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+        
+        # Route through governance pipeline
+        response = self._route_through_governance(
+            "access.grant",
+            {
+                "username": "system",
+                "role": "integrator"
+            }
         )
-
-    def export_audit(self) -> None:
-        expert = ExpertAgent(name="admin_expert")
-        res = expert.export_and_review(self.codex_adapter.codex)
-        if res.get("success"):
+        
+        if response.get("status") == "success":
             QMessageBox.information(
-                self, "Export", f"Audit exported to {res.get('out')}"
+                self, "Access Control", "Granted 'integrator' role to 'system'"
             )
         else:
-            QMessageBox.critical(self, "Export Failed", str(res))
+            QMessageBox.critical(self, "Error", response.get("error", "Failed to grant role"))
+
+    def export_audit(self) -> None:
+        """Export audit log via expert agent."""
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                self, 
+                "Governance Error", 
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+        
+        # Route through governance pipeline
+        response = self._route_through_governance(
+            "audit.export",
+            {
+                "requester": "system"
+            }
+        )
+        
+        if response.get("status") == "success":
+            result = response.get("result", {})
+            output_file = result.get("out", "audit_exported.json")
+            QMessageBox.information(
+                self, "Export", f"Audit exported to {output_file}"
+            )
+        else:
+            QMessageBox.critical(self, "Export Failed", response.get("error", "Unknown error"))
 
     def _init_waiting_tab(self) -> None:
         widget = QWidget()
@@ -307,15 +407,41 @@ class DashboardMainWindow(QMainWindow):
             QMessageBox.warning(self, "No selection", "No staged artifact selected")
             return
         staged_path = os.path.join("data/waiting_room/staged", item.text())
-        # Attempt activation as 'system' (automatic integrator path)
-        res = self.codex_adapter.codex.activate_staged(staged_path, requester="system")
-        if res.get("success"):
+        
+        # MANDATORY governance routing - no fallback
+        
+        if not self.desktop_adapter:
+        
+            QMessageBox.critical(
+        
+                self, 
+        
+                "Governance Error", 
+        
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+        
+            )
+        
+            return
+        
+        
+        
+        # Route through governance pipeline
+        response = self._route_through_governance(
+            "codex.activate",
+            {
+                "staged_path": staged_path,
+                "requester": "system"
+            }
+        )
+        
+        if response.get("status") == "success":
             QMessageBox.information(
                 self, "Activated", "Staged artifact activated and integrated"
             )
             self.refresh_waiting()
         else:
-            QMessageBox.critical(self, "Activation Failed", str(res))
+            QMessageBox.critical(self, "Activation Failed", response.get("error", "Unknown error"))
 
     def run_qa_on_selected(self) -> None:
         item = self.waiting_list.currentItem()
@@ -323,44 +449,102 @@ class DashboardMainWindow(QMainWindow):
             QMessageBox.warning(self, "No selection", "No staged artifact selected")
             return
         staged_path = os.path.join("data/waiting_room/staged", item.text())
-        try:
-            # read staged metadata and run QA on archived path
-            import json
-
-            with open(staged_path, encoding="utf-8") as f:
-                meta = json.load(f)
-            archived = meta.get("archived")
-            if not archived or not os.path.exists(archived):
-                QMessageBox.critical(self, "QA Error", "Archived artifact missing")
-                return
-            hub = get_council_hub()
-            project = getattr(hub, "_project", None)
-            if not project:
-                QMessageBox.critical(self, "QA Error", "No project agents available")
-                return
-            qa = project.get("qa_generator")
-            dep = project.get("dependency_auditor")
-            dep_res = dep.analyze_new_module(archived) if dep else {"success": True}
-            qa_res = qa.generate_test_for_module(archived) if qa else {"success": True}
-            if qa_res.get("success"):
-                run_res = qa.run_tests()
-            else:
-                run_res = {"success": False, "detail": qa_res}
-
+        
+        # MANDATORY governance routing - no fallback
+        
+        if not self.desktop_adapter:
+        
+            QMessageBox.critical(
+        
+                self, 
+        
+                "Governance Error", 
+        
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+        
+            )
+        
+            return
+        
+        
+        
+        # Route through governance pipeline
+        response = self._route_through_governance(
+            "codex.qa",
+            {
+                "staged_path": staged_path
+            }
+        )
+        
+        if response.get("status") == "success":
+            result = response.get("result", {})
             QMessageBox.information(
                 self,
                 "QA Results",
-                f"Dependency: {dep_res.get('success')}, Tests: {run_res.get('success')}",
+                f"Dependency: {result.get('dependency_success')}, Tests: {result.get('test_success')}",
             )
-        except Exception as e:
-            QMessageBox.critical(self, "QA Error", str(e))
+        else:
+            QMessageBox.critical(self, "QA Error", response.get("error", "Unknown error"))
 
     def toggle_agents(self) -> None:
-        hub = get_council_hub()
-        # flip qa/dependency enabled state
-        current = hub._agents_enabled.get("qa_generator", True)
-        hub._agents_enabled["qa_generator"] = not current
-        hub._agents_enabled["dependency_auditor"] = not current
-        QMessageBox.information(
-            self, "Agents", f"QA/Dependency agents enabled: {not current}"
+        """Toggle QA/Dependency agents on/off."""
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                self, 
+                "Governance Error", 
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+        
+        # Route through governance pipeline
+        response = self._route_through_governance(
+            "agents.toggle",
+            {
+                "agent_types": ["qa_generator", "dependency_auditor"]
+            }
         )
+        
+        if response.get("status") == "success":
+            enabled = response.get("result", {}).get("enabled", False)
+            QMessageBox.information(
+                self, "Agents", f"QA/Dependency agents enabled: {enabled}"
+            )
+        else:
+            QMessageBox.critical(self, "Error", response.get("error", "Failed to toggle agents"))
+
+    def set_desktop_adapter(self, adapter) -> None:
+        """Inject desktop adapter for governance routing.
+        
+        Args:
+            adapter: Desktop adapter instance from governance pipeline
+        """
+        self.desktop_adapter = adapter
+        logger.info("Desktop adapter injected into DashboardMainWindow")
+
+    def _route_through_governance(self, action: str, payload: dict) -> dict:
+        """Route action through governance pipeline (MANDATORY - no fallback).
+        
+        Args:
+            action: Action identifier (e.g., "learning.approve", "learning.deny")
+            payload: Action parameters
+            
+        Returns:
+            Response dict with status and result
+            
+        Raises:
+            RuntimeError: If desktop adapter not initialized
+        """
+        if not self.desktop_adapter:
+            raise RuntimeError(
+                "Desktop governance adapter not initialized. "
+                "Cannot execute governed action. "
+                "This indicates a system initialization failure."
+            )
+        
+        try:
+            return self.desktop_adapter.execute(action, payload)
+        except Exception as e:
+            logger.error(f"Governance routing failed for {action}: {e}")
+            return {"status": "error", "error": str(e)}
+

@@ -14,7 +14,7 @@ hashing, creating an immutable chain that detects any tampering attempts.
 
 import hashlib
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -116,7 +116,7 @@ class AuditLog:
         try:
             # Create event structure
             event = {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "event_type": event_type,
                 "actor": actor,
                 "description": description or f"{event_type} event",
@@ -242,3 +242,4 @@ class AuditLog:
 
 
 __all__ = ["AuditLog"]
+

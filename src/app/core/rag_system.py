@@ -412,18 +412,7 @@ class RAGSystem:
             Dictionary with answer, context, and metadata
         """
         try:
-            from app.core.model_providers import get_provider
-
-            # Get the model provider
-            model_provider = get_provider(provider)
-
-            if not model_provider.is_available():
-                return {
-                    "answer": f"Error: {provider} provider is not available. Please check API key.",
-                    "context": "",
-                    "chunks_used": 0,
-                    "error": "provider_unavailable",
-                }
+            from app.core.ai.orchestrator import run_ai, AIRequest
 
             # Retrieve relevant context
             context = self.build_context(query, top_k=top_k)
@@ -446,60 +435,35 @@ Question: {query}
 
 Answer:"""
 
-            # Call model provider API with error handling
-            try:
-                messages = [
-                    {
-                        "role": "system",
-                        "content": "You are a helpful assistant that answers questions based on provided context.",
-                    },
-                    {"role": "user", "content": prompt},
-                ]
+            # Use AI orchestrator for routing through approved channels
+            request = AIRequest(
+                task_type="chat",
+                prompt=prompt,
+                model=model,
+                provider=provider,
+                config={
+                    "temperature": 0.3,
+                    "system_message": "You are a helpful assistant that answers questions based on provided context.",
+                }
+            )
 
-                answer = model_provider.chat_completion(
-                    messages=messages,
-                    model=model,
-                    temperature=0.3,
-                )
+            response = run_ai(request)
 
+            if response.status == "success":
                 return {
-                    "answer": answer,
+                    "answer": response.result,
                     "context": context,
                     "chunks_used": top_k,
                     "model": model,
                     "provider": provider,
                 }
-            except openai.RateLimitError as e:
-                logger.error("OpenAI rate limit exceeded: %s", e)
+            else:
+                logger.error("AI request failed: %s", response.error)
                 return {
-                    "answer": "Rate limit exceeded. Please try again later.",
+                    "answer": f"Error: {response.error}",
                     "context": context,
                     "chunks_used": 0,
-                    "error": "rate_limit",
-                }
-            except openai.AuthenticationError as e:
-                logger.error("OpenAI authentication failed: %s", e)
-                return {
-                    "answer": "Authentication error. Please check your API key.",
-                    "context": context,
-                    "chunks_used": 0,
-                    "error": "authentication",
-                }
-            except openai.APITimeoutError as e:
-                logger.error("OpenAI API timeout: %s", e)
-                return {
-                    "answer": "Request timed out. Please try again.",
-                    "context": context,
-                    "chunks_used": 0,
-                    "error": "timeout",
-                }
-            except openai.APIError as e:
-                logger.error("OpenAI API error: %s", e)
-                return {
-                    "answer": f"API error occurred: {str(e)}",
-                    "context": context,
-                    "chunks_used": 0,
-                    "error": "api_error",
+                    "error": "ai_request_failed",
                 }
 
         except ImportError as e:

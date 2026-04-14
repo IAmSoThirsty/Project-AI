@@ -1,3 +1,7 @@
+# ADMIN BYPASS - This is an administrative tool that intentionally
+# bypasses governance for system maintenance/debugging purposes.
+# NOT for production use.
+
 """
 Constitutional Verification Test
 Tests that the Governance Kernel upholds its core guarantees

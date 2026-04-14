@@ -7,6 +7,10 @@ all formatting, comments, and code structure. Maximum precision!
 
 This fixes the MEDIUM priority performance issue:
 "Use lazy % formatting in logging functions" (1700+ instances)
+
+GOVERNANCE: ADMIN-BYPASS
+Classification: Code maintenance tool
+Risk: Medium (modifies source files)
 """
 
 import argparse

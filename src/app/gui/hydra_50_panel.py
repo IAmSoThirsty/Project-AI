@@ -33,6 +33,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QListWidget,
     QListWidgetItem,
+    QMessageBox,
     QProgressBar,
     QPushButton,
     QSlider,
@@ -44,6 +45,8 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+from app.interfaces.desktop.adapter import DesktopAdapter
 
 logger = logging.getLogger(__name__)
 
@@ -502,9 +505,10 @@ class VisualizationWidget(QFrame):
 class AlertManagementWidget(QFrame):
     """Alert management interface"""
 
-    def __init__(self, parent=None):
+    def __init__(self, desktop_adapter=None, parent=None):
         super().__init__(parent)
         self.setStyleSheet(PANEL_STYLESHEET)
+        self.desktop_adapter = desktop_adapter
 
         layout = QVBoxLayout(self)
 
@@ -586,13 +590,99 @@ class AlertManagementWidget(QFrame):
 
     def acknowledge_selected(self):
         """Acknowledge selected alert"""
-        # Implementation would acknowledge selected row
-        pass
+        current_row = self.alert_table.currentRow()
+        if current_row < 0:
+            QMessageBox.warning(None, "No Selection", "No alert selected")
+            return
+
+        # Get alert ID from table (assuming first column or stored data)
+        alert_id = f"alert_{current_row}"  # Simplified ID logic
+
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                None,
+                "Governance Error",
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+
+        response = self._route_through_governance(
+            "hydra.alert.acknowledge",
+            {"alert_id": alert_id}
+        )
+
+        if response.get("status") == "success":
+            logger.info("Acknowledged alert: %s", alert_id)
+            self.refresh_alerts()
+        else:
+            logger.error("Failed to acknowledge alert: %s", response.get("error"))
+            QMessageBox.critical(
+                None,
+                "Acknowledgement Failed",
+                f"Failed to acknowledge alert: {response.get('error', 'Unknown error')}"
+            )
 
     def resolve_selected(self):
         """Resolve selected alert"""
-        # Implementation would resolve selected row
-        pass
+        current_row = self.alert_table.currentRow()
+        if current_row < 0:
+            QMessageBox.warning(None, "No Selection", "No alert selected")
+            return
+
+        # Get alert ID from table
+        alert_id = f"alert_{current_row}"  # Simplified ID logic
+
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                None,
+                "Governance Error",
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+
+        response = self._route_through_governance(
+            "hydra.alert.resolve",
+            {"alert_id": alert_id}
+        )
+
+        if response.get("status") == "success":
+            logger.info("Resolved alert: %s", alert_id)
+            self.refresh_alerts()
+        else:
+            logger.error("Failed to resolve alert: %s", response.get("error"))
+            QMessageBox.critical(
+                None,
+                "Resolution Failed",
+                f"Failed to resolve alert: {response.get('error', 'Unknown error')}"
+            )
+
+    def _route_through_governance(self, action: str, payload: dict) -> dict:
+        """Route action through governance pipeline (MANDATORY - no fallback).
+
+        Args:
+            action: Action identifier (e.g., "hydra.alert.acknowledge", "hydra.alert.resolve")
+            payload: Action parameters
+
+        Returns:
+            Response dict with status and result
+
+        Raises:
+            RuntimeError: If desktop adapter not initialized
+        """
+        if not self.desktop_adapter:
+            raise RuntimeError(
+                "Desktop governance adapter not initialized. "
+                "Cannot execute governed action. "
+                "This indicates a system initialization failure."
+            )
+
+        try:
+            return self.desktop_adapter.execute(action, payload)
+        except Exception as e:
+            logger.error(f"Governance routing failed for {action}: {e}")
+            return {"status": "error", "error": str(e)}
 
 
 # ============================================================================
@@ -603,9 +693,10 @@ class AlertManagementWidget(QFrame):
 class ControlPanelWidget(QFrame):
     """Scenario control panel"""
 
-    def __init__(self, parent=None):
+    def __init__(self, desktop_adapter=None, parent=None):
         super().__init__(parent)
         self.setStyleSheet(PANEL_STYLESHEET)
+        self.desktop_adapter = desktop_adapter
 
         layout = QVBoxLayout(self)
 
@@ -655,38 +746,168 @@ class ControlPanelWidget(QFrame):
     def activate_scenario(self):
         """Activate scenario"""
         if not self.current_scenario_id:
+            QMessageBox.warning(None, "No Scenario", "No scenario selected")
             return
-        try:
-            from app.core.hydra_50_engine import Hydra50Engine
 
-            engine = Hydra50Engine()
-            engine.activate_scenario(self.current_scenario_id)
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                None,
+                "Governance Error",
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+
+        response = self._route_through_governance(
+            "hydra.activate",
+            {"scenario_id": self.current_scenario_id}
+        )
+
+        if response.get("status") == "success":
             logger.info("Activated scenario: %s", self.current_scenario_id)
-        except Exception as e:
-            logger.error("Failed to activate: %s", e)
+            QMessageBox.information(
+                None,
+                "Activated",
+                f"Scenario {self.current_scenario_id} activated successfully"
+            )
+        else:
+            logger.error("Failed to activate: %s", response.get("error"))
+            QMessageBox.critical(
+                None,
+                "Activation Failed",
+                f"Failed to activate scenario: {response.get('error', 'Unknown error')}"
+            )
 
     def deactivate_scenario(self):
         """Deactivate scenario"""
         if not self.current_scenario_id:
+            QMessageBox.warning(None, "No Scenario", "No scenario selected")
             return
-        try:
-            from app.core.hydra_50_engine import Hydra50Engine
 
-            engine = Hydra50Engine()
-            engine.deactivate_scenario(self.current_scenario_id)
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                None,
+                "Governance Error",
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+
+        response = self._route_through_governance(
+            "hydra.deactivate",
+            {"scenario_id": self.current_scenario_id}
+        )
+
+        if response.get("status") == "success":
             logger.info("Deactivated scenario: %s", self.current_scenario_id)
-        except Exception as e:
-            logger.error("Failed to deactivate: %s", e)
+            QMessageBox.information(
+                None,
+                "Deactivated",
+                f"Scenario {self.current_scenario_id} deactivated successfully"
+            )
+        else:
+            logger.error("Failed to deactivate: %s", response.get("error"))
+            QMessageBox.critical(
+                None,
+                "Deactivation Failed",
+                f"Failed to deactivate scenario: {response.get('error', 'Unknown error')}"
+            )
 
     def escalate_scenario(self):
         """Escalate scenario"""
-        # Implementation would escalate
-        pass
+        if not self.current_scenario_id:
+            QMessageBox.warning(None, "No Scenario", "No scenario selected")
+            return
+
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                None,
+                "Governance Error",
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+
+        response = self._route_through_governance(
+            "hydra.escalate",
+            {"scenario_id": self.current_scenario_id}
+        )
+
+        if response.get("status") == "success":
+            logger.info("Escalated scenario: %s", self.current_scenario_id)
+            QMessageBox.information(
+                None,
+                "Escalated",
+                f"Scenario {self.current_scenario_id} escalated successfully"
+            )
+        else:
+            logger.error("Failed to escalate: %s", response.get("error"))
+            QMessageBox.critical(
+                None,
+                "Escalation Failed",
+                f"Failed to escalate scenario: {response.get('error', 'Unknown error')}"
+            )
 
     def simulate_scenario(self):
         """Run simulation"""
-        # Implementation would run simulation
-        pass
+        if not self.current_scenario_id:
+            QMessageBox.warning(None, "No Scenario", "No scenario selected")
+            return
+
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                None,
+                "Governance Error",
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+
+        response = self._route_through_governance(
+            "hydra.simulate",
+            {"scenario_id": self.current_scenario_id}
+        )
+
+        if response.get("status") == "success":
+            logger.info("Simulated scenario: %s", self.current_scenario_id)
+            QMessageBox.information(
+                None,
+                "Simulation Complete",
+                f"Scenario {self.current_scenario_id} simulation completed"
+            )
+        else:
+            logger.error("Failed to simulate: %s", response.get("error"))
+            QMessageBox.critical(
+                None,
+                "Simulation Failed",
+                f"Failed to simulate scenario: {response.get('error', 'Unknown error')}"
+            )
+
+    def _route_through_governance(self, action: str, payload: dict) -> dict:
+        """Route action through governance pipeline (MANDATORY - no fallback).
+
+        Args:
+            action: Action identifier (e.g., "hydra.activate", "hydra.deactivate")
+            payload: Action parameters
+
+        Returns:
+            Response dict with status and result
+
+        Raises:
+            RuntimeError: If desktop adapter not initialized
+        """
+        if not self.desktop_adapter:
+            raise RuntimeError(
+                "Desktop governance adapter not initialized. "
+                "Cannot execute governed action. "
+                "This indicates a system initialization failure."
+            )
+
+        try:
+            return self.desktop_adapter.execute(action, payload)
+        except Exception as e:
+            logger.error(f"Governance routing failed for {action}: {e}")
+            return {"status": "error", "error": str(e)}
 
 
 # ============================================================================
@@ -697,9 +918,10 @@ class ControlPanelWidget(QFrame):
 class HistoricalReplayWidget(QFrame):
     """Historical replay controls"""
 
-    def __init__(self, parent=None):
+    def __init__(self, desktop_adapter=None, parent=None):
         super().__init__(parent)
         self.setStyleSheet(PANEL_STYLESHEET)
+        self.desktop_adapter = desktop_adapter
 
         layout = QVBoxLayout(self)
 
@@ -784,16 +1006,114 @@ class HistoricalReplayWidget(QFrame):
 
     def play_replay(self):
         """Start replay"""
-        logger.info("Replay started")
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                None,
+                "Governance Error",
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+
+        timeline_position = self.timeline_slider.value()
+        speed = self.speed_combo.currentText()
+
+        response = self._route_through_governance(
+            "hydra.replay.play",
+            {
+                "timeline_position": timeline_position,
+                "speed": speed
+            }
+        )
+
+        if response.get("status") == "success":
+            logger.info("Replay started at position %d with speed %s", timeline_position, speed)
+        else:
+            logger.error("Failed to start replay: %s", response.get("error"))
+            QMessageBox.critical(
+                None,
+                "Replay Failed",
+                f"Failed to start replay: {response.get('error', 'Unknown error')}"
+            )
 
     def pause_replay(self):
         """Pause replay"""
-        logger.info("Replay paused")
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                None,
+                "Governance Error",
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+
+        response = self._route_through_governance(
+            "hydra.replay.pause",
+            {}
+        )
+
+        if response.get("status") == "success":
+            logger.info("Replay paused")
+        else:
+            logger.error("Failed to pause replay: %s", response.get("error"))
+            QMessageBox.critical(
+                None,
+                "Pause Failed",
+                f"Failed to pause replay: {response.get('error', 'Unknown error')}"
+            )
 
     def stop_replay(self):
         """Stop replay"""
-        self.timeline_slider.setValue(100)
-        logger.info("Replay stopped")
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            QMessageBox.critical(
+                None,
+                "Governance Error",
+                "Desktop governance adapter not initialized. Cannot execute governed action."
+            )
+            return
+
+        response = self._route_through_governance(
+            "hydra.replay.stop",
+            {}
+        )
+
+        if response.get("status") == "success":
+            self.timeline_slider.setValue(100)
+            logger.info("Replay stopped")
+        else:
+            logger.error("Failed to stop replay: %s", response.get("error"))
+            QMessageBox.critical(
+                None,
+                "Stop Failed",
+                f"Failed to stop replay: {response.get('error', 'Unknown error')}"
+            )
+
+    def _route_through_governance(self, action: str, payload: dict) -> dict:
+        """Route action through governance pipeline (MANDATORY - no fallback).
+
+        Args:
+            action: Action identifier (e.g., "hydra.replay.play", "hydra.replay.pause")
+            payload: Action parameters
+
+        Returns:
+            Response dict with status and result
+
+        Raises:
+            RuntimeError: If desktop adapter not initialized
+        """
+        if not self.desktop_adapter:
+            raise RuntimeError(
+                "Desktop governance adapter not initialized. "
+                "Cannot execute governed action. "
+                "This indicates a system initialization failure."
+            )
+
+        try:
+            return self.desktop_adapter.execute(action, payload)
+        except Exception as e:
+            logger.error(f"Governance routing failed for {action}: {e}")
+            return {"status": "error", "error": str(e)}
 
 
 # ============================================================================
@@ -816,6 +1136,9 @@ class HYDRA50Panel(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setStyleSheet(f"background-color: {TRON_DARK};")
+
+        # Initialize governance adapter
+        self.desktop_adapter = DesktopAdapter()
 
         main_layout = QVBoxLayout(self)
 
@@ -863,8 +1186,8 @@ class HYDRA50Panel(QWidget):
         center_splitter.addWidget(self.status_dashboard)
         center_splitter.addWidget(self.visualization)
 
-        # Right side: Control panel
-        self.control_panel = ControlPanelWidget()
+        # Right side: Control panel (inject adapter)
+        self.control_panel = ControlPanelWidget(desktop_adapter=self.desktop_adapter)
 
         # Add to horizontal splitter
         main_splitter = QSplitter(Qt.Orientation.Horizontal)
@@ -878,12 +1201,12 @@ class HYDRA50Panel(QWidget):
         overview_layout.addWidget(main_splitter)
         tabs.addTab(overview_widget, "Overview")
 
-        # Alerts tab
-        self.alert_management = AlertManagementWidget()
+        # Alerts tab (inject adapter)
+        self.alert_management = AlertManagementWidget(desktop_adapter=self.desktop_adapter)
         tabs.addTab(self.alert_management, "Alerts")
 
-        # Replay tab
-        self.historical_replay = HistoricalReplayWidget()
+        # Replay tab (inject adapter)
+        self.historical_replay = HistoricalReplayWidget(desktop_adapter=self.desktop_adapter)
         tabs.addTab(self.historical_replay, "Replay")
 
         main_layout.addWidget(tabs)
@@ -892,6 +1215,32 @@ class HYDRA50Panel(QWidget):
         self.scenario_list.refresh_scenarios()
 
         logger.info("HYDRA-50 Panel initialized")
+
+    def _route_through_governance(self, action: str, payload: dict) -> dict:
+        """Route action through governance pipeline (MANDATORY - no fallback).
+
+        Args:
+            action: Action identifier (e.g., "hydra.activate", "hydra.deactivate")
+            payload: Action parameters
+
+        Returns:
+            Response dict with status and result
+
+        Raises:
+            RuntimeError: If desktop adapter not initialized
+        """
+        if not self.desktop_adapter:
+            raise RuntimeError(
+                "Desktop governance adapter not initialized. "
+                "Cannot execute governed action. "
+                "This indicates a system initialization failure."
+            )
+
+        try:
+            return self.desktop_adapter.execute(action, payload)
+        except Exception as e:
+            logger.error(f"Governance routing failed for {action}: {e}")
+            return {"status": "error", "error": str(e)}
 
     def on_scenario_selected(self, scenario_id: str):
         """Handle scenario selection"""

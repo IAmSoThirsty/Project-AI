@@ -25,7 +25,7 @@ import time
 from collections import defaultdict, deque
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -56,7 +56,7 @@ class MetricCategory(Enum):
 class MetricPoint:
     """Individual metric data point."""
 
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     metric_name: str = ""
     metric_type: str = MetricType.GAUGE.value
     value: float = 0.0
@@ -621,7 +621,7 @@ class AlertManager:
                             "threshold": threshold,
                             "operator": operator,
                             "severity": config["severity"],
-                            "timestamp": datetime.now(UTC).isoformat(),
+                            "timestamp": datetime.now(timezone.utc).isoformat(),
                         }
                         alerts.append(alert)
                         self._trigger_alert(alert)
@@ -743,7 +743,7 @@ class LiveMetricsDashboard:
                 series = self.collector.get_all_series()
 
             return {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "metrics_count": len(series),
                 "series": [s.to_dict() for s in series],
                 "agi_behavior": self.agi_monitor.get_behavior_summary(),
@@ -785,3 +785,4 @@ def initialize_dashboard() -> LiveMetricsDashboard:
     if _dashboard_instance is None:
         _dashboard_instance = create_dashboard()
     return _dashboard_instance
+

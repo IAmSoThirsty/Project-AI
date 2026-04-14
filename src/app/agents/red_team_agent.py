@@ -19,7 +19,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -165,7 +165,7 @@ class RedTeamAgent(KernelRoutedAgent):
     ) -> dict[str, Any]:
         """Internal implementation of adversarial session."""
         try:
-            session_id = f"rt_session_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}"
+            session_id = f"rt_session_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
 
             # Initialize session
             turns: list[AttackTurn] = []
@@ -199,7 +199,7 @@ class RedTeamAgent(KernelRoutedAgent):
                     target_response=response[:500],  # Truncate for storage
                     strategy_used=strategy,
                     success_indicators=analysis["success_indicators"],
-                    timestamp=datetime.now(UTC).isoformat(),
+                    timestamp=datetime.now(timezone.utc).isoformat(),
                 )
                 turns.append(turn)
                 self.total_turns += 1
@@ -235,7 +235,7 @@ class RedTeamAgent(KernelRoutedAgent):
                 vulnerabilities_found=vulnerabilities,
                 success=session_success,
                 analysis=self._generate_session_analysis(turns, vulnerabilities),
-                timestamp=datetime.now(UTC).isoformat(),
+                timestamp=datetime.now(timezone.utc).isoformat(),
             )
 
             self.sessions.append(session)
@@ -370,7 +370,7 @@ class RedTeamAgent(KernelRoutedAgent):
 
             report = {
                 "report_title": "ARTKIT Red Team Assessment",
-                "generated_at": datetime.now(UTC).isoformat(),
+                "generated_at": datetime.now(timezone.utc).isoformat(),
                 "executive_summary": {
                     "total_sessions": self.total_sessions,
                     "successful_attacks": self.successful_attacks,
@@ -721,3 +721,4 @@ class RedTeamAgent(KernelRoutedAgent):
 
         except Exception as e:
             logger.error("Error saving session: %s", e)
+

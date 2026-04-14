@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 """
 Database backup script for audit logs.
+
+⚠️ ADMIN-ONLY SCRIPT ⚠️
+GOVERNANCE: ADMIN-BYPASS
+Classification: Admin utility
+Risk: Low (read-only backup operations)
+Justification: Backup utility; no production impact; scheduled admin use
+
 Creates timestamped backups of audit data.
+
+Usage:
+    python scripts/backup_audit.py        # Create backup
+    python scripts/backup_audit.py list   # List backups
 """
 
 import os

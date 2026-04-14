@@ -4,6 +4,9 @@ Model Provider Adapters for AI Services.
 This module provides abstraction for different AI model providers including
 OpenAI, Perplexity, and future providers. It enables seamless switching
 between providers while maintaining consistent interfaces.
+
+REFACTORED: Now wraps AI orchestrator for governance compliance.
+Legacy direct-call methods preserved for backward compatibility but deprecated.
 """
 
 import logging
@@ -54,16 +57,19 @@ class ModelProvider(ABC):
 
 
 class OpenAIProvider(ModelProvider):
-    """OpenAI API provider."""
+    """
+    OpenAI API provider.
+    
+    REFACTORED: Now uses AI orchestrator for governance compliance.
+    """
 
     def __init__(self, api_key: str | None = None):
         """Initialize OpenAI provider."""
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
+        # Legacy client kept for backward compatibility
         if self.api_key:
             try:
                 import openai
-
-                # Use client instantiation pattern (recommended by OpenAI)
                 self._client = openai.OpenAI(api_key=self.api_key)
             except ImportError:
                 logger.error("openai package not installed")
@@ -78,21 +84,28 @@ class OpenAIProvider(ModelProvider):
         temperature: float = 0.7,
         **kwargs: Any,
     ) -> str:
-        """Create a chat completion using OpenAI API."""
-        if not self._client:
-            raise RuntimeError("OpenAI not available. Check API key and installation.")
-
-        try:
-            response = self._client.chat.completions.create(
-                model=model,
-                messages=messages,
-                temperature=temperature,
-                **kwargs,
-            )
-            return response.choices[0].message.content
-        except Exception as e:
-            logger.error("OpenAI API error: %s", e)
-            raise
+        """
+        Create a chat completion using AI orchestrator (MANDATORY governance).
+        """
+        # MANDATORY: Use AI orchestrator for governance compliance
+        from app.core.ai.orchestrator import run_ai, AIRequest
+        
+        # Convert messages to single prompt (simple concatenation)
+        prompt = "\n".join([f"{m.get('role', 'user')}: {m.get('content', '')}" for m in messages])
+        
+        request = AIRequest(
+            task_type="chat",
+            prompt=prompt,
+            model=model,
+            provider="openai",
+            config={"temperature": temperature, **kwargs}
+        )
+        
+        response = run_ai(request)
+        if response.status == "success":
+            return response.result
+        else:
+            raise RuntimeError(f"AI orchestrator failed: {response.error}")
 
     def is_available(self) -> bool:
         """Check if OpenAI is available."""

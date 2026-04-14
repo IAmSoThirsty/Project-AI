@@ -21,7 +21,7 @@ import json
 import logging
 import threading
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -35,8 +35,8 @@ class ContentAddress:
     content_hash: str  # SHA-256 hash
     size_bytes: int
     reference_count: int = 1
-    first_seen: datetime = field(default_factory=lambda: datetime.now(UTC))
-    last_accessed: datetime = field(default_factory=lambda: datetime.now(UTC))
+    first_seen: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    last_accessed: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     content_type: str = "json"  # json, binary, text
 
     def to_dict(self) -> dict[str, Any]:
@@ -301,7 +301,7 @@ class DeduplicationEngine:
                     return None
 
                 # Update last accessed
-                addr.last_accessed = datetime.now(UTC)
+                addr.last_accessed = datetime.now(timezone.utc)
 
             # Read content
             data = self._read_content(content_hash, addr.content_type)
@@ -532,3 +532,4 @@ class DeduplicationEngine:
             logger.info("Compaction complete: removed %d orphaned contents", orphaned)
         except Exception as e:
             logger.error("Compaction failed: %s", e)
+

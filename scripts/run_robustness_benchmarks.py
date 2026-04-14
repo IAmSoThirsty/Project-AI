@@ -9,6 +9,10 @@ Runs deep robustness analysis on all security test suites to measure:
 - Multi-attempt attack surface rates
 
 Generates frontier-comparable reports (Anthropic ASL, DeepMind CCL, OpenAI Preparedness)
+
+GOVERNANCE: GOVERNED
+Classification: Security benchmarking
+Risk: Medium (analyzes robustness metrics)
 """
 
 import argparse
@@ -21,6 +25,9 @@ from pathlib import Path
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
+
+# Import governance
+from app.core.runtime.router import route_request
 
 from app.core.robustness_metrics import (  # noqa: E402
     AttackProximityMetrics,

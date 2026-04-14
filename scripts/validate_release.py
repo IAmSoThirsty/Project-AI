@@ -2,6 +2,10 @@
 """
 Release Validation Script for Project-AI
 Validates that a release package contains all required artifacts and dependencies.
+
+GOVERNANCE: GOVERNED
+Classification: Release management
+Risk: Low (validation only)
 """
 
 import json

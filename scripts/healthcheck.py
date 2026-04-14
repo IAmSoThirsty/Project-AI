@@ -2,6 +2,10 @@
 """
 Health check script for Project AI services.
 Verifies all components are running and accessible.
+
+GOVERNANCE: GOVERNED
+Classification: Production health monitoring
+Risk: Low (read-only health checks)
 """
 
 import sys

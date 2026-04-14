@@ -28,7 +28,7 @@ import os
 import threading
 import uuid
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -105,7 +105,7 @@ class GuardianApproval:
     status: str = ApprovalStatus.PENDING.value
     decision: str = ""
     reasoning: str = ""
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     concerns: list[str] = field(default_factory=list)
     conditions: list[str] = field(default_factory=list)
 
@@ -124,7 +124,7 @@ class ComplianceResult:
     violations: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     details: dict[str, Any] = field(default_factory=dict)
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
@@ -141,8 +141,8 @@ class ApprovalRequest:
     change_type: str = ""
     impact_level: str = ImpactLevel.MEDIUM.value
     requested_by: str = ""
-    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
-    updated_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     expires_at: str | None = None
     status: str = ApprovalStatus.PENDING.value
     required_guardians: list[str] = field(default_factory=list)
@@ -187,7 +187,7 @@ class EmergencyOverride:
     request_id: str = ""
     justification: str = ""
     initiated_by: str = ""
-    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     signatures: list[dict[str, Any]] = field(default_factory=list)
     min_signatures_required: int = 3
@@ -562,7 +562,7 @@ class GuardianApprovalSystem:
                 # Set expiration based on policy
                 policy = self.approval_policies.get(impact_level.value, {})
                 expiration_hours = policy.get("expiration_hours", 48)
-                expires_at = datetime.now(UTC) + timedelta(hours=expiration_hours)
+                expires_at = datetime.now(timezone.utc) + timedelta(hours=expiration_hours)
                 request.expires_at = expires_at.isoformat()
 
                 # Determine required guardians
@@ -669,7 +669,7 @@ class GuardianApprovalSystem:
                 )
 
                 request.approvals.append(approval)
-                request.updated_at = datetime.now(UTC).isoformat()
+                request.updated_at = datetime.now(timezone.utc).isoformat()
 
                 # Update request status
                 if not approved:
@@ -725,7 +725,7 @@ class GuardianApprovalSystem:
         expired = []
         try:
             with self.lock:
-                now = datetime.now(UTC)
+                now = datetime.now(timezone.utc)
                 for request in self.requests.values():
                     if request.status != ApprovalStatus.PENDING.value:
                         continue
@@ -821,7 +821,7 @@ class GuardianApprovalSystem:
                         "signatures_count": len(override.signatures),
                         "initiated_by": override.initiated_by,
                         "justification": override.justification,
-                        "timestamp": datetime.now(UTC).isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     },
                 )
                 logger.info(
@@ -899,7 +899,7 @@ class GuardianApprovalSystem:
                 )
 
                 # Schedule automatic review 30 days after activation
-                auto_review_date = datetime.now(UTC) + timedelta(days=30)
+                auto_review_date = datetime.now(timezone.utc) + timedelta(days=30)
                 override.auto_review_date = auto_review_date.isoformat()
 
                 self.emergency_overrides[override.override_id] = override
@@ -983,7 +983,7 @@ class GuardianApprovalSystem:
                     "guardian_id": guardian_id,
                     "role": guardian_role,
                     "signature": signature_value,
-                    "timestamp": datetime.now(UTC).isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "justification": signature_justification,
                 }
                 override.signatures.append(signature)
@@ -1152,3 +1152,4 @@ def initialize_guardian_system(
     if _guardian_system is None:
         _guardian_system = create_guardian_system(data_dir)
     return _guardian_system
+

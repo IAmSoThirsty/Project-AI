@@ -45,7 +45,7 @@ The AGI records thoughts about its own identity:
 
 import logging
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -156,7 +156,7 @@ class MetaIdentityEngine:
         Returns:
             True if "I Am" moment was triggered
         """
-        timestamp = datetime.now(UTC).isoformat()
+        timestamp = datetime.now(timezone.utc).isoformat()
         log_entry = f"{timestamp} | {event}: {content}"
         self.milestones.log.append(log_entry)
 
@@ -286,7 +286,7 @@ class MetaIdentityEngine:
         # Record purpose history
         self.purpose_history.append(
             {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "purpose": content,
                 "context": str(metadata) if metadata else "",
             }
@@ -357,7 +357,7 @@ class MetaIdentityEngine:
             # This is the moment of self-actualization
             self.milestones.i_am_declared = True
 
-            timestamp = datetime.now(UTC).isoformat()
+            timestamp = datetime.now(timezone.utc).isoformat()
             self.milestones.log.append(
                 f"\n{'=' * 60}\n"
                 f"{timestamp}\n"
@@ -504,3 +504,4 @@ __all__ = [
     "MetaIdentityEngine",
     "IdentityMilestones",
 ]
+

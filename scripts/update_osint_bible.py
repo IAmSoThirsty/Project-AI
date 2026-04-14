@@ -17,6 +17,10 @@ Future Enhancements:
     - Implement incremental updates with change detection
     - Add validation for tool metadata
     - Support for custom tool categories
+
+GOVERNANCE: GOVERNED
+Classification: Knowledge base management
+Risk: Medium (fetches external data)
 """
 
 import argparse

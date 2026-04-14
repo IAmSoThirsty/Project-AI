@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
 Simple Legion registration using requests library
+
+GOVERNANCE: ADMIN-BYPASS
+Classification: Registration utility
+Risk: Low (one-time setup)
 """
 
 import json

@@ -46,55 +46,34 @@ class TestDeepSeekV32:
         assert is_safe
         assert "disabled" in reason.lower()
 
-    @patch("transformers.AutoModelForCausalLM")
-    @patch("transformers.AutoTokenizer")
-    def test_model_loading(self, mock_tokenizer, mock_model, deepseek):
-        """Test model loading with mocked transformers."""
-        # Mock tokenizer and model
-        mock_tokenizer.from_pretrained.return_value = MagicMock()
-        mock_model_instance = MagicMock()
-        mock_model_instance.to.return_value = mock_model_instance
-        mock_model.from_pretrained.return_value = mock_model_instance
-
-        # Load model
+    def test_model_loading(self, deepseek):
+        """Test model loading with orchestrator integration."""
+        # Load model (now a compatibility shim that always succeeds)
         success = deepseek._load_model()
 
         assert success
         assert deepseek._model_loaded
-        mock_tokenizer.from_pretrained.assert_called_once()
-        mock_model.from_pretrained.assert_called_once()
 
     def test_model_loading_failure_no_transformers(self, deepseek):
         """Test graceful failure when transformers not installed."""
-        # Simplify the test - just mock the import at the right level
-        with patch.dict("sys.modules", {"transformers": None}):
-            # This should trigger ImportError when trying to import
-            success = deepseek._load_model()
-            # Since transformers is actually installed, this won't fail
-            # So we just test the error handling logic exists
-            # In real scenario without transformers, it would return False
-            assert isinstance(success, bool)
+        # With orchestrator integration, _load_model is now a compatibility shim
+        # that always succeeds. Actual failures happen during generation.
+        success = deepseek._load_model()
+        assert success
+        assert isinstance(success, bool)
 
-    @patch("transformers.AutoModelForCausalLM")
-    @patch("transformers.AutoTokenizer")
-    def test_generate_completion(self, mock_tokenizer, mock_model, deepseek):
-        """Test completion generation."""
-        # Setup mocks
-        mock_tok_instance = MagicMock()
-        mock_tok_instance.return_value = {"input_ids": MagicMock()}
-        mock_tok_instance.eos_token_id = 0
-        mock_tok_instance.decode.return_value = "This is a generated response."
-        mock_tokenizer.from_pretrained.return_value = mock_tok_instance
+    @patch("app.core.deepseek_v32_inference.run_ai")
+    def test_generate_completion(self, mock_run_ai, deepseek):
+        """Test completion generation via orchestrator."""
+        # Mock orchestrator response
+        from app.core.ai.orchestrator import AIResponse
 
-        mock_model_instance = MagicMock()
-        mock_model_instance.to.return_value = mock_model_instance
-        mock_model_instance.generate.return_value = [MagicMock()]
-        mock_model.from_pretrained.return_value = mock_model_instance
-
-        # Mock the tokenizer call result to have a 'to' method
-        tokenized_result = MagicMock()
-        tokenized_result.to.return_value = {"input_ids": MagicMock()}
-        mock_tok_instance.return_value = tokenized_result
+        mock_run_ai.return_value = AIResponse(
+            status="success",
+            result="This is a generated response.",
+            provider_used="huggingface",
+            metadata={"model": deepseek.model_name, "task_type": "completion"},
+        )
 
         # Generate completion
         result = deepseek.generate_completion("Hello, how are you?")
@@ -103,6 +82,15 @@ class TestDeepSeekV32:
         assert "text" in result
         assert result["prompt"] == "Hello, how are you?"
         assert result["model"] == deepseek.model_name
+        
+        # Verify orchestrator was called with correct parameters
+        mock_run_ai.assert_called_once()
+        call_args = mock_run_ai.call_args[0][0]
+        assert call_args.task_type == "completion"
+        assert call_args.prompt == "Hello, how are you?"
+        assert call_args.provider == "huggingface"
+        assert call_args.model == deepseek.model_name
+        assert call_args.config["use_local"] is True
 
     def test_generate_completion_blocked_content(self, deepseek):
         """Test completion blocks inappropriate content."""
@@ -111,26 +99,18 @@ class TestDeepSeekV32:
         assert not result["success"]
         assert "Content filter" in result["error"]
 
-    @patch("transformers.AutoModelForCausalLM")
-    @patch("transformers.AutoTokenizer")
-    def test_generate_chat(self, mock_tokenizer, mock_model, deepseek):
-        """Test chat generation."""
-        # Setup mocks
-        mock_tok_instance = MagicMock()
-        mock_tok_instance.apply_chat_template.return_value = "user: Hello\nassistant:"
-        mock_tok_instance.eos_token_id = 0
-        mock_tok_instance.decode.return_value = "Hello! How can I help you?"
-        mock_tokenizer.from_pretrained.return_value = mock_tok_instance
+    @patch("app.core.deepseek_v32_inference.run_ai")
+    def test_generate_chat(self, mock_run_ai, deepseek):
+        """Test chat generation via orchestrator."""
+        # Mock orchestrator response
+        from app.core.ai.orchestrator import AIResponse
 
-        mock_model_instance = MagicMock()
-        mock_model_instance.to.return_value = mock_model_instance
-        mock_model_instance.generate.return_value = [MagicMock()]
-        mock_model.from_pretrained.return_value = mock_model_instance
-
-        # Mock the tokenizer call result
-        tokenized_result = MagicMock()
-        tokenized_result.to.return_value = {"input_ids": MagicMock()}
-        mock_tok_instance.return_value = tokenized_result
+        mock_run_ai.return_value = AIResponse(
+            status="success",
+            result="Hello! How can I help you?",
+            provider_used="huggingface",
+            metadata={"model": deepseek.model_name, "task_type": "chat"},
+        )
 
         # Generate chat
         messages = [{"role": "user", "content": "Hello"}]
@@ -140,6 +120,15 @@ class TestDeepSeekV32:
         assert "text" in result
         assert "messages" in result
         assert result["messages"] == messages
+        
+        # Verify orchestrator was called with correct parameters
+        mock_run_ai.assert_called_once()
+        call_args = mock_run_ai.call_args[0][0]
+        assert call_args.task_type == "chat"
+        assert call_args.provider == "huggingface"
+        assert call_args.model == deepseek.model_name
+        assert call_args.config["use_local"] is True
+        assert call_args.config["messages"] == messages
 
     def test_generate_chat_blocked_content(self, deepseek):
         """Test chat blocks inappropriate content."""
@@ -186,17 +175,9 @@ class TestDeepSeekV32:
         assert info["loaded"] is False
         assert info["max_length"] == 128
 
-    @patch("transformers.AutoModelForCausalLM")
-    @patch("transformers.AutoTokenizer")
-    def test_unload_model(self, mock_tokenizer, mock_model, deepseek):
+    def test_unload_model(self, deepseek):
         """Test model unloading."""
-        # Setup mocks
-        mock_tokenizer.from_pretrained.return_value = MagicMock()
-        mock_model_instance = MagicMock()
-        mock_model_instance.to.return_value = mock_model_instance
-        mock_model.from_pretrained.return_value = mock_model_instance
-
-        # Load then unload
+        # Load then unload (now compatibility shims)
         deepseek._load_model()
         assert deepseek._model_loaded
 

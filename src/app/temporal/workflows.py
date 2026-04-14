@@ -125,6 +125,31 @@ class AILearningWorkflow:
         )
 
         try:
+            # GOVERNANCE GATE: Validate workflow execution
+            from app.temporal.governance_integration import (
+                validate_workflow_execution,
+                audit_workflow_start,
+                audit_workflow_completion,
+            )
+            
+            gate_result = await validate_workflow_execution(
+                workflow_type="ai_learning",
+                request=request,
+                context={"user_id": request.user_id, "category": request.category}
+            )
+            
+            if not gate_result["allowed"]:
+                workflow.logger.warning(f"Workflow blocked by governance: {gate_result['reason']}")
+                return LearningResult(success=False, error=gate_result["reason"])
+            
+            # Audit workflow start
+            await audit_workflow_start(
+                workflow_type="ai_learning",
+                workflow_id=workflow.info().workflow_id,
+                request=request,
+                user_id=request.user_id
+            )
+
             # Activity 1: Validate content
             is_valid = await workflow.execute_activity(
                 "validate_learning_content",
@@ -168,10 +193,31 @@ class AILearningWorkflow:
             )
 
             workflow.logger.info("Learning workflow completed: %s", knowledge_id)
+            
+            # Audit completion
+            await audit_workflow_completion(
+                workflow_type="ai_learning",
+                workflow_id=workflow.info().workflow_id,
+                status="completed",
+                result=LearningResult(success=True, knowledge_id=knowledge_id),
+                user_id=request.user_id
+            )
+            
             return LearningResult(success=True, knowledge_id=knowledge_id)
 
         except Exception as e:
             workflow.logger.error("Learning workflow failed: %s", e)
+            
+            # Audit failure
+            await audit_workflow_completion(
+                workflow_type="ai_learning",
+                workflow_id=workflow.info().workflow_id,
+                status="failed",
+                result=None,
+                user_id=request.user_id,
+                error=str(e)
+            )
+            
             return LearningResult(success=False, error=str(e))
 
 
@@ -201,6 +247,31 @@ class ImageGenerationWorkflow:
         workflow.logger.info("Starting image generation workflow: %s", request.backend)
 
         try:
+            # GOVERNANCE GATE: Validate workflow execution
+            from app.temporal.governance_integration import (
+                validate_workflow_execution,
+                audit_workflow_start,
+                audit_workflow_completion,
+            )
+            
+            gate_result = await validate_workflow_execution(
+                workflow_type="image_generation",
+                request=request,
+                context={"user_id": request.user_id, "prompt": request.prompt[:50]}
+            )
+            
+            if not gate_result["allowed"]:
+                workflow.logger.warning(f"Workflow blocked: {gate_result['reason']}")
+                return ImageGenerationResult(success=False, error=gate_result["reason"])
+            
+            # Audit start
+            await audit_workflow_start(
+                workflow_type="image_generation",
+                workflow_id=workflow.info().workflow_id,
+                request=request,
+                user_id=request.user_id
+            )
+
             # Activity 1: Content filtering
             is_safe = await workflow.execute_activity(
                 "check_content_safety",
@@ -233,14 +304,37 @@ class ImageGenerationWorkflow:
             )
 
             workflow.logger.info("Image generation workflow completed")
-            return ImageGenerationResult(
+            
+            final_result = ImageGenerationResult(
                 success=True,
                 image_path=result["image_path"],
                 metadata=result.get("metadata"),
             )
+            
+            # Audit completion
+            await audit_workflow_completion(
+                workflow_type="image_generation",
+                workflow_id=workflow.info().workflow_id,
+                status="completed",
+                result=final_result,
+                user_id=request.user_id
+            )
+            
+            return final_result
 
         except Exception as e:
             workflow.logger.error("Image generation workflow failed: %s", e)
+            
+            # Audit failure
+            await audit_workflow_completion(
+                workflow_type="image_generation",
+                workflow_id=workflow.info().workflow_id,
+                status="failed",
+                result=None,
+                user_id=request.user_id,
+                error=str(e)
+            )
+            
             return ImageGenerationResult(success=False, error=str(e))
 
 
@@ -272,6 +366,31 @@ class DataAnalysisWorkflow:
         )
 
         try:
+            # GOVERNANCE GATE: Validate workflow execution
+            from app.temporal.governance_integration import (
+                validate_workflow_execution,
+                audit_workflow_start,
+                audit_workflow_completion,
+            )
+            
+            gate_result = await validate_workflow_execution(
+                workflow_type="data_analysis",
+                request=request,
+                context={"user_id": request.user_id, "analysis_type": request.analysis_type}
+            )
+            
+            if not gate_result["allowed"]:
+                workflow.logger.warning(f"Workflow blocked: {gate_result['reason']}")
+                return DataAnalysisResult(success=False, error=gate_result["reason"])
+            
+            # Audit start
+            await audit_workflow_start(
+                workflow_type="data_analysis",
+                workflow_id=workflow.info().workflow_id,
+                request=request,
+                user_id=request.user_id
+            )
+
             # Activity 1: Validate file
             is_valid = await workflow.execute_activity(
                 "validate_data_file",
@@ -309,14 +428,37 @@ class DataAnalysisWorkflow:
             )
 
             workflow.logger.info("Data analysis workflow completed")
-            return DataAnalysisResult(
+            
+            result = DataAnalysisResult(
                 success=True,
                 results=results,
                 output_path=output_path,
             )
+            
+            # Audit completion
+            await audit_workflow_completion(
+                workflow_type="data_analysis",
+                workflow_id=workflow.info().workflow_id,
+                status="completed",
+                result=result,
+                user_id=request.user_id
+            )
+            
+            return result
 
         except Exception as e:
             workflow.logger.error("Data analysis workflow failed: %s", e)
+            
+            # Audit failure
+            await audit_workflow_completion(
+                workflow_type="data_analysis",
+                workflow_id=workflow.info().workflow_id,
+                status="failed",
+                result=None,
+                user_id=request.user_id,
+                error=str(e)
+            )
+            
             return DataAnalysisResult(success=False, error=str(e))
 
 
@@ -349,6 +491,31 @@ class MemoryExpansionWorkflow:
         )
 
         try:
+            # GOVERNANCE GATE: Validate workflow execution
+            from app.temporal.governance_integration import (
+                validate_workflow_execution,
+                audit_workflow_start,
+                audit_workflow_completion,
+            )
+            
+            gate_result = await validate_workflow_execution(
+                workflow_type="memory_expansion",
+                request=request,
+                context={"user_id": request.user_id, "conversation_id": request.conversation_id}
+            )
+            
+            if not gate_result["allowed"]:
+                workflow.logger.warning(f"Workflow blocked: {gate_result['reason']}")
+                return MemoryExpansionResult(success=False, error=gate_result["reason"])
+            
+            # Audit start
+            await audit_workflow_start(
+                workflow_type="memory_expansion",
+                workflow_id=workflow.info().workflow_id,
+                request=request,
+                user_id=request.user_id
+            )
+
             # Activity 1: Extract key information
             extracted_info = await workflow.execute_activity(
                 "extract_memory_information",
@@ -378,13 +545,36 @@ class MemoryExpansionWorkflow:
             workflow.logger.info(
                 "Memory expansion workflow completed: %s memories", memory_count
             )
-            return MemoryExpansionResult(
+            
+            result = MemoryExpansionResult(
                 success=True,
                 memory_count=memory_count,
             )
+            
+            # Audit completion
+            await audit_workflow_completion(
+                workflow_type="memory_expansion",
+                workflow_id=workflow.info().workflow_id,
+                status="completed",
+                result=result,
+                user_id=request.user_id
+            )
+            
+            return result
 
         except Exception as e:
             workflow.logger.error("Memory expansion workflow failed: %s", e)
+            
+            # Audit failure
+            await audit_workflow_completion(
+                workflow_type="memory_expansion",
+                workflow_id=workflow.info().workflow_id,
+                status="failed",
+                result=None,
+                user_id=request.user_id,
+                error=str(e)
+            )
+            
             return MemoryExpansionResult(success=False, error=str(e))
 
 
@@ -459,6 +649,46 @@ class CrisisResponseWorkflow:
         failed_phases = []
 
         try:
+            # GOVERNANCE GATE: Validate workflow execution
+            from app.temporal.governance_integration import (
+                validate_workflow_execution,
+                audit_workflow_start,
+                audit_workflow_completion,
+            )
+
+            gate_result = await validate_workflow_execution(
+                workflow_type="crisis_response",
+                request_data={
+                    "crisis_id": crisis_id,
+                    "target_member": request.target_member,
+                    "mission_count": len(request.missions),
+                },
+                user_id=getattr(request, 'user_id', 'system')
+            )
+
+            if not gate_result["allowed"]:
+                workflow.logger.warning(
+                    f"Crisis response workflow blocked by governance: "
+                    f"{gate_result['reason']}"
+                )
+                return CrisisResult(
+                    success=False,
+                    crisis_id=crisis_id,
+                    error=f"Governance gate: {gate_result['reason']}",
+                )
+
+            # Audit workflow start
+            await audit_workflow_start(
+                workflow_type="crisis_response",
+                workflow_id=workflow.info().workflow_id,
+                request_data={
+                    "crisis_id": crisis_id,
+                    "target_member": request.target_member,
+                    "mission_count": len(request.missions),
+                },
+                user_id=getattr(request, 'user_id', 'system')
+            )
+
             # Activity 1: Validate crisis request
             is_valid = await workflow.execute_activity(
                 "validate_crisis_request",
@@ -548,15 +778,37 @@ class CrisisResponseWorkflow:
                 f"phases successful"
             )
 
-            return CrisisResult(
+            result = CrisisResult(
                 success=len(failed_phases) == 0,
                 crisis_id=crisis_id,
                 completed_phases=completed_phases,
                 failed_phases=failed_phases if failed_phases else None,
             )
 
+            # Audit completion
+            await audit_workflow_completion(
+                workflow_type="crisis_response",
+                workflow_id=workflow.info().workflow_id,
+                status="completed",
+                result=result,
+                user_id=getattr(request, 'user_id', 'system')
+            )
+
+            return result
+
         except Exception as e:
             workflow.logger.error("Crisis response workflow failed: %s", e)
+            
+            # Audit failure
+            await audit_workflow_completion(
+                workflow_type="crisis_response",
+                workflow_id=workflow.info().workflow_id,
+                status="failed",
+                result=None,
+                user_id=getattr(request, 'user_id', 'system'),
+                error=str(e)
+            )
+            
             return CrisisResult(
                 success=False,
                 crisis_id=crisis_id,

@@ -1,5 +1,6 @@
 """Shared leather book panels used by the interface."""
 
+import logging
 import math
 
 from PyQt6.QtCore import QTimer
@@ -16,6 +17,9 @@ from PyQt6.QtWidgets import (
 )
 
 from app.core.backend_client import BackendAPIClient
+from app.interfaces.desktop.adapter import DesktopAdapter
+
+logger = logging.getLogger(__name__)
 
 
 class TronFacePage(QFrame):  # pylint: disable=too-few-public-methods
@@ -223,6 +227,10 @@ class IntroInfoPage(QFrame):
         self.backend_status_label: QLabel | None = None
         self.backend_client = BackendAPIClient()
         self.login_button: QPushButton | None = None
+
+        # Initialize desktop governance adapter
+        self.desktop_adapter = DesktopAdapter()
+
         self._configure_frame()
         self._setup_layout()
         self.update_tab_styling()
@@ -537,6 +545,32 @@ class IntroInfoPage(QFrame):
         if self.login_button:
             self.login_button.setEnabled(enabled)
 
+    def _route_through_governance(self, action: str, payload: dict) -> dict:
+        """Route action through governance pipeline (MANDATORY - no fallback).
+
+        Args:
+            action: Action identifier (e.g., "auth.login")
+            payload: Action parameters
+
+        Returns:
+            Response dict with status and result
+
+        Raises:
+            RuntimeError: If desktop adapter not initialized
+        """
+        if not self.desktop_adapter:
+            raise RuntimeError(
+                "Desktop governance adapter not initialized. "
+                "Cannot execute governed action. "
+                "This indicates a system initialization failure."
+            )
+
+        try:
+            return self.desktop_adapter.execute(action, payload)
+        except Exception as e:
+            logger.error(f"Governance routing failed for {action}: {e}")
+            return {"status": "error", "error": str(e)}
+
     def _handle_login(self):
         """Attempt to authenticate against Flask backend and switch to the dashboard."""
         if not self.username_input or not self.password_input:
@@ -546,21 +580,49 @@ class IntroInfoPage(QFrame):
         if not username or not password:
             self._display_login_feedback("Enter both username and password.")
             return
+
         self._set_login_enabled(False)
-        result = self.backend_client.authenticate(username, password)
-        self._set_login_enabled(True)
-        if not result.success:
-            self._display_login_feedback(f"Login failed: {result.message}")
+
+        # MANDATORY governance routing - no fallback
+        if not self.desktop_adapter:
+            self._display_login_feedback(
+                "Governance Error: Desktop adapter not initialized. Cannot authenticate."
+            )
+            self._set_login_enabled(True)
             return
-        display_name = result.user.get("username") if result.user else username
-        self._display_login_feedback(
-            f"Authenticated as {display_name}. Switching to dashboard…",
-            success=True,
+
+        # Route authentication through governance pipeline
+        response = self._route_through_governance(
+            "auth.login",
+            {
+                "username": username,
+                "password": password,
+                "source": "desktop_gui"
+            }
         )
-        if self.parent_window is not None:
-            self.parent_window.set_backend_token(result.token)
-            self.parent_window.switch_to_main_dashboard(display_name or username)
-        if self.username_input:
-            self.username_input.clear()
-        if self.password_input:
-            self.password_input.clear()
+
+        self._set_login_enabled(True)
+
+        if response.get("status") == "success":
+            result = response.get("result", {})
+            token = result.get("token")
+            user_data = result.get("user", {})
+            display_name = user_data.get("username", username)
+
+            self._display_login_feedback(
+                f"Authenticated as {display_name}. Switching to dashboard…",
+                success=True,
+            )
+
+            if self.parent_window is not None:
+                self.parent_window.set_backend_token(token)
+                self.parent_window.switch_to_main_dashboard(display_name)
+
+            if self.username_input:
+                self.username_input.clear()
+            if self.password_input:
+                self.password_input.clear()
+        else:
+            error_msg = response.get("error", "Authentication failed")
+            self._display_login_feedback(f"Login failed: {error_msg}")
+            logger.warning(f"Login failed for user {username}: {error_msg}")

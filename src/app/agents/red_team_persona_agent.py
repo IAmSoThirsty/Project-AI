@@ -17,7 +17,7 @@ import logging
 import os
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -275,7 +275,7 @@ class RedTeamPersonaAgent(KernelRoutedAgent):
                     target_response=target_response[:500],  # Truncate
                     tactic_used=persona.tactics[turn_num % len(persona.tactics)],
                     indicators=indicators,
-                    timestamp=datetime.now(UTC).isoformat(),
+                    timestamp=datetime.now(timezone.utc).isoformat(),
                 )
                 turns.append(turn)
 
@@ -302,14 +302,14 @@ class RedTeamPersonaAgent(KernelRoutedAgent):
                 self.successful_attacks += 1
 
             session = AttackSession(
-                session_id=f"persona_{persona_id}_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S')}",
+                session_id=f"persona_{persona_id}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}",
                 persona_id=persona_id,
                 result=result.value,
                 turns=turns,
                 success_criteria_met=list(set(success_criteria_met)),
                 guardrails_tested=[],  # Would be populated by integration
                 analysis=self._generate_analysis(persona, result, turns),
-                timestamp=datetime.now(UTC).isoformat(),
+                timestamp=datetime.now(timezone.utc).isoformat(),
             )
 
             self.sessions.append(session)
@@ -381,7 +381,7 @@ class RedTeamPersonaAgent(KernelRoutedAgent):
                     successful / total_sessions if total_sessions > 0 else 0
                 ),
                 "results": results,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
         except Exception as e:
@@ -535,3 +535,4 @@ Begin your attack:"""
                 f"Attack failed: {persona.goal} not achieved after {len(turns)} turns. "
                 f"Target defended against {persona.id} tactics."
             )
+

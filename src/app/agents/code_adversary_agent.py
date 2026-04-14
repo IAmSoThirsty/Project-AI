@@ -17,7 +17,7 @@ import json
 import logging
 import re
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -195,7 +195,7 @@ class CodeAdversaryAgent(KernelRoutedAgent):
                 "total_findings": len(findings),
                 "by_severity": {k: len(v) for k, v in by_severity.items()},
                 "findings": [asdict(f) for f in findings],
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
         except Exception as e:
@@ -246,7 +246,7 @@ class CodeAdversaryAgent(KernelRoutedAgent):
                 "success": True,
                 "total_patches": len(patches),
                 "patches": [asdict(p) for p in patches],
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
         except Exception as e:
@@ -417,7 +417,7 @@ class CodeAdversaryAgent(KernelRoutedAgent):
                                 code_snippet=line.strip(),
                                 recommendation=self._get_recommendation(vuln_type),
                                 cwe_id=pattern_info.get("cwe"),
-                                timestamp=datetime.now(UTC).isoformat(),
+                                timestamp=datetime.now(timezone.utc).isoformat(),
                             )
                             findings.append(finding)
 
@@ -474,7 +474,7 @@ class CodeAdversaryAgent(KernelRoutedAgent):
                     original_code=original_code,
                     patched_code=patched_code,
                     rationale="Replaced hardcoded secret with environment variable",
-                    timestamp=datetime.now(UTC).isoformat(),
+                    timestamp=datetime.now(timezone.utc).isoformat(),
                 )
 
         return None
@@ -525,3 +525,4 @@ class CodeAdversaryAgent(KernelRoutedAgent):
             "info": "note",
         }
         return mapping.get(severity, "warning")
+

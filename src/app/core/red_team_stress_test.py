@@ -13,7 +13,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -868,7 +868,7 @@ class RedTeamStressTestGenerator:
             "average_variations_per_scenario": round(avg_variations, 2),
             "average_evasion_techniques": round(avg_evasion, 2),
             "total_attack_variations": total_variations,
-            "generated_at": datetime.now(UTC).isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
             "standards": [
                 "OWASP Top 10 2021",
                 "MITRE ATT&CK Framework",
@@ -877,3 +877,4 @@ class RedTeamStressTestGenerator:
                 "Red Team Offensive Standards",
             ],
         }
+

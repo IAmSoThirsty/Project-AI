@@ -2,6 +2,18 @@
 """
 Automated Logging Refactoring Tool
 
+⚠️ ADMIN-ONLY SCRIPT ⚠️
+GOVERNANCE: ADMIN-BYPASS
+Classification: Dev maintenance tool
+Risk: Medium (code modification across entire codebase)
+Justification: Performance optimization tool; requires developer supervision
+
+WARNING: This script bypasses governance controls.
+         - Restricted to developers
+         - Modifies 1700+ files across codebase
+         - Manual code review required after execution
+         - Not for automated execution
+
 Converts f-string logging to lazy % formatting for performance.
 Handles 1700+ instances across the codebase systematically.
 

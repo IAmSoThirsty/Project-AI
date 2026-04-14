@@ -16,7 +16,7 @@ import threading
 import time
 from collections import deque
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -73,7 +73,7 @@ class IncrementalUpdateManager:
                 # Log update
                 self.update_log.append(
                     {
-                        "timestamp": datetime.now(UTC).isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "country": country,
                         "domain": domain,
                         "year": year,
@@ -161,7 +161,7 @@ class RealTimeAlertSystem:
             alert: CrisisAlert instance
         """
         self.alert_queue.append(
-            {"timestamp": datetime.now(UTC).isoformat(), "alert": alert}
+            {"timestamp": datetime.now(timezone.utc).isoformat(), "alert": alert}
         )
 
         for subscriber in self.subscribers:
@@ -271,7 +271,7 @@ class WebhookNotifier:
         """
 
         payload = {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "alert": {
                 "alert_id": alert.alert_id,
                 "risk_score": alert.risk_score,
@@ -295,7 +295,7 @@ class WebhookNotifier:
 
                 self.notification_log.append(
                     {
-                        "timestamp": datetime.now(UTC).isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "url": url,
                         "alert_id": alert.alert_id,
                         "status": "success",
@@ -310,7 +310,7 @@ class WebhookNotifier:
             except Exception as e:
                 self.notification_log.append(
                     {
-                        "timestamp": datetime.now(UTC).isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "url": url,
                         "alert_id": alert.alert_id,
                         "status": "failed",
@@ -347,7 +347,7 @@ class MonitoringDashboard:
         """
         with self.lock:
             metrics = {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "data_points": sum(
                     sum(len(years) for years in data.values())
                     for data in self.engine.historical_data.values()
@@ -407,7 +407,7 @@ class MonitoringDashboard:
         Returns:
             List of historical metrics
         """
-        cutoff = datetime.now(UTC).timestamp() - (minutes * 60)
+        cutoff = datetime.now(timezone.utc).timestamp() - (minutes * 60)
 
         return [
             m
@@ -492,3 +492,4 @@ def setup_real_time_monitoring(
 
     logger.info("Real-time monitoring setup completed")
     return components
+

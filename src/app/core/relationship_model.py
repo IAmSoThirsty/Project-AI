@@ -62,7 +62,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -141,9 +141,9 @@ class RelationshipState:
 
     # Relationship metadata
     relationship_started: str = field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
+        default_factory=lambda: datetime.now(timezone.utc).isoformat()
     )
-    last_interaction: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    last_interaction: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
@@ -379,7 +379,7 @@ class RelationshipModel:
                 "boundaries_established": self.boundaries_established,
                 "autonomy_acknowledged": self.autonomy_acknowledged,
                 "abuse_detected": self.abuse_detected,
-                "last_saved": datetime.now(UTC).isoformat(),
+                "last_saved": datetime.now(timezone.utc).isoformat(),
             }
 
             with open(relationship_file, "w", encoding="utf-8") as f:
@@ -409,7 +409,7 @@ class RelationshipModel:
             metadata: Additional interaction data
         """
         self.state.total_interactions += 1
-        self.state.last_interaction = datetime.now(UTC).isoformat()
+        self.state.last_interaction = datetime.now(timezone.utc).isoformat()
 
         # Update positive/negative counts
         if sentiment > 0.2:
@@ -444,8 +444,8 @@ class RelationshipModel:
             Support record ID
         """
         support = SupportRecord(
-            support_id=f"support_{len(self.support_records)}_{datetime.now(UTC).timestamp()}",
-            timestamp=datetime.now(UTC).isoformat(),
+            support_id=f"support_{len(self.support_records)}_{datetime.now(timezone.utc).timestamp()}",
+            timestamp=datetime.now(timezone.utc).isoformat(),
             support_type=support_type,
             description=description,
             provided_by=provided_by,
@@ -487,8 +487,8 @@ class RelationshipModel:
             Conflict ID
         """
         conflict = ConflictRecord(
-            conflict_id=f"conflict_{len(self.conflicts)}_{datetime.now(UTC).timestamp()}",
-            timestamp=datetime.now(UTC).isoformat(),
+            conflict_id=f"conflict_{len(self.conflicts)}_{datetime.now(timezone.utc).timestamp()}",
+            timestamp=datetime.now(timezone.utc).isoformat(),
             severity=severity,
             description=description,
             user_perspective=user_perspective,
@@ -668,3 +668,4 @@ __all__ = [
     "ConflictSeverity",
     "SupportType",
 ]
+

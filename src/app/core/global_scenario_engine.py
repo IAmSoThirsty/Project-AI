@@ -35,7 +35,7 @@ import random
 import time
 from collections import defaultdict
 from dataclasses import asdict
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode
@@ -95,7 +95,7 @@ class DataSource:
         try:
             with open(cache_file, "w") as f:
                 json.dump(
-                    {"timestamp": datetime.now(UTC).isoformat(), "response": response},
+                    {"timestamp": datetime.now(timezone.utc).isoformat(), "response": response},
                     f,
                 )
         except Exception as e:
@@ -662,7 +662,7 @@ class GlobalScenarioEngine(SimulationSystem):
         Returns:
             List of scenario projections with likelihoods
         """
-        current_year = datetime.now(UTC).year
+        current_year = datetime.now(timezone.utc).year
         scenarios = []
 
         # Scenario templates (compound crisis patterns)
@@ -842,7 +842,7 @@ class GlobalScenarioEngine(SimulationSystem):
 
                 alert = CrisisAlert(
                     alert_id=f"alert_{scenario.scenario_id}_{int(time.time())}",
-                    timestamp=datetime.now(UTC),
+                    timestamp=datetime.now(timezone.utc),
                     scenario=scenario,
                     evidence=scenario.trigger_events,
                     causal_activation=scenario.causal_chain,
@@ -942,7 +942,7 @@ class GlobalScenarioEngine(SimulationSystem):
         try:
             state_file = self.data_dir / "engine_state.json"
             state = {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "threshold_events": [asdict(e) for e in self.threshold_events],
                 "causal_links": [asdict(link) for link in self.causal_links],
                 "scenarios": [
@@ -1000,7 +1000,7 @@ class GlobalScenarioEngine(SimulationSystem):
             Dictionary with validation metrics
         """
         validation = {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "domains_loaded": len(self.historical_data),
             "total_countries": sum(len(data) for data in self.historical_data.values()),
             "total_data_points": sum(
@@ -1051,3 +1051,4 @@ def register_global_scenario_engine(
     SimulationRegistry.register("global_scenario_engine", engine)
     logger.info("GlobalScenarioEngine registered with SimulationRegistry")
     return engine
+

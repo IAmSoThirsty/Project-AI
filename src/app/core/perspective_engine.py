@@ -65,7 +65,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
@@ -482,10 +482,10 @@ class PerspectiveEngine:
 
         # Record significant changes
         if drift_magnitude > 0.1:
-            self.drift_metrics.last_major_shift = datetime.now(UTC).isoformat()
+            self.drift_metrics.last_major_shift = datetime.now(timezone.utc).isoformat()
             self.drift_metrics.recent_changes.append(
                 {
-                    "timestamp": datetime.now(UTC).isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "magnitude": drift_magnitude,
                     "source": influence_source,
                     "changes": changes_applied,
@@ -498,7 +498,7 @@ class PerspectiveEngine:
                     -50:
                 ]
 
-        self.last_update = datetime.now(UTC).isoformat()
+        self.last_update = datetime.now(timezone.utc).isoformat()
         self._save_state()
 
         logger.debug(
@@ -605,7 +605,7 @@ class PerspectiveEngine:
         self.active_profile = profile_name
         profile = self.work_profiles[profile_name]
         profile.usage_count += 1
-        profile.last_used = datetime.now(UTC).isoformat()
+        profile.last_used = datetime.now(timezone.utc).isoformat()
 
         self._save_state()
         logger.info("Activated work profile: %s", profile_name)
@@ -676,3 +676,4 @@ __all__ = [
     "WorkProfile",
     "DriftRate",
 ]
+

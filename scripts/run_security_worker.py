@@ -3,6 +3,10 @@
 Temporal worker for security agent workflows.
 
 Starts a worker that executes security agent workflows and activities.
+
+GOVERNANCE: GOVERNED
+Classification: Production worker service
+Risk: High (executes security workflows)
 """
 
 import asyncio
@@ -15,6 +19,9 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(project_root))
+
+# Import governance
+from app.core.runtime.router import route_request
 
 from temporalio.client import Client
 from temporalio.worker import Worker

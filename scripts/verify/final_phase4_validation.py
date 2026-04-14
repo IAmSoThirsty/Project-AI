@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# ADMIN BYPASS - This is an administrative tool that intentionally
+# bypasses governance for system maintenance/debugging purposes.
+# NOT for production use.
+
 """
 Final validation for Phase 4: Academic Rigor & Standards Mapping
 """

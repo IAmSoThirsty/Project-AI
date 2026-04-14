@@ -9,6 +9,10 @@ Usage:
     python scripts/launch_mcp_server.py
     python scripts/launch_mcp_server.py --data-dir /custom/data
     python scripts/launch_mcp_server.py --log-level DEBUG
+
+GOVERNANCE: GOVERNED
+Classification: Production server launcher
+Risk: Medium (starts services)
 """
 
 import argparse

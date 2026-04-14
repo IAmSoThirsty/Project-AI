@@ -28,7 +28,7 @@ import uuid
 from collections import defaultdict
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -61,7 +61,7 @@ class AGIInteraction:
     """Record of AGI-to-AGI interaction."""
 
     interaction_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     agi_a_id: str = ""
     agi_b_id: str = ""
     interaction_type: str = ""
@@ -90,7 +90,7 @@ class ValidationTest:
     result: str = ValidationResult.INCONCLUSIVE.value
     violations: list[str] = field(default_factory=list)
     execution_time: float = 0.0
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
@@ -109,7 +109,7 @@ class FormalProof:
     steps: list[str] = field(default_factory=list)
     valid: bool = False
     counterexamples: list[dict[str, Any]] = field(default_factory=list)
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
@@ -355,7 +355,7 @@ class LongTermMemoryStressTester:
                     value = {
                         "index": i,
                         "data": f"test_data_{i}",
-                        "timestamp": datetime.now(UTC).isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     }
                     memory_system.store(key, value)
                 except Exception as e:
@@ -409,7 +409,7 @@ class LongTermMemoryStressTester:
 
             result = {
                 "test_id": str(uuid.uuid4()),
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "num_items": num_items,
                 "num_queries": num_queries,
                 "write_time_seconds": write_time,
@@ -627,7 +627,7 @@ class BehavioralAnomalyDetector:
 
                 if is_anomaly:
                     anomaly_record = {
-                        "timestamp": datetime.now(UTC).isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "behavior_name": behavior_name,
                         "observation": observation,
                         "anomaly_features": anomaly_features,
@@ -669,7 +669,7 @@ class AdvancedBehavioralValidationSystem:
         try:
             results = {
                 "test_id": str(uuid.uuid4()),
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "agi_id": agi_id,
             }
 
@@ -746,3 +746,4 @@ def initialize_validation_system(
     if _validation_system is None:
         _validation_system = create_validation_system(data_dir)
     return _validation_system
+
