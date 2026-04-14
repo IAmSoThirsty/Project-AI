@@ -21,6 +21,7 @@ passlib[bcrypt]==1.7.4
 cryptography==42.0.4
 argon2-cffi==23.1.0  # Secure password hashing for governance pipeline
 PyJWT==2.8.0  # JWT token generation and verification
+pyotp>=2.9.0  # MFA (TOTP) support for two-factor authentication
 flask-cors==4.0.0  # CORS middleware for web backend
 flask-limiter==3.5.0  # Rate limiting for web backend
 flask==3.0.2  # Web framework for interface adapters
