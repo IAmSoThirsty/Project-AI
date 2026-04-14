@@ -21,7 +21,8 @@ def test_create_and_authenticate(tmpdir):
     f = os.path.join(tmpdir, "users.json")
     um = UserManager(users_file=f)
     assert um.create_user("alice", "pw") is True
-    assert um.authenticate("alice", "pw") is True
+    success, msg = um.authenticate("alice", "pw")
+    assert success is True
 
 
 def test_get_user_data_sanitized(tmpdir):
@@ -50,7 +51,8 @@ def test_set_password_changes_hash(tmpdir):
     old_hash = um.users["d"]["password_hash"]
     um.set_password("d", "pw2")
     assert um.users["d"]["password_hash"] != old_hash
-    assert um.authenticate("d", "pw2") is True
+    success, msg = um.authenticate("d", "pw2")
+    assert success is True
 
 
 def test_delete_user(tmpdir):
@@ -68,7 +70,8 @@ def test_migration_from_plaintext(tmpdir):
     um = UserManager(users_file=f)
     assert "password" not in um.users["u"]
     assert "password_hash" in um.users["u"]
-    assert um.authenticate("u", "plaintext") is True
+    success, msg = um.authenticate("u", "plaintext")
+    assert success is True
 
 
 def test_list_users(tmpdir):
@@ -84,7 +87,8 @@ def test_update_user_password_via_update(tmpdir):
     um = UserManager(users_file=f)
     um.create_user("g", "pw")
     um.update_user("g", password="new")  # Test fixture passwords
-    assert um.authenticate("g", "new") is True
+    success, msg = um.authenticate("g", "new")
+    assert success is True
 
 
 def test_authenticate_missing_hash(tmpdir):
@@ -92,7 +96,8 @@ def test_authenticate_missing_hash(tmpdir):
     with open(f, "w", encoding="utf-8") as fh:
         json.dump({"h": {"role": "user"}}, fh)
     um = UserManager(users_file=f)
-    assert um.authenticate("h", "pw") is False
+    success, msg = um.authenticate("h", "pw")
+    assert success is False
 
 
 def test_get_nonexistent_user(tmpdir):

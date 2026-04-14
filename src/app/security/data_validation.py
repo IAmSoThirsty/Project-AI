@@ -16,7 +16,9 @@ import re
 from dataclasses import dataclass
 from io import StringIO
 from typing import Any
-from xml.etree.ElementTree import Element  # nosec B405 - Only used for type hints, not parsing
+from xml.etree.ElementTree import (
+    Element,  # nosec B405 - Only used for type hints, not parsing
+)
 
 import defusedxml.ElementTree as ET  # noqa: N817 - Standard ElementTree alias
 
@@ -458,3 +460,96 @@ class DataPoisoningDefense:
         sanitized = re.sub(r"javascript:", "", sanitized, flags=re.IGNORECASE)
 
         return sanitized
+
+
+# Standalone utility functions for GUI input validation
+def sanitize_input(data: str, max_length: int | None = None) -> str:
+    """Sanitize user input by removing dangerous patterns and enforcing length.
+
+    Args:
+        data: Raw user input string
+        max_length: Maximum allowed length (optional)
+
+    Returns:
+        Sanitized string with dangerous patterns removed
+    """
+    if not isinstance(data, str):
+        return ""
+
+    sanitized = data.strip()
+
+    # Enforce max length if specified
+    if max_length and len(sanitized) > max_length:
+        sanitized = sanitized[:max_length]
+
+    # Remove script tags and XSS patterns
+    sanitized = re.sub(
+        r"<script.*?>.*?</script>", "", sanitized, flags=re.IGNORECASE | re.DOTALL
+    )
+
+    # Remove event handlers (onclick, onerror, etc.)
+    sanitized = re.sub(
+        r"on\w+\s*=\s*[\"'][^\"']*[\"']", "", sanitized, flags=re.IGNORECASE
+    )
+
+    # Remove javascript: URLs
+    sanitized = re.sub(r"javascript:", "", sanitized, flags=re.IGNORECASE)
+
+    # Remove SQL injection attempts - common patterns
+    sql_patterns = [
+        r";\s*DROP\s+TABLE",
+        r";\s*DELETE\s+FROM",
+        r";\s*UPDATE\s+.*\s+SET",
+        r"--\s*$",
+        r"'\s*OR\s+'1'\s*=\s*'1",
+        r"'\s*OR\s+1\s*=\s*1",
+    ]
+    for pattern in sql_patterns:
+        sanitized = re.sub(pattern, "", sanitized, flags=re.IGNORECASE)
+
+    # Remove path traversal attempts
+    sanitized = sanitized.replace("../", "").replace("..\\", "")
+
+    # Remove null bytes
+    sanitized = sanitized.replace("\x00", "")
+
+    return sanitized
+
+
+def validate_length(data: str, min_len: int = 0, max_len: int | None = None) -> bool:
+    """Validate string length against min/max constraints.
+
+    Args:
+        data: String to validate
+        min_len: Minimum required length (default: 0)
+        max_len: Maximum allowed length (default: None for unlimited)
+
+    Returns:
+        True if length is within bounds, False otherwise
+    """
+    if not isinstance(data, str):
+        return False
+
+    length = len(data)
+
+    if length < min_len:
+        return False
+
+    return not (max_len is not None and length > max_len)
+
+
+def validate_email(email: str) -> bool:
+    """Validate email address format.
+
+    Args:
+        email: Email address to validate
+
+    Returns:
+        True if valid email format, False otherwise
+    """
+    if not isinstance(email, str):
+        return False
+
+    # Basic email regex pattern
+    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    return bool(re.match(pattern, email))

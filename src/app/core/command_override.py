@@ -11,9 +11,13 @@ WARNING: This system grants full control over all safety mechanisms. Use with ca
 import base64
 import hashlib
 import json
+import logging
 import os
+import secrets
 from datetime import datetime
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 # Prefer passlib bcrypt if available for secure password hashing
 try:
@@ -59,6 +63,8 @@ class CommandOverrideSystem:
         self.master_password_hash = None
         self.authenticated = False
         self.auth_timestamp = None
+        self.failed_auth_attempts = 0
+        self.auth_locked_until = None
 
         # Load configuration and init audit
         self._load_config()
@@ -72,9 +78,15 @@ class CommandOverrideSystem:
                     config = json.load(f)
                     self.master_password_hash = config.get("master_password_hash")
                     self.safety_protocols.update(config.get("safety_protocols", {}))
+                    self.failed_auth_attempts = config.get("failed_auth_attempts", 0)
+                    self.auth_locked_until = config.get("auth_locked_until")
             else:
+                self.failed_auth_attempts = 0
+                self.auth_locked_until = None
                 self._save_config()
         except Exception as e:
+            self.failed_auth_attempts = 0
+            self.auth_locked_until = None
             print(f"Error loading command override config: {e}")
 
     def _save_config(self) -> None:
@@ -84,6 +96,8 @@ class CommandOverrideSystem:
             config = {
                 "master_password_hash": self.master_password_hash,
                 "safety_protocols": self.safety_protocols,
+                "failed_auth_attempts": self.failed_auth_attempts,
+                "auth_locked_until": self.auth_locked_until,
             }
             with open(self.config_file, "w", encoding="utf-8") as f:
                 json.dump(config, f, indent=2)
@@ -154,7 +168,9 @@ class CommandOverrideSystem:
                     dk = hashlib.pbkdf2_hmac(
                         "sha256", password.encode("utf-8"), salt, iterations
                     )
-                    return base64.b64encode(dk).decode() == stored_dk
+                    computed_dk = base64.b64encode(dk).decode()
+                    # FIX: Use constant-time comparison to prevent timing attacks
+                    return secrets.compare_digest(computed_dk, stored_dk)
         except Exception:
             return False
         return False
@@ -163,9 +179,36 @@ class CommandOverrideSystem:
         """Hash a password using secure scheme (bcrypt preferred)."""
         return self._hash_with_bcrypt(password)
 
+    def _validate_master_password_strength(self, password: str) -> tuple[bool, str]:
+        """Validate master password meets security requirements."""
+        if len(password) < 8:
+            return False, "Master password must be at least 8 characters"
+        
+        if not any(c.isupper() for c in password):
+            return False, "Master password must contain uppercase letter"
+        
+        if not any(c.islower() for c in password):
+            return False, "Master password must contain lowercase letter"
+        
+        if not any(c.isdigit() for c in password):
+            return False, "Master password must contain digit"
+        
+        special_chars = "!@#$%^&*()_+-=[]{}|;:,.<>?"
+        if not any(c in special_chars for c in password):
+            return False, "Master password must contain special character"
+        
+        return True, ""
+
     def set_master_password(self, password: str) -> bool:
         """Set the master password for override authentication."""
         try:
+            # NEW: Validate strength
+            is_valid, error_msg = self._validate_master_password_strength(password)
+            if not is_valid:
+                logger.error(f"Master password policy violation: {error_msg}")
+                self._log_action("SET_MASTER_PASSWORD", f"Rejected: {error_msg}", success=False)
+                return False
+            
             self.master_password_hash = self._hash_password(password)
             self._save_config()
             self._log_action("SET_MASTER_PASSWORD", "Master password configured")
@@ -180,10 +223,30 @@ class CommandOverrideSystem:
             self._log_action("AUTHENTICATE", "No master password set", success=False)
             return False
 
+        # Check if account is locked
+        if self.auth_locked_until:
+            current_time = datetime.now().timestamp()
+            if current_time < self.auth_locked_until:
+                remaining = int(self.auth_locked_until - current_time)
+                self._log_action(
+                    "AUTHENTICATE",
+                    f"Account locked. {remaining}s remaining",
+                    success=False,
+                )
+                return False
+            else:
+                # Lock expired, clear it
+                self.auth_locked_until = None
+                self.failed_auth_attempts = 0
+                self._save_config()
+                self._log_action("AUTHENTICATE", "Lockout period expired, reset")
+
         # Legacy SHA256 migration
         if self._is_sha256_hash(self.master_password_hash):
             legacy_hash = self.master_password_hash
-            if hashlib.sha256(password.encode("utf-8")).hexdigest() == legacy_hash:
+            computed_hash = hashlib.sha256(password.encode("utf-8")).hexdigest()
+            # FIX: Use constant-time comparison to prevent timing attacks
+            if secrets.compare_digest(computed_hash, legacy_hash):
                 try:
                     new_hash = self._hash_with_bcrypt(password)
                     self.master_password_hash = new_hash
@@ -199,23 +262,80 @@ class CommandOverrideSystem:
                     )
                 self.authenticated = True
                 self.auth_timestamp = datetime.now()
+                self.failed_auth_attempts = 0
+                self.auth_locked_until = None
+                self._save_config()
                 self._log_action(
                     "AUTHENTICATE", "Authentication successful (legacy migrated)"
                 )
                 return True
             else:
-                self._log_action("AUTHENTICATE", "Invalid password", success=False)
+                # Failed authentication
+                self._handle_failed_authentication()
                 return False
 
         # Verify against current hash formats
         if self._verify_bcrypt_or_pbkdf2(self.master_password_hash, password):
             self.authenticated = True
             self.auth_timestamp = datetime.now()
+            self.failed_auth_attempts = 0
+            self.auth_locked_until = None
+            self._save_config()
             self._log_action("AUTHENTICATE", "Authentication successful")
             return True
 
-        self._log_action("AUTHENTICATE", "Invalid password", success=False)
+        # Failed authentication
+        self._handle_failed_authentication()
         return False
+
+    def _handle_failed_authentication(self) -> None:
+        """Handle failed authentication attempt with lockout tracking."""
+        self.failed_auth_attempts += 1
+        self._save_config()
+
+        if self.failed_auth_attempts >= 5:
+            # Lock the account for 15 minutes (900 seconds)
+            self.auth_locked_until = datetime.now().timestamp() + 900
+            self._save_config()
+            self._log_action(
+                "AUTHENTICATE",
+                f"Account locked after {self.failed_auth_attempts} failed attempts. Locked for 900s",
+                success=False,
+            )
+        else:
+            attempts_left = 5 - self.failed_auth_attempts
+            self._log_action(
+                "AUTHENTICATE",
+                f"Invalid password. Attempt {self.failed_auth_attempts}/5. {attempts_left} attempts remaining",
+                success=False,
+            )
+
+    def emergency_unlock(self, admin_verification: str = "") -> bool:
+        """
+        Emergency unlock to reset account lockout.
+        
+        This is a separate administrative function that should require
+        additional verification in production (e.g., separate admin password,
+        physical access verification, or multi-factor authentication).
+        
+        Args:
+            admin_verification: Additional verification token/password (for future use)
+        
+        Returns:
+            bool: True if unlock successful
+        """
+        if self.auth_locked_until:
+            self.auth_locked_until = None
+            self.failed_auth_attempts = 0
+            self._save_config()
+            self._log_action(
+                "EMERGENCY_UNLOCK",
+                f"Account lockout manually cleared. Admin verification: {bool(admin_verification)}",
+            )
+            return True
+        else:
+            self._log_action("EMERGENCY_UNLOCK", "No active lockout to clear")
+            return False
 
     def logout(self) -> None:
         """Logout and clear authentication."""
@@ -296,6 +416,19 @@ class CommandOverrideSystem:
 
     def get_status(self) -> dict[str, Any]:
         """Get the current status of the command override system."""
+        lockout_info = None
+        if self.auth_locked_until:
+            current_time = datetime.now().timestamp()
+            if current_time < self.auth_locked_until:
+                remaining = int(self.auth_locked_until - current_time)
+                lockout_info = {
+                    "locked": True,
+                    "remaining_seconds": remaining,
+                    "locked_until_timestamp": self.auth_locked_until,
+                }
+            else:
+                lockout_info = {"locked": False, "expired": True}
+        
         return {
             "authenticated": self.authenticated,
             "master_override_active": self.master_override_active,
@@ -304,6 +437,8 @@ class CommandOverrideSystem:
             ),
             "safety_protocols": self.safety_protocols.copy(),
             "has_master_password": self.master_password_hash is not None,
+            "failed_auth_attempts": self.failed_auth_attempts,
+            "lockout_status": lockout_info,
         }
 
     def get_audit_log(self, lines: int = 50) -> list[str]:

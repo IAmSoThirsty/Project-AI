@@ -8,11 +8,30 @@ This module provides comprehensive security controls including:
 - Agent encapsulation and adversarial controls
 - Database security
 - Monitoring and alerting
+- Path traversal protection
 """
 
-# Import core security components (always available)
-from .data_validation import DataPoisoningDefense, SecureDataParser
-from .environment_hardening import EnvironmentHardening
+# Import path security (always available, no dependencies)
+from .path_security import (
+    PathTraversalError,
+    safe_path_join,
+    safe_open,
+    validate_filename,
+    sanitize_filename,
+    is_safe_symlink,
+)
+
+# Import core security components (with graceful degradation)
+try:
+    from .data_validation import DataPoisoningDefense, SecureDataParser
+except ImportError:
+    DataPoisoningDefense = None
+    SecureDataParser = None
+
+try:
+    from .environment_hardening import EnvironmentHardening
+except ImportError:
+    EnvironmentHardening = None
 
 # Optional imports (graceful degradation if dependencies missing)
 try:
