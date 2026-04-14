@@ -1,0 +1,1 @@
+dir /s /b t:\Project-AI-main\model t:\Project-AI-main\train.py

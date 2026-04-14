@@ -1,0 +1,1 @@
+ls -lh t:/Project-AI-main/.env t:/Project-AI-main/adversarial_tests/galahad_model.py t:/Project-AI-main/src/app/core/openrouter_provider.py t:/Project-AI-main/src/app/core/openrouter_mock.py t:/Project-AI-main/test_openrouter_integration.py t:/Project-AI-main/test_mock_openrouter.py

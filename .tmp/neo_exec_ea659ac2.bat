@@ -1,0 +1,1 @@
+ls -lh t:/Project-AI-main/src/app/core/tscg_codec.py t:/Project-AI-main/src/app/core/state_register.py t:/Project-AI-main/src/app/core/octoreflex.py t:/Project-AI-main/src/app/core/directness.py t:/Project-AI-main/src/app/core/constitutional_model.py t:/Project-AI-main/src/app/core/validate_constitution.py t:/Project-AI-main/CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT.md

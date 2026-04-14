@@ -1,0 +1,1 @@
+type "t:\Project-AI-main\src\app\core\octoreflex.py" | findstr /C:"rule" /C:"AGI" /C:"Four Laws" /C:"Directness"

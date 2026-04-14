@@ -1,0 +1,1 @@
+if not exist "t:\Project-AI-main\venv" python -m venv t:\Project-AI-main\venv

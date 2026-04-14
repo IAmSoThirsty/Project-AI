@@ -1,0 +1,1 @@
+call t:\Project-AI-main\venv\Scripts\activate.bat && python t:\Project-AI-main\test_connection.py

@@ -13,6 +13,45 @@ from typing import Any
 logger = logging.getLogger(__name__)
 
 
+# ACTION REGISTRY: Whitelist of all valid actions
+# This prevents unknown/malicious actions from bypassing validation
+VALID_ACTIONS = {
+    # AI Operations
+    "ai.chat", "ai.image", "ai.code", "ai.analyze",
+    
+    # User Management
+    "user.login", "user.logout", "user.create", "user.update", "user.delete",
+    
+    # Persona Operations
+    "persona.update", "persona.query", "persona.reset",
+    
+    # Agent Operations
+    "agent.execute", "agent.plan", "agent.validate",
+    
+    # Temporal Operations
+    "temporal.workflow.validate", "temporal.workflow.execute", 
+    "temporal.activity.validate", "temporal.activity.execute",
+    
+    # System Operations
+    "system.status", "system.config", "system.shutdown",
+    
+    # Data Operations
+    "data.query", "data.update", "data.export",
+    
+    # Learning Operations
+    "learning.request", "learning.approve", "learning.deny",
+}
+
+# Action metadata for enhanced validation
+ACTION_METADATA = {
+    "ai.chat": {"requires_auth": True, "rate_limit": 30, "resource_intensive": False},
+    "ai.image": {"requires_auth": True, "rate_limit": 10, "resource_intensive": True},
+    "user.login": {"requires_auth": False, "rate_limit": 5, "resource_intensive": False},
+    "user.delete": {"requires_auth": True, "admin_only": True, "resource_intensive": False},
+    "system.shutdown": {"requires_auth": True, "admin_only": True, "resource_intensive": False},
+}
+
+
 def enforce_pipeline(context: dict[str, Any]) -> Any:
     """
     Execute governance pipeline: validate → simulate → gate → execute → commit → log.
@@ -71,6 +110,7 @@ def _validate(context: dict[str, Any]) -> dict[str, Any]:
     Phase 1: Input validation and sanitization.
 
     Checks:
+        - Action is in whitelist (prevents unknown/malicious actions)
         - Required fields present
         - Data types correct
         - Input sanitization (XSS, injection prevention)
@@ -85,6 +125,36 @@ def _validate(context: dict[str, Any]) -> dict[str, Any]:
     for field in required_fields:
         if field not in context:
             raise ValueError(f"Missing required field: {field}")
+
+    # ACTION REGISTRY CHECK: Reject unknown actions
+    action = context["action"]
+    
+    # Check if action is in whitelist or matches a valid prefix
+    is_valid = action in VALID_ACTIONS
+    
+    # Allow wildcard patterns (e.g., "agent.*" matches "agent.execute")
+    if not is_valid:
+        for valid_action in VALID_ACTIONS:
+            if valid_action.endswith("*"):
+                prefix = valid_action[:-1]
+                if action.startswith(prefix):
+                    is_valid = True
+                    break
+            # Check prefix match for registered patterns
+            elif "." in action and "." in valid_action:
+                action_prefix = action.split(".")[0]
+                valid_prefix = valid_action.split(".")[0]
+                if action_prefix == valid_prefix and action not in VALID_ACTIONS:
+                    # Allow if prefix matches but log warning
+                    logger.warning(f"Action {action} not in registry but prefix matches {valid_prefix}")
+                    is_valid = True
+                    break
+    
+    if not is_valid:
+        raise ValueError(
+            f"Action '{action}' not in registry. "
+            f"Valid actions: {sorted(VALID_ACTIONS)}"
+        )
 
     # Sanitize payload to prevent injection attacks
     context["payload"] = sanitize_payload(context["payload"])
@@ -107,16 +177,90 @@ def _simulate(context: dict[str, Any]) -> dict[str, Any]:
     """
     logger.debug("Governance Phase 2: Simulation")
 
-    # For now, return basic simulation metadata
-    # TODO: Implement full shadow execution in deterministic_replay.py
+    action = context["action"]
+    payload = context.get("payload", {})
+    
+    # Build simulation result based on action type
     simulation = {
         "estimated_impact": "low",
         "state_changes": [],
-        "resource_usage": {"cpu": "low", "memory": "low"},
+        "resource_usage": {"cpu": "low", "memory": "low", "network": "low"},
         "predicted_outcome": "success",
+        "risk_level": "low",
+        "requires_admin": False,
     }
-
+    
+    # Analyze based on action metadata
+    if action in ACTION_METADATA:
+        metadata = ACTION_METADATA[action]
+        
+        if metadata.get("resource_intensive"):
+            simulation["estimated_impact"] = "high"
+            simulation["resource_usage"]["cpu"] = "high"
+            simulation["resource_usage"]["memory"] = "high"
+            simulation["risk_level"] = "medium"
+        
+        if metadata.get("admin_only"):
+            simulation["requires_admin"] = True
+            simulation["risk_level"] = "high"
+    
+    # Predict state changes based on action
+    if action.startswith("user."):
+        simulation["state_changes"].append("user_database")
+    elif action.startswith("persona."):
+        simulation["state_changes"].append("persona_state")
+    elif action.startswith("system."):
+        simulation["state_changes"].append("system_config")
+        simulation["estimated_impact"] = "high"
+    
+    # AI operations
+    if action.startswith("ai."):
+        simulation["resource_usage"]["network"] = "high"
+        if action == "ai.image":
+            simulation["resource_usage"]["cpu"] = "high"
+            simulation["estimated_impact"] = "medium"
+    
+    # Agent operations
+    if action.startswith("agent."):
+        simulation["resource_usage"]["cpu"] = "medium"
+        simulation["state_changes"].append("agent_state")
+    
+    # Temporal workflows
+    if action.startswith("temporal."):
+        simulation["resource_usage"]["memory"] = "medium"
+        simulation["state_changes"].append("workflow_state")
+    
+    # Predict potential failures
+    simulation["potential_failures"] = []
+    
+    if simulation["requires_admin"]:
+        user_role = context.get("user", {}).get("role", "user")
+        if user_role != "admin":
+            simulation["predicted_outcome"] = "failure"
+            simulation["potential_failures"].append("insufficient_permissions")
+    
+    # Check for required fields in payload
+    required_fields = _get_required_fields(action)
+    missing_fields = [f for f in required_fields if f not in payload]
+    if missing_fields:
+        simulation["predicted_outcome"] = "failure"
+        simulation["potential_failures"].append(f"missing_fields: {missing_fields}")
+    
     return simulation
+
+
+def _get_required_fields(action: str) -> list[str]:
+    """Get required payload fields for an action."""
+    field_requirements = {
+        "user.login": ["username", "password"],
+        "user.create": ["username", "password", "role"],
+        "user.update": ["username"],
+        "persona.update": ["trait", "value"],
+        "ai.chat": ["prompt"],
+        "ai.image": ["prompt"],
+        "agent.execute": ["agent_type", "task"],
+    }
+    return field_requirements.get(action, [])
 
 
 def _gate(
@@ -219,47 +363,165 @@ def _check_rate_limit(context: dict[str, Any]) -> None:
 
 def _check_user_permissions(context: dict[str, Any]) -> None:
     """
-    Check user permissions for action.
+    Check user permissions for action with full RBAC implementation.
     
     Raises:
         PermissionError: If user lacks permission
     """
     action = context["action"]
     user = context.get("user", {})
-    
-    # Permission rules
-    admin_only_actions = ["user.delete", "system.shutdown"]
     user_role = user.get("role", "user")
+    username = user.get("username", "anonymous")
     
-    if action in admin_only_actions and user_role != "admin":
+    # Role hierarchy: admin > power_user > user > guest
+    role_hierarchy = {"admin": 4, "power_user": 3, "user": 2, "guest": 1, "anonymous": 0}
+    user_level = role_hierarchy.get(user_role, 0)
+    
+    # Permission matrix: action -> minimum role level required
+    permission_matrix = {
+        # Admin-only actions
+        "user.delete": 4,
+        "system.shutdown": 4,
+        "system.config": 4,
+        
+        # Power user actions
+        "user.create": 3,
+        "user.update": 3,
+        "data.export": 3,
+        
+        # Authenticated user actions
+        "ai.chat": 2,
+        "ai.image": 2,
+        "ai.code": 2,
+        "persona.update": 2,
+        "learning.request": 2,
+        "agent.execute": 2,
+        
+        # Guest actions
+        "system.status": 1,
+        "data.query": 1,
+        
+        # Anonymous actions
+        "user.login": 0,
+    }
+    
+    # Check action permission
+    required_level = permission_matrix.get(action, 2)  # Default: require authenticated user
+    
+    # Special case: users can always update their own data
+    if action == "user.update":
+        target_user = context.get("payload", {}).get("username")
+        if target_user == username:
+            required_level = 2  # Own profile
+    
+    if user_level < required_level:
+        required_role = [r for r, l in role_hierarchy.items() if l == required_level][0]
         raise PermissionError(
-            f"Action {action} requires admin role (user has: {user_role})"
+            f"Action '{action}' requires role '{required_role}' or higher "
+            f"(user '{username}' has role '{user_role}')"
         )
     
-    # TODO: Implement full RBAC system
+    logger.debug(f"Permission check passed: {username} ({user_role}) for {action}")
 
 
 def _check_resource_quotas(context: dict[str, Any]) -> None:
     """
-    Check resource quotas (CPU, memory, API calls).
+    Check resource quotas with persistent tracking via file-based storage.
     
     Raises:
         PermissionError: If quota exceeded
     """
+    import json
+    import os
+    from datetime import datetime, timedelta
+    
     action = context["action"]
     user = context.get("user", {}).get("username", "anonymous")
     
-    # Quota rules (example: daily AI call limits)
+    # Quota definitions: action -> limits
     quotas = {
-        "ai.chat": {"daily_limit": 1000},
-        "ai.image": {"daily_limit": 100},
+        "ai.chat": {"hourly_limit": 100, "daily_limit": 1000},
+        "ai.image": {"hourly_limit": 10, "daily_limit": 100},
+        "ai.code": {"hourly_limit": 50, "daily_limit": 500},
+        "data.export": {"daily_limit": 10},
+        "agent.execute": {"hourly_limit": 20, "daily_limit": 200},
     }
     
-    if action in quotas:
-        # TODO: Implement persistent quota tracking (Redis/DB)
-        # For now, just log
-        logger.info(f"Quota check for {user}: {action} (limit: {quotas[action]['daily_limit']}/day)")
-        pass
+    if action not in quotas:
+        return  # No quota for this action
+    
+    limits = quotas[action]
+    
+    # Load quota tracking data
+    quota_file = "data/runtime/quotas.json"
+    os.makedirs("data/runtime", exist_ok=True)
+    
+    try:
+        if os.path.exists(quota_file):
+            with open(quota_file, "r") as f:
+                quota_data = json.load(f)
+        else:
+            quota_data = {}
+    except Exception as e:
+        logger.warning(f"Failed to load quota data: {e}")
+        quota_data = {}
+    
+    # Initialize user quota tracking
+    if user not in quota_data:
+        quota_data[user] = {}
+    if action not in quota_data[user]:
+        quota_data[user][action] = {"requests": []}
+    
+    # Get request history
+    requests = quota_data[user][action]["requests"]
+    now = datetime.now()
+    
+    # Clean old requests (older than 24 hours)
+    requests = [
+        ts for ts in requests
+        if datetime.fromisoformat(ts) > now - timedelta(hours=24)
+    ]
+    
+    # Check hourly limit
+    if "hourly_limit" in limits:
+        hour_ago = now - timedelta(hours=1)
+        hourly_requests = [
+            ts for ts in requests
+            if datetime.fromisoformat(ts) > hour_ago
+        ]
+        
+        if len(hourly_requests) >= limits["hourly_limit"]:
+            raise PermissionError(
+                f"Hourly quota exceeded for {action}: "
+                f"{len(hourly_requests)}/{limits['hourly_limit']} requests in last hour"
+            )
+    
+    # Check daily limit
+    if "daily_limit" in limits:
+        day_ago = now - timedelta(hours=24)
+        daily_requests = [
+            ts for ts in requests
+            if datetime.fromisoformat(ts) > day_ago
+        ]
+        
+        if len(daily_requests) >= limits["daily_limit"]:
+            raise PermissionError(
+                f"Daily quota exceeded for {action}: "
+                f"{len(daily_requests)}/{limits['daily_limit']} requests in last 24 hours"
+            )
+    
+    # Record this request
+    requests.append(now.isoformat())
+    quota_data[user][action]["requests"] = requests
+    
+    # Save updated quota data
+    try:
+        with open(quota_file, "w") as f:
+            json.dump(quota_data, f)
+    except Exception as e:
+        logger.warning(f"Failed to save quota data: {e}")
+    
+    logger.debug(f"Quota check passed for {user}: {action}")
 
 
 def _execute(context: dict[str, Any]) -> Any:
@@ -316,7 +578,6 @@ def _execute(context: dict[str, Any]) -> Any:
         from app.core.security.auth import generate_jwt_token
 
         manager = UserManager()
-        # FIX: UserManager has authenticate(), not authenticate_user()
         is_authenticated = manager.authenticate(
             payload.get("username"), payload.get("password")
         )

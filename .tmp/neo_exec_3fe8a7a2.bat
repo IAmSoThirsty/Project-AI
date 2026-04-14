@@ -1,0 +1,1 @@
+cd t:\Project-AI-main && call venv\Scripts\activate.bat && pip install requests -q && python test_connection.py

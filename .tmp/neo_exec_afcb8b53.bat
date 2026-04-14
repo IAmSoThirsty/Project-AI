@@ -1,0 +1,1 @@
+powershell -Command "Get-Content -Path 't:/Project-AI-main/test_mock_openrouter.py' -TotalCount 500"

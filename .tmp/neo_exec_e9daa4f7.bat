@@ -1,0 +1,1 @@
+dir /s /b "t:\Project-AI-main\galahad_model.py" 2>nul | head -5

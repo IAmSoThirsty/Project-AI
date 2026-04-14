@@ -568,7 +568,7 @@ def memoize_with_ttl(ttl: int = 300):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             # Generate cache key
-            key = f"{func.__name__}_{hashlib.md5(str((args, kwargs)).encode()).hexdigest()}"
+            key = f"{func.__name__}_{hashlib.md5(str((args, kwargs)).encode(), usedforsecurity=False).hexdigest()}"
 
             # Try cache first
             result = cache.get(key)

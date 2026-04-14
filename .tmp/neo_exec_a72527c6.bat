@@ -1,0 +1,1 @@
+type "t:\Project-AI-main\src\app\core\validate_constitution.py" | findstr /C:"test" /C:"assert" /C:"passed" /C:"failed"

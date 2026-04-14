@@ -5,6 +5,11 @@ Supports multiple backends:
 - Stable Diffusion (Hugging Face API)
 - DALL-E (OpenAI API)
 - Local generation (optional)
+
+Security:
+- Content filtering with blocked keywords
+- Secure file storage with path traversal protection
+- Filename sanitization
 """
 
 import logging
@@ -17,6 +22,8 @@ from typing import Any
 
 import requests
 from dotenv import load_dotenv
+
+from app.security.path_security import safe_path_join, sanitize_filename
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -252,7 +259,8 @@ class ImageGenerator:
                 # Save image data
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 filename = f"sd_{timestamp}.png"
-                filepath = os.path.join(self.output_dir, filename)
+                # Secure path joining to prevent traversal
+                filepath = safe_path_join(self.output_dir, filename)
 
                 with open(filepath, "wb") as f:
                     f.write(response.result)
@@ -306,7 +314,8 @@ class ImageGenerator:
 
                 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 filename = f"dalle_{timestamp}.png"
-                filepath = os.path.join(self.output_dir, filename)
+                # Secure path joining to prevent traversal
+                filepath = safe_path_join(self.output_dir, filename)
 
                 with open(filepath, "wb") as f:
                     f.write(img_resp.content)
@@ -380,17 +389,18 @@ class ImageGenerator:
             return {"success": False, "error": "Backend not implemented"}
 
     def get_generation_history(self, limit: int = 10) -> list[dict[str, Any]]:
-        """Get recent generation history."""
+        """Get recent generation history with secure path handling."""
         history = []
         try:
             files = sorted(
                 os.listdir(self.output_dir),
-                key=lambda f: os.path.getmtime(os.path.join(self.output_dir, f)),
+                key=lambda f: os.path.getmtime(safe_path_join(self.output_dir, f)),
                 reverse=True,
             )[:limit]
 
             for filename in files:
-                filepath = os.path.join(self.output_dir, filename)
+                # Secure path joining
+                filepath = safe_path_join(self.output_dir, filename)
                 history.append(
                     {
                         "filename": filename,

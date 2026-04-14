@@ -1,0 +1,1 @@
+powershell -Command "Get-Content -Path 't:\Project-AI-main\adversarial_tests\galahad_model.py' -TotalCount 1000"

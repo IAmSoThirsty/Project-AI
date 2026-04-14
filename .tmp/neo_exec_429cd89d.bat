@@ -1,0 +1,1 @@
+powershell -Command "if (Test-Path 't:\Project-AI-main\venv') { Write-Output 'venv exists' } else { Write-Output 'venv not found'; python -m venv 't:\Project-AI-main\venv' }"

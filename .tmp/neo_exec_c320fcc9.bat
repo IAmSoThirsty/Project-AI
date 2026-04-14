@@ -1,0 +1,1 @@
+dir /s /b t:\Project-AI-main\*galahad*.py 2>nul

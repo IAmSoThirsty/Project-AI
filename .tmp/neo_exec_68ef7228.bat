@@ -1,0 +1,1 @@
+type "t:\Project-AI-main\CONSTITUTIONAL_AI_IMPLEMENTATION_REPORT.md" | findstr /C:"14" /C:"documents"

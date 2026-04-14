@@ -8,6 +8,8 @@ Supports 50+ programming language runtimes with deterministic selection and heal
 
 import json
 import logging
+import re
+import shlex
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -122,10 +124,30 @@ class RuntimeManager:
 
         for lang_key, runtime in self.runtimes.items():
             try:
-                # Execute health check command
+                # Convert health_check_cmd to list if it's a string
+                if isinstance(runtime.health_check_cmd, str):
+                    cmd_list = shlex.split(runtime.health_check_cmd)
+                else:
+                    cmd_list = runtime.health_check_cmd
+
+                # Validate command to prevent injection attacks
+                # Allow alphanumeric, spaces, hyphens, underscores, dots, slashes, and pipes
+                cmd_str = ' '.join(cmd_list)
+                allowed_pattern = re.compile(r'^[a-zA-Z0-9\s\-_./|\'\"]+$')
+                if not allowed_pattern.match(cmd_str):
+                    logger.warning(
+                        "Invalid characters in health check command for %s: %s",
+                        lang_key,
+                        cmd_str,
+                    )
+                    runtime.health_status = "unavailable"
+                    self.health_cache[lang_key] = "unavailable"
+                    continue
+
+                # Execute health check command securely (shell=False)
                 result = subprocess.run(
-                    runtime.health_check_cmd,
-                    shell=True,
+                    cmd_list,
+                    shell=False,
                     capture_output=True,
                     timeout=timeout,
                     text=True,

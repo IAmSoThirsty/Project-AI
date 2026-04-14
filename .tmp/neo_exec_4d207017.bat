@@ -1,0 +1,1 @@
+powershell -Command "Get-Content -Path 't:\Project-AI-main\adversarial_tests\garak\run_garak.py' -TotalCount 921"

@@ -21,6 +21,7 @@ from PyQt6.QtWidgets import (
 )
 
 from app.core.user_manager import UserManager
+from app.security.data_validation import sanitize_input, validate_length
 
 
 class LoginDialog(QDialog):
@@ -119,8 +120,26 @@ class LoginDialog(QDialog):
         self.layout.addWidget(self.create_admin_btn)
 
     def create_admin_account(self):
-        username = self.admin_user.text().strip()
-        password = self.admin_pass.text().strip()
+        # Sanitize and validate username
+        username = sanitize_input(self.admin_user.text().strip(), max_length=50)
+        if not validate_length(username, min_len=3, max_len=50):
+            QMessageBox.warning(
+                self,
+                "Onboarding",
+                "Username must be 3-50 characters",
+            )
+            return
+
+        # Sanitize and validate password
+        password = sanitize_input(self.admin_pass.text().strip(), max_length=128)
+        if not validate_length(password, min_len=8, max_len=128):
+            QMessageBox.warning(
+                self,
+                "Onboarding",
+                "Password must be 8-128 characters",
+            )
+            return
+
         if not username or not password:
             QMessageBox.warning(
                 self,
@@ -145,17 +164,39 @@ class LoginDialog(QDialog):
             )
 
     def try_login(self):
-        username = self.user_input.text().strip()
-        password = self.pass_input.text().strip()
+        # Sanitize and validate username
+        username = sanitize_input(self.user_input.text().strip(), max_length=50)
+        if not validate_length(username, min_len=3, max_len=50):
+            QMessageBox.warning(
+                self,
+                "Login Error",
+                "Username must be 3-50 characters"
+            )
+            return
+
+        # Sanitize and validate password
+        password = sanitize_input(self.pass_input.text().strip(), max_length=128)
+        if not validate_length(password, min_len=8, max_len=128):
+            QMessageBox.warning(
+                self,
+                "Login Error",
+                "Password must be 8-128 characters"
+            )
+            return
+
         if not username or not password:
             QMessageBox.warning(self, "Login", "Enter username and password")
             return
-        if self.user_manager.authenticate(username, password):
+        
+        # Authenticate returns (success, message) tuple
+        success, msg = self.user_manager.authenticate(username, password)
+        if success:
             self.username = username
             # Show TOC
             self._show_toc()
         else:
-            QMessageBox.warning(self, "Login Failed", "Invalid credentials")
+            # Show specific error message (includes lockout info if applicable)
+            QMessageBox.warning(self, "Login Failed", msg)
 
     def _show_toc(self):
         # Clear login widgets and show TOC

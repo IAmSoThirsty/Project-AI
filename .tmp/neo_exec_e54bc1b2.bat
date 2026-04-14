@@ -1,0 +1,1 @@
+source venv/bin/activate && python t:\Project-AI-main\test_connection.py

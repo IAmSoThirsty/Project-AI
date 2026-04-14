@@ -1,0 +1,1 @@
+cd t:\Project-AI-main && python -m src.app.core.validate_constitution 2>&1

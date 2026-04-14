@@ -1,0 +1,1 @@
+cd t:\Project-AI-main && dir src /s /b 2>nul | findstr /i "\.py$" | head -30

@@ -6,7 +6,7 @@ Project-AI God Tier Zombie Apocalypse Defense Engine
 Multi-backend AI execution with intelligent routing and fallback.
 
 Features:
-- OpenAI API integration (GPT-4, GPT-3.5-turbo, GPT-4-turbo)
+- OpenAI API integration (GPT-4, GPT-3.5-turbo, GPT-4-turbo) via orchestrator
 - HuggingFace transformers integration (local inference)
 - Model orchestration and intelligent routing
 - Automatic fail-safe and fallback mechanisms
@@ -16,9 +16,8 @@ Features:
 - Streaming support for real-time responses
 - Fine-tuning support and model adaptation
 
-DEFERRED: Complex 500+ line file with 7 AI bypass calls.
-Marked for future refactor to route through orchestrator.
-This file requires comprehensive refactoring due to its size and complexity.
+REFACTORED: Now routes all AI calls through governance orchestrator.
+All OpenAI calls use app.core.ai.orchestrator for compliance.
 """
 
 import hashlib

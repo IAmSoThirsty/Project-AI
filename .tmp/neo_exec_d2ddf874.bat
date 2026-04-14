@@ -1,0 +1,1 @@
+python -c "import sys; sys.path.insert(0, 't:\\Project-AI-main\\src'); from adversarial_tests.galahad_model import GalahadModel; print('GalahadModel imports successfully')"

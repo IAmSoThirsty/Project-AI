@@ -1,0 +1,1 @@
+t:\Project-AI-main\venv\Scripts\python.exe t:\Project-AI-main\test_connection.py

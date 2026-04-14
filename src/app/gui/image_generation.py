@@ -22,6 +22,7 @@ from PyQt6.QtWidgets import (
 )
 
 from app.core.image_generator import ImageGenerationBackend, ImageGenerator, ImageStyle
+from app.security.data_validation import sanitize_input, validate_length
 
 logger = logging.getLogger(__name__)
 
@@ -199,7 +200,16 @@ class ImageGenerationLeftPanel(QFrame):
 
     def _on_generate(self):
         """Handle generate button click."""
-        prompt = self.prompt_input.toPlainText().strip()
+        # Sanitize and validate prompt
+        prompt = sanitize_input(
+            self.prompt_input.toPlainText().strip(),
+            max_length=1000
+        )
+        if not validate_length(prompt, min_len=3, max_len=1000):
+            self.status_label.setText("⚠️ Prompt must be 3-1000 characters")
+            self.status_label.setStyleSheet("color: #ff4444; font-size: 10pt;")
+            return
+
         if not prompt:
             self.status_label.setText("⚠️ Please enter a prompt")
             return

@@ -1,0 +1,1 @@
+dir "t:\Project-AI-main\src\app\core\" /s | findstr "octoreflex state_register tscg_codec validate_constitution"

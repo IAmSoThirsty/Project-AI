@@ -6,9 +6,11 @@ New pattern: Handler → Desktop Adapter → Router → Governance → Systems
 """
 
 import logging
+
 from PyQt6.QtWidgets import QFileDialog, QMessageBox, QVBoxLayout, QWidget
 
 from app.interfaces.desktop.integration import get_desktop_adapter
+from app.security.data_validation import sanitize_input, validate_email, validate_length
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +18,16 @@ logger = logging.getLogger(__name__)
 class DashboardHandlers:
     def generate_learning_path(self):
         """Generate a learning path based on user input (governance-routed)"""
-        interest = self.interest_input.text()
+        # Sanitize and validate interest input
+        interest = sanitize_input(self.interest_input.text(), max_length=200)
+        if not validate_length(interest, min_len=1, max_len=200):
+            QMessageBox.warning(
+                self,
+                "Input Error",
+                "Interest must be 1-200 characters"
+            )
+            return
+
         skill_level = self.skill_level.currentText().lower()
 
         if interest:
@@ -30,7 +41,7 @@ class DashboardHandlers:
                         "user": self.user_manager.current_user,
                     }
                 )
-                
+
                 if response["status"] == "success":
                     path = response["result"]["path"]
                     self.learning_path_display.setText(path)
@@ -38,7 +49,7 @@ class DashboardHandlers:
                     error_msg = response.get("error", "Unknown error")
                     logger.error(f"Learning path generation failed: {error_msg}")
                     self.learning_path_display.setText(f"Error: {error_msg}")
-                    
+
             except Exception as e:
                 logger.error(f"Failed to generate learning path: {e}")
                 # Fallback to direct call to preserve functionality
@@ -67,7 +78,7 @@ class DashboardHandlers:
                         "user": self.user_manager.current_user,
                     }
                 )
-                
+
                 if response["status"] == "success":
                     columns = response["result"]["columns"]
                     self.column_selector.clear()
@@ -76,7 +87,7 @@ class DashboardHandlers:
                 else:
                     error_msg = response.get("error", "Failed to load file")
                     QMessageBox.warning(self, "Error", error_msg)
-                    
+
             except Exception as e:
                 logger.error(f"Failed to load data file through governance: {e}")
                 # Fallback to direct call
@@ -106,7 +117,7 @@ class DashboardHandlers:
                     "user": self.user_manager.current_user,
                 }
             )
-            
+
             if response["status"] == "success":
                 stats = response["result"]["stats"]
                 self.analysis_display.setText(str(stats))
@@ -115,7 +126,7 @@ class DashboardHandlers:
                 # Fallback to direct call
                 stats = self.data_analyzer.get_summary_stats()
                 self.analysis_display.setText(str(stats))
-                
+
         except Exception as e:
             logger.error(f"Failed to get stats through governance: {e}")
             # Fallback to direct call
@@ -125,7 +136,7 @@ class DashboardHandlers:
     def update_security_resources(self):
         """Update the security resources list (governance-routed)"""
         category = self.security_category.currentText()
-        
+
         try:
             adapter = get_desktop_adapter()
             response = adapter.execute(
@@ -135,7 +146,7 @@ class DashboardHandlers:
                     "user": self.user_manager.current_user,
                 }
             )
-            
+
             if response["status"] == "success":
                 resources = response["result"]["resources"]
                 self.resources_list.clear()
@@ -148,7 +159,7 @@ class DashboardHandlers:
                 self.resources_list.clear()
                 for resource in resources:
                     self.resources_list.addItem(f"{resource['name']} ({resource['repo']})")
-                    
+
         except Exception as e:
             logger.error(f"Failed to get security resources through governance: {e}")
             # Fallback to direct call
@@ -170,7 +181,7 @@ class DashboardHandlers:
         if self.resources_list.currentItem():
             text = self.resources_list.currentItem().text()
             repo = text[text.find("(") + 1 : text.find(")")]
-            
+
             try:
                 adapter = get_desktop_adapter()
                 response = adapter.execute(
@@ -180,13 +191,13 @@ class DashboardHandlers:
                         "user": self.user_manager.current_user,
                     }
                 )
-                
+
                 if response["status"] == "success":
                     QMessageBox.information(self, "Success", "Added to favorites")
                 else:
                     error_msg = response.get("error", "Failed to add favorite")
                     QMessageBox.warning(self, "Error", error_msg)
-                    
+
             except Exception as e:
                 logger.error(f"Failed to add favorite through governance: {e}")
                 # Fallback to direct call
@@ -198,14 +209,14 @@ class DashboardHandlers:
         try:
             adapter = get_desktop_adapter()
             action = "location.start" if not self.location_tracker.active else "location.stop"
-            
+
             response = adapter.execute(
                 action,
                 {
                     "user": self.user_manager.current_user,
                 }
             )
-            
+
             if response["status"] == "success":
                 self.location_tracker.active = response["result"]["active"]
                 if self.location_tracker.active:
@@ -219,12 +230,12 @@ class DashboardHandlers:
                 logger.warning(f"Location tracking toggle failed: {response.get('error')}")
                 # Fallback to direct control
                 self._toggle_location_tracking_direct()
-                
+
         except Exception as e:
             logger.error(f"Failed to toggle location tracking through governance: {e}")
             # Fallback to direct control
             self._toggle_location_tracking_direct()
-    
+
     def _toggle_location_tracking_direct(self):
         """Direct location tracking toggle (fallback)"""
         if not self.location_tracker.active:
@@ -248,19 +259,19 @@ class DashboardHandlers:
                         "user": self.user_manager.current_user,
                     }
                 )
-                
+
                 if response["status"] == "success":
                     self.update_location_display()
                 else:
                     logger.warning(f"Location update failed: {response.get('error')}")
                     # Fallback to direct call
                     self._update_location_direct()
-                    
+
             except Exception as e:
                 logger.error(f"Failed to update location through governance: {e}")
                 # Fallback to direct call
                 self._update_location_direct()
-    
+
     def _update_location_direct(self):
         """Direct location update (fallback)"""
         location = self.location_tracker.get_location_from_ip()
@@ -302,13 +313,13 @@ class DashboardHandlers:
                         "user": self.user_manager.current_user,
                     }
                 )
-                
+
                 if response["status"] == "success":
                     self.location_history.clear()
                 else:
                     error_msg = response.get("error", "Failed to clear history")
                     QMessageBox.warning(self, "Error", error_msg)
-                    
+
             except Exception as e:
                 logger.error(f"Failed to clear location history through governance: {e}")
                 # Fallback to direct call
@@ -317,29 +328,57 @@ class DashboardHandlers:
 
     def save_emergency_contacts(self):
         """Save emergency contact information (governance-routed)"""
-        contacts = [email.strip() for email in self.contacts_input.text().split(",")]
-        
+        # Sanitize and validate contact emails
+        contacts_raw = sanitize_input(self.contacts_input.text(), max_length=500)
+        contacts = [email.strip() for email in contacts_raw.split(",")]
+
+        # Validate each email
+        invalid_emails = []
+        valid_contacts = []
+        for email in contacts:
+            if email:  # Skip empty strings
+                if validate_email(email):
+                    valid_contacts.append(email)
+                else:
+                    invalid_emails.append(email)
+
+        if invalid_emails:
+            QMessageBox.warning(
+                self,
+                "Invalid Email",
+                f"Invalid email addresses: {', '.join(invalid_emails)}"
+            )
+            return
+
+        if not valid_contacts:
+            QMessageBox.warning(
+                self,
+                "No Contacts",
+                "Please enter at least one valid email address"
+            )
+            return
+
         try:
             adapter = get_desktop_adapter()
             response = adapter.execute(
                 "emergency.save_contacts",
                 {
-                    "contacts": contacts,
+                    "contacts": valid_contacts,
                     "user": self.user_manager.current_user,
                 }
             )
-            
+
             if response["status"] == "success":
                 QMessageBox.information(self, "Success", "Emergency contacts saved")
             else:
                 error_msg = response.get("error", "Failed to save contacts")
                 QMessageBox.warning(self, "Error", error_msg)
-                
+
         except Exception as e:
             logger.error(f"Failed to save emergency contacts through governance: {e}")
             # Fallback to direct call
             self.emergency_alert.add_emergency_contact(
-                self.user_manager.current_user, {"emails": contacts}
+                self.user_manager.current_user, {"emails": valid_contacts}
             )
             QMessageBox.information(self, "Success", "Emergency contacts saved")
 
@@ -360,7 +399,19 @@ class DashboardHandlers:
                     self.user_manager.current_user
                 )
                 location = history[-1] if history else None
-                message = self.emergency_message.toPlainText()
+
+                # Sanitize and validate emergency message
+                message = sanitize_input(
+                    self.emergency_message.toPlainText(),
+                    max_length=1000
+                )
+                if not validate_length(message, min_len=1, max_len=1000):
+                    QMessageBox.warning(
+                        self,
+                        "Input Error",
+                        "Emergency message must be 1-1000 characters"
+                    )
+                    return
 
                 adapter = get_desktop_adapter()
                 response = adapter.execute(
@@ -371,7 +422,7 @@ class DashboardHandlers:
                         "user": self.user_manager.current_user,
                     }
                 )
-                
+
                 if response["status"] == "success":
                     QMessageBox.information(
                         self, "Alert Sent", "Emergency alert was sent successfully"
@@ -382,12 +433,12 @@ class DashboardHandlers:
                     QMessageBox.warning(
                         self, "Alert Failed", f"Failed to send alert: {error_msg}"
                     )
-                    
+
             except Exception as e:
                 logger.error(f"Failed to send emergency alert through governance: {e}")
                 # Fallback to direct call
                 self._send_emergency_alert_direct()
-    
+
     def _send_emergency_alert_direct(self):
         """Direct emergency alert sending (fallback)"""
         # Get latest location
@@ -395,7 +446,19 @@ class DashboardHandlers:
             self.user_manager.current_user
         )
         location = history[-1] if history else None
-        message = self.emergency_message.toPlainText()
+
+        # Sanitize and validate emergency message
+        message = sanitize_input(
+            self.emergency_message.toPlainText(),
+            max_length=1000
+        )
+        if not validate_length(message, min_len=1, max_len=1000):
+            QMessageBox.warning(
+                self,
+                "Input Error",
+                "Emergency message must be 1-1000 characters"
+            )
+            return
 
         success, msg = self.emergency_alert.send_alert(
             self.user_manager.current_user, location, message

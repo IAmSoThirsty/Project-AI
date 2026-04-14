@@ -9,20 +9,24 @@ import logging
 import os
 
 from app.core.ai.orchestrator import run_ai, AIRequest
+from app.security.path_security import safe_path_join, sanitize_filename
 
 logger = logging.getLogger(__name__)
 
 
 class LearningPathManager:
-    def __init__(self, api_key=None, provider="openai"):
+    def __init__(self, api_key=None, provider="openai", data_dir="data/learning_paths"):
         """
         Initialize learning path manager.
 
         Args:
             api_key: API key for the model provider (deprecated - uses orchestrator)
             provider: Model provider to use ('openai' or 'perplexity')
+            data_dir: Directory to store learning paths
         """
         self.provider_name = provider
+        self.data_dir = data_dir
+        os.makedirs(data_dir, exist_ok=True)
         logger.info("LearningPathManager initialized with AI orchestrator")
 
     def generate_path(self, interest, skill_level="beginner", model=None):
@@ -74,11 +78,21 @@ class LearningPathManager:
             return f"Error generating learning path: {str(e)}"
 
     def save_path(self, username, interest, path_content):
-        """Save a generated learning path"""
-        filename = f"learning_paths_{username}.json"
+        """Save a generated learning path.
+        
+        Args:
+            username: User identifier (sanitized for filename)
+            interest: Learning interest topic
+            path_content: Generated path content
+        """
+        # Sanitize username to prevent path traversal
+        safe_username = sanitize_filename(username)
+        filename = f"learning_paths_{safe_username}.json"
+        filepath = safe_path_join(self.data_dir, filename)
+        
         paths = {}
-        if os.path.exists(filename):
-            with open(filename) as f:
+        if os.path.exists(filepath):
+            with open(filepath) as f:
                 paths = json.load(f)
 
         paths[interest] = {
@@ -87,13 +101,24 @@ class LearningPathManager:
             "completed_milestones": [],
         }
 
-        with open(filename, "w") as f:
+        with open(filepath, "w") as f:
             json.dump(paths, f)
 
     def get_saved_paths(self, username):
-        """Get all saved learning paths for a user"""
-        filename = f"learning_paths_{username}.json"
-        if os.path.exists(filename):
-            with open(filename) as f:
+        """Get all saved learning paths for a user.
+        
+        Args:
+            username: User identifier (sanitized for filename)
+            
+        Returns:
+            Dictionary of saved learning paths
+        """
+        # Sanitize username to prevent path traversal
+        safe_username = sanitize_filename(username)
+        filename = f"learning_paths_{safe_username}.json"
+        filepath = safe_path_join(self.data_dir, filename)
+        
+        if os.path.exists(filepath):
+            with open(filepath) as f:
                 return json.load(f)
         return {}

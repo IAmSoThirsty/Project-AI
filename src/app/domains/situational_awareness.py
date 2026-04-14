@@ -584,7 +584,8 @@ class SituationalAwarenessSubsystem(
                 return
 
             contact_id = hashlib.md5(
-                f"{location[0]:.3f},{location[1]:.3f}".encode()
+                f"{location[0]:.3f},{location[1]:.3f}".encode(),
+                usedforsecurity=False
             ).hexdigest()[:16]
 
             if contact_id in self._threat_contacts:

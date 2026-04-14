@@ -21,7 +21,8 @@
         "ms-toolsai.jupyter",
         "eamodio.gitlens",
         "GitHub.copilot",
-        "GitHub.copilot-chat"
+        "GitHub.copilot-chat",
+        "NeoResearchInc.heyneo"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",

@@ -21,6 +21,7 @@ from PyQt6.QtWidgets import (
 )
 
 from app.core.ai_systems import AIPersona, FourLaws
+from app.security.data_validation import sanitize_input, validate_length
 
 logger = logging.getLogger(__name__)
 
@@ -180,10 +181,13 @@ These laws are **immutable and hierarchical**. They cannot be overridden or modi
                     normalized = val / 100.0
                     val_label.setText(f"{normalized:.2f}")
                     if self.persona:
-                        current = self.persona.personality.get(trait_name.lower(), 0.5)
-                        delta = normalized - current
-                        self.persona.adjust_trait(trait_name, delta)
-                        self.personality_changed.emit(self.persona.personality)
+                        # REFACTORED: Route through desktop adapter for governance
+                        from app.interfaces.desktop.integration import execute_persona_update
+                        try:
+                            execute_persona_update(trait_name.lower(), normalized)
+                            self.personality_changed.emit(self.persona.personality)
+                        except Exception as e:
+                            logger.error(f"Failed to update persona trait {trait_name}: {e}")
 
                 return update_value
 
@@ -313,7 +317,19 @@ These laws are **immutable and hierarchical**. They cannot be overridden or modi
             QMessageBox.warning(self, "Error", "Persona not initialized")
             return
 
-        action = self.action_input.toPlainText().strip()
+        # Sanitize and validate action input
+        action = sanitize_input(
+            self.action_input.toPlainText().strip(),
+            max_length=2000
+        )
+        if not validate_length(action, min_len=1, max_len=2000):
+            QMessageBox.warning(
+                self,
+                "Error",
+                "Action description must be 1-2000 characters"
+            )
+            return
+
         if not action:
             QMessageBox.warning(self, "Error", "Please enter an action description")
             return

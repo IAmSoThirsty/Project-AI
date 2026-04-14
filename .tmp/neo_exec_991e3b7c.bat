@@ -1,0 +1,1 @@
+ls -F t:/Project-AI-main/
