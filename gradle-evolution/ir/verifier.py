@@ -22,12 +22,18 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from typing import Any
 
 from .ir_schema import IRGraph, IROpcode
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 @dataclass
@@ -521,9 +527,7 @@ class IRVerifier:
 
     def _get_timestamp(self) -> str:
         """Get current timestamp"""
-        from datetime import datetime
-
-        return datetime.utcnow().isoformat() + "Z"
+        return _utcnow().isoformat() + "Z"
 
     def _sign_certificate(self, graph: IRGraph) -> str:
         """Sign proof certificate"""

@@ -11,13 +11,18 @@ import logging
 import os
 import sqlite3
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from .sql_utils import sanitize_identifier_list
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class BuildMemoryDB:
@@ -339,7 +344,7 @@ class BuildMemoryDB:
         """
         import json
 
-        timestamp = datetime.utcnow().isoformat()
+        timestamp = _utcnow().isoformat()
 
         with self.get_connection() as conn:
             try:
@@ -541,7 +546,7 @@ class BuildMemoryDB:
         """Create build phase record."""
         import json
 
-        start_time = datetime.utcnow().isoformat()
+        start_time = _utcnow().isoformat()
 
         with self.get_connection() as conn:
             try:

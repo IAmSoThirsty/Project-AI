@@ -9,13 +9,18 @@ Provides comprehensive audit trail for build operations and policy decisions.
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from cognition.audit import audit
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class BuildAuditIntegration:
@@ -55,7 +60,7 @@ class BuildAuditIntegration:
             detail = {
                 "tasks": tasks,
                 "task_count": len(tasks),
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "context": self._sanitize_context(context),
             }
 
@@ -89,7 +94,7 @@ class BuildAuditIntegration:
             detail = {
                 "success": success,
                 "duration_seconds": duration_seconds,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "result_summary": self._summarize_result(result),
             }
 
@@ -131,7 +136,7 @@ class BuildAuditIntegration:
                     "action": decision.get("policy") or decision.get("action"),
                     "allowed": (decision.get("outcome") == "allowed"),
                     "reason": decision.get("reason"),
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": _utcnow().isoformat(),
                     "metadata": metadata or {},
                 }
             else:
@@ -139,7 +144,7 @@ class BuildAuditIntegration:
                     "action": action,
                     "allowed": bool(allowed),
                     "reason": reason,
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": _utcnow().isoformat(),
                     "metadata": metadata or {},
                 }
 
@@ -183,7 +188,7 @@ class BuildAuditIntegration:
                 "operation": operation,
                 "allowed": allowed,
                 "reason": reason,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
             }
 
             audit(event, detail)
@@ -223,7 +228,7 @@ class BuildAuditIntegration:
                 "input_count": input_count,
                 "output_count": output_count,
                 "merkle_root": merkle_root,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
             }
 
             audit(event, detail)
@@ -251,7 +256,7 @@ class BuildAuditIntegration:
             detail = {
                 "success": success,
                 "has_differences": differences is not None,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
             }
 
             if differences:
@@ -288,7 +293,7 @@ class BuildAuditIntegration:
                 "inputs_summary": self._summarize_dict(inputs, max_keys=5),
                 "outputs_summary": self._summarize_dict(outputs, max_keys=5),
                 "has_reasoning": reasoning is not None,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
             }
 
             audit(event, detail)
@@ -321,7 +326,7 @@ class BuildAuditIntegration:
             detail = {
                 "task": task_name,
                 "result": task_result,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
             }
             audit(event, detail)
             self._buffer_audit(event, detail)
@@ -412,7 +417,7 @@ class BuildAuditIntegration:
             {
                 "event": event,
                 "detail": detail,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
             }
         )
 

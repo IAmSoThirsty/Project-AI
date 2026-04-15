@@ -11,10 +11,15 @@ Provides automated policy transitions and scheduled reviews.
 import asyncio
 import logging
 from collections.abc import Callable
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class ScheduledPolicy:
@@ -117,7 +122,7 @@ class PolicyScheduler:
             start_time: Optional start time (default: now)
         """
         try:
-            start = start_time or datetime.utcnow()
+            start = start_time or _utcnow()
 
             # Schedule next 30 days of recurrences
             current = start
@@ -181,7 +186,7 @@ class PolicyScheduler:
     async def _process_scheduled_policies(self) -> None:
         """Process scheduled policies for activation/expiration."""
         try:
-            now = datetime.utcnow()
+            now = _utcnow()
 
             for _policy_id, scheduled in list(self.scheduled_policies.items()):
                 # Check for activation
@@ -304,7 +309,7 @@ class PolicyScheduler:
         Returns:
             List of upcoming policies
         """
-        now = datetime.utcnow()
+        now = _utcnow()
         cutoff = now + timedelta(hours=hours_ahead)
 
         upcoming = []
@@ -333,7 +338,7 @@ class PolicyScheduler:
         """Record policy event to history."""
         self.policy_history.append(
             {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "policy_id": policy_id,
                 "event_type": event_type,
                 "policy_data": policy_data,

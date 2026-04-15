@@ -11,11 +11,16 @@ Ensures all policy overrides are traceable to responsible humans.
 import hashlib
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class AccountabilityRecord:
@@ -47,7 +52,7 @@ class AccountabilityRecord:
             metadata: Additional metadata
         """
         resolved_id = record_id or action_id or hashlib.sha256(
-            f"{actor}:{action_type}:{datetime.utcnow().isoformat()}".encode()
+            f"{actor}:{action_type}:{_utcnow().isoformat()}".encode()
         ).hexdigest()[:16]
 
         self.record_id = resolved_id
@@ -59,7 +64,7 @@ class AccountabilityRecord:
         self.metadata = metadata or {}
         self.target = target
         self.outcome = outcome
-        self.timestamp = timestamp or datetime.utcnow().isoformat()
+        self.timestamp = timestamp or _utcnow().isoformat()
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
@@ -192,7 +197,7 @@ class AccountabilitySystem:
             request_id = self._generate_request_id(actor, policy_id)
 
             # Create signature
-            content = f"override:{actor}:{reason}:{datetime.utcnow().isoformat()}"
+            content = f"override:{actor}:{reason}:{_utcnow().isoformat()}"
             signature = hashlib.sha256(content.encode()).hexdigest()
 
             # Create accountability record
@@ -244,7 +249,7 @@ class AccountabilitySystem:
         try:
             request_id = self._generate_request_id(actor, requirement)
 
-            content = f"waiver:{actor}:{reason}:{datetime.utcnow().isoformat()}"
+            content = f"waiver:{actor}:{reason}:{_utcnow().isoformat()}"
             signature = hashlib.sha256(content.encode()).hexdigest()
 
             record = AccountabilityRecord(
@@ -300,7 +305,7 @@ class AccountabilitySystem:
             # Add approval
             approval = {
                 "approver": approver,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "comments": comments,
             }
             approval_data["approvals"].append(approval)
@@ -347,7 +352,7 @@ class AccountabilitySystem:
             record.metadata["status"] = "denied"
             record.metadata["denied_by"] = denier
             record.metadata["denial_reason"] = reason
-            record.metadata["denial_timestamp"] = datetime.utcnow().isoformat()
+            record.metadata["denial_timestamp"] = _utcnow().isoformat()
 
             del self.pending_approvals[request_id]
             self._persist_record(record)
@@ -380,7 +385,7 @@ class AccountabilitySystem:
             record_id = self._generate_request_id(actor, action_type)
 
             content = (
-                f"{action_type}:{actor}:{justification}:{datetime.utcnow().isoformat()}"
+                f"{action_type}:{actor}:{justification}:{_utcnow().isoformat()}"
             )
             signature = hashlib.sha256(content.encode()).hexdigest()
 
@@ -487,7 +492,7 @@ class AccountabilitySystem:
 
     def _generate_request_id(self, actor: str, identifier: str) -> str:
         """Generate unique request ID."""
-        content = f"{actor}:{identifier}:{datetime.utcnow().isoformat()}"
+        content = f"{actor}:{identifier}:{_utcnow().isoformat()}"
         return hashlib.sha256(content.encode()).hexdigest()[:16]
 
     def _persist_record(self, record: AccountabilityRecord) -> None:

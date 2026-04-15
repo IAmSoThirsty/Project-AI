@@ -9,6 +9,7 @@ Validates build actions against constitutional policies and identity-aware const
 """
 
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,11 @@ from project_ai.engine.identity.identity_manager import IdentityManager
 from project_ai.engine.policy.policy_engine import PolicyEngine
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class BuildActionViolation(Exception):
@@ -233,10 +239,8 @@ class ConstitutionalEnforcer:
             metadata: Action metadata
             reason: Reason for denial
         """
-        from datetime import datetime
-
         violation = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": _utcnow().isoformat(),
             "action": action,
             "metadata": metadata,
             "reason": reason,

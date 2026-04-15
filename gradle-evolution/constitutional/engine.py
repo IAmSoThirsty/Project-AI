@@ -5,12 +5,18 @@ Constitutional Engine - Enforces constitutional principles during builds
 """
 
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class ConstitutionalEngine:
@@ -129,14 +135,12 @@ class ConstitutionalEngine:
         self, action: str, context: dict[str, Any], severity: str, reason: str
     ) -> None:
         """Log a constitutional violation."""
-        from datetime import datetime
-
         violation = {
             "action": action,
             "context": context,
             "severity": severity,
             "reason": reason,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": _utcnow().isoformat(),
         }
         self.violation_log.append(violation)
         logger.warning("Constitutional violation: %s", reason)

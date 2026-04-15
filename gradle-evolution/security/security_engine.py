@@ -9,6 +9,7 @@ Provides runtime security controls and agent-based security validation.
 """
 
 import logging
+from datetime import datetime, timezone
 from fnmatch import fnmatch
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,11 @@ from typing import Any
 import yaml
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class SecurityContext:
@@ -292,11 +298,9 @@ class SecurityEngine:
 
     def _log_access(self, agent: str, path: str, operation: str, allowed: bool) -> None:
         """Log access attempt."""
-        from datetime import datetime
-
         self.access_log.append(
             {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "agent": agent,
                 "path": path,
                 "operation": operation,
@@ -312,11 +316,9 @@ class SecurityEngine:
         self, agent: str, path: str, operation: str, reason: str
     ) -> None:
         """Log denied operation."""
-        from datetime import datetime
-
         self.denied_operations.append(
             {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "agent": agent,
                 "path": path,
                 "operation": operation,

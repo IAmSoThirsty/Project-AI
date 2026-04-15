@@ -9,6 +9,7 @@ Provides deliberation, learning, and adaptive build optimization.
 """
 
 import logging
+from datetime import datetime, timezone
 from typing import Any
 
 from cognition.boundary import check_boundary
@@ -16,6 +17,11 @@ from cognition.invariants import InvariantChecker
 from project_ai.engine.cognition.deliberation_engine import DeliberationEngine
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class BuildCognitionEngine:
@@ -312,11 +318,9 @@ class BuildCognitionEngine:
         self, original: list[str], optimized: list[str], reasoning: dict[str, Any]
     ) -> None:
         """Record optimization decision."""
-        from datetime import datetime
-
         self.optimization_history.append(
             {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "original": original,
                 "optimized": optimized,
                 "reasoning": reasoning,

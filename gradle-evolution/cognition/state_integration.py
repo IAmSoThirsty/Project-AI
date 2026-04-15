@@ -10,13 +10,18 @@ Provides persistent build state, episodic build logs, and introspection.
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from project_ai.engine.state.state_manager import StateManager
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class BuildStateIntegration:
@@ -124,7 +129,7 @@ class BuildStateIntegration:
             episode = {
                 "type": "build_execution",
                 "build_id": build_id,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "tasks": tasks,
                 "result": result,
                 "metadata": metadata or {},
@@ -297,7 +302,7 @@ class BuildStateIntegration:
         """
         try:
             snapshot = {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "cache": self.load_build_cache(),
                 "config": self.load_build_configuration(),
                 "statistics": self.get_build_statistics(),

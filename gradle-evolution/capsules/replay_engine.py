@@ -10,7 +10,7 @@ Enables deterministic replay of build executions for debugging and auditing.
 
 import logging
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -19,6 +19,11 @@ from temporalio.client import Client
 from .capsule_engine import BuildCapsule, CapsuleEngine
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class ReplayResult:
@@ -46,7 +51,7 @@ class ReplayResult:
         self.differences = differences
         self.error = error
         self.output_hash = output_hash
-        self.timestamp = datetime.utcnow().isoformat()
+        self.timestamp = _utcnow().isoformat()
 
 
 class ReplayEngine:
@@ -126,7 +131,7 @@ class ReplayEngine:
     ) -> ReplayResult:
         """Replay using Temporal workflow."""
         try:
-            workflow_id = f"replay-{capsule.capsule_id}-{datetime.utcnow().timestamp()}"
+            workflow_id = f"replay-{capsule.capsule_id}-{_utcnow().timestamp()}"
 
             handle = await self.temporal_client.start_workflow(
                 "BuildReplayWorkflow",
@@ -333,7 +338,7 @@ class ReplayEngine:
         self.replay_history.append(
             {
                 "capsule_id": capsule_id,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "success": result.success,
                 "has_differences": result.differences is not None,
                 "error": result.error,

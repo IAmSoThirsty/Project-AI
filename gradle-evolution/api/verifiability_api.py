@@ -9,7 +9,7 @@ Provides cryptographic proof interfaces for external auditors.
 """
 
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 
 from flask import Flask, jsonify, request
 
@@ -25,6 +25,11 @@ from ..capsules.capsule_engine import CapsuleEngine
 from ..capsules.replay_engine import ReplayEngine
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class VerifiabilityAPI:
@@ -72,7 +77,7 @@ class VerifiabilityAPI:
             return jsonify(
                 {
                     "status": "healthy",
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": _utcnow().isoformat(),
                     "service": "verifiability-api",
                 }
             )
@@ -130,7 +135,7 @@ class VerifiabilityAPI:
                         "verified": is_valid,
                         "valid": is_valid,
                         "error": error,
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": _utcnow().isoformat(),
                     }
                 )
             except Exception as e:
@@ -241,7 +246,7 @@ class VerifiabilityAPI:
                     "merkle_root": capsule.merkle_root,
                     "integrity_verified": is_valid,
                     "verification_error": error,
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": _utcnow().isoformat(),
                     "capsule_data": capsule.to_dict(),
                 }
 
@@ -263,7 +268,7 @@ class VerifiabilityAPI:
                         "audit_buffer_size": len(
                             self.audit_integration.get_audit_buffer(limit=10000)
                         ),
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": _utcnow().isoformat(),
                     }
                 )
             except Exception as e:

@@ -153,7 +153,7 @@ class TemporalLawEnforcer:
                 return self._local_enforcement(action, metadata)
 
             # Start enforcement workflow
-            workflow_id = f"enforce-{action}-{datetime.utcnow().timestamp()}"
+            workflow_id = f"enforce-{action}-{_utc_now_naive().timestamp()}"
 
             handle = await self.temporal_client.start_workflow(
                 "PolicyEnforcementWorkflow",
@@ -175,14 +175,14 @@ class TemporalLawEnforcer:
             return {
                 "allowed": False,
                 "reason": f"Policy enforcement timeout ({timeout_seconds}s)",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_naive().isoformat(),
             }
         except Exception as e:
             logger.error("Error in temporal enforcement: %s", e, exc_info=True)
             return {
                 "allowed": False,
                 "reason": f"Enforcement error: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_naive().isoformat(),
             }
 
     async def query_historical_decision(
@@ -236,7 +236,7 @@ class TemporalLawEnforcer:
             if not self.temporal_client:
                 raise RuntimeError("Temporal client not available")
 
-            workflow_id = f"review-{action}-{datetime.utcnow().timestamp()}"
+            workflow_id = f"review-{action}-{_utc_now_naive().timestamp()}"
 
             await self.temporal_client.start_workflow(
                 "PeriodicPolicyReview",
@@ -270,7 +270,7 @@ class TemporalLawEnforcer:
             Enforcement result
         """
         try:
-            now = datetime.utcnow()
+            now = _utc_now_naive()
 
             if now > valid_until:
                 logger.warning("Time-bounded policy expired for %s", action)
@@ -298,7 +298,7 @@ class TemporalLawEnforcer:
             return {
                 "allowed": False,
                 "reason": f"Time-bounded enforcement error: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_naive().isoformat(),
             }
 
     def _local_enforcement(
@@ -321,14 +321,14 @@ class TemporalLawEnforcer:
             return {
                 "allowed": False,
                 "reason": f"High risk level {risk_level} in local mode",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_naive().isoformat(),
                 "fallback": True,
             }
 
         return {
             "allowed": True,
             "reason": "Allowed by local enforcement",
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": _utc_now_naive().isoformat(),
             "fallback": True,
         }
 
@@ -373,7 +373,7 @@ class TemporalLawEnforcer:
             Number of workflows cleaned up
         """
         try:
-            cutoff = datetime.utcnow() - timedelta(days=max_age_days)
+            cutoff = _utc_now_naive() - timedelta(days=max_age_days)
             cleaned = 0
 
             for action, workflow_id in list(self.workflow_cache.items()):

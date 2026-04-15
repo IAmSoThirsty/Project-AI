@@ -11,11 +11,16 @@ Provides reproducible builds and forensic replay capabilities.
 import hashlib
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class BuildCapsule:
@@ -45,7 +50,7 @@ class BuildCapsule:
         self.outputs = outputs
         self.metadata = metadata
         self.merkle_root = self._compute_merkle_root()
-        self.timestamp = metadata.get("timestamp", datetime.utcnow().isoformat())
+        self.timestamp = metadata.get("timestamp", _utcnow().isoformat())
 
     def _compute_merkle_root(self) -> str:
         """Compute Merkle root hash of capsule contents."""
@@ -177,7 +182,7 @@ class CapsuleEngine:
 
             # Create capsule
             capsule_metadata = metadata or {}
-            capsule_metadata["timestamp"] = datetime.utcnow().isoformat()
+            capsule_metadata["timestamp"] = _utcnow().isoformat()
 
             capsule = BuildCapsule(
                 capsule_id=capsule_id,
@@ -383,7 +388,7 @@ class CapsuleEngine:
                 "tasks": sorted(tasks),
                 "inputs": inputs,
                 "outputs": outputs,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
             },
             sort_keys=True,
         )
