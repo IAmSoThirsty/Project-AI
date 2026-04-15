@@ -25,9 +25,26 @@ import tempfile
 from collections.abc import Generator
 from pathlib import Path
 from typing import Any
+from unittest import mock as umock
 
 import pytest
 import yaml
+
+
+@pytest.fixture
+def mocker(request):
+    """Fallback mocker fixture when pytest-mock plugin is unavailable."""
+
+    class _Mocker:
+        MagicMock = umock.MagicMock
+
+        def patch(self, target: str, *args, **kwargs):
+            patcher = umock.patch(target, *args, **kwargs)
+            mocked = patcher.start()
+            request.addfinalizer(patcher.stop)
+            return mocked
+
+    return _Mocker()
 
 
 @pytest.fixture
