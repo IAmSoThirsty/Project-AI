@@ -600,6 +600,7 @@ class CrisisRequest:
     missions: list[MissionPhase]
     crisis_id: str | None = None
     initiated_by: str | None = None
+    initiator_role: str | None = None
 
 
 @dataclass
@@ -658,12 +659,26 @@ class CrisisResponseWorkflow:
 
             gate_result = await validate_workflow_execution(
                 workflow_type="crisis_response",
-                request_data={
-                    "crisis_id": crisis_id,
+                request={
                     "target_member": request.target_member,
-                    "mission_count": len(request.missions),
+                    "missions": [
+                        {
+                            "phase_id": m.phase_id,
+                            "agent_id": m.agent_id,
+                            "action": m.action,
+                            "target": m.target,
+                            "priority": m.priority,
+                        }
+                        for m in request.missions
+                    ],
                 },
-                user_id=getattr(request, 'user_id', 'system')
+                context={
+                    "user": {
+                        "username": request.initiated_by or "system",
+                        "role": request.initiator_role or "anonymous",
+                    },
+                    "crisis_id": crisis_id,
+                },
             )
 
             if not gate_result["allowed"]:
@@ -681,12 +696,12 @@ class CrisisResponseWorkflow:
             await audit_workflow_start(
                 workflow_type="crisis_response",
                 workflow_id=workflow.info().workflow_id,
-                request_data={
+                request={
                     "crisis_id": crisis_id,
                     "target_member": request.target_member,
                     "mission_count": len(request.missions),
                 },
-                user_id=getattr(request, 'user_id', 'system')
+                user_id=request.initiated_by or "system",
             )
 
             # Activity 1: Validate crisis request
@@ -791,7 +806,7 @@ class CrisisResponseWorkflow:
                 workflow_id=workflow.info().workflow_id,
                 status="completed",
                 result=result,
-                user_id=getattr(request, 'user_id', 'system')
+                user_id=request.initiated_by or "system",
             )
 
             return result
@@ -805,7 +820,7 @@ class CrisisResponseWorkflow:
                 workflow_id=workflow.info().workflow_id,
                 status="failed",
                 result=None,
-                user_id=getattr(request, 'user_id', 'system'),
+                user_id=request.initiated_by or "system",
                 error=str(e)
             )
             

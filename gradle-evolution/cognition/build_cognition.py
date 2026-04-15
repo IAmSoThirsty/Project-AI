@@ -7,6 +7,7 @@ Provides deliberation, learning, and adaptive build optimization.
 """
 
 import logging
+from datetime import datetime, timezone
 from typing import Any
 
 from cognition.boundary import check_boundary
@@ -14,6 +15,11 @@ from cognition.invariants import InvariantChecker
 from project_ai.engine.cognition.deliberation_engine import DeliberationEngine
 
 logger = logging.getLogger(__name__)
+
+
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class BuildCognitionEngine:
@@ -80,7 +86,12 @@ class BuildCognitionEngine:
             )
 
             optimized_tasks = result.get("optimized_order", tasks)
-            reasoning = result.get("reasoning", {})
+            raw_reasoning = result.get("reasoning", {})
+            reasoning: dict[str, Any] = {
+                "reasoning": raw_reasoning,
+            }
+            if isinstance(raw_reasoning, dict):
+                reasoning.update(raw_reasoning)
 
             # Validate invariants
             if not self._validate_task_order(optimized_tasks, context):
@@ -97,9 +108,7 @@ class BuildCognitionEngine:
             logger.error("Error deliberating build plan: %s", e, exc_info=True)
             return tasks, {"error": str(e)}
 
-    def learn_from_build(
-        self, tasks: list[str], execution_data: dict[str, Any], success: bool
-    ) -> None:
+    def learn_from_build(self, *args: Any, **kwargs: Any) -> None:
         """
         Learn from build execution to improve future decisions.
 
@@ -109,8 +118,34 @@ class BuildCognitionEngine:
             success: Whether build succeeded
         """
         try:
+            # Supported call patterns:
+            # 1) learn_from_build(tasks, execution_data, success)
+            # 2) learn_from_build(build_id, tasks, performance_dict)
+            build_id: str | None = None
+
+            if len(args) >= 3 and isinstance(args[0], str) and isinstance(args[1], list):
+                build_id = args[0]
+                tasks = args[1]
+                execution_data = args[2] if isinstance(args[2], dict) else {}
+                success = bool(execution_data.get("success", True))
+            else:
+                tasks = args[0] if len(args) > 0 else kwargs.get("tasks", [])
+                execution_data = (
+                    args[1] if len(args) > 1 else kwargs.get("execution_data", {})
+                )
+                success = (
+                    args[2]
+                    if len(args) > 2
+                    else kwargs.get("success", bool(execution_data.get("success", True)))
+                )
+
+            if not isinstance(tasks, list):
+                tasks = [str(tasks)]
+            if not isinstance(execution_data, dict):
+                execution_data = {}
+
             # Record pattern
-            pattern_key = self._compute_pattern_key(tasks)
+            pattern_key = build_id or self._compute_pattern_key(tasks)
 
             if pattern_key not in self.build_patterns:
                 self.build_patterns[pattern_key] = []
@@ -118,14 +153,14 @@ class BuildCognitionEngine:
             pattern_entry = {
                 "tasks": tasks,
                 "execution_data": execution_data,
-                "success": success,
+                "success": bool(success),
                 "timestamp": execution_data.get("timestamp"),
             }
 
             self.build_patterns[pattern_key].append(pattern_entry)
 
             # Update failure patterns
-            if not success:
+            if not bool(success):
                 for task in tasks:
                     self.failure_patterns[task] = self.failure_patterns.get(task, 0) + 1
 
@@ -139,6 +174,24 @@ class BuildCognitionEngine:
 
         except Exception as e:
             logger.error("Error learning from build: %s", e, exc_info=True)
+
+    def get_optimization_stats(self) -> dict[str, Any]:
+        """Return optimization statistics for legacy and current integrations."""
+        total = len(self.optimization_history)
+        avg_tasks_changed = 0.0
+        if total:
+            changed_counts = [
+                sum(1 for old, new in zip(item["original"], item["optimized"], strict=False) if old != new)
+                for item in self.optimization_history
+            ]
+            avg_tasks_changed = sum(changed_counts) / total if changed_counts else 0.0
+
+        return {
+            "total_optimizations": total,
+            "pattern_count": len(self.build_patterns),
+            "failure_pattern_count": len(self.failure_patterns),
+            "average_tasks_changed": avg_tasks_changed,
+        }
 
     def suggest_optimizations(self, context: dict[str, Any]) -> list[dict[str, Any]]:
         """
@@ -272,11 +325,9 @@ class BuildCognitionEngine:
         self, original: list[str], optimized: list[str], reasoning: dict[str, Any]
     ) -> None:
         """Record optimization decision."""
-        from datetime import datetime
-
         self.optimization_history.append(
             {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "original": original,
                 "optimized": optimized,
                 "reasoning": reasoning,

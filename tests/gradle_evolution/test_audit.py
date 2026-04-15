@@ -5,7 +5,7 @@ Tests audit logging integration with cognition/audit.py,
 accountability tracking, and compliance reporting.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import patch
 
 from gradle_evolution.audit.accountability import (
@@ -13,6 +13,11 @@ from gradle_evolution.audit.accountability import (
     AccountabilitySystem,
 )
 from gradle_evolution.audit.audit_integration import BuildAuditIntegration
+
+
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format for tests."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class TestBuildAuditIntegration:
@@ -159,7 +164,7 @@ class TestAccountabilityRecord:
             actor="build_agent",
             action_type="compile",
             target="src/Main.java",
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=_utc_now_iso(),
             outcome="success",
         )
 
@@ -174,7 +179,7 @@ class TestAccountabilityRecord:
             actor="build_agent",
             action_type="compile",
             target="src/Main.java",
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=_utc_now_iso(),
             outcome="success",
         )
 
@@ -204,7 +209,7 @@ class TestAccountabilitySystem:
             actor="build_agent",
             action_type="compile",
             target="src/Main.java",
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=_utc_now_iso(),
             outcome="success",
         )
 
@@ -224,7 +229,7 @@ class TestAccountabilitySystem:
                 actor="build_agent",
                 action_type="compile",
                 target=f"File{i}.java",
-                timestamp=datetime.utcnow().isoformat(),
+                timestamp=_utc_now_iso(),
                 outcome="success",
             )
             system.record_action(record)
@@ -235,7 +240,7 @@ class TestAccountabilitySystem:
             actor="test_agent",
             action_type="test",
             target="Test.java",
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=_utc_now_iso(),
             outcome="success",
         )
         system.record_action(other_record)
@@ -255,7 +260,7 @@ class TestAccountabilitySystem:
             actor="build_agent",
             action_type="compile",
             target="Main.java",
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=_utc_now_iso(),
             outcome="success",
         )
 
@@ -265,7 +270,7 @@ class TestAccountabilitySystem:
             actor="build_agent",
             action_type="compile",
             target="Broken.java",
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=_utc_now_iso(),
             outcome="failure",
         )
 
@@ -286,7 +291,7 @@ class TestAccountabilitySystem:
             actor="build_agent",
             action_type="compile",
             target="Main.java",
-            timestamp=datetime.utcnow().isoformat(),
+            timestamp=_utc_now_iso(),
             outcome="success",
         )
 
@@ -311,7 +316,7 @@ class TestAccountabilitySystem:
                 actor="build_agent",
                 action_type="compile",
                 target=f"File{i}.java",
-                timestamp=datetime.utcnow().isoformat(),
+                timestamp=_utc_now_iso(),
                 outcome="success" if i < 4 else "failure",
             )
             system.record_action(record)
@@ -332,7 +337,7 @@ class TestAccountabilitySystem:
                 actor="build_agent",
                 action_type="compile",
                 target=f"File{i}.java",
-                timestamp=datetime.utcnow().isoformat(),
+                timestamp=_utc_now_iso(),
                 outcome="success",
             )
             system.record_action(record)

@@ -11,9 +11,39 @@ import tempfile
 from collections.abc import Generator
 from pathlib import Path
 from typing import Any
+import unittest.mock as mock
 
 import pytest
 import yaml
+
+
+class _FallbackMocker:
+    """Lightweight subset of pytest-mock's mocker fixture API."""
+
+    def __init__(self) -> None:
+        self._patches: list[mock._patch] = []  # type: ignore[attr-defined]
+        self.MagicMock = mock.MagicMock
+
+    def patch(self, target: str, *args: Any, **kwargs: Any) -> Any:
+        patcher = mock.patch(target, *args, **kwargs)
+        patched = patcher.start()
+        self._patches.append(patcher)
+        return patched
+
+    def stopall(self) -> None:
+        while self._patches:
+            patcher = self._patches.pop()
+            patcher.stop()
+
+
+@pytest.fixture
+def mocker() -> Generator[_FallbackMocker, None, None]:
+    """Fallback mocker fixture when pytest-mock is unavailable."""
+    m = _FallbackMocker()
+    try:
+        yield m
+    finally:
+        m.stopall()
 
 
 @pytest.fixture

@@ -125,7 +125,11 @@ def _call_openai(request: AIRequest) -> AIResponse:
         client = OpenAI(api_key=api_key)
 
         # Route by task type
-        if request.task_type == "chat" or request.task_type == "completion":
+        if (
+            request.task_type == "chat"
+            or request.task_type == "completion"
+            or request.task_type == "analysis"
+        ):
             model = request.model or "gpt-4"
             response = client.chat.completions.create(
                 model=model,
@@ -202,7 +206,11 @@ def _call_huggingface_api(request: AIRequest) -> AIResponse:
             response.raise_for_status()
             result = response.content  # Binary image data
 
-        elif request.task_type == "chat" or request.task_type == "completion":
+        elif (
+            request.task_type == "chat"
+            or request.task_type == "completion"
+            or request.task_type == "analysis"
+        ):
             model = request.model or "mistralai/Mistral-7B-Instruct-v0.2"
             api_url = f"https://api-inference.huggingface.co/models/{model}"
 

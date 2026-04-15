@@ -8,14 +8,42 @@ Provides living documentation that reflects actual system behavior.
 
 import json
 import logging
-from datetime import datetime
+from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 from ..audit.audit_integration import BuildAuditIntegration
 from ..capsules.capsule_engine import CapsuleEngine
 from ..cognition.state_integration import BuildStateIntegration
+from project_ai.engine.state.state_manager import StateManager
 
 logger = logging.getLogger(__name__)
+
+
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
+
+
+@dataclass
+class APIDocumentation:
+    """Structured API endpoint documentation metadata."""
+
+    endpoint: str
+    method: str
+    description: str
+    parameters: list[dict[str, Any]]
+    response_schema: dict[str, Any]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "endpoint": self.endpoint,
+            "method": self.method,
+            "description": self.description,
+            "parameters": self.parameters,
+            "response_schema": self.response_schema,
+        }
 
 
 class DocumentationGenerator:
@@ -26,9 +54,9 @@ class DocumentationGenerator:
 
     def __init__(
         self,
-        capsule_engine: CapsuleEngine,
-        state_integration: BuildStateIntegration,
-        audit_integration: BuildAuditIntegration,
+        capsule_engine: CapsuleEngine | None = None,
+        state_integration: BuildStateIntegration | None = None,
+        audit_integration: BuildAuditIntegration | None = None,
         output_dir: Path | None = None,
     ):
         """
@@ -40,12 +68,159 @@ class DocumentationGenerator:
             audit_integration: Audit integration instance
             output_dir: Output directory for documentation
         """
-        self.capsule_engine = capsule_engine
-        self.state_integration = state_integration
-        self.audit_integration = audit_integration
+        self.capsule_engine = capsule_engine or CapsuleEngine()
+        self.state_integration = state_integration or BuildStateIntegration(
+            state_manager=StateManager(config={})
+        )
+        self.audit_integration = audit_integration or BuildAuditIntegration()
         self.output_dir = output_dir or Path("docs/generated")
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.api_docs: list[APIDocumentation] = []
         logger.info("Documentation generator initialized: %s", self.output_dir)
+
+    def add_endpoint_documentation(self, documentation: APIDocumentation) -> None:
+        """Add endpoint documentation to the in-memory registry."""
+        self.api_docs.append(documentation)
+
+    def validate_documentation(self, documentation: APIDocumentation) -> bool:
+        """Validate minimum endpoint documentation contract."""
+        if not documentation.endpoint.startswith("/"):
+            return False
+        if documentation.method.upper() not in {
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS",
+            "HEAD",
+        }:
+            return False
+        if not documentation.description.strip():
+            return False
+        return True
+
+    def generate_openapi_spec(self) -> dict[str, Any]:
+        """Generate OpenAPI 3.0 spec from registered endpoint docs."""
+        paths: dict[str, Any] = {}
+
+        for doc in self.api_docs:
+            if not self.validate_documentation(doc):
+                continue
+
+            endpoint = doc.endpoint
+            method = doc.method.lower()
+            paths.setdefault(endpoint, {})[method] = {
+                "summary": doc.description,
+                "parameters": doc.parameters,
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": doc.response_schema,
+                            }
+                        },
+                    }
+                },
+            }
+
+        return {
+            "openapi": "3.0.0",
+            "info": {
+                "title": "Gradle Evolution Verifiability API",
+                "version": "1.0.0",
+            },
+            "paths": paths,
+        }
+
+    def generate_markdown_docs(self) -> str:
+        """Generate Markdown API docs from registered endpoint docs."""
+        lines = ["# API Documentation", ""]
+
+        for doc in self.api_docs:
+            lines.append(f"## {doc.method.upper()} {doc.endpoint}")
+            lines.append("")
+            lines.append(doc.description)
+            lines.append("")
+            if doc.parameters:
+                lines.append("### Parameters")
+                lines.append("")
+                for param in doc.parameters:
+                    lines.append(
+                        f"- `{param.get('name', 'param')}` ({param.get('type', 'string')}): "
+                        f"{param.get('description', '')}"
+                    )
+                lines.append("")
+            lines.append("---")
+            lines.append("")
+
+        return "\n".join(lines)
+
+    def generate_postman_collection(self) -> dict[str, Any]:
+        """Generate Postman collection JSON from registered endpoint docs."""
+        items = []
+        for doc in self.api_docs:
+            items.append(
+                {
+                    "name": f"{doc.method.upper()} {doc.endpoint}",
+                    "request": {
+                        "method": doc.method.upper(),
+                        "url": {
+                            "raw": f"{{{{baseUrl}}}}{doc.endpoint}",
+                            "host": ["{{baseUrl}}"],
+                            "path": [p for p in doc.endpoint.split("/") if p],
+                        },
+                        "description": doc.description,
+                    },
+                }
+            )
+
+        return {
+            "info": {
+                "name": "Gradle Evolution API",
+                "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+            },
+            "item": items,
+        }
+
+    def export_documentation(self, output_path: Path, format: str = "markdown") -> None:
+        """Export generated documentation to disk."""
+        output = Path(output_path)
+        output.parent.mkdir(parents=True, exist_ok=True)
+
+        if format == "markdown":
+            output.write_text(self.generate_markdown_docs(), encoding="utf-8")
+        elif format == "openapi":
+            output.write_text(
+                json.dumps(self.generate_openapi_spec(), indent=2),
+                encoding="utf-8",
+            )
+        elif format == "postman":
+            output.write_text(
+                json.dumps(self.generate_postman_collection(), indent=2),
+                encoding="utf-8",
+            )
+        else:
+            raise ValueError(f"Unsupported documentation format: {format}")
+
+    def generate_examples(self, endpoint: str) -> dict[str, Any]:
+        """Generate request/response examples for a documented endpoint."""
+        doc = next((d for d in self.api_docs if d.endpoint == endpoint), None)
+        if doc is None:
+            return {"error": "endpoint_not_found"}
+
+        return {
+            "request": {
+                "method": doc.method.upper(),
+                "url": endpoint,
+                "parameters": doc.parameters,
+            },
+            "response": {
+                "status": 200,
+                "schema": doc.response_schema,
+            },
+        }
 
     def generate_build_history_doc(self, limit: int = 50) -> Path:
         """
@@ -321,7 +496,7 @@ class DocumentationGenerator:
         doc = self._build_markdown_header("Gradle Evolution Documentation")
 
         doc += "\n## Documentation Index\n\n"
-        doc += f"Generated: {datetime.utcnow().isoformat()}\n\n"
+        doc += f"Generated: {_utc_now_iso()}\n\n"
 
         doc += "### Available Documents\n\n"
         for doc_path in docs:
@@ -336,7 +511,7 @@ class DocumentationGenerator:
         """Build markdown document header."""
         return f"""# {title}
 
-*Generated: {datetime.utcnow().isoformat()}*
+*Generated: {_utc_now_iso()}*
 
 ---
 """
@@ -350,7 +525,7 @@ class DocumentationGenerator:
         """
         try:
             snapshot = {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "capsules": [
                     cap.to_dict() for cap in self.capsule_engine.capsules.values()
                 ],
@@ -361,7 +536,7 @@ class DocumentationGenerator:
 
             output_path = (
                 self.output_dir
-                / f"snapshot-{datetime.utcnow().strftime('%Y%m%d-%H%M%S')}.json"
+                / f"snapshot-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}.json"
             )
             with open(output_path, "w") as f:
                 json.dump(snapshot, f, indent=2)
@@ -374,4 +549,4 @@ class DocumentationGenerator:
             raise
 
 
-__all__ = ["DocumentationGenerator"]
+__all__ = ["APIDocumentation", "DocumentationGenerator"]

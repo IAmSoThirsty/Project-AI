@@ -3,12 +3,18 @@ Constitutional Engine - Enforces constitutional principles during builds
 """
 
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 logger = logging.getLogger(__name__)
+
+
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class ConstitutionalEngine:
@@ -127,14 +133,12 @@ class ConstitutionalEngine:
         self, action: str, context: dict[str, Any], severity: str, reason: str
     ) -> None:
         """Log a constitutional violation."""
-        from datetime import datetime
-
         violation = {
             "action": action,
             "context": context,
             "severity": severity,
             "reason": reason,
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": _utc_now_iso(),
         }
         self.violation_log.append(violation)
         logger.warning("Constitutional violation: %s", reason)
@@ -142,6 +146,12 @@ class ConstitutionalEngine:
     def get_violations(self) -> list[dict[str, Any]]:
         """Get all logged violations."""
         return self.violation_log
+
+    def get_violation_history(self, limit: int | None = None) -> list[dict[str, Any]]:
+        """Backward-compatible accessor for logged violations."""
+        if limit is None:
+            return self.violation_log
+        return self.violation_log[-limit:]
 
 
 __all__ = ["ConstitutionalEngine"]

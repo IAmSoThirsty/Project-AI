@@ -15,7 +15,7 @@ from typing import Any, Literal
 
 logger = logging.getLogger(__name__)
 
-ExecutionSource = Literal["web", "desktop", "cli", "agent", "test"]
+ExecutionSource = Literal["web", "desktop", "cli", "agent", "temporal", "test"]
 
 
 def route_request(source: ExecutionSource, payload: dict[str, Any]) -> dict[str, Any]:

@@ -7,6 +7,7 @@ Validates build actions against constitutional policies and identity-aware const
 """
 
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -14,6 +15,11 @@ from project_ai.engine.identity.identity_manager import IdentityManager
 from project_ai.engine.policy.policy_engine import PolicyEngine
 
 logger = logging.getLogger(__name__)
+
+
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class BuildActionViolation(Exception):
@@ -123,6 +129,41 @@ class ConstitutionalEnforcer:
             )
             return False, f"Validation error: {str(e)}"
 
+    def enforce_action(
+        self,
+        action: str,
+        identity: str,
+        context: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Compatibility enforcement entrypoint used by test and legacy flows."""
+        metadata = context or {}
+
+        is_identity_valid = True
+        if hasattr(self.identity_manager, "verify_identity"):
+            try:
+                is_identity_valid = bool(self.identity_manager.verify_identity(identity))
+            except Exception as e:
+                logger.error("Identity verification error: %s", e, exc_info=True)
+                is_identity_valid = False
+
+        if not is_identity_valid:
+            reason = f"Identity verification failed for {identity}"
+            self._record_violation(action, metadata, reason)
+            return {
+                "action": action,
+                "identity": identity,
+                "allowed": False,
+                "reason": reason,
+            }
+
+        allowed, reason = self.validate_build_action(action, metadata)
+        return {
+            "action": action,
+            "identity": identity,
+            "allowed": allowed,
+            "reason": reason,
+        }
+
     def enforce_task_limit(self, task_count: int) -> tuple[bool, str | None]:
         """
         Enforce maximum task count based on current policy mode.
@@ -204,10 +245,8 @@ class ConstitutionalEnforcer:
             metadata: Action metadata
             reason: Reason for denial
         """
-        from datetime import datetime
-
         violation = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": _utc_now_iso(),
             "action": action,
             "metadata": metadata,
             "reason": reason,

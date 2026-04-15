@@ -7,13 +7,110 @@ Provides time-bound policy evaluation and workflow-based governance.
 """
 
 import asyncio
+import json
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from typing import Any
 
 from temporalio.client import Client
 
 logger = logging.getLogger(__name__)
+
+
+def _utc_now_naive() -> datetime:
+    """Return naive UTC datetime for compatibility with legacy naive timestamps."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
+
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
+
+
+class TemporalLaw:
+    """Time-bounded constitutional rule set."""
+
+    def __init__(
+        self,
+        law_id: str,
+        effective_from: str | datetime,
+        effective_until: str | datetime | None = None,
+        description: str = "",
+        rules: list[dict[str, Any]] | None = None,
+    ):
+        self.law_id = law_id
+        self.effective_from = self._coerce_datetime(effective_from)
+        self.effective_until = (
+            self._coerce_datetime(effective_until) if effective_until else None
+        )
+        self.description = description
+        self.rules = rules or []
+
+    @staticmethod
+    def _coerce_datetime(value: str | datetime | None) -> datetime:
+        if isinstance(value, datetime):
+            return value
+        if value is None:
+            return _utc_now_naive()
+        return datetime.fromisoformat(value.replace("Z", "+00:00")).replace(
+            tzinfo=None
+        )
+
+    def is_active(self, at: datetime | None = None) -> bool:
+        """Return whether law is active at a given moment (defaults to now)."""
+        now = at or _utc_now_naive()
+        if now < self.effective_from:
+            return False
+        if self.effective_until and now > self.effective_until:
+            return False
+        return True
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "law_id": self.law_id,
+            "effective_from": self.effective_from.isoformat(),
+            "effective_until": (
+                self.effective_until.isoformat() if self.effective_until else None
+            ),
+            "description": self.description,
+            "rules": self.rules,
+        }
+
+
+class TemporalLawRegistry:
+    """Persistent registry for temporal constitutional laws."""
+
+    def __init__(self, storage_path: Path | str):
+        self.storage_path = Path(storage_path)
+        self.laws: dict[str, TemporalLaw] = {}
+
+    def register_law(self, law: TemporalLaw) -> None:
+        self.laws[law.law_id] = law
+
+    def get_active_laws(self, at: datetime | None = None) -> list[TemporalLaw]:
+        now = at or _utc_now_naive()
+        return [law for law in self.laws.values() if law.is_active(now)]
+
+    def revoke_law(self, law_id: str) -> bool:
+        if law_id in self.laws:
+            del self.laws[law_id]
+            return True
+        return False
+
+    def save(self) -> None:
+        self.storage_path.parent.mkdir(parents=True, exist_ok=True)
+        payload = {law_id: law.to_dict() for law_id, law in self.laws.items()}
+        self.storage_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    def load(self) -> None:
+        if not self.storage_path.exists():
+            return
+        data = json.loads(self.storage_path.read_text(encoding="utf-8"))
+        self.laws = {
+            law_id: TemporalLaw(**law_payload)
+            for law_id, law_payload in data.items()
+        }
 
 
 class TemporalLawEnforcer:
@@ -59,7 +156,7 @@ class TemporalLawEnforcer:
                 return self._local_enforcement(action, metadata)
 
             # Start enforcement workflow
-            workflow_id = f"enforce-{action}-{datetime.utcnow().timestamp()}"
+            workflow_id = f"enforce-{action}-{datetime.now(timezone.utc).timestamp()}"
 
             handle = await self.temporal_client.start_workflow(
                 "PolicyEnforcementWorkflow",
@@ -81,14 +178,14 @@ class TemporalLawEnforcer:
             return {
                 "allowed": False,
                 "reason": f"Policy enforcement timeout ({timeout_seconds}s)",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
         except Exception as e:
             logger.error("Error in temporal enforcement: %s", e, exc_info=True)
             return {
                 "allowed": False,
                 "reason": f"Enforcement error: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
 
     async def query_historical_decision(
@@ -142,7 +239,7 @@ class TemporalLawEnforcer:
             if not self.temporal_client:
                 raise RuntimeError("Temporal client not available")
 
-            workflow_id = f"review-{action}-{datetime.utcnow().timestamp()}"
+            workflow_id = f"review-{action}-{datetime.now(timezone.utc).timestamp()}"
 
             await self.temporal_client.start_workflow(
                 "PeriodicPolicyReview",
@@ -176,7 +273,7 @@ class TemporalLawEnforcer:
             Enforcement result
         """
         try:
-            now = datetime.utcnow()
+            now = _utc_now_naive()
 
             if now > valid_until:
                 logger.warning("Time-bounded policy expired for %s", action)
@@ -204,7 +301,7 @@ class TemporalLawEnforcer:
             return {
                 "allowed": False,
                 "reason": f"Time-bounded enforcement error: {str(e)}",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
             }
 
     def _local_enforcement(
@@ -227,14 +324,14 @@ class TemporalLawEnforcer:
             return {
                 "allowed": False,
                 "reason": f"High risk level {risk_level} in local mode",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "fallback": True,
             }
 
         return {
             "allowed": True,
             "reason": "Allowed by local enforcement",
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": _utc_now_iso(),
             "fallback": True,
         }
 
@@ -279,7 +376,7 @@ class TemporalLawEnforcer:
             Number of workflows cleaned up
         """
         try:
-            cutoff = datetime.utcnow() - timedelta(days=max_age_days)
+            cutoff = _utc_now_naive() - timedelta(days=max_age_days)
             cleaned = 0
 
             for action, workflow_id in list(self.workflow_cache.items()):
@@ -308,4 +405,4 @@ class TemporalLawEnforcer:
             return 0
 
 
-__all__ = ["TemporalLawEnforcer"]
+__all__ = ["TemporalLaw", "TemporalLawRegistry", "TemporalLawEnforcer"]

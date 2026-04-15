@@ -9,6 +9,7 @@ Called from Gradle tasks to enforce constitutional, cognitive, and security poli
 import json
 import logging
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -18,20 +19,35 @@ sys.path.insert(0, str(project_root))
 
 from gradle_evolution.api.documentation_generator import DocumentationGenerator
 from gradle_evolution.api.verifiability_api import VerifiabilityAPI
-from gradle_evolution.audit.accountability import AccountabilityManager
+from gradle_evolution.audit.accountability import AccountabilitySystem
 from gradle_evolution.audit.audit_integration import BuildAuditIntegration
-from gradle_evolution.capsules.capsule_engine import BuildCapsuleEngine
+from gradle_evolution.capsules.capsule_engine import CapsuleEngine
+from gradle_evolution.capsules.replay_engine import ReplayEngine
 from gradle_evolution.cognition.build_cognition import BuildCognitionEngine
-from gradle_evolution.cognition.state_integration import BuildStateManager
-from gradle_evolution.constitutional.enforcer import BuildPolicyEnforcer
+from gradle_evolution.cognition.state_integration import BuildStateIntegration
 from gradle_evolution.constitutional.engine import ConstitutionalEngine
 from gradle_evolution.security.policy_scheduler import PolicyScheduler
 from gradle_evolution.security.security_engine import SecurityEngine
+from project_ai.engine.state.state_manager import StateManager
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+
+class _RewireDeliberationAdapter:
+    """Minimal adapter implementing the interface expected by BuildCognitionEngine."""
+
+    def deliberate(self, decision_type: str, inputs: dict[str, Any]) -> dict[str, Any]:
+        tasks = inputs.get("tasks", [])
+        return {
+            "optimized_order": tasks,
+            "reasoning": {
+                "decision_type": decision_type,
+                "strategy": "identity_preserving_noop",
+            },
+        }
 
 
 class GradleEvolutionBridge:
@@ -59,42 +75,49 @@ class GradleEvolutionBridge:
             self.constitutional_engine = ConstitutionalEngine(
                 str(self.project_dir / "policies" / "constitution.yaml")
             )
-            self.policy_enforcer = BuildPolicyEnforcer(self.constitutional_engine)
 
             # Cognition layer
+            self.deliberation_engine = _RewireDeliberationAdapter()
             self.build_cognition = BuildCognitionEngine(
-                cognition_dir=str(self.project_dir / "cognition")
+                deliberation_engine=self.deliberation_engine,
+                config={},
             )
-            self.state_manager = BuildStateManager(
-                state_dir=str(self.project_dir / "data" / "build_state")
+            self.state_integration = BuildStateIntegration(
+                state_manager=StateManager(config={}),
+                state_dir=self.project_dir / "data" / "build_state",
             )
 
             # Capsule layer
-            self.capsule_engine = BuildCapsuleEngine(
-                capsule_dir=str(self.project_dir / "build" / "capsules")
+            self.capsule_engine = CapsuleEngine(
+                capsule_dir=self.project_dir / "build" / "capsules"
             )
 
             # Security layer
             self.security_engine = SecurityEngine(
-                config_path=str(self.project_dir / "config" / "security_hardening.yaml")
+                config_path=self.project_dir / "config" / "security_hardening.yaml"
             )
-            self.policy_scheduler = PolicyScheduler(self.security_engine)
+            self.policy_scheduler = PolicyScheduler()
 
             # Audit layer
             self.audit_integration = BuildAuditIntegration(
-                audit_log=str(self.project_dir / "cognition" / "governance_audit.log")
+                audit_log_path=self.project_dir / "cognition" / "governance_audit.log"
             )
-            self.accountability_manager = AccountabilityManager(
-                data_dir=str(self.project_dir / "data" / "accountability")
+            self.accountability_manager = AccountabilitySystem(
+                records_dir=self.project_dir / "data" / "accountability"
             )
 
             # API layer
+            self.replay_engine = ReplayEngine(capsule_engine=self.capsule_engine)
             self.verifiability_api = VerifiabilityAPI(
                 capsule_engine=self.capsule_engine,
+                replay_engine=self.replay_engine,
                 audit_integration=self.audit_integration,
             )
             self.doc_generator = DocumentationGenerator(
-                output_dir=str(self.project_dir / "build" / "docs" / "generated")
+                capsule_engine=self.capsule_engine,
+                state_integration=self.state_integration,
+                audit_integration=self.audit_integration,
+                output_dir=self.project_dir / "build" / "docs" / "generated",
             )
 
             logger.info("✓ All evolution components initialized")
@@ -140,31 +163,57 @@ class GradleEvolutionBridge:
                     {"layer": "constitutional", "reason": reason}
                 )
 
-            # Policy enforcement
-            policy_result = self.policy_enforcer.enforce_build_policy(phase, context)
-            if not policy_result["allowed"]:
-                result["allowed"] = False
-                result["violations"].extend(policy_result.get("violations", []))
-            result["warnings"].extend(policy_result.get("warnings", []))
-
             # Security validation
-            security_result = self.security_engine.validate_action(phase, context)
-            if not security_result["allowed"]:
+            security_allowed, security_reason = self.security_engine.validate_path_access(
+                agent=context.get("agent", "build_agent"),
+                path=context.get("path", "build/reports/evolution"),
+                operation=context.get("operation", "write"),
+            )
+            if not security_allowed:
                 result["allowed"] = False
                 result["violations"].append(
                     {
                         "layer": "security",
-                        "reason": security_result.get(
-                            "reason", "Unknown security violation"
-                        ),
+                        "reason": security_reason or "Unknown security violation",
                     }
                 )
 
             # Audit logging
-            self.audit_integration.log_build_event(phase, context, result)
+            self.audit_integration.audit_policy_decision(
+                decision_type="constitutional",
+                action=phase,
+                allowed=is_allowed,
+                reason=reason,
+                metadata=context,
+            )
+
+            self.audit_integration.audit_security_event(
+                event_type="build_phase_check",
+                agent=context.get("agent", "build_agent"),
+                path=context.get("path", "build/reports/evolution"),
+                operation=context.get("operation", "write"),
+                allowed=security_allowed,
+                reason=security_reason,
+            )
 
             # Update build cognition
-            self.build_cognition.record_build_event(phase, context, result)
+            execution_data = {
+                "duration_seconds": context.get("duration_seconds", 0.0),
+                "timestamp": datetime.utcnow().isoformat(),
+                "result": result,
+            }
+            self.build_cognition.learn_from_build(
+                tasks=[phase],
+                execution_data=execution_data,
+                success=result["allowed"],
+            )
+
+            self.state_integration.record_build_episode(
+                build_id=f"{phase}-{int(datetime.utcnow().timestamp())}",
+                tasks=[phase],
+                result={"success": result["allowed"], **execution_data},
+                metadata=context,
+            )
 
             logger.info(
                 "Validation result: %s", "ALLOWED" if result["allowed"] else "BLOCKED"
@@ -199,19 +248,30 @@ class GradleEvolutionBridge:
             metadata = {}
 
         try:
+            artifact_paths = [Path(p) for p in artifacts]
             capsule = self.capsule_engine.create_capsule(
-                phase=phase, artifacts=artifacts, metadata=metadata
+                tasks=[phase],
+                input_files=artifact_paths,
+                output_files=artifact_paths,
+                metadata=metadata,
             )
 
             # Log capsule creation
-            self.audit_integration.log_build_event(
-                "capsule_created",
-                {"phase": phase, "capsule_id": capsule["capsule_id"]},
-                {"success": True},
+            self.audit_integration.audit_capsule_creation(
+                capsule_id=capsule.capsule_id,
+                tasks=capsule.tasks,
+                input_count=len(capsule.inputs),
+                output_count=len(capsule.outputs),
+                merkle_root=capsule.merkle_root,
             )
 
-            logger.info("✓ Capsule created: %s", capsule["capsule_id"])
-            return capsule
+            logger.info("✓ Capsule created: %s", capsule.capsule_id)
+            return {
+                "success": True,
+                "capsule_id": capsule.capsule_id,
+                "merkle_root": capsule.merkle_root,
+                "task_count": len(capsule.tasks),
+            }
 
         except Exception as e:
             logger.error("Failed to create capsule: %s", e)
@@ -227,24 +287,11 @@ class GradleEvolutionBridge:
         logger.info("Generating evolution documentation...")
 
         try:
-            # Gather state from all components
-            state = {
-                "constitutional": {
-                    "violations": self.constitutional_engine.get_violations(),
-                },
-                "cognition": self.build_cognition.get_build_history(limit=10),
-                "capsules": self.capsule_engine.list_capsules(),
-                "audit": self.audit_integration.get_recent_events(limit=50),
-                "accountability": self.accountability_manager.list_overrides(),
-            }
+            docs = self.doc_generator.generate_complete_documentation()
 
-            # Generate documentation
-            docs = self.doc_generator.generate_from_state(state)
-
-            logger.info(
-                "✓ Documentation generated: %s files", len(docs.get("files", []))
-            )
-            return docs
+            file_paths = [str(path) for path in docs]
+            logger.info("✓ Documentation generated: %s files", len(file_paths))
+            return {"success": True, "files": file_paths}
 
         except Exception as e:
             logger.error("Failed to generate documentation: %s", e)

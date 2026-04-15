@@ -40,6 +40,13 @@ VALID_ACTIONS = {
     
     # Learning Operations
     "learning.request", "learning.approve", "learning.deny",
+
+    # Dashboard Operations (governed desktop actions)
+    "codex.fix", "codex.activate", "codex.qa",
+    "access.grant", "audit.export", "agents.toggle",
+
+    # Auth aliases (backward compatibility)
+    "auth.login",
 }
 
 # Action metadata for enhanced validation
@@ -84,25 +91,35 @@ def enforce_pipeline(context: dict[str, Any]) -> Any:
         f"Governance pipeline: {context.get('action', 'unknown')} from {context.get('source', 'unknown')}"
     )
 
-    # Phase 1: Validation
-    validated_context = _validate(context)
+    validated_context: dict[str, Any] | None = None
+    gated_context: dict[str, Any] | None = None
+    result: Any = None
 
-    # Phase 2: Simulation (shadow execution for impact analysis)
-    simulation_result = _simulate(validated_context)
+    try:
+        # Phase 1: Validation
+        validated_context = _validate(context)
 
-    # Phase 3: Gate (authorization, Four Laws compliance)
-    gated_context = _gate(validated_context, simulation_result)
+        # Phase 2: Simulation (shadow execution for impact analysis)
+        simulation_result = _simulate(validated_context)
 
-    # Phase 4: Execution
-    result = _execute(gated_context)
+        # Phase 3: Gate (authorization, Four Laws compliance)
+        gated_context = _gate(validated_context, simulation_result)
 
-    # Phase 5: Commit (persist state changes)
-    _commit(gated_context, result)
+        # Phase 4: Execution
+        result = _execute(gated_context)
 
-    # Phase 6: Logging (audit trail)
-    _log(gated_context, result)
+        # Phase 5: Commit (persist state changes)
+        _commit(gated_context, result)
 
-    return result
+        # Phase 6: Logging (audit trail)
+        _log(gated_context, result, status="success")
+
+        return result
+    except Exception as e:
+        # Always attempt to log failed requests for forensic traceability
+        log_context = gated_context or validated_context or context
+        _log(log_context, result=None, status="error", error=str(e))
+        raise
 
 
 def _validate(context: dict[str, Any]) -> dict[str, Any]:
@@ -129,28 +146,8 @@ def _validate(context: dict[str, Any]) -> dict[str, Any]:
     # ACTION REGISTRY CHECK: Reject unknown actions
     action = context["action"]
     
-    # Check if action is in whitelist or matches a valid prefix
-    is_valid = action in VALID_ACTIONS
-    
-    # Allow wildcard patterns (e.g., "agent.*" matches "agent.execute")
-    if not is_valid:
-        for valid_action in VALID_ACTIONS:
-            if valid_action.endswith("*"):
-                prefix = valid_action[:-1]
-                if action.startswith(prefix):
-                    is_valid = True
-                    break
-            # Check prefix match for registered patterns
-            elif "." in action and "." in valid_action:
-                action_prefix = action.split(".")[0]
-                valid_prefix = valid_action.split(".")[0]
-                if action_prefix == valid_prefix and action not in VALID_ACTIONS:
-                    # Allow if prefix matches but log warning
-                    logger.warning(f"Action {action} not in registry but prefix matches {valid_prefix}")
-                    is_valid = True
-                    break
-    
-    if not is_valid:
+    # STRICT ACTION REGISTRY CHECK (no prefix/wildcard bypass)
+    if action not in VALID_ACTIONS:
         raise ValueError(
             f"Action '{action}' not in registry. "
             f"Valid actions: {sorted(VALID_ACTIONS)}"
@@ -252,6 +249,7 @@ def _simulate(context: dict[str, Any]) -> dict[str, Any]:
 def _get_required_fields(action: str) -> list[str]:
     """Get required payload fields for an action."""
     field_requirements = {
+        "auth.login": ["username", "password"],
         "user.login": ["username", "password"],
         "user.create": ["username", "password", "role"],
         "user.update": ["username"],
@@ -259,8 +257,102 @@ def _get_required_fields(action: str) -> list[str]:
         "ai.chat": ["prompt"],
         "ai.image": ["prompt"],
         "agent.execute": ["agent_type", "task"],
+        "learning.approve": ["request_id"],
+        "learning.deny": ["request_id"],
+        "codex.activate": ["staged_path"],
+        "access.grant": ["username", "role"],
+        "agents.toggle": ["agent_types"],
     }
     return field_requirements.get(action, [])
+
+
+def _lookup_user_role(username: str) -> str:
+    """Best-effort role lookup from user and access control stores."""
+    if not username or username == "anonymous":
+        return "anonymous"
+
+    # Primary source: UserManager roles
+    try:
+        from app.core.user_manager import UserManager
+
+        user_manager = UserManager()
+        role = user_manager.users.get(username, {}).get("role")
+        if role:
+            return role
+    except Exception as e:
+        logger.debug("UserManager role lookup failed for %s: %s", username, e)
+
+    # Secondary source: AccessControl roles
+    try:
+        from app.core.access_control import get_access_control
+
+        access = get_access_control()
+        if access.has_role(username, "admin"):
+            return "admin"
+        if access.has_role(username, "integrator") or access.has_role(
+            username, "expert"
+        ):
+            return "power_user"
+    except Exception as e:
+        logger.debug("AccessControl role lookup failed for %s: %s", username, e)
+
+    # Authenticated user fallback
+    return "user"
+
+
+def _resolve_user_context(context: dict[str, Any]) -> dict[str, Any]:
+    """
+    Resolve authenticated user context from explicit user object and/or JWT token.
+
+    Priority:
+    1. Explicit user context in request
+    2. JWT token in payload
+    3. Role lookup by username
+    4. Anonymous fallback
+    """
+    payload = context.get("payload", {})
+    if not isinstance(payload, dict):
+        payload = {}
+
+    user = context.get("user", {})
+    if not isinstance(user, dict):
+        user = {}
+
+    username = user.get("username")
+    role = user.get("role")
+
+    # Try token-based resolution when role context is incomplete
+    token = payload.get("token")
+    if token and (not username or not role):
+        try:
+            from app.core.security.auth import verify_jwt_token
+
+            token_payload = verify_jwt_token(token)
+        except Exception as e:
+            raise PermissionError(f"Token verification failed: {e}") from e
+
+        if token_payload is None:
+            raise PermissionError("Invalid or expired authentication token")
+
+        username = token_payload.username
+        role = token_payload.role
+
+    # Infer role if username exists but role was not explicitly provided
+    if username and not role:
+        role = _lookup_user_role(username)
+
+    if not username:
+        username = "anonymous"
+    if not role:
+        role = "anonymous"
+
+    resolved = {
+        "username": username,
+        "role": role,
+    }
+
+    context["user"] = resolved
+    return resolved
 
 
 def _gate(
@@ -276,6 +368,9 @@ def _gate(
         - Resource quotas
     """
     logger.debug("Governance Phase 3: Gate")
+
+    # Resolve authenticated user context before all gate checks
+    _resolve_user_context(context)
 
     # Check Four Laws compliance
     from app.core.ai_systems import FourLaws
@@ -370,7 +465,7 @@ def _check_user_permissions(context: dict[str, Any]) -> None:
     """
     action = context["action"]
     user = context.get("user", {})
-    user_role = user.get("role", "user")
+    user_role = user.get("role", "anonymous")
     username = user.get("username", "anonymous")
     
     # Role hierarchy: admin > power_user > user > guest
@@ -395,7 +490,17 @@ def _check_user_permissions(context: dict[str, Any]) -> None:
         "ai.code": 2,
         "persona.update": 2,
         "learning.request": 2,
+        "learning.approve": 3,
+        "learning.deny": 3,
         "agent.execute": 2,
+
+        # Governance-powered dashboard operations
+        "codex.fix": 3,
+        "codex.activate": 3,
+        "codex.qa": 3,
+        "access.grant": 3,
+        "audit.export": 3,
+        "agents.toggle": 3,
         
         # Guest actions
         "system.status": 1,
@@ -403,6 +508,7 @@ def _check_user_permissions(context: dict[str, Any]) -> None:
         
         # Anonymous actions
         "user.login": 0,
+        "auth.login": 0,
     }
     
     # Check action permission
@@ -539,19 +645,33 @@ def _execute(context: dict[str, Any]) -> Any:
     payload = context["payload"]
 
     # Route agent operations through CognitionKernel (unified governance)
-    if action.startswith("agent.") or context.get("source") == "agent":
-        from app.core.cognition_kernel import get_cognition_kernel
-        
-        kernel = get_cognition_kernel()
+    if action.startswith("agent."):
+        from app.core.kernel_integration import get_global_kernel
+
+        kernel = get_global_kernel()
         if not kernel:
             raise RuntimeError("CognitionKernel not available for agent action")
-        
-        # Execute through kernel (kernel has its own internal governance)
-        result = kernel.execute(
-            action_type=action.replace("agent.", ""),
-            payload=payload,
-            requester=context.get("user", "system")
+
+        # Execute through kernel route API
+        result = kernel.route(
+            task={
+                "action": action,
+                "payload": payload,
+            },
+            source="agent",
+            metadata={
+                "action": action,
+                "requester": context.get("user", {}).get("username", "system"),
+                "requires_approval": True,
+                "risk_level": "medium",
+            },
         )
+
+        if hasattr(result, "success"):
+            if result.success:
+                return result.result
+            raise RuntimeError(result.error or "Kernel-routed agent action failed")
+
         return result
     
     # Route AI operations to orchestrator
@@ -573,15 +693,22 @@ def _execute(context: dict[str, Any]) -> Any:
 
     # Route system operations to existing core modules
     # This preserves all existing functionality
-    elif action == "user.login":
+    elif action in {"user.login", "auth.login"}:
         from app.core.user_manager import UserManager
         from app.core.security.auth import generate_jwt_token
 
         manager = UserManager()
-        is_authenticated = manager.authenticate(
+        auth_result = manager.authenticate(
             payload.get("username"), payload.get("password")
         )
-        
+
+        if isinstance(auth_result, tuple):
+            is_authenticated = bool(auth_result[0])
+            auth_message = str(auth_result[1]) if len(auth_result) > 1 else ""
+        else:
+            is_authenticated = bool(auth_result)
+            auth_message = ""
+
         if is_authenticated:
             # Get user details for role
             user = manager.users.get(payload.get("username"), {})
@@ -596,15 +723,189 @@ def _execute(context: dict[str, Any]) -> Any:
                 "role": user.get("role", "user")
             }
         else:
-            raise PermissionError("Invalid credentials")
+            raise PermissionError(auth_message or "Invalid credentials")
 
     elif action == "persona.update":
         from app.core.ai_systems import AIPersona
 
         persona = AIPersona()
-        return persona.adjust_trait(
-            payload.get("trait"), payload.get("value")
+        trait = payload.get("trait")
+        if not trait:
+            raise ValueError("persona.update requires 'trait'")
+
+        try:
+            delta = float(payload.get("value", 0.0))
+        except (TypeError, ValueError) as e:
+            raise ValueError("persona.update requires numeric 'value'") from e
+
+        persona.adjust_trait(trait, delta)
+        return {
+            "status": "updated",
+            "trait": trait,
+            "value": persona.personality.get(trait),
+        }
+
+    elif action == "learning.approve":
+        from app.core.ai_systems import LearningRequestManager
+
+        request_id = payload.get("request_id")
+        if not request_id:
+            raise ValueError("learning.approve requires 'request_id'")
+
+        manager = LearningRequestManager()
+        approved = manager.approve_request(
+            request_id,
+            payload.get("response", "Approved via governance pipeline"),
         )
+        if not approved:
+            raise ValueError(f"Learning request not found: {request_id}")
+
+        return {"status": "approved", "request_id": request_id}
+
+    elif action == "learning.deny":
+        from app.core.ai_systems import LearningRequestManager
+
+        request_id = payload.get("request_id")
+        if not request_id:
+            raise ValueError("learning.deny requires 'request_id'")
+
+        manager = LearningRequestManager()
+        denied = manager.deny_request(
+            request_id,
+            payload.get("reason", "Denied via governance pipeline"),
+            bool(payload.get("to_vault", True)),
+        )
+        if not denied:
+            raise ValueError(f"Learning request not found: {request_id}")
+
+        return {"status": "denied", "request_id": request_id}
+
+    elif action == "codex.fix":
+        from app.agents.codex_deus_maximus import create_codex
+
+        root = payload.get("root")
+        codex = create_codex()
+        report = codex.run_schematic_enforcement(root)
+        return {
+            "fixed": report.get("fixes", []),
+            "errors": report.get("errors", []),
+            "structure": report.get("structure_check", {}),
+        }
+
+    elif action == "codex.activate":
+        import os
+        import shutil
+
+        staged_path = payload.get("staged_path")
+        if not staged_path:
+            raise ValueError("codex.activate requires 'staged_path'")
+        if not os.path.exists(staged_path):
+            raise ValueError(f"Staged artifact not found: {staged_path}")
+
+        integrated_dir = "data/waiting_room/integrated"
+        os.makedirs(integrated_dir, exist_ok=True)
+        destination = os.path.join(integrated_dir, os.path.basename(staged_path))
+        shutil.copy2(staged_path, destination)
+
+        return {
+            "status": "activated",
+            "integrated_path": destination,
+        }
+
+    elif action == "codex.qa":
+        from app.core.council_hub import get_council_hub
+
+        hub = get_council_hub()
+        checks = hub.run_checks(payload.get("staged_path"))
+        success = bool(checks.get("success"))
+        return {
+            "dependency_success": success,
+            "test_success": success,
+            "details": checks,
+        }
+
+    elif action == "access.grant":
+        from app.core.access_control import get_access_control
+
+        username = payload.get("username")
+        role = payload.get("role")
+        if not username or not role:
+            raise ValueError("access.grant requires 'username' and 'role'")
+
+        access = get_access_control()
+        access.grant_role(username, role)
+        return {
+            "status": "granted",
+            "username": username,
+            "role": role,
+        }
+
+    elif action == "audit.export":
+        import json
+        import os
+        from datetime import datetime
+
+        export_dir = "data/runtime/exports"
+        os.makedirs(export_dir, exist_ok=True)
+        out_path = os.path.join(
+            export_dir,
+            f"audit_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
+        )
+
+        export_payload: dict[str, Any] = {
+            "generated_at": datetime.now().isoformat(),
+            "requester": payload.get("requester", "unknown"),
+            "sources": {},
+        }
+
+        sources = [
+            "data/runtime/governance_audit.log",
+            "data/runtime/state_changes.log",
+            "data/codex_audit.json",
+        ]
+        for source_path in sources:
+            if not os.path.exists(source_path):
+                continue
+            try:
+                if source_path.endswith(".log"):
+                    with open(source_path, encoding="utf-8") as f:
+                        export_payload["sources"][source_path] = f.read().splitlines()
+                else:
+                    with open(source_path, encoding="utf-8") as f:
+                        export_payload["sources"][source_path] = json.load(f)
+            except Exception as e:
+                export_payload["sources"][source_path] = {
+                    "error": f"Failed to read source: {e}",
+                }
+
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(export_payload, f, indent=2)
+
+        return {
+            "status": "exported",
+            "out": out_path,
+        }
+
+    elif action == "agents.toggle":
+        from app.core.council_hub import get_council_hub
+
+        agent_types = payload.get("agent_types")
+        if not isinstance(agent_types, list) or not agent_types:
+            raise ValueError("agents.toggle requires non-empty 'agent_types' list")
+
+        hub = get_council_hub()
+        target_enabled = not hub.is_agent_enabled(agent_types[0])
+
+        for agent_id in agent_types:
+            if target_enabled:
+                hub.enable_agent(agent_id)
+            else:
+                hub.disable_agent(agent_id)
+
+        return {
+            "enabled": target_enabled,
+            "agent_types": agent_types,
+        }
 
     # Route Temporal workflow operations
     elif action.startswith("temporal."):
@@ -629,7 +930,13 @@ def _commit(context: dict[str, Any], result: Any) -> None:
     action = context["action"]
     
     # State-modifying actions that require persistence
-    state_actions = ["user.login", "persona.update", "user.create", "user.update"]
+    state_actions = [
+        "user.login",
+        "auth.login",
+        "persona.update",
+        "user.create",
+        "user.update",
+    ]
     
     if action in state_actions:
         # Record state change in audit log
@@ -682,7 +989,12 @@ def _validate_state_consistency(context: dict[str, Any], result: Any) -> bool:
     return True
 
 
-def _log(context: dict[str, Any], result: Any) -> None:
+def _log(
+    context: dict[str, Any],
+    result: Any,
+    status: str = "success",
+    error: str | None = None,
+) -> None:
     """
     Phase 6: Audit logging.
 
@@ -696,19 +1008,26 @@ def _log(context: dict[str, Any], result: Any) -> None:
     import json
     from datetime import datetime
     
+    payload = context.get("payload", {})
+    if not isinstance(payload, dict):
+        payload = {}
+
     # Build structured audit log entry
     audit_entry = {
         "timestamp": datetime.now().isoformat(),
         "action": context["action"],
         "source": context["source"],
         "user": context.get("user", {}).get("username", "anonymous"),
-        "status": "success" if result else "unknown",
+        "status": status,
         "result_type": type(result).__name__,
         "payload_summary": {
-            k: str(v)[:50] for k, v in context.get("payload", {}).items()
+            k: str(v)[:50] for k, v in payload.items()
             if k not in ["password", "token", "api_key"]  # Redact sensitive fields
         }
     }
+
+    if error:
+        audit_entry["error"] = error
     
     # Write to structured audit log
     try:
@@ -740,6 +1059,7 @@ def _execute_temporal_action(
         - temporal.workflow.validate: Pre-execution validation gate
         - temporal.workflow.execute: Execute workflow through Temporal client
         - temporal.activity.validate: Pre-activity validation
+        - temporal.activity.execute: Execute specific activity in governed mode
 
     Args:
         action: Temporal action type
@@ -781,19 +1101,24 @@ def _execute_temporal_action(
         return {"status": "validated", "metadata": validation_result}
 
     elif action == "temporal.workflow.execute":
-        # Execute workflow through Temporal client
-        # This is called AFTER validation has passed
         workflow_type = payload.get("workflow_type")
-        
+        workflow_payload = payload.get("payload", {})
+
+        if not workflow_type:
+            raise ValueError("temporal.workflow.execute requires 'workflow_type'")
+
         logger.info(f"Executing Temporal workflow: {workflow_type}")
-        
-        # Import and execute workflow
-        # NOTE: Actual Temporal client execution would happen here
-        # For now, return success marker
+
+        workflow_result = _start_temporal_workflow(
+            workflow_type=workflow_type,
+            workflow_payload=workflow_payload,
+            context=context,
+        )
+
         return {
             "status": "workflow_started",
             "workflow_type": workflow_type,
-            "message": "Workflow queued for execution",
+            **workflow_result,
         }
 
     elif action == "temporal.activity.validate":
@@ -808,8 +1133,137 @@ def _execute_temporal_action(
         
         return {"status": "validated", "activity_type": activity_type}
 
+    elif action == "temporal.activity.execute":
+        activity_type = payload.get("activity_type")
+        activity_payload = payload.get("payload", {})
+
+        if not activity_type:
+            raise ValueError("temporal.activity.execute requires 'activity_type'")
+
+        if not isinstance(activity_payload, dict):
+            raise ValueError("temporal.activity.execute requires dict 'payload'")
+
+        if activity_type == "agent_mission":
+            from app.temporal.activities import perform_agent_mission
+
+            success = _run_async_safely(perform_agent_mission(activity_payload))
+            return {
+                "status": "activity_executed",
+                "activity_type": activity_type,
+                "success": bool(success),
+            }
+
+        raise ValueError(f"Unknown activity type: {activity_type}")
+
     else:
         raise ValueError(f"Unknown Temporal action: {action}")
+
+
+def _run_async_safely(coro: Any) -> Any:
+    """Run an async coroutine from sync governance code."""
+    import asyncio
+
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coro)
+
+    raise RuntimeError(
+        "Cannot run async Temporal operation inside an active event loop context"
+    )
+
+
+def _start_temporal_workflow(
+    workflow_type: str,
+    workflow_payload: dict[str, Any],
+    context: dict[str, Any],
+) -> dict[str, Any]:
+    """Start a Temporal workflow and return workflow/run identifiers."""
+    import uuid
+
+    from app.temporal.client import TemporalClientManager
+    from app.temporal.workflows import (
+        AILearningWorkflow,
+        CrisisRequest,
+        CrisisResponseWorkflow,
+        DataAnalysisRequest,
+        DataAnalysisWorkflow,
+        ImageGenerationRequest,
+        ImageGenerationWorkflow,
+        LearningRequest,
+        MemoryExpansionRequest,
+        MemoryExpansionWorkflow,
+        MissionPhase,
+    )
+
+    workflow_map = {
+        "ai_learning": (AILearningWorkflow, LearningRequest),
+        "image_generation": (ImageGenerationWorkflow, ImageGenerationRequest),
+        "data_analysis": (DataAnalysisWorkflow, DataAnalysisRequest),
+        "memory_expansion": (MemoryExpansionWorkflow, MemoryExpansionRequest),
+        "crisis_response": (CrisisResponseWorkflow, CrisisRequest),
+    }
+
+    workflow_entry = workflow_map.get(workflow_type)
+    if workflow_entry is None:
+        raise ValueError(f"Unknown workflow type: {workflow_type}")
+
+    workflow_cls, request_cls = workflow_entry
+
+    # Normalize crisis workflow payload to dataclass contract
+    if workflow_type == "crisis_response":
+        missions_data = workflow_payload.get("missions", [])
+        missions: list[MissionPhase] = []
+        for mission in missions_data:
+            if not isinstance(mission, dict):
+                raise ValueError("Each crisis mission must be a dict")
+            missions.append(
+                MissionPhase(
+                    phase_id=mission.get("phase_id", ""),
+                    agent_id=mission.get("agent_id", ""),
+                    action=mission.get("action", ""),
+                    target=mission.get("target", ""),
+                    priority=mission.get("priority", 1),
+                )
+            )
+
+        request_obj = request_cls(
+            target_member=workflow_payload.get("target_member", ""),
+            missions=missions,
+            crisis_id=workflow_payload.get("crisis_id"),
+            initiated_by=context.get("user", {}).get("username"),
+            initiator_role=context.get("user", {}).get("role"),
+        )
+    else:
+        try:
+            request_obj = request_cls(**workflow_payload)
+        except TypeError as e:
+            raise ValueError(
+                f"Invalid workflow payload for {workflow_type}: {e}"
+            ) from e
+
+    workflow_id = workflow_payload.get("workflow_id") or (
+        f"{workflow_type}-{uuid.uuid4().hex[:12]}"
+    )
+
+    async def _start() -> dict[str, Any]:
+        manager = TemporalClientManager()
+        await manager.connect()
+        try:
+            handle = await manager.client.start_workflow(
+                workflow_cls.run,
+                request_obj,
+                id=workflow_id,
+                task_queue=manager.task_queue,
+            )
+            return {
+                "workflow_id": getattr(handle, "id", workflow_id),
+                "run_id": getattr(handle, "first_execution_run_id", None),
+            }
+        finally:
+            await manager.disconnect()
+
+    return _run_async_safely(_start())
 
 
 def _validate_learning_workflow(

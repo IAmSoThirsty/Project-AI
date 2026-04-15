@@ -15,12 +15,17 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
+from dotenv import load_dotenv
+
 logger = logging.getLogger(__name__)
 
 # Constants
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24
 JWT_REFRESH_EXPIRATION_DAYS = 30
+
+# Load local environment variables (including .env) before reading JWT settings
+load_dotenv()
 
 # CRITICAL: JWT secret MUST be set in environment for production
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")

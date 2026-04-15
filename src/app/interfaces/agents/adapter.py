@@ -48,7 +48,10 @@ class AgentAdapter:
             Response dict with status, result, metadata
         """
         # Add agent context
-        payload["action"] = f"ai.{task_type}"
+        # Keep action names aligned with governance registry
+        action_name = "ai.analyze" if task_type == "analysis" else f"ai.{task_type}"
+
+        payload["action"] = action_name
         payload["task_type"] = task_type
         payload["agent"] = {
             "id": self.agent_id,

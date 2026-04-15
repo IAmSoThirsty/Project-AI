@@ -8,10 +8,12 @@ Enforces policies/constitution.yaml principles during build execution.
 
 from .enforcer import ConstitutionalEnforcer
 from .engine import ConstitutionalEngine
-from .temporal_law import TemporalLawEnforcer
+from .temporal_law import TemporalLaw, TemporalLawEnforcer, TemporalLawRegistry
 
 __all__ = [
     "ConstitutionalEngine",
     "ConstitutionalEnforcer",
+    "TemporalLaw",
+    "TemporalLawRegistry",
     "TemporalLawEnforcer",
 ]

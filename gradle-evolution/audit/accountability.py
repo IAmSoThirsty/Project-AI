@@ -9,11 +9,16 @@ Ensures all policy overrides are traceable to responsible humans.
 import hashlib
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
+
+
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class AccountabilityRecord:
@@ -21,12 +26,17 @@ class AccountabilityRecord:
 
     def __init__(
         self,
-        record_id: str,
-        action_type: str,
-        actor: str,
-        justification: str,
-        signature: str,
-        metadata: dict[str, Any],
+        record_id: str | None = None,
+        action_type: str | None = None,
+        actor: str | None = None,
+        justification: str | None = None,
+        signature: str | None = None,
+        metadata: dict[str, Any] | None = None,
+        *,
+        action_id: str | None = None,
+        target: str | None = None,
+        timestamp: str | None = None,
+        outcome: str | None = None,
     ):
         """
         Initialize accountability record.
@@ -39,24 +49,56 @@ class AccountabilityRecord:
             signature: Digital signature
             metadata: Additional metadata
         """
-        self.record_id = record_id
-        self.action_type = action_type
-        self.actor = actor
-        self.justification = justification
+        resolved_record_id = record_id or action_id
+        if not resolved_record_id:
+            # Deterministic-enough fallback for compatibility paths.
+            resolved_record_id = hashlib.sha256(
+                f"record:{_utc_now_iso()}".encode()
+            ).hexdigest()[:16]
+
+        resolved_actor = actor or "unknown_actor"
+        resolved_action_type = action_type or "unknown_action"
+        resolved_justification = justification or ""
+        resolved_metadata = dict(metadata or {})
+
+        if target is not None:
+            resolved_metadata.setdefault("target", target)
+        if outcome is not None:
+            resolved_metadata.setdefault("outcome", outcome)
+
+        resolved_timestamp = timestamp or _utc_now_iso()
+
+        if signature is None:
+            signature_payload = (
+                f"{resolved_action_type}:{resolved_actor}:"
+                f"{resolved_justification}:{resolved_timestamp}"
+            )
+            signature = hashlib.sha256(signature_payload.encode()).hexdigest()
+
+        self.record_id = resolved_record_id
+        self.action_id = resolved_record_id  # legacy alias
+        self.action_type = resolved_action_type
+        self.actor = resolved_actor
+        self.justification = resolved_justification
         self.signature = signature
-        self.metadata = metadata
-        self.timestamp = datetime.utcnow().isoformat()
+        self.metadata = resolved_metadata
+        self.timestamp = resolved_timestamp
+        self.target = self.metadata.get("target")
+        self.outcome = self.metadata.get("outcome", "unknown")
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "record_id": self.record_id,
+            "action_id": self.action_id,
             "action_type": self.action_type,
             "actor": self.actor,
             "justification": self.justification,
             "signature": self.signature,
             "metadata": self.metadata,
             "timestamp": self.timestamp,
+            "target": self.target,
+            "outcome": self.outcome,
         }
 
     def verify_signature(self, expected_actor: str) -> bool:
@@ -84,19 +126,36 @@ class AccountabilitySystem:
     Ensures all deviations from policy are traceable and justified.
     """
 
-    def __init__(self, records_dir: Path | None = None):
+    def __init__(
+        self,
+        records_dir: Path | None = None,
+        storage_path: Path | None = None,
+    ):
         """
         Initialize accountability system.
 
         Args:
             records_dir: Directory for accountability records
+            storage_path: Backward-compatible JSON file path
         """
-        self.records_dir = records_dir or Path("data/accountability")
-        self.records_dir.mkdir(parents=True, exist_ok=True)
+        self.storage_path = storage_path
+
+        if self.storage_path is not None:
+            # File-backed compatibility mode.
+            self.records_dir = self.storage_path.parent
+            self.records_dir.mkdir(parents=True, exist_ok=True)
+        else:
+            self.records_dir = records_dir or Path("data/accountability")
+            self.records_dir.mkdir(parents=True, exist_ok=True)
+
         self.records: dict[str, AccountabilityRecord] = {}
+        self.action_records: list[AccountabilityRecord] = []  # legacy-compatible view
         self.pending_approvals: dict[str, dict[str, Any]] = {}
         self._load_records()
-        logger.info("Accountability system initialized: %s", self.records_dir)
+        logger.info(
+            "Accountability system initialized: %s",
+            self.storage_path if self.storage_path else self.records_dir,
+        )
 
     def request_policy_override(
         self,
@@ -123,7 +182,7 @@ class AccountabilitySystem:
             request_id = self._generate_request_id(actor, policy_id)
 
             # Create signature
-            content = f"override:{actor}:{reason}:{datetime.utcnow().isoformat()}"
+            content = f"override:{actor}:{reason}:{_utc_now_iso()}"
             signature = hashlib.sha256(content.encode()).hexdigest()
 
             # Create accountability record
@@ -141,7 +200,7 @@ class AccountabilitySystem:
                 },
             )
 
-            self.records[request_id] = record
+            self._register_record(record)
             self.pending_approvals[request_id] = {
                 "record": record,
                 "requires_approvals": 1,  # Could be configurable
@@ -175,7 +234,7 @@ class AccountabilitySystem:
         try:
             request_id = self._generate_request_id(actor, requirement)
 
-            content = f"waiver:{actor}:{reason}:{datetime.utcnow().isoformat()}"
+            content = f"waiver:{actor}:{reason}:{_utc_now_iso()}"
             signature = hashlib.sha256(content.encode()).hexdigest()
 
             record = AccountabilityRecord(
@@ -191,7 +250,7 @@ class AccountabilitySystem:
                 },
             )
 
-            self.records[request_id] = record
+            self._register_record(record)
             self.pending_approvals[request_id] = {
                 "record": record,
                 "requires_approvals": 2,  # Waivers require more approvals
@@ -231,7 +290,7 @@ class AccountabilitySystem:
             # Add approval
             approval = {
                 "approver": approver,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "comments": comments,
             }
             approval_data["approvals"].append(approval)
@@ -278,7 +337,7 @@ class AccountabilitySystem:
             record.metadata["status"] = "denied"
             record.metadata["denied_by"] = denier
             record.metadata["denial_reason"] = reason
-            record.metadata["denial_timestamp"] = datetime.utcnow().isoformat()
+            record.metadata["denial_timestamp"] = _utc_now_iso()
 
             del self.pending_approvals[request_id]
             self._persist_record(record)
@@ -311,7 +370,7 @@ class AccountabilitySystem:
             record_id = self._generate_request_id(actor, action_type)
 
             content = (
-                f"{action_type}:{actor}:{justification}:{datetime.utcnow().isoformat()}"
+                f"{action_type}:{actor}:{justification}:{_utc_now_iso()}"
             )
             signature = hashlib.sha256(content.encode()).hexdigest()
 
@@ -327,7 +386,7 @@ class AccountabilitySystem:
                 },
             )
 
-            self.records[record_id] = record
+            self._register_record(record)
             self._persist_record(record)
 
             logger.info("Action signed: %s by %s", record_id, actor)
@@ -349,6 +408,36 @@ class AccountabilitySystem:
         """
         return self.records.get(record_id)
 
+    def record_action(self, record: AccountabilityRecord) -> None:
+        """Record an accountability action (legacy-compatible API)."""
+        self._register_record(record)
+        self._persist_record(record)
+
+    def _register_record(self, record: AccountabilityRecord) -> None:
+        """Register record in canonical and legacy in-memory indexes."""
+        self.records[record.record_id] = record
+        if record not in self.action_records:
+            self.action_records.append(record)
+
+    def get_actions_by_actor(self, actor: str) -> list[AccountabilityRecord]:
+        """Legacy alias for actor-based query."""
+        return [record for record in self.action_records if record.actor == actor]
+
+    def get_actions_by_outcome(self, outcome: str) -> list[AccountabilityRecord]:
+        """Return actions filtered by outcome status."""
+        return [
+            record
+            for record in self.action_records
+            if str(record.outcome).lower() == str(outcome).lower()
+        ]
+
+    def get_audit_trail(self) -> list[dict[str, Any]]:
+        """Return full audit trail as dictionaries sorted by timestamp."""
+        return [
+            record.to_dict()
+            for record in sorted(self.action_records, key=lambda r: r.timestamp)
+        ]
+
     def get_records_by_actor(self, actor: str) -> list[AccountabilityRecord]:
         """
         Get all records for actor.
@@ -359,6 +448,7 @@ class AccountabilitySystem:
         Returns:
             List of records
         """
+        # Keep canonical behavior based on all records (including non-action events).
         return [record for record in self.records.values() if record.actor == actor]
 
     def get_pending_approvals(self) -> list[dict[str, Any]]:
@@ -400,6 +490,7 @@ class AccountabilitySystem:
 
             return {
                 "total_records": len(self.records),
+                "total_actions": len(self.action_records),
                 "pending_approvals": len(self.pending_approvals),
                 "by_actor": {
                     actor: {
@@ -417,12 +508,17 @@ class AccountabilitySystem:
 
     def _generate_request_id(self, actor: str, identifier: str) -> str:
         """Generate unique request ID."""
-        content = f"{actor}:{identifier}:{datetime.utcnow().isoformat()}"
+        content = f"{actor}:{identifier}:{_utc_now_iso()}"
         return hashlib.sha256(content.encode()).hexdigest()[:16]
 
     def _persist_record(self, record: AccountabilityRecord) -> None:
         """Persist record to disk."""
         try:
+            if self.storage_path is not None:
+                # File-backed mode persists all records together.
+                self.save()
+                return
+
             filepath = self.records_dir / f"{record.record_id}.json"
             with open(filepath, "w") as f:
                 json.dump(record.to_dict(), f, indent=2)
@@ -432,6 +528,10 @@ class AccountabilitySystem:
     def _load_records(self) -> None:
         """Load records from disk."""
         try:
+            if self.storage_path is not None:
+                self.load()
+                return
+
             for filepath in self.records_dir.glob("*.json"):
                 with open(filepath) as f:
                     data = json.load(f)
@@ -445,7 +545,7 @@ class AccountabilitySystem:
                     metadata=data["metadata"],
                 )
 
-                self.records[record.record_id] = record
+                self._register_record(record)
 
                 # Restore pending approvals
                 if data["metadata"].get("status") == "pending_approval":
@@ -460,6 +560,49 @@ class AccountabilitySystem:
             logger.info("Loaded %s accountability records", len(self.records))
         except Exception as e:
             logger.error("Error loading records: %s", e, exc_info=True)
+
+    def save(self) -> None:
+        """Persist records for file-backed compatibility mode."""
+        if self.storage_path is None:
+            # Directory-backed mode persists per-record already.
+            return
+
+        payload = [record.to_dict() for record in self.action_records]
+        self.storage_path.parent.mkdir(parents=True, exist_ok=True)
+        self.storage_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+    def load(self) -> None:
+        """Load records for file-backed compatibility mode."""
+        if self.storage_path is None or not self.storage_path.exists():
+            return
+
+        raw = self.storage_path.read_text(encoding="utf-8").strip()
+        if not raw:
+            return
+
+        parsed = json.loads(raw)
+        if not isinstance(parsed, list):
+            logger.warning("Unexpected accountability file format at %s", self.storage_path)
+            return
+
+        self.records.clear()
+        self.action_records.clear()
+        for item in parsed:
+            if not isinstance(item, dict):
+                continue
+            record = AccountabilityRecord(
+                record_id=item.get("record_id") or item.get("action_id"),
+                action_type=item.get("action_type"),
+                actor=item.get("actor"),
+                justification=item.get("justification", ""),
+                signature=item.get("signature"),
+                metadata=item.get("metadata", {}),
+                action_id=item.get("action_id"),
+                target=item.get("target"),
+                timestamp=item.get("timestamp"),
+                outcome=item.get("outcome"),
+            )
+            self._register_record(record)
 
 
 __all__ = ["AccountabilitySystem", "AccountabilityRecord"]

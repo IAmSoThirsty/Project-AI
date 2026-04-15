@@ -33,7 +33,7 @@ configure_rate_limiting(app)
 @app.route("/api/status")
 def status():
     """Health check endpoint."""
-    return jsonify(status="ok", component="web-backend-v2"), 200
+    return jsonify(status="ok", component="web-backend"), 200
 
 
 @app.route("/api/auth/login", methods=["POST"])
@@ -59,15 +59,20 @@ def login():
     )
 
     if response["status"] == "success":
+        role = response["result"].get("role", "user")
+        username = response["result"].get("username")
         return jsonify(
+            status="ok",
             success=True,
             token=response["result"]["token"],
-            user=response["result"]["username"],
+            user={"username": username, "role": role},
         ), 200
     else:
         return jsonify(
+            status="error",
             success=False,
-            error=response.get("error", "Authentication failed"),
+            error="invalid-credentials",
+            message=response.get("error", "Authentication failed"),
         ), 401
 
 

@@ -47,9 +47,17 @@ class DesktopAdapter:
         Returns:
             Response dict with status, result, metadata
         """
-        # Add user context
+        # Add user context without clobbering existing caller-provided fields
         payload["action"] = action
-        payload["user"] = {"username": self.username} if self.username else {}
+
+        existing_user = payload.get("user", {})
+        if not isinstance(existing_user, dict):
+            existing_user = {}
+
+        if self.username and not existing_user.get("username"):
+            existing_user["username"] = self.username
+
+        payload["user"] = existing_user
 
         # Route through governance pipeline
         response = route_request(source="desktop", payload=payload)

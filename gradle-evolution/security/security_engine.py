@@ -7,6 +7,7 @@ Provides runtime security controls and agent-based security validation.
 """
 
 import logging
+from datetime import datetime, timezone
 from fnmatch import fnmatch
 from pathlib import Path
 from typing import Any
@@ -14,6 +15,11 @@ from typing import Any
 import yaml
 
 logger = logging.getLogger(__name__)
+
+
+def _utc_now_iso() -> str:
+    """Return UTC timestamp in ISO-8601 format."""
+    return datetime.now(timezone.utc).isoformat()
 
 
 class SecurityContext:
@@ -185,6 +191,22 @@ class SecurityEngine:
             results[key] = self.validate_path_access(agent, path, operation)
         return results
 
+    def validate_operation(self, agent: str, operation: str) -> tuple[bool, str | None]:
+        """Validate whether an agent may perform an operation type."""
+        context = self.get_security_context(agent)
+        if not context:
+            reason = f"No security context for agent: {agent}"
+            self._log_denied_operation(agent, "<operation-only>", operation, reason)
+            return False, reason
+
+        if operation not in context.allowed_operations:
+            reason = f"Operation '{operation}' not allowed for agent '{agent}'"
+            self._log_denied_operation(agent, "<operation-only>", operation, reason)
+            return False, reason
+
+        self._log_access(agent, "<operation-only>", operation, allowed=True)
+        return True, None
+
     def get_allowed_paths(self, agent: str) -> list[str]:
         """
         Get allowed paths for agent.
@@ -285,11 +307,9 @@ class SecurityEngine:
 
     def _log_access(self, agent: str, path: str, operation: str, allowed: bool) -> None:
         """Log access attempt."""
-        from datetime import datetime
-
         self.access_log.append(
             {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "agent": agent,
                 "path": path,
                 "operation": operation,
@@ -305,11 +325,9 @@ class SecurityEngine:
         self, agent: str, path: str, operation: str, reason: str
     ) -> None:
         """Log denied operation."""
-        from datetime import datetime
-
         self.denied_operations.append(
             {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utc_now_iso(),
                 "agent": agent,
                 "path": path,
                 "operation": operation,
