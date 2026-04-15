@@ -279,30 +279,18 @@ class PolicyScheduler:
             except Exception as e:
                 logger.error("Error executing callback: %s", e, exc_info=True)
 
-    def get_active_policies(self) -> list[dict[str, Any]]:
+    def get_active_policies(self) -> list[ScheduledPolicy]:
         """
         Get currently active policies.
 
         Returns:
             List of active policy data
         """
-        active = []
+        active: list[ScheduledPolicy] = []
         for policy_id in self.active_policies:
             scheduled = self.scheduled_policies.get(policy_id)
             if scheduled:
-                active.append(
-                    {
-                        "policy_id": policy_id,
-                        "policy_data": scheduled.policy_data,
-                        "activation_time": scheduled.activation_time.isoformat(),
-                        "expiration_time": (
-                            scheduled.expiration_time.isoformat()
-                            if scheduled.expiration_time
-                            else None
-                        ),
-                        "activation_count": scheduled.activation_count,
-                    }
-                )
+                active.append(scheduled)
 
         return active
 

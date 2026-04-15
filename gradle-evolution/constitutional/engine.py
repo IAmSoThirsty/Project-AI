@@ -145,5 +145,9 @@ class ConstitutionalEngine:
         """Get all logged violations."""
         return self.violation_log
 
+    def get_violation_history(self) -> list[dict[str, Any]]:
+        """Compatibility alias for legacy callers/tests."""
+        return self.get_violations()
+
 
 __all__ = ["ConstitutionalEngine"]

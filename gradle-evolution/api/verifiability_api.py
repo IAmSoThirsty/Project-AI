@@ -12,7 +12,13 @@ import logging
 from datetime import datetime
 
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+
+try:
+    from flask_cors import CORS
+except ModuleNotFoundError:
+    def CORS(_app):  # type: ignore[misc]
+        """No-op fallback when flask-cors is unavailable."""
+        return None
 
 from ..audit.audit_integration import BuildAuditIntegration
 from ..capsules.capsule_engine import CapsuleEngine
@@ -114,11 +120,14 @@ class VerifiabilityAPI:
         def verify_capsule(capsule_id):
             """Verify capsule integrity."""
             try:
-                is_valid, error = self.capsule_engine.verify_capsule(capsule_id)
+                is_valid, error = self.capsule_engine.verify_capsule(
+                    capsule_id, with_reason=True
+                )
 
                 return jsonify(
                     {
                         "capsule_id": capsule_id,
+                        "verified": is_valid,
                         "valid": is_valid,
                         "error": error,
                         "timestamp": datetime.utcnow().isoformat(),
@@ -129,13 +138,13 @@ class VerifiabilityAPI:
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/capsules/<capsule_id>/replay", methods=["POST"])
-        async def replay_capsule(capsule_id):
+        def replay_capsule(capsule_id):
             """Replay build from capsule."""
             try:
-                data = request.get_json() or {}
+                data = request.get_json(silent=True) or {}
                 verify_outputs = data.get("verify_outputs", True)
 
-                result = await self.replay_engine.replay_build(
+                result = self.replay_engine.replay_build(
                     capsule_id, verify_outputs=verify_outputs
                 )
 
@@ -176,6 +185,7 @@ class VerifiabilityAPI:
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/audit/events", methods=["GET"])
+        @self.app.route("/api/v1/audit", methods=["GET"])
         def get_audit_events():
             """Get recent audit events."""
             try:
@@ -212,6 +222,7 @@ class VerifiabilityAPI:
                 return jsonify({"error": str(e)}), 500
 
         @self.app.route("/api/v1/proof/<capsule_id>", methods=["GET"])
+        @self.app.route("/api/v1/capsules/<capsule_id>/proof", methods=["GET"])
         def get_cryptographic_proof(capsule_id):
             """Get cryptographic proof package for capsule."""
             try:
@@ -220,7 +231,9 @@ class VerifiabilityAPI:
                     return jsonify({"error": "Capsule not found"}), 404
 
                 # Verify integrity
-                is_valid, error = self.capsule_engine.verify_capsule(capsule_id)
+                is_valid, error = self.capsule_engine.verify_capsule(
+                    capsule_id, with_reason=True
+                )
 
                 # Generate proof package
                 proof = {

@@ -187,6 +187,11 @@ class SecurityEngine:
             results[key] = self.validate_path_access(agent, path, operation)
         return results
 
+    def validate_operation(self, agent: str, operation: str) -> tuple[bool, str | None]:
+        """Compatibility API that validates operation without explicit path."""
+        synthetic_path = "build/**"
+        return self.validate_path_access(agent, synthetic_path, operation)
+
     def get_allowed_paths(self, agent: str) -> list[str]:
         """
         Get allowed paths for agent.

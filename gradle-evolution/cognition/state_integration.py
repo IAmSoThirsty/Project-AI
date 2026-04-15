@@ -25,7 +25,12 @@ class BuildStateIntegration:
     Provides episodic build memory and state persistence.
     """
 
-    def __init__(self, state_manager: StateManager, state_dir: Path | None = None):
+    def __init__(
+        self,
+        state_manager: StateManager | None = None,
+        state_dir: Path | None = None,
+        storage_path: Path | None = None,
+    ):
         """
         Initialize build state integration.
 
@@ -33,9 +38,11 @@ class BuildStateIntegration:
             state_manager: Project-AI state manager
             state_dir: Optional directory for persistent state
         """
-        self.state_manager = state_manager
+        self.state_manager = state_manager or StateManager(config={})
         self.state_dir = state_dir or Path("data/build_state")
         self.state_dir.mkdir(parents=True, exist_ok=True)
+        self.storage_path = storage_path or (self.state_dir / "build_state.json")
+        self.build_states: dict[str, dict[str, Any]] = {}
 
         # Build-specific state keys
         self.BUILD_CACHE_KEY = "build_cache"
@@ -43,7 +50,59 @@ class BuildStateIntegration:
         self.BUILD_CONFIG_KEY = "build_configuration"
 
         self._load_persistent_state()
+        self.load()
         logger.info("Build state integration initialized: %s", self.state_dir)
+
+    # ---------------------------------------------------------------------
+    # Compatibility APIs expected by gradle_evolution tests
+    # ---------------------------------------------------------------------
+    def record_build_state(self, build_id: str, state: dict[str, Any]) -> None:
+        self.build_states[build_id] = dict(state)
+
+    def update_build_state(self, build_id: str, updates: dict[str, Any]) -> None:
+        if build_id not in self.build_states:
+            self.build_states[build_id] = {}
+        self.build_states[build_id].update(updates)
+
+    def get_build_state(self, build_id: str) -> dict[str, Any] | None:
+        return self.build_states.get(build_id)
+
+    def save(self) -> None:
+        self.storage_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.storage_path, "w", encoding="utf-8") as f:
+            json.dump(self.build_states, f, indent=2)
+
+    def load(self) -> None:
+        if not self.storage_path.exists():
+            return
+        with open(self.storage_path, encoding="utf-8") as f:
+            data = json.load(f)
+        if isinstance(data, dict):
+            self.build_states = {k: dict(v) for k, v in data.items()}
+
+    def query_builds_by_status(self, status: str) -> list[dict[str, Any]]:
+        return [state for state in self.build_states.values() if state.get("status") == status]
+
+    def cleanup_old_states(self, keep_count: int = 100) -> None:
+        if keep_count < 0:
+            keep_count = 0
+        items = list(self.build_states.items())
+        if len(items) <= keep_count:
+            return
+        self.build_states = dict(items[-keep_count:])
+
+    def get_build_metrics(self) -> dict[str, Any]:
+        total = len(self.build_states)
+        completed = sum(1 for s in self.build_states.values() if s.get("status") == "completed")
+        failed = sum(1 for s in self.build_states.values() if s.get("status") == "failed")
+        durations = [float(s.get("duration", 0.0)) for s in self.build_states.values() if s.get("duration") is not None]
+        avg_duration = (sum(durations) / len(durations)) if durations else 0.0
+        return {
+            "total_builds": total,
+            "completed_builds": completed,
+            "failed_builds": failed,
+            "average_duration": avg_duration,
+        }
 
     def record_build_episode(
         self,
@@ -340,4 +399,8 @@ class BuildStateIntegration:
             logger.error("Error loading persistent state: %s", e, exc_info=True)
 
 
-__all__ = ["BuildStateIntegration"]
+# Backward-compatible alias expected by older integrations/tests.
+BuildStateManager = BuildStateIntegration
+
+
+__all__ = ["BuildStateIntegration", "BuildStateManager"]

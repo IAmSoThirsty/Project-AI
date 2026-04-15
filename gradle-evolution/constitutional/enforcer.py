@@ -172,6 +172,33 @@ class ConstitutionalEnforcer:
             results[action] = self.validate_build_action(action, metadata)
         return results
 
+    def enforce_action(
+        self, action: str, identity: str, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
+        """Compatibility API for enforcing a single action with identity context."""
+        context = context or {}
+
+        # Identity verification hook expected by tests.
+        if hasattr(self.identity_manager, "verify_identity"):
+            verified = bool(self.identity_manager.verify_identity(identity))
+            if not verified:
+                reason = f"Identity verification failed for {identity}"
+                self._record_violation(action, context, reason)
+                return {
+                    "allowed": False,
+                    "action": action,
+                    "identity": identity,
+                    "reason": reason,
+                }
+
+        allowed, reason = self.validate_build_action(action, context)
+        return {
+            "allowed": allowed,
+            "action": action,
+            "identity": identity,
+            "reason": reason,
+        }
+
     def get_policy_summary(self) -> dict[str, Any]:
         """
         Get current policy configuration summary.

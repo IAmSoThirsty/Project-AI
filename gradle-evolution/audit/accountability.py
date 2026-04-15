@@ -23,12 +23,17 @@ class AccountabilityRecord:
 
     def __init__(
         self,
-        record_id: str,
-        action_type: str,
-        actor: str,
-        justification: str,
-        signature: str,
-        metadata: dict[str, Any],
+        record_id: str | None = None,
+        action_type: str = "",
+        actor: str = "",
+        justification: str = "",
+        signature: str = "",
+        metadata: dict[str, Any] | None = None,
+        *,
+        action_id: str | None = None,
+        target: str | None = None,
+        timestamp: str | None = None,
+        outcome: str | None = None,
     ):
         """
         Initialize accountability record.
@@ -41,20 +46,30 @@ class AccountabilityRecord:
             signature: Digital signature
             metadata: Additional metadata
         """
-        self.record_id = record_id
+        resolved_id = record_id or action_id or hashlib.sha256(
+            f"{actor}:{action_type}:{datetime.utcnow().isoformat()}".encode()
+        ).hexdigest()[:16]
+
+        self.record_id = resolved_id
+        self.action_id = resolved_id
         self.action_type = action_type
         self.actor = actor
         self.justification = justification
         self.signature = signature
-        self.metadata = metadata
-        self.timestamp = datetime.utcnow().isoformat()
+        self.metadata = metadata or {}
+        self.target = target
+        self.outcome = outcome
+        self.timestamp = timestamp or datetime.utcnow().isoformat()
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
         return {
             "record_id": self.record_id,
+            "action_id": self.action_id,
             "action_type": self.action_type,
             "actor": self.actor,
+            "target": self.target,
+            "outcome": self.outcome,
             "justification": self.justification,
             "signature": self.signature,
             "metadata": self.metadata,
@@ -86,7 +101,9 @@ class AccountabilitySystem:
     Ensures all deviations from policy are traceable and justified.
     """
 
-    def __init__(self, records_dir: Path | None = None):
+    def __init__(
+        self, records_dir: Path | None = None, storage_path: Path | None = None
+    ):
         """
         Initialize accountability system.
 
@@ -95,10 +112,60 @@ class AccountabilitySystem:
         """
         self.records_dir = records_dir or Path("data/accountability")
         self.records_dir.mkdir(parents=True, exist_ok=True)
+        self.storage_path = storage_path or (self.records_dir / "accountability.json")
         self.records: dict[str, AccountabilityRecord] = {}
+        self.action_records: list[AccountabilityRecord] = []
         self.pending_approvals: dict[str, dict[str, Any]] = {}
         self._load_records()
+        self.load()
         logger.info("Accountability system initialized: %s", self.records_dir)
+
+    # ---------------------------------------------------------------------
+    # Compatibility APIs expected by gradle_evolution tests
+    # ---------------------------------------------------------------------
+    def record_action(self, record: AccountabilityRecord) -> None:
+        self.records[record.record_id] = record
+        self.action_records.append(record)
+
+    def get_actions_by_actor(self, actor: str) -> list[AccountabilityRecord]:
+        return [r for r in self.action_records if r.actor == actor]
+
+    def get_actions_by_outcome(self, outcome: str) -> list[AccountabilityRecord]:
+        return [r for r in self.action_records if r.outcome == outcome]
+
+    def get_audit_trail(self) -> list[AccountabilityRecord]:
+        return list(self.action_records)
+
+    def save(self) -> None:
+        self.storage_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(self.storage_path, "w", encoding="utf-8") as f:
+            json.dump([r.to_dict() for r in self.action_records], f, indent=2)
+
+    def load(self) -> None:
+        if not self.storage_path.exists():
+            return
+        with open(self.storage_path, encoding="utf-8") as f:
+            data = json.load(f)
+
+        loaded: list[AccountabilityRecord] = []
+        for entry in data:
+            loaded.append(
+                AccountabilityRecord(
+                    action_id=entry.get("action_id") or entry.get("record_id"),
+                    actor=entry.get("actor", ""),
+                    action_type=entry.get("action_type", ""),
+                    target=entry.get("target"),
+                    timestamp=entry.get("timestamp"),
+                    outcome=entry.get("outcome"),
+                    justification=entry.get("justification", ""),
+                    signature=entry.get("signature", ""),
+                    metadata=entry.get("metadata", {}),
+                )
+            )
+
+        self.action_records = loaded
+        for record in loaded:
+            self.records[record.record_id] = record
 
     def request_policy_override(
         self,
@@ -401,6 +468,7 @@ class AccountabilitySystem:
                 by_type[record.action_type] = by_type.get(record.action_type, 0) + 1
 
             return {
+                "total_actions": len(self.action_records),
                 "total_records": len(self.records),
                 "pending_approvals": len(self.pending_approvals),
                 "by_actor": {
