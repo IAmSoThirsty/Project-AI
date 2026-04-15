@@ -1,0 +1,62 @@
+# Compatibility-Layers
+
+Mapped Source: `integrations`
+
+## Representative Files
+
+- `integrations/README.md`
+- `integrations/__init__.py`
+- `integrations/openclaw/agent_adapter.py`
+- `integrations/openclaw/api_endpoints.py`
+- `integrations/openclaw/autonomous_learning.py`
+- `integrations/openclaw/capability_registry.py`
+- `integrations/openclaw/config.py`
+- `integrations/openclaw/eed_memory.py`
+- `integrations/openclaw/INSTALLATION.md`
+- `integrations/openclaw/legion_api.py`
+- `integrations/openclaw/legion_interface.html`
+- `integrations/openclaw/moltbook_client.py`
+- `integrations/openclaw/moltbook_config.json`
+- `integrations/openclaw/README.md`
+- `integrations/openclaw/security_wrapper.py`
+- `integrations/openclaw/test_legion.py`
+- `integrations/openclaw/test_standalone_api.py`
+- `integrations/openclaw/triumvirate_client.py`
+- `integrations/openclaw/WSL_SETUP.md`
+- `integrations/openclaw/__init__.py`
+- `integrations/thirstys_trading_hub/README.md`
+- `integrations/thirstys_trading_hub/__init__.py`
+- `integrations/thirsty_lang_complete/COMPLETION_SUMMARY.txt`
+- `integrations/thirsty_lang_complete/copy_to_thirsty_lang.sh`
+- `integrations/thirsty_lang_complete/demo.py`
+- `integrations/thirsty_lang_complete/DEPLOYMENT_READY.md`
+- `integrations/thirsty_lang_complete/FEATURES.md`
+- `integrations/thirsty_lang_complete/FINAL_SUMMARY.txt`
+- `integrations/thirsty_lang_complete/IMPLEMENTATION_COMPLETE.md`
+- `integrations/thirsty_lang_complete/INDEX.md`
+- `integrations/thirsty_lang_complete/INTEGRATION_COMPLETE.md`
+- `integrations/thirsty_lang_complete/MANIFEST.json`
+- `integrations/thirsty_lang_complete/QUICK_REFERENCE.md`
+- `integrations/thirsty_lang_complete/README.md`
+- `integrations/thirsty_lang_complete/test_integration.py`
+- `integrations/__pycache__/__init__.cpython-310.pyc`
+- `integrations/__pycache__/__init__.cpython-312.pyc`
+- `integrations/openclaw/__pycache__/agent_adapter.cpython-312.pyc`
+- `integrations/openclaw/__pycache__/api_endpoints.cpython-312.pyc`
+- `integrations/openclaw/__pycache__/autonomous_learning.cpython-312.pyc`
+- `integrations/openclaw/__pycache__/capability_registry.cpython-312.pyc`
+- `integrations/openclaw/__pycache__/config.cpython-312.pyc`
+- `integrations/openclaw/__pycache__/eed_memory.cpython-312.pyc`
+- `integrations/openclaw/__pycache__/security_wrapper.cpython-312.pyc`
+- `integrations/openclaw/__pycache__/triumvirate_client.cpython-312.pyc`
+- `integrations/openclaw/__pycache__/__init__.cpython-312.pyc`
+- `integrations/thirstys_trading_hub/core/market_data.py`
+- `integrations/thirstys_trading_hub/core/order_manager.py`
+- `integrations/thirstys_trading_hub/core/portfolio.py`
+- `integrations/thirstys_trading_hub/core/README.md`
+- `integrations/thirstys_trading_hub/core/strategy_engine.py`
+- `integrations/thirstys_trading_hub/core/__init__.py`
+- `integrations/thirstys_trading_hub/tests/test_core_integration.py`
+- `integrations/thirsty_lang_complete/bridge/README.md`
+- `integrations/thirsty_lang_complete/bridge/tarl-bridge.js`
+- `integrations/thirsty_lang_complete/bridge/unified-security.py`
