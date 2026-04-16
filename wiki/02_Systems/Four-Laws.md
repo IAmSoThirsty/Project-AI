@@ -3,6 +3,11 @@ type: system
 priority: canonical
 layer: systems
 status: active
+aliases:
+  - four laws
+  - four-laws
+  - fourlaws
+  - Four Laws
 domain:
   - governance
 tags:

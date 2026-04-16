@@ -3,6 +3,9 @@ type: system
 priority: canonical
 layer: systems
 status: active
+aliases:
+  - triumvirate
+  - Triumvirate
 domain:
   - governance
 tags:

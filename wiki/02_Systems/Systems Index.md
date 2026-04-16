@@ -22,6 +22,8 @@ graph_color: "#00F5D4"
 - [[TARL]]
 - [[OctoReflex]]
 - [[Cerberus]]
+- [[Codex-Deus]]
+- [[Legion]]
 - [[Audit-System]]
 - [[Governance-Pipeline]]
 - [[Sovereign-Runtime]]
@@ -37,5 +39,6 @@ graph_color: "#00F5D4"
 
 ## Knowledge And Audit
 - [[Codex]]
+- [[Codex-Deus]]
 - [[Cryptographic-Audit]]
 - [[Four-Laws]]

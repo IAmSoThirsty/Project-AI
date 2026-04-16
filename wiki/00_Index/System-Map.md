@@ -66,9 +66,12 @@ graph_color: red
 - [[PSIA]] - Privileged System Instruction Architecture
 - [[OctoReflex]] - System call enforcement
 - [[Cerberus]] - Runtime governance agent
+- [[Legion]] - Canonical Legion references
 
 **Constitutional Framework:**
 - [[Triumvirate]] - Three-agent governance model
+- [[Triumvirate-Consensus]] - Consensus references and governance linkage
+- [[Galahad]] - Governance agent reference
 - [[Four-Laws]] - Constitutional axioms
 - [[Sovereign-Covenant]] - The binding agreement
 
@@ -76,6 +79,11 @@ graph_color: red
 - [[TARL]] - Type-safe architecture runtime language
 - [[Thirsty-Lang]] - Constitutional programming language
 - [[TSCG]] - Type-safe code generation
+
+**Index Hygiene:**
+- [[Root Index]] - Folder index source of truth
+- [[Evolution-Timeline]] - Timeline alias hub
+- [[Ingestion-Summary]] - Ingestion summary source of truth
 
 ---
 

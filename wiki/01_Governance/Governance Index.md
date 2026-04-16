@@ -42,6 +42,8 @@ Arch Angel protected linkage:
 - [[Identity-System]]
 - [[Reviewer-Trap]]
 - [[Triumvirate]]
+- [[Triumvirate-Consensus]]
+- [[Galahad]]
 - [[Four-Laws]]
 - [[Governance-Pipeline]]
 - [[RBAC-Model]]

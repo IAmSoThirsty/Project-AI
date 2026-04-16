@@ -3,6 +3,10 @@ type: template
 priority: canonical
 layer: architecture
 status: active
+aliases:
+  - agent build template
+  - agent-build-template
+  - Agent Build Template
 domain:
   - architecture
   - systems

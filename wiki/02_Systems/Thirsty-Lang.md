@@ -3,6 +3,11 @@ type: system
 priority: canonical
 layer: systems
 status: active
+aliases:
+  - thirsty lang
+  - thirsty-lang
+  - thirstylang
+  - Thirsty Lang
 domain:
   - architecture
   - systems
