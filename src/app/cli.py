@@ -21,8 +21,15 @@ STATUS: PRODUCTION
 
 import json
 import logging
+import sys
+from pathlib import Path
 
 import typer
+
+# Keep direct execution usable: `python src/app/cli.py ...`.
+SRC_DIR = Path(__file__).resolve().parents[1]
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
 
 # Version information
 __version__ = "1.0.0"
@@ -947,6 +954,144 @@ def ai_chat(
 
 
 app.add_typer(ai_app, name="ai")
+
+
+# ============================================================================
+# Personal Agent Command Group -> Caregiver Scribe
+# ============================================================================
+personal_app = typer.Typer(
+    help="Commands for the personal caregiver-scribe agent."
+)
+
+
+def _load_personal_agent(config: str | None = None):
+    from app.personal_agent import PersonalAgent
+
+    return PersonalAgent.from_config(config)
+
+
+def _echo_mapping(title: str, values: dict):
+    typer.echo(title)
+    typer.echo("-" * len(title))
+    for key, value in values.items():
+        typer.echo(f"{key}: {value}")
+
+
+@personal_app.command(name="chat")
+def personal_chat(
+    config: str | None = typer.Option(
+        None, "--config", "-c", help="Path to personal-agent config JSON."
+    ),
+):
+    """Start the local personal-agent chat loop."""
+    from app.personal_agent import run_chat
+
+    raise typer.Exit(code=run_chat(config))
+
+
+@personal_app.command(name="learn")
+def personal_learn(
+    category: str = typer.Argument(
+        ..., help="Memory category: fact, preference, goal, or skill."
+    ),
+    text: str = typer.Argument(..., help="Memory text to store."),
+    config: str | None = typer.Option(
+        None, "--config", "-c", help="Path to personal-agent config JSON."
+    ),
+):
+    """Store a structured personal memory."""
+    try:
+        agent = _load_personal_agent(config)
+        item_id = agent.add_memory(category, text)
+        typer.echo(f"Learned {category}: {item_id}")
+    except Exception as e:
+        typer.echo(f"Error: {e}")
+        raise typer.Exit(code=1) from e
+
+
+@personal_app.command(name="memory")
+def personal_memory(
+    config: str | None = typer.Option(
+        None, "--config", "-c", help="Path to personal-agent config JSON."
+    ),
+):
+    """Print saved personal memory."""
+    agent = _load_personal_agent(config)
+    typer.echo(agent.format_memory())
+
+
+@personal_app.command(name="forget")
+def personal_forget(
+    memory_id: str = typer.Argument(..., help="Memory id to remove."),
+    config: str | None = typer.Option(
+        None, "--config", "-c", help="Path to personal-agent config JSON."
+    ),
+):
+    """Forget one structured memory item."""
+    agent = _load_personal_agent(config)
+    if agent.forget_memory(memory_id):
+        typer.echo(f"Forgot {memory_id}.")
+        return
+    typer.echo(f"Memory id not found: {memory_id}")
+    raise typer.Exit(code=1)
+
+
+@personal_app.command(name="scribe-status")
+def personal_scribe_status(
+    config: str | None = typer.Option(
+        None, "--config", "-c", help="Path to personal-agent config JSON."
+    ),
+):
+    """Show Obsidian vault and scribe configuration."""
+    from app.personal_agent import CaregiverScribe
+
+    agent = _load_personal_agent(config)
+    _echo_mapping("Caregiver Scribe Status", CaregiverScribe(agent.config).status())
+
+
+@personal_app.command(name="scribe-init")
+def personal_scribe_init(
+    config: str | None = typer.Option(
+        None, "--config", "-c", help="Path to personal-agent config JSON."
+    ),
+):
+    """Create the scribe home note inside Obsidian."""
+    from app.personal_agent import CaregiverScribe
+
+    agent = _load_personal_agent(config)
+    home = CaregiverScribe(agent.config).write_scribe_home()
+    typer.echo(f"Scribe home written: {home}")
+
+
+@personal_app.command(name="absorb-vault")
+def personal_absorb_vault(
+    config: str | None = typer.Option(
+        None, "--config", "-c", help="Path to personal-agent config JSON."
+    ),
+):
+    """Absorb the Obsidian vault structure first."""
+    from app.personal_agent import CaregiverScribe
+
+    agent = _load_personal_agent(config)
+    result = CaregiverScribe(agent.config).absorb_vault()
+    _echo_mapping("Vault absorbed", result)
+
+
+@personal_app.command(name="learn-repo")
+def personal_learn_repo(
+    config: str | None = typer.Option(
+        None, "--config", "-c", help="Path to personal-agent config JSON."
+    ),
+):
+    """Index Project-AI docs and non-doc files into Obsidian."""
+    from app.personal_agent import CaregiverScribe
+
+    agent = _load_personal_agent(config)
+    result = CaregiverScribe(agent.config).learn_repo()
+    _echo_mapping("Project-AI files indexed", result)
+
+
+app.add_typer(personal_app, name="personal")
 
 if __name__ == "__main__":
     app()

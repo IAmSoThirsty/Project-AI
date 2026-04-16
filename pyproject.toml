@@ -62,6 +62,8 @@ dependencies = [
 
 [project.scripts]
 taar = "taar.cli:cli_main"
+project-ai = "app.cli:app"
+project-ai-personal = "app.personal_agent:main"
 
 [project.optional-dependencies]
 dev = [
