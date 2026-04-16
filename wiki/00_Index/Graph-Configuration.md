@@ -32,6 +32,9 @@ Use tags and folder paths as color signals. Tags create the intentional blends; 
 | `#domain/research` | violet | Theory, papers, formal framing |
 | `#domain/corpus` | ember orange | Origin corpus and motive record |
 | `#domain/operations` | charged purple | Deployment, runbooks, monitoring |
+| `#legacy` | warning amber | Captured legacy evidence, not canonical doctrine |
+| `#priority/canonical` | solar gold | Source-of-truth notes |
+| `#priority/supporting` | slate gray | Supporting notes and evidence |
 
 ## Bridge Colors
 
@@ -68,12 +71,22 @@ Use `#system/name` tags to pull system clusters together:
 - `#system/governance-pipeline`
 - `#system/yggdrasil-dns`
 - `#system/constitutional-code-store`
+- `#system/codex`
+- `#system/four-laws`
+- `#system/thirsty-lang`
 
 ## Obsidian Setup
 
 This wiki vault includes `.obsidian/graph.json` with the live clash palette for the Graph view in Obsidian.
 
-Keep bridge color groups above domain color groups so cross-domain nodes take the intended mixed color first.
+Keep color groups ordered from specific to broad:
+
+1. Root, bridge, and legacy tags.
+2. System tags.
+3. Domain tags.
+4. Layer and type tags.
+5. Priority and status tags.
+6. Path fallbacks.
 
 Path groups sit underneath the tag groups:
 
@@ -89,9 +102,17 @@ Path groups sit underneath the tag groups:
 
 This makes the graph structurally colored even before every note has perfect tags.
 
+## Tag Highlight Layer
+
+The vault enables the CSS snippet `project-ai-tag-colors`.
+
+- Rendered tags are color-coded by domain, layer, type, priority, and legacy status.
+- System tags use electric cyan unless a more specific graph group overrides them.
+- The file explorer uses folder-path fallback colors because Obsidian CSS cannot inspect a note's frontmatter tags from the file tree.
+
 ## Glow Layer
 
-The vault enables the CSS snippet `sovereign-glow`.
+The vault also enables the CSS snippet `sovereign-glow`.
 
 - Nodes are scaled heavier in graph settings.
 - Graph links use bright white variables where Obsidian exposes them.
