@@ -33,5 +33,8 @@ This is the bridge between the monorepo documents and the Obsidian vault.
 - [[Constitutional-Audit]]
 - [[Vault-Threat-Model]]
 
+## Legacy Artifacts
+- [[Legacy Evidence Index]]
+
 ## Working Spine
 Start at [[System-Map]], follow [[Sovereign-Journey]], then use this index when the vault needs to point back to the repo evidence.

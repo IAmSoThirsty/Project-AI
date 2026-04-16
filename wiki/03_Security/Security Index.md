@@ -37,3 +37,6 @@ graph_color: "#FF6B35"
 - [[Audit-System]]
 - [[Sovereign-Vault]]
 - [[Cryptographic-Audit]]
+
+## Legacy Evidence
+- [[Triumvirate-Decisions-2026-04-16]]

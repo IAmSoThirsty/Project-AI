@@ -219,3 +219,7 @@ workspace/.git_workspace_nested_backup/
 # Personal agent runtime data
 data/personal_agent/
 wiki/_Scribe/Project-AI/
+
+# Security runtime logs
+security/triumvirate_decisions.log
+security/vault_audit.log

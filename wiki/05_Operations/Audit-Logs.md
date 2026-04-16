@@ -28,3 +28,6 @@ Operational log stream for verifiable events and recovery evidence.
 ## Repo Anchors
 - `logs/`
 - `validation_evidence/`
+
+## Legacy Evidence
+- [[Triumvirate-Decisions-2026-04-16]]

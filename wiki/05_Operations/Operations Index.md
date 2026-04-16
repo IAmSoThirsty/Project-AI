@@ -45,6 +45,7 @@ graph_color: "#8A8F98"
 - [[Environment-Variables]]
 - [[Ingestion-Summary]]
 - [[Incident-Response]]
+- [[Legacy Evidence Index]]
 - [[Secret-Management]]
 - [[Triumvirate-Deployment]]
 - [[2026-04-11]]
