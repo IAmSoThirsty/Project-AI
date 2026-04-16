@@ -2,6 +2,21 @@
 <!--                                        Productivity: Active -->
 # 🏛️ Codex Deus Ultimate - God Tier Workflow Summary
 
+
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
+## Research Provenance
+
+Arch Angel protected linkage:
+- Canonical DOI registry: [DOI-Registry](../../wiki/07_Research/Publications/DOI-Registry.md)
+- Governance DOI map: [GOVERNANCE_DOI_MAP](GOVERNANCE_DOI_MAP.md)
+- Primary DOI anchors:
+- [The Sovereign Covenant](../../wiki/07_Research/Publications/Paper-02.md) - https://doi.org/10.5281/zenodo.18726221
+- [Constitutional Architectures](../../wiki/07_Research/Publications/Paper-05.md) - https://doi.org/10.5281/zenodo.18794646
+- [Governing Force In AGI](../../wiki/07_Research/Publications/Paper-15.md) - https://doi.org/10.5281/zenodo.19582420
+- [Project-AI: Sovereign Constitutional AGI Ecosystem](../../wiki/07_Research/Publications/Paper-17.md) - https://doi.org/10.5281/zenodo.19582539
+- [The Constitutional Code Store](../../wiki/07_Research/Publications/Paper-20.md) - https://doi.org/10.5281/zenodo.19591660
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
+
 ## Overview
 
 **Status:** ✅ COMPLETE **File:** `.github/workflows/codex-deus-ultimate.yml` **Total Lines:** 2,507 **Total Jobs:** 55 **Consolidated Workflows:** 28

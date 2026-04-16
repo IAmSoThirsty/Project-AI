@@ -25,6 +25,18 @@ tags:
 graph_color: "#A3E635"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.19453224](https://doi.org/10.5281/zenodo.19453224)
+- Canonical named note: [[Naive-Passive-Reviewer]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-11]]
+- Next paper: [[Paper-13]]
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # The Naive Passive Reviewer
 
 ## Summary

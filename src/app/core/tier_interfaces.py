@@ -40,11 +40,12 @@ CRITICAL BOUNDARIES:
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from datetime import timezone, datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any
 
 logger = logging.getLogger(__name__)
+UTC = getattr(datetime, "UTC", timezone.utc)  # noqa: UP017
 
 
 # ============================================================================
@@ -101,7 +102,7 @@ class TierRequest:
     target_component: str
     operation: str
     payload: dict[str, Any]
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 @dataclass
@@ -112,7 +113,7 @@ class TierResponse:
     success: bool
     result: Any
     error_message: str | None = None
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 @dataclass
@@ -136,6 +137,16 @@ class GovernanceDecisionResponse:
     council_votes: dict[str, Any] | None = None
     enforcement_actions: list[EnforcementAction] = field(default_factory=list)
     constraints: dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def allowed(self) -> bool:
+        """Compatibility alias for legacy Triumvirate callers."""
+        return self.approved
+
+    @property
+    def overrides(self) -> bool:
+        """Compatibility alias used by legacy deny/degrade mapping code."""
+        return not self.approved
 
 
 @dataclass

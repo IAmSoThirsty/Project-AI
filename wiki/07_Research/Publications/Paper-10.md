@@ -26,6 +26,19 @@ tags:
 graph_color: "#FF9F1C"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.19101877](https://doi.org/10.5281/zenodo.19101877)
+- Canonical named note: [[State-Register]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-09]]
+- Next paper: [[Paper-11]]
+- Provided source artifact: `c:/Users/Quencher/Documents/Docs/The_STATE_REGISTER_Karrick_Jeremy.docx`
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # The State Register
 
 ## Summary

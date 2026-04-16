@@ -26,6 +26,18 @@ tags:
 graph_color: "#FF70A6"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.18726221](https://doi.org/10.5281/zenodo.18726221)
+- Canonical named note: [[Sovereign-Covenant]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-01]]
+- Next paper: [[Paper-03]]
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # The Sovereign Covenant
 
 ## Summary

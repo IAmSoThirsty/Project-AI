@@ -26,6 +26,18 @@ tags:
 graph_color: "#A3E635"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.19481152](https://doi.org/10.5281/zenodo.19481152)
+- Canonical named note: [[Information-Preservation]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-12]]
+- Next paper: [[Paper-14]]
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # The Universe Does not Preserve All Information
 
 ## Summary

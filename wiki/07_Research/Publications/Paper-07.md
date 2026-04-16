@@ -26,6 +26,18 @@ tags:
 graph_color: "#A3E635"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.18827649](https://doi.org/10.5281/zenodo.18827649)
+- Canonical named note: [[The-Flat-Gap]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-06]]
+- Next paper: [[Paper-08]]
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # The Flat Gap
 
 ## Summary

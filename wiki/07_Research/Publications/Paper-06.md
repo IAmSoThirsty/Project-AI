@@ -26,6 +26,18 @@ tags:
 graph_color: "#4CC9F0"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.18826409](https://doi.org/10.5281/zenodo.18826409)
+- Canonical named note: [[TSCG-B]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-05]]
+- Next paper: [[Paper-07]]
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # TSCG-B
 
 ## Summary

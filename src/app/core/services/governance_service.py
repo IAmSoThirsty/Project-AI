@@ -14,13 +14,13 @@ and policy enforcement across all platform tiers.
 import logging
 from typing import Any
 
+from src.app.core.governance_graph import GovernanceGraph
 from src.app.core.tier_interfaces import (
     GovernanceDecisionRequest,
     GovernanceDecisionResponse,
     ITier1Governance,
 )
 from src.app.governance.planetary_defense_monolith import PLANETARY_CORE
-from src.app.core.governance_graph import GovernanceGraph
 from src.cognition.triumvirate import Triumvirate
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,10 @@ class GovernanceService(ITier1Governance):
         logger.info("Sovereign Governance Service initialized")
 
     def evaluate_action(
-        self, request: GovernanceDecisionRequest
+        self,
+        request: GovernanceDecisionRequest | str | None = None,
+        context: dict[str, Any] | None = None,
+        **kwargs: Any,
     ) -> GovernanceDecisionResponse:
         """
         Perform a comprehensive multi-stage evaluation of a proposed action.
@@ -62,6 +65,11 @@ class GovernanceService(ITier1Governance):
         Returns:
             GovernanceDecisionResponse with binding approval and constraints
         """
+        if not isinstance(request, GovernanceDecisionRequest):
+            action = request if request is not None else kwargs.get("action", "")
+            compat_context = context or kwargs.get("context") or {}
+            return self._evaluate_legacy_action(str(action), dict(compat_context))
+
         logger.info("Evaluating action through sovereign gateway: %s", request.action)
 
         action_context = request.context or {}
@@ -91,7 +99,9 @@ class GovernanceService(ITier1Governance):
 
             # Extract consensus from Triumvirate process
             # Galahad (Ethics), Cerberus (Safety), Codex (Clarity)
-            approved = triumvirate_result.get("status") != "rejected"
+            approved = bool(triumvirate_result.get("success", False)) and (
+                triumvirate_result.get("status") != "rejected"
+            )
 
             if not approved:
                 return GovernanceDecisionResponse(
@@ -138,3 +148,71 @@ class GovernanceService(ITier1Governance):
         """Rollback a tier to previous state."""
         logger.warning("ROLLBACK triggered for Tier %d: %s", tier, reason)
         return True
+
+    def _evaluate_legacy_action(
+        self, action: str, context: dict[str, Any]
+    ) -> GovernanceDecisionResponse:
+        """Evaluate the legacy Triumvirate `evaluate_action(action, context)` API."""
+        logger.info("Evaluating legacy Triumvirate action: %s", action)
+
+        denials = [
+            (
+                context.get("is_abusive"),
+                "Galahad",
+                "Galahad: abusive action blocked",
+            ),
+            (
+                context.get("affects_identity") and not context.get("user_consent"),
+                "Galahad",
+                "Galahad: identity changes require user consent",
+            ),
+            (
+                context.get("high_risk") and not context.get("fully_clarified"),
+                "Cerberus",
+                "Cerberus: high-risk action requires full clarification",
+            ),
+            (
+                context.get("sensitive_data")
+                and not context.get("proper_safeguards", False),
+                "Cerberus",
+                "Cerberus: sensitive data requires proper safeguards",
+            ),
+        ]
+
+        for denied, pillar, reason in denials:
+            if denied:
+                return GovernanceDecisionResponse(
+                    approved=False,
+                    reason=reason,
+                    council_votes={
+                        "Galahad": "deny" if pillar == "Galahad" else "allow",
+                        "Cerberus": "deny" if pillar == "Cerberus" else "allow",
+                        "Codex Deus": "defer",
+                    },
+                    constraints={"blocked_by": pillar, "action": action},
+                )
+
+        evaluations = self.constitutional_core.evaluate_laws(context)
+        violations = [e.law for e in evaluations if not e.satisfied]
+        if violations:
+            reason = f"Codex Deus: constitutional violation {[v.value for v in violations]}"
+            return GovernanceDecisionResponse(
+                approved=False,
+                reason=reason,
+                council_votes={
+                    "Galahad": "allow",
+                    "Cerberus": "allow",
+                    "Codex Deus": "deny",
+                },
+                constraints={"violated_laws": [v.name for v in violations]},
+            )
+
+        return GovernanceDecisionResponse(
+            approved=True,
+            reason="Codex Deus: action approved by compatibility governance",
+            council_votes={
+                "Galahad": "allow",
+                "Cerberus": "allow",
+                "Codex Deus": "allow",
+            },
+        )

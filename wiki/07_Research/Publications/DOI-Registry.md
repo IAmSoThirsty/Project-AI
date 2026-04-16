@@ -10,7 +10,7 @@ tags:
 
 # DOI Registry
 
-> **Complete Zenodo DOI catalog for Project-AI publications.**  
+> Complete Zenodo DOI catalog for Project-AI publications.
 > Permanent archival records at https://doi.org/10.5281/zenodo/[ID]
 
 ---
@@ -52,8 +52,8 @@ tags:
 | 5 | [[Constitutional-Architectures]] | [18794646](https://doi.org/10.5281/zenodo.18794646) | Technical Note | 1 |
 | 6 | [[TSCG-B]] | [18826409](https://doi.org/10.5281/zenodo.18826409) | Report | 2 |
 | 7 | [[The-Flat-Gap]] | [18827649](https://doi.org/10.5281/zenodo.18827649) | Preprint | 3 |
-| 8 | [[Directness-Doctrine]] | [19030041](https://doi.org/10.5281/zenodo.19030041) | Preprint | 3 |
-| 9 | [[User-Perception-Identity]] | [19055819](https://doi.org/10.5281/zenodo.19055819) | Preprint | 3 |
+| 8 | [[User-Perception-Identity]] | [19055819](https://doi.org/10.5281/zenodo.19055819) | Preprint | 3 |
+| 9 | [[Directness-Doctrine]] | [19030041](https://doi.org/10.5281/zenodo.19030041) | Preprint | 3 |
 | 10 | [[State-Register]] | [19101877](https://doi.org/10.5281/zenodo.19101877) | Report | 2 |
 | 11 | [[Asymmetric-Security]] | [19162019](https://doi.org/10.5281/zenodo.19162019) | Technical Note | 4 |
 | 12 | [[Naive-Passive-Reviewer]] | [19453224](https://doi.org/10.5281/zenodo.19453224) | Publication | 4 |
@@ -71,14 +71,17 @@ tags:
 
 ## Citation Format
 
-```
-[Author]. ([Year]). [Title]. Zenodo. https://doi.org/10.5281/zenodo.[ID]
+```text
+Karrick, J. (2026). [Title]. Zenodo. https://doi.org/10.5281/zenodo.[ID]
 ```
 
 ---
+
+## Arch Angel Guard
+
+This registry is protected by [[GOVERNANCE_DOI_MAP]] and `docs/governance/arch_angel_manifest.yaml`.
 
 ## Navigation
 
 - ↑ [[Publications Index]] - Publications index
 - → [[Sovereign-Journey]] - Timeline view
-

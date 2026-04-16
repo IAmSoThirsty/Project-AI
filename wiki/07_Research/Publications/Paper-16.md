@@ -25,6 +25,18 @@ tags:
 graph_color: "#F72585"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.19582479](https://doi.org/10.5281/zenodo.19582479)
+- Canonical named note: [[Two-Species-Aligned]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-15]]
+- Next paper: [[Paper-17]]
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # Two Species Aligned
 
 ## Summary

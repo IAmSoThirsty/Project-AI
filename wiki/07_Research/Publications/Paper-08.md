@@ -25,6 +25,18 @@ tags:
 graph_color: "#A3E635"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.19055819](https://doi.org/10.5281/zenodo.19055819)
+- Canonical named note: [[User-Perception-Identity]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-07]]
+- Next paper: [[Paper-09]]
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # User Perception and Identity Problem
 
 ## Summary

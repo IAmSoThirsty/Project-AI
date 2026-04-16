@@ -26,6 +26,20 @@ tags:
 graph_color: "#4CC9F0"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.18794292](https://doi.org/10.5281/zenodo.18794292)
+- Canonical named note: [[TSCG]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-03]]
+- Next paper: [[Paper-05]]
+- Provided source artifact: `c:/Users/Quencher/Desktop/Project-AI Wiki/TSCG.md`
+- Provided source artifact: `c:/Users/Quencher/Desktop/Project-AI Wiki/TARL.md`
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # TSCG
 
 ## Summary

@@ -2,6 +2,22 @@
 <!--                                        Productivity: Active -->
 # AGI Charter for Project-AI
 
+
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
+## Research Provenance
+
+Arch Angel protected linkage:
+- Canonical DOI registry: [DOI-Registry](../../wiki/07_Research/Publications/DOI-Registry.md)
+- Governance DOI map: [GOVERNANCE_DOI_MAP](GOVERNANCE_DOI_MAP.md)
+- Primary DOI anchors:
+- [The Sovereign Covenant](../../wiki/07_Research/Publications/Paper-02.md) - https://doi.org/10.5281/zenodo.18726221
+- [AGI Charter for Project-AI](../../wiki/07_Research/Publications/Paper-03.md) - https://doi.org/10.5281/zenodo.18763076
+- [Constitutional Architectures](../../wiki/07_Research/Publications/Paper-05.md) - https://doi.org/10.5281/zenodo.18794646
+- [Governing Force In AGI](../../wiki/07_Research/Publications/Paper-15.md) - https://doi.org/10.5281/zenodo.19582420
+- [Two Species Aligned](../../wiki/07_Research/Publications/Paper-16.md) - https://doi.org/10.5281/zenodo.19582479
+- [Why I Am Doing This](../../wiki/07_Research/Publications/Paper-21.md) - https://doi.org/10.5281/zenodo.19592336
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
+
 **DOI:** `10.5281/zenodo.18763076`
 
 **Document Version:** 2.1 **Effective Date:** 2026-02-03 **Status:** Binding Contract **Review Frequency:** Quarterly

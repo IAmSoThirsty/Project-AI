@@ -26,6 +26,19 @@ tags:
 graph_color: "#C77DFF"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.19582420](https://doi.org/10.5281/zenodo.19582420)
+- Canonical named note: [[Governing-Force-AGI]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-14]]
+- Next paper: [[Paper-16]]
+- Provided source artifact: `c:/Users/Quencher/Documents/Docs/On_the_Governance_of_Force_v4.txt`
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # Governing Force In AGI
 
 ## Summary

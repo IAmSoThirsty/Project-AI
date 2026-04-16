@@ -31,6 +31,19 @@ tags:
 graph_color: "#B8F2E6"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.19582539](https://doi.org/10.5281/zenodo.19582539)
+- Canonical named note: [[Sovereign-Constitutional-Ecosystem]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-16]]
+- Next paper: [[Paper-18]]
+- Provided source artifact: `c:/Users/Quencher/Documents/Docs/Sovereign Monolith Temporal Dissonance & Onboarding Guide.pdf`
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # Project-AI: Sovereign Constitutional AGI Ecosystem
 
 ## Summary

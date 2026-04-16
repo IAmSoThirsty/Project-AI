@@ -25,6 +25,19 @@ tags:
 graph_color: "#A3E635"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.18763076](https://doi.org/10.5281/zenodo.18763076)
+- Canonical named note: [[AGI-Charter]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-02]]
+- Next paper: [[Paper-04]]
+- Provided source artifact: `c:/Users/Quencher/Documents/Docs/AGI Charter.pdf`
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # AGI Charter for Project-AI
 
 ## Summary

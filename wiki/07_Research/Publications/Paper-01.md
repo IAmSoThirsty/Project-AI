@@ -26,6 +26,19 @@ tags:
 graph_color: "#FF9F1C"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.18726064](https://doi.org/10.5281/zenodo.18726064)
+- Canonical named note: [[OctoReflex-Report]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: None
+- Next paper: [[Paper-02]]
+- Provided source artifact: `c:/Users/Quencher/Desktop/Project-AI Wiki/OctoReflex.md`
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # OctoReflex
 
 ## Summary

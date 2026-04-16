@@ -2,6 +2,22 @@
 <!--                                        Productivity: Active -->
 # Algorithmic Philosophy: Constitutional Resonance
 
+
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
+## Research Provenance
+
+Arch Angel protected linkage:
+- Canonical DOI registry: [DOI-Registry](../../wiki/07_Research/Publications/DOI-Registry.md)
+- Governance DOI map: [GOVERNANCE_DOI_MAP](GOVERNANCE_DOI_MAP.md)
+- Primary DOI anchors:
+- [The Sovereign Covenant](../../wiki/07_Research/Publications/Paper-02.md) - https://doi.org/10.5281/zenodo.18726221
+- [Constitutional Architectures](../../wiki/07_Research/Publications/Paper-05.md) - https://doi.org/10.5281/zenodo.18794646
+- [The Flat Gap](../../wiki/07_Research/Publications/Paper-07.md) - https://doi.org/10.5281/zenodo.18827649
+- [Governing Force In AGI](../../wiki/07_Research/Publications/Paper-15.md) - https://doi.org/10.5281/zenodo.19582420
+- [Two Species Aligned](../../wiki/07_Research/Publications/Paper-16.md) - https://doi.org/10.5281/zenodo.19582479
+- [Project-AI: Sovereign Constitutional AGI Ecosystem](../../wiki/07_Research/Publications/Paper-17.md) - https://doi.org/10.5281/zenodo.19582539
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
+
 **Computational Aesthetic Movement**: Sovereign Generative Formalism
 **Implementation Target**: p5.js
 **Conceptual Seed**: The Collective Invariant (The One in the Many)

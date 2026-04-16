@@ -29,6 +29,20 @@ tags:
 graph_color: "#FEE440"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.19592336](https://doi.org/10.5281/zenodo.19592336)
+- Canonical named note: [[Why-I-Am-Doing-This]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-20]]
+- Next paper: None
+- Provided source artifact: `c:/Users/Quencher/Documents/Docs/ill show you complete.txt`
+- Provided source artifact: `c:/Users/Quencher/Documents/Docs/Why I Am  Doing This.txt`
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # Why I Am Doing This
 
 ## Summary

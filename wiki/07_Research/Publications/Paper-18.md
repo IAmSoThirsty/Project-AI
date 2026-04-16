@@ -27,6 +27,19 @@ tags:
 graph_color: "#2EC4B6"
 ---
 
+
+<!-- ARCH_ANGEL:REFERENCES START -->
+## References
+
+- DOI: [10.5281/zenodo.19583170](https://doi.org/10.5281/zenodo.19583170)
+- Canonical named note: [[Iron-Path-Executor]]
+- DOI registry: [[DOI-Registry]]
+- Publications index: [[Publications Index]]
+- Previous paper: [[Paper-17]]
+- Next paper: [[Paper-19]]
+- Provided source artifact: `c:/Users/Quencher/Documents/Docs/The Iron Path Executor_ Formal Technical Specification for Deterministic AI Governance.pdf`
+<!-- ARCH_ANGEL:REFERENCES END -->
+
 # The Iron Path Executor
 
 ## Summary
