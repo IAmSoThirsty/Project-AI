@@ -1,24 +1,32 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
-# Feature Request
-
 ---
 name: Feature request
-about: Suggest an idea for this project
-title: ''
-labels: ''
-assignees: ''
-
+about: Propose a focused improvement
+title: "[Feature] "
+labels: ["enhancement"]
+assignees: ""
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+## Summary
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+What should be added or improved?
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+## Problem
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+What current workflow or limitation does this solve?
+
+## Proposed Shape
+
+Describe the smallest useful version of the feature.
+
+## Verification
+
+How should this feature prove that it works?
+
+```text
+Suggested command/test:
+Expected result:
+```
+
+## Scope Boundary
+
+What should this feature explicitly not do?

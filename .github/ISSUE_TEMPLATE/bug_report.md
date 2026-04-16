@@ -1,45 +1,42 @@
-<!--                                         [2026-03-03 13:45] -->
-<!--                                        Productivity: Active -->
-# Bug Report
-
 ---
 name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
-
+about: Report a reproducible problem
+title: "[Bug] "
+labels: ["bug"]
+assignees: ""
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Summary
 
-**To Reproduce**
-Steps to reproduce the behavior:
+What broke?
 
-1. Go to '...'
-1. Click on '....'
-1. Scroll down to '....'
-1. See error
+## Reproduction
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+Steps to reproduce:
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+1.
+2.
+3.
 
-**Desktop (please complete the following information):**
+## Expected Result
 
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+What should have happened?
 
-**Smartphone (please complete the following information):**
+## Actual Result
 
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+What happened instead?
 
-**Additional context**
-Add any other context about the problem here.
+## Environment
+
+- OS:
+- Python version:
+- Branch:
+- Command used:
+
+## Evidence
+
+Paste the relevant output, traceback, or screenshot.
+
+```text
+
+```

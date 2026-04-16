@@ -1,5 +1,10 @@
 # Project-AI
 
+![Verified POC Surface](https://img.shields.io/badge/surface-verified_POC-2f6f46)
+![Python 3.12](https://img.shields.io/badge/python-3.12-3776AB)
+![Local First](https://img.shields.io/badge/runtime-local_first-3b4b5a)
+![Obsidian Backed](https://img.shields.io/badge/memory-obsidian_backed-6f42c1)
+
 Project-AI is a research workspace for building and testing local AI governance,
 memory, and agentic tooling. This branch is the polished GitHub-facing surface:
 it highlights only verified proofs of concept and gives newcomers a clear path
@@ -8,16 +13,27 @@ through the repo.
 This branch does not claim the entire monorepo is production-ready. It presents
 the verified pieces first, with evidence and scope boundaries.
 
+## Why This Exists
+
+Project-AI is exploring a practical question: how can a local AI workspace grow
+memory, structure, verification, and agency without losing track of what is
+actually proven?
+
+The current answer is intentionally grounded: start with a Caregiver Scribe that
+learns the workspace, writes its maps into Obsidian, and keeps public claims tied
+to reproducible evidence.
+
 ## Start Here For Newcomers
 
 If you are checking out Project-AI for the first time, start here:
 
 1. Read this README to understand the verified surface.
-2. Open [docs/VERIFIED_POC_MANIFEST.md](docs/VERIFIED_POC_MANIFEST.md) to see
+2. Open [docs/START_HERE.md](docs/START_HERE.md) for the guided first pass.
+3. Open [docs/VERIFIED_POC_MANIFEST.md](docs/VERIFIED_POC_MANIFEST.md) to see
    exactly what has been verified and how.
-3. Run the focused verification commands below.
-4. Explore the Caregiver Scribe outputs in your Obsidian vault.
-5. Treat everything outside the verified manifest as experimental until proven.
+4. Run the focused verification commands below.
+5. Explore the Caregiver Scribe outputs in your Obsidian vault.
+6. Treat everything outside the verified manifest as experimental until proven.
 
 ## Quick Verification
 
@@ -47,6 +63,18 @@ Verified POC branch surface checks passed.
 
 Detailed evidence lives in the
 [Verified POC Manifest](docs/VERIFIED_POC_MANIFEST.md).
+
+## Documentation Path
+
+For a clean read-through:
+
+| Document | Purpose |
+| --- | --- |
+| [Start Here](docs/START_HERE.md) | First-pass guide for newcomers. |
+| [Verified POC Manifest](docs/VERIFIED_POC_MANIFEST.md) | Evidence and scope boundaries for each verified claim. |
+| [Personal Agent](docs/PERSONAL_AGENT.md) | Caregiver Scribe usage and configuration. |
+| [Reviewer Guide](docs/REVIEWER_GUIDE.md) | How to evaluate this branch without getting lost in the monorepo. |
+| [POC Branch Policy](docs/POC_BRANCH_POLICY.md) | Rules for keeping the branch face evidence-first. |
 
 ## Main POC: Caregiver Scribe
 
@@ -100,6 +128,18 @@ High-level areas newcomers will see:
 | `wiki/` | Obsidian vault | Source for scribe navigation |
 | `docs/` | Policies, manifests, and project notes | Mixed; manifest is authoritative |
 | `src/`, `api/`, `engines/`, `security/` | Experimental implementation areas | Not branch-face verified unless listed in manifest |
+
+## For Reviewers
+
+This branch is designed to be reviewed from the outside in:
+
+1. Confirm the README only lists manifest-backed POCs.
+2. Run the quick verification commands.
+3. Inspect the focused scribe implementation and tests.
+4. Treat older broad architecture documents as background research, not claims.
+
+The reviewer flow is documented in
+[docs/REVIEWER_GUIDE.md](docs/REVIEWER_GUIDE.md).
 
 ## Project-AI CLI
 
