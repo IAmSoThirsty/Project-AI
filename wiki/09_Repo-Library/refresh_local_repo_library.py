@@ -6,16 +6,27 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
-
 
 SCRIPT = Path(__file__).resolve()
 LIB = SCRIPT.parent
 WIKI = LIB.parent
 ROOT = WIKI.parent
 IGNORED_SHARDS = LIB / "Ignored-Files"
+SCRIPTS = ROOT / "scripts"
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
+
+from repo_scan_contract import (
+    SCAN_PHASES,
+    collect_repo_scan,
+    ordered_file_paths,
+    scan_order_for_path,
+    scan_phase_for_path,
+)
 
 GENERATED = {
     "wiki/09_Repo-Library/Local-Repo-Library.md",
@@ -47,19 +58,6 @@ def run_git(args: list[str], check: bool = True) -> str:
     if check and result.returncode != 0:
         raise RuntimeError(f"git {' '.join(args)} failed: {result.stderr.strip()}")
     return result.stdout
-
-
-def run_git_z(args: list[str]) -> list[str]:
-    result = subprocess.run(
-        ["git", *args],
-        cwd=ROOT,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=False,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"git {' '.join(args)} failed: {result.stderr.decode(errors='replace')}")
-    return sorted(x.decode("utf-8", errors="replace") for x in result.stdout.split(b"\0") if x)
 
 
 def repo_rel(path: Path) -> str:
@@ -102,33 +100,6 @@ def local_files() -> list[str]:
     return sorted(files)
 
 
-def branch_rows() -> list[dict[str, str]]:
-    fmt = "%(refname)%00%(refname:short)%00%(objectname:short)%00%(upstream:short)%00%(contents:subject)%00%(HEAD)"
-    rows: list[dict[str, str]] = []
-    for line in run_git(["for-each-ref", f"--format={fmt}", "refs/heads", "refs/remotes"]).splitlines():
-        parts = line.split("\0")
-        if len(parts) != 6:
-            continue
-        full_ref, short, commit, upstream, subject, head = parts
-        if full_ref.endswith("/HEAD"):
-            kind = "remote-head"
-        elif full_ref.startswith("refs/remotes/"):
-            kind = "remote"
-        else:
-            kind = "local"
-        rows.append(
-            {
-                "kind": kind,
-                "name": short,
-                "commit": commit,
-                "upstream": upstream,
-                "subject": subject,
-                "current": "yes" if head == "*" else "",
-            }
-        )
-    return rows
-
-
 def ignored_details(paths: list[str]) -> dict[str, dict[str, str]]:
     if not paths:
         return {}
@@ -141,13 +112,19 @@ def ignored_details(paths: list[str]) -> dict[str, dict[str, str]]:
         stderr=subprocess.PIPE,
         check=False,
     )
-    parts = [p.decode("utf-8", errors="replace") for p in result.stdout.split(b"\0") if p]
+    parts = [
+        p.decode("utf-8", errors="replace") for p in result.stdout.split(b"\0") if p
+    ]
     details: dict[str, dict[str, str]] = {}
     for index in range(0, len(parts), 4):
         if index + 3 >= len(parts):
             continue
         source, line, pattern, path = parts[index : index + 4]
-        details[path] = {"ignore_source": source, "ignore_line": line, "ignore_pattern": pattern}
+        details[path] = {
+            "ignore_source": source,
+            "ignore_line": line,
+            "ignore_pattern": pattern,
+        }
     return details
 
 
@@ -165,7 +142,16 @@ def path_category(rel: str) -> str:
     p = rel.replace("\\", "/")
     lower = p.lower()
     suffix = Path(p).suffix.lower()
-    if any(part in lower for part in ["/__pycache__/", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".gradle/"]):
+    if any(
+        part in lower
+        for part in [
+            "/__pycache__/",
+            ".pytest_cache",
+            ".mypy_cache",
+            ".ruff_cache",
+            ".gradle/",
+        ]
+    ):
         return "cache"
     if lower.startswith((".venv/", ".venv_airllm/", "venv/", "node_modules/")):
         return "dependency-environment"
@@ -175,15 +161,56 @@ def path_category(rel: str) -> str:
         return "runtime-log-or-lock"
     if lower.startswith(("audit_reports/", "test-artifacts/", "ci-reports/")):
         return "generated-report"
-    if lower.startswith("unity/") and any(part in lower for part in ["/library/", "/temp/", "/obj/", "/build/", "/logs/"]):
+    if lower.startswith("unity/") and any(
+        part in lower for part in ["/library/", "/temp/", "/obj/", "/build/", "/logs/"]
+    ):
         return "unity-generated"
-    if suffix in {".py", ".js", ".ts", ".tsx", ".jsx", ".java", ".kt", ".go", ".rs", ".c", ".h", ".cpp", ".cs", ".sh", ".ps1"}:
+    if suffix in {
+        ".py",
+        ".js",
+        ".ts",
+        ".tsx",
+        ".jsx",
+        ".java",
+        ".kt",
+        ".go",
+        ".rs",
+        ".c",
+        ".h",
+        ".cpp",
+        ".cs",
+        ".sh",
+        ".ps1",
+    }:
         return "code"
     if suffix in {".md", ".rst", ".txt"}:
         return "doc"
-    if suffix in {".json", ".jsonl", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".xml", ".csv", ".db"}:
+    if suffix in {
+        ".json",
+        ".jsonl",
+        ".yaml",
+        ".yml",
+        ".toml",
+        ".ini",
+        ".cfg",
+        ".xml",
+        ".csv",
+        ".db",
+    }:
         return "data"
-    if suffix in {".png", ".jpg", ".jpeg", ".gif", ".ico", ".pdf", ".exe", ".bin", ".class", ".pyc", ".jar"}:
+    if suffix in {
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".gif",
+        ".ico",
+        ".pdf",
+        ".exe",
+        ".bin",
+        ".class",
+        ".pyc",
+        ".jar",
+    }:
         return "binary-or-build-artifact"
     return "repo-file"
 
@@ -253,6 +280,8 @@ def file_record(
     details: dict[str, dict[str, str]],
     statuses: dict[str, dict[str, str]],
     generated_at: str,
+    database_scan_phase: str,
+    database_scan_order: int,
 ) -> dict[str, object]:
     path = ROOT / rel
     if rel in tracked:
@@ -278,15 +307,21 @@ def file_record(
         "top_root": top_root(rel),
         "category": path_category(rel),
         "git_state": git_state,
+        "database_scan_phase": database_scan_phase,
+        "database_scan_order": database_scan_order,
         "git_status": statuses.get(rel, {"code": "", "index": "", "worktree": ""}),
         "ignore_source": detail.get("ignore_source", ""),
         "ignore_line": detail.get("ignore_line", ""),
         "ignore_pattern": detail.get("ignore_pattern", ""),
         "why_untracked_or_ignored": reason,
         "size_bytes": None if rel in GENERATED else stat.st_size,
-        "modified_at": generated_at
-        if rel in GENERATED
-        else datetime.fromtimestamp(stat.st_mtime, timezone.utc).isoformat(timespec="seconds"),
+        "modified_at": (
+            generated_at
+            if rel in GENERATED
+            else datetime.fromtimestamp(stat.st_mtime, timezone.utc).isoformat(
+                timespec="seconds"
+            )
+        ),
         "sha256": digest,
         "sha256_status": digest_status,
     }
@@ -347,7 +382,10 @@ def md_escape(value: object) -> str:
 
 
 def table(headers: list[str], rows: list[list[object]]) -> str:
-    lines = ["| " + " | ".join(headers) + " |", "| " + " | ".join("---" for _ in headers) + " |"]
+    lines = [
+        "| " + " | ".join(headers) + " |",
+        "| " + " | ".join("---" for _ in headers) + " |",
+    ]
     for row in rows:
         lines.append("| " + " | ".join(md_escape(cell) for cell in row) + " |")
     return "\n".join(lines)
@@ -365,7 +403,9 @@ def shard_name(root: str, index: int) -> str:
     return f"Ignored-{safe}-{index:03d}.md"
 
 
-def ignored_shards(ignored_records: list[dict[str, object]], generated_at: str) -> list[str]:
+def ignored_shards(
+    ignored_records: list[dict[str, object]], generated_at: str
+) -> list[str]:
     IGNORED_SHARDS.mkdir(parents=True, exist_ok=True)
     root_resolved = IGNORED_SHARDS.resolve()
     if not str(root_resolved).startswith(str(LIB.resolve())):
@@ -467,6 +507,7 @@ def local_repo_library(
     generated_at: str,
     branch: str,
     head: str,
+    scan_phases: tuple[str, ...],
     records: list[dict[str, object]],
     folders: list[dict[str, object]],
     shards: list[str],
@@ -493,6 +534,12 @@ The local working copy is primary. GitHub/remotes are tracked as outside context
 - Total local filesystem files indexed, excluding `.git` internals: {len(records)}
 - Folder records: {len(folders)}
 - Ignored markdown shards: {len(shards)}
+
+## Database Scan Order
+
+Every repository database refresh uses the shared local scan contract.
+
+{chr(10).join(f"- {idx + 1}. `{phase}`" for idx, phase in enumerate(scan_phases))}
 
 ## Git State Counts
 
@@ -529,13 +576,33 @@ The local working copy is primary. GitHub/remotes are tracked as outside context
 """
 
 
-def git_state_page(generated_at: str, branch: str, head: str, status_short: str, branches: list[dict[str, str]]) -> str:
+def git_state_page(
+    generated_at: str,
+    branch: str,
+    head: str,
+    status_short: str,
+    branches: list[dict[str, str]],
+    scan_phases: tuple[str, ...],
+) -> str:
     local = [b for b in branches if b["kind"] == "local"]
     remote = [b for b in branches if b["kind"] in {"remote", "remote-head"}]
-    local_rows = [[b["current"], f"`{b['name']}`", b["commit"], f"`{b['upstream']}`", b["subject"]] for b in local]
-    remote_rows = [[b["kind"], f"`{b['name']}`", b["commit"], b["subject"]] for b in remote]
+    local_rows = [
+        [
+            b["current"],
+            f"`{b['name']}`",
+            b["commit"],
+            f"`{b['upstream']}`",
+            b["subject"],
+        ]
+        for b in local
+    ]
+    remote_rows = [
+        [b["kind"], f"`{b['name']}`", b["commit"], b["subject"]] for b in remote
+    ]
     remotes = run_git(["remote", "-v"]).splitlines()
-    submodules = run_git(["submodule", "status", "--recursive"], check=False).splitlines()
+    submodules = run_git(
+        ["submodule", "status", "--recursive"], check=False
+    ).splitlines()
     return f"""---
 agent: local-repo-library
 generated_at: {generated_at}
@@ -553,6 +620,10 @@ Local HEAD: `{head}`
 ```text
 {status_short}
 ```
+
+## Database Scan Order
+
+{chr(10).join(f"- {idx + 1}. `{phase}`" for idx, phase in enumerate(scan_phases))}
 
 ## Local Branches
 
@@ -577,9 +648,21 @@ Local HEAD: `{head}`
 """
 
 
-def working_tree_page(generated_at: str, branch: str, head: str, status_short: str, status_lines: list[str]) -> str:
-    modified = [[line[:2], f"`{line[3:]}`"] for line in status_lines if not line.startswith("??")]
-    untracked = [[line[:2], f"`{line[3:]}`"] for line in status_lines if line.startswith("??")]
+def working_tree_page(
+    generated_at: str,
+    branch: str,
+    head: str,
+    status_short: str,
+    status_lines: list[str],
+) -> str:
+    modified = [
+        [line[:2], f"`{line[3:]}`"]
+        for line in status_lines
+        if not line.startswith("??")
+    ]
+    untracked = [
+        [line[:2], f"`{line[3:]}`"] for line in status_lines if line.startswith("??")
+    ]
     return f"""---
 agent: local-repo-library
 generated_at: {generated_at}
@@ -616,6 +699,7 @@ HEAD: `{head}`
 
 def file_library_page(generated_at: str, records: list[dict[str, object]]) -> str:
     states = Counter(str(r["git_state"]) for r in records)
+    phases = Counter(str(r["database_scan_phase"]) for r in records)
     cats = Counter(str(r["category"]) for r in records)
     roots = Counter(str(r["top_root"]) for r in records)
     exts = Counter(str(r["extension"]) for r in records)
@@ -629,9 +713,15 @@ source: local-file-library
 
 Every local file outside `.git` internals is represented in `local_file_manifest.jsonl`.
 
+The manifest records `database_scan_phase` and `database_scan_order` for each path.
+
 ## Git States
 
 {bullets(states)}
+
+## Database Scan Phases
+
+{bullets(phases)}
 
 ## Categories
 
@@ -691,10 +781,15 @@ Every folder containing local files outside `.git` internals is represented in `
 """
 
 
-def ignored_library_page(generated_at: str, ignored_records: list[dict[str, object]], shards: list[str]) -> str:
+def ignored_library_page(
+    generated_at: str, ignored_records: list[dict[str, object]], shards: list[str]
+) -> str:
     roots = Counter(str(r["top_root"]) for r in ignored_records)
     cats = Counter(str(r["category"]) for r in ignored_records)
-    rules = Counter(f"{r['ignore_source']}:{r['ignore_line']} `{r['ignore_pattern']}`" for r in ignored_records)
+    rules = Counter(
+        f"{r['ignore_source']}:{r['ignore_line']} `{r['ignore_pattern']}`"
+        for r in ignored_records
+    )
     shard_links = "\n".join(f"- [[{Path(shard).stem}]]" for shard in shards)
     return f"""---
 agent: local-repo-library
@@ -740,20 +835,49 @@ def main() -> None:
     generated_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
     LIB.mkdir(parents=True, exist_ok=True)
 
-    branch = run_git(["branch", "--show-current"]).strip() or "(detached)"
-    head = run_git(["rev-parse", "HEAD"]).strip()
-    status_short = run_git(["status", "--short", "--branch"]).rstrip()
-    status_lines = run_git(["status", "--porcelain=v1", "-uall"]).splitlines()
+    scan = collect_repo_scan(ROOT)
+    if scan.phases != SCAN_PHASES:
+        raise RuntimeError(
+            "repo scan order drifted: "
+            + " -> ".join(scan.phases)
+            + " expected "
+            + " -> ".join(SCAN_PHASES)
+        )
+
+    branch = scan.branch
+    head = scan.head
+    status_short = scan.status_short
+    status_lines = scan.status_lines
     statuses = git_status_map(status_lines)
 
-    tracked = set(run_git_z(["ls-files", "-z"]))
-    untracked = set(run_git_z(["ls-files", "--others", "--exclude-standard", "-z"]))
-    ignored = set(run_git_z(["ls-files", "--others", "--ignored", "--exclude-standard", "-z"]))
+    tracked = scan.tracked
+    untracked = scan.untracked
+    ignored = scan.ignored
     details = ignored_details(sorted(ignored))
 
-    all_paths = sorted(set(local_files()) | tracked | untracked | ignored)
-    records = [file_record(path, tracked, untracked, ignored, details, statuses, generated_at) for path in all_paths if (ROOT / path).exists()]
-    records = sorted(records, key=lambda item: str(item["relative_path"]).lower())
+    all_paths = ordered_file_paths(local_files(), scan)
+    records = [
+        file_record(
+            path,
+            tracked,
+            untracked,
+            ignored,
+            details,
+            statuses,
+            generated_at,
+            scan_phase_for_path(path, scan),
+            scan_order_for_path(path, scan),
+        )
+        for path in all_paths
+        if (ROOT / path).exists()
+    ]
+    records = sorted(
+        records,
+        key=lambda item: (
+            int(item["database_scan_order"]),
+            str(item["relative_path"]).lower(),
+        ),
+    )
     ignored_records = [record for record in records if record["git_state"] == "ignored"]
     folders = folder_records(records)
 
@@ -763,29 +887,75 @@ def main() -> None:
 
     shards = ignored_shards(ignored_records, generated_at)
     health = link_health()
-    branches = branch_rows()
+    branches = scan.branches
 
-    write_text(LIB / "Local-Repo-Library.md", local_repo_library(generated_at, branch, head, records, folders, shards, health))
-    write_text(LIB / "Local-Git-State.md", git_state_page(generated_at, branch, head, status_short, branches))
-    write_text(LIB / "Local-Working-Tree.md", working_tree_page(generated_at, branch, head, status_short, status_lines))
+    write_text(
+        LIB / "Local-Repo-Library.md",
+        local_repo_library(
+            generated_at, branch, head, scan.phases, records, folders, shards, health
+        ),
+    )
+    write_text(
+        LIB / "Local-Git-State.md",
+        git_state_page(generated_at, branch, head, status_short, branches, scan.phases),
+    )
+    write_text(
+        LIB / "Local-Working-Tree.md",
+        working_tree_page(generated_at, branch, head, status_short, status_lines),
+    )
     write_text(LIB / "Local-File-Library.md", file_library_page(generated_at, records))
-    write_text(LIB / "Local-Folder-Library.md", folder_library_page(generated_at, folders))
-    write_text(LIB / "Ignored-File-Library.md", ignored_library_page(generated_at, ignored_records, shards))
+    write_text(
+        LIB / "Local-Folder-Library.md", folder_library_page(generated_at, folders)
+    )
+    write_text(
+        LIB / "Ignored-File-Library.md",
+        ignored_library_page(generated_at, ignored_records, shards),
+    )
 
     # Rebuild once more so generated library pages and shards are included as local files.
-    all_paths = sorted(set(local_files()) | tracked | untracked | ignored)
-    records = [file_record(path, tracked, untracked, ignored, details, statuses, generated_at) for path in all_paths if (ROOT / path).exists()]
-    records = sorted(records, key=lambda item: str(item["relative_path"]).lower())
+    all_paths = ordered_file_paths(local_files(), scan)
+    records = [
+        file_record(
+            path,
+            tracked,
+            untracked,
+            ignored,
+            details,
+            statuses,
+            generated_at,
+            scan_phase_for_path(path, scan),
+            scan_order_for_path(path, scan),
+        )
+        for path in all_paths
+        if (ROOT / path).exists()
+    ]
+    records = sorted(
+        records,
+        key=lambda item: (
+            int(item["database_scan_order"]),
+            str(item["relative_path"]).lower(),
+        ),
+    )
     ignored_records = [record for record in records if record["git_state"] == "ignored"]
     folders = folder_records(records)
     write_jsonl(LIB / "local_file_manifest.jsonl", records)
     write_jsonl(LIB / "ignored_file_manifest.jsonl", ignored_records)
     write_jsonl(LIB / "local_folder_manifest.jsonl", folders)
     health = link_health()
-    write_text(LIB / "Local-Repo-Library.md", local_repo_library(generated_at, branch, head, records, folders, shards, health))
+    write_text(
+        LIB / "Local-Repo-Library.md",
+        local_repo_library(
+            generated_at, branch, head, scan.phases, records, folders, shards, health
+        ),
+    )
     write_text(LIB / "Local-File-Library.md", file_library_page(generated_at, records))
-    write_text(LIB / "Local-Folder-Library.md", folder_library_page(generated_at, folders))
-    write_text(LIB / "Ignored-File-Library.md", ignored_library_page(generated_at, ignored_records, shards))
+    write_text(
+        LIB / "Local-Folder-Library.md", folder_library_page(generated_at, folders)
+    )
+    write_text(
+        LIB / "Ignored-File-Library.md",
+        ignored_library_page(generated_at, ignored_records, shards),
+    )
 
     print(
         "LOCAL_LIBRARY_OK "

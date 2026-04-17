@@ -33,9 +33,15 @@ def test_heart_restore_verifier_checks_git_library_and_branches() -> None:
     payload = json.loads(result.stdout)
     scopes = {check["scope"] for check in payload["checks"]}
 
+    assert "repo-scan-contract" in scopes
     assert "git" in scopes
     assert "repo-library" in scopes
     assert "git-branches" in scopes
+    assert any(
+        check["scope"] == "repo-scan-contract"
+        and "tracked -> branches -> untracked-git" in check["message"]
+        for check in payload["checks"]
+    )
     assert any(
         check["scope"] == "git-branches" and "surveyed" in check["message"]
         for check in payload["checks"]

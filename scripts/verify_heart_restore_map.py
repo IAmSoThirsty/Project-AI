@@ -6,11 +6,16 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import subprocess
 import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from repo_scan_contract import SCAN_PHASES, RepoScanSnapshot, collect_repo_scan
 
 BUCKET_1_REQUIRED = (
     "governance/sovereign_runtime.py",
@@ -150,24 +155,6 @@ def exists(root: Path, relative_path: str) -> bool:
     return (root / relative_path).exists()
 
 
-def run_git(root: Path, args: list[str]) -> tuple[int, str, str]:
-    result = subprocess.run(
-        ["git", *args],
-        cwd=root,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    return result.returncode, result.stdout, result.stderr
-
-
-def git_lines(root: Path, args: list[str]) -> list[str]:
-    code, stdout, _stderr = run_git(root, args)
-    if code != 0:
-        return []
-    return [line for line in stdout.splitlines() if line]
-
-
 def baseline_mentions(root: Path, relative_path: str) -> bool:
     needles = {relative_path, relative_path.replace("/", "\\")}
     for manifest in BASELINE_FILES:
@@ -296,74 +283,67 @@ def validate_paths(root: Path) -> list[Check]:
     return checks
 
 
-def validate_git_state(root: Path) -> tuple[list[Check], dict[str, Any]]:
-    checks: list[Check] = []
-    code, inside, error = run_git(root, ["rev-parse", "--is-inside-work-tree"])
-    if code != 0 or inside.strip() != "true":
-        checks.append(
-            Check("fail", ".git", "git", error.strip() or "not a git worktree")
+def validate_scan_order(snapshot: RepoScanSnapshot) -> list[Check]:
+    return [
+        Check(
+            "pass" if snapshot.phases == SCAN_PHASES else "fail",
+            "repo-scan-contract",
+            "repo-scan-contract",
+            "scan order is " + " -> ".join(snapshot.phases),
         )
-        return checks, {}
+    ]
 
-    git_dir_code, git_dir_text, git_dir_error = run_git(
-        root, ["rev-parse", "--git-dir"]
-    )
-    if git_dir_code != 0:
-        checks.append(Check("fail", ".git", "git", git_dir_error.strip()))
-        return checks, {}
 
-    git_dir_raw = git_dir_text.strip()
-    git_dir = Path(git_dir_raw)
-    if not git_dir.is_absolute():
-        git_dir = root / git_dir
+def validate_tracked_phase(snapshot: RepoScanSnapshot) -> list[Check]:
+    return [
+        Check(
+            "pass",
+            "tracked",
+            "git",
+            f"{len(snapshot.tracked)} tracked paths scanned before branches",
+        )
+    ]
+
+
+def validate_untracked_git_phase(snapshot: RepoScanSnapshot) -> list[Check]:
+    checks: list[Check] = []
     checks.append(
         Check(
-            "pass" if git_dir.exists() else "fail",
-            git_dir_raw,
+            "pass" if snapshot.git_dir_exists else "fail",
+            snapshot.git_dir_raw,
             "git",
             (
                 "git metadata path resolves"
-                if git_dir.exists()
+                if snapshot.git_dir_exists
                 else "git metadata path is missing"
             ),
         )
     )
-    for required in ("HEAD", "config", "index", "objects", "refs"):
-        path = git_dir / required
+    for required, present in snapshot.git_metadata.items():
         checks.append(
             Check(
-                "pass" if path.exists() else "fail",
-                f"{git_dir_raw}/{required}",
+                "pass" if present else "fail",
+                f"{snapshot.git_dir_raw}/{required}",
                 "git",
                 (
                     "required git metadata exists"
-                    if path.exists()
+                    if present
                     else "required git metadata is missing"
                 ),
             )
         )
 
-    head = git_lines(root, ["rev-parse", "HEAD"])
-    branch = git_lines(root, ["branch", "--show-current"])
-    tracked = git_lines(root, ["ls-files"])
-    untracked = git_lines(root, ["ls-files", "--others", "--exclude-standard"])
-    ignored = git_lines(
-        root, ["ls-files", "--others", "--ignored", "--exclude-standard"]
-    )
-    porcelain = git_lines(root, ["status", "--porcelain=v1"])
-    modified = [line for line in porcelain if not line.startswith("??")]
+    modified = [line for line in snapshot.status_lines if not line.startswith("??")]
 
-    current_head = head[0] if head else ""
-    checks.append(Check("pass", "HEAD", "git", f"current HEAD is {current_head[:12]}"))
+    checks.append(Check("pass", "HEAD", "git", f"current HEAD is {snapshot.head[:12]}"))
     checks.append(
         Check(
             "pass",
             "branch",
             "git",
-            f"current branch is {branch[0] if branch else '(detached)'}",
+            f"current branch is {snapshot.branch}",
         )
     )
-    checks.append(Check("pass", "tracked", "git", f"{len(tracked)} tracked paths"))
     checks.append(
         Check(
             "warn" if modified else "pass",
@@ -374,25 +354,19 @@ def validate_git_state(root: Path) -> tuple[list[Check], dict[str, Any]]:
     )
     checks.append(
         Check(
-            "warn" if untracked else "pass",
+            "warn" if snapshot.untracked else "pass",
             "untracked",
             "git",
-            f"{len(untracked)} untracked non-ignored paths",
+            f"{len(snapshot.untracked)} untracked non-ignored paths",
         )
     )
-    checks.append(Check("pass", "ignored", "git", f"{len(ignored)} ignored paths"))
-
-    state = {
-        "head": current_head,
-        "tracked": set(tracked),
-        "untracked": set(untracked),
-        "ignored": set(ignored),
-        "modified": modified,
-    }
-    return checks, state
+    checks.append(
+        Check("pass", "ignored", "git", f"{len(snapshot.ignored)} ignored paths")
+    )
+    return checks
 
 
-def validate_repo_library(root: Path, git_state: dict[str, Any]) -> list[Check]:
+def validate_repo_library(root: Path, snapshot: RepoScanSnapshot) -> list[Check]:
     checks: list[Check] = []
     for path in REPO_LIBRARY_REQUIRED:
         checks.append(
@@ -408,7 +382,7 @@ def validate_repo_library(root: Path, git_state: dict[str, Any]) -> list[Check]:
             )
         )
 
-    current_head = str(git_state.get("head") or "")
+    current_head = snapshot.head
     library_head = read_library_head(root)
     if library_head and current_head:
         checks.append(
@@ -455,7 +429,7 @@ def validate_repo_library(root: Path, git_state: dict[str, Any]) -> list[Check]:
 
     ignored_manifest = root / "wiki/09_Repo-Library/ignored_file_manifest.jsonl"
     ignored_count = count_jsonl_lines(ignored_manifest)
-    live_ignored = len(git_state.get("ignored") or [])
+    live_ignored = len(snapshot.ignored)
     if ignored_count and live_ignored:
         checks.append(
             Check(
@@ -472,33 +446,25 @@ def validate_repo_library(root: Path, git_state: dict[str, Any]) -> list[Check]:
     return checks
 
 
-def validate_branch_trees(root: Path) -> list[Check]:
+def validate_branch_trees(snapshot: RepoScanSnapshot) -> list[Check]:
     checks: list[Check] = []
-    refs = git_lines(
-        root,
-        ["for-each-ref", "--format=%(refname:short)", "refs/heads", "refs/remotes"],
-    )
-    refs = [ref for ref in refs if not ref.endswith("/HEAD")]
+    survey = snapshot.branch_tree_survey
+    refs = list(survey.get("refs") or [])
     if not refs:
         return [
             Check("warn", "branches", "git-branches", "no local or remote refs found")
         ]
 
     checks.append(
-        Check("pass", "branches", "git-branches", f"surveyed {len(refs)} refs")
+        Check(
+            "pass",
+            "branches",
+            "git-branches",
+            f"surveyed {len(refs)} refs after tracked scan",
+        )
     )
-    missing_by_ref: list[tuple[str, list[str]]] = []
-    unreadable_refs: list[str] = []
-    required = set(BUCKET_1_REQUIRED)
-    for ref in refs:
-        code, stdout, _stderr = run_git(root, ["ls-tree", "-r", "--name-only", ref])
-        if code != 0:
-            unreadable_refs.append(ref)
-            continue
-        tree_paths = set(stdout.splitlines())
-        missing = sorted(required - tree_paths)
-        if missing:
-            missing_by_ref.append((ref, missing))
+    missing_by_ref = list(survey.get("missing_by_ref") or [])
+    unreadable_refs = list(survey.get("unreadable_refs") or [])
 
     if unreadable_refs:
         checks.append(
@@ -511,8 +477,8 @@ def validate_branch_trees(root: Path) -> list[Check]:
         )
 
     if missing_by_ref:
-        worst_ref, worst_missing = max(missing_by_ref, key=lambda item: len(item[1]))
-        examples = ", ".join(ref for ref, _missing in missing_by_ref[:5])
+        worst = max(missing_by_ref, key=lambda item: len(item["missing"]))
+        examples = ", ".join(item["ref"] for item in missing_by_ref[:5])
         checks.append(
             Check(
                 "warn",
@@ -520,7 +486,7 @@ def validate_branch_trees(root: Path) -> list[Check]:
                 "git-branches",
                 (
                     f"{len(missing_by_ref)} refs are missing one or more Bucket 1 paths; "
-                    f"worst is {worst_ref} missing {len(worst_missing)}; examples: {examples}"
+                    f"worst is {worst['ref']} missing {len(worst['missing'])}; examples: {examples}"
                 ),
             )
         )
@@ -675,11 +641,13 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     root = Path(args.root).resolve()
-    checks = validate_paths(root)
-    git_checks, git_state = validate_git_state(root)
-    checks.extend(git_checks)
-    checks.extend(validate_repo_library(root, git_state))
-    checks.extend(validate_branch_trees(root))
+    snapshot = collect_repo_scan(root, branch_required_paths=set(BUCKET_1_REQUIRED))
+    checks = validate_scan_order(snapshot)
+    checks.extend(validate_tracked_phase(snapshot))
+    checks.extend(validate_branch_trees(snapshot))
+    checks.extend(validate_untracked_git_phase(snapshot))
+    checks.extend(validate_paths(root))
+    checks.extend(validate_repo_library(root, snapshot))
     checks.extend(validate_workspace(root, strict_external=args.strict_workspace))
     summary = summarize(checks)
     if args.json:
