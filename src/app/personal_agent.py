@@ -12,6 +12,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import posixpath
 import re
 import sys
 import urllib.error
@@ -19,7 +20,6 @@ import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
-
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_PATH = REPO_ROOT / "config" / "personal_agent.json"
@@ -257,6 +257,94 @@ def file_category(path: Path) -> str:
     return "binary" if looks_binary(path) else "other"
 
 
+def normalize_tag(tag: str) -> str | None:
+    normalized = tag.strip().strip("'\"").lstrip("#").strip()
+    return normalized or None
+
+
+def parse_frontmatter_tag_value(raw_value: str) -> list[str]:
+    value = raw_value.strip()
+    if not value:
+        return []
+    if value.startswith("[") and value.endswith("]"):
+        value = value[1:-1]
+    parts = [part for part in re.split(r",|\s+", value) if part.strip()]
+    return [tag for part in parts if (tag := normalize_tag(part))]
+
+
+def extract_frontmatter_tags(text: str) -> list[str]:
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return []
+
+    closing_index = None
+    for index, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            closing_index = index
+            break
+    if closing_index is None:
+        return []
+
+    frontmatter = lines[1:closing_index]
+    tags: list[str] = []
+    index = 0
+    while index < len(frontmatter):
+        line = frontmatter[index]
+        match = re.match(r"^\s*tags?\s*:\s*(.*)$", line, re.IGNORECASE)
+        if not match:
+            index += 1
+            continue
+
+        inline_value = match.group(1).strip()
+        if inline_value:
+            tags.extend(parse_frontmatter_tag_value(inline_value))
+            index += 1
+            continue
+
+        index += 1
+        while index < len(frontmatter):
+            item_line = frontmatter[index]
+            if item_line and not item_line.startswith((" ", "\t")):
+                break
+            item = item_line.strip()
+            if item.startswith("- "):
+                tags.extend(parse_frontmatter_tag_value(item[2:]))
+            index += 1
+
+    return tags
+
+
+def wiki_link_target(raw_link: str) -> str:
+    target = raw_link.split("|", 1)[0].split("#", 1)[0].strip()
+    return target.replace("\\", "/")
+
+
+def link_slug(value: str) -> str:
+    value = value.replace("\\", "/").strip().strip("/")
+    value = re.sub(r"\.md$", "", value, flags=re.IGNORECASE)
+    parts = []
+    for part in value.split("/"):
+        slug = re.sub(r"[^a-z0-9]+", "-", part.lower()).strip("-")
+        if slug:
+            parts.append(slug)
+    return "/".join(parts)
+
+
+def normalize_link_path(value: str) -> str:
+    normalized = posixpath.normpath(value.replace("\\", "/"))
+    return "" if normalized == "." else normalized.lstrip("./")
+
+
+def markdown_link_target(raw_link: str) -> str:
+    target = raw_link.strip()
+    target = target.split("#", 1)[0].split("?", 1)[0].strip()
+    return target.replace("\\", "/")
+
+
+def is_external_link(target: str) -> bool:
+    return bool(re.match(r"^[a-z][a-z0-9+.-]*:", target, re.IGNORECASE))
+
+
 def extract_text_signals(path: Path, text: str) -> dict[str, Any]:
     suffix = path.suffix.lower()
     signals: dict[str, Any] = {}
@@ -269,7 +357,8 @@ def extract_text_signals(path: Path, text: str) -> dict[str, Any]:
             )
         links = sorted(set(re.findall(r"\[\[([^\]]+)\]\]", text)))[:100]
         markdown_links = sorted(set(re.findall(r"\[[^\]]+\]\(([^)]+)\)", text)))[:100]
-        tags = sorted(set(re.findall(r"(?<!\w)#([A-Za-z0-9_/-]+)", text)))[:100]
+        inline_tags = re.findall(r"(?<!\w)#([A-Za-z0-9_/-]+)", text)
+        tags = sorted(set(extract_frontmatter_tags(text) + inline_tags))[:100]
         signals.update(
             {
                 "headings": headings[:100],
@@ -289,9 +378,15 @@ def extract_text_signals(path: Path, text: str) -> dict[str, Any]:
     if suffix in {".js", ".ts", ".tsx"}:
         symbols = []
         pattern = r"^(?:export\s+)?(?:async\s+)?function\s+([A-Za-z_$][\w$]*)"
-        symbols.extend({"kind": "function", "name": name} for name in re.findall(pattern, text, re.MULTILINE))
+        symbols.extend(
+            {"kind": "function", "name": name}
+            for name in re.findall(pattern, text, re.MULTILINE)
+        )
         class_pattern = r"^(?:export\s+)?class\s+([A-Za-z_$][\w$]*)"
-        symbols.extend({"kind": "class", "name": name} for name in re.findall(class_pattern, text, re.MULTILINE))
+        symbols.extend(
+            {"kind": "class", "name": name}
+            for name in re.findall(class_pattern, text, re.MULTILINE)
+        )
         signals["symbols"] = symbols[:100]
 
     return signals
@@ -390,7 +485,101 @@ class CaregiverScribe:
                     continue
                 records.append(self.inspect_file(file_path, root, context))
         records.sort(key=lambda item: item["relative_path"].lower())
+        self.annotate_link_health(records)
         return records
+
+    def annotate_link_health(self, records: list[dict[str, Any]]) -> None:
+        markdown_targets = self.markdown_target_index(records)
+        file_targets = {item["relative_path"] for item in records}
+        for record in records:
+            signals = record.get("signals")
+            if not signals:
+                continue
+            unresolved_wikilinks = []
+            for raw_link in signals.get("wikilinks", []):
+                target = wiki_link_target(raw_link)
+                if not target or target.startswith("#"):
+                    continue
+                if (
+                    self.resolve_wiki_target(
+                        target, record["relative_path"], markdown_targets
+                    )
+                    is None
+                ):
+                    unresolved_wikilinks.append(raw_link)
+
+            unresolved_markdown_links = []
+            for raw_link in signals.get("markdown_links", []):
+                target = markdown_link_target(raw_link)
+                if not target or target.startswith("#") or is_external_link(target):
+                    continue
+                if (
+                    self.resolve_markdown_target(
+                        target, record["relative_path"], file_targets
+                    )
+                    is None
+                ):
+                    unresolved_markdown_links.append(raw_link)
+
+            signals["link_health"] = {
+                "wikilinks_total": len(signals.get("wikilinks", [])),
+                "wikilinks_unresolved": len(unresolved_wikilinks),
+                "markdown_links_total": len(signals.get("markdown_links", [])),
+                "markdown_links_unresolved": len(unresolved_markdown_links),
+            }
+            if unresolved_wikilinks:
+                signals["unresolved_wikilinks"] = unresolved_wikilinks[:100]
+            if unresolved_markdown_links:
+                signals["unresolved_markdown_links"] = unresolved_markdown_links[:100]
+
+    def markdown_target_index(self, records: list[dict[str, Any]]) -> dict[str, str]:
+        targets: dict[str, str] = {}
+        for item in records:
+            if item.get("extension") != ".md":
+                continue
+            relative_path = item["relative_path"]
+            without_extension = re.sub(r"\.md$", "", relative_path, flags=re.IGNORECASE)
+            parts = without_extension.split("/")
+            for offset in range(len(parts)):
+                targets.setdefault(link_slug("/".join(parts[offset:])), relative_path)
+            targets.setdefault(link_slug(Path(relative_path).stem), relative_path)
+        return targets
+
+    def resolve_wiki_target(
+        self, target: str, source_relative_path: str, targets: dict[str, str]
+    ) -> str | None:
+        candidates = []
+        if target.startswith((".", "/")) or "/" in target:
+            source_dir = posixpath.dirname(source_relative_path)
+            candidates.append(normalize_link_path(posixpath.join(source_dir, target)))
+            candidates.append(normalize_link_path(target))
+        candidates.append(target)
+
+        for candidate in candidates:
+            resolved = targets.get(link_slug(candidate))
+            if resolved is not None:
+                return resolved
+        return None
+
+    def resolve_markdown_target(
+        self, target: str, source_relative_path: str, targets: set[str]
+    ) -> str | None:
+        source_dir = posixpath.dirname(source_relative_path)
+        if target.startswith("/"):
+            base = normalize_link_path(target)
+        else:
+            base = normalize_link_path(posixpath.join(source_dir, target))
+
+        candidates = [base]
+        if not Path(base).suffix:
+            candidates.extend([f"{base}.md", f"{base}/README.md", f"{base}/index.md"])
+        if base.endswith("/"):
+            candidates.extend([f"{base}README.md", f"{base}index.md"])
+
+        for candidate in candidates:
+            if candidate in targets:
+                return candidate
+        return None
 
     def should_skip_directory(self, path: Path, root: Path, context: str) -> bool:
         if path.name in set(self.config.scan_exclude_dirs):
@@ -404,7 +593,9 @@ class CaregiverScribe:
             pass
         if context == "repo":
             try:
-                path.resolve().relative_to((self.vault_path / self.config.scribe_folder).resolve())
+                path.resolve().relative_to(
+                    (self.vault_path / self.config.scribe_folder).resolve()
+                )
                 return True
             except ValueError:
                 pass
@@ -430,9 +621,7 @@ class CaregiverScribe:
             "extension": path.suffix.lower(),
             "category": category,
             "size_bytes": stat.st_size,
-            "modified_at": dt.datetime.fromtimestamp(
-                stat.st_mtime, tz=dt.timezone.utc
-            )
+            "modified_at": dt.datetime.fromtimestamp(stat.st_mtime, tz=dt.timezone.utc)
             .replace(microsecond=0)
             .isoformat(),
             "sha256": sha256_file(path) if stat.st_size <= hash_limit else None,
@@ -489,6 +678,7 @@ The scribe's first duty is to learn the terrain:
         folders = self.folder_counts(records)
         tags = self.collect_signal_counts(records, "tags")
         links = self.collect_signal_counts(records, "wikilinks")
+        link_health = self.link_health_totals(records)
 
         lines = [
             "---",
@@ -515,13 +705,20 @@ The scribe's first duty is to learn the terrain:
             "",
             *self.render_count_list(links),
             "",
+            "## Link Health",
+            "",
+            f"- Wiki links unresolved: {link_health['wikilinks_unresolved']}",
+            f"- Markdown links unresolved: {link_health['markdown_links_unresolved']}",
+            "",
             "## Notes",
             "",
         ]
         for item in markdown_records[:500]:
             lines.append(f"- `{item['relative_path']}`")
         if len(markdown_records) > 500:
-            lines.append(f"- ... {len(markdown_records) - 500} more notes in vault_manifest.jsonl")
+            lines.append(
+                f"- ... {len(markdown_records) - 500} more notes in vault_manifest.jsonl"
+            )
         lines.append("")
         lines.append("Full file-level data is in `vault_manifest.jsonl`.")
         lines.append("")
@@ -532,6 +729,7 @@ The scribe's first duty is to learn the terrain:
         categories = self.value_counts(records, "category")
         extensions = self.value_counts(records, "extension")
         folders = self.folder_counts(records)
+        link_health = self.link_health_totals(records)
 
         lines = [
             "---",
@@ -560,6 +758,11 @@ The scribe's first duty is to learn the terrain:
             "",
             *self.render_count_list(folders, limit=80),
             "",
+            "## Link Health",
+            "",
+            f"- Wiki links unresolved: {link_health['wikilinks_unresolved']}",
+            f"- Markdown links unresolved: {link_health['markdown_links_unresolved']}",
+            "",
             "## High-Signal Files",
             "",
         ]
@@ -570,6 +773,12 @@ The scribe's first duty is to learn the terrain:
                 details.append(f"{len(signals['headings'])} headings")
             if signals.get("symbols"):
                 details.append(f"{len(signals['symbols'])} symbols")
+            link_health = signals.get("link_health", {})
+            unresolved_links = link_health.get(
+                "wikilinks_unresolved", 0
+            ) + link_health.get("markdown_links_unresolved", 0)
+            if unresolved_links:
+                details.append(f"{unresolved_links} unresolved links")
             label = ", ".join(details) if details else item["category"]
             lines.append(f"- `{item['relative_path']}` ({label})")
         lines.append("")
@@ -577,7 +786,9 @@ The scribe's first duty is to learn the terrain:
         lines.append("")
         return "\n".join(lines)
 
-    def high_signal_records(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    def high_signal_records(
+        self, records: list[dict[str, Any]]
+    ) -> list[dict[str, Any]]:
         def score(item: dict[str, Any]) -> int:
             signals = item.get("signals", {})
             return (
@@ -618,9 +829,20 @@ The scribe's first duty is to learn the terrain:
                 counts[text] = counts.get(text, 0) + 1
         return dict(sorted(counts.items(), key=lambda pair: pair[1], reverse=True))
 
-    def render_count_list(
-        self, counts: dict[str, int], limit: int = 40
-    ) -> list[str]:
+    def link_health_totals(self, records: list[dict[str, Any]]) -> dict[str, int]:
+        totals = {
+            "wikilinks_total": 0,
+            "wikilinks_unresolved": 0,
+            "markdown_links_total": 0,
+            "markdown_links_unresolved": 0,
+        }
+        for item in records:
+            health = item.get("signals", {}).get("link_health", {})
+            for key in totals:
+                totals[key] += int(health.get(key, 0))
+        return totals
+
+    def render_count_list(self, counts: dict[str, int], limit: int = 40) -> list[str]:
         if not counts:
             return ["- None found"]
         lines = []
@@ -639,9 +861,7 @@ class PersonalAgent:
         self.ensure_storage()
 
     @classmethod
-    def from_config(
-        cls, config_path: str | Path | None = None
-    ) -> "PersonalAgent":
+    def from_config(cls, config_path: str | Path | None = None) -> "PersonalAgent":
         return cls(PersonalAgentConfig.from_file(config_path))
 
     def ensure_storage(self) -> None:
@@ -665,9 +885,7 @@ class PersonalAgent:
 
     def load_profile(self) -> dict[str, list[dict[str, str]]]:
         loaded = load_json(self.config.profile_file)
-        return {
-            section: list(loaded.get(section, [])) for section in PROFILE_SECTIONS
-        }
+        return {section: list(loaded.get(section, [])) for section in PROFILE_SECTIONS}
 
     def save_profile(self, profile: dict[str, list[dict[str, str]]]) -> None:
         save_json(self.config.profile_file, profile)
@@ -1015,9 +1233,7 @@ def parse_args() -> argparse.Namespace:
     scribe_subparsers = scribe_parser.add_subparsers(dest="scribe_command")
     scribe_subparsers.add_parser("status", help="Show scribe/vault configuration.")
     scribe_subparsers.add_parser("init", help="Create the scribe home note.")
-    scribe_subparsers.add_parser(
-        "absorb-vault", help="Index the Obsidian vault first."
-    )
+    scribe_subparsers.add_parser("absorb-vault", help="Index the Obsidian vault first.")
     scribe_subparsers.add_parser(
         "learn-repo", help="Index Project-AI files into the vault."
     )

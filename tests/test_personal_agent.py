@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from app.personal_agent import CaregiverScribe, PersonalAgent
+from app.personal_agent import CaregiverScribe, PersonalAgent, extract_text_signals
 
 
 def write_config(tmp_path: Path) -> Path:
@@ -72,6 +72,31 @@ def test_personal_agent_prompt_includes_memory_and_project_context(
     assert "Build a private local agent." in prompt
 
 
+def test_extract_text_signals_reads_frontmatter_tags() -> None:
+    signals = extract_text_signals(
+        Path("Note.md"),
+        """---
+tags:
+  - governance
+  - "#local/wiki"
+tag: [architecture, sovereign]
+---
+
+# Note
+
+Body #inline
+""",
+    )
+
+    assert signals["tags"] == [
+        "architecture",
+        "governance",
+        "inline",
+        "local/wiki",
+        "sovereign",
+    ]
+
+
 def test_caregiver_scribe_absorbs_vault_and_learns_repo(tmp_path: Path) -> None:
     vault = tmp_path / "vault"
     repo = tmp_path / "repo"
@@ -101,3 +126,50 @@ def test_caregiver_scribe_absorbs_vault_and_learns_repo(tmp_path: Path) -> None:
     assert repo_result["records"] == 2
     assert (vault / "_Scribe" / "Project-AI" / "Vault Navigation Map.md").exists()
     assert (vault / "_Scribe" / "Project-AI" / "Project-AI File Index.md").exists()
+
+
+def test_caregiver_scribe_marks_link_health_without_editing_sources(
+    tmp_path: Path,
+) -> None:
+    repo = tmp_path / "repo"
+    (repo / "docs" / "architecture").mkdir(parents=True)
+    (repo / "wiki" / "Development").mkdir(parents=True)
+    (repo / "docs" / "architecture" / "SOVEREIGN_RUNTIME.md").write_text(
+        "# Runtime\n",
+        encoding="utf-8",
+    )
+    (repo / "wiki" / "Development" / "Quick-Start.md").write_text(
+        "\n".join(
+            [
+                "# Quick Start",
+                "",
+                "[Runtime](../../docs/architecture/SOVEREIGN_RUNTIME.md)",
+                "[[Architecture/Sovereign-Runtime]]",
+                "[[Missing-Link]]",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    config_path = write_config(tmp_path)
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    config["repo_root"] = str(repo)
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    scribe = CaregiverScribe.from_config(config_path)
+    records = scribe.scan_tree(repo, context="repo")
+    quick_start = next(
+        item
+        for item in records
+        if item["relative_path"] == "wiki/Development/Quick-Start.md"
+    )
+    signals = quick_start["signals"]
+
+    assert signals["link_health"] == {
+        "wikilinks_total": 2,
+        "wikilinks_unresolved": 1,
+        "markdown_links_total": 1,
+        "markdown_links_unresolved": 0,
+    }
+    assert signals["unresolved_wikilinks"] == ["Missing-Link"]
+    assert "unresolved_markdown_links" not in signals
