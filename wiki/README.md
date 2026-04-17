@@ -20,6 +20,8 @@ This is the Obsidian vault for Project-AI.
 
 ## Start
 
+- [[Local-Repo-Library]]
+- [[Repo-Mirror]]
 - [[System-Map]]
 - [[Sovereign-Journey]]
 - [[Sovereign-Orbit]]
@@ -41,3 +43,5 @@ This is the Obsidian vault for Project-AI.
 - [[Wiki-Folder-Audit]]
 - [[Graph-Configuration]]
 - [[Source-Document-Index]]
+- [[Local-Working-Tree]]
+- [[Repo-Working-Tree]]

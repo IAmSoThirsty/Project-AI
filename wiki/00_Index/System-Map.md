@@ -20,6 +20,9 @@ graph_color: red
 
 ## Start Here
 
+**Vault home**
+→ [[README|Project-AI Wiki]] - Top-level vault entry
+
 **New to Project-AI?**  
 → [[Sovereign-Journey]] - The story of how we built this (5 eras, 21 publications)
 
@@ -58,6 +61,11 @@ graph_color: red
 ### Source Corpus
 → [[Source-Document-Index]] - Repo source documents wired into the vault
 
+### Repo Mirror
+→ [[Local-Repo-Library]] - Local-first filesystem, git, ignored-file, folder, and working-tree library
+
+→ [[Repo-Mirror]] - Branch, status, file, folder, tracked, untracked, ignored, and vault-health snapshot
+
 ---
 
 ## Quick Links to Canonical Systems
@@ -93,7 +101,10 @@ graph_color: red
 - **Graph Settings:** [[Graph-Configuration]] - Visual configuration guide
 - **Folder Audit:** [[Wiki-Folder-Audit]] - Vault folder status and duplicate check
 - **Source Documents:** [[Source-Document-Index]] - Root repo documents and extracted signals
+- **Local Repo Library:** [[Local-Repo-Library]] - Current local repo library and ignored-file catalog
+- **Repo Mirror:** [[Repo-Mirror]] - Current branch, files, folders, and working tree
 - **VS Copilot Activity:** [[VS-Copilot-Activity]] - Concurrent modification tracking
+- **Scribe Home:** [[00 Scribe Home]] - Personal scribe navigation
 
 ---
 

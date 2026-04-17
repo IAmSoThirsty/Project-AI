@@ -26,6 +26,7 @@ This is the bridge between the monorepo documents and the Obsidian vault.
 - [[Production-Roadmap-Source]] anchors `PRODUCTION_ROADMAP.md`.
 - [[Verification-Runbook-Source]] anchors `The_Guide_Book.md`.
 - [[Sovereign-Vault-Architecture-Source]] anchors `SOVEREIGN_VAULT_ARCHITECTURE.md`.
+- [[GOVERNANCE_DOI_MAP]] anchors `docs/governance/GOVERNANCE_DOI_MAP.md`.
 
 ## Extracted Signals
 - [[Source-Corpus]]
@@ -38,3 +39,6 @@ This is the bridge between the monorepo documents and the Obsidian vault.
 
 ## Working Spine
 Start at [[System-Map]], follow [[Sovereign-Journey]], then use this index when the vault needs to point back to the repo evidence.
+
+## Local Library
+- [[Local-Repo-Library]] mirrors the local working tree, ignored files, git state, folders, and file manifests.

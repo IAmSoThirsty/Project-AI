@@ -1,0 +1,240 @@
+---
+agent: local-repo-library
+generated_at: 2026-04-17T19:02:31+00:00
+source: local-file-library
+---
+
+# Local File Library
+
+Every local file outside `.git` internals is represented in `local_file_manifest.jsonl`.
+
+## Git States
+
+- `ignored`: 25902
+- `tracked`: 5477
+
+## Categories
+
+- `dependency-environment`: 25075
+- `code`: 2093
+- `doc`: 1575
+- `repo-file`: 987
+- `unity-generated`: 860
+- `data`: 588
+- `cache`: 121
+- `generated-report`: 33
+- `runtime-log-or-lock`: 26
+- `local-environment`: 15
+- `binary-or-build-artifact`: 6
+
+## Top Roots
+
+- `.venv_airllm`: 20024
+- `.venv`: 4290
+- `unity`: 938
+- `venv`: 761
+- `src`: 740
+- `.hypothesis`: 653
+- `docs`: 565
+- `emergent-microservices`: 381
+- `adversarial_tests`: 310
+- `tests`: 257
+- `archive`: 250
+- `engines`: 218
+- `wiki`: 199
+- `data`: 146
+- `scripts`: 126
+- `.github`: 99
+- `Project-AI-Monorepo`: 84
+- `k8s`: 79
+- `.gradle`: 78
+- `native_browser`: 75
+- `octoreflex`: 68
+- `governance`: 56
+- `config`: 48
+- `project_ai`: 47
+- `web`: 47
+- `deploy`: 46
+- `integrations`: 45
+- `gradle-evolution`: 42
+- `tarl_os`: 38
+- `android`: 33
+- `desktop`: 33
+- `examples`: 33
+- `tarl`: 33
+- `e2e`: 30
+- `demos`: 27
+- `audit_reports`: 26
+- `kernel`: 26
+- `tools`: 24
+- `hardware_schematics`: 22
+- `helm`: 20
+- `cognition`: 18
+- `linguist-submission`: 18
+- `orchestrator`: 16
+- `api`: 15
+- `utils`: 13
+- `h323_sec_profile`: 12
+- `taar`: 11
+- `canonical`: 10
+- `security`: 9
+- `temporal`: 9
+- `.antigravity`: 7
+- `benchmarks`: 6
+- `external`: 6
+- `monitoring`: 6
+- `.venv_prod`: 5
+- `ci-reports`: 5
+- `policies`: 5
+- `usb_installer`: 5
+- `codeql-custom-queries-python`: 4
+- `gradle`: 4
+- `.agent`: 3
+- `.codacy`: 3
+- `.devcontainer`: 3
+- `.vscode`: 3
+- `.githooks`: 2
+- `logs`: 2
+- `man`: 2
+- `terraform`: 2
+- `test-artifacts`: 2
+- `test-data`: 2
+- `thirsty_lang`: 2
+- `tmp`: 2
+- `.agents`: 1
+- `.bandit`: 1
+- `.circleci`: 1
+- `.coverage`: 1
+- `.dockerignore`: 1
+- `.env`: 1
+- `.env.example`: 1
+- `.eslintrc.js`: 1
+- `.eslintrc.json`: 1
+- `.gitattributes`: 1
+- `.gitignore`: 1
+- `.gitmodules`: 1
+- `.gitmodules.local_backup`: 1
+- `.lsp`: 1
+- `.markdownlint.yaml`: 1
+- `.pre-commit-config.yaml`: 1
+- `.prettierrc`: 1
+- `.python-version`: 1
+- `activate_transcendence.py`: 1
+- `app`: 1
+- `ARCHITECT_MANIFEST.md`: 1
+- `audit.log`: 1
+- `baseline_coverage.txt`: 1
+- `bayesian_proof_demo.py`: 1
+- `boot_sovereign.py`: 1
+- `build-installer.ps1`: 1
+- `build.gradle.kts`: 1
+- `build_orchestrator.py`: 1
+
+## Extensions
+
+- `.py`: 13961
+- `.h`: 9354
+- `.md`: 2186
+- `(none)`: 1390
+- `.pyi`: 944
+- `.json`: 421
+- `.pyd`: 388
+- `.txt`: 326
+- `.yaml`: 201
+- `.js`: 126
+- `.mat`: 110
+- `.a`: 109
+- `.exe`: 107
+- `.yml`: 103
+- `.typed`: 90
+- `.hpp`: 88
+- `.test`: 71
+- `.thirsty`: 65
+- `.cuh`: 62
+- `.f90`: 61
+- `.cpp`: 60
+- `.sh`: 58
+- `.sav`: 47
+- `.class`: 43
+- `.meta`: 41
+- `.ps1`: 35
+- `.lib`: 34
+- `.csv`: 31
+- `.go`: 31
+- `.cs`: 30
+- `.tsx`: 30
+- `.c`: 28
+- `.cmake`: 28
+- `.dat`: 26
+- `.log`: 25
+- `.pxd`: 24
+- `.f`: 24
+- `.npz`: 22
+- `.wav`: 22
+- `.jsonl`: 22
+- `.rst`: 20
+- `.html`: 19
+- `.pyx`: 19
+- `.bat`: 19
+- `.example`: 17
+- `.png`: 17
+- `.kt`: 17
+- `.arff`: 16
+- `.al`: 16
+- `.jinja`: 16
+- `.bin`: 14
+- `.tarl`: 14
+- `.ts`: 13
+- `.puml`: 13
+- `.cfg`: 12
+- `.dll`: 12
+- `.toml`: 12
+- `.xml`: 11
+- `.npy`: 11
+- `.properties`: 10
+- `.css`: 10
+- `.cc`: 10
+- `.lock`: 9
+- `.cu`: 9
+- `.java`: 8
+- `.tmpl`: 7
+- `.pyf`: 7
+- `.tag`: 7
+- `.mako`: 6
+- `.ini`: 6
+- `.build`: 6
+- `.tscgb`: 6
+- `.pth`: 5
+- `.pem`: 5
+- `.rs`: 5
+- `.shadow`: 5
+- `.apache`: 4
+- `.bsd`: 4
+- `.pump`: 4
+- `.bz2`: 4
+- `.gz`: 4
+- `.gradle`: 4
+- `.sql`: 4
+- `.tog`: 4
+- `.nc`: 3
+- `.1`: 3
+- `.xsl`: 3
+- `.in`: 3
+- `.proto`: 3
+- `.db`: 3
+- `.thirst`: 3
+- `.qss`: 3
+- `.asm`: 2
+- `.obj`: 2
+- `.xslt`: 2
+- `.a99`: 2
+- `.b99`: 2
+- `.g4`: 2
+- `.lark`: 2
+- `.mjs`: 2
+
+## Connects
+
+- [[Local-Repo-Library]]
+- [[Local-Folder-Library]]
+- [[Ignored-File-Library]]

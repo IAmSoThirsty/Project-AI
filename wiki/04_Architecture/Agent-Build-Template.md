@@ -49,6 +49,7 @@ This is the practical template for building Project-AI/PACE agents.
 - Tests for routing, success, failure, and cleanup.
 
 ## Connects
+- [[Agent Instance Template]]
 - [[Workflow-Engine]]
 - [[State-Model]]
 - [[Sovereign-Orchestration]]

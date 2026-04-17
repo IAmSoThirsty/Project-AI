@@ -45,5 +45,6 @@ graph_color: "#70E000"
 - [[Production-Roadmap-Source]]
 - [[Verification-Runbook-Source]]
 - [[Sovereign-Vault-Architecture-Source]]
+- [[GOVERNANCE_DOI_MAP]]
 - [[Repository-Maturity]]
 - [[Vault-Threat-Model]]
