@@ -115,6 +115,7 @@
 | `boot_sovereign.py` (6 KB) | Sovereign ignition sequence | ✅ Active |
 | `start.ps1` (6 KB) | Windows startup script | ✅ Active |
 | `Project-AI.ps1` (1 KB) | PowerShell launcher | ✅ Active |
+| `FIX_WORKSTATION.ps1` | Heart Restore workstation verifier | ✅ Active |
 | `Master-Sovereign-Launch-Sequence.ps1` (3 KB) | Master launch script | ✅ Active |
 | `fix_mem.py` (2 KB) | Memory fix utility | ✅ Active |
 | `test_gui.py` (1 KB) | GUI test entrypoint | ✅ Active |
@@ -135,6 +136,7 @@
 | `.python-version` | Python version pin (3.12) | ✅ Active |
 | `taar.toml` (8 KB) | TAAR agent config | ✅ Active |
 | `Project-AI.code-workspace` (6 KB) | VS Code workspace | ✅ Active |
+| `IDE_Work_Spaces/project-ai-control-plane.code-workspace` | Compact Heart Restore control-plane workspace | ✅ Active |
 | `Project-AI.spec` / `ProjectAI.spec` | PyInstaller spec files | ✅ Active |
 
 ---
@@ -237,6 +239,7 @@
 | `scripts/` | ~113 | Utility scripts (PS1, Bash, Python) | ✅ Active |
 | `tools/` | ~22 | Developer tooling | ✅ Active |
 | `utils/` | ~13 | Shared utility modules | ✅ Active |
+| `IDE_Work_Spaces/` | ~2 | Focused IDE workspace wiring for Heart Restore validation | ✅ Active |
 | `gradle/` | ~4 | Gradle wrapper JAR & properties | ✅ Active |
 | `gradle-evolution/` | ~42 | Gradle build evolution/history | ✅ Active |
 | `config/` | ~39 | Application & environment configs | ✅ Active |

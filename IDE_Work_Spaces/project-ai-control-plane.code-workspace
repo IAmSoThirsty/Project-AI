@@ -1,0 +1,60 @@
+{
+  "folders": [
+    {
+      "name": "Project-AI Root",
+      "path": ".."
+    },
+    {
+      "name": "Core Control Plane",
+      "path": "../src/app/core"
+    },
+    {
+      "name": "Agent Control",
+      "path": "../src/app/agents"
+    },
+    {
+      "name": "App Governance",
+      "path": "../src/app/governance"
+    },
+    {
+      "name": "Governance Runtime",
+      "path": "../governance"
+    },
+    {
+      "name": "Cognition",
+      "path": "../cognition"
+    },
+    {
+      "name": "Canonical Replay",
+      "path": "../canonical"
+    },
+    {
+      "name": "Config",
+      "path": "../config"
+    },
+    {
+      "name": "GitHub Workflows",
+      "path": "../.github/workflows"
+    },
+    {
+      "name": "Operations Docs",
+      "path": "../docs/operations"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/.pytest_cache": true,
+      "**/.mypy_cache": true,
+      "**/.ruff_cache": true
+    },
+    "search.exclude": {
+      "**/.git": true,
+      "**/node_modules": true,
+      "**/.venv": true,
+      "**/venv": true,
+      "**/archive": true,
+      "**/history": true
+    }
+  }
+}
