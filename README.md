@@ -60,6 +60,7 @@ Verified POC branch surface checks passed.
 | Obsidian-backed knowledge map | Verified | Generated scribe maps and JSONL manifests are written into the configured Obsidian vault. |
 | Personal-agent CLI access | Verified | The direct script and Project-AI CLI package path both expose the scribe. |
 | Branch-face verification | Verified | A focused checker enforces that README claims match the verified manifest. |
+| Public DOI citation spine | Verified | The public docs surface links the full DOI catalog, DOI registry, and governance DOI map. |
 
 Detailed evidence lives in the
 [Verified POC Manifest](docs/VERIFIED_POC_MANIFEST.md).
@@ -72,9 +73,43 @@ For a clean read-through:
 | --- | --- |
 | [Start Here](docs/START_HERE.md) | First-pass guide for newcomers. |
 | [Verified POC Manifest](docs/VERIFIED_POC_MANIFEST.md) | Evidence and scope boundaries for each verified claim. |
+| [Research Citations](CITATIONS.md) | DOI catalog and BibTeX references for the Project-AI publication spine. |
 | [Personal Agent](docs/PERSONAL_AGENT.md) | Caregiver Scribe usage and configuration. |
 | [Reviewer Guide](docs/REVIEWER_GUIDE.md) | How to evaluate this branch without getting lost in the monorepo. |
 | [POC Branch Policy](docs/POC_BRANCH_POLICY.md) | Rules for keeping the branch face evidence-first. |
+
+## Publication DOI Spine
+
+Project-AI's public documentation view must keep provenance visible. The
+complete DOI catalog and BibTeX entries live in [CITATIONS.md](CITATIONS.md),
+with the vault source of truth in
+[wiki/07_Research/Publications/DOI-Registry.md](wiki/07_Research/Publications/DOI-Registry.md)
+and governance coverage in
+[docs/governance/GOVERNANCE_DOI_MAP.md](docs/governance/GOVERNANCE_DOI_MAP.md).
+
+| # | Publication | DOI |
+| --- | --- | --- |
+| 1 | OctoReflex | [10.5281/zenodo.18726064](https://doi.org/10.5281/zenodo.18726064) |
+| 2 | The Sovereign Covenant | [10.5281/zenodo.18726221](https://doi.org/10.5281/zenodo.18726221) |
+| 3 | AGI Charter for Project-AI | [10.5281/zenodo.18763076](https://doi.org/10.5281/zenodo.18763076) |
+| 4 | TSCG | [10.5281/zenodo.18794292](https://doi.org/10.5281/zenodo.18794292) |
+| 5 | Constitutional Architectures | [10.5281/zenodo.18794646](https://doi.org/10.5281/zenodo.18794646) |
+| 6 | TSCG-B | [10.5281/zenodo.18826409](https://doi.org/10.5281/zenodo.18826409) |
+| 7 | The Flat Gap | [10.5281/zenodo.18827649](https://doi.org/10.5281/zenodo.18827649) |
+| 8 | User Perception and Identity Problem | [10.5281/zenodo.19055819](https://doi.org/10.5281/zenodo.19055819) |
+| 9 | The Directness Doctrine | [10.5281/zenodo.19030041](https://doi.org/10.5281/zenodo.19030041) |
+| 10 | The State Register | [10.5281/zenodo.19101877](https://doi.org/10.5281/zenodo.19101877) |
+| 11 | Project-AI Asymmetric Security | [10.5281/zenodo.19162019](https://doi.org/10.5281/zenodo.19162019) |
+| 12 | The Naive Passive Reviewer | [10.5281/zenodo.19453224](https://doi.org/10.5281/zenodo.19453224) |
+| 13 | The Universe Does not Preserve All Information | [10.5281/zenodo.19481152](https://doi.org/10.5281/zenodo.19481152) |
+| 14 | Genesis: MicroServices Generation | [10.5281/zenodo.19488571](https://doi.org/10.5281/zenodo.19488571) |
+| 15 | Governing Force In AGI | [10.5281/zenodo.19582420](https://doi.org/10.5281/zenodo.19582420) |
+| 16 | Two Species Aligned | [10.5281/zenodo.19582479](https://doi.org/10.5281/zenodo.19582479) |
+| 17 | Project-AI: Sovereign Constitutional AGI Ecosystem | [10.5281/zenodo.19582539](https://doi.org/10.5281/zenodo.19582539) |
+| 18 | The Iron Path Executor | [10.5281/zenodo.19583170](https://doi.org/10.5281/zenodo.19583170) |
+| 19 | Yggdrasil: A Constitutional DNS Layer | [10.5281/zenodo.19591259](https://doi.org/10.5281/zenodo.19591259) |
+| 20 | The Constitutional Code Store | [10.5281/zenodo.19591660](https://doi.org/10.5281/zenodo.19591660) |
+| 21 | Why I Am Doing This | [10.5281/zenodo.19592336](https://doi.org/10.5281/zenodo.19592336) |
 
 ## Main POC: Caregiver Scribe
 

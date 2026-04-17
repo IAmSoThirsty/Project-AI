@@ -9,6 +9,7 @@ MANIFEST = ROOT / "docs" / "VERIFIED_POC_MANIFEST.md"
 POLICY = ROOT / "docs" / "POC_BRANCH_POLICY.md"
 START_HERE = ROOT / "docs" / "START_HERE.md"
 REVIEWER_GUIDE = ROOT / "docs" / "REVIEWER_GUIDE.md"
+CITATIONS = ROOT / "CITATIONS.md"
 PR_TEMPLATE = ROOT / ".github" / "pull_request_template.md"
 BUG_TEMPLATE = ROOT / ".github" / "ISSUE_TEMPLATE" / "bug_report.md"
 FEATURE_TEMPLATE = ROOT / ".github" / "ISSUE_TEMPLATE" / "feature_request.md"
@@ -18,6 +19,10 @@ REQUIRED_README_PHRASES = [
     "Verified Proofs Of Concept",
     "Verified POC Manifest",
     "Reviewer Guide",
+    "Publication DOI Spine",
+    "CITATIONS.md",
+    "10.5281/zenodo.18726064",
+    "10.5281/zenodo.19592336",
     "Branch Discipline",
     "Do not add a capability to this README unless",
 ]
@@ -26,18 +31,27 @@ REQUIRED_MANIFEST_PHRASES = [
     "POC-002: Personal-Agent CLI Access",
     "POC-003: Scribe Regression Tests",
     "POC-004: Branch-Face Verification",
+    "POC-005: Public DOI Citation Spine",
     "Scope boundary",
     "Excluded From The Branch Face",
 ]
 REQUIRED_START_HERE_PHRASES = [
     "First Five Minutes",
     "What To Run First",
+    "Publication And Citation Trail",
     "If a capability is not in the verified manifest",
 ]
 REQUIRED_REVIEWER_GUIDE_PHRASES = [
     "Review Order",
     "What Counts As Verified",
     "What Does Not Count As Verified",
+    "DOI Provenance",
+]
+REQUIRED_CITATION_PHRASES = [
+    "Complete DOI Catalog",
+    "10.5281/zenodo.18726064",
+    "10.5281/zenodo.19592336",
+    "BibTeX",
 ]
 REQUIRED_TEMPLATE_PHRASES = [
     "Evidence",
@@ -64,6 +78,7 @@ def main() -> int:
     require_phrases(MANIFEST, REQUIRED_MANIFEST_PHRASES)
     require_phrases(START_HERE, REQUIRED_START_HERE_PHRASES)
     require_phrases(REVIEWER_GUIDE, REQUIRED_REVIEWER_GUIDE_PHRASES)
+    require_phrases(CITATIONS, REQUIRED_CITATION_PHRASES)
     require_phrases(PR_TEMPLATE, REQUIRED_TEMPLATE_PHRASES)
     require_phrases(BUG_TEMPLATE, ["Reproduction", "Evidence"])
     require_phrases(FEATURE_TEMPLATE, ["Verification", "Scope Boundary"])

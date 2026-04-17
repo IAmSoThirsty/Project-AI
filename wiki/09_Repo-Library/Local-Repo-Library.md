@@ -1,6 +1,6 @@
 ---
 agent: local-repo-library
-generated_at: 2026-04-17T19:02:31+00:00
+generated_at: 2026-04-17T19:06:11+00:00
 source: local-filesystem-and-git
 ---
 
@@ -13,7 +13,7 @@ The local working copy is primary. GitHub/remotes are tracked as outside context
 ## Local Position
 
 - Branch: `github/verified-poc-face`
-- HEAD: `a446138c55297c9d264f9cb7bfe8cb134ddbbe5b`
+- HEAD: `064c6220f78bb09c4a63ade762b1b601fec595ff`
 - Total local filesystem files indexed, excluding `.git` internals: 31379
 - Folder records: 3639
 - Ignored markdown shards: 27

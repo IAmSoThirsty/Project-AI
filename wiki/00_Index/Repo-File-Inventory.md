@@ -1,29 +1,29 @@
 ---
 agent: caregiver-scribe
-generated_at: 2026-04-17T17:32:46+00:00
+generated_at: 2026-04-17T19:06:11+00:00
 source: project-ai-repo
 ---
 
 # Repo File Inventory
 
 Repo root: `T:\Project-AI-main`
-Files indexed: 5450
+Files indexed: 5487
 
 This index is the scribe's map. Every tracked file and every non-ignored untracked file has a record in `repo_file_manifest.jsonl`.
 
 ## Git Coverage
 
-- Tracked files: 5434
-- Untracked non-ignored files: 6
-- Ignored files summarized separately: 35748
+- Tracked files: 5477
+- Untracked non-ignored files: 0
+- Ignored files summarized separately: 25902
 - Current branch: `github/verified-poc-face`
-- Current HEAD: `a446138c`
+- Current HEAD: `064c6220`
 
 ## Categories
 
-- `doc`: 2254
-- `code`: 2217
-- `data`: 720
+- `doc`: 2287
+- `code`: 2218
+- `data`: 723
 - `other`: 171
 - `text`: 74
 - `binary`: 8
@@ -31,8 +31,8 @@ This index is the scribe's map. Every tracked file and every non-ignored untrack
 
 ## Extensions
 
-- `.md`: 2120
-- `.py`: 1747
+- `.md`: 2153
+- `.py`: 1748
 - `.json`: 382
 - `.yaml`: 190
 - `.txt`: 134
@@ -47,7 +47,7 @@ This index is the scribe's map. Every tracked file and every non-ignored untrack
 - `.cs`: 30
 - `.tsx`: 30
 - `.log`: 24
-- `.jsonl`: 19
+- `.jsonl`: 22
 - `.example`: 17
 - `.kt`: 17
 - `.tarl`: 14
@@ -122,7 +122,7 @@ This index is the scribe's map. Every tracked file and every non-ignored untrack
 - `tests`: 256
 - `archive`: 250
 - `engines`: 218
-- `wiki`: 161
+- `wiki`: 198
 - `data`: 132
 - `scripts`: 126
 - `.github`: 99

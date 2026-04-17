@@ -141,6 +141,33 @@ Scope boundary:
 This verifies that required branch-face documents and phrases are present. It
 does not prove every historical document in the repository is current.
 
+### POC-005: Public DOI Citation Spine
+
+Status: Verified
+
+Purpose:
+
+The GitHub-facing public view preserves Project-AI's DOI provenance. The root
+README links the complete citation catalog, the DOI registry, and the governance
+DOI map.
+
+Verified command:
+
+```powershell
+py -3.12 .\scripts\verify_poc_surface.py
+```
+
+Recorded result:
+
+```text
+Verified POC branch surface checks passed.
+```
+
+Scope boundary:
+
+This verifies that public-facing docs cite the DOI spine. It does not validate
+external DOI availability or the contents of Zenodo records.
+
 ## Excluded From The Branch Face
 
 The following are not accepted POCs on this branch unless later verified with
@@ -153,6 +180,9 @@ local evidence:
 - Full desktop GUI execution.
 - Full test-suite health.
 - Any feature documented only in aspirational architecture notes.
+
+Citation provenance is included in the branch face, but DOI-backed publications
+remain research references rather than production-readiness claims.
 
 ## Promotion Criteria
 

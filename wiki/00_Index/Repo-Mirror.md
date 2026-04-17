@@ -1,6 +1,6 @@
 ---
 agent: caregiver-scribe
-generated_at: 2026-04-17T17:32:46+00:00
+generated_at: 2026-04-17T19:06:11+00:00
 source: repo-live-snapshot
 ---
 
@@ -11,29 +11,29 @@ This is the live mirror point for the current repo state.
 ## Git Position
 
 - Branch: `github/verified-poc-face`
-- HEAD short: `a446138c`
-- HEAD full: `a446138c55297c9d264f9cb7bfe8cb134ddbbe5b`
+- HEAD short: `064c6220`
+- HEAD full: `064c6220f78bb09c4a63ade762b1b601fec595ff`
 - Local branches: 13
 - Remote branches: 52
 - Submodule entries: 6
 
 ## Working Tree
 
-- Modified tracked paths: 10
-- Untracked non-ignored paths: 6
-- Ignored paths summarized: 35748
+- Modified tracked paths: 15
+- Untracked non-ignored paths: 0
+- Ignored paths summarized: 25902
 
 ## File And Folder Coverage
 
-- Tracked files: 5434
-- Untracked non-ignored files: 6
-- Indexed repo files: 5450
-- Indexed folders and subfolders: 1308
+- Tracked files: 5477
+- Untracked non-ignored files: 0
+- Indexed repo files: 5487
+- Indexed folders and subfolders: 1310
 
 ## Wiki Health
 
-- Vault files scanned: 162
-- Vault Markdown/canvas notes: 153
+- Vault files scanned: 199
+- Vault Markdown/canvas notes: 186
 - Unresolved wikilinks: 0
 - Orphan notes: 0
 

@@ -7,10 +7,11 @@ lost in the full Project-AI monorepo.
 
 1. Start with `README.md`.
 2. Read `docs/VERIFIED_POC_MANIFEST.md`.
-3. Run the focused verification commands.
-4. Inspect `src/app/personal_agent.py`.
-5. Inspect `tests/test_personal_agent.py`.
-6. Inspect `scripts/verify_poc_surface.py`.
+3. Check `CITATIONS.md` for the DOI catalog and BibTeX references.
+4. Run the focused verification commands.
+5. Inspect `src/app/personal_agent.py`.
+6. Inspect `tests/test_personal_agent.py`.
+7. Inspect `scripts/verify_poc_surface.py`.
 
 ## Commands
 
@@ -45,6 +46,16 @@ A feature is verified for this branch only when it has:
 - Obsidian-backed scribe maps.
 - Personal-agent CLI access.
 - Branch-face verification.
+- Public DOI catalog and publication citation spine.
+
+## DOI Provenance
+
+The public GitHub view should preserve citation provenance even when it is later
+trimmed to a docs-only preview. Use:
+
+- `CITATIONS.md` for DOI links and BibTeX entries.
+- `wiki/07_Research/Publications/DOI-Registry.md` as the vault source.
+- `docs/governance/GOVERNANCE_DOI_MAP.md` for governance-document coverage.
 
 ## Review Notes
 

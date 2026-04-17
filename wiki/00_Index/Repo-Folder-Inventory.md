@@ -1,6 +1,6 @@
 ---
 agent: caregiver-scribe
-generated_at: 2026-04-17T17:32:46+00:00
+generated_at: 2026-04-17T19:06:11+00:00
 source: repo-folders
 ---
 
@@ -10,10 +10,10 @@ This page summarizes the current repository folder and subfolder surface.
 
 ## Coverage
 
-- Tracked files: 5434
-- Untracked non-ignored files: 6
-- Ignored files summarized: 35748
-- Folder records: 1308
+- Tracked files: 5477
+- Untracked non-ignored files: 0
+- Ignored files summarized: 25902
+- Folder records: 1310
 - Full folder data: `repo_folder_manifest.jsonl`
 
 ## Top-Level Entries
@@ -28,7 +28,7 @@ This page summarizes the current repository folder and subfolder surface.
 | `tests` | 256 |
 | `archive` | 250 |
 | `engines` | 218 |
-| `wiki` | 161 |
+| `wiki` | 198 |
 | `data` | 132 |
 | `scripts` | 126 |
 | `.github` | 99 |
@@ -183,7 +183,7 @@ Depth is relative to the repository root. This table is capped for readability; 
 | 1 | `utils` | 13 | 13 | 0 | 2 |
 | 1 | `validation_evidence` | 1 | 1 | 0 | 0 |
 | 1 | `web` | 47 | 47 | 0 | 7 |
-| 1 | `wiki` | 161 | 145 | 16 | 11 |
+| 1 | `wiki` | 198 | 188 | 10 | 12 |
 | 1 | `workspace` | 1 | 1 | 0 | 1 |
 | 2 | `.agent/rules` | 1 | 1 | 0 | 0 |
 | 2 | `.agent/workflows` | 1 | 1 | 0 | 0 |

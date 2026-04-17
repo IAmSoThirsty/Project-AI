@@ -32,9 +32,18 @@ py -3.12 .\scripts\personal_agent.py scribe status
 ## What To Read First
 
 - `docs/VERIFIED_POC_MANIFEST.md`
+- `CITATIONS.md`
 - `docs/PERSONAL_AGENT.md`
 - `docs/REVIEWER_GUIDE.md`
 - `docs/POC_BRANCH_POLICY.md`
+
+## Publication And Citation Trail
+
+The GitHub public view keeps DOI provenance visible. Read `CITATIONS.md` for
+the full DOI catalog and BibTeX entries, then use
+`wiki/07_Research/Publications/DOI-Registry.md` as the vault source of truth.
+Governance document coverage is mapped in
+`docs/governance/GOVERNANCE_DOI_MAP.md`.
 
 ## How To Think About The Repo
 

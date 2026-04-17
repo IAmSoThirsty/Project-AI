@@ -1,6 +1,6 @@
 ---
 agent: caregiver-scribe
-generated_at: 2026-04-17T17:32:46+00:00
+generated_at: 2026-04-17T19:06:11+00:00
 source: git-branches
 ---
 
@@ -8,7 +8,7 @@ source: git-branches
 
 Current branch: `github/verified-poc-face`
 
-Current HEAD: `a446138c55297c9d264f9cb7bfe8cb134ddbbe5b`
+Current HEAD: `064c6220f78bb09c4a63ade762b1b601fec595ff`
 
 ## Local Branches
 
@@ -17,7 +17,7 @@ Current HEAD: `a446138c55297c9d264f9cb7bfe8cb134ddbbe5b`
 |  | `dev` | 5a2333d0 |  | governance: add Thirst branch acceptance criteria and transfer matrix |
 |  | `experiment/bootstrap` | 5a2333d0 |  | governance: add Thirst branch acceptance criteria and transfer matrix |
 |  | `github/save-sync-2026-04-16` | 17dcc730 | `origin/github/save-sync-2026-04-16` | feat: add Arch Angel governance guard |
-| yes | `github/verified-poc-face` | a446138c | `origin/github/verified-poc-face` | docs: color-code Obsidian vault tags |
+| yes | `github/verified-poc-face` | 064c6220 | `origin/github/verified-poc-face` | docs: add local-first repo wiki library |
 |  | `governance-lock` | 5a2333d0 |  | governance: add Thirst branch acceptance criteria and transfer matrix |
 |  | `heal/repair` | 5a2333d0 |  | governance: add Thirst branch acceptance criteria and transfer matrix |
 |  | `hotfix/urgent-template` | 5a2333d0 |  | governance: add Thirst branch acceptance criteria and transfer matrix |
