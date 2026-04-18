@@ -10,6 +10,8 @@ tags:
   - role/root
 ---
 
+<!-- markdownlint-disable MD012 -->
+
 # Sovereign Journey
 
 > **The intellectual timeline of Project-AI.**  
@@ -17,13 +19,15 @@ tags:
 
 **This is the graph center.** Everything links TO this file.
 
+Canonical pair hubs: [[Publication-Spine]] and [[Publications Index]].
+
 ---
 
 ## Era 1: Constitutional Foundations (2024 Q1-Q2)
 
 The philosophical and ethical bedrock. Defining what constitutional AGI means.
 
-### Publication Nodes
+### Era 1 Publication Nodes
 
 - [[Paper-02]]
 - [[Paper-03]]
@@ -39,7 +43,7 @@ The philosophical and ethical bedrock. Defining what constitutional AGI means.
 
 Building the enforcement layer. How constitutional rules become runtime reality.
 
-### Publication Nodes
+### Era 2 Publication Nodes
 
 - [[Paper-01]]
 - [[Paper-04]]
@@ -57,7 +61,7 @@ Building the enforcement layer. How constitutional rules become runtime reality.
 
 Deep theory. Why alignment works this way and not others.
 
-### Publication Nodes
+### Era 3 Publication Nodes
 
 - [[Paper-07]]
 - [[Paper-08]]
@@ -75,7 +79,7 @@ Deep theory. Why alignment works this way and not others.
 
 Scaling from theory to production-grade tooling.
 
-### Publication Nodes
+### Era 4 Publication Nodes
 
 - [[Paper-11]]
 - [[Paper-12]]
@@ -93,7 +97,7 @@ Scaling from theory to production-grade tooling.
 
 Taking constitutional AGI from research to operational reality.
 
-### Publication Nodes
+### Era 5 Publication Nodes
 
 - [[Paper-16]]
 - [[Paper-17]]
@@ -111,7 +115,7 @@ Taking constitutional AGI from research to operational reality.
 
 ## Meta
 
-### Publication Nodes
+### Meta Publication Nodes
 
 - [[Paper-21]]
 
@@ -122,9 +126,11 @@ Taking constitutional AGI from research to operational reality.
 ## Navigation
 
 - ↑ [[System-Map]] - Return to top-level navigation
+- ↔ [[Publication-Spine]] - Canonical publication hub
+- ↔ [[Publications Index]] - Domain-indexed publication catalog
 - → [[Reading-Paths]] - Follow guided tours through this timeline
 
 ---
-
 *Graph: This node should be the largest and most connected. All publications link here.*
+<!-- end -->
 

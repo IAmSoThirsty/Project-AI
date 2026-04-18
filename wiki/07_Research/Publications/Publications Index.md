@@ -15,31 +15,50 @@ tags:
 
 ---
 
+## Spine
+
+- [[Publication-Spine]] - Canonical publication routing hub
+- [[Sovereign-Journey]] - Chronological research narrative
+- [[Reading-Paths]] - Guided traversal through publication domains
+
+---
+
 ## By Domain
 
 ### Architecture
+
 - [[TSCG]] - 18794292
 - [[Constitutional-Architectures]] - 18794646
 - [[TSCG-B]] - 18826409
 - [[Yggdrasil-DNS]] - 19591259
 - [[Constitutional-Code-Store]] - 19591660
+
 ### Corpus
+
 - [[Why-I-Am-Doing-This]] - 19592336
+
 ### Governance
+
 - [[Sovereign-Covenant]] - 18726221
 - [[AGI-Charter]] - 18763076
 - [[The-Flat-Gap]] - 18827649
 - [[Governing-Force-AGI]] - 19582420
 - [[Two-Species-Aligned]] - 19582479
+
 ### Research
+
 - [[User-Perception-Identity]] - 19055819
 - [[Naive-Passive-Reviewer]] - 19453224
 - [[Information-Preservation]] - 19481152
+
 ### Security
+
 - [[OctoReflex-Report]] - 18726064
 - [[State-Register]] - 19101877
 - [[Asymmetric-Security]] - 19162019
+
 ### Systems
+
 - [[Directness-Doctrine]] - 19030041
 - [[Genesis-MicroServices]] - 19488571
 - [[Sovereign-Constitutional-Ecosystem]] - 19582539
@@ -107,5 +126,7 @@ This index is protected by `docs/governance/arch_angel_manifest.yaml`.
 
 ## Navigation
 
-- ↑ [[Sovereign-Journey]] - Publications timeline
+- ↑ [[Publication-Spine]] - Canonical publication hub
+- ↔ [[Sovereign-Journey]] - Publications timeline
+- → [[Reading-Paths]] - Guided publication paths
 - → [[System-Map]] - Back to main navigation

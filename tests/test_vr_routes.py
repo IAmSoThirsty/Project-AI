@@ -1,5 +1,10 @@
 """Tests for governed VR ingress routes."""
 
+import hashlib
+import hmac
+import json
+import time
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -7,6 +12,42 @@ from api.main import app
 from api.vr_routes import MAX_QUEUE_SIZE, VRCommand, command_queue, send_command
 
 client = TestClient(app)
+
+
+def _build_token(
+    *,
+    command_type: str,
+    channel: str = "genesis_entity",
+    issued_at: float | None = None,
+    final_verdict: str = "allow",
+    intent_hash: str = "intent-42",
+    signing_secret: str | None = None,
+):
+    token = {
+        "final_verdict": final_verdict,
+        "intent_hash": intent_hash,
+        "issued_at": float(issued_at if issued_at is not None else time.time()),
+        "command_type": command_type,
+        "channel": channel,
+    }
+
+    if signing_secret:
+        payload = json.dumps(
+            {
+                "intent_hash": token["intent_hash"],
+                "final_verdict": token["final_verdict"],
+                "issued_at": token["issued_at"],
+                "command_type": token["command_type"],
+                "channel": token["channel"],
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+        token["signature"] = hmac.new(
+            signing_secret.encode("utf-8"), payload, hashlib.sha256
+        ).hexdigest()
+
+    return token
 
 
 @pytest.fixture(autouse=True)
@@ -65,7 +106,7 @@ def test_genesis_interaction_requires_genesis_channel():
         "params": {"x": 0.1, "y": 0.2, "z": 0.3},
         "source": "host_operator",
         "channel": "observer",
-        "governance_token": {"final_verdict": "allow", "intent_hash": "abc123"},
+        "governance_token": _build_token(command_type="MoveOrb", channel="observer"),
     }
 
     response = client.post("/vr/command", json=payload)
@@ -92,7 +133,7 @@ def test_genesis_interaction_is_queued_with_valid_governance_token():
         "params": {"name": "genesis_wave"},
         "source": "genesis_entity",
         "channel": "genesis_entity",
-        "governance_token": {"final_verdict": "allow", "intent_hash": "intent-42"},
+        "governance_token": _build_token(command_type="PlayAnimation"),
     }
 
     response = client.post("/vr/command", json=payload)
@@ -101,6 +142,78 @@ def test_genesis_interaction_is_queued_with_valid_governance_token():
     data = response.json()
     assert data["mode"] == "genesis_interaction"
     assert data["queue_size"] == 1
+
+
+def test_genesis_interaction_rejects_expired_token(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("VR_GOVERNANCE_TOKEN_TTL_SECONDS", "60")
+
+    payload = {
+        "type": "MoveOrb",
+        "params": {"x": 1.0},
+        "source": "genesis_entity",
+        "channel": "genesis_entity",
+        "governance_token": _build_token(
+            command_type="MoveOrb",
+            issued_at=time.time() - 120,
+        ),
+    }
+
+    response = client.post("/vr/command", json=payload)
+    assert response.status_code == 403
+    assert "expired" in response.json()["detail"]
+
+
+def test_genesis_interaction_rejects_mismatched_command_binding():
+    payload = {
+        "type": "MoveOrb",
+        "params": {"x": 1.0},
+        "source": "genesis_entity",
+        "channel": "genesis_entity",
+        "governance_token": _build_token(command_type="PlayAnimation"),
+    }
+
+    response = client.post("/vr/command", json=payload)
+    assert response.status_code == 403
+    assert "command_type" in response.json()["detail"]
+
+
+def test_signature_is_required_when_secret_is_configured(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    monkeypatch.setenv("VR_GOVERNANCE_SIGNING_SECRET", "unit-test-secret")
+
+    payload = {
+        "type": "ChangeLighting",
+        "params": {"level": 3},
+        "source": "genesis_entity",
+        "channel": "genesis_entity",
+        "governance_token": _build_token(command_type="ChangeLighting"),
+    }
+
+    response = client.post("/vr/command", json=payload)
+    assert response.status_code == 403
+    assert "signature" in response.json()["detail"]
+
+
+def test_signed_token_is_accepted_when_secret_is_configured(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    secret = "unit-test-secret"
+    monkeypatch.setenv("VR_GOVERNANCE_SIGNING_SECRET", secret)
+
+    payload = {
+        "type": "ChangeLighting",
+        "params": {"level": 3},
+        "source": "genesis_entity",
+        "channel": "genesis_entity",
+        "governance_token": _build_token(
+            command_type="ChangeLighting", signing_secret=secret
+        ),
+    }
+
+    response = client.post("/vr/command", json=payload)
+    assert response.status_code == 200
+    assert response.json()["mode"] == "genesis_interaction"
 
 
 def test_unknown_command_type_is_rejected_under_observer_policy():

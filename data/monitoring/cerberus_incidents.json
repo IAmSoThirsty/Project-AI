@@ -8421,10 +8421,50 @@
         "details": "test incident"
       },
       "ts": 1769715058.1496205
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "0",
+        "gate": "test-gate-2",
+        "ts": 1776345392.7606409
+      },
+      "ts": 1776345392.7626405
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "0",
+        "gate": "test-gate-2",
+        "ts": 1776345392.7711494
+      },
+      "ts": 1776345392.7736576
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "0",
+        "gate": "test-gate-2",
+        "ts": 1776345684.2869556
+      },
+      "ts": 1776345684.2889555
+    },
+    {
+      "type": "incident",
+      "detail": {
+        "action": "lockdown",
+        "tower": "0",
+        "gate": "test-gate-2",
+        "ts": 1776345684.29858
+      },
+      "ts": 1776345684.29958
     }
   ],
   "attack_counts": {
-    "unknown": 650,
+    "unknown": 654,
     "gate-0-0-0": 35,
     "gate-0-0-1": 4,
     "gate-0-1-0": 4,

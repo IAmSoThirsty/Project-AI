@@ -1,5 +1,9 @@
 #                                           [2026-03-03 13:45]
 #                                          Productivity: Active
+import hashlib
+import hmac
+import json
+import os
 import time
 from typing import Any
 
@@ -25,6 +29,8 @@ GENESIS_INTERACTION_COMMAND_TYPES = {
 }
 
 MAX_QUEUE_SIZE = 100
+DEFAULT_TOKEN_TTL_SECONDS = 300
+MAX_TOKEN_FUTURE_SKEW_SECONDS = 30
 
 
 class VRCommand(BaseModel):
@@ -41,12 +47,83 @@ class VRCommand(BaseModel):
 command_queue: list[VRCommand] = []
 
 
-def _has_governance_allow(token: dict[str, Any] | None) -> bool:
-    if not token:
+def _get_token_ttl_seconds() -> int:
+    try:
+        ttl = int(os.getenv("VR_GOVERNANCE_TOKEN_TTL_SECONDS", str(DEFAULT_TOKEN_TTL_SECONDS)))
+        if ttl <= 0:
+            return DEFAULT_TOKEN_TTL_SECONDS
+        return ttl
+    except (TypeError, ValueError):
+        return DEFAULT_TOKEN_TTL_SECONDS
+
+
+def _get_signing_secret() -> str:
+    return os.getenv("VR_GOVERNANCE_SIGNING_SECRET", "").strip()
+
+
+def _canonical_token_payload(token: dict[str, Any]) -> str:
+    payload = {
+        "intent_hash": token.get("intent_hash"),
+        "final_verdict": token.get("final_verdict"),
+        "issued_at": token.get("issued_at"),
+        "command_type": token.get("command_type"),
+        "channel": token.get("channel"),
+    }
+    return json.dumps(payload, sort_keys=True, separators=(",", ":"))
+
+
+def _signature_is_valid(token: dict[str, Any]) -> bool:
+    secret = _get_signing_secret()
+    if not secret:
+        # Signature is optional unless a secret is configured.
+        return True
+
+    provided_signature = token.get("signature")
+    if not isinstance(provided_signature, str) or not provided_signature:
         return False
-    return bool(
-        token.get("final_verdict") == "allow" and token.get("intent_hash")
-    )
+
+    payload = _canonical_token_payload(token).encode("utf-8")
+    expected = hmac.new(secret.encode("utf-8"), payload, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(provided_signature, expected)
+
+
+def _has_governance_allow(
+    token: dict[str, Any] | None,
+    *,
+    command_type: str,
+    channel: str,
+) -> tuple[bool, str]:
+    if not token:
+        return False, "Governance approval token required for genesis interaction"
+
+    if token.get("final_verdict") != "allow":
+        return False, "Governance token verdict must be 'allow'"
+
+    if not token.get("intent_hash"):
+        return False, "Governance token missing intent_hash"
+
+    issued_at = token.get("issued_at")
+    if not isinstance(issued_at, (int, float)):
+        return False, "Governance token missing valid issued_at timestamp"
+
+    now = time.time()
+    token_age = now - float(issued_at)
+    if token_age > _get_token_ttl_seconds():
+        return False, "Governance token expired"
+
+    if token_age < -MAX_TOKEN_FUTURE_SKEW_SECONDS:
+        return False, "Governance token timestamp is too far in the future"
+
+    if token.get("command_type") != command_type:
+        return False, "Governance token command_type does not match request"
+
+    if token.get("channel") != channel:
+        return False, "Governance token channel does not match request"
+
+    if not _signature_is_valid(token):
+        return False, "Governance token signature validation failed"
+
+    return True, "ok"
 
 
 def _enqueue_command(cmd: VRCommand) -> None:
@@ -87,10 +164,15 @@ def send_command(cmd: VRCommand):
                 ),
             )
 
-        if not _has_governance_allow(cmd.governance_token):
+        is_allowed, reason = _has_governance_allow(
+            cmd.governance_token,
+            command_type=command_type,
+            channel=cmd.channel,
+        )
+        if not is_allowed:
             raise HTTPException(
                 status_code=403,
-                detail="Governance approval token required for genesis interaction",
+                detail=reason,
             )
 
         _enqueue_command(cmd)
@@ -123,6 +205,11 @@ def get_policy():
             "governance_token": {
                 "final_verdict": "allow",
                 "intent_hash": "required",
+                "issued_at": "required unix timestamp",
+                "command_type": "must match command.type",
+                "channel": "must match command.channel",
+                "signature": "required when VR_GOVERNANCE_SIGNING_SECRET is configured",
             },
+            "token_ttl_seconds": _get_token_ttl_seconds(),
         },
     }

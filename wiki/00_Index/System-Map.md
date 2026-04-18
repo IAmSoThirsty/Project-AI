@@ -11,6 +11,8 @@ tags:
 graph_color: red
 ---
 
+<!-- markdownlint-disable MD012 -->
+
 # System Map
 
 > **Top-level navigation for the entire Project-AI vault.**  
@@ -34,34 +36,57 @@ graph_color: red
 ## Core Domains
 
 ### 📘 Architecture
+
 → [[Architecture-Map]] - System design, execution models, language runtimes
 
 ### 🟣 Governance  
+
 → [[Governance-Map]] - Constitutional framework, agents, enforcement
 
 ### 🟠 Security
+
 → [[Security-Map]] - Cryptographic audit, isolation, runtime protection
 
 ### ⚙️ Operations
+
 → [[Operations-Map]] - Deployment, monitoring, runbooks
+
+---
+
+## Governance Backbone Hubs
+
+These are the primary structure-governance anchors for dense-graph navigation:
+
+- [[AGI-Charter-Source]] - Charter authority source (`docs/governance/AGI_CHARTER.md`)
+- [[Constitution-Source]] - Governance kernel constitution source (`docs/developer/api/CONSTITUTION.md`)
+- [[Runtime-Architecture-Source]] - Runtime architecture source (`docs/PRODUCTION_ARCHITECTURE.md`)
+- [[Invariant-Layer-Source]] - Enforcement/invariant source (`docs/governance/IRREVERSIBILITY_FORMALIZATION.md`)
+- [[Publication-Spine]] - Canonical research spine
 
 ---
 
 ## Special Navigation
 
 ### 📚 Research Timeline
+
 → [[Sovereign-Journey]] - All 21 Zenodo publications organized by era
 
+→ [[Publication-Spine]] - Canonical publication hub (index + chronology + DOI routing)
+
 ### 🗺️ Guided Tours
+
 → [[Reading-Paths]] - Curated paths for newcomers, engineers, security specialists, researchers
 
 ### Sovereign Orbit
+
 → [[Sovereign-Orbit]] - Slow orbital view of the provenance ring
 
 ### Source Corpus
+
 → [[Source-Document-Index]] - Repo source documents wired into the vault
 
 ### Repo Mirror
+
 → [[Local-Repo-Library]] - Local-first filesystem, git, ignored-file, folder, and working-tree library
 
 → [[Repo-Mirror]] - Branch, status, file, folder, tracked, untracked, ignored, and vault-health snapshot
@@ -71,12 +96,14 @@ graph_color: red
 ## Quick Links to Canonical Systems
 
 **Core Enforcement:**
+
 - [[PSIA]] - Privileged System Instruction Architecture
 - [[OctoReflex]] - System call enforcement
 - [[Cerberus]] - Runtime governance agent
 - [[Legion]] - Canonical Legion references
 
 **Constitutional Framework:**
+
 - [[Triumvirate]] - Three-agent governance model
 - [[Triumvirate-Consensus]] - Consensus references and governance linkage
 - [[Galahad]] - Governance agent reference
@@ -84,11 +111,13 @@ graph_color: red
 - [[Sovereign-Covenant]] - The binding agreement
 
 **Language & Execution:**
+
 - [[TARL]] - Type-safe architecture runtime language
 - [[Thirsty-Lang]] - Constitutional programming language
 - [[TSCG]] - Type-safe code generation
 
 **Index Hygiene:**
+
 - [[Root Index]] - Folder index source of truth
 - [[Evolution-Timeline]] - Timeline alias hub
 - [[Ingestion-Summary]] - Ingestion summary source of truth
@@ -107,6 +136,6 @@ graph_color: red
 - **Scribe Home:** [[00 Scribe Home]] - Personal scribe navigation
 
 ---
-
 *This is the entry point. Start here, then follow the links.*
+<!-- end -->
 
