@@ -57,7 +57,7 @@
     "electron": "^41.1.0",
     "electron-builder": "^24.9.1",
     "typescript": "^5.3.3",
-    "vite": "^5.0.12"
+    "vite": "^8.0.8"
   },
   "keywords": [
     "governance",
