@@ -1,0 +1,5 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+"gradle/libs.versions.toml","gradle","gradle","libs.versions.toml",".toml","4731","4.62","2026-03-29T00:58:42.7531558Z","6.125","True","False","117","103","4047","34.59","127"
+"gradle/README.md","gradle","gradle","README.md",".md","621","0.606","2026-04-01T15:28:03.2114295Z","2.522","True","False","23","16","573","24.913","125"
+"gradle/wrapper/gradle-wrapper.jar","gradle","gradle\wrapper","gradle-wrapper.jar",".jar","43462","42.443","2026-03-29T00:58:42.7541579Z","6.125","False","True",,,,,
+"gradle/wrapper/gradle-wrapper.properties","gradle","gradle\wrapper","gradle-wrapper.properties",".properties","257","0.251","2026-03-29T00:58:42.7541579Z","6.125","True","False","7","7","243","34.714","77"

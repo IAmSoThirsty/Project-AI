@@ -30,16 +30,16 @@ jobs:
             build-mode: none
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: 34e114876b0b11c390a56381ad16ebd13914f8d5  # pinned from actions/checkout@v4
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: 3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c  # pinned from github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
           queries: security-extended,security-and-quality
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: 3b1a19a80ab047f35cbb237b5bd9bdc1e14f166c  # pinned from github/codeql-action/analyze@v3
         with:
           category: "/language:${{ matrix.language }}"
