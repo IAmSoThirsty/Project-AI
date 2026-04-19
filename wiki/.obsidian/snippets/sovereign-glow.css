@@ -1,7 +1,7 @@
 body {
-  --graph-line: rgba(255, 255, 255, 0.9);
-  --graph-line-highlight: #ffffff;
-  --graph-node: #ffffff;
+  --graph-line: rgba(214, 230, 255, 0.76);
+  --graph-line-highlight: #e8f2ff;
+  --graph-node: #f6fbff;
   --graph-node-focused: #ffffff;
   --graph-node-tag: #70e000;
   --graph-node-attachment: #00bbf9;
@@ -13,15 +13,11 @@ body {
 .workspace-leaf-content[data-type="graph"] canvas {
   animation: sovereign-graph-breathe 8s ease-in-out infinite;
   filter:
-    saturate(1.9)
-    contrast(1.18)
-    brightness(1.18)
-    blur(0.12px)
-    drop-shadow(0 0 8px rgba(255, 255, 255, 0.86))
-    drop-shadow(0 0 24px rgba(255, 255, 255, 0.68))
-    drop-shadow(0 0 58px rgba(255, 255, 255, 0.42))
-    drop-shadow(0 0 112px rgba(255, 255, 255, 0.22))
-    drop-shadow(0 0 180px rgba(184, 242, 230, 0.16));
+    saturate(1.2)
+    contrast(1.08)
+    brightness(1.04)
+    drop-shadow(0 0 8px rgba(193, 220, 255, 0.24))
+    drop-shadow(0 0 22px rgba(182, 108, 255, 0.16));
 }
 
 .workspace-leaf-content[data-type="graph"] .view-content {
@@ -41,75 +37,61 @@ body {
 .canvas-node {
   animation: sovereign-node-hum 7s ease-in-out infinite;
   filter:
-    saturate(1.85)
-    contrast(1.12)
-    drop-shadow(0 0 12px rgba(255, 255, 255, 0.36))
-    drop-shadow(0 0 28px rgba(255, 255, 255, 0.22))
-    drop-shadow(0 0 42px rgba(255, 209, 102, 0.18));
+    saturate(1.25)
+    contrast(1.08)
+    drop-shadow(0 0 8px rgba(205, 168, 255, 0.18))
+    drop-shadow(0 0 18px rgba(126, 247, 255, 0.14));
 }
 
 .canvas-node-container {
   border-width: 2px;
   box-shadow:
-    0 0 18px rgba(255, 255, 255, 0.18),
-    0 0 44px rgba(255, 209, 102, 0.12);
+    0 0 12px rgba(215, 228, 255, 0.16),
+    0 0 28px rgba(255, 211, 106, 0.1);
 }
 
 .canvas-path,
 .canvas-path-end,
 .canvas-path-start {
   animation: sovereign-ray-hum 6s ease-in-out infinite;
-  stroke: rgba(255, 255, 255, 0.9) !important;
+  stroke: rgba(220, 235, 255, 0.82) !important;
   stroke-width: 5px !important;
-  opacity: 0.88 !important;
+  opacity: 0.8 !important;
   mix-blend-mode: screen;
   filter:
-    blur(0.18px)
-    drop-shadow(0 0 6px rgba(255, 255, 255, 0.9))
-    drop-shadow(0 0 18px rgba(255, 255, 255, 0.74))
-    drop-shadow(0 0 42px rgba(255, 255, 255, 0.48))
-    drop-shadow(0 0 88px rgba(255, 255, 255, 0.26))
-    drop-shadow(0 0 150px rgba(184, 242, 230, 0.18));
+    drop-shadow(0 0 5px rgba(214, 230, 255, 0.55))
+    drop-shadow(0 0 14px rgba(126, 247, 255, 0.22));
 }
 
 .canvas-path:hover,
 .canvas-path.is-focused {
-  stroke-width: 6px !important;
+  stroke-width: 5.5px !important;
   opacity: 1 !important;
   filter:
-    blur(0.1px)
-    drop-shadow(0 0 8px rgba(255, 255, 255, 1))
-    drop-shadow(0 0 28px rgba(255, 255, 255, 0.92))
-    drop-shadow(0 0 70px rgba(255, 255, 255, 0.62))
-    drop-shadow(0 0 140px rgba(184, 242, 230, 0.34));
+    drop-shadow(0 0 8px rgba(214, 230, 255, 0.8))
+    drop-shadow(0 0 22px rgba(182, 108, 255, 0.26));
 }
 
 .canvas-path-label {
   color: #ffffff;
   text-shadow:
-    0 0 8px rgba(255, 255, 255, 0.9),
-    0 0 18px rgba(255, 209, 102, 0.45);
+    0 0 6px rgba(255, 255, 255, 0.74),
+    0 0 12px rgba(255, 211, 106, 0.28);
 }
 
 @keyframes sovereign-ray-hum {
   0%,
   100% {
-    opacity: 0.78;
+    opacity: 0.72;
     filter:
-      blur(0.2px)
-      drop-shadow(0 0 5px rgba(255, 255, 255, 0.76))
-      drop-shadow(0 0 18px rgba(255, 255, 255, 0.58))
-      drop-shadow(0 0 54px rgba(255, 255, 255, 0.32))
-      drop-shadow(0 0 130px rgba(184, 242, 230, 0.14));
+      drop-shadow(0 0 5px rgba(214, 230, 255, 0.5))
+      drop-shadow(0 0 12px rgba(126, 247, 255, 0.18));
   }
   50% {
-    opacity: 0.96;
+    opacity: 0.9;
     filter:
-      blur(0.08px)
-      drop-shadow(0 0 8px rgba(255, 255, 255, 0.96))
-      drop-shadow(0 0 26px rgba(255, 255, 255, 0.82))
-      drop-shadow(0 0 78px rgba(255, 255, 255, 0.44))
-      drop-shadow(0 0 180px rgba(184, 242, 230, 0.22));
+      drop-shadow(0 0 8px rgba(214, 230, 255, 0.72))
+      drop-shadow(0 0 18px rgba(182, 108, 255, 0.24));
   }
 }
 

@@ -8,647 +8,661 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "path:Sovereign-Journey",
+      "query": "path:Sovereign-Journey OR path:00_Index/Sovereign-Journey OR path:wiki/00_Index/Sovereign-Journey",
       "color": {
         "a": 1,
-        "rgb": 16774839
+        "rgb": 16771496
       }
     },
     {
       "query": "tag:#role/root",
       "color": {
         "a": 1,
-        "rgb": 16774839
+        "rgb": 16771496
       }
     },
     {
       "query": "tag:#bridge/sovereign-core",
       "color": {
         "a": 1,
-        "rgb": 16774839
+        "rgb": 16765802
       }
     },
     {
       "query": "tag:#bridge/governance-security",
       "color": {
         "a": 1,
-        "rgb": 16732038
+        "rgb": 16347647
       }
     },
     {
       "query": "tag:#bridge/security-systems",
       "color": {
         "a": 1,
-        "rgb": 3407820
+        "rgb": 8191940
       }
     },
     {
       "query": "tag:#bridge/security-research",
       "color": {
         "a": 1,
-        "rgb": 13196543
+        "rgb": 14071551
       }
     },
     {
       "query": "tag:#bridge/systems-governance",
       "color": {
         "a": 1,
-        "rgb": 7995221
+        "rgb": 10465023
       }
     },
     {
       "query": "tag:#bridge/security-architecture",
       "color": {
         "a": 1,
-        "rgb": 16757575
+        "rgb": 16748410
       }
     },
     {
       "query": "tag:#bridge/architecture-systems",
       "color": {
         "a": 1,
-        "rgb": 62975
+        "rgb": 8321023
       }
     },
     {
       "query": "tag:#bridge/governance-architecture",
       "color": {
         "a": 1,
-        "rgb": 16771661
+        "rgb": 16740312
       }
     },
     {
       "query": "tag:#bridge/governance-research",
       "color": {
         "a": 1,
-        "rgb": 14052607
+        "rgb": 12949247
       }
     },
     {
       "query": "tag:#bridge/corpus-governance",
       "color": {
         "a": 1,
-        "rgb": 16738816
+        "rgb": 16759178
+      }
+    },
+    {
+      "query": "tag:#bridge",
+      "color": {
+        "a": 1,
+        "rgb": 16765802
       }
     },
     {
       "query": "tag:#legacy",
       "color": {
         "a": 1,
-        "rgb": 16752412
+        "rgb": 16757355
       }
     },
     {
       "query": "tag:#type/legacy-evidence",
       "color": {
         "a": 1,
-        "rgb": 16752412
+        "rgb": 16757355
       }
     },
     {
       "query": "tag:#MOCs",
       "color": {
         "a": 1,
-        "rgb": 16704576
+        "rgb": 16774604
       }
     },
     {
       "query": "tag:#system/psia",
       "color": {
         "a": 1,
-        "rgb": 54527
+        "rgb": 8321023
       }
     },
     {
       "query": "tag:#system/triumvirate",
       "color": {
         "a": 1,
-        "rgb": 16735487
+        "rgb": 16347647
       }
     },
     {
       "query": "tag:#system/tarl",
       "color": {
         "a": 1,
-        "rgb": 2686136
+        "rgb": 16769154
       }
     },
     {
       "query": "tag:#system/thirsty-lang",
       "color": {
         "a": 1,
-        "rgb": 2686136
+        "rgb": 16769154
       }
     },
     {
       "query": "tag:#system/tscg",
       "color": {
         "a": 1,
-        "rgb": 5032432
+        "rgb": 8321023
       }
     },
     {
       "query": "tag:#system/tscg-b",
       "color": {
         "a": 1,
-        "rgb": 5032432
+        "rgb": 8321023
       }
     },
     {
       "query": "tag:#system/octoreflex",
       "color": {
         "a": 1,
-        "rgb": 16756736
+        "rgb": 16748410
       }
     },
     {
       "query": "tag:#system/cerberus",
       "color": {
         "a": 1,
-        "rgb": 16726116
+        "rgb": 16748410
       }
     },
     {
       "query": "tag:#system/sovereign-vault",
       "color": {
         "a": 1,
-        "rgb": 16777215
+        "rgb": 16774604
       }
     },
     {
       "query": "tag:#system/sovereign-runtime",
       "color": {
         "a": 1,
-        "rgb": 5032432
+        "rgb": 11046143
       }
     },
     {
       "query": "tag:#system/sovereign-orchestration",
       "color": {
         "a": 1,
-        "rgb": 5032432
+        "rgb": 11046143
       }
     },
     {
       "query": "tag:#system/governance-pipeline",
       "color": {
         "a": 1,
-        "rgb": 13073919
+        "rgb": 16347647
       }
     },
     {
       "query": "tag:#system/yggdrasil",
       "color": {
         "a": 1,
-        "rgb": 7405359
+        "rgb": 16769154
       }
     },
     {
       "query": "tag:#system/yggdrasil-dns",
       "color": {
         "a": 1,
-        "rgb": 7405359
+        "rgb": 16769154
       }
     },
     {
       "query": "tag:#system/constitutional-code-store",
       "color": {
         "a": 1,
-        "rgb": 16767053
+        "rgb": 16769154
       }
     },
     {
       "query": "tag:#system/iron-path",
       "color": {
         "a": 1,
-        "rgb": 16727296
+        "rgb": 11046143
       }
     },
     {
       "query": "tag:#system/iron-path-executor",
       "color": {
         "a": 1,
-        "rgb": 16727296
+        "rgb": 11046143
       }
     },
     {
       "query": "tag:#system/audit",
       "color": {
         "a": 1,
-        "rgb": 10741301
+        "rgb": 16765802
       }
     },
     {
       "query": "tag:#system/codex",
       "color": {
         "a": 1,
-        "rgb": 10741301
+        "rgb": 12949247
       }
     },
     {
       "query": "tag:#system/four-laws",
       "color": {
         "a": 1,
-        "rgb": 10182117
+        "rgb": 16347647
       }
     },
     {
       "query": "tag:#system/shadow-execution",
       "color": {
         "a": 1,
-        "rgb": 5078271
+        "rgb": 10465023
       }
     },
     {
       "query": "tag:#system/state-register",
       "color": {
         "a": 1,
-        "rgb": 16756736
+        "rgb": 16748410
       }
     },
     {
       "query": "tag:#system/cryptographic-audit",
       "color": {
         "a": 1,
-        "rgb": 10741301
+        "rgb": 16765802
       }
     },
     {
       "query": "tag:#system/kernel-architecture",
       "color": {
         "a": 1,
-        "rgb": 13073919
+        "rgb": 16769154
       }
     },
     {
       "query": "tag:#system/genesis-microservices",
       "color": {
         "a": 1,
-        "rgb": 5032432
+        "rgb": 8321023
+      }
+    },
+    {
+      "query": "tag:#system",
+      "color": {
+        "a": 1,
+        "rgb": 8321023
       }
     },
     {
       "query": "tag:#domain/governance",
       "color": {
         "a": 1,
-        "rgb": 16723837
+        "rgb": 16347647
       }
     },
     {
       "query": "tag:#domain/security",
       "color": {
         "a": 1,
-        "rgb": 2424698
+        "rgb": 8191940
       }
     },
     {
       "query": "tag:#domain/architecture",
       "color": {
         "a": 1,
-        "rgb": 16767053
+        "rgb": 16769154
       }
     },
     {
       "query": "tag:#domain/systems",
       "color": {
         "a": 1,
-        "rgb": 62975
+        "rgb": 8321023
       }
     },
     {
       "query": "tag:#domain/research",
       "color": {
         "a": 1,
-        "rgb": 11955455
+        "rgb": 13478143
       }
     },
     {
       "query": "tag:#domain/corpus",
       "color": {
         "a": 1,
-        "rgb": 16742912
+        "rgb": 16759946
       }
     },
     {
       "query": "tag:#domain/operations",
       "color": {
         "a": 1,
-        "rgb": 9395455
+        "rgb": 11046143
       }
     },
     {
       "query": "tag:#layer/index",
       "color": {
         "a": 1,
-        "rgb": 16773542
+        "rgb": 16774604
       }
     },
     {
       "query": "tag:#layer/governance",
       "color": {
         "a": 1,
-        "rgb": 16723837
+        "rgb": 16347647
       }
     },
     {
       "query": "tag:#layer/systems",
       "color": {
         "a": 1,
-        "rgb": 62975
+        "rgb": 8321023
       }
     },
     {
       "query": "tag:#layer/security",
       "color": {
         "a": 1,
-        "rgb": 2424698
+        "rgb": 8191940
       }
     },
     {
       "query": "tag:#layer/architecture",
       "color": {
         "a": 1,
-        "rgb": 16767053
+        "rgb": 16769154
       }
     },
     {
       "query": "tag:#layer/operations",
       "color": {
         "a": 1,
-        "rgb": 9395455
+        "rgb": 11046143
       }
     },
     {
       "query": "tag:#layer/research",
       "color": {
         "a": 1,
-        "rgb": 11955455
+        "rgb": 13478143
       }
     },
     {
       "query": "tag:#layer/corpus",
       "color": {
         "a": 1,
-        "rgb": 16742912
+        "rgb": 16759946
       }
     },
     {
       "query": "tag:#type/publication",
       "color": {
         "a": 1,
-        "rgb": 11955455
+        "rgb": 13478143
       }
     },
     {
       "query": "tag:#type/system",
       "color": {
         "a": 1,
-        "rgb": 62975
+        "rgb": 8321023
       }
     },
     {
       "query": "tag:#type/operation",
       "color": {
         "a": 1,
-        "rgb": 9080728
+        "rgb": 11046143
       }
     },
     {
       "query": "tag:#type/index",
       "color": {
         "a": 1,
-        "rgb": 16773542
+        "rgb": 16774604
       }
     },
     {
       "query": "tag:#type/security-control",
       "color": {
         "a": 1,
-        "rgb": 16739125
+        "rgb": 16748410
       }
     },
     {
       "query": "tag:#type/control-node",
       "color": {
         "a": 1,
-        "rgb": 16704576
+        "rgb": 16765802
       }
     },
     {
       "query": "tag:#type/architecture-concept",
       "color": {
         "a": 1,
-        "rgb": 5032432
+        "rgb": 16769154
       }
     },
     {
       "query": "tag:#type/source",
       "color": {
         "a": 1,
-        "rgb": 16742912
+        "rgb": 16759946
       }
     },
     {
       "query": "tag:#type/concept",
       "color": {
         "a": 1,
-        "rgb": 5078271
+        "rgb": 10465023
       }
     },
     {
       "query": "tag:#type/agent",
       "color": {
         "a": 1,
-        "rgb": 16723837
+        "rgb": 16347647
       }
     },
     {
       "query": "tag:#type/template",
       "color": {
         "a": 1,
-        "rgb": 16737996
+        "rgb": 16746198
       }
     },
     {
       "query": "tag:#type/governance-model",
       "color": {
         "a": 1,
-        "rgb": 10741301
+        "rgb": 12949247
       }
     },
     {
       "query": "tag:#type/guide",
       "color": {
         "a": 1,
-        "rgb": 12120806
+        "rgb": 16771496
       }
     },
     {
       "query": "tag:#type/runbook",
       "color": {
         "a": 1,
-        "rgb": 3065014
+        "rgb": 11046143
       }
     },
     {
       "query": "tag:#type/date-note",
       "color": {
         "a": 1,
-        "rgb": 9080728
+        "rgb": 11046143
       }
     },
     {
       "query": "tag:#type/moc",
       "color": {
         "a": 1,
-        "rgb": 16704576
+        "rgb": 16774604
       }
     },
     {
       "query": "tag:#type/audit",
       "color": {
         "a": 1,
-        "rgb": 16704576
+        "rgb": 16765802
       }
     },
     {
       "query": "tag:#type/reference",
       "color": {
         "a": 1,
-        "rgb": 16737996
+        "rgb": 16759178
       }
     },
     {
       "query": "tag:#priority/canonical",
       "color": {
         "a": 1,
-        "rgb": 16765286
+        "rgb": 16771496
       }
     },
     {
       "query": "tag:#priority/supporting",
       "color": {
         "a": 1,
-        "rgb": 9080728
+        "rgb": 11121863
       }
     },
     {
       "query": "tag:#status/active",
       "color": {
         "a": 1,
-        "rgb": 3065014
+        "rgb": 8585118
       }
     },
     {
       "query": "tag:#status/published",
       "color": {
         "a": 1,
-        "rgb": 11955455
+        "rgb": 14071551
       }
     },
     {
       "query": "tag:#status/captured",
       "color": {
         "a": 1,
-        "rgb": 16752412
+        "rgb": 16763276
       }
     },
     {
       "query": "tag:#role/provenance",
       "color": {
         "a": 1,
-        "rgb": 16737996
+        "rgb": 16759178
       }
     },
     {
       "query": "tag:#role/navigation",
       "color": {
         "a": 1,
-        "rgb": 16773542
+        "rgb": 16771496
       }
     },
     {
       "query": "tag:#role/graph",
       "color": {
         "a": 1,
-        "rgb": 16704576
+        "rgb": 16765802
       }
     },
     {
-      "query": "path:01_Governance",
+      "query": "path:01_Governance OR path:wiki/01_Governance",
       "color": {
         "a": 1,
-        "rgb": 16723837
+        "rgb": 16347647
       }
     },
     {
-      "query": "path:02_Systems",
+      "query": "path:02_Systems OR path:wiki/02_Systems",
       "color": {
         "a": 1,
-        "rgb": 62975
+        "rgb": 8321023
       }
     },
     {
-      "query": "path:03_Security",
+      "query": "path:03_Security OR path:wiki/03_Security",
       "color": {
         "a": 1,
-        "rgb": 2424698
+        "rgb": 8191940
       }
     },
     {
-      "query": "path:04_Architecture",
+      "query": "path:04_Architecture OR path:wiki/04_Architecture",
       "color": {
         "a": 1,
-        "rgb": 16767053
+        "rgb": 16769154
       }
     },
     {
-      "query": "path:05_Operations",
+      "query": "path:05_Operations OR path:wiki/05_Operations",
       "color": {
         "a": 1,
-        "rgb": 9395455
+        "rgb": 11046143
       }
     },
     {
-      "query": "path:05_Operations/Legacy",
+      "query": "path:05_Operations/Legacy OR path:wiki/05_Operations/Legacy",
       "color": {
         "a": 1,
-        "rgb": 16752412
+        "rgb": 16757355
       }
     },
     {
-      "query": "path:06_Concepts",
+      "query": "path:06_Concepts OR path:wiki/06_Concepts",
       "color": {
         "a": 1,
-        "rgb": 5078271
+        "rgb": 10465023
       }
     },
     {
-      "query": "path:07_Research/Publications",
+      "query": "path:07_Research/Publications OR path:wiki/07_Research/Publications",
       "color": {
         "a": 1,
-        "rgb": 16742912
+        "rgb": 13478143
       }
     },
     {
-      "query": "path:07_Research",
+      "query": "path:07_Research OR path:wiki/07_Research",
       "color": {
         "a": 1,
-        "rgb": 11955455
+        "rgb": 13478143
       }
     },
     {
-      "query": "path:00_Index",
+      "query": "path:00_Index OR path:wiki/00_Index",
       "color": {
         "a": 1,
-        "rgb": 16773542
+        "rgb": 16774604
       }
     },
     {
-      "query": "path:08_Templates",
+      "query": "path:08_Templates OR path:wiki/08_Templates",
       "color": {
         "a": 1,
-        "rgb": 16737996
+        "rgb": 16746198
       }
     }
   ],

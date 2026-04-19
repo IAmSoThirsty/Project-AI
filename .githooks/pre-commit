@@ -1,1 +1,5 @@
-python tools/check_large_files_for_lfs.py
+#!/bin/sh
+set -e
+
+py -3 tools/check_large_files_for_lfs.py
+py -3 tools/enforce_docs_only_branch.py
