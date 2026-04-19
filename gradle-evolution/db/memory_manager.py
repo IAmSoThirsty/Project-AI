@@ -11,11 +11,16 @@ import gzip
 import json
 import logging
 import shutil
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class RetentionPolicy:
@@ -128,7 +133,7 @@ class MemoryManager:
         # Rule 2: Keep builds within age threshold
         if self.policy.keep_days:
             cutoff_time = (
-                datetime.utcnow() - timedelta(days=self.policy.keep_days)
+                _utcnow() - timedelta(days=self.policy.keep_days)
             ).isoformat()
             for build in all_builds:
                 if build["timestamp"] >= cutoff_time:
@@ -137,7 +142,7 @@ class MemoryManager:
         # Rule 3: Keep successful builds for shorter period
         if self.policy.keep_successful_days:
             cutoff_time = (
-                datetime.utcnow() - timedelta(days=self.policy.keep_successful_days)
+                _utcnow() - timedelta(days=self.policy.keep_successful_days)
             ).isoformat()
             for build in all_builds:
                 if build["status"] == "success" and build["timestamp"] >= cutoff_time:
@@ -227,7 +232,7 @@ class MemoryManager:
             }
 
             # Create archive file
-            timestamp = datetime.utcnow().strftime("%Y%m%d")
+            timestamp = _utcnow().strftime("%Y%m%d")
             archive_file = self.archive_dir / f"build_{build_id}_{timestamp}.json.gz"
 
             with gzip.open(archive_file, "wt", encoding="utf-8") as f:
@@ -540,7 +545,7 @@ class MemoryManager:
             Path to backup file
         """
         if backup_path is None:
-            timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+            timestamp = _utcnow().strftime("%Y%m%d_%H%M%S")
             backup_path = self.archive_dir / f"backup_{timestamp}.db"
         else:
             backup_path = Path(backup_path)

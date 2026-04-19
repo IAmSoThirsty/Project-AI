@@ -15,6 +15,8 @@ This folder contains detailed technical diagrams, system architecture documents,
 ## Key Documents
 
 - `ARCHITECTURE_OVERVIEW.md` - Complete system architecture overview
+- `AGENT_MODEL.md` - PACE agent architecture and coordination model
+- `../templates/AGENT_BUILD_TEMPLATE.md` - Practical template for defining and building new agents
 - `PROJECT_AI_KERNEL_ARCHITECTURE.md` - Kernel architecture details
 - `KERNEL_MODULARIZATION_SUMMARY.md` - Modularization approach
 - `HYDRA_50_ARCHITECTURE.md` - High-availability architecture

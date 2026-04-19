@@ -30,7 +30,7 @@ from abc import ABC, abstractmethod
 from collections import defaultdict, deque
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -69,7 +69,7 @@ class StreamEvent:
     topic: str = ""
     data: dict[str, Any] = field(default_factory=dict)
     metadata: dict[str, Any] = field(default_factory=dict)
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     partition: int = 0
     offset: int = 0
     source: str = ""
@@ -405,7 +405,7 @@ class EventSourceStore:
                 self.snapshots[aggregate_id] = {
                     "state": state,
                     "version": version,
-                    "timestamp": datetime.now(UTC).isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
                 logger.info(
                     "Created snapshot for aggregate %s at version %s",
@@ -494,7 +494,7 @@ class SensorMotorAggregator:
                 "total_motor_commands": sum(
                     len(q) for q in self.motor_commands.values()
                 ),
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
             for callback in self.aggregation_callbacks:

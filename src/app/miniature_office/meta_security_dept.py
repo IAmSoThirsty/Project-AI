@@ -19,7 +19,7 @@ from __future__ import annotations
 import logging
 import uuid
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum, IntEnum
 from typing import Any
 
@@ -63,7 +63,7 @@ class Violation:
     severity: EnforcementLevel
     component_id: str | None = None
     evidence: dict[str, Any] = field(default_factory=dict)
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -74,7 +74,7 @@ class ContainmentResult:
     component_id: str
     action: str  # "isolated", "suspended", "locked"
     reason: str
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -86,7 +86,7 @@ class ShutdownResult:
     components_affected: list[str] = field(default_factory=list)
     reason: str = ""
     requires_triumvirate_review: bool = True
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -101,7 +101,7 @@ class EnforcementAction:
     vr_message: str
     access_restricted: bool = False
     requires_triumvirate_reinstatement: bool = False
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -114,7 +114,7 @@ class TriumvirateDecision:
     reason: str
     deciding_members: list[str] = field(default_factory=list)
     conditions: list[str] = field(default_factory=list)
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -509,7 +509,7 @@ class MetaSecurityDepartment:
                     if e.enforcement_level >= EnforcementLevel.INTERVENTION
                 ]
             ),
-            last_scan=datetime.now(UTC).isoformat(),
+            last_scan=datetime.now(timezone.utc).isoformat(),
             system_integrity=integrity,
         )
 
@@ -547,7 +547,7 @@ class MetaSecurityDepartment:
         self._audit_log.append(
             {
                 "action": action,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "details": details,
             }
         )

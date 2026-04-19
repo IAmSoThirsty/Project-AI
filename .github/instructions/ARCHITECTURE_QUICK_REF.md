@@ -1,10 +1,14 @@
-<!--                                         [2026-03-03 13:45] -->
+<!--                                         [2026-04-08 08:42] -->
 <!--                                        Productivity: Active -->
 # Project-AI Architecture Quick Reference
 
+> Governance precedence: `.github/Active_Governance_Policy.md` is the authoritative policy baseline.
+> This quick reference is operational guidance and must remain consistent with the workspace profile.
+> Monorepo integrity: Treat all repository components as potentially mission-critical unless maintainers explicitly state otherwise.
+
 ## 🏗️ System Overview
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                    LEATHER BOOK UI (PyQt6)                      │
 │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────┐   │
@@ -15,7 +19,7 @@
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    CORE SYSTEMS (10 Modules)                    │
+│                    CORE SYSTEMS (11 Modules)                    │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │ ai_systems.py (470 lines - 6 integrated systems)         │  │
 │  │  • FourLaws          • AIPersona       • MemorySystem    │  │
@@ -23,9 +27,11 @@
 │  └──────────────────────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────────────────────┐  │
 │  │ Feature Modules                                          │  │
-│  │  • user_manager      • learning_paths  • data_analysis   │  │
-│  │  • security_resources • location_tracker • emergency     │  │
+│  │  • user_manager      • command_override • learning_paths │  │
+│  │  • data_analysis     • security_resources                │  │
+│  │  • location_tracker  • emergency_alert                   │  │
 │  │  • intelligence_engine • intent_detection                │  │
+│  │  • image_generator                                      │  │
 │  └──────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
                               │
@@ -58,7 +64,7 @@
 
 ### User Action → AI Response
 
-```
+```text
 User Input (GUI)
     ↓
 Dashboard Handler
@@ -78,7 +84,7 @@ GUI Response Display
 
 ### Learning Request Workflow
 
-```
+```text
 AI discovers new content
     ↓
 LearningRequestManager.create_request()
@@ -202,6 +208,33 @@ cd web/backend && flask run      # Backend API
 cd web/frontend && npm run dev   # Frontend dev server
 ```
 
+## 🌐 Runtime Context Boundaries
+
+- **Desktop runtime**: entrypoint `python -m src.app.main`
+- **Web backend**: `web/backend` (docs reference default local port `5000`)
+- **Web frontend**: `web/frontend` (docs reference default local port `3000`)
+- Maintain strict separation between desktop and web troubleshooting paths
+
+## 🚀 Deployment Entry Points
+
+- Desktop launch scripts: `scripts/launch-desktop.ps1` and `scripts/launch-desktop.bat`
+- Containerized workflows are governed through root Docker/Compose assets and `.github/workflows/*`
+- Prefer repository-defined deployment paths over ad-hoc launch recipes
+
+## ⚙️ Workflow Awareness Baseline
+
+Key workflow files currently present (non-exhaustive):
+
+- `ci.yml`
+- `bandit.yml`
+- `codeql.yml`
+- `dependency-review.yml`
+- `deploy.yml`
+- `production-deployment.yml`
+- `security-secret-scan.yml`
+- `format-and-fix.yml`
+- `generate-sbom.yml`
+
 ## ⚠️ Critical Patterns
 
 ### Module Imports
@@ -251,7 +284,7 @@ threading.Thread(target=self.delayed_action).start()
 
 ## 🔐 Security Layers
 
-```
+```text
 ┌──────────────────────────────────────────┐
 │ FourLaws (Asimov's Laws hierarchy)       │ ← Ethics
 ├──────────────────────────────────────────┤
@@ -278,5 +311,5 @@ threading.Thread(target=self.delayed_action).start()
 
 ---
 
-**Last Updated**: November 29, 2025
+**Last Updated**: 2026-04-08 08:42 -06:00
 **Target Audience**: AI coding agents and new developers

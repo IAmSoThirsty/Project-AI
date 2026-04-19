@@ -40,7 +40,7 @@ import hashlib
 import json
 import logging
 import os
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any, Literal
 
@@ -172,7 +172,7 @@ class ExternalMerkleAnchor:
             "merkle_root": merkle_root,
             "genesis_id": genesis_id,
             "batch_info": batch_info,
-            "pinned_at": datetime.now(UTC).isoformat(),
+            "pinned_at": datetime.now(timezone.utc).isoformat(),
             "backends": self.backends,
         }
 
@@ -251,7 +251,7 @@ class ExternalMerkleAnchor:
 
     def _generate_anchor_id(self) -> str:
         """Generate unique anchor ID."""
-        timestamp = datetime.now(UTC).isoformat()
+        timestamp = datetime.now(timezone.utc).isoformat()
         random_bytes = os.urandom(8)
         return hashlib.sha256(timestamp.encode() + random_bytes).hexdigest()[:16]
 
@@ -437,7 +437,7 @@ class ExternalMerkleAnchor:
             # Calculate retention date
             from datetime import timedelta
 
-            retention_until = datetime.now(UTC) + timedelta(days=self.s3_retention_days)
+            retention_until = datetime.now(timezone.utc) + timedelta(days=self.s3_retention_days)
 
             # Put object with object lock retention
             response = client.put_object(

@@ -26,7 +26,7 @@ import statistics
 import sys
 import time
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 
 try:
@@ -180,7 +180,7 @@ class LoadTester:
             logger.info(f"  Target RPS: {config.requests_per_second}")
 
         self.results = []
-        start_time = datetime.now(UTC)
+        start_time = datetime.now(timezone.utc)
         start_timestamp = time.time()
 
         # Calculate delay between requests if RPS is specified
@@ -225,7 +225,7 @@ class LoadTester:
             await asyncio.gather(*tasks)
 
         end_timestamp = time.time()
-        end_time_dt = datetime.now(UTC)
+        end_time_dt = datetime.now(timezone.utc)
 
         # Calculate metrics
         duration = end_timestamp - start_timestamp

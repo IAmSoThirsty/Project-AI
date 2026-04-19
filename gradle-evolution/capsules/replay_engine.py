@@ -9,7 +9,8 @@ Enables deterministic replay of build executions for debugging and auditing.
 """
 
 import logging
-from datetime import datetime
+import asyncio
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,11 @@ from temporalio.client import Client
 from .capsule_engine import BuildCapsule, CapsuleEngine
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class ReplayResult:
@@ -29,6 +35,7 @@ class ReplayResult:
         capsule_id: str,
         differences: dict[str, Any] | None = None,
         error: str | None = None,
+        output_hash: str | None = None,
     ):
         """
         Initialize replay result.
@@ -43,7 +50,8 @@ class ReplayResult:
         self.capsule_id = capsule_id
         self.differences = differences
         self.error = error
-        self.timestamp = datetime.utcnow().isoformat()
+        self.output_hash = output_hash
+        self.timestamp = _utcnow().isoformat()
 
 
 class ReplayEngine:
@@ -72,7 +80,7 @@ class ReplayEngine:
         self.replay_history: list[dict[str, Any]] = []
         logger.info("Replay engine initialized with queue: %s", task_queue)
 
-    async def replay_build(
+    def replay_build(
         self, capsule_id: str, verify_outputs: bool = True
     ) -> ReplayResult:
         """
@@ -88,14 +96,12 @@ class ReplayEngine:
         try:
             capsule = self.capsule_engine.capsules.get(capsule_id)
             if not capsule:
-                return ReplayResult(
-                    success=False,
-                    capsule_id=capsule_id,
-                    error=f"Capsule not found: {capsule_id}",
-                )
+                raise ValueError(f"Capsule not found: {capsule_id}")
 
             # Verify capsule integrity first
-            is_valid, error = self.capsule_engine.verify_capsule(capsule_id)
+            is_valid, error = self.capsule_engine.verify_capsule(
+                capsule_id, with_reason=True
+            )
             if not is_valid:
                 return ReplayResult(
                     success=False,
@@ -105,9 +111,9 @@ class ReplayEngine:
 
             # Execute replay workflow if Temporal available
             if self.temporal_client:
-                result = await self._replay_with_temporal(capsule, verify_outputs)
+                result = asyncio.run(self._replay_with_temporal(capsule, verify_outputs))
             else:
-                result = await self._replay_local(capsule, verify_outputs)
+                result = self._replay_local(capsule, verify_outputs)
 
             # Record replay
             self._record_replay(capsule_id, result)
@@ -115,6 +121,8 @@ class ReplayEngine:
             return result
 
         except Exception as e:
+            if isinstance(e, ValueError):
+                raise
             logger.error("Error replaying build: %s", e, exc_info=True)
             return ReplayResult(success=False, capsule_id=capsule_id, error=str(e))
 
@@ -123,7 +131,7 @@ class ReplayEngine:
     ) -> ReplayResult:
         """Replay using Temporal workflow."""
         try:
-            workflow_id = f"replay-{capsule.capsule_id}-{datetime.utcnow().timestamp()}"
+            workflow_id = f"replay-{capsule.capsule_id}-{_utcnow().timestamp()}"
 
             handle = await self.temporal_client.start_workflow(
                 "BuildReplayWorkflow",
@@ -149,7 +157,7 @@ class ReplayEngine:
                 error=f"Temporal replay error: {str(e)}",
             )
 
-    async def _replay_local(
+    def _replay_local(
         self, capsule: BuildCapsule, verify_outputs: bool
     ) -> ReplayResult:
         """Fallback local replay without Temporal."""
@@ -214,6 +222,7 @@ class ReplayEngine:
                 success=success,
                 capsule_id=capsule.capsule_id,
                 differences=differences if differences else None,
+                output_hash=capsule.merkle_root,
             )
 
         except Exception as e:
@@ -240,7 +249,7 @@ class ReplayEngine:
         results = []
 
         for capsule_id in capsule_ids:
-            result = await self.replay_build(capsule_id, verify_outputs=True)
+            result = self.replay_build(capsule_id, verify_outputs=True)
             results.append(result)
 
             if stop_on_failure and not result.success:
@@ -329,7 +338,7 @@ class ReplayEngine:
         self.replay_history.append(
             {
                 "capsule_id": capsule_id,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": _utcnow().isoformat(),
                 "success": result.success,
                 "has_differences": result.differences is not None,
                 "error": result.error,
@@ -339,6 +348,45 @@ class ReplayEngine:
         # Keep last 1000 replays
         if len(self.replay_history) > 1000:
             self.replay_history = self.replay_history[-1000:]
+
+    # ------------------------------------------------------------------
+    # Compatibility helpers expected by legacy tests
+    # ------------------------------------------------------------------
+    def forensic_analysis(self, capsule_id: str) -> dict[str, Any]:
+        capsule = self.capsule_engine.get_capsule(capsule_id)
+        if not capsule:
+            raise ValueError(f"Capsule not found: {capsule_id}")
+        return {
+            "capsule_id": capsule_id,
+            "input_analysis": {
+                "count": len(capsule.inputs),
+                "paths": list(capsule.inputs.keys()),
+            },
+            "output_analysis": {
+                "count": len(capsule.outputs),
+                "paths": list(capsule.outputs.keys()),
+            },
+        }
+
+    def compare_capsules(self, capsule_id1: str, capsule_id2: str) -> dict[str, Any]:
+        diff = self.capsule_engine.compute_capsule_diff(capsule_id1, capsule_id2)
+        differences = []
+        similarities = []
+
+        for area in ("tasks", "inputs", "outputs"):
+            section = diff.get(area, {}) if isinstance(diff, dict) else {}
+            if section.get("added") or section.get("removed") or section.get("modified"):
+                differences.append(area)
+            else:
+                similarities.append(area)
+
+        return {
+            "capsule_1": capsule_id1,
+            "capsule_2": capsule_id2,
+            "differences": differences,
+            "similarities": similarities,
+            "raw_diff": diff,
+        }
 
 
 __all__ = ["ReplayEngine", "ReplayResult"]

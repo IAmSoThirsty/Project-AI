@@ -1,22 +1,9 @@
 /*
- * ═══════════════════════════════════════════════════════════════════════════
- * THIRSTY'S GRADLE: GOD TIER MONOLITHIC BUILD ORCHESTRATION
- * ═══════════════════════════════════════════════════════════════════════════
- * 
- * Enterprise-grade, unified build system for Project-AI
- * Coordinates ALL builds, tests, packaging, and deployments across:
- *   - Python backends (Flask/FastAPI)
- *   - Android applications (Legion Mini)
- *   - Electron Desktop (TypeScript/React)
- *   - Documentation generation
- *   - USB/Portable distributions
- *   - Testing, linting, security scanning
- *   - CI/CD integration and release automation
- * 
- * Version: 1.0.0
- * Architecture: Monolithic Density Pattern
- * Paradigm: Maximum Coordination, Zero Fragmentation
- * ═══════════════════════════════════════════════════════════════════════════
+ * (Monolithic Build Synthesis)              [2026-04-09 04:26]
+ *                                          Status: Active
+ *
+ * Unified build orchestration layer for the Sovereign Substrate.
+ * Coordinates Python, Android, Electron, and Documentation synthesis.
  */
 
 import org.gradle.api.tasks.testing.logging.TestLogEvent
@@ -1732,3 +1719,31 @@ For all tasks:            gradle tasks --all
 // ═══════════════════════════════════════════════════════════════════════════
 // END OF GOD TIER BUILD ORCHESTRATION WITH EVOLUTION SUBSTRATE
 // ═══════════════════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ROBUST CLEANUP STRATEGY
+// ═══════════════════════════════════════════════════════════════════════════
+tasks.named<Delete>("clean") {
+    doFirst {
+        logger.lifecycle("🧹 Aggressive cleanup: Terminating lingering build daemons to release file locks...")
+        if (System.getProperty("os.name").lowercase().contains("windows")) {
+            exec {
+                commandLine("cmd", "/c", "taskkill /F /IM node.exe /FI \"MEMUSAGE gt 1000\" 2>nul || exit 0")
+                isIgnoreExitValue = true
+            }
+            exec {
+                commandLine("cmd", "/c", "taskkill /F /IM python.exe /FI \"MEMUSAGE gt 150000\" 2>nul || exit 0")
+                isIgnoreExitValue = true
+            }
+        } else {
+            exec {
+                commandLine("sh", "-c", "pkill -f node || true")
+                isIgnoreExitValue = true
+            }
+            exec {
+                commandLine("sh", "-c", "pkill -f python || true")
+                isIgnoreExitValue = true
+            }
+        }
+    }
+}

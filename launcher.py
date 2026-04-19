@@ -1,14 +1,5 @@
-# ============================================================================ #
-#                                           [2026-03-18 09:59]
-#                                          Productivity: Active
-# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
-# COMPLIANCE: Sovereign Substrate / launcher.py
-# ============================================================================ #
-#
-# COMPLIANCE: Sovereign Substrate / launcher.py
-
-
-# STATUS: ACTIVE | TIER: SUBSTRATE | DATE: 2026-03-17 | TIME: 11:35
+# (Master Launch Vector)                    [2026-04-09 04:26]
+#                                          Status: Active
 # This file owns nothing. It starts the engine and steps aside.
 import sys
 import os
@@ -16,8 +7,8 @@ import os
 # Add src to path for relative imports if needed
 sys.path.append(os.path.join(os.getcwd(), "src"))
 
-from src.thirsty_lang.src.thirsty_interpreter import ThirstyInterpreter
-from src.app.ui.render_engine import RenderEngine
+from thirsty_lang.src.thirsty_interpreter import ThirstyInterpreter
+from app.ui.render_engine import RenderEngine
 
 def main():
     renderer = RenderEngine()

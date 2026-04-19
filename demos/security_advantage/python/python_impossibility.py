@@ -17,6 +17,7 @@ Result: IMPOSSIBLE in Python - all protection mechanisms can be bypassed.
 
 import ctypes
 import gc
+import inspect
 import sys
 from inspect import currentframe
 from typing import Final
@@ -46,7 +47,7 @@ class SecretWithMangling:
         return self.__api_key
 
 
-secret1 = SecretWithMangling("sk-PRODUCTION-SECRET-12345")
+secret1 = SecretWithMangling("demo-token-12345")
 print(f"✗ BYPASSED: {secret1._SecretWithMangling__api_key}")
 print("  Attack: Name mangling is just a convention, not security")
 print()
@@ -71,7 +72,7 @@ class SecretWithSlots:
         raise AttributeError("Cannot modify attributes!")
 
 
-secret2 = SecretWithSlots("sk-PRODUCTION-SECRET-12345")
+secret2 = SecretWithSlots("demo-token-12345")
 print(f"✗ BYPASSED: {object.__getattribute__(secret2, '_key')}")
 print("  Attack: object.__getattribute__ bypasses __slots__ protection")
 print()
@@ -99,7 +100,7 @@ class SecretWithProperty:
         return self._api_key
 
 
-secret3 = SecretWithProperty("sk-PRODUCTION-SECRET-12345")
+secret3 = SecretWithProperty("demo-token-12345")
 # Bypass 1: Direct attribute access
 print(f"✗ BYPASSED (direct): {secret3._api_key}")
 # Bypass 2: Access __dict__
@@ -128,7 +129,7 @@ class SecretHolder[T]:
         return self._secret
 
 
-secret4 = SecretHolder[str]("sk-PRODUCTION-SECRET-12345")
+secret4 = SecretHolder[str]("demo-token-12345")
 # Bypass: Type parameters don't provide runtime protection
 print(f"✗ BYPASSED: {secret4._secret}")
 print(f"  Type parameter: {secret4.__class__.__type_params__}")
@@ -155,7 +156,7 @@ class SecretInMemory:
         return self._buffer.value.decode()
 
 
-secret5 = SecretInMemory("sk-PRODUCTION-SECRET-12345")
+secret5 = SecretInMemory("demo-token-12345")
 # Bypass: Direct memory access
 buffer_address = secret5._address
 memory_value = ctypes.string_at(buffer_address, 50)
@@ -173,7 +174,7 @@ print("-" * 80)
 
 # Python 3.12 allows complex expressions in f-strings
 def get_secret_key():
-    return "sk-PRODUCTION-SECRET-12345"
+    return "demo-token-12345"
 
 
 # Attempt to hide in f-string expression
@@ -198,8 +199,8 @@ print("-" * 80)
 
 def get_production_key():
     """Secret embedded in bytecode constants."""
-    SECRET_KEY = "sk-PRODUCTION-SECRET-12345"
-    return SECRET_KEY
+    secret_key = "demo-token-12345"
+    return secret_key
 
 
 # Bypass: Extract from code constants
@@ -220,7 +221,7 @@ print("-" * 80)
 
 def create_secret_holder():
     """Secret stored in closure, not accessible directly."""
-    api_key = "sk-PRODUCTION-SECRET-12345"
+    api_key = "demo-token-12345"
 
     def get_key():
         return api_key
@@ -245,7 +246,7 @@ print()
 print("ATTEMPT 9: Module Constant with typing.Final")
 print("-" * 80)
 
-API_KEY: Final[str] = "sk-PRODUCTION-SECRET-12345"
+API_KEY: Final[str] = "demo-token-12345"
 
 # Bypass: Final is only a type hint, not enforced
 old_key = API_KEY
@@ -278,7 +279,7 @@ class ProtectedDescriptor:
 
 
 class SecretWithDescriptor:
-    api_key = ProtectedDescriptor("sk-PRODUCTION-SECRET-12345")
+    api_key = ProtectedDescriptor("demo-token-12345")
 
 
 # Bypass: Access descriptor's internal storage
@@ -297,7 +298,7 @@ print("-" * 80)
 
 def use_secret_and_delete():
     """Use secret then immediately delete it."""
-    secret = "sk-PRODUCTION-SECRET-12345"
+    secret = "demo-token-12345"
     # Use it
     result = len(secret)
     # Delete it
@@ -310,7 +311,7 @@ def use_secret_and_delete():
 use_secret_and_delete()
 # Search all objects for the string
 for obj in gc.get_objects():
-    if isinstance(obj, str) and obj.startswith("sk-PRODUCTION"):
+    if isinstance(obj, str) and obj.startswith("demo-token"):
         print(f"✗ BYPASSED (gc): Found in memory: {obj}")
         break
 print("  Attack: Deleted objects may still exist in memory")
@@ -330,16 +331,15 @@ class SecretWithInspect:
     def __init__(self):
         # Try to hide by not storing as attribute
         frame = currentframe()
-        frame.f_locals["hidden_key"] = "sk-PRODUCTION-SECRET-12345"
+        frame.f_locals["hidden_key"] = "demo-token-12345"
 
 
 # Bypass: inspect and __dict__ both reveal everything
 secret12 = SecretWithInspect()
 # Can access via frame manipulation or other introspection
-import inspect
 
 frame_info = inspect.getframeinfo(inspect.currentframe())
-print(f"✗ BYPASSED (inspect): Secrets visible via introspection")
+print("✗ BYPASSED (inspect): Secrets visible via introspection")
 print(f"  Frame info available: {frame_info.filename}")
 print("  Attack: inspect module exposes all runtime state")
 print()

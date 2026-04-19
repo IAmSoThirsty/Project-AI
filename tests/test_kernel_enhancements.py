@@ -5,7 +5,7 @@ Tests for kernel enhancement tools: fuzz harness, replay, and drift monitor.
 """
 
 import tempfile
-from datetime import UTC, datetime, timedelta
+from datetime import timezone, datetime, timedelta
 
 import pytest
 
@@ -100,7 +100,7 @@ class TestDeterministicReplayTool:
 
         context = ExecutionContext(
             trace_id="test_trace_123",
-            timestamp=datetime.now(UTC),
+            timestamp=datetime.now(timezone.utc),
             perception={"test": "data"},
             interpretation={"test": "interpretation"},
             proposed_action=action,
@@ -147,7 +147,7 @@ class TestDeterministicReplayTool:
 
         context = ExecutionContext(
             trace_id="test_trace_456",
-            timestamp=datetime.now(UTC),
+            timestamp=datetime.now(timezone.utc),
             perception={"test": "data"},
             interpretation={"test": "interpretation"},
             proposed_action=action,
@@ -199,7 +199,7 @@ class TestGovernanceDriftMonitor:
         # Create historical executions (low approval)
         historical = [
             {
-                "timestamp": (datetime.now(UTC) - timedelta(days=60)).isoformat(),
+                "timestamp": (datetime.now(timezone.utc) - timedelta(days=60)).isoformat(),
                 "governance_decision": {"approved": False},
                 "proposed_action": {"risk_level": "medium", "mutation_targets": []},
             }
@@ -209,7 +209,7 @@ class TestGovernanceDriftMonitor:
         # Create recent executions (high approval)
         recent = [
             {
-                "timestamp": (datetime.now(UTC) - timedelta(days=5)).isoformat(),
+                "timestamp": (datetime.now(timezone.utc) - timedelta(days=5)).isoformat(),
                 "governance_decision": {"approved": True},
                 "proposed_action": {"risk_level": "medium", "mutation_targets": []},
             }

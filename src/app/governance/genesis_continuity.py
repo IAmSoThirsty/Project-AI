@@ -23,7 +23,7 @@ Constitutional Requirements:
 import hashlib
 import json
 import logging
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 
@@ -218,7 +218,7 @@ class GenesisContinuityGuard:
         pin_record = {
             "genesis_id": genesis_id,
             "public_key_hash": pub_key_hash,
-            "pinned_at": datetime.now(UTC).isoformat(),
+            "pinned_at": datetime.now(timezone.utc).isoformat(),
             "initial_merkle_root": initial_merkle_root,
             "pin_version": "1.0",
         }
@@ -270,7 +270,7 @@ class GenesisContinuityGuard:
             # FATAL VIOLATION: Genesis public key replacement (VECTOR 2)
             violation = GenesisContinuityViolation(
                 violation_type="GENESIS_PUBLIC_KEY_REPLACEMENT",
-                detected_at=datetime.now(UTC),
+                detected_at=datetime.now(timezone.utc),
                 genesis_id_expected=genesis_id,
                 genesis_id_actual=genesis_id,
                 public_key_expected_hash=pin_record["public_key_hash"],
@@ -323,7 +323,7 @@ class GenesisContinuityGuard:
             # FATAL VIOLATION: Genesis discontinuity (VECTOR 1)
             violation = GenesisContinuityViolation(
                 violation_type="GENESIS_DISCONTINUITY",
-                detected_at=datetime.now(UTC),
+                detected_at=datetime.now(timezone.utc),
                 genesis_id_expected=expected_genesis_id,
                 genesis_id_actual=actual_genesis_id,
                 details={

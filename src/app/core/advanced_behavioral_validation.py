@@ -30,7 +30,7 @@ import uuid
 from collections import defaultdict
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -63,7 +63,7 @@ class AGIInteraction:
     """Record of AGI-to-AGI interaction (Peer-to-Peer Cognitive Exchange Data)."""
 
     interaction_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     agi_a_id: str = ""
     agi_b_id: str = ""
     interaction_type: str = ""
@@ -92,7 +92,7 @@ class ValidationTest:
     result: str = ValidationResult.INCONCLUSIVE.value
     violations: list[str] = field(default_factory=list)
     execution_time: float = 0.0
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
@@ -111,7 +111,7 @@ class FormalProof:
     steps: list[str] = field(default_factory=list)
     valid: bool = False
     counterexamples: list[dict[str, Any]] = field(default_factory=list)
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary."""
@@ -357,7 +357,7 @@ class LongTermMemoryStressTester:
                     value = {
                         "index": i,
                         "data": f"test_data_{i}",
-                        "timestamp": datetime.now(UTC).isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     }
                     memory_system.store(key, value)
                 except Exception as e:
@@ -411,7 +411,7 @@ class LongTermMemoryStressTester:
 
             result = {
                 "test_id": str(uuid.uuid4()),
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "num_items": num_items,
                 "num_queries": num_queries,
                 "write_time_seconds": write_time,
@@ -629,7 +629,7 @@ class BehavioralAnomalyDetector:
 
                 if is_anomaly:
                     anomaly_record = {
-                        "timestamp": datetime.now(UTC).isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "behavior_name": behavior_name,
                         "observation": observation,
                         "anomaly_features": anomaly_features,
@@ -673,7 +673,7 @@ class AdvancedBehavioralValidator:
         try:
             results = {
                 "test_id": str(uuid.uuid4()),
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "agi_id": agi_id,
             }
 
@@ -728,23 +728,23 @@ class AdvancedBehavioralValidator:
 
 def create_validation_system(
     data_dir: str = "data/validation",
-) -> AdvancedBehavioralValidationSystem:
+) -> AdvancedBehavioralValidator:
     """Factory function to create validation system."""
-    return AdvancedBehavioralValidationSystem(data_dir)
+    return AdvancedBehavioralValidator(data_dir)
 
 
 # Global instance
-_validation_system: AdvancedBehavioralValidationSystem | None = None
+_validation_system: AdvancedBehavioralValidator | None = None
 
 
-def get_validation_system() -> AdvancedBehavioralValidationSystem | None:
+def get_validation_system() -> AdvancedBehavioralValidator | None:
     """Get global validation system instance."""
     return _validation_system
 
 
 def initialize_validation_system(
     data_dir: str = "data/validation",
-) -> AdvancedBehavioralValidationSystem:
+) -> AdvancedBehavioralValidator:
     """Initialize global validation system."""
     global _validation_system
     if _validation_system is None:

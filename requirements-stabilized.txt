@@ -1,0 +1,59 @@
+# (Substrate Stability Anchor)             [2026-04-09 04:26]
+#                                          Status: Active
+# Stabilization Requirements for Sovereign Governance Substrate
+# Rooted in Project-AI Thirsty-Lang Standards
+
+# Core dependencies (Pinned for stability)
+fastapi==0.109.1
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+python-dotenv==1.0.0
+
+# GUI dependencies
+PyQt6==6.4.2
+
+# Web server (production)
+gunicorn==22.0.0
+
+# Database
+sqlalchemy==2.0.25
+alembic==1.13.1
+
+# Security
+python-multipart==0.0.22
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+cryptography==42.0.4
+asn1crypto>=1.5.1
+rfc3161ng>=2.1.2
+pyasn1>=0.4.8
+
+# HTTP client
+httpx==0.26.0
+requests==2.31.0
+
+# AI Infrastructure (STABILIZED PIN)
+# Specifically addressing [WinError 1114] DLL initialization failed (c10.dll)
+torch==2.1.2+cpu --index-url https://download.pytorch.org/whl/cpu
+transformers==4.37.0
+accelerate==0.26.0
+
+# ATLAS \u03a9 Constitutional Engine
+cbor2>=5.6.0
+jsonschema>=4.23.0
+pyyaml>=6.0.2
+
+# Constitutional Sovereignty
+ipfshttpclient==0.8.0a2
+boto3==1.34.24
+
+# Monitoring and Metrics
+prometheus-client>=0.18.0
+grafana-client>=5.0.0
+
+# Miniature Office (Cognitive IDE + Repair Crew)
+flask==3.0.0
+flask-socketio==5.3.5
+python-socketio==5.14.0
+eventlet==0.40.3
+pillow>=10.3.0

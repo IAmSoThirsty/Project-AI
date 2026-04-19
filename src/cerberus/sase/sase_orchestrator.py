@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-04-09 05:45]
 #                                          Productivity: Active
 """
 SASE - Sovereign Adversarial Signal Engine
@@ -123,11 +123,11 @@ class SASEOrchestrator:
 
     def process_telemetry(self, raw_telemetry: dict[str, Any]) -> dict[str, Any]:
         """
-        Process telemetry event through full SASE pipeline
+        Process telemetry event through full SASE pipeline (Master Tier)
 
         Returns comprehensive analysis result
         """
-        start_time = time.time()
+        start_time = time.perf_counter()
 
         logger.info("=" * 40)
         logger.info("PROCESSING TELEMETRY EVENT")
@@ -226,7 +226,7 @@ class SASEOrchestrator:
                         self.observability.record_containment_action(exec.action.value)
 
             # L11: Observability
-            detection_time = time.time() - start_time
+            detection_time = time.perf_counter() - start_time
             self.observability.record_detection(detection_time)
 
             # L9: Evidence vault (store event)

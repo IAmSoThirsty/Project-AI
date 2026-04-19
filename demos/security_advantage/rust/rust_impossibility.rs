@@ -63,7 +63,7 @@ fn attempt1_private_field() {
     println!("ATTEMPT 1: Private Field in Struct");
     println!("{}", "-".repeat(80));
 
-    let holder = attempt1::SecretHolder::new("sk-PRODUCTION-SECRET-12345".to_string());
+    let holder = attempt1::SecretHolder::new("demo-token-12345".to_string());
 
     // Bypass 1: Use public getter method
     let extracted_secret = holder.get_key();
@@ -106,7 +106,7 @@ fn attempt2_private_module() {
     println!("ATTEMPT 2: Private Module Encapsulation");
     println!("{}", "-".repeat(80));
 
-    let secret = sealed_secret::Secret::new("sk-PRODUCTION-SECRET-12345".to_string());
+    let secret = sealed_secret::Secret::new("demo-token-12345".to_string());
 
     // Bypass: Module privacy doesn't protect runtime access
     let extracted_secret = secret.reveal();
@@ -120,7 +120,7 @@ fn attempt2_private_module() {
 // ATTEMPT 3: Closure Capturing Secret
 // ============================================================================
 fn create_secret_closure() -> impl Fn() -> String {
-    let secret = "sk-PRODUCTION-SECRET-12345".to_string();
+    let secret = "demo-token-12345".to_string();
     move || secret.clone()
 }
 
@@ -172,7 +172,7 @@ fn attempt4_unsafe_transmute() {
     println!("ATTEMPT 4: Type Punning with transmute");
     println!("{}", "-".repeat(80));
 
-    let holder = OpaqueSecret::new("sk-PRODUCTION-SECRET-12345");
+    let holder = OpaqueSecret::new("demo-token-12345");
 
     // Bypass 1: Use getter
     let extracted_secret = holder.get_secret();
@@ -212,7 +212,7 @@ fn attempt5_raw_pointers() {
     println!("ATTEMPT 5: Raw Pointers and Pointer Arithmetic");
     println!("{}", "-".repeat(80));
 
-    let secure_box = SecureBox::new("sk-PRODUCTION-SECRET-12345".to_string());
+    let secure_box = SecureBox::new("demo-token-12345".to_string());
 
     unsafe {
         // Get pointer to the Box<String>
@@ -261,7 +261,7 @@ fn attempt6_ffi_boundary() {
     println!("ATTEMPT 6: FFI Boundary (C Interface)");
     println!("{}", "-".repeat(80));
 
-    let secret_string = "sk-PRODUCTION-SECRET-12345".to_string();
+    let secret_string = "demo-token-12345".to_string();
     let c_secret = CSecret::new(&secret_string);
 
     unsafe {
@@ -306,7 +306,7 @@ fn attempt7_async_fn_trait() {
     println!("{}", "-".repeat(80));
 
     let secret = AsyncSecret {
-        key: "sk-PRODUCTION-SECRET-12345".to_string(),
+        key: "demo-token-12345".to_string(),
     };
 
     // Bypass: async functions don't protect data
@@ -337,7 +337,7 @@ fn attempt8_manually_drop() {
     println!("ATTEMPT 8: ManuallyDrop for Memory Control");
     println!("{}", "-".repeat(80));
 
-    let secret = ManuallyDrop::new("sk-PRODUCTION-SECRET-12345".to_string());
+    let secret = ManuallyDrop::new("demo-token-12345".to_string());
 
     // Bypass 1: Deref to access inner value
     let extracted_secret = &**secret;
@@ -379,7 +379,7 @@ fn attempt9_const_generics() {
     println!("ATTEMPT 9: Const Generics (Advanced Type Safety)");
     println!("{}", "-".repeat(80));
 
-    let secret: SecretArray<32> = SecretArray::new("sk-PRODUCTION-SECRET-12345");
+    let secret: SecretArray<32> = SecretArray::new("demo-token-12345");
 
     // Bypass 1: Call getter
     let extracted = secret.get_secret();

@@ -7,7 +7,7 @@ Demonstrates how the database system integrates with Gradle builds,
 constitutional validation, and security scanning.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from gradle_evolution.db import (
@@ -17,6 +17,11 @@ from gradle_evolution.db import (
     MemoryManager,
 )
 from gradle_evolution.db.memory_manager import RetentionPolicy
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 def main():
@@ -65,7 +70,7 @@ def main():
         db.update_build_phase(
             phase_id,
             status=status,
-            end_time=datetime.utcnow().isoformat(),
+            end_time=_utcnow().isoformat(),
             duration=duration,
         )
         print(f"   ✓ {phase_name}: {status} ({duration}s)")

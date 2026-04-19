@@ -12,7 +12,7 @@ import logging
 import os
 import shutil
 import types
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 # Lazy imports for GPT‑OSS 1208 are performed inside _load_gpt_oss_model()
@@ -63,7 +63,7 @@ class CodexDeusMaximus(KernelRoutedAgent):
         try:
             os.makedirs(os.path.dirname(self.audit_path), exist_ok=True)
             entry = {
-                "ts": datetime.now(UTC).isoformat(),
+                "ts": datetime.now(timezone.utc).isoformat(),
                 "action": action,
                 "details": details,
             }

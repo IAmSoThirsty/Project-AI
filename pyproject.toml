@@ -1,5 +1,5 @@
-# [2026-03-02 04:47]
-# Productivity: Active
+# (Sovereign Project Architect)            [2026-04-09 04:26]
+#                                          Status: Active
 
 [build-system]
 requires = ["setuptools>=45", "wheel"]
@@ -127,13 +127,25 @@ ignore = [
 testpaths = ["tests"]
 pythonpath = ["src"]
 python_files = "test_*.py"
-addopts = "-v"
+addopts = "-v --strict-markers -m 'not weekly'"
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",
     "load: Load tests",
     "chaos: Chaos tests",
     "soak: Soak tests",
+    "slow: Slow-running tests",
+    "weekly: Weekly stress tests (1000-scenario constitutional tests)",
+    "daily: Daily regression tests (default)",
+    "hourly: Fast smoke tests for hourly rotation",
+    "timeout: Tests with custom timeout values",
+    "governance: Governance and constitutional tests",
+    "security: Security and attack simulation tests",
+    "kernel: Core kernel and intelligence tests",
+    "tarl: TARL orchestration tests",
+    "psia: PSIA (Planetary Security Intelligence Agency) tests",
+    "web: Web backend/frontend/API tests",
+    "temporal: Temporal system tests",
 ]
 filterwarnings = [
     "ignore::DeprecationWarning:passlib",

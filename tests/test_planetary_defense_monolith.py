@@ -4,7 +4,7 @@
 Tests for Planetary Defense Monolith - Constitutional Core for Project-AI.
 """
 
-from datetime import UTC
+from datetime import timezone
 
 import pytest
 
@@ -52,11 +52,11 @@ class TestAccountabilityRecord:
 
     def test_record_creation(self):
         """Test creating an accountability record."""
-        from datetime import UTC, datetime
+        from datetime import timezone, datetime
 
         record = AccountabilityRecord(
             action_id="test-123",
-            timestamp=datetime.now(UTC),
+            timestamp=datetime.now(timezone.utc),
             actor="TestActor",
             intent="Test action",
             authorized_by="TestUser",
@@ -72,7 +72,7 @@ class TestAccountabilityRecord:
 
         record = AccountabilityRecord(
             action_id="test-123",
-            timestamp=datetime.now(UTC),
+            timestamp=datetime.now(timezone.utc),
             actor="TestActor",
             intent="Test action",
             authorized_by="TestUser",
@@ -99,7 +99,7 @@ class TestAccountabilityRecord:
         for phrase in forbidden_tests:
             record = AccountabilityRecord(
                 action_id="test-123",
-                timestamp=datetime.now(UTC),
+                timestamp=datetime.now(timezone.utc),
                 actor="TestActor",
                 intent="Test action",
                 authorized_by="TestUser",
@@ -116,7 +116,7 @@ class TestAccountabilityRecord:
 
         record = AccountabilityRecord(
             action_id="test-123",
-            timestamp=datetime.now(UTC),
+            timestamp=datetime.now(timezone.utc),
             actor="TestActor",
             intent="Test action",
             authorized_by="TestUser",

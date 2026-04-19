@@ -26,10 +26,14 @@ class SecureStorage:
         self.key = key or os.getenv("FERNET_KEY")
         if not self.key:
             logger.warning("No FERNET_KEY found. Generating a runtime-only key.")
-            self.key = Fernet.generate_key().decode()
+            # generate_key() returns bytes, decode to str for storage
+            generated = Fernet.generate_key()
+            self.key = generated.decode("utf-8")
 
         try:
-            self.cipher = Fernet(self.key.encode())
+            # If key is string, encode to bytes for Fernet
+            key_bytes = self.key.encode("utf-8") if isinstance(self.key, str) else self.key
+            self.cipher = Fernet(key_bytes)
         except Exception as e:
             logger.error(f"Invalid Fernet key: {e}")
             raise ValueError("Invalid encryption key provided.")

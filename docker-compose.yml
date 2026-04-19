@@ -1,5 +1,5 @@
-# [2026-03-01 13:20]
-# Productivity: Active
+# (Substrate Orchestration Mesh)          [2026-04-09 04:26]
+#                                          Status: Active
 
 version: "3.8"
 
@@ -109,7 +109,7 @@ services:
     restart: unless-stopped
 
   temporal-postgresql:
-    image: postgres:13
+    image: postgres:16
     container_name: project-ai-temporal-db
     environment:
       - POSTGRES_USER=temporal

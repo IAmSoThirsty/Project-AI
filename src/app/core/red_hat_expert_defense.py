@@ -16,7 +16,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -788,7 +788,7 @@ class RedHatExpertDefenseSimulator:
             "scenarios_by_severity": severity_counts,
             "scenarios_by_exploitability": exploitability_counts,
             "average_cvss_score": round(avg_cvss, 2),
-            "generated_at": datetime.now(UTC).isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
             "designed_for": "Senior/Principal Security Engineers, Red Team Operators, Security Architects",
         }
 

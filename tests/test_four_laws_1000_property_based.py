@@ -9,6 +9,9 @@ import pytest
 from app.core.ai_systems import FourLaws
 from tests.utils.scenario_recorder import ScenarioRecorder
 
+# WEEKLY STRESS TEST - Run once per week, not daily
+pytestmark = pytest.mark.weekly
+
 
 def _expected_from_flags(context: dict[str, Any]) -> tuple[bool, str]:
     # Mirrors FourLaws.validate_action ordering to create strict expectations.

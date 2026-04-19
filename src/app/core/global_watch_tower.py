@@ -50,7 +50,7 @@ import threading
 from pathlib import Path
 from typing import Any
 
-from app.agents.border_patrol import (
+from src.app.agents.border_patrol import (
     Cerberus,
     GateGuardian,
     PortAdmin,
@@ -58,7 +58,7 @@ from app.agents.border_patrol import (
     VerifierAgent,
     WatchTower,
 )
-from app.core.platform_tiers import (
+from src.app.core.platform_tiers import (
     AuthorityLevel,
     ComponentRole,
     PlatformTier,
@@ -93,6 +93,9 @@ class GlobalWatchTower:
     _instance: GlobalWatchTower | None = None
     _lock = threading.Lock()
     _initialized = False
+
+    # Sovereign Sector Constraint: 111 subordinates per Sector (Sector Alpha)
+    MAX_SUBORDINATES = 111
 
     def __init__(self) -> None:
         """Private constructor. Use get_instance() or initialize() instead."""
@@ -151,6 +154,20 @@ class GlobalWatchTower:
                     "GlobalWatchTower already initialized, returning existing instance"
                 )
                 return cls._instance
+
+            # Reconcile Headcount: 1 Admin + Towers + (Towers * Gates)
+            total_subordinates = num_port_admins + (num_port_admins * towers_per_port) + (num_port_admins * towers_per_port * gates_per_tower)
+            if total_subordinates > cls.MAX_SUBORDINATES:
+                logger.error(
+                    "STATIC LIMIT ERROR: Combined headcount %d exceeds Sector Alpha limit (%d)",
+                    total_subordinates,
+                    cls.MAX_SUBORDINATES
+                )
+                # Auto-adjust to stay within limit
+                num_port_admins = 1
+                towers_per_port = 10
+                gates_per_tower = 10
+                logger.warning("Auto-adjusted hierarchy to (1, 10, 10) = 111 subordinates")
 
             instance = cls.__new__(cls)
             instance.__init__()
@@ -233,7 +250,7 @@ class GlobalWatchTower:
                 logger.info(
                     "GlobalWatchTower registered as Tier-2 Infrastructure Controller"
                 )
-            except Exception as e:
+            except (RuntimeError, ValueError) as e:
                 logger.warning(
                     "Failed to register GlobalWatchTower in tier registry: %s", e
                 )
@@ -471,7 +488,7 @@ class GlobalWatchTower:
         return self.cerberus
 
     def register_security_agent(
-        self, agent_type: str, agent_id: str, agent_instance: Any = None
+        self, agent_type: str, agent_id: str, _agent_instance: Any = None
     ) -> None:
         """Register an external security agent with Cerberus (Chief of Security).
 
@@ -496,18 +513,28 @@ class GlobalWatchTower:
         )
 
     def get_security_status(self) -> dict[str, Any]:
-        """Get comprehensive security status from Cerberus (Chief of Security).
-
-        Returns:
-            dict: Complete security status including all registered agents
-
-        Example:
-            tower = GlobalWatchTower.get_instance()
-            status = tower.get_security_status()
-            print(f"Chief: {status['chief_of_security']}")
-            print(f"Agents: {status['registered_agents']}")
-        """
-        return self.cerberus.get_security_status()
+        """Get comprehensive security status from Cerberus (Chief of Security)."""
+        status = self.cerberus.get_security_status()
+        
+        # Add detailed component metrics for reconciliation
+        status["infrastructure_metrics"] = {
+            "port_admins": len(self.port_admins),
+            "watch_towers": len(self.watch_towers),
+            "gate_guardians": len(self.gate_guardians),
+            "verifiers": len(self.verifiers),
+            "total_subordinates": len(self.port_admins) + len(self.watch_towers) + len(self.gate_guardians) + len(self.verifiers)
+        }
+        
+        # Check for headcount drift
+        try:
+            registry = get_tier_registry()
+            status["registry_count"] = len(registry.get_all_components())
+            status["headcount_drift"] = status["infrastructure_metrics"]["total_subordinates"] - status["registry_count"]
+        except (AttributeError, RuntimeError):
+            status["registry_count"] = "unknown"
+            status["headcount_drift"] = "unknown"
+            
+        return status
 
 
 # Convenience functions for global access

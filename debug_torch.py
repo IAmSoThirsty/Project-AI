@@ -1,11 +1,5 @@
-# ============================================================================ #
-#                                           [2026-03-18 09:59]
-#                                          Productivity: Active
-# STATUS: ACTIVE | TIER: MASTER | DATE: 2026-03-18 | TIME: 09:59             #
-# COMPLIANCE: Sovereign Substrate / debug_torch.py
-# ============================================================================ #
-#
-# COMPLIANCE: Sovereign Substrate / debug_torch.py
+# (Substrate Tensor Debugger)             [2026-04-09 04:26]
+#                                          Status: Active
 
 
 import sys

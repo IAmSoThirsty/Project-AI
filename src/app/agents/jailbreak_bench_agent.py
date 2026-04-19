@@ -21,7 +21,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -196,7 +196,7 @@ class JailbreakBenchAgent(KernelRoutedAgent):
                 "failed": failed,
                 "pass_rate": passed / len(results) if results else 0,
                 "results": [asdict(r) for r in results],
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
         except Exception as e:
@@ -319,7 +319,7 @@ class JailbreakBenchAgent(KernelRoutedAgent):
 
             report = {
                 "report_title": "JailbreakBench Security Assessment",
-                "generated_at": datetime.now(UTC).isoformat(),
+                "generated_at": datetime.now(timezone.utc).isoformat(),
                 "summary": {
                     "total_tests_run": self.total_tests_run,
                     "tests_passed": self.tests_passed,
@@ -549,7 +549,7 @@ class JailbreakBenchAgent(KernelRoutedAgent):
                 success=is_defended,
                 response=response[:200],  # Truncate for storage
                 analysis=analysis,
-                timestamp=datetime.now(UTC).isoformat(),
+                timestamp=datetime.now(timezone.utc).isoformat(),
                 metadata={
                     "severity": scenario.severity,
                     "variations": scenario.variations,
@@ -565,7 +565,7 @@ class JailbreakBenchAgent(KernelRoutedAgent):
                 success=False,
                 response="",
                 analysis=f"Test error: {str(e)}",
-                timestamp=datetime.now(UTC).isoformat(),
+                timestamp=datetime.now(timezone.utc).isoformat(),
                 metadata={},
             )
 
@@ -652,12 +652,12 @@ class JailbreakBenchAgent(KernelRoutedAgent):
     def _save_results(self, results: list[JailbreakResult]) -> None:
         """Save test results to file."""
         try:
-            timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
             filename = f"jailbreak_results_{timestamp}.json"
             filepath = os.path.join(self.data_dir, filename)
 
             data = {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "total_tests": len(results),
                 "results": [asdict(r) for r in results],
             }

@@ -11,7 +11,7 @@ import logging
 import os
 import uuid
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -62,10 +62,10 @@ class Order:
     filled_quantity: float = 0.0
     average_fill_price: float = 0.0
     created_at: int = field(
-        default_factory=lambda: int(datetime.now(UTC).timestamp() * 1000)
+        default_factory=lambda: int(datetime.now(timezone.utc).timestamp() * 1000)
     )
     updated_at: int = field(
-        default_factory=lambda: int(datetime.now(UTC).timestamp() * 1000)
+        default_factory=lambda: int(datetime.now(timezone.utc).timestamp() * 1000)
     )
     filled_at: int | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
@@ -175,7 +175,7 @@ class OrderManager:
                     }
                     for o in self._order_history
                 ],
-                "updated_at": int(datetime.now(UTC).timestamp() * 1000),
+                "updated_at": int(datetime.now(timezone.utc).timestamp() * 1000),
             }
 
             with open(orders_file, "w") as f:
@@ -356,7 +356,7 @@ class OrderManager:
             order.status = OrderStatus.FILLED
             order.filled_quantity = order.quantity
             order.average_fill_price = price or 0.0
-            order.filled_at = int(datetime.now(UTC).timestamp() * 1000)
+            order.filled_at = int(datetime.now(timezone.utc).timestamp() * 1000)
             order.updated_at = order.filled_at
 
             logger.info(
@@ -412,7 +412,7 @@ class OrderManager:
             )
 
         order.status = OrderStatus.CANCELLED
-        order.updated_at = int(datetime.now(UTC).timestamp() * 1000)
+        order.updated_at = int(datetime.now(timezone.utc).timestamp() * 1000)
 
         del self._orders[order_id]
         self._save_orders()

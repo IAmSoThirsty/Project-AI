@@ -13,7 +13,7 @@ import os
 import time
 import uuid
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -81,7 +81,7 @@ class RepairReport:
     repair_id: str
     diagnostic_report_id: str
     patches: list[RepairPatch] = field(default_factory=list)
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 # ---------------------------------------------------------------------------
@@ -157,7 +157,7 @@ class RepairCrew:
         report = DiagnosticReport(
             report_id=report_id,
             target_path=target_path,
-            timestamp=datetime.now(UTC).isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             issues=issues,
             files_scanned=files_scanned,
             duration_ms=duration,
@@ -332,7 +332,7 @@ class RepairCrew:
         self._audit_log.append(
             {
                 "action": action,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "details": details,
             }
         )

@@ -29,7 +29,7 @@ import uuid
 from collections import defaultdict, deque
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -72,7 +72,7 @@ class HealthCheck:
 
     component: str
     status: str = HealthStatus.UNKNOWN.value
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     response_time_ms: float = 0.0
     error_message: str = ""
     metrics: dict[str, Any] = field(default_factory=dict)
@@ -88,7 +88,7 @@ class FailureEvent:
     """Failure event record."""
 
     event_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     component: str = ""
     failure_category: str = FailureCategory.TRANSIENT.value
     description: str = ""
@@ -106,7 +106,7 @@ class FailureEvent:
 class ContinuityScore:
     """AGI continuity score."""
 
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     overall_score: float = 1.0
     identity_continuity: float = 1.0
     memory_continuity: float = 1.0
@@ -287,7 +287,7 @@ class AGIContinuityTracker:
 
         self.continuity_scores: deque = deque(maxlen=1000)
         self.identity_hash: str | None = None
-        self.start_time = datetime.now(UTC)
+        self.start_time = datetime.now(timezone.utc)
         self.lock = threading.RLock()
 
         self._load_continuity_state()
@@ -448,7 +448,7 @@ class PredictiveFailureDetector:
         """Record metric for prediction."""
         with self.lock:
             key = f"{component}_{metric_name}"
-            self.metric_history[key].append((datetime.now(UTC), value))
+            self.metric_history[key].append((datetime.now(timezone.utc), value))
 
     def predict_failure(
         self, component: str, metric_name: str, threshold: float, lookback: int = 10
@@ -504,7 +504,7 @@ class PredictiveFailureDetector:
                         "trend_slope": slope,
                         "predicted_values": predictions_values,
                         "steps_to_failure": steps_to_failure,
-                        "timestamp": datetime.now(UTC).isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     }
 
                     self.predictions.append(prediction)
@@ -623,7 +623,7 @@ class HealthMonitoringSystem:
             continuity_trend = self.continuity_tracker.get_continuity_trend()
 
             return {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "operating_mode": operating_mode.value,
                 "monitoring_active": self.monitoring_active,
                 "components": component_statuses,

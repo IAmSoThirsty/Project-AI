@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-04-09 06:15]
 #                                          Productivity: Active
 """
 SASE Production Hardening - Deterministic Operations
@@ -8,6 +8,7 @@ Ensures reproducibility for Merkle audit across multi-node deployments.
 
 import decimal
 import json
+import time
 from decimal import ROUND_HALF_EVEN, Decimal
 from typing import Any
 
@@ -30,7 +31,7 @@ class DeterministicSerializer:
         - Use canonical JSON encoding
         """
         # Convert floats to Decimal for deterministic representation
-        normalized = {}
+        normalized: dict[str, Any] = {}
         for key in sorted(features.keys()):
             value = features[key]
 
@@ -45,7 +46,7 @@ class DeterministicSerializer:
             elif isinstance(value, bool):
                 # Bools must come before int check since bool is subclass of int
                 normalized[key] = value
-            elif isinstance(value, int) or isinstance(value, str):
+            elif isinstance(value, (int, str)):
                 normalized[key] = value
             elif isinstance(value, list):
                 normalized[key] = (
@@ -115,8 +116,7 @@ class BackpressureHandler:
 
         Returns (accept: bool, backoff_seconds: float)
         """
-        import time
-
+        now = time.monotonic()
         utilization = self.current_queue_size / self.max_queue_size
 
         if utilization < 0.8:
@@ -132,13 +132,12 @@ class BackpressureHandler:
             return True, backoff
 
         elif utilization < 1.0:
-            # Queue 95-100%, CRITICAL PRESSURE
             # Start degraded mode timer if not already started
-            if self.high_pressure_start_time == 0.0:
-                self.high_pressure_start_time = time.time()
+            if self.high_pressure_start_time < 0.001:  # Close to 0.0
+                self.high_pressure_start_time = now
 
             # Check if sustained high pressure → degraded mode
-            sustained_duration = time.time() - self.high_pressure_start_time
+            sustained_duration = now - self.high_pressure_start_time
             if sustained_duration > self.degraded_threshold_seconds:
                 self.is_degraded = True
 

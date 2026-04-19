@@ -15,7 +15,7 @@ from __future__ import annotations
 import logging
 import uuid
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -35,7 +35,7 @@ class Directive:
     sub_directives: list[Directive] = field(default_factory=list)
     status: str = "pending"  # pending, in_progress, completed, failed
     assigned_agents: list[str] = field(default_factory=list)
-    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -58,7 +58,7 @@ class SimulationSnapshot:
     active_tasks: int
     completed_tasks: int
     world_status: str = "running"
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 # ---------------------------------------------------------------------------
@@ -284,7 +284,7 @@ class CognitiveIDE:
         self._audit_entries.append(
             {
                 "action": action,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "details": details,
             }
         )

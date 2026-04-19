@@ -1,0 +1,504 @@
+---
+timestamp: '2026-03-31T23:20:34.358268+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: GENESIS
+data:
+  dependency: cv2
+  description: OpenCV for video processing
+  config_key: enable_video
+  feature_disabled: true
+metadata: {}
+hash: 4a9cc8e8411fc934b1c307c7921804dc763c733c8f767b2fb287186b222a25a1
+---
+timestamp: '2026-03-31T23:20:34.377323+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 4a9cc8e8411fc934b1c307c7921804dc763c733c8f767b2fb287186b222a25a1
+data:
+  dependency: whisper
+  description: Whisper for audio transcription
+  config_key: enable_transcript
+  feature_disabled: true
+metadata: {}
+hash: 435a6e2e762daa6f9e885f25128be3d9c722495a396a748222aaa856b250b5b4
+---
+timestamp: '2026-03-31T23:20:34.395443+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 435a6e2e762daa6f9e885f25128be3d9c722495a396a748222aaa856b250b5b4
+data:
+  dependency: redis
+  description: Redis for audit log fallback
+  config_key: redis_enabled
+  feature_disabled: true
+metadata: {}
+hash: 333107ee28035c70c8071d57310fa65b861f73250709b8a1fb13d8f599636d7a
+---
+timestamp: '2026-03-31T23:20:34.417772+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 333107ee28035c70c8071d57310fa65b861f73250709b8a1fb13d8f599636d7a
+data:
+  dependency: pydub
+  description: PyDub for audio format conversion
+  config_key: enable_audio_processing
+  feature_disabled: true
+metadata: {}
+hash: 6d6dab54c1ff54e49c582587301682a35ae8b362d8de252d237d92b10fe459f0
+---
+timestamp: '2026-03-31T23:22:47.794110+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 6d6dab54c1ff54e49c582587301682a35ae8b362d8de252d237d92b10fe459f0
+data:
+  dependency: cv2
+  description: OpenCV for video processing
+  config_key: enable_video
+  feature_disabled: true
+metadata: {}
+hash: 10d371c76c60df9830b0d81f14e2ac01c4e0d86cf54d0c51567e5786e3664a92
+---
+timestamp: '2026-03-31T23:22:47.813844+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 10d371c76c60df9830b0d81f14e2ac01c4e0d86cf54d0c51567e5786e3664a92
+data:
+  dependency: whisper
+  description: Whisper for audio transcription
+  config_key: enable_transcript
+  feature_disabled: true
+metadata: {}
+hash: 29379fdf8c3c607d6d81a4a553fb202de66755153b335bc1cd141cb3f5862a26
+---
+timestamp: '2026-03-31T23:22:47.836165+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 29379fdf8c3c607d6d81a4a553fb202de66755153b335bc1cd141cb3f5862a26
+data:
+  dependency: redis
+  description: Redis for audit log fallback
+  config_key: redis_enabled
+  feature_disabled: true
+metadata: {}
+hash: 6ba856d516c7cae0cbd9f68a2083991702eec3d297fa056eb2cf2e49122083cf
+---
+timestamp: '2026-03-31T23:22:47.857762+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 6ba856d516c7cae0cbd9f68a2083991702eec3d297fa056eb2cf2e49122083cf
+data:
+  dependency: pydub
+  description: PyDub for audio format conversion
+  config_key: enable_audio_processing
+  feature_disabled: true
+metadata: {}
+hash: 03f09b859c2844ede0d375ff3a823606eb9557d0c5a3629ef2c010c3318f85fd
+---
+timestamp: '2026-04-01T00:09:53.067398+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 03f09b859c2844ede0d375ff3a823606eb9557d0c5a3629ef2c010c3318f85fd
+data:
+  dependency: cv2
+  description: OpenCV for video processing
+  config_key: enable_video
+  feature_disabled: true
+metadata: {}
+hash: 48fcf1964c6a284670a04cf6286b0d355f1a925714fee68b36eaa4281bd14d5d
+---
+timestamp: '2026-04-01T00:09:53.097050+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 48fcf1964c6a284670a04cf6286b0d355f1a925714fee68b36eaa4281bd14d5d
+data:
+  dependency: whisper
+  description: Whisper for audio transcription
+  config_key: enable_transcript
+  feature_disabled: true
+metadata: {}
+hash: 669c350686926ee2b9537298df9c594c5e8e1670e169b1971e04bc6cf9e0e693
+---
+timestamp: '2026-04-01T00:09:53.126406+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 669c350686926ee2b9537298df9c594c5e8e1670e169b1971e04bc6cf9e0e693
+data:
+  dependency: redis
+  description: Redis for audit log fallback
+  config_key: redis_enabled
+  feature_disabled: true
+metadata: {}
+hash: c91b7da65647c44fe632bdb003f94ba3352da91257ec3038525b9b4ec8cb372f
+---
+timestamp: '2026-04-01T00:09:53.152148+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: c91b7da65647c44fe632bdb003f94ba3352da91257ec3038525b9b4ec8cb372f
+data:
+  dependency: pydub
+  description: PyDub for audio format conversion
+  config_key: enable_audio_processing
+  feature_disabled: true
+metadata: {}
+hash: 87b033ab3a89c8ec90526a47027ab91f9cbf6cfcfa0cf415ebaf716d0d1278d7
+---
+timestamp: '2026-04-01T00:38:01.598589+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 87b033ab3a89c8ec90526a47027ab91f9cbf6cfcfa0cf415ebaf716d0d1278d7
+data:
+  dependency: cv2
+  description: OpenCV for video processing
+  config_key: enable_video
+  feature_disabled: true
+metadata: {}
+hash: 0179b5c7e4ef005621cd68cbd5ed4d398ebe6fb26547cf7064e62658e24e8273
+---
+timestamp: '2026-04-01T00:38:01.627662+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 0179b5c7e4ef005621cd68cbd5ed4d398ebe6fb26547cf7064e62658e24e8273
+data:
+  dependency: whisper
+  description: Whisper for audio transcription
+  config_key: enable_transcript
+  feature_disabled: true
+metadata: {}
+hash: dc9b8f1521acc61756f215af76104df8f8bc72bcd75d3e94dd9f9fd393c2b7fb
+---
+timestamp: '2026-04-01T00:38:01.656258+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: dc9b8f1521acc61756f215af76104df8f8bc72bcd75d3e94dd9f9fd393c2b7fb
+data:
+  dependency: redis
+  description: Redis for audit log fallback
+  config_key: redis_enabled
+  feature_disabled: true
+metadata: {}
+hash: 7b8df70635668c1eb37af74ae5f999fcdd9a795c9b1e4f4dc841371676dbcd2b
+---
+timestamp: '2026-04-01T00:38:01.687211+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 7b8df70635668c1eb37af74ae5f999fcdd9a795c9b1e4f4dc841371676dbcd2b
+data:
+  dependency: pydub
+  description: PyDub for audio format conversion
+  config_key: enable_audio_processing
+  feature_disabled: true
+metadata: {}
+hash: 6ba6d020beaab885b80df245bb3ab53b6cbfb2c08f93c2c9d7456d675261b9ec
+---
+timestamp: '2026-04-01T00:44:27.773485+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 6ba6d020beaab885b80df245bb3ab53b6cbfb2c08f93c2c9d7456d675261b9ec
+data:
+  dependency: cv2
+  description: OpenCV for video processing
+  config_key: enable_video
+  feature_disabled: true
+metadata: {}
+hash: 17b6275537f023f9508ffcf809af1302d332b9692c60bbbcad4265d9d873ef4c
+---
+timestamp: '2026-04-01T00:44:27.801848+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 17b6275537f023f9508ffcf809af1302d332b9692c60bbbcad4265d9d873ef4c
+data:
+  dependency: whisper
+  description: Whisper for audio transcription
+  config_key: enable_transcript
+  feature_disabled: true
+metadata: {}
+hash: 8baa4050e1f4fba3626585d30d6bddb535b09b0dc609927088976b910c6e17c1
+---
+timestamp: '2026-04-01T00:44:27.831638+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 8baa4050e1f4fba3626585d30d6bddb535b09b0dc609927088976b910c6e17c1
+data:
+  dependency: redis
+  description: Redis for audit log fallback
+  config_key: redis_enabled
+  feature_disabled: true
+metadata: {}
+hash: 4f6858a238d3def3b4adb1f1a449427e310ee6998c88a6213ed039063354684c
+---
+timestamp: '2026-04-01T00:44:27.862836+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 4f6858a238d3def3b4adb1f1a449427e310ee6998c88a6213ed039063354684c
+data:
+  dependency: pydub
+  description: PyDub for audio format conversion
+  config_key: enable_audio_processing
+  feature_disabled: true
+metadata: {}
+hash: e5c62771768200155b5a56453a68f51d7163cbd844482f2e6d0d9fa2ac532877
+---
+timestamp: '2026-04-01T00:46:18.906671+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: e5c62771768200155b5a56453a68f51d7163cbd844482f2e6d0d9fa2ac532877
+data:
+  dependency: cv2
+  description: OpenCV for video processing
+  config_key: enable_video
+  feature_disabled: true
+metadata: {}
+hash: db577b90656b7745ab9d4c1083ff4d0acab0ce049f1ac9418eb3a09a4229adf8
+---
+timestamp: '2026-04-01T00:46:18.938082+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: db577b90656b7745ab9d4c1083ff4d0acab0ce049f1ac9418eb3a09a4229adf8
+data:
+  dependency: whisper
+  description: Whisper for audio transcription
+  config_key: enable_transcript
+  feature_disabled: true
+metadata: {}
+hash: 6f7b753fcbd764b62ae5e835fac85b39686fb9614e1d9aa99e6d92a89a29a345
+---
+timestamp: '2026-04-01T00:46:18.968222+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 6f7b753fcbd764b62ae5e835fac85b39686fb9614e1d9aa99e6d92a89a29a345
+data:
+  dependency: redis
+  description: Redis for audit log fallback
+  config_key: redis_enabled
+  feature_disabled: true
+metadata: {}
+hash: e6942f45c0b3f0d395a8005c4bd92f86562d3586ceaec551eb95435c90796e89
+---
+timestamp: '2026-04-01T00:46:19.000851+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: e6942f45c0b3f0d395a8005c4bd92f86562d3586ceaec551eb95435c90796e89
+data:
+  dependency: pydub
+  description: PyDub for audio format conversion
+  config_key: enable_audio_processing
+  feature_disabled: true
+metadata: {}
+hash: b6b1c1b77589d50e0d9ee1072fef9a2fb76313924beb6aece81381a3ee1bab10
+---
+timestamp: '2026-04-01T00:49:33.796235+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: b6b1c1b77589d50e0d9ee1072fef9a2fb76313924beb6aece81381a3ee1bab10
+data:
+  dependency: cv2
+  description: OpenCV for video processing
+  config_key: enable_video
+  feature_disabled: true
+metadata: {}
+hash: ed773f99b0be9ed0682bfa3049ae684bc82f83fd2b68e35292a10a5f7fc39a31
+---
+timestamp: '2026-04-01T00:49:33.837520+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: ed773f99b0be9ed0682bfa3049ae684bc82f83fd2b68e35292a10a5f7fc39a31
+data:
+  dependency: whisper
+  description: Whisper for audio transcription
+  config_key: enable_transcript
+  feature_disabled: true
+metadata: {}
+hash: c01f26669049eb851fc5747e474cb7184bf9e122b62ce7a60ec89aca93621d28
+---
+timestamp: '2026-04-01T00:49:33.871947+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: c01f26669049eb851fc5747e474cb7184bf9e122b62ce7a60ec89aca93621d28
+data:
+  dependency: redis
+  description: Redis for audit log fallback
+  config_key: redis_enabled
+  feature_disabled: true
+metadata: {}
+hash: c3f9852bd499456ce6c4dbc38637f5336a17e4b205ebc12a369e04f3767ff8c3
+---
+timestamp: '2026-04-01T00:49:33.909163+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: c3f9852bd499456ce6c4dbc38637f5336a17e4b205ebc12a369e04f3767ff8c3
+data:
+  dependency: pydub
+  description: PyDub for audio format conversion
+  config_key: enable_audio_processing
+  feature_disabled: true
+metadata: {}
+hash: 3ae3187628df6b1c9dc17779d8eb681e3e154c7c6357c7b8e0f9e89c64c9cae2
+---
+timestamp: '2026-04-01T00:53:39.193044+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 3ae3187628df6b1c9dc17779d8eb681e3e154c7c6357c7b8e0f9e89c64c9cae2
+data:
+  dependency: cv2
+  description: OpenCV for video processing
+  config_key: enable_video
+  feature_disabled: true
+metadata: {}
+hash: 1c2e2667b4e2e766f5d5c5fd8b5c4f28cce32ff1567870757de64ae3d965e174
+---
+timestamp: '2026-04-01T00:53:39.229278+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 1c2e2667b4e2e766f5d5c5fd8b5c4f28cce32ff1567870757de64ae3d965e174
+data:
+  dependency: whisper
+  description: Whisper for audio transcription
+  config_key: enable_transcript
+  feature_disabled: true
+metadata: {}
+hash: 4530798110ea8b0a4bc723ac65a5925c2eedd1ef10580f459ab2ca10cbe0f52d
+---
+timestamp: '2026-04-01T00:53:39.293636+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 4530798110ea8b0a4bc723ac65a5925c2eedd1ef10580f459ab2ca10cbe0f52d
+data:
+  dependency: redis
+  description: Redis for audit log fallback
+  config_key: redis_enabled
+  feature_disabled: true
+metadata: {}
+hash: d38d0d14a8a2880bf6c804e0a9e86ad8bfdf8a0e3d8e444138d91fbaa1d18879
+---
+timestamp: '2026-04-01T00:53:39.363330+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: d38d0d14a8a2880bf6c804e0a9e86ad8bfdf8a0e3d8e444138d91fbaa1d18879
+data:
+  dependency: pydub
+  description: PyDub for audio format conversion
+  config_key: enable_audio_processing
+  feature_disabled: true
+metadata: {}
+hash: 2067abbded213ecaac99859b3abe1812b5744e9e3087f57bfefa51d42137161d
+---
+timestamp: '2026-04-01T00:57:27.656670+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 2067abbded213ecaac99859b3abe1812b5744e9e3087f57bfefa51d42137161d
+data:
+  dependency: cv2
+  description: OpenCV for video processing
+  config_key: enable_video
+  feature_disabled: true
+metadata: {}
+hash: a9fafafe95ed23d78bb591ad3477086adb31f9fcb73352721b428416cac2eb2b
+---
+timestamp: '2026-04-01T00:57:27.696586+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: a9fafafe95ed23d78bb591ad3477086adb31f9fcb73352721b428416cac2eb2b
+data:
+  dependency: whisper
+  description: Whisper for audio transcription
+  config_key: enable_transcript
+  feature_disabled: true
+metadata: {}
+hash: f6f64299c0f74d2705a2f4ab559fe6f41725f9c16d3e916b4615a081ec20fac0
+---
+timestamp: '2026-04-01T00:57:27.752131+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: f6f64299c0f74d2705a2f4ab559fe6f41725f9c16d3e916b4615a081ec20fac0
+data:
+  dependency: redis
+  description: Redis for audit log fallback
+  config_key: redis_enabled
+  feature_disabled: true
+metadata: {}
+hash: 82bd82501378ec2bbec661ba0e09e35ccfd89cfee15c4ada809ff8db0af66204
+---
+timestamp: '2026-04-01T00:57:27.796204+00:00'
+event_type: dependency_missing
+actor: system_startup
+description: dependency_missing event
+severity: info
+previous_hash: 82bd82501378ec2bbec661ba0e09e35ccfd89cfee15c4ada809ff8db0af66204
+data:
+  dependency: pydub
+  description: PyDub for audio format conversion
+  config_key: enable_audio_processing
+  feature_disabled: true
+metadata: {}
+hash: 5d9a66a99a0b431e3da537f33109452f5987dc41f7ce1dce60f04bb55077c1e4

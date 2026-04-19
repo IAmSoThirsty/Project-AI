@@ -549,12 +549,12 @@ T.A.R.L. is ready for integration into Project-AI's secure execution environment
 1. **T.A.R.L. Architecture**: `tarl/docs/ARCHITECTURE.md`
 2. **API Documentation**: `tarl/README.md`
 3. **Integration Guide**: `TARL_TECHNICAL_DOCUMENTATION.md`
-4. **Project-AI Standards**: `.github/copilot_workspace_profile.md`
+4. **Project-AI Standards**: `.github/Active_Governance_Policy.md`
 5. **Thirsty-lang Security**: `THIRSTY_LANG_INTEGRATION.md`
 
 ---
 
 **Document Version:** 1.0.0
-**Last Updated:** 2026-01-24
+**Last Updated:** 2026-04-08 08:42 -06:00
 **License:** MIT
 **Copyright:** (c) 2026 Project-AI Team

@@ -1,5 +1,5 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Out-Dated(archive)
+# (Repository Intelligence Vector)        [2026-04-09 05:00]
+#                                          Status: Active
 """
 Repository Inspector - Full File Inventory and Classification
 
@@ -35,14 +35,14 @@ import logging
 import os
 import re
 from dataclasses import asdict, dataclass, field
-from enum import StrEnum
+from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 
 
-class FileStatus(StrEnum):
+class FileStatus(str, Enum):
     """Status classification for files and components."""
 
     IMPLEMENTED = "implemented"
@@ -56,7 +56,7 @@ class FileStatus(StrEnum):
     UNKNOWN = "unknown"
 
 
-class FileType(StrEnum):
+class FileType(str, Enum):
     """File type classifications."""
 
     PYTHON_MODULE = "python_module"
@@ -219,7 +219,7 @@ class RepositoryInspector:
 
         self.files: dict[str, FileInfo] = {}
         self.components: dict[str, ComponentInfo] = {}
-        self.stats = {
+        self.stats: Dict[str, Any] = {
             "total_files": 0,
             "total_lines": 0,
             "by_type": {},
@@ -334,12 +334,9 @@ class RepositoryInspector:
                 tree = ast.parse(content, filename=file_info.path)
 
                 # Extract module docstring
-                if (
-                    ast.get_docstring(tree)
-                    and isinstance(tree.body[0], ast.Expr)
-                    and isinstance(tree.body[0].value, ast.Constant)
-                ):
-                    file_info.docstring = ast.get_docstring(tree) or ""
+                module_doc = ast.get_docstring(tree)
+                if module_doc:
+                    file_info.docstring = module_doc
 
                 # Extract classes and functions
                 for node in ast.walk(tree):
@@ -446,12 +443,14 @@ class RepositoryInspector:
         # By file type
         for file_info in self.files.values():
             ftype = file_info.file_type.value
-            self.stats["by_type"][ftype] = self.stats["by_type"].get(ftype, 0) + 1
+            type_bucket: Dict[str, int] = self.stats["by_type"]
+            type_bucket[ftype] = type_bucket.get(ftype, 0) + 1
 
         # By status
         for file_info in self.files.values():
             status = file_info.status.value
-            self.stats["by_status"][status] = self.stats["by_status"].get(status, 0) + 1
+            status_bucket: Dict[str, int] = self.stats["by_status"]
+            status_bucket[status] = status_bucket.get(status, 0) + 1
 
         # By component
         for component_name, component_info in self.components.items():

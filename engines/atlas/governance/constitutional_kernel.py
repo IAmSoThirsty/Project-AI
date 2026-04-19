@@ -36,7 +36,7 @@ or supersede Project-AI, Triumvirate authority, or baseline personality assignme
 import hashlib
 import logging
 import math
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -374,11 +374,11 @@ class ConstitutionalKernel:
                 # Parse timestamp with timezone awareness
                 created_time = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
                 # Use timezone-aware current time
-                now = datetime.now(UTC)
+                now = datetime.now(timezone.utc)
 
                 # Ensure both are timezone-aware for comparison
                 if created_time.tzinfo is None:
-                    created_time = created_time.replace(tzinfo=UTC)
+                    created_time = created_time.replace(tzinfo=timezone.utc)
 
                 # State cannot be created in the future
                 if created_time > now:

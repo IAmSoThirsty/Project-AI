@@ -56,7 +56,7 @@ import logging
 import os
 import secrets
 import threading
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -415,7 +415,7 @@ class MerkleTreeAnchor:
             "anchor_id": uuid4().hex,
             "merkle_root": merkle_root.hex(),
             "batch_size": len(self.current_batch),
-            "created_at": datetime.now(UTC).isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
             "entry_hashes": [h.hex() for h in self.current_batch],
         }
 
@@ -720,7 +720,7 @@ class SovereignAuditLog:
                 if self.deterministic_mode and deterministic_timestamp:
                     timestamp = deterministic_timestamp
                 else:
-                    timestamp = datetime.now(UTC)
+                    timestamp = datetime.now(timezone.utc)
 
                 # Create canonical event representation
                 canonical_event = {
@@ -959,7 +959,7 @@ class SovereignAuditLog:
                         "previous_hash": event.get("previous_hash"),
                         "hash": event.get("hash"),
                     },
-                    "proof_generated_at": datetime.now(UTC).isoformat(),
+                    "proof_generated_at": datetime.now(timezone.utc).isoformat(),
                 }
 
                 return proof

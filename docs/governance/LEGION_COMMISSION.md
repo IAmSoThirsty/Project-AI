@@ -1,3 +1,18 @@
+
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
+## Research Provenance
+
+Arch Angel protected linkage:
+- Canonical DOI registry: [DOI-Registry](../../wiki/07_Research/Publications/DOI-Registry.md)
+- Governance DOI map: [GOVERNANCE_DOI_MAP](GOVERNANCE_DOI_MAP.md)
+- Primary DOI anchors:
+- [The Sovereign Covenant](../../wiki/07_Research/Publications/Paper-02.md) - https://doi.org/10.5281/zenodo.18726221
+- [AGI Charter for Project-AI](../../wiki/07_Research/Publications/Paper-03.md) - https://doi.org/10.5281/zenodo.18763076
+- [Governing Force In AGI](../../wiki/07_Research/Publications/Paper-15.md) - https://doi.org/10.5281/zenodo.19582420
+- [Two Species Aligned](../../wiki/07_Research/Publications/Paper-16.md) - https://doi.org/10.5281/zenodo.19582479
+- [Project-AI: Sovereign Constitutional AGI Ecosystem](../../wiki/07_Research/Publications/Paper-17.md) - https://doi.org/10.5281/zenodo.19582539
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
+
 <!--                                         [2026-03-04 09:48] -->
 <!--                                        Productivity: Active -->
 ⚜
@@ -218,4 +233,3 @@ BINDING
 
 Stay Hydrated. Stay Sovereign.
 — The Sovereign Monolith
-

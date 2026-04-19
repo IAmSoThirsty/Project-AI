@@ -1,5 +1,5 @@
 ﻿<div align="right">
-  [2026-03-01 13:20] <br>
+    [2026-04-08 08:42] <br>
   Productivity: Active
 </div>
 # Contributing to Project-AI: Code, Docs, and Civilization-Scale Impact
@@ -79,7 +79,7 @@ ______________________________________________________________________
 
 ## Quick Start: How to Contribute
 
-- **Read the [Copilot Workspace Profile](.github/copilot_workspace_profile.md)** - All contributions must meet production-grade standards
+- **Read the [Active Governance Policy](.github/Active_Governance_Policy.md)** - All contributions must meet production-grade standards
 - **Read the [Security Validation Claims Policy](.github/SECURITY_VALIDATION_POLICY.md)** - MANDATORY for all PRs making security or runtime enforcement claims
 - **For documentation**: See [Documentation Contributing Guide](.github/CONTRIBUTING_DOCS.md)
 - Fork the repository
@@ -92,7 +92,7 @@ ______________________________________________________________________
 
 All contributionsâ€”whether from humans or AI assistantsâ€”MUST comply with:
 
-**[.github/copilot_workspace_profile.md](.github/copilot_workspace_profile.md)**
+**[.github/Active_Governance_Policy.md](.github/Active_Governance_Policy.md)**
 
 This governance profile enforces:
 
@@ -476,6 +476,15 @@ pip-audit
 # Alternative dependency check
 
 safety check
+
+# Lockfile and manifest consistency checks
+
+npm install --package-lock-only
+pip-compile --allow-unsafe --generate-hashes --output-file=requirements.lock requirements.in
+
+# Verify no dependency drift remains
+
+git diff -- package-lock.json requirements.lock
 ```
 
 ______________________________________________________________________
@@ -650,4 +659,4 @@ ______________________________________________________________________
 
 **Document Maintenance:** This document is reviewed quarterly and updated based on community feedback and evolving best practices.
 
-**Last Updated:** 2026-02-05 **Next Review:** 2026-05-05
+**Last Updated:** 2026-04-08 08:42 -06:00 **Next Review:** 2026-07-08

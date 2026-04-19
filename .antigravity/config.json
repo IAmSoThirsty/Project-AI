@@ -53,6 +53,32 @@
       "include_examples": true,
       "update_on_change": true
     },
+    "arch_angel": {
+      "enabled": true,
+      "mode": "passive_non_conversational_guardian",
+      "module": "src.app.agents.arch_angel.ArchAngel",
+      "check_command": "python scripts/arch_angel_docs_guard.py check",
+      "repair_command": "python scripts/arch_angel_docs_guard.py repair",
+      "watch_command": "python scripts/arch_angel_docs_guard.py watch --repair",
+      "protected_paths": [
+        "wiki/07_Research/Publications/**",
+        "wiki/01_Governance/**",
+        "docs/governance/**",
+        "CITATIONS.md",
+        "docs/CITATIONS.md"
+      ],
+      "repair_permissions": [
+        "rewrite_doi_registry",
+        "rewrite_citation_tables",
+        "insert_governance_provenance_blocks",
+        "insert_publication_reference_blocks",
+        "refresh_publications_index",
+        "refresh_manifest",
+        "write_triumvirate_notifications"
+      ],
+      "escalate_to": "Triumvirate",
+      "notification_path": "data/triumvirate_notifications/"
+    },
     "ethical_review": {
       "enabled": true,
       "auto_trigger": true,
@@ -193,6 +219,13 @@
     "workflow_definitions": [
       "temporal/workflows/**/*.py",
       "src/app/temporal/**/*.py"
+    ],
+    "arch_angel_protected": [
+      "wiki/07_Research/Publications/**",
+      "wiki/01_Governance/**",
+      "docs/governance/**",
+      "CITATIONS.md",
+      "docs/CITATIONS.md"
     ]
   },
   "code_quality": {

@@ -9,6 +9,7 @@ Validates build actions against constitutional policies and identity-aware const
 """
 
 import logging
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,11 @@ from project_ai.engine.identity.identity_manager import IdentityManager
 from project_ai.engine.policy.policy_engine import PolicyEngine
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class BuildActionViolation(Exception):
@@ -172,6 +178,33 @@ class ConstitutionalEnforcer:
             results[action] = self.validate_build_action(action, metadata)
         return results
 
+    def enforce_action(
+        self, action: str, identity: str, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
+        """Compatibility API for enforcing a single action with identity context."""
+        context = context or {}
+
+        # Identity verification hook expected by tests.
+        if hasattr(self.identity_manager, "verify_identity"):
+            verified = bool(self.identity_manager.verify_identity(identity))
+            if not verified:
+                reason = f"Identity verification failed for {identity}"
+                self._record_violation(action, context, reason)
+                return {
+                    "allowed": False,
+                    "action": action,
+                    "identity": identity,
+                    "reason": reason,
+                }
+
+        allowed, reason = self.validate_build_action(action, context)
+        return {
+            "allowed": allowed,
+            "action": action,
+            "identity": identity,
+            "reason": reason,
+        }
+
     def get_policy_summary(self) -> dict[str, Any]:
         """
         Get current policy configuration summary.
@@ -206,10 +239,8 @@ class ConstitutionalEnforcer:
             metadata: Action metadata
             reason: Reason for denial
         """
-        from datetime import datetime
-
         violation = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": _utcnow().isoformat(),
             "action": action,
             "metadata": metadata,
             "reason": reason,

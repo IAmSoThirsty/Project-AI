@@ -12,8 +12,19 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
-import numpy as np
+if TYPE_CHECKING:
+    import numpy as np
+    import numpy.typing as npt
+    NDArray = npt.NDArray[Any]
+else:
+    try:
+        import numpy as np
+        NDArray = Any  # type: ignore
+    except ImportError:
+        np = None  # type: ignore  # Graceful degradation if numpy not installed  
+        NDArray = Any  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -24,18 +35,20 @@ class MemoryRecord:
 
     id: str
     content: str
-    embedding: np.ndarray | None = None
+    embedding: Any | None = None  # np.ndarray when numpy available
     metadata: dict | None = None
     timestamp: str | None = None
 
     def to_dict(self) -> dict:
         """Convert to dictionary for serialization."""
+        embedding_list = None
+        if self.embedding is not None and hasattr(self.embedding, 'tolist'):
+            embedding_list = self.embedding.tolist()
+        
         return {
             "id": self.id,
             "content": self.content,
-            "embedding": (
-                self.embedding.tolist() if self.embedding is not None else None
-            ),
+            "embedding": embedding_list,
             "metadata": self.metadata or {},
             "timestamp": self.timestamp or datetime.now().isoformat(),
         }
@@ -44,7 +57,7 @@ class MemoryRecord:
     def from_dict(cls, data: dict) -> "MemoryRecord":
         """Create from dictionary."""
         embedding = data.get("embedding")
-        if embedding is not None:
+        if embedding is not None and np is not None:
             embedding = np.array(embedding)
         return cls(
             id=data["id"],
@@ -84,7 +97,7 @@ class MemoryAdapter:
         self.data_dir = Path(data_dir)
         self.max_records = max_records
         self.records: list[MemoryRecord] = []
-        self.embeddings_matrix: np.ndarray | None = None
+        self.embeddings_matrix: NDArray | None = None
 
         # Initialize embedding model
         self._init_embedding_model()
@@ -255,7 +268,7 @@ class MemoryAdapter:
             "has_embeddings": self.embeddings_matrix is not None,
         }
 
-    def _generate_embedding(self, text: str) -> np.ndarray | None:
+    def _generate_embedding(self, text: str) -> NDArray | None:
         """Generate embedding for text."""
         if self.encoder is None:
             # Dummy embedding for testing
@@ -281,7 +294,7 @@ class MemoryAdapter:
             self.embeddings_matrix = None
 
     @staticmethod
-    def _cosine_similarity(query: np.ndarray, matrix: np.ndarray) -> np.ndarray:
+    def _cosine_similarity(query: NDArray, matrix: NDArray) -> NDArray:
         """Compute cosine similarity between query and matrix rows."""
         # Normalize query
         query_norm = query / (np.linalg.norm(query) + 1e-8)

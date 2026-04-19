@@ -23,7 +23,7 @@ import logging
 import subprocess
 import sys
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -311,7 +311,7 @@ class AgentSandbox:
 
         # Log execution attempt
         log_entry = {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "agent_id": agent_id,
             "image": image,
             "command": command,
@@ -321,7 +321,7 @@ class AgentSandbox:
 
         logger.info(f"Executing in sandbox: {agent_id}")
 
-        start_time = datetime.now(UTC)
+        start_time = datetime.now(timezone.utc)
 
         try:
             # Execute with timeout
@@ -329,7 +329,7 @@ class AgentSandbox:
                 docker_cmd, capture_output=True, text=True, timeout=timeout
             )
 
-            execution_time = (datetime.now(UTC) - start_time).total_seconds()
+            execution_time = (datetime.now(timezone.utc) - start_time).total_seconds()
 
             log_entry.update(
                 {

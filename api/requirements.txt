@@ -2,7 +2,7 @@
 # Project AI Governance Host
 
 # Core Framework
-fastapi==0.109.1
+fastapi>=0.112.2
 uvicorn[standard]==0.27.0
 pydantic==2.5.3
 
@@ -10,4 +10,6 @@ pydantic==2.5.3
 python-multipart==0.0.22
 
 # Optional: Production deployment
-gunicorn==22.0.0
+# gunicorn is currently disabled due to CVE-2024-1135 (HTTP Request Smuggling). 
+# A reverse proxy (e.g. Nginx) is required if re-enabled.
+# gunicorn==22.0.0

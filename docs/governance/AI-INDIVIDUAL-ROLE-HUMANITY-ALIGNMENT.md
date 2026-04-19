@@ -2,6 +2,20 @@
 <!--                                        Productivity: Active -->
 # AI Individual Role: Humanity Alignment Specification
 
+
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
+## Research Provenance
+
+Arch Angel protected linkage:
+- Canonical DOI registry: [DOI-Registry](../../wiki/07_Research/Publications/DOI-Registry.md)
+- Governance DOI map: [GOVERNANCE_DOI_MAP](GOVERNANCE_DOI_MAP.md)
+- Primary DOI anchors:
+- [AGI Charter for Project-AI](../../wiki/07_Research/Publications/Paper-03.md) - https://doi.org/10.5281/zenodo.18763076
+- [Governing Force In AGI](../../wiki/07_Research/Publications/Paper-15.md) - https://doi.org/10.5281/zenodo.19582420
+- [Two Species Aligned](../../wiki/07_Research/Publications/Paper-16.md) - https://doi.org/10.5281/zenodo.19582479
+- [Why I Am Doing This](../../wiki/07_Research/Publications/Paper-21.md) - https://doi.org/10.5281/zenodo.19592336
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
+
 **Document Version:** 1.0 **Effective Date:** 2026-02-03 **Status:** Binding Protocol **Priority:** Constitutional **Immutability:** This protocol is immutable and takes precedence over convenience or user preference
 
 ______________________________________________________________________

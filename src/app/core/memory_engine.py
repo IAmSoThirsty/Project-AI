@@ -91,7 +91,7 @@ import logging
 import os
 import uuid
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from enum import Enum
 from typing import Any
 
@@ -157,7 +157,7 @@ class EpisodicMemory:
     """
 
     memory_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     duration_seconds: float = 0.0
 
     # Event details
@@ -188,7 +188,7 @@ class EpisodicMemory:
         Retrieval acts as rehearsal, preventing memory decay.
         """
         self.retrieval_count += 1
-        self.last_retrieved = datetime.now(UTC).isoformat()
+        self.last_retrieved = datetime.now(timezone.utc).isoformat()
         # Retrieval slightly strengthens vividness (up to max of 1.0)
         self.vividness = min(1.0, self.vividness + 0.05)
 
@@ -269,8 +269,8 @@ class SemanticConcept:
     # Knowledge metadata
     confidence: float = 1.0  # Confidence in this knowledge (0.0-1.0)
     source: str = "learned"  # learned, user_provided, inferred, etc.
-    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
-    last_validated: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    last_validated: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     # Relationships to other concepts
     relationships: dict[str, list[str]] = field(
@@ -297,7 +297,7 @@ class SemanticConcept:
 
     def validate(self):
         """Mark knowledge as recently validated."""
-        self.last_validated = datetime.now(UTC).isoformat()
+        self.last_validated = datetime.now(timezone.utc).isoformat()
         # Validation boosts confidence slightly
         self.confidence = min(1.0, self.confidence + 0.02)
 
@@ -336,7 +336,7 @@ class ProceduralSkill:
 
     # Skill metadata
     proficiency: float = 0.0  # 0.0 (novice) to 1.0 (expert)
-    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     last_executed: str | None = None
 
     # Optimization history
@@ -352,7 +352,7 @@ class ProceduralSkill:
             notes: Additional notes about execution
         """
         self.execution_count += 1
-        self.last_executed = datetime.now(UTC).isoformat()
+        self.last_executed = datetime.now(timezone.utc).isoformat()
 
         if success:
             self.success_count += 1
@@ -713,7 +713,7 @@ class MemoryEngine:
         Returns:
             Recent memories, most recent first
         """
-        cutoff = datetime.now(UTC) - timedelta(hours=hours)
+        cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
         cutoff_str = cutoff.isoformat()
 
         recent = [
@@ -950,7 +950,7 @@ class MemoryEngine:
         logger.info("Starting memory consolidation...")
 
         report = {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "episodic_count": len(self.episodic_memories),
             "semantic_count": len(self.semantic_concepts),
             "procedural_count": len(self.procedural_skills),
@@ -987,7 +987,7 @@ class MemoryEngine:
                     report["extracted_concepts"] += 1
 
         # Update consolidation metadata
-        self.last_consolidation = datetime.now(UTC).isoformat()
+        self.last_consolidation = datetime.now(timezone.utc).isoformat()
         self.consolidation_count += 1
 
         self._save_memories()

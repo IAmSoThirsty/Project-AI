@@ -37,7 +37,7 @@ Example:
 import hashlib
 import logging
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 
 import requests
 from asn1crypto import cms, tsp
@@ -316,10 +316,10 @@ class TSAProvider:
             # Convert to UTC datetime if needed
             if not tsa_time.tzinfo:
                 # Assume UTC if no timezone
-                tsa_time = tsa_time.replace(tzinfo=UTC)
+                tsa_time = tsa_time.replace(tzinfo=timezone.utc)
 
             # CRITICAL: Enforce clock skew
-            now = datetime.now(UTC)
+            now = datetime.now(timezone.utc)
             skew = abs((now - tsa_time).total_seconds())
 
             if skew > self.max_clock_skew:

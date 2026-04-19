@@ -1,0 +1,10 @@
+# (Substrate Expansion Vector)             [2026-04-09 04:26]
+#                                          Status: Active
+# Optional runtime dependencies for feature-complete recovery.
+# Base install remains in requirements.txt; use this file when you want the
+# optional video, audio, and Redis-backed paths enabled in the current env.
+
+opencv-python-headless
+openai-whisper
+pydub
+redis

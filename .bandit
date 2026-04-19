@@ -1,6 +1,6 @@
+# (Substrate Security Blueprint)              [2026-04-09 04:26]
+#                                          Status: Active
 [bandit]
-# Bandit configuration for Project-AI
-# Exclude test directories and files from certain checks
 
 exclude_dirs = 
     /tests/,

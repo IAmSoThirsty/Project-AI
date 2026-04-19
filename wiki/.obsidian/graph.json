@@ -1,0 +1,296 @@
+{
+  "collapse-filter": true,
+  "search": "",
+  "showTags": true,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:Sovereign-Journey",
+      "color": {
+        "a": 1,
+        "rgb": 16774839
+      }
+    },
+    {
+      "query": "tag:#role/root",
+      "color": {
+        "a": 1,
+        "rgb": 16774839
+      }
+    },
+    {
+      "query": "tag:#bridge/sovereign-core",
+      "color": {
+        "a": 1,
+        "rgb": 16774839
+      }
+    },
+    {
+      "query": "tag:#bridge/governance-security",
+      "color": {
+        "a": 1,
+        "rgb": 16732038
+      }
+    },
+    {
+      "query": "tag:#bridge/security-systems",
+      "color": {
+        "a": 1,
+        "rgb": 3407820
+      }
+    },
+    {
+      "query": "tag:#bridge/security-research",
+      "color": {
+        "a": 1,
+        "rgb": 13196543
+      }
+    },
+    {
+      "query": "tag:#bridge/systems-governance",
+      "color": {
+        "a": 1,
+        "rgb": 7995221
+      }
+    },
+    {
+      "query": "tag:#bridge/security-architecture",
+      "color": {
+        "a": 1,
+        "rgb": 16757575
+      }
+    },
+    {
+      "query": "tag:#bridge/architecture-systems",
+      "color": {
+        "a": 1,
+        "rgb": 62975
+      }
+    },
+    {
+      "query": "tag:#bridge/governance-architecture",
+      "color": {
+        "a": 1,
+        "rgb": 16771661
+      }
+    },
+    {
+      "query": "tag:#bridge/governance-research",
+      "color": {
+        "a": 1,
+        "rgb": 14052607
+      }
+    },
+    {
+      "query": "tag:#bridge/corpus-governance",
+      "color": {
+        "a": 1,
+        "rgb": 16738816
+      }
+    },
+    {
+      "query": "tag:#system/psia",
+      "color": {
+        "a": 1,
+        "rgb": 54527
+      }
+    },
+    {
+      "query": "tag:#system/triumvirate",
+      "color": {
+        "a": 1,
+        "rgb": 16735487
+      }
+    },
+    {
+      "query": "tag:#system/tarl",
+      "color": {
+        "a": 1,
+        "rgb": 2686136
+      }
+    },
+    {
+      "query": "tag:#system/octoreflex",
+      "color": {
+        "a": 1,
+        "rgb": 16756736
+      }
+    },
+    {
+      "query": "tag:#system/cerberus",
+      "color": {
+        "a": 1,
+        "rgb": 16726116
+      }
+    },
+    {
+      "query": "tag:#system/sovereign-vault",
+      "color": {
+        "a": 1,
+        "rgb": 16777215
+      }
+    },
+    {
+      "query": "tag:#system/yggdrasil",
+      "color": {
+        "a": 1,
+        "rgb": 7405359
+      }
+    },
+    {
+      "query": "tag:#system/constitutional-code-store",
+      "color": {
+        "a": 1,
+        "rgb": 16767053
+      }
+    },
+    {
+      "query": "tag:#system/iron-path-executor",
+      "color": {
+        "a": 1,
+        "rgb": 16727296
+      }
+    },
+    {
+      "query": "tag:#domain/governance",
+      "color": {
+        "a": 1,
+        "rgb": 16723837
+      }
+    },
+    {
+      "query": "tag:#domain/security",
+      "color": {
+        "a": 1,
+        "rgb": 2424698
+      }
+    },
+    {
+      "query": "tag:#domain/architecture",
+      "color": {
+        "a": 1,
+        "rgb": 16767053
+      }
+    },
+    {
+      "query": "tag:#domain/systems",
+      "color": {
+        "a": 1,
+        "rgb": 62975
+      }
+    },
+    {
+      "query": "tag:#domain/research",
+      "color": {
+        "a": 1,
+        "rgb": 11955455
+      }
+    },
+    {
+      "query": "tag:#domain/corpus",
+      "color": {
+        "a": 1,
+        "rgb": 16742912
+      }
+    },
+    {
+      "query": "tag:#domain/operations",
+      "color": {
+        "a": 1,
+        "rgb": 9395455
+      }
+    },
+    {
+      "query": "tag:#role/provenance",
+      "color": {
+        "a": 1,
+        "rgb": 16737996
+      }
+    },
+    {
+      "query": "path:01_Governance",
+      "color": {
+        "a": 1,
+        "rgb": 16723837
+      }
+    },
+    {
+      "query": "path:02_Systems",
+      "color": {
+        "a": 1,
+        "rgb": 62975
+      }
+    },
+    {
+      "query": "path:03_Security",
+      "color": {
+        "a": 1,
+        "rgb": 2424698
+      }
+    },
+    {
+      "query": "path:04_Architecture",
+      "color": {
+        "a": 1,
+        "rgb": 16767053
+      }
+    },
+    {
+      "query": "path:05_Operations",
+      "color": {
+        "a": 1,
+        "rgb": 9395455
+      }
+    },
+    {
+      "query": "path:06_Concepts",
+      "color": {
+        "a": 1,
+        "rgb": 5078271
+      }
+    },
+    {
+      "query": "path:07_Research/Publications",
+      "color": {
+        "a": 1,
+        "rgb": 16742912
+      }
+    },
+    {
+      "query": "path:07_Research",
+      "color": {
+        "a": 1,
+        "rgb": 11955455
+      }
+    },
+    {
+      "query": "path:00_Index",
+      "color": {
+        "a": 1,
+        "rgb": 16773542
+      }
+    },
+    {
+      "query": "path:08_Templates",
+      "color": {
+        "a": 1,
+        "rgb": 16737996
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": true,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 2.8,
+  "lineSizeMultiplier": 7.0,
+  "collapse-forces": false,
+  "centerStrength": 0.58,
+  "repelStrength": 16,
+  "linkStrength": 1.25,
+  "linkDistance": 340,
+  "scale": 1,
+  "close": false
+}

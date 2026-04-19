@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project-AI App Summary</title>
+  <style>
+    @page {
+      size: Letter;
+      margin: 0;
+    }
+
+    :root {
+      --page-width: 816px;
+      --page-height: 1056px;
+      --bg: #f5f1e8;
+      --ink: #16212b;
+      --muted: #4d5a66;
+      --accent: #0f5b78;
+      --accent-soft: #d8e8ee;
+      --rule: #cdd7de;
+      --shadow: rgba(15, 37, 48, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      width: var(--page-width);
+      height: var(--page-height);
+      overflow: hidden;
+    }
+
+    .page {
+      width: var(--page-width);
+      height: var(--page-height);
+      padding: 34px 36px 22px;
+      background:
+        radial-gradient(circle at top right, rgba(15, 91, 120, 0.08), transparent 34%),
+        linear-gradient(180deg, #fcfbf8 0%, #f6f2ea 100%);
+      overflow: hidden;
+    }
+
+    .banner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--rule);
+    }
+
+    .kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 27px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      font-size: 11.8px;
+      line-height: 1.38;
+      color: var(--muted);
+      max-width: 500px;
+    }
+
+    .badge {
+      align-self: start;
+      padding: 8px 11px;
+      border: 1px solid #b6cad3;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.18fr 0.92fr;
+      gap: 12px;
+    }
+
+    .card {
+      background: rgba(255, 253, 250, 0.92);
+      border: 1px solid var(--rule);
+      border-radius: 14px;
+      padding: 12px 13px 11px;
+      box-shadow: 0 8px 20px var(--shadow);
+      break-inside: avoid;
+    }
+
+    .card + .card {
+      margin-top: 10px;
+    }
+
+    h2 {
+      margin: 0 0 7px;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    p {
+      margin: 0;
+      font-size: 11.75px;
+      line-height: 1.36;
+    }
+
+    .persona {
+      font-size: 12px;
+      line-height: 1.38;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    li {
+      margin: 0 0 6px;
+      font-size: 11.35px;
+      line-height: 1.29;
+      color: var(--ink);
+    }
+
+    li:last-child {
+      margin-bottom: 0;
+    }
+
+    .flow {
+      display: grid;
+      gap: 7px;
+    }
+
+    .flow-step {
+      padding: 8px 9px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #ffffff 0%, #f3f7f9 100%);
+      border: 1px solid var(--rule);
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .label {
+      display: inline-block;
+      margin-bottom: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 11.2px;
+      background: var(--accent-soft);
+      border-radius: 5px;
+      padding: 1px 4px;
+    }
+
+    .steps li {
+      margin-bottom: 4px;
+    }
+
+    .note {
+      margin-top: 7px;
+      font-size: 10.2px;
+      line-height: 1.28;
+      color: var(--muted);
+    }
+
+    .footer {
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px solid var(--rule);
+      font-size: 9.7px;
+      line-height: 1.25;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="banner">
+      <div>
+        <div class="kicker">One-page repo summary</div>
+        <h1>Project-AI</h1>
+        <p class="subtitle">
+          Evidence-based snapshot of the app as implemented in this repository. Focus:
+          product shape, runtime flow, and the smallest documented way to launch it.
+        </p>
+      </div>
+      <div class="badge">Repo-derived only</div>
+    </section>
+
+    <section class="grid">
+      <div>
+        <article class="card">
+          <h2>What It Is</h2>
+          <p>
+            Project-AI is a governance-first AI app/platform that combines a desktop shell,
+            a Python trust-root runtime, and a FastAPI governance host. It routes work through
+            TARL rules, a CognitionKernel, and auditable control paths.
+          </p>
+        </article>
+
+        <article class="card">
+          <h2>Who It's For</h2>
+          <p class="persona">The Creator.</p>
+          <p class="note">Not found in repo: a narrower named persona or role description.</p>
+        </article>
+
+        <article class="card">
+          <h2>What It Does</h2>
+          <ul>
+            <li>Evaluates intents through <span class="code">/intent</span> and returns allow / deny / degrade verdicts.</li>
+            <li>Shows health, TARL rules, and audit records in the desktop UI.</li>
+            <li>Boots CognitionKernel with identity, memory, governance, reflection, and CouncilHub routing.</li>
+            <li>Loads defense and oversight agents, including SafetyGuard, constitutional guardrail, TARL protector, validator, explainability, and red-team roles.</li>
+            <li>Exposes workspace browsing, repo status, local terminal sessions, and guarded browser opening from Electron.</li>
+            <li>Offers Electron/React desktop and a PyQt6 "Leather Book" UI.</li>
+            <li>Adds monitoring, Temporal, and microservices through Docker Compose.</li>
+          </ul>
+        </article>
+      </div>
+
+      <div>
+        <article class="card">
+          <h2>How It Works</h2>
+          <div class="flow">
+            <div class="flow-step">
+              <span class="label">Shells</span>
+              <strong>Electron/React desktop</strong> runs from <span class="code">desktop/</span>.
+              The repo launcher can start that shell or switch to the PyQt6
+              <span class="code">LeatherBookInterface</span>.
+            </div>
+            <div class="flow-step">
+              <span class="label">API</span>
+              <span class="code">start.ps1</span> starts
+              <span class="code">uvicorn psia.server.governance_server:app</span> on
+              <span class="code">127.0.0.1:8001</span>; the desktop client calls
+              <span class="code">/health</span>, <span class="code">/tarl</span>,
+              <span class="code">/audit</span>, and <span class="code">/intent</span>.
+            </div>
+            <div class="flow-step">
+              <span class="label">Trust Root</span>
+              <span class="code">src/app/main.py</span> initializes the tier registry,
+              <span class="code">CognitionKernel</span>,
+              <span class="code">IdentityIntegratedIntelligenceEngine</span>,
+              <span class="code">MemoryEngine</span>,
+              governance <span class="code">Triumvirate</span>,
+              <span class="code">ReflectionCycle</span>, and <span class="code">CouncilHub</span>.
+            </div>
+            <div class="flow-step">
+              <span class="label">Security + Data</span>
+              Security systems include <span class="code">GlobalWatchTower</span>, agent guards,
+              ASL-3 enforcement, IP blocking, and honeypot detection. Runtime state spans
+              <span class="code">data/</span>, <span class="code">logs/</span>,
+              <span class="code">config/</span>, and <span class="code">governance/</span>;
+              <span class="code">docker-compose.yml</span> adds monitoring, Temporal, and extra services.
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>How To Run</h2>
+          <ol class="steps">
+            <li>Install Python 3.11+ and Node.js. Docker is optional.</li>
+            <li>From repo root: <span class="code">pip install -r requirements.txt</span></li>
+            <li>Launch the desktop path on Windows: <span class="code">.\start.ps1</span></li>
+            <li>Optional full PyQt UI: <span class="code">.\start.ps1 -Full</span></li>
+          </ol>
+          <p class="note">
+            Repo note: <span class="code">start.ps1</span> auto-runs
+            <span class="code">npm install</span> in <span class="code">desktop/</span> if needed.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <div class="footer">
+      Source basis: README.md, src/app/main.py, start.ps1, api/main.py,
+      desktop/src/api/governance.ts, desktop/electron/main.ts, desktop/electron/preload.ts,
+      docker-compose.yml, and COMPONENT_MAP.md.
+    </div>
+  </main>
+</body>
+</html>

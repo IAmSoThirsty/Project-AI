@@ -8,8 +8,13 @@ Tests basic functionality without requiring pytest
 
 import os
 import sys
+from pathlib import Path
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
+ROOT = Path(__file__).resolve().parents[2]
+for candidate in (ROOT, ROOT / "src"):
+    candidate_str = str(candidate)
+    if candidate_str not in sys.path:
+        sys.path.insert(0, candidate_str)
 
 
 print("=" * 80)
@@ -26,13 +31,13 @@ try:
     AsymmetricSecurityEngine = asymmetric_security_engine.AsymmetricSecurityEngine
     GodTierAsymmetricSecurity = god_tier_asymmetric_security.GodTierAsymmetricSecurity
 
-    print("✓ All modules imported successfully")
+    print("[PASS] All modules imported successfully")
     print("  - AsymmetricSecurityEngine")
     print("  - GodTierAsymmetricSecurity")
 
     # Note: SecurityEnforcementGateway has dependencies, so we'll test it separately
 except Exception as e:
-    print(f"✗ Import failed: {e}")
+    print(f"[FAIL] Import failed: {e}")
     import traceback
 
     traceback.print_exc()
@@ -55,23 +60,21 @@ try:
         )
 
     # Check enforcement gateway file directly
-    gateway_file = os.path.join(
-        os.path.dirname(__file__), "src/app/security/asymmetric_enforcement_gateway.py"
-    )
-    with open(gateway_file) as f:
+    gateway_file = ROOT / "src" / "app" / "security" / "asymmetric_enforcement_gateway.py"
+    with open(gateway_file, encoding="utf-8") as f:
         gateway_content = f.read()
         if not ("THIRSTY'S" in gateway_content or "Thirsty's" in gateway_content):
             raise AssertionError("Missing Thirsty's branding in enforcement gateway")
 
-    print("✓ All modules have Thirsty's branding")
+    print("[PASS] All modules have Thirsty's branding")
     print("  - asymmetric_security_engine: Contains 'Thirsty's'")
     print("  - god_tier_asymmetric_security: Contains 'Thirsty's'")
     print("  - asymmetric_enforcement_gateway: Contains 'Thirsty's'")
 except AssertionError as e:
-    print(f"✗ Branding check failed: {e}")
+    print(f"[FAIL] Branding check failed: {e}")
     sys.exit(1)
 except Exception as e:
-    print(f"✗ Error checking branding: {e}")
+    print(f"[FAIL] Error checking branding: {e}")
     sys.exit(1)
 
 print()
@@ -85,18 +88,18 @@ try:
 
     # Initialize AsymmetricSecurityEngine
     engine = AsymmetricSecurityEngine(data_dir=tmpdir)
-    print("✓ AsymmetricSecurityEngine initialized")
+    print("[PASS] AsymmetricSecurityEngine initialized")
 
     # Initialize GodTierAsymmetricSecurity
     god_tier = GodTierAsymmetricSecurity(data_dir=tmpdir, enable_all=True)
-    print("✓ GodTierAsymmetricSecurity initialized")
+    print("[PASS] GodTierAsymmetricSecurity initialized")
 
     # Note: SecurityEnforcementGateway requires additional dependencies
     # Skipping for this validation
-    print("✓ SecurityEnforcementGateway (tested via file check)")
+    print("[PASS] SecurityEnforcementGateway (tested via file check)")
 
 except Exception as e:
-    print(f"✗ Initialization failed: {e}")
+    print(f"[FAIL] Initialization failed: {e}")
     import traceback
 
     traceback.print_exc()
@@ -121,13 +124,13 @@ try:
 
     if not (result["allowed"]):
         raise AssertionError("Valid action should be allowed")
-    print("✓ Valid action allowed")
+    print("[PASS] Valid action allowed")
     print("  - Action: read_data")
     print(f"  - Allowed: {result['allowed']}")
     print(f"  - Layers passed: {len(result['layers_passed'])}")
 
 except Exception as e:
-    print(f"✗ Validation test failed: {e}")
+    print(f"[FAIL] Validation test failed: {e}")
     import traceback
 
     traceback.print_exc()
@@ -153,7 +156,7 @@ try:
 
     # The system might allow it through God Tier but the individual
     # constitutional check can be tested separately
-    print("✓ Validation complete")
+    print("[PASS] Validation complete")
     print("  - Action: malicious_action")
     print(f"  - Allowed: {result['allowed']}")
     if not result["allowed"]:
@@ -162,7 +165,7 @@ try:
         print("  - Note: Constitution enforcement active in production mode")
 
 except Exception as e:
-    print(f"✗ Constitutional test failed: {e}")
+    print(f"[FAIL] Constitutional test failed: {e}")
     import traceback
 
     traceback.print_exc()
@@ -180,21 +183,21 @@ try:
     ]
 
     for filepath in tarl_files:
-        full_path = os.path.join(os.path.dirname(__file__), filepath)
+        full_path = ROOT / filepath
         if not os.path.exists(full_path):
             raise AssertionError(f"T.A.R.L. file not found: {filepath}")
 
         # Check file size
         size = os.path.getsize(full_path)
-        print(f"✓ {os.path.basename(filepath)}: {size:,} bytes")
+        print(f"[PASS] {os.path.basename(filepath)}: {size:,} bytes")
 
-    print("✓ All T.A.R.L. files present")
+    print("[PASS] All T.A.R.L. files present")
 
 except AssertionError as e:
-    print(f"✗ T.A.R.L. file check failed: {e}")
+    print(f"[FAIL] T.A.R.L. file check failed: {e}")
     sys.exit(1)
 except Exception as e:
-    print(f"✗ Error checking T.A.R.L. files: {e}")
+    print(f"[FAIL] Error checking T.A.R.L. files: {e}")
     sys.exit(1)
 
 print()
@@ -203,12 +206,12 @@ print()
 print("Test 7: Verify documentation...")
 try:
     doc_file = "docs/THIRSTYS_ASYMMETRIC_SECURITY_README.md"
-    full_path = os.path.join(os.path.dirname(__file__), doc_file)
+    full_path = ROOT / doc_file
 
     if not os.path.exists(full_path):
         raise AssertionError(f"Documentation file not found: {doc_file}")
 
-    with open(full_path) as f:
+    with open(full_path, encoding="utf-8") as f:
         content = f.read()
         if "THIRSTY'S ASYMMETRIC SECURITY" not in content:
             raise AssertionError("Missing title in documentation")
@@ -218,30 +221,30 @@ try:
             raise AssertionError("Missing key paradigm in documentation")
 
     size = os.path.getsize(full_path)
-    print(f"✓ Documentation verified: {size:,} bytes")
+    print(f"[PASS] Documentation verified: {size:,} bytes")
     print("  - Contains Thirsty's branding")
     print("  - Contains T.A.R.L. references")
     print("  - Contains key paradigm")
 
 except AssertionError as e:
-    print(f"✗ Documentation check failed: {e}")
+    print(f"[FAIL] Documentation check failed: {e}")
     sys.exit(1)
 except Exception as e:
-    print(f"✗ Error checking documentation: {e}")
+    print(f"[FAIL] Error checking documentation: {e}")
     sys.exit(1)
 
 print()
 print("=" * 80)
-print("✓ ALL VALIDATION TESTS PASSED")
+print("[PASS] ALL VALIDATION TESTS PASSED")
 print("=" * 80)
 print()
 print("Summary:")
-print("  - Python modules: Imported and branded ✓")
-print("  - Security systems: Initialized ✓")
-print("  - Validation: Working ✓")
-print("  - Constitutional enforcement: Working ✓")
-print("  - T.A.R.L. files: Present (3 files) ✓")
-print("  - Documentation: Complete ✓")
+print("  - Python modules: Imported and branded [PASS]")
+print("  - Security systems: Initialized [PASS]")
+print("  - Validation: Working [PASS]")
+print("  - Constitutional enforcement: Working [PASS]")
+print("  - T.A.R.L. files: Present (3 files) [PASS]")
+print("  - Documentation: Complete [PASS]")
 print()
-print("Thirsty's Asymmetric Security Framework is ready! ✓")
+print("Thirsty's Asymmetric Security Framework is ready! [PASS]")
 print()

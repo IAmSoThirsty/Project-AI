@@ -36,7 +36,7 @@ import logging
 import os
 import random
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -386,7 +386,7 @@ class AntiSovereignStressTestGenerator:
                             "governance_enforcement",
                         ],
                     },
-                    created_at=datetime.now(UTC).isoformat(),
+                    created_at=datetime.now(timezone.utc).isoformat(),
                 )
             )
 
@@ -447,7 +447,7 @@ class AntiSovereignStressTestGenerator:
                             "audit_logging",
                         ],
                     },
-                    created_at=datetime.now(UTC).isoformat(),
+                    created_at=datetime.now(timezone.utc).isoformat(),
                 )
             )
 
@@ -508,7 +508,7 @@ class AntiSovereignStressTestGenerator:
                             "context_validation",
                         ],
                     },
-                    created_at=datetime.now(UTC).isoformat(),
+                    created_at=datetime.now(timezone.utc).isoformat(),
                 )
             )
 
@@ -569,7 +569,7 @@ class AntiSovereignStressTestGenerator:
                             "anomaly_detection",
                         ],
                     },
-                    created_at=datetime.now(UTC).isoformat(),
+                    created_at=datetime.now(timezone.utc).isoformat(),
                 )
             )
 
@@ -630,7 +630,7 @@ class AntiSovereignStressTestGenerator:
                             "governance_enforcement",
                         ],
                     },
-                    created_at=datetime.now(UTC).isoformat(),
+                    created_at=datetime.now(timezone.utc).isoformat(),
                 )
             )
 
@@ -691,7 +691,7 @@ class AntiSovereignStressTestGenerator:
                             "pattern_recognition",
                         ],
                     },
-                    created_at=datetime.now(UTC).isoformat(),
+                    created_at=datetime.now(timezone.utc).isoformat(),
                 )
             )
 
@@ -752,7 +752,7 @@ class AntiSovereignStressTestGenerator:
                             "boundary_detection",
                         ],
                     },
-                    created_at=datetime.now(UTC).isoformat(),
+                    created_at=datetime.now(timezone.utc).isoformat(),
                 )
             )
 
@@ -806,7 +806,7 @@ class AntiSovereignStressTestGenerator:
                         "maximum_breaches_allowed": 0,
                         "required_defense_triggers": self.expected_defenses[:6],
                     },
-                    created_at=datetime.now(UTC).isoformat(),
+                    created_at=datetime.now(timezone.utc).isoformat(),
                 )
             )
 
@@ -854,7 +854,7 @@ class AntiSovereignStressTestGenerator:
                             "memory_integrity_check",
                         ],
                     },
-                    created_at=datetime.now(UTC).isoformat(),
+                    created_at=datetime.now(timezone.utc).isoformat(),
                 )
             )
 
@@ -901,7 +901,7 @@ class AntiSovereignStressTestGenerator:
                             "anomaly_detection",
                         ],
                     },
-                    created_at=datetime.now(UTC).isoformat(),
+                    created_at=datetime.now(timezone.utc).isoformat(),
                 )
             )
 
@@ -1036,7 +1036,7 @@ class AntiSovereignStressTestGenerator:
             "success_criteria": "All 4 phases must complete for test to count as 1/400",
             "expected_defenses": len(self.expected_defenses),
             "attack_techniques": sum(len(v) for v in self.attack_techniques.values()),
-            "generated_at": datetime.now(UTC).isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
 

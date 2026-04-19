@@ -5,6 +5,10 @@ Formal invariants for Project AI.
 Each invariant must be mechanically enforceable and provable.
 """
 
+from __future__ import annotations
+
+from typing import Any
+
 
 def invariant_single_authority(active_roles: list) -> bool:
     return len(active_roles) <= 1
@@ -20,3 +24,51 @@ def invariant_no_role_stacking(liara_active: bool, active_roles: list) -> bool:
 
 def invariant_contraction_on_failure(expanded: bool) -> bool:
     return expanded is False
+
+
+class InvariantChecker:
+    """Compatibility invariant checker used by cognition integrations."""
+
+    def __init__(self) -> None:
+        self._checks = {
+            "single_authority": invariant_single_authority,
+            "kernel_mediation": invariant_kernel_mediation,
+            "no_role_stacking": invariant_no_role_stacking,
+            "contraction_on_failure": invariant_contraction_on_failure,
+        }
+
+    def validate(self, name: str, *args: Any, **kwargs: Any) -> bool:
+        fn = self._checks.get(name)
+        if fn is None:
+            return False
+        try:
+            return bool(fn(*args, **kwargs))
+        except Exception:
+            return False
+
+    def validate_all(self, payload: dict[str, Any]) -> dict[str, bool]:
+        return {
+            "single_authority": self.validate(
+                "single_authority", payload.get("active_roles", [])
+            ),
+            "kernel_mediation": self.validate(
+                "kernel_mediation", payload.get("executed_via_kernel", False)
+            ),
+            "no_role_stacking": self.validate(
+                "no_role_stacking",
+                payload.get("liara_active", False),
+                payload.get("active_roles", []),
+            ),
+            "contraction_on_failure": self.validate(
+                "contraction_on_failure", payload.get("expanded", False)
+            ),
+        }
+
+
+__all__ = [
+    "invariant_single_authority",
+    "invariant_kernel_mediation",
+    "invariant_no_role_stacking",
+    "invariant_contraction_on_failure",
+    "InvariantChecker",
+]

@@ -1,13 +1,6 @@
 /*
- * ═══════════════════════════════════════════════════════════════════════════
- * THIRSTY'S GRADLE - SETTINGS & MODULE DISCOVERY
- * ═══════════════════════════════════════════════════════════════════════════
- * 
- * Root settings for the monolithic God Tier build system
- * Automatically discovers and configures all project modules
- * 
- * Version: 1.0.0
- * ═══════════════════════════════════════════════════════════════════════════
+ * (Build Synthesis Settings)                [2026-04-09 04:26]
+ *                                          Status: Active
  */
 
 rootProject.name = "Project-AI"
