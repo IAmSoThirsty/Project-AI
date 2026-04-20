@@ -1,0 +1,386 @@
+{
+  "Details": [
+    {
+      "Message": "Vault directory found: data\\black_vault_secure",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\data\\black_vault_secure"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Directory Exists",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Vault directory found: src\\app\\vault",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\src\\app\\vault"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Directory Exists",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Vault directory found: governance\\sovereign_data",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\governance\\sovereign_data"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Directory Exists",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Vault directory found: data\\learning_requests\\pending_secure",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\data\\learning_requests\\pending_secure"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Directory Exists",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Vault directory found: emergent-microservices\\sovereign-data-vault",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\emergent-microservices\\sovereign-data-vault"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Directory Exists",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Black Vault has proper AI access restrictions",
+      "Details": {
+        "File": "T:\\Project-AI-main\\data\\black_vault_secure\\.aiignore"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "AI Isolation",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Directory follows secure naming convention: data\\black_vault_secure",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\data\\black_vault_secure"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Secure Naming",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Directory follows secure naming convention: data\\learning_requests\\pending_secure",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\data\\learning_requests\\pending_secure"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Secure Naming",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Privacy Vault uses cryptography.fernet",
+      "Details": {
+        "File": "T:\\Project-AI-main\\utils\\storage\\privacy_vault.py"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Encryption Library",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Privacy Vault implements forensic resistance",
+      "Details": {
+        "File": "T:\\Project-AI-main\\utils\\storage\\privacy_vault.py"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Forensic Resistance",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Privacy Vault implements secure data wiping",
+      "Details": {
+        "File": "T:\\Project-AI-main\\utils\\storage\\privacy_vault.py"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Secure Wipe",
+      "Status": "Pass"
+    },
+    {
+      "Message": "TARL Vault has Attack Detection",
+      "Details": {
+        "File": "T:\\Project-AI-main\\tarl_os\\security\\secrets_vault.thirsty",
+        "Feature": "Attack Detection"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "TARL Security Feature",
+      "Status": "Pass"
+    },
+    {
+      "Message": "TARL Vault has Memory Armoring",
+      "Details": {
+        "File": "T:\\Project-AI-main\\tarl_os\\security\\secrets_vault.thirsty",
+        "Feature": "Memory Armoring"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "TARL Security Feature",
+      "Status": "Pass"
+    },
+    {
+      "Message": "TARL Vault has Input Sanitization",
+      "Details": {
+        "File": "T:\\Project-AI-main\\tarl_os\\security\\secrets_vault.thirsty",
+        "Feature": "Input Sanitization"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "TARL Security Feature",
+      "Status": "Pass"
+    },
+    {
+      "Message": "TARL Vault has Encryption Function",
+      "Details": {
+        "File": "T:\\Project-AI-main\\tarl_os\\security\\secrets_vault.thirsty",
+        "Feature": "Encryption Function"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "TARL Security Feature",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Sovereign data directory exists",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\governance\\sovereign_data"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Sovereign Data",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Found governance file: immutable_audit.jsonl",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\governance\\sovereign_data\\immutable_audit.jsonl"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Governance File",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Found governance file: sovereign_keypair.json",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\governance\\sovereign_data\\sovereign_keypair.json"
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Governance File",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Artifacts directory contains 24 files",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\governance\\sovereign_data\\artifacts",
+        "FileCount": 24
+      },
+      "Timestamp": "2026-04-20 10:21:18",
+      "Test": "Governance Artifacts",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Directory follows naming convention: _securetransport",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\.venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\_securetransport"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Naming Convention",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Directory follows naming convention: _securetransport",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\.venv_airllm\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\_securetransport"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Naming Convention",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Directory follows naming convention: black_vault_secure",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\data\\black_vault_secure"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Naming Convention",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Directory follows naming convention: pending_secure",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\data\\learning_requests\\pending_secure"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Naming Convention",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Directory follows naming convention: sovereign-data-vault",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\emergent-microservices\\sovereign-data-vault"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Naming Convention",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Directory follows naming convention: vault",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\src\\app\\vault"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Naming Convention",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Directory follows naming convention: _securetransport",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\venv\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\_securetransport"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Naming Convention",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Can read directory: data\\black_vault_secure",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\data\\black_vault_secure"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Read Access",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Can write to directory: data\\black_vault_secure",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\data\\black_vault_secure"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Write Access",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Can read directory: governance\\sovereign_data",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\governance\\sovereign_data"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Read Access",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Can write to directory: governance\\sovereign_data",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\governance\\sovereign_data"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Write Access",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Sovereign keypair has valid structure",
+      "Details": {
+        "File": "T:\\Project-AI-main\\governance\\sovereign_data\\sovereign_keypair.json"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Keypair Structure",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Immutable audit log exists with 64 entries",
+      "Details": {
+        "Lines": 64,
+        "File": "T:\\Project-AI-main\\governance\\sovereign_data\\immutable_audit.jsonl"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Audit Log",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Found vault component: src\\app\\vault\\core",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\src\\app\\vault\\core"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Vault Module",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Found vault component: src\\app\\vault\\auth",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\src\\app\\vault\\auth"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Vault Module",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Found vault component: src\\app\\vault\\audit",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\src\\app\\vault\\audit"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Vault Module",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Found 3 vault integration modules",
+      "Details": {
+        "ModuleCount": 3
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Module Integration",
+      "Status": "Pass"
+    },
+    {
+      "Message": "Vault directory missing __init__.py: __pycache__",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\src\\app\\vault\\__pycache__",
+        "ExpectedFile": "T:\\Project-AI-main\\src\\app\\vault\\__pycache__\\__init__.py"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Python Package",
+      "Status": "Warning"
+    },
+    {
+      "Message": "Vault directory missing __init__.py: audit",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\src\\app\\vault\\audit",
+        "ExpectedFile": "T:\\Project-AI-main\\src\\app\\vault\\audit\\__init__.py"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Python Package",
+      "Status": "Warning"
+    },
+    {
+      "Message": "Vault directory missing __init__.py: auth",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\src\\app\\vault\\auth",
+        "ExpectedFile": "T:\\Project-AI-main\\src\\app\\vault\\auth\\__init__.py"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Python Package",
+      "Status": "Warning"
+    },
+    {
+      "Message": "Vault directory missing __init__.py: core",
+      "Details": {
+        "Path": "T:\\Project-AI-main\\src\\app\\vault\\core",
+        "ExpectedFile": "T:\\Project-AI-main\\src\\app\\vault\\core\\__init__.py"
+      },
+      "Timestamp": "2026-04-20 10:21:20",
+      "Test": "Python Package",
+      "Status": "Warning"
+    }
+  ],
+  "TotalTests": 40,
+  "Warnings": [
+    "Python Package - Vault directory missing __init__.py: __pycache__",
+    "Python Package - Vault directory missing __init__.py: audit",
+    "Python Package - Vault directory missing __init__.py: auth",
+    "Python Package - Vault directory missing __init__.py: core"
+  ],
+  "PassedTests": 36,
+  "FailedTests": 0,
+  "Errors": [],
+  "Timestamp": "2026-04-20 10:21:17",
+  "WarningTests": 4
+}

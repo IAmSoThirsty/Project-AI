@@ -1,0 +1,255 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://project-ai.dev/schemas/metadata.schema.json",
+  "title": "Project-AI Metadata Schema",
+  "description": "Comprehensive JSON Schema for validating YAML frontmatter metadata in Markdown documentation files",
+  "version": "1.0.0",
+  "type": "object",
+  "required": ["description"],
+  "properties": {
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 500,
+      "description": "Brief description of the document's purpose and scope",
+      "pattern": "^[A-Z].*[^.]$",
+      "examples": [
+        "Configuration for AI behavior when interacting with Codacy's MCP Server",
+        "Comprehensive guide for implementing metadata validation systems"
+      ]
+    },
+    "applyTo": {
+      "type": "string",
+      "description": "Glob pattern specifying which files this metadata applies to",
+      "pattern": "^[\\w\\-\\.\\*/]+$",
+      "default": "**",
+      "examples": ["**", "**/*.md", "src/**/*.py", "docs/**"]
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of the document",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.-]+)?(\\+[a-zA-Z0-9.-]+)?$",
+      "examples": ["1.0.0", "2.1.3-beta.1", "1.0.0+build.123"]
+    },
+    "lastUpdated": {
+      "type": "string",
+      "description": "ISO 8601 date of last update (YYYY-MM-DD)",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "format": "date",
+      "examples": ["2026-01-23", "2025-12-31"]
+    },
+    "status": {
+      "type": "string",
+      "description": "Current lifecycle status of the document",
+      "enum": [
+        "DRAFT",
+        "ACTIVE",
+        "DEPRECATED",
+        "ARCHIVED",
+        "REVIEW",
+        "PENDING",
+        "SUPERSEDED"
+      ],
+      "default": "ACTIVE"
+    },
+    "category": {
+      "type": "string",
+      "description": "Primary category for document classification",
+      "enum": [
+        "architecture",
+        "security",
+        "governance",
+        "deployment",
+        "development",
+        "operations",
+        "testing",
+        "documentation",
+        "compliance",
+        "api",
+        "integration",
+        "configuration",
+        "guide",
+        "reference",
+        "policy",
+        "standard"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "description": "Taxonomy tags for enhanced discoverability",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$",
+        "minLength": 2,
+        "maxLength": 50
+      },
+      "uniqueItems": true,
+      "minItems": 1,
+      "maxItems": 20,
+      "examples": [
+        ["metadata", "validation", "json-schema"],
+        ["security", "authentication", "oauth2"]
+      ]
+    },
+    "author": {
+      "type": "string",
+      "description": "Primary author or team responsible",
+      "minLength": 2,
+      "maxLength": 100,
+      "examples": ["Security Team", "AGENT-018", "John Doe"]
+    },
+    "reviewers": {
+      "type": "array",
+      "description": "List of reviewers who approved this document",
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 100
+      },
+      "uniqueItems": true,
+      "maxItems": 10
+    },
+    "relatedDocs": {
+      "type": "array",
+      "description": "Related documentation files (relative paths)",
+      "items": {
+        "type": "string",
+        "pattern": "^[\\w\\-\\./ ]+\\.(md|txt|pdf|json|yaml|yml)$"
+      },
+      "uniqueItems": true,
+      "maxItems": 20
+    },
+    "dependencies": {
+      "type": "array",
+      "description": "External dependencies or prerequisites",
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 200
+      },
+      "uniqueItems": true,
+      "maxItems": 30
+    },
+    "audience": {
+      "type": "string",
+      "description": "Intended audience for the document",
+      "enum": [
+        "developers",
+        "operators",
+        "security-team",
+        "architects",
+        "all",
+        "executive",
+        "contributors",
+        "maintainers",
+        "end-users"
+      ],
+      "default": "developers"
+    },
+    "confidentiality": {
+      "type": "string",
+      "description": "Confidentiality classification",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "default": "public"
+    },
+    "priority": {
+      "type": "string",
+      "description": "Document priority level",
+      "enum": ["critical", "high", "medium", "low"],
+      "default": "medium"
+    },
+    "compliance": {
+      "type": "array",
+      "description": "Compliance frameworks this document addresses",
+      "items": {
+        "type": "string",
+        "enum": [
+          "SOC2",
+          "ISO27001",
+          "GDPR",
+          "HIPAA",
+          "PCI-DSS",
+          "NIST",
+          "CIS",
+          "OWASP"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "reviewSchedule": {
+      "type": "string",
+      "description": "How often this document should be reviewed",
+      "enum": [
+        "weekly",
+        "monthly",
+        "quarterly",
+        "biannually",
+        "annually",
+        "ad-hoc"
+      ],
+      "default": "quarterly"
+    },
+    "expiryDate": {
+      "type": "string",
+      "description": "ISO 8601 date when document expires",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "format": "date"
+    },
+    "language": {
+      "type": "string",
+      "description": "Primary language of the document (ISO 639-1)",
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+      "default": "en",
+      "examples": ["en", "en-US", "es", "fr"]
+    },
+    "license": {
+      "type": "string",
+      "description": "License identifier (SPDX format)",
+      "pattern": "^[A-Za-z0-9.-]+$",
+      "examples": ["MIT", "Apache-2.0", "GPL-3.0", "CC-BY-4.0"]
+    },
+    "customFields": {
+      "type": "object",
+      "description": "Project-specific custom metadata fields",
+      "additionalProperties": {
+        "anyOf": [
+          { "type": "string" },
+          { "type": "number" },
+          { "type": "boolean" },
+          { "type": "array", "items": { "type": "string" } }
+        ]
+      },
+      "maxProperties": 20
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "description": "Comprehensive metadata validation system for Project-AI documentation",
+      "version": "1.0.0",
+      "lastUpdated": "2026-01-23",
+      "status": "ACTIVE",
+      "category": "documentation",
+      "tags": ["metadata", "validation", "json-schema", "powershell"],
+      "author": "AGENT-018",
+      "audience": "developers",
+      "confidentiality": "public",
+      "priority": "high",
+      "reviewSchedule": "quarterly",
+      "language": "en"
+    },
+    {
+      "description": "Configuration for AI behavior when interacting with Codacy's MCP Server",
+      "applyTo": "**",
+      "status": "ACTIVE",
+      "category": "configuration",
+      "tags": ["codacy", "mcp", "ai-configuration"],
+      "audience": "developers"
+    }
+  ]
+}

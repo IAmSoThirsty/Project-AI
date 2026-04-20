@@ -334,16 +334,6 @@ class ImageGenerator:
         except Exception as e:
             logger.error("OpenAI generation error: %s", e)
             return {"success": False, "error": str(e)}
-                "filepath": filepath,
-                "filename": filename,
-                "prompt": prompt,
-                "timestamp": timestamp,
-                "url": image_url,
-            }
-
-        except Exception as e:
-            logger.error("OpenAI generation error: %s", e)
-            return {"success": False, "error": str(e)}
 
     def generate(
         self,

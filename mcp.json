@@ -1,5 +1,13 @@
 {
   "mcpServers": {
+    "wiki-tasks": {
+      "type": "http",
+      "url": "http://127.0.0.1:${WIKI_TASKS_MCP_PORT}/mcp",
+      "headers": {
+        "Authorization": "Bearer ${WIKI_TASKS_BEARER_TOKEN}"
+      },
+      "description": "Local wiki tasks MCP server"
+    },
     "project-ai": {
       "command": "python",
       "args": [

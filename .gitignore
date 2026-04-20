@@ -186,3 +186,8 @@ node_modules/
 audit_reports/
 test_audit_sample/
 test_audit_output/
+
+# Obsidian vault personal settings
+# For personal vault usage - excludes workspace-specific configuration
+# See VAULT_GIT_STRATEGY.md for team vault configuration
+.obsidian/
