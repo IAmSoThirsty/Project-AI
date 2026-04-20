@@ -1,0 +1,6 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+"benchmarks/benchmark_report.json","benchmarks","benchmarks","benchmark_report.json",".json","4884","4.77","2026-03-29T00:58:41.3615414Z","6.125","True","False","177","177","4532","25.605","69"
+"benchmarks/performance_suite.py","benchmarks","benchmarks","performance_suite.py",".py","17574","17.162","2026-04-01T15:28:00.6911788Z","2.522","True","False","478","395","16590","34.707","161"
+"benchmarks/psia_benchmark.py","benchmarks","benchmarks","psia_benchmark.py",".py","13802","13.479","2026-04-01T15:28:00.6928370Z","2.522","True","False","415","347","12688","30.573","87"
+"benchmarks/README.md","benchmarks","benchmarks","README.md",".md","1195","1.167","2026-04-01T15:28:00.6896669Z","2.522","True","False","37","26","1113","30.081","127"
+"benchmarks/run_benchmarks.py","benchmarks","benchmarks","run_benchmarks.py",".py","10942","10.686","2026-04-01T15:28:00.6950193Z","2.522","True","False","338","262","9760","28.876","105"

@@ -1,0 +1,7 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+"monitoring/entropy_slope.py","monitoring","monitoring","entropy_slope.py",".py","20948","20.457","2026-04-01T15:28:03.7406431Z","2.522","True","False","590","481","19765","33.5","88"
+"monitoring/prometheus.yml","monitoring","monitoring","prometheus.yml",".yml","505","0.493","2026-04-01T15:28:03.7464146Z","2.522","True","False","19","17","467","24.579","63"
+"monitoring/README.md","monitoring","monitoring","README.md",".md","5823","5.687","2026-04-01T15:28:03.7240698Z","2.522","True","False","216","154","5085","23.542","86"
+"monitoring/grafana/datasources/prometheus.yml","monitoring","monitoring\grafana\datasources","prometheus.yml",".yml","297","0.29","2026-03-29T00:58:39.2782687Z","6.125","True","False","11","10","275","25","63"
+"monitoring/grafana/provisioning/dashboards/dashboard-provider.yml","monitoring","monitoring\grafana\provisioning\dashboards","dashboard-provider.yml",".yml","388","0.379","2026-03-29T00:58:39.2782687Z","6.125","True","False","14","13","360","25.714","63"
+"monitoring/grafana/provisioning/datasources/prometheus.yml","monitoring","monitoring\grafana\provisioning\datasources","prometheus.yml",".yml","366","0.357","2026-03-29T00:58:39.2782687Z","6.125","True","False","14","13","338","24.143","63"

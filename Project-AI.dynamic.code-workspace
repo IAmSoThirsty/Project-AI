@@ -1,0 +1,64 @@
+{
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "external/Cerberus"
+    },
+    {
+      "path": "external/The_Triumvirate"
+    },
+    {
+      "path": "external/Thirsty-Lang"
+    },
+    {
+      "path": "external/Thirstys-Monolith"
+    },
+    {
+      "path": "external/Thirstys-Waterfall"
+    },
+    {
+      "path": "security/penetration-testing-tools"
+    }
+  ],
+  "settings": {
+    "python.analysis.nodeArguments": [
+      "--max-old-space-size=8192"
+    ],
+    "python.analysis.indexing": false,
+    "python.analysis.exclude": [
+      "**/.git/**",
+      "**/node_modules/**",
+      "**/__pycache__/**",
+      "**/.venv/**",
+      "**/logs/**",
+      "**/output/**",
+      "**/archive/**"
+    ],
+    "chat.checkpoints.showFileChanges": true,
+    "chat.edits2.enabled": true,
+    "chat.mcp.assisted.nuget.enabled": true,
+    "chat.mcp.discovery.enabled": {
+      "claude-desktop": true,
+      "windsurf": true,
+      "cursor-global": true,
+      "cursor-workspace": true
+    },
+    "chat.mcp.gallery.enabled": true,
+    "chat.tools.terminal.autoReplyToPrompts": true,
+    "inlineChat.enableV2": true,
+    "inlineChat.notebookAgent": true,
+    "terminal.integrated.suggest.enabled": true,
+    "php.validate.executablePath": "php",
+    "java.configuration.runtimes": [
+      {
+        "name": "JavaSE-17",
+        "path": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.18.8-hotspot",
+        "default": true
+      }
+    ],
+    "java.jdt.ls.java.home": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.18.8-hotspot",
+    "java.configuration.updateBuildConfiguration": "interactive"
+  }
+}

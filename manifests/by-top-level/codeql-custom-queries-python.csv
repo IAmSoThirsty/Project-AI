@@ -1,0 +1,5 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+"codeql-custom-queries-python/codeql-pack.lock.yml","codeql-custom-queries-python","codeql-custom-queries-python","codeql-pack.lock.yml",".yml","706","0.689","2026-03-29T00:58:42.4507932Z","6.125","True","False","32","32","642","20.062","63"
+"codeql-custom-queries-python/codeql-pack.yml","codeql-custom-queries-python","codeql-custom-queries-python","codeql-pack.yml",".yml","288","0.281","2026-03-29T00:58:42.4517935Z","6.125","True","False","9","9","270","30","63"
+"codeql-custom-queries-python/example.ql","codeql-custom-queries-python","codeql-custom-queries-python","example.ql",".ql","216","0.211","2026-03-29T00:58:42.4517935Z","6.125","True","False","12","10","194","16.167","42"
+"codeql-custom-queries-python/README.md","codeql-custom-queries-python","codeql-custom-queries-python","README.md",".md","652","0.637","2026-04-01T15:28:00.7214873Z","2.522","True","False","16","11","618","38.625","158"

@@ -1,0 +1,6 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+".venv_prod/pyvenv.cfg",".venv_prod",".venv_prod","pyvenv.cfg",".cfg","378","0.369","2026-04-01T15:27:59.4053156Z","2.522","True","False","5","5","368","73.6","170"
+".venv_prod/Scripts/activate",".venv_prod",".venv_prod\Scripts","activate","[no-ext]","2382","2.326","2026-04-01T15:27:59.4018180Z","2.522","True","False","76","65","2230","29.342","116"
+".venv_prod/Scripts/activate.bat",".venv_prod",".venv_prod\Scripts","activate.bat",".bat","1070","1.045","2026-04-01T15:27:59.4029971Z","2.522","True","False","34","25","1002","29.471","101"
+".venv_prod/Scripts/Activate.ps1",".venv_prod",".venv_prod\Scripts","Activate.ps1",".ps1","27975","27.319","2026-04-01T15:27:59.4002734Z","2.522","True","False","528","478","26919","50.983","170"
+".venv_prod/Scripts/deactivate.bat",".venv_prod",".venv_prod\Scripts","deactivate.bat",".bat","393","0.384","2026-04-01T15:27:59.4048044Z","2.522","True","False","22","16","349","15.864","46"

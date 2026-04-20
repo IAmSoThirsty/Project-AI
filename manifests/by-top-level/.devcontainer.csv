@@ -1,0 +1,4 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+".devcontainer/devcontainer.json",".devcontainer",".devcontainer","devcontainer.json",".json","1796","1.754","2026-04-01T15:27:59.2285006Z","2.522","True","False","68","60","1660","24.412","120"
+".devcontainer/postCreateCommand.sh",".devcontainer",".devcontainer","postCreateCommand.sh",".sh","3024","2.953","2026-04-01T15:27:59.2305387Z","2.522","True","False","80","71","2810","35.125","129"
+".devcontainer/README.md",".devcontainer",".devcontainer","README.md",".md","2989","2.919","2026-04-01T15:27:59.2285006Z","2.522","True","False","122","80","2743","22.484","102"
