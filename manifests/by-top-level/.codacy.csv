@@ -1,0 +1,4 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+".codacy/cli.sh",".codacy",".codacy","cli.sh",".sh","4095","3.999","2026-04-01T15:27:59.2254907Z","2.522","True","False","151","121","3785","25.066","151"
+".codacy/codacy.yaml",".codacy",".codacy","codacy.yaml",".yaml","833","0.813","2026-04-01T15:27:59.2265011Z","2.522","True","False","34","34","765","22.5","63"
+".codacy/README.md",".codacy",".codacy","README.md",".md","384","0.375","2026-04-01T15:27:59.2239819Z","2.522","True","False","14","10","354","25.286","68"

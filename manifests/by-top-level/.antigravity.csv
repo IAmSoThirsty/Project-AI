@@ -1,0 +1,8 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+".antigravity/config.json",".antigravity",".antigravity","config.json",".json","5658","5.525","2026-04-03T19:11:28.1064579Z","0.366","True","False","221","221","5216","23.602","94"
+".antigravity/README.md",".antigravity",".antigravity","README.md",".md","8719","8.515","2026-04-01T15:27:59.1565465Z","2.522","True","False","353","245","7867","22.286","117"
+".antigravity/security.yaml",".antigravity",".antigravity","security.yaml",".yaml","3275","3.198","2026-04-03T19:11:28.1074624Z","0.366","True","False","131","121","3013","23","69"
+".antigravity/agents/project_ai_agent.py",".antigravity",".antigravity\agents","project_ai_agent.py",".py","13559","13.241","2026-04-03T19:11:28.1054521Z","0.366","True","False","376","314","12807","34.061","95"
+".antigravity/scripts/setup_antigravity.py",".antigravity",".antigravity\scripts","setup_antigravity.py",".py","9399","9.179","2026-04-01T15:27:59.2120792Z","2.522","True","False","283","225","8793","31.071","89"
+".antigravity/workflows/feature-development.yaml",".antigravity",".antigravity\workflows","feature-development.yaml",".yaml","5453","5.325","2026-04-01T15:27:59.2153189Z","2.522","True","False","213","188","5027","23.601","86"
+".antigravity/workflows/security-fix.yaml",".antigravity",".antigravity\workflows","security-fix.yaml",".yaml","4907","4.792","2026-04-01T15:27:59.2193401Z","2.522","True","False","188","162","4531","24.101","83"

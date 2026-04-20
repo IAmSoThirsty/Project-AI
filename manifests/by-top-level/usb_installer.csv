@@ -1,0 +1,6 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+"usb_installer/autorun_launcher.bat","usb_installer","usb_installer","autorun_launcher.bat",".bat","521","0.509","2026-03-29T00:58:45.1178320Z","6.125","True","False","22","17","477","21.682","60"
+"usb_installer/autorun_launcher.sh","usb_installer","usb_installer","autorun_launcher.sh",".sh","1042","1.018","2026-03-29T00:58:45.1178320Z","6.125","True","False","29","26","984","33.931","75"
+"usb_installer/autorun_wizard.html","usb_installer","usb_installer","autorun_wizard.html",".html","13584","13.266","2026-03-29T00:58:45.1178320Z","6.125","True","False","420","359","12736","30.324","107"
+"usb_installer/autorun.inf","usb_installer","usb_installer","autorun.inf",".inf","155","0.151","2026-03-29T00:58:45.1019674Z","6.125","True","False","5","5","145","29","45"
+"usb_installer/README.md","usb_installer","usb_installer","README.md",".md","813","0.794","2026-04-01T15:28:07.8559718Z","2.521","True","False","29","19","747","25.759","88"
