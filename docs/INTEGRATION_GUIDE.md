@@ -6,14 +6,14 @@
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Installation](#installation)
-3. [Quick Start (5 Minutes)](#quick-start-5-minutes)
-4. [Detailed Integration](#detailed-integration)
-5. [Configuration Reference](#configuration-reference)
-6. [Best Practices](#best-practices)
-7. [API Reference](#api-reference)
-8. [Troubleshooting](#troubleshooting)
+1. [[#overview|Overview]]
+2. [[#installation|Installation]]
+3. [[#quick-start-5-minutes|Quick Start (5 Minutes)]]
+4. [[#detailed-integration|Detailed Integration]]
+5. [[#configuration-reference|Configuration Reference]]
+6. [[#best-practices|Best Practices]]
+7. [[#api-reference|API Reference]]
+8. [[#troubleshooting|Troubleshooting]]
 
 ---
 

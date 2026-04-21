@@ -1,3 +1,27 @@
+---
+type: guide
+tags:
+  - p2-root
+  - status
+  - guide
+  - obsidian
+  - excalidraw-plugin
+  - visualization
+created: 2024-01-01
+last_verified: 2026-04-20
+status: current
+related_systems:
+  - excalidraw-plugin
+  - visualization
+  - diagramming
+stakeholders:
+  - architecture-team
+  - visualization-team
+report_type: guide
+supersedes: []
+review_cycle: as-needed
+---
+
 # Excalidraw Plugin Guide
 
 ## Overview

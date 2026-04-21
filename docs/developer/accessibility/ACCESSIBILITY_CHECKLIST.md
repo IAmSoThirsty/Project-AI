@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, accessibility, pyqt6, gui-accessibility, wcag, inclusive-design]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [pyqt6-gui, leather-book-ui, screen-readers, keyboard-navigation]
+stakeholders: [developers, accessibility-engineers, ui-developers, qa-team]
+audience: intermediate
+prerequisites: [pyqt6-knowledge, accessibility-basics, wcag-awareness, inclusive-design-principles]
+estimated_time: 30 minutes
+review_cycle: quarterly
+---
 # Accessibility Checklist for PyQt GUI
 
 This checklist provides a minimum accessibility baseline for the Leather Book PyQt GUI.

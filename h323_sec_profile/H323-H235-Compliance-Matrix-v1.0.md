@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, compliance, certification, audit]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, compliance-framework, audit-system]
+stakeholders: [compliance-team, security-team, audit-team]
+system_category: security-protocol
+external_standard: H.323, H.235, ITU-T
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 / H.235 Compliance Matrix
 
 ## Version 1.0 — Enterprise Certification Grid

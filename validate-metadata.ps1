@@ -396,16 +396,26 @@ function Validate-FieldType {
     
     $expectedType = $FieldSchema.type
     
-    $actualType = switch ($Value.GetType().Name) {
-        "String"    { "string" }
-        "Int32"     { "number" }
-        "Int64"     { "number" }
-        "Double"    { "number" }
-        "Boolean"   { "boolean" }
-        "Object[]"  { "array" }
-        "ArrayList" { "array" }
-        "Hashtable" { "object" }
-        default     { "unknown" }
+    # Determine actual type
+    $actualType = "unknown"
+    
+    if ($Value -is [string]) {
+        $actualType = "string"
+    }
+    elseif ($Value -is [int] -or $Value -is [long] -or $Value -is [double] -or $Value -is [decimal]) {
+        $actualType = "number"
+    }
+    elseif ($Value -is [bool]) {
+        $actualType = "boolean"
+    }
+    elseif ($Value -is [array] -or $Value -is [System.Collections.ArrayList] -or $Value -is [System.Collections.Generic.List[object]]) {
+        $actualType = "array"
+    }
+    elseif ($Value -is [hashtable] -or $Value -is [System.Collections.Specialized.OrderedDictionary]) {
+        $actualType = "object"
+    }
+    elseif ($null -ne $Value -and $Value.GetType().Name -eq "Object[]") {
+        $actualType = "array"
     }
     
     if ($expectedType -and $actualType -ne $expectedType) {

@@ -1,3 +1,19 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, design-patterns, observer-pattern, behavioral-pattern, event-driven, pub-sub]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [event-listener, metrics-collection, monitoring, audit-logging]
+stakeholders: [architecture-team, developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: class
+format: code
+pattern_category: behavioral
+---
+
 # Observer Pattern in Project-AI
 
 ## Overview
@@ -42,5 +58,5 @@ class MetricsObserver(EventListener):
 
 ## Related Documentation
 
-- **[Domain Events](../domain/domain_events.md)** - Event definitions
+- **[[../domain/domain_events.md|Domain Events]]** - Event definitions
 - **[Monitoring](../../monitoring/README.md)** - System monitoring

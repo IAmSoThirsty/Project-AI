@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, logging, event-taxonomy, observability]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, logging-infrastructure, siem]
+stakeholders: [operations-team, security-team, compliance-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 Logging Schema & Event Taxonomy
 
 Version 1.0 — Standardized Log Fields, Event Types, and Severity Model

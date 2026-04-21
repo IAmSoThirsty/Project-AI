@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, release-notes, v1.0.0, production-release, triumvirate, changelog, multi-platform]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [triumvirate, governance-kernel, desktop-app, web-frontend, android-app]
+stakeholders: [devops, deployment-team, release-managers, end-users, project-leads]
+audience: intermediate
+prerequisites: [project-overview, version-history-understanding]
+estimated_time: 20 minutes
+review_cycle: quarterly
+---
 # Project-AI v1.0.0 - Production Release Notes
 
 **Release Date:** January 28, 2026  

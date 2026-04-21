@@ -1,3 +1,27 @@
+---
+type: plan
+tags:
+  - p2-root
+  - status
+  - plan
+  - governance
+  - execution-convergence
+  - desktop-integration
+created: 2026-04-13
+last_verified: 2026-04-20
+status: archived
+related_systems:
+  - governance-pipeline
+  - desktop-gui
+  - dashboard-main
+stakeholders:
+  - governance-team
+  - desktop-team
+report_type: plan
+supersedes: []
+review_cycle: as-needed
+---
+
 # Execution Path Convergence - The Real Fix
 
 **Discovery**: Desktop adapter IS injected, routing methods EXIST, but **never called**

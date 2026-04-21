@@ -1,3 +1,19 @@
+---
+type: demo
+tags: [demo, security, golang, reflection, runtime-security, learning]
+created: 2024-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [tarl, go-runtime, reflection-api, unsafe-package, cgo]
+stakeholders: [security-engineers, go-developers, learners, architects]
+complexity_level: advanced
+demonstrates: [reflection-attacks, unsafe-pointer-access, unexported-field-bypass, interface-type-assertions, cgo-memory-access, struct-tag-limitations, runtime-introspection]
+runnable: true
+estimated_completion: 8
+requires: [go-1.18+]
+review_cycle: quarterly
+---
+
 # Go Security Demonstration
 
 ## Overview

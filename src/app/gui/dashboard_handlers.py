@@ -15,6 +15,11 @@ from app.security.data_validation import sanitize_input, validate_email, validat
 logger = logging.getLogger(__name__)
 
 
+# 📚 Documentation Links:
+# - [[relationships/gui/03_HANDLER_RELATIONSHIPS.md]]
+# - [[source-docs/gui/dashboard_handlers.md]]
+#
+
 class DashboardHandlers:
     def generate_learning_path(self):
         """Generate a learning path based on user input (governance-routed)"""

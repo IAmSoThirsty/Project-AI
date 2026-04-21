@@ -1,3 +1,19 @@
+---
+type: demo
+tags: [demo, security, asymmetric-security, constitutional-ai, interactive]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [asymmetric-security-engine, constitutional-validator, god-tier-security, flask-api, web-ui]
+stakeholders: [security-engineers, developers, learners, auditors]
+complexity_level: intermediate
+demonstrates: [asymmetric-security-framework, constitutional-validation, privilege-escalation-protection, cross-tenant-isolation, trust-score-validation, temporal-security, clock-skew-detection, multi-stage-attack-prevention, audit-trails, forensics]
+runnable: true
+estimated_completion: 10
+requires: [docker, python-3.11+, flask, modern-browser]
+review_cycle: quarterly
+---
+
 # Thirsty's Asymmetric Security Framework - Public Demo
 
 **Try the framework with 5 live attack scenarios**

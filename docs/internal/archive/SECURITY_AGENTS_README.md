@@ -1,3 +1,37 @@
+---
+title: "SECURITY AGENTS README"
+id: "security-agents-readme"
+type: historical
+tags:
+  - p3-archive
+  - historical
+  - archive
+  - testing
+  - governance
+  - ci-cd
+  - security
+  - architecture
+created: 2026-02-10
+last_verified: 2026-04-20
+status: archived
+archived_date: 2026-04-19
+archive_reason: migrated
+related_systems:
+  - security-systems
+  - test-framework
+  - ci-cd-pipeline
+  - architecture
+stakeholders:
+  - developer
+  - architect
+audience:
+  - developer
+  - architect
+review_cycle: annually
+historical_value: high
+restore_candidate: false
+path_confirmed: T:/Project-AI-main/docs/internal/archive/SECURITY_AGENTS_README.md
+---
 # Security Agents - Quick Reference
 
 ## Overview

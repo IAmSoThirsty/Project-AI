@@ -1,3 +1,21 @@
+---
+type: deployment-guide
+tags: [deployment, hydra-50, docker, kubernetes, fastapi, production, telemetry, monitoring]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [hydra-50-engine, hydra-telemetry, docker-containers, kubernetes-cluster, prometheus]
+stakeholders: [developers, devops, deployment-engineers, sre-team]
+audience: intermediate
+prerequisites: [docker-basics, kubernetes-fundamentals, python-deployment, hydra-understanding]
+estimated_time: 90 minutes
+review_cycle: monthly
+deployment_target: multi-platform
+deployment_complexity: complex
+production_ready: true
+platform_support: [linux, macos, docker, kubernetes]
+monitoring_systems: [prometheus, grafana]
+---
 # HYDRA-50 DEPLOYMENT GUIDE
 **God-Tier Production Deployment**
 

@@ -1,12 +1,23 @@
 ---
 title: "Project: <% tp.file.title %>"
 created: <% tp.date.now("YYYY-MM-DD") %>
-type: project
+type: template
+template_type: project
 status: <% tp.system.suggester(["🟢 Active", "🟡 Planning", "🔴 On Hold", "✅ Completed", "❌ Cancelled"], ["active", "planning", "on-hold", "completed", "cancelled"]) %>
 priority: <% tp.system.suggester(["🔴 High", "🟡 Medium", "🟢 Low"], ["high", "medium", "low"]) %>
 start_date: <% tp.system.prompt("Start date (YYYY-MM-DD)", tp.date.now("YYYY-MM-DD")) %>
 due_date: <% tp.system.prompt("Due date (YYYY-MM-DD)", tp.date.now("YYYY-MM-DD", 30)) %>
-tags: [project]
+tags: [template, project-management, planning, templater]
+last_verified: 2026-04-20
+template_status: current
+related_systems: [templater, obsidian, dataview]
+stakeholders: [project-managers, developers, team-leads]
+complexity_level: intermediate
+demonstrates: [project-planning, okr-tracking, milestone-management, team-coordination, templater-prompts, dataview-queries]
+runnable: true
+estimated_completion: 15
+requires: [templater-plugin, dataview-plugin]
+review_cycle: quarterly
 ---
 
 # 🚀 <% tp.file.title %>

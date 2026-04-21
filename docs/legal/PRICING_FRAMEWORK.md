@@ -1,3 +1,21 @@
+---
+type: governance-policy
+tags: [governance, legal, pricing-framework, tiers, business-model, commercial-rights]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [tier-management, commercial-licensing, payment-systems]
+stakeholders: [business-team, legal-team, users, finance-team]
+sovereignty_level: governed
+immutability: revisable
+enforcement: manual
+review_cycle: quarterly
+document_type: pricing-framework
+tier_structure: [solo, team, enterprise, government]
+lifetime_options_available: true
+version: 1.0.0
+---
+
 # Project-AI Pricing Framework
 
 **Version:** 1.0.0  

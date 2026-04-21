@@ -1,3 +1,25 @@
+---
+created: '2026-02-03'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: engine-architecture
+tags:
+- emp-defense
+- engines
+- documentation
+engine_type: emp-defense
+implementation_status: in-progress
+language: python
+related_systems:
+- simulation-engine
+- emp-modeling
+- grid-analysis
+stakeholders:
+- architecture-team
+- simulation-team
+---
+
 # EMP Global Civilization Disruption Defense Engine
 
 ## Overview

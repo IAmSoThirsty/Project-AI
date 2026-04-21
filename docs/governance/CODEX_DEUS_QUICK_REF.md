@@ -1,3 +1,50 @@
+---
+title: "Codex Deus Ultimate - Quick Reference Guide"
+id: codex-deus-quick-ref
+type: guide
+status: active
+created_date: 2024-01-01
+updated_date: 2024-12-01
+version: 1.0.0
+author: DevOps Team
+contributors: ["SRE Team", "Security Team"]
+policy_level: P2
+enforcement_level: recommended
+tags:
+  - area:governance
+  - area:automation
+  - area:cicd
+  - type:guide
+  - type:reference
+  - component:workflows
+  - component:cli
+  - audience:devops
+  - audience:developer
+  - audience:release-manager
+  - priority:high
+  - special:quick-reference
+compliance_frameworks: []
+classification: public
+related_systems:
+  - codex-deus
+  - github-actions
+  - workflow-automation
+  - ci-cd-pipeline
+stakeholders:
+  - governance-team
+  - devops-team
+last_verified: 2026-04-20
+relationships:
+  governed_by: ["CODEX_DEUS_INDEX", "copilot_workspace_profile"]
+  related_docs: ["CODEX_DEUS_ULTIMATE_SUMMARY"]
+  references: [".github/workflows/codex-deus-ultimate.yml"]
+workflow_references:
+  - ".github/workflows/codex-deus-ultimate.yml"
+purpose: "Quick reference guide for day-to-day Codex Deus Ultimate workflow operations including commands, triggers, monitoring, and troubleshooting"
+scope: "GitHub CLI commands, phase overview, trigger patterns, artifact locations, environment variables, conditional logic, troubleshooting procedures, best practices"
+estimated_time: "5-10 minutes (quick lookup)"
+---
+
 # 🏛️ Codex Deus Ultimate - Quick Reference
 
 ## At a Glance

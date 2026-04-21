@@ -1,3 +1,54 @@
+---
+title: Module Contracts - PACE Engine Interface Specifications
+id: module-contracts-spec
+type: specification
+version: 1.0
+created: 2026-01-23
+created_date: 2026-01-23
+last_verified: 2026-04-20
+updated_date: 2026-01-23
+status: active
+author: Architecture Team
+contributors: []
+# Architecture-Specific Metadata
+architecture_layer: application
+design_pattern: ["interface-segregation", "dependency-inversion", "contract-first"]
+implements: ["component-interface", "policy-interface", "cognition-interface", "workflow-interface"]
+uses: []
+quality_attributes: ["modularity", "testability", "extensibility", "contract-enforcement"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/backend"]
+tags: ["module-contracts", "interfaces", "component-contracts", "PACE-system", "api-specification"]
+component: ["component-interface", "policy-engine-interface", "cognition-engine-interface", "workflow-engine-interface"]
+# Relationships
+related_docs: ["pace-engine-spec", "agent-model-spec", "capability-model-spec"]
+related_systems: ["pace-engine", "agent-coordinator", "capability-system"]
+depends_on: []
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "developers", "api-consumers"]
+stakeholders: ["developers", "architecture-team", "product-team"]
+priority: P0
+difficulty: intermediate
+estimated_reading_time: 18 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: low
+compliance: []
+# Discovery
+keywords: ["contracts", "interfaces", "API", "component interfaces", "PACE"]
+search_terms: ["module contracts", "component interface", "policy interface", "cognition interface"]
+aliases: ["Interface Specifications", "PACE Contracts"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: null
+---
+
+
 # Module Contracts
 
 **Version:** 1.0  
@@ -842,7 +893,7 @@ All module implementations must provide:
 
 ## See Also
 
-- [ENGINE_SPEC.md](ENGINE_SPEC.md) - Engine specification
+- [[ENGINE_SPEC.md|ENGINE_SPEC.md]] - Engine specification
 - [PACE_ARCHITECTURE.md](PACE_ARCHITECTURE.md) - Architecture overview
-- [IDENTITY_ENGINE.md](IDENTITY_ENGINE.md) - Identity management details
-- [WORKFLOW_ENGINE.md](WORKFLOW_ENGINE.md) - Workflow execution details
+- [[IDENTITY_ENGINE.md|IDENTITY_ENGINE.md]] - Identity management details
+- [[WORKFLOW_ENGINE.md|WORKFLOW_ENGINE.md]] - Workflow execution details

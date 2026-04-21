@@ -1,3 +1,54 @@
+---
+title: Identity Engine Specification - Authentication & Authorization
+id: identity-engine-spec
+type: specification
+version: 1.0
+created: 2026-01-23
+created_date: 2026-01-23
+last_verified: 2026-04-20
+updated_date: 2026-01-23
+status: active
+author: Architecture Team
+contributors: ["Security Team"]
+# Architecture-Specific Metadata
+architecture_layer: infrastructure
+design_pattern: ["token-based-auth", "session-management", "password-hashing"]
+implements: ["identity-manager", "auth-provider", "session-manager", "token-manager"]
+uses: ["bcrypt", "jwt", "identity-store"]
+quality_attributes: ["security", "authentication", "authorization", "session-tracking"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/infrastructure", "security", "security/authentication"]
+tags: ["identity-engine", "authentication", "authorization", "session-management", "token-management", "PACE-system"]
+component: ["identity-manager", "auth-provider", "session-manager", "token-manager", "identity-store"]
+# Relationships
+related_docs: ["pace-engine-spec", "architecture-security-ethics-overview"]
+related_systems: ["pace-engine", "identity-engine"]
+depends_on: ["pace-engine-spec"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "security-engineers", "backend-developers"]
+stakeholders: ["platform-team", "devops-team", "developers", "architecture-team"]
+priority: P0
+difficulty: intermediate
+estimated_reading_time: 15 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: confidential
+sensitivity: high
+compliance: ["password-security", "token-security"]
+# Discovery
+keywords: ["identity", "authentication", "authorization", "session", "tokens"]
+search_terms: ["identity engine", "auth provider", "session manager", "bcrypt"]
+aliases: ["Identity Manager", "Auth System"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: null
+---
+
+
 # Identity Engine Specification
 
 **Version:** 1.0  
@@ -512,6 +563,6 @@ The Identity Engine works closely with the Policy Engine:
 
 ## See Also
 
-- [MODULE_CONTRACTS.md](MODULE_CONTRACTS.md) - Identity Manager interface
+- [[MODULE_CONTRACTS.md|MODULE_CONTRACTS.md]] - Identity Manager interface
 - [PACE_ARCHITECTURE.md](PACE_ARCHITECTURE.md) - Overall architecture
-- [CAPABILITY_MODEL.md](CAPABILITY_MODEL.md) - Capability authorization
+- [[CAPABILITY_MODEL.md|CAPABILITY_MODEL.md]] - Capability authorization

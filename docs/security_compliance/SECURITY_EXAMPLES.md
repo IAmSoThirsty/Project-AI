@@ -1,14 +1,96 @@
+---
+title: "Project-AI Security Framework Examples"
+id: "security-examples"
+type: "guide"
+version: "1.0.0"
+created_date: "2026-01-20"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:testing"
+  - "type:guide"
+  - "type:reference"
+  - "component:security-tests"
+  - "component:robustness-metrics"
+  - "component:asl3"
+  - "component:cbrn"
+  - "audience:developer"
+  - "audience:security-engineer"
+  - "priority:p1-high"
+technologies:
+  - "Python"
+  - "Red Hat Expert Defense"
+  - "Red Team Stress Test"
+  - "ASL-3 Security Framework"
+  - "CBRN Classifier"
+  - "Robustness Metrics"
+difficulty: "advanced"
+estimated_time: "PT150M"
+prerequisites:
+  - "Security framework understanding"
+  - "Python security testing"
+  - "ASL-3 concepts"
+summary: "Comprehensive examples of security features including 8,850 test scenarios, robustness metrics, ASL-3 framework, CBRN classification, and complete workflow integration patterns."
+scope: "Complete example coverage: SQL injection defense, AI/ML adversarial attacks, robustness metrics, ASL-3 security, CBRN classification, end-to-end workflows with code samples and outputs"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "multi-layer-sql-injection"
+  - "ai-ml-adversarial-attacks"
+  - "gradient-based-perturbation"
+  - "cbrn-requests"
+  - "cyber-offense"
+validates:
+  - "8,850 security test scenarios"
+  - "Robustness metrics collection"
+  - "ASL-3 security controls"
+  - "CBRN classification accuracy"
+  - "Defense effectiveness"
+compliance:
+  - "OWASP Testing Guide"
+  - "ASL-3 Standards"
+  - "CBRN Detection Framework"
+stakeholders:
+  - security-team   - compliance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Example Documentation"
+cwe_ids:
+  - "CWE-89: SQL Injection"
+  - "CWE-77: Command Injection"
+  - "CWE-94: Code Injection"
+related_docs:
+  - "security-framework"
+  - "red-hat-expert-simulations"
+  - "red-team-stress-test-results"
+  - "asl3-implementation"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "testing-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "developers"
+  - "security-engineers"
+  - "qa-engineers"
+  - "security-researchers"
+---
+
 # Project-AI Security Framework Examples
 
 This document provides comprehensive examples of all security features implemented in Project-AI, including the 8,850 security test scenarios, robustness metrics, and ASL-3 security framework.
 
 ## Table of Contents
 
-1. [Security Test Scenarios](#security-test-scenarios)
-1. [Robustness Metrics Examples](#robustness-metrics-examples)
-1. [ASL-3 Security Framework Examples](#asl-3-security-framework-examples)
-1. [CBRN Classification Examples](#cbrn-classification-examples)
-1. [Complete Workflow Examples](#complete-workflow-examples)
+1. [[#security-test-scenarios|Security Test Scenarios]]
+1. [[#robustness-metrics-examples|Robustness Metrics Examples]]
+1. [[#asl-3-security-framework-examples|ASL-3 Security Framework Examples]]
+1. [[#cbrn-classification-examples|CBRN Classification Examples]]
+1. [[#complete-workflow-examples|Complete Workflow Examples]]
 
 ---
 

@@ -1,3 +1,20 @@
+---
+type: governance-policy
+tags: [governance, compliance, checklist, pre-deployment, validation]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [compliance-validation, deployment-systems, acceptance-ledger]
+stakeholders: [compliance-officers, deployment-team, governance-team]
+sovereignty_level: governed
+immutability: revisable
+enforcement: manual
+review_cycle: quarterly
+checklist_type: pre-deployment
+validation_scope: [legal-framework, user-acceptance, technical-prerequisites]
+version: 1.0.0
+---
+
 # Project-AI Compliance Checklist
 
 **Version:** 1.0.0  

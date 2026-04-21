@@ -1,3 +1,45 @@
+---
+title: "ChatGPT/OpenAI Integration Guide"
+id: chatgpt-openai-integration
+type: guide
+version: 1.1.0
+created_date: 2026-01-28
+updated_date: 2026-01-30
+status: active
+author: AI Integration Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: reference
+retention_policy: permanent
+category: development
+tags:
+  - openai
+  - chatgpt
+  - gpt-3.5
+  - gpt-4
+  - dall-e
+  - embeddings
+  - api-integration
+technologies:
+  - OpenAI API
+  - GPT-3.5-turbo
+  - GPT-4
+  - DALL-E 3
+  - text-embedding-ada-002
+  - Python
+related_docs:
+  - PERPLEXITY_INTEGRATION.md
+  - ../architecture/ai-providers-architecture.md
+  - learning_paths.py
+  - intelligence_engine.py
+  - image_generator.py
+dependencies:
+  - openai
+scope: "Integration guide for OpenAI GPT models and APIs across conversational AI, learning paths, image generation, and RAG systems"
+description: Comprehensive integration guide for ChatGPT/OpenAI services including GPT-3.5/4 for conversational AI, DALL-E 3 for image generation, and embeddings for semantic search and RAG.
+---
+
 # ChatGPT/OpenAI Integration Guide
 
 **Last Updated:** January 28, 2026  
@@ -518,7 +560,7 @@ class IdentityIntegratedIntelligenceEngine:
 
 - **[.env.example](../.env.example)** - Environment variable template
 - **[IMAGE_GENERATION_QUICKSTART.md](overview/IMAGE_GENERATION_QUICKSTART.md)** - Image generation setup
-- **[FUNCTION_REGISTRY_KNOWLEDGE_BASE.md](FUNCTION_REGISTRY_KNOWLEDGE_BASE.md)** - Function calling guide
+- **[[FUNCTION_REGISTRY_KNOWLEDGE_BASE.md|FUNCTION_REGISTRY_KNOWLEDGE_BASE.md]]** - Function calling guide
 - **[SECRET_MANAGEMENT.md](security/SECRET_MANAGEMENT.md)** - API key security best practices
 - **[TECHNICAL_WHITE_PAPER.md](../TECHNICAL_WHITE_PAPER.md)** - Complete system architecture
 
@@ -614,7 +656,7 @@ Google Antigravity is a revolutionary AI-powered IDE (Integrated Development Env
 - ✅ Custom agent configurations prepared
 
 **Learn more:** See the complete integration guide:
-- **[Google Antigravity IDE Integration Guide](GOOGLE_ANTIGRAVITY_IDE_INTEGRATION.md)** - Full setup and configuration
+- **[[GOOGLE_ANTIGRAVITY_IDE_INTEGRATION.md|Google Antigravity IDE Integration Guide]]** - Full setup and configuration
 
 **Why it fits Project-AI:**
 1. Project-AI already has agent systems (oversight, planner, validator)

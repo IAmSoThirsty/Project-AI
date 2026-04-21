@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, incident-response, security, playbook]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, soc, incident-management]
+stakeholders: [security-team, soc-team, incident-response-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # Incident Response Playbook for H.323 Security Events
 
 ## Version 1.0 — Detection, Containment, Eradication, Recovery

@@ -1,3 +1,27 @@
+---
+type: guide
+tags:
+  - p2-root
+  - status
+  - guide
+  - obsidian
+  - dataview-plugin
+  - setup
+created: 2024-12-20
+last_verified: 2026-04-20
+status: current
+related_systems:
+  - obsidian-vault
+  - dataview-plugin
+  - query-framework
+stakeholders:
+  - documentation-team
+  - obsidian-users
+report_type: guide
+supersedes: []
+review_cycle: monthly
+---
+
 # Dataview Setup Guide
 
 **Production-Ready Installation and Configuration Guide for Obsidian Dataview Plugin**

@@ -1,3 +1,26 @@
+---
+type: diagram
+tags: [p1-diagrams, diagrams, api-reference, rest, endpoints, flask, authentication]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [flask-api, jwt-authentication, openapi, swagger]
+stakeholders: [backend-team, api-consumers, frontend-developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: reference
+format: openapi
+endpoint_categories: 6
+---
+keywords:
+  - rest-api
+  - flask-endpoints
+  - jwt-authentication
+  - api-specification
+  - openapi
+---
+
 # REST API Specification
 
 ## Overview

@@ -1,3 +1,54 @@
+---
+title: TARL System Architecture - Policy Enforcement & Governance
+id: tarl-architecture
+type: architecture
+version: 1.0
+created: 2026-02-01
+created_date: 2026-02-01
+last_verified: 2026-04-20
+updated_date: 2026-02-01
+status: active
+author: TARL Team
+contributors: ["Governance Team", "Execution Team"]
+# Architecture-Specific Metadata
+architecture_layer: infrastructure
+design_pattern: ["policy-enforcement", "execution-gate", "policy-chain"]
+implements: ["tarl-runtime", "tarl-gate", "policy-chain", "tarl-codex-bridge"]
+uses: ["execution-kernel", "governance-core", "codex-deus"]
+quality_attributes: ["policy-enforcement", "governance-integration", "escalation-handling"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/infrastructure", "governance"]
+tags: ["tarl", "policy-enforcement", "governance", "execution-gate", "codex-deus", "policy-chain"]
+component: ["tarl-runtime", "tarl-gate", "execution-kernel", "tarl-codex-bridge"]
+# Relationships
+related_docs: ["architecture-overview", "planetary-defense-monolith", "god-tier-platform-implementation"]
+related_systems: ["planetary-defense", "god-tier-platform", "kernel", "governance-service", "tarl-governance"]
+depends_on: ["architecture-overview"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "governance-engineers", "policy-developers"]
+stakeholders: ["platform-team", "security-team", "devops-team", "compliance-team", "developers", "architecture-team"]
+priority: P0
+difficulty: advanced
+estimated_reading_time: 16 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: medium
+compliance: ["policy-enforcement", "governance-escalation"]
+# Discovery
+keywords: ["TARL", "policy enforcement", "execution gate", "governance", "Codex Deus"]
+search_terms: ["TarlGate", "policy chain", "TarlEnforcementError", "escalation"]
+aliases: ["TARL System", "Policy Enforcement Architecture"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: 86%
+---
+
+
 # TARL System Architecture
 
 ```

@@ -1,3 +1,26 @@
+---
+created: '2026-02-03'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: engine-architecture
+tags:
+- ai-takeover
+- engines
+- documentation
+engine_type: ai-takeover
+implementation_status: complete
+language: python
+related_systems:
+- constraint-system
+- threat-analysis
+- simulation-engine
+stakeholders:
+- architecture-team
+- security-team
+- governance-team
+---
+
 # AI Takeover Hard Stress Simulation Engine — Final Integration Summary
 
 **Engine ID:** ENGINE_AI_TAKEOVER_TERMINAL_V1  

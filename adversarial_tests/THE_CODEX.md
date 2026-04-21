@@ -1,3 +1,17 @@
+---
+type: adversarial-spec
+tags: [testing, adversarial, security-tests, red-teaming, architecture, methodology]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, four-laws, ai-persona, adversarial-suite]
+stakeholders: [security-team, ai-safety-team, researchers, architects]
+test_type: adversarial
+coverage_target: complete adversarial testing architecture and methodology documentation
+automation_status: automated
+review_cycle: quarterly
+---
+
 # 📜 THE ADVERSARIAL RED-TEAMING CODEX 📜
 
 ## The Complete Scrolls of Galahad's Defense Against the Darkness

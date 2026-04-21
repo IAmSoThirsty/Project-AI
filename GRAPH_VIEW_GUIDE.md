@@ -1,3 +1,28 @@
+---
+type: guide
+tags:
+  - p2-root
+  - status
+  - guide
+  - obsidian
+  - graph-analysis
+  - visualization
+created: 2024-01-01
+last_verified: 2026-04-20
+status: current
+related_systems:
+  - graph-analysis-plugin
+  - knowledge-graph
+  - architecture-visualization
+stakeholders:
+  - architecture-team
+  - plugin-team
+report_type: guide
+agent_id: AGENT-014
+supersedes: []
+review_cycle: as-needed
+---
+
 # Graph View Guide: Navigating Project-AI Knowledge Architecture
 
 ## Overview

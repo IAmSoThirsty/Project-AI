@@ -1,3 +1,19 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, design-patterns, event-sourcing, event-store, audit-trail, time-travel, state-reconstruction]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [event-store, event-bus, aggregate-reconstruction, audit-trail]
+stakeholders: [architecture-team, developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: ascii
+pattern_category: architectural
+---
+
 # Event Sourcing in Project-AI
 
 ## Overview
@@ -265,6 +281,6 @@ class TestEventStore:
 
 ## Related Documentation
 
-- **[Domain Events](../domain/domain_events.md)** - Event definitions
-- **[Aggregates](../aggregate/README.md)** - Event-sourced aggregates
+- **[[../domain/domain_events.md|Domain Events]]** - Event definitions
+- **[[../aggregate/README.md|Aggregates]]** - Event-sourced aggregates
 - **[Event Projections](event_projections.md)** - Read model updates

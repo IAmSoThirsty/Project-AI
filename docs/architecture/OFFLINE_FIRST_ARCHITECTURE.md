@@ -1,3 +1,54 @@
+---
+title: Offline-First Architecture - RAG, Optical Flow, Local LLM
+id: offline-first-architecture
+type: architecture
+version: 1.0
+created: 2026-02-01
+created_date: 2026-02-01
+last_verified: 2026-04-20
+updated_date: 2026-02-01
+status: active
+author: Offline Systems Team
+contributors: ["RAG Team", "Computer Vision Team", "LLM Team"]
+# Architecture-Specific Metadata
+architecture_layer: application
+design_pattern: ["offline-first", "local-fallback", "rag-pattern", "vector-search"]
+implements: ["rag-system", "optical-flow-detector", "local-llm-manager"]
+uses: ["sentence-transformers", "opencv", "farneback-flow", "llama-cpp"]
+quality_attributes: ["offline-capability", "network-independence", "local-processing", "mobile-ready"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/data", "ai-ml"]
+tags: ["offline-first", "rag", "optical-flow", "local-llm", "vector-search", "embedding", "computer-vision"]
+component: ["rag-system", "optical-flow-detector", "local-llm-manager"]
+# Relationships
+related_docs: ["architecture-overview", "platform-compatibility"]
+related_systems: ["core-architecture"]
+depends_on: ["architecture-overview"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "ml-engineers", "mobile-developers"]
+stakeholders: ["developers", "architecture-team", "product-team"]
+priority: P1
+difficulty: advanced
+estimated_reading_time: 18 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: low
+compliance: []
+# Discovery
+keywords: ["offline-first", "RAG", "vector search", "optical flow", "local LLM", "embeddings"]
+search_terms: ["sentence transformers", "Farneback", "Lucas-Kanade", "llama.cpp"]
+aliases: ["Local Fallback Offline", "FBO System", "RAG Architecture"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: 76%
+---
+
+
 # Offline-First Architecture - Project-AI
 
 ## Overview

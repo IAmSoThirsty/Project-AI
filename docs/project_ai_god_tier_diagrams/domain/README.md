@@ -1,3 +1,29 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, domain-driven-design, ddd, bounded-contexts, ubiquitous-language]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [bounded-contexts, domain-models, domain-events, aggregates, repositories]
+stakeholders: [architecture-team, developers, domain-experts]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: ascii
+bounded_contexts: 4
+---
+  - "[[domain_events]]"
+keywords:
+  - domain-driven-design
+  - ddd
+  - bounded-contexts
+  - domain-models
+  - ubiquitous-language
+  - tactical-patterns
+  - strategic-patterns
+---
+
 # Domain-Driven Design (DDD) in Project-AI
 
 ## Overview
@@ -340,12 +366,12 @@ class TestGovernanceAggregate:
 
 ## Related Documentation
 
-- **[Bounded Contexts](bounded_contexts.md)** - Detailed context definitions
-- **[Domain Models](domain_models.md)** - Entity and value object patterns
-- **[Domain Events](domain_events.md)** - Event definitions and handlers
-- **[Aggregates](../aggregate/README.md)** - Aggregate implementations
-- **[Command Pattern](../command/README.md)** - CQRS command side
-- **[Event Sourcing](../event/README.md)** - Event store architecture
+- **[[bounded_contexts.md|Bounded Contexts]]** - Detailed context definitions
+- **[[domain_models.md|Domain Models]]** - Entity and value object patterns
+- **[[domain_events.md|Domain Events]]** - Event definitions and handlers
+- **[[../aggregate/README.md|Aggregates]]** - Aggregate implementations
+- **[[../command/README.md|Command Pattern]]** - CQRS command side
+- **[[../event/README.md|Event Sourcing]]** - Event store architecture
 
 ## References
 

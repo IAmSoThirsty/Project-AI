@@ -1,3 +1,23 @@
+---
+type: roadmap
+tags: [p1-diagrams, strategy, monitoring, alerting, incident-management, on-call, escalation]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [alertmanager, pagerduty, slack, email, prometheus]
+stakeholders: [devops-team, sre, on-call-engineers]
+audience: technical-leadership
+document_purpose: strategic
+review_cycle: quarterly
+diagram_type: strategy
+format: markdown
+severity_levels: 4
+---
+  - on-call
+  - pagerduty
+  - alert-routing
+---
+
 # Alerting Strategy
 
 ## Alerting Philosophy

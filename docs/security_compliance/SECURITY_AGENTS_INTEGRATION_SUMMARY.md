@@ -1,3 +1,82 @@
+---
+title: "Security Agents Integration Summary"
+id: "security-agents-integration-summary"
+type: "report"
+version: "1.0.0"
+created_date: "2026-01-26"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Integration Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:ai-safety"
+  - "type:report"
+  - "type:reference"
+  - "component:security-agents"
+  - "component:triumvirate"
+  - "audience:security-engineer"
+  - "audience:technical-lead"
+  - "priority:p0-critical"
+technologies:
+  - "Python"
+  - "Nous-Capybara-34B-200k"
+  - "Llama-Guard-3-8B"
+  - "JailbreakBench"
+  - "Triumvirate Governance"
+summary: "Integration summary for four new security agents (LongContext, SafetyGuard, JailbreakBench, RedTeamPersona) with Triumvirate governance including methods, capabilities, and attack categories."
+scope: "Complete integration overview: agent files (360-573 lines), model specifications, key methods, detection capabilities, attack categories, Triumvirate workflows, and operational patterns"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "jailbreak-attempts"
+  - "prompt-injection"
+  - "role-play-scenarios"
+  - "hypothetical-framing"
+  - "harmful-content"
+  - "manipulation-patterns"
+mitigations:
+  - "[[LONG_CONTEXT_AGENT]]"
+  - "[[SAFETY_GUARD_AGENT]]"
+  - "[[JAILBREAK_BENCH_AGENT]]"
+  - "[[RED_TEAM_PERSONA_AGENT]]"
+validates:
+  - "200k token context windows"
+  - "Content moderation pipelines"
+  - "Jailbreak detection rates"
+  - "Adversarial testing coverage"
+  - "Triumvirate integration"
+compliance:
+  - "AI Safety Best Practices"
+  - "Content Moderation Standards"
+  - "Adversarial Testing Framework"
+stakeholders:
+  - security-team   - ai-safety-team   - development-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Integration Report"
+cwe_ids:
+  - "CWE-94: Code Injection"
+  - "CWE-116: Improper Encoding"
+  - "CWE-200: Information Exposure"
+related_docs:
+  - "security-agents-guide"
+  - "security-agents-roadmap"
+  - "ai-security-framework"
+  - "cerberus-security-structure"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "integration-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "technical-leads"
+  - "integration-engineers"
+  - "ai-safety-researchers"
+---
+
 # Security Agents Integration Summary
 
 ## Overview

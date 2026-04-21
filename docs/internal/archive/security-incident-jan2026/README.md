@@ -1,3 +1,24 @@
+---
+title: "README"
+id: "readme"
+type: historical_record
+status: archived
+archived_date: 2026-04-19
+archive_reason: completed
+historical_value: high
+restore_candidate: false
+audience:
+  - developer
+  - architect
+tags:
+  - historical
+  - archive
+  - implementation
+  - ci-cd
+  - security
+path_confirmed: T:/Project-AI-main/docs/internal/archive/security-incident-jan2026/README.md
+---
+
 # Security Incident - January 9, 2026 (ARCHIVED)
 
 **Status**: RESOLVED  

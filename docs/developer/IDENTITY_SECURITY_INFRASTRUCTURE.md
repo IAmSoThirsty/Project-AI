@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, identity, security, infrastructure, architecture, foundational-principles]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [identity-management, security-framework, infrastructure-layer, authentication]
+stakeholders: [architects, security-engineers, infrastructure-engineers]
+audience: intermediate
+prerequisites: [security-fundamentals, infrastructure-basics, identity-concepts, system-design]
+estimated_time: 90 minutes
+review_cycle: quarterly
+---
 # Identity, Security, and Infrastructure: Foundational Principles
 
 **Document Version:** 1.0  
@@ -567,10 +580,10 @@ Identity, security, and infrastructure are not afterthoughts—they are **prereq
 ## Additional Resources
 
 ### Internal Documentation
-- [AGI Charter](../governance/AGI_CHARTER.md) - Identity rights and dignity
-- [Security Framework](../security_compliance/AI_SECURITY_FRAMEWORK.md) - Security policies
-- [Infrastructure Production Guide](INFRASTRUCTURE_PRODUCTION_GUIDE.md) - Deployment patterns
-- [Operator Quickstart](OPERATOR_QUICKSTART.md) - Daily operations
+- [[../governance/AGI_CHARTER.md|AGI Charter]] - Identity rights and dignity
+- [[../security_compliance/AI_SECURITY_FRAMEWORK.md|Security Framework]] - Security policies
+- [[INFRASTRUCTURE_PRODUCTION_GUIDE.md|Infrastructure Production Guide]] - Deployment patterns
+- [[OPERATOR_QUICKSTART.md|Operator Quickstart]] - Daily operations
 
 ### External Resources
 - [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)

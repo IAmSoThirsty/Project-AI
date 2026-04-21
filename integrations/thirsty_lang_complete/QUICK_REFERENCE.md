@@ -1,3 +1,17 @@
+---
+type: api-reference
+tags: [integrations, thirsty-lang, quick-reference, syntax, api]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, tarl]
+stakeholders: [developers, integration-team]
+platform: cross-platform
+integration_type: sdk
+external_dependencies: [python, nodejs]
+review_cycle: quarterly
+---
+
 # Thirsty-lang Complete - Quick Reference
 
 **Version:** 2.0.0 | **Last Updated:** 2026-01-28

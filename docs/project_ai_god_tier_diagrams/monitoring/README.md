@@ -1,3 +1,27 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, monitoring, observability, prometheus, grafana, alertmanager]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [prometheus, grafana, alertmanager, tsdb, loki, thanos]
+stakeholders: [devops-team, sre, platform-engineers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: ascii
+dashboards: 12
+scrape_interval: 15s
+---
+  - observability
+  - prometheus
+  - grafana
+  - alertmanager
+  - time-series-database
+  - dashboards
+---
+
 # Project-AI Monitoring Stack
 
 ## Overview
@@ -356,10 +380,10 @@ curl http://localhost:8000/metrics
 
 ## Related Documentation
 
-- [Prometheus Configuration](./prometheus_configuration.md) - Complete scrape configs and rules
-- [Grafana Dashboards](./grafana_dashboards.md) - Dashboard JSON and panel configs
-- [Alerting Strategy](./alerting_strategy.md) - Alert definitions and escalation
-- [Metrics Catalog](./metrics_catalog.md) - Complete metrics reference
+- [[./prometheus_configuration.md|Prometheus Configuration]] - Complete scrape configs and rules
+- [[./grafana_dashboards.md|Grafana Dashboards]] - Dashboard JSON and panel configs
+- [[./alerting_strategy.md|Alerting Strategy]] - Alert definitions and escalation
+- [[./metrics_catalog.md|Metrics Catalog]] - Complete metrics reference
 
 ## External Resources
 

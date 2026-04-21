@@ -1,3 +1,17 @@
+---
+type: integration-guide
+tags: [integrations, trading, finance, market-data, portfolio-management]
+created: 2026-04-19
+last_verified: 2026-04-20
+status: current
+related_systems: [alpaca-api, binance-api, trading-hub-core, four-laws, cerberus, tarl]
+stakeholders: [integration-team, trading-team, security-team]
+platform: cross-platform
+integration_type: service
+external_dependencies: [alpaca-trade-api, ccxt, pandas, numpy, ta]
+review_cycle: quarterly
+---
+
 # Thirsty's Trading Hub Integration
 
 ## Overview

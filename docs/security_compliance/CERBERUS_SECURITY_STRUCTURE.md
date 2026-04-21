@@ -1,3 +1,80 @@
+---
+title: "Cerberus - Chief of Security"
+id: "cerberus-security-structure"
+type: "framework"
+version: "1.0.0"
+created_date: "2026-01-20"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Architecture Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:governance"
+  - "type:framework"
+  - "type:reference"
+  - "component:cerberus"
+  - "component:watch-tower"
+  - "component:border-patrol"
+  - "component:active-defense"
+  - "audience:security-engineer"
+  - "audience:system-architect"
+  - "priority:p0-critical"
+technologies:
+  - "Python"
+  - "Global Watch Tower Command Center"
+  - "Security Agent Registration"
+  - "Unified Command Structure"
+summary: "Complete security command structure with Cerberus as Chief of Security commanding all operations through Global Watch Tower including border patrol, active defense, red team, and oversight agents."
+scope: "Unified security authority structure covering border patrol operations, active defense agents, red team testing, oversight and analysis, with centralized registration and coordination"
+classification: "internal"
+threat_level: "critical"
+attack_vectors:
+  - "uncoordinated-defense"
+  - "fragmented-security"
+  - "agent-isolation"
+  - "command-bypass"
+mitigations:
+  - "[[GLOBAL_WATCH_TOWER]]"
+  - "[[CERBERUS_HYDRA_README]]"
+  - "[[SECURITY_AGENTS_GUIDE]]"
+defends_against:
+  - "Fragmented security posture"
+  - "Uncoordinated threat response"
+  - "Agent isolation vulnerabilities"
+  - "Command structure bypass"
+compliance:
+  - "NIST Cybersecurity Framework"
+  - "Defense-in-Depth Principle"
+  - "ISO 27001:2022"
+stakeholders:
+  - security-team
+  - architecture-team
+  - security-operations
+last_verified: 2026-04-20
+cvss_score: "N/A - Framework Documentation"
+cwe_ids:
+  - "CWE-1008: Architectural Concepts"
+  - "CWE-1009: Audit Log Errors"
+related_docs:
+  - "cerberus-hydra-readme"
+  - "security-agents-guide"
+  - "security-framework"
+  - "threat-model"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "architecture-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "system-architects"
+  - "security-analysts"
+  - "compliance-auditors"
+---
+
 # Cerberus - Chief of Security
 
 **Complete Security Command Structure for Project-AI**

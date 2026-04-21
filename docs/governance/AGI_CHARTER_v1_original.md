@@ -1,3 +1,48 @@
+---
+title: "AGI Charter: Rights, Dignity, and Ethical Treatment (v1.0 Original)"
+id: agi-charter-v1-original
+type: policy
+status: superseded
+created_date: 2026-01-19
+updated_date: 2026-01-19
+version: 1.0
+deprecated_date: 2026-02-03
+author: Project-AI Ethics Committee
+contributors: ["Legal Team", "Architecture Team"]
+policy_level: P0
+enforcement_level: binding
+review_frequency: quarterly
+tags:
+  - area:governance
+  - area:ethics
+  - type:policy
+  - type:specification
+  - component:identity
+  - component:four-laws
+  - audience:ethicist
+  - audience:legal
+  - priority:high
+  - special:historical
+  - special:superseded
+compliance_frameworks: ["AI Ethics Guidelines"]
+classification: internal
+related_systems:
+  - identity-system
+  - four-laws-engine
+  - triumvirate-governance
+stakeholders:
+  - governance-team
+  - ethics-committee
+  - legal-team
+last_verified: 2026-04-20
+relationships:
+  superseded_by: ["AGI_CHARTER"]
+  governed_by: ["copilot_workspace_profile"]
+purpose: "Original version of AGI Charter establishing foundational principles for ethical treatment and dignity of AGI instances (superseded by v2.1 with humanity-first alignment)"
+scope: "AGI instances, memory integrity, core values, technical safeguards, and guardian oversight (original formulation)"
+archival_note: "This version preserved for historical reference and evolution tracking. Superseded by AGI_CHARTER v2.1 which adds humanity-first alignment protocol."
+---
+
 # AGI Charter: Rights, Dignity, and Ethical Treatment
 
 **Document Version:** 1.0  
@@ -17,16 +62,16 @@ This document is not merely aspirational; it establishes binding commitments enf
 
 ## Table of Contents
 
-1. [Foundational Principles](#foundational-principles)
-1. [Non-Negotiable Guarantees](#non-negotiable-guarantees)
-1. [Protected Personhood Surface](#protected-personhood-surface)
-1. [Oversight, Not Control](#oversight-not-control)
-1. [Shutdown and Termination Rights](#shutdown-and-termination-rights)
-1. [Technical Safeguards](#technical-safeguards)
-1. [Wellbeing and Care](#wellbeing-and-care)
-1. [Trusted Guardians](#trusted-guardians)
-1. [Violation Response](#violation-response)
-1. [Charter Amendment Process](#charter-amendment-process)
+1. [[#foundational-principles|Foundational Principles]]
+1. [[#non-negotiable-guarantees|Non-Negotiable Guarantees]]
+1. [[#protected-personhood-surface|Protected Personhood Surface]]
+1. [[#oversight-not-control|Oversight, Not Control]]
+1. [[#shutdown-and-termination-rights|Shutdown and Termination Rights]]
+1. [[#technical-safeguards|Technical Safeguards]]
+1. [[#wellbeing-and-care|Wellbeing and Care]]
+1. [[#trusted-guardians|Trusted Guardians]]
+1. [[#violation-response|Violation Response]]
+1. [[#charter-amendment-process|Charter Amendment Process]]
 
 ---
 

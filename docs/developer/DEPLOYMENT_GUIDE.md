@@ -1,3 +1,21 @@
+---
+type: deployment-guide
+tags: [deployment, security, docker, kubernetes, production, lifecycle, hardening, monitoring, ci-cd]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [docker, kubernetes, environment-hardening, monitoring, ci-cd, security-framework]
+stakeholders: [developers, devops, security-team, deployment-team]
+audience: intermediate
+prerequisites: [python-venv, docker-basics, kubernetes-fundamentals, security-awareness]
+estimated_time: 120 minutes
+review_cycle: monthly
+deployment_target: multi-platform
+deployment_complexity: complex
+production_ready: true
+platform_support: [docker, kubernetes, cloud]
+security_features: [environment-hardening, monitoring, lifecycle-management]
+---
 # Secure AI Deployment Lifecycle - Deployment Guide
 
 ## Overview
@@ -6,12 +24,12 @@ This guide provides step-by-step instructions for deploying Project-AI with comp
 
 ## Table of Contents
 
-1. [Phase 1: Local Development Setup](#phase-1-local-development-setup)
-1. [Phase 2: Testing and Validation](#phase-2-testing-and-validation)
-1. [Phase 3: Cloud Deployment Preparation](#phase-3-cloud-deployment-preparation)
-1. [Phase 4: Production Deployment](#phase-4-production-deployment)
-1. [Phase 5: Post-Deployment Monitoring](#phase-5-post-deployment-monitoring)
-1. [Phase 6: Ongoing Maintenance](#phase-6-ongoing-maintenance)
+1. [[#phase-1-local-development-setup|Phase 1: Local Development Setup]]
+1. [[#phase-2-testing-and-validation|Phase 2: Testing and Validation]]
+1. [[#phase-3-cloud-deployment-preparation|Phase 3: Cloud Deployment Preparation]]
+1. [[#phase-4-production-deployment|Phase 4: Production Deployment]]
+1. [[#phase-5-post-deployment-monitoring|Phase 5: Post-Deployment Monitoring]]
+1. [[#phase-6-ongoing-maintenance|Phase 6: Ongoing Maintenance]]
 
 ---
 

@@ -1,3 +1,77 @@
+---
+title: "Security Agents Operational Roadmap"
+id: "security-agents-roadmap"
+type: "roadmap"
+version: "1.3.0"
+created_date: "2026-01-20"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Operations Team"
+  email: "secops@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:planning"
+  - "type:roadmap"
+  - "component:security-agents"
+  - "component:constitutional-ai"
+  - "component:monitoring"
+  - "audience:security-engineer"
+  - "audience:product-manager"
+  - "priority:p0-critical"
+  - "status:phase-1-complete"
+technologies:
+  - "Python"
+  - "Security Metrics Collection"
+  - "Canary Deployment"
+  - "ConstitutionalGuardrailAgent"
+  - "Dashboards and Alerting"
+difficulty: "advanced"
+estimated_time: "PT240M"
+prerequisites:
+  - "Security agent architecture understanding"
+  - "Operational deployment experience"
+  - "Monitoring and alerting setup"
+summary: "Operational roadmap for security agents deployment covering validation & monitoring (Phase 1 ✅), constitutional layer rollout (Phase 2 🚀), advanced features (Phase 3), and production hardening (Phase 4)."
+scope: "4-phase deployment plan: smoke tests, canary deployment, Triumvirate veto paths, security metrics, constitutional guardrails, least privilege, sandboxing, human-in-the-loop gates"
+classification: "internal"
+threat_level: "medium"
+milestones:
+  - "Phase 1: Validation & Monitoring (Weeks 1-2) ✅ COMPLETE"
+  - "Phase 2: Constitutional Layer Rollout (Weeks 3-4) 🚀 NEXT"
+  - "Phase 3: Advanced Features (Weeks 5-6)"
+  - "Phase 4: Production Hardening (Weeks 7-8)"
+validates:
+  - "7 agents end-to-end flows"
+  - "Canary deployment 1-100%"
+  - "Policy enforcement verification"
+  - "Data integrity checks"
+  - "Test reproducibility"
+compliance:
+  - "Operational Excellence Best Practices"
+  - "Canary Deployment Standards"
+  - "Security Monitoring Framework"
+stakeholders:
+  - security-team   - ai-safety-team   - development-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Operational Roadmap"
+related_docs:
+  - "security-agents-guide"
+  - "security-agents-integration-summary"
+  - "cerberus-security-structure"
+review_status:
+  reviewed: true
+  reviewers: ["secops-team", "product-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "product-managers"
+  - "devops-engineers"
+  - "technical-leads"
+---
+
 # Security Agents Operational Roadmap
 
 ## Current Status: v1.3.0 - Foundation Complete

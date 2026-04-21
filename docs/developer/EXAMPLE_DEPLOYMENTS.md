@@ -1,3 +1,21 @@
+---
+type: deployment-guide
+tags: [deployment, deployment-examples, security-patterns, docker, kubernetes, production, disaster-recovery]
+created: 2026-02-05
+last_verified: 2026-04-20
+status: current
+related_systems: [docker-deployment, kubernetes-cluster, security-hardening, load-balancers, monitoring]
+stakeholders: [devops-engineers, architects, security-engineers, deployment-team]
+audience: intermediate
+prerequisites: [docker-experience, kubernetes-basics, security-awareness, networking-fundamentals]
+estimated_time: 75 minutes
+review_cycle: quarterly
+deployment_target: multi-platform
+deployment_complexity: complex
+production_ready: true
+platform_support: [docker, kubernetes, cloud]
+deployment_patterns: [minimal, secured, research-sandbox]
+---
 # Example Deployments: Production-Ready Security Patterns
 
 **Document Version:** 1.0  
@@ -899,10 +917,10 @@ There is no "one size fits all" deployment. Choose the configuration that matche
 
 ## Additional Resources
 
-- [Infrastructure Production Guide](INFRASTRUCTURE_PRODUCTION_GUIDE.md) - Detailed Kubernetes guide
-- [Operator Quickstart](OPERATOR_QUICKSTART.md) - Day-to-day operations
-- [AI Safety Overview](AI_SAFETY_OVERVIEW.md) - Safety considerations
-- [Security Framework](../security_compliance/AI_SECURITY_FRAMEWORK.md) - Security best practices
+- [[INFRASTRUCTURE_PRODUCTION_GUIDE.md|Infrastructure Production Guide]] - Detailed Kubernetes guide
+- [[OPERATOR_QUICKSTART.md|Operator Quickstart]] - Day-to-day operations
+- [[AI_SAFETY_OVERVIEW.md|AI Safety Overview]] - Safety considerations
+- [[../security_compliance/AI_SECURITY_FRAMEWORK.md|Security Framework]] - Security best practices
 
 ---
 

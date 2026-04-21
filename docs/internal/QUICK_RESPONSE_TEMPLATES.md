@@ -1,3 +1,34 @@
+---
+title: "Quick Response Templates for Incident Management"
+id: quick-response-templates
+type: runbook
+version: 1.0.0
+created_date: 2026-01-21
+updated_date: 2026-01-25
+status: active
+author: Incident Response Team
+audience: internal
+confidentiality: internal
+owner_team: operations
+operational_context: incident
+retention_policy: permanent
+category: operations
+tags:
+  - incident-response
+  - templates
+  - runbook
+  - triumvirate
+  - galahad
+  - cerberus
+  - forensics
+  - rollback
+related_docs:
+  - ../operations/incident-response-playbook.md
+  - ../security/security-incident-procedures.md
+scope: "Quick reference templates for incident reporting, triage, and response communications"
+description: Collection of standardized templates for incident reporting, Slack/channel posts, Triumvirate triage checklists, and response procedures.
+---
+
 # Quick Response Templates
 
 ## Incident Slack/Channel Post Template

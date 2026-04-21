@@ -1,3 +1,17 @@
+---
+type: integration-guide
+tags: [integrations, openclaw, legion, ai-agent, fastapi, cerberus]
+created: 2026-04-19
+last_verified: 2026-04-20
+status: current
+related_systems: [openclaw, legion-agent, triumvirate, cerberus, eed-memory]
+stakeholders: [integration-team, ai-team, security-team]
+platform: cross-platform
+integration_type: api
+external_dependencies: [fastapi, python, openclaw-cli]
+review_cycle: quarterly
+---
+
 # Legion Agent - Quick Start Guide
 
 ## Phase 1 Complete! 🎉

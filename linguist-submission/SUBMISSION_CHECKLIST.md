@@ -1,3 +1,19 @@
+---
+type: submission-doc
+tags: [thirsty-lang, linguist, language-design, github-integration, submission-workflow]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, github-linguist]
+stakeholders: [language-team, contributors, linguist-maintainers]
+project_category: language-implementation
+language_paradigm: [water-themed, defensive-programming, multi-edition]
+build_system: custom
+review_cycle: monthly
+submission_target: github/linguist
+submission_status: ready
+---
+
 # Thirsty-lang Linguist Submission Checklist
 
 Use this checklist to ensure your submission to github/linguist is complete and correct.

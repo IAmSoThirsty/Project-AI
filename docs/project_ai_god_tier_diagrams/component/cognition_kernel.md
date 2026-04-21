@@ -1,3 +1,20 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, mermaid, component-diagram, cognition-kernel, intent-detection]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [cognition-kernel, intent-detector, entity-extractor, semantic-parser, context-enricher]
+stakeholders: [architecture-team, ml-engineers, developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: component
+format: ascii
+ml_accuracy: 95%+
+intent_categories: 30+
+---
+
 # CognitionKernel - Central Intelligence Hub
 
 ## Overview
@@ -696,4 +713,4 @@ intent_distribution = Counter(
 - [GovernanceTriumvirate](./governance_triumvirate.md)
 - [MemoryEngine](./memory_engine.md)
 - [Agent System](./agent_system.md)
-- [User Request Flow](../data_flow/user_request_flow.md)
+- [[../data_flow/user_request_flow.md|User Request Flow]]

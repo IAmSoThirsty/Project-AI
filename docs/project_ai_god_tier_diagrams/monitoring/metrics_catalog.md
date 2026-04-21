@@ -1,3 +1,19 @@
+---
+type: diagram
+tags: [p1-diagrams, diagrams, reference, monitoring, metrics, prometheus, instrumentation]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [prometheus, application-metrics, system-metrics, database-metrics, cache-metrics]
+stakeholders: [devops-team, sre, developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: reference
+format: table
+metric_types: 4
+---
+
 # Metrics Catalog
 
 ## Overview

@@ -1,3 +1,21 @@
+---
+type: governance-policy
+tags: [governance, legal, acceptance-ledger, cryptographic-signatures, non-repudiation]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [acceptance-ledger, cryptographic-verification, governance-enforcement]
+stakeholders: [legal-team, governance-team, compliance-officers]
+sovereignty_level: sovereign
+immutability: immutable
+enforcement: automatic
+review_cycle: annual
+license_type: acceptance-verification
+cryptographic_binding: true
+public_verifiability: true
+version: 1.0.0
+---
+
 # Project-AI Acceptance Ledger License
 
 **Version:** 1.0.0  

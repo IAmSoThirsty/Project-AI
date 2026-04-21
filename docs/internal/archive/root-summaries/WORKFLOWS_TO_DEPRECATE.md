@@ -1,3 +1,26 @@
+---
+title: "WORKFLOWS TO DEPRECATE"
+id: "workflows-to-deprecate"
+type: historical_record
+status: archived
+archived_date: 2026-04-19
+archive_reason: deprecated
+historical_value: high
+restore_candidate: false
+audience:
+  - developer
+  - architect
+tags:
+  - historical
+  - archive
+  - implementation
+  - testing
+  - ci-cd
+  - security
+superseded_by: [[Phase 4-5 Code Quality  Testing]]
+path_confirmed: T:/Project-AI-main/docs/internal/archive/root-summaries/WORKFLOWS_TO_DEPRECATE.md
+---
+
 # Workflows That Can Be Safely Deprecated
 
 ## Overview

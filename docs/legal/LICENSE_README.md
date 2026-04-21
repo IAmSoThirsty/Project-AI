@@ -1,3 +1,21 @@
+---
+type: governance-policy
+tags: [governance, legal, licensing-information, mit-license, third-party-licenses]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [licensing-framework, compliance-management]
+stakeholders: [legal-team, open-source-community, contributors]
+sovereignty_level: governed
+immutability: revisable
+enforcement: manual
+review_cycle: annual
+document_type: licensing-readme
+primary_license: mit
+component_licenses: [mit, apache-2.0]
+third_party_compliant: true
+---
+
 # Project-AI Licensing Information
 
 ## Main Project License

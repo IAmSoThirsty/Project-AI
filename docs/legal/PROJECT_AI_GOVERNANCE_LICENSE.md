@@ -1,3 +1,21 @@
+---
+type: constitutional-doc
+tags: [governance, licensing, constitutional, legal, supremacy, non-removable-governance]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [triumvirate, tarl, constitutional-constraints, policy-engines, audit-systems]
+stakeholders: [legal-team, governance-team, compliance-officers, sovereign-authority]
+sovereignty_level: sovereign
+immutability: immutable
+enforcement: automatic
+review_cycle: annual
+license_type: behavioral-use-control
+legal_nature: constitutional-overlay
+version: 1.0.0
+applies_to: [governance-components, triumvirate, tarl, enforcement-logic]
+---
+
 # Project-AI Governance License (PAGL)
 
 Copyright © 2026 Project-AI

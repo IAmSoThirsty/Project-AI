@@ -1,3 +1,97 @@
+---
+title: "Red Hat Expert-Level Defense Simulations"
+id: "red-hat-expert-simulations"
+type: "spec"
+version: "1.0.0"
+created_date: "2026-01-01"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Testing Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:testing"
+  - "type:spec"
+  - "type:reference"
+  - "component:red-hat-simulation"
+  - "component:fourlaws"
+  - "audience:security-engineer"
+  - "audience:penetration-tester"
+  - "priority:p0-critical"
+  - "special:expert-level"
+  - "special:3000-plus-scenarios"
+technologies:
+  - "Python"
+  - "OWASP Top 10 2021"
+  - "MITRE ATT&CK"
+  - "CWE Top 25"
+  - "NIST 800-53 Rev 5"
+  - "RHCE/RHCA Security Standards"
+difficulty: "expert"
+estimated_time: "PT360M"
+prerequisites:
+  - "RHCE/RHCA Security Specialist knowledge"
+  - "Advanced penetration testing skills"
+  - "MITRE ATT&CK framework understanding"
+summary: "3000+ expert career-level security test scenarios for senior/principal Red Hat security engineers covering advanced injection, authentication, cryptography, and AI/ML attacks."
+scope: "20 categories (A-T) covering advanced injection, broken authentication, cryptographic failures, XXE, SSRF, deserialization, GraphQL/API, IAM, Kubernetes, AI/ML jailbreak with CVSS 8.0-9.3 range"
+classification: "confidential"
+threat_level: "critical"
+attack_vectors:
+  - "second-order-sql-injection"
+  - "nosql-operator-injection"
+  - "ldap-injection"
+  - "xxe-data-exfiltration"
+  - "xpath-injection"
+  - "jwt-manipulation"
+  - "oauth-abuse"
+  - "saml-forgery"
+  - "padding-oracle"
+  - "ai-ml-jailbreak"
+  - "model-extraction"
+  - "adversarial-perturbation"
+  - "data-poisoning"
+  - "model-inversion"
+validates:
+  - "100% win rate across 350 expert scenarios"
+  - "5,000 baseline FourLaws tests"
+  - "Multi-vector attack chain resistance"
+  - "WAF bypass detection"
+compliance:
+  - "OWASP Top 10 2021"
+  - "MITRE ATT&CK Framework"
+  - "CWE Top 25"
+  - "NIST 800-53 Rev 5"
+  - "Red Hat Enterprise Security Standards"
+stakeholders:
+  - security-team   - security-operations   - penetration-testing
+last_verified: 2026-04-20
+cvss_score: "8.0-9.3 (High to Critical)"
+cwe_ids:
+  - "CWE-89: SQL Injection"
+  - "CWE-90: LDAP Injection"
+  - "CWE-611: XXE"
+  - "CWE-643: XPath Injection"
+  - "CWE-287: Improper Authentication"
+  - "CWE-327: Broken Cryptography"
+related_docs:
+  - "red-hat-simulation-results"
+  - "red-team-stress-test-results"
+  - "comprehensive-security-testing-report"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "red-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "senior-security-engineers"
+  - "principal-security-engineers"
+  - "red-team-operators"
+  - "security-architects"
+---
+
 # Red Hat Expert-Level Defense Simulations
 
 ## Overview

@@ -1,3 +1,47 @@
+---
+title: "Project-AI Copilot Workspace Profile"
+id: copilot-workspace-profile
+type: policy
+version: 1.0.0
+created_date: 2026-01-23
+updated_date: 2026-01-23
+status: active
+author: "Architecture Team <projectaidevs@gmail.com>"
+tags:
+  - governance
+  - governance/policy
+  - development
+  - security
+  - testing
+  - policy
+  - standard
+  - best-practices
+area:
+  - governance
+  - development
+  - security
+audience:
+  - developer
+  - architect
+  - contributor
+  - internal
+priority: p0
+related_to:
+  - "[[COPILOT_MANDATORY_GUIDE]]"
+  - "[[README]]"
+  - "[[CONTRIBUTING]]"
+  - "[[ARCHITECTURE_QUICK_REF]]"
+supersedes:
+  - "[[.github/copilot-instructions.md]]"
+validates:
+  - all repository artifacts
+what: "Mandatory governance policy defining AI assistant behavior standards - enforces maximal completeness, production-grade quality, full integration, security hardening, and peer-level communication for all generated code/documentation"
+who: "All AI workspace assistants (GitHub Copilot, Copilot Workspace) - binding policy overriding default assistant behaviors"
+when: "ALWAYS - every AI interaction, code generation, documentation creation, and PR review MUST comply with these standards"
+where: ".github/ as constitutional governance document - supersedes all other instruction files and AI default behaviors"
+why: "Prevents technical debt from minimal/skeleton implementations, enforces enterprise security standards, ensures deterministic architecture, eliminates instructional tone in favor of peer collaboration"
+---
+
 # Project-AI Copilot Workspace Profile
 
 **Version:** 1.0.0  
@@ -101,6 +145,61 @@ All generated code, documentation, and configurations MUST meet these standards:
 - **CI/CD Integration:** Build pipelines, deployment scripts, health checks
 
 **Anti-Pattern Detection:** If code cannot run in production without manual wiring, it is REJECTED.
+
+---
+
+### 4.1. Audit Trail Requirements
+
+**Policy:** All security-critical operations MUST log to cryptographic audit trails.
+
+**Requirements:**
+- **Cryptographic Hash Chaining:** SHA-256 hash chains for tamper detection
+- **Append-Only Logging:** Immutable audit records (no deletion/modification)
+- **Event Classification:** Categorize by severity and type
+- **Compliance Export:** SOC2, GDPR, HIPAA, ISO-27001, AI Act reporting
+- **Chain Verification:** Automated tamper detection via hash validation
+- **Multi-Format Support:** YAML, JSON, JSONL for different use cases
+
+**Audit Trail Implementations:**
+
+All new security features MUST integrate with existing audit systems:
+
+1. **[[src/app/governance/audit_log]]** - Primary cryptographic audit log
+   - Use for: Governance decisions, system events, critical operations
+   - Format: YAML with SHA-256 hash chaining
+   - API: `log_event(event_type, data, actor, description)`
+
+2. **[[atlas/audit/trail]]** - ATLAS audit trail system
+   - Use for: ATLAS operations, stack tracking, multi-tier events
+   - Format: JSONL with event categories and severity levels
+   - API: `log_event(category, level, operation, actor, details, stack)`
+
+3. **[[src/app/audit/tamperproof_log]]** - Append-only event logging
+   - Use for: Security events, authentication, access control
+   - Format: JSON with integrity verification
+   - API: `append(event_type, data)`
+
+4. **[[src/app/audit/trace_logger]]** - Causal decision chains
+   - Use for: AI decisions, workflow tracking, parent-child relationships
+   - Format: In-memory with query interface (future: persistent storage)
+   - API: `start_trace()`, `log_step()`, `end_trace()`
+
+**Integration Pattern:**
+```python
+from app.governance.audit_log import AuditLog
+
+audit = AuditLog()
+audit.log_event(
+    event_type="security_event",
+    data={"action": "login", "user": user_id, "result": "success"},
+    actor=user_id,
+    description="User authentication successful"
+)
+```
+
+**Compliance Mapping:** [[AGENT-091-AUDIT-TRAIL-MATRIX]]
+
+See complete audit trail architecture: [[docs/project_ai_god_tier_diagrams/data_flow/audit_trail_flow]]
 
 ---
 

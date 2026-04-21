@@ -1,3 +1,40 @@
+---
+title: "Project-AI Code of Conduct"
+id: code-of-conduct
+type: policy
+version: 1.0.0
+created_date: 2025-09-01
+updated_date: 2025-09-01
+status: active
+author: "Project-AI Team <projectaidevs@gmail.com>"
+tags:
+  - governance
+  - governance/policy
+  - governance/ethics
+  - legal
+  - policy
+area:
+  - governance
+  - legal
+audience:
+  - developer
+  - contributor
+  - public
+priority: p0
+related_to:
+  - "[[CONTRIBUTING]]"
+  - "[[README]]"
+  - "[[SECURITY]]"
+validates:
+  - community interactions
+  - contributor behavior
+what: "Community conduct policy defining behavioral expectations, inclusive values, harassment definitions, conflict resolution guidelines, and enforcement consequences for all Project-AI community spaces (IRC, issue tracker, forums, events)"
+who: "All community members (contributors, maintainers, users, event participants) - applies equally to founders, mentors, and help-seekers"
+when: "ALWAYS - applies to all community interactions in Project-AI managed spaces and may affect participation rights for violations outside these spaces"
+where: "Root directory as canonical community standards - enforced in GitHub issues/PRs, communication channels, and project events"
+why: "Establishes safe, inclusive, professional community for AGI development; diversity strengthens Project-AI through varied perspectives; prevents harassment/discrimination; provides clear conflict resolution path"
+---
+
 # Project Ai Code of Conduct
 
 Like the technical community as a whole, Project AI and its future community will be made up of a mixture of professionals and volunteers from all over the world, working on every aspect of the mission - including mentorship, teaching, and connecting people.

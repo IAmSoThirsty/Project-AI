@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, infrastructure, production, deployment, monitoring, kubernetes, sre]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [kubernetes-cluster, monitoring-stack, deployment-pipeline, production-ops]
+stakeholders: [infrastructure-engineers, devops, sre, platform-engineers]
+audience: intermediate
+prerequisites: [kubernetes-experience, monitoring-fundamentals, production-operations, cloud-platforms]
+estimated_time: 120 minutes
+review_cycle: quarterly
+---
 # Infrastructure Production Guide: Deployment, Monitoring, and Kubernetes
 
 **Document Version:** 1.0  
@@ -873,8 +886,8 @@ Infrastructure engineering for AGI is not a purely technical discipline—it is 
 - [Prometheus Best Practices](https://prometheus.io/docs/practices/)
 - [Terraform Documentation](https://www.terraform.io/docs)
 - [CNCF Cloud Native Trail Map](https://github.com/cncf/trailmap)
-- [Project-AI Monitoring Quickstart](MONITORING_QUICKSTART.md)
-- [Project-AI Deployment Guide](DEPLOYMENT_GUIDE.md)
+- [[MONITORING_QUICKSTART.md|Project-AI Monitoring Quickstart]]
+- [[DEPLOYMENT_GUIDE.md|Project-AI Deployment Guide]]
 
 ---
 

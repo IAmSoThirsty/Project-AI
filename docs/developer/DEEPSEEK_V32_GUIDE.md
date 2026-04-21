@@ -1,3 +1,16 @@
+---
+type: guide
+tags: [p1-developer, deepseek-v32, llm-integration, moe-model, ai-models, huggingface]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [deepseek-integration, huggingface-api, llm-engine, moe-architecture]
+stakeholders: [developers, ai-engineers, model-integrators]
+audience: intermediate
+prerequisites: [python-intermediate, llm-concepts, api-integration, huggingface-basics]
+estimated_time: 40 minutes
+review_cycle: quarterly
+---
 # DeepSeek V3.2 Integration Guide
 
 ## Overview

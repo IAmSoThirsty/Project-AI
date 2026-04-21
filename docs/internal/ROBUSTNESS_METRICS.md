@@ -1,3 +1,42 @@
+---
+title: "Robustness Metrics & Deep Defense Analysis"
+id: robustness-metrics-framework
+type: specification
+version: 1.0.0
+created_date: 2026-02-18
+updated_date: 2026-02-20
+status: active
+author: AI Safety Team
+contributors:
+  - Security Team
+  - Research Team
+audience: internal
+confidentiality: confidential
+owner_team: security
+operational_context: reference
+retention_policy: permanent
+category: security
+tags:
+  - robustness-metrics
+  - adversarial-testing
+  - ai-safety
+  - attack-proximity
+  - defense-margins
+  - anthropic-asl
+  - deepmind-ccl
+  - openai-preparedness
+technologies:
+  - Python
+  - scikit-learn
+  - Levenshtein
+related_docs:
+  - FORMAL-PROOFS-AND-ADVERSARIAL-TESTING-SUMMARY.md
+  - ../security/adversarial-defense.md
+  - ../research/ai-safety-metrics.md
+scope: "Comprehensive robustness metrics framework for measuring attack proximity, defense margins, transferability, and uncertainty"
+description: Specification for the robustness metrics system providing deep analysis beyond binary pass/fail, measuring attack proximity, effort metrics, sensitivity, uncertainty, and transferability aligned with frontier AI safety standards.
+---
+
 # Robustness Metrics & Deep Defense Analysis
 
 ## Overview

@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, cli-commands, command-reference, cli-api, command-line-tools]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [cli-framework, command-handlers, argument-parsing]
+stakeholders: [developers, cli-users, power-users]
+audience: intermediate
+prerequisites: [cli-basics, python-cli-knowledge, command-syntax]
+estimated_time: 35 minutes
+review_cycle: monthly
+---
 # CLI Command Reference
 
 This documentation is auto-generated from CLI help output.

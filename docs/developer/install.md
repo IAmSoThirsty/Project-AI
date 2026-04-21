@@ -1,3 +1,27 @@
+---
+type: tutorial
+tags: [p1-developer, installation, actionlint, multi-platform, github-actions, linting-tools]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [actionlint, package-managers, binary-releases, github-actions]
+stakeholders: [developers, devops, ci-cd-engineers]
+audience: intermediate
+prerequisites: [shell-basics, package-manager-familiarity, github-actions-awareness]
+estimated_time: 10 minutes
+review_cycle: quarterly
+---
+
+code_examples: false
+api_reference: false
+
+platform_support: [windows, linux, macos]
+installation_methods: [chocolatey, scoop, winget, homebrew, nix, pacman]
+related_systems: [github-actions, ci-cd, linting-tools]
+related_docs:
+  - [[README]]
+  - [[CI_PIPELINE]]
+---
 Installation
 ============
 
@@ -123,11 +147,11 @@ example installs the latest version to `/usr/bin`.
 bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) latest /usr/bin
 ```
 
-For the usage of actionlint on GitHub Actions, see [the usage document](usage.md#on-github-actions).
+For the usage of actionlint on GitHub Actions, see [[usage.md#on-github-actions|the usage document]].
 
 ## Docker image
 
-See [the usage document](./usage.md#docker) to know how to install and use an official actionlint Docker image.
+See [[./usage.md#docker|the usage document]] to know how to install and use an official actionlint Docker image.
 
 ## asdf
 
@@ -163,7 +187,7 @@ go install github.com/rhysd/actionlint/cmd/actionlint
 
 ---
 
-[Checks](checks.md) | [Usage](usage.md) | [Configuration](config.md) | [Go API](api.md) | [References](reference.md)
+[[checks.md|Checks]] | [[usage.md|Usage]] | [[config.md|Configuration]] | [[api.md|Go API]] | [[reference.md|References]]
 
 [formula]: https://formulae.brew.sh/formula/actionlint
 [homebrew]: https://brew.sh/

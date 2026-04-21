@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, architecture, diagrams, visual-documentation]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, network-architecture]
+stakeholders: [architecture-team, integration-team, network-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 Security Architecture Diagram Specification
 
 ## Version 1.0 — Structural, Logical, and Data‑Flow Blueprint

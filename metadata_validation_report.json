@@ -1,0 +1,30 @@
+{
+  "WithCompliance": 53,
+  "Total": 54,
+  "WithLastVerified": 54,
+  "WithClassification": 54,
+  "Errors": [
+    {
+      "File": "CYBERSECURITY_KNOWLEDGE.md",
+      "MissingYAML": false,
+      "MissingClassification": false,
+      "MissingRelatedSystems": false,
+      "MissingStakeholders": false,
+      "MissingLastVerified": false,
+      "MissingCompliance": true
+    },
+    {
+      "File": "SECURITY_AUDIT_EXECUTIVE_SUMMARY.md",
+      "MissingYAML": false,
+      "MissingClassification": false,
+      "MissingRelatedSystems": true,
+      "MissingStakeholders": false,
+      "MissingLastVerified": false,
+      "MissingCompliance": false
+    }
+  ],
+  "WithRelatedSystems": 53,
+  "WithYAML": 54,
+  "WithStakeholders": 54,
+  "FullyEnriched": 52
+}

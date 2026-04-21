@@ -1,3 +1,17 @@
+---
+type: system-spec
+tags: [specialized-systems, h323, security-protocol, telecommunications, enterprise-architecture]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [project-ai-core, pki-infrastructure, network-security]
+stakeholders: [specialized-team, integration-team, architecture-team, security-team]
+system_category: security-protocol
+external_standard: H.323, H.235, H.225, H.245
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 Security Capability Profile System
 
 ## Complete Enterprise Documentation Suite

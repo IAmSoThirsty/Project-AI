@@ -1,3 +1,17 @@
+---
+type: config-guide
+tags: [documentation, contributing, governance, developer-guide]
+created: 2025-12-10
+last_verified: 2026-04-20
+status: current
+related_systems: [documentation, governance]
+stakeholders: [developers, contributors, technical-writers]
+config_scope: development
+automation_type: manual-config
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # Contributing Documentation to Project-AI
 
 Thank you for contributing to Project-AI documentation! This guide will help you place your documentation in the correct location.

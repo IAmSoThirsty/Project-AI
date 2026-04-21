@@ -1,3 +1,20 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, mermaid, data-flow, request-processing, governance, memory-system]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [cognition-kernel, governance-triumvirate, memory-engine, execution-service, audit-trail]
+stakeholders: [architecture-team, developers, security-engineers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: overview
+format: ascii
+total_lines: 5816
+plantuml_diagrams: 5
+---
+
 # Data Flow Architecture - Project-AI
 
 ## Overview
@@ -256,19 +273,19 @@ Data Source → Stream Processor → Governance Filter → Consumer
 
 ## Related Documentation
 
-- [User Request Flow](./user_request_flow.md) - Detailed user interaction flow
-- [Governance Decision Flow](./governance_decision_flow.md) - Triumvirate decision process
-- [Memory Recording Flow](./memory_recording_flow.md) - Five-channel memory system
-- [Agent Execution Flow](./agent_execution_flow.md) - Agent selection and execution
-- [Audit Trail Flow](./audit_trail_flow.md) - Immutable audit logging
+- [[./user_request_flow.md|User Request Flow]] - Detailed user interaction flow
+- [[./governance_decision_flow.md|Governance Decision Flow]] - Triumvirate decision process
+- [[./memory_recording_flow.md|Memory Recording Flow]] - Five-channel memory system
+- [[./agent_execution_flow.md|Agent Execution Flow]] - Agent selection and execution
+- [[./audit_trail_flow.md|Audit Trail Flow]] - Immutable audit logging
 
 ## Diagrams
 
-- [user_request_flow.puml](./user_request_flow.puml) - PlantUML source for user request flow
-- [governance_decision_flow.puml](./governance_decision_flow.puml) - PlantUML source for governance decisions
-- [memory_recording_flow.puml](./memory_recording_flow.puml) - PlantUML source for memory recording
-- [agent_execution_flow.puml](./agent_execution_flow.puml) - PlantUML source for agent execution
-- [audit_trail_flow.puml](./audit_trail_flow.puml) - PlantUML source for audit trail
+- [[./user_request_flow.puml|user_request_flow.puml]] - PlantUML source for user request flow
+- [[./governance_decision_flow.puml|governance_decision_flow.puml]] - PlantUML source for governance decisions
+- [[./memory_recording_flow.puml|memory_recording_flow.puml]] - PlantUML source for memory recording
+- [[./agent_execution_flow.puml|agent_execution_flow.puml]] - PlantUML source for agent execution
+- [[./audit_trail_flow.puml|audit_trail_flow.puml]] - PlantUML source for audit trail
 
 ## Contact
 

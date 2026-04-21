@@ -1,3 +1,16 @@
+---
+type: deployment
+tags: [p1-developer, kubernetes, helm, monitoring, prometheus, grafana, elk-stack, observability]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [kubernetes, helm, prometheus, grafana, elasticsearch, kibana, netdata, opentelemetry]
+stakeholders: [developers, devops, sre, monitoring-engineers]
+audience: intermediate
+prerequisites: [kubernetes-basics, helm-fundamentals, monitoring-concepts, yaml-proficiency]
+estimated_time: 90 minutes
+review_cycle: quarterly
+---
 # Kubernetes + Helm Deployment Guide for Project-AI Monitoring
 
 ## Overview
@@ -17,17 +30,17 @@ Deploy the complete Project-AI observability stack on Kubernetes in minutes usin
 
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-1. [Quick Start](#quick-start)
-1. [Deployment Options](#deployment-options)
-1. [Component Details](#component-details)
-1. [eBPF Observability with Cilium](#ebpf-observability-with-cilium)
-1. [ELK Stack Configuration](#elk-stack-configuration)
-1. [Netdata Setup](#netdata-setup)
-1. [OpenTelemetry Integration](#opentelemetry-integration)
-1. [Scaling](#scaling)
-1. [Troubleshooting](#troubleshooting)
-1. [Production Best Practices](#production-best-practices)
+1. [[#prerequisites|Prerequisites]]
+1. [[#quick-start|Quick Start]]
+1. [[#deployment-options|Deployment Options]]
+1. [[#component-details|Component Details]]
+1. [[#ebpf-observability-with-cilium|eBPF Observability with Cilium]]
+1. [[#elk-stack-configuration|ELK Stack Configuration]]
+1. [[#netdata-setup|Netdata Setup]]
+1. [[#opentelemetry-integration|OpenTelemetry Integration]]
+1. [[#scaling|Scaling]]
+1. [[#troubleshooting|Troubleshooting]]
+1. [[#production-best-practices|Production Best Practices]]
 
 ---
 

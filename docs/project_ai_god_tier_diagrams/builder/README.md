@@ -1,3 +1,19 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, design-patterns, builder-pattern, creational-pattern, fluent-interface]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [execution-contexts, governance-decisions, configuration-management]
+stakeholders: [architecture-team, developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: class
+format: code
+pattern_category: creational
+---
+
 # Builder Pattern in Project-AI
 
 ## Overview
@@ -114,5 +130,5 @@ context = (
 
 ## Related Documentation
 
-- **[Factory Pattern](../factory/README.md)** - Object creation
-- **[Domain Models](../domain/domain_models.md)** - Entities and value objects
+- **[[../factory/README.md|Factory Pattern]]** - Object creation
+- **[[../domain/domain_models.md|Domain Models]]** - Entities and value objects

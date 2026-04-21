@@ -1,16 +1,29 @@
+---
+type: reference
+tags: [p1-developer, cli, cli-documentation, command-line-interface, usage-guide]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [cli-framework, command-parser, project-ai-cli]
+stakeholders: [developers, cli-users, contributors]
+audience: intermediate
+prerequisites: [shell-basics, python-cli-familiarity, command-line-comfort]
+estimated_time: 20 minutes
+review_cycle: monthly
+---
 # Project-AI CLI Documentation
 
 Welcome to the Project-AI Command Line Interface (CLI) documentation. This guide covers everything you need to know about using the CLI effectively.
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Configuration](#configuration)
-- [Command Groups](#command-groups)
-- [Shell Completion](#shell-completion)
-- [Examples](#examples)
-- [Troubleshooting](#troubleshooting)
+- [[#installation|Installation]]
+- [[#quick-start|Quick Start]]
+- [[#configuration|Configuration]]
+- [[#command-groups|Command Groups]]
+- [[#shell-completion|Shell Completion]]
+- [[#examples|Examples]]
+- [[#troubleshooting|Troubleshooting]]
 
 ## Installation
 
@@ -355,9 +368,9 @@ python -m app.cli batch --file commands.txt
 ## Related Documentation
 
 - [CLI-CODEX.md](../../CLI-CODEX.md) - CLI development guidelines
-- [commands.md](./commands.md) - Auto-generated command reference
+- [[./commands.md|commands.md]] - Auto-generated command reference
 - [CONTRIBUTING.md](../../CONTRIBUTING.md) - Contributing to CLI development
-- [README.md](../../README.md) - Main project documentation
+- [[../../README.md|README.md]] - Main project documentation
 
 ## Getting Help
 

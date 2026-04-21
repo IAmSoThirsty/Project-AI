@@ -1,3 +1,19 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, design-patterns, aggregate-pattern, ddd, domain-driven-design, consistency-boundary]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [domain-driven-design, transactional-boundaries, invariant-enforcement]
+stakeholders: [architecture-team, developers, domain-experts]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: ascii
+pattern_category: tactical-ddd
+---
+
 # Aggregates in Project-AI
 
 ## Overview
@@ -857,6 +873,6 @@ class TestMemoryAggregate:
 
 ## Related Documentation
 
-- **[Domain Models](../domain/domain_models.md)** - Entity and value object patterns
-- **[Domain Events](../domain/domain_events.md)** - Event definitions
+- **[[../domain/domain_models.md|Domain Models]]** - Entity and value object patterns
+- **[[../domain/domain_events.md|Domain Events]]** - Event definitions
 - **[Command Handlers](../command/command_handlers.md)** - Command to aggregate mapping

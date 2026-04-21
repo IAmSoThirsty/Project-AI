@@ -1,3 +1,54 @@
+---
+title: Planetary Defense Monolith - Constitutional Core Integration
+id: planetary-defense-monolith
+type: architecture
+version: 1.0
+created: 2026-02-01
+created_date: 2026-02-01
+last_verified: 2026-04-20
+updated_date: 2026-02-01
+status: active
+author: Constitutional AI Team
+contributors: ["Governance Team", "Ethics Team"]
+# Architecture-Specific Metadata
+architecture_layer: domain
+design_pattern: ["constitutional-ai", "hard-constraint-enforcement", "sovereign-execution"]
+implements: ["four-laws-kernel", "triumvirate-advisory", "accountability-logging"]
+uses: ["four-laws", "triumvirate", "sovereign-runtime"]
+quality_attributes: ["ethical-governance", "hard-constraints", "auditability", "accountability"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "governance", "constitutional-ai"]
+tags: ["planetary-defense", "four-laws", "constitutional-core", "triumvirate", "ethical-ai", "accountability", "sovereign-execution"]
+component: ["planetary-defense-kernel", "four-laws-runtime", "triumvirate-advisory", "accountability-logger"]
+# Relationships
+related_docs: ["architecture-security-ethics-overview", "sovereign-runtime", "architecture-overview"]
+related_systems: ["sovereign-runtime", "triumvirate", "planetary-defense"]
+depends_on: ["architecture-overview"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "ethics-experts", "governance-engineers", "senior-leadership"]
+stakeholders: ["developers", "architecture-team"]
+priority: P0
+difficulty: expert
+estimated_reading_time: 20 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: confidential
+sensitivity: critical
+compliance: ["constitutional-ai", "four-laws", "ethical-constraints"]
+# Discovery
+keywords: ["planetary defense", "Four Laws", "constitutional AI", "Triumvirate", "ethical governance"]
+search_terms: ["Zeroth Law", "human interposition", "accountability", "moral outsourcing"]
+aliases: ["Constitutional Core", "Four Laws Kernel", "Planetary Defense System"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: 93%
+---
+
+
 # Planetary Defense Monolith - Constitutional Core Integration Guide
 
 ## Overview

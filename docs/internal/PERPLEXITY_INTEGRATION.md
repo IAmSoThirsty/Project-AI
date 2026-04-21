@@ -1,3 +1,37 @@
+---
+title: "Perplexity API Integration Guide"
+id: perplexity-integration-guide
+type: guide
+version: 1.0.0
+created_date: 2026-02-01
+updated_date: 2026-02-04
+status: active
+author: AI Integration Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: implementation
+retention_policy: permanent
+category: development
+tags:
+  - perplexity-ai
+  - api-integration
+  - model-providers
+  - rag
+  - learning-paths
+technologies:
+  - Perplexity API
+  - Python
+  - OpenAI API
+related_docs:
+  - ../architecture/ai-providers-architecture.md
+  - learning_paths.py
+dependencies:
+  - perplexity-sdk
+scope: "Integration guide for using Perplexity AI as alternative model provider for learning paths and RAG queries"
+description: Guide for integrating Perplexity AI as an alternative model provider alongside OpenAI, covering configuration, API key setup, and usage examples.
+---
+
 # Perplexity API Integration
 
 This document explains how to use Perplexity AI as an alternative model provider in Project-AI.
@@ -188,5 +222,5 @@ If you get a model not found error:
 ## Additional Resources
 
 - [Perplexity AI Documentation](https://docs.perplexity.ai/)
-- [Project-AI Documentation](../README.md)
+- [[../README.md|Project-AI Documentation]]
 - [Model Provider API Reference](../DEVELOPER_QUICK_REFERENCE.md)

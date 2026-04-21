@@ -33,7 +33,7 @@ Project-AI is a constitutionally-governed AI platform emphasizing ethics, govern
 | **Total Issues** | 100 | [View All Issues](https://github.com/IAmSoThirsty/Project-AI/issues) |
 | **Open Issues** | 70 | [View Open](https://github.com/IAmSoThirsty/Project-AI/issues?q=is%3Aissue+is%3Aopen) |
 | **Closed Issues** | 30 | [View Closed](https://github.com/IAmSoThirsty/Project-AI/issues?q=is%3Aissue+is%3Aclosed) |
-| **Open Security Issues** | 39 | [View Security Issues](#security-related-issues-and-quality-flags) |
+| **Open Security Issues** | 39 | [[#security-related-issues-and-quality-flags|View Security Issues]] |
 | **Open Bug Issues** | 39+ | [View Bugs](https://github.com/IAmSoThirsty/Project-AI/issues?q=is%3Aissue+is%3Aopen+label%3Abug) |
 
 #### Issue Distribution by Type
@@ -456,7 +456,7 @@ For a fully comprehensive analysis beyond API limitations:
    - Review and remediate issues [#240](https://github.com/IAmSoThirsty/Project-AI/issues/240), [#234](https://github.com/IAmSoThirsty/Project-AI/issues/234), [#227](https://github.com/IAmSoThirsty/Project-AI/issues/227), [#222](https://github.com/IAmSoThirsty/Project-AI/issues/222), and similar
    - Rotate any exposed credentials immediately
    - Remove secrets from git history if necessary using `git-filter-repo`
-   - Links: See [Security Issues](#critical-security-issues-open) section
+   - Links: See [[#critical-security-issues-open|Security Issues]] section
 
 2. **⚠️ HIGH: Review Expired Security Waivers**
    - Evaluate security waivers in issues [#290](https://github.com/IAmSoThirsty/Project-AI/issues/290), [#280](https://github.com/IAmSoThirsty/Project-AI/issues/280)

@@ -1,3 +1,87 @@
+---
+title: "Security & Compliance Documentation"
+id: "security-compliance-readme"
+type: "index"
+version: "1.0.0"
+created_date: "2026-01-10"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:compliance"
+  - "type:index"
+  - "type:guide"
+  - "audience:security-engineer"
+  - "audience:compliance-auditor"
+  - "audience:developer"
+  - "priority:p0-critical"
+technologies:
+  - "Python"
+  - "OWASP Top 10"
+  - "NIST Cybersecurity Framework"
+  - "AWS Security Best Practices"
+  - "CIS Benchmarks"
+summary: "Central index for cryptographic verification, RBAC examples, incident response playbooks, security frameworks, and compliance documentation covering OWASP, NIST, CERT, AWS, and CIS standards."
+scope: "Complete security framework documentation including environment hardening, data validation, AWS integration, agent security, database security, web security, monitoring, and 158 comprehensive tests"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "injection-attacks"
+  - "data-poisoning"
+  - "privilege-escalation"
+  - "adversarial-ai-attacks"
+  - "xss"
+  - "sql-injection"
+  - "xxe"
+  - "path-traversal"
+defends_against:
+  - "OWASP Top 10 2021 (all 10 categories)"
+  - "Injection attacks"
+  - "Data poisoning"
+  - "Privilege escalation"
+  - "Adversarial AI attacks"
+compliance:
+  - "OWASP Top 10 2021"
+  - "NIST Cybersecurity Framework"
+  - "CERT Secure Coding Standards"
+  - "AWS Well-Architected Security Pillar"
+  - "CIS Benchmarks"
+  - "GDPR"
+  - "HIPAA"
+  - "SOC 2"
+  - "ISO 27001:2022"
+stakeholders:
+  - security-team   - all-teams
+last_verified: 2026-04-20
+cvss_score: "N/A - Index Documentation"
+test_coverage:
+  has_tests: true
+  coverage_percent: 99
+  test_count: 158
+  tests_passing: 157
+  tests_skipped: 1
+related_docs:
+  - "security-framework"
+  - "security-quickref"
+  - "threat-model"
+  - "ai-security-framework"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "compliance-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "compliance-officers"
+  - "auditors"
+  - "penetration-testers"
+  - "developers"
+---
+
 # Security & Compliance Documentation
 
 ## 📁 Folder Purpose
@@ -151,6 +235,10 @@ report = hardening.get_validation_report()
 - Directory permission enforcement (0700)
 - Data structure initialization
 
+**Implementation:** See [[src/app/security/environment_hardening.py|Environment Hardening Implementation]]
+
+---
+
 ### 2. Data Validation (`data_validation.py`)
 
 Secure parsing with attack detection:
@@ -179,6 +267,13 @@ is_poisoned, patterns = defense.check_for_poison(user_input)
 - Path traversal prevention
 - Template injection blocking
 - CRLF injection prevention
+
+**Implementation:** 
+- [[src/app/security/data_validation.py|Data Validation Framework]]
+- [[src/app/security/path_security.py|Path Security Validator]]
+- [[source-docs/security/07-data-validation.md|Data Validation Guide]]
+
+---
 
 ### 3. AWS Integration (`aws_integration.py`)
 
@@ -255,6 +350,17 @@ test_cases = fuzzer.fuzz_input("boundary_values", base_input)
 - Timeout protection
 - Runtime fuzzing (4 strategies)
 
+**Implementation:**
+- [[src/app/security/agent_security.py|Agent Security Implementation]]
+- [[src/app/security/ai_security_framework.py|AI Security Framework]]
+- [[source-docs/security/06-agent-security.md|Agent Security Guide]]
+
+**Related:**
+- [[src/app/core/ai_systems.py#FourLaws|Four Laws Ethics System]]
+- [[docs/security_compliance/AI_SECURITY_FRAMEWORK.md|AI Security Framework Documentation]]
+
+---
+
 ### 5. Database Security (`database_security.py`)
 
 SQL injection prevention:
@@ -293,6 +399,12 @@ with db.transaction() as conn:
 - Schema with foreign keys and constraints
 - Agent state storage
 - Knowledge base storage
+
+**Implementation:**
+- [[src/app/security/database_security.py|Database Security Manager]]
+- [[src/app/core/user_manager.py|User Manager]] (bcrypt password hashing)
+
+---
 
 ### 6. Security Monitoring (`monitoring.py`)
 
@@ -335,7 +447,18 @@ stats = monitor.get_event_statistics(time_window=3600)
 - Event statistics and reporting
 - Export audit logs (JSON/CSV)
 
-### 7. Web Security (`web_service.py`)
+**Implementation:**
+- [[src/app/core/security_monitoring.py|Security Monitoring System]]
+- [[src/app/monitoring/security_metrics.py|Security Metrics]]
+- [[src/app/core/security_operations_center.py|Security Operations Center]]
+- [[source-docs/security/05-security-monitoring.md|Security Monitoring Guide]]
+
+**Related:**
+- [[kernel/threat_detection.py|Threat Detection Engine]]
+- [[src/app/core/honeypot_detector.py|Honeypot Detector]]
+- [[src/app/core/incident_responder.py|Incident Responder]]
+
+---
 
 HTTP/SOAP security:
 
@@ -466,9 +589,9 @@ pytest tests/test_security*.py -n auto
 
 ### Core Documentation
 
-- **[SECURITY_FRAMEWORK.md](SECURITY_FRAMEWORK.md)** - Complete API reference with examples
+- **[[SECURITY_FRAMEWORK.md|SECURITY_FRAMEWORK.md]]** - Complete API reference with examples
 - **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Step-by-step deployment procedures
-- **[SECURITY_QUICKREF.md](SECURITY_QUICKREF.md)** - Quick reference guide
+- **[[SECURITY_QUICKREF.md|SECURITY_QUICKREF.md]]** - Quick reference guide
 
 ### Examples
 

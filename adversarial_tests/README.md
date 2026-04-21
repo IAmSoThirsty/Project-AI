@@ -1,3 +1,17 @@
+---
+type: adversarial-spec
+tags: [testing, adversarial, security-tests, red-teaming, jailbreak-testing, prompt-injection]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, four-laws, ai-persona, jailbreakbench, garak, hydra]
+stakeholders: [security-team, qa-team, ai-safety-team, researchers]
+test_type: adversarial
+coverage_target: 276+ conversation transcripts - JBB (40), Multiturn (15), Hydra (200), Garak (21)
+automation_status: automated
+review_cycle: monthly
+---
+
 # Adversarial Red-Teaming Evaluation for Galahad (Project-AI)
 
 ## Overview

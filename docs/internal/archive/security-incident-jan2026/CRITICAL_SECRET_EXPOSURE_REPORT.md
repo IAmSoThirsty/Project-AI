@@ -1,3 +1,27 @@
+---
+title: "CRITICAL SECRET EXPOSURE REPORT"
+id: "critical-secret-exposure-report"
+type: historical_record
+status: archived
+archived_date: 2026-04-19
+archive_reason: completed
+historical_value: high
+restore_candidate: false
+audience:
+  - developer
+  - architect
+tags:
+  - historical
+  - archive
+  - implementation
+  - monitoring
+  - testing
+  - governance
+  - ci-cd
+  - security
+path_confirmed: T:/Project-AI-main/docs/internal/archive/security-incident-jan2026/CRITICAL_SECRET_EXPOSURE_REPORT.md
+---
+
 # 🚨 CRITICAL: Secret Exposure Report
 
 **Date**: January 9, 2026  

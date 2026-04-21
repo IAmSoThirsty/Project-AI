@@ -1,3 +1,85 @@
+---
+title: "Secret Purge Runbook (Git History Rewrite)"
+id: "secret-purge-runbook"
+type: "runbook"
+version: "1.0.0"
+created_date: "2026-01-15"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Operations Team"
+  email: "secops@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:incident-response"
+  - "type:runbook"
+  - "component:git-filter-repo"
+  - "component:history-rewrite"
+  - "audience:security-engineer"
+  - "audience:devops-engineer"
+  - "priority:p0-critical"
+  - "special:destructive-operation"
+technologies:
+  - "git-filter-repo"
+  - "Git History Rewrite"
+  - "PowerShell"
+  - "Secret Rotation"
+difficulty: "expert"
+estimated_time: "PT60M"
+prerequisites:
+  - "Admin rights to repository"
+  - "git-filter-repo installed"
+  - "All secrets already rotated"
+  - "Coordination with team for re-cloning"
+summary: "Comprehensive runbook for purging secrets from git history using git-filter-repo including rotation, history rewrite, force-push, and verification steps."
+scope: "Complete git history purge workflow: prerequisites verification, git-filter-repo execution, force-push rewritten history, team coordination, and post-purge verification"
+classification: "confidential"
+threat_level: "critical"
+triggers:
+  - "Accidental .env commit"
+  - "API key in git history"
+  - "Credential leak detected"
+  - "Secret scanner alert"
+mitigations:
+  - "[[SECRET_ROTATION]]"
+  - "[[GIT_HISTORY_REWRITE]]"
+  - "[[FORCE_PUSH]]"
+  - "[[VERIFICATION_STEPS]]"
+defends_against:
+  - "Leaked credentials in git history"
+  - "Historical secret exposure"
+  - "Committed .env files"
+  - "API keys in old commits"
+compliance:
+  - "Incident Response Best Practices"
+  - "Secret Leak Remediation"
+  - "GDPR Right to Erasure (if PII)"
+stakeholders:
+  - security-team   - security-operations   - compliance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Incident Response Runbook"
+cwe_ids:
+  - "CWE-798: Use of Hard-coded Credentials"
+  - "CWE-312: Cleartext Storage of Sensitive Information"
+  - "CWE-522: Insufficiently Protected Credentials"
+related_docs:
+  - "secret-management"
+  - "incident-playbook"
+  - "security-framework"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "devops-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "devops-engineers"
+  - "repository-admins"
+escalation_path: "Security Lead → CTO"
+last_tested: "2026-01-15"
+---
+
 # Secret Purge Runbook (Git history rewrite)
 
 This repository previously committed `.env` containing secrets. Removing the file going forward is not enough; you must **rewrite git history** to purge those blobs.

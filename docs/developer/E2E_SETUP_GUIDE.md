@@ -1,3 +1,16 @@
+---
+type: guide
+tags: [p1-developer, e2e-testing, evaluation-pipeline, pytest, ci-cd, test-automation]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [e2e-pipeline, pytest-framework, ci-cd-integration, test-suite]
+stakeholders: [developers, qa-engineers, devops, ci-cd-maintainers]
+audience: beginner
+prerequisites: [python-basics, pytest-fundamentals, yaml-basics, environment-setup]
+estimated_time: 35 minutes
+review_cycle: monthly
+---
 # E2E Evaluation Pipeline - Setup and Configuration Guide
 
 ## Complete Setup Guide
@@ -6,14 +19,14 @@ This guide provides step-by-step instructions for setting up and configuring the
 
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Local Development Setup](#local-development-setup)
-3. [Environment Configuration](#environment-configuration)
-4. [Service Configuration](#service-configuration)
-5. [CI/CD Integration](#cicd-integration)
-6. [Docker Setup](#docker-setup)
-7. [Advanced Configuration](#advanced-configuration)
-8. [Troubleshooting](#troubleshooting)
+1. [[#prerequisites|Prerequisites]]
+2. [[#local-development-setup|Local Development Setup]]
+3. [[#environment-configuration|Environment Configuration]]
+4. [[#service-configuration|Service Configuration]]
+5. [[#cicd-integration|CI/CD Integration]]
+6. [[#docker-setup|Docker Setup]]
+7. [[#advanced-configuration|Advanced Configuration]]
+8. [[#troubleshooting|Troubleshooting]]
 
 ## Prerequisites
 

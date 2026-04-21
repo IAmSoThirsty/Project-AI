@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [github-actions, automation, ci-cd, security, workflows, pull-requests]
+created: 2025-12-18
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, security-automation, dependabot]
+stakeholders: [devops, developers, security-team]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: true
+review_cycle: quarterly
+---
+
 # Automated Workflows Guide
 
 This document describes the automated workflows configured for the Project-AI repository to handle pull requests and security alerts.

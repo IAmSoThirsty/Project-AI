@@ -1,3 +1,45 @@
+---
+title: "Sovereign Messaging System Specification"
+id: sovereign-messaging-spec
+type: specification
+version: 1.0.0
+created_date: 2026-02-05
+updated_date: 2026-02-08
+status: active
+author: Security Team
+contributors:
+  - Backend Team
+  - Cryptography Team
+audience: internal
+confidentiality: confidential
+owner_team: security
+operational_context: implementation
+retention_policy: permanent
+category: security
+tags:
+  - messaging
+  - encryption
+  - p2p
+  - rsa-2048
+  - aes-256
+  - end-to-end-encryption
+  - self-destruct
+  - sovereignty
+  - privacy
+technologies:
+  - RSA-2048-OAEP
+  - AES-256-CBC
+  - SHA-256
+  - cryptography
+related_docs:
+  - ../architecture/messaging-architecture.md
+  - ../security/encryption-standards.md
+dependencies:
+  - cryptography
+scope: "Secure P2P end-to-end encrypted messaging system with self-destruct capabilities for user-AI communication"
+description: Specification for the Sovereign Messaging System providing industry-standard end-to-end encrypted P2P communication with hybrid RSA/AES encryption and automatic message self-destruct.
+---
+
 # 🔐 Sovereign Messaging System
 
 **Secure P2P encrypted messaging for users and AI agents**

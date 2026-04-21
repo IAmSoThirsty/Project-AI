@@ -1,15 +1,66 @@
+---
+title: Project-AI Kernel Architecture - Unified SuperKernel Overview
+id: project-ai-kernel-architecture
+type: architecture
+version: 2.0
+created: 2026-02-03
+created_date: 2026-02-03
+last_verified: 2026-04-20
+updated_date: 2026-02-03
+status: active
+author: Kernel Architecture Team
+contributors: ["SuperKernel Team", "Modular Services Team"]
+# Architecture-Specific Metadata
+architecture_layer: application
+design_pattern: ["two-tier-kernel", "kernel-router", "modular-services", "unified-orchestration"]
+implements: ["superkernel", "cognition-kernel", "reflection-cycle", "memory-engine"]
+uses: ["governance-service", "execution-service", "memory-logging-service", "storage-layer"]
+quality_attributes: ["unified-orchestration", "modularity", "rbac", "governance-integration"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/backend", "governance"]
+tags: ["kernel-architecture", "superkernel", "two-tier", "modular-services", "triumvirate", "rbac", "governance"]
+component: ["superkernel", "kernel-router", "cognition-kernel", "reflection-cycle", "memory-engine", "governance-service"]
+# Relationships
+related_docs: ["kernel-modularization-summary", "super-kernel-documentation", "architecture-overview"]
+related_systems: ["kernel", "governance-service", "superkernel", "triumvirate"]
+depends_on: ["architecture-overview", "kernel-modularization-summary"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "kernel-developers", "system-integrators"]
+stakeholders: ["security-team", "product-team", "compliance-team", "developers", "architecture-team"]
+priority: P0
+difficulty: expert
+estimated_reading_time: 22 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: medium
+compliance: ["rbac", "governance-enforcement"]
+# Discovery
+keywords: ["SuperKernel", "two-tier kernel", "modular services", "kernel router", "unified orchestration"]
+search_terms: ["CognitionKernel", "Triumvirate", "RBAC", "governance service"]
+aliases: ["Unified Kernel", "SuperKernel Architecture", "Two-Tier Kernel"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: 88%
+---
+
+
 # Project-AI Kernel Architecture - Unified Overview
 
 This document provides a unified view of the complete kernel architecture including the newly implemented SuperKernel system and the previously modularized services.
 
 ## Table of Contents
 
-1. [Architecture Overview](#architecture-overview)
-2. [Modular Services (Phase 1)](#modular-services-phase-1)
-3. [SuperKernel System (Phase 2)](#superkernel-system-phase-2)
-4. [Integration](#integration)
-5. [Complete Example](#complete-example)
-6. [Migration Guide](#migration-guide)
+1. [[#architecture-overview|Architecture Overview]]
+2. [[#modular-services-phase-1|Modular Services (Phase 1)]]
+3. [[#superkernel-system-phase-2|SuperKernel System (Phase 2)]]
+4. [[#integration|Integration]]
+5. [[#complete-example|Complete Example]]
+6. [[#migration-guide|Migration Guide]]
 
 ---
 

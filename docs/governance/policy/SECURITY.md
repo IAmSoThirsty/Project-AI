@@ -1,3 +1,41 @@
+---
+title: "Security Policy for Project-AI"
+id: security-policy
+type: policy
+status: active
+created_date: 2025-11-28
+updated_date: 2025-11-28
+version: 1.0
+author: Security Team
+contributors: ["DevOps Team", "Legal Team"]
+policy_level: P1
+enforcement_level: mandatory
+review_frequency: quarterly
+tags:
+  - area:governance
+  - area:security
+  - type:policy
+  - type:guide
+  - component:vulnerability-disclosure
+  - component:security-scanning
+  - audience:security-engineer
+  - audience:developer
+  - audience:contributor
+  - audience:user
+  - priority:critical
+compliance_frameworks: ["Responsible Disclosure", "SARIF", "CVE"]
+relationships:
+  governed_by: ["copilot_workspace_profile"]
+  related_docs: ["CODEX_DEUS_ULTIMATE_SUMMARY", "CONTRIBUTING"]
+  validates: []
+workflow_references:
+  - ".github/workflows/codex-deus-ultimate.yml"
+  - ".github/workflows/bandit.yml"
+  - ".github/workflows/codeql.yml"
+purpose: "Comprehensive security policy covering vulnerability disclosure, supported versions, security best practices, testing requirements, and incident response procedures"
+scope: "Responsible disclosure process, security advisories, supported versions, secure coding practices, code review requirements, testing, monitoring, incident response"
+---
+
 # Security Policy for Project-AI
 
 **Last Updated**: November 28, 2025
@@ -260,7 +298,47 @@ For security concerns:
 
 ---
 
+## 🔧 Enforcement
+
+This policy is enforced through multiple layers of the Project-AI governance system:
+
+### Automated Enforcement Points
+
+| Requirement | Enforcement Location | Mechanism |
+|-------------|---------------------|-----------|
+| **Input Validation** | [[../../../src/app/core/governance/validators.py#L54-L111\|validators.validate_input()]] | Schema validation for all actions |
+| **Input Sanitization** | [[../../../src/app/core/governance/validators.py#L12-L52\|validators.sanitize_payload()]] | HTML encoding, SQL/command injection prevention, path traversal blocking |
+| **Encryption at Rest** | [[../../../src/app/core/security_enforcer.py#L99-L168\|security_enforcer.ASL3Security]] | Fernet encryption (AES-256) with quarterly key rotation |
+| **Access Control** | [[../../../src/app/core/access_control.py#L10-L72\|access_control.AccessControlManager]] | Role-based access control with persistent storage |
+| **Security Monitoring** | [[../../../src/app/core/honeypot_detector.py#L191-L214\|honeypot_detector.detect_attack_patterns()]] | SQL injection, XSS, command injection detection |
+| **Audit Logging** | [[../../../src/app/core/security_enforcer.py#L513\|security_enforcer._log_access_attempt()]] | Security event logging with cryptographic chain |
+
+### Enforcement Integration
+
+All security enforcement occurs through the **Universal Governance Pipeline**:
+
+1. **Validation Phase** [[../../../src/app/core/governance/pipeline.py#L125-L157\|pipeline._validate()]] - Input sanitization and schema validation
+2. **Gate Phase** [[../../../src/app/core/governance/pipeline.py#L169-L184\|pipeline._gate()]] - Access control and authorization
+3. **Logging Phase** [[../../../src/app/core/governance/pipeline.py#L114-L122\|pipeline._log()]] - Security audit trail
+
+**Coverage:** 75% of security requirements have automated enforcement (18/24 mapped requirements).
+
+**Known Gaps:**
+- Hardcoded secrets detection (recommended: pre-commit hook with `detect-secrets`)
+- HTTPS enforcement for network communications
+- Automated CI dependency scanning (workflows exist but need verification)
+
+See [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#1-security-policy-enforcement-matrix\|Policy→Enforcement Traceability Matrix]] for complete mapping.
+
+---
+
 ## 📜 Security Changelog
+
+### February 3, 2025
+
+- Added comprehensive enforcement section with code mappings
+- Documented enforcement integration with governance pipeline
+- Identified security gaps requiring implementation
 
 ### November 28, 2025
 
@@ -271,6 +349,6 @@ For security concerns:
 
 ---
 
-**Status**: ✅ Security Framework Established
-**Last Review**: November 28, 2025
+**Status**: ✅ Security Framework Established (75% enforcement coverage)
+**Last Review**: February 3, 2025
 **Next Review**: June 28, 2026

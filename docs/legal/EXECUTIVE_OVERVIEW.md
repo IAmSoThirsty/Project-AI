@@ -1,3 +1,20 @@
+---
+type: governance-policy
+tags: [governance, legal, executive-overview, business-model, strategic-summary]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [business-operations, licensing-framework, governance-platform]
+stakeholders: [executive-team, board-members, business-development, investors]
+sovereignty_level: governed
+immutability: revisable
+enforcement: manual
+review_cycle: quarterly
+document_type: executive-summary
+target_audience: [c-suite, board-members, decision-makers]
+version: 1.0.0
+---
+
 # Project-AI Executive Overview
 
 **Version:** 1.0.0  

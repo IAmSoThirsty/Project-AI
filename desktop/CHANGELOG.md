@@ -1,3 +1,17 @@
+---
+type: deployment-guide
+tags: [deployment, desktop, changelog, version-history, release-notes]
+created: 2026-01-27
+last_verified: 2026-04-20
+status: current
+related_systems: [desktop-app, electron, react]
+stakeholders: [devops, deployment-team, developers]
+deployment_target: desktop
+deployment_complexity: simple
+production_ready: true
+review_cycle: monthly
+---
+
 # Changelog
 
 All notable changes to the Project AI Desktop application will be documented in this file.

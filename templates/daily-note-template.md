@@ -3,7 +3,19 @@ title: "Daily Note - <% tp.date.now("YYYY-MM-DD") %>"
 date: <% tp.date.now("YYYY-MM-DD") %>
 day: <% tp.date.now("dddd") %>
 week: <% tp.date.now("YYYY-[W]WW") %>
-tags: [daily-note, journal]
+type: template
+template_type: daily-note
+tags: [template, daily-note, journal, productivity, templater]
+last_verified: 2026-04-20
+template_status: current
+related_systems: [templater, obsidian, daily-notes]
+stakeholders: [developers, learners, individual-contributors]
+complexity_level: beginner
+demonstrates: [daily-journaling, task-tracking, reflection, navigation-links, mood-tracking, templater-prompts, auto-file-creation]
+runnable: true
+estimated_completion: 3
+requires: [templater-plugin, daily-notes-plugin]
+review_cycle: quarterly
 ---
 
 # 📅 <% tp.date.now("dddd, MMMM DD, YYYY") %>

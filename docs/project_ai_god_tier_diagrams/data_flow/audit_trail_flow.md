@@ -1,3 +1,27 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, mermaid, sequence-diagram, data-flow, audit-trail, hash-chaining, immutability, compliance]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [audit-trail, hash-chain-generator, compliance-exporter, forensics-engine]
+stakeholders: [security-engineers, compliance-officers, auditors, architecture-team]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: sequence
+format: ascii
+total_lines: 735
+hash_algorithm: SHA-256
+---
+  - hash-chaining
+  - immutable-logging
+  - compliance-export
+  - forensic-analysis
+  - tamper-detection
+  - sha256
+---
+
 # Audit Trail Flow - Immutable Logging with Hash Chaining
 
 ## Overview
@@ -729,7 +753,7 @@ audit_chain_length = Gauge(
 
 ## Related Documentation
 
-- [User Request Flow](./user_request_flow.md)
-- [Governance Decision Flow](./governance_decision_flow.md)
-- [Memory Recording Flow](./memory_recording_flow.md)
-- [Security Architecture](../security/README.md)
+- [[./user_request_flow.md|User Request Flow]]
+- [[./governance_decision_flow.md|Governance Decision Flow]]
+- [[./memory_recording_flow.md|Memory Recording Flow]]
+- [[../security/README.md|Security Architecture]]

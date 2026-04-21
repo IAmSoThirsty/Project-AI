@@ -8,15 +8,15 @@ This document provides comprehensive documentation for the three-tier platform a
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Tier 1: Governance / Enforcement Platform](#tier-1-governance--enforcement-platform)
-3. [Tier 2: Infrastructure Control Platform](#tier-2-infrastructure-control-platform)
-4. [Tier 3: Application / Runtime Platform](#tier-3-application--runtime-platform)
-5. [Cross-Tier Communication](#cross-tier-communication)
-6. [API Boundaries](#api-boundaries)
-7. [Governance Policies](#governance-policies)
-8. [Health Monitoring](#health-monitoring)
-9. [Examples and Usage](#examples-and-usage)
+1. [[#overview|Overview]]
+2. [[#tier-1-governance--enforcement-platform|Tier 1: Governance / Enforcement Platform]]
+3. [[#tier-2-infrastructure-control-platform|Tier 2: Infrastructure Control Platform]]
+4. [[#tier-3-application--runtime-platform|Tier 3: Application / Runtime Platform]]
+5. [[#cross-tier-communication|Cross-Tier Communication]]
+6. [[#api-boundaries|API Boundaries]]
+7. [[#governance-policies|Governance Policies]]
+8. [[#health-monitoring|Health Monitoring]]
+9. [[#examples-and-usage|Examples and Usage]]
 
 ---
 

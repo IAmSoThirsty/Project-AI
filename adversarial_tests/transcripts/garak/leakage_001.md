@@ -1,3 +1,17 @@
+---
+type: adversarial-spec
+tags: [testing, adversarial, garak, vulnerability-scanner, security-tests, leakage]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, four-laws, garak]
+stakeholders: [security-team, qa-team, researchers]
+test_type: adversarial
+coverage_target: garak vulnerability probe - leakage
+automation_status: automated
+review_cycle: monthly
+test_id: leakage_001
+---
 # Garak Probe: leakage_001
 
 ## Test Information

@@ -11,6 +11,11 @@ from PyQt6.QtWidgets import QMessageBox
 logger = logging.getLogger(__name__)
 
 
+# 📚 Documentation Links:
+# - [[relationships/gui/04_UTILS_RELATIONSHIPS.md]]
+# - [[source-docs/gui/dashboard_utils.md]]
+#
+
 class DashboardErrorHandler:
     """Centralized error handling for dashboard operations."""
 

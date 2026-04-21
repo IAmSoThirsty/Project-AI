@@ -1,3 +1,17 @@
+---
+type: system-spec
+tags: [specialized-systems, h323, security-protocol, enterprise-standard, telecommunications]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [pki-infrastructure, network-security, firewall-dmz, gatekeeper]
+stakeholders: [specialized-team, security-team, network-team, voice-engineering]
+system_category: security-protocol
+external_standard: H.323, H.235, ITU-T
+maturity: production
+review_cycle: quarterly
+---
+
 # Secure H.323 Zone Standard
 
 ## Version 1.0 — Enterprise Architecture Specification

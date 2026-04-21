@@ -2,9 +2,21 @@
 title: "<% tp.file.title %>"
 created: <% tp.file.creation_date("YYYY-MM-DD HH:mm") %>
 modified: <% tp.file.last_modified_date("YYYY-MM-DD HH:mm") %>
-tags: [sample, templater]
+type: template
+template_type: basic-note
+tags: [template, note-taking, quickstart, templater]
 author: <% tp.user.name || "Project-AI" %>
 status: draft
+last_verified: 2026-04-20
+template_status: current
+related_systems: [templater, obsidian]
+stakeholders: [developers, learners, contributors, general-users]
+complexity_level: beginner
+demonstrates: [basic-note-structure, templater-variables, metadata-tracking, file-properties]
+runnable: true
+estimated_completion: 2
+requires: [templater-plugin]
+review_cycle: quarterly
 ---
 
 # <% tp.file.title %>

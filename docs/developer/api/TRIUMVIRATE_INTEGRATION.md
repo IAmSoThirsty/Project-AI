@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, triumvirate, production-integration, governance-architecture, multi-agent-system]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [triumvirate-architecture, galahad, cerberus, codexdeus, governance-layer]
+stakeholders: [developers, architects, governance-team, production-engineers]
+audience: intermediate
+prerequisites: [triumvirate-understanding, multi-agent-systems, governance-architecture, production-deployment]
+estimated_time: 55 minutes
+review_cycle: quarterly
+---
 # Triumvirate Production Integration
 
 ## Overview

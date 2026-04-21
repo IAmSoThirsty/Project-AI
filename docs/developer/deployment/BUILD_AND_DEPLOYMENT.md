@@ -1,3 +1,27 @@
+---
+type: deployment
+tags: [p1-developer, build-system, deployment, packaging, pypi, docker, kubernetes, multi-platform]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [build-pipeline, pypi, docker-registry, kubernetes-cluster, packaging-tools]
+stakeholders: [devops, deployment-team, release-managers, build-engineers]
+audience: intermediate
+prerequisites: [python-packaging, docker-basics, kubernetes-fundamentals, ci-cd-knowledge]
+estimated_time: 90 minutes
+review_cycle: monthly
+---
+
+prerequisites:
+  - [[install]]
+  - [[config]]
+
+related_systems: [pypi, docker, kubernetes, build-tools, distribution]
+related_docs:
+  - [[README]]
+  - [[RELEASE_BUILD_GUIDE]]
+  - [[DEPLOYMENT_GUIDE]]
+---
 # Project-AI v1.0.0 - Package Build & Deployment Guide
 
 **Version:** 1.0.0  

@@ -1,3 +1,25 @@
+---
+type: diagram
+tags: [p1-diagrams, diagrams, dashboard, monitoring, grafana, visualization, metrics]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [grafana-server, prometheus-datasource, loki-datasource, dashboard-renderer]
+stakeholders: [devops-team, sre, developers, business-analysts]
+audience: mixed
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: dashboard
+format: json
+total_dashboards: 12
+---
+  - grafana-dashboards
+  - visualization
+  - metrics-dashboards
+  - system-monitoring
+  - performance-monitoring
+---
+
 # Grafana Dashboards
 
 ## Dashboard Architecture

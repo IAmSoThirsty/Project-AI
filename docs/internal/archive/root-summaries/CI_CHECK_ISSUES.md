@@ -1,3 +1,25 @@
+---
+title: "CI CHECK ISSUES"
+id: "ci-check-issues"
+type: historical_record
+status: archived
+archived_date: 2026-04-19
+archive_reason: deprecated
+historical_value: medium
+restore_candidate: false
+audience:
+  - developer
+  - architect
+tags:
+  - historical
+  - archive
+  - testing
+  - ci-cd
+  - architecture
+superseded_by: [[CI Pipeline Documentation]]
+path_confirmed: T:/Project-AI-main/docs/internal/archive/root-summaries/CI_CHECK_ISSUES.md
+---
+
 # CI Check Issues Analysis
 
 ## Summary

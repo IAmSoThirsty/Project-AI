@@ -1,3 +1,25 @@
+---
+title: "QUICK START"
+id: "quick-start"
+type: historical_record
+status: archived
+archived_date: 2026-04-19
+archive_reason: completed
+historical_value: high
+restore_candidate: false
+audience:
+  - developer
+  - architect
+tags:
+  - historical
+  - archive
+  - testing
+  - ci-cd
+  - security
+  - architecture
+path_confirmed: T:/Project-AI-main/docs/internal/archive/session-notes/QUICK_START.md
+---
+
 # Quick Start Guide - Project-AI Dashboard
 
 ## 🚀 Launch Commands

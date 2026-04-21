@@ -1,3 +1,20 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, mermaid, sequence-diagram, data-flow, request-processing]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [api-gateway, cognition-kernel, governance-triumvirate, execution-service, memory-engine]
+stakeholders: [architecture-team, developers, technical-leads]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: sequence
+format: ascii
+total_lines: 803
+flow_steps: 8
+---
+
 # User Request Flow - Detailed Architecture
 
 ## Overview
@@ -797,7 +814,7 @@ async def call_external_service(request):
 
 ## Related Documentation
 
-- [Governance Decision Flow](./governance_decision_flow.md)
-- [Agent Execution Flow](./agent_execution_flow.md)
-- [Memory Recording Flow](./memory_recording_flow.md)
-- [Audit Trail Flow](./audit_trail_flow.md)
+- [[./governance_decision_flow.md|Governance Decision Flow]]
+- [[./agent_execution_flow.md|Agent Execution Flow]]
+- [[./memory_recording_flow.md|Memory Recording Flow]]
+- [[./audit_trail_flow.md|Audit Trail Flow]]

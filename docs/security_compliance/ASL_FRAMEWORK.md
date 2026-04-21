@@ -1,3 +1,80 @@
+---
+title: "AI Safety Levels (ASL) Framework for Project-AI"
+id: "asl-framework"
+type: "framework"
+version: "1.0.0"
+created_date: "2026-01-15"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "AI Safety Team"
+  email: "ai-safety@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:ai-safety"
+  - "type:framework"
+  - "type:spec"
+  - "component:asl-evaluator"
+  - "component:asl-monitor"
+  - "component:capability-assessment"
+  - "audience:ai-researcher"
+  - "audience:security-engineer"
+  - "priority:p0-critical"
+  - "special:responsible-scaling"
+technologies:
+  - "Python"
+  - "Anthropic RSP"
+  - "Capability Assessment Framework"
+  - "Robustness Metrics"
+summary: "Comprehensive AI Safety Levels (ASL) framework based on Anthropic's Responsible Scaling Policy providing automated capability threshold detection, risk assessment, and graduated safety measures."
+scope: "ASL-1 through ASL-4 classification system, capability categories (CBRN, cyber, AI R&D, persuasion, autonomy, deception), threshold detection, and continuous monitoring"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "cbrn-capability-escalation"
+  - "cyber-offense-capabilities"
+  - "self-improvement"
+  - "mass-persuasion"
+  - "autonomous-replication"
+  - "deception-capabilities"
+mitigations:
+  - "[[ASL3_IMPLEMENTATION]]"
+  - "[[SECURITY_COUNTERMEASURES]]"
+  - "[[THREAT_MODEL]]"
+validates:
+  - "Capability thresholds for ASL transitions"
+  - "8,850 security test results"
+  - "Attack success rates (ASR)"
+  - "Risk-based deployment controls"
+compliance:
+  - "Anthropic Responsible Scaling Policy"
+  - "NIST AI RMF 1.0"
+  - "ISO 27001:2022"
+stakeholders:
+  - security-team   - compliance-team   - ai-safety-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Framework Documentation"
+cwe_ids:
+  - "CWE-749: Exposed Dangerous Method"
+  - "CWE-650: Trusting HTTP Permission Methods"
+related_docs:
+  - "asl3-implementation"
+  - "ai-security-framework"
+  - "threat-model"
+  - "security-audit-report"
+review_status:
+  reviewed: true
+  reviewers: ["ai-safety-team", "security-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "ai-safety-researchers"
+  - "security-engineers"
+  - "compliance-auditors"
+  - "risk-managers"
+---
+
 # AI Safety Levels (ASL) Framework for Project-AI
 
 ## Overview

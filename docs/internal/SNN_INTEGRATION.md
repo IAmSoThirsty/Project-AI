@@ -1,3 +1,51 @@
+---
+title: "Spiking Neural Networks (SNNs) Integration"
+id: snn-integration-guide
+type: specification
+version: 1.0.0
+created_date: 2026-02-12
+updated_date: 2026-02-15
+status: active
+author: AI Research Team
+contributors:
+  - Neuromorphic Computing Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: implementation
+retention_policy: permanent
+category: development
+tags:
+  - spiking-neural-networks
+  - neuromorphic-computing
+  - bindsnet
+  - sinabs
+  - snntorch
+  - pytorch
+  - continual-learning
+  - energy-efficient-ai
+technologies:
+  - BindsNet
+  - Sinabs
+  - snnTorch
+  - SpikingJelly
+  - Norse
+  - Brian2
+  - Lava
+  - Rockpool
+  - Nengo
+  - NIR
+related_docs:
+  - ../architecture/ai-systems-architecture.md
+  - ../research/neuromorphic-computing.md
+dependencies:
+  - torch
+  - bindsnet
+  - sinabs
+scope: "Integration of 10 production-ready SNN libraries for neuromorphic computing and continual learning"
+description: Documentation for Spiking Neural Networks integration with 10 production-ready libraries, enabling neuromorphic computing, continual learning, and energy-efficient AI.
+---
+
 # Spiking Neural Networks (SNNs) Integration
 
 ## Overview

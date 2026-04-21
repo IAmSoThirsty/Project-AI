@@ -1,3 +1,20 @@
+---
+type: deployment-guide
+tags: [deployment, desktop, electron, cross-platform, production-ready, desktop-app]
+created: 2026-01-27
+last_verified: 2026-04-20
+status: current
+related_systems: [governance-kernel, electron, react, typescript, material-ui]
+stakeholders: [devops, deployment-team, end-users, desktop-developers]
+deployment_target: desktop
+deployment_complexity: moderate
+production_ready: true
+review_cycle: monthly
+platform_support: [windows, macos, linux]
+build_system: [vite, electron-builder]
+dependencies: [node-18+, governance-kernel]
+---
+
 # Project AI - Desktop Application
 
 ## Overview

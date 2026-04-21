@@ -1,3 +1,54 @@
+---
+title: Temporal Integration Architecture - Workflow Orchestration
+id: temporal-integration-architecture
+type: architecture
+version: 1.0
+created: 2026-01-28
+created_date: 2026-01-28
+last_verified: 2026-04-20
+updated_date: 2026-01-28
+status: active
+author: Temporal Integration Team
+contributors: ["Workflow Team", "Backend Team"]
+# Architecture-Specific Metadata
+architecture_layer: infrastructure
+design_pattern: ["durable-execution", "workflow-orchestration", "activity-pattern"]
+implements: ["temporal-client", "workflows", "activities", "worker"]
+uses: ["temporalio-sdk", "workflow-definitions", "activity-functions"]
+quality_attributes: ["fault-tolerance", "durability", "reliability", "observability"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/infrastructure", "workflow"]
+tags: ["temporal", "workflow-orchestration", "durable-execution", "fault-tolerance", "activities"]
+component: ["temporal-client", "workflow-engine", "activity-executor", "temporal-worker"]
+# Relationships
+related_docs: ["temporal-io-integration", "workflow-engine-spec", "architecture-overview"]
+related_systems: ["temporal-integration", "workflow-engine"]
+depends_on: ["workflow-engine-spec"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "workflow-engineers", "backend-developers"]
+stakeholders: ["platform-team", "devops-team", "developers", "architecture-team"]
+priority: P0
+difficulty: advanced
+estimated_reading_time: 14 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: low
+compliance: []
+# Discovery
+keywords: ["Temporal", "workflow orchestration", "durable execution", "fault tolerance", "activities"]
+search_terms: ["Temporal.io", "workflow definitions", "activity patterns", "worker"]
+aliases: ["Temporal Architecture", "Workflow Orchestration System"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: 81%
+---
+
+
 # Temporal Integration Architecture
 
 ## Overview

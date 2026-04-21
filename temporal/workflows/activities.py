@@ -17,6 +17,11 @@ logger = logging.getLogger(__name__)
 
 
 @activity.defn
+# 📚 Documentation Links:
+# - [[relationships/temporal/02_ACTIVITY_DEPENDENCIES.md]]
+# - [[source-docs/temporal/ACTIVITIES_COMPREHENSIVE.md]]
+#
+
 async def run_triumvirate_pipeline(request: dict) -> dict:
     """
     Run the complete Triumvirate pipeline as a Temporal activity.

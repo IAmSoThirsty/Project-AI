@@ -1,0 +1,24 @@
+================================================================================
+Metadata Generation Log - Started: 2026-04-20 10:33:26
+Command: .\scripts\automation\add-metadata.ps1 -Path $testFile -DryRun -ErrorAction Stop | Select-Object -First 10
+
+================================================================================
+
+[2026-04-20 10:33:26] [INFO] Starting metadata generation
+[2026-04-20 10:33:27] [INFO] Target: C:\Users\Quencher\AppData\Local\Temp\quick-test-20260420103326\test.md
+[2026-04-20 10:33:27] [DEBUG] Using default taxonomy
+[2026-04-20 10:33:27] [INFO] Processing: C:\Users\Quencher\AppData\Local\Temp\quick-test-20260420103326\test.md
+[2026-04-20 10:33:27] [INFO] [DRY RUN] Would add frontmatter to: C:\Users\Quencher\AppData\Local\Temp\quick-test-20260420103326\test.md
+[2026-04-20 10:33:27] [INFO] 
+================================================================================
+PROCESSING SUMMARY
+================================================================================
+Total Files:      1
+Processed:        1
+Skipped:          0
+Errors:           0
+Duration:         00:00
+Mode:             DRY RUN
+================================================================================
+
+[2026-04-20 10:33:27] [SUCCESS] Metadata generation completed

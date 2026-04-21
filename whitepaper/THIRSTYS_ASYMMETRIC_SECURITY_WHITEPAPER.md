@@ -1,3 +1,15 @@
+---
+type: whitepaper
+tags: [whitepapers, aggregated-content, strategic, security-architecture, asymmetric-defense]
+created: 2025-01-26
+last_verified: 2026-04-20
+status: current
+related_systems: [security-enforcement-gateway, constitutional-rules, moving-target-defense, temporal-fuzzing, zero-trust-architecture]
+stakeholders: [content-team, knowledge-management, security-team, architects, researchers]
+content_category: strategic
+review_cycle: quarterly
+---
+
 # Thirsty's Asymmetric Security: Making Exploitation Structurally Unfinishable
 
 **Through Runtime Invariants, Moving-Target Defense, and Temporal Analysis**

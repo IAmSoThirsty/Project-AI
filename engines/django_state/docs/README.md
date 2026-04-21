@@ -1,3 +1,25 @@
+---
+created: '2026-01-01'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: engine-architecture
+tags:
+- django-state
+- engines
+- documentation
+engine_type: django-state
+implementation_status: in-progress
+language: python
+related_systems:
+- state-evolution
+- trust-modeling
+- simulation-engine
+stakeholders:
+- architecture-team
+- simulation-team
+---
+
 # Django State Engine
 
 ## Human Misunderstanding Extinction Engine

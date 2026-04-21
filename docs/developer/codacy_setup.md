@@ -1,3 +1,16 @@
+---
+type: tutorial
+tags: [p1-developer, codacy, code-quality, setup-guide, integration, ci-cd]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [codacy-platform, code-analysis, quality-gates, ci-cd-integration]
+stakeholders: [developers, qa-team, code-quality-engineers]
+audience: beginner
+prerequisites: [codacy-account, api-token, repository-access]
+estimated_time: 15 minutes
+review_cycle: quarterly
+---
 # 🎉 Welcome to Project-AI Codacy Integration! 🎉
 
 Ready to add top-tier code quality checks to your Project-AI repo?  

@@ -1,0 +1,359 @@
+{
+  "version": "1.0.0",
+  "description": "Comprehensive error catalog for metadata validation system",
+  "lastUpdated": "2026-01-23",
+  "errors": {
+    "REQUIRED_FIELD_MISSING": {
+      "code": "E001",
+      "severity": "ERROR",
+      "category": "Schema Violation",
+      "description": "A required field specified in the JSON Schema is missing from the metadata",
+      "resolution": "Add the required field to the YAML frontmatter. Refer to the schema documentation for required fields.",
+      "examples": [
+        {
+          "error": "Required field 'description' is missing",
+          "fix": "Add '---\\ndescription: Your description here\\n---' to the top of the file"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/required-fields"
+    },
+    "TYPE_MISMATCH": {
+      "code": "E002",
+      "severity": "ERROR",
+      "category": "Data Type",
+      "description": "The data type of a field does not match the expected type in the schema",
+      "resolution": "Ensure the field value matches the expected type (string, number, boolean, array, or object)",
+      "examples": [
+        {
+          "error": "Expected type 'string' but got 'number'",
+          "fix": "Change 'version: 1' to 'version: \"1.0.0\"'"
+        },
+        {
+          "error": "Expected type 'array' but got 'string'",
+          "fix": "Change 'tags: metadata' to 'tags: [metadata]'"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/data-types"
+    },
+    "ENUM_VIOLATION": {
+      "code": "E003",
+      "severity": "ERROR",
+      "category": "Value Constraint",
+      "description": "The field value is not one of the allowed enumeration values",
+      "resolution": "Use one of the allowed values specified in the schema",
+      "examples": [
+        {
+          "error": "Value 'INVALID_STATUS' is not in allowed values: DRAFT, ACTIVE, DEPRECATED, ARCHIVED, REVIEW, PENDING, SUPERSEDED",
+          "fix": "Change 'status: INVALID_STATUS' to 'status: ACTIVE'"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/enumerations"
+    },
+    "PATTERN_MISMATCH": {
+      "code": "E004",
+      "severity": "ERROR",
+      "category": "Format Validation",
+      "description": "The field value does not match the required pattern (regex)",
+      "resolution": "Ensure the value conforms to the specified pattern format",
+      "examples": [
+        {
+          "error": "Value '1.0' does not match pattern: ^\\d+\\.\\d+\\.\\d+$",
+          "fix": "Change 'version: 1.0' to 'version: 1.0.0' (semantic versioning)"
+        },
+        {
+          "error": "Value '2026-1-5' does not match pattern: ^\\d{4}-\\d{2}-\\d{2}$",
+          "fix": "Change 'lastUpdated: 2026-1-5' to 'lastUpdated: 2026-01-05' (ISO 8601)"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/patterns"
+    },
+    "MIN_LENGTH_VIOLATION": {
+      "code": "E005",
+      "severity": "ERROR",
+      "category": "Length Constraint",
+      "description": "The string value is shorter than the minimum allowed length",
+      "resolution": "Provide a value that meets the minimum length requirement",
+      "examples": [
+        {
+          "error": "Value length (5) is less than minimum (10)",
+          "fix": "Expand 'description: Short' to a minimum of 10 characters"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/constraints"
+    },
+    "MAX_LENGTH_VIOLATION": {
+      "code": "E006",
+      "severity": "ERROR",
+      "category": "Length Constraint",
+      "description": "The string value exceeds the maximum allowed length",
+      "resolution": "Shorten the value to meet the maximum length requirement",
+      "examples": [
+        {
+          "error": "Value length (600) exceeds maximum (500)",
+          "fix": "Reduce description to 500 characters or less"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/constraints"
+    },
+    "MIN_ITEMS_VIOLATION": {
+      "code": "E007",
+      "severity": "ERROR",
+      "category": "Array Constraint",
+      "description": "The array has fewer items than the minimum required",
+      "resolution": "Add more items to the array to meet the minimum requirement",
+      "examples": [
+        {
+          "error": "Array has 0 items, minimum is 1",
+          "fix": "Change 'tags: []' to 'tags: [at-least-one-tag]'"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/arrays"
+    },
+    "MAX_ITEMS_VIOLATION": {
+      "code": "E008",
+      "severity": "ERROR",
+      "category": "Array Constraint",
+      "description": "The array has more items than the maximum allowed",
+      "resolution": "Remove items to meet the maximum requirement",
+      "examples": [
+        {
+          "error": "Array has 25 items, maximum is 20",
+          "fix": "Reduce the number of tags to 20 or fewer"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/arrays"
+    },
+    "UNIQUE_ITEMS_VIOLATION": {
+      "code": "E009",
+      "severity": "ERROR",
+      "category": "Array Constraint",
+      "description": "The array contains duplicate items when uniqueness is required",
+      "resolution": "Remove duplicate items from the array",
+      "examples": [
+        {
+          "error": "Array contains duplicate items",
+          "fix": "Change 'tags: [metadata, validation, metadata]' to 'tags: [metadata, validation]'"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/arrays"
+    },
+    "UNKNOWN_FIELD": {
+      "code": "W001",
+      "severity": "WARNING",
+      "category": "Schema Compatibility",
+      "description": "A field is present in the metadata but not defined in the schema",
+      "resolution": "Remove the unknown field or add it to the schema if intentional",
+      "examples": [
+        {
+          "error": "Field 'customField' is not defined in schema",
+          "fix": "Remove 'customField' or use 'customFields.customField' instead"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/custom-fields"
+    },
+    "NO_METADATA": {
+      "code": "W002",
+      "severity": "WARNING",
+      "category": "Missing Metadata",
+      "description": "No YAML frontmatter found in the document",
+      "resolution": "Add YAML frontmatter between '---' delimiters at the top of the file",
+      "examples": [
+        {
+          "error": "No YAML frontmatter found",
+          "fix": "Add at the top of file:\\n---\\ndescription: Your description\\n---"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/frontmatter"
+    },
+    "INVALID_DATE_FORMAT": {
+      "code": "E010",
+      "severity": "ERROR",
+      "category": "Format Validation",
+      "description": "Date value does not conform to ISO 8601 format (YYYY-MM-DD)",
+      "resolution": "Use ISO 8601 date format with zero-padded month and day",
+      "examples": [
+        {
+          "error": "Invalid date format: '01/23/2026'",
+          "fix": "Change to '2026-01-23'"
+        },
+        {
+          "error": "Invalid date format: '2026-1-23'",
+          "fix": "Change to '2026-01-23' (zero-padded)"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/date-formats"
+    },
+    "INVALID_SEMVER": {
+      "code": "E011",
+      "severity": "ERROR",
+      "category": "Format Validation",
+      "description": "Version value does not conform to Semantic Versioning 2.0.0",
+      "resolution": "Use semantic versioning format: MAJOR.MINOR.PATCH with optional pre-release and build metadata",
+      "examples": [
+        {
+          "error": "Invalid semver: 'v1.0'",
+          "fix": "Change to '1.0.0' (no 'v' prefix, three components required)"
+        },
+        {
+          "error": "Invalid semver: '1.0'",
+          "fix": "Change to '1.0.0' (must have three components)"
+        }
+      ],
+      "documentation": "https://semver.org/"
+    },
+    "INVALID_GLOB_PATTERN": {
+      "code": "E012",
+      "severity": "ERROR",
+      "category": "Format Validation",
+      "description": "The applyTo field contains an invalid glob pattern",
+      "resolution": "Use valid glob syntax with wildcards (*, **, ?) and path separators",
+      "examples": [
+        {
+          "error": "Invalid glob pattern: '***invalid'",
+          "fix": "Use valid patterns like '**/*.md', 'src/**', or '**'"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/glob-patterns"
+    },
+    "EXPIRY_DATE_PASSED": {
+      "code": "W003",
+      "severity": "WARNING",
+      "category": "Lifecycle",
+      "description": "The document's expiry date has passed",
+      "resolution": "Review the document and update the expiry date or archive the document",
+      "examples": [
+        {
+          "error": "Document expired on 2025-12-31",
+          "fix": "Update 'expiryDate' or set 'status: ARCHIVED'"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/lifecycle"
+    },
+    "DEPRECATED_FIELD": {
+      "code": "W004",
+      "severity": "WARNING",
+      "category": "Schema Compatibility",
+      "description": "A field is deprecated and scheduled for removal in future schema versions",
+      "resolution": "Migrate to the recommended replacement field",
+      "examples": [
+        {
+          "error": "Field 'oldField' is deprecated, use 'newField' instead",
+          "fix": "Replace 'oldField: value' with 'newField: value'"
+        }
+      ],
+      "documentation": "https://project-ai.dev/docs/metadata/migrations"
+    }
+  },
+  "categories": {
+    "Schema Violation": {
+      "description": "Errors related to missing or incorrect schema structure",
+      "severity": "ERROR",
+      "autofix": false
+    },
+    "Data Type": {
+      "description": "Errors related to incorrect data types",
+      "severity": "ERROR",
+      "autofix": false
+    },
+    "Value Constraint": {
+      "description": "Errors related to value constraints (enum, range, etc.)",
+      "severity": "ERROR",
+      "autofix": false
+    },
+    "Format Validation": {
+      "description": "Errors related to format patterns (regex, dates, versions)",
+      "severity": "ERROR",
+      "autofix": false
+    },
+    "Length Constraint": {
+      "description": "Errors related to string or array length constraints",
+      "severity": "ERROR",
+      "autofix": false
+    },
+    "Array Constraint": {
+      "description": "Errors related to array-specific constraints",
+      "severity": "ERROR",
+      "autofix": false
+    },
+    "Schema Compatibility": {
+      "description": "Warnings about schema compatibility issues",
+      "severity": "WARNING",
+      "autofix": false
+    },
+    "Missing Metadata": {
+      "description": "Warnings about missing metadata",
+      "severity": "WARNING",
+      "autofix": false
+    },
+    "Lifecycle": {
+      "description": "Warnings about document lifecycle issues",
+      "severity": "WARNING",
+      "autofix": false
+    }
+  },
+  "severityLevels": {
+    "ERROR": {
+      "exitCode": 1,
+      "description": "Critical issues that must be fixed",
+      "color": "red",
+      "icon": "❌"
+    },
+    "WARNING": {
+      "exitCode": 0,
+      "description": "Issues that should be reviewed but don't block validation",
+      "color": "yellow",
+      "icon": "⚠"
+    },
+    "INFO": {
+      "exitCode": 0,
+      "description": "Informational messages",
+      "color": "blue",
+      "icon": "ℹ"
+    }
+  },
+  "troubleshooting": {
+    "commonIssues": [
+      {
+        "issue": "YAML parsing fails",
+        "causes": [
+          "Incorrect YAML syntax",
+          "Missing closing quotes",
+          "Incorrect indentation",
+          "Special characters not escaped"
+        ],
+        "solutions": [
+          "Validate YAML syntax with a YAML linter",
+          "Ensure all strings with special characters are quoted",
+          "Use consistent indentation (2 spaces recommended)",
+          "Check for unescaped colons in values"
+        ]
+      },
+      {
+        "issue": "No metadata found",
+        "causes": [
+          "Missing --- delimiters",
+          "Frontmatter not at start of file",
+          "Incorrect delimiter format"
+        ],
+        "solutions": [
+          "Ensure frontmatter starts with '---' on line 1",
+          "Ensure frontmatter ends with '---' followed by blank line",
+          "Remove any content before the first '---'"
+        ]
+      },
+      {
+        "issue": "Validation is slow",
+        "causes": [
+          "Large number of files",
+          "Complex regex patterns",
+          "Cache disabled"
+        ],
+        "solutions": [
+          "Enable caching with -Cache parameter",
+          "Use parallel processing with -Parallel parameter",
+          "Validate only changed files in CI/CD"
+        ]
+      }
+    ]
+  }
+}

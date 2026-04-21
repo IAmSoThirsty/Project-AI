@@ -5,11 +5,11 @@ Production-ready Dataview query collection for Obsidian vault management.
 ---
 
 ## Table of Contents
-- [Query 1: Active Projects Dashboard](#query-1-active-projects-dashboard)
-- [Query 2: Priority Task Matrix](#query-2-priority-task-matrix)
-- [Query 3: Budget Analysis Report](#query-3-budget-analysis-report)
-- [Advanced Queries](#advanced-queries)
-- [Performance Optimization](#performance-optimization)
+- [[#query-1-active-projects-dashboard|Query 1: Active Projects Dashboard]]
+- [[#query-2-priority-task-matrix|Query 2: Priority Task Matrix]]
+- [[#query-3-budget-analysis-report|Query 3: Budget Analysis Report]]
+- [[#advanced-queries|Advanced Queries]]
+- [[#performance-optimization|Performance Optimization]]
 
 ---
 

@@ -1,0 +1,102 @@
+{
+  "nodes": [
+    {
+      "id": "oversight_agent",
+      "name": "Oversight Agent",
+      "type": "agent",
+      "description": "Action safety validation agent",
+      "tags": ["agent", "oversight", "validation", "safety"],
+      "folder": "src/app/agents",
+      "metadata": {"file": "oversight.py"}
+    },
+    {
+      "id": "planner_agent",
+      "name": "Planner Agent",
+      "type": "agent",
+      "description": "Task decomposition and planning",
+      "tags": ["agent", "planner", "task", "planning"],
+      "folder": "src/app/agents",
+      "metadata": {"file": "planner.py"}
+    },
+    {
+      "id": "validator_agent",
+      "name": "Validator Agent",
+      "type": "agent",
+      "description": "Input/output validation",
+      "tags": ["agent", "validator", "validation", "io"],
+      "folder": "src/app/agents",
+      "metadata": {"file": "validator.py"}
+    },
+    {
+      "id": "explainability_agent",
+      "name": "Explainability Agent",
+      "type": "agent",
+      "description": "Decision explanation generation",
+      "tags": ["agent", "explainability", "transparency", "explanation"],
+      "folder": "src/app/agents",
+      "metadata": {"file": "explainability.py"}
+    },
+    {
+      "id": "ai_persona",
+      "name": "AI Persona System",
+      "type": "ai_system",
+      "description": "Self-aware AI with personality and mood tracking",
+      "tags": ["persona", "personality", "mood", "ai_system"],
+      "folder": "src/app/core",
+      "metadata": {"class": "AIPersona", "file": "ai_systems.py"}
+    },
+    {
+      "id": "memory_expansion",
+      "name": "Memory Expansion System",
+      "type": "ai_system",
+      "description": "Conversation logging and knowledge base",
+      "tags": ["memory", "knowledge", "conversation", "ai_system"],
+      "folder": "src/app/core",
+      "metadata": {"class": "MemoryExpansionSystem", "file": "ai_systems.py"}
+    },
+    {
+      "id": "learning_system",
+      "name": "Learning Request Manager",
+      "type": "ai_system",
+      "description": "Human-in-the-loop learning with Black Vault",
+      "tags": ["learning", "approval", "black_vault", "ai_system"],
+      "folder": "src/app/core",
+      "metadata": {"class": "LearningRequestManager", "file": "ai_systems.py"}
+    }
+  ],
+  "links": [
+    {
+      "source": "oversight_agent",
+      "target": "planner_agent",
+      "type": "validates",
+      "weight": 1.5,
+      "metadata": {"description": "Oversight validates planned tasks"}
+    },
+    {
+      "source": "oversight_agent",
+      "target": "ai_persona",
+      "type": "validates",
+      "weight": 1.7,
+      "metadata": {"description": "Oversight validates persona actions"}
+    },
+    {
+      "source": "validator_agent",
+      "target": "memory_expansion",
+      "type": "validates",
+      "weight": 1.4,
+      "metadata": {"description": "Validator checks memory operations"}
+    },
+    {
+      "source": "planner_agent",
+      "target": "learning_system",
+      "type": "uses",
+      "weight": 1.3,
+      "metadata": {"description": "Planner uses learning for task planning"}
+    }
+  ],
+  "stats": {
+    "node_count": 7,
+    "link_count": 4,
+    "node_types": ["agent", "ai_system"]
+  }
+}

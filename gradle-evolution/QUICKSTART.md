@@ -1,3 +1,17 @@
+---
+type: build-system-doc
+tags: [gradle, gradle-evolution, quickstart, build-systems, getting-started]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: production-ready
+related_systems: [gradle, project-ai-governance, constitutional-engine]
+stakeholders: [build-team, contributors, developers]
+project_category: build-tooling
+build_system: gradle-evolution
+review_cycle: monthly
+target_audience: [developers, build-engineers]
+---
+
 # Gradle Evolution Substrate - Quick Start
 
 ## Installation

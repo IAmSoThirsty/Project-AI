@@ -1,3 +1,54 @@
+---
+title: PACE Engine Specification
+id: pace-engine-spec
+type: specification
+version: 1.0
+created: 2026-01-23
+created_date: 2026-01-23
+last_verified: 2026-04-20
+updated_date: 2026-01-23
+status: active
+author: Architecture Team
+contributors: []
+# Architecture-Specific Metadata
+architecture_layer: application
+design_pattern: ["orchestration-pattern", "event-driven", "policy-enforcement"]
+implements: ["pace-engine-interface", "policy-agent-cognition-engine"]
+uses: ["policy-engine", "agent-coordinator", "cognition-engine", "execution-runtime"]
+quality_attributes: ["orchestration", "governance", "extensibility", "observability"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/backend"]
+tags: ["pace-engine", "orchestration", "policy-enforcement", "agent-coordination", "workflow-execution"]
+component: ["pace-engine", "policy-engine", "agent-coordinator", "cognition-engine", "execution-runtime"]
+# Relationships
+related_docs: ["agent-model-spec", "capability-model-spec", "workflow-engine-spec", "architecture-overview"]
+related_systems: ["agent-coordinator", "capability-system", "workflow-engine", "pace-engine"]
+depends_on: []
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "developers", "system-integrators"]
+stakeholders: ["developers", "architecture-team", "product-team"]
+priority: P0
+difficulty: advanced
+estimated_reading_time: 18 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: low
+compliance: []
+# Discovery
+keywords: ["PACE", "orchestration", "policy engine", "agent coordination", "cognition engine"]
+search_terms: ["PACE engine", "policy enforcement", "workflow orchestration"]
+aliases: ["PACE Runtime", "Policy-Agent-Cognition-Engine"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: null
+---
+
+
 # PACE Engine Specification
 
 **Version:** 1.0  
@@ -279,5 +330,5 @@ The PACE Engine can be extended through:
 ## See Also
 
 - [PACE_ARCHITECTURE.md](PACE_ARCHITECTURE.md) - Overall architecture design
-- [MODULE_CONTRACTS.md](MODULE_CONTRACTS.md) - Module interface specifications
-- [WORKFLOW_ENGINE.md](WORKFLOW_ENGINE.md) - Workflow execution details
+- [[MODULE_CONTRACTS.md|MODULE_CONTRACTS.md]] - Module interface specifications
+- [[WORKFLOW_ENGINE.md|WORKFLOW_ENGINE.md]] - Workflow execution details

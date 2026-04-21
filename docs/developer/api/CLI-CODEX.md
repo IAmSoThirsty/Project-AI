@@ -1,3 +1,16 @@
+---
+type: api
+tags: [p1-developer, cli, cli-codex, cli-development, best-practices, architecture, api-reference]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [cli-framework, command-parser, arg-parsing, cli-patterns]
+stakeholders: [developers, architects, cli-contributors]
+audience: advanced
+prerequisites: [python-advanced, cli-design-patterns, api-architecture, user-experience-design]
+estimated_time: 75 minutes
+review_cycle: quarterly
+---
 # Project-AI CLI-CODEX
 
 ## Overview

@@ -1,3 +1,40 @@
+---
+title: "MIT License - Project-AI"
+id: license
+type: standard
+version: 1.0.0
+created_date: 2025-01-01
+updated_date: 2025-01-01
+status: active
+author: "Project AI Team"
+tags:
+  - legal
+  - legal/licensing
+  - legal/intellectual-property
+  - governance
+  - standard
+area:
+  - legal
+  - governance
+audience:
+  - developer
+  - legal
+  - public
+priority: p0
+related_to:
+  - "[[README]]"
+  - "[[CONTRIBUTING]]"
+  - "[[CODE_OF_CONDUCT]]"
+validates:
+  - all repository code
+  - all repository documentation
+what: "MIT License granting permission to use, copy, modify, merge, publish, distribute, sublicense, and sell the Project-AI software with attribution requirement and warranty disclaimer"
+who: "All users, contributors, and redistributors of Project-AI software - defines legal rights and obligations"
+when: "ALWAYS - applies to all use, modification, and distribution of Project-AI codebase"
+where: "Root directory LICENSE file - legally binding copyright notice for entire repository"
+why: "Provides open-source permissive license enabling AGI accountability through transparency, allows commercial and non-commercial use, requires attribution, disclaims warranties, protects contributors from liability"
+---
+
 # MIT License
 
 Copyright (c) 2025 Project AI Team

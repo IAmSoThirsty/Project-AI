@@ -1,3 +1,36 @@
+---
+title: "BADGE RECOMMENDATIONS"
+id: "badge-recommendations"
+type: archived
+tags:
+  - p3-archive
+  - historical
+  - archive
+  - implementation
+  - testing
+  - governance
+  - ci-cd
+  - security
+created: 2026-02-10
+last_verified: 2026-04-20
+status: archived
+archived_date: 2026-04-19
+archive_reason: completed
+related_systems:
+  - security-systems
+  - test-framework
+  - ci-cd-pipeline
+stakeholders:
+  - developer
+  - architect
+audience:
+  - developer
+  - architect
+review_cycle: annually
+historical_value: high
+restore_candidate: false
+path_confirmed: T:/Project-AI-main/docs/internal/archive/BADGE_RECOMMENDATIONS.md
+---
 # Security and Compliance Badge Recommendations
 
 This document provides recommended badges for README.md to showcase the security and compliance features implemented in Project-AI.

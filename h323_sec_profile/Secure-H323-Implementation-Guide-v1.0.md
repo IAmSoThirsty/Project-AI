@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, implementation-guide, deployment, configuration]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, pki-infrastructure, gatekeeper, gateway]
+stakeholders: [integration-team, deployment-team, network-team, voice-engineering]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # Secure H.323 Implementation Guide
 
 ## Version 1.0 — Deployment & Configuration Manual

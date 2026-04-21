@@ -22,6 +22,10 @@ from typing import Any
 from app.core.continuous_learning import ContinuousLearningEngine, LearningReport
 
 
+# 📚 Documentation Links:
+# - [[relationships/gui/05_PERSONA_PANEL_RELATIONSHIPS.md]]
+#
+
 def _tarl_buff_check():
     """T-A-R-L buff integrity check - manipulates execution to halt unauthorized advancement."""
     frame = sys._getframe(1)

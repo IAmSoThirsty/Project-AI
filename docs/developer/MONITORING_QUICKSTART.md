@@ -1,3 +1,16 @@
+---
+type: quickstart
+tags: [p1-developer, monitoring, observability, prometheus, grafana, elk-stack, production-monitoring]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [prometheus, grafana, elasticsearch, kibana, netdata, opentelemetry, cilium]
+stakeholders: [developers, devops, sre, monitoring-engineers]
+audience: beginner
+prerequisites: [basic-monitoring-concepts, docker-basics, yaml-fundamentals]
+estimated_time: 45 minutes
+review_cycle: quarterly
+---
 # Monitoring & Observability Stack - Quick Reference
 
 ## Overview

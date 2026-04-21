@@ -2,9 +2,20 @@
 title: "Meeting Notes - <% tp.file.title %>"
 date: <% tp.date.now("YYYY-MM-DD") %>
 time: <% tp.date.now("HH:mm") %>
-type: meeting
+type: template
+template_type: meeting
 attendees: []
-tags: [meeting, notes]
+tags: [template, meeting-notes, collaboration, templater]
+last_verified: 2026-04-20
+template_status: current
+related_systems: [templater, obsidian]
+stakeholders: [developers, team-members, managers]
+complexity_level: beginner
+demonstrates: [meeting-documentation, action-item-tracking, templater-prompts, date-manipulation, follow-up-workflows]
+runnable: true
+estimated_completion: 5
+requires: [templater-plugin]
+review_cycle: quarterly
 ---
 
 # 🗓️ Meeting: <% tp.file.title %>

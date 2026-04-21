@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [github-actions, codex-deus, workflows, monolith, consolidation]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, codex-deus]
+stakeholders: [devops, developers, architects]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: true
+review_cycle: quarterly
+---
+
 # Codex Deus Monolith Documentation
 
 ## Overview

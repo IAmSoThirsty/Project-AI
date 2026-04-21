@@ -1,3 +1,22 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, orchestration, temporal, workflows, durable-execution, fault-tolerance]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [temporal-io, workflow-engine, history-service, matching-service, workers]
+stakeholders: [platform-team, backend-developers, architecture-team]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: ascii
+workflow_features: 5
+---
+  - fault-tolerance
+  - distributed-workflows
+---
+
 # Temporal.io Workflow Orchestration
 
 ## Overview
@@ -615,7 +634,7 @@ class TemporalHealthCheck:
 
 ## Related Documentation
 
-- [Temporal Workflows](./temporal_workflows.md) - Workflow definitions and activities
+- [[./temporal_workflows.md|Temporal Workflows]] - Workflow definitions and activities
 - [Workflow Patterns](./workflow_patterns.md) - Saga pattern, compensation, retry policies
 - [Task Queues](./task_queues.md) - Queue configuration, worker pools, rate limiting
 

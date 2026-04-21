@@ -1,3 +1,17 @@
+---
+type: platform-doc
+tags: [web, nextjs, implementation, summary, production]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [nextjs, react, flask-backend, zustand]
+stakeholders: [web-team, frontend-team, integration-team]
+platform: web
+integration_type: sdk
+external_dependencies: [nextjs, react, typescript, zustand, axios]
+review_cycle: quarterly
+---
+
 # Next.js Implementation Summary
 
 ## Overview

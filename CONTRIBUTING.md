@@ -1,3 +1,51 @@
+---
+title: "Contributing to Project-AI: Code, Docs, and Civilization-Scale Impact"
+id: contributing-guide
+type: guide
+version: 2.0.0
+created_date: 2025-12-01
+updated_date: 2026-02-05
+status: active
+author: "Project-AI Team <projectaidevs@gmail.com>"
+tags:
+  - governance
+  - governance/policy
+  - development
+  - development/testing
+  - development/ci-cd
+  - legal
+  - legal/licensing
+  - guide
+  - best-practices
+area:
+  - governance
+  - development
+  - legal
+audience:
+  - developer
+  - contributor
+  - architect
+  - public
+priority: p0
+related_to:
+  - "[[README]]"
+  - "[[CODE_OF_CONDUCT]]"
+  - "[[SECURITY]]"
+  - "[[LICENSE]]"
+  - "[[copilot_workspace_profile]]"
+depends_on:
+  - "[[CODE_OF_CONDUCT]]"
+  - "[[LICENSE]]"
+validates:
+  - pull requests
+  - contributor workflows
+what: "Comprehensive contributor governance framework defining PR workflows, code standards, testing requirements, review process, trust levels (Contributor → Reviewer → Maintainer → Steward), and fork philosophy for AGI stewardship"
+who: "All contributors (first-time contributors, maintainers, stewards) - defines how to participate in distributed AGI development with high-trust review model"
+when: "Before first contribution - reference when submitting PRs, reviewing code, or making governance decisions"
+where: "Root directory as canonical contributor guide - referenced in PR templates and onboarding documentation"
+why: "Establishes distributed stewardship model for AGI development, balances openness with accountability, defines trust-based progression path, ensures long-term oriented decision-making over short-term convenience"
+---
+
 # Contributing to Project-AI: Code, Docs, and Civilization-Scale Impact
 
 **Document Version:** 2.0  

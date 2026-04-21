@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, documentation-index, developer-hub, navigation]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [docs-structure, api-docs, cli-docs, deployment-docs, guides]
+stakeholders: [developers, contributors, documentation-team]
+audience: beginner
+prerequisites: [basic-navigation]
+estimated_time: 5 minutes
+review_cycle: monthly
+---
 # Developer Documentation
 
 ## 📁 Folder Purpose

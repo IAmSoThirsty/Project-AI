@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, liara, temporal-agency, temporal-io, distributed-workflows, agent-orchestration]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [liara-temporal-agency, temporal-workflows, mission-management, distributed-agents]
+stakeholders: [developers, workflow-engineers, distributed-systems-engineers]
+audience: beginner
+prerequisites: [python-basics, temporal-io-basics, distributed-systems-awareness, workflow-concepts]
+estimated_time: 35 minutes
+review_cycle: quarterly
+---
 # Liara Temporal Agency - Quick Reference Guide
 
 ## Overview

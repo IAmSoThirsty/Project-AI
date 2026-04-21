@@ -1,3 +1,21 @@
+---
+type: governance-policy
+tags: [governance, legal, commercial-use, licensing, compensation, reporting]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [commercial-licensing, governance-enforcement, reporting-systems]
+stakeholders: [legal-team, business-development, governance-team, commercial-users]
+sovereignty_level: governed
+immutability: revisable
+enforcement: hybrid
+review_cycle: annual
+license_type: commercial-use
+requires_addendum: true
+compensation_model: [subscription, royalty, hybrid]
+version: 1.0.0
+---
+
 # Project-AI Commercial Use License
 
 **Version:** 1.0.0  

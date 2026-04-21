@@ -1,3 +1,16 @@
+---
+type: quickstart
+tags: [p1-developer, temporal, temporal-io, workflows, quick-reference, distributed-orchestration]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [temporal-workflows, temporal-server, workflow-orchestration, distributed-systems]
+stakeholders: [developers, workflow-engineers, backend-developers]
+audience: beginner
+prerequisites: [python-basics, docker-basics, workflow-concepts]
+estimated_time: 10 minutes
+review_cycle: monthly
+---
 # Temporal Integration Quick Reference
 
 Quick reference guide for using the Temporal integration in Project-AI.

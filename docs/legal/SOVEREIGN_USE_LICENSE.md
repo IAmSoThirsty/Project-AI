@@ -1,3 +1,22 @@
+---
+type: governance-policy
+tags: [governance, legal, sovereign-use, government, authorization, military, intelligence]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [governance-authority, audit-systems, authorization-framework]
+stakeholders: [legal-team, governance-team, sovereign-authority, national-security]
+sovereignty_level: sovereign
+immutability: immutable
+enforcement: automatic
+review_cycle: annual
+license_type: sovereign-government-use
+clearance_level: public
+authorization_required: true
+audit_mandatory: true
+version: 1.0.0
+---
+
 # Project-AI Sovereign / Government Use License
 
 **Version:** 1.0.0  

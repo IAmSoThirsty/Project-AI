@@ -453,10 +453,10 @@ function ConvertTo-YamlFrontmatter {
         
         if ($value -is [array]) {
             if ($value.Count -eq 0) {
-                $yaml += "$key: []"
+                $yaml += "${key}: []"
             }
             else {
-                $yaml += "$key`:"
+                $yaml += "${key}:"
                 foreach ($item in $value) {
                     if ($item -is [hashtable]) {
                         $yaml += "  - type: $($item.type)"
@@ -469,13 +469,13 @@ function ConvertTo-YamlFrontmatter {
             }
         }
         elseif ($value -is [hashtable]) {
-            $yaml += "$key`:"
+            $yaml += "${key}:"
             foreach ($subKey in $value.Keys) {
-                $yaml += "  $subKey`: $($value[$subKey])"
+                $yaml += "  ${subKey}: $($value[$subKey])"
             }
         }
         else {
-            $yaml += "$key`: $value"
+            $yaml += "${key}: $value"
         }
     }
     

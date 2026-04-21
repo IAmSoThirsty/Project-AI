@@ -1,4 +1,18 @@
 ---
+type: github-config
+tags: [pull-request, template, github, contribution, behavioral-impact]
+created: 2025-11-10
+last_verified: 2026-04-20
+status: current
+related_systems: [github-actions, governance, ethics-framework]
+stakeholders: [developers, contributors, ethics-team]
+config_scope: development
+automation_type: manual-config
+requires_secrets: false
+review_cycle: quarterly
+---
+
+---
 name: Pull Request
 about: Propose changes to the codebase
 title: ''

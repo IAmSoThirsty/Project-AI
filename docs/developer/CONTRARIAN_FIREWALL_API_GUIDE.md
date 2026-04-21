@@ -1,3 +1,16 @@
+---
+type: api
+tags: [p1-developer, api-guide, contrarian-firewall, fastapi, flask, advanced-security]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [contrarian-firewall, api-gateway, security-layer, request-validation]
+stakeholders: [developers, architects, security-engineers, api-integrators]
+audience: advanced
+prerequisites: [python-advanced, fastapi-expertise, api-design, security-patterns, microservices]
+estimated_time: 60 minutes
+review_cycle: quarterly
+---
 # Contrarian Firewall - API Integration Guide
 
 ## Quick Start

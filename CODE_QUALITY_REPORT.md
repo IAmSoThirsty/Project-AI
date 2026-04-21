@@ -1,3 +1,46 @@
+---
+type: report
+report_type: audit
+report_date: 2025-01-24T00:00:00Z
+project_phase: code-quality-assessment
+completion_percentage: 100
+tags:
+  - status/complete
+  - quality/code-standards
+  - audit/linting
+  - technical-debt
+  - documentation/good
+  - type-hints/good
+area: code-quality
+stakeholders:
+  - development-team
+  - tech-lead
+  - quality-assurance-team
+supersedes: []
+related_reports:
+  - TECHNICAL_DEBT_REPORT.md
+next_report: null
+impact:
+  - Overall grade B+ established with 445 linting violations
+  - 209 errors, 89 warnings, 147 info-level issues identified
+  - 83% function docstring coverage (4,616 of 5,546 functions)
+  - 84% type hint coverage validated
+  - 78 auto-fixable issues identified (17.5%)
+verification_method: ruff-static-analysis
+overall_grade: B+
+total_python_files: 376
+total_functions: 5546
+linting_violations: 445
+errors: 209
+warnings: 89
+info_issues: 147
+auto_fixable: 78
+complex_functions: 112
+module_docstring_coverage: 92.8
+function_docstring_coverage: 83.2
+type_hint_coverage: 84.1
+---
+
 # PROJECT-AI CODE QUALITY & STANDARDS COMPLIANCE REPORT
 **Analysis Date:** 2025-01-24  
 **Scope:** All Python code in `src/` directory (376 files, 5,546 functions)

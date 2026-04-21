@@ -1,3 +1,17 @@
+---
+type: migration-guide
+tags: [integrations, thirsty-lang, tarl, migration, checklist]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, tarl, project-ai-core]
+stakeholders: [platform-team, developers, integration-team]
+platform: cross-platform
+integration_type: sdk
+external_dependencies: [python, nodejs, pyyaml, jsonschema, cryptography]
+review_cycle: quarterly
+---
+
 # Migration Checklist: Thirsty-Lang + TARL Integration
 
 This checklist guides you through migrating an existing Thirsty-Lang or TARL project to use the unified integration package.

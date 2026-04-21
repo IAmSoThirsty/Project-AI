@@ -26,6 +26,11 @@ from app.security.data_validation import sanitize_input, validate_length
 logger = logging.getLogger(__name__)
 
 
+# 📚 Documentation Links:
+# - [[relationships/gui/05_PERSONA_PANEL_RELATIONSHIPS.md]]
+# - [[source-docs/gui/persona_panel.md]]
+#
+
 class PersonaPanel(QWidget):
     """Panel for managing AI Persona settings and displaying Four Laws."""
 

@@ -1,3 +1,28 @@
+---
+created: '2026-01-01'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: implementation-guide
+tags:
+- tarl
+- compiler
+- implementation
+engine_type: tarl-runtime
+implementation_status: in-progress
+language: tarl
+related_systems:
+- compiler
+- runtime-vm
+- bytecode
+- jit
+- garbage-collector
+stakeholders:
+- architecture-team
+- tarl-team
+- compiler-team
+---
+
 # T.A.R.L. Compiler Frontend Subsystem
 
 ## Overview

@@ -1,3 +1,17 @@
+---
+type: platform-integration
+tags: [specialized-systems, unity, vr, integration-guide, deployment]
+created: 2026-01-23
+last_verified: 2026-04-20
+status: current
+related_systems: [project-ai-core, vr-bridge, scene-initialization]
+stakeholders: [vr-team, integration-team, development-team]
+system_category: game-engine
+external_standard: Unity3D, C#, XR
+maturity: production
+review_cycle: quarterly
+---
+
 # Integration Guide - VR Module with Unity Project
 
 ## Overview

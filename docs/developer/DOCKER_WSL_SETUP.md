@@ -1,3 +1,16 @@
+---
+type: tutorial
+tags: [p1-developer, docker, wsl2, windows, containerization, setup, development-environment]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [docker-desktop, wsl2, virtualization, codacy-cli, development-tools]
+stakeholders: [developers, devops, windows-users]
+audience: intermediate
+prerequisites: [windows-10+, admin-privileges, virtualization-enabled, basic-docker-knowledge]
+estimated_time: 30 minutes
+review_cycle: quarterly
+---
 # Docker & WSL Setup Guide for Project-AI
 
 ## Overview

@@ -1,8 +1,22 @@
+---
+type: script-documentation
+tags: [scripts, governance, classification, security, automation]
+created: 2026-01-21
+last_verified: 2026-04-20
+status: current
+related_systems: [governance, security, audit-framework]
+stakeholders: [security-team, devops, developers]
+script_language: [python, powershell, bash]
+automation_purpose: [classification, governance, security]
+requires_admin: false
+review_cycle: quarterly
+---
+
 # SCRIPT GOVERNANCE CLASSIFICATION
 
 **Date**: 2026-01-21  
 **Classification Authority**: Multi-Path Governance Architecture  
-**Review Cycle**: Quarterly or upon script modification  
+**Review Cycle**: Quarterly or upon script modification
 
 ---
 

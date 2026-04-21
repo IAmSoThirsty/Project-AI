@@ -1,3 +1,21 @@
+---
+type: governance-policy
+tags: [governance, legal, data-ingest, data-contribution, user-data, privacy]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [data-processing, storage-systems, privacy-framework]
+stakeholders: [legal-team, data-protection-officer, users, governance-team]
+sovereignty_level: governed
+immutability: revisable
+enforcement: automatic
+review_cycle: quarterly
+license_type: data-ingest-contribution
+ownership_transfer: false
+user_responsibility: true
+version: 1.0.0
+---
+
 # Project-AI Data Ingest & Contribution License
 
 **Version:** 1.0.0  

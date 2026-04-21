@@ -1,7 +1,20 @@
+---
+type: reference
+tags: [p1-developer, configuration, actionlint, yaml-config, linter-configuration]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [actionlint, configuration-files, github-actions, workflow-validation]
+stakeholders: [developers, ci-cd-maintainers, workflow-authors]
+audience: intermediate
+prerequisites: [yaml-proficiency, actionlint-basics, github-actions-knowledge]
+estimated_time: 25 minutes
+review_cycle: quarterly
+---
 Configuration
 =============
 
-This document describes how to configure [actionlint](..) behavior.
+This document describes how to configure [[..|actionlint]] behavior.
 
 Note that configuration file is optional. The author tries to keep configuration file as minimal as possible not to
 bother users to configure behavior of actionlint. Running actionlint without configuration file would work fine in most
@@ -48,7 +61,7 @@ config-variables:
 
 ---
 
-[Checks](checks.md) | [Installation](install.md) | [Usage](usage.md) | [Go API](api.md) | [References](reference.md)
+[[checks.md|Checks]] | [[install.md|Installation]] | [[usage.md|Usage]] | [[api.md|Go API]] | [[reference.md|References]]
 
 [Super-Linter]: https://github.com/super-linter/super-linter
 [pat]: https://pkg.go.dev/path#Match

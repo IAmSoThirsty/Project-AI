@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [security, automation, github-actions, vulnerability-scanning, remediation]
+created: 2026-01-07
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, security-automation, github-actions, dependabot]
+stakeholders: [security-team, devops, developers]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: true
+review_cycle: quarterly
+---
+
 # Automated Security Resolution System
 
 ## Overview

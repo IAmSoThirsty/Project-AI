@@ -1,3 +1,17 @@
+---
+type: platform-doc
+tags: [web, security, nextjs, vulnerability, upgrade]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [nextjs, react, web-frontend]
+stakeholders: [security-team, web-team, platform-team]
+platform: web
+integration_type: sdk
+external_dependencies: [nextjs]
+review_cycle: quarterly
+---
+
 # Security Update: Next.js 15.5.12
 
 ## Issue

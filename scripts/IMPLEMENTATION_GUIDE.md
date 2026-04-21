@@ -1,8 +1,22 @@
+---
+type: automation-guide
+tags: [scripts, governance, implementation, automation, ci-cd]
+created: 2026-01-21
+last_verified: 2026-04-20
+status: current
+related_systems: [governance, router, audit-framework, ci-cd]
+stakeholders: [devops, developers, security-team]
+script_language: [python, powershell, bash]
+automation_purpose: [deployment, validation, governance]
+requires_admin: true
+review_cycle: quarterly
+---
+
 # Script Governance Implementation Guide
 
 **Status**: Phase 2 - Partial Implementation Complete  
 **Date**: 2026-01-21  
-**Next Review**: 2026-04-21  
+**Next Review**: 2026-04-21
 
 ---
 

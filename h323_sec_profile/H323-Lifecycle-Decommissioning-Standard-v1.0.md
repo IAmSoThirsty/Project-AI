@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, lifecycle, decommissioning, asset-management]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, asset-management, change-management]
+stakeholders: [operations-team, asset-management, compliance-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 Lifecycle & Decommissioning Standard
 
 Version 1.0 — Deployment, Maintenance, Retirement

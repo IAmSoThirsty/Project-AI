@@ -1,3 +1,19 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, design-patterns, factory-pattern, creational-pattern, agent-creation, object-instantiation]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [agent-factory, workflow-factory, execution-context-factory]
+stakeholders: [architecture-team, developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: class
+format: code
+pattern_category: creational
+---
+
 # Factory Pattern in Project-AI
 
 ## Overview
@@ -194,5 +210,5 @@ class TestAgentFactory:
 
 ## Related Documentation
 
-- **[Builder Pattern](../builder/README.md)** - Complex object construction
-- **[Agent Entities](../domain/domain_models.md)** - Agent domain models
+- **[[../builder/README.md|Builder Pattern]]** - Complex object construction
+- **[[../domain/domain_models.md|Agent Entities]]** - Agent domain models

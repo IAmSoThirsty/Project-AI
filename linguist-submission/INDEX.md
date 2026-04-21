@@ -1,3 +1,20 @@
+---
+type: submission-doc
+tags: [thirsty-lang, linguist, index, package-inventory, github-integration]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, github-linguist, textmate]
+stakeholders: [language-team, contributors, linguist-maintainers]
+project_category: language-implementation
+language_paradigm: [water-themed, defensive-programming, multi-edition]
+build_system: custom
+review_cycle: monthly
+package_version: 1.0.0
+total_files: 11
+sample_files: 5
+---
+
 # Thirsty-lang Linguist Submission Package - INDEX
 
 **Version:** 1.0.0  

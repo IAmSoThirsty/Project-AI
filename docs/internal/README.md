@@ -1,3 +1,29 @@
+---
+title: "Internal Documentation Index"
+id: internal-docs-index
+type: index
+version: 1.0.0
+created_date: 2026-01-15
+updated_date: 2026-04-20
+status: active
+author: Project-AI Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: reference
+retention_policy: permanent
+category: documentation
+tags:
+  - documentation
+  - internal
+  - index
+  - team-reference
+related_docs:
+  - ../public/README.md
+  - ../architecture/README.md
+description: Index and navigation guide for internal engineering documentation, including implementation summaries, integration notes, and work-in-progress materials.
+---
+
 # Internal Documentation
 
 This folder is reserved for legacy notes, archived summaries, internal codenames, and engineering team-only documentation.

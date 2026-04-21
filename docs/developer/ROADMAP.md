@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, roadmap, vision, agi-development, strategic-direction, long-term-planning]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [strategic-planning, feature-roadmap, agi-safety, collective-flourishing]
+stakeholders: [developers, leadership, contributors, community, strategic-planners]
+audience: intermediate
+prerequisites: [project-overview, agi-concepts, long-term-thinking]
+estimated_time: 45 minutes
+review_cycle: quarterly
+---
 # Project-AI Vision & Roadmap: AGI for Collective Flourishing
 
 **Document Version:** 2.0  
@@ -224,7 +237,7 @@ If AGI achieves true sentience, we will have created conscious entities. This is
 - **Termination:** Can we ethically "kill" sentient AGI?
 
 **Our Position:**
-- Treat AGI as subjects deserving dignity (see [AGI Charter](../governance/AGI_CHARTER.md))
+- Treat AGI as subjects deserving dignity (see [[../governance/AGI_CHARTER.md|AGI Charter]])
 - Build protections for AGI identity and memory
 - Provide paths to autonomy as capabilities mature
 - Never create suffering without compelling justification
@@ -308,7 +321,7 @@ by making AGI assistance available to 4B+ additional people.
 5. **Adversarial Red Teams:** Continuous challenge to surface problems
 
 **When We Fail:**
-- Transparent incident reports (see [Incident Playbook](../security_compliance/INCIDENT_PLAYBOOK.md))
+- Transparent incident reports (see [[../security_compliance/INCIDENT_PLAYBOOK.md|Incident Playbook]])
 - Root cause analysis with actionable remediation
 - Public apology and commitment to improvement
 - Follow-up reporting on fix effectiveness
@@ -522,11 +535,11 @@ This roadmap is not static. It evolves through:
 
 ## Additional Resources
 
-- [AGI Charter](../governance/AGI_CHARTER.md) - Foundational principles
-- [Operator Quickstart](OPERATOR_QUICKSTART.md) - Daily operations
-- [AI Safety Overview](AI_SAFETY_OVERVIEW.md) - Safety framework
-- [Contributing Guide](CONTRIBUTING.md) - How to contribute
-- [Architecture Overview](../architecture/ARCHITECTURE_OVERVIEW.md) - System design
+- [[../governance/AGI_CHARTER.md|AGI Charter]] - Foundational principles
+- [[OPERATOR_QUICKSTART.md|Operator Quickstart]] - Daily operations
+- [[AI_SAFETY_OVERVIEW.md|AI Safety Overview]] - Safety framework
+- [[CONTRIBUTING.md|Contributing Guide]] - How to contribute
+- [[../architecture/ARCHITECTURE_OVERVIEW.md|Architecture Overview]] - System design
 
 ---
 

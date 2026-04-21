@@ -1,4 +1,18 @@
 ---
+type: github-config
+tags: [issue-template, cli, enhancement, proposal, github]
+created: 2026-01-10
+last_verified: 2026-04-20
+status: current
+related_systems: [cli, development-environment, issue-management]
+stakeholders: [developers, contributors, cli-team]
+config_scope: development
+automation_type: manual-config
+requires_secrets: false
+review_cycle: quarterly
+---
+
+---
 name: CLI Enhancement Proposal
 about: Propose a new CLI command, feature, or improvement
 title: '[CLI] '

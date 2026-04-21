@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, smoke-testing, quick-checks, verification, testing-checklist, qa]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [desktop-app, web-frontend, testing-framework, verification-suite]
+stakeholders: [developers, qa-team, testers, ci-cd-maintainers]
+audience: intermediate
+prerequisites: [python-3.11, development-environment, testing-basics]
+estimated_time: 15 minutes
+review_cycle: monthly
+---
 # Smoke Check Guide
 
 This checklist helps you verify the key stacks quickly before opening a full issue.

@@ -1,3 +1,17 @@
+---
+type: test-suite-doc
+tags: [testing, unit-tests, integration-tests, gradle-evolution, constitutional-engine]
+created: 2026-04-19
+last_verified: 2026-04-20
+status: current
+related_systems: [gradle-evolution, constitutional-engine, build-cognition, audit-system]
+stakeholders: [qa-team, developers, build-team]
+test_type: integration
+coverage_target: 7 test modules - constitutional, cognition, capsules, security, audit, api, integration
+automation_status: automated
+review_cycle: monthly
+---
+
 # Gradle Evolution Test Suite
 
 Comprehensive pytest test suite for the Gradle Evolution substrate, validating constitutional enforcement, cognitive deliberation, build capsules, security policies, audit integration, and API functionality.

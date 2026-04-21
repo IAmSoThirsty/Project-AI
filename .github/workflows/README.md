@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [github-actions, workflows, codex-deus, ci-cd, consolidation]
+created: 2026-01-25
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, security-automation, codex-deus]
+stakeholders: [devops, developers, architects]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: true
+review_cycle: quarterly
+---
+
 # GitHub Actions Workflows
 
 ## 🏛️ Codex Deus Ultimate - Single Source of Truth

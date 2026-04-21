@@ -1,3 +1,17 @@
+---
+type: deployment-guide
+tags: [deployment, desktop, configuration, resources, build-system, documentation]
+created: 2026-01-27
+last_verified: 2026-04-20
+status: current
+related_systems: [desktop-app, electron-builder, vite, typescript]
+stakeholders: [devops, deployment-team, developers]
+deployment_target: desktop
+deployment_complexity: moderate
+production_ready: true
+review_cycle: monthly
+---
+
 # Desktop Resources & Configuration - Complete
 
 ## ✅ Created Files (12 Additional)

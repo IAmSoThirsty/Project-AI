@@ -1,6 +1,30 @@
+---
+type: deployment
+tags: [p1-developer, deployment-checklist, release-management, automation, github-actions, ci-cd]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [release-pipeline, github-actions, automation-workflows, multi-platform-builds]
+stakeholders: [devops, deployment-team, release-managers, build-engineers]
+audience: intermediate
+prerequisites: [deployment-basics, github-actions-knowledge, multi-platform-deployment, automation]
+estimated_time: 60 minutes
+review_cycle: monthly
+---
+
+prerequisites:
+  - [[install]]
+  - [[config]]
+
+related_systems: [github-actions, docker, kubernetes, android-sdk, electron-builder]
+related_docs:
+  - [[README]]
+  - [[RELEASE_BUILD_GUIDE]]
+  - [[BUILD_AND_DEPLOYMENT]]
+---
 # Deployment & Release Checklist
 
-This document captures the deployment and release process for Project-AI. For detailed automated build instructions, see [RELEASE_BUILD_GUIDE.md](RELEASE_BUILD_GUIDE.md).
+This document captures the deployment and release process for Project-AI. For detailed automated build instructions, see [[RELEASE_BUILD_GUIDE.md|RELEASE_BUILD_GUIDE.md]].
 
 ## Automated Release Process (Recommended)
 
@@ -41,7 +65,7 @@ For local builds or testing:
 scripts\build_release.bat
 ```
 
-See [RELEASE_BUILD_GUIDE.md](RELEASE_BUILD_GUIDE.md) for complete instructions.
+See [[RELEASE_BUILD_GUIDE.md|RELEASE_BUILD_GUIDE.md]] for complete instructions.
 
 ## Manual Deployment (Legacy)
 
@@ -154,6 +178,6 @@ project-ai-v1.0.0/
 ## Support
 
 For detailed build instructions, troubleshooting, and CI/CD integration:
-- See [RELEASE_BUILD_GUIDE.md](RELEASE_BUILD_GUIDE.md)
+- See [[RELEASE_BUILD_GUIDE.md|RELEASE_BUILD_GUIDE.md]]
 - See [PRODUCTION_DEPLOYMENT.md](PRODUCTION_DEPLOYMENT.md) for deployment
 - GitHub Issues: https://github.com/IAmSoThirsty/Project-AI/issues

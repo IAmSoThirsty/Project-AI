@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, monitoring, telemetry, observability]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, monitoring-infrastructure, metrics-platform]
+stakeholders: [operations-team, sre-team, monitoring-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # Monitoring & Telemetry Specification for Secure H.323 Deployments
 
 ## Version 1.0 — Observability, Metrics, Alerts, and Data Flows

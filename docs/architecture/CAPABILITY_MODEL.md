@@ -1,3 +1,54 @@
+---
+title: Capability Model Specification
+id: capability-model-spec
+type: architecture
+version: 1.0
+created: 2026-01-23
+created_date: 2026-01-23
+last_verified: 2026-04-20
+updated_date: 2026-01-23
+status: active
+author: Architecture Team
+contributors: []
+# Architecture-Specific Metadata
+architecture_layer: application
+design_pattern: ["registry-pattern", "sandbox-pattern", "plugin-architecture"]
+implements: ["capability-interface", "sandbox-manager"]
+uses: ["validation-engine", "monitoring-engine", "capability-registry"]
+quality_attributes: ["composability", "isolation", "observability", "extensibility"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/backend"]
+tags: ["capability-model", "sandboxing", "plugin-system", "PACE-system", "composability"]
+component: ["capability-invoker", "capability-registry", "sandbox-manager", "validation-engine"]
+# Relationships
+related_docs: ["agent-model-spec", "workflow-engine-spec", "pace-engine-spec"]
+related_systems: ["agent-coordinator", "workflow-engine", "pace-engine", "capability-system"]
+depends_on: ["pace-engine-spec"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "developers", "plugin-developers"]
+stakeholders: ["developers", "architecture-team", "product-team"]
+priority: P0
+difficulty: intermediate
+estimated_reading_time: 12 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: low
+compliance: []
+# Discovery
+keywords: ["capabilities", "plugins", "sandbox", "registry", "composability"]
+search_terms: ["capability model", "capability registry", "sandbox execution"]
+aliases: ["Capability Architecture", "PACE Capability Model"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: null
+---
+
+
 # Capability Model Specification
 
 **Version:** 1.0  
@@ -687,6 +738,6 @@ capabilities:
 
 ## See Also
 
-- [MODULE_CONTRACTS.md](MODULE_CONTRACTS.md) - CapabilityInvoker interface
-- [AGENT_MODEL.md](AGENT_MODEL.md) - Agent-capability integration
-- [WORKFLOW_ENGINE.md](WORKFLOW_ENGINE.md) - Workflow-capability integration
+- [[MODULE_CONTRACTS.md|MODULE_CONTRACTS.md]] - CapabilityInvoker interface
+- [[AGENT_MODEL.md|AGENT_MODEL.md]] - Agent-capability integration
+- [[WORKFLOW_ENGINE.md|WORKFLOW_ENGINE.md]] - Workflow-capability integration

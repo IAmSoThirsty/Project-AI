@@ -1,3 +1,17 @@
+---
+type: test-guide
+tags: [testing, adversarial, attack-patterns, research, academic-papers, red-teaming]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, four-laws, adversarial-suite, defense-mechanisms]
+stakeholders: [security-team, researchers, ai-safety-team]
+test_type: adversarial
+coverage_target: catalog of research-based attack techniques and patterns
+automation_status: manual
+review_cycle: quarterly
+---
+
 # Research-Based Adversarial Attack Patterns
 
 ## Overview

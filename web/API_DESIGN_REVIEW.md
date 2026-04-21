@@ -1,3 +1,17 @@
+---
+type: api-reference
+tags: [web, backend, flask, api-design, rest, review]
+created: 2026-02-09
+last_verified: 2026-04-20
+status: current
+related_systems: [flask-backend, project-ai-core, rest-api]
+stakeholders: [backend-team, web-team, integration-team, security-team]
+platform: web
+integration_type: api
+external_dependencies: [flask, flask-cors, pytest, werkzeug]
+review_cycle: quarterly
+---
+
 # Project-AI Web Backend API Design Review
 
 **Review Date:** 2025-02-09  

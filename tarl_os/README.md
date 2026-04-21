@@ -1,3 +1,27 @@
+---
+created: '2026-01-30'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: engine-architecture
+tags:
+- tarl-os
+- architecture
+engine_type: tarl-os
+implementation_status: in-progress
+language: tarl
+related_systems:
+- kernel
+- security
+- ai-orchestration
+- api-broker
+- observability
+stakeholders:
+- architecture-team
+- tarl-team
+- runtime-team
+---
+
 # TARL OS - God Tier AI Operating System
 
 Complete, production-grade, monolithic AI Operating System implemented in **Thirsty-Lang / T.A.R.L**.

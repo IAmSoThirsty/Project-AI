@@ -1,3 +1,37 @@
+---
+type: report
+report_type: audit
+report_date: 2026-02-09T10:00:00Z
+project_phase: technical-debt-analysis
+completion_percentage: 100
+tags:
+  - status/complete
+  - quality/technical-debt
+  - audit/codebase
+  - health/moderate
+area: technical-debt-assessment
+stakeholders:
+  - development-team
+  - architecture-team
+  - tech-lead
+supersedes: []
+related_reports:
+  - CODE_QUALITY_REPORT.md
+  - HEALTH_REPORT.md
+next_report: null
+impact:
+  - Codebase health 7.5/10 identified
+  - 9 monolithic files flagged
+  - 17 actionable TODO/FIXME items
+  - 3 backup files requiring cleanup
+verification_method: static-analysis
+codebase_health: 7.5
+python_files: 374
+monolithic_files: 9
+backup_files: 3
+todo_items: 17
+---
+
 # Technical Debt Analysis Report
 **Project-AI Codebase Assessment**  
 Generated: 2026-02-09

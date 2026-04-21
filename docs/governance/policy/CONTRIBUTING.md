@@ -1,3 +1,34 @@
+---
+title: "Contributing to Project-AI"
+id: contributing-guide
+type: guide
+status: active
+created_date: 2025-11-28
+updated_date: 2025-11-28
+version: 1.0
+author: Project-AI Maintainers
+contributors: ["Core Development Team", "DevOps Team"]
+policy_level: P2
+enforcement_level: recommended
+tags:
+  - area:governance
+  - type:guide
+  - component:contribution
+  - component:development
+  - audience:contributor
+  - audience:developer
+  - priority:high
+compliance_frameworks: []
+relationships:
+  governed_by: ["copilot_workspace_profile", "CODE_OF_CONDUCT"]
+  related_docs: ["SECURITY", "LICENSING_GUIDE"]
+  validates: []
+purpose: "Comprehensive contribution guide covering development environment setup, workflow, code quality standards, commit conventions, and pull request process"
+scope: "Prerequisites, development environment setup, testing procedures, code style (PEP 8, ruff), commit message conventions, PR process, documentation updates"
+prerequisites: ["Python 3.11+", "Node.js 18+", "Git"]
+estimated_time: "15-20 minutes (initial setup)"
+---
+
 # Contributing to Project-AI
 
 Thank you for interest in contributing to Project-AI! This guide will help you get started.

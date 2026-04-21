@@ -1,3 +1,42 @@
+---
+type: report
+report_type: evaluation
+report_date: 2026-04-13T00:00:00Z
+project_phase: i18n-readiness-assessment
+completion_percentage: 100
+tags:
+  - status/not-ready
+  - i18n/partial-infrastructure
+  - evaluation/localization
+  - quality/25-percent
+  - multilingual/27-languages
+  - integration/missing
+area: internationalization-localization
+stakeholders:
+  - i18n-team
+  - frontend-team
+  - product-team
+  - localization-team
+supersedes: []
+related_reports:
+  - GUI_ARCHITECTURE_EVALUATION_REPORT.md
+next_report: null
+impact:
+  - I18n readiness score 25/100 - NOT production-ready
+  - 27 language translation files exist but lack integration
+  - Desktop app has no QTranslator implementation
+  - Web application has zero i18n support
+  - Hardcoded English strings permeate UI layer
+verification_method: i18n-infrastructure-analysis
+i18n_readiness_score: 25
+languages_supported: 27
+desktop_i18n_status: 30
+web_i18n_status: 0
+rtl_languages: 4
+integration_status: missing
+translation_framework: none
+---
+
 # Project-AI Internationalization & Localization Evaluation Report
 
 **Date:** 2026-04-13  

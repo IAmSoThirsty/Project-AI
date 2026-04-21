@@ -1,3 +1,33 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, architecture, state-management, identity-snapshots, memory-channels, audit-trails]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [identity-engine, memory-engine, audit-trail, cache-layer, persistence-layer]
+stakeholders: [architecture-team, backend-developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: code
+state_layers: 4
+---
+  - SHA-256
+related_docs:
+  - "[[data_flow/memory_recording_flow]]"
+  - "[[data_flow/audit_trail_flow]]"
+  - "[[component/README]]"
+keywords:
+  - state-management
+  - identity-snapshots
+  - memory-channels
+  - audit-trails
+  - consistency
+  - recovery
+  - multi-layer-state
+---
+
 # State Management Architecture
 
 **Version:** 1.0  
@@ -614,8 +644,8 @@ class StateRecoveryManager:
 
 ## Related Documentation
 
-- [Data Flow Architecture](../data_flow/)
-- [Component Architecture](../component/)
+- [[../data_flow/|Data Flow Architecture]]
+- [[../component/|Component Architecture]]
 - [Persistence Architecture](../persistence/)
 - [Auditing Architecture](../auditing/)
 

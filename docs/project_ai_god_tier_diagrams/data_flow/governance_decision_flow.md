@@ -1,3 +1,22 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, mermaid, sequence-diagram, data-flow, governance, ethics, security, policy-enforcement]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [governance-triumvirate, galahad-ethics, cerberus-security, codex-deus-policy]
+stakeholders: [architecture-team, security-engineers, compliance-officers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: sequence
+format: ascii
+total_lines: 1056
+validation_layers: 3
+---
+  - unanimous-approval
+---
+
 # Governance Decision Flow - Triumvirate Architecture
 
 ## Overview
@@ -1050,7 +1069,7 @@ async def escalate_to_human(request: EnrichedRequest,
 
 ## Related Documentation
 
-- [User Request Flow](./user_request_flow.md)
-- [Memory Recording Flow](./memory_recording_flow.md)
-- [Audit Trail Flow](./audit_trail_flow.md)
-- [Security Architecture](../security/README.md)
+- [[./user_request_flow.md|User Request Flow]]
+- [[./memory_recording_flow.md|Memory Recording Flow]]
+- [[./audit_trail_flow.md|Audit Trail Flow]]
+- [[../security/README.md|Security Architecture]]

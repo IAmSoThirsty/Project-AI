@@ -4,10 +4,10 @@ Welcome to **Project-AI** — a comprehensive, production-grade AI assistant pla
 
 ## Quick Links
 
-- [Documentation Home](README.md)
-- [Architecture Overview](architecture/)
-- [Developer Guides](developer/)
-- [Security & Compliance](security_compliance/)
+- [[README.md|Documentation Home]]
+- [[architecture/|Architecture Overview]]
+- [[developer/|Developer Guides]]
+- [[security_compliance/|Security & Compliance]]
 
 ## System Health
 
@@ -24,7 +24,7 @@ The latest system health report provides diagnostic information including:
 - **Dependencies**: Installed packages and versions
 - **Configuration**: Active configuration settings
 
-**[View Latest Health Report](assets/health_report.png)**
+**[[assets/health_report.png|View Latest Health Report]]**
 
 ### Health Snapshots
 
@@ -119,10 +119,10 @@ The health reporting system adheres to Project-AI's security and governance stan
 
 ## Next Steps
 
-- [Read the Full Documentation](README.md)
-- [Explore the Architecture](architecture/)
-- [Review Security Policies](security_compliance/)
-- [Contribute to the Project](developer/CONTRIBUTING.md)
+- [[README.md|Read the Full Documentation]]
+- [[architecture/|Explore the Architecture]]
+- [[security_compliance/|Review Security Policies]]
+- [[developer/CONTRIBUTING.md|Contribute to the Project]]
 
 ---
 

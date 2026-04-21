@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, network-design, architecture-patterns, telecommunications]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, network-architecture, dmz-design]
+stakeholders: [network-team, architecture-team, voice-engineering]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 Network Design Patterns
 
 Version 1.0 — Reference Architectures (Campus, Multi-Site, Hybrid Cloud)

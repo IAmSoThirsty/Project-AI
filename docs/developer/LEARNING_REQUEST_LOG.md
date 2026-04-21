@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, learning-request-log, approval-system, ai-learning, black-vault, documentation]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [learning-request-manager, approval-workflow, black-vault, priority-system]
+stakeholders: [developers, ai-safety-team, users]
+audience: intermediate
+prerequisites: [python-intermediate, ai-learning-concepts, approval-workflow-understanding]
+estimated_time: 25 minutes
+review_cycle: monthly
+---
 # Learning Request Log System Documentation
 
 ## Overview

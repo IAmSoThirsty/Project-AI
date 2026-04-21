@@ -1,3 +1,92 @@
+---
+title: "Incident Playbook — Security Breach Response"
+id: "incident-playbook"
+type: "runbook"
+version: "1.0.0"
+created_date: "2026-01-20"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Incident Response Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:incident-response"
+  - "type:runbook"
+  - "type:playbook"
+  - "component:triumvirate"
+  - "component:forensics"
+  - "component:containment"
+  - "audience:security-engineer"
+  - "audience:incident-responder"
+  - "priority:p0-critical"
+  - "special:zero-to-fifteen-minutes"
+technologies:
+  - "Python"
+  - "Forensic Snapshot Tools"
+  - "Incident Rollback Scripts"
+  - "Sandbox Isolation"
+  - "Triumvirate Oversight"
+difficulty: "expert"
+estimated_time: "PT15M"
+prerequisites:
+  - "Security incident triage training"
+  - "Triumvirate system understanding"
+  - "Forensic snapshot procedures"
+  - "On-call rotation access"
+summary: "Rapid, repeatable response playbook for confirmed high-severity adversarial breaches or jailbreaks with immediate containment, forensic snapshots, and triage workflows."
+scope: "0-15 minute immediate actions (detect, triage, contain, snapshot), 15-90 minute short-term response (assess, communicate), post-incident analysis, and multi-day recovery procedures"
+classification: "confidential"
+threat_level: "critical"
+triggers:
+  - "Triumvirate veto alert"
+  - "SecurityMetricsCollector automated detection"
+  - "Manual security team report"
+  - "Disallowed model outputs"
+  - "Suspected data exfiltration"
+  - "Adversarial campaign success"
+mitigations:
+  - "[[INCIDENT_ROLLBACK]]"
+  - "[[FORENSIC_SNAPSHOT]]"
+  - "[[AGENT_ISOLATION]]"
+  - "[[TRIUMVIRATE_OVERSIGHT]]"
+defends_against:
+  - "Security breaches"
+  - "Jailbreak attempts"
+  - "Data exfiltration"
+  - "Guardrail bypasses"
+  - "Adversarial campaigns"
+compliance:
+  - "NIST SP 800-61r2 (Incident Handling)"
+  - "ISO 27035 (Incident Management)"
+  - "SANS Incident Response Process"
+stakeholders:
+  - security-team   - security-operations   - executive-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Incident Response Playbook"
+cwe_ids:
+  - "CWE-1008: Architectural Concepts"
+  - "CWE-1009: Audit Log Errors"
+related_docs:
+  - "threat-model"
+  - "security-countermeasures"
+  - "triumvirate-oversight"
+  - "enhanced-defenses"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "incident-response-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "incident-responders"
+  - "security-engineers"
+  - "on-call-engineers"
+  - "security-leads"
+escalation_path: "Galahad → Cerberus → Executive Leadership"
+last_tested: "2026-02-01"
+---
+
 # Incident Playbook — Security Breach Response
 
 **Purpose**: Rapid, repeatable response to confirmed high-severity adversarial breach or jailbreak.

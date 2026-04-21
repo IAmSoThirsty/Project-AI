@@ -1,3 +1,49 @@
+---
+title: "Licensing Guide for Project-AI"
+id: licensing-guide
+type: guide
+status: active
+created_date: 2025-12-04
+updated_date: 2025-12-04
+version: 1.0
+author: Legal Team
+contributors: ["Architecture Team", "Governance Team"]
+policy_level: P2
+enforcement_level: mandatory
+tags:
+  - area:governance
+  - area:legal
+  - type:guide
+  - type:policy
+  - component:licensing
+  - audience:legal
+  - audience:compliance-officer
+  - audience:developer
+  - audience:contributor
+  - priority:high
+compliance_frameworks: ["MIT License", "Open Source Initiative"]
+classification: public
+related_systems:
+  - license-compliance
+  - governance-system
+stakeholders:
+  - governance-team
+  - legal-team
+  - compliance-team
+last_verified: 2026-04-20
+relationships:
+  governed_by: ["copilot_workspace_profile"]
+  related_docs: ["LICENSING_SUMMARY"]
+  references: ["LICENSE"]
+license_info:
+  project_license: "MIT"
+  commercial_use: true
+  sublicensing_allowed: true
+  attribution_required: true
+purpose: "Comprehensive licensing documentation for Project-AI covering MIT license obligations, dependency licensing compatibility, compliance requirements, and usage rights"
+scope: "MIT license obligations, dependency licensing matrix (PyQt6/GPL, scikit-learn/BSD, OpenAI/Apache, etc.), compliance checklist, commercial use rights, attribution requirements"
+---
+
 # Licensing Guide for Project-AI
 
 **Status**: ✅ MIT License Implemented  

@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, leather-book-ui, user-guide, pyqt6, gui-overview, interface-guide]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [leather-book-interface, dashboard, login-system, tron-theme, ui-features]
+stakeholders: [developers, end-users, ui-developers]
+audience: intermediate
+prerequisites: [python-basics, pyqt6-familiarity, gui-concepts]
+estimated_time: 30 minutes
+review_cycle: monthly
+---
 # Leather Book UI System - README
 
 ## What is the Leather Book UI?

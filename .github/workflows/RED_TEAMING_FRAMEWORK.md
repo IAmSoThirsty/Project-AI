@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [security, red-teaming, penetration-testing, adversarial-testing, ai-safety]
+created: 2026-01-22
+last_verified: 2026-04-20
+status: current
+related_systems: [security-automation, ai-safety, testing]
+stakeholders: [security-team, ai-safety-team, devops]
+config_scope: multi-environment
+automation_type: manual-config
+requires_secrets: true
+review_cycle: quarterly
+---
+
 # 🎯 Red Teaming Framework for Project-AI
 
 ## Overview

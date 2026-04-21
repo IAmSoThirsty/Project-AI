@@ -1,0 +1,167 @@
+name: Validate Metadata
+
+on:
+  pull_request:
+    paths:
+      - '**/*.md'
+  push:
+    branches:
+      - main
+      - develop
+      - cerberus-integration
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate Documentation Metadata
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup validation cache
+        uses: actions/cache@v3
+        with:
+          path: validation/.cache
+          key: validation-cache-${{ hashFiles('**/*.md') }}
+          restore-keys: |
+            validation-cache-
+      
+      - name: Install PowerShell YAML module
+        shell: pwsh
+        run: |
+          Write-Host "Installing powershell-yaml module..."
+          Install-Module -Name powershell-yaml -Scope CurrentUser -Force -AllowClobber
+          Write-Host "✅ Module installed successfully"
+      
+      - name: Validate metadata (strict mode)
+        shell: pwsh
+        run: |
+          .\validate-metadata.ps1 `
+            -Path "." `
+            -Recursive `
+            -Parallel `
+            -Cache `
+            -StrictMode `
+            -OutputFormat JSON `
+            -OutputPath "validation-results.json"
+      
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report-${{ github.run_number }}
+          path: validation-results.json
+          retention-days: 30
+      
+      - name: Generate job summary
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path "validation-results.json") {
+            $results = Get-Content "validation-results.json" | ConvertFrom-Json
+            
+            $summary = @"
+          ## 📊 Metadata Validation Results
+          
+          | Metric | Value |
+          |--------|-------|
+          | Total Files | $($results.Statistics.TotalFiles) |
+          | ✅ Valid | $($results.Statistics.ValidFiles) |
+          | ❌ Invalid | $($results.Statistics.InvalidFiles) |
+          | ⚠ Skipped | $($results.Statistics.SkippedFiles) |
+          | Errors | $($results.Statistics.TotalErrors) |
+          | Warnings | $($results.Statistics.TotalWarnings) |
+          
+          ### Performance Metrics
+          
+          | Metric | Value |
+          |--------|-------|
+          | Total Time | $([math]::Round($results.Statistics.TotalTime, 2))ms |
+          | Average Time | $([math]::Round($results.Statistics.TotalTime / [math]::Max($results.Statistics.TotalFiles, 1), 2))ms |
+          | Min Time | $([math]::Round($results.Statistics.MinTime, 2))ms |
+          | Max Time | $([math]::Round($results.Statistics.MaxTime, 2))ms |
+          
+          "@
+            
+            $summary >> $env:GITHUB_STEP_SUMMARY
+          }
+      
+      - name: Comment on PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            if (!fs.existsSync('validation-results.json')) {
+              console.log('No results file found');
+              return;
+            }
+            
+            const results = JSON.parse(fs.readFileSync('validation-results.json', 'utf8'));
+            const invalidFiles = results.Results.filter(r => r.Status === 'INVALID');
+            
+            if (invalidFiles.length === 0) {
+              console.log('No invalid files found');
+              return;
+            }
+            
+            let comment = '## ❌ Metadata Validation Failed\n\n';
+            comment += `**Files with errors:** ${invalidFiles.length}\n\n`;
+            comment += `**Total errors:** ${results.Statistics.TotalErrors}\n`;
+            comment += `**Total warnings:** ${results.Statistics.TotalWarnings}\n\n`;
+            comment += '---\n\n';
+            
+            const maxFilesToShow = 5;
+            invalidFiles.slice(0, maxFilesToShow).forEach(file => {
+              comment += `### 📄 \`${file.FilePath}\`\n\n`;
+              
+              if (file.Errors && file.Errors.length > 0) {
+                comment += '**Errors:**\n';
+                file.Errors.forEach(err => {
+                  comment += `- **${err.Field}:** ${err.Message} \`[${err.Error}]\`\n`;
+                });
+              }
+              
+              if (file.Warnings && file.Warnings.length > 0) {
+                comment += '\n**Warnings:**\n';
+                file.Warnings.forEach(warn => {
+                  comment += `- **${warn.Field}:** ${warn.Message} \`[${warn.Warning}]\`\n`;
+                });
+              }
+              
+              comment += '\n';
+            });
+            
+            if (invalidFiles.length > maxFilesToShow) {
+              comment += `\n...and ${invalidFiles.length - maxFilesToShow} more files. `;
+              comment += 'See the full report in the [workflow artifacts](';
+              comment += `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).\n`;
+            }
+            
+            comment += '\n---\n\n';
+            comment += '## 💡 Quick Fix Guide\n\n';
+            comment += '1. **Review error catalog:** `validation/error-catalog/error-catalog.json`\n';
+            comment += '2. **Run locally:** `.\validate-metadata.ps1 -Path "." -Recursive`\n';
+            comment += '3. **See validation guide:** `validation/VALIDATION_GUIDE.md`\n';
+            comment += '4. **Check schema:** `validation/schemas/metadata.schema.json`\n\n';
+            comment += '### Common Fixes\n\n';
+            comment += '- **Missing description:** Add `description: "Your description here"` to frontmatter\n';
+            comment += '- **Invalid status:** Use one of: DRAFT, ACTIVE, DEPRECATED, ARCHIVED, REVIEW, PENDING, SUPERSEDED\n';
+            comment += '- **Invalid version:** Use semantic versioning (e.g., `1.0.0`)\n';
+            comment += '- **Invalid date:** Use ISO 8601 format (e.g., `2026-01-23`)\n';
+            
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

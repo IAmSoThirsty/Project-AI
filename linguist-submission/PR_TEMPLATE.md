@@ -1,3 +1,19 @@
+---
+type: submission-doc
+tags: [thirsty-lang, linguist, pr-template, github-integration]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, github-linguist]
+stakeholders: [language-team, contributors, linguist-maintainers]
+project_category: language-implementation
+language_paradigm: [water-themed, defensive-programming, multi-edition]
+build_system: custom
+review_cycle: monthly
+template_type: pull-request
+template_target: github/linguist
+---
+
 ## Add support for Thirsty-lang
 
 This PR adds support for Thirsty-lang, a unique programming language with water-themed syntax and defensive programming capabilities.

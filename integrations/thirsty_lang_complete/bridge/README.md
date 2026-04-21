@@ -1,3 +1,17 @@
+---
+type: api-reference
+tags: [integrations, thirsty-lang, tarl, bridge, cross-language, rpc]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, tarl, unified-security]
+stakeholders: [developers, integration-team, platform-team]
+platform: cross-platform
+integration_type: sdk
+external_dependencies: [python, nodejs, json-rpc, child_process]
+review_cycle: quarterly
+---
+
 # Bridge Layer Documentation
 
 ## Overview

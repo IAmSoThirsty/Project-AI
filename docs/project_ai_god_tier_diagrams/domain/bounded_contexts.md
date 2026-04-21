@@ -1,3 +1,20 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, domain-driven-design, ddd, bounded-contexts, context-mapping, strategic-patterns]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [ai-governance-context, memory-management-context, agent-orchestration-context, user-identity-context]
+stakeholders: [architecture-team, domain-experts, technical-leads]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: ascii
+bounded_contexts: 4
+---
+---
+
 # Bounded Contexts in Project-AI
 
 ## Overview
@@ -664,6 +681,6 @@ class TestUserContext:
 
 ## Related Documentation
 
-- **[Domain Models](domain_models.md)** - Entity and value object patterns
-- **[Domain Events](domain_events.md)** - Event definitions
-- **[Aggregates](../aggregate/README.md)** - Aggregate implementations
+- **[[domain_models.md|Domain Models]]** - Entity and value object patterns
+- **[[domain_events.md|Domain Events]]** - Event definitions
+- **[[../aggregate/README.md|Aggregates]]** - Aggregate implementations

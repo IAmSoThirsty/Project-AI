@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [github-actions, automation, issues, triage, resolution]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, issue-management]
+stakeholders: [developers, devops, project-managers]
+config_scope: ci-cd
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # Automated Issue Management System
 
 ## Overview

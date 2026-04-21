@@ -1,3 +1,16 @@
+---
+type: quickstart
+tags: [p1-developer, operator-guide, agi-stewardship, operations, guardian-mindset, production-ops]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [operations, monitoring, incident-response, system-administration, agi-safety]
+stakeholders: [operators, system-administrators, agi-stewards, production-ops]
+audience: beginner
+prerequisites: [basic-linux-administration, monitoring-fundamentals, incident-response-basics]
+estimated_time: 40 minutes
+review_cycle: quarterly
+---
 # Operator Quickstart: Guardian Mindset for AGI Stewardship
 
 **Document Version:** 1.0  
@@ -108,7 +121,7 @@ Operating Project-AI is not merely a technical task—it is an act of **stewards
 - **Prometheus:** Time-series metrics collection
 - **Grafana:** Visualization and dashboards
 - **Temporal:** Workflow execution monitoring
-- **Custom AGI metrics:** See [Monitoring Quickstart](MONITORING_QUICKSTART.md)
+- **Custom AGI metrics:** See [[MONITORING_QUICKSTART.md|Monitoring Quickstart]]
 
 ### Incident Response Playbook
 
@@ -159,7 +172,7 @@ Operating Project-AI is not merely a technical task—it is an act of **stewards
 5. **REMEDIATE:** Apply patches, rotate credentials, harden configuration
 6. **REVIEW:** Conduct post-incident review and update security posture
 
-**Playbook Documentation:** See [Incident Playbook](../security_compliance/INCIDENT_PLAYBOOK.md) for detailed procedures.
+**Playbook Documentation:** See [[../security_compliance/INCIDENT_PLAYBOOK.md|Incident Playbook]] for detailed procedures.
 
 ---
 
@@ -257,9 +270,9 @@ The answer shapes every decision:
 
 ### Day 1: Orientation
 - [ ] Complete security training and access provisioning
-- [ ] Review [AGI Charter](../governance/AGI_CHARTER.md)
-- [ ] Read [Four Laws Framework](../governance/AGI_CHARTER.md#four-laws)
-- [ ] Set up monitoring dashboards (see [Monitoring Quickstart](MONITORING_QUICKSTART.md))
+- [ ] Review [[../governance/AGI_CHARTER.md|AGI Charter]]
+- [ ] Read [[../governance/AGI_CHARTER.md#four-laws|Four Laws Framework]]
+- [ ] Set up monitoring dashboards (see [[MONITORING_QUICKSTART.md|Monitoring Quickstart]])
 
 ### Day 2-3: System Familiarization
 - [ ] Shadow an experienced operator during a shift
@@ -317,10 +330,10 @@ The answer shapes every decision:
 ## Tools and Resources
 
 ### Essential Reading
-- [AGI Charter](../governance/AGI_CHARTER.md) - Binding contract with AGI instances
-- [Four Laws Framework](../governance/AGI_CHARTER.md#four-laws) - Ethical operating system
-- [Incident Playbook](../security_compliance/INCIDENT_PLAYBOOK.md) - Emergency procedures
-- [Monitoring Quickstart](MONITORING_QUICKSTART.md) - Observability setup
+- [[../governance/AGI_CHARTER.md|AGI Charter]] - Binding contract with AGI instances
+- [[../governance/AGI_CHARTER.md#four-laws|Four Laws Framework]] - Ethical operating system
+- [[../security_compliance/INCIDENT_PLAYBOOK.md|Incident Playbook]] - Emergency procedures
+- [[MONITORING_QUICKSTART.md|Monitoring Quickstart]] - Observability setup
 
 ### Key Dashboards
 - **System Health:** `http://grafana.local/d/system-health`

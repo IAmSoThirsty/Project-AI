@@ -1,3 +1,19 @@
+---
+type: evolution-doc
+tags: [gradle, gradle-evolution, architecture, build-systems, constitutional-governance, deterministic-builds]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: production-ready
+related_systems: [gradle, project-ai-governance, constitutional-engine, security-engine, audit-system]
+stakeholders: [build-team, governance-team, architecture-team, contributors]
+project_category: build-tooling
+build_system: gradle-evolution
+review_cycle: monthly
+document_type: architecture-specification
+architecture_layers: 8
+components_documented: 23
+---
+
 # Thirsty's Gradle—Total System Evolution Architecture
 
 ## Executive Summary

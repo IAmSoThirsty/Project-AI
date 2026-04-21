@@ -1,3 +1,56 @@
+---
+title: "Gradle + JavaScript Setup Guide for Project-AI"
+id: gradle-javascript-setup
+type: deployment-guide
+area: development
+status: current
+version: "1.0"
+created: 2026-04-20
+last_verified: 2026-04-20
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Deployment Metadata
+deployment_target: multi-platform
+deployment_complexity: moderate
+production_ready: true
+review_cycle: monthly
+
+# Classification
+tags:
+  - deployment
+  - build-system
+  - gradle
+  - javascript
+  - nodejs
+  - android
+  - setup-guide
+
+# Developer Metadata
+skill_level: beginner
+audience:
+  - developer
+
+stakeholders: [developers, build-engineers, android-developers]
+
+languages:
+  - Groovy
+  - JavaScript
+  - Shell
+  - PowerShell
+
+frameworks:
+  - Gradle
+  - Node-JS
+
+code_examples: true
+api_reference: false
+
+related_systems: [gradle, nodejs, android-sdk, jdk]
+related_docs:
+  - [[README]]
+  - [[RELEASE_BUILD_GUIDE]]
+---
 # Gradle + JavaScript Setup Guide for Project-AI
 
 This guide will help you set up Gradle to work with JavaScript/Node.js in your Project-AI repository.

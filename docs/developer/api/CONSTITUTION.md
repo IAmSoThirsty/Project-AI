@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, governance, constitution, governance-kernel, philosophical-framework, agi-governance]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [governance-kernel, triumvirate, constitutional-framework, agi-oversight]
+stakeholders: [developers, governance-team, architects, leadership, ethics-board]
+audience: intermediate
+prerequisites: [project-philosophy-understanding, governance-concepts, agi-awareness]
+estimated_time: 50 minutes
+review_cycle: quarterly
+---
 # 🏛️ GOVERNANCE KERNEL v1 - CONSTITUTIONAL DOCUMENT
 
 ## What This Is

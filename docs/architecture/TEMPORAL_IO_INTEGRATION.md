@@ -1,3 +1,54 @@
+---
+title: Temporal.io Integration Guide - Full Integration Status
+id: temporal-io-integration
+type: guide
+version: 1.0
+created: 2026-01-28
+created_date: 2026-01-28
+last_verified: 2026-04-20
+updated_date: 2026-01-28
+status: active
+author: Temporal Integration Team
+contributors: ["Security Team", "Learning Team", "Crisis Response Team"]
+# Architecture-Specific Metadata
+architecture_layer: infrastructure
+design_pattern: ["durable-execution", "workflow-orchestration", "distributed-workflows"]
+implements: ["triumvirate-workflows", "security-agent-workflows", "learning-workflows", "crisis-workflows"]
+uses: ["temporalio-sdk", "protobuf"]
+quality_attributes: ["fault-tolerance", "reliability", "observability", "scalability", "durability"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/infrastructure", "workflow", "integration"]
+tags: ["temporal", "workflow-integration", "durable-execution", "triumvirate", "security-workflows", "learning-workflows", "crisis-response"]
+component: ["triumvirate-workflows", "security-agent-workflows", "red-team-workflows", "learning-workflows", "liara-crisis-workflows"]
+# Relationships
+related_docs: ["temporal-integration-architecture", "workflow-engine-spec", "architecture-overview"]
+related_systems: ["temporal-integration", "workflow-engine", "triumvirate"]
+depends_on: ["workflow-engine-spec"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "workflow-developers", "operations-teams"]
+stakeholders: ["platform-team", "devops-team", "developers", "architecture-team"]
+priority: P0
+difficulty: intermediate
+estimated_reading_time: 12 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: low
+compliance: []
+# Discovery
+keywords: ["Temporal.io", "workflow integration", "Triumvirate workflows", "security workflows", "crisis response"]
+search_terms: ["temporalio SDK", "durable execution", "Liara", "red team workflows"]
+aliases: ["Temporal Integration", "Workflow Platform"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: 83%
+---
+
+
 # Temporal.io Integration Guide
 
 **Last Updated:** January 28, 2026  

@@ -1,3 +1,39 @@
+---
+title: "OPERATIONAL SUBSTRUCTURE GUIDE"
+id: "operational-substructure-guide"
+type: archived
+tags:
+  - p3-archive
+  - historical
+  - archive
+  - implementation
+  - monitoring
+  - testing
+  - governance
+  - ci-cd
+  - security
+  - architecture
+created: 2026-02-10
+last_verified: 2026-04-20
+status: archived
+archived_date: 2026-04-19
+archive_reason: completed
+related_systems:
+  - security-systems
+  - test-framework
+  - ci-cd-pipeline
+  - architecture
+stakeholders:
+  - developer
+  - architect
+audience:
+  - developer
+  - architect
+review_cycle: annually
+historical_value: high
+restore_candidate: false
+path_confirmed: T:/Project-AI-main/docs/internal/archive/OPERATIONAL_SUBSTRUCTURE_GUIDE.md
+---
 # Operational Substructure - Complete Implementation Guide
 
 ## Executive Summary
@@ -10,14 +46,14 @@ This document describes the **Operational Substructure** layer - a comprehensive
 
 ## Table of Contents
 
-- [Architecture Overview](#architecture-overview)
-- [Core Framework](#core-framework)
-- [Governance Extensions](#governance-extensions)
-- [Core System Extensions](#core-system-extensions)
-- [Agent System Extensions](#agent-system-extensions)
-- [Interface Extensions](#interface-extensions)
-- [Integration Examples](#integration-examples)
-- [Best Practices](#best-practices)
+- [[#architecture-overview|Architecture Overview]]
+- [[#core-framework|Core Framework]]
+- [[#governance-extensions|Governance Extensions]]
+- [[#core-system-extensions|Core System Extensions]]
+- [[#agent-system-extensions|Agent System Extensions]]
+- [[#interface-extensions|Interface Extensions]]
+- [[#integration-examples|Integration Examples]]
+- [[#best-practices|Best Practices]]
 
 ---
 

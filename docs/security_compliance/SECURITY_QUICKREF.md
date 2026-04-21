@@ -1,3 +1,85 @@
+---
+title: "Security Framework Quick Reference"
+id: "security-quickref"
+type: "reference"
+version: "1.0.0"
+created_date: "2026-01-15"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "type:reference"
+  - "type:guide"
+  - "component:security-framework"
+  - "component:testing"
+  - "audience:developer"
+  - "audience:security-engineer"
+  - "priority:p1-high"
+technologies:
+  - "Python"
+  - "EnvironmentHardening"
+  - "SecureDataParser"
+  - "SecurityMonitor"
+  - "SecureDatabaseManager"
+difficulty: "intermediate"
+estimated_time: "PT45M"
+prerequisites:
+  - "Python basics"
+  - "Security framework understanding"
+summary: "Quick reference guide for Project-AI security framework covering quick start code, 158 test coverage, blocked attack vectors (XSS, SQLi, XXE, etc.), and common usage patterns."
+scope: "Complete quick reference: initialization, monitoring, data parsing, database operations, test coverage breakdown, attack vector examples, common patterns"
+classification: "internal"
+threat_level: "low"
+attack_vectors:
+  - "xss-variants"
+  - "sql-injection"
+  - "xxe"
+  - "path-traversal"
+  - "data-poisoning"
+  - "numerical-adversaries"
+defends_against:
+  - "10+ XSS variants"
+  - "SQL injection"
+  - "XXE attacks"
+  - "Path traversal"
+  - "Data poisoning"
+  - "Numerical adversarial attacks"
+compliance:
+  - "OWASP Top 10 2021"
+  - "Secure Coding Standards"
+stakeholders:
+  - security-team   - compliance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Quick Reference"
+cwe_ids:
+  - "CWE-79: XSS"
+  - "CWE-89: SQL Injection"
+  - "CWE-611: XXE"
+  - "CWE-22: Path Traversal"
+test_coverage:
+  total_tests: 158
+  passing_tests: 157
+  skipped_tests: 1
+  categories: 9
+related_docs:
+  - "security-framework"
+  - "security-examples"
+  - "threat-model"
+review_status:
+  reviewed: true
+  reviewers: ["security-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "developers"
+  - "security-engineers"
+  - "qa-engineers"
+---
+
 # Security Framework Quick Reference
 
 ## 🎯 Quick Start
@@ -240,7 +322,7 @@ response = client.call("GetData", {"id": "123"})
 
 ## 📚 Documentation
 
-- **[SECURITY_FRAMEWORK.md](SECURITY_FRAMEWORK.md)** - Complete API reference (22KB)
+- **[[SECURITY_FRAMEWORK.md|SECURITY_FRAMEWORK.md]]** - Complete API reference (22KB)
 - **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Step-by-step deployment (21KB)
 - **[examples/security_integration.py](../examples/security_integration.py)** - Working example (14KB)
 

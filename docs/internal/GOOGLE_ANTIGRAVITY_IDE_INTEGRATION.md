@@ -1,3 +1,35 @@
+---
+title: "Google Antigravity IDE Integration Guide"
+id: antigravity-ide-integration
+type: guide
+version: 1.0.0
+created_date: 2026-01-28
+updated_date: 2026-01-30
+status: active
+author: Developer Experience Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: reference
+retention_policy: permanent
+category: development
+tags:
+  - ide-integration
+  - google-antigravity
+  - ai-agents
+  - autonomous-development
+  - vscode-compatible
+technologies:
+  - Google Antigravity
+  - VS Code Extensions
+  - AI Agents
+related_docs:
+  - ../development/ide-setup.md
+  - ../architecture/agent-architecture.md
+scope: "Integration guide for Google Antigravity AI-powered IDE with autonomous agent development capabilities"
+description: Comprehensive guide for integrating Google Antigravity IDE, an AI-agent-first development environment enabling autonomous multi-step engineering tasks with Mission Control supervision.
+---
+
 # Google Antigravity IDE Integration Guide
 
 **Last Updated:** January 28, 2026  

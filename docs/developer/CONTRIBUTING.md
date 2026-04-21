@@ -1,3 +1,16 @@
+---
+type: guide
+tags: [p1-developer, contributing, governance, stewardship, agi-ethics, pr-process]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [github-workflow, pr-review, trust-levels, fork-philosophy]
+stakeholders: [contributors, maintainers, stewards, community]
+audience: intermediate
+prerequisites: [git-basics, github-workflow, project-philosophy-understanding]
+estimated_time: 30 minutes
+review_cycle: quarterly
+---
 # Contributing to Project-AI: Code, Docs, and Civilization-Scale Impact
 
 **Document Version:** 2.0  
@@ -267,7 +280,7 @@ def test_four_laws_prevents_harm():
 
 ### 5. Respect the AGI Charter
 
-**Rule:** All contributions must align with the [AGI Charter](../governance/AGI_CHARTER.md) and Four Laws framework.
+**Rule:** All contributions must align with the [[../governance/AGI_CHARTER.md|AGI Charter]] and Four Laws framework.
 
 **What This Means:**
 - Do not bypass safety mechanisms
@@ -531,7 +544,7 @@ Capability and safety do not always align. Sometimes the most responsible contri
 - Assume good faith
 - Escalate concerns to maintainers
 
-**Full Code of Conduct:** [CODE_OF_CONDUCT.md](../governance/policy/CODE_OF_CONDUCT.md)
+**Full Code of Conduct:** [[../governance/policy/CODE_OF_CONDUCT.md|CODE_OF_CONDUCT.md]]
 
 ### Communication Channels
 
@@ -560,11 +573,11 @@ Thank you for being part of this journey.
 
 ## Additional Resources
 
-- [AGI Charter](../governance/AGI_CHARTER.md) - Foundational principles
-- [Architecture Overview](../architecture/ARCHITECTURE_OVERVIEW.md) - System design
-- [Security Framework](../security_compliance/AI_SECURITY_FRAMEWORK.md) - Security guidelines
-- [Operator Quickstart](OPERATOR_QUICKSTART.md) - Operations guide
-- [AI Safety Overview](AI_SAFETY_OVERVIEW.md) - Safety principles
+- [[../governance/AGI_CHARTER.md|AGI Charter]] - Foundational principles
+- [[../architecture/ARCHITECTURE_OVERVIEW.md|Architecture Overview]] - System design
+- [[../security_compliance/AI_SECURITY_FRAMEWORK.md|Security Framework]] - Security guidelines
+- [[OPERATOR_QUICKSTART.md|Operator Quickstart]] - Operations guide
+- [[AI_SAFETY_OVERVIEW.md|AI Safety Overview]] - Safety principles
 
 ---
 

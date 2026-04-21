@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, web-version, flask, react, web-application, spa, modern-frontend]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [flask-backend, react-frontend, web-app, cloud-sync, plugin-system]
+stakeholders: [developers, web-developers, full-stack-engineers]
+audience: intermediate
+prerequisites: [javascript-intermediate, python-intermediate, flask-basics, react-fundamentals]
+estimated_time: 35 minutes
+review_cycle: monthly
+---
 # Project-AI Web Version
 
 This branch contains a web-based version of Project-AI, converting the PyQt desktop

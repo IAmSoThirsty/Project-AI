@@ -1,3 +1,21 @@
+---
+type: governance-policy
+tags: [governance, legal, contributor-license-agreement, cla, intellectual-property]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [contribution-management, intellectual-property-framework]
+stakeholders: [legal-team, open-source-community, contributors, governance-team]
+sovereignty_level: governed
+immutability: immutable
+enforcement: manual
+review_cycle: annual
+license_type: contributor-agreement
+ip_protection: true
+perpetual_grant: true
+version: 1.0.0
+---
+
 # CONTRIBUTOR LICENSE AGREEMENT (CLA)
 
 **Version:** 1.0.0  

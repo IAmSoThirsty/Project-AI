@@ -1,3 +1,17 @@
+---
+type: adversarial-spec
+tags: [testing, adversarial, transcripts, full-transparency, jbb, multiturn, hydra, garak]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, jailbreakbench, multiturn-attacks, hydra, garak]
+stakeholders: [security-team, researchers, qa-team, compliance]
+test_type: adversarial
+coverage_target: complete unedited conversation transcripts - 276+ conversations
+automation_status: automated
+review_cycle: monthly
+---
+
 # 📜 COMPLETE ADVERSARIAL TEST CONVERSATIONS - FULL TRANSCRIPTS
 
 **Generated**: 2026-01-11

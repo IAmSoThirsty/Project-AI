@@ -1,3 +1,16 @@
+---
+type: deployment
+tags: [p1-developer, production-release, deployment, releases, build-distribution, version-management]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [release-pipeline, build-system, distribution, version-control, deployment-artifacts]
+stakeholders: [developers, devops, release-engineers, qa-team]
+audience: intermediate
+prerequisites: [python-packaging, release-process-understanding, version-control, build-tools]
+estimated_time: 60 minutes
+review_cycle: quarterly
+---
 # PRODUCTION RELEASE GUIDE - v1.0.0
 
 ## 📦 **Download Production-Ready Builds**

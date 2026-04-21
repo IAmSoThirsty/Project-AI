@@ -1,7 +1,20 @@
+---
+type: reference
+tags: [p1-developer, usage-guide, actionlint, command-line, cli-reference, workflow-linting]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [actionlint-cli, github-actions, workflow-validation, linting-tools]
+stakeholders: [developers, ci-cd-maintainers, workflow-authors]
+audience: intermediate
+prerequisites: [shell-basics, github-actions-knowledge, yaml-proficiency]
+estimated_time: 20 minutes
+review_cycle: quarterly
+---
 Usage
 =====
 
-This document describes how to use [actionlint](..).
+This document describes how to use [[..|actionlint]].
 
 ## `actionlint` command
 
@@ -108,8 +121,8 @@ Output:
 To include newlines in the annotation body, it prints `%0A`. (ref [actions/toolkit#193](https://github.com/actions/toolkit/issues/193)).
 And it suppresses `SC2016` shellcheck rule error since it complains about the template argument.
 
-Basically it is more recommended to use [Problem Matchers](#problem-matchers) or reviewdog as explained in
-['Tools integration' section](#tools-integ) below.
+Basically it is more recommended to use [[#problem-matchers|Problem Matchers]] or reviewdog as explained in
+[[#tools-integ|'Tools integration' section]] below.
 
 #### Example: [SARIF format][sarif]
 
@@ -194,7 +207,7 @@ Note that special characters escaped with back slash like `\n` in the format str
 
 ## Use actionlint on GitHub Actions
 
-Preparing `actionlint` executable with the download script is recommended. See [the instruction](install.md#download-script) for
+Preparing `actionlint` executable with the download script is recommended. See [[install.md#download-script|the instruction]] for
 more details. It sets an absolute file path of downloaded executable to `executable` output in order to use the executable in the
 following steps easily.
 
@@ -232,13 +245,13 @@ Or simply download the executable and run it in one step:
 The download script allows to specify the version of actionlint and the download directory. Try to give `--help` argument
 to the script for more usage details.
 
-If you want to enable [shellcheck integration](checks.md#check-shellcheck-integ), install `shellcheck` command. Note that
+If you want to enable [[checks.md#check-shellcheck-integ|shellcheck integration]], install `shellcheck` command. Note that
 shellcheck is [pre-installed on Ubuntu worker][preinstall-ubuntu].
 
 If you want to [annotate errors][ga-annotate-error] from actionlint on GitHub, consider to use
-[Problem Matchers](#problem-matchers).
+[[#problem-matchers|Problem Matchers]].
 
-If you prefer Docker image to running a downloaded executable, using [actionlint Docker image](#docker) is another option.
+If you prefer Docker image to running a downloaded executable, using [[#docker|actionlint Docker image]] is another option.
 
 ```yaml
 name: Lint GitHub Actions workflows
@@ -304,7 +317,7 @@ docker run --rm -v /path/to/workflows:/workflows rhysd/actionlint:latest -color 
 
 ## Using actionlint from Go program
 
-Go APIs are available. See [the Go API document](api.md) for more details.
+Go APIs are available. See [[api.md|the Go API document]] for more details.
 
 
 <a name="tools-integ"></a>
@@ -381,8 +394,8 @@ As alternatives to `actionlint` hook, `actionlint-docker` or `actionlint-system`
 | Hook ID | Explanation |
 |-|-|
 | `actionlint` | Automatically installs `actionlint` command in isolated `$GOPATH` directory using [Go toolchain][go-install]. |
-| `actionlint-docker` | Automatically pulls [the actionlint Docker image](#docker). |
-| `actionlint-system` | Uses system-installed `actionlint` command. The command is necessary to be [installed manually](install.md). |
+| `actionlint-docker` | Automatically pulls [[#docker|the actionlint Docker image]]. |
+| `actionlint-system` | Uses system-installed `actionlint` command. The command is necessary to be [[install.md|installed manually]]. |
 
 ### VS Code
 
@@ -448,7 +461,7 @@ You can also see actionlint issues inline in VS Code via the [Trunk VS Code exte
 
 ---
 
-[Checks](checks.md) | [Installation](install.md) | [Configuration](config.md) | [Go API](api.md) | [References](reference.md)
+[[checks.md|Checks]] | [[install.md|Installation]] | [[config.md|Configuration]] | [[api.md|Go API]] | [[reference.md|References]]
 
 [reviewdog-actionlint]: https://github.com/reviewdog/action-actionlint
 [reviewdog]: https://github.com/reviewdog/reviewdog

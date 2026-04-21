@@ -1,3 +1,50 @@
+---
+title: "Plugin Sandboxing Architecture Proposal"
+id: plugin-sandboxing-proposal
+type: rfc
+version: 1.0.0
+created_date: 2026-01-28
+updated_date: 2026-02-03
+status: review
+author: Security Engineering Team
+contributors:
+  - Plugin Architecture Team
+audience: internal
+confidentiality: confidential
+owner_team: security
+operational_context: planning
+retention_policy: permanent
+category: security
+tags:
+  - plugin-security
+  - sandboxing
+  - isolation
+  - process-isolation
+  - containerization
+  - rfc
+  - threat-model
+technologies:
+  - Python
+  - Docker
+  - PyPy
+  - JSON-RPC
+  - WebAssembly
+related_docs:
+  - ../architecture/plugin-architecture.md
+  - ../security/plugin-security-model.md
+scope: "Phased implementation plan for plugin sandboxing with process isolation, containerization, and security controls"
+findings:
+  - Process isolation recommended as baseline
+  - Docker containerization for high-assurance
+  - Python sandboxing has weak guarantees
+  - WebAssembly offers strong isolation but high porting effort
+recommendations:
+  - Implement Phase 0 governance immediately
+  - Deploy Phase 1 process isolation
+  - Evaluate Docker for enterprise deployments
+description: RFC proposing practical, incremental approach to isolate third-party plugins with process isolation, containerization, and security controls to prevent unintended code execution and privilege escalation.
+---
+
 # Plugin Sandboxing Proposal
 
 Goal: design a practical, incremental approach to isolate third-party plugins so they cannot execute unintended code paths, access sensitive data, or escalate privileges. The intent is to provide concrete options, trade-offs, and an implementation roadmap that fits the Project-AI architecture (desktop PyQt6 app + optional web components).

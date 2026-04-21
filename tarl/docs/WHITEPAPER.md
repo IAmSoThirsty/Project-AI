@@ -1,3 +1,29 @@
+---
+created: '2026-01-24'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: runtime-spec
+tags:
+- tarl
+- language
+- whitepaper
+- specification
+engine_type: tarl-runtime
+implementation_status: complete
+language: tarl
+related_systems:
+- compiler
+- runtime-vm
+- bytecode
+- jit
+- garbage-collector
+stakeholders:
+- architecture-team
+- tarl-team
+- compiler-team
+---
+
 # T.A.R.L. Technical Whitepaper
 
 **Thirsty's Active Resistance Language - A Production-Grade Language Implementation**

@@ -1,3 +1,93 @@
+---
+title: "Multi-Path Governance Architecture - Migration Guide"
+id: multi-path-governance-architecture
+type: guide
+version: 1.0.0
+created_date: 2026-04-13
+last_verified: 2026-04-20
+status: current
+author: "Architecture Team <projectaidevs@gmail.com>"
+tags:
+  - p0-core
+  - governance
+  - architecture
+  - architecture/router
+  - governance/multi-path
+  - guide
+  - migration
+  - reference
+area:
+  - governance
+  - architecture
+  - development
+component:
+  - runtime-router
+  - ai-orchestrator
+  - governance-pipeline
+  - security-layer
+  - interface-adapters
+audience:
+  - developer
+  - architect
+  - contributor
+priority: p0
+related_to:
+  - "[[MULTI_PATH_GOVERNANCE_COMPLETE]]"
+  - "[[ARCHITECTURE_QUICK_REF]]"
+  - "[[COPILOT_MANDATORY_GUIDE]]"
+  - "[[DEVELOPER_QUICK_REFERENCE]]"
+  - "[[CONTRIBUTING]]"
+depends_on:
+  - "[[MULTI_PATH_GOVERNANCE_COMPLETE]]"
+related_systems:
+  - runtime-router
+  - ai-orchestrator
+  - governance-pipeline
+  - security-layer
+  - web-adapter
+  - desktop-adapter
+  - cli-adapter
+  - agent-adapter
+stakeholders:
+  - developers
+  - architecture-team
+  - governance-team
+  - contributors
+scope: project-wide
+review_cycle: quarterly
+what: "Technical migration guide for multi-path governance architecture - documents runtime router, AI orchestrator, governance pipeline, security layer, and interface adapter patterns for unified governance across all execution paths"
+who: "Developers migrating code to use governance adapters, architects understanding governance flow, contributors implementing new interfaces"
+when: "Use when integrating new features with governance, refactoring direct AI calls to use orchestrator, debugging interface adapter issues, or implementing new execution paths"
+where: "Root directory as canonical migration reference - complements MULTI_PATH_GOVERNANCE_COMPLETE.md deployment report with technical implementation details"
+why: "Enables zero-breaking-change migration to unified governance, documents API patterns for each adapter (web/desktop/CLI/agent), explains provider fallback order, shows security middleware usage (Argon2, JWT, CORS, rate limiting)"
+---
+
+---
+type: guide
+tags:
+  - p2-root
+  - status
+  - guide
+  - governance
+  - multi-path
+  - architecture
+created: 2026-04-13
+last_verified: 2026-04-20
+status: current
+related_systems:
+  - runtime-router
+  - governance-pipeline
+  - ai-orchestrator
+  - interface-adapters
+stakeholders:
+  - architecture-team
+  - governance-team
+  - developers
+report_type: guide
+supersedes: []
+review_cycle: quarterly
+---
+
 # Multi-Path Governance Architecture - Migration Guide
 
 ## Overview

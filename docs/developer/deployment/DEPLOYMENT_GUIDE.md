@@ -1,3 +1,18 @@
+---
+type: deployment
+tags: [p1-developer, production-deployment, multi-platform, desktop, android, docker, kubernetes, usb-installer]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [docker, kubernetes, android-sdk, electron-builder, usb-installer, pyqt6-app]
+stakeholders: [devops, deployment-team, release-managers, build-engineers]
+audience: intermediate
+prerequisites: [docker-basics, kubernetes-fundamentals, python-packaging, android-sdk-knowledge]
+estimated_time: 120 minutes
+review_cycle: monthly
+---
+  - [[RELEASE_BUILD_GUIDE]]
+---
 # Project-AI Production Deployment Guide
 
 ## 🚀 Complete Deployment Package

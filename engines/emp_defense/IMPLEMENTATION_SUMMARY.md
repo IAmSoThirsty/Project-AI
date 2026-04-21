@@ -1,3 +1,25 @@
+---
+created: '2026-02-03'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: implementation-guide
+tags:
+- emp-defense
+- engines
+- implementation
+engine_type: emp-defense
+implementation_status: complete
+language: python
+related_systems:
+- simulation-engine
+- emp-modeling
+- grid-analysis
+stakeholders:
+- architecture-team
+- simulation-team
+---
+
 # EMP Defense Engine - Implementation Summary
 
 ## Executive Summary

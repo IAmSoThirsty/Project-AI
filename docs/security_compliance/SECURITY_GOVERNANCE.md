@@ -1,6 +1,77 @@
+---
+title: "Security Governance and Ownership"
+id: "security-governance"
+type: "policy"
+version: "1.0.0"
+created_date: "2026-01-19"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:governance"
+  - "type:policy"
+  - "type:reference"
+  - "component:triumvirate"
+  - "component:guardians"
+  - "audience:security-engineer"
+  - "audience:compliance-auditor"
+  - "priority:p0-critical"
+technologies:
+  - "GitHub CODEOWNERS"
+  - "Triumvirate Governance"
+  - "AGI Charter"
+  - "Guardian Workflows"
+difficulty: "advanced"
+estimated_time: "PT90M"
+prerequisites:
+  - "Triumvirate governance understanding"
+  - "AGI Charter familiarity"
+  - "GitHub governance workflows"
+summary: "Security governance framework defining Triumvirate guardian role mapping (Cerberus, Codex, Galahad), ownership responsibilities, workflow ownership, approval requirements, and KPIs."
+scope: "Complete governance structure: Triumvirate roles, guardian positions, GitHub teams, CODEOWNERS enforcement, approval workflows, security KPIs, waiver process, override authority"
+classification: "internal"
+threat_level: "medium"
+triumvirate_roles:
+  - "Cerberus (Security & Safety)"
+  - "Codex Deus Maximus (Logic & Consistency)"
+  - "Galahad (Ethics & Empathy)"
+approval_requirements:
+  routine_changes: "2 of 3 guardians"
+  core_ethics: "All 3 guardians required"
+  emergency_overrides: "Guardian + executive + ethics committee + waiver"
+compliance:
+  - "AGI Charter §5"
+  - "GitHub Governance Best Practices"
+  - "Security Ownership Standards"
+stakeholders:
+  - security-team   - governance-team   - triumvirate
+last_verified: 2026-04-20
+cvss_score: "N/A - Governance Policy"
+related_docs:
+  - "agi-charter"
+  - "agi-identity-specification"
+  - "cerberus-security-structure"
+  - "triumvirate-oversight"
+review_status:
+  reviewed: true
+  reviewers: ["triumvirate", "security-team", "legal-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "compliance-auditors"
+  - "guardians"
+  - "executives"
+review_frequency: "quarterly"
+---
+
 # Security Governance and Ownership
 
-**Document Version:** 1.0  
+**Document Version:** 1.0
 **Last Updated:** 2026-01-19  
 **Owner:** Security Team  
 **Review Frequency:** Quarterly
@@ -9,12 +80,12 @@
 
 ## Table of Contents
 
-1. [Ownership and Responsibilities](#ownership-and-responsibilities)
-1. [Security KPIs](#security-kpis)
-1. [Waiver Process](#waiver-process)
-1. [Override Authority](#override-authority)
-1. [Local Development](#local-development)
-1. [Downstream Integration](#downstream-integration)
+1. [[#ownership-and-responsibilities|Ownership and Responsibilities]]
+1. [[#security-kpis|Security KPIs]]
+1. [[#waiver-process|Waiver Process]]
+1. [[#override-authority|Override Authority]]
+1. [[#local-development|Local Development]]
+1. [[#downstream-integration|Downstream Integration]]
 
 ---
 
@@ -807,9 +878,9 @@ echo "✅ Verified deployment bundle created: project-ai-${RELEASE}-verified.tar
 ## References
 
 - [Security Framework](../SECURITY_FRAMEWORK.md)
-- [SBOM Policy](SBOM_POLICY.md)
-- [Workflow Runbooks](SECURITY_WORKFLOW_RUNBOOKS.md)
-- [Threat Model](THREAT_MODEL_SECURITY_WORKFLOWS.md)
+- [[SBOM_POLICY.md|SBOM Policy]]
+- [[SECURITY_WORKFLOW_RUNBOOKS.md|Workflow Runbooks]]
+- [[THREAT_MODEL_SECURITY_WORKFLOWS.md|Threat Model]]
 
 ---
 

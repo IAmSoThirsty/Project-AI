@@ -17,16 +17,16 @@ This document outlines a comprehensive rate limiting architecture for Project-AI
 
 ## Table of Contents
 
-1. [Current State Analysis](#current-state-analysis)
-2. [Architecture Overview](#architecture-overview)
-3. [Implementation Options](#implementation-options)
-4. [Integration Points](#integration-points)
-5. [Configuration Parameters](#configuration-parameters)
-6. [Testing Strategy](#testing-strategy)
-7. [Migration Plan](#migration-plan)
-8. [Security Considerations](#security-considerations)
-9. [Performance Impact](#performance-impact)
-10. [Monitoring & Observability](#monitoring--observability)
+1. [[#current-state-analysis|Current State Analysis]]
+2. [[#architecture-overview|Architecture Overview]]
+3. [[#implementation-options|Implementation Options]]
+4. [[#integration-points|Integration Points]]
+5. [[#configuration-parameters|Configuration Parameters]]
+6. [[#testing-strategy|Testing Strategy]]
+7. [[#migration-plan|Migration Plan]]
+8. [[#security-considerations|Security Considerations]]
+9. [[#performance-impact|Performance Impact]]
+10. [[#monitoring--observability|Monitoring & Observability]]
 
 ---
 

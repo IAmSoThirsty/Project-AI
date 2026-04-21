@@ -1,3 +1,20 @@
+---
+type: tool-reference
+tags: [tools, security, scanning, secrets-detection, vulnerability-scanning]
+created: 2024-12-15
+last_verified: 2026-04-20
+status: current
+related_systems: [bandit, detect-secrets, trufflehog, git-secrets, enhanced-secret-scanner]
+stakeholders: [security-team, developers, devops-team]
+data_category: tooling
+persistence: transient
+security_sensitive: true
+review_cycle: quarterly
+tool_categories: [secret-scanning, security-linting, dependency-scanning]
+automation_workflows: [pre-commit-hooks, ci-cd-integration, scheduled-scans]
+exit_code_meanings: {0: no-secrets, 1: medium-high-secrets, 2: critical-secrets}
+---
+
 # 🔐 Security Scanning Guide
 
 This directory contains tools and configurations for scanning the Project-AI codebase for security vulnerabilities, hardcoded secrets, and compliance issues.

@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, reference-links, resources, actionlint, documentation, external-resources]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [actionlint-repository, playground, github-actions-docs, official-documentation]
+stakeholders: [developers, learners, documentation-users]
+audience: intermediate
+prerequisites: [github-actions-basics]
+estimated_time: 5 minutes
+review_cycle: annually
+---
 References
 ==========
 
@@ -21,4 +34,4 @@ This document describes links to resources.
 
 ---
 
-[Checks](checks.md) | [Installation](install.md) | [Usage](usage.md) | [Configuration](config.md) | [Go API](api.md)
+[[checks.md|Checks]] | [[install.md|Installation]] | [[usage.md|Usage]] | [[config.md|Configuration]] | [[api.md|Go API]]

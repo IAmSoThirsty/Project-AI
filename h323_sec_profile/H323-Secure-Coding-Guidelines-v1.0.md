@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, coding-guidelines, security, development]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, secure-sdlc, code-review-standards]
+stakeholders: [development-team, security-team, code-review-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 Secure Coding & Extension Development Guidelines
 
 Version 1.0 — Developer Standards for Custom H.323 Extensions

@@ -1,3 +1,16 @@
+---
+type: guide
+tags: [p1-developer, leather-book-ui, architecture, pyqt6, gui-design, component-architecture]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [leather-book-interface, dashboard, gui-components, tron-theme, signal-architecture]
+stakeholders: [developers, ui-architects, gui-developers]
+audience: advanced
+prerequisites: [python-advanced, pyqt6-expertise, gui-architecture, design-patterns]
+estimated_time: 60 minutes
+review_cycle: quarterly
+---
 # Leather Book UI Architecture
 
 ## System Overview

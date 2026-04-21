@@ -1,3 +1,24 @@
+---
+title: "QUICK REFERENCE FIXES"
+id: "quick-reference-fixes"
+type: historical_record
+status: archived
+archived_date: 2026-04-19
+archive_reason: deprecated
+historical_value: medium
+restore_candidate: false
+audience:
+  - developer
+  - architect
+tags:
+  - historical
+  - archive
+  - implementation
+  - testing
+  - architecture
+path_confirmed: T:/Project-AI-main/docs/internal/archive/session-notes/QUICK_REFERENCE_FIXES.md
+---
+
 # Quick Reference: Session Fixes Summary
 
 ## What Was Done

@@ -33,6 +33,10 @@ MAX_API_RETRIES = int(os.getenv("IMAGE_API_MAX_RETRIES", "3"))
 BACKOFF_FACTOR = float(os.getenv("IMAGE_API_BACKOFF_FACTOR", "0.8"))
 
 
+# 📚 Documentation Links:
+# - [[relationships/gui/06_IMAGE_GENERATION_RELATIONSHIPS.md]]
+#
+
 def _request_with_retries(method: str, url: str, **kwargs) -> requests.Response:
     """Perform an HTTP request with retries and exponential backoff for transient errors.
 

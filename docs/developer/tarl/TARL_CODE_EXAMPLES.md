@@ -1,3 +1,43 @@
+---
+title: "T-A-R-L Code Examples: Exact Code Transformation"
+id: tarl-code-examples
+type: reference
+area: development
+status: active
+version: "1.0"
+created_date: "2026-04-20"
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Classification
+tags:
+  - development
+  - tarl
+
+# Developer Metadata
+skill_level: intermediate
+audience:
+  - developer
+
+languages:
+  - JavaScript
+  - Python
+
+frameworks:
+  - Temporal
+
+code_examples: false
+api_reference: false
+
+prerequisites:
+  - [[QUICK_START]]
+
+implements:
+  - src/app/core/tarl_orchestrator.py
+
+related_docs:
+  - [[README]]
+---
 # T-A-R-L Code Examples: Exact Code Transformation
 
 This document shows the EXACT code before and after T-A-R-L buffing.

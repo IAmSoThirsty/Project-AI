@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, tarl, trust-layer, authorization, runtime-security, temporal, policy-enforcement]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [tarl-orchestrator, temporal-workflows, security-layer, policy-engine]
+stakeholders: [developers, security-team, architects, workflow-engineers]
+audience: intermediate
+prerequisites: [python-intermediate, temporal-basics, security-concepts, policy-enforcement-understanding]
+estimated_time: 45 minutes
+review_cycle: quarterly
+---
 # 🛡️ TARL - Trust and Authorization Runtime Layer
 
 [![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)]()

@@ -1,3 +1,54 @@
+---
+title: Project-AI Root Directory Structure & Organization
+id: root-structure
+type: reference
+version: 1.0
+created: 2026-01-30
+created_date: 2026-01-30
+last_verified: 2026-04-20
+updated_date: 2026-01-30
+status: active
+author: Architecture Team
+contributors: []
+# Architecture-Specific Metadata
+architecture_layer: infrastructure
+design_pattern: ["clean-root", "organized-subdirectories"]
+implements: []
+uses: ["cleanup-script"]
+quality_attributes: ["organization", "maintainability", "cleanliness"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "infrastructure"]
+tags: ["root-structure", "directory-organization", "cleanup", "file-organization"]
+component: []
+# Relationships
+related_docs: ["project-structure", "architecture-overview"]
+related_systems: ["core-architecture"]
+depends_on: []
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["developers", "architects", "devops-engineers"]
+stakeholders: ["platform-team", "devops-team", "developers", "architecture-team"]
+priority: P1
+difficulty: beginner
+estimated_reading_time: 8 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: low
+compliance: []
+# Discovery
+keywords: ["root directory", "file organization", "cleanup", "directory structure"]
+search_terms: ["root structure", "organized subdirectories", "cleanup script"]
+aliases: ["Root Organization", "Directory Cleanup"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: null
+---
+
+
 # Project-AI Root Directory Structure
 
 After running `scripts/cleanup_root.ps1`, the root directory is organized as follows:

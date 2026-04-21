@@ -27,6 +27,11 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
+# 📚 Documentation Links:
+# - [[relationships/temporal/01_WORKFLOW_CHAINS.md]]
+# - [[source-docs/temporal/WORKFLOWS_COMPREHENSIVE.md]]
+#
+
 class RedTeamCampaignRequest:
     """Request for red team campaign workflow."""
 

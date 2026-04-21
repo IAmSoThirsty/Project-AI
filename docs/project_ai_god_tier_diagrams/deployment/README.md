@@ -1,3 +1,33 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, architecture, deployment, infrastructure, docker, kubernetes, cloud-deployment]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [desktop-deployment, docker-compose, kubernetes-cluster, multi-region-architecture]
+stakeholders: [devops-team, sre, platform-engineers, architecture-team]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: deployment
+format: ascii
+deployment_models: 3
+---
+  - "[[monitoring/README]]"
+  - "[[security/README]]"
+  - "[[component/README]]"
+total_lines: 700+
+keywords:
+  - infrastructure-as-code
+  - container-orchestration
+  - kubernetes-deployment
+  - docker-compose
+  - terraform
+  - helm-charts
+  - auto-scaling
+  - load-balancing
+---
+
 # Deployment Architecture - Project-AI
 
 ## Overview

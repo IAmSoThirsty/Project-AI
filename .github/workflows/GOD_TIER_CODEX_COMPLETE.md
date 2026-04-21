@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [github-actions, codex-deus, workflows, god-tier, ci-cd, ultimate]
+created: 2026-01-25
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, security-automation, codex-deus]
+stakeholders: [devops, developers, architects, executives]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: true
+review_cycle: quarterly
+---
+
 # 🏛️ God Tier Codex Deus Ultimate - Complete Architecture
 
 ## Executive Summary

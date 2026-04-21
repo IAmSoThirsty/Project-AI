@@ -1,3 +1,42 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, architecture, security, defense-in-depth, zero-trust, encryption, authentication]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [tls-configuration, oauth2, jwt, mfa, rbac, abac, encryption-service, key-management]
+stakeholders: [security-team, architecture-team, compliance-officers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: ascii
+security_layers: 7
+---
+  - RSA-4096
+  - PBKDF2
+  - HSM
+compliance:
+  - GDPR
+  - HIPAA
+  - SOC2
+  - ISO27001
+related_docs:
+  - "[[data_flow/governance_decision_flow]]"
+  - "[[data_flow/audit_trail_flow]]"
+  - "[[component/README]]"
+total_lines: 700+
+keywords:
+  - security-architecture
+  - defense-in-depth
+  - zero-trust
+  - encryption
+  - authentication
+  - authorization
+  - key-management
+  - compliance
+---
+
 # Security Architecture - Project-AI
 
 ## Overview
@@ -709,4 +748,4 @@ class FieldEncryptionService:
 - [Authorization RBAC](./authorization_rbac.md)
 - [Seven-Layer Encryption](./seven_layer_encryption.md)
 - [Threat Model](./threat_model.md)
-- [Audit Trail](../data_flow/audit_trail_flow.md)
+- [[../data_flow/audit_trail_flow.md|Audit Trail]]

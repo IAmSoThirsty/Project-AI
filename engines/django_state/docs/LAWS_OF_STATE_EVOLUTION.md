@@ -1,3 +1,26 @@
+---
+created: '2026-01-01'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: runtime-spec
+tags:
+- django-state
+- engines
+- laws
+- state-evolution
+engine_type: django-state
+implementation_status: in-progress
+language: python
+related_systems:
+- state-evolution
+- trust-modeling
+- simulation-engine
+stakeholders:
+- architecture-team
+- simulation-team
+---
+
 # Laws of State Evolution
 
 Complete mathematical formulations and implementation details for all irreversibility laws in the Django State Engine.

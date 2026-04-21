@@ -1,3 +1,16 @@
+---
+type: tutorial
+tags: [p1-developer, temporal-setup, temporal-io, workflow-setup, durable-execution, installation]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [temporal-server, temporal-workflows, docker-compose, postgresql, workflow-platform]
+stakeholders: [developers, workflow-engineers, infrastructure-team]
+audience: beginner
+prerequisites: [python-basics, docker-installed, docker-compose-knowledge, postgresql-awareness]
+estimated_time: 45 minutes
+review_cycle: quarterly
+---
 # Temporal.io Integration Setup Guide
 
 ## Overview

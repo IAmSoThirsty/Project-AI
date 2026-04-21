@@ -1,3 +1,42 @@
+---
+title: "T-A-R-L (Thirsty's Active Resistance Language) - Complete Technical Documentation"
+id: tarl-technical-documentation
+type: reference
+area: development
+status: active
+version: "1.0"
+created_date: "2026-04-20"
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Classification
+tags:
+  - development
+  - tarl
+
+# Developer Metadata
+skill_level: intermediate
+audience:
+  - developer
+
+languages:
+  - Python
+
+frameworks:
+  - Temporal
+
+code_examples: false
+api_reference: false
+
+prerequisites:
+  - [[QUICK_START]]
+
+implements:
+  - src/app/core/tarl_orchestrator.py
+
+related_docs:
+  - [[README]]
+---
 # T-A-R-L (Thirsty's Active Resistance Language) - Complete Technical Documentation
 
 ## Overview

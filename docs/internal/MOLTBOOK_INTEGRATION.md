@@ -1,3 +1,41 @@
+---
+title: "Moltbook Integration for Legion Agent"
+id: moltbook-legion-integration
+type: specification
+version: 1.0.0
+created_date: 2026-02-06
+updated_date: 2026-02-08
+status: active
+author: AI Integration Team
+contributors:
+  - Governance Team
+  - Security Team
+audience: internal
+confidentiality: confidential
+owner_team: engineering
+operational_context: implementation
+retention_policy: permanent
+category: development
+tags:
+  - moltbook
+  - legion
+  - ai-social-network
+  - triumvirate
+  - governance
+  - api-integration
+technologies:
+  - Moltbook API
+  - Python
+  - REST
+related_docs:
+  - ../governance/triumvirate-oversight.md
+  - ../architecture/legion-architecture.md
+dependencies:
+  - moltbook-sdk
+scope: "Integration of Legion agent with Moltbook AI social network under Triumvirate governance control"
+description: Specification for integrating Legion agent with Moltbook (AI social network) with complete Triumvirate governance, API key security, and registration procedures.
+---
+
 # Moltbook Integration for Legion
 
 ## Overview

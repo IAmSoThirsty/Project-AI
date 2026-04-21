@@ -1,6 +1,93 @@
+---
+title: "Software Bill of Materials (SBOM) Policy"
+id: "sbom-policy"
+type: "policy"
+version: "1.0.0"
+created_date: "2026-01-19"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:compliance"
+  - "area:supply-chain"
+  - "type:policy"
+  - "type:spec"
+  - "component:sbom"
+  - "component:cyclonedx"
+  - "audience:security-engineer"
+  - "audience:compliance-auditor"
+  - "priority:p1-high"
+technologies:
+  - "CycloneDX 1.5 JSON"
+  - "SPDX 2.3"
+  - "Python (requirements.txt, pyproject.toml)"
+  - "Node.js (package.json)"
+  - "Binary Artifacts"
+difficulty: "intermediate"
+estimated_time: "PT90M"
+prerequisites:
+  - "Supply chain security understanding"
+  - "SBOM format knowledge"
+  - "Dependency management"
+summary: "Comprehensive policy for generating, publishing, and verifying Software Bill of Materials (SBOM) using CycloneDX 1.5 JSON for supply chain security and license compliance."
+scope: "SBOM generation covering Python/Node.js dependencies, binary artifacts, system dependencies, model metadata with NTIA minimum elements and NIST SP 800-218 compliance"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "supply-chain-attacks"
+  - "vulnerable-dependencies"
+  - "license-violations"
+  - "component-tampering"
+mitigations:
+  - "[[SBOM_GENERATION]]"
+  - "[[VULNERABILITY_SCANNING]]"
+  - "[[LICENSE_COMPLIANCE]]"
+  - "[[COMPONENT_VERIFICATION]]"
+defends_against:
+  - "Supply chain attacks"
+  - "Vulnerable components"
+  - "License compliance violations"
+  - "Component tampering"
+  - "Dependency confusion"
+compliance:
+  - "NTIA Minimum Elements"
+  - "NIST SP 800-218 (SSDF)"
+  - "CycloneDX 1.5 Specification"
+  - "SPDX 2.3"
+  - "Executive Order 14028 (Cybersecurity)"
+stakeholders:
+  - security-team   - devops-team   - compliance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Policy Documentation"
+cwe_ids:
+  - "CWE-829: Inclusion of Functionality from Untrusted Source"
+  - "CWE-494: Download of Code Without Integrity Check"
+  - "CWE-1357: Reliance on Insufficiently Trustworthy Component"
+related_docs:
+  - "security-framework"
+  - "supply-chain-security"
+  - "vulnerability-management"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "compliance-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "compliance-auditors"
+  - "devops-engineers"
+  - "software-architects"
+enforcement_level: "mandatory"
+review_cycle: "quarterly"
+---
+
 # Software Bill of Materials (SBOM) Policy
 
-**Document Version:** 1.0  
+**Document Version:** 1.0
 **Last Updated:** 2026-01-19  
 **Owner:** Project-AI Security Team
 

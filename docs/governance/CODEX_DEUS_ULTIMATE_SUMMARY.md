@@ -1,3 +1,57 @@
+---
+title: "Codex Deus Ultimate - God Tier Workflow Summary"
+id: codex-deus-ultimate-summary
+type: specification
+status: active
+created_date: 2024-01-01
+updated_date: 2024-12-01
+version: 1.0.0
+author: DevOps Team
+contributors: ["Security Team", "Architecture Team", "SRE Team"]
+policy_level: P2
+enforcement_level: mandatory
+tags:
+  - area:governance
+  - area:automation
+  - area:cicd
+  - area:security
+  - type:specification
+  - type:design
+  - component:workflows
+  - component:testing
+  - component:security
+  - component:release
+  - audience:devops
+  - audience:architect
+  - audience:security-engineer
+  - audience:release-manager
+  - priority:critical
+  - special:comprehensive
+compliance_frameworks: ["SBOM", "SARIF", "Sigstore"]
+classification: public
+related_systems:
+  - codex-deus
+  - github-actions
+  - workflow-automation
+  - sbom-generation
+  - container-security
+  - sarif-scanning
+stakeholders:
+  - governance-team
+  - devops-team
+  - security-team
+  - architecture-team
+last_verified: 2026-04-20
+relationships:
+  governed_by: ["CODEX_DEUS_INDEX", "copilot_workspace_profile"]
+  related_docs: ["CODEX_DEUS_QUICK_REF"]
+  implements: []
+workflow_references:
+  - ".github/workflows/codex-deus-ultimate.yml"
+purpose: "Comprehensive technical specification for Codex Deus Ultimate monolithic workflow: complete 15-phase architecture consolidating 28 workflows with zero redundancy"
+scope: "All 55 jobs across 15 phases: initialization, security scanning, AI safety, code quality, testing matrix, coverage enforcement, build, SBOM, container security, auto-fix, PR automation, release management, post-merge validation, cleanup, reporting"
+---
+
 # 🏛️ Codex Deus Ultimate - God Tier Workflow Summary
 
 ## Overview

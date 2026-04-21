@@ -21,6 +21,10 @@ logger = logging.getLogger(__name__)
 _desktop_adapter: DesktopAdapter | None = None
 
 
+# 📚 Documentation Links:
+# - [[relationships/gui/03_HANDLER_RELATIONSHIPS.md]]
+#
+
 def get_desktop_adapter() -> DesktopAdapter:
     """
     Get global desktop adapter instance.

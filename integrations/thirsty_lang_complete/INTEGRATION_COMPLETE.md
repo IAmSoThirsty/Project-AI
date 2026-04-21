@@ -1,3 +1,17 @@
+---
+type: integration-guide
+tags: [integrations, thirsty-lang, tarl, security, cross-platform, production]
+created: 2025-01-01
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, tarl, project-ai-core, unified-security]
+stakeholders: [platform-team, developers, integration-team, security-team]
+platform: cross-platform
+integration_type: sdk
+external_dependencies: [python, nodejs, pyyaml, jsonschema, cryptography, psutil]
+review_cycle: quarterly
+---
+
 # Thirsty-Lang + TARL Complete Integration Guide
 
 **Version:** 1.0.0  

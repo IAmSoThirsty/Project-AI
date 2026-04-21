@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, mcp, model-context-protocol, configuration, mcp-server, ai-integration]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [mcp-server, mcp-integration, claude-desktop, ai-clients, protocol-handlers]
+stakeholders: [developers, integrators, mcp-users, ai-engineers]
+audience: intermediate
+prerequisites: [python-intermediate, mcp-concepts, protocol-understanding, api-integration]
+estimated_time: 40 minutes
+review_cycle: monthly
+---
 # Model Context Protocol (MCP) Configuration for Project-AI
 
 ## Overview

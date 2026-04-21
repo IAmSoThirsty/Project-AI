@@ -1,3 +1,20 @@
+---
+type: canonical-spec
+tags: [canonical, golden-path, regression-oracle, system-validation, triumvirate]
+created: 2026-02-01
+last_verified: 2026-04-20
+status: current
+related_systems: [triumvirate, tarl, eed-memory, decision-contracts, operational-substructure]
+stakeholders: [architecture-team, qa-team, external-auditors, governance-team]
+sovereignty_level: sovereign
+immutability: immutable
+enforcement: automatic
+review_cycle: quarterly
+test_type: end-to-end-integration
+validation_method: deterministic-replay
+regression_protection: true
+---
+
 # Canonical Scenario: The Golden Path
 
 > **One command. One path. One irrefutable demonstration of Project-AI's unique capabilities.**

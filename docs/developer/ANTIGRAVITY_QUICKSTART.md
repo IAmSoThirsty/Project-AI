@@ -1,3 +1,16 @@
+---
+type: quickstart
+tags: [p1-developer, antigravity-ide, ai-powered-development, google-ide, vscode-integration]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [antigravity-ide, triumvirate, temporal-workflows, vscode, ai-agents]
+stakeholders: [developers, ai-developers, ide-users]
+audience: beginner
+prerequisites: [python-3.11+, project-ai-cloned, vscode-installed, basic-ide-knowledge]
+estimated_time: 10 minutes
+review_cycle: quarterly
+---
 # Google Antigravity IDE - Quick Start Guide
 
 **Get started with Antigravity IDE in Project-AI in under 10 minutes!**

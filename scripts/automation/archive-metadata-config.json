@@ -1,0 +1,44 @@
+{
+  "metadata_template": {
+    "status": "archived",
+    "type": "historical_record",
+    "archived_date": "AUTO_FILE_MODIFIED_DATE",
+    "archive_reason": "AUTO_DETECT",
+    "superseded_by": "AUTO_DETECT",
+    "historical_value": "AUTO_ASSESS",
+    "restore_candidate": false,
+    "audience": ["developer", "architect"],
+    "tags_base": ["historical", "archive", "completed"]
+  },
+  "archive_reason_patterns": {
+    "superseded": ["COMPLETE", "SUMMARY", "superseded", "newer docs", "replaced by"],
+    "deprecated": ["deprecated", "obsolete", "no longer", "discontinued"],
+    "migrated": ["moved to", "migrated to", "now in", "relocated"],
+    "completed": ["COMPLETE", "FINISHED", "DONE", "implementation done"]
+  },
+  "historical_value_rules": {
+    "high": ["architecture", "security", "incident", "audit", "charter", "governance"],
+    "medium": ["implementation", "summary", "report", "analysis", "testing"],
+    "low": ["status", "mission", "notes", "temp"]
+  },
+  "supersession_mapping": {
+    "CI_CHECK_ISSUES.md": "docs/ci-cd/CI_PIPELINE.md",
+    "COMPLETE_REPOSITORY_AUDIT.md": "docs/audits/REPOSITORY_AUDIT.md",
+    "IMPLEMENTATION_SUMMARY.md": "CHANGELOG.md",
+    "MISSION_STATUS.txt": "CHANGELOG.md",
+    "SUPER_KERNEL_SUMMARY.md": "docs/architecture/SUPER_KERNEL.md",
+    "CONTRARIAN_FIREWALL_COMPLETE.md": "docs/security/CONTRARIAN_FIREWALL.md",
+    "IMPLEMENTATION_COMPLETE_PLANETARY_DEFENSE.md": "docs/security/PLANETARY_DEFENSE.md",
+    "IMPLEMENTATION_COMPLETE_WATCHTOWER.md": "docs/monitoring/WATCHTOWER.md",
+    "HEALTH_REPORT_SUMMARY.md": "docs/monitoring/HEALTH_MONITORING.md"
+  },
+  "tag_additions": {
+    "security": ["security", "security-audit"],
+    "adversarial": ["testing", "adversarial-testing"],
+    "implementation": ["implementation"],
+    "monitoring": ["monitoring", "observability"],
+    "ci-cd": ["ci-cd", "automation"],
+    "governance": ["governance", "policy"],
+    "architecture": ["architecture", "design"]
+  }
+}

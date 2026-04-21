@@ -1,3 +1,54 @@
+---
+title: State Model Specification - State Management & Persistence
+id: state-model-spec
+type: specification
+version: 1.0
+created: 2026-01-23
+created_date: 2026-01-23
+last_verified: 2026-04-20
+updated_date: 2026-01-23
+status: active
+author: Architecture Team
+contributors: []
+# Architecture-Specific Metadata
+architecture_layer: application
+design_pattern: ["state-management", "checkpoint-restore", "episodic-logging"]
+implements: ["state-manager", "memory-store", "episode-store", "checkpoint-manager"]
+uses: ["persistence-layer"]
+quality_attributes: ["state-recovery", "persistence", "episodic-memory", "introspection"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/data"]
+tags: ["state-model", "state-management", "persistence", "episodic-logging", "checkpoint-restore", "PACE-system"]
+component: ["state-manager", "memory-store", "episode-store", "checkpoint-manager", "persistence-layer"]
+# Relationships
+related_docs: ["pace-engine-spec", "architecture-overview"]
+related_systems: ["pace-engine", "state-manager"]
+depends_on: ["pace-engine-spec"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "backend-developers", "system-integrators"]
+stakeholders: ["developers", "architecture-team", "product-team"]
+priority: P0
+difficulty: intermediate
+estimated_reading_time: 14 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: low
+compliance: []
+# Discovery
+keywords: ["state management", "persistence", "episodic logs", "checkpoint restore", "introspection"]
+search_terms: ["state model", "memory store", "episode store", "state lifecycle"]
+aliases: ["State Management", "PACE State Model"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: null
+---
+
+
 # State Model Specification
 
 **Version:** 1.0  
@@ -641,6 +692,6 @@ print(f"State health: {stats}")
 
 ## See Also
 
-- [MODULE_CONTRACTS.md](MODULE_CONTRACTS.md) - StateManager interface
-- [WORKFLOW_ENGINE.md](WORKFLOW_ENGINE.md) - Workflow state integration
-- [AGENT_MODEL.md](AGENT_MODEL.md) - Agent state integration
+- [[MODULE_CONTRACTS.md|MODULE_CONTRACTS.md]] - StateManager interface
+- [[WORKFLOW_ENGINE.md|WORKFLOW_ENGINE.md]] - Workflow state integration
+- [[AGENT_MODEL.md|AGENT_MODEL.md]] - Agent state integration

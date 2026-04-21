@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, prometheus, monitoring, metrics, integration, observability, timeseries]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [prometheus-server, metrics-exporters, alertmanager, grafana, monitoring-stack]
+stakeholders: [developers, devops, sre, monitoring-engineers]
+audience: intermediate
+prerequisites: [prometheus-basics, yaml-configuration, metrics-concepts, monitoring-fundamentals]
+estimated_time: 50 minutes
+review_cycle: quarterly
+---
 # Prometheus Integration Guide for Project-AI
 
 ## Overview
@@ -6,15 +19,15 @@ This document describes the Prometheus monitoring integration for Project-AI, pr
 
 ## Table of Contents
 
-1. [Architecture](#architecture)
-1. [Quick Start](#quick-start)
-1. [Metrics Categories](#metrics-categories)
-1. [Configuration](#configuration)
-1. [Grafana Dashboards](#grafana-dashboards)
-1. [Alerting](#alerting)
-1. [Integration with Existing Systems](#integration-with-existing-systems)
-1. [Troubleshooting](#troubleshooting)
-1. [Advanced Usage](#advanced-usage)
+1. [[#architecture|Architecture]]
+1. [[#quick-start|Quick Start]]
+1. [[#metrics-categories|Metrics Categories]]
+1. [[#configuration|Configuration]]
+1. [[#grafana-dashboards|Grafana Dashboards]]
+1. [[#alerting|Alerting]]
+1. [[#integration-with-existing-systems|Integration with Existing Systems]]
+1. [[#troubleshooting|Troubleshooting]]
+1. [[#advanced-usage|Advanced Usage]]
 
 ---
 

@@ -1,3 +1,43 @@
+---
+title: "TARL Productivity Enhancement - Quick Reference"
+id: tarl-productivity-quick-ref
+type: reference
+area: development
+status: active
+version: "1.0"
+created_date: "2026-04-20"
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Classification
+tags:
+  - development
+  - tarl
+
+# Developer Metadata
+skill_level: intermediate
+audience:
+  - developer
+
+languages:
+  - Python
+  - Shell
+
+frameworks:
+  - Temporal
+
+code_examples: false
+api_reference: false
+
+prerequisites:
+  - [[QUICK_START]]
+
+implements:
+  - src/app/core/tarl_orchestrator.py
+
+related_docs:
+  - [[README]]
+---
 # TARL Productivity Enhancement - Quick Reference
 
 ## 🚀 Quick Start
@@ -243,8 +283,8 @@ Results: 7 passed, 0 failed
 ## 📚 Documentation
 
 - **Full Implementation**: [TARL_PRODUCTIVITY_ENHANCEMENT.md](TARL_PRODUCTIVITY_ENHANCEMENT.md)
-- **Main README**: [TARL_README.md](TARL_README.md)
-- **Quick Reference**: [TARL_QUICK_REFERENCE.md](TARL_QUICK_REFERENCE.md)
+- **Main README**: [[TARL_README.md|TARL_README.md]]
+- **Quick Reference**: [[TARL_QUICK_REFERENCE.md|TARL_QUICK_REFERENCE.md]]
 - **Test Suite**: `test_tarl_productivity.py`
 
 ## ✅ Verification Checklist

@@ -35,6 +35,11 @@ logger = logging.getLogger(__name__)
 
 
 @activity.defn
+# 📚 Documentation Links:
+# - [[relationships/temporal/02_ACTIVITY_DEPENDENCIES.md]]
+# - [[source-docs/temporal/ACTIVITIES_COMPREHENSIVE.md]]
+#
+
 async def create_forensic_snapshot(campaign_id: str) -> dict[str, Any]:
     """
     Create immutable forensic snapshot with tamperproof metadata.

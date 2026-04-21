@@ -1,0 +1,197 @@
+# Sample Taxonomy Definition
+#
+# This file defines valid tags and categories for documentation.
+# Use with automation scripts: -TaxonomyPath ".\sample-taxonomy.yml"
+
+categories:
+  - security
+  - architecture
+  - infrastructure
+  - documentation
+  - development
+  - testing
+  - deployment
+  - monitoring
+  - governance
+  - ai-systems
+
+tags:
+  security:
+    - authentication
+    - authorization
+    - encryption
+    - audit
+    - compliance
+    - vulnerability
+    - penetration-testing
+    - threat-modeling
+    - zero-trust
+    - mfa
+    - sso
+    - rbac
+    - oauth
+    - jwt
+    - tls
+    - ssl
+  
+  architecture:
+    - design
+    - patterns
+    - components
+    - integration
+    - microservices
+    - api
+    - event-driven
+    - serverless
+    - monolithic
+    - layered
+    - hexagonal
+    - cqrs
+    - saga
+    - rest
+    - graphql
+    - grpc
+  
+  infrastructure:
+    - database
+    - cache
+    - messaging
+    - storage
+    - networking
+    - dns
+    - load-balancing
+    - cdn
+    - firewall
+    - vpn
+    - postgres
+    - mongodb
+    - redis
+    - kafka
+    - rabbitmq
+    - s3
+  
+  development:
+    - coding
+    - refactoring
+    - code-review
+    - git
+    - branching
+    - versioning
+    - standards
+    - python
+    - javascript
+    - typescript
+    - java
+    - golang
+    - rust
+    - powershell
+    - bash
+  
+  testing:
+    - unit
+    - integration
+    - e2e
+    - performance
+    - security-testing
+    - automation
+    - tdd
+    - bdd
+    - load-testing
+    - stress-testing
+    - pytest
+    - jest
+    - selenium
+    - cypress
+  
+  deployment:
+    - ci-cd
+    - docker
+    - kubernetes
+    - cloud
+    - production
+    - staging
+    - blue-green
+    - canary
+    - rolling
+    - aws
+    - azure
+    - gcp
+    - terraform
+    - ansible
+    - jenkins
+    - github-actions
+  
+  monitoring:
+    - metrics
+    - logging
+    - tracing
+    - alerting
+    - dashboards
+    - apm
+    - observability
+    - prometheus
+    - grafana
+    - elk
+    - splunk
+    - datadog
+    - newrelic
+  
+  governance:
+    - policy
+    - compliance
+    - audit
+    - risk-management
+    - data-governance
+    - access-control
+    - gdpr
+    - hipaa
+    - soc2
+    - iso27001
+  
+  ai-systems:
+    - ml
+    - nlp
+    - ethics
+    - persona
+    - learning
+    - agents
+    - training
+    - inference
+    - transformers
+    - llm
+    - embeddings
+    - rag
+    - fine-tuning
+    - prompt-engineering
+  
+  documentation:
+    - readme
+    - wiki
+    - api-docs
+    - guides
+    - tutorials
+    - runbooks
+    - architecture-docs
+    - adr
+    - changelog
+    - contributing
+
+# Tag aliases - alternative names that map to canonical tags
+aliases:
+  auth: authentication
+  authz: authorization
+  k8s: kubernetes
+  db: database
+  ci: ci-cd
+  cd: ci-cd
+  ml: machine-learning
+  ai: artificial-intelligence
+  vpc: vpn
+  pg: postgres
+  js: javascript
+  ts: typescript
+  py: python
+  ps: powershell
+  tf: terraform
+  gha: github-actions
+  mfa: multi-factor-authentication

@@ -1,3 +1,17 @@
+---
+type: integration-guide
+tags: [integrations, thirsty-lang, deployment, production-ready]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, tarl, project-ai-core]
+stakeholders: [platform-team, deployment-team, integration-team]
+platform: cross-platform
+integration_type: sdk
+external_dependencies: [python, nodejs, pyyaml, jsonschema, cryptography, psutil]
+review_cycle: quarterly
+---
+
 # Integration Package Complete ✅
 
 **Date:** 2026-01-28  

@@ -1,16 +1,67 @@
+---
+title: Bio-Inspired Brain Mapping AI Subsystem Architecture
+id: bio-brain-mapping-architecture
+type: architecture
+version: 1.0
+created: 2026-02-01
+created_date: 2026-02-01
+last_verified: 2026-04-20
+updated_date: 2026-02-01
+status: active
+author: Architecture Team
+contributors: ["Neuroscience Team", "ML Team"]
+# Architecture-Specific Metadata
+architecture_layer: domain
+design_pattern: ["hierarchical-neural", "sparse-coding", "hebbian-learning", "hyperbolic-geometry"]
+implements: ["cortical-hierarchy", "rsgn-interface", "bio-modular-representation"]
+uses: ["poincare-ball-embeddings", "k-winner-take-all", "lateral-inhibition"]
+quality_attributes: ["biological-plausibility", "energy-efficiency", "interpretability", "scalability"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/data", "ai-ml"]
+tags: ["bio-inspired", "neural-architecture", "cognitive-modeling", "hyperbolic-geometry", "sparse-coding", "rsgn", "hebbian-learning"]
+component: ["bio-brain-mapping-system", "rsgn-network", "bio-modular-representation", "cognition-kernel"]
+# Relationships
+related_docs: ["god-tier-intelligence-system", "architecture-overview", "kernel-modularization-summary"]
+related_systems: ["god-tier-platform", "kernel"]
+depends_on: ["cognition-kernel-architecture", "governance-service"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "ml-engineers", "researchers", "neuroscience-experts"]
+stakeholders: ["developers", "architecture-team"]
+priority: P1
+difficulty: expert
+estimated_reading_time: 25 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: medium
+compliance: []
+# Discovery
+keywords: ["bio-inspired", "neural networks", "cortical hierarchy", "hyperbolic geometry", "sparse coding"]
+search_terms: ["RSGN", "bio-modular", "Poincare ball", "Hebbian", "lateral inhibition"]
+aliases: ["Bio Brain Mapping", "RSGN Architecture", "Cortical AI System"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: 85%
+---
+
+
 # Bio-Inspired Brain Mapping AI Subsystem Architecture
 
 ## Table of Contents
-1. [Overview](#overview)
-2. [Architectural Components](#architectural-components)
-3. [RSGN (Resonant Sparse Geometry Network)](#rsgn)
-4. [Bio-Modular Representation](#bio-modular-representation)
-5. [Configuration Guide](#configuration-guide)
-6. [API Reference](#api-reference)
-7. [Usage Examples](#usage-examples)
-8. [Integration with Project-AI](#integration-with-project-ai)
-9. [Performance and Scaling](#performance-and-scaling)
-10. [Future Extensions](#future-extensions)
+1. [[#overview|Overview]]
+2. [[#architectural-components|Architectural Components]]
+3. [[#rsgn|RSGN (Resonant Sparse Geometry Network)]]
+4. [[#bio-modular-representation|Bio-Modular Representation]]
+5. [[#configuration-guide|Configuration Guide]]
+6. [[#api-reference|API Reference]]
+7. [[#usage-examples|Usage Examples]]
+8. [[#integration-with-project-ai|Integration with Project-AI]]
+9. [[#performance-and-scaling|Performance and Scaling]]
+10. [[#future-extensions|Future Extensions]]
 
 ---
 

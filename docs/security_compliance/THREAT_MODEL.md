@@ -1,3 +1,95 @@
+---
+title: "Project-AI Threat Model"
+id: "threat-model"
+type: "spec"
+version: "1.0.0"
+created_date: "2026-02-08"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:threat-modeling"
+  - "type:spec"
+  - "type:reference"
+  - "component:threat-analysis"
+  - "component:attack-surface"
+  - "component:defense-boundaries"
+  - "audience:security-engineer"
+  - "audience:security-researcher"
+  - "audience:compliance-auditor"
+  - "priority:p0-critical"
+technologies:
+  - "PyQt6"
+  - "TARL Policy Runtime"
+  - "Triumvirate Governance"
+  - "Fernet Encryption"
+  - "bcrypt"
+  - "JSON Persistence"
+difficulty: "expert"
+estimated_time: "PT180M"
+prerequisites:
+  - "STRIDE threat modeling"
+  - "Attack surface analysis"
+  - "System architecture understanding"
+summary: "Comprehensive threat model explicitly scoping Project-AI's security boundaries, attack surfaces, and intentional non-defenses for adversarial review by security researchers and auditors."
+scope: "Complete threat model: monolithic core (PyQt6), TARL runtime (v2.0 + v1.0.0), Triumvirate governance (Galahad/Cerberus/Codex), data persistence (JSON/bcrypt/Fernet), attack surface analysis, intentional non-defenses"
+classification: "confidential"
+threat_level: "critical"
+key_principle: "Control the narrative of risk instead of defending blindly"
+attack_surfaces:
+  - "Desktop GUI (PyQt6)"
+  - "TARL bytecode runtime"
+  - "JSON state persistence"
+  - "Filesystem access"
+  - "Command execution"
+  - "OpenAI API integration"
+mitigations:
+  - "[[TRIUMVIRATE_GOVERNANCE]]"
+  - "[[FOURLAWS_ETHICS]]"
+  - "[[COMMAND_OVERRIDE_SYSTEM]]"
+  - "[[AUDIT_LOGGING]]"
+  - "[[BCRYPT_PASSWORD_HASHING]]"
+  - "[[FERNET_ENCRYPTION]]"
+defends_against:
+  - "Four Laws violations"
+  - "Unauthorized command execution"
+  - "State tampering (hash chains)"
+  - "Password cracking (bcrypt)"
+  - "Sensitive data exposure (Fernet)"
+compliance:
+  - "STRIDE Threat Model"
+  - "Adversarial Review Standards"
+  - "Enterprise Security Audit"
+stakeholders:
+  - security-team   - security-operations   - architecture-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Threat Model Documentation"
+cwe_ids:
+  - "CWE-1008: Architectural Concepts"
+  - "CWE-284: Improper Access Control"
+  - "CWE-693: Protection Mechanism Failure"
+related_docs:
+  - "threat-model-security-workflows"
+  - "threat-model-initial"
+  - "security-framework"
+  - "cerberus-security-structure"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "red-team", "enterprise-security"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-researchers"
+  - "enterprise-security-teams"
+  - "compliance-auditors"
+  - "penetration-testers"
+  - "threat-modelers"
+---
+
 # Project-AI Threat Model
 
 **Version**: 1.0.0  
@@ -65,6 +157,29 @@ This threat model explicitly scopes Project-AI's security boundaries, attack sur
 - ✅ Exception handling prevents crashes
 - ⚠️ Runs with user privileges (intentional - not a service)
 
+#### Defenses
+See complete defense mappings in [[AGENT-087-THREAT-DEFENSE-MATRIX.md#desktop-application-attack-surface-t-001-to-t-004]]
+
+**T-001 (UI Input Injection)**:
+- Primary: [[Input Validation]] (`src/app/security/`)
+- Secondary: [[Plugin Sandboxing]] (`src/app/core/ai_systems.py`)
+- Tertiary: [[ValidatorAgent]] (`src/app/agents/validator.py`)
+- Quaternary: [[Data Validation]] (`src/app/security/data_validation.py`)
+
+**T-002 (File System Access)**:
+- Primary: [[Plugin Sandboxing]] (`src/app/core/ai_systems.py`)
+- Secondary: [[Resource Limits]] (`tarl/`)
+- Tertiary: [[Border Patrol Operations]] (`src/app/`)
+
+**T-003 (Process Execution)**:
+- Primary: [[Plugin Sandboxing]] (`src/app/core/ai_systems.py`)
+- Secondary: [[Resource Limits]] (`tarl/`)
+- Tertiary: [[TARLCodeProtector]] (`src/app/agents/tarl_protector.py`)
+
+**T-004 (Memory Manipulation)**:
+- Primary: [[Exception Handling]] (comprehensive)
+- Secondary: [[Resource Limits]] (`tarl/`)
+
 #### Risk Level: **MEDIUM**
 *Rationale*: Local attack only, requires user to run malicious code
 
@@ -86,6 +201,29 @@ This threat model explicitly scopes Project-AI's security boundaries, attack sur
 - ✅ Resource limits (execution timeout, memory caps)
 - ✅ Immutable axioms cannot be overridden
 - ✅ Stack-based VM with bounded operations
+
+#### Defenses
+See complete defense mappings in [[AGENT-087-THREAT-DEFENSE-MATRIX.md#tarl-runtime-attack-surface-t-005-to-t-008]]
+
+**T-005 (Bytecode Injection)**:
+- Primary: [[Constitutional Kernel]] (`tarl/`) - HIGH effectiveness
+- Secondary: [[Bytecode Signing]] (`tarl/`) - HIGH effectiveness
+- Tertiary: [[Immutable Axioms]] (`tarl/`) - HIGH effectiveness
+
+**T-006 (Resource Exhaustion)**:
+- Primary: [[Constitutional Kernel]] (`tarl/`) - HIGH effectiveness
+- Secondary: [[Resource Limits]] (`tarl/`) - HIGH effectiveness
+- Mitigation: Execution timeout (5s), memory caps, bounded operations
+
+**T-007 (Constitutional Bypass)**:
+- Primary: [[Constitutional Kernel]] (`tarl/`) - HIGH effectiveness
+- Secondary: [[Immutable Axioms]] (`tarl/`) - HIGH effectiveness
+- Tertiary: [[OctoReflex Constitutional Enforcement]] - HIGH effectiveness
+
+**T-008 (Type Confusion)**:
+- Primary: [[Constitutional Kernel]] (`tarl/`) - HIGH effectiveness
+- Secondary: [[Bytecode Signing]] (`tarl/`) - MEDIUM effectiveness
+- Tertiary: [[ValidatorAgent]] (`src/app/agents/validator.py`) - MEDIUM effectiveness
 
 #### Risk Level: **LOW**
 *Rationale*: Defense-in-depth with constitutional guarantees

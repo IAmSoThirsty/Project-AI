@@ -1,3 +1,23 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, mermaid, sequence-diagram, data-flow, memory-system, five-channel-architecture]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [memory-engine, five-channel-recording, operational-transparency, learning-system]
+stakeholders: [architecture-team, developers, data-engineers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: sequence
+format: ascii
+total_lines: 868
+channels: 5
+---
+  - deterministic-replay
+  - jsonb-storage
+---
+
 # Memory Recording Flow - Five-Channel Architecture
 
 ## Overview
@@ -862,7 +882,7 @@ memory_query_duration_seconds = Histogram(
 
 ## Related Documentation
 
-- [User Request Flow](./user_request_flow.md)
-- [Governance Decision Flow](./governance_decision_flow.md)
-- [Audit Trail Flow](./audit_trail_flow.md)
+- [[./user_request_flow.md|User Request Flow]]
+- [[./governance_decision_flow.md|Governance Decision Flow]]
+- [[./audit_trail_flow.md|Audit Trail Flow]]
 - [Component Architecture - Memory Engine](../component/memory_engine.md)

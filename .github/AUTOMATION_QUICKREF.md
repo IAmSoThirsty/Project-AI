@@ -1,3 +1,17 @@
+---
+type: config-guide
+tags: [automation, quick-reference, github-actions, ci-cd, cheatsheet]
+created: 2025-12-18
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, security-automation]
+stakeholders: [developers, devops]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # Automation Quick Reference
 
 ⚡ **Fast reference for Project-AI automated workflows**

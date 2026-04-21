@@ -1,6 +1,82 @@
+---
+title: "Security Roadmap"
+id: "security-roadmap"
+type: "roadmap"
+version: "1.0.0"
+created_date: "2026-01-19"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:planning"
+  - "type:roadmap"
+  - "type:policy"
+  - "audience:security-engineer"
+  - "audience:product-manager"
+  - "priority:p0-critical"
+technologies:
+  - "Build-Time Security"
+  - "CI/CD Security"
+  - "Supply Chain Protection"
+  - "Dependency Scanning"
+difficulty: "advanced"
+estimated_time: "PT90M"
+prerequisites:
+  - "Threat model understanding"
+  - "Security framework knowledge"
+  - "CI/CD pipeline expertise"
+summary: "Security enhancement roadmap converting security gaps into tracked initiatives including build-time code injection protection, planned controls, implementation timelines with status tracking."
+scope: "Complete roadmap covering build-time injection protection, CI/CD security, supply chain attacks, dependency confusion, artifact tampering with 5-tier status (implemented/in-progress/planned/research/deferred)"
+classification: "internal"
+threat_level: "high"
+roadmap_status:
+  implemented: "Active and operational"
+  in_progress: "Partial deployment"
+  planned: "Approved, timeline set"
+  research: "Under evaluation"
+  deferred: "Lower priority"
+threat_vectors:
+  - "compromised-ci-runners"
+  - "malicious-build-plugins"
+  - "dependency-confusion"
+  - "artifact-tampering"
+  - "supply-chain-attacks"
+compliance:
+  - "NIST SSDF"
+  - "SLSA Build Levels"
+  - "Supply Chain Security"
+stakeholders:
+  - security-team   - compliance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Roadmap Documentation"
+cwe_ids:
+  - "CWE-829: Inclusion of Functionality from Untrusted Source"
+  - "CWE-494: Download of Code Without Integrity Check"
+related_docs:
+  - "threat-model-security-workflows"
+  - "security-framework"
+  - "security-governance"
+  - "sbom-policy"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "product-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "product-managers"
+  - "technical-leads"
+  - "security-guardians"
+review_cycle: "quarterly"
+---
+
 # Security Roadmap
 
-**Document Version:** 1.0  
+**Document Version:** 1.0
 **Last Updated:** 2026-01-19  
 **Owner:** Security Team (@org/security-guardians)  
 **Review Cycle:** Quarterly
@@ -13,9 +89,9 @@ This document outlines Project-AI's security enhancement roadmap, converting pre
 
 **Related Documents:**
 
-- [Threat Model](THREAT_MODEL_SECURITY_WORKFLOWS.md) - Current threat coverage
+- [[THREAT_MODEL_SECURITY_WORKFLOWS.md|Threat Model]] - Current threat coverage
 - [Security Framework](../SECURITY_FRAMEWORK.md) - Overall security posture
-- [Security Governance](SECURITY_GOVERNANCE.md) - Ownership and processes
+- [[SECURITY_GOVERNANCE.md|Security Governance]] - Ownership and processes
 
 ---
 
@@ -638,8 +714,8 @@ Track progress using these KPIs:
 This roadmap is referenced in:
 
 - **[SECURITY_FRAMEWORK.md](../SECURITY_FRAMEWORK.md)** - Section 8.9 "Future Enhancements"
-- **[THREAT_MODEL_SECURITY_WORKFLOWS.md](THREAT_MODEL_SECURITY_WORKFLOWS.md)** - Section "Out of Scope"
-- **[SECURITY_GOVERNANCE.md](SECURITY_GOVERNANCE.md)** - Section "Roadmap Governance"
+- **[[THREAT_MODEL_SECURITY_WORKFLOWS.md|THREAT_MODEL_SECURITY_WORKFLOWS.md]]** - Section "Out of Scope"
+- **[[SECURITY_GOVERNANCE.md|SECURITY_GOVERNANCE.md]]** - Section "Roadmap Governance"
 
 All roadmap items transition from:
 

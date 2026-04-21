@@ -567,24 +567,24 @@ Project-AI documentation is now organized by audience for easier navigation:
 
 ## Table of Contents
 
-- [Sovereign Runtime Proof Layer](#sovereign-runtime-proof-layer)
-- [Design Philosophy](#design-philosophy)
-- [System Architecture](#system-architecture)
-  - [Monolithic Integration](#monolithic-integration)
-  - [Subsystem Overview](#subsystem-overview)
-- [End-to-End Data & Model Flow](#end-to-end-data--model-flow)
-  - [Data Ingestion & Lineage](#data-ingestion--lineage)
-  - [Pipeline Orchestration](#pipeline-orchestration)
-  - [Model Training, Registry, and Deployment](#model-training-registry-and-deployment)
-  - [Monitoring & Diagnostics](#monitoring--diagnostics)
-- [Configuration, Secrets, and Environment](#configuration-secrets-and-environment)
-- [Development Workflow](#development-workflow)
-- [Testing & Validation](#testing--validation)
-- [Security & Compliance](#security--compliance)
-- [DevOps & Observability](#devops--observability)
-- [Contribution Guide](#contribution-guide)
-- [License & Governance](#license--governance)
-- [Contact & Maintainers](#contact--maintainers)
+- [[#sovereign-runtime-proof-layer|Sovereign Runtime Proof Layer]]
+- [[#design-philosophy|Design Philosophy]]
+- [[#system-architecture|System Architecture]]
+  - [[#monolithic-integration|Monolithic Integration]]
+  - [[#subsystem-overview|Subsystem Overview]]
+- [[#end-to-end-data--model-flow|End-to-End Data & Model Flow]]
+  - [[#data-ingestion--lineage|Data Ingestion & Lineage]]
+  - [[#pipeline-orchestration|Pipeline Orchestration]]
+  - [[#model-training-registry-and-deployment|Model Training, Registry, and Deployment]]
+  - [[#monitoring--diagnostics|Monitoring & Diagnostics]]
+- [[#configuration-secrets-and-environment|Configuration, Secrets, and Environment]]
+- [[#development-workflow|Development Workflow]]
+- [[#testing--validation|Testing & Validation]]
+- [[#security--compliance|Security & Compliance]]
+- [[#devops--observability|DevOps & Observability]]
+- [[#contribution-guide|Contribution Guide]]
+- [[#license--governance|License & Governance]]
+- [[#contact--maintainers|Contact & Maintainers]]
 
 ## 1. README, God Tier Architecture, Monolithic Design
 

@@ -1,3 +1,41 @@
+---
+type: deployment
+tags: [p1-developer, web-deployment, static-hosting, netlify, vercel, nginx, docker, kubernetes, production]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [web-frontend, static-hosting, netlify, vercel, nginx, kubernetes, ssl, dns]
+stakeholders: [devops, deployment-team, web-developers, sysadmins]
+audience: intermediate
+prerequisites: [web-fundamentals, dns-basics, ssl-certificates, docker-basics, deployment-experience]
+estimated_time: 90 minutes
+review_cycle: monthly
+---
+  - JavaScript
+  - Python
+  - Shell
+  - HTML
+
+frameworks:
+  - Docker
+  - Flask
+  - Kubernetes
+  - React
+  - Nginx
+
+code_examples: true
+api_reference: false
+
+prerequisites:
+  - [[install]]
+  - [[config]]
+
+related_systems: [netlify, vercel, nginx, docker, kubernetes, cloudflare, ssl-certificates]
+related_docs:
+  - [[README]]
+  - [[DEPLOYMENT_GUIDE]]
+  - [[RELEASE_BUILD_GUIDE]]
+---
 # WEB DEPLOYMENT GUIDE - Project AI Governance
 
 ## 🌐 **Deploy Web Frontend to Your Domain**

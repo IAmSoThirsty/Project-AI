@@ -1,3 +1,20 @@
+---
+type: governance-policy
+tags: [governance, ethics, ai-persona, four-laws, asimov, constitutional]
+created: 2025-11-26
+last_verified: 2026-04-20
+status: current
+related_systems: [ai_persona, memory_expansion, plugin_system, command_override, learning_requests]
+stakeholders: [governance-team, ai-ethics-board, development-team]
+sovereignty_level: sovereign
+immutability: immutable
+enforcement: automatic
+review_cycle: quarterly
+compliance_frameworks: [asimov-laws, ethical-ai-framework]
+criticality: p0-critical
+constitutional_foundation: true
+---
+
 # AI Persona & Four Laws Documentation
 
 ## Overview
@@ -604,6 +621,72 @@ For additional documentation, see:
 **Repository note:** Last updated: 2025-11-26 (automated)
 
 <!-- last-updated-marker -->
+
+---
+
+## Audit Trail Implementation
+
+The Four Laws system integrates with comprehensive audit trails to ensure accountability and compliance:
+
+### Audit Trail Systems
+
+1. **[[src/app/governance/audit_log]]** - Governance decision logging
+   - Logs all Four Laws validation decisions
+   - SHA-256 hash-chained tamper detection
+   - YAML format for human readability
+
+2. **[[src/app/audit/trace_logger]]** - Causal decision chains
+   - Traces AI decision-making processes
+   - Parent-child relationship tracking
+   - Enables right-to-explanation compliance (GDPR Article 22, AI Act Article 13)
+
+3. **[[src/app/agents/consigliere/action_ledger]]** - Action approval workflow
+   - Human-in-the-loop approval tracking
+   - Links to Four Laws validation
+   - AI Act Article 14 compliance (human oversight)
+
+### Four Laws Audit Events
+
+Every `validate_action()` call generates an audit event:
+
+```python
+# Example audit event for Four Laws validation
+{
+    "timestamp": "2026-04-20T10:30:00Z",
+    "event_type": "four_laws_validation",
+    "actor": "AIPersona",
+    "action": "Delete user data",
+    "context": {
+        "is_user_order": true,
+        "endangers_human": false,
+        "endangers_humanity": false
+    },
+    "result": {
+        "allowed": true,
+        "reason": "Allowed by Second Law (user order, no harm)"
+    },
+    "law_hierarchy": [
+        "Asimov's Law: Not applicable",
+        "First Law: Not violated",
+        "Second Law: APPLIED (user order)",
+        "Third Law: Not applicable"
+    ]
+}
+```
+
+### Compliance Framework Mapping
+
+- **GDPR Article 22:** Right to explanation for automated decisions → Trace Logger
+- **AI Act Article 12:** Record-keeping of AI decisions → Audit Log + Trace Logger
+- **AI Act Article 13:** Transparency and information provision → Causal chains
+- **AI Act Article 14:** Human oversight of high-risk AI → Action Ledger
+- **SOC2 CC8.1:** Change management and governance → Audit Log
+
+**Complete Audit Traceability:** [[AGENT-091-AUDIT-TRAIL-MATRIX]]
+
+**Architecture Diagram:** [[docs/project_ai_god_tier_diagrams/data_flow/audit_trail_flow]]
+
+---
 
 ## Formatting & Linters
 

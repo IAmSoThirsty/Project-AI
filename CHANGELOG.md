@@ -1,3 +1,41 @@
+---
+title: "Project-AI Changelog"
+id: changelog
+type: changelog
+version: 1.0.0
+created_date: 2025-11-01
+updated_date: 2026-02-08
+status: active
+author: "Project-AI Team <projectaidevs@gmail.com>"
+tags:
+  - development
+  - operations
+  - operations/deployment
+  - governance
+  - versioning
+  - changelog
+  - reference
+area:
+  - development
+  - operations
+  - governance
+audience:
+  - developer
+  - architect
+  - operator
+  - contributor
+priority: p0
+related_to:
+  - "[[README]]"
+  - "[[CONTRIBUTING]]"
+  - "[[SECURITY]]"
+what: "Chronological release history documenting all notable changes following Keep a Changelog format - tracks Added/Changed/Removed/Fixed/Documentation/Security categories with Semantic Versioning"
+who: "Developers, operators, contributors tracking feature additions, breaking changes, security fixes, and repository reorganizations across versions"
+when: "Reference when upgrading versions, debugging regressions, understanding feature availability, or planning migrations"
+where: "Root directory as canonical version history - updated with every release and major structural changes"
+why: "Provides transparent version history for dependency management, documents repository reorganizations (e.g., 2026-02-08 33-file restructure), tracks security fixes and breaking changes, enables informed upgrade decisions"
+---
+
 # Changelog
 
 All notable changes to Project-AI will be documented in this file.

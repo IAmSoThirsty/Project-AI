@@ -1,3 +1,21 @@
+---
+type: governance-policy
+tags: [governance, legal, license-manifest, supremacy-order, canonical-index]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [licensing-framework, governance-enforcement, legal-compliance]
+stakeholders: [legal-team, governance-team, courts, arbitrators]
+sovereignty_level: sovereign
+immutability: immutable
+enforcement: automatic
+review_cycle: annual
+document_type: canonical-index
+authoritative: true
+conflict_resolution: supremacy-order
+version: 1.0.0
+---
+
 # Project-AI License Manifest
 
 **Version:** 1.0.0  

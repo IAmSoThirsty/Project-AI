@@ -1,3 +1,27 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, architecture, mermaid, plantuml, system-design, data-flow, component-architecture, deployment, security]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [three-tier-architecture, governance-triumvirate, five-channel-memory, seven-layer-security]
+stakeholders: [architecture-team, security-team, devops-team, engineering-leadership]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+total_diagrams: 27
+diagram_types: [data-flow, component, deployment, security, monitoring, domain, patterns]
+diagram_coverage:
+  data_flow: 5
+  component: 2
+  deployment: 1
+  security: 1
+  monitoring: 5
+  domain: 3
+  patterns: 8
+total_lines: 11000+
+---
+
 # Project-AI God-Tier Architectural Documentation Suite
 
 ## 📋 Overview
@@ -16,12 +40,12 @@ This directory contains **comprehensive, production-ready architectural document
 **Purpose**: Complete documentation of all data flows through Project-AI
 
 **Contents**:
-- [README.md](./data_flow/README.md) - Data flow architecture overview (278 lines)
-- [user_request_flow.md](./data_flow/user_request_flow.md) - Step-by-step user request processing (803 lines)
-- [governance_decision_flow.md](./data_flow/governance_decision_flow.md) - Triumvirate validation system (1,056 lines)
-- [memory_recording_flow.md](./data_flow/memory_recording_flow.md) - Five-channel memory system (868 lines)
-- [agent_execution_flow.md](./data_flow/agent_execution_flow.md) - Agent selection and orchestration (775 lines)
-- [audit_trail_flow.md](./data_flow/audit_trail_flow.md) - Immutable hash-chained logging (735 lines)
+- [[./data_flow/README.md|README.md]] - Data flow architecture overview (278 lines)
+- [[./data_flow/user_request_flow.md|user_request_flow.md]] - Step-by-step user request processing (803 lines)
+- [[./data_flow/governance_decision_flow.md|governance_decision_flow.md]] - Triumvirate validation system (1,056 lines)
+- [[./data_flow/memory_recording_flow.md|memory_recording_flow.md]] - Five-channel memory system (868 lines)
+- [[./data_flow/agent_execution_flow.md|agent_execution_flow.md]] - Agent selection and orchestration (775 lines)
+- [[./data_flow/audit_trail_flow.md|audit_trail_flow.md]] - Immutable hash-chained logging (735 lines)
 
 **PlantUML Diagrams**:
 - `user_request_flow.puml` - Complete request lifecycle
@@ -47,8 +71,8 @@ This directory contains **comprehensive, production-ready architectural document
 **Purpose**: Detailed specifications for all system components
 
 **Contents**:
-- [README.md](./component/README.md) - Three-tier component architecture (450 lines)
-- [cognition_kernel.md](./component/cognition_kernel.md) - Intent detection and context enrichment (600+ lines)
+- [[./component/README.md|README.md]] - Three-tier component architecture (450 lines)
+- [[./component/cognition_kernel.md|cognition_kernel.md]] - Intent detection and context enrichment (600+ lines)
 
 **Key Topics**:
 - Three-tier architecture (Governance → Infrastructure → Application)
@@ -75,7 +99,7 @@ This directory contains **comprehensive, production-ready architectural document
 **Purpose**: Production deployment configurations and infrastructure
 
 **Contents**:
-- [README.md](./deployment/README.md) - Complete deployment guide (700+ lines)
+- [[./deployment/README.md|README.md]] - Complete deployment guide (700+ lines)
 
 **Deployment Models**:
 
@@ -122,7 +146,7 @@ This directory contains **comprehensive, production-ready architectural document
 **Purpose**: Comprehensive security implementation and threat mitigation
 
 **Contents**:
-- [README.md](./security/README.md) - Seven-layer security model (700+ lines)
+- [[./security/README.md|README.md]] - Seven-layer security model (700+ lines)
 
 **Seven Security Layers**:
 
@@ -181,61 +205,61 @@ This directory contains **comprehensive, production-ready architectural document
 ### By Topic
 
 **User Interactions**:
-- [User Request Flow](./data_flow/user_request_flow.md)
-- [GUI Components](./component/README.md#tier-3-application-components)
+- [[./data_flow/user_request_flow.md|User Request Flow]]
+- [[./component/README.md#tier-3-application-components|GUI Components]]
 
 **Governance & Ethics**:
-- [Governance Decision Flow](./data_flow/governance_decision_flow.md)
-- [Triumvirate Architecture](./component/README.md#governancetriumvirate)
+- [[./data_flow/governance_decision_flow.md|Governance Decision Flow]]
+- [[./component/README.md#governancetriumvirate|Triumvirate Architecture]]
 
 **Data & Memory**:
-- [Memory Recording Flow](./data_flow/memory_recording_flow.md)
-- [MemoryEngine Component](./component/README.md#memoryengine)
+- [[./data_flow/memory_recording_flow.md|Memory Recording Flow]]
+- [[./component/README.md#memoryengine|MemoryEngine Component]]
 
 **Security**:
-- [Security Overview](./security/README.md)
-- [Authentication](./security/README.md#layer-2-authentication)
-- [Authorization](./security/README.md#layer-3-authorization-rbac)
+- [[./security/README.md|Security Overview]]
+- [[./security/README.md#layer-2-authentication|Authentication]]
+- [[./security/README.md#layer-3-authorization-rbac|Authorization]]
 
 **Deployment**:
-- [Deployment Models](./deployment/README.md)
-- [Docker Compose](./deployment/README.md#deployment-model-2-docker-compose-localdevelopment)
-- [Kubernetes](./deployment/README.md#deployment-model-3-production-cloudkubernetes)
+- [[./deployment/README.md|Deployment Models]]
+- [[./deployment/README.md#deployment-model-2-docker-compose-localdevelopment|Docker Compose]]
+- [[./deployment/README.md#deployment-model-3-production-cloudkubernetes|Kubernetes]]
 
 **Agents & Execution**:
-- [Agent Execution Flow](./data_flow/agent_execution_flow.md)
-- [Agent System](./component/README.md#agent-system)
+- [[./data_flow/agent_execution_flow.md|Agent Execution Flow]]
+- [[./component/README.md#agent-system|Agent System]]
 
 **Audit & Compliance**:
-- [Audit Trail Flow](./data_flow/audit_trail_flow.md)
-- [Compliance Export](./data_flow/audit_trail_flow.md#compliance-export)
+- [[./data_flow/audit_trail_flow.md|Audit Trail Flow]]
+- [[./data_flow/audit_trail_flow.md#compliance-export|Compliance Export]]
 
 ### By Persona
 
 **For Architects**:
-1. [Component Architecture](./component/README.md)
-2. [Data Flow Architecture](./data_flow/README.md)
-3. [Deployment Architecture](./deployment/README.md)
+1. [[./component/README.md|Component Architecture]]
+2. [[./data_flow/README.md|Data Flow Architecture]]
+3. [[./deployment/README.md|Deployment Architecture]]
 
 **For Security Engineers**:
-1. [Security Architecture](./security/README.md)
-2. [Governance Decision Flow](./data_flow/governance_decision_flow.md)
-3. [Audit Trail Flow](./data_flow/audit_trail_flow.md)
+1. [[./security/README.md|Security Architecture]]
+2. [[./data_flow/governance_decision_flow.md|Governance Decision Flow]]
+3. [[./data_flow/audit_trail_flow.md|Audit Trail Flow]]
 
 **For DevOps Engineers**:
-1. [Deployment Architecture](./deployment/README.md)
-2. [Docker Compose Setup](./deployment/README.md#docker-compose-configuration)
-3. [Kubernetes Deployment](./deployment/README.md#kubernetes-manifests)
+1. [[./deployment/README.md|Deployment Architecture]]
+2. [[./deployment/README.md#docker-compose-configuration|Docker Compose Setup]]
+3. [[./deployment/README.md#kubernetes-manifests|Kubernetes Deployment]]
 
 **For Developers**:
-1. [User Request Flow](./data_flow/user_request_flow.md)
-2. [Agent Execution Flow](./data_flow/agent_execution_flow.md)
-3. [CognitionKernel](./component/cognition_kernel.md)
+1. [[./data_flow/user_request_flow.md|User Request Flow]]
+2. [[./data_flow/agent_execution_flow.md|Agent Execution Flow]]
+3. [[./component/cognition_kernel.md|CognitionKernel]]
 
 **For Compliance Officers**:
-1. [Audit Trail Flow](./data_flow/audit_trail_flow.md)
-2. [Security Architecture](./security/README.md)
-3. [Memory Recording Flow](./data_flow/memory_recording_flow.md)
+1. [[./data_flow/audit_trail_flow.md|Audit Trail Flow]]
+2. [[./security/README.md|Security Architecture]]
+3. [[./data_flow/memory_recording_flow.md|Memory Recording Flow]]
 
 ---
 
@@ -356,18 +380,18 @@ All documentation in this suite follows these standards:
 
 ### For First-Time Readers
 
-1. **Start here**: [Component Architecture README](./component/README.md)
+1. **Start here**: [[./component/README.md|Component Architecture README]]
    - Understand the three-tier architecture
    - Learn about core components
 
-2. **Then read**: [User Request Flow](./data_flow/user_request_flow.md)
+2. **Then read**: [[./data_flow/user_request_flow.md|User Request Flow]]
    - See how requests flow through the system
    - Understand the complete lifecycle
 
 3. **Deep dive**: Choose based on your role
-   - **Security**: [Security Architecture](./security/README.md)
-   - **DevOps**: [Deployment Architecture](./deployment/README.md)
-   - **Development**: [Agent Execution Flow](./data_flow/agent_execution_flow.md)
+   - **Security**: [[./security/README.md|Security Architecture]]
+   - **DevOps**: [[./deployment/README.md|Deployment Architecture]]
+   - **Development**: [[./data_flow/agent_execution_flow.md|Agent Execution Flow]]
 
 ### For Code Implementation
 

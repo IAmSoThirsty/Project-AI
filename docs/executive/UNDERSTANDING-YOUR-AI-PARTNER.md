@@ -1,3 +1,71 @@
+---
+title: "Understanding Your AI Partner: A Clear Guide"
+id: "exec-ai-partner-guide"
+type: "guide"
+version: "1.0.0"
+created_date: "2026-02-01"
+updated_date: "2026-02-01"
+status: "active"
+author: "project-ai-team"
+area:
+  - "executive"
+  - "user-education"
+  - "ethics"
+tags:
+  - "user-guide"
+  - "ethics"
+  - "ai-relationship"
+  - "transparency"
+  - "trust"
+  - "executive"
+audience:
+  - "executive"
+  - "end-user"
+  - "stakeholder"
+  - "non-technical"
+category: "user_education"
+difficulty: "beginner"
+estimated_time: "15 minutes"
+summary: "Non-technical guide explaining the ethical framework, capabilities, and limitations of AI partnership for executives and end users"
+decision_required: false
+roi_impact: "high"
+strategic_alignment:
+  - "mission"
+  - "ethics"
+  - "user-trust"
+  - "transparency"
+approval_status: "approved"
+business_value:
+  - "user-trust"
+  - "risk-reduction"
+  - "regulatory-compliance"
+  - "brand-reputation"
+compliance:
+  - "AI-ethics"
+  - "transparency-requirements"
+  - "user-rights"
+related_docs:
+  - "whitepapers/PROJECT_AI_COMPREHENSIVE_WHITEPAPER.md"
+  - "whitepapers/TECHNICAL_WHITE_PAPER.md"
+  - "../architecture/FOUR_LAWS_IMPLEMENTATION.md"
+learning_objectives:
+  - "Understand AI ethical framework and boundaries"
+  - "Recognize appropriate AI partnership expectations"
+  - "Identify prohibited requests and why they exist"
+  - "Build trust through transparency"
+search_keywords:
+  - "ai-partner"
+  - "ethics"
+  - "asimov-laws"
+  - "user-guide"
+  - "transparency"
+  - "trust"
+metrics:
+  word_count: 9060
+  reading_time: "15 minutes"
+  complexity: "low"
+---
+
 # Understanding Your AI Partner: A Clear Guide
 
 **For Users of Project-AI**  

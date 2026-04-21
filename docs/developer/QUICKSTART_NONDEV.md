@@ -1,3 +1,16 @@
+---
+type: quickstart
+tags: [p1-developer, non-developer-guide, beginner-friendly, desktop-app, end-user, simple-setup]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [desktop-app, setup-scripts, python-installation, windows-installation]
+stakeholders: [non-developers, end-users, new-users]
+audience: beginner
+prerequisites: [windows-10-11-or-macos, python-3.12]
+estimated_time: 10 minutes
+review_cycle: monthly
+---
 # Quick Start (Non-developer)
 
 This guide helps non-technical users get started with Project-AI (Desktop) quickly.

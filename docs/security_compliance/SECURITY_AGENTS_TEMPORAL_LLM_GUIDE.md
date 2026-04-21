@@ -1,14 +1,82 @@
+---
+title: "Security Agents: Temporal Workflows & LLM Endpoints"
+id: "security-agents-temporal-llm-guide"
+type: "guide"
+version: "1.0.0"
+created_date: "2026-01-25"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Architecture Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:infrastructure"
+  - "type:guide"
+  - "type:reference"
+  - "component:temporal"
+  - "component:llm-endpoints"
+  - "component:workflows"
+  - "audience:security-engineer"
+  - "audience:devops-engineer"
+  - "priority:p1-high"
+technologies:
+  - "Temporal Workflows"
+  - "Docker Compose"
+  - "PostgreSQL"
+  - "LLM Endpoints"
+  - "CI/CD Integration"
+difficulty: "expert"
+estimated_time: "PT240M"
+prerequisites:
+  - "Temporal workflow understanding"
+  - "Docker/container expertise"
+  - "LLM endpoint configuration"
+  - "CI/CD pipeline knowledge"
+summary: "Complete guide for Temporal workflow integration and LLM endpoint configuration covering RedTeam campaigns, code security sweeps, constitutional monitoring, and safety testing workflows."
+scope: "4 durable workflows (RedTeam, CodeSweep, ConstitutionalMonitoring, SafetyTesting) with Temporal server setup, worker configuration, scheduling, CI/CD integration, and monitoring"
+classification: "internal"
+threat_level: "medium"
+workflows:
+  - "RedTeamCampaignWorkflow (daily/weekly)"
+  - "CodeSecuritySweepWorkflow (nightly)"
+  - "ConstitutionalMonitoringWorkflow (continuous)"
+  - "SafetyTestingWorkflow (weekly/daily)"
+compliance:
+  - "Operational Excellence Best Practices"
+  - "Workflow Orchestration Standards"
+stakeholders:
+  - security-team   - ai-safety-team   - development-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Infrastructure Guide"
+related_docs:
+  - "security-agents-guide"
+  - "security-agents-roadmap"
+  - "ci-cd-integration"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "infrastructure-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "devops-engineers"
+  - "infrastructure-engineers"
+  - "technical-leads"
+---
+
 # Security Agents: Temporal Workflows & LLM Endpoints
 
 Complete guide for Temporal workflow integration and LLM endpoint configuration for the security agent system.
 
 ## Table of Contents
 
-1. [Temporal Workflow Integration](#temporal-workflow-integration)
-1. [LLM Endpoint Configuration](#llm-endpoint-configuration)
-1. [Scheduling Security Campaigns](#scheduling-security-campaigns)
-1. [CI/CD Integration](#cicd-integration)
-1. [Monitoring & Alerting](#monitoring--alerting)
+1. [[#temporal-workflow-integration|Temporal Workflow Integration]]
+1. [[#llm-endpoint-configuration|LLM Endpoint Configuration]]
+1. [[#scheduling-security-campaigns|Scheduling Security Campaigns]]
+1. [[#cicd-integration|CI/CD Integration]]
+1. [[#monitoring--alerting|Monitoring & Alerting]]
 
 ---
 

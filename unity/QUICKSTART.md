@@ -1,3 +1,17 @@
+---
+type: platform-integration
+tags: [specialized-systems, unity, vr, quickstart, setup-guide]
+created: 2026-01-23
+last_verified: 2026-04-20
+status: current
+related_systems: [project-ai-core, vr-module, unity-scripts]
+stakeholders: [vr-team, integration-team, development-team]
+system_category: game-engine
+external_standard: Unity3D, C#
+maturity: production
+review_cycle: quarterly
+---
+
 # Quick Start Guide - VR Module
 
 ## 5-Minute Setup

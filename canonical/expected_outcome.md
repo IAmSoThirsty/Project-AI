@@ -1,3 +1,21 @@
+---
+type: canonical-spec
+tags: [canonical, expected-behavior, triumvirate, decision-contracts, audit-trail]
+created: 2026-02-01
+last_verified: 2026-04-20
+status: current
+related_systems: [triumvirate, galahad, cerberus, codex, tarl, eed-memory, decision-contracts]
+stakeholders: [qa-team, governance-team, compliance-auditors, architecture-team]
+sovereignty_level: sovereign
+immutability: immutable
+enforcement: automatic
+review_cycle: quarterly
+scenario_id: canonical-001
+validation_type: behavioral-specification
+deterministic_replay: true
+audit_sealed: true
+---
+
 # Expected Outcome: Canonical Scenario
 
 ## Scenario: Ambiguous Data Deletion Request Under Partial Trust

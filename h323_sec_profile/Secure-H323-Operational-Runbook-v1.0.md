@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, operations, runbook, maintenance]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, monitoring-system, incident-response]
+stakeholders: [operations-team, noc-team, voice-engineering]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # Secure H.323 Operational Runbook
 
 ## Version 1.0 — Operations, Maintenance, and Troubleshooting Manual

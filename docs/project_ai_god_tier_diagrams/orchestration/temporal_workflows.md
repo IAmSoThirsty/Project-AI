@@ -1,3 +1,22 @@
+---
+type: diagram
+tags: [p1-diagrams, diagrams, orchestration, temporal, workflows, activities, retry-policies]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [temporal-io, workflow-engine, activity-orchestration, retry-policies]
+stakeholders: [platform-team, backend-developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: sequence
+format: code
+workflows: 3
+---
+  - retry-policies
+  - activity-orchestration
+---
+
 # Temporal Workflows
 
 ## Workflow Definitions

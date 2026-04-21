@@ -30,6 +30,11 @@ from app.gui.leather_book_panels import IntroInfoPage, TronFacePage
 logger = logging.getLogger(__name__)
 
 
+# 📚 Documentation Links:
+# - [[relationships/gui/01_DASHBOARD_RELATIONSHIPS.md]]
+# - [[source-docs/gui/leather_book_interface.md]]
+#
+
 class LeatherBookInterface(QMainWindow):
     """Main window with leather book aesthetic."""
 

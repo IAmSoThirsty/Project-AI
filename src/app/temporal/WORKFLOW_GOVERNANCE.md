@@ -1,3 +1,20 @@
+---
+type: governance-policy
+tags: [governance, temporal, workflow-governance, latency-analysis, integration-architecture]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [temporal-workflows, governance-pipeline, ai-learning, image-generation, data-analysis]
+stakeholders: [governance-team, architecture-team, temporal-engineers]
+sovereignty_level: governed
+immutability: revisable
+enforcement: automatic
+review_cycle: quarterly
+workflow_count: 5
+governance_overhead: <50ms
+latency_impact: minimal
+---
+
 # TEMPORAL WORKFLOW GOVERNANCE
 ## Classification and Integration Architecture
 

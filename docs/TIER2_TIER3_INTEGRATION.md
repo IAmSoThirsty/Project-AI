@@ -358,7 +358,7 @@ All existing tests (26 tests in test_advanced_boot.py) still pass.
 - Platform-wide health reporting
 - Violation detection and logging
 
-**Live Health Report Example**: See [Tier Health Report Output](TIER_HEALTH_REPORT_OUTPUT.md) for actual startup diagnostics showing all components, status, and validation.
+**Live Health Report Example**: See [[TIER_HEALTH_REPORT_OUTPUT.md|Tier Health Report Output]] for actual startup diagnostics showing all components, status, and validation.
 
 ## Documentation
 

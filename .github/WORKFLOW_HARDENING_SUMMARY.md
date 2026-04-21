@@ -1,8 +1,22 @@
+---
+type: workflow-spec
+tags: [security, hardening, github-actions, compliance, action-pinning]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, security-automation, github-actions]
+stakeholders: [security-team, devops]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # Workflow Hardening Implementation Summary
 
 **Date**: 2026-01-11  
 **Session**: Project AI workflow hardening compliance  
-**Consent**: @IAmSoThirsty approved  
+**Consent**: @IAmSoThirsty approved
 
 ## Executive Summary
 

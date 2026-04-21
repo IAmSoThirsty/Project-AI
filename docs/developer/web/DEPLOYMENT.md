@@ -1,3 +1,65 @@
+---
+title: "Deployment Guide for Project-AI Web"
+id: deployment
+type: deployment-guide
+area: development
+status: current
+version: "1.0"
+created: 2026-04-20
+last_verified: 2026-04-20
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Deployment Metadata
+deployment_target: multi-platform
+deployment_complexity: complex
+production_ready: true
+review_cycle: monthly
+
+# Classification
+tags:
+  - deployment
+  - web
+  - docker
+  - kubernetes
+  - docker-compose
+  - postgresql
+  - nginx
+  - production
+
+# Developer Metadata
+skill_level: intermediate
+audience:
+  - developer
+  - devops
+
+stakeholders: [devops, deployment-team, web-developers, sre-team]
+
+languages:
+  - Python
+  - Shell
+  - YAML
+  - JavaScript
+
+frameworks:
+  - Docker
+  - Kubernetes
+  - Flask
+  - PostgreSQL
+
+code_examples: true
+api_reference: false
+
+prerequisites:
+  - [[install]]
+  - [[config]]
+
+related_systems: [docker, kubernetes, postgresql, nginx, web-backend, web-frontend]
+related_docs:
+  - [[README]]
+  - [[WEB_DEPLOYMENT_GUIDE]]
+  - [[DEPLOYMENT_GUIDE]]
+---
 # Deployment Guide for Project-AI Web
 
 ## Docker Deployment

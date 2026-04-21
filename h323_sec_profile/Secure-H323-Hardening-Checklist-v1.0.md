@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, hardening, security-checklist, compliance]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, security-baseline, compliance-framework]
+stakeholders: [security-team, deployment-team, compliance-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # Secure H.323 Hardening Checklist
 
 ## Version 1.0 — Gatekeeper, Gateway, Endpoint, Network, PKI

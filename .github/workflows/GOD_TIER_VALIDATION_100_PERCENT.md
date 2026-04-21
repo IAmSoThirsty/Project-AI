@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [github-actions, codex-deus, workflows, validation, testing, god-tier]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, security-automation, testing]
+stakeholders: [devops, developers, qa-team, architects]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # 🎯 100% End-to-End God Tier Validation
 
 ## Validation Status: ✅ COMPLETE

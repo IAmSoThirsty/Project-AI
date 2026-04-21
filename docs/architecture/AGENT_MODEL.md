@@ -1,3 +1,54 @@
+---
+title: Agent Model Specification
+id: agent-model-spec
+type: architecture
+version: 1.0
+created: 2026-01-23
+created_date: 2026-01-23
+last_verified: 2026-04-20
+updated_date: 2026-01-23
+status: active
+author: Architecture Team
+contributors: []
+# Architecture-Specific Metadata
+architecture_layer: application
+design_pattern: ["agent-based", "registry-pattern", "message-bus"]
+implements: ["agent-interface", "agent-coordination-protocol"]
+uses: ["routing-engine", "message-bus", "agent-registry"]
+quality_attributes: ["autonomy", "scalability", "composability", "observability"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/distributed"]
+tags: ["agent-model", "coordination", "distributed-systems", "autonomous-agents", "PACE-system"]
+component: ["agent-coordinator", "agent-registry", "routing-engine", "message-bus"]
+# Relationships
+related_docs: ["capability-model-spec", "workflow-engine-spec", "pace-engine-spec"]
+related_systems: ["capability-system", "workflow-engine", "pace-engine", "agent-coordinator"]
+depends_on: ["capability-model-spec"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "developers", "system-integrators"]
+stakeholders: ["infrastructure-team", "developers", "architecture-team", "product-team"]
+priority: P0
+difficulty: advanced
+estimated_reading_time: 15 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: low
+compliance: []
+# Discovery
+keywords: ["agents", "coordination", "distributed", "autonomous", "PACE"]
+search_terms: ["agent model", "task agents", "coordinator agents", "agent registry"]
+aliases: ["Agent Architecture", "PACE Agent Model"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: null
+---
+
+
 # Agent Model Specification
 
 **Version:** 1.0  
@@ -682,6 +733,6 @@ agents:
 
 ## See Also
 
-- [MODULE_CONTRACTS.md](MODULE_CONTRACTS.md) - AgentCoordinator interface
-- [CAPABILITY_MODEL.md](CAPABILITY_MODEL.md) - Agent capabilities
-- [WORKFLOW_ENGINE.md](WORKFLOW_ENGINE.md) - Agent-workflow integration
+- [[MODULE_CONTRACTS.md|MODULE_CONTRACTS.md]] - AgentCoordinator interface
+- [[CAPABILITY_MODEL.md|CAPABILITY_MODEL.md]] - Agent capabilities
+- [[WORKFLOW_ENGINE.md|WORKFLOW_ENGINE.md]] - Agent-workflow integration

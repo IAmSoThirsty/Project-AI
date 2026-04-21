@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, infrastructure, project-structure, ci-cd, github-actions, architecture]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [github-workflows, project-layout, ci-cd-pipeline, directory-structure]
+stakeholders: [developers, infrastructure-team, new-contributors]
+audience: intermediate
+prerequisites: [project-overview, basic-infrastructure-knowledge]
+estimated_time: 15 minutes
+review_cycle: monthly
+---
 # Infrastructure Documentation
 
 This document describes the infrastructure configuration and setup for Project-AI.

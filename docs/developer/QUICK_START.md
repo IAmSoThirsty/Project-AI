@@ -1,3 +1,16 @@
+---
+type: quickstart
+tags: [p1-developer, platform, quickstart, backend, api, legion, deployment]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [backend-api, legion-api, desktop-app, android-app, usb-portable]
+stakeholders: [developers, new-users, contributors]
+audience: beginner
+prerequisites: [python-3.11+, git, basic-shell-knowledge]
+estimated_time: 5 minutes
+review_cycle: monthly
+---
 # Quick Start Guide - Project-AI
 
 ## 🚀 60-Second Quick Start

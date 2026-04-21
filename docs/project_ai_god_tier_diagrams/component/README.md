@@ -1,3 +1,22 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, mermaid, component-architecture, three-tier-architecture, governance-layer]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [governance-triumvirate, cognition-kernel, memory-engine, identity-engine, execution-service]
+stakeholders: [architecture-team, developers, technical-leads]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: component
+format: ascii
+total_lines: 1050+
+components: 13
+---
+  - command-pattern
+---
+
 # Component Architecture - Project-AI
 
 ## Overview
@@ -509,7 +528,7 @@ Docker Compose:
 
 ## Related Documentation
 
-- [CognitionKernel Architecture](./cognition_kernel.md)
+- [[./cognition_kernel.md|CognitionKernel Architecture]]
 - [GovernanceTriumvirate Architecture](./governance_triumvirate.md)
 - [MemoryEngine Architecture](./memory_engine.md)
 - [IdentityEngine Architecture](./identity_engine.md)

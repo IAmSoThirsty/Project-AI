@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, testing, security-validation, quality-assurance]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, test-automation, quality-framework]
+stakeholders: [qa-team, security-team, integration-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 / H.235 Security Test Plan
 
 ## Version 1.0 — Validation & Certification Framework

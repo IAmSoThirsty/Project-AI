@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, ai-safety, corrigibility, interpretability, robustness, ethics, agi-safety]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [safety-framework, red-team, ethics-review, corrigibility-engine]
+stakeholders: [developers, ai-safety-researchers, red-team, ethics-board]
+audience: intermediate
+prerequisites: [ai-fundamentals, safety-concepts, ethics-awareness, system-design]
+estimated_time: 60 minutes
+review_cycle: quarterly
+---
 # AI Safety Overview: Corrigibility, Interpretability, and Robustness
 
 **Document Version:** 1.0  
@@ -524,7 +537,7 @@ Responsibility is distributed across multiple parties:
 
 ## AGI Charter Integration
 
-Project-AI's AI Safety framework is grounded in the [AGI Charter](../governance/AGI_CHARTER.md), which establishes:
+Project-AI's AI Safety framework is grounded in the [[../governance/AGI_CHARTER.md|AGI Charter]], which establishes:
 
 1. **Four Laws Framework:** Hierarchical ethical constraints
 2. **Genesis Event:** Identity initialization with safety guarantees
@@ -538,7 +551,7 @@ Project-AI's AI Safety framework is grounded in the [AGI Charter](../governance/
 - **Interpretability:** Charter Section 5.2 (Transparency Requirements)
 - **Robustness:** Charter Section 6 (Security and Resilience)
 
-**See Also:** [AI Individual Role: Humanity Alignment](../governance/AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md)
+**See Also:** [[../governance/AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md|AI Individual Role: Humanity Alignment]]
 
 ---
 
@@ -592,10 +605,10 @@ AI safety is not a milestone to reach—it is a **continuous practice** requirin
 ## Additional Resources
 
 ### Internal Documentation
-- [AGI Charter](../governance/AGI_CHARTER.md)
-- [Incident Playbook](../security_compliance/INCIDENT_PLAYBOOK.md)
-- [Operator Quickstart](OPERATOR_QUICKSTART.md)
-- [Four Laws Implementation](../governance/AGI_CHARTER.md#four-laws)
+- [[../governance/AGI_CHARTER.md|AGI Charter]]
+- [[../security_compliance/INCIDENT_PLAYBOOK.md|Incident Playbook]]
+- [[OPERATOR_QUICKSTART.md|Operator Quickstart]]
+- [[../governance/AGI_CHARTER.md#four-laws|Four Laws Implementation]]
 
 ### External Resources
 - [Anthropic's Constitutional AI](https://www.anthropic.com/constitutional-ai)

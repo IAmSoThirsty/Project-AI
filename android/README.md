@@ -1,3 +1,17 @@
+---
+type: platform-doc
+tags: [android, mobile, jetpack-compose, kotlin, tarl, triumvirate]
+created: 2026-04-19
+last_verified: 2026-04-20
+status: current
+related_systems: [governance-kernel, triumvirate, tarl, android-sdk]
+stakeholders: [platform-team, mobile-team, integration-team]
+platform: android
+integration_type: sdk
+external_dependencies: [kotlin, jetpack-compose, retrofit, hilt, coroutines, material3]
+review_cycle: quarterly
+---
+
 # Project AI - Android Application
 
 ## Overview

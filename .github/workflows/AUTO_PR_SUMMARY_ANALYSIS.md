@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [github-actions, automation, pull-requests, analysis, summary]
+created: 2026-01-20
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, pr-automation, issue-management]
+stakeholders: [developers, devops]
+config_scope: ci-cd
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # Auto-PR Creation Summary - Analysis Report
 
 ## Issue Overview

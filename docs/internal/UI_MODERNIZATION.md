@@ -1,3 +1,39 @@
+---
+title: "UI Modernization Implementation Guide"
+id: ui-modernization-guide
+type: guide
+version: 1.2.0
+created_date: 2026-01-20
+updated_date: 2026-02-10
+status: active
+author: UI/UX Team
+contributors:
+  - Frontend Engineering Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: implementation
+retention_policy: permanent
+category: development
+tags:
+  - ui-ux
+  - frontend
+  - pyqt6
+  - design-system
+  - glassmorphism
+  - accessibility
+technologies:
+  - PyQt6
+  - QSS
+  - CSS
+related_docs:
+  - DEVELOPER_QUICK_REFERENCE.md
+  - ../architecture/frontend-architecture.md
+dependencies:
+  - PyQt6
+description: Implementation guide for modern UI enhancements including glassmorphism design, gradient systems, accessibility improvements, and PyQt6 stylesheet architecture.
+---
+
 # UI Modernization Guide
 
 ## Overview

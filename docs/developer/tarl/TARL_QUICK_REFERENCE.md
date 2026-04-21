@@ -1,3 +1,43 @@
+---
+title: "TARL Quick Reference Guide"
+id: tarl-quick-reference
+type: guide
+area: development
+status: active
+version: "1.0"
+created_date: "2026-04-20"
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Classification
+tags:
+  - development
+  - tarl
+
+# Developer Metadata
+skill_level: beginner
+audience:
+  - developer
+
+languages:
+  - Python
+  - Shell
+
+frameworks:
+  - Temporal
+
+code_examples: true
+api_reference: false
+
+prerequisites:
+  - [[QUICK_START]]
+
+implements:
+  - src/app/core/tarl_orchestrator.py
+
+related_docs:
+  - [[README]]
+---
 # TARL Quick Reference Guide
 
 ## Quick Start

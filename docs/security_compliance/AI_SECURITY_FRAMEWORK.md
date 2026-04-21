@@ -1,3 +1,82 @@
+---
+title: "AI Security Framework - Project-AI"
+id: "ai-security-framework"
+type: "framework"
+version: "1.0.0"
+created_date: "2026-01-15"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:ai-safety"
+  - "type:framework"
+  - "type:reference"
+  - "component:nist-ai-rmf"
+  - "component:owasp-llm"
+  - "component:red-team"
+  - "audience:security-engineer"
+  - "audience:ai-researcher"
+  - "priority:p0-critical"
+technologies:
+  - "Python"
+  - "NIST AI RMF 1.0"
+  - "OWASP LLM Top 10"
+  - "Offensive Security Tools"
+summary: "Enterprise-grade AI security framework implementing NIST AI RMF, OWASP LLM Top 10, and red team testing for zero-failure AI deployments."
+scope: "Complete AI security implementation across NIST governance, OWASP vulnerability protection, and adversarial testing infrastructure"
+classification: "internal"
+threat_level: "critical"
+attack_vectors:
+  - "prompt-injection"
+  - "model-poisoning"
+  - "data-exfiltration"
+  - "adversarial-examples"
+  - "four-laws-violations"
+mitigations:
+  - "[[SECURITY_COUNTERMEASURES]]"
+  - "[[THREAT_MODEL]]"
+  - "[[ENHANCED_DEFENSES]]"
+defends_against:
+  - "LLM01:2025 Prompt Injection"
+  - "LLM02:2025 Sensitive Information Disclosure"
+  - "LLM03:2025 Supply Chain Vulnerabilities"
+  - "LLM06:2025 Excessive Agency"
+  - "LLM10:2025 Unbounded Consumption"
+compliance:
+  - "NIST AI RMF 1.0"
+  - "OWASP LLM Top 10 (2023/2025)"
+  - "ISO 27001:2022"
+  - "SOC 2 Type II"
+stakeholders:
+  - security-team   - architecture-team   - governance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Framework Documentation"
+cwe_ids:
+  - "CWE-77: Command Injection"
+  - "CWE-94: Code Injection"
+  - "CWE-502: Deserialization of Untrusted Data"
+  - "CWE-862: Missing Authorization"
+related_docs:
+  - "security-framework"
+  - "threat-model"
+  - "asl3-implementation"
+  - "owasp-llm-defenses"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "ai-safety-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "ai-researchers"
+  - "compliance-auditors"
+  - "enterprise-architects"
+---
+
 # AI Security Framework - Project-AI
 
 **Complete implementation of NIST AI RMF, OWASP LLM Top 10, and offensive security testing for zero-failure AI deployments.**
@@ -13,13 +92,13 @@ Project-AI implements enterprise-grade AI security following industry-leading fr
 
 ## Table of Contents
 
-1. [NIST AI RMF Implementation](#nist-ai-rmf-implementation)
-1. [OWASP LLM Top 10 Protection](#owasp-llm-top-10-protection)
-1. [Red Team Attack Simulators](#red-team-attack-simulators)
-1. [Offensive Security Techniques](#offensive-security-techniques)
-1. [Zero-Failure SNN MLOps](#zero-failure-snn-mlops)
-1. [Quick Start](#quick-start)
-1. [API Reference](#api-reference)
+1. [[#nist-ai-rmf-implementation|NIST AI RMF Implementation]]
+1. [[#owasp-llm-top-10-protection|OWASP LLM Top 10 Protection]]
+1. [[#red-team-attack-simulators|Red Team Attack Simulators]]
+1. [[#offensive-security-techniques|Offensive Security Techniques]]
+1. [[#zero-failure-snn-mlops|Zero-Failure SNN MLOps]]
+1. [[#quick-start|Quick Start]]
+1. [[#api-reference|API Reference]]
 
 ---
 

@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [github-actions, workflows, archive, deprecated, legacy]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: archived
+related_systems: [ci-cd, github-actions, codex-deus]
+stakeholders: [devops, developers]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # Archived Workflows
 
 ## 📦 Status: ARCHIVED

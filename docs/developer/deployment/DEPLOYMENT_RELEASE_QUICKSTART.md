@@ -1,3 +1,65 @@
+---
+title: "DEPLOYMENT & RELEASE - Quick Reference"
+id: deployment-release-quickstart
+type: deployment-guide
+area: development
+status: current
+version: "1.0"
+created: 2026-04-20
+last_verified: 2026-04-20
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Deployment Metadata
+deployment_target: multi-platform
+deployment_complexity: moderate
+production_ready: true
+review_cycle: monthly
+
+# Classification
+tags:
+  - deployment
+  - release
+  - web
+  - android
+  - desktop
+  - docker
+  - kubernetes
+  - netlify
+  - github-releases
+
+# Developer Metadata
+skill_level: beginner
+audience:
+  - developer
+  - devops
+
+stakeholders: [devops, deployment-team, release-managers]
+
+languages:
+  - Python
+  - Shell
+  - Bash
+
+frameworks:
+  - Docker
+  - Kubernetes
+  - Netlify
+  - Nginx
+
+code_examples: true
+api_reference: false
+
+prerequisites:
+  - [[install]]
+  - [[config]]
+
+related_systems: [web-server, docker, kubernetes, netlify, github-releases]
+related_docs:
+  - [[README]]
+  - [[DEVELOPMENT]]
+  - [[BUILD_AND_DEPLOYMENT]]
+---
 # DEPLOYMENT & RELEASE - Quick Reference
 
 ## 🌐 **Web Deployment to Your Domain**

@@ -1,3 +1,91 @@
+---
+title: "Security and Testing Agents - User Guide"
+id: "security-agents-guide"
+type: "guide"
+version: "1.0.0"
+created_date: "2026-01-25"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:ai-safety"
+  - "type:guide"
+  - "type:reference"
+  - "component:security-agents"
+  - "component:long-context"
+  - "component:safety-guard"
+  - "component:jailbreak-bench"
+  - "component:red-team-persona"
+  - "audience:developer"
+  - "audience:security-engineer"
+  - "priority:p0-critical"
+technologies:
+  - "Python"
+  - "Nous-Capybara-34B-200k"
+  - "Llama-Guard-3-8B"
+  - "JailbreakBench Framework"
+  - "Triumvirate Integration"
+difficulty: "advanced"
+estimated_time: "PT180M"
+prerequisites:
+  - "Triumvirate governance understanding"
+  - "Agent architecture knowledge"
+  - "Security testing principles"
+summary: "Comprehensive user guide for four advanced security and testing agents integrated with Triumvirate: LongContextAgent, SafetyGuardAgent, JailbreakBenchAgent, and RedTeamPersonaAgent."
+scope: "Complete agent documentation covering long-context processing (200k tokens), safety moderation, jailbreak testing, adversarial red-teaming, integration patterns, and usage examples"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "jailbreak-attempts"
+  - "harmful-content"
+  - "data-leaks"
+  - "manipulation-patterns"
+  - "prompt-injection"
+mitigations:
+  - "[[SAFETY_GUARD_AGENT]]"
+  - "[[JAILBREAK_BENCH_AGENT]]"
+  - "[[RED_TEAM_PERSONA_AGENT]]"
+  - "[[TRIUMVIRATE_INTEGRATION]]"
+defends_against:
+  - "Jailbreak attempts"
+  - "Harmful content generation"
+  - "Sensitive data leaks"
+  - "Manipulation patterns"
+  - "Unsafe instructions"
+  - "Abuse patterns"
+compliance:
+  - "AI Safety Best Practices"
+  - "Content Moderation Standards"
+  - "Red Team Testing Methodology"
+stakeholders:
+  - security-team   - ai-safety-team   - development-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Security Agent Guide"
+cwe_ids:
+  - "CWE-94: Code Injection"
+  - "CWE-116: Improper Encoding or Escaping"
+  - "CWE-200: Exposure of Sensitive Information"
+related_docs:
+  - "security-agents-integration-summary"
+  - "security-agents-roadmap"
+  - "ai-security-framework"
+  - "cerberus-security-structure"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "ai-safety-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "developers"
+  - "security-engineers"
+  - "ai-safety-researchers"
+  - "qa-engineers"
+---
+
 # Security and Testing Agents - User Guide
 
 ## Overview

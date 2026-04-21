@@ -1,3 +1,19 @@
+---
+type: example
+tags: [examples, mcp, model-context-protocol, ai-integration, learning]
+created: 2024-01-03
+last_verified: 2026-04-20
+status: current
+related_systems: [mcp-server, ethics-framework, persona-system, memory-system, learning-system, data-analysis, image-generation, plugin-manager]
+stakeholders: [developers, ai-engineers, integrators, learners]
+complexity_level: advanced
+demonstrates: [mcp-tools, mcp-resources, mcp-prompts, ethics-validation, persona-management, memory-operations, learning-workflows, data-analysis, image-generation, plugin-management, multi-step-workflows]
+runnable: true
+estimated_completion: 30
+requires: [mcp-server, python-environment, openai-api-key, mcp-inspector]
+review_cycle: quarterly
+---
+
 # MCP Usage Examples
 
 This document provides comprehensive examples of using Project-AI's MCP server with various AI assistants and scenarios.

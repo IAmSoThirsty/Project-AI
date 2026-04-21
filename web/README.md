@@ -1,3 +1,17 @@
+---
+type: platform-doc
+tags: [web, nextjs, react, typescript, production, frontend]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [flask-backend, project-ai-core, zustand, axios]
+stakeholders: [platform-team, web-team, frontend-team]
+platform: web
+integration_type: sdk
+external_dependencies: [nextjs, react, typescript, zustand, axios, tailwindcss]
+review_cycle: quarterly
+---
+
 # Project-AI Web - Production-Grade Next.js Application
 
 A complete, production-ready Next.js 14 web application for Project-AI, featuring TypeScript, server-side rendering, static export capabilities, and comprehensive integration with the Flask backend.

@@ -1,3 +1,27 @@
+---
+type: guide
+tags:
+  - p2-root
+  - status
+  - guide
+  - obsidian
+  - tag-wrangler
+  - tag-management
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems:
+  - obsidian-vault
+  - tag-wrangler-plugin
+  - tag-management
+stakeholders:
+  - obsidian-team
+  - documentation-team
+report_type: guide
+supersedes: []
+review_cycle: as-needed
+---
+
 # Tag Wrangler Plugin Guide
 
 **Version:** 0.6.4  

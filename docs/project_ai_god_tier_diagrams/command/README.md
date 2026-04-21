@@ -1,3 +1,19 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, design-patterns, command-pattern, cqrs, event-sourcing, write-model, read-model]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [command-bus, query-bus, event-store, write-read-separation]
+stakeholders: [architecture-team, developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: ascii
+pattern_category: architectural
+---
+
 # Command Pattern (CQRS) in Project-AI
 
 ## Overview
@@ -644,5 +660,5 @@ class TestCommands:
 
 - **[Command Handlers](command_handlers.md)** - Handler implementations
 - **[Command Validation](command_validation.md)** - Validation rules
-- **[Domain Events](../domain/domain_events.md)** - Event emission from commands
-- **[Query Pattern](../query/README.md)** - CQRS query side
+- **[[../domain/domain_events.md|Domain Events]]** - Event emission from commands
+- **[[../query/README.md|Query Pattern]]** - CQRS query side

@@ -1,3 +1,19 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, design-patterns, query-pattern, cqrs, read-model, denormalized-views]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [query-handler, read-model, query-bus, projection]
+stakeholders: [architecture-team, developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: architecture
+format: code
+pattern_category: architectural-cqrs
+---
+
 # Query Pattern (CQRS) in Project-AI
 
 ## Overview
@@ -103,6 +119,6 @@ class UserQueryHandler:
 
 ## Related Documentation
 
-- **[Command Pattern](../command/README.md)** - CQRS write side
+- **[[../command/README.md|Command Pattern]]** - CQRS write side
 - **[Read Models](query_models.md)** - Denormalized views
 - **[Event Projections](../event/event_projections.md)** - Read model updates

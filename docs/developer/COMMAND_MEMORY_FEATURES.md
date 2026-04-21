@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, command-override, memory-expansion, security, ai-memory, privileged-access]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [command-override-system, memory-expansion-engine, safety-protocols, knowledge-base]
+stakeholders: [developers, security-team, power-users]
+audience: intermediate
+prerequisites: [python-intermediate, security-concepts, state-management, authorization-basics]
+estimated_time: 30 minutes
+review_cycle: monthly
+---
 # Command Override & Memory Expansion Features
 
 **Date**: November 24, 2025

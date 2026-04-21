@@ -1,3 +1,19 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, design-patterns, mediator-pattern, behavioral-pattern, agent-collaboration, council-hub]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [council-hub, agent-registry, communication-bus, inter-agent-communication]
+stakeholders: [architecture-team, developers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: class
+format: code
+pattern_category: behavioral
+---
+
 # Mediator Pattern in Project-AI
 
 ## Overview
@@ -66,4 +82,4 @@ class CouncilHub:
 ## Related Documentation
 
 - **[Agent Execution](../../workflow/temporal_workflows.md)** - Agent orchestration
-- **[Factory Pattern](../factory/README.md)** - Agent creation
+- **[[../factory/README.md|Factory Pattern]]** - Agent creation

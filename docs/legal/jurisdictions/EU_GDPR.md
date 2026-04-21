@@ -1,3 +1,22 @@
+---
+type: governance-policy
+tags: [governance, legal, gdpr, eu-compliance, jurisdictional-annex, data-protection]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [data-protection, privacy-framework, compliance-management]
+stakeholders: [legal-team, data-protection-officer, eu-users, governance-team]
+sovereignty_level: governed
+immutability: revisable
+enforcement: automatic
+review_cycle: quarterly
+document_type: jurisdictional-annex
+jurisdiction: european-union
+regulation: gdpr
+compliance_mandatory: true
+version: 1.0.0
+---
+
 # Jurisdictional Annex: European Union (GDPR)
 
 **Version:** 1.0.0  

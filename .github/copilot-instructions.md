@@ -1,3 +1,18 @@
+---
+type: config-guide
+tags: [copilot, ai-assistant, development, architecture, legacy-reference]
+created: 2025-11-15
+last_verified: 2026-04-20
+status: superseded
+related_systems: [development-environment, copilot-ai, governance]
+stakeholders: [developers, architects, ai-assistants]
+config_scope: development
+automation_type: manual-config
+requires_secrets: true
+review_cycle: quarterly
+superseded_by: copilot_workspace_profile.md
+---
+
 # Project-AI Copilot Instructions
 
 > **⚠️ GOVERNANCE POLICY SUPERSEDED**  

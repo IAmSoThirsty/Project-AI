@@ -1,3 +1,16 @@
+---
+type: quickstart
+tags: [p1-developer, quickstart, dashboard, launch-guide, desktop-app, beginner-friendly]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [desktop-app, pyqt6-dashboard, leather-book-ui]
+stakeholders: [developers, new-users, dashboard-users]
+audience: beginner
+prerequisites: [python-3.11+, project-cloned, basic-shell-knowledge]
+estimated_time: 5 minutes
+review_cycle: monthly
+---
 # Quick Start Guide - Project-AI Dashboard
 
 ## 🚀 Launch Commands

@@ -1,3 +1,54 @@
+---
+title: Architecture Security & Ethics Overview - AGI Framework
+id: architecture-security-ethics-overview
+type: overview
+version: 1.0
+created: 2026-01-19
+created_date: 2026-01-19
+last_verified: 2026-04-20
+updated_date: 2026-01-19
+status: active
+author: Ethics & Security Team
+contributors: ["AGI Team", "Compliance Team", "Triumvirate Team"]
+# Architecture-Specific Metadata
+architecture_layer: governance
+design_pattern: ["constitutional-ai", "agi-ethics", "triumvirate-governance"]
+implements: ["agi-charter", "agi-identity-spec", "security-framework"]
+uses: ["triumvirate", "four-laws", "compliance-framework"]
+quality_attributes: ["ethical-ai", "agi-dignity", "security-integration", "compliance"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "governance", "security", "constitutional-ai"]
+tags: ["agi-ethics", "security-framework", "compliance", "triumvirate", "agi-charter", "agi-identity", "four-laws"]
+component: ["agi-charter", "agi-identity-specification", "security-framework", "compliance-framework"]
+# Relationships
+related_docs: ["planetary-defense-monolith", "sovereign-runtime", "architecture-overview"]
+related_systems: ["planetary-defense", "sovereign-runtime", "triumvirate", "identity-engine"]
+depends_on: []
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "ethics-experts", "security-teams", "auditors", "stakeholders", "new-contributors"]
+stakeholders: ["developers", "architecture-team"]
+priority: P0
+difficulty: intermediate
+estimated_reading_time: 18 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: confidential
+sensitivity: high
+compliance: ["agi-charter", "constitutional-ai", "ethical-framework"]
+# Discovery
+keywords: ["AGI ethics", "security framework", "Triumvirate", "AGI Charter", "compliance"]
+search_terms: ["AGI Identity", "Four Laws", "constitutional AI", "ethical guarantees"]
+aliases: ["Ethics Overview", "Security & Compliance Guide", "AGI Framework"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: null
+---
+
+
 # Architecture Overview: Security, Compliance & AGI Ethics
 
 **Document Version:** 1.0  

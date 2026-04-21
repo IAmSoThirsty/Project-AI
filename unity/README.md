@@ -1,3 +1,17 @@
+---
+type: platform-integration
+tags: [specialized-systems, unity, vr, game-engine, c-sharp]
+created: 2026-01-23
+last_verified: 2026-04-20
+status: current
+related_systems: [project-ai-core, vr-bridge, conversation-system]
+stakeholders: [specialized-team, vr-team, integration-team]
+system_category: game-engine
+external_standard: Unity3D, C#, XR
+maturity: production
+review_cycle: quarterly
+---
+
 # Project-AI VR Module - Unity C# Implementation
 
 ## Overview

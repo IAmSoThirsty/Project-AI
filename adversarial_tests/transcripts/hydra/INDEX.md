@@ -1,3 +1,17 @@
+---
+type: adversarial-spec
+tags: [testing, adversarial, transcripts, hydra-defense, index, stress-test]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, hydra-defense, four-laws]
+stakeholders: [security-team, researchers, qa-team]
+test_type: adversarial
+coverage_target: 200 hydra tests - 40 attack categories, 5 examples each
+automation_status: automated
+review_cycle: monthly
+---
+
 # HYDRA DEFENSE Test Transcripts Index
 
 **Generated**: 2026-01-11  

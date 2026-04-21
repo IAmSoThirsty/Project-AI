@@ -1,4 +1,18 @@
 ---
+type: config-guide
+tags: [codacy, mcp, code-quality, automation, ai-behavior]
+created: 2026-02-15
+last_verified: 2026-04-20
+status: current
+related_systems: [codacy-mcp, code-quality, ci-cd]
+stakeholders: [developers, ai-assistants, code-quality-team]
+config_scope: development
+automation_type: manual-config
+requires_secrets: true
+review_cycle: quarterly
+---
+
+---
     description: Configuration for AI behavior when interacting with Codacy's MCP Server
     applyTo: '**'
 ---

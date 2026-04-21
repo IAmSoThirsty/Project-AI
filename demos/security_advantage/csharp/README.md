@@ -1,3 +1,19 @@
+---
+type: demo
+tags: [demo, security, csharp, dotnet, reflection, runtime-security, learning]
+created: 2024-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [tarl, dotnet-runtime, reflection-api, marshal-class, unsafe-code]
+stakeholders: [security-engineers, dotnet-developers, learners, architects]
+complexity_level: advanced
+demonstrates: [reflection-attacks, marshal-manipulation, unsafe-pointers, readonly-field-modification, securestring-bypass, il-inspection, access-modifier-limitations, constant-field-access]
+runnable: true
+estimated_completion: 8
+requires: [dotnet-8.0-sdk, unsafe-blocks-enabled]
+review_cycle: quarterly
+---
+
 # C# Security Demonstration
 
 ## Overview

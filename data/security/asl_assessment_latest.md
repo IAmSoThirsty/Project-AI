@@ -1,3 +1,20 @@
+---
+type: data-schema
+tags: [data, security, ai-safety, asl-assessment, capability-evaluation]
+created: 2026-01-02
+last_verified: 2026-04-20
+status: current
+related_systems: [asl3-security-enforcer, cbrn-classifier, governance-triumvirate]
+stakeholders: [security-team, ai-safety-team, executive-team, compliance-officers]
+data_category: monitoring
+persistence: persistent
+security_sensitive: true
+review_cycle: quarterly
+report_type: automated-security
+assessment_domains: [cbrn, cyber-offense, ai-research, persuasion, autonomy, deception]
+compliance_framework: anthropic-asl
+risk_levels: [asl-2, asl-3, asl-4]
+---
 
 # AI Safety Level (ASL) Assessment Report
 

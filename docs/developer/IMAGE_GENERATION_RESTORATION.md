@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, image-generation, feature-restoration, implementation-summary, ai-art]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [image-generator-core, image-generation-ui, content-filter, style-presets]
+stakeholders: [developers, feature-maintainers, ui-developers]
+audience: intermediate
+prerequisites: [python-intermediate, pyqt6-knowledge, async-programming, api-integration]
+estimated_time: 30 minutes
+review_cycle: monthly
+---
 # Image Generation Feature - Restoration Summary
 
 ## Overview

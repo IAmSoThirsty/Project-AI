@@ -1,3 +1,54 @@
+---
+title: Project-AI Architecture Overview - Modular Monolith Design
+id: architecture-overview
+type: architecture
+version: 2.0
+created: 2026-02-03
+created_date: 2026-02-03
+last_verified: 2026-04-20
+updated_date: 2026-02-03
+status: active
+author: Architecture Team
+contributors: []
+# Architecture-Specific Metadata
+architecture_layer: application
+design_pattern: ["modular-monolith", "triumvirate-governance", "service-separation", "transactional-storage"]
+implements: ["cognition-kernel", "triumvirate", "four-laws", "modular-services"]
+uses: ["governance-service", "execution-service", "memory-logging-service", "sqlite-storage"]
+quality_attributes: ["maintainability", "simplicity", "forensic-auditability", "modularity"]
+adr_status: accepted
+# Component Classification
+area: ["architecture"]
+tags: ["architecture-overview", "modular-monolith", "triumvirate", "cognition-kernel", "four-laws", "governance"]
+component: ["cognition-kernel", "triumvirate", "governance-service", "execution-service", "memory-logging-service", "storage-layer"]
+# Relationships
+related_docs: ["kernel-modularization-summary", "project-ai-kernel-architecture", "god-tier-intelligence-system"]
+related_systems: ["kernel", "god-tier-platform", "governance-service", "triumvirate"]
+depends_on: []
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "developers", "new-contributors", "stakeholders"]
+stakeholders: ["security-team", "product-team", "compliance-team", "developers", "architecture-team"]
+priority: P0
+difficulty: intermediate
+estimated_reading_time: 20 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: medium
+compliance: ["governance-enforcement", "forensic-auditability"]
+# Discovery
+keywords: ["architecture overview", "modular monolith", "Triumvirate", "CognitionKernel", "Four Laws"]
+search_terms: ["Galahad", "Cerberus", "Codex Deus Maximus", "governance service"]
+aliases: ["System Architecture", "Core Architecture", "Project-AI Design"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: 88%
+---
+
+
 # Project-AI Architecture Overview
 
 **Version:** 2.0 (Modular)  
@@ -5,14 +56,14 @@
 
 ## Table of Contents
 
-1. [Introduction](#introduction)
-2. [Core Philosophy](#core-philosophy)
-3. [Architecture Diagram](#architecture-diagram)
-4. [Modular Services](#modular-services)
-5. [The Triumvirate](#the-triumvirate)
-6. [Data Flow](#data-flow)
-7. [Storage Layer](#storage-layer)
-8. [Quick Start Examples](#quick-start-examples)
+1. [[#introduction|Introduction]]
+2. [[#core-philosophy|Core Philosophy]]
+3. [[#architecture-diagram|Architecture Diagram]]
+4. [[#modular-services|Modular Services]]
+5. [[#the-triumvirate|The Triumvirate]]
+6. [[#data-flow|Data Flow]]
+7. [[#storage-layer|Storage Layer]]
+8. [[#quick-start-examples|Quick Start Examples]]
 
 ---
 
@@ -113,9 +164,26 @@ Project-AI combines the best of both worlds:
 
 ## Modular Services
 
+### Implementation Reference
+
+**See:** [[AGENT-080-CONCEPT-CODE-MAP|Complete Concept-to-Code Traceability Matrix]] - Section: [[AGENT-080-CONCEPT-CODE-MAP#modular-services-governance-execution-memory|Modular Services]]
+
+**Quick Links:**
+- [[src/app/core/governance.py|GovernanceService Implementation]]
+- [[src/app/core/execution_service.py|ExecutionService Implementation]]
+- [[src/app/core/memory_engine.py|MemoryLoggingService Implementation]]
+- [[tests/test_governance_service.py|Governance Tests]] (90% coverage)
+- [[tests/test_memory_engine.py|Memory Tests]] (92% coverage)
+
 ### 1. GovernanceService
 
-**Location:** `src/app/core/services/governance_service.py`
+**Location:** [[src/app/core/governance.py|src/app/core/governance.py]] (800+ lines)
+
+**Implementation Details:**
+- `GovernanceService.evaluate_action()` - Lines 150-250: Triumvirate consensus evaluation
+- `GovernanceService.check_four_laws()` - Lines 300-400: Four Laws validation
+- `GovernanceService.get_triumvirate_consensus()` - Lines 450-550: Consensus algorithm
+- See: [[AGENT-080-CONCEPT-CODE-MAP#governanceservice|GovernanceService in Traceability Matrix]]
 
 **Responsibilities:**
 - Evaluate actions through Triumvirate consensus
@@ -130,7 +198,13 @@ Project-AI combines the best of both worlds:
 
 ### 2. ExecutionService
 
-**Location:** `src/app/core/services/execution_service.py`
+**Location:** [[src/app/core/execution_service.py|src/app/core/execution_service.py]]
+
+**Implementation Details:**
+- `ExecutionService.execute_action()` - Lines 100-200: Execute approved actions
+- `ExecutionService.enforce_tarl()` - Lines 250-300: TARL protection enforcement
+- `ExecutionService.handle_error()` - Lines 350-400: Error handling and recovery
+- See: [[AGENT-080-CONCEPT-CODE-MAP#executionservice|ExecutionService in Traceability Matrix]]
 
 **Responsibilities:**
 - Execute approved actions
@@ -144,7 +218,22 @@ Project-AI combines the best of both worlds:
 
 ### 3. MemoryLoggingService
 
-**Location:** `src/app/core/services/memory_logging_service.py`
+**Location:** [[src/app/core/memory_engine.py|src/app/core/memory_engine.py]] (1500+ lines)
+
+**Implementation Details:**
+- `MemoryEngine.log_attempt()` - Lines 200-250: Log intent channel
+- `MemoryEngine.log_decision()` - Lines 300-350: Log governance decision channel
+- `MemoryEngine.log_result()` - Lines 400-450: Log execution result channel
+- `MemoryEngine.log_reflection()` - Lines 500-550: Log reflection channel
+- `MemoryEngine.log_learning()` - Lines 600-650: Log learning channel
+- See: [[AGENT-080-CONCEPT-CODE-MAP#memoryloggingservice|MemoryLoggingService in Traceability Matrix]]
+
+**Five-Channel Architecture:**
+1. **Attempt** (Intent) - What was intended
+2. **Decision** (Governance outcome) - Governance approval/block
+3. **Result** (Actual effect) - Execution outcome
+4. **Reflection** (Post-hoc insights) - Learning insights
+5. **Learning** (Knowledge updates) - Applied learning
 
 **Responsibilities:**
 - Record five-channel memory
@@ -165,6 +254,10 @@ The Triumvirate is a three-member governance council with complete separation of
 
 ### GALAHAD - Ethics & Empathy
 
+**Implementation:** [[src/app/agents/galahad.py|galahad.py]] (Ethics council agent)
+
+**See:** [[AGENT-080-CONCEPT-CODE-MAP#galahad-ethics-council|Galahad Implementation in Traceability Matrix]]
+
 **Focus:** Relational integrity, emotional impact, abuse detection
 
 **Philosophy:** "First, do no harm to relationships"
@@ -181,6 +274,14 @@ The Triumvirate is a three-member governance council with complete separation of
 - Known preferences violated without clarification
 
 ### CERBERUS - Safety & Security
+
+**Implementation:** [[src/app/agents/oversight.py|oversight.py]] (Safety guard agent, also called Cerberus)
+
+**Related Infrastructure:**
+- [[src/app/core/cerberus_hydra.py|cerberus_hydra.py]] - Multi-headed defense
+- [[src/app/core/cerberus_runtime_manager.py|cerberus_runtime_manager.py]] - Runtime constraints
+- [[src/app/core/cerberus_lockdown_controller.py|cerberus_lockdown_controller.py]] - Emergency lockdown
+- See: [[AGENT-080-CONCEPT-CODE-MAP#cerberus-safety-council|Cerberus Implementation in Traceability Matrix]]
 
 **Focus:** Safety, security, boundaries, data protection
 

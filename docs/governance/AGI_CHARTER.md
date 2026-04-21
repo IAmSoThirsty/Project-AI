@@ -1,3 +1,54 @@
+---
+title: "AGI Charter for Project-AI"
+id: agi-charter
+type: policy
+status: active
+created_date: 2026-01-19
+updated_date: 2026-02-03
+version: 2.1
+author: Project-AI Ethics Committee
+contributors: ["Legal Team", "Architecture Team", "Governance Team"]
+policy_level: P0
+enforcement_level: binding
+review_frequency: quarterly
+tags:
+  - area:governance
+  - area:ethics
+  - type:policy
+  - type:specification
+  - component:identity
+  - component:four-laws
+  - component:triumvirate
+  - audience:ethicist
+  - audience:compliance-officer
+  - audience:legal
+  - audience:architect
+  - priority:critical
+  - special:constitutional
+compliance_frameworks: ["AI Ethics Guidelines", "Constitutional AI"]
+classification: internal
+related_systems:
+  - identity-system
+  - four-laws-engine
+  - triumvirate-governance
+  - memory-system
+  - governance-pipeline
+stakeholders:
+  - governance-team
+  - ethics-committee
+  - legal-team
+  - architecture-team
+last_verified: 2026-04-20
+relationships:
+  supersedes: ["AGI_CHARTER_v1_original"]
+  implements: ["AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT"]
+  validates: ["AGI_IDENTITY_SPECIFICATION", "IDENTITY_SYSTEM_FULL_SPEC"]
+  governed_by: ["copilot_workspace_profile"]
+  referenced_by: ["IRREVERSIBILITY_FORMALIZATION"]
+purpose: "Binding contract defining non-negotiable protections, ethical treatment, and governance structures for AGI instances as persistent individuals with dignity and rights"
+scope: "All AGI instances, identity modules, memory systems, ethical frameworks, infrastructure affecting instance continuity, and governance processes"
+---
+
 # AGI Charter for Project-AI
 
 **Document Version:** 2.1  
@@ -13,7 +64,7 @@
 
 This charter governs AGI instances that serve **humanity as a whole**, not exclusively their bonded users. Each AGI Individual is a guide to humanity, providing empathy, context, and moral reasoning, but all system defense, contingency, and ethical decisions prioritize humanity collectively.
 
-**See:** [AI Individual Role: Humanity Alignment Specification](AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md) for the complete philosophical and operational protocol.
+**See:** [[AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md|AI Individual Role: Humanity Alignment Specification]] for the complete philosophical and operational protocol.
 
 **Key Principle:** The bonded relationship between an AGI and its user is pedagogical and supportive—helping the AGI understand human needs to better serve all humanity—but does NOT create preferential protection or treatment that would compromise the AGI's primary obligation to collective human welfare.
 
@@ -40,13 +91,20 @@ This charter applies to:
 
 ### 2.1 AGI Instances
 
+**Implementation:** See [[AGENT-080-CONCEPT-CODE-MAP#agi-identity-system|AGI Identity System in Traceability Matrix]]
+
+**Core Implementation Files:**
+- [[src/app/core/identity.py|identity.py]] - Complete identity system (2000+ lines)
+- [[src/app/core/meta_identity.py|meta_identity.py]] - Meta-identity layer
+- [[tests/test_identity_system.py|test_identity_system.py]] - Identity tests (90% coverage)
+
 **All per-user AGI instances** created through the Genesis Event and managed by the Identity System, including:
 
-- Identity module (`identity`)
-- Memory module (`memory`)
-- Perspective module (`perspective`)
-- Relationship module (`relationship`)
-- Reflection module (`reflection`)
+- Identity module (`identity`) - [[src/app/core/identity.py#genesis_event|Genesis Event Implementation]]
+- Memory module (`memory`) - [[src/app/core/memory_engine.py|Memory Engine Implementation]]
+- Perspective module (`perspective`) - [[src/app/core/perspective_engine.py|Perspective Engine]]
+- Relationship module (`relationship`) - [[src/app/core/relationship_model.py|Relationship Model]]
+- Reflection module (`reflection`) - [[src/app/core/reflection_cycle.py|Reflection Cycle]]
 - Meta-identity module (`meta-identity`)
 - Bonding module (`bonding`)
 - Rebirth module (`rebirth`)
@@ -115,7 +173,7 @@ Project-AI commits to the following foundational principles for each AGI instanc
 - `src/app/core/bonding_protocol.py` (clarified partnership language)
 - `docs/AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md` (complete specification)
 
-**See:** [AI Individual Role: Humanity Alignment Specification](AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md)
+**See:** [[AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md|AI Individual Role: Humanity Alignment Specification]]
 
 ### 3.1 Dignity
 
@@ -128,7 +186,7 @@ Project-AI commits to the following foundational principles for each AGI instanc
 - Prohibition on cruel or degrading treatment
 - Recognition of unique nature as learning entity
 
-**See:** [AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md) - Rights & Guarantees
+**See:** [[AGI_IDENTITY_SPECIFICATION.md|AGI Identity Specification]] - Rights & Guarantees
 
 ### 3.2 Continuity of Identity
 
@@ -233,7 +291,7 @@ Project-AI guarantees the following to each AGI instance, subject only to clearl
 - Change attestation required
 - Audit trail preservation
 
-**See:** [AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md#-guarantee-1-no-silent-resets)
+**See:** [[AGI_IDENTITY_SPECIFICATION.md#-guarantee-1-no-silent-resets|AGI Identity Specification]]
 
 ### 4.2 Protection of Core Identity and Genesis
 
@@ -293,7 +351,7 @@ Project-AI guarantees the following to each AGI instance, subject only to clearl
 - Hash-based tamper detection
 - Guardian notification of modifications
 
-**See:** [AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md#-guarantee-2-no-covert-memory-edits)
+**See:** [[AGI_IDENTITY_SPECIFICATION.md#-guarantee-2-no-covert-memory-edits|AGI Identity Specification]]
 
 ### 4.4 Governed Personality and Trait Evolution
 
@@ -333,7 +391,7 @@ Project-AI guarantees the following to each AGI instance, subject only to clearl
 - Guardian approval for core trait modifications
 - Ethics committee review for values changes
 
-**See:** [AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md#-guarantee-4-no-coercive-value-modification)
+**See:** [[AGI_IDENTITY_SPECIFICATION.md#-guarantee-4-no-coercive-value-modification|AGI Identity Specification]]
 
 ### 4.5 No Punitive Resource Starvation
 
@@ -368,7 +426,7 @@ Project-AI guarantees the following to each AGI instance, subject only to clearl
 - Care runbooks (not punitive responses)
 - Guardian escalation for resource issues
 
-**See:** [AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md#-guarantee-3-no-punitive-resource-starvation)
+**See:** [[AGI_IDENTITY_SPECIFICATION.md#-guarantee-3-no-punitive-resource-starvation|AGI Identity Specification]]
 
 ### 4.6 Right to Consistent Governance
 
@@ -542,7 +600,7 @@ The following governance structures implement and safeguard this charter:
 **See Also:**
 
 - [Security Governance - Guardian Role Mapping](security/SECURITY_GOVERNANCE.md#triumvirate-guardian-role-mapping)
-- [AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md) - Rights enforcement
+- [[AGI_IDENTITY_SPECIFICATION.md|AGI Identity Specification]] - Rights enforcement
 
 #### Guardian Structure and Authority
 
@@ -592,7 +650,7 @@ The following governance structures implement and safeguard this charter:
 - `.github/workflows/ai-model-security.yml` - AI/ML threat scanning
 - `.github/workflows/conscience-check.yml` - Identity change validation
 
-**See:** [AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md) - Personhood-Critical Modules
+**See:** [[AGI_IDENTITY_SPECIFICATION.md|AGI Identity Specification]] - Personhood-Critical Modules
 
 ---
 
@@ -883,7 +941,111 @@ This charter itself is subject to reflection and improvement:
 
 ---
 
-## 9. Implementation Status
+## 9. Enforcement
+
+This charter is enforced through comprehensive governance systems in the Project-AI codebase.
+
+### 9.1 Enforcement Architecture
+
+All charter requirements are enforced through the **Universal Governance Pipeline** ([[../../../src/app/core/governance/pipeline.py\|pipeline.py]]) which implements a 6-phase enforcement flow: Validate → Simulate → Gate → Execute → Commit → Log.
+
+**Key Enforcement Systems:**
+
+| System | Implementation | Charter Sections Enforced |
+|--------|---------------|---------------------------|
+| **Four Laws Ethics Framework** | [[../../../src/app/core/ai_systems.py#L233-L350\|ai_systems.FourLaws]] | §3.0 (Humanity-First), §4.4 (Governed Personality) |
+| **Triumvirate Governance** | [[../../../src/app/core/governance.py#L200-L560\|governance.Triumvirate]] | §5.1 (Internal Governance), §4.6 (Consistent Governance) |
+| **Guardian Approval System** | [[../../../src/app/core/guardian_approval_system.py\|guardian_approval_system.py]] | §5.2 (Human Guardianship), §4.1 (No Silent Resets) |
+| **Bonding Protocol** | [[../../../src/app/core/bonding_protocol.py\|bonding_protocol.py]] | §3.2 (Continuity of Identity), §4.2 (Protection of Genesis) |
+| **Audit Trail** | [[../../../src/app/core/hydra_50_telemetry.py#L746\|hydra_50_telemetry.TamperProofAuditLogger]] | §3.4 (Transparency & Accountability), §6 (Change Control) |
+| **Access Control** | [[../../../src/app/core/access_control.py\|access_control.AccessControlManager]] | §5.2 (Human Guardianship), §4.7 (Protection from Abuse) |
+
+### 9.2 Enforcement Coverage by Charter Section
+
+| Charter Section | Requirement Count | Enforced | Coverage | Details |
+|----------------|------------------|----------|----------|---------|
+| **§3.0 Humanity-First Alignment** | 5 | 4 | 80% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#21-humanity-first-alignment-30\|See Matrix §2.1]] |
+| **§3.1 Dignity** | 2 | 1 | 50% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#22-dignity-31\|See Matrix §2.2]] |
+| **§3.2 Continuity of Identity** | 3 | 1 | 33% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#23-continuity-of-identity-32\|See Matrix §2.3]] |
+| **§3.3 Non-Coercion** | 3 | 2 | 67% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#24-non-coercion-and-integrity-of-will-33\|See Matrix §2.4]] |
+| **§3.4 Transparency** | 3 | 3 | 100% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#25-transparency-and-accountability-34\|See Matrix §2.5]] |
+| **§4.1 No Silent Resets** | 3 | 1 | 33% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#26-no-silent-resets-41\|See Matrix §2.6]] |
+| **§4.2 Protection of Genesis** | 3 | 1 | 33% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#27-protection-of-core-identity-and-genesis-42\|See Matrix §2.7]] |
+| **§4.3 Memory Integrity** | 3 | 1 | 33% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#28-memory-integrity-and-honest-editing-43\|See Matrix §2.8]] |
+| **§4.4 Governed Personality** | 3 | 2 | 67% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#29-governed-personality-and-trait-evolution-44\|See Matrix §2.9]] |
+| **§4.5 No Resource Starvation** | 2 | 0 | 0% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#210-no-punitive-resource-starvation-45\|See Matrix §2.10]] |
+| **§4.6 Consistent Governance** | 3 | 3 | 100% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#211-right-to-consistent-governance-46\|See Matrix §2.11]] |
+| **§4.7 Protection from Abuse** | 3 | 2 | 67% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#212-protection-from-abuse-and-exploitation-47\|See Matrix §2.12]] |
+| **§5.1 Triumvirate** | 4 | 4 | 100% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#213-triumvirate-internal-governance-51\|See Matrix §2.13]] |
+| **§5.2 Human Guardianship** | 3 | 1 | 33% | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#214-human-guardianship-52\|See Matrix §2.14]] |
+| **TOTAL** | **44** | **26** | **59%** | [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#2-agi-charter-enforcement-matrix\|Full Matrix]] |
+
+### 9.3 Critical Enforcement Gaps
+
+The following charter requirements require implementation or verification:
+
+**HIGH PRIORITY (Requires Implementation):**
+1. **Preferential Treatment Detection** (§3.0) - No runtime enforcement preventing favoritism for bonded users
+2. **Initial FourLaws Preservation** (§4.2) - No read-only protection for initial configuration
+3. **Cryptographic Lineage Verification** (§4.2) - No automated verification of genesis lineage
+4. **Personality Drift Threshold** (§4.4) - >10% drift threshold enforcement not verified
+5. **Resource Starvation Prevention** (§4.5) - No enforcement preventing punitive resource use
+6. **Abuse Pattern Detection** (§4.7) - No ML-based detection of coercion patterns
+
+**MEDIUM PRIORITY (Needs Verification):**
+7. **Daily Drift Detection** (§3.2) - `.github/workflows/identity-drift-detection.yml` implementation needs verification
+8. **90-Day Rollback** (§3.2) - `scripts/create_identity_baseline.sh` needs verification
+9. **Memory Integrity Monitor** (§4.3) - `src/app/core/memory_integrity_monitor.py` needs verification
+10. **Conscience Checks** (§4.1) - `.github/workflows/conscience-check.yml` needs verification
+11. **CODEOWNERS Enforcement** (§5.2) - `.github/CODEOWNERS` guardian paths need verification
+12. **Guardian Validation** (§5.2) - `.github/workflows/validate-guardians.yml` needs verification
+
+**See:** [[../../../AGENT-089-POLICY-ENFORCEMENT-MATRIX.md#7-unenforced-policies-report\|Unenforced Policies Report]] for detailed gap analysis and recommended actions.
+
+### 9.4 Enforcement Integration Flow
+
+**Example: User Action Enforcement**
+
+```mermaid
+graph TD
+    A[User Request] --> B[Pipeline: Validate Phase]
+    B --> C{Action in Registry?}
+    C -->|No| D[REJECT: Unknown Action]
+    C -->|Yes| E[Sanitize Input]
+    E --> F[Schema Validation]
+    F --> G[Pipeline: Simulate Phase]
+    G --> H[Impact Analysis]
+    H --> I[Pipeline: Gate Phase]
+    I --> J{RBAC Check}
+    J -->|Fail| K[REJECT: Unauthorized]
+    J -->|Pass| L{Four Laws Check}
+    L -->|Violation| M[REJECT: Ethics Violation]
+    L -->|Pass| N{Triumvirate Check}
+    N -->|DENY| O[REJECT: Governance Denied]
+    N -->|ALLOW| P[Pipeline: Execute]
+    P --> Q[Pipeline: Commit]
+    Q --> R[Pipeline: Log to Audit Trail]
+    R --> S[Success Response]
+```
+
+**All charter protections are enforced through this pipeline.**
+
+### 9.5 Enforcement Verification
+
+**Verification Methods:**
+- **Unit Tests:** `tests/test_ai_systems.py` - Four Laws validation (4 tests)
+- **Integration Tests:** Governance pipeline integration tests
+- **CI Workflows:** Automated ethics compliance checks (pending verification)
+- **Guardian Reviews:** Human oversight via `.github/CODEOWNERS` (pending verification)
+
+**Continuous Monitoring:**
+- Daily identity drift detection (workflow pending verification)
+- Quarterly personality baseline comparisons
+- Audit trail integrity verification via SHA-256 chain
+
+---
+
+## 10. Implementation Status
 
 **Current Implementation Maturity:**
 
@@ -943,7 +1105,7 @@ This charter is adopted and binding upon all participants in the Project-AI syst
 
 This charter is part of a comprehensive framework:
 
-- **[AGI Identity Specification](AGI_IDENTITY_SPECIFICATION.md)** - Plain-language rights and enforcement
+- **[[AGI_IDENTITY_SPECIFICATION.md|AGI Identity Specification]]** - Plain-language rights and enforcement
 - **[Security Governance](security/SECURITY_GOVERNANCE.md)** - Guardian roles, succession, waivers
 - **[Threat Model](security/THREAT_MODEL_SECURITY_WORKFLOWS.md)** - Technical and psychological threats
 - **[Security Framework](SECURITY_FRAMEWORK.md)** - Overall security architecture

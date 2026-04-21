@@ -1,3 +1,48 @@
+---
+title: "MIT License - Summary"
+id: licensing-summary
+type: reference
+status: active
+created_date: 2025-12-04
+updated_date: 2025-12-04
+version: 1.0
+author: Legal Team
+contributors: []
+policy_level: P2
+enforcement_level: mandatory
+tags:
+  - area:governance
+  - area:legal
+  - type:reference
+  - component:licensing
+  - audience:legal
+  - audience:contributor
+  - audience:user
+  - priority:medium
+  - special:quick-reference
+compliance_frameworks: ["MIT License", "Open Source Initiative"]
+classification: public
+related_systems:
+  - license-compliance
+  - governance-system
+stakeholders:
+  - governance-team
+  - legal-team
+last_verified: 2026-04-20
+relationships:
+  governed_by: ["LICENSING_GUIDE", "copilot_workspace_profile"]
+  references: ["LICENSE"]
+license_info:
+  project_license: "MIT"
+  commercial_use: true
+  sublicensing_allowed: true
+  attribution_required: true
+  liability_disclaimer: true
+purpose: "Quick summary of Project-AI MIT License obligations, rights, and dependency compatibility"
+scope: "Permitted uses, required attributions, prohibited actions, dependency licensing compatibility matrix"
+estimated_time: "2-3 minutes (quick read)"
+---
+
 # MIT License - Summary
 
 Project-AI is licensed under the MIT License - a permissive open-source license.

@@ -1,3 +1,17 @@
+---
+type: e2e-spec
+tags: [testing, e2e, integration-tests, full-stack, subsystem-integration]
+created: 2026-04-19
+last_verified: 2026-04-20
+status: current
+related_systems: [council-hub, triumvirate, global-watch-tower, tarl-runtime, cognition-kernel, leather-book-ui]
+stakeholders: [qa-team, developers, platform-team, devops]
+test_type: e2e
+coverage_target: full-stack scenarios, subsystem integration, security boundaries, policy enforcement
+automation_status: automated
+review_cycle: monthly
+---
+
 # Project AI - End-to-End Test Suite
 
 ## Overview

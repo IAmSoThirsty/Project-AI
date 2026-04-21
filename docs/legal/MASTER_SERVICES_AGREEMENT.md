@@ -1,3 +1,21 @@
+---
+type: governance-policy
+tags: [governance, legal, master-services-agreement, msa, contractual-framework]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [service-delivery, tier-management, acceptance-ledger]
+stakeholders: [legal-team, service-provider, users, governance-team]
+sovereignty_level: sovereign
+immutability: immutable
+enforcement: hybrid
+review_cycle: annual
+document_type: master-agreement
+legal_supremacy: true
+tier_based: true
+version: 1.0.0
+---
+
 # Project-AI Master Services Agreement (MSA)
 
 **Version:** 1.0.0  

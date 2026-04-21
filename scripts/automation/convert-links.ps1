@@ -192,13 +192,26 @@ function New-FileBackup {
     
     try {
         $file = Get-Item -Path $FilePath
-        $relativePath = $file.FullName -replace [regex]::Escape((Get-Location).Path), ''
-        $relativePath = $relativePath.TrimStart('\', '/')
+        
+        # Get relative path, handling temp directories correctly
+        $basePath = (Get-Location).Path
+        $relativePath = if ($file.FullName.StartsWith($basePath)) {
+            $file.FullName.Substring($basePath.Length).TrimStart('\', '/')
+        } else {
+            # For files outside project directory, use just filename
+            $file.Name
+        }
         
         $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
         $backupFileName = "$($file.BaseName)_$timestamp$($file.Extension)"
+        
+        # Create backup subdirectory structure
         $backupSubDir = Split-Path -Parent $relativePath
-        $backupFullDir = Join-Path $BackupPath $backupSubDir
+        if ($backupSubDir) {
+            $backupFullDir = Join-Path $BackupPath $backupSubDir
+        } else {
+            $backupFullDir = $BackupPath
+        }
         
         if (-not (Test-Path $backupFullDir)) {
             New-Item -Path $backupFullDir -ItemType Directory -Force | Out-Null

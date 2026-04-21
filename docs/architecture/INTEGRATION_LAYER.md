@@ -1,3 +1,54 @@
+---
+title: Integration Layer Specification - External System Connectivity
+id: integration-layer-spec
+type: specification
+version: 1.0
+created: 2026-01-23
+created_date: 2026-01-23
+last_verified: 2026-04-20
+updated_date: 2026-01-23
+status: active
+author: Architecture Team
+contributors: ["Integration Team"]
+# Architecture-Specific Metadata
+architecture_layer: infrastructure
+design_pattern: ["adapter-pattern", "event-bus", "protocol-translation", "io-routing"]
+implements: ["io-router", "protocol-adapters", "service-connectors"]
+uses: ["event-bus", "message-transform", "data-mappers"]
+quality_attributes: ["interoperability", "extensibility", "protocol-agnostic", "loose-coupling"]
+adr_status: accepted
+# Component Classification
+area: ["architecture", "architecture/integration", "integration"]
+tags: ["integration-layer", "io-routing", "protocol-adapters", "service-connectors", "event-bus", "PACE-system"]
+component: ["io-router", "protocol-adapters", "service-connectors", "event-bus", "message-transform"]
+# Relationships
+related_docs: ["pace-engine-spec", "architecture-overview", "temporal-integration-architecture"]
+related_systems: ["pace-engine", "temporal-integration"]
+depends_on: ["pace-engine-spec"]
+supersedes: []
+superseded_by: []
+# Audience & Priority
+audience: ["architects", "integration-engineers", "backend-developers"]
+stakeholders: ["platform-team", "devops-team", "developers", "architecture-team"]
+priority: P0
+difficulty: advanced
+estimated_reading_time: 16 minutes
+review_cycle: quarterly
+# Security & Compliance
+classification: internal
+sensitivity: medium
+compliance: []
+# Discovery
+keywords: ["integration", "adapters", "protocols", "IO routing", "event bus"]
+search_terms: ["integration layer", "protocol adapters", "service connectors", "H.323", "MCP servers"]
+aliases: ["Integration Architecture", "IO Router System"]
+# Quality Metadata
+review_status: approved
+accuracy_rating: high
+test_coverage: null
+---
+
+
 # Integration Layer Specification
 
 **Version:** 1.0  
@@ -730,6 +781,6 @@ if ethics_result.get("approved"):
 
 ## See Also
 
-- [ENGINE_SPEC.md](ENGINE_SPEC.md) - Engine specification
+- [[ENGINE_SPEC.md|ENGINE_SPEC.md]] - Engine specification
 - [PACE_ARCHITECTURE.md](PACE_ARCHITECTURE.md) - Overall architecture
-- [MODULE_CONTRACTS.md](MODULE_CONTRACTS.md) - Module interfaces
+- [[MODULE_CONTRACTS.md|MODULE_CONTRACTS.md]] - Module interfaces

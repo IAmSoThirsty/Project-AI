@@ -1,3 +1,19 @@
+---
+type: submission-doc
+tags: [thirsty-lang, linguist, language-design, github-integration, textmate-grammar]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, github-linguist, textmate]
+stakeholders: [language-team, contributors, linguist-maintainers]
+project_category: language-implementation
+language_paradigm: [water-themed, defensive-programming, multi-edition]
+build_system: custom
+review_cycle: monthly
+submission_package: true
+package_version: 1.0.0
+---
+
 # GitHub Linguist Submission Package for Thirsty-lang
 
 This directory contains everything needed to submit Thirsty-lang to the [github/linguist](https://github.com/github/linguist) repository for official language recognition.

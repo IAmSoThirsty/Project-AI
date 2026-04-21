@@ -1,3 +1,16 @@
+---
+type: api
+tags: [p1-developer, api-reference, hydra-50, fastapi, flask, advanced-ai, telemetry]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [hydra-50-engine, hydra-telemetry, ai-core, api-gateway]
+stakeholders: [developers, architects, api-integrators]
+audience: advanced
+prerequisites: [python-advanced, fastapi-knowledge, ai-systems-understanding, api-design]
+estimated_time: 60 minutes
+review_cycle: quarterly
+---
 # HYDRA-50 API REFERENCE
 **Complete API Documentation**
 

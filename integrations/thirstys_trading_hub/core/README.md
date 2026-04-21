@@ -1,3 +1,17 @@
+---
+type: api-reference
+tags: [integrations, trading, core-modules, market-data, order-management, portfolio]
+created: 2026-04-19
+last_verified: 2026-04-20
+status: current
+related_systems: [trading-hub, alpaca, binance, ccxt]
+stakeholders: [trading-team, integration-team, developers]
+platform: cross-platform
+integration_type: service
+external_dependencies: [alpaca-trade-api, ccxt, pandas, numpy, ta, logging, json]
+review_cycle: quarterly
+---
+
 # Trading Hub Core Modules
 
 Production-grade core modules for Thirsty's Trading Hub integration with Project AI.

@@ -1,3 +1,53 @@
+---
+title: "Executive Documentation Hub"
+id: "exec-doc-hub"
+type: "directory_index"
+version: "1.0.0"
+created_date: "2026-02-01"
+updated_date: "2026-02-01"
+status: "active"
+author: "project-ai-team"
+area:
+  - "executive"
+  - "documentation"
+  - "governance"
+tags:
+  - "executive"
+  - "business"
+  - "stakeholders"
+  - "compliance"
+  - "strategy"
+audience:
+  - "executive"
+  - "c-level"
+  - "board"
+  - "investor"
+  - "stakeholder"
+category: "navigation"
+summary: "Central directory for executive-focused documentation including strategic overviews, compliance materials, and stakeholder communications"
+decision_required: false
+roi_impact: "medium"
+strategic_alignment:
+  - "vision"
+  - "stakeholder-engagement"
+  - "transparency"
+approval_status: "approved"
+business_value:
+  - "stakeholder-communication"
+  - "governance"
+  - "transparency"
+related_docs:
+  - "UNDERSTANDING-YOUR-AI-PARTNER.md"
+  - "WORKFLOW_CONSOLIDATION_EXECUTIVE_SUMMARY.md"
+  - "whitepapers/README.md"
+search_keywords:
+  - "executive"
+  - "business"
+  - "stakeholder"
+  - "documentation"
+  - "navigation"
+---
+
 # Executive Documentation
 
 This folder contains business-oriented overviews, case studies, compliance guides, and investor-friendly materials.

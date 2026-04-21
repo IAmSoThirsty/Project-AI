@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, tarl, orchestration, deterministic-ai, temporal, workflow-engine]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [tarl-orchestrator, temporal-workflow, deterministic-execution, ai-workflow]
+stakeholders: [developers, architects, workflow-engineers]
+audience: intermediate
+prerequisites: [python-intermediate, temporal-basics, workflow-concepts, tarl-understanding]
+estimated_time: 45 minutes
+review_cycle: monthly
+---
 # T.A.R.L. Deterministic Orchestration Integration
 
 ## Overview

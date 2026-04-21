@@ -1,3 +1,17 @@
+---
+type: system-spec
+tags: [specialized-systems, atlas, knowledge-graph, probabilistic-engine, civilization-modeling]
+created: 2026-02-07
+last_verified: 2026-04-20
+status: current
+related_systems: [project-ai-core, triumvirate-governance, constitutional-kernel]
+stakeholders: [specialized-team, architecture-team, triumvirate]
+system_category: knowledge-graph
+external_standard: none
+maturity: production
+review_cycle: quarterly
+---
+
 # PROJECT ATLAS Ω
 
 ## Constitutional Probabilistic Civilization Engine

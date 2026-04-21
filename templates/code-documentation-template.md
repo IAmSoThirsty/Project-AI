@@ -1,10 +1,21 @@
 ---
 title: "Code Documentation - <% tp.file.title %>"
 created: <% tp.date.now("YYYY-MM-DD") %>
-type: code-documentation
+type: template
+template_type: code-documentation
 language: <% tp.system.suggester(["Python", "JavaScript", "TypeScript", "Java", "C++", "Go", "Rust", "Other"], ["python", "javascript", "typescript", "java", "cpp", "go", "rust", "other"]) %>
 project: <% tp.system.prompt("Project name") %>
-tags: [code, documentation, <% tp.frontmatter.language %>]
+tags: [template, code-documentation, api-reference, templater, <% tp.frontmatter.language %>]
+last_verified: 2026-04-20
+template_status: current
+related_systems: [templater, obsidian, mermaid]
+stakeholders: [developers, technical-writers, architects]
+complexity_level: advanced
+demonstrates: [code-documentation, api-documentation, architecture-diagrams, complexity-analysis, security-documentation, performance-tracking, mermaid-diagrams, templater-prompts]
+runnable: true
+estimated_completion: 20
+requires: [templater-plugin, mermaid-support]
+review_cycle: quarterly
 ---
 
 # 💻 <% tp.file.title %>

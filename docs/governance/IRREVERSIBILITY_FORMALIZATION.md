@@ -1,3 +1,53 @@
+---
+title: "Irreversibility Formalization: From Warnings to Physics"
+id: irreversibility-formalization
+type: specification
+status: active
+created_date: 2026-02-03
+updated_date: 2026-02-03
+version: 1.0
+author: Planetary Defense Core Team
+contributors: ["Architecture Team", "Ethics Committee"]
+policy_level: P1
+enforcement_level: mandatory
+tags:
+  - area:governance
+  - area:architecture
+  - area:security
+  - type:specification
+  - type:design
+  - component:planetary-defense
+  - component:contingency
+  - audience:architect
+  - audience:security-engineer
+  - audience:ethicist
+  - priority:critical
+  - special:advanced-mechanism
+compliance_frameworks: []
+classification: internal
+related_systems:
+  - planetary-defense
+  - contingency-engine
+  - governance-system
+  - identity-system
+  - constitutional-ai
+stakeholders:
+  - governance-team
+  - architecture-team
+  - ethics-committee
+  - security-team
+last_verified: 2026-04-20
+relationships:
+  implements: ["AGI_CHARTER"]
+  governed_by: ["AGI_CHARTER", "copilot_workspace_profile"]
+  related_docs: ["AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT"]
+code_references:
+  - "src/app/core/planetary_defense_monolith.py"
+  - "src/app/core/contingency_engine.py"
+purpose: "Technical specification for HYDRA-50 Contingency Plan Engine's irreversibility enforcement: transforming irreversible state detection from warnings into immutable physics through state locks"
+scope: "State lock architecture, variable constraints, disabled recovery events, governance ceilings, enforcement mechanisms, data models, validation logic, scenario integration"
+---
+
 # Irreversibility Formalization: From Warnings to Physics
 
 ## Overview

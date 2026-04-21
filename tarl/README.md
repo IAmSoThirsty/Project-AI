@@ -1,3 +1,28 @@
+---
+created: '2026-01-01'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: engine-architecture
+tags:
+- tarl
+- language
+- documentation
+engine_type: tarl-runtime
+implementation_status: complete
+language: tarl
+related_systems:
+- compiler
+- runtime-vm
+- bytecode
+- jit
+- garbage-collector
+stakeholders:
+- architecture-team
+- tarl-team
+- compiler-team
+---
+
 # T.A.R.L. (Thirsty's Active Resistance Language)
 
 **Version:** 1.0.0  

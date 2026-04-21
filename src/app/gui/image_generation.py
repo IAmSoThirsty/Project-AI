@@ -33,6 +33,11 @@ TRON_BLACK = "#0a0a0a"
 TRON_DARK = "#1a1a1a"
 
 
+# 📚 Documentation Links:
+# - [[relationships/gui/06_IMAGE_GENERATION_RELATIONSHIPS.md]]
+# - [[source-docs/gui/image_generation.md]]
+#
+
 class ImageGenerationWorker(QThread):
     """Worker thread for image generation to prevent UI blocking."""
 

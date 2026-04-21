@@ -1,3 +1,28 @@
+---
+type: guide
+tags:
+  - p2-root
+  - status
+  - guide
+  - obsidian
+  - vault-configuration
+  - git-strategy
+created: 2025-01-20
+last_verified: 2026-04-20
+status: current
+related_systems:
+  - obsidian-vault
+  - git-configuration
+  - team-collaboration
+stakeholders:
+  - obsidian-team
+  - documentation-team
+report_type: guide
+agent_id: AGENT-010
+supersedes: []
+review_cycle: as-needed
+---
+
 # Obsidian Vault Git Configuration Decision Matrix
 
 **Version:** 1.0  

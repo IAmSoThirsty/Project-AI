@@ -1,3 +1,17 @@
+---
+type: integration-guide
+tags: [integrations, thirsty-lang, tarl, features, capabilities]
+created: 2025-01-01
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, tarl, project-ai-core]
+stakeholders: [developers, platform-team, product-team]
+platform: cross-platform
+integration_type: sdk
+external_dependencies: [python, nodejs, pyyaml, jsonschema, cryptography]
+review_cycle: quarterly
+---
+
 # Thirsty-Lang + TARL Complete Feature List
 
 **Integration Version:** 1.0.0  

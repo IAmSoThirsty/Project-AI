@@ -1,3 +1,20 @@
+---
+type: quickstart
+tags: [p1-developer, image-generation, ai-art, stable-diffusion, dalle, huggingface, openai]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [image-generator, stable-diffusion, dalle-3, huggingface-api, openai-api]
+stakeholders: [developers, content-creators, ai-artists]
+audience: beginner
+prerequisites: [python-basics, api-keys-huggingface, api-keys-openai-optional]
+estimated_time: 10 minutes
+review_cycle: monthly
+api_modules:
+  - "[[API_QUICK_REFERENCE#core/image_generator.py|ImageGenerator]]"
+  - "[[API_QUICK_REFERENCE#gui/image_generation.py|ImageGenerationUI]]"
+  - "[[API_QUICK_REFERENCE#gui/leather_book_dashboard.py|LeatherBookDashboard]]"
+---
 # Image Generation Quick Start Guide
 
 ## Setup (One-Time)
@@ -49,6 +66,8 @@ cat .env
 
 ## Using Image Generation
 
+The image generation system uses [[API_QUICK_REFERENCE#core/image_generator.py|ImageGenerator]] class with dual backend support (Hugging Face Stable Diffusion 2.1 and OpenAI DALL-E 3).
+
 ### 1. Launch Application
 
 ```powershell
@@ -58,10 +77,12 @@ python -m src.app.main
 
 ### 2. Navigate to Image Generation
 
+The [[API_QUICK_REFERENCE#gui/leather_book_dashboard.py|LeatherBookDashboard]] includes a **Proactive Actions Panel** with image generation access:
+
 1. **Login** to the application
 1. You'll see the **Dashboard** (6-zone layout)
 1. Look at **top-right panel** ("Proactive Actions")
-1. Click **"🎨 GENERATE IMAGES"** button
+1. Click **"🎨 GENERATE IMAGES"** button (triggers [[API_QUICK_REFERENCE#gui/image_generation.py|ImageGenerationUI]])
 
 ### 3. Generate Your First Image
 
@@ -195,6 +216,8 @@ python -m src.app.main
 - **Minimalist**: Simple, clean, essential elements
 
 ## Content Safety
+
+The [[API_QUICK_REFERENCE#core/image_generator.py|ImageGenerator.check_content_filter()]] method blocks prompts containing forbidden keywords.
 
 ### Blocked Keywords (15 total)
 
@@ -388,31 +411,309 @@ A: No. Requires internet connection for API calls.
 
 1. **Check logs**: `logs/` directory
 1. **Test API keys**: Use Hugging Face web UI to verify token
-1. **Review documentation**: `IMAGE_GENERATION_RESTORATION.md`
+1. **Review documentation**: [[IMAGE_GENERATION_RESTORATION]]
 1. **Check GitHub issues**: Report bugs or request features
 
-## Next Steps
+---
 
-Once comfortable with basic generation:
+## API Reference
 
-1. Experiment with style presets
-1. Try different image sizes
-1. Compare Hugging Face vs OpenAI
-1. Explore prompt engineering techniques
-1. Save your favorite generations
+### Core Image Generation Module
 
-## Feature Roadmap
+**[[API_QUICK_REFERENCE#core/image_generator.py|ImageGenerator]]** - Dual-backend image generation system
 
-**Coming Soon**:
+Located in: `src/app/core/image_generator.py` (220 LOC)
 
-- [ ] Image history browser
-- [ ] Negative prompt input
-- [ ] Batch generation
-- [ ] Image upscaling
-- [ ] Image-to-image generation
-- [ ] Inpainting (edit parts of images)
-- [ ] Custom model support (LoRA)
-- [ ] Video generation
-- [ ] Animation sequences
+#### Key Methods
+
+- **`generate(prompt, style, size, backend)`** - Generate image with specified parameters
+  - `prompt` (str): Image description
+  - `style` (str): Style preset (photorealistic, digital_art, oil_painting, watercolor, anime, sketch, abstract, cyberpunk, fantasy, minimalist)
+  - `size` (str): Image dimensions ("256x256", "512x512", "768x768", "1024x1024")
+  - `backend` (str): "huggingface" or "openai"
+  - Returns: `(image_path, metadata)` or `(None, error_message)`
+
+- **`check_content_filter(prompt)`** - Validate prompt safety
+  - Blocks 15 forbidden keywords (violence, gore, blood, explicit, nude, nsfw, hate, weapon, illegal, drugs, terror, etc.)
+  - Returns: `(is_safe: bool, reason: str)`
+  - Automatically adds negative prompts for safety
+
+- **`generate_with_huggingface(prompt, size)`** - Hugging Face Stable Diffusion 2.1 backend
+  - Free API (requires `HUGGINGFACE_API_KEY`)
+  - Model: `stabilityai/stable-diffusion-2-1`
+  - Max size: 768x768
+  - Generation time: 20-40 seconds
+
+- **`generate_with_openai(prompt, size)`** - OpenAI DALL-E 3 backend
+  - Paid API (requires `OPENAI_API_KEY` and active plan)
+  - Highest quality output
+  - Max size: 1024x1024
+  - Generation time: 30-60 seconds
+  - Prompt length: Unlimited
+
+#### Style Presets
+
+Each style preset automatically appends style-specific prompts:
+
+```python
+STYLE_PRESETS = {
+    "photorealistic": "photorealistic, highly detailed, 8k resolution",
+    "digital_art": "digital art, concept art, trending on artstation",
+    "oil_painting": "oil painting, canvas texture, classical art style",
+    "watercolor": "watercolor painting, soft colors, artistic",
+    "anime": "anime style, manga illustration, vibrant colors",
+    "sketch": "pencil sketch, hand-drawn, artistic sketch",
+    "abstract": "abstract art, modern, geometric shapes",
+    "cyberpunk": "cyberpunk style, neon lights, futuristic",
+    "fantasy": "fantasy art, magical, ethereal, detailed",
+    "minimalist": "minimalist design, simple, clean lines"
+}
+```
+
+#### Content Filtering
+
+**Blocked Keywords** (15 total):
+```python
+BLOCKED_KEYWORDS = [
+    "violence", "gore", "blood", "explicit", "nude", "nsfw",
+    "hate", "weapon", "illegal", "drugs", "terror", 
+    # + 4 more sensitive terms
+]
+```
+
+**Safety Negative Prompts**:
+```python
+SAFETY_NEGATIVE_PROMPTS = [
+    "violence", "gore", "blood", "nsfw", "explicit content",
+    "disturbing", "inappropriate"
+]
+```
+
+#### Generation History
+
+Automatically tracked in `data/image_history.json`:
+
+```json
+[
+  {
+    "image_path": "data/generated_images/image_1234567890.png",
+    "metadata": {
+      "prompt": "cyberpunk city at night",
+      "style": "cyberpunk",
+      "backend": "huggingface",
+      "size": "512x512",
+      "timestamp": "2024-01-01 12:00:00"
+    }
+  }
+]
+```
+
+### GUI Module
+
+**[[API_QUICK_REFERENCE#gui/image_generation.py|ImageGenerationUI]]** - Image generation interface
+
+Located in: `src/app/gui/image_generation.py` (450 LOC)
+
+#### Components
+
+- **`ImageGenerationLeftPanel`** - Prompt input page (Tron-themed)
+  - Prompt text area (`QPlainTextEdit`)
+  - Style selector dropdown (`QComboBox`)
+  - Size selector dropdown (`QComboBox`)
+  - Backend choice (`QRadioButton` group)
+  - Generate button (triggers async generation)
+
+- **`ImageGenerationRightPanel`** - Image display page
+  - Image display area (`QLabel` with scaled pixmap)
+  - Zoom controls (25%, 50%, 100%, 200%)
+  - Save button (opens `QFileDialog`)
+  - Copy to clipboard button
+  - Metadata display (prompt, style, backend, size, timestamp)
+
+- **`ImageGenerationWorker`** - Async generation thread (`QThread`)
+  - Runs image generation in background to prevent UI blocking
+  - Emits `image_generated` signal with `(image_path, metadata)`
+  - Emits `generation_failed` signal with error message
+  - Typical generation time: 20-60 seconds
+
+#### Signals
+
+```python
+class ImageGenerationUI(QWidget):
+    image_generated = pyqtSignal(str, dict)  # (image_path, metadata)
+    generation_failed = pyqtSignal(str)      # (error_message)
+    return_to_dashboard = pyqtSignal()       # Navigate back
+```
+
+#### Usage Example
+
+```python
+# From dashboard, navigate to image generation
+image_gen_ui = ImageGenerationUI()
+image_gen_ui.image_generated.connect(display_image_callback)
+image_gen_ui.return_to_dashboard.connect(switch_to_dashboard)
+main_window.add_page(image_gen_ui)
+```
+
+### Dashboard Integration
+
+**[[API_QUICK_REFERENCE#gui/leather_book_dashboard.py|LeatherBookDashboard]]** - Main dashboard
+
+The **ProactiveActionsPanel** includes image generation button:
+
+```python
+class ProactiveActionsPanel(QWidget):
+    image_gen_requested = pyqtSignal()  # Emitted when button clicked
+    
+    def __init__(self):
+        # ...
+        self.image_gen_button = QPushButton("🎨 GENERATE IMAGES")
+        self.image_gen_button.clicked.connect(
+            lambda: self.image_gen_requested.emit()
+        )
+```
+
+#### Dashboard Flow
+
+1. User clicks "🎨 GENERATE IMAGES" button
+2. Dashboard emits `image_gen_requested` signal
+3. Main window (`LeatherBookInterface`) switches to page 2
+4. `ImageGenerationUI` is displayed
+5. User generates image
+6. User clicks "Return to Dashboard"
+7. Main window switches back to page 1 (dashboard)
+
+### Configuration & Environment
+
+**Required Environment Variables** (`.env` file):
+
+```bash
+# Required for Hugging Face backend
+HUGGINGFACE_API_KEY=hf_your_token_here
+
+# Optional for OpenAI DALL-E 3 backend
+OPENAI_API_KEY=sk_your_key_here
+```
+
+**Get API Keys**:
+- Hugging Face: https://huggingface.co/settings/tokens (free)
+- OpenAI: https://platform.openai.com/api-keys (paid plan required for DALL-E 3)
+
+### Data Storage
+
+**Generated Images**: `data/generated_images/`
+- Filenames: `image_<timestamp>.png`
+- Format: PNG (lossless compression)
+- Size: 2-5MB per image (depends on resolution)
+
+**Generation History**: `data/image_history.json`
+- JSON array of generation metadata
+- Includes prompt, style, backend, size, timestamp
+- Used for history browsing (future feature)
+
+### Performance Characteristics
+
+**Generation Times** (approximate):
+
+| Size | Hugging Face | OpenAI |
+|------|-------------|---------|
+| 256x256 | 15-20 sec | 25-30 sec |
+| 512x512 | 20-40 sec | 30-45 sec |
+| 768x768 | 40-60 sec | 45-60 sec |
+| 1024x1024 | N/A (not supported) | 60-90 sec |
+
+**Memory Usage**:
+- Application base: ~100MB
+- During generation: +200MB
+- Generated images: 2-5MB each (stored on disk)
+
+**API Rate Limits**:
+- Hugging Face: ~1,000 requests/month (free tier)
+- OpenAI: Varies by plan (pay-per-use)
+
+### Error Handling
+
+Common errors and solutions:
+
+```python
+# API key not found
+if not os.getenv("HUGGINGFACE_API_KEY"):
+    return None, "Error: HUGGINGFACE_API_KEY not found in .env"
+
+# Content filter triggered
+is_safe, reason = self.check_content_filter(prompt)
+if not is_safe:
+    return None, f"Content filter: {reason}"
+
+# API request failed
+try:
+    response = requests.post(api_url, ...)
+    response.raise_for_status()
+except requests.HTTPError as e:
+    return None, f"Generation failed: {e}"
+```
+
+### Threading Pattern
+
+**CRITICAL**: Always use `QThread` for background generation:
+
+```python
+# CORRECT: Async generation with QThread
+worker = ImageGenerationWorker(prompt, style, size, backend)
+worker.image_generated.connect(self.on_image_generated)
+worker.generation_failed.connect(self.on_generation_failed)
+worker.start()  # Non-blocking
+
+# WRONG: Never use threading.Thread in PyQt6
+# threading.Thread(target=generate_image).start()  # ❌ Will crash
+```
+
+### Related Documentation
+
+- **Image Generation Restoration**: [[IMAGE_GENERATION_RESTORATION]] (troubleshooting guide)
+- **Desktop App Quickstart**: [[DESKTOP_APP_QUICKSTART]] (setup and installation)
+- **GUI Architecture**: [[PROGRAM_SUMMARY]] → GUI Development section
+- **PyQt6 Threading**: [[COPILOT_MANDATORY_GUIDE]] → PyQt6 threading gotchas
+- **Environment Setup**: [[DEVELOPER_QUICK_REFERENCE]] → Environment Setup
+
+### Source Code Locations
+
+```
+src/app/
+├── core/
+│   └── image_generator.py          # 220 LOC - ImageGenerator class
+└── gui/
+    ├── image_generation.py         # 450 LOC - ImageGenerationUI
+    ├── leather_book_dashboard.py   # 608 LOC - Dashboard with ProactiveActions
+    └── leather_book_interface.py   # 659 LOC - Main window with page switching
+```
+
+### Future Enhancements (Roadmap)
+
+Planned features:
+
+- [ ] **Image History Browser** - Browse previously generated images
+- [ ] **Negative Prompt Input** - Manual negative prompt control
+- [ ] **Batch Generation** - Generate multiple images from prompts list
+- [ ] **Image Upscaling** - Upscale 512x512 → 2048x2048
+- [ ] **Image-to-Image** - Use existing image as base
+- [ ] **Inpainting** - Edit parts of generated images
+- [ ] **Custom Models** - Support for LoRA and fine-tuned models
+- [ ] **Video Generation** - Animate image sequences
+- [ ] **Advanced Style Mixing** - Combine multiple style presets
+
+See [[PROGRAM_SUMMARY]] → Image Generation System for implementation details.
+
+---
+
+**Quick Navigation**:
+- [[#Setup (One-Time)|↑ Setup]]
+- [[#Using Image Generation|↑ Usage]]
+- [[#Troubleshooting|↑ Troubleshooting]]
+- [[API_QUICK_REFERENCE|→ Full API Reference]]
+- [[IMAGE_GENERATION_RESTORATION|→ Restoration Guide]]
+- [[PROGRAM_SUMMARY|→ Complete Documentation]]
+
+---
 
 Enjoy creating AI-generated art! 🎨

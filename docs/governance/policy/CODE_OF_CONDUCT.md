@@ -1,3 +1,37 @@
+---
+title: "Code of Conduct for Project-AI"
+id: code-of-conduct
+type: policy
+status: active
+created_date: 2025-11-28
+updated_date: 2025-11-28
+version: 1.0
+author: Project-AI Governance Team
+contributors: ["Legal Team", "Community Team"]
+policy_level: P1
+enforcement_level: binding
+review_frequency: annually
+tags:
+  - area:governance
+  - area:community
+  - type:policy
+  - component:community-standards
+  - component:ethics
+  - audience:contributor
+  - audience:user
+  - audience:maintainer
+  - priority:critical
+  - special:constitutional
+compliance_frameworks: ["Contributor Covenant", "Diversity & Inclusion"]
+relationships:
+  governed_by: ["copilot_workspace_profile"]
+  related_docs: ["CONTRIBUTING"]
+  validates: []
+purpose: "Binding code of conduct establishing community standards, expected behaviors, unacceptable actions, reporting procedures, and enforcement mechanisms"
+scope: "Community pledge, expected behavior (respect, inclusivity, collaboration, professionalism), unacceptable behavior (harassment, discrimination), reporting procedures, enforcement consequences"
+enforcement: "Mandatory - Violations result in warnings, temporary bans, or permanent removal from community"
+---
+
 # Code of Conduct for Project-AI
 
 **Effective Date**: November 28, 2025

@@ -1,3 +1,53 @@
+---
+title: "Desktop Quickstart - Project-AI (Leather Book)"
+id: desktop-quickstart
+type: deployment-guide
+area: development
+status: current
+version: "1.0"
+created: 2026-04-20
+last_verified: 2026-04-20
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Deployment Metadata
+deployment_target: desktop
+deployment_complexity: simple
+production_ready: true
+review_cycle: monthly
+
+# Classification
+tags:
+  - deployment
+  - desktop
+  - quickstart
+  - pyqt6
+  - leather-book
+  - python
+
+# Developer Metadata
+skill_level: beginner
+audience:
+  - developer
+
+stakeholders: [developers, end-users, deployment-team]
+
+languages:
+  - Python
+  - PowerShell
+
+frameworks:
+  - PyQt6
+
+code_examples: true
+api_reference: false
+
+related_systems: [desktop-app, leather-book-ui, pyqt6]
+related_docs:
+  - [[README]]
+  - [[DESKTOP_APP_QUICKSTART]]
+  - [[DESKTOP_APP_README]]
+---
 # Desktop Quickstart - Project-AI (Leather Book)
 
 This quickstart helps you run the native desktop (PyQt6) Leather Book interface.

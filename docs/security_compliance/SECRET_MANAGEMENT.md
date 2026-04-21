@@ -1,6 +1,91 @@
+---
+title: "Secret Management Guide"
+id: "secret-management"
+type: "guide"
+version: "1.0.0"
+created_date: "2026-01-01"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:compliance"
+  - "type:guide"
+  - "type:policy"
+  - "component:secret-management"
+  - "component:env-variables"
+  - "audience:developer"
+  - "audience:security-engineer"
+  - "priority:p0-critical"
+  - "special:required-reading"
+technologies:
+  - "Python dotenv"
+  - "Environment Variables"
+  - ".gitignore"
+  - "AWS Secrets Manager"
+  - "Fernet Encryption"
+difficulty: "beginner"
+estimated_time: "PT30M"
+prerequisites:
+  - "Basic git knowledge"
+  - "Understanding of environment variables"
+summary: "Critical security guide for proper secret management using environment variables, .env files, AWS Secrets Manager, and pre-commit hooks to prevent credential leaks."
+scope: "Complete secret management practices covering what counts as secrets, environment variable usage, .env file patterns, AWS Secrets Manager integration, pre-commit hooks, and rotation procedures"
+classification: "internal"
+threat_level: "critical"
+attack_vectors:
+  - "credential-leaks"
+  - "api-key-exposure"
+  - "git-history-exposure"
+  - "environment-variable-leaks"
+mitigations:
+  - "[[ENV_VARIABLE_MANAGEMENT]]"
+  - "[[PRE_COMMIT_HOOKS]]"
+  - "[[AWS_SECRETS_MANAGER]]"
+  - "[[SECRET_ROTATION]]"
+defends_against:
+  - "Credential leaks in git history"
+  - "API key exposure in code"
+  - "Hardcoded passwords"
+  - "Unencrypted secrets in repos"
+  - "Secret sprawl"
+compliance:
+  - "OWASP ASVS V2.10 (Secret Management)"
+  - "CIS Benchmarks (Secret Storage)"
+  - "PCI DSS 3.2.1 (Requirement 8)"
+  - "ISO 27001:2022 (A.9.4.3)"
+stakeholders:
+  - security-team   - security-operations   - compliance-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Security Guide"
+cwe_ids:
+  - "CWE-798: Use of Hard-coded Credentials"
+  - "CWE-259: Use of Hard-coded Password"
+  - "CWE-522: Insufficiently Protected Credentials"
+  - "CWE-312: Cleartext Storage of Sensitive Information"
+related_docs:
+  - "secret-purge-runbook"
+  - "security-framework"
+  - "asl3-implementation"
+review_status:
+  reviewed: true
+  reviewers: ["security-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "developers"
+  - "security-engineers"
+  - "devops-engineers"
+  - "all-contributors"
+enforcement_level: "mandatory"
+---
+
 # 🔐 Secret Management Guide
 
-**Last Updated**: January 2026  
+**Last Updated**: January 2026
 **Status**: Required Reading for All Contributors
 
 ---

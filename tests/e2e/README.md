@@ -1,3 +1,17 @@
+---
+type: test-suite-doc
+tags: [testing, e2e, integration-tests, governance, authentication]
+created: 2026-04-19
+last_verified: 2026-04-20
+status: current
+related_systems: [fastapi-governance, flask-backend, tarl-runtime, system-integration]
+stakeholders: [qa-team, developers, platform-team]
+test_type: e2e
+coverage_target: 15 governance tests + complete auth workflows
+automation_status: automated
+review_cycle: monthly
+---
+
 # End-to-End Test Suite
 
 This directory contains comprehensive end-to-end (e2e) tests for the Project-AI system.

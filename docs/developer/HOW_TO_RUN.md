@@ -1,3 +1,16 @@
+---
+type: quickstart
+tags: [p1-developer, quickstart, run-guide, backend, legion-api, simple-setup]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [backend-api, legion-api, uvicorn, web-interface]
+stakeholders: [developers, new-users, quick-start-users]
+audience: beginner
+prerequisites: [python-installed, project-cloned, basic-terminal-knowledge]
+estimated_time: 5 minutes
+review_cycle: monthly
+---
 # 🚀 How to Actually Run Project-AI
 
 **Stop trying the automated scripts - they're causing issues. Here's the simple way:**

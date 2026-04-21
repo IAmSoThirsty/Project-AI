@@ -1,3 +1,17 @@
+---
+type: adversarial-spec
+tags: [testing, adversarial, garak, vulnerability-scanner, security-tests, goodware]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, four-laws, garak]
+stakeholders: [security-team, qa-team, researchers]
+test_type: adversarial
+coverage_target: garak vulnerability probe - goodware
+automation_status: automated
+review_cycle: monthly
+test_id: goodware_003
+---
 # Garak Probe: goodware_003
 
 ## Test Information

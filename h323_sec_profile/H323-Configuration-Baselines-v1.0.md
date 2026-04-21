@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, configuration, baselines, standards]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, configuration-management, change-control]
+stakeholders: [operations-team, configuration-management, deployment-team]
+system_category: security-protocol
+external_standard: H.323, H.235
+maturity: production
+review_cycle: quarterly
+---
+
 # H.323 Configuration Baselines
 
 Version 1.0 — Standardized Secure Configurations (GK, GW, EP)

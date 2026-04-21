@@ -1,3 +1,17 @@
+---
+type: integration-guide
+tags: [integrations, thirsty-lang, index, documentation, master-index]
+created: 2026-01-28
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, tarl]
+stakeholders: [developers, integration-team, documentation-team]
+platform: cross-platform
+integration_type: sdk
+external_dependencies: [python, nodejs]
+review_cycle: quarterly
+---
+
 # Thirsty-lang Complete Integration - Master Index
 
 **Package Version:** 2.0.0  

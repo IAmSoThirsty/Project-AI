@@ -110,9 +110,9 @@ curl -X POST http://localhost:8000/api/firewall/chaos/tune \
 
 ## Resources
 
-- [Architecture Documentation](../architecture/CONTRARIAN_FIREWALL_ARCHITECTURE.md)
-- [API Integration Guide](../developer/CONTRARIAN_FIREWALL_API_GUIDE.md)
-- [Test Suite](../../tests/test_contrarian_firewall.py)
+- [[../architecture/CONTRARIAN_FIREWALL_ARCHITECTURE.md|Architecture Documentation]]
+- [[../developer/CONTRARIAN_FIREWALL_API_GUIDE.md|API Integration Guide]]
+- [[../../tests/test_contrarian_firewall.py|Test Suite]]
 
 ---
 

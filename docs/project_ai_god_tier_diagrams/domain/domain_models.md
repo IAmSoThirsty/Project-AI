@@ -1,3 +1,21 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, domain-driven-design, ddd, entities, value-objects, aggregates]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [entity-pattern, value-object-pattern, aggregate-pattern, repository-pattern]
+stakeholders: [architecture-team, developers, domain-experts]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: class
+format: code
+pattern_category: tactical-ddd
+---
+  - consistency-boundary
+---
+
 # Domain Models: Entities, Value Objects, and Aggregates
 
 ## Overview
@@ -826,6 +844,6 @@ class TestAggregate:
 
 ## Related Documentation
 
-- **[Aggregates](../aggregate/README.md)** - Detailed aggregate implementations
-- **[Domain Events](domain_events.md)** - Event definitions and handlers
-- **[Bounded Contexts](bounded_contexts.md)** - Context-specific models
+- **[[../aggregate/README.md|Aggregates]]** - Detailed aggregate implementations
+- **[[domain_events.md|Domain Events]]** - Event definitions and handlers
+- **[[bounded_contexts.md|Bounded Contexts]]** - Context-specific models

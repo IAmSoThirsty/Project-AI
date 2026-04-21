@@ -1,6 +1,96 @@
+---
+title: "Threat Model: Security Workflows"
+id: "threat-model-security-workflows"
+type: "spec"
+version: "1.0.0"
+created_date: "2026-01-19"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Team"
+  email: "security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:threat-modeling"
+  - "type:spec"
+  - "type:reference"
+  - "component:signing"
+  - "component:sbom"
+  - "component:ai-ml-security"
+  - "audience:security-engineer"
+  - "audience:compliance-auditor"
+  - "priority:p0-critical"
+technologies:
+  - "STRIDE Threat Model"
+  - "OWASP Top 10"
+  - "MITRE ATT&CK"
+  - "Cosign Signing"
+  - "SBOM Scanning"
+difficulty: "expert"
+estimated_time: "PT120M"
+prerequisites:
+  - "STRIDE framework understanding"
+  - "Threat modeling expertise"
+  - "Security workflows knowledge"
+summary: "Comprehensive threat model mapping security workflows to specific threats using STRIDE + OWASP + MITRE ATT&CK with coverage analysis, known limitations, and out-of-scope documentation."
+scope: "Complete threat model: release artifact signing (90% coverage), SBOM generation (70%), AI/ML model security (60%), supply chain attacks, malicious dependencies, integrity attacks, insider threats"
+classification: "confidential"
+threat_level: "critical"
+threat_categories:
+  - "Supply Chain Attacks (80% coverage)"
+  - "Malicious Dependencies (70%)"
+  - "AI/ML Threats (60%)"
+  - "Integrity Attacks (90%)"
+  - "Insider Threats (50%)"
+frameworks:
+  - "STRIDE (Microsoft)"
+  - "OWASP Top 10"
+  - "MITRE ATT&CK"
+mitigations:
+  - "[[ARTIFACT_SIGNING]]"
+  - "[[SBOM_GENERATION]]"
+  - "[[AI_ML_MODEL_SECURITY]]"
+  - "[[SUPPLY_CHAIN_PROTECTION]]"
+defends_against:
+  - "Artifact tampering"
+  - "Supply chain attacks"
+  - "Malicious dependencies"
+  - "Model poisoning"
+  - "Insider threats"
+compliance:
+  - "STRIDE Threat Model"
+  - "NIST SSDF"
+  - "SLSA Build Levels"
+stakeholders:
+  - security-team   - devops-team   - security-operations
+last_verified: 2026-04-20
+cvss_score: "N/A - Threat Model Documentation"
+cwe_ids:
+  - "CWE-829: Inclusion of Functionality from Untrusted Source"
+  - "CWE-494: Download of Code Without Integrity Check"
+  - "CWE-345: Insufficient Verification of Data Authenticity"
+related_docs:
+  - "threat-model"
+  - "security-roadmap"
+  - "sbom-policy"
+  - "security-governance"
+review_status:
+  reviewed: true
+  reviewers: ["security-team", "threat-modeling-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "security-engineers"
+  - "compliance-auditors"
+  - "threat-modelers"
+  - "risk-managers"
+review_frequency: "quarterly"
+---
+
 # Threat Model: Security Workflows
 
-**Document Version:** 1.0  
+**Document Version:** 1.0
 **Last Updated:** 2026-01-19  
 **Owner:** Security Team  
 **Review Frequency:** Quarterly
@@ -15,14 +105,14 @@ This document maps security workflows to specific threats they mitigate, defines
 
 ## Table of Contents
 
-1. [Threat Model Overview](#threat-model-overview)
-1. [Release Artifact Signing](#release-artifact-signing)
-1. [SBOM Generation](#sbom-generation)
-1. [AI/ML Model Security](#aiml-model-security)
-1. [Coverage Analysis](#coverage-analysis)
-1. [Known Limitations](#known-limitations)
-1. [Out of Scope](#out-of-scope)
-1. [Maintenance and Performance](#maintenance-and-performance)
+1. [[#threat-model-overview|Threat Model Overview]]
+1. [[#release-artifact-signing|Release Artifact Signing]]
+1. [[#sbom-generation|SBOM Generation]]
+1. [[#aiml-model-security|AI/ML Model Security]]
+1. [[#coverage-analysis|Coverage Analysis]]
+1. [[#known-limitations|Known Limitations]]
+1. [[#out-of-scope|Out of Scope]]
+1. [[#maintenance-and-performance|Maintenance and Performance]]
 
 ---
 
@@ -885,10 +975,10 @@ gh run watch
 
 ### Related Documentation
 
-- [SECURITY.md](../../SECURITY.md) - Vulnerability reporting policy
+- [[../../SECURITY.md|SECURITY.md]] - Vulnerability reporting policy
 - [SECURITY_FRAMEWORK.md](../SECURITY_FRAMEWORK.md) - Comprehensive security guide
-- [SBOM_POLICY.md](SBOM_POLICY.md) - SBOM generation and usage
-- [SECURITY_WORKFLOW_RUNBOOKS.md](SECURITY_WORKFLOW_RUNBOOKS.md) - Failure response procedures
+- [[SBOM_POLICY.md|SBOM_POLICY.md]] - SBOM generation and usage
+- [[SECURITY_WORKFLOW_RUNBOOKS.md|SECURITY_WORKFLOW_RUNBOOKS.md]] - Failure response procedures
 
 ---
 

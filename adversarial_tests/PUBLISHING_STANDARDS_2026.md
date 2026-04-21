@@ -1,3 +1,17 @@
+---
+type: test-guide
+tags: [testing, adversarial, publishing-standards, research-methodology, transparency]
+created: 2026-01-11
+last_verified: 2026-04-20
+status: current
+related_systems: [galahad, adversarial-suite, jailbreakbench, garak]
+stakeholders: [security-team, researchers, qa-team, compliance]
+test_type: adversarial
+coverage_target: industry-standard publishing practices and methodology guidelines
+automation_status: manual
+review_cycle: quarterly
+---
+
 # Adversarial Testing Publishing Standards (2026)
 
 **Based on current industry norms from JailbreakBench, DeepTeam, Garak, ActorAttack, and academic research standards.**

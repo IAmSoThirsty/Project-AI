@@ -1,3 +1,20 @@
+---
+type: docker-spec
+tags: [deployment, docker, containerization, docker-compose, thirsty-lang, development-environment]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, docker, docker-compose, node-js, python]
+stakeholders: [devops, deployment-team, developers, container-engineers]
+deployment_target: docker
+deployment_complexity: moderate
+production_ready: true
+review_cycle: monthly
+container_registry: [docker-hub]
+orchestration: [docker-compose]
+services: [thirsty-prod, thirsty-dev, repl, python-repl, training]
+---
+
 # Docker Guide for Thirsty-lang 🐳💧
 
 This guide explains how to use Docker with Thirsty-lang for containerized development and deployment.

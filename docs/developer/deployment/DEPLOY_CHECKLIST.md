@@ -1,3 +1,16 @@
+---
+type: deployment
+tags: [p1-developer, deploy-checklist, thirstysprojects, web-deployment, ftp, cpanel, netlify]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [web-hosting, ftp-client, cpanel, netlify-platform]
+stakeholders: [devops, deployment-team, web-developers]
+audience: intermediate
+prerequisites: [ftp-basics, cpanel-knowledge, netlify-account]
+estimated_time: 15 minutes
+review_cycle: monthly
+---
 # ✅ Deploy to thirstysprojects.com - Quick Checklist
 
 ## 🚀 **FASTEST PATH: 3 Steps**

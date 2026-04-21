@@ -1,3 +1,37 @@
+---
+title: "Function Registry & Knowledge Base Querying"
+id: function-registry-knowledge-base
+type: specification
+version: 1.0.0
+created_date: 2026-02-08
+updated_date: 2026-02-10
+status: active
+author: AI Systems Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: implementation
+retention_policy: permanent
+category: development
+tags:
+  - function-registry
+  - knowledge-base
+  - llm-tools
+  - openai-functions
+  - dynamic-registration
+  - memory-system
+technologies:
+  - Python
+  - OpenAI
+  - Type Hints
+related_docs:
+  - ../architecture/ai-systems-architecture.md
+  - AI_PERSONA_IMPLEMENTATION.md
+  - LEARNING_REQUEST_IMPLEMENTATION.md
+scope: "Modular function registry and knowledge base querying system for LLM-style tool calling and structured knowledge recall"
+description: Specification for FunctionRegistry, enhanced MemoryExpansionSystem, and IntelligenceRouter providing dynamic tool registration, OpenAI-compatible function calling, and extensible knowledge base querying.
+---
+
 # Function Registry & Knowledge Base Querying
 
 This document describes the new modular, extensible knowledge base querying and function calling capabilities in Project-AI.

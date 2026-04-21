@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, dashboard-integration, pyqt6, ui-integration, persona-panel, async-management]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [dashboard, persona-panel, error-handler, async-manager, ui-components]
+stakeholders: [developers, ui-developers, integration-engineers]
+audience: intermediate
+prerequisites: [python-intermediate, pyqt6-fundamentals, async-programming, signal-slots]
+estimated_time: 35 minutes
+review_cycle: monthly
+---
 # Dashboard Integration Guide
 
 ## Quick Start: Adding AI Persona Panel to Dashboard

@@ -1,3 +1,16 @@
+---
+type: reference
+tags: [p1-developer, gui, leather-book-ui, pyqt6, component-reference, styling]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [leather-book-interface, dashboard, ai-neural-head, chat-panel]
+stakeholders: [developers, gui-developers]
+audience: beginner
+prerequisites: [python-basics, pyqt6-fundamentals, oop-knowledge]
+estimated_time: 20 minutes
+review_cycle: monthly
+---
 # Leather Book UI - Developer Quick Reference
 
 ## File Locations

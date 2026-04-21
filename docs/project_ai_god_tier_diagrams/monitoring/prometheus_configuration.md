@@ -1,3 +1,20 @@
+---
+type: diagram
+tags: [p1-diagrams, diagrams, configuration, monitoring, prometheus, scraping, service-discovery]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [prometheus-server, scrape-configs, alerting-rules, service-discovery]
+stakeholders: [devops-team, sre, platform-engineers]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: configuration
+format: yaml
+scrape_interval: 15s
+retention: 15d
+---
+
 # Prometheus Configuration
 
 ## Complete Configuration File

@@ -1,3 +1,18 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, domain-driven-design, ddd, domain-events, event-sourcing, event-driven]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [domain-events, event-bus, event-handlers, event-store, event-sourcing]
+stakeholders: [architecture-team, developers, domain-experts]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: sequence
+format: code
+---
+
 # Domain Events in Project-AI
 
 ## Overview
@@ -759,6 +774,6 @@ class TestDomainEvents:
 
 ## Related Documentation
 
-- **[Event Sourcing](../event/README.md)** - Event store implementation
-- **[Aggregates](../aggregate/README.md)** - Event-sourced aggregates
+- **[[../event/README.md|Event Sourcing]]** - Event store implementation
+- **[[../aggregate/README.md|Aggregates]]** - Event-sourced aggregates
 - **[Command Handlers](../command/command_handlers.md)** - Command to event flow

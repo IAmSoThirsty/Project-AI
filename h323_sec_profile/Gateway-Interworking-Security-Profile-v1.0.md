@@ -1,3 +1,17 @@
+---
+type: protocol-doc
+tags: [specialized-systems, h323, gateway, interworking, sip, pstn]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [h323-zone-standard, sip-infrastructure, pstn-gateway]
+stakeholders: [integration-team, voice-engineering, network-team]
+system_category: security-protocol
+external_standard: H.323, H.235, H.320, SIP, PSTN
+maturity: production
+review_cycle: quarterly
+---
+
 # Gateway Interworking Security Profile
 
 ## Version 1.0 — H.323 ↔ H.320 / PSTN / SIP Security Specification

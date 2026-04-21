@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [github-actions, automation, pull-requests, branch-management, ci-cd]
+created: 2026-01-20
+last_verified: 2026-04-20
+status: current
+related_systems: [ci-cd, github-actions, pr-automation]
+stakeholders: [developers, devops]
+config_scope: ci-cd
+automation_type: github-actions
+requires_secrets: false
+review_cycle: quarterly
+---
+
 # Automated Branch-to-Main PR System
 
 ## Overview

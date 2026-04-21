@@ -1,3 +1,22 @@
+---
+type: governance-policy
+tags: [governance, legal, output-license, derived-works, cc-by-4.0, usage-restrictions]
+created: 2026-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [output-generation, artifact-management, usage-compliance]
+stakeholders: [legal-team, users, governance-team, compliance-officers]
+sovereignty_level: governed
+immutability: immutable
+enforcement: hybrid
+review_cycle: annual
+license_type: output-derived-works
+base_license: cc-by-4.0
+user_ownership: true
+restrictions: [military, illegal-activity, human-rights-violations, unauthorized-scientific]
+version: 1.0.0
+---
+
 # Project-AI Output & Derived Works License
 
 **Version:** 1.0.0  

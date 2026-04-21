@@ -1,43 +1,56 @@
+---
+type: reference
+tags: [p1-developer, actionlint, checks, linting, github-actions, workflow-validation, yaml]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [actionlint, github-actions, workflow-linter, ci-cd-validation]
+stakeholders: [developers, ci-cd-maintainers, workflow-authors]
+audience: intermediate
+prerequisites: [github-actions-knowledge, yaml-proficiency, ci-cd-basics]
+estimated_time: 30 minutes
+review_cycle: quarterly
+---
 All checks done by actionlint
 =============================
 
-This document describes all checks done by [actionlint](..) with example inputs, outputs, and playground links.
+This document describes all checks done by [[..|actionlint]] with example inputs, outputs, and playground links.
 
 List of checks:
 
-- [Unexpected keys](#check-unexpected-keys)
-- [Missing required keys or key duplicates](#check-missing-required-duplicate-keys)
-- [Unexpected empty mappings](#check-empty-mapping)
-- [Unexpected mapping values](#check-mapping-values)
-- [Syntax check for expression `${{ }}`](#check-syntax-expression)
-- [Type checks for expression syntax in `${{ }}`](#check-type-check-expression)
-- [Contexts and built-in functions](#check-contexts-and-builtin-func)
-- [Contextual typing for `steps.<step_id>` objects](#check-contextual-step-object)
-- [Contextual typing for `matrix` object](#check-contextual-matrix-object)
-- [Contextual typing for `needs` object](#check-contextual-needs-object)
-- [shellcheck integration for `run:`](#check-shellcheck-integ)
-- [pyflakes integration for `run:`](#check-pyflakes-integ)
-- [Script injection by potentially untrusted inputs](#untrusted-inputs)
-- [Job dependencies validation](#check-job-deps)
-- [Matrix values](#check-matrix-values)
-- [Webhook events validation](#check-webhook-events)
-- [Workflow dispatch event validation](#check-workflow-dispatch-events)
-- [Glob filter pattern syntax validation](#check-glob-pattern)
-- [CRON syntax check at `schedule:`](#check-cron-syntax)
-- [Runner labels](#check-runner-labels)
-- [Action format in `uses:`](#check-action-format)
-- [Local action inputs validation at `with:`](#check-local-action-inputs)
-- [Popular action inputs validation at `with:`](#check-popular-action-inputs)
-- [Shell name validation at `shell:`](#check-shell-names)
-- [Job ID and step ID uniqueness](#check-job-step-ids)
-- [Hardcoded credentials](#check-hardcoded-credentials)
-- [Environment variable names](#check-env-var-names)
-- [Permissions](#permissions)
-- [Reusable workflows](#check-reusable-workflows)
-- [ID naming convention](#id-naming-convention)
-- [Contexts and special functions availability](#ctx-spfunc-availability)
-- [Deprecated workflow commands](#check-deprecated-workflow-commands)
-- [Conditions always evaluated to true at `if:`](#if-cond-always-true)
+- [[#check-unexpected-keys|Unexpected keys]]
+- [[#check-missing-required-duplicate-keys|Missing required keys or key duplicates]]
+- [[#check-empty-mapping|Unexpected empty mappings]]
+- [[#check-mapping-values|Unexpected mapping values]]
+- [[#check-syntax-expression|Syntax check for expression `${{ }}`]]
+- [[#check-type-check-expression|Type checks for expression syntax in `${{ }}`]]
+- [[#check-contexts-and-builtin-func|Contexts and built-in functions]]
+- [[#check-contextual-step-object|Contextual typing for `steps.<step_id>` objects]]
+- [[#check-contextual-matrix-object|Contextual typing for `matrix` object]]
+- [[#check-contextual-needs-object|Contextual typing for `needs` object]]
+- [[#check-shellcheck-integ|shellcheck integration for `run:`]]
+- [[#check-pyflakes-integ|pyflakes integration for `run:`]]
+- [[#untrusted-inputs|Script injection by potentially untrusted inputs]]
+- [[#check-job-deps|Job dependencies validation]]
+- [[#check-matrix-values|Matrix values]]
+- [[#check-webhook-events|Webhook events validation]]
+- [[#check-workflow-dispatch-events|Workflow dispatch event validation]]
+- [[#check-glob-pattern|Glob filter pattern syntax validation]]
+- [[#check-cron-syntax|CRON syntax check at `schedule:`]]
+- [[#check-runner-labels|Runner labels]]
+- [[#check-action-format|Action format in `uses:`]]
+- [[#check-local-action-inputs|Local action inputs validation at `with:`]]
+- [[#check-popular-action-inputs|Popular action inputs validation at `with:`]]
+- [[#check-shell-names|Shell name validation at `shell:`]]
+- [[#check-job-step-ids|Job ID and step ID uniqueness]]
+- [[#check-hardcoded-credentials|Hardcoded credentials]]
+- [[#check-env-var-names|Environment variable names]]
+- [[#permissions|Permissions]]
+- [[#check-reusable-workflows|Reusable workflows]]
+- [[#id-naming-convention|ID naming convention]]
+- [[#ctx-spfunc-availability|Contexts and special functions availability]]
+- [[#check-deprecated-workflow-commands|Deprecated workflow commands]]
+- [[#if-cond-always-true|Conditions always evaluated to true at `if:`]]
 
 Note that actionlint focuses on catching mistakes in workflow files. If you want some general code style checks, please consider
 using a general YAML checker like [yamllint][].
@@ -1562,7 +1575,7 @@ actionlint checks proper label is used at `runs-on:` configuration. Even if an e
 `runs-on: ${{ matrix.foo }}`, actionlint parses the expression and resolves the possible values, then validates the values.
 
 When you define some custom labels for your self-hosted runner, actionlint does not know the labels. Please set the label
-names in [`actionlint.yaml` configuration file](config.md) to let actionlint know them.
+names in [[config.md|`actionlint.yaml` configuration file]] to let actionlint know them.
 
 In addition to checking label values, actionlint checks combinations of labels. `runs-on:` section can be an array that contains
 multiple labels. In this case, a runner which has all the labels will be selected. However, those labels combinations can have
@@ -2693,7 +2706,7 @@ characters around `${{ }}`.
 
 ---
 
-[Installation](install.md) | [Usage](usage.md) | [Configuration](config.md) | [Go API](api.md) | [References](reference.md)
+[[install.md|Installation]] | [[usage.md|Usage]] | [[config.md|Configuration]] | [[api.md|Go API]] | [[reference.md|References]]
 
 [yamllint]: https://github.com/adrienverge/yamllint
 [issue-form]: https://github.com/rhysd/actionlint/issues/new

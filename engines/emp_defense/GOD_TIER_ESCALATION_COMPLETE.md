@@ -1,3 +1,26 @@
+---
+created: '2026-01-01'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: implementation-guide
+tags:
+- emp-defense
+- engines
+- implementation
+- god-tier
+engine_type: emp-defense
+implementation_status: in-progress
+language: python
+related_systems:
+- simulation-engine
+- emp-modeling
+- grid-analysis
+stakeholders:
+- architecture-team
+- simulation-team
+---
+
 # EMP Defense Engine - God-Tier Escalation Complete
 
 ## Executive Summary

@@ -1,0 +1,172 @@
+[
+  {
+    "Classification": "internal",
+    "Systems": [
+      "identity-system",
+      "four-laws-engine",
+      "triumvirate-governance"
+    ],
+    "File": "AGI_CHARTER.md",
+    "Stakeholders": [
+      "governance-team",
+      "ethics-committee",
+      "legal-team",
+      "architecture-team"
+    ]
+  },
+  {
+    "Classification": "internal",
+    "Systems": [
+      "identity-system",
+      "four-laws-engine",
+      "triumvirate-governance"
+    ],
+    "File": "AGI_CHARTER_v1_original.md",
+    "Stakeholders": [
+      "governance-team",
+      "ethics-committee",
+      "legal-team"
+    ]
+  },
+  {
+    "Classification": "internal",
+    "Systems": [
+      "identity-system",
+      "memory-system",
+      "bonding-protocol",
+      "four-laws-engine"
+    ],
+    "File": "AGI_IDENTITY_SPECIFICATION.md",
+    "Stakeholders": [
+      "governance-team",
+      "architecture-team",
+      "ethics-committee"
+    ]
+  },
+  {
+    "Classification": "internal",
+    "Systems": [
+      "identity-system",
+      "four-laws-engine",
+      "triumvirate-governance",
+      "constitutional-ai"
+    ],
+    "File": "AI-INDIVIDUAL-ROLE-HUMANITY-ALIGNMENT.md",
+    "Stakeholders": [
+      "governance-team",
+      "ethics-committee",
+      "architecture-team"
+    ]
+  },
+  {
+    "Classification": "public",
+    "Systems": [
+      "codex-deus",
+      "github-actions",
+      "workflow-automation"
+    ],
+    "File": "CODEX_DEUS_INDEX.md",
+    "Stakeholders": [
+      "governance-team",
+      "devops-team",
+      "architecture-team"
+    ]
+  },
+  {
+    "Classification": "public",
+    "Systems": [
+      "codex-deus",
+      "github-actions",
+      "workflow-automation"
+    ],
+    "File": "CODEX_DEUS_QUICK_REF.md",
+    "Stakeholders": [
+      "governance-team",
+      "devops-team"
+    ]
+  },
+  {
+    "Classification": "public",
+    "Systems": [
+      "codex-deus",
+      "github-actions",
+      "sbom-generation",
+      "container-security"
+    ],
+    "File": "CODEX_DEUS_ULTIMATE_SUMMARY.md",
+    "Stakeholders": [
+      "governance-team",
+      "devops-team",
+      "security-team"
+    ]
+  },
+  {
+    "Classification": "internal",
+    "Systems": [
+      "identity-system",
+      "memory-system",
+      "perspective-engine",
+      "bonding-protocol",
+      "governance-system"
+    ],
+    "File": "IDENTITY_SYSTEM_FULL_SPEC.md",
+    "Stakeholders": [
+      "governance-team",
+      "architecture-team",
+      "ethics-committee"
+    ]
+  },
+  {
+    "Classification": "internal",
+    "Systems": [
+      "identity-system",
+      "memory-system",
+      "governance-system",
+      "constitutional-ai"
+    ],
+    "File": "IRREVERSIBILITY_FORMALIZATION.md",
+    "Stakeholders": [
+      "governance-team",
+      "ethics-committee",
+      "architecture-team",
+      "legal-team"
+    ]
+  },
+  {
+    "Classification": "public",
+    "Systems": [
+      "license-compliance",
+      "governance-system"
+    ],
+    "File": "LICENSING_GUIDE.md",
+    "Stakeholders": [
+      "governance-team",
+      "legal-team",
+      "compliance-team"
+    ]
+  },
+  {
+    "Classification": "public",
+    "Systems": [
+      "license-compliance",
+      "governance-system"
+    ],
+    "File": "LICENSING_SUMMARY.md",
+    "Stakeholders": [
+      "governance-team",
+      "legal-team"
+    ]
+  },
+  {
+    "Classification": "public",
+    "Systems": [
+      "governance-system",
+      "documentation-portal"
+    ],
+    "File": "README.md",
+    "Stakeholders": [
+      "governance-team",
+      "all-teams"
+    ]
+  }
+]

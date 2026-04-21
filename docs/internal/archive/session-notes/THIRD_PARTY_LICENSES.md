@@ -1,3 +1,24 @@
+---
+title: "THIRD PARTY LICENSES"
+id: "third-party-licenses"
+type: historical_record
+status: archived
+archived_date: 2026-04-19
+archive_reason: completed
+historical_value: high
+restore_candidate: false
+audience:
+  - developer
+  - architect
+tags:
+  - historical
+  - archive
+  - testing
+  - ci-cd
+  - security
+path_confirmed: T:/Project-AI-main/docs/internal/archive/session-notes/THIRD_PARTY_LICENSES.md
+---
+
 # Third-Party Licenses
 
 **Generated**: December 4, 2025

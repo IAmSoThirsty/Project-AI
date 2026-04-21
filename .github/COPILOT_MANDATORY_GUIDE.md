@@ -1,3 +1,52 @@
+---
+title: "Copilot Mandatory Guide - Project-AI"
+id: copilot-mandatory-guide
+type: guide
+version: 2.1.0
+created_date: 2026-01-15
+updated_date: 2026-04-14
+status: active
+author: "Principal Architect <projectaidevs@gmail.com>"
+tags:
+  - governance
+  - development
+  - architecture
+  - reference
+  - guide
+  - internal
+  - automation
+  - best-practices
+area:
+  - governance
+  - development
+  - architecture
+component:
+  - constitutional-ai
+  - cerberus
+  - governance-engine
+  - agents
+audience:
+  - developer
+  - architect
+  - contributor
+  - internal
+priority: p0
+related_to:
+  - "[[copilot_workspace_profile]]"
+  - "[[README]]"
+  - "[[ARCHITECTURE_QUICK_REF]]"
+  - "[[CONTRIBUTING]]"
+depends_on:
+  - "[[copilot_workspace_profile]]"
+validates:
+  - "[[copilot_workspace_profile]]"
+what: "Authoritative rulebook, system inventory, and verified implementation catalog for all AI assistants working on Project-AI - prevents hallucinations and ensures accurate system knowledge"
+who: "ALL AI assistants (GitHub Copilot, Claude, GPT-4, etc.) - MUST be read before claiming anything doesn't exist or making architectural assertions"
+when: "FIRST action before any development work, code generation, or system analysis - referenced continuously during all sessions"
+where: ".github/ directory as permanent governance artifact - NEVER delete or relocate without team consensus"
+why: "Eliminates AI hallucinations about non-existent systems, documents verified implementations with proof (file paths + commit SHAs), prevents re-invention of existing solutions"
+---
+
 # COPILOT MANDATORY GUIDE - PROJECT-AI
 
 **Purpose:** THE definitive rulebook, knowledge base, and system inventory for ALL AI assistants working on Project-AI  

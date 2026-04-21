@@ -1,3 +1,22 @@
+---
+type: architecture-diagram
+tags: [p1-diagrams, diagrams, mermaid, sequence-diagram, data-flow, agent-system, dynamic-selection, orchestration]
+created: 2024-02-08
+last_verified: 2026-04-20
+status: current
+related_systems: [execution-service, agent-pool, resource-pooling, timeout-manager, result-aggregator]
+stakeholders: [architecture-team, developers, technical-leads]
+audience: technical-leadership
+document_purpose: visualization
+review_cycle: quarterly
+diagram_type: sequence
+format: ascii
+total_lines: 775
+total_agents: 30+
+---
+  - specialized-agents
+---
+
 # Agent Execution Flow - Dynamic Agent Selection and Orchestration
 
 ## Overview
@@ -770,6 +789,6 @@ agent_pool_size = Gauge(
 
 ## Related Documentation
 
-- [User Request Flow](./user_request_flow.md)
-- [Memory Recording Flow](./memory_recording_flow.md)
+- [[./user_request_flow.md|User Request Flow]]
+- [[./memory_recording_flow.md|Memory Recording Flow]]
 - [Component Architecture - Agent System](../component/agent_system.md)

@@ -1,3 +1,88 @@
+---
+title: "Secure H.323 Deployment Specification"
+id: "secure-h323-deployment"
+type: "spec"
+version: "1.0.0"
+created_date: "2026-01-10"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "VoIP Security Team"
+  email: "voip-security@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:networking"
+  - "type:spec"
+  - "component:h323"
+  - "component:voip"
+  - "component:srtp"
+  - "audience:network-engineer"
+  - "audience:security-engineer"
+  - "priority:p1-high"
+technologies:
+  - "H.323"
+  - "H.235"
+  - "SRTP"
+  - "TLS 1.3"
+  - "X.509 Certificates"
+  - "RAS (Registration/Admission/Status)"
+difficulty: "expert"
+estimated_time: "PT300M"
+prerequisites:
+  - "VoIP protocol understanding"
+  - "H.323 architecture knowledge"
+  - "PKI and certificate management"
+  - "Network security fundamentals"
+summary: "Comprehensive security specification for H.323 VoIP deployments covering gatekeeper logging, gateway security, endpoint requirements, performance capacity, and audit schema."
+scope: "Complete H.323 security architecture including RAS event logging, H.225/H.245 security, SRTP keying, certificate validation, codec negotiation, WORM log storage, and performance SLAs"
+classification: "internal"
+threat_level: "high"
+attack_vectors:
+  - "h323-call-hijacking"
+  - "rtp-stream-injection"
+  - "codec-negotiation-downgrade"
+  - "certificate-validation-bypass"
+  - "man-in-the-middle-voip"
+mitigations:
+  - "[[SRTP_ENCRYPTION]]"
+  - "[[TLS_13_SIGNALING]]"
+  - "[[CERTIFICATE_VALIDATION]]"
+  - "[[RAS_LOGGING]]"
+defends_against:
+  - "Call hijacking"
+  - "RTP stream injection"
+  - "Codec downgrade attacks"
+  - "MITM attacks on signaling"
+  - "Unauthorized registrations"
+compliance:
+  - "ITU-T H.323"
+  - "ITU-T H.235 (Security)"
+  - "RFC 3711 (SRTP)"
+  - "NIST SP 800-52r2 (TLS)"
+stakeholders:
+  - security-team   - network-team
+last_verified: 2026-04-20
+cvss_score: "N/A - Specification Document"
+cwe_ids:
+  - "CWE-300: Channel Accessible by Non-Endpoint"
+  - "CWE-319: Cleartext Transmission of Sensitive Information"
+  - "CWE-326: Inadequate Encryption Strength"
+related_docs:
+  - "security-framework"
+  - "threat-model"
+review_status:
+  reviewed: true
+  reviewers: ["voip-security-team", "network-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "network-engineers"
+  - "voip-engineers"
+  - "security-engineers"
+  - "telecom-architects"
+---
+
 ## 12. Logging & Audit Schema
 
 ### 12.1 Gatekeeper Logging Requirements

@@ -1,8 +1,21 @@
+---
+type: reference
+tags: [p1-developer, api, go-library, actionlint, workflow-parser, linter]
+created: 2026-04-20
+last_verified: 2026-04-20
+status: current
+related_systems: [actionlint-cli, linter-engine, expression-parser, rule-checker]
+stakeholders: [developers, library-users, integrators]
+audience: advanced
+prerequisites: [go-programming, yaml-syntax, github-actions-knowledge, compiler-design]
+estimated_time: 45 minutes
+review_cycle: quarterly
+---
 Go API
 ======
 [![API Document][api-badge]][apidoc]
 
-This document describes how to use [actionlint](..) as Go library.
+This document describes how to use [[..|actionlint]] as Go library.
 
 actionlint can be used from Go programs. See [the documentation][apidoc] to know the list of all APIs. It contains
 a workflow file parser built on top of `go-yaml/yaml`, expression `${{ }}` lexer/parser/checker, etc.
@@ -70,7 +83,7 @@ Go version is v1.22, v1.21 and v1.22 are nice to use.
 
 ---
 
-[Checks](checks.md) | [Installation](install.md) | [Usage](usage.md) | [Configuration](config.md) | [References](reference.md)
+[[checks.md|Checks]] | [[install.md|Installation]] | [[usage.md|Usage]] | [[config.md|Configuration]] | [[reference.md|References]]
 
 [api-badge]: https://pkg.go.dev/badge/github.com/rhysd/actionlint.svg
 [apidoc]: https://pkg.go.dev/github.com/rhysd/actionlint

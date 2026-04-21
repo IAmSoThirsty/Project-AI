@@ -1,3 +1,65 @@
+---
+title: "Release Build Guide for Project-AI"
+id: release-build-guide
+type: deployment-guide
+area: development
+status: current
+version: "1.0"
+created: 2026-04-20
+last_verified: 2026-04-20
+updated_date: "2026-04-20"
+author: AGENT-026
+
+# Deployment Metadata
+deployment_target: multi-platform
+deployment_complexity: complex
+production_ready: true
+review_cycle: monthly
+
+# Classification
+tags:
+  - deployment
+  - release
+  - build-automation
+  - multi-platform
+  - github-actions
+  - ci-cd
+  - packaging
+  - android
+  - desktop
+  - web
+
+# Developer Metadata
+skill_level: intermediate
+audience:
+  - developer
+  - devops
+
+stakeholders: [devops, deployment-team, release-managers, build-engineers]
+
+languages:
+  - Python
+  - Shell
+  - Bash
+  - YAML
+  - PowerShell
+
+frameworks:
+  - PyQt6
+  - FastAPI
+  - Docker
+  - Gradle
+  - Electron
+
+code_examples: true
+api_reference: false
+
+related_systems: [github-actions, docker, kubernetes, android-sdk, electron-builder, python, nodejs]
+related_docs:
+  - [[README]]
+  - [[DEPLOYMENT]]
+  - [[BUILD_AND_DEPLOYMENT]]
+---
 # Release Build Guide for Project-AI
 
 ## Overview

@@ -1,3 +1,17 @@
+---
+type: workflow-spec
+tags: [security, checklist, github-actions, sast, dast, compliance]
+created: 2026-01-20
+last_verified: 2026-04-20
+status: current
+related_systems: [security-automation, ci-cd, github-actions]
+stakeholders: [security-team, devops, developers]
+config_scope: multi-environment
+automation_type: github-actions
+requires_secrets: true
+review_cycle: quarterly
+---
+
 # Security Checklist for GitHub Workflows
 
 ## Overview

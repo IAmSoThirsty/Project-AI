@@ -1,3 +1,27 @@
+---
+created: '2026-01-01'
+last_verified: '2026-04-20'
+status: current
+review_cycle: monthly
+type: implementation-guide
+tags:
+- alien-invaders
+- engines
+- operations
+- procedures
+engine_type: aicpd
+implementation_status: in-progress
+language: python
+related_systems:
+- defense-simulation
+- scenario-engine
+- simulation-registry
+stakeholders:
+- architecture-team
+- simulation-team
+- defense-team
+---
+
 # AICPD Engine Operations Guide
 
 ## Installation

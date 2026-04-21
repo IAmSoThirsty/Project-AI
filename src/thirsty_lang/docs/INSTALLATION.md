@@ -1,3 +1,22 @@
+---
+type: installer-guide
+tags: [deployment, installation, thirsty-lang, nodejs, npm, cli, setup, verification]
+created: 2026-01-15
+last_verified: 2026-04-20
+status: current
+related_systems: [thirsty-lang, nodejs, npm, github, cli-tools]
+stakeholders: [developers, end-users, language-learners]
+audience: beginner
+prerequisites: [nodejs-14+, npm-or-yarn, terminal-access, code-editor]
+estimated_time: 15 minutes
+review_cycle: quarterly
+deployment_target: multi-platform
+deployment_complexity: simple
+production_ready: true
+platform_support: [windows, linux, macos]
+installation_methods: [github-clone, direct-download, npm-link]
+---
+
 # Installation and Setup Guide
 
 ## Prerequisites

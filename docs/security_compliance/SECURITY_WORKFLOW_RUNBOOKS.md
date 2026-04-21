@@ -1,6 +1,79 @@
+---
+title: "Security Workflow Failure Runbooks"
+id: "security-workflow-runbooks"
+type: "runbook"
+version: "1.0.0"
+created_date: "2026-01-19"
+updated_date: "2026-02-08"
+status: "active"
+author:
+  name: "Security Operations Team"
+  email: "secops@project-ai.org"
+category: "security"
+tags:
+  - "area:security"
+  - "area:operations"
+  - "type:runbook"
+  - "component:release-signing"
+  - "component:sbom-generation"
+  - "component:ai-ml-security"
+  - "audience:on-call-engineer"
+  - "audience:security-engineer"
+  - "priority:p0-critical"
+technologies:
+  - "GitHub Workflows"
+  - "Cosign"
+  - "Syft (SBOM)"
+  - "ModelScan"
+  - "Sigstore"
+difficulty: "advanced"
+estimated_time: "PT60M"
+prerequisites:
+  - "GitHub Actions understanding"
+  - "Cosign/Sigstore knowledge"
+  - "SBOM generation familiarity"
+  - "On-call experience"
+summary: "Quick reference runbooks for responding to security workflow failures including release signing, SBOM generation, and AI/ML security scan failures with triage, resolution, and prevention steps."
+scope: "3 critical workflow runbooks: release artifact signing (Cosign), SBOM generation (Syft), AI/ML model security (ModelScan) with failure scenarios, root causes, fixes, and prevention"
+classification: "internal"
+threat_level: "high"
+workflows:
+  - "Release Artifact Signing (HIGH - 1 hour)"
+  - "SBOM Generation (MEDIUM - 4 hours)"
+  - "AI/ML Security Scan (CRITICAL - 30 minutes)"
+escalation:
+  release_signing: "Security team"
+  sbom_generation: "Release manager"
+  ai_ml_security: "Security + Dev lead"
+compliance:
+  - "Incident Response Best Practices"
+  - "Workflow Failure Management"
+stakeholders:
+  - security-team   - devops-team   - security-operations
+last_verified: 2026-04-20
+cvss_score: "N/A - Operational Runbook"
+cwe_ids:
+  - "CWE-1008: Architectural Concepts"
+  - "CWE-1357: Reliance on Insufficiently Trustworthy Component"
+related_docs:
+  - "security-governance"
+  - "sbom-policy"
+  - "incident-playbook"
+review_status:
+  reviewed: true
+  reviewers: ["secops-team", "on-call-team"]
+  review_date: "2026-02-08"
+  approved: true
+audience:
+  - "on-call-engineers"
+  - "security-engineers"
+  - "devops-engineers"
+  - "contributors"
+---
+
 # Security Workflow Failure Runbooks
 
-**Purpose:** Quick reference guide for responding to security workflow failures  
+**Purpose:** Quick reference guide for responding to security workflow failures
 **Audience:** On-call engineers, contributors, security team  
 **Last Updated:** 2026-01-19
 

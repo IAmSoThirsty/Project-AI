@@ -72,6 +72,12 @@ PROACTIVE_ACTIONS = (
 )
 
 
+# 📚 Documentation Links:
+# - [[relationships/gui/01_DASHBOARD_RELATIONSHIPS.md]]
+# - [[relationships/gui/02_PANEL_RELATIONSHIPS.md]]
+# - [[source-docs/gui/leather_book_dashboard.md]]
+#
+
 class LeatherBookDashboard(QWidget):
     """Main dashboard with 6-zone layout on leather book."""
 

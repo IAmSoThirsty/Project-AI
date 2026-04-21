@@ -1,3 +1,40 @@
+---
+title: "AI Persona Detector Retraining Guide"
+id: detector-retraining-guide
+type: guide
+version: 1.0.0
+created_date: 2026-01-22
+updated_date: 2026-02-03
+status: active
+author: AI Systems Team
+audience: internal
+confidentiality: internal
+owner_team: engineering
+operational_context: runbook
+retention_policy: permanent
+category: development
+tags:
+  - ai-persona
+  - machine-learning
+  - retraining
+  - cli-tools
+  - pytorch
+  - scikit-learn
+technologies:
+  - Python
+  - PyTorch
+  - scikit-learn
+  - TfidfVectorizer
+related_docs:
+  - AI_PERSONA_IMPLEMENTATION.md
+  - ../architecture/ai-persona-architecture.md
+dependencies:
+  - torch
+  - scikit-learn
+scope: "CLI helper and behavior documentation for retraining AI Persona Zeroth/First-law detectors"
+description: Documentation for the CLI retraining helper and retraining behavior for AI Persona's Zeroth/First-law detectors, including model artifacts, vocabulary management, and audit logging.
+---
+
 # Retraining the AI Persona Detectors
 
 This document describes the CLI retrain helper and the retraining behavior used by the

@@ -1,3 +1,17 @@
+---
+type: test-suite-doc
+tags: [testing, security-tests, attack-vectors, mitre-attack, owasp, cwe]
+created: 2026-04-19
+last_verified: 2026-04-20
+status: current
+related_systems: [asymmetric-security-framework, four-laws, tarl-runtime]
+stakeholders: [security-team, qa-team, developers]
+test_type: security
+coverage_target: 51 attack vectors - 100% block rate
+automation_status: automated
+review_cycle: monthly
+---
+
 # Thirsty's Asymmetric Security Framework - Test Vector Documentation
 
 **Complete documentation of all 51 attack test vectors**
