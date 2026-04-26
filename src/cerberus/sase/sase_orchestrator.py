@@ -129,7 +129,7 @@ class SASEOrchestrator:
             return {"blocked": True, "reason": enforcement_action.value}
         return None
 
-    def _ingest_and_enrich(self, raw_telemetry: dict[str, Any]) -> tuple[Any, Any]:
+    def _ingest_and_enrich(self, raw_telemetry: dict[str, Any]) -> tuple["AdversarialEvent", "EnrichmentData"]:
         """L2-L3: Telemetry ingestion and enrichment."""
         event = self.telemetry_gateway.ingest(raw_telemetry)
         self.observability.record_event_ingested(event.artifact_type.value)
