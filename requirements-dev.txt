@@ -1,3 +1,5 @@
+# (Substrate Development Vector)          [2026-04-09 04:26]
+#                                          Status: Active
 # Development-only dependencies (not required to run the app)
 -r requirements.txt
 

@@ -21,7 +21,7 @@ import hashlib
 import json
 import os
 import sys
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 
 try:
@@ -175,7 +175,7 @@ class PersonaSigner:
             "parent_snapshot": parent_snapshot,
             "state": persona_state,
             "signature": signature.hex(),
-            "created_at": datetime.now(UTC).isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
             "creator": os.getenv("USER", "system"),
             "metadata": metadata or {},
         }

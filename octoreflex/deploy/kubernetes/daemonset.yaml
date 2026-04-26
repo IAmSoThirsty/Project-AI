@@ -64,8 +64,21 @@ spec:
               else
                 echo "bpffs already mounted."
               fi
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
           securityContext:
-            privileged: true
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - CAP_SYS_ADMIN
+                - CAP_BPF
           volumeMounts:
             - name: bpffs
               mountPath: /sys/fs/bpf
@@ -79,8 +92,18 @@ spec:
             - /etc/octoreflex/config.yaml
 
           securityContext:
-            # Privileged is required for BPF LSM attachment and cgroup operations.
-            privileged: true
+            # Granular capabilities required for BPF LSM attachment and cgroup operations instead of full privilege.
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - CAP_BPF
+                - CAP_SYS_ADMIN
+                - CAP_PERFMON
+                - CAP_NET_ADMIN
+            seccompProfile:
+              type: RuntimeDefault
             # Prevent privilege escalation via execve.
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: false

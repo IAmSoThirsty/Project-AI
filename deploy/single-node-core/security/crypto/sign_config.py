@@ -21,7 +21,7 @@ import hashlib
 import json
 import os
 import sys
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 
@@ -191,7 +191,7 @@ class ConfigSigner:
             "content_size": len(canonical_bytes),
             "signature": signature.hex(),
             "environment": self.environment,
-            "signed_at": datetime.now(UTC).isoformat(),
+            "signed_at": datetime.now(timezone.utc).isoformat(),
             "signer": os.getenv("USER", "unknown"),
             "metadata": metadata or {},
         }

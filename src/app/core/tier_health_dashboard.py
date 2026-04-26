@@ -52,7 +52,7 @@ MONITORING DOMAINS:
 import logging
 import time
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 
 from app.core.platform_tiers import PlatformTier, TierHealthStatus, get_tier_registry
@@ -100,7 +100,7 @@ class HealthMetric:
     unit: str
     threshold_warning: float | None = None
     threshold_critical: float | None = None
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def get_health_level(self) -> HealthLevel:
         """Determine health level based on thresholds."""
@@ -123,7 +123,7 @@ class ComponentHealthReport:
     uptime_seconds: float
     metrics: list[HealthMetric] = field(default_factory=list)
     recent_errors: list[str] = field(default_factory=list)
-    last_check: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    last_check: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     def get_overall_health(self) -> HealthLevel:
         """Calculate overall health from metrics."""
@@ -159,7 +159,7 @@ class TierHealthReport:
     active_violations: int
     recent_alerts: list[str]
     metrics: dict[str, HealthMetric]
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -174,7 +174,7 @@ class PlatformHealthReport:
     failed_components: int
     total_violations: int
     uptime_seconds: float
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -188,7 +188,7 @@ class HealthAlert:
     message: str
     metric: HealthMetric | None = None
     acknowledged: bool = False
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 # ============================================================================

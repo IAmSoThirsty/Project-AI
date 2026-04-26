@@ -7,7 +7,7 @@ Tests constitutional principle enforcement, temporal law evolution,
 and integration with existing governance infrastructure.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from gradle_evolution.constitutional.enforcer import ConstitutionalEnforcer
@@ -16,6 +16,11 @@ from gradle_evolution.constitutional.temporal_law import (
     TemporalLaw,
     TemporalLawRegistry,
 )
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class TestConstitutionalEngine:
@@ -163,7 +168,7 @@ class TestTemporalLaw:
     def test_is_active_within_timeframe(self, sample_temporal_law):
         """Test law is active within valid timeframe."""
         # Set timeframe around current time
-        now = datetime.utcnow()
+        now = _utcnow()
         sample_temporal_law["effective_from"] = (now - timedelta(days=1)).isoformat()
         sample_temporal_law["effective_until"] = (now + timedelta(days=1)).isoformat()
 
@@ -173,7 +178,7 @@ class TestTemporalLaw:
 
     def test_is_inactive_before_effective(self, sample_temporal_law):
         """Test law is inactive before effective date."""
-        future = datetime.utcnow() + timedelta(days=10)
+        future = _utcnow() + timedelta(days=10)
         sample_temporal_law["effective_from"] = future.isoformat()
 
         law = TemporalLaw(**sample_temporal_law)
@@ -182,7 +187,7 @@ class TestTemporalLaw:
 
     def test_is_inactive_after_expiration(self, sample_temporal_law):
         """Test law is inactive after expiration."""
-        past = datetime.utcnow() - timedelta(days=10)
+        past = _utcnow() - timedelta(days=10)
         sample_temporal_law["effective_from"] = (past - timedelta(days=5)).isoformat()
         sample_temporal_law["effective_until"] = past.isoformat()
 
@@ -226,7 +231,7 @@ class TestTemporalLawRegistry:
         registry = TemporalLawRegistry(storage_path=storage)
 
         # Active law
-        now = datetime.utcnow()
+        now = _utcnow()
         sample_temporal_law["effective_from"] = (now - timedelta(days=1)).isoformat()
         active_law = TemporalLaw(**sample_temporal_law)
 

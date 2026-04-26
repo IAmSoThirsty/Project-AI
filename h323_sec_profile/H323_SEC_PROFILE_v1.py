@@ -21,7 +21,7 @@ This is the foundational trust model for Project-AI.
 
 import argparse
 import json
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 
 # ---------------------------------------------------------------------------
 # 0. Core utilities: time & logging
@@ -30,7 +30,7 @@ from datetime import UTC, datetime
 
 def timestamp_now():
     try:
-        return datetime.now(UTC).isoformat() + "Z"
+        return datetime.now(timezone.utc).isoformat() + "Z"
     except (AttributeError, NameError):
         return datetime.utcnow().isoformat() + "Z"
 

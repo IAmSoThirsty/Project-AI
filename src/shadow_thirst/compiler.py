@@ -23,7 +23,7 @@ VERSION: 1.0.0
 
 import logging
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from shadow_thirst.ast_nodes import Program
@@ -52,7 +52,7 @@ class CompilationResult:
 
     # Metadata
     source_file: str | None = None
-    compiled_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    compiled_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     compilation_time_ms: float = 0.0
 
     # Statistics

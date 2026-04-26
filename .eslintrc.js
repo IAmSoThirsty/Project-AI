@@ -1,5 +1,5 @@
-//                                           [2026-03-03 13:45]
-//                                          Productivity: Active
+// (Substrate JavaScript Logic)             [2026-04-09 04:26]
+//                                          Status: Active
 module.exports = {
   env: {
     browser: true,
@@ -15,6 +15,7 @@ module.exports = {
   },
   rules: {
     // Adjust rules based on project needs
+    'linebreak-style': 'off', // Disabled to allow native CRLF development on Windows
     'no-console': 'off', // Allow console for debugging
     'import/prefer-default-export': 'off',
     'max-len': ['error', { code: 100 }],

@@ -12,7 +12,7 @@ from __future__ import annotations
 import json
 import logging
 import os
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 from app.core.cognition_kernel import CognitionKernel, ExecutionType
@@ -98,7 +98,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
             # Add to pending upgrades
             self.pending_upgrades.append(
                 {
-                    "timestamp": datetime.now(UTC).isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "threat_id": threat_data.get("id", "unknown"),
                     "opportunities": opportunities,
                     "status": "pending_codex_review",
@@ -192,7 +192,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
     ) -> dict[str, Any]:
         """Create an alert for Codex Deus Maximus."""
         return {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "alert_type": "defense_upgrade_opportunity",
             "source": "cerberus",
             "threat_summary": {
@@ -265,7 +265,7 @@ class CerberusCodexBridge(KernelRoutedAgent):
 
             # Log implementation
             implementation_record = {
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "upgrade_spec": upgrade_spec,
                 "result": result,
                 "implemented_by": "codex_deus_maximus",

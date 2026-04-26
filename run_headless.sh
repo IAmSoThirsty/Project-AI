@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# [Run Headless]                            [2026-04-03 19:30]
+# (Headless Substrate Vector)              [2026-04-09 04:12]
 #                                          Status: Active
 set -euo pipefail
 

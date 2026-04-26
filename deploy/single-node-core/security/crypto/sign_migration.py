@@ -21,7 +21,7 @@ import hashlib
 import json
 import os
 import sys
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 
 try:
@@ -158,7 +158,7 @@ class MigrationSigner:
             "content_hash": content_hash,
             "content_size": len(content),
             "signature": signature.hex(),
-            "signed_at": datetime.now(UTC).isoformat(),
+            "signed_at": datetime.now(timezone.utc).isoformat(),
             "signer": os.getenv("USER", "unknown"),
             "metadata": metadata or {},
         }

@@ -14,7 +14,7 @@ This ensures identity operations are ethically defensible and temporally consist
 """
 
 import logging
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -397,7 +397,7 @@ class IdentitySignalsTelemetry(SignalsTelemetry):
                 "snapshot_id": snapshot_id,
                 "user_present": user_present,
                 "context": context,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             },
             destination=["MemoryEngine", "AuditLog", "Triumvirate"],
         )
@@ -663,7 +663,7 @@ class ContinuityManager:
         snapshot_id = str(uuid.uuid4())
         snapshot = {
             "snapshot_id": snapshot_id,
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "identity_state": identity_state,
             "user_present": user_present,
             "continuity_mode": self.continuity_mode.value,
@@ -754,7 +754,7 @@ class ContinuityManager:
                 "gradual_reintegration",
                 "validate_continuity",
             ],
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
         return recovery_plan

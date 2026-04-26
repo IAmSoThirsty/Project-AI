@@ -1,5 +1,9 @@
 #                                           [2026-03-05 10:03]
 #                                          Productivity: Active
+# STATUS: SOLID
+# Last verified: 2026-04-09
+# Dependencies: Verified in smoke tests
+
 """
 CognitionKernel - Central processing hub for all agent, tool, and system executions.
 
@@ -33,7 +37,7 @@ import time
 import uuid
 from collections.abc import Callable
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -136,7 +140,7 @@ class Decision:
     mutation_intent: MutationIntent | None = None
     consensus_required: bool = False
     consensus_achieved: bool = False
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 @dataclass
@@ -222,7 +226,7 @@ class ExecutionResult:
 
     # Timing and metadata
     duration_ms: float = 0.0
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     metadata: dict[str, Any] = field(default_factory=dict)
 
     # Error information
@@ -804,7 +808,7 @@ class CognitionKernel:
         # Create context (single source of truth)
         return ExecutionContext(
             trace_id=trace_id,
-            timestamp=datetime.now(UTC),
+            timestamp=datetime.now(timezone.utc),
             perception=perception,
             interpretation=interpretation,
             proposed_action=proposed_action,
@@ -1199,7 +1203,7 @@ class CognitionKernel:
             "active_agents": active_count,
             "headcount_drift": drift,
             "status": "UNSTABLE" if drift != EXPECTED_HYDRA_RESERVE else "STABLE (HYDRA_SYNCHRONIZED)",
-            "timestamp": datetime.now(UTC).isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
         if drift == EXPECTED_HYDRA_RESERVE:

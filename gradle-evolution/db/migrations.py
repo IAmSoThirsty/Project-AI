@@ -10,13 +10,18 @@ and data migration helpers.
 import logging
 import sqlite3
 from collections.abc import Callable
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from .sql_utils import sanitize_identifier, sanitize_identifier_list
 
 logger = logging.getLogger(__name__)
+
+
+def _utcnow() -> datetime:
+    """Return naive UTC datetime without deprecated utcnow()."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class Migration:
@@ -277,7 +282,7 @@ class MigrationManager:
 
         conn.execute(
             "INSERT OR REPLACE INTO schema_metadata (key, value, updated_at) VALUES (?, ?, ?)",
-            ("schema_version", str(version), datetime.utcnow().isoformat()),
+            ("schema_version", str(version), _utcnow().isoformat()),
         )
 
         # Record migration in history
@@ -564,7 +569,7 @@ class MigrationManager:
         # Sanitize table name to prevent SQL injection
         safe_table = sanitize_identifier(table)
 
-        timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+        timestamp = _utcnow().strftime("%Y%m%d_%H%M%S")
         backup_table = f"{table}_backup_{timestamp}"
         safe_backup = sanitize_identifier(backup_table)
 

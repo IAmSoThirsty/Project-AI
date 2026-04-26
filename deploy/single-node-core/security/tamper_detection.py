@@ -22,7 +22,7 @@ import json
 import logging
 import sys
 import time
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO)
@@ -154,7 +154,7 @@ class TamperDetector:
                 baseline[str(file_path)] = {
                     "hash": file_hash,
                     "metadata": metadata,
-                    "created_at": datetime.now(UTC).isoformat(),
+                    "created_at": datetime.now(timezone.utc).isoformat(),
                 }
 
         # Save baseline
@@ -275,7 +275,7 @@ class TamperDetector:
                 logger.warning(f"  {change['type'].upper()}: {change['path']}")
 
                 # Log to alert file
-                alert = {"timestamp": datetime.now(UTC).isoformat(), "change": change}
+                alert = {"timestamp": datetime.now(timezone.utc).isoformat(), "change": change}
 
                 with open(self.alert_log, "a") as f:
                     f.write(json.dumps(alert) + "\n")
@@ -339,7 +339,7 @@ class TamperDetector:
         self.baseline[str(file_path)] = {
             "hash": file_hash,
             "metadata": metadata,
-            "updated_at": datetime.now(UTC).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
         }
 
         # Save baseline

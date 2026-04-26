@@ -30,7 +30,7 @@ import uuid
 from collections import deque
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -79,7 +79,7 @@ class SecurityEvent:
     """Individual security event."""
 
     event_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     event_type: str = ""
     threat_level: str = ThreatLevel.INFO.value
     source: str = ""
@@ -103,8 +103,8 @@ class SecurityIncident:
     description: str = ""
     threat_level: str = ThreatLevel.MEDIUM.value
     status: str = IncidentStatus.DETECTED.value
-    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
-    updated_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    updated_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     resolved_at: str | None = None
     events: list[SecurityEvent] = field(default_factory=list)
     remediation_actions: list[str] = field(default_factory=list)
@@ -398,7 +398,7 @@ class AutomatedRemediationEngine:
                     "incident_id": incident_id,
                     "action": action.value,
                     "success": success,
-                    "timestamp": datetime.now(UTC).isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
             )
 
@@ -456,7 +456,7 @@ class IncidentManager:
 
                 incident = self.incidents[incident_id]
                 incident.status = status.value
-                incident.updated_at = datetime.now(UTC).isoformat()
+                incident.updated_at = datetime.now(timezone.utc).isoformat()
 
                 if (
                     status == IncidentStatus.CLOSED
@@ -485,7 +485,7 @@ class IncidentManager:
 
                 incident = self.incidents[incident_id]
                 incident.remediation_actions.append(action)
-                incident.updated_at = datetime.now(UTC).isoformat()
+                incident.updated_at = datetime.now(timezone.utc).isoformat()
                 self._save_incident(incident)
                 return True
         except Exception as e:

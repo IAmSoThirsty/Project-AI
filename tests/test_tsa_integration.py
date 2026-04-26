@@ -25,7 +25,7 @@ Attack Simulations:
 import tempfile
 import threading
 import time
-from datetime import UTC, datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -65,7 +65,7 @@ class TestTSAProvider:
         tsa = TSAProvider()
 
         # Create test payload (simulate Merkle root)
-        test_data = b"TEST_MERKLE_ROOT_" + datetime.now(UTC).isoformat().encode()
+        test_data = b"TEST_MERKLE_ROOT_" + datetime.now(timezone.utc).isoformat().encode()
 
         # Request timestamp
         try:
@@ -78,7 +78,7 @@ class TestTSAProvider:
             assert len(token.raw_der) > 0
 
             # Verify timestamp is recent (within 5 minutes)
-            time_diff = abs((datetime.now(UTC) - token.tsa_time).total_seconds())
+            time_diff = abs((datetime.now(timezone.utc) - token.tsa_time).total_seconds())
             assert time_diff < 300, f"TSA timestamp too old: {time_diff} seconds"
 
             # Verify token can be re-verified
@@ -103,7 +103,7 @@ class TestTSAProvider:
             # If TSA time is more than 1 second different from local time,
             # verification should detect it
             # (This test may pass or fail depending on actual clock skew)
-            time_diff = abs((datetime.now(UTC) - token.tsa_time).total_seconds())
+            time_diff = abs((datetime.now(timezone.utc) - token.tsa_time).total_seconds())
 
             # If skew is large, re-verification should fail
             if time_diff > 1:

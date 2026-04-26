@@ -25,7 +25,7 @@ import hashlib
 import logging
 import uuid
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -385,7 +385,7 @@ class ShadowContainmentEngine:
             self.profiles[session_id] = ThreatProfile(
                 profile_id=f"profile_{uuid.uuid4().hex[:12]}",
                 session_id=session_id,
-                timestamp=datetime.now(UTC),
+                timestamp=datetime.now(timezone.utc),
                 threat_class=ThreatClass.BENIGN,
                 threat_score=0.0,
                 confidence=0.5,
@@ -489,7 +489,7 @@ class ShadowContainmentEngine:
         action = ContainmentAction(
             action_id=action_id,
             profile_id=profile.profile_id,
-            timestamp=datetime.now(UTC),
+            timestamp=datetime.now(timezone.utc),
             mode=mode,
             deception_tactic=deception_tactic,
             original_request=original_request,

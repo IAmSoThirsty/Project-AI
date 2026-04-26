@@ -35,6 +35,15 @@ try:
     HAS_HYPOTHESIS = True
 except ImportError:
     HAS_HYPOTHESIS = False
+    # Create dummy st for when hypothesis is not available
+    class DummyStrategies:
+        @staticmethod
+        def text(*args, **kwargs):
+            return None
+        @staticmethod
+        def characters(*args, **kwargs):
+            return None
+    st = DummyStrategies()
 
 from psia.canonical.capability_authority import CapabilityAuthority
 from psia.canonical.ledger import DurableLedger, ExecutionRecord, LedgerBlock

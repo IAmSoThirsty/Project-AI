@@ -99,7 +99,7 @@ def test_deterministic_mode():
     """Test deterministic replay mode."""
     print("\nTesting Deterministic Replay Mode...")
 
-    from datetime import UTC, datetime
+    from datetime import timezone, datetime
 
     with tempfile.TemporaryDirectory() as tmpdir:
         manager = AuditManager(

@@ -23,7 +23,7 @@ import threading
 import time
 from collections import defaultdict, deque
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -35,8 +35,8 @@ class IPRecord:
     """Record of IP address activity."""
 
     ip_address: str
-    first_seen: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
-    last_seen: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    first_seen: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    last_seen: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     request_count: int = 0
     violation_count: int = 0
     blocked: bool = False
@@ -163,7 +163,7 @@ class IPBlockingSystem:
                     # Check if block has expired
                     if record.block_timestamp:
                         block_time = datetime.fromisoformat(record.block_timestamp)
-                        if datetime.now(UTC) - block_time > self.block_duration:
+                        if datetime.now(timezone.utc) - block_time > self.block_duration:
                             # Unblock
                             record.blocked = False
                             record.block_timestamp = None
@@ -245,7 +245,7 @@ class IPBlockingSystem:
             self.ip_records[ip_address] = IPRecord(ip_address=ip_address)
 
         record = self.ip_records[ip_address]
-        record.last_seen = datetime.now(UTC).isoformat()
+        record.last_seen = datetime.now(timezone.utc).isoformat()
         record.request_count += 1
         record.user_agent = user_agent or record.user_agent
 
@@ -266,7 +266,7 @@ class IPBlockingSystem:
         # Record violation
         violation = RateLimitViolation(
             ip_address=ip_address,
-            timestamp=datetime.now(UTC).isoformat(),
+            timestamp=datetime.now(timezone.utc).isoformat(),
             requests_in_window=len(self.rate_windows[f"{ip_address}:{endpoint}"]),
             limit=self.max_requests_per_hour,
             endpoint=endpoint,
@@ -304,7 +304,7 @@ class IPBlockingSystem:
             record = self.ip_records[ip_address]
             record.blocked = True
             record.block_reason = reason
-            record.block_timestamp = datetime.now(UTC).isoformat()
+            record.block_timestamp = datetime.now(timezone.utc).isoformat()
 
             if permanent:
                 self.blacklist.add(ip_address)

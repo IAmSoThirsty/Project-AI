@@ -1,4 +1,4 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-04-09 06:22]
 #                                          Productivity: Active
 """
 SASE - Sovereign Adversarial Signal Engine
@@ -8,7 +8,6 @@ Deployment topology management, resource validation, and failure recovery.
 """
 
 import logging
-import os
 import shutil
 import time
 from dataclasses import dataclass
@@ -115,7 +114,7 @@ class FailureRecoveryOrchestrator:
         # Log recovery attempt
         self.recovery_log.append(
             {
-                "timestamp": time.time(),
+                "timestamp": time.monotonic(),
                 "mode": mode.value,
                 "context": context,
                 "result": result,
@@ -242,7 +241,7 @@ class SubstrateManager:
             },
         }
 
-    def handle_failure(self, mode: FailureMode, context: dict = None) -> dict:
+    def handle_failure(self, mode: FailureMode, context: dict[str, Any] | None = None) -> dict:
         """Delegate failure handling to recovery orchestrator"""
         return self.recovery.handle_failure(mode, context or {})
 
@@ -276,7 +275,7 @@ class SubstrateManager:
             "healthy": healthy,
             "metrics": metrics,
             "recent_failures": len(self.recovery.recovery_log),
-            "monotonic_time": self.recovery.monotonic_clock,
+            "monotonic_time": time.monotonic(),
         }
 
 

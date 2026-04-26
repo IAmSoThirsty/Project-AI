@@ -15,7 +15,7 @@ import json
 import logging
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 logger = logging.getLogger(__name__)
@@ -629,5 +629,5 @@ class ComprehensiveSecurityExpansion:
             "scenarios_by_severity": severity_counts,
             "scenarios_by_difficulty": difficulty_counts,
             "average_cvss_score": round(avg_cvss, 2),
-            "generated_at": datetime.now(UTC).isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }

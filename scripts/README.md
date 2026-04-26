@@ -75,6 +75,7 @@
 | `quickstart.py` | Quick start guide runner |
 | `bootstrap.py` | Bootstrap environment setup |
 | `healthcheck.py` | System health check |
+| `detect_blob_format.py` | Detects `TSGB`, `gzip/tar`, or unknown blob formats |
 | `maintenance/verify_system.py` | Final system verification |
 | `maintenance/audit_repo.py` | Repository audit and stub detection |
 | `maintenance/archive_files.py` | Archive audit results into history |

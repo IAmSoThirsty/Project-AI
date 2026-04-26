@@ -1,4 +1,4 @@
-#                                            [2026-03-02 08:32]
+#                                            [2026-04-09 05:40]
 #                                           Productivity: Active
 """
 ABYSS ASYMMETRIC HYBRID SIMULATION ENGINE
@@ -10,36 +10,26 @@ and Goblin Angler hybrid lures for hard isolation.
 """
 
 import math
-import random
-import networkx as nx
-import sys
 import os
-from typing import Optional
+import random
+import sys
 
-# Ensure src is in path for imports
-sys.path.append(os.getcwd() + "/src")
+import networkx as nx
 
-try:
-    from security.asymmetric_security import RFICalculator, SecurityContext
-except ImportError:
-    # Minimal fallback calculator if execution environment differs
-    class SecurityContext:
-        def __init__(self, user_id, action, dimensions):
-            self.user_id = user_id
-            self.action = action
-            self.dimensions = dimensions
+# Ensure src is in path for imports (Active Restoration)
+if os.getcwd() not in sys.path:
+    sys.path.append(os.getcwd())
+if os.path.join(os.getcwd(), "src") not in sys.path:
+    sys.path.append(os.path.join(os.getcwd(), "src"))
 
-    class RFICalculator:
-        def calculate(self, ctx):
-            total_entropy = sum(ctx.dimensions.values())
-            return 1.0 - (2.0**-total_entropy) if total_entropy > 0 else 0.0
+from .asymmetric_security import RFICalculator, SecurityContext
 
 
 def cosine_similarity(a: list[float], b: list[float]) -> float:
     """Calculates cosine similarity between two context vectors."""
     if not a or not b:
         return 0.0
-    dot = sum(ai * bi for ai, bi in zip(a, b))
+    dot = sum(ai * bi for ai, bi in zip(a, b, strict=False))
     norm_a = math.sqrt(sum(ai**2 for ai in a))
     norm_b = math.sqrt(sum(bi**2 for bi in b))
     return dot / (norm_a * norm_b) if norm_a > 0 and norm_b > 0 else 0.0
@@ -55,7 +45,7 @@ class AbyssAsymmetryHybrid:
     - Graph-Based PIVOT: Attackers can move to neighbors with similar context.
     """
 
-    def __init__(self, network_size=30, num_lures=6, entropy_bits=64, seed=None):
+    def __init__(self, network_size: int = 30, num_lures: int = 6, entropy_bits: int = 64, seed: int | None = None):
         if seed is not None:
             random.seed(seed)
 
@@ -77,10 +67,11 @@ class AbyssAsymmetryHybrid:
 
         # Goblin Angler Lures (Hidden from attacker)
         self.lures = set(random.sample(self.nodes, num_lures))
-        self.sensor_certainty = {node: 0.5 for node in self.lures}
-        self.node_probe_counts = {node: 0 for node in self.nodes}
+        self.sensor_certainty = dict.fromkeys(self.lures, 0.5)
+        self.node_probe_counts = dict.fromkeys(self.nodes, 0)
 
         # Security Gateway Components
+
         self.rfi_calculator = RFICalculator()
 
         # Statistics
@@ -90,9 +81,9 @@ class AbyssAsymmetryHybrid:
         self.total_probes = 0
 
         # Attacker State
-        self.known_success_nodes = []
+        self.known_success_nodes: list[int] = []
         self.current_tuned_vector = None
-        self.probed_nodes = set()
+        self.probed_nodes: set[int] = set()
 
     def run_campaign(self, num_probes=25):
         """Simulates an attack campaign."""

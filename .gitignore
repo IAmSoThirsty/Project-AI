@@ -1,3 +1,5 @@
+# (Substrate Ignore Vector)                  [2026-04-09 04:26]
+#                                          Status: Active
 # Health report snapshots and archives (keep canonical report only)
 data/health_snapshots/
 docs/assets/health_report_*.png
@@ -92,7 +94,8 @@ secret_scan_report.json
 *secret*scan*.txt
 
 # IDEs
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 .idea/
 .vs/
 
@@ -110,6 +113,8 @@ Thumbs.db
 
 # Generated test data
 data/generated_tests/
+data/arch_angel/
+data/triumvirate_notifications/
 
 # Global scenario engine cache
 data/global_scenarios*/cache/

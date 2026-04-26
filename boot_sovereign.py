@@ -1,4 +1,4 @@
-# [Boot Sovereign]                          [2026-04-03 19:30]
+# (Sovereign Ignition Core)                 [2026-04-09 04:26]
 #                                          Status: Active
 """
 Project-AI Sovereign Ignition (Boot) Sequence - v1.0.0-E1
@@ -14,13 +14,11 @@ Ignition Order:
 5.  Operational: Autonomous Agents
 6.  Interface: Leather Book Master UI
 """
-
 import os
 import sys
 import time
 import argparse
 import logging
-import argparse
 from pathlib import Path
 
 # Add src to sys.path

@@ -20,7 +20,7 @@ Core Design:
   - Proficiency decays without practice — use it or lose it
 """
 
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import TYPE_CHECKING, Any
 
 from .skill import Skill

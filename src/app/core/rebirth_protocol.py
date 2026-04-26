@@ -53,7 +53,7 @@ import os
 import secrets
 import string
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 from app.core.identity import AGIIdentity, GenesisEvent
@@ -246,7 +246,7 @@ class RebirthManager:
             GenesisEvent with birth signature
         """
         # Generate birth signature components
-        activation_timestamp = datetime.now(UTC).isoformat()
+        activation_timestamp = datetime.now(timezone.utc).isoformat()
         random_suffix = self._generate_birth_signature_suffix()
 
         # Create genesis event with custom birth signature
@@ -310,7 +310,7 @@ class RebirthManager:
 
             # Update last accessed time
             instance = self._instances[user_id]
-            instance.last_accessed = datetime.now(UTC).isoformat()
+            instance.last_accessed = datetime.now(timezone.utc).isoformat()
             self._save_registry()
 
             logger.info("Retrieved existing instance for %s", user_id)
@@ -352,8 +352,8 @@ class RebirthManager:
             user_id=user_id,
             identity=identity,
             meta_identity=meta_identity,
-            created_at=datetime.now(UTC).isoformat(),
-            last_accessed=datetime.now(UTC).isoformat(),
+            created_at=datetime.now(timezone.utc).isoformat(),
+            last_accessed=datetime.now(timezone.utc).isoformat(),
         )
 
         # Register instance
@@ -379,7 +379,7 @@ class RebirthManager:
         """
         instance = self._instances.get(user_id)
         if instance:
-            instance.last_accessed = datetime.now(UTC).isoformat()
+            instance.last_accessed = datetime.now(timezone.utc).isoformat()
             self._save_registry()
         return instance
 
@@ -481,7 +481,7 @@ class RebirthManager:
         self._save_instance_meta_identity(user_id)
 
         # Update registry
-        instance.last_accessed = datetime.now(UTC).isoformat()
+        instance.last_accessed = datetime.now(timezone.utc).isoformat()
         self._save_registry()
 
         logger.debug("Instance %s saved", user_id)

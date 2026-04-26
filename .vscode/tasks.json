@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Arch Angel: Check Governance Docs",
+      "type": "shell",
+      "command": "python",
+      "args": ["scripts/arch_angel_docs_guard.py", "check"],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Arch Angel: Repair Governance Docs",
+      "type": "shell",
+      "command": "python",
+      "args": ["scripts/arch_angel_docs_guard.py", "repair"],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Arch Angel: Watch and Repair Governance Docs",
+      "type": "shell",
+      "command": "python",
+      "args": ["scripts/arch_angel_docs_guard.py", "watch", "--repair"],
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

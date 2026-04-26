@@ -9,7 +9,7 @@ It operates within the Cerberus perimeter and is governed by the Triumvirate.
 
 import logging
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 from .ai_systems import AIPersona, EntityClass, FourLaws
@@ -68,7 +68,7 @@ class TriumvirateFilter:
         self, action_callable: Callable, context: dict | None = None
     ) -> dict[str, Any]:
         """Runs the action through Shadow Thirst speculative execution."""
-        trace_id = f"legion_verify_{datetime.now(UTC).timestamp()}"
+        trace_id = f"legion_verify_{datetime.now(timezone.utc).timestamp()}"
 
         # Define invariants for Legion's global representation
         invariants = [

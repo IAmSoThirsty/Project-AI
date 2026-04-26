@@ -9,10 +9,10 @@ Implements tiered pricing for company tier:
 """
 
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import Enum
 
 
-class CompanyBillingCycle(StrEnum):
+class CompanyBillingCycle(str, Enum):
     """Company billing cycle options"""
 
     WEEKLY = "weekly"

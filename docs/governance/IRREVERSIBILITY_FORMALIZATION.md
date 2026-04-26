@@ -2,6 +2,19 @@
 <!--                                        Productivity: Active -->
 # Irreversibility Formalization: From Warnings to Physics
 
+
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE START -->
+## Research Provenance
+
+Arch Angel protected linkage:
+- Canonical DOI registry: [DOI-Registry](../../wiki/07_Research/Publications/DOI-Registry.md)
+- Governance DOI map: [GOVERNANCE_DOI_MAP](GOVERNANCE_DOI_MAP.md)
+- Primary DOI anchors:
+- [The State Register](../../wiki/07_Research/Publications/Paper-10.md) - https://doi.org/10.5281/zenodo.19101877
+- [The Iron Path Executor](../../wiki/07_Research/Publications/Paper-18.md) - https://doi.org/10.5281/zenodo.19583170
+- [The Constitutional Code Store](../../wiki/07_Research/Publications/Paper-20.md) - https://doi.org/10.5281/zenodo.19591660
+<!-- ARCH_ANGEL:RESEARCH_PROVENANCE END -->
+
 ## Overview
 
 The HYDRA-50 Contingency Plan Engine now enforces irreversibility as **physics**, not warnings. Once a scenario crosses the point of no return, state locks create permanent constraints on the system. This prevents unrealistic recovery assumptions and models true collapse dynamics.

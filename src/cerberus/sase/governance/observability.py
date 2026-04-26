@@ -1,7 +1,7 @@
-#                                           [2026-03-03 13:45]
+#                                           [2026-04-09 06:25]
 #                                          Productivity: Active
 """
-S ASE - Sovereign Adversarial Signal Engine
+SASE - Sovereign Adversarial Signal Engine
 L11: Observability & Metrics Fabric
 
 Prometheus/Grafana integration for SASE metrics.
@@ -16,7 +16,9 @@ METRICS:
 
 import logging
 import time
-from dataclasses import dataclass
+from datetime import datetime, timezone
+from dataclasses import dataclass, field
+from typing import Optional
 
 logger = logging.getLogger("SASE.L11.Observability")
 
@@ -28,11 +30,7 @@ class Metric:
     name: str
     value: float
     timestamp: float
-    labels: dict[str, str] = None
-
-    def __post_init__(self):
-        if self.labels is None:
-            self.labels = {}
+    labels: dict[str, str] = field(default_factory=dict)
 
 
 class MetricsExporter:
@@ -45,10 +43,11 @@ class MetricsExporter:
     def __init__(self):
         self.metrics: dict[str, list[Metric]] = {}
 
-    def record(self, name: str, value: float, labels: dict = None):
+    def record(self, name: str, value: float, labels: Optional[dict[str, str]] = None):
         """Record metric"""
+        now = datetime.now(timezone.utc).timestamp()
         metric = Metric(
-            name=name, value=value, timestamp=time.time(), labels=labels or {}
+            name=name, value=value, timestamp=now, labels=labels or {}
         )
 
         if name not in self.metrics:
@@ -114,7 +113,7 @@ class ObservabilityFabric:
         self.event_count += 1
         self.exporter.record(
             self.METRIC_EVENTS_INGESTED,
-            self.event_count,
+            float(self.event_count),
             {"artifact_type": artifact_type},
         )
 

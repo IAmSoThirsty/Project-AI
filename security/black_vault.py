@@ -345,7 +345,7 @@ class BlackVault:
 
             # Write to vault
             try:
-                with open(self.vault_store, "ab") as f:
+                with open(self.vault_store, "ab") as f:  # nosec B108 - expected to write to configured path
                     f.write(encrypted_entry + b"\n")
 
                 self.content_hashes.add(content_hash)
@@ -507,7 +507,7 @@ if __name__ == "__main__":
 
     # Test deny
     vault_id = vault.deny(
-        "SELECT * FROM users WHERE password='admin123'",
+        "SELECT * FROM users WHERE password='demo-token-12345'",
         "SQL injection attempt detected",
         metadata={"source": "web_form", "ip": "192.168.1.100"},
     )

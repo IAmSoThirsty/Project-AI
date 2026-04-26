@@ -1,11 +1,11 @@
-#                                           [2026-03-03 13:45]
-#                                          Productivity: Active
+# (Substrate Oversight Mesh)             [2026-04-09 04:26]
+#                                          Status: Active
 version: "3.8"
 
 services:
   # Prometheus - Metrics collection and storage
   prometheus:
-    image: prom/prometheus:v2.51.0 # Latest stable as of Feb 2026
+    image: prom/prometheus:latest
     container_name: project-ai-prometheus
     ports:
       - "9090:9090"
@@ -23,7 +23,7 @@ services:
 
   # Grafana - Metrics visualization
   grafana:
-    image: grafana/grafana:11.0.0 # Latest stable as of Feb 2026
+    image: grafana/grafana:latest
     container_name: project-ai-grafana
     ports:
       - "3000:3000"

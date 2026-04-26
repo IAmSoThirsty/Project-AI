@@ -12,7 +12,7 @@ import os
 import random
 import time
 from dataclasses import dataclass
-from datetime import UTC, datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from enum import Enum
 from typing import Any
 
@@ -159,7 +159,7 @@ class MarketDataProvider:
         }
         minutes = timeframe_minutes.get(timeframe, 60)
 
-        current_time = datetime.now(UTC)
+        current_time = datetime.now(timezone.utc)
         current_price = base_price
 
         for i in range(limit):
@@ -291,7 +291,7 @@ class MarketDataProvider:
                 ask=round(ask_price, 2),
                 last=round(last_price, 2),
                 volume_24h=round(volume_24h, 2),
-                timestamp=int(datetime.now(UTC).timestamp() * 1000),
+                timestamp=int(datetime.now(timezone.utc).timestamp() * 1000),
             )
 
             logger.debug("Generated ticker for %s: last=%s", symbol, ticker.last)

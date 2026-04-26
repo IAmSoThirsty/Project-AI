@@ -23,6 +23,12 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Callable
 
 from src.app.core.global_watch_tower import GlobalWatchTower
+
+# Import from root security/ directory
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parents[3]))
+
 from security.triumvirate_authorization import (
     ThreatLevel,
     ToolAuthorizationRequest,

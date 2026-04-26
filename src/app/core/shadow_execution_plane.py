@@ -30,7 +30,7 @@ import logging
 import time
 import uuid
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from typing import Any
 
 from app.core.platform_tiers import (
@@ -269,7 +269,7 @@ class ShadowExecutionPlane:
         shadow_ctx = ShadowContext(
             shadow_id=shadow_id,
             trace_id=trace_id,
-            timestamp=datetime.now(UTC),
+            timestamp=datetime.now(timezone.utc),
             mode=mode,
             activation_reason=activation_reason,
             activation_predicates=activation_predicates,
@@ -449,7 +449,7 @@ class ShadowExecutionPlane:
         shadow_ctx = ShadowContext(
             shadow_id=shadow_id,
             trace_id=trace_id,
-            timestamp=datetime.now(UTC),
+            timestamp=datetime.now(timezone.utc),
             mode=ShadowMode.SIMULATION,
             activation_reason=ActivationReason.POLICY_FLAG,
             divergence_policy=DivergencePolicy.LOG_DIVERGENCE,

@@ -40,7 +40,7 @@ import logging
 import shutil
 import threading
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 
@@ -194,7 +194,7 @@ class AuditLog:
 
                 # Create event structure
                 event = {
-                    "timestamp": datetime.now(UTC).isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "event_type": event_type,
                     "actor": actor,
                     "description": description or f"{event_type} event",
@@ -357,7 +357,7 @@ class AuditLog:
             True if rotation succeeded, False otherwise
         """
         try:
-            timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
+            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
             archive_name = f"{self.log_file.stem}_{timestamp}.yaml"
 
             if self.compression:
@@ -504,7 +504,7 @@ class AuditLog:
                 json.dump(
                     {
                         "version": "1.0",
-                        "exported_at": datetime.now(UTC).isoformat(),
+                        "exported_at": datetime.now(timezone.utc).isoformat(),
                         "event_count": len(events),
                         "events": events,
                     },
@@ -639,7 +639,7 @@ class AuditLog:
             actual_end = end_time
 
         return {
-            "report_generated": datetime.now(UTC).isoformat(),
+            "report_generated": datetime.now(timezone.utc).isoformat(),
             "window_start": actual_start.isoformat() if actual_start else None,
             "window_end": actual_end.isoformat() if actual_end else None,
             "total_events": len(events),
@@ -760,7 +760,7 @@ class AuditLogWithRedis(AuditLog):
             "description": description,
             "severity": severity,
             "metadata": metadata,
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
         primary_success = False

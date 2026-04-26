@@ -1,4 +1,4 @@
-# [Build Orchestrator]                      [2026-04-03 19:30]
+# (Orchestration Synthesis Engine)           [2026-04-09 04:26]
 #                                          Status: Active
 """
 Project-AI Unified Build Orchestrator - v1.0.0-E1
@@ -12,7 +12,6 @@ A single entry point for building all Project-AI components:
 
 import os
 import sys
-import subprocess
 import argparse
 import logging
 from pathlib import Path
@@ -74,7 +73,6 @@ class BuildOrchestrator:
         """Build Layer 1/2: Python Core & Triumvirate"""
         logger.info("[2/4] Hardening Layer 1/2: Python Core...")
         # In practice, this means verifying dependencies and compiling bytecode
-        vmlinux_path = PROJECT_ROOT / ".venv_prod"
         logger.info("✅ Python environment verified.")
 
     def _build_desktop_app(self):

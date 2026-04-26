@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import Any
 
@@ -22,7 +22,7 @@ class AuditLogger:
     def log_case(self, payload: dict[str, Any]) -> str:
         """Append an entry and return its hash."""
         record = {
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "previous_hash": self._previous_hash,
             **payload,
         }

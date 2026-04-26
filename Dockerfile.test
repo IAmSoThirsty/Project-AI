@@ -1,6 +1,9 @@
-#                                           [2026-04-02 10:49]
-#                                          Productivity: Active
-FROM python:3.11-slim
+# (Substrate Validation Blueprint)         [2026-04-09 05:25]
+#                                          Status: Active
+FROM python:3.11-slim@sha256:0b23cfb7425d065008b778022a17b1551c82f8b4866ee5a7a200084b7e2eafbf
+
+# Create non-root user for security
+RUN groupadd -r testrunner && useradd -r -g testrunner testrunner
 
 WORKDIR /app
 
@@ -9,9 +12,11 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH=/app/src:/app
 
 COPY requirements.txt requirements-dev.txt /tmp/
-RUN python -m pip install --no-cache-dir --upgrade pip \
+RUN python -m pip install --no-cache-dir --upgrade pip@sha256:0e85a6662e08e64c2d3ef0e40552b412953289069d5843b006cb5561a0d78314 \
     && python -m pip install --no-cache-dir -r /tmp/requirements.txt -r /tmp/requirements-dev.txt
 
-COPY . /app
+COPY --chown=testrunner:testrunner . /app
+
+USER testrunner
 
 CMD ["python", "Verify-SovereignLoaders.py"]

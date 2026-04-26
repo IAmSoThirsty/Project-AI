@@ -27,7 +27,7 @@ import shutil
 import tempfile
 import threading
 from collections import defaultdict
-from datetime import UTC, datetime, timedelta
+from datetime import timezone, datetime, timedelta
 from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, patch
@@ -60,7 +60,7 @@ class AttackSimulationReport:
 
     def __init__(self):
         self.attacks = []
-        self.start_time = datetime.now(UTC)
+        self.start_time = datetime.now(timezone.utc)
         self.end_time = None
 
     def record_attack(
@@ -81,13 +81,13 @@ class AttackSimulationReport:
                 "defense_triggered": defense_triggered,
                 "recovery_possible": recovery_possible,
                 "details": details,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
 
     def finalize(self):
         """Finalize the report."""
-        self.end_time = datetime.now(UTC)
+        self.end_time = datetime.now(timezone.utc)
 
     def generate_summary(self) -> dict[str, Any]:
         """Generate attack summary."""
@@ -167,7 +167,7 @@ class TestVMRollbackSimulation:
                 mock_response.content = mock_tsa_token
                 mock_post.return_value = mock_response
 
-                audit = SovereignAuditLog(data_dir=data_dir)
+                audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
                 audit.merkle_anchor.batch_size = 100
 
                 # Phase 1: Log events before checkpoint
@@ -177,7 +177,7 @@ class TestVMRollbackSimulation:
                 # Create checkpoint (snapshot filesystem state)
                 checkpoint_dir = Path(tmpdir) / "checkpoint"
                 shutil.copytree(data_dir, checkpoint_dir)
-                checkpoint_time = datetime.now(UTC)
+                checkpoint_time = datetime.now(timezone.utc)
 
                 # Phase 2: Log events after checkpoint
                 for i in range(500, 1000):
@@ -195,7 +195,7 @@ class TestVMRollbackSimulation:
                 shutil.copytree(checkpoint_dir, data_dir)
 
                 # Reload audit from rolled-back state
-                audit_rolled = SovereignAuditLog(data_dir=data_dir)
+                audit_rolled = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
                 # Try to log new events (will have timestamps after rollback)
                 try:
@@ -255,7 +255,7 @@ class TestVMRollbackSimulation:
             mock_ipfs_module.connect.return_value = mock_client
 
             # Initialize with IPFS backend
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit.merkle_anchor.external_anchor = ExternalMerkleAnchor(
                 backends=["ipfs"], ipfs_api_url="http://localhost:5001"
             )
@@ -283,7 +283,7 @@ class TestVMRollbackSimulation:
             shutil.copytree(checkpoint_dir, data_dir)
 
             # Reload
-            audit_rolled = SovereignAuditLog(data_dir=data_dir)
+            audit_rolled = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             # Local event count should be less than IPFS anchor count
             local_events = len(audit_rolled.operational_log.get_events())
@@ -322,7 +322,7 @@ class TestClockSkewInjection:
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
 
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log normal events
             for i in range(10):
@@ -395,7 +395,7 @@ class TestClockSkewInjection:
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
 
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log events
             for i in range(10):
@@ -467,7 +467,7 @@ class TestConcurrentCorruptionStress:
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
 
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit.merkle_anchor.batch_size = 50
 
             corruption_attempts = []
@@ -500,7 +500,7 @@ class TestConcurrentCorruptionStress:
                                         "target_event": sovereign_events[-1][
                                             "event_type"
                                         ],
-                                        "timestamp": datetime.now(UTC).isoformat(),
+                                        "timestamp": datetime.now(timezone.utc).isoformat(),
                                     }
                                 )
 
@@ -586,7 +586,7 @@ class TestGenesisDeletionRecovery:
             mock_boto3.client.return_value = mock_s3_client
 
             # Initialize with external backups
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit.merkle_anchor.external_anchor = ExternalMerkleAnchor(
                 backends=["ipfs", "s3"],
                 ipfs_api_url="http://localhost:5001",
@@ -612,7 +612,7 @@ class TestGenesisDeletionRecovery:
 
             # Attempt restart (will fail)
             try:
-                SovereignAuditLog(data_dir=data_dir)
+                SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
                 recovery_failed = True
             except GenesisDiscontinuityError:
                 recovery_failed = False
@@ -656,7 +656,7 @@ class TestMerkleAnchorReplay:
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
 
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit.merkle_anchor.batch_size = 50
 
             # Phase 1: Create first anchor
@@ -741,7 +741,7 @@ class TestKeyCompromiseSimulation:
             mock_tsa_post.return_value = mock_response
 
             # Initialize system
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
             audit.merkle_anchor.batch_size = 100
 
             # Log legitimate events
@@ -806,7 +806,7 @@ class TestMultiVectorAttackCombinations:
         with tempfile.TemporaryDirectory() as tmpdir:
             data_dir = Path(tmpdir) / "audit_data"
 
-            audit = SovereignAuditLog(data_dir=data_dir)
+            audit = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             # Log events
             for i in range(100):
@@ -825,11 +825,11 @@ class TestMultiVectorAttackCombinations:
             shutil.copytree(checkpoint_dir, data_dir)
 
             # ATTACK 2: Clock skew
-            audit_rolled = SovereignAuditLog(data_dir=data_dir)
+            audit_rolled = SovereignAuditLog(data_dir=data_dir, enable_notarization=False, enable_external_anchoring=False)
 
             try:
                 # Try to log with future timestamp
-                future_time = datetime.now(UTC) + timedelta(hours=24)
+                future_time = datetime.now(timezone.utc) + timedelta(hours=24)
                 audit_rolled.log_event(
                     "combined_attack",
                     {"attack": "rollback+clock_skew"},

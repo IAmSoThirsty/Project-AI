@@ -14,7 +14,7 @@ import logging
 import time
 import uuid
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from enum import Enum
 from typing import Any
 
@@ -55,7 +55,7 @@ class Discussion:
     title: str
     participants: list[str] = field(default_factory=list)
     messages: list[dict[str, Any]] = field(default_factory=list)
-    started_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    started_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     active: bool = True
 
 
@@ -69,7 +69,7 @@ class Proposal:
     authors: list[str] = field(default_factory=list)
     status: ProposalStatus = ProposalStatus.DRAFT
     votes: dict[str, bool] = field(default_factory=dict)  # agent_id → approve/reject
-    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     resolved_at: str | None = None
     metadata: dict[str, Any] = field(default_factory=dict)
 
@@ -84,7 +84,7 @@ class LoungeState:
     active_discussions: int = 0
     pending_proposals: int = 0
     ambient_mood: str = "relaxed"  # relaxed, focused, energetic
-    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 # ---------------------------------------------------------------------------
@@ -172,7 +172,7 @@ class AgentLounge:
             {
                 "agent_id": agent_id,
                 "content": content,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
         if agent_id not in disc.participants:
@@ -258,7 +258,7 @@ class AgentLounge:
         else:
             proposal.status = ProposalStatus.REJECTED
 
-        proposal.resolved_at = datetime.now(UTC).isoformat()
+        proposal.resolved_at = datetime.now(timezone.utc).isoformat()
         self._log_audit(
             "resolve_proposal",
             {"proposal_id": proposal_id, "status": proposal.status.value},
@@ -324,7 +324,7 @@ class AgentLounge:
         self._audit_log.append(
             {
                 "action": action,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "details": details,
             }
         )
