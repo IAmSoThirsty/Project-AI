@@ -1,0 +1,6 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+"policies/__init__.py","policies","policies","__init__.py",".py","196","0.191","2026-04-01T15:28:03.8935051Z","2.522","True","False","3","3","190","63.333","65"
+"policies/constitution.yaml","policies","policies","constitution.yaml",".yaml","2810","2.744","2026-03-29T00:58:39.2942843Z","6.125","True","False","92","81","2626","28.543","107"
+"policies/policy_guard.py","policies","policies","policy_guard.py",".py","556","0.543","2026-04-01T15:28:03.8955183Z","2.522","True","False","23","18","510","22.174","63"
+"policies/README.md","policies","policies","README.md",".md","1572","1.535","2026-04-01T15:28:03.8924961Z","2.522","True","False","37","26","1478","39.946","173"
+"policies/red_team_personas.yaml","policies","policies","red_team_personas.yaml",".yaml","5807","5.671","2026-03-29T00:58:39.2942843Z","6.125","True","False","168","156","5471","32.565","89"

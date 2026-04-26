@@ -1,0 +1,4 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+".agent/README.md",".agent",".agent","README.md",".md","393","0.384","2026-04-01T15:27:59.1461091Z","2.522","True","False","8","5","375","46.875","149"
+".agent/rules/thirstysexpectations.md",".agent",".agent\rules","thirstysexpectations.md",".md","1311","1.28","2026-04-03T23:21:37.6798563Z","0.193","True","False","15","11","1283","85.533","365"
+".agent/workflows/add_gpt_oss_1208.md",".agent",".agent\workflows","add_gpt_oss_1208.md",".md","349","0.341","2026-04-01T15:27:59.1489065Z","2.522","True","False","7","6","337","48.143","161"

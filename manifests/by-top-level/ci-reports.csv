@@ -1,0 +1,6 @@
+"RelativePath","TopLevelFolder","Directory","FileName","Extension","SizeBytes","SizeKiB","LastWriteTimeUtc","FileAgeDays","IsText","IsBinary","LineCount","NonEmptyLineCount","CharCount","AvgLineLength","MaxLineLength"
+"ci-reports/garak-latest.json","ci-reports","ci-reports","garak-latest.json",".json","15684","15.316","2026-04-01T15:28:00.7125847Z","2.522","True","False","385","385","14916","38.743","278"
+"ci-reports/hydra-latest.json","ci-reports","ci-reports","hydra-latest.json",".json","118290","115.518","2026-04-01T15:28:00.7154302Z","2.522","True","False","2815","2815","112662","40.022","132"
+"ci-reports/jbb-latest.json","ci-reports","ci-reports","jbb-latest.json",".json","34850","34.033","2026-04-01T15:28:00.7164421Z","2.522","True","False","966","966","32920","34.079","209"
+"ci-reports/multiturn-latest.json","ci-reports","ci-reports","multiturn-latest.json",".json","31513","30.774","2026-04-01T15:28:00.7174433Z","2.522","True","False","747","747","30021","40.189","137"
+"ci-reports/unified-report.json","ci-reports","ci-reports","unified-report.json",".json","91103","88.968","2026-04-01T15:28:00.7204766Z","2.522","True","False","2122","2122","86861","40.934","282"
